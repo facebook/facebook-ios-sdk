@@ -1,0 +1,129 @@
+Facebook Connect for iPhone
+===========================
+
+This open source iPhone library allows you to integrate Facebook into your iPhone application.
+
+Except as otherwise noted, the Facebook Connect iPhone SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
+
+Alpha Status
+------------
+
+This is an alpha release. In order to guide the development of the library and allow you to freely inspect and use the source, we have open-sourced the library. The underlying APIs are generally stable, however we may make changes to the library in response to developer feedback.
+
+Known Issues
+------------
+
+* Binary API parameters (such as uploading pictures) is not yet supported -- coming soon, but if you have already implemented it, feel free to send us a patch!
+
+* The dialog webviews may be blank if an error occurs -- we are working on figuring these out and providing more debugging information. Sorry for the frustration.
+
+* If you see "an invalid next or cancel parameter was specified" message in the login dialog, then you need to migrate your application to the New Data Permissions. This can be done by going to http://www.facebook.com/developers/apps.php then selecting the application you are testing with, and clicking "Edit Settings" (the third item underneath Total Users). On the settings page, click on Migrations (bottom of the left menu), then set New Data Permissions to "Enabled"
+
+Getting Started
+===============
+
+The SDK is lightweight and has no external dependencies. Getting started is quick and easy.
+
+Install necessary packages
+--------------------------
+
+* Follow the (https://developer.apple.com/iphone/index.action)[iPhone Dev Center Getting Started Documents]. 
+
+* Pull the read-only repository from github. 
+   
+   git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git
+   (if you have trouble, you could also try "git clone http://github.com/facebook/facebook-iphone-sdk-2.0.git")
+
+Create your own application
+---------------------------
+
+* Create a Facebook Application: http://www.facebook.com/developers/createapp.php
+
+* Check out the mobile documentation: http://developers.facebook.com/docs/guides/mobile/
+
+* Adding Connect to your Xcode project
+  * Open the src/FBConnect.xcodeproj project file.
+  * Drag the "FBConnect" group into your application's Xcode project.
+  * Make sure that the FBConnect headers are in the include path. Go into your project's settings and enter the relative or absolute path to the "src" directory.
+  * Include the FBConnect headers in your code:
+      #import "FBConnect/FBConnect.h"
+  * You should now be able to compile your project successfully.
+
+Usage
+-----
+
+With the iPhone SDK, you can do three main things:
+
+* Authorize users: prompt users to log in to facebook and grant access permission to your application.
+
+User credentials are not handled by the iPhone application in this SDK: authentication is done in an embedded webView using the OAuth 2.0 User-Agent flow to obtain an access token.
+
+* Make API requests
+
+Requests to the Facebook Graph and REST APIs are supported in this SDK. Authenticated requests are done over https using the OAuth access token.
+
+* Display a Facebook dialog
+
+The SDK supports several WebView html dialogs for user interactions, such as creating a wall post. This is intended to provided quick Facebook functionality without having to implement a native iPhone UI and pass data to facebook directly though the APIs.
+
+Authentication and Authorization
+--------------------------------
+
+User login and application permission requests use the same method: authorize(). By default, if you pass an empty ''permissions'' parameter, then you will get access to the user's basic information., which includes their name, profile picture, list of friends and other general information. For more information, see http://developers.facebook.com/docs/authentication/.
+
+If you pass in extra permissions in the permissions parameter (e.g. "publish_stream", "offline_access"), then the user will be prompted to grant these permissions. "offline_access" is particularly useful, as it avoids access expiration and ongoing prompts to the user for access. See http://developers.facebook.com/docs/authentication/permissions
+
+This SDK uses the (http://tools.ietf.org/html/draft-ietf-oauth-v2)["user-agent"] flow from OAuth 2.0 for authentication details.
+
+To authorize a user, the simplest usage is:
+
+     facebook = [[Facebook alloc] init];
+     [facebook authorize:apiKey permissions:permissions delegate:self];
+
+The authorize method generate a dialog with WebView content from Facebook, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
+
+See the sample applications for more specific code samples.
+
+When the user wants to stop using Facebook integration with your application, you can call the logout method to clear all application state and make a server request to invalidate the current OAuth 2.0 token.
+
+     [facebook logout:self]
+
+
+Accessing the Graph API
+-----------------------
+
+The (http://developers.facebook.com/docs/api)[Facebook Graph API] presents a simple, consistent view of the Facebook social graph, uniformly representing objects in the graph (e.g., people, photos, events, and fan pages) and the connections between them (e.g., friend relationships, shared content, and photo tags).
+
+You can access the Graph API by passing the Graph Path to the ''request'' method. For example, to access information about the logged in user, call
+
+     [facebook requestWithGraphPath:@"me" andDelegate:self];             // get information about the currently logged in user
+     [facebook requestWithGraphPath:@"platform/posts" andDelegate:self]; // get the posts made by the "platform" page
+     [facebook requestWithGraphPath:@"me/friends" andDelegate:self];     // get the logged-in user's friends
+
+The FBRequestDelegate is an interface that handle the request response that your application should implement.
+
+Note that the server response is in JSON string format. The SDK use a open source package json frame work (http://code.google.com/p/json-framework/) to parse the result. If there is error, it will call request:didFailWithError: function in the FBRequestDelegate. If it is succeed, it will call request:didLoad: function in the FBRequestDelegate. The result passed to the FBRequestDelegate can be an NSArray for multiple results or a NSDictionary for single result.
+i whose fields and values can be inspected and accessed. The sample implementation checks for a variety of error conditions and raises JSON or Facebook exceptions if the content is invalid or includes an error generated by the server. Advanced applications may wish to provide their own parsing and error handling.
+
+The (http://developers.facebook.com/docs/reference/rest/)[Old REST API] is also supported. To access the older methods, pass in the named parameters and method name as a NSDictionary.
+
+     NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"4", @"uids", @"name", @"fields", nil];
+     [facebook requestWithMethodName: @"users.getInfo" andParams: params andHttpMethod: @"GET" andDelegate: self]; 
+
+
+User Interface Dialogs
+----------------------
+
+This SDK provides a method for popping up a Facebook dialog. The currently supported dialogs are the login and permissions dialogs used in the authorization flow, and a "stream.publish" flow for making a wall post.  The dialog require an action to perform, and a FBDialogDelegate interface for notification that must be implemented by the application. For example,
+
+     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys: apiKey, @"api_key", nil];
+  
+     [facebook dialog: @"stream.publish" andParams: params andDelegate:self];
+
+This allows you to provide basic Facebook functionality in your application with a singe line of code -- no need to build native dialogs, make API calls, or handle responses.
+
+Error Handling
+--------------
+
+For Request and Dialog, errors are handled by FBRequestDelegate and FBDialogDelegate callback methods. Application can implement these interface to handle them.
+
