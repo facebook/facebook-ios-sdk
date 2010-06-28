@@ -18,6 +18,8 @@
 #import "DemoAppViewController.h"
 #import "FBConnect.h"
 
+// Your Facebook API Key must be set before running this example
+// See http://www.facebook.com/developers/createapp.php
 static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
 
 @implementation DemoAppViewController
