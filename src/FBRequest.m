@@ -40,10 +40,10 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
-+ (FBRequest*)getRequestWithParams:(NSMutableDictionary *) params
-                        httpMethod:(NSString *) httpMethod
-                          delegate:(id<FBRequestDelegate>) delegate
-                        requestURL:(NSString *) url {
++ (FBRequest *)getRequestWithParams:(NSMutableDictionary *) params
+                         httpMethod:(NSString *) httpMethod
+                           delegate:(id<FBRequestDelegate>) delegate
+                         requestURL:(NSString *) url {
   FBRequest* request    = [[[FBRequest alloc] init] autorelease];
   request.delegate      = delegate; 
   request.url           = url;
@@ -107,7 +107,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * Formulate the NSError
  */
 - (id) formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
-   return [NSError errorWithDomain:@"facebook.com" code:code userInfo:errorData];
+   return [NSError errorWithDomain:@"facebookErrDomain" code:code userInfo:errorData];
   
 }
 

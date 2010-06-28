@@ -27,6 +27,7 @@
 /**
  * private helper method: Find a specific parameter from the url
  */
+/*
 - (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle {
   NSString * str = nil;
   NSRange start = [url rangeOfString:needle];
@@ -40,7 +41,7 @@
   }
 
   return str;
-}
+}*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // public 

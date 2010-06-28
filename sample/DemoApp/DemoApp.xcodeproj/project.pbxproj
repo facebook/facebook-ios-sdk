@@ -151,7 +151,6 @@
 		AEA93B9C11D52A6E000A4545 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
-				AEA93B9D11D52A6E000A4545 /* JSON */,
 				AEA93BAB11D52A6E000A4545 /* FBConnect.h */,
 				AEA93BAC11D52A6E000A4545 /* FBRequest.h */,
 				AEA93BAD11D52A6E000A4545 /* FBRequest.m */,
@@ -161,6 +160,7 @@
 				AEA93BB111D52A6E000A4545 /* FBLoginDialog.m */,
 				AEA93BB211D52A6E000A4545 /* FBDialog.h */,
 				AEA93BB311D52A6E000A4545 /* FBDialog.m */,
+				AEA93B9D11D52A6E000A4545 /* JSON */,
 			);
 			name = FBConnect;
 			sourceTree = "<group>";

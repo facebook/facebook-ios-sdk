@@ -1,5 +1,5 @@
 /*
- * Copyright 2009 Facebook
+ * Copyright 2010 Facebook
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -410,7 +410,17 @@ BOOL FBIsDeviceIPad() {
 
   if ([url.scheme isEqualToString:@"fbconnect"]) {
     if ([url.resourceSpecifier isEqualToString:@"cancel"]) {
-      [self dismissWithSuccess:NO animated:YES];
+      NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code"];
+      NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg"];
+      if (errorCode) {
+        NSDictionary * errorData = [NSDictionary dictionaryWithObject:errorStr forKey:@"error_msg"];
+        NSError * error = [NSError errorWithDomain:@"facebookErrDomain" 
+                                              code:[errorCode intValue]
+                                          userInfo:errorData];
+        [self dismissWithError:error animated:YES];
+      } else {
+        [self dismissWithSuccess:NO animated:YES];        
+      }
     } else {
       [self dialogDidSucceed:url];
       [self dismissWithSuccess:YES animated:YES];
@@ -496,10 +506,28 @@ BOOL FBIsDeviceIPad() {
 
   _showingKeyboard = NO;
 }
- 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
 // public
 
+/**
+ * Find a specific parameter from the url
+ */
+- (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle {
+  NSString * str = nil;
+  NSRange start = [url rangeOfString:needle];
+  if (start.location != NSNotFound) {
+    NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
+    NSUInteger offset = start.location+start.length;
+    str = end.location == NSNotFound
+    ? [url substringFromIndex:offset]
+    : [url substringWithRange:NSMakeRange(offset, end.location)];  
+    str = [str stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]; 
+  }
+  
+  return str;
+}
+ 
 - (id)initWithURL: (NSString *) serverURL 
            params: (NSMutableDictionary *) params  
          delegate: (id <FBDialogDelegate>) delegate {
@@ -518,6 +546,35 @@ BOOL FBIsDeviceIPad() {
 
 - (void)setTitle:(NSString*)title {
   _titleLabel.text = title;
+}
+
+- (void)load {
+  [self loadURL:_serverURL method:@"GET" get:_params post:nil];
+}
+
+- (void)loadURL:(NSString*)url method:(NSString*)method get:(NSDictionary*)getParams
+           post:(NSDictionary*)postParams {
+  
+  [_loadingURL release];
+  _loadingURL = [[self generateURL:url params:getParams] retain];
+  NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_loadingURL];
+  
+  if (method) {
+    [request setHTTPMethod:method];
+    
+    if ([[method uppercaseString] isEqualToString:@"POST"]) {
+      NSString* contentType = [NSString
+                               stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
+      [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
+      
+      NSData* body = [self generatePostBody:postParams];
+      if (body) {
+        [request setHTTPBody:body];
+      }
+    }
+  }
+  
+  [_webView loadRequest:request];
 }
 
 - (void)show {
@@ -596,35 +653,6 @@ BOOL FBIsDeviceIPad() {
   }
 
   [self dismiss:animated];
-}
-
-- (void)load {
-  [self loadURL:_serverURL method:@"GET" get:_params post:nil];
-}
-
-- (void)loadURL:(NSString*)url method:(NSString*)method get:(NSDictionary*)getParams
-        post:(NSDictionary*)postParams {
-
-  [_loadingURL release];
-  _loadingURL = [[self generateURL:url params:getParams] retain];
-  NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_loadingURL];
-  
-  if (method) {
-    [request setHTTPMethod:method];
-
-    if ([[method uppercaseString] isEqualToString:@"POST"]) {
-      NSString* contentType = [NSString
-        stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
-      [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-
-      NSData* body = [self generatePostBody:postParams];
-      if (body) {
-        [request setHTTPBody:body];
-      }
-    }
-  }
-
-  [_webView loadRequest:request];
 }
 
 - (void)dialogWillAppear {
