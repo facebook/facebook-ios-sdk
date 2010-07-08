@@ -25,6 +25,7 @@ static NSString* kRestApiURL = @"https://api.facebook.com/method/";
 static NSString* kUIserverBaseURL = @"http://www.facebook.com/connect/uiserver.php";
 static NSString* kCancelURL = @"fbconnect://cancel";
 static NSString* kLogin = @"login";
+static NSString* kSDKVersion = @"ios";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -57,6 +58,7 @@ static NSString* kLogin = @"login";
         delegate:(id<FBRequestDelegate>)delegate {
   
   [params setValue:@"json" forKey:@"format"];
+  [params setValue:kSDKVersion forKey:@"sdk"];
   if ([self isSessionValid]) {
     [params setValue:self.accessToken forKey:@"access_token"];
   }
@@ -114,6 +116,7 @@ static NSString* kLogin = @"login";
     @"user_agent", @"type", 
     kRedirectURL, @"redirect_uri",
     @"touch", @"display", 
+    kSDKVersion, @"sdk",
     nil];
   
   if (permissions != nil) {
@@ -350,6 +353,7 @@ static NSString* kLogin = @"login";
   
   FBDialog* fbDialog = nil;
   [params setObject:@"touch" forKey:@"display"];
+  [params setObject: kSDKVersion forKey:@"sdk"];
   
   if (action == kLogin) {
     [params setObject:@"user_agent" forKey:@"type"];
