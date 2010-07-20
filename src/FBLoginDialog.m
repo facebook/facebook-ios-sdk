@@ -21,28 +21,6 @@
 
 @implementation FBLoginDialog
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// private
-
-/**
- * private helper method: Find a specific parameter from the url
- */
-/*
-- (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle {
-  NSString * str = nil;
-  NSRange start = [url rangeOfString:needle];
-  if (start.location != NSNotFound) {
-    NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
-    NSUInteger offset = start.location+start.length;
-    str = end.location == NSNotFound
-    ? [url substringFromIndex:offset]
-    : [url substringWithRange:NSMakeRange(offset, end.location)];  
-    str = [str stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]; 
-  }
-
-  return str;
-}*/
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // public 
 
@@ -97,7 +75,6 @@
  * Override FBDialog : free the space
  */
 - (void)dealloc {
-  _loginDelegate = nil;
   [_loginDelegate release];
   [super dealloc];
 }

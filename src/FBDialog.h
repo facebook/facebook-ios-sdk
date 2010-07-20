@@ -123,7 +123,12 @@
 /**
  * Called when the dialog succeeds and is about to be dismissed.
  */
-- (void)dialogDidSucceed:(FBDialog*)dialog;
+- (void)dialogDidSucceed:(FBDialog *)dialog;
+
+/**
+ * Called when the dialog succeeds with a returning url.
+ */
+- (void)dialogSucceedWithUrl:(NSURL *)url;
 
 /**
  * Called when the dialog is cancelled and is about to be dismissed.

@@ -320,8 +320,8 @@ BOOL FBIsDeviceIPad() {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.contentMode = UIViewContentModeRedraw;
     
-    UIImage* iconImage = [UIImage imageNamed:@"FBConnect.bundle/images/fbicon.png"];
-    UIImage* closeImage = [UIImage imageNamed:@"FBConnect.bundle/images/close.png"];
+    UIImage* iconImage = [UIImage imageNamed:@"FBDialog.bundle/images/fbicon.png"];
+    UIImage* closeImage = [UIImage imageNamed:@"FBDialog.bundle/images/close.png"];
     
     _iconView = [[UIImageView alloc] initWithImage:iconImage];
     [self addSubview:_iconView];
@@ -371,7 +371,7 @@ BOOL FBIsDeviceIPad() {
 - (void)dealloc {
   _webView.delegate = nil;
   [_webView release];
-  _delegate = nil;
+  [_delegate release];
   [_params release];
   [_serverURL release];
   [_spinner release];
@@ -661,7 +661,10 @@ BOOL FBIsDeviceIPad() {
 - (void)dialogWillDisappear {
 }
 
-- (void)dialogDidSucceed:(NSURL*)url {
+- (void)dialogDidSucceed:(NSURL *)url {
+  if ([_delegate respondsToSelector:@selector(dialogSucceedWithUrl:)]) {
+    [_delegate dialogSucceedWithUrl:url];
+  }
   [self dismissWithSuccess:YES animated:YES];
 }
 

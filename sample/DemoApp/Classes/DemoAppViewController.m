@@ -18,9 +18,9 @@
 #import "DemoAppViewController.h"
 #import "FBConnect.h"
 
-// Your Facebook API Key must be set before running this example
+// Your Facebook APP Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
-static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
+static NSString* kAppId = @"230820755197";
 
 @implementation DemoAppViewController
 
@@ -35,7 +35,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
     _permissions =  [[NSArray arrayWithObjects: 
-                      @"publish_stream",@"read_stream", @"offline_access",nil] retain];
+                      @"read_stream", @"offline_access",nil] retain];
   }
   
   return self;
@@ -48,7 +48,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
   _facebook = [[[[Facebook alloc] init] autorelease] retain];
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden    = YES;
-  _getUserInfoButton2.hidden   = YES;
+  _getPublicInfoButton.hidden   = YES;
   _publishButton.hidden        = YES;
   _fbButton.isLoggedIn   = NO;
   [_fbButton updateImage];
@@ -62,7 +62,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
   [_label release];
   [_fbButton release];
   [_getUserInfoButton release];
-  [_getUserInfoButton2 release];
+  [_getPublicInfoButton release];
   [_publishButton release];
   [_facebook release];
   [_permissions release];
@@ -76,7 +76,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
  * Example of facebook login and permission request
  */
 - (void) login {
-  [_facebook authorize:kApiKey permissions:_permissions delegate:self];
+  [_facebook authorize:kAppId permissions:_permissions delegate:self];
 }
 
 /**
@@ -102,34 +102,41 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
 
 /**
  * Example of graph API CAll
+ *
+ * This lets you make a Graph API Call to get the information of current logged in user.
  */
 - (IBAction) getUserInfo: (id)sender {
   [_facebook requestWithGraphPath:@"me" andDelegate:self];
 }
 
+
 /**
- * Example of REST API call
+ * Example of REST API CAll
+ *
+ * This lets you make a REST API Call to get a user's public information with FQL.
  */
-- (IBAction) getUserInfo2: (id)sender {
+- (IBAction) getPublicInfo: (id)sender {
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                                      @"4", @"uids",
-                                                      @"name", @"fields",
-                                                      nil];
-  [_facebook requestWithMethodName: @"users.getInfo" 
-             andParams: params
-             andHttpMethod: @"POST" 
-             andDelegate: self]; 
+                                  @"SELECT uid,name FROM user WHERE uid=4", @"query",
+                                  nil];
+  [_facebook requestWithMethodName: @"fql.query" 
+                         andParams: params
+                     andHttpMethod: @"POST" 
+                       andDelegate: self]; 
 }
 
 /**
- * Example of display UIServer dialog
+ * Example of display Facebook dialogs
+ *
+ * This lets you publish a story to the user's stream. It uses UIServer, which is a consistent 
+ * way of displaying user-facing dialogs
  */
 - (IBAction) publishStream: (id)sender {
   
   SBJSON *jsonWriter = [[SBJSON new] autorelease];
   
-  NSDictionary* actionLinks = [NSDictionary dictionaryWithObjectsAndKeys: 
-                               @"Always Running",@"text",@"http://itsti.me/",@"href", nil];
+  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys: 
+                               @"Always Running",@"text",@"http://itsti.me/",@"href", nil], nil];
   
   NSString *actionLinksStr = [jsonWriter stringWithObject:actionLinks];
   NSDictionary* attachment = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -139,7 +146,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
                                @"http://itsti.me/", @"href", nil];
   NSString *attachmentStr = [jsonWriter stringWithObject:attachment];
   NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                 kApiKey, @"api_key",
+                                 kAppId, @"api_key",
                                  @"Share on Facebook",  @"user_message_prompt",
                                  actionLinksStr, @"action_links",
                                  attachmentStr, @"attachment",
@@ -167,7 +174,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
 -(void) fbDidLogin {
   [self.label setText:@"logged in"];
   _getUserInfoButton.hidden    = NO;
-  _getUserInfoButton2.hidden   = NO;
+  _getPublicInfoButton.hidden   = NO;
   _publishButton.hidden        = NO;
   _fbButton.isLoggedIn         = YES;
   [_fbButton updateImage];
@@ -179,7 +186,7 @@ static NSString* kApiKey = @"39c66d68e4adfa4691c4b93cf0afa93d";
 -(void) fbDidLogout {
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden    = YES;
-  _getUserInfoButton2.hidden   = YES;
+  _getPublicInfoButton.hidden   = YES;
   _publishButton.hidden        = YES;
   _fbButton.isLoggedIn         = NO;
   [_fbButton updateImage];

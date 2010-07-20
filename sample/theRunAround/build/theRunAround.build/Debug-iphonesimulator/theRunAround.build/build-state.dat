@@ -1,0 +1,830 @@
+TtheRunAround
+v7
+r0
+t301272553.192863
+cCheck dependencies
+cProcessInfoPlistFile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/Info.plist theRunAround-Info.plist
+cCompileXIB /Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib
+cCompileXIB /Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib
+cCpResource build/Debug-iphonesimulator/theRunAround.app/FBConnect.bundle ../FBConnect.bundle
+cProcessPCH /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch.gch theRunAround_Prefix.pch normal i386 objective-c com.apple.compilers.gcc.4_2
+cDataModelVersionCompile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd /Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld
+cDataModelCompile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/runs.mom /Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/main.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAroundAppDelegate.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginButton.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/mainViewController.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Runs-E1619738B399158F.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/UserInfo.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/MyRunViewController.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/RunViewCell.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSObject+SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSString+SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonBase.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonParser.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonWriter.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBRequest.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Facebook.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginDialog.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBDialog.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m normal i386 objective-c com.apple.compilers.gcc.4_2
+cLd /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround normal i386
+cGenerateDSYMFile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app.dSYM /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround
+cTouch /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk
+c000000004C00062A00000000000000EE
+t1275069994
+s238
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/CoreData.framework/CoreData
+c000000004B2B4E070000000000185440
+t1261129223
+s1594432
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/CoreData.framework/Headers/CoreData.h
+c000000004B2B4DFB000000000000046B
+t1261129211
+s1131
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/CoreGraphics.framework/CoreGraphics
+c000000004B2B4CC3000000000026EE30
+t1261128899
+s2551344
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/Foundation.framework/Foundation
+c000000004B2B4DC8000000000027E880
+t1261129160
+s2615424
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/Foundation.framework/Headers/Foundation.h
+c000000004B2B4DAE0000000000001355
+t1261129134
+s4949
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIKit.h
+c000000004B2B61620000000000000788
+t1261134178
+s1928
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/UIKit.framework/UIKit
+c000000004B2B62B500000000016721E0
+t1261134517
+s23536096
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/include/Availability.h
+c000000004B2B4EE200000000000019F9
+t1261129442
+s6649
+
+N/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/usr/include/dlfcn.h
+c00000000476340E00000000000000AC7
+t1197687008
+s2759
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBConnect.h
+c000000004C28E9A100000000000002C2
+t1277749665
+s706
+i"Facebook.h"
+i"FBDialog.h"
+i"FBLoginDialog.h"
+i"FBRequest.h"
+i"SBJSON.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m
+c000000004C4164D00000000000005A66
+t1279354064
+s23142
+i"FBDialog.h"
+i"Facebook.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m
+c000000004C3E47C90000000000000949
+t1279150025
+s2377
+i"FBDialog.h"
+i"FBLoginDialog.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m
+c000000004C3CEBB4000000000000216D
+t1279060916
+s8557
+i"FBRequest.h"
+i"JSON.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m
+c000000004C3B6A8C0000000000003AD3
+t1278962316
+s15059
+i"Facebook.h"
+i"FBLoginDialog.h"
+i"FBRequest.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/JSON.h
+c000000004C212D8F00000000000008F9
+t1277242767
+s2297
+i"SBJSON.h"
+i"NSObject+SBJSON.h"
+i"NSString+SBJSON.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m
+c000000004C212D8F000000000000089E
+t1277242767
+s2206
+i"NSObject+SBJSON.h"
+i"SBJsonWriter.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m
+c000000004C212D8F000000000000087D
+t1277242767
+s2173
+i"NSString+SBJSON.h"
+i"SBJsonParser.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.h
+c000000004C212D8F0000000000000AED
+t1277242767
+s2797
+i<Foundation/Foundation.h>
+i"SBJsonParser.h"
+i"SBJsonWriter.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m
+c000000004C212D8F0000000000001ABC
+t1277242767
+s6844
+i"SBJSON.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m
+c000000004C212D8F0000000000000AC1
+t1277242767
+s2753
+i"SBJsonBase.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m
+c000000004C212D8F00000000000036D0
+t1277242767
+s14032
+i"SBJsonParser.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m
+c000000004C212D8F0000000000001F26
+t1277242767
+s7974
+i"SBJsonWriter.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../FBConnect.bundle
+c000000004C4163C20000000000000066
+t1279353794
+s102
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.h
+c000000004C3E49AB00000000000003CB
+t1279150507
+s971
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m
+c000000004C3E49AB00000000000007C4
+t1279150507
+s1988
+i"FBLoginButton.h"
+i"Facebook.h"
+i<dlfcn.h>
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.h
+c000000004C3E49AB00000000000003F2
+t1279150507
+s1010
+i<UIKit/UIKit.h>
+i"UserInfo.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m
+c000000004C3F6A190000000000001980
+t1279224345
+s6528
+i"MyRunViewController.h"
+i"UserInfo.h"
+i"RunViewCell.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.h
+c000000004C3E49AB00000000000003B5
+t1279150507
+s949
+i<UIKit/UIKit.h>
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m
+c000000004C3F6B1700000000000009D0
+t1279224599
+s2512
+i"RunViewCell.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.h
+c000000004C3F981800000000000005DE
+t1279236120
+s1502
+i<UIKit/UIKit.h>
+i"FBConnect.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m
+c000000004C3F994B0000000000000F8E
+t1279236427
+s3982
+i"UserInfo.h"
+i"FBConnect.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.h
+c000000004C3E49AB00000000000007D6
+t1279150507
+s2006
+i<UIKit/UIKit.h>
+i"FBLoginButton.h"
+i"FBConnect.h"
+i"UserInfo.h"
+i"MyRunViewController.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m
+c000000004C44D6300000000000001D57
+t1279579696
+s7511
+i"mainViewController.h"
+i"FBConnect.h"
+i"Runs.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.h
+c000000004C3E49AB0000000000000435
+t1279150507
+s1077
+i<UIKit/UIKit.h>
+i<CoreData/CoreData.h>
+i"mainViewController.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m
+c000000004C3E49AB00000000000012D0
+t1279150507
+s4816
+i"theRunAroundAppDelegate.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib
+c000000004C3E49AB00000000000021E3
+t1279150507
+s8675
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.h
+c000000004C3E49AB00000000000001A3
+t1279150507
+s419
+i<CoreData/CoreData.h>
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m
+c000000004C3E49AB0000000000000103
+t1279150507
+s259
+i"Runs.h"
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app
+t1279579697
+s340
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app.dSYM
+t1279579697
+s102
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/FBConnect.bundle
+t1279571639
+s102
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/Info.plist
+t1279224345
+s613
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/MainWindow.nib
+t1279224346
+s1365
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/PkgInfo
+t1279224345
+s8
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/mainViewController.nib
+t1279224347
+s6953
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/runs.mom
+t1279224347
+s2841
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround
+t1279579697
+s138640
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd
+t1279224347
+s136
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBDialog.o
+t1279571640
+s75816
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginButton.o
+t1279224348
+s13972
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginDialog.o
+t1279224350
+s16024
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBRequest.o
+t1279224350
+s31988
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Facebook.o
+t1279224350
+s32880
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/MyRunViewController.o
+t1279236125
+s51640
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSObject+SBJSON.o
+t1279224349
+s7780
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSString+SBJSON.o
+t1279224349
+s7800
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/RunViewCell.o
+t1279235717
+s23852
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Runs-E1619738B399158F.o
+t1279224348
+s5220
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJSON.o
+t1279224350
+s16800
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonBase.o
+t1279224350
+s12144
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonParser.o
+t1279224350
+s29876
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonWriter.o
+t1279224350
+s22596
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/UserInfo.o
+t1279236428
+s20284
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/main.o
+t1279224347
+s5972
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/mainViewController.o
+t1279579697
+s63020
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAround.LinkFileList
+c000000004C3F6A190000000000000AB9
+t1279224345
+s2745
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAroundAppDelegate.o
+t1279236125
+s49352
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m
+c000000004C3E49AB000000000000016C
+t1279150507
+s364
+i<UIKit/UIKit.h>
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib
+c000000004C3E49AB000000000000B83B
+t1279150507
+s47163
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel
+c000000004C3E49AB0000000000000088
+t1279150507
+s136
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld
+c000000004C3E49AB0000000000000088
+t1279150507
+s136
+
+N/Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround_Prefix.pch
+c000000004C3E49AB000000000000016C
+t1279150507
+s364
+i<Availability.h>
+i<Foundation/Foundation.h>
+i<UIKit/UIKit.h>
+i<CoreData/CoreData.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/FBDialog.h
+c000000004C3CF96200000000000010DD
+t1279064418
+s4317
+i<Foundation/Foundation.h>
+i<UIKit/UIKit.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/FBLoginDialog.h
+c000000004C3BCE2C0000000000000548
+t1278987820
+s1352
+i"FBDialog.h"
+
+N/Users/yujuan/facebook-ios-sdk/src/FBRequest.h
+c000000004C28ED110000000000000B4A
+t1277750545
+s2890
+i<Foundation/Foundation.h>
+i<UIKit/UIKit.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/Facebook.h
+c000000004C28E9A10000000000000BDB
+t1277749665
+s3035
+i"FBLoginDialog.h"
+i"FBRequest.h"
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/NSObject+SBJSON.h
+c000000004C212D8F0000000000000A01
+t1277242767
+s2561
+i<Foundation/Foundation.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/NSString+SBJSON.h
+c000000004C212D8F0000000000000916
+t1277242767
+s2326
+i<Foundation/Foundation.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/SBJSON.h
+c000000004C212D8F0000000000000AED
+t1277242767
+s2797
+i<Foundation/Foundation.h>
+i"SBJsonParser.h"
+i"SBJsonWriter.h"
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/SBJsonBase.h
+c000000004C212D8F0000000000000B82
+t1277242767
+s2946
+i<Foundation/Foundation.h>
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/SBJsonParser.h
+c000000004C212D8F0000000000000C0B
+t1277242767
+s3083
+i<Foundation/Foundation.h>
+i"SBJsonBase.h"
+
+N/Users/yujuan/facebook-ios-sdk/src/JSON/SBJsonWriter.h
+c000000004C212D8F0000000000001140
+t1277242767
+s4416
+i<Foundation/Foundation.h>
+i"SBJsonBase.h"
+
+N/var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch.gch
+t1279150543
+s13879536
+
+NtheRunAround-Info.plist
+c000000004C3E49AB000000000000038D
+t1279150507
+s909
+
+CCheck dependencies
+r0
+lSLF07#2@18"Check dependencies301272553#301272553#0(0"0(0#1#0"4300911832#0"0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBDialog.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s301264439.883629
+e301264440.077946
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBDialog.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+o/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m: In function '-[FBDialog init]':
+o/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m:339: warning: 'setFont:' is deprecated (declared at /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIButton.h:105)
+lSLF07#2@79"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m301264439#301264440#0(381"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m: In function '-[FBDialog init]':/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m:339: warning: 'setFont:' is deprecated (declared at /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIButton.h:105)1(22@189"'setFont:' is deprecated (declared at /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk/System/Library/Frameworks/UIKit.framework/Headers/UIButton.h:105)301264439#105#276#0(6@71"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m301046864#339#0#339#0#33"'*' is deprecated (declared at *)0(0#0#71"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m4300911832#2177"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBDialog.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBDialog.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginButton.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917147.963514
+e300917148.053641
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginButton.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@82"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m300917147#300917148#0(0"0(0#0#74"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m4300911832#2185"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/FBLoginButton.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginButton.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginDialog.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917150.681481
+e300917150.794095
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginDialog.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@84"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m300917150#300917150#0(0"0(0#0#76"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m4300911832#2187"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBLoginDialog.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBLoginDialog.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBRequest.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917150.461570
+e300917150.683290
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBRequest.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@80"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m300917150#300917150#0(0"0(0#0#72"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m4300911832#2179"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/FBRequest.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/FBRequest.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Facebook.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917150.519211
+e300917150.681374
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Facebook.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@79"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m300917150#300917150#0(0"0(0#0#71"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m4300911832#2177"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/Facebook.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Facebook.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/MyRunViewController.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300928925.312225
+e300928925.448275
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/MyRunViewController.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@88"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m300928925#300928925#0(0"0(0#0#80"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m4300911832#2197"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/MyRunViewController.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/MyRunViewController.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSObject+SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917149.757980
+e300917149.829103
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSObject+SBJSON.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@91"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m300917149#300917150#0(0"0(0#0#83"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m4300911832#2196"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSObject+SBJSON.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSObject+SBJSON.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSString+SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917149.771106
+e300917149.903999
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSString+SBJSON.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@91"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m300917149#300917150#0(0"0(0#0#83"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m4300911832#2196"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/NSString+SBJSON.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/NSString+SBJSON.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/RunViewCell.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300928516.701083
+e300928517.069493
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/RunViewCell.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@80"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m300928516#300928517#0(0"0(0#0#72"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m4300911832#2181"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/RunViewCell.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/RunViewCell.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Runs-E1619738B399158F.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917148.077236
+e300917148.130634
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Runs-E1619738B399158F.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@65"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m300917148#300917148#0(0"0(0#0#57"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m4300911832#2176"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Runs.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/Runs-E1619738B399158F.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJSON.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917149.829218
+e300917150.071575
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJSON.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@82"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m300917149#300917150#0(0"0(0#0#74"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m4300911832#2178"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJSON.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJSON.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonBase.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917149.904094
+e300917150.068060
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonBase.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@86"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m300917149#300917150#0(0"0(0#0#78"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m4300911832#2186"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonBase.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonBase.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonParser.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917150.068173
+e300917150.519024
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonParser.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@88"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m300917150#300917150#0(0"0(0#0#80"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m4300911832#2190"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonParser.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonParser.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonWriter.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917150.071663
+e300917150.461462
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonWriter.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@88"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m300917150#300917150#0(0"0(0#0#80"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m4300911832#2190"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../../src/JSON/SBJsonWriter.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/SBJsonWriter.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/UserInfo.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300929228.576470
+e300929228.777037
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/UserInfo.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@77"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m300929228#300929228#0(0"0(0#0#69"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m4300911832#2175"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/UserInfo.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/UserInfo.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/main.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300917147.799466
+e300917147.963412
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/main.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@65"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m300917147#300917147#0(0"0(0#0#57"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m4300911832#2159"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/main.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/main.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/mainViewController.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s301272497.499240
+e301272497.721588
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/mainViewController.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@87"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m301272497#301272497#0(0"0(0#0#79"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m4300911832#2195"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/mainViewController.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/mainViewController.o0#
+
+CCompileC build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAroundAppDelegate.o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m normal i386 objective-c com.apple.compilers.gcc.4_2
+s300928925.111394
+e300928925.299879
+r1
+xCompileC
+xbuild/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAroundAppDelegate.o
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m
+xnormal
+xi386
+xobjective-c
+xcom.apple.compilers.gcc.4_2
+lSLF07#2@92"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m300928925#300928925#0(0"0(0#0#84"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m4300911832#2205"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv LANG en_US.US-ASCII    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -x objective-c -arch i386 -fmessage-length=0 -pipe -std=c99 -Wno-trigraphs -fpascal-strings -fasm-blocks -O0 -Wreturn-type -Wunused-variable -D__IPHONE_OS_VERSION_MIN_REQUIRED=30000 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -fvisibility=hidden -mmacosx-version-min=10.5 -gdwarf-2 -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-generated-files.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-own-target-headers.hmap -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-all-target-headers.hmap -iquote /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/theRunAround-project-headers.hmap -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/include -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources/i386 -I/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/DerivedSources -include /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/Classes/theRunAroundAppDelegate.m -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAroundAppDelegate.o0#
+
+CCompileXIB /Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib
+s300917145.807438
+e300917147.008552
+r1
+xCompileXIB
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib
+lSLF07#2@25"CompileXIB MainWindow.xib300917145#300917147#0(0"0(0#0#65"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib4300911832#585"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 3.1.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/MainWindow.nib /Users/yujuan/facebook-ios-sdk/sample/theRunAround/MainWindow.xib0#
+
+CCompileXIB /Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib
+s300917145.843846
+e300917147.675214
+r1
+xCompileXIB
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib
+lSLF07#2@33"CompileXIB mainViewController.xib300917145#300917147#0(0"0(0#0#73"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib4300911832#601"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv IBC_MINIMUM_COMPATIBILITY_VERSION 3.1.3    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/mainViewController.nib /Users/yujuan/facebook-ios-sdk/sample/theRunAround/mainViewController.xib0#
+
+CCpResource build/Debug-iphonesimulator/theRunAround.app/FBConnect.bundle ../FBConnect.bundle
+s301264439.727551
+e301264439.827985
+r1
+xCpResource
+xbuild/Debug-iphonesimulator/theRunAround.app/FBConnect.bundle
+x../FBConnect.bundle
+lSLF07#2@24"Copy ../FBConnect.bundle301264439#301264439#0(0"0(0#0#70"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/../FBConnect.bundle4300911832#566"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks /Users/yujuan/facebook-ios-sdk/sample/theRunAround/../FBConnect.bundle /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app0#
+
+CDataModelCompile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/runs.mom /Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel
+s300917147.676976
+e300917147.848205
+r1
+xDataModelCompile
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/runs.mom
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel
+lSLF07#2@75"Compile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel300917147#300917147#0(0"0(0#0#67"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel4300911832#481"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/usr/bin/momc -XD_MOMC_TARGET_VERSION=10.5 /Users/yujuan/facebook-ios-sdk/sample/theRunAround/runs.xcdatamodel /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/runs.mom0#
+
+CDataModelVersionCompile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd /Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld
+s300917147.675475
+e300917147.799365
+r1
+xDataModelVersionCompile
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld
+lSLF07#2@112"DataModelVersionCompile build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd theRunAround.xcdatamodeld300917147#300917147#0(0"0(0#0#76"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld4300911832#499"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/usr/bin/momc -XD_MOMC_TARGET_VERSION=10.5 /Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround.xcdatamodeld /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround.momd0#
+
+CGenerateDSYMFile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app.dSYM /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround
+s301272497.842583
+e301272497.901212
+r1
+xGenerateDSYMFile
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app.dSYM
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround
+lSLF07#2@124"GenerateDSYMFile build/Debug-iphonesimulator/theRunAround.app.dSYM build/Debug-iphonesimulator/theRunAround.app/theRunAround301272497#301272497#0(0"0(0#0#108"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround4300911832#496"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/usr/bin/dsymutil /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app.dSYM0#
+
+CLd /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround normal i386
+s301272497.721682
+e301272497.842477
+r1
+xLd
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround
+xnormal
+xi386
+lSLF07#2@113"Link /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround301272497#301272497#0(0"0(0#0#0"4300911832#1031"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv MACOSX_DEPLOYMENT_TARGET 10.5    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin/gcc-4.2 -arch i386 -isysroot /Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator3.1.3.sdk -L/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -F/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator -filelist /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/theRunAround.build/Debug-iphonesimulator/theRunAround.build/Objects-normal/i386/theRunAround.LinkFileList -mmacosx-version-min=10.5 -framework Foundation -framework UIKit -framework CoreGraphics -framework CoreData -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/theRunAround0#
+
+CProcessInfoPlistFile /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/Info.plist theRunAround-Info.plist
+s300917145.789972
+e300917145.807350
+r1
+xProcessInfoPlistFile
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/Info.plist
+xtheRunAround-Info.plist
+lSLF07#2@31"Process theRunAround-Info.plist300917145#300917145#0(0"0(0#0#74"/Users/yujuan/facebook-ios-sdk/sample/theRunAround/theRunAround-Info.plist4300911832#592"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    builtin-infoPlistUtility theRunAround-Info.plist -genpkginfo /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/PkgInfo -expandbuildsettings -format binary -platform iphonesimulator -o /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app/Info.plist0#
+
+CProcessPCH /var/folders/-m/-mk8-xhnHVmOWbBnhx4MhUQg0UQ/-Caches-/com.apple.Xcode.120326663/SharedPrecompiledHeaders/theRunAround_Prefix-gftldseedtsxdneialsrwjeomorp/theRunAround_Prefix.pch.gch theRunAround_Prefix.pch normal i386 objective-c com.apple.compilers.gcc.4_2
+r0
+
+CTouch /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app
+s301272497.901304
+e301272497.904026
+r1
+xTouch
+x/Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app
+lSLF07#2@101"Touch /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app301272497#301272497#0(0"0(0#0#0"4300911832#369"    cd /Users/yujuan/facebook-ios-sdk/sample/theRunAround    setenv PATH "/Developer/Platforms/iPhoneSimulator.platform/Developer/usr/bin:/Developer/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/opt/local/bin:/usr/local/git/bin"    /usr/bin/touch -c /Users/yujuan/facebook-ios-sdk/sample/theRunAround/build/Debug-iphonesimulator/theRunAround.app0#
+

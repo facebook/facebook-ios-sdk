@@ -237,21 +237,21 @@
 					<int key="connectionID">14</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">_getPublicInfoButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="677071957"/>
+					</object>
+					<int key="connectionID">20</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">getUserInfo2:</string>
+						<string key="label">getPublicInfo:</string>
 						<reference key="source" ref="677071957"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">17</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">_getUserInfoButton2</string>
-						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="677071957"/>
-					</object>
-					<int key="connectionID">18</int>
+					<int key="connectionID">23</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -333,7 +333,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>DemoAppViewController</string>
 					<string>UIResponder</string>
-					<string>{{642, 213}, {320, 480}}</string>
+					<string>{{1021, 332}, {320, 480}}</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>FBLoginButton</string>
@@ -359,7 +359,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">18</int>
+			<int key="maxID">23</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -372,7 +372,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>fbButtonClick:</string>
-							<string>getUserInfo2:</string>
+							<string>getPublicInfo:</string>
 							<string>getUserInfo:</string>
 							<string>publishStream:</string>
 						</object>
@@ -389,8 +389,8 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>_fbButton</string>
+							<string>_getPublicInfoButton</string>
 							<string>_getUserInfoButton</string>
-							<string>_getUserInfoButton2</string>
 							<string>_label</string>
 							<string>_publishButton</string>
 						</object>
@@ -420,14 +420,14 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../../facebook-iphone-sdk/JSON/NSObject+SBJSON.h</string>
+						<string key="minorKey">../../src/JSON/NSObject+SBJSON.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../../facebook-iphone-sdk/JSON/SBJsonWriter.h</string>
+						<string key="minorKey">../../src/JSON/SBJsonWriter.h</string>
 					</object>
 				</object>
 			</object>

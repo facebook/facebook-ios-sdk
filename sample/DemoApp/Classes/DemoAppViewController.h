@@ -27,7 +27,7 @@ FBSessionDelegate>{
   IBOutlet UILabel* _label;
   IBOutlet FBLoginButton* _fbButton;
   IBOutlet UIButton* _getUserInfoButton;
-  IBOutlet UIButton* _getUserInfoButton2;
+  IBOutlet UIButton* _getPublicInfoButton;
   IBOutlet UIButton* _publishButton;
   Facebook* _facebook;
   NSArray* _permissions;
@@ -39,7 +39,7 @@ FBSessionDelegate>{
 
 -(IBAction) getUserInfo: (id) sender;
 
--(IBAction) getUserInfo2: (id)sender;
+-(IBAction) getPublicInfo: (id) sender;
 
 -(IBAction) publishStream: (id) sender;
 
