@@ -181,7 +181,12 @@ BOOL FBIsDeviceIPad() {
 
   _orientation = [UIApplication sharedApplication].statusBarOrientation;
   if (UIInterfaceOrientationIsLandscape(_orientation)) {
-    self.frame = CGRectMake(kPadding, kPadding, height, width);
+    if([self isKindOfClass:[FBLoginDialog class]]){
+      self.frame = CGRectMake(kPadding, kPadding, height, width + 20);
+    } else {
+      self.frame = CGRectMake(kPadding, kPadding, height, width); 
+    }
+
   } else {
     self.frame = CGRectMake(kPadding, kPadding, width, height);
   }

@@ -30,23 +30,28 @@ Install necessary packages
 * Follow the (https://developer.apple.com/iphone/index.action)[iPhone Dev Center Getting Started Documents]. 
 
 * Pull the read-only repository from github. 
-   
-   git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git
-   (if you have trouble, you could also try "git clone http://github.com/facebook/facebook-iphone-sdk-2.0.git")
+
+     git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git   
+  
+  if you have trouble, you could also try 
+     
+     git clone http://github.com/facebook/facebook-iphone-sdk-2.0.git"
 
 Create your own application
 ---------------------------
 
-* Create a Facebook Application: http://www.facebook.com/developers/createapp.php
+* Create a Facebook Application at: http://www.facebook.com/developers/createapp.php
 
-* Check out the mobile documentation: http://developers.facebook.com/docs/guides/mobile/
+* Check out the mobile documentation at: http://developers.facebook.com/docs/guides/mobile/
 
 * Adding Connect to your Xcode project
   * Open the src/FBConnect.xcodeproj project file.
   * Drag the "FBConnect" group into your application's Xcode project.
   * Make sure that the FBConnect headers are in the include path. Go into your project's settings and enter the relative or absolute path to the "src" directory.
   * Include the FBConnect headers in your code:
-      #import "FBConnect/FBConnect.h"
+
+     #import "FBConnect/FBConnect.h"
+
   * You should now be able to compile your project successfully.
 
 Usage
