@@ -31,9 +31,9 @@ Install necessary packages
 
 * Pull the read-only repository from github. 
 
-     git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git   
+       git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git   
   
-  if you have trouble, you could also try 
+if you have trouble, you could also try 
      
      git clone http://github.com/facebook/facebook-iphone-sdk-2.0.git"
 
