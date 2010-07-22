@@ -107,8 +107,14 @@
  *
  * Implementations must call dismissWithSuccess:YES at some point to hide the dialog.
  */
-- (void)dialogDidSucceed:(NSURL*)url;
+- (void)dialogDidSucceed:(NSURL *)url;
 
+/**
+ * Subclasses should override to process data returned from the server in a 'fbconnect' url.
+ *
+ * Implementations must call dismissWithSuccess:YES at some point to hide the dialog.
+ */
+- (void)dialogDidCancel:(NSURL *)url;
 @end
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,6 +135,11 @@
  * Called when the dialog succeeds with a returning url.
  */
 - (void)dialogSucceedWithUrl:(NSURL *)url;
+
+/**
+ * Called when the dialog get canceled by the user.
+ */
+- (void)dialogCancelWithUrl:(NSURL *)url;
 
 /**
  * Called when the dialog is cancelled and is about to be dismissed.

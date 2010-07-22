@@ -90,6 +90,11 @@
 - (void)fbDidLogin;
 
 /**
+ * Called when the user dismiss the dialog without login
+ */
+- (void)fbDidNotLogin;
+
+/**
  * Called when the user is logged out
  */
 - (void)fbDidLogout;

@@ -181,6 +181,13 @@ static NSString* kAppId = @"230820755197";
 }
 
 /**
+ * Callback for facebook did not login
+ */
+- (void)fbDidNotLogin {
+  NSLog(@"did not login");
+}
+
+/**
  * Callback for facebook logout
  */ 
 -(void) fbDidLogout {
@@ -191,6 +198,7 @@ static NSString* kAppId = @"230820755197";
   _fbButton.isLoggedIn         = NO;
   [_fbButton updateImage];
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FBRequestDelegate

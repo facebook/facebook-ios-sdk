@@ -17,6 +17,7 @@
 #import "mainViewController.h"
 #import "FBConnect.h"
 #import "Runs.h"
+#import "Session.h"
 
 
 
@@ -41,6 +42,7 @@ static NSString* kAppId = @"230820755197";
 }
 
 - (void) logout {
+  [_session unsave];
   [_facebook logout:self]; 
 }
 
@@ -69,16 +71,25 @@ static NSString* kAppId = @"230820755197";
   _distance.returnKeyType = UIReturnKeyDone;
   _distance.delegate = self;
   
-  _facebook = [[[[Facebook alloc] init] autorelease] retain];
-  
-  _fbButton.isLoggedIn   = NO;
-  [_fbButton updateImage];
-  _addRunButton.hidden = YES;
+  _session = [[Session alloc] init];
+  _facebook = [[_session restore] retain];
+  if (_facebook == nil) {
+    _facebook = [[[[Facebook alloc] init] autorelease] retain];
+    _fbButton.isLoggedIn = NO;
+    _addRunButton.hidden = YES;
+    [self.view addSubview:self.logoutView];
+  } else {
+    _fbButton.isLoggedIn = YES;
+    _addRunButton.hidden = NO;
+    [self fbDidLogin];
+    [self.view addSubview:self.loginView];
+  }
 
+  [_fbButton updateImage];
   [[self view] addSubview:[self headerView]];
   [_headerView addSubview:_fbButton];
 
-  [self.view addSubview:self.logoutView];
+  
   
 }
 
@@ -210,6 +221,7 @@ static NSString* kAppId = @"230820755197";
    _fbButton.isLoggedIn         = YES;
   [_fbButton updateImage];
   _addRunButton.hidden = NO;
+  
   _userInfo = [[[[UserInfo alloc] initializeWithFacebook:_facebook andDelegate: self] 
                 autorelease] 
                retain];
@@ -222,6 +234,7 @@ static NSString* kAppId = @"230820755197";
  * FBSessionDelegate
  */ 
 -(void) fbDidLogout {
+  [_session unsave];
   [_loginView removeFromSuperview];
   [self.view addSubview:_logoutView];
   _fbButton.isLoggedIn         = NO;
@@ -233,6 +246,9 @@ static NSString* kAppId = @"230820755197";
  * UserInfoLoadDelegate
  */
 - (void)userInfoDidLoad {
+  [_session setSessionWithFacebook:_facebook andUid:_userInfo.uid];
+  [_session save];
+  
   _myRunController = [[MyRunViewController alloc] init];
   _myRunController.managedObjectContext = _managedObjectContext;
   _myRunController.userInfo = _userInfo;

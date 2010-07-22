@@ -19,6 +19,7 @@
 #import "FBConnect.h"
 #import "UserInfo.h"
 #import "MyRunViewController.h"
+#import "Session.h"
 
 @class Runs;
 
@@ -30,6 +31,7 @@
   IBOutlet FBLoginButton* _fbButton;
   IBOutlet UIButton* _addRunButton;
   Facebook *_facebook;
+  Session *_session;
   NSArray *_permissions;
   UserInfo *_userInfo;
   MyRunViewController *_myRunController;

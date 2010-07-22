@@ -37,9 +37,11 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-@protocol FBLoginDialogDelegate <NSObject>
+@protocol FBLoginDialogDelegate <NSObject> 
 
-- (void)fbDialogLogin:(NSString *) token expirationDate:(NSDate *) expirationDate;
+- (void) fbDialogLogin:(NSString *) token expirationDate:(NSDate *) expirationDate;
+
+- (void) fbDialogNotLogin;
 
 @end
 

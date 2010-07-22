@@ -403,6 +403,16 @@ static NSString* kSDKVersion = @"ios";
   
 }
 
+/**
+ * Did not login call the not login delegate
+ */
+- (void) fbDialogNotLogin {
+  if ([self.sessionDelegate respondsToSelector:@selector(fbDidNotLogin)]) {
+    [_sessionDelegate fbDidNotLogin];
+  }
+}
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //FBRequestDelegate
 

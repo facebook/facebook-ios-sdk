@@ -307,6 +307,7 @@ BOOL FBIsDeviceIPad() {
 }
 
 - (void)cancel {
+  [self dialogDidCancel:nil];
   [self dismissWithSuccess:NO animated:YES];
 }
 
@@ -424,6 +425,7 @@ BOOL FBIsDeviceIPad() {
                                           userInfo:errorData];
         [self dismissWithError:error animated:YES];
       } else {
+        [self dialogDidCancel:url];
         [self dismissWithSuccess:NO animated:YES];        
       }
     } else {
@@ -667,10 +669,18 @@ BOOL FBIsDeviceIPad() {
 }
 
 - (void)dialogDidSucceed:(NSURL *)url {
+  
   if ([_delegate respondsToSelector:@selector(dialogSucceedWithUrl:)]) {
     [_delegate dialogSucceedWithUrl:url];
   }
-  [self dismissWithSuccess:YES animated:YES];
+  [self dismissWithSuccess:YES animated:YES];  
+}
+
+- (void)dialogDidCancel:(NSURL *)url {
+  if ([_delegate respondsToSelector:@selector(dialogCancelWithUrl:)]) {
+    [_delegate dialogCancelWithUrl:url];
+  }
+  [self dismissWithSuccess:NO animated:YES];
 }
 
 @end
