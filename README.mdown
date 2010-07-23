@@ -13,8 +13,6 @@ This is an alpha release. In order to guide the development of the library and a
 Known Issues
 ------------
 
-* Binary API parameters (such as uploading pictures) is not yet supported -- coming soon, but if you have already implemented it, feel free to send us a patch!
-
 * The dialog webviews may be blank if an error occurs -- we are working on figuring these out and providing more debugging information. Sorry for the frustration.
 
 * If you see "an invalid next or cancel parameter was specified" message in the login dialog, then you need to migrate your application to the New Data Permissions. This can be done by going to http://www.facebook.com/developers/apps.php then selecting the application you are testing with, and clicking "Edit Settings" (the third item underneath Total Users). On the settings page, click on Migrations (bottom of the left menu), then set New Data Permissions to "Enabled"
