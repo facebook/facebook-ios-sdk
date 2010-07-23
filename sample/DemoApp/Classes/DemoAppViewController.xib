@@ -152,6 +152,25 @@
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="572866613"/>
 					</object>
+					<object class="IBUIButton" id="561178455">
+						<reference key="NSNextResponder" ref="191373211"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrame">{{100, 253}, {120, 37}}</string>
+						<reference key="NSSuperview" ref="191373211"/>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<reference key="IBUIFont" ref="915421114"/>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">photo upload</string>
+						<reference key="IBUIHighlightedTitleColor" ref="770377711"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="572866613"/>
+					</object>
 				</object>
 				<string key="NSFrameSize">{320, 460}</string>
 				<reference key="NSSuperview"/>
@@ -253,6 +272,23 @@
 					</object>
 					<int key="connectionID">23</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">uploadPhoto:</string>
+						<reference key="source" ref="561178455"/>
+						<reference key="destination" ref="372490531"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">25</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">_uploadPhotoButton</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="561178455"/>
+					</object>
+					<int key="connectionID">26</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -273,6 +309,7 @@
 							<reference ref="677071957"/>
 							<reference ref="809253328"/>
 							<reference ref="454090630"/>
+							<reference ref="561178455"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -312,6 +349,11 @@
 						<reference key="object" ref="677071957"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">24</int>
+						<reference key="object" ref="561178455"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -323,6 +365,7 @@
 					<string>1.IBEditorWindowLastContentRect</string>
 					<string>1.IBPluginDependency</string>
 					<string>15.IBPluginDependency</string>
+					<string>24.IBPluginDependency</string>
 					<string>4.CustomClassName</string>
 					<string>4.IBPluginDependency</string>
 					<string>5.IBPluginDependency</string>
@@ -334,6 +377,7 @@
 					<string>DemoAppViewController</string>
 					<string>UIResponder</string>
 					<string>{{1021, 332}, {320, 480}}</string>
+					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 					<string>FBLoginButton</string>
@@ -359,7 +403,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">23</int>
+			<int key="maxID">26</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -375,9 +419,11 @@
 							<string>getPublicInfo:</string>
 							<string>getUserInfo:</string>
 							<string>publishStream:</string>
+							<string>uploadPhoto:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -393,6 +439,7 @@
 							<string>_getUserInfoButton</string>
 							<string>_label</string>
 							<string>_publishButton</string>
+							<string>_uploadPhotoButton</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -400,6 +447,7 @@
 							<string>UIButton</string>
 							<string>UIButton</string>
 							<string>UILabel</string>
+							<string>UIButton</string>
 							<string>UIButton</string>
 						</object>
 					</object>

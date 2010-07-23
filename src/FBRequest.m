@@ -67,6 +67,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   NSMutableArray* pairs = [NSMutableArray array];
   for (NSString* key in [_params keyEnumerator]) {
+    if ([(NSString *)key isEqualToString:@"dataParam"]) {
+      if ([_httpMethod isEqualToString:@"GET"]) {
+        NSLog(@"can not use GET to upload a file");
+      }
+      continue;
+    } 
     NSString* value = [[_params objectForKey:key] 
       stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
@@ -86,19 +92,44 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /**
  * Generate body for POST method
  */
-- (NSMutableData*)generatePostBody {
-  NSMutableData* body = [NSMutableData data];
-  NSString* endLine = [NSString stringWithFormat:@"\r\n--%@\r\n", kStringBoundary];
+- (NSMutableData *)generatePostBody {
+  NSMutableData *body = [NSMutableData data];
+  NSString *endLine = [NSString stringWithFormat:@"\r\n--%@\r\n", kStringBoundary];
+  NSObject *dataParam =nil;
   
   [self utfAppendBody:body data:[NSString stringWithFormat:@"--%@\r\n", kStringBoundary]];
   
   for (id key in [_params keyEnumerator]) {
+    if ([(NSString *)key isEqualToString:@"dataParam"]) {
+      dataParam = [_params valueForKey:key];
+      continue;
+    } 
     [self utfAppendBody:body
-                   data:[NSString 
-                         stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", 
-                         key]];
+                  data:[NSString 
+                        stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", 
+                        key]];
     [self utfAppendBody:body data:[_params valueForKey:key]];
     [self utfAppendBody:body data:endLine];
+    
+  }
+  
+  if (dataParam != nil) {
+    if ([dataParam isKindOfClass:[UIImage class]]) {
+      NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
+      [self utfAppendBody:body
+                     data:[NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"photo\"\r\n"]];
+      [self utfAppendBody:body
+                     data:[NSString stringWithString:@"Content-Type: image/png\r\n\r\n"]];
+      [body appendData:imageData];
+    } else {
+      NSAssert([dataParam isKindOfClass:[NSData class]], @"dataParam must be a UIImage or NSData");
+      [self utfAppendBody:body
+                     data:[NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"data\"\r\n"]];
+      [self utfAppendBody:body
+                     data:[NSString stringWithString:@"Content-Type: content/unknown\r\n\r\n"]];
+      [body appendData:(NSData*)dataParam];
+    }
+    [self utfAppendBody:body data:endLine];    
   }
   return body;
 }
@@ -208,7 +239,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   
   
   [request setHTTPMethod:self.httpMethod];
-  if (self.httpMethod == @"POST") {  
+  if ([self.httpMethod isEqualToString: @"POST"]) {  
     NSString* contentType = [NSString
                              stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
     [request setValue:contentType forHTTPHeaderField:@"Content-Type"];

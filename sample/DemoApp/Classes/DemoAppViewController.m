@@ -50,6 +50,7 @@ static NSString* kAppId = @"230820755197";
   _getUserInfoButton.hidden    = YES;
   _getPublicInfoButton.hidden   = YES;
   _publishButton.hidden        = YES;
+  _uploadPhotoButton.hidden    = YES;
   _fbButton.isLoggedIn   = NO;
   [_fbButton updateImage];
   
@@ -64,6 +65,7 @@ static NSString* kAppId = @"230820755197";
   [_getUserInfoButton release];
   [_getPublicInfoButton release];
   [_publishButton release];
+  [_uploadPhotoButton release];
   [_facebook release];
   [_permissions release];
   [super dealloc];
@@ -160,7 +162,21 @@ static NSString* kAppId = @"230820755197";
 }
 
 
-
+-(IBAction) uploadPhoto: (id)sender {
+  NSString *path = @"http://www.facebook.com/images/devsite/iphone_connect_btn.jpg";
+  NSURL    *url  = [NSURL URLWithString:path];
+  NSData   *data = [NSData dataWithContentsOfURL:url];
+  UIImage  *img  = [[UIImage alloc] initWithData:data];
+  
+  NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                  img, @"dataParam",
+                                  nil];
+  [_facebook requestWithMethodName: @"photos.upload" 
+                         andParams: params
+                     andHttpMethod: @"POST" 
+                       andDelegate: self]; 
+  
+}
 
 // Override to allow orientations other than the default portrait orientation.
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -176,6 +192,7 @@ static NSString* kAppId = @"230820755197";
   _getUserInfoButton.hidden    = NO;
   _getPublicInfoButton.hidden   = NO;
   _publishButton.hidden        = NO;
+  _uploadPhotoButton.hidden    = NO;
   _fbButton.isLoggedIn         = YES;
   [_fbButton updateImage];
 }
@@ -195,6 +212,7 @@ static NSString* kAppId = @"230820755197";
   _getUserInfoButton.hidden    = YES;
   _getPublicInfoButton.hidden   = YES;
   _publishButton.hidden        = YES;
+  _uploadPhotoButton.hidden = YES;
   _fbButton.isLoggedIn         = NO;
   [_fbButton updateImage];
 }
@@ -226,7 +244,11 @@ static NSString* kAppId = @"230820755197";
   if ([result isKindOfClass:[NSArray class]]) {
     result = [result objectAtIndex:0]; 
   }
-  [self.label setText:[result objectForKey:@"name"]];
+  if ([result objectForKey:@"link"]) {
+    [self.label setText:@"Photo upload Success"];
+  } else {
+    [self.label setText:[result objectForKey:@"name"]];
+  }
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

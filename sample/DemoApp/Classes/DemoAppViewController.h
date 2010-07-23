@@ -29,6 +29,7 @@ FBSessionDelegate>{
   IBOutlet UIButton* _getUserInfoButton;
   IBOutlet UIButton* _getPublicInfoButton;
   IBOutlet UIButton* _publishButton;
+  IBOutlet UIButton* _uploadPhotoButton;
   Facebook* _facebook;
   NSArray* _permissions;
 }
@@ -42,5 +43,7 @@ FBSessionDelegate>{
 -(IBAction) getPublicInfo: (id) sender;
 
 -(IBAction) publishStream: (id) sender;
+
+-(IBAction) uploadPhoto: (id)sender;
 
 @end
