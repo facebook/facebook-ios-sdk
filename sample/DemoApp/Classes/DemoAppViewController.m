@@ -167,9 +167,9 @@ static NSString* kAppId = @"230820755197";
   NSURL    *url  = [NSURL URLWithString:path];
   NSData   *data = [NSData dataWithContentsOfURL:url];
   UIImage  *img  = [[UIImage alloc] initWithData:data];
-  
+ 
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                  img, @"dataParam",
+                                  img, @"picture",
                                   nil];
   [_facebook requestWithMethodName: @"photos.upload" 
                          andParams: params

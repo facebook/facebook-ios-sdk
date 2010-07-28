@@ -48,4 +48,6 @@
 
 - (void)userInfoDidLoad;
 
+- (void)userInfoFailToLoad;
+
 @end

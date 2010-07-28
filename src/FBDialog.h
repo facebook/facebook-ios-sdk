@@ -78,9 +78,7 @@
  * Displays a URL in the dialog.
  */
 - (void)loadURL:(NSString*)url 
-         method:(NSString*)method 
-            get:(NSDictionary*)getParams
-           post:(NSDictionary*)postParams;
+            get:(NSDictionary*)getParams;
 
 /**
  * Hides the view and notifies delegates of success or cancellation.

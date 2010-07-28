@@ -115,5 +115,11 @@
   }
 }
 
+- (void)request:(FBRequest*)request didFailWithError:(NSError*)error {
+  NSLog(@"%@",[error localizedDescription]);
+  if ([self.userInfoDelegate respondsToSelector:@selector(userInfoFailToLoad)]) {
+    [_userInfoDelegate userInfoFailToLoad];
+  }
+}
 
 @end

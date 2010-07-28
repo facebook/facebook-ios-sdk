@@ -22,7 +22,6 @@
 // global
 
 static NSString* kDefaultTitle = @"Connect to Facebook";
-static NSString* kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 
 static CGFloat kFacebookBlue[4] = {0.42578125, 0.515625, 0.703125, 1.0};
 static CGFloat kBorderGray[4] = {0.3, 0.3, 0.3, 0.8};
@@ -240,28 +239,6 @@ BOOL FBIsDeviceIPad() {
   } else {
     return [NSURL URLWithString:baseURL];
   }
-}
-
-- (NSMutableData*)generatePostBody:(NSDictionary*)params {
-  if (!params) {
-    return nil;
-  }
-  
-  NSMutableData* body = [NSMutableData data];
-  NSString* endLine = [NSString stringWithFormat:@"\r\n--%@\r\n", kStringBoundary];
-
-  [body appendData:[[NSString stringWithFormat:@"--%@\r\n", kStringBoundary]
-    dataUsingEncoding:NSUTF8StringEncoding]];
-  
-  for (id key in [params keyEnumerator]) {
-    [body appendData:[[NSString
-      stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key]
-        dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[[params valueForKey:key] dataUsingEncoding:NSUTF8StringEncoding]];
-    [body appendData:[endLine dataUsingEncoding:NSUTF8StringEncoding]];        
-  }
-
-  return body;
 }
 
 - (void)addObservers {
@@ -556,31 +533,15 @@ BOOL FBIsDeviceIPad() {
 }
 
 - (void)load {
-  [self loadURL:_serverURL method:@"GET" get:_params post:nil];
+  [self loadURL:_serverURL get:_params];
 }
 
-- (void)loadURL:(NSString*)url method:(NSString*)method get:(NSDictionary*)getParams
-           post:(NSDictionary*)postParams {
+- (void)loadURL:(NSString*)url get:(NSDictionary*)getParams {
   
   [_loadingURL release];
   _loadingURL = [[self generateURL:url params:getParams] retain];
   NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_loadingURL];
-  
-  if (method) {
-    [request setHTTPMethod:method];
-    
-    if ([[method uppercaseString] isEqualToString:@"POST"]) {
-      NSString* contentType = [NSString
-                               stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
-      [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-      
-      NSData* body = [self generatePostBody:postParams];
-      if (body) {
-        [request setHTTPBody:body];
-      }
-    }
-  }
-  
+
   [_webView loadRequest:request];
 }
 

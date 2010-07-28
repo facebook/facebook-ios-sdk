@@ -257,6 +257,13 @@ static NSString* kAppId = @"230820755197";
   [_loginView addSubview:self.myRunController.view];
 }
 
+- (void)userInfoFailToLoad {
+  [self logout]; 
+  _fbButton.isLoggedIn = NO;
+  _addRunButton.hidden = YES;
+  [self.view addSubview:self.logoutView];
+  
+}
 /**
  * UITextFieldDelegate
  */
@@ -264,5 +271,6 @@ static NSString* kAppId = @"230820755197";
   [textField resignFirstResponder];
   return YES;
 }
+
 
 @end
