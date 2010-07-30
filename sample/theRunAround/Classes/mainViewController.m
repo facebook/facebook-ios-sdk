@@ -95,8 +95,7 @@ static NSString* kAppId = @"230820755197";
 
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-  // Return YES for supported orientations
-  return YES;
+  return NO;
 }
 
 - (void)dealloc {
