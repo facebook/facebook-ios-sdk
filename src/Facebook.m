@@ -187,7 +187,7 @@ static NSString* kSDKVersion = @"ios";
  *  
  * @param parameters
  *            Key-value pairs of parameters to the request. Refer to the
- *            documentation: one of the parameters must be "method".
+ *            documentation: one of the parameters must be "method". 
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
@@ -219,7 +219,11 @@ static NSString* kSDKVersion = @"ios";
  *             a valid REST server API method.
  * @param parameters
  *            Key-value pairs of parameters to the request. Refer to the
- *            documentation: one of the parameters must be "method".
+ *            documentation: one of the parameters must be "method". To upload
+ *            a file, you should specify the httpMethod to be "POST" and the 
+ *            “params” you passed in should contain a value of the type 
+ *            (UIImage *) or (NSData *) which contains the content that you 
+ *            want to upload
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
@@ -305,6 +309,10 @@ static NSString* kSDKVersion = @"ios";
  *            parameters {"q" : "facebook"} would produce a query for the
  *            following graph resource:
  *            https://graph.facebook.com/search?q=facebook
+ *            To upload a file, you should specify the httpMethod to be 
+ *            "POST" and the “params” you passed in should contain a value 
+ *            of the type (UIImage *) or (NSData *) which contains the 
+ *            content that you want to upload
  * @param httpMethod
  *            http verb, e.g. "GET", "POST", "DELETE"
  * @param delegate

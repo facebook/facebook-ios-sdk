@@ -115,8 +115,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                         stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", 
                         key]];
     [self utfAppendBody:body data:[_params valueForKey:key]];
-    [self utfAppendBody:body data:endLine];
     
+    [self utfAppendBody:body data:endLine];   
   }
   
   if ([dataDictionary count] > 0) {
@@ -125,14 +125,17 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
       if ([dataParam isKindOfClass:[UIImage class]]) {
         NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
         [self utfAppendBody:body
-                       data:[NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"photo\"\r\n"]];
+                       data:[NSString stringWithFormat:
+                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
         [self utfAppendBody:body
                        data:[NSString stringWithString:@"Content-Type: image/png\r\n\r\n"]];
         [body appendData:imageData];
       } else {
-        NSAssert([dataParam isKindOfClass:[NSData class]], @"dataParam must be a UIImage or NSData");
+        NSAssert([dataParam isKindOfClass:[NSData class]], 
+                 @"dataParam must be a UIImage or NSData");
         [self utfAppendBody:body
-                       data:[NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"data\"\r\n"]];
+                       data:[NSString stringWithFormat:
+                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
         [self utfAppendBody:body
                        data:[NSString stringWithString:@"Content-Type: content/unknown\r\n\r\n"]];
         [body appendData:(NSData*)dataParam];
