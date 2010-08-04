@@ -5,15 +5,9 @@ This open source iPhone library allows you to integrate Facebook into your iPhon
 
 Except as otherwise noted, the Facebook Connect iPhone SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Alpha Status
-------------
-
-This is an alpha release. In order to guide the development of the library and allow you to freely inspect and use the source, we have open-sourced the library. The underlying APIs are generally stable, however we may make changes to the library in response to developer feedback.
-
 Known Issues
 ------------
-
-* The dialog webviews may be blank if an error occurs -- we are working on figuring these out and providing more debugging information. Sorry for the frustration.
+* If you see an "Missing client_id" error, that means you did not set your application id. For our demo app to run, you need to set your app id in the file DemoAppViewController.m of DemoApp or mainViewController in theRunAround, set the kAppId to be your own app id in string format. 
 
 * If you see "an invalid next or cancel parameter was specified" message in the login dialog, then you need to migrate your application to the New Data Permissions. This can be done by going to http://www.facebook.com/developers/apps.php then selecting the application you are testing with, and clicking "Edit Settings" (the third item underneath Total Users). On the settings page, click on Migrations (bottom of the left menu), then set New Data Permissions to "Enabled"
 

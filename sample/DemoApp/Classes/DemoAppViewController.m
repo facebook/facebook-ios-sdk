@@ -20,7 +20,7 @@
 
 // Your Facebook APP Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
-static NSString* kAppId = @"230820755197";
+static NSString* kAppId = nil;
 
 @implementation DemoAppViewController
 
