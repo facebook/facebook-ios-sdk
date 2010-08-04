@@ -1,9 +1,9 @@
-Facebook Connect for iPhone
+Facebook Connect for iOS
 ===========================
 
-This open source iPhone library allows you to integrate Facebook into your iPhone application.
+This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
-Except as otherwise noted, the Facebook Connect iPhone SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
+Except as otherwise noted, the Facebook Connect iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Known Issues
 ------------
@@ -51,11 +51,11 @@ Create your own application
 Usage
 -----
 
-With the iPhone SDK, you can do three main things:
+With the iOS SDK, you can do three main things:
 
 * Authorize users: prompt users to log in to facebook and grant access permission to your application.
 
-User credentials are not handled by the iPhone application in this SDK: authentication is done in an embedded webView using the OAuth 2.0 User-Agent flow to obtain an access token.
+User credentials are not handled by the iOS application in this SDK: authentication is done in an embedded webView using the OAuth 2.0 User-Agent flow to obtain an access token.
 
 * Make API requests
 
@@ -63,7 +63,7 @@ Requests to the Facebook Graph and REST APIs are supported in this SDK. Authenti
 
 * Display a Facebook dialog
 
-The SDK supports several WebView html dialogs for user interactions, such as creating a wall post. This is intended to provided quick Facebook functionality without having to implement a native iPhone UI and pass data to facebook directly though the APIs.
+The SDK supports several WebView html dialogs for user interactions, such as creating a wall post. This is intended to provided quick Facebook functionality without having to implement a native iOS UI and pass data to facebook directly though the APIs.
 
 Authentication and Authorization
 --------------------------------
