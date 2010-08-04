@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		1D3623260D0F684500981E51 /* DemoAppAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* DemoAppAppDelegate.m */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
-		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
-		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
-		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		28AD733F0D9D9553002E5188 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.xib */; };
 		AE2AFB7E11E43A49005AE0C5 /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2AFB6A11E43A49005AE0C5 /* NSObject+SBJSON.m */; };
 		AE2AFB7F11E43A49005AE0C5 /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2AFB6C11E43A49005AE0C5 /* NSString+SBJSON.m */; };
@@ -25,18 +22,18 @@
 		AE2AFB8711E43A49005AE0C5 /* FBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2AFB7D11E43A49005AE0C5 /* FBDialog.m */; };
 		AE3FC2F611F19A6B001C05F3 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AE3FC2F511F19A6B001C05F3 /* FBConnect.bundle */; };
 		AE3FC32A11F19C3F001C05F3 /* FBDialog.bundle in Resources */ = {isa = PBXBuildFile; fileRef = AE3FC32911F19C3F001C05F3 /* FBDialog.bundle */; };
+		AE4DC3811208F8C900A43A8B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE4DC3801208F8C900A43A8B /* Foundation.framework */; };
+		AE4DC3871208F8FE00A43A8B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE4DC3861208F8FE00A43A8B /* UIKit.framework */; };
+		AE4DC49B1209087B00A43A8B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE4DC3951208F93E00A43A8B /* CoreGraphics.framework */; };
 		AEE8F65211CC8EB3008BF99E /* DemoAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE8F65011CC8EB3008BF99E /* DemoAppViewController.m */; };
 		AEE8F65311CC8EB3008BF99E /* DemoAppViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEE8F65111CC8EB3008BF99E /* DemoAppViewController.xib */; };
 		AEE8F65611CC8EF1008BF99E /* FBLoginButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AEE8F65511CC8EF1008BF99E /* FBLoginButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3623240D0F684500981E51 /* DemoAppAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAppAppDelegate.h; sourceTree = "<group>"; };
 		1D3623250D0F684500981E51 /* DemoAppAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAppAppDelegate.m; sourceTree = "<group>"; };
 		1D6058910D05DD3D006BFB54 /* DemoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DemoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		288765FC0DF74451002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		28AD733E0D9D9553002E5188 /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainWindow.xib; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* DemoApp_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoApp_Prefix.pch; sourceTree = "<group>"; };
@@ -65,6 +62,9 @@
 		AE2AFB7D11E43A49005AE0C5 /* FBDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBDialog.m; path = ../../src/FBDialog.m; sourceTree = SOURCE_ROOT; };
 		AE3FC2F511F19A6B001C05F3 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBConnect.bundle; path = ../FBConnect.bundle; sourceTree = SOURCE_ROOT; };
 		AE3FC32911F19C3F001C05F3 /* FBDialog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBDialog.bundle; path = ../../src/FBDialog.bundle; sourceTree = SOURCE_ROOT; };
+		AE4DC3801208F8C900A43A8B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		AE4DC3861208F8FE00A43A8B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		AE4DC3951208F93E00A43A8B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		AEE8F64F11CC8EB3008BF99E /* DemoAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DemoAppViewController.h; sourceTree = "<group>"; };
 		AEE8F65011CC8EB3008BF99E /* DemoAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DemoAppViewController.m; sourceTree = "<group>"; };
 		AEE8F65111CC8EB3008BF99E /* DemoAppViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = DemoAppViewController.xib; path = Classes/DemoAppViewController.xib; sourceTree = "<group>"; };
@@ -77,9 +77,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
-				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
-				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
+				AE4DC3811208F8C900A43A8B /* Foundation.framework in Frameworks */,
+				AE4DC3871208F8FE00A43A8B /* UIKit.framework in Frameworks */,
+				AE4DC49B1209087B00A43A8B /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,9 +143,9 @@
 		29B97323FDCFA39411CA2CEA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				1DF5F4DF0D08C38300B7A737 /* UIKit.framework */,
-				1D30AB110D05D00D00671497 /* Foundation.framework */,
-				288765FC0DF74451002DB57D /* CoreGraphics.framework */,
+				AE4DC3861208F8FE00A43A8B /* UIKit.framework */,
+				AE4DC3801208F8C900A43A8B /* Foundation.framework */,
+				AE4DC3951208F93E00A43A8B /* CoreGraphics.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -276,6 +276,7 @@
 				GCC_PREFIX_HEADER = DemoApp_Prefix.pch;
 				INFOPLIST_FILE = "DemoApp-Info.plist";
 				PRODUCT_NAME = DemoApp;
+				SDKROOT = iphonesimulator4.0;
 			};
 			name = Debug;
 		};
@@ -296,12 +297,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "Don't Code Sign";
+				ENABLE_OPENMP_SUPPORT = YES;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphonesimulator4.0;
+				VALID_ARCHS = "armv8 armv7 i386";
 			};
 			name = Debug;
 		};
@@ -315,7 +319,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphoneos3.2;
 			};
 			name = Release;
 		};

@@ -244,7 +244,7 @@ static NSString* kAppId = nil;
   if ([result isKindOfClass:[NSArray class]]) {
     result = [result objectAtIndex:0]; 
   }
-  if ([result objectForKey:@"link"]) {
+  if ([result objectForKey:@"owner"]) {
     [self.label setText:@"Photo upload Success"];
   } else {
     [self.label setText:[result objectForKey:@"name"]];

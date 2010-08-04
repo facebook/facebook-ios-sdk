@@ -354,7 +354,7 @@
 				PREBINDING = NO;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos3.1.3;
+				SDKROOT = iphonesimulator4.0;
 			};
 			name = Debug;
 		};
