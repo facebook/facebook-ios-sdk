@@ -11,6 +11,8 @@ Known Issues
 
 * If you see "an invalid next or cancel parameter was specified" message in the login dialog, then you need to migrate your application to the New Data Permissions. This can be done by going to http://www.facebook.com/developers/apps.php then selecting the application you are testing with, and clicking "Edit Settings" (the third item underneath Total Users). On the settings page, click on Migrations (bottom of the left menu), then set New Data Permissions to "Enabled"
 
+* The dialog webviews may be blank if an error occurs -- we are working on figuring these out and providing more debugging information. Sorry for the frustration.
+
 Getting Started
 ===============
 
