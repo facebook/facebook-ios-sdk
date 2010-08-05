@@ -36,6 +36,8 @@
 		AEBDBB6811DACEF3002E8C4D /* FBLoginButton.m in Sources */ = {isa = PBXBuildFile; fileRef = AEBDBB6711DACEF3002E8C4D /* FBLoginButton.m */; };
 		AEBDBB6B11DACEFD002E8C4D /* mainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AEBDBB6A11DACEFD002E8C4D /* mainViewController.m */; };
 		AEBDBB6E11DACF1E002E8C4D /* mainViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = AEBDBB6D11DACF1E002E8C4D /* mainViewController.xib */; };
+		AED48D95120A2F2800F3F2E7 /* UserRequestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AED48D94120A2F2800F3F2E7 /* UserRequestResult.m */; };
+		AED48D98120A2F4A00F3F2E7 /* FriendsRequestResult.m in Sources */ = {isa = PBXBuildFile; fileRef = AED48D97120A2F4A00F3F2E7 /* FriendsRequestResult.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,6 +93,10 @@
 		AEBDBB6911DACEFD002E8C4D /* mainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mainViewController.h; sourceTree = "<group>"; };
 		AEBDBB6A11DACEFD002E8C4D /* mainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = mainViewController.m; sourceTree = "<group>"; };
 		AEBDBB6D11DACF1E002E8C4D /* mainViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = mainViewController.xib; sourceTree = "<group>"; };
+		AED48D93120A2F2800F3F2E7 /* UserRequestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserRequestResult.h; sourceTree = "<group>"; };
+		AED48D94120A2F2800F3F2E7 /* UserRequestResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserRequestResult.m; sourceTree = "<group>"; };
+		AED48D96120A2F4A00F3F2E7 /* FriendsRequestResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FriendsRequestResult.h; sourceTree = "<group>"; };
+		AED48D97120A2F4A00F3F2E7 /* FriendsRequestResult.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FriendsRequestResult.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +131,10 @@
 				AE63F45611E3B26400CB0B36 /* RunViewCell.m */,
 				AE81776711F79EEF00B22254 /* Session.h */,
 				AE81776811F79EEF00B22254 /* Session.m */,
+				AED48D93120A2F2800F3F2E7 /* UserRequestResult.h */,
+				AED48D94120A2F2800F3F2E7 /* UserRequestResult.m */,
+				AED48D96120A2F4A00F3F2E7 /* FriendsRequestResult.h */,
+				AED48D97120A2F4A00F3F2E7 /* FriendsRequestResult.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -309,6 +319,8 @@
 				AE8178D711F7CD8D00B22254 /* Facebook.m in Sources */,
 				AE8178D811F7CD8D00B22254 /* FBLoginDialog.m in Sources */,
 				AE8178D911F7CD8D00B22254 /* FBDialog.m in Sources */,
+				AED48D95120A2F2800F3F2E7 /* UserRequestResult.m in Sources */,
+				AED48D98120A2F4A00F3F2E7 /* FriendsRequestResult.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,6 +338,7 @@
 				GCC_PREFIX_HEADER = theRunAround_Prefix.pch;
 				INFOPLIST_FILE = "theRunAround-Info.plist";
 				PRODUCT_NAME = theRunAround;
+				SDKROOT = iphonesimulator3.2;
 			};
 			name = Debug;
 		};
@@ -338,6 +351,7 @@
 				GCC_PREFIX_HEADER = theRunAround_Prefix.pch;
 				INFOPLIST_FILE = "theRunAround-Info.plist";
 				PRODUCT_NAME = theRunAround;
+				SDKROOT = iphonesimulator3.2;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

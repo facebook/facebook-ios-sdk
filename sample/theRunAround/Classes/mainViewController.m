@@ -23,7 +23,7 @@
 
 // Your Facebook App Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
-static NSString* kAppId = nil;
+static NSString* kAppId = @"230820755197";
 
 @implementation mainViewController
 

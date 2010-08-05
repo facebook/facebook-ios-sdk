@@ -18,6 +18,7 @@
 #import "FBConnect.h"
 
 
+
 @implementation UserInfo
 
 @synthesize facebook = _facebook,
@@ -62,7 +63,9 @@
  * an intermediate solution to get the logged in user id.
  */
 - (void) requestUid{
-  [_facebook requestWithGraphPath:@"me" andDelegate:self];
+  UserRequestResult *userRequestResult = 
+    [[[[UserRequestResult alloc] initializeWithDelegate:self] autorelease] retain];
+  [_facebook requestWithGraphPath:@"me" andDelegate:userRequestResult];
 }
 
 /** 
@@ -71,6 +74,9 @@
  * Use FQL to query detailed friends information
  */
 - (void) requestFriendsDetail{
+  FriendsRequestResult *friendsRequestResult = 
+    [[[[FriendsRequestResult alloc] initializeWithDelegate:self] autorelease] retain];
+   
   NSString *query = @"SELECT uid, name, pic_square, status FROM user WHERE uid IN (";
   query = [query stringByAppendingFormat:@"SELECT uid2 FROM friend WHERE uid1 = %@)", _uid];
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -79,47 +85,32 @@
   [_facebook requestWithMethodName: @"fql.query" 
                          andParams: params
                      andHttpMethod: @"POST" 
-                       andDelegate: self]; 
+                       andDelegate: friendsRequestResult]; 
   [query release];
 }
 
 /**
- * FBRequestDelegate
+ * UserRequestDelegate
  */
-- (void)request:(FBRequest*)request didLoad:(id)result{
-     
-  if ([request.url hasPrefix:@"https://graph.facebook.com/me"]) {
-    self.uid = [result objectForKey:@"id"]; 
-    [self requestFriendsDetail];   
-  } else {
-    _friendsInfo = [[[[NSMutableArray alloc] init] autorelease] retain];
-    for (NSDictionary *info in result) {
-      NSString *friend_id = [NSString stringWithString:[[info objectForKey:@"uid"] stringValue]];
-      NSString *friend_name = nil;
-      if ([info objectForKey:@"name"] != [NSNull null]) {
-        friend_name = [NSString stringWithString:[info objectForKey:@"name"]];
-      } 
-      NSString *friend_pic = [info objectForKey:@"pic_square"];
-      NSString *friend_status = [info objectForKey:@"status"];
-      NSMutableDictionary *friend_info = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                          friend_id,@"uid",
-                                          friend_name, @"name", 
-                                          friend_pic, @"pic", 
-                                          friend_status, @"status", 
-                                          nil];
-      [_friendsInfo addObject:friend_info];
-    }
-    if ([self.userInfoDelegate respondsToSelector:@selector(userInfoDidLoad)]) {
-      [_userInfoDelegate userInfoDidLoad];
-    }
-  }
+- (void)userRequestCompleteWithUid:(NSString *)uid {
+  self.uid = uid;
+  [self requestFriendsDetail];
 }
 
-- (void)request:(FBRequest*)request didFailWithError:(NSError*)error {
-  NSLog(@"%@",[error localizedDescription]);
+- (void)userRequestFailed {
   if ([self.userInfoDelegate respondsToSelector:@selector(userInfoFailToLoad)]) {
     [_userInfoDelegate userInfoFailToLoad];
   }
 }
 
+/**
+ * FriendsRequestDelegate
+ */
+- (void)FriendsRequestCompleteWithFriendsInfo:(NSMutableArray *)friendsInfo {
+  _friendsInfo = [friendsInfo retain];
+  if ([self.userInfoDelegate respondsToSelector:@selector(userInfoDidLoad)]) {
+    [_userInfoDelegate userInfoDidLoad];
+  }
+}
+  
 @end

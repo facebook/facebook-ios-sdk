@@ -240,9 +240,6 @@ static NSString* kSDKVersion = @"ios";
  * Make a request to the Facebook Graph API without any parameters.
  * 
  * See http://developers.facebook.com/docs/api
- *  
- * Note that this method blocks waiting for a network response, so do not 
- * call it in a UI thread.
  * 
  * @param graphPath
  *            Path to resource in the Facebook graph, e.g., to fetch data

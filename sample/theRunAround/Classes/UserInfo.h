@@ -16,10 +16,12 @@
 
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
+#import "UserRequestResult.h"
+#import "FriendsRequestResult.h"
 
 @protocol UserInfoLoadDelegate;
 
-@interface UserInfo : NSObject<FBRequestDelegate> {
+@interface UserInfo : NSObject<UserRequestDelegate, FriendsRequestDelegate> {
   NSString *_uid;
   NSMutableArray * _friendsList;
   NSMutableArray *_friendsInfo;
