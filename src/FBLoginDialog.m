@@ -88,7 +88,13 @@
   }
 }
 
-
+- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+  [super webView:webView didFailLoadWithError:error];
+  if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
+    [_loginDelegate fbDialogNotLogin];
+  }
+}
+  
 /**
  * Override FBDialog : free the space
  */

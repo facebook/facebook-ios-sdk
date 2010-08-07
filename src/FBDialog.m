@@ -606,7 +606,7 @@ BOOL FBIsDeviceIPad() {
       [_delegate dialogDidCancel:self];
     }
   }
-
+  
   [self dismiss:animated];
 }
 
@@ -614,7 +614,7 @@ BOOL FBIsDeviceIPad() {
   if ([_delegate respondsToSelector:@selector(dialog:didFailWithError:)]) {
     [_delegate dialog:self didFailWithError:error];
   }
-
+  
   [self dismiss:animated];
 }
 
