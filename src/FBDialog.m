@@ -331,7 +331,7 @@ BOOL FBIsDeviceIPad() {
       | UIViewAutoresizingFlexibleBottomMargin;
     [self addSubview:_titleLabel];
         
-    _webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    _webView = [[UIWebView alloc] initWithFrame:CGRectMake(kPadding, kPadding, 480, 480)];
     _webView.delegate = self;
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:_webView];
