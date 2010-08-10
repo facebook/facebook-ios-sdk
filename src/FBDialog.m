@@ -331,8 +331,7 @@ BOOL FBIsDeviceIPad() {
       | UIViewAutoresizingFlexibleBottomMargin;
     [self addSubview:_titleLabel];
        
-    _webView = [[[[UIWebView alloc] initWithFrame:CGRectMake(kPadding, kPadding, 480, 480)] 
-                 autorelease] retain];
+    _webView = [[UIWebView alloc] initWithFrame:CGRectMake(kPadding, kPadding, 480, 480)];
     _webView.delegate = self;
     _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self addSubview:_webView];
@@ -513,9 +512,9 @@ BOOL FBIsDeviceIPad() {
          delegate: (id <FBDialogDelegate>) delegate {
   
   self = [self init];
-  _serverURL = serverURL;
-  _params = params;
-  _delegate = delegate;
+  _serverURL = [serverURL retain];
+  _params = [params retain];
+  _delegate = [delegate retain];
   
   return self;
 }

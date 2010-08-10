@@ -86,7 +86,6 @@
                          andParams: params
                      andHttpMethod: @"POST" 
                        andDelegate: friendsRequestResult]; 
-  [query release];
 }
 
 /**

@@ -175,7 +175,7 @@ static NSString* kAppId = nil;
                          andParams: params
                      andHttpMethod: @"POST" 
                        andDelegate: self]; 
-  
+  [img release];  
 }
 
 // Override to allow orientations other than the default portrait orientation.

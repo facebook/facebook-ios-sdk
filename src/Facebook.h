@@ -29,6 +29,10 @@
   NSString* _accessToken;
   NSDate* _expirationDate;
   id<FBSessionDelegate> _sessionDelegate;
+  FBRequest* _request;
+  FBDialog* _loginDialog;
+  FBDialog* _fbDialog;
+  
 }
 
 @property(nonatomic, retain) NSString* accessToken;

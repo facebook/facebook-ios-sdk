@@ -30,7 +30,7 @@
  */
 - (void)request:(FBRequest*)request didLoad:(id)result{
   
-    NSMutableArray *friendsInfo = [[[[NSMutableArray alloc] init] autorelease] retain];
+    NSMutableArray *friendsInfo = [[[NSMutableArray alloc] init] autorelease];
     for (NSDictionary *info in result) {
       NSString *friend_id = [NSString stringWithString:[[info objectForKey:@"uid"] stringValue]];
       NSString *friend_name = nil;

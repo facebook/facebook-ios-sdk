@@ -63,11 +63,12 @@ static NSString* kSDKVersion = @"ios";
     [params setValue:self.accessToken forKey:@"access_token"];
   }
   
-  FBRequest * request = [[FBRequest getRequestWithParams:params
-                                              httpMethod:httpMethod
-                                                delegate:delegate
-                                              requestURL:url] retain];
-  [request connect];
+  [_request release];
+  _request = [[FBRequest getRequestWithParams:params
+                                   httpMethod:httpMethod
+                                     delegate:delegate
+                                   requestURL:url] retain];
+  [_request connect];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -130,11 +131,12 @@ static NSString* kSDKVersion = @"ios";
   }
   _sessionDelegate = [delegate retain];
   
-  FBDialog* loginDialog = [[[FBLoginDialog alloc] initWithURL:kOAuthURL 
-                                                  loginParams:params 
-                                                     delegate:self] 
-                           autorelease];
-  [loginDialog show];
+  [_loginDialog release];
+  _loginDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL 
+                                         loginParams:params 
+                                            delegate:self];
+                           
+  [_loginDialog show];
   
 }
 
@@ -160,6 +162,7 @@ static NSString* kSDKVersion = @"ios";
                     andParams:params andHttpMethod:@"GET" 
                   andDelegate:self];
   
+  [params release];
   [_accessToken release];
   _accessToken = nil;
   [_expirationDate release];
@@ -356,31 +359,36 @@ static NSString* kSDKVersion = @"ios";
       andParams:(NSMutableDictionary *)params 
     andDelegate:(id <FBDialogDelegate>)delegate {
   
-  FBDialog* fbDialog = nil;
+  
   [params setObject:@"touch" forKey:@"display"];
   [params setObject: kSDKVersion forKey:@"sdk"];
   
   if (action == kLogin) {
     [params setObject:@"user_agent" forKey:@"type"];
     [params setObject:kRedirectURL forKey:@"redirect_uri"];
-    fbDialog = [[[FBLoginDialog alloc] initWithURL:kOAuthURL loginParams:params delegate:self] autorelease];
+    
+    [_fbDialog release];
+    _fbDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL loginParams:params delegate:self]; 
+                 
   } else {
     [params setObject:action forKey:@"method"];
     [params setObject:kRedirectURL forKey:@"next"];
     [params setObject:kCancelURL forKey:@"cancel_url"];
   
     if ([self isSessionValid]) {
-      [params setValue:[self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] forKey:@"access_token"];
+      [params setValue:
+       [self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] 
+                forKey:@"access_token"];
     }
-  
-    fbDialog = [[[[FBDialog alloc] initWithURL:kUIserverBaseURL 
-                                        params:params
-                                      delegate:delegate] 
-                 retain] 
-                autorelease];
+   
+    [_fbDialog release];
+    _fbDialog = [[FBDialog alloc] initWithURL:kUIserverBaseURL 
+                                       params:params
+                                     delegate:delegate]; 
+
   }
 
-  [fbDialog show];  
+  [_fbDialog show];  
 }
 
 /**
@@ -428,4 +436,18 @@ static NSString* kSDKVersion = @"ios";
   NSLog(@"Failed to expiration the session"); 
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Override NSObject : free the space
+ */
+- (void)dealloc {
+  [_accessToken release];
+  [_expirationDate release];
+  [_sessionDelegate release];
+  [_request release];
+  [_loginDialog release];
+  [_fbDialog release];
+  [super dealloc];
+}
+                 
 @end

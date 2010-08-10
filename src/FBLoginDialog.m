@@ -42,13 +42,6 @@
 // FBDialog
 
 /**
- * Override FBDialog : to call when the webView Dialog will disappear
- */
-- (void)dialogWillDisappear {
-  [_webView stringByEvaluatingJavaScriptFromString:@"email.blur();"];
-}
-
-/**
  * Override FBDialog : to call when the webView Dialog did succeed
  */
 - (void) dialogDidSucceed:(NSURL*)url {

@@ -99,6 +99,7 @@ static NSString* kAppId = nil;
 }
 
 - (void)dealloc {
+  
   [_facebook release];
   [_permissions release];
   [_userInfo release];
