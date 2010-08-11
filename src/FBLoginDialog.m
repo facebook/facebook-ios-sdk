@@ -82,9 +82,12 @@
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-  [super webView:webView didFailLoadWithError:error];
-  if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
-    [_loginDelegate fbDialogNotLogin];
+  if (!(([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == -999) ||
+        ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
+    [super webView:webView didFailLoadWithError:error];
+    if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
+      [_loginDelegate fbDialogNotLogin];
+    }
   }
 }
 
