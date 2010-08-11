@@ -34,7 +34,7 @@
   self = [super init];
   _serverURL = [loginURL retain];
   _params = [params retain];
-  _loginDelegate = [delegate retain];
+  _loginDelegate = delegate;
   return self;
 }
 
@@ -86,14 +86,6 @@
   if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
     [_loginDelegate fbDialogNotLogin];
   }
-}
-  
-/**
- * Override FBDialog : free the space
- */
-- (void)dealloc {
-  [_loginDelegate release];
-  [super dealloc];
 }
 
 @end

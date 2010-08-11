@@ -349,7 +349,6 @@ BOOL FBIsDeviceIPad() {
 - (void)dealloc {
   _webView.delegate = nil;
   [_webView release];
-  [_delegate release];
   [_params release];
   [_serverURL release];
   [_spinner release];
@@ -514,7 +513,7 @@ BOOL FBIsDeviceIPad() {
   self = [self init];
   _serverURL = [serverURL retain];
   _params = [params retain];
-  _delegate = [delegate retain];
+  _delegate = delegate;
   
   return self;
 }

@@ -45,7 +45,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                            delegate:(id<FBRequestDelegate>) delegate
                          requestURL:(NSString *) url {
   FBRequest* request    = [[[FBRequest alloc] init] autorelease];
-  request.delegate      = [delegate retain]; 
+  request.delegate      = delegate; 
   request.url           = [url retain];
   request.httpMethod    = [httpMethod retain];
   request.params        = [params retain];

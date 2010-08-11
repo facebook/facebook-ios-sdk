@@ -35,11 +35,11 @@
   
 }
 
-@property(nonatomic, retain) NSString* accessToken;
+@property(nonatomic, copy) NSString* accessToken;
 
-@property(nonatomic, retain) NSDate* expirationDate;
+@property(nonatomic, copy) NSDate* expirationDate;
 
-@property(nonatomic, retain) id<FBSessionDelegate> sessionDelegate;
+@property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 
 
 - (void) authorize:(NSString*) application_id

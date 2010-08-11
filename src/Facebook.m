@@ -125,11 +125,7 @@ static NSString* kSDKVersion = @"ios";
     [params setValue:scope forKey:@"scope"];
   }
 
-  if (_sessionDelegate) {
-    [_sessionDelegate release];
-     _sessionDelegate = nil;
-  }
-  _sessionDelegate = [delegate retain];
+  _sessionDelegate = delegate;
   
   [_loginDialog release];
   _loginDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL 
@@ -151,11 +147,7 @@ static NSString* kSDKVersion = @"ios";
  */
 - (void)logout:(id<FBSessionDelegate>)delegate {
  
-  if (_sessionDelegate) {
-    [_sessionDelegate release];
-    _sessionDelegate = nil;
-  }
-  _sessionDelegate = [delegate retain];
+  _sessionDelegate = delegate;
   
   NSMutableDictionary * params = [[NSMutableDictionary alloc] init]; 
   [self requestWithMethodName:@"auth.expireSession" 
@@ -443,7 +435,6 @@ static NSString* kSDKVersion = @"ios";
 - (void)dealloc {
   [_accessToken release];
   [_expirationDate release];
-  [_sessionDelegate release];
   [_request release];
   [_loginDialog release];
   [_fbDialog release];

@@ -37,12 +37,12 @@
 /**
  * The URL which will be contacted to execute the request.
  */
-@property(nonatomic,assign) NSString* url;
+@property(nonatomic,copy) NSString* url;
 
 /**
  * The API method which will be called.
  */
-@property(nonatomic,assign) NSString* httpMethod;
+@property(nonatomic,copy) NSString* httpMethod;
 
 /**
  * The dictionary of parameters to pass to the method.
