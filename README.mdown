@@ -19,7 +19,7 @@ The SDK is lightweight and has no external dependencies. Getting started is quic
 Install necessary packages
 --------------------------
 
-* Follow the (https://developer.apple.com/iphone/index.action)[iPhone Dev Center Getting Started Documents]. 
+* Follow the [iPhone Dev Center Getting Started Documents](https://developer.apple.com/iphone/index.action). 
 
 * Pull the read-only repository from github. 
 
