@@ -127,27 +127,27 @@
 /**
  * Called when the dialog succeeds and is about to be dismissed.
  */
-- (void)dialogDidSucceed:(FBDialog *)dialog;
+- (void)dialogDidComplete:(FBDialog *)dialog;
 
 /**
  * Called when the dialog succeeds with a returning url.
  */
-- (void)dialogSucceedWithUrl:(NSURL *)url;
+- (void)dialogCompleteWithUrl:(NSURL *)url;
 
 /**
  * Called when the dialog get canceled by the user.
  */
-- (void)dialogCancelWithUrl:(NSURL *)url;
+- (void)dialogDidNotCompleteWithUrl:(NSURL *)url;
 
 /**
  * Called when the dialog is cancelled and is about to be dismissed.
  */
-- (void)dialogDidCancel:(FBDialog*)dialog;
+- (void)dialogDidNotComplete:(FBDialog *)dialog;
 
 /**
  * Called when dialog failed to load due to an error.
  */
-- (void)dialog:(FBDialog*)dialog didFailWithError:(NSError*)error;
+- (void)dialog:(FBDialog*)dialog didFailWithError:(NSError *)error;
 
 /**
  * Asks if a link touched by a user should be opened in an external browser.
@@ -159,6 +159,6 @@
  * should hold onto the URL and once you have received their acknowledgement open the URL yourself
  * using [[UIApplication sharedApplication] openURL:].
  */
-- (BOOL)dialog:(FBDialog*)dialog shouldOpenURLInExternalBrowser:(NSURL*)url;
+- (BOOL)dialog:(FBDialog*)dialog shouldOpenURLInExternalBrowser:(NSURL *)url;
 
 @end

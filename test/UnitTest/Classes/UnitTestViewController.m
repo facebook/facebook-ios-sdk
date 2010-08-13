@@ -296,7 +296,7 @@ static NSString* kTestUser =@"499095509";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FBDialogDelegate
 
-- (void)dialogSucceedWithUrl:(NSURL *)url {
+- (void)dialogCompleteWithUrl:(NSURL *)url {
   NSString *post_id = [self getStringFromUrl:[url absoluteString] needle:@"post_id="];
 
   if (post_id.length > 0) {

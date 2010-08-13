@@ -257,7 +257,7 @@ static NSString* kAppId = nil;
 /** 
  * Called when a UIServer Dialog successfully return
  */
-- (void)dialogDidSucceed:(FBDialog*)dialog{
+- (void)dialogDidComplete:(FBDialog*)dialog{
    [self.label setText:@"publish successfully"];
 }
 
