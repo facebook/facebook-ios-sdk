@@ -1,15 +1,9 @@
-Facebook iOS SDK
+Facebook Connect for iOS
 ===========================
 
 This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
-Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
-
-Known Issues
-------------
-* If you see an "Missing client_id" error, that means you did not set your application id. For our demo app to run, you need to set your app id in the file DemoAppViewController.m of DemoApp or mainViewController in theRunAround, set the kAppId to be your own app id in string format. 
-
-* If you see "an invalid next or cancel parameter was specified" message in the login dialog, then you need to migrate your application to the New Data Permissions. This can be done by going to http://www.facebook.com/developers/apps.php then selecting the application you are testing with, and clicking "Edit Settings" (the third item underneath Total Users). On the settings page, click on Migrations (bottom of the left menu), then set New Data Permissions to "Enabled"
+Except as otherwise noted, the Facebook Connect iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Getting Started
 ===============
@@ -19,25 +13,21 @@ The SDK is lightweight and has no external dependencies. Getting started is quic
 Install necessary packages
 --------------------------
 
-* Follow the [iPhone Dev Center Getting Started Documents](https://developer.apple.com/iphone/index.action). 
+* Set up for iPhone development by following (https://developer.apple.com/iphone/index.action)[iPhone Dev Center Getting Started Documents].
 
-* Pull the read-only repository from github. 
+* Install (http://git-scm.com/)[Git].
 
-       git clone git://github.com/facebook/facebook-iphone-sdk-2.0.git   
-  
-  if you have trouble, you could also try 
-     
-       git clone http://github.com/facebook/facebook-iphone-sdk-2.0.git"
+* Pull code down from github:
+
+       git clone git://github.com/facebook/facebook-ios-sdk.git
 
 Create your own application
 ---------------------------
 
 * Create a Facebook Application at: http://www.facebook.com/developers/createapp.php
 
-* Check out the mobile documentation at: http://developers.facebook.com/docs/guides/mobile/
-
-* Adding FBConnect to your Xcode project
-  * Open the src/FBConnect.xcodeproj project file.
+* Adding Connect to your Xcode project
+  * Open src/facebook-ios-sdk.xcodeproj
   * Drag the "FBConnect" group into your application's Xcode project.
   * Make sure that the FBConnect headers are in the include path. Go into your project's settings and enter the relative or absolute path to the "src" directory.
   * Include the FBConnect headers in your code:
@@ -105,7 +95,7 @@ i whose fields and values can be inspected and accessed. The sample implementati
 The (http://developers.facebook.com/docs/reference/rest/)[Old REST API] is also supported. To access the older methods, pass in the named parameters and method name as a NSDictionary.
 
      NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"4", @"uids", @"name", @"fields", nil];
-     [facebook requestWithMethodName: @"users.getInfo" andParams: params andHttpMethod: @"GET" andDelegate: self]; 
+     [facebook requestWithMethodName: @"users.getInfo" andParams: params andHttpMethod: @"GET" andDelegate: self];
 
 
 User Interface Dialogs
@@ -114,7 +104,7 @@ User Interface Dialogs
 This SDK provides a method for popping up a Facebook dialog. The currently supported dialogs are the login and permissions dialogs used in the authorization flow, and a "stream.publish" flow for making a wall post.  The dialog require an action to perform, and a FBDialogDelegate interface for notification that must be implemented by the application. For example,
 
      NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys: apiKey, @"api_key", nil];
-  
+
      [facebook dialog: @"stream.publish" andParams: params andDelegate:self];
 
 This allows you to provide basic Facebook functionality in your application with a singe line of code -- no need to build native dialogs, make API calls, or handle responses.
@@ -124,3 +114,7 @@ Error Handling
 
 For Request and Dialog, errors are handled by FBRequestDelegate and FBDialogDelegate callback methods. Application can implement these interface to handle them.
 
+Troubleshooting
+------------
+: I get a ''missing client_id'' error.
+; Read the setup instructions and make sure your application ID is set.
