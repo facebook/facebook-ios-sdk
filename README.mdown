@@ -1,9 +1,9 @@
-Facebook Connect for iOS
+Facebook iOS SDK
 ===========================
 
 This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
-Except as otherwise noted, the Facebook Connect iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
+Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Getting Started
 ===============
@@ -26,7 +26,7 @@ Create your own application
 
 * Create a Facebook Application at: http://www.facebook.com/developers/createapp.php
 
-* Adding Connect to your Xcode project
+* Adding Facebook to your Xcode project
   * Open src/facebook-ios-sdk.xcodeproj
   * Drag the "FBConnect" group into your application's Xcode project.
   * Make sure that the FBConnect headers are in the include path. Go into your project's settings and enter the relative or absolute path to the "src" directory.
