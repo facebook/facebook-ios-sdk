@@ -74,8 +74,14 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
       }
       continue;
     } 
-    NSString* value = [[_params objectForKey:key] 
-      stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    
+    NSString* value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+                        NULL, /* allocator */
+                        (CFStringRef)[_params objectForKey:key],
+                        NULL, /* charactersToLeaveUnescaped */
+                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                        kCFStringEncodingUTF8);
+    
     [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
   }
   NSString* params = [pairs componentsJoinedByString:@"&"];
