@@ -82,7 +82,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                         (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                         kCFStringEncodingUTF8);
     
-    [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
+    [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, [value autorelease]]];
   }
   NSString* params = [pairs componentsJoinedByString:@"&"];
   
