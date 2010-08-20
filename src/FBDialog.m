@@ -230,8 +230,9 @@ BOOL FBIsDeviceIPad() {
                         (CFStringRef)@"!*'();:@&=+$,/?%#[]",
                         kCFStringEncodingUTF8);
 
-      NSString* pair = [NSString stringWithFormat:@"%@=%@", key, [val autorelease]];
+      NSString* pair = [NSString stringWithFormat:@"%@=%@", key, val];
       [pairs addObject:pair];
+      [val release];
     }
       
     NSString* query = [pairs componentsJoinedByString:@"&"];
