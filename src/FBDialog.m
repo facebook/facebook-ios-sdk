@@ -223,15 +223,15 @@ BOOL FBIsDeviceIPad() {
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in params.keyEnumerator) {
       NSString* value = [params objectForKey:key];
-      NSString* val = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                        NULL,
-                        (CFStringRef)value,
-                        NULL,
-                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                        kCFStringEncodingUTF8);
+      NSString* escaped_value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                  NULL, /* allocator */
+                                  (CFStringRef)value,
+                                  NULL, /* charactersToLeaveUnescaped */
+                                  (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                  kCFStringEncodingUTF8);
 
-      NSString* pair = [NSString stringWithFormat:@"%@=%@", key, val];
-      [pairs addObject:pair];
+      [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
+      [escaped_value release];
     }
       
     NSString* query = [pairs componentsJoinedByString:@"&"];
