@@ -268,7 +268,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [request setHTTPBody:[self generatePostBody]];
   }
   
-  _connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self]  retain];
+  _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
   
 }
 
