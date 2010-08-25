@@ -75,15 +75,15 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
       continue;
     } 
     
-    NSString* value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                        NULL, /* allocator */
-                        (CFStringRef)[_params objectForKey:key],
-                        NULL, /* charactersToLeaveUnescaped */
-                        (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                        kCFStringEncodingUTF8);
+    NSString* escaped_value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                NULL, /* allocator */
+                                (CFStringRef)[_params objectForKey:key],
+                                NULL, /* charactersToLeaveUnescaped */
+                                (CFStringRef)@"!*'();:@&=+$,/?%#[]",
+                                kCFStringEncodingUTF8);
     
-    [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, value]];
-    [value release];
+    [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
+    [escaped_value release];
   }
   NSString* params = [pairs componentsJoinedByString:@"&"];
   
@@ -268,7 +268,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [request setHTTPBody:[self generatePostBody]];
   }
   
-  _connection = [[[NSURLConnection alloc] initWithRequest:request delegate:self]  retain];
+  _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
   
 }
 
