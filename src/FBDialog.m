@@ -406,11 +406,9 @@ BOOL FBIsDeviceIPad() {
         [self dismissWithError:error animated:YES];
       } else {
         [self dialogDidCancel:url];
-        [self dismissWithSuccess:NO animated:YES];        
       }
     } else {
       [self dialogDidSucceed:url];
-      [self dismissWithSuccess:YES animated:YES];
     }
     return NO;
   } else if ([_loadingURL isEqual:url]) {
