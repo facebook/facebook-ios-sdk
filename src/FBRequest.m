@@ -228,7 +228,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   if (error) {
     [self failWithError:error];
   } else if ([_delegate respondsToSelector:@selector(request:didLoad:)]) {
-    [_delegate request:self didLoad:result];
+	[_delegate request:self didLoad:result != nil ? result : data];
   }
 }
 
