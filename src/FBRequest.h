@@ -101,6 +101,12 @@
  */
 - (void)request:(FBRequest*)request didLoad:(id)result;
 
+/**
+ * Called when a request returns a response.
+ *
+ * The result object is the raw response from the server of type NSData
+ */
+- (void)request:(FBRequest*)request didLoadRawResponse:(NSData*)data;
 
 @end
 

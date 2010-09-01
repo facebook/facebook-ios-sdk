@@ -96,7 +96,7 @@
 /**
  * Called when the user dismiss the dialog without login
  */
-- (void)fbDidNotLogin;
+- (void)fbDidNotLogin:(BOOL)cancelled;
 
 /**
  * Called when the user is logged out

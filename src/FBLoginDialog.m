@@ -59,7 +59,7 @@
     } 
   } 
   
-  if ((token == (NSString *) [NSNull null]) || (token.length ==0)) {
+  if ((token == (NSString *) [NSNull null]) || (token.length == 0)) {
     [self dialogDidCancel:url];
     [self dismissWithSuccess:NO animated:YES];
   } else {
@@ -76,8 +76,8 @@
  */
 - (void)dialogDidCancel:(NSURL *)url {
   [self dismissWithSuccess:NO animated:YES];
-  if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
-    [_loginDelegate fbDialogNotLogin];
+  if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
+    [_loginDelegate fbDialogNotLogin:YES];
   }
 }
 
@@ -85,8 +85,8 @@
   if (!(([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == -999) ||
         ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
     [super webView:webView didFailLoadWithError:error];
-    if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin)]) {
-      [_loginDelegate fbDialogNotLogin];
+    if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
+      [_loginDelegate fbDialogNotLogin:NO];
     }
   }
 }

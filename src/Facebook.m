@@ -411,9 +411,9 @@ static NSString* kSDKVersion = @"ios";
 /**
  * Did not login call the not login delegate
  */
-- (void) fbDialogNotLogin {
-  if ([self.sessionDelegate respondsToSelector:@selector(fbDidNotLogin)]) {
-    [_sessionDelegate fbDidNotLogin];
+- (void) fbDialogNotLogin:(BOOL)cancelled {
+  if ([self.sessionDelegate respondsToSelector:@selector(fbDidNotLogin:)]) {
+    [_sessionDelegate fbDidNotLogin:cancelled];
   }
 }
 
@@ -425,7 +425,7 @@ static NSString* kSDKVersion = @"ios";
  * Handle the auth.ExpireSession api call failure
  */
 - (void)request:(FBRequest*)request didFailWithError:(NSError*)error{
-  NSLog(@"Failed to expiration the session"); 
+  NSLog(@"Failed to expire the session"); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
