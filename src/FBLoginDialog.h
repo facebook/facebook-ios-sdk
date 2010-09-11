@@ -41,7 +41,7 @@
 
 - (void) fbDialogLogin:(NSString *) token expirationDate:(NSDate *) expirationDate;
 
-- (void) fbDialogNotLogin:(BOOL)cancelled;
+- (void) fbDialogNotLogin:(BOOL) cancelled;
 
 @end
 

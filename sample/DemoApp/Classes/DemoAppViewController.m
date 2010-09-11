@@ -45,7 +45,7 @@ static NSString* kAppId = nil;
  * Set initial view
  */
 - (void) viewDidLoad {
-  _facebook = [[[[Facebook alloc] init] autorelease] retain];
+  _facebook = [[Facebook alloc] init];
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden    = YES;
   _getPublicInfoButton.hidden   = YES;
@@ -200,7 +200,7 @@ static NSString* kAppId = nil;
 /**
  * Callback for facebook did not login
  */
-- (void)fbDidNotLogin {
+- (void)fbDidNotLogin:(BOOL)cancelled {
   NSLog(@"did not login");
 }
 
@@ -240,7 +240,7 @@ static NSString* kAppId = nil;
  * The resulting object may be a dictionary, an array, a string, or a number, depending
  * on thee format of the API response.
  */
-- (void)request:(FBRequest*)request didLoad:(id)result{
+- (void)request:(FBRequest*)request didLoad:(id)result {
   if ([result isKindOfClass:[NSArray class]]) {
     result = [result objectAtIndex:0]; 
   }

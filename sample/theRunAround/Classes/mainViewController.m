@@ -74,7 +74,7 @@ static NSString* kAppId = nil;
   _session = [[Session alloc] init];
   _facebook = [[_session restore] retain];
   if (_facebook == nil) {
-    _facebook = [[[[Facebook alloc] init] autorelease] retain];
+    _facebook = [[Facebook alloc] init];
     _fbButton.isLoggedIn = NO;
     _addRunButton.hidden = YES;
     [self.view addSubview:self.logoutView];

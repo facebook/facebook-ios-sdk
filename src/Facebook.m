@@ -425,7 +425,7 @@ static NSString* kSDKVersion = @"ios";
  * Handle the auth.ExpireSession api call failure
  */
 - (void)request:(FBRequest*)request didFailWithError:(NSError*)error{
-  NSLog(@"Failed to expiration the session"); 
+  NSLog(@"Failed to expire the session"); 
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

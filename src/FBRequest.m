@@ -223,14 +223,25 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * private helper function: handle the response data 
  */
 - (void)handleResponseData:(NSData*)data {
-  NSError* error = nil;
-  id result = [self parseJsonResponse:data error:&error];
-  if (error) {
-    [self failWithError:error];
-  } else if ([_delegate respondsToSelector:@selector(request:didLoad:)]) {
-    [_delegate request:self didLoad:result];
+  if ([_delegate respondsToSelector:@selector(request:didLoadRawResponse:)]) {
+    [_delegate request:self didLoadRawResponse:data];
   }
+  
+  if ([_delegate respondsToSelector:@selector(request:didLoad:)] ||
+      [_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
+    NSError* error = nil;
+    id result = [self parseJsonResponse:data error:&error];
+    if (error) {
+      [self failWithError:error];
+    } else if ([_delegate respondsToSelector:@selector(request:didLoad:)]) {
+      [_delegate request:self didLoad:(result == nil ? data : result)];
+    }
+      
+  }
+  
 }
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // public
