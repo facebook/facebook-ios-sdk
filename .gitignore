@@ -1,0 +1,9 @@
+.DS_Store
+build
+Build
+Products
+*.pbxuser
+*.perspectivev3
+*.mode1v3
+.DS_Store
+.svn
