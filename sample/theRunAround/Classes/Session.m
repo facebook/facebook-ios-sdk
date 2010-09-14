@@ -55,7 +55,7 @@
   if ((access_token != (NSString *) [NSNull null]) && (access_token.length > 0)) {
     [defaults setObject:access_token forKey:@"FBAccessToken"];
   } else {
-    [defaults removeObjectForKey:@"FBSessionKey"];
+    [defaults removeObjectForKey:@"FBAccessToken"];
   }
  
   NSDate *expirationDate = _facebook.expirationDate;  

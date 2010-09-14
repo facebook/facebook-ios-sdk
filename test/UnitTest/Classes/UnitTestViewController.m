@@ -194,7 +194,7 @@ static NSString* kTestUser =@"499095509";
   dateString = [formatter stringFromDate:[NSDate date]];  
   [formatter release];
   NSString *msg = @"Hello World";
-  msg = [msg stringByAppendingFormat:dateString];
+  msg = [msg stringByAppendingString:dateString];
   
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   msg, @"message",
@@ -216,7 +216,7 @@ static NSString* kTestUser =@"499095509";
   dateString = [formatter stringFromDate:[NSDate date]];  
   [formatter release];
   NSString *msg = @"Hi World";
-  msg = [msg stringByAppendingFormat:dateString];
+  msg = [msg stringByAppendingString:dateString];
   
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   msg, @"message",

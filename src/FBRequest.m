@@ -175,10 +175,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   if ([responseString isEqualToString:@"true"]) {
     return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
   } else if ([responseString isEqualToString:@"false"]) {
-    *error = [self formError:kGeneralErrorCode 
-                    userInfo:[NSDictionary 
-                              dictionaryWithObject:@"This operation can not be completed" 
-                              forKey:@"error_msg"]];
+    if (error != nil) {
+      *error = [self formError:kGeneralErrorCode 
+                      userInfo:[NSDictionary 
+                                dictionaryWithObject:@"This operation can not be completed" 
+                                forKey:@"error_msg"]];
+    }
     return nil;
   }
               
@@ -187,22 +189,30 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   
   if (![result isKindOfClass:[NSArray class]]) {
     if ([result objectForKey:@"error"] != nil) {
-      *error = [self formError:kGeneralErrorCode
-                      userInfo:result];
+      if (error != nil) {
+        *error = [self formError:kGeneralErrorCode
+                        userInfo:result];
+      }
       return nil;
     }
   
     if ([result objectForKey:@"error_code"] != nil) {
-      *error = [self formError:[[result objectForKey:@"error_code"] intValue] userInfo:result];
+      if (error != nil) {
+        *error = [self formError:[[result objectForKey:@"error_code"] intValue] userInfo:result];
+      }
       return nil;
     }
   
     if ([result objectForKey:@"error_msg"] != nil) {
-      *error = [self formError:kGeneralErrorCode userInfo:result];
+      if (error != nil) {
+        *error = [self formError:kGeneralErrorCode userInfo:result];
+      }
     }
   
     if ([result objectForKey:@"error_reason"] != nil) {
-      *error = [self formError:kGeneralErrorCode userInfo:result];
+      if (error != nil) {
+        *error = [self formError:kGeneralErrorCode userInfo:result];
+      }
     }
   }
   

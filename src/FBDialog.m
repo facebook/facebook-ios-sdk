@@ -462,6 +462,9 @@ BOOL FBIsDeviceIPad() {
 // UIKeyboardNotifications
 
 - (void)keyboardWillShow:(NSNotification*)notification {
+  
+  _showingKeyboard = YES;
+  
   if (FBIsDeviceIPad()) {
     // On the iPad the screen is large enough that we don't need to 
     // resize the dialog to accomodate the keyboard popping up
@@ -474,11 +477,11 @@ BOOL FBIsDeviceIPad() {
       -(kPadding + kBorderWidth),
       -(kPadding + kBorderWidth) - _titleLabel.frame.size.height);
   }
-
-  _showingKeyboard = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification*)notification {
+  _showingKeyboard = NO;
+  
   if (FBIsDeviceIPad()) {
     return;
   }
@@ -488,8 +491,6 @@ BOOL FBIsDeviceIPad() {
       kPadding + kBorderWidth,
       kPadding + kBorderWidth + _titleLabel.frame.size.height);
   }
-
-  _showingKeyboard = NO;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
