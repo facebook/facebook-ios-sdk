@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -32,7 +32,8 @@
   FBRequest* _request;
   FBDialog* _loginDialog;
   FBDialog* _fbDialog;
-  
+  NSString* _appId;
+  NSArray* _permissions;
 }
 
 @property(nonatomic, copy) NSString* accessToken;
@@ -42,64 +43,66 @@
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 
 
-- (void) authorize:(NSString*) application_id
-       permissions:(NSArray*) permissions
-          delegate:(id<FBSessionDelegate>) delegate;
+- (void)authorize:(NSString *)application_id
+      permissions:(NSArray *)permissions
+         delegate:(id<FBSessionDelegate>)delegate;
 
-- (void) logout:(id<FBSessionDelegate>) delegate;
+- (BOOL)handleOpenURL:(NSURL *)url;
 
-- (void) requestWithParams:(NSMutableDictionary *) params 
-               andDelegate:(id <FBRequestDelegate>) delegate;
+- (void)logout:(id<FBSessionDelegate>)delegate;
 
-- (void) requestWithMethodName:(NSString *) methodName 
-                     andParams:(NSMutableDictionary *) params 
-                 andHttpMethod:(NSString *) httpMethod 
-                   andDelegate:(id <FBRequestDelegate>) delegate;
+- (void)requestWithParams:(NSMutableDictionary *)params
+              andDelegate:(id <FBRequestDelegate>)delegate;
 
-- (void) requestWithGraphPath:(NSString *) graphPath 
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (void)requestWithMethodName:(NSString *)methodName
+                    andParams:(NSMutableDictionary *)params
+                andHttpMethod:(NSString *)httpMethod
+                  andDelegate:(id <FBRequestDelegate>)delegate;
 
-- (void) requestWithGraphPath:(NSString *)graphPath 
-                    andParams:(NSMutableDictionary *) params  
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (void)requestWithGraphPath:(NSString *)graphPath
+                 andDelegate:(id <FBRequestDelegate>)delegate;
 
-- (void) requestWithGraphPath:(NSString *)graphPath 
-                    andParams:(NSMutableDictionary *) params 
-                andHttpMethod:(NSString *) httpMethod 
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (void)requestWithGraphPath:(NSString *)graphPath
+                   andParams:(NSMutableDictionary *)params
+                 andDelegate:(id <FBRequestDelegate>)delegate;
 
-- (void) dialog:(NSString *) action 
-    andDelegate:(id<FBDialogDelegate>) delegate;
+- (void)requestWithGraphPath:(NSString *)graphPath
+                   andParams:(NSMutableDictionary *)params
+               andHttpMethod:(NSString *)httpMethod
+                 andDelegate:(id <FBRequestDelegate>)delegate;
 
-- (void) dialog:(NSString *) action 
-      andParams:(NSMutableDictionary *) params 
-    andDelegate:(id <FBDialogDelegate>) delegate;
+- (void)dialog:(NSString *)action
+   andDelegate:(id<FBDialogDelegate>)delegate;
 
-- (BOOL) isSessionValid;
+- (void)dialog:(NSString *)action
+     andParams:(NSMutableDictionary *)params
+   andDelegate:(id <FBDialogDelegate>)delegate;
+
+- (BOOL)isSessionValid;
 
 @end
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
- *Your application should implement this delegate 
+ *Your application should implement this delegate
  */
 @protocol FBSessionDelegate <NSObject>
 
 @optional
 
 /**
- * Called when the dialog successful log in the user
+ * Called when the user successfully logged in.
  */
 - (void)fbDidLogin;
 
 /**
- * Called when the user dismiss the dialog without login
+ * Called when the user dismissed the dialog without logging in.
  */
 - (void)fbDidNotLogin:(BOOL)cancelled;
 
 /**
- * Called when the user is logged out
+ * Called when the user logged out.
  */
 - (void)fbDidLogout;
 

@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,24 +20,33 @@
 
 // Your Facebook APP Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
+// Also, your application must bind to the fb[app_id]:// URL
+// scheme (substitue [app_id] for your real Facebook app id).
 static NSString* kAppId = nil;
 
 @implementation DemoAppViewController
 
-@synthesize label = _label;
+@synthesize label = _label, facebook = _facebook;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // UIViewController
 
 /**
- * initialization 
+ * initialization
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  if (!kAppId) {
+    NSLog(@"missing app id!");
+    exit(1);
+    return nil;
+  }
+
+
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-    _permissions =  [[NSArray arrayWithObjects: 
+    _permissions =  [[NSArray arrayWithObjects:
                       @"read_stream", @"offline_access",nil] retain];
   }
-  
+
   return self;
 }
 
@@ -53,7 +62,7 @@ static NSString* kAppId = nil;
   _uploadPhotoButton.hidden    = YES;
   _fbButton.isLoggedIn   = NO;
   [_fbButton updateImage];
-  
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +94,7 @@ static NSString* kAppId = nil;
  * Example of facebook logout
  */
 - (void) logout {
-  [_facebook logout:self]; 
+  [_facebook logout:self];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,25 +130,25 @@ static NSString* kAppId = nil;
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   @"SELECT uid,name FROM user WHERE uid=4", @"query",
                                   nil];
-  [_facebook requestWithMethodName: @"fql.query" 
+  [_facebook requestWithMethodName: @"fql.query"
                          andParams: params
-                     andHttpMethod: @"POST" 
-                       andDelegate: self]; 
+                     andHttpMethod: @"POST"
+                       andDelegate: self];
 }
 
 /**
  * Example of display Facebook dialogs
  *
- * This lets you publish a story to the user's stream. It uses UIServer, which is a consistent 
+ * This lets you publish a story to the user's stream. It uses UIServer, which is a consistent
  * way of displaying user-facing dialogs
  */
 - (IBAction) publishStream: (id)sender {
-  
+
   SBJSON *jsonWriter = [[SBJSON new] autorelease];
-  
-  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys: 
+
+  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:
                                @"Always Running",@"text",@"http://itsti.me/",@"href", nil], nil];
-  
+
   NSString *actionLinksStr = [jsonWriter stringWithObject:actionLinks];
   NSDictionary* attachment = [NSDictionary dictionaryWithObjectsAndKeys:
                                @"a long run", @"name",
@@ -153,12 +162,12 @@ static NSString* kAppId = nil;
                                  actionLinksStr, @"action_links",
                                  attachmentStr, @"attachment",
                                  nil];
-  
-  
+
+
   [_facebook dialog: @"stream.publish"
           andParams: params
         andDelegate:self];
-  
+
 }
 
 
@@ -167,15 +176,15 @@ static NSString* kAppId = nil;
   NSURL    *url  = [NSURL URLWithString:path];
   NSData   *data = [NSData dataWithContentsOfURL:url];
   UIImage  *img  = [[UIImage alloc] initWithData:data];
- 
+
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   img, @"picture",
                                   nil];
-  [_facebook requestWithMethodName: @"photos.upload" 
+  [_facebook requestWithMethodName: @"photos.upload"
                          andParams: params
-                     andHttpMethod: @"POST" 
-                       andDelegate: self]; 
-  [img release];  
+                     andHttpMethod: @"POST"
+                       andDelegate: self];
+  [img release];
 }
 
 // Override to allow orientations other than the default portrait orientation.
@@ -186,7 +195,7 @@ static NSString* kAppId = nil;
 
 /**
  * Callback for facebook login
- */ 
+ */
 -(void) fbDidLogin {
   [self.label setText:@"logged in"];
   _getUserInfoButton.hidden    = NO;
@@ -206,7 +215,7 @@ static NSString* kAppId = nil;
 
 /**
  * Callback for facebook logout
- */ 
+ */
 -(void) fbDidLogout {
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden    = YES;
@@ -223,7 +232,7 @@ static NSString* kAppId = nil;
 
 /**
  * Callback when a request receives Response
- */ 
+ */
 - (void)request:(FBRequest*)request didReceiveResponse:(NSURLResponse*)response{
   NSLog(@"received response");
 };
@@ -242,7 +251,7 @@ static NSString* kAppId = nil;
  */
 - (void)request:(FBRequest*)request didLoad:(id)result {
   if ([result isKindOfClass:[NSArray class]]) {
-    result = [result objectAtIndex:0]; 
+    result = [result objectAtIndex:0];
   }
   if ([result objectForKey:@"owner"]) {
     [self.label setText:@"Photo upload Success"];
@@ -254,7 +263,7 @@ static NSString* kAppId = nil;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FBDialogDelegate
 
-/** 
+/**
  * Called when a UIServer Dialog successfully return
  */
 - (void)dialogDidComplete:(FBDialog*)dialog{

@@ -10,4 +10,5 @@ src/build/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
-
+*~
+*#
