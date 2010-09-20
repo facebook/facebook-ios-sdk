@@ -22,7 +22,9 @@ static NSString* kOAuthURL = @"https://graph.facebook.com/oauth/authorize";
 static NSString* kRedirectURL = @"fbconnect://success";
 static NSString* kGraphBaseURL = @"https://graph.facebook.com/";
 static NSString* kRestApiURL = @"https://api.facebook.com/method/";
-static NSString* kUIserverBaseURL = @"http://www.facebook.com/connect/uiserver.php";
+static NSString* kUIServerBaseURL = @"http://www.facebook.com/connect/uiserver.php";
+// Use this url when you pass access token to the server
+static NSString* kUIServerSecureURL = @"https://www.facebook.com/connect/uiserver.php";
 static NSString* kCancelURL = @"fbconnect://cancel";
 static NSString* kLogin = @"login";
 static NSString* kSDKVersion = @"ios";
@@ -351,7 +353,7 @@ static NSString* kSDKVersion = @"ios";
       andParams:(NSMutableDictionary *)params 
     andDelegate:(id <FBDialogDelegate>)delegate {
   
-  
+  NSString *dialogURL = nil;
   [params setObject:@"touch" forKey:@"display"];
   [params setObject: kSDKVersion forKey:@"sdk"];
   
@@ -371,15 +373,19 @@ static NSString* kSDKVersion = @"ios";
       [params setValue:
        [self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] 
                 forKey:@"access_token"];
+      dialogURL = [kUIServerSecureURL copy];
+    } else {
+      dialogURL = [kUIServerBaseURL copy];
     }
    
     [_fbDialog release];
-    _fbDialog = [[FBDialog alloc] initWithURL:kUIserverBaseURL 
+    _fbDialog = [[FBDialog alloc] initWithURL:dialogURL 
                                        params:params
                                      delegate:delegate]; 
+    [dialogURL release];
 
   }
-
+  
   [_fbDialog show];  
 }
 
