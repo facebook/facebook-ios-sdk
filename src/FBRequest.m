@@ -45,7 +45,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                            delegate:(id<FBRequestDelegate>) delegate
                          requestURL:(NSString *) url {
   FBRequest* request    = [[[FBRequest alloc] init] autorelease];
-  request.delegate      = delegate; 
+  request.delegate      = [delegate retain]; 
   request.url           = [url retain];
   request.httpMethod    = [httpMethod retain];
   request.params        = [params retain];
@@ -299,6 +299,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 - (void)dealloc {
   [_connection cancel];
   [_connection release];
+  [_delegate release];
   [_responseText release];
   [_url release];
   [_httpMethod release];
