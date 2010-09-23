@@ -154,7 +154,7 @@ static NSString* kSDKVersion = @"ios";
   NSMutableDictionary * params = [[NSMutableDictionary alloc] init]; 
   [self requestWithMethodName:@"auth.expireSession" 
                     andParams:params andHttpMethod:@"GET" 
-                  andDelegate:self];
+                  andDelegate:nil];
   
   [params release];
   [_accessToken release];
@@ -423,16 +423,6 @@ static NSString* kSDKVersion = @"ios";
   }
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//FBRequestDelegate
-
-/**
- * Handle the auth.ExpireSession api call failure
- */
-- (void)request:(FBRequest*)request didFailWithError:(NSError*)error{
-  NSLog(@"Failed to expire the session"); 
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 /**

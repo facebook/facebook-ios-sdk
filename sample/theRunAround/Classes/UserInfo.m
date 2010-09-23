@@ -44,6 +44,7 @@
   [_uid release];
   [_friendsList release];
   [_friendsInfo release];
+  [_userInfoDelegate release];
   [super dealloc];
 }
 
