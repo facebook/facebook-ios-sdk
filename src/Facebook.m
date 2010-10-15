@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,7 +89,9 @@ static NSString* kSDKVersion = @"ios";
   [_request connect];
 }
 
-- (void)authorizeWithFBAppAuth:(BOOL)tryFBAppAuth {
+- (void)authorizeWithFBAppAuth:(BOOL)tryFBAppAuth
+                    safariAuth:(BOOL)trySafariAuth {
+
   NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  _appId, @"client_id",
                                  @"user_agent", @"type",
@@ -104,11 +106,23 @@ static NSString* kSDKVersion = @"ios";
   }
 
   // If we're running on iOS 4.0 or above, try to obtain the access
-  // token from the Facebook app installed on the device.
+  // token from the Facebook app installed on the device. If the Facebook app
+  // isn't installed or if it doesn't support the fbauth:// URL scheme,
+  // fall back on Safari for obtaining the access token. This
+  // maximizes the chance that the user won't have to enter his or
+  // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
   if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 4.0) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
+      didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+    }
+
+    if (trySafariAuth && !didOpenOtherApp) {
+      NSString *nextUrl = [NSString stringWithFormat:@"fb%@://authorize", _appId];
+      [params setValue:nextUrl forKey:@"redirect_uri"];
+
+      NSString *fbAppUrl = [FBRequest serializeURL:kOAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
     }
   }
@@ -195,11 +209,13 @@ static NSString* kSDKVersion = @"ios";
   _permissions = [permissions retain];
 
   _sessionDelegate = delegate;
-  [self authorizeWithFBAppAuth:YES];
+
+  [self authorizeWithFBAppAuth:YES safariAuth:YES];
 }
 
 /**
- * This function should be used to process the response from the Facebook application.
+ * This function should be used to process the response from the Facebook application
+ * or from Safari.
  *
  * You MUST call this function in your application delegate's implementation of the method.
  *
@@ -226,10 +242,16 @@ static NSString* kSDKVersion = @"ios";
   if (!accessToken) {
     NSString *errorReason = [params valueForKey:@"error"];
 
+    // If the error response indicates that we should try again using Safari, do that.
+    if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
+      [self authorizeWithFBAppAuth:NO safariAuth:YES];
+      return YES;
+    }
+
     // If the error response indicates that we should try again using an inline dialog,
     // do that.
     if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
-      [self authorizeWithFBAppAuth:NO];
+      [self authorizeWithFBAppAuth:NO safariAuth:NO];
       return YES;
     }
 

@@ -74,6 +74,8 @@ In the updated version of the SDK, we changed the authorization mechanism so tha
 
 If the app is running in iOS version 4 or greater, and if the device has the Facebook app of version 3.2.3 or greater installed, the SDK attempts to open the authorization dialog withing the Facebook app. After the user grants or declines the authorization, the Facebook app redirects back to the calling app, passing the authorization token, expiration, and any other parameters the Facebook OAuth server may return.
 
+If the device is running iOS version 4 or greater but it doesn't have the Facebook app of version 3.2.3 or greater installed, the SDK will open the authorization dialog in Safari. After the user grants or revokes the authorization, Safari redirects back to the calling app. Similar to the Facebook app based authorization, this allows multiple applications to share the same Facebook user session through the Safari cookie.
+
 If the app is running in iOS 3.x, the SDK uses the old mechanism of popping up an inline UIWebView, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
 
 Setting Up One-Time Authentication
