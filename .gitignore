@@ -1,3 +1,4 @@
+.DS_Store
 sample/DemoApp/build/
 sample/DemoApp/DemoApp.xcodeproj/*.pbxuser
 sample/DemoApp/DemoApp.xcodeproj/*.mode*
