@@ -44,6 +44,7 @@
   [_uid release];
   [_friendsList release];
   [_friendsInfo release];
+  [_userInfoDelegate release];
   [super dealloc];
 }
 
@@ -77,7 +78,7 @@
   FriendsRequestResult *friendsRequestResult = 
     [[[[FriendsRequestResult alloc] initializeWithDelegate:self] autorelease] retain];
    
-  NSString *query = @"SELECT uid, name, pic_square, status FROM user WHERE uid IN (";
+  NSString *query = @"SELECT uid, name, is_app_user, pic_square, status FROM user WHERE uid IN (";
   query = [query stringByAppendingFormat:@"SELECT uid2 FROM friend WHERE uid1 = %@)", _uid];
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   query, @"query",

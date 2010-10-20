@@ -32,6 +32,9 @@
   
     NSMutableArray *friendsInfo = [[[NSMutableArray alloc] init] autorelease];
     for (NSDictionary *info in result) {
+	if (!([[info objectForKey:@"is_app_user"] boolValue])) {
+		continue;
+	}
       NSString *friend_id = [NSString stringWithString:[[info objectForKey:@"uid"] stringValue]];
       NSString *friend_name = nil;
       if ([info objectForKey:@"name"] != [NSNull null]) {

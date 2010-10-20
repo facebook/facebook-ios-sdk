@@ -83,8 +83,8 @@
   if (uid) {
     NSDate* expirationDate = [defaults objectForKey:@"FBSessionExpires"];
     if (!expirationDate || [expirationDate timeIntervalSinceNow] > 0) {
-      _uid = uid;
-      _facebook = [[[[Facebook alloc] init] retain] autorelease];
+      _uid = [uid copy];
+      _facebook = [[Facebook alloc] init];
       _facebook.accessToken = [[defaults stringForKey:@"FBAccessToken"] copy];
       _facebook.expirationDate = [expirationDate retain];
     
@@ -94,5 +94,12 @@
   return nil;  
 }
 
+- (void)dealloc {
+  [_facebook.accessToken release];
+  [_facebook.expirationDate release];
+  [_facebook release];
+  [_uid release];
+  [super dealloc];
+}
 
 @end

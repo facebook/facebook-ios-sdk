@@ -25,6 +25,10 @@
   return self;  
 }
 
+- (void)dealloc {
+  [_userRequestDelegate release];
+  [super dealloc];
+}
 
 /**
  * FBRequestDelegate
