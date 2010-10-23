@@ -586,7 +586,6 @@ BOOL FBIsDeviceIPad() {
     self.frame.size.height - (_titleLabel.frame.size.height + 1 + kBorderWidth*2));
 
   [_spinner sizeToFit];
-  //[_spinner startAnimating];
   _spinner.center = _webView.center;
 
   UIWindow* window = [UIApplication sharedApplication].keyWindow;
