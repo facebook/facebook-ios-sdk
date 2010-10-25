@@ -143,8 +143,7 @@ static NSString* kSDKVersion = @"ios";
 /**
  * A private function for parsing URL parameters.
  */
--(NSDictionary*)parseUrlParams:(NSURL *)url {
-	NSString *query = [url query];
+-(NSDictionary*)parseURLParams:(NSString *)query {
 	NSArray *pairs = [query componentsSeparatedByString:@"&"];
 	NSMutableDictionary *params = [[NSMutableDictionary alloc] init];
 	for (NSString *pair in pairs) {
@@ -236,7 +235,15 @@ static NSString* kSDKVersion = @"ios";
     return NO;
   }
 
-  NSDictionary *params = [self parseUrlParams:url];
+  NSString *query = [url fragment];
+
+  // Version 3.2.3 of the FB app encodes the parameters in the query, so we
+  // try to parse the query if the fragment is missing.
+  if (!query) {
+    query = [url query];
+  }
+
+  NSDictionary *params = [self parseURLParams:query];
   NSString *accessToken = [params valueForKey:@"access_token"];
 
   // Abort if the URL doesn't contain an access token.
