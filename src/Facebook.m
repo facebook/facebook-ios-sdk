@@ -105,14 +105,15 @@ static NSString* kSDKVersion = @"ios";
     [params setValue:scope forKey:@"scope"];
   }
 
-  // If we're running on iOS 4.0 or above, try to obtain the access
-  // token from the Facebook app installed on the device. If the Facebook app
-  // isn't installed or if it doesn't support the fbauth:// URL scheme,
-  // fall back on Safari for obtaining the access token. This
-  // maximizes the chance that the user won't have to enter his or
+  // If we're running on a version of ios that supports multitask,
+  // try to obtain the access token from the Facebook app installed
+  // on the device.
+  // If the Facebook app isn't installed or if it doesn't support
+  // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
+  // This maximizes the chance that the user won't have to enter his or
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
-  if ([[[UIDevice currentDevice] systemVersion] doubleValue] >= 4.0) {
+  if ([UIDevice currentDevice].multitaskingSupported) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
