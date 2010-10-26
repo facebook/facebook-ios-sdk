@@ -113,7 +113,8 @@ static NSString* kSDKVersion = @"ios";
   // This maximizes the chance that the user won't have to enter his or
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
-  if ([UIDevice currentDevice].multitaskingSupported) {
+  UIDevice *device = [UIDevice currentDevice];
+  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && device.multitaskingSupported) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
@@ -270,12 +271,10 @@ static NSString* kSDKVersion = @"ios";
 
   // Parse the expiration date.
   NSString *expTime = [params valueForKey:@"expires_in"];
-  NSDate *expirationDate;
+  NSDate *expirationDate = [NSDate distantFuture];
   if (expTime != nil) {
     int expVal = [expTime intValue];
-    if (expVal == 0) {
-      expirationDate = [NSDate distantFuture];
-    } else {
+    if (expVal != 0) {
       expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
     }
   }
