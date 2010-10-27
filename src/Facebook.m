@@ -114,7 +114,7 @@ static NSString* kSDKVersion = @"ios";
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
   UIDevice *device = [UIDevice currentDevice];
-  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && device.multitaskingSupported) {
+  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device multitaskingSupported]) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
