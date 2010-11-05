@@ -27,12 +27,13 @@ static NSString* kAppId = nil;
 
 @implementation mainViewController
 
-@synthesize managedObjectContext = _managedObjectContext,      
+@synthesize managedObjectContext = _managedObjectContext,
             logoutView = _logoutView,
             loginView  = _loginView,
             headerView = _headerView,
             addRunView = _addRunView,
-       myRunController = _myRunController;
+            myRunController = _myRunController,
+            facebook = _facebook;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Private helper function for login / logout
@@ -43,7 +44,7 @@ static NSString* kAppId = nil;
 
 - (void) logout {
   [_session unsave];
-  [_facebook logout:self]; 
+  [_facebook logout:self];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,10 +54,14 @@ static NSString* kAppId = nil;
  * initialization
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  if (!kAppId) {
+    NSLog(@"Missing app id!");
+    exit(1);
+  }
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-    _permissions =  [[NSArray arrayWithObjects: 
+    _permissions =  [[NSArray arrayWithObjects:
                       @"publish_stream",@"read_stream", @"offline_access",nil] retain];
-      
+
   }
   return self;
 }
@@ -64,13 +69,13 @@ static NSString* kAppId = nil;
 
 - (void)viewDidLoad {
   [super viewDidLoad];
- 
+
   _location.keyboardType = UIKeyboardTypeDefault;
   _location.returnKeyType = UIReturnKeyDone;
   _location.delegate = self;
   _distance.returnKeyType = UIReturnKeyDone;
   _distance.delegate = self;
-  
+
   _session = [[Session alloc] init];
   _facebook = [[_session restore] retain];
   if (_facebook == nil) {
@@ -89,7 +94,7 @@ static NSString* kAppId = nil;
   [[self view] addSubview:[self headerView]];
   [_headerView addSubview:_fbButton];
 
-  
+
   
 }
 
@@ -99,7 +104,7 @@ static NSString* kAppId = nil;
 }
 
 - (void)dealloc {
-  
+
   [_facebook release];
   [_permissions release];
   [_userInfo release];
@@ -125,13 +130,13 @@ static NSString* kAppId = nil;
  */
 - (IBAction) addRunButtonClick: (id) sender {
   [UIView beginAnimations:nil context:nil];
-  [UIView setAnimationDuration:0.75];     
-  [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight 
+  [UIView setAnimationDuration:0.75];
+  [UIView setAnimationTransition:UIViewAnimationTransitionFlipFromRight
                          forView:self.view cache:YES];
 
   [_loginView removeFromSuperview];
   [_headerView removeFromSuperview];
-  
+
 
   [self.view  addSubview:self.addRunView];
   [UIView commitAnimations];
@@ -141,10 +146,10 @@ static NSString* kAppId = nil;
  * IBAction for Add My Run button click
  */
 - (IBAction) insertRun: (id) sender{
-  
-  NSEntityDescription *runEntity = [NSEntityDescription entityForName:@"Runs" 
+
+  NSEntityDescription *runEntity = [NSEntityDescription entityForName:@"Runs"
                                                inManagedObjectContext:_managedObjectContext];
-  Runs *newRun = [[[NSManagedObject alloc] initWithEntity:runEntity 
+  Runs *newRun = [[[NSManagedObject alloc] initWithEntity:runEntity
                            insertIntoManagedObjectContext:_managedObjectContext] autorelease];
   newRun.location = _location.text;
 
@@ -152,38 +157,38 @@ static NSString* kAppId = nil;
   newRun.facebookUid = [f numberFromString:_userInfo.uid];
 
   newRun.date = _date.date;
-  
+
   if (_distance.text) {
-    newRun.distance = [f numberFromString:_distance.text]; 
+    newRun.distance = [f numberFromString:_distance.text];
   }
-  
+
   [f release];
-  
+
   NSError *error = nil;
   if (![_managedObjectContext save:&error]) {
     NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
   }
-  
-  [_addRunView removeFromSuperview]; 
+
+  [_addRunView removeFromSuperview];
   [self.view addSubview:_headerView];
   _myRunController.managedObjectContext = _managedObjectContext;
   [self.myRunController viewWillAppear:YES];
   [self.view addSubview:_loginView];
-  
+
   
   SBJSON *jsonWriter = [[SBJSON new] autorelease];
-  
 
-  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys: 
+
+  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:
                                @"Always Running",@"text",@"http://itsti.me/",@"href", nil], nil];
-  
+
   NSString *actionLinksStr = [jsonWriter stringWithObject:actionLinks];
-  
+
   NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
   [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
   [dateFormatter setDateStyle:NSDateFormatterShortStyle];
-  
-  NSString *caption = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@", 
+
+  NSString *caption = [NSString stringWithFormat:@"%@ %@ %@ %@ %@ %@",
     @"I run",_distance.text, @"miles at", _location.text ,@"on",
                        [dateFormatter stringFromDate:_date.date]];
   NSDictionary* attachment = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -192,7 +197,7 @@ static NSString* kAppId = nil;
                               @"It finally happened, I started exercising.", @"description",
                               @"http://itsti.me/", @"href", nil];
   NSString *attachmentStr = [jsonWriter stringWithObject:attachment];
-  
+
                        
   NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  kAppId, @"api_key",
@@ -201,11 +206,11 @@ static NSString* kAppId = nil;
                                  attachmentStr, @"attachment",
                                  nil];
   [dateFormatter release];
-  
+
   [_facebook dialog: @"stream.publish"
           andParams: params
         andDelegate: self];
-  
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +218,7 @@ static NSString* kAppId = nil;
 
 /**
  * FBSessionDelegate
- */ 
+ */
 -(void) fbDidLogin {
   [_logoutView removeFromSuperview];
   [_addRunView removeFromSuperview];
@@ -221,18 +226,18 @@ static NSString* kAppId = nil;
    _fbButton.isLoggedIn         = YES;
   [_fbButton updateImage];
   _addRunButton.hidden = NO;
-  
-  _userInfo = [[[[UserInfo alloc] initializeWithFacebook:_facebook andDelegate: self] 
-                autorelease] 
+
+  _userInfo = [[[[UserInfo alloc] initializeWithFacebook:_facebook andDelegate: self]
+                autorelease]
                retain];
   [_userInfo requestAllInfo];
-  
+
   [self.view addSubview:self.loginView];
 }
 
 /**
  * FBSessionDelegate
- */ 
+ */
 -(void) fbDidLogout {
   [_session unsave];
   [_loginView removeFromSuperview];
@@ -248,7 +253,7 @@ static NSString* kAppId = nil;
 - (void)userInfoDidLoad {
   [_session setSessionWithFacebook:_facebook andUid:_userInfo.uid];
   [_session save];
-  
+
   _myRunController = [[MyRunViewController alloc] init];
   _myRunController.managedObjectContext = _managedObjectContext;
   _myRunController.userInfo = _userInfo;
@@ -258,11 +263,11 @@ static NSString* kAppId = nil;
 }
 
 - (void)userInfoFailToLoad {
-  [self logout]; 
+  [self logout];
   _fbButton.isLoggedIn = NO;
   _addRunButton.hidden = YES;
   [self.view addSubview:self.logoutView];
-  
+
 }
 /**
  * UITextFieldDelegate

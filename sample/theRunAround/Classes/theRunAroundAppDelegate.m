@@ -33,15 +33,15 @@
 #pragma mark -
 #pragma mark Application lifecycle
 
-- (BOOL)application:(UIApplication *)application 
-  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+- (BOOL)application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 	
   // Override point for customization after application launch
   controller = [[mainViewController alloc] init];
   controller.managedObjectContext = [self managedObjectContext];
   controller.view.frame = CGRectMake(0, 20, 320, 460);
   [window addSubview:controller.view];
-  
+
   [window makeKeyAndVisible];
   return YES;
   
@@ -49,11 +49,11 @@
 
 
 /**
- * applicationWillTerminate: saves changes in the application's managed object 
+ * applicationWillTerminate: saves changes in the application's managed object
  * context before the application terminates.
  */
 - (void)applicationWillTerminate:(UIApplication *)application {
-	
+
   NSError *error = nil;
     if (managedObjectContext != nil) {
       if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
@@ -63,17 +63,21 @@
     }
 }
 
+- (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
+  return [controller.facebook handleOpenURL:url];
+}
+
 
 #pragma mark -
 #pragma mark Core Data stack
 
 /**
  * Returns the managed object context for the application.
- * If the context doesn't already exist, it is created and bound to the persistent 
+ * If the context doesn't already exist, it is created and bound to the persistent
  * store coordinator for the application.
  */
 - (NSManagedObjectContext *) managedObjectContext {
-	
+
   if (managedObjectContext != nil) {
     return managedObjectContext;
   }
@@ -88,15 +92,15 @@
 
 /**
  * Returns the managed object model for the application.
- * If the model doesn't already exist, it is created by merging all of the models 
+ * If the model doesn't already exist, it is created by merging all of the models
  * found in the application bundle.
  */
 - (NSManagedObjectModel *)managedObjectModel {
-	
+
   if (managedObjectModel != nil) {
     return managedObjectModel;
   }
-  managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];    
+  managedObjectModel = [[NSManagedObjectModel mergedModelFromBundles:nil] retain];
   return managedObjectModel;
 }
 
@@ -110,23 +114,23 @@
   if (persistentStoreCoordinator != nil) {
     return persistentStoreCoordinator;
   }
-	
-  NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory] 
+
+  NSURL *storeUrl = [NSURL fileURLWithPath: [[self applicationDocumentsDirectory]
             stringByAppendingPathComponent: @"theRunAround.sqlite"]];
-	
+
   NSError *error = nil;
-  persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] 
+  persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc]
                                 initWithManagedObjectModel:[self managedObjectModel]];
 
-  if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType 
-                                                configuration:nil 
-                                                          URL:storeUrl 
-                                                      options:nil 
+  if (![persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType
+                                                configuration:nil
+                                                          URL:storeUrl
+                                                      options:nil
                                                         error:&error]) {
   NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
   abort();
   }
-    
+
   return persistentStoreCoordinator;
 }
 
@@ -138,7 +142,7 @@
  * Returns the path to the application's Documents directory.
  */
 - (NSString *)applicationDocumentsDirectory {
-  return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) 
+  return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)
           lastObject];
 }
 
@@ -147,11 +151,11 @@
 #pragma mark Memory management
 
 - (void)dealloc {
-	
+
   [managedObjectContext release];
   [managedObjectModel release];
   [persistentStoreCoordinator release];
-    
+
   [window release];
   [super dealloc];
 }
