@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,46 +20,54 @@
 
 // Your Facebook APP Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
+// Also, your application must bind to the fb[app_id]:// URL
+// scheme (substitue [app_id] for your real Facebook app id).
 static NSString* kAppId = nil;
 
 @implementation DemoAppViewController
 
-@synthesize label = _label;
+@synthesize label = _label, facebook = _facebook;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // UIViewController
 
 /**
- * initialization 
+ * initialization
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+  if (!kAppId) {
+    NSLog(@"missing app id!");
+    exit(1);
+    return nil;
+  }
+
+
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
-    _permissions =  [[NSArray arrayWithObjects: 
+    _permissions =  [[NSArray arrayWithObjects:
                       @"read_stream", @"offline_access",nil] retain];
   }
-  
+
   return self;
 }
 
 /**
  * Set initial view
  */
-- (void) viewDidLoad {
+- (void)viewDidLoad {
   _facebook = [[Facebook alloc] init];
   [self.label setText:@"Please log in"];
-  _getUserInfoButton.hidden    = YES;
-  _getPublicInfoButton.hidden   = YES;
-  _publishButton.hidden        = YES;
-  _uploadPhotoButton.hidden    = YES;
-  _fbButton.isLoggedIn   = NO;
+  _getUserInfoButton.hidden = YES;
+  _getPublicInfoButton.hidden = YES;
+  _publishButton.hidden = YES;
+  _uploadPhotoButton.hidden = YES;
+  _fbButton.isLoggedIn = NO;
   [_fbButton updateImage];
-  
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
-- (void) dealloc {
+- (void)dealloc {
   [_label release];
   [_fbButton release];
   [_getUserInfoButton release];
@@ -75,26 +83,26 @@ static NSString* kAppId = nil;
 // private
 
 /**
- * Example of facebook login and permission request
+ * Show the authorization dialog.
  */
-- (void) login {
+- (void)login {
   [_facebook authorize:kAppId permissions:_permissions delegate:self];
 }
 
 /**
- * Example of facebook logout
+ * Invalidate the access token and clear the cookie.
  */
-- (void) logout {
-  [_facebook logout:self]; 
+- (void)logout {
+  [_facebook logout:self];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // IBAction
 
 /**
- * Login/out button click
+ * Called on a login/logout button click.
  */
-- (IBAction) fbButtonClick: (id) sender {
+- (IBAction)fbButtonClick:(id)sender {
   if (_fbButton.isLoggedIn) {
     [self logout];
   } else {
@@ -103,43 +111,37 @@ static NSString* kAppId = nil;
 }
 
 /**
- * Example of graph API CAll
- *
- * This lets you make a Graph API Call to get the information of current logged in user.
+ * Make a Graph API Call to get information about the current logged in user.
  */
-- (IBAction) getUserInfo: (id)sender {
+- (IBAction)getUserInfo:(id)sender {
   [_facebook requestWithGraphPath:@"me" andDelegate:self];
 }
 
 
 /**
- * Example of REST API CAll
- *
- * This lets you make a REST API Call to get a user's public information with FQL.
+ * Make a REST API call to get a user's name using FQL.
  */
-- (IBAction) getPublicInfo: (id)sender {
+- (IBAction)getPublicInfo:(id)sender {
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   @"SELECT uid,name FROM user WHERE uid=4", @"query",
                                   nil];
-  [_facebook requestWithMethodName: @"fql.query" 
+  [_facebook requestWithMethodName: @"fql.query"
                          andParams: params
-                     andHttpMethod: @"POST" 
-                       andDelegate: self]; 
+                     andHttpMethod: @"POST"
+                       andDelegate: self];
 }
 
 /**
- * Example of display Facebook dialogs
- *
- * This lets you publish a story to the user's stream. It uses UIServer, which is a consistent 
- * way of displaying user-facing dialogs
+ * Open an inline dialog that allows the logged in user to publish a story to his or
+ * her wall.
  */
-- (IBAction) publishStream: (id)sender {
-  
+- (IBAction)publishStream:(id)sender {
+
   SBJSON *jsonWriter = [[SBJSON new] autorelease];
-  
-  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys: 
+
+  NSDictionary* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:
                                @"Always Running",@"text",@"http://itsti.me/",@"href", nil], nil];
-  
+
   NSString *actionLinksStr = [jsonWriter stringWithObject:actionLinks];
   NSDictionary* attachment = [NSDictionary dictionaryWithObjectsAndKeys:
                                @"a long run", @"name",
@@ -153,29 +155,31 @@ static NSString* kAppId = nil;
                                  actionLinksStr, @"action_links",
                                  attachmentStr, @"attachment",
                                  nil];
-  
-  
-  [_facebook dialog: @"stream.publish"
-          andParams: params
+
+
+  [_facebook dialog:@"stream.publish"
+          andParams:params
         andDelegate:self];
-  
+
 }
 
-
--(IBAction) uploadPhoto: (id)sender {
+/**
+ * Upload a photo.
+ */
+- (IBAction)uploadPhoto:(id)sender {
   NSString *path = @"http://www.facebook.com/images/devsite/iphone_connect_btn.jpg";
-  NSURL    *url  = [NSURL URLWithString:path];
-  NSData   *data = [NSData dataWithContentsOfURL:url];
-  UIImage  *img  = [[UIImage alloc] initWithData:data];
- 
-  NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                  img, @"picture",
-                                  nil];
-  [_facebook requestWithMethodName: @"photos.upload" 
-                         andParams: params
-                     andHttpMethod: @"POST" 
-                       andDelegate: self]; 
-  [img release];  
+  NSURL *url = [NSURL URLWithString:path];
+  NSData *data = [NSData dataWithContentsOfURL:url];
+  UIImage *img  = [[UIImage alloc] initWithData:data];
+
+  NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                 img, @"picture",
+                                 nil];
+  [_facebook requestWithMethodName:@"photos.upload"
+                         andParams:params
+                     andHttpMethod:@"POST"
+                       andDelegate:self];
+  [img release];
 }
 
 // Override to allow orientations other than the default portrait orientation.
@@ -185,29 +189,29 @@ static NSString* kAppId = nil;
 
 
 /**
- * Callback for facebook login
- */ 
--(void) fbDidLogin {
+ * Called when the user has logged in successfully.
+ */
+- (void)fbDidLogin {
   [self.label setText:@"logged in"];
-  _getUserInfoButton.hidden    = NO;
-  _getPublicInfoButton.hidden   = NO;
-  _publishButton.hidden        = NO;
-  _uploadPhotoButton.hidden    = NO;
-  _fbButton.isLoggedIn         = YES;
+  _getUserInfoButton.hidden = NO;
+  _getPublicInfoButton.hidden = NO;
+  _publishButton.hidden = NO;
+  _uploadPhotoButton.hidden = NO;
+  _fbButton.isLoggedIn = YES;
   [_fbButton updateImage];
 }
 
 /**
- * Callback for facebook did not login
+ * Called when the user canceled the authorization dialog.
  */
-- (void)fbDidNotLogin:(BOOL)cancelled {
+-(void)fbDidNotLogin:(BOOL)cancelled {
   NSLog(@"did not login");
 }
 
 /**
- * Callback for facebook logout
- */ 
--(void) fbDidLogout {
+ * Called when the request logout has succeeded.
+ */
+- (void)fbDidLogout {
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden    = YES;
   _getPublicInfoButton.hidden   = YES;
@@ -222,27 +226,25 @@ static NSString* kAppId = nil;
 // FBRequestDelegate
 
 /**
- * Callback when a request receives Response
- */ 
-- (void)request:(FBRequest*)request didReceiveResponse:(NSURLResponse*)response{
-  NSLog(@"received response");
-};
-
-/**
- * Called when an error prevents the request from completing successfully.
+ * Called when the Facebook API request has returned a response. This callback
+ * gives you access to the raw response. It's called before
+ * (void)request:(FBRequest *)request didLoad:(id)result,
+ * which is passed the parsed response object.
  */
-- (void)request:(FBRequest*)request didFailWithError:(NSError*)error{
-  [self.label setText:[error localizedDescription]];
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
+  NSLog(@"received response");
 };
 
 /**
  * Called when a request returns and its response has been parsed into an object.
  * The resulting object may be a dictionary, an array, a string, or a number, depending
- * on thee format of the API response.
+ * on the format of the API response.
+ * If you need access to the raw response, use
+ * (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response.
  */
-- (void)request:(FBRequest*)request didLoad:(id)result {
+- (void)request:(FBRequest *)request didLoad:(id)result {
   if ([result isKindOfClass:[NSArray class]]) {
-    result = [result objectAtIndex:0]; 
+    result = [result objectAtIndex:0];
   }
   if ([result objectForKey:@"owner"]) {
     [self.label setText:@"Photo upload Success"];
@@ -251,14 +253,22 @@ static NSString* kAppId = nil;
   }
 };
 
+/**
+ * Called when an error prevents the Facebook API request from completing successfully.
+ */
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+  [self.label setText:[error localizedDescription]];
+};
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // FBDialogDelegate
 
-/** 
- * Called when a UIServer Dialog successfully return
+/**
+ * Called when a UIServer Dialog successfully return.
  */
-- (void)dialogDidComplete:(FBDialog*)dialog{
-   [self.label setText:@"publish successfully"];
+- (void)dialogDidComplete:(FBDialog *)dialog {
+  [self.label setText:@"publish successfully"];
 }
 
 @end

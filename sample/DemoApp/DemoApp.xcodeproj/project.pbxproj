@@ -158,8 +158,8 @@
 				AE2AFB7511E43A49005AE0C5 /* FBConnect.h */,
 				AE2AFB7611E43A49005AE0C5 /* FBRequest.h */,
 				AE2AFB7711E43A49005AE0C5 /* FBRequest.m */,
-				AE2AFB7811E43A49005AE0C5 /* Facebook.m */,
 				AE2AFB7911E43A49005AE0C5 /* Facebook.h */,
+				AE2AFB7811E43A49005AE0C5 /* Facebook.m */,
 				AE2AFB7A11E43A49005AE0C5 /* FBLoginDialog.h */,
 				AE2AFB7B11E43A49005AE0C5 /* FBLoginDialog.m */,
 				AE2AFB7C11E43A49005AE0C5 /* FBDialog.h */,
@@ -216,7 +216,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "DemoApp" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -280,7 +287,7 @@
 				PRODUCT_NAME = DemoApp;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphonesimulator4.1;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -298,7 +305,7 @@
 				PRODUCT_NAME = DemoApp;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphonesimulator4.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -315,7 +322,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				ONLY_ACTIVE_ARCH = NO;
 				PREBINDING = NO;
-				SDKROOT = iphonesimulator4.0;
+				SDKROOT = iphonesimulator4.1;
 				VALID_ARCHS = "armv8 armv7 i386";
 			};
 			name = Debug;
@@ -330,7 +337,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PREBINDING = NO;
-				SDKROOT = iphoneos3.2;
+				SDKROOT = iphonesimulator4.1;
 			};
 			name = Release;
 		};

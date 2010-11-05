@@ -58,16 +58,43 @@ Authentication and Authorization
 
 User login and application permission requests use the same method: authorize(). By default, if you pass an empty ''permissions'' parameter, then you will get access to the user's basic information., which includes their name, profile picture, list of friends and other general information. For more information, see http://developers.facebook.com/docs/authentication/.
 
-If you pass in extra permissions in the permissions parameter (e.g. "publish_stream", "offline_access"), then the user will be prompted to grant these permissions. "offline_access" is particularly useful, as it avoids access expiration and ongoing prompts to the user for access. See http://developers.facebook.com/docs/authentication/permissions
+If you pass in extra permissions in the permissions parameter (e.g. "publish_stream", "offline_access"), then the user will be prompted to grant these permissions. "offline_access" is particularly useful, as it avoids access expiration and ongoing prompts to the user for access. See http://developers.facebook.com/docs/authentication/permissions.
 
 To authorize a user, the simplest usage is:
 
      facebook = [[Facebook alloc] init];
-     [facebook authorize:apiKey permissions:permissions delegate:self];
+     [facebook authorize:appId permissions:permissions delegate:self];
 
-The authorize method generate a dialog with WebView content from Facebook, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
+One-Time Authentication
+-----------------------
+
+In the initial release of the SDK, the authorize method always opened an inline dialog containing a UIWebView in which the authorization UI was shown to the user. Each iOS application has its own cookie jar, so this mechnism had a major disadvantage: it required users to enter their credentials separately for each app they authorized.
+
+In the updated version of the SDK, we changed the authorization mechanism so that users no longer have to re-enter their credentials for every application on the device they want to authorize. The new mechanism relies on iOS 4's fast app switching. It works as follows:
+
+If the app is running in iOS version 4 or greater, and if the device has the Facebook app of version 3.2.3 or greater installed, the SDK attempts to open the authorization dialog withing the Facebook app. After the user grants or declines the authorization, the Facebook app redirects back to the calling app, passing the authorization token, expiration, and any other parameters the Facebook OAuth server may return.
+
+If the device is running iOS version 4 or greater but it doesn't have the Facebook app of version 3.2.3 or greater installed, the SDK will open the authorization dialog in Safari. After the user grants or revokes the authorization, Safari redirects back to the calling app. Similar to the Facebook app based authorization, this allows multiple applications to share the same Facebook user session through the Safari cookie.
+
+If the app is running in iOS 3.x, the SDK uses the old mechanism of popping up an inline UIWebView, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
+
+Setting Up One-Time Authentication
+----------------------------------
+
+For One-Time Authentication to work, you MUST do the following:
+
+1. In your application's Info.plist file, add a new URL scheme. The URL scheme should be fb[your-app-id]. For example, if your Facebook application ID is 1234, the URL scheme should be 'fb1234'.
+
+2. In your application's UIApplicationDelegate class, add the
+
+  - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+
+method if it doesn't exist already. In this method, call your application's Facebook object's handleOpenURL method, passing into it the url parameter.
 
 See the sample applications for more specific code samples.
+
+Logging out
+-----------
 
 When the user wants to stop using Facebook integration with your application, you can call the logout method to clear all application state and make a server request to invalidate the current OAuth 2.0 token.
 
