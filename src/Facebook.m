@@ -53,11 +53,12 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
-- (void) openUrl:(NSString *)url 
-          params:(NSMutableDictionary *)params 
-      httpMethod:(NSString *)httpMethod 
-        delegate:(id<FBRequestDelegate>)delegate {
+- (FBRequest *) openUrl:(NSString *)url
+                 params:(NSMutableDictionary *)params
+             httpMethod:(NSString *)httpMethod
+               delegate:(id<FBRequestDelegate>)delegate {
   
   [params setValue:@"json" forKey:@"format"];
   [params setValue:kSDKVersion forKey:@"sdk"];
@@ -65,12 +66,20 @@ static NSString* kSDKVersion = @"ios";
     [params setValue:self.accessToken forKey:@"access_token"];
   }
   
-  [_request release];
-  _request = [[FBRequest getRequestWithParams:params
-                                   httpMethod:httpMethod
-                                     delegate:delegate
-                                   requestURL:url] retain];
-  [_request connect];
+  FBRequest *aRequest = [FBRequest getRequestWithParams:params
+                                             httpMethod:httpMethod
+                                               delegate:self
+                                             requestURL:url];
+  if (!_requests) {
+    /* Retain the keys (requests), but don't mess
+     with the values (delegates)
+    */
+    _requests = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+                                          &kCFTypeDictionaryKeyCallBacks, NULL);
+  }
+  CFDictionarySetValue(_requests, aRequest, delegate);
+  [aRequest connect];
+  return aRequest;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,21 +197,23 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
-- (void) requestWithParams:(NSMutableDictionary *)params 
-               andDelegate:(id <FBRequestDelegate>)delegate {
+- (FBRequest *) requestWithParams:(NSMutableDictionary *)params
+                      andDelegate:(id <FBRequestDelegate>)delegate {
+
   if ([params objectForKey:@"method"] == nil) {
     NSLog(@"API Method must be specified");
-    return;
+    return nil;
   }
   
   NSString * methodName = [params objectForKey:@"method"];
   [params removeObjectForKey:@"method"];
   
-  [self requestWithMethodName:methodName
-                    andParams:params 
-                andHttpMethod:@"GET" 
-                  andDelegate:delegate];
+  return [self requestWithMethodName:methodName
+                           andParams:params
+                       andHttpMethod:@"GET"
+                         andDelegate:delegate];
 }
 
 /**
@@ -224,13 +235,15 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
--(void) requestWithMethodName:(NSString *)methodName 
-                    andParams:(NSMutableDictionary *)params 
-                andHttpMethod:(NSString *)httpMethod 
-                  andDelegate:(id <FBRequestDelegate>)delegate {
+-(FBRequest *) requestWithMethodName:(NSString *)methodName
+                           andParams:(NSMutableDictionary *)params
+                       andHttpMethod:(NSString *)httpMethod
+                         andDelegate:(id <FBRequestDelegate>)delegate {
+
   NSString * fullURL = [kRestApiURL stringByAppendingString:methodName];
-  [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
+  return [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
 }
 
 /**
@@ -245,15 +258,15 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
-- (void) requestWithGraphPath:(NSString *)graphPath 
-                  andDelegate:(id <FBRequestDelegate>)delegate {
+- (FBRequest *) requestWithGraphPath:(NSString *)graphPath
+                         andDelegate:(id <FBRequestDelegate>)delegate {
   
-  [self requestWithGraphPath:graphPath 
-                   andParams:[NSMutableDictionary dictionary] 
-               andHttpMethod:@"GET" 
-                 andDelegate:delegate];
-  
+  return [self requestWithGraphPath:graphPath
+                          andParams:[NSMutableDictionary dictionary]
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
 }
 
 /**
@@ -275,15 +288,16 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
--(void) requestWithGraphPath:(NSString *)graphPath 
-                   andParams:(NSMutableDictionary *)params  
-                 andDelegate:(id <FBRequestDelegate>)delegate {
+-(FBRequest *) requestWithGraphPath:(NSString *)graphPath
+                          andParams:(NSMutableDictionary *)params
+                        andDelegate:(id <FBRequestDelegate>)delegate {
  
-  [self requestWithGraphPath:graphPath 
-                   andParams:params 
-               andHttpMethod:@"GET" 
-                 andDelegate:delegate];  
+  return [self requestWithGraphPath:graphPath
+                          andParams:params
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
 }
 
 /**
@@ -312,13 +326,15 @@ static NSString* kSDKVersion = @"ios";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return the created FBRequest
  */
--(void) requestWithGraphPath:(NSString *)graphPath 
-                   andParams:(NSMutableDictionary *)params 
-               andHttpMethod:(NSString *)httpMethod 
-                 andDelegate:(id <FBRequestDelegate>)delegate {
+-(FBRequest*) requestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+
   NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
-  [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
+  return [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
 }
 
 /**
@@ -399,6 +415,29 @@ static NSString* kSDKVersion = @"ios";
 
 }
 
+/**
+ * Cancel all pending requests for a given delegate. Useful for calling it from
+ * dealloc in objects performing requests
+ * @param delegate
+ *            delegate for the requests to be cancelled
+ */
+
+- (void)cancelRequestsForDelegate:(id <FBRequestDelegate>)delegate {
+  CFIndex count = CFDictionaryGetCount(_requests);
+  if (count) {
+    const FBRequest *requests[count];
+	const id delegates[count];
+	CFDictionaryGetKeysAndValues(_requests, (const void **)requests,
+                                 (const void **)delegates);
+    for (int ii = 0; ii < count; ++ii) {
+      if (delegates[ii] == delegate) {
+        [requests[ii] cancel];
+        CFDictionaryRemoveValue(_requests, requests[ii]);
+      }
+    }
+  }
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //FBLoginDialogDelegate
 
@@ -423,6 +462,51 @@ static NSString* kSDKVersion = @"ios";
   }
 }
 
+- (void)trampolineToDelegateForRequest:(FBRequest *)theRequest
+                              selector:(SEL)selector
+                          withArgument:(id)theArgument {
+
+  id requestDelegate = (id)CFDictionaryGetValue(_requests, theRequest);
+  if (requestDelegate && [requestDelegate respondsToSelector:selector]) {
+    [requestDelegate performSelector:selector withObject:theRequest
+                          withObject:theArgument];
+  }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//FBRequestDelegate
+// Just some trampoline methods for the real delegates
+
+- (void)requestLoading:(FBRequest *)request {
+    [self trampolineToDelegateForRequest:request
+                                selector:_cmd
+                            withArgument:nil];
+}
+
+- (void)request:(FBRequest*)request didReceiveResponse:(NSURLResponse*)response {
+    [self trampolineToDelegateForRequest:request
+                                selector:_cmd
+                            withArgument:response];
+}
+
+- (void)request:(FBRequest*)request didFailWithError:(NSError*)error {
+    [self trampolineToDelegateForRequest:request
+                                selector:_cmd
+                            withArgument:error];
+    CFDictionaryRemoveValue(_requests, request);
+}
+
+- (void)request:(FBRequest*)request didLoad:(id)result {
+    [self trampolineToDelegateForRequest:request
+                                selector:_cmd
+                            withArgument:result];
+    CFDictionaryRemoveValue(_requests, request);
+}
+
+- (void)request:(FBRequest*)request didLoadRawResponse:(NSData*)data {
+    [self trampolineToDelegateForRequest:request
+                                selector:_cmd
+                            withArgument:data];
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 /**
@@ -431,7 +515,9 @@ static NSString* kSDKVersion = @"ios";
 - (void)dealloc {
   [_accessToken release];
   [_expirationDate release];
-  [_request release];
+  [[(NSDictionary *)_requests allValues]
+   makeObjectsPerformSelector:@selector(cancel)];
+  [(NSDictionary *)_requests release];
   [_loginDialog release];
   [_fbDialog release];
   [super dealloc];

@@ -25,11 +25,11 @@
  * and Graph APIs, and start user interface interactions (such as
  * pop-ups promoting for credentials, permissions, stream posts, etc.)
  */
-@interface Facebook : NSObject<FBLoginDialogDelegate>{
+@interface Facebook : NSObject<FBLoginDialogDelegate, FBRequestDelegate>{
   NSString* _accessToken;
   NSDate* _expirationDate;
   id<FBSessionDelegate> _sessionDelegate;
-  FBRequest* _request;
+  CFMutableDictionaryRef _requests;
   FBDialog* _loginDialog;
   FBDialog* _fbDialog;
   
@@ -48,25 +48,25 @@
 
 - (void) logout:(id<FBSessionDelegate>) delegate;
 
-- (void) requestWithParams:(NSMutableDictionary *) params 
-               andDelegate:(id <FBRequestDelegate>) delegate;
+- (FBRequest *) requestWithParams:(NSMutableDictionary *) params
+                      andDelegate:(id <FBRequestDelegate>) delegate;
 
-- (void) requestWithMethodName:(NSString *) methodName 
-                     andParams:(NSMutableDictionary *) params 
-                 andHttpMethod:(NSString *) httpMethod 
-                   andDelegate:(id <FBRequestDelegate>) delegate;
+- (FBRequest *) requestWithMethodName:(NSString *) methodName
+                            andParams:(NSMutableDictionary *) params
+                        andHttpMethod:(NSString *) httpMethod
+                          andDelegate:(id <FBRequestDelegate>) delegate;
 
-- (void) requestWithGraphPath:(NSString *) graphPath 
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (FBRequest *) requestWithGraphPath:(NSString *) graphPath
+                         andDelegate:(id <FBRequestDelegate>) delegate;
 
-- (void) requestWithGraphPath:(NSString *)graphPath 
-                    andParams:(NSMutableDictionary *) params  
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (FBRequest *) requestWithGraphPath:(NSString *)graphPath
+                           andParams:(NSMutableDictionary *) params
+                         andDelegate:(id <FBRequestDelegate>) delegate;
 
-- (void) requestWithGraphPath:(NSString *)graphPath 
-                    andParams:(NSMutableDictionary *) params 
-                andHttpMethod:(NSString *) httpMethod 
-                  andDelegate:(id <FBRequestDelegate>) delegate;
+- (FBRequest *) requestWithGraphPath:(NSString *)graphPath
+                           andParams:(NSMutableDictionary *) params
+                       andHttpMethod:(NSString *) httpMethod
+                         andDelegate:(id <FBRequestDelegate>) delegate;
 
 - (void) dialog:(NSString *) action 
     andDelegate:(id<FBDialogDelegate>) delegate;
@@ -76,6 +76,8 @@
     andDelegate:(id <FBDialogDelegate>) delegate;
 
 - (BOOL) isSessionValid;
+
+- (void) cancelRequestsForDelegate:(id <FBRequestDelegate>)delegate;
 
 @end
 
