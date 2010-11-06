@@ -183,6 +183,20 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * Formulate the NSError
  */
 - (id) formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
+    if ([[errorData objectForKey:@"error"] objectForKey:@"message"] &&
+        ![errorData objectForKey:NSLocalizedDescriptionKey]) {
+
+        /* Facebook returns the error message in the "message"
+         attribute inside "error", but NSError expects the
+         readable error message in NSLocalizedDescriptionKey.
+         */
+        NSString *theDescription = [[errorData objectForKey:@"error"]
+                                    objectForKey:@"message"];
+        NSMutableDictionary *theData = [NSMutableDictionary
+                                        dictionaryWithDictionary:errorData];
+        [theData setObject:theDescription forKey:NSLocalizedDescriptionKey];
+        errorData = theData;
+    }
    return [NSError errorWithDomain:@"facebookErrDomain" code:code userInfo:errorData];
   
 }
