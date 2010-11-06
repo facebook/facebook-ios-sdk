@@ -50,15 +50,19 @@
  * These values in the dictionary will be converted to strings using the 
  * standard Objective-C object-to-string conversion facilities.
  */
-@property(nonatomic,assign) NSDictionary* params;
+@property(nonatomic,retain) NSDictionary* params;
 
 
-@property(nonatomic,assign) NSURLConnection*  connection;
+@property(nonatomic,readonly) NSURLConnection*  connection;
 
-@property(nonatomic,assign) NSMutableData* responseText;
+@property(nonatomic,readonly) NSData* responseText;
 
 
-                        
+- (id)initWithParams:(NSDictionary *)params
+          httpMethod:(NSString *) httpMethod
+            delegate:(id<FBRequestDelegate>)delegate
+          requestURL:(NSString *) url;
+
 + (FBRequest*)getRequestWithParams:(NSDictionary *) params
                         httpMethod:(NSString *) httpMethod
                           delegate:(id<FBRequestDelegate>)delegate

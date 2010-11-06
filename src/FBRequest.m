@@ -34,25 +34,49 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
             url          = _url,
             httpMethod   = _httpMethod,
             params       = _params,
-            connection   = _connection,
-            responseText = _responseText;
+            connection   = _connection;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
+
+- (id)initWithParams:(NSDictionary *)params
+          httpMethod:(NSString *) httpMethod
+            delegate:(id<FBRequestDelegate>)delegate
+          requestURL:(NSString *) url {
+
+    if ((self = [super init])) {
+        self.params = params;
+        self.httpMethod = httpMethod;
+        self.delegate = delegate;
+        self.url = url;
+        /* There's no need to initialize fields
+         to nil, it's guaranteed by the runtime
+         */
+    }
+    return self;
+}
+
+- (NSData *)responseText {
+    /* Just create a non-mutable NSData object
+     pointing to the same data. Cast is needed
+     because dataWithBytesNoCopy:length:freeWhenDone:
+     might alter the memory if freeWhenDone is YES
+     */
+    if (_responseText) {
+        return [NSData dataWithBytesNoCopy:(void *)_responseText.bytes
+                                    length:_responseText.length
+                              freeWhenDone:NO];
+    }
+    return nil;
+}
 
 + (FBRequest *)getRequestWithParams:(NSDictionary *) params
                          httpMethod:(NSString *) httpMethod
                            delegate:(id<FBRequestDelegate>) delegate
                          requestURL:(NSString *) url {
-  FBRequest* request    = [[[FBRequest alloc] init] autorelease];
-  request.delegate      = [delegate retain]; 
-  request.url           = [url retain];
-  request.httpMethod    = [httpMethod retain];
-  request.params        = [params retain];
-  request.connection    = nil;
-  request.responseText  = nil;
-  
-  return request;
+
+  return [[[self alloc] initWithParams:params httpMethod:httpMethod
+                              delegate:delegate requestURL:url] autorelease];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -307,7 +331,6 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 - (void)dealloc {
   [_connection cancel];
   [_connection release];
-  [_delegate release];
   [_responseText release];
   [_url release];
   [_httpMethod release];
