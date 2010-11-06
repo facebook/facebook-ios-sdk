@@ -27,7 +27,7 @@
 
 @interface FBDialog : UIView <UIWebViewDelegate> {
   id<FBDialogDelegate> _delegate;
-  NSMutableDictionary *_params;
+  NSDictionary *_params;
   NSString * _serverURL;
   NSURL* _loadingURL;
   UIWebView* _webView;
@@ -47,7 +47,7 @@
 /**
  * The parameters.
  */
-@property(nonatomic, retain) NSMutableDictionary* params;
+@property(nonatomic, retain) NSDictionary* params;
 
 /**
  * The title that is shown in the header atop the view.
@@ -57,7 +57,7 @@
 - (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle;
 
 - (id)initWithURL: (NSString *) loadingURL 
-           params: (NSMutableDictionary *) params  
+           params: (NSDictionary *) params
          delegate: (id <FBDialogDelegate>) delegate;
 
 /**

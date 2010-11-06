@@ -56,17 +56,20 @@ static NSString* kSDKVersion = @"ios";
  * @return the created FBRequest
  */
 - (FBRequest *) openUrl:(NSString *)url
-                 params:(NSMutableDictionary *)params
+                 params:(NSDictionary *)params
              httpMethod:(NSString *)httpMethod
                delegate:(id<FBRequestDelegate>)delegate {
-  
-  [params setValue:@"json" forKey:@"format"];
-  [params setValue:kSDKVersion forKey:@"sdk"];
+
+  NSMutableDictionary *theParameters = [NSMutableDictionary
+                                        dictionaryWithDictionary:params];
+
+  [theParameters setValue:@"json" forKey:@"format"];
+  [theParameters setValue:kSDKVersion forKey:@"sdk"];
   if ([self isSessionValid]) {
-    [params setValue:self.accessToken forKey:@"access_token"];
+    [theParameters setValue:self.accessToken forKey:@"access_token"];
   }
   
-  FBRequest *aRequest = [FBRequest getRequestWithParams:params
+  FBRequest *aRequest = [FBRequest getRequestWithParams:theParameters
                                              httpMethod:httpMethod
                                                delegate:self
                                              requestURL:url];
@@ -199,7 +202,7 @@ static NSString* kSDKVersion = @"ios";
  *            the request has received response
  * @return the created FBRequest
  */
-- (FBRequest *) requestWithParams:(NSMutableDictionary *)params
+- (FBRequest *) requestWithParams:(NSDictionary *)params
                       andDelegate:(id <FBRequestDelegate>)delegate {
 
   if ([params objectForKey:@"method"] == nil) {
@@ -208,10 +211,12 @@ static NSString* kSDKVersion = @"ios";
   }
   
   NSString * methodName = [params objectForKey:@"method"];
-  [params removeObjectForKey:@"method"];
+  NSMutableDictionary *theParameters = [NSMutableDictionary
+                                        dictionaryWithDictionary:params];
+  [theParameters removeObjectForKey:@"method"];
   
   return [self requestWithMethodName:methodName
-                           andParams:params
+                           andParams:theParameters
                        andHttpMethod:@"GET"
                          andDelegate:delegate];
 }
@@ -238,7 +243,7 @@ static NSString* kSDKVersion = @"ios";
  * @return the created FBRequest
  */
 -(FBRequest *) requestWithMethodName:(NSString *)methodName
-                           andParams:(NSMutableDictionary *)params
+                           andParams:(NSDictionary *)params
                        andHttpMethod:(NSString *)httpMethod
                          andDelegate:(id <FBRequestDelegate>)delegate {
 
@@ -264,7 +269,7 @@ static NSString* kSDKVersion = @"ios";
                          andDelegate:(id <FBRequestDelegate>)delegate {
   
   return [self requestWithGraphPath:graphPath
-                          andParams:[NSMutableDictionary dictionary]
+                          andParams:nil
                       andHttpMethod:@"GET"
                         andDelegate:delegate];
 }
@@ -329,7 +334,7 @@ static NSString* kSDKVersion = @"ios";
  * @return the created FBRequest
  */
 -(FBRequest*) requestWithGraphPath:(NSString *)graphPath
-                         andParams:(NSMutableDictionary *)params
+                         andParams:(NSDictionary *)params
                      andHttpMethod:(NSString *)httpMethod
                        andDelegate:(id <FBRequestDelegate>)delegate {
 
@@ -349,8 +354,7 @@ static NSString* kSDKVersion = @"ios";
  */
 - (void) dialog:(NSString *)action 
     andDelegate:(id<FBDialogDelegate>)delegate {
-  NSMutableDictionary * params = [NSMutableDictionary dictionary];
-  [self dialog:action andParams:params andDelegate:delegate];
+  [self dialog:action andParams:nil andDelegate:delegate];
 }
 
 /**
@@ -366,27 +370,32 @@ static NSString* kSDKVersion = @"ios";
  *            dialog has completed.
  */
 - (void) dialog:(NSString *)action 
-      andParams:(NSMutableDictionary *)params 
+      andParams:(NSDictionary *)params
     andDelegate:(id <FBDialogDelegate>)delegate {
   
   NSString *dialogURL = nil;
-  [params setObject:@"touch" forKey:@"display"];
-  [params setObject: kSDKVersion forKey:@"sdk"];
+  NSMutableDictionary *theParameters = [NSMutableDictionary
+                                        dictionaryWithDictionary:params];
+
+  [theParameters setObject:@"touch" forKey:@"display"];
+  [theParameters setObject: kSDKVersion forKey:@"sdk"];
   
   if (action == kLogin) {
-    [params setObject:@"user_agent" forKey:@"type"];
-    [params setObject:kRedirectURL forKey:@"redirect_uri"];
+    [theParameters setObject:@"user_agent" forKey:@"type"];
+    [theParameters setObject:kRedirectURL forKey:@"redirect_uri"];
     
     [_fbDialog release];
-    _fbDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL loginParams:params delegate:self]; 
+    _fbDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL
+                                       loginParams:theParameters
+                                          delegate:self];
                  
   } else {
-    [params setObject:action forKey:@"method"];
-    [params setObject:kRedirectURL forKey:@"next"];
-    [params setObject:kCancelURL forKey:@"cancel_url"];
+    [theParameters setObject:action forKey:@"method"];
+    [theParameters setObject:kRedirectURL forKey:@"next"];
+    [theParameters setObject:kCancelURL forKey:@"cancel_url"];
   
     if ([self isSessionValid]) {
-      [params setValue:
+      [theParameters setValue:
        [self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding] 
                 forKey:@"access_token"];
       dialogURL = [kUIServerSecureURL copy];
@@ -396,7 +405,7 @@ static NSString* kSDKVersion = @"ios";
    
     [_fbDialog release];
     _fbDialog = [[FBDialog alloc] initWithURL:dialogURL 
-                                       params:params
+                                       params:theParameters
                                      delegate:delegate]; 
     [dialogURL release];
 

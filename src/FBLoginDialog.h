@@ -31,7 +31,7 @@
 }
 
 -(id) initWithURL:(NSString *) loginURL 
-      loginParams:(NSMutableDictionary *) params 
+      loginParams:(NSDictionary *) params
       delegate:(id <FBLoginDialogDelegate>) delegate;
 @end
 

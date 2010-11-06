@@ -40,7 +40,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
-+ (FBRequest *)getRequestWithParams:(NSMutableDictionary *) params
++ (FBRequest *)getRequestWithParams:(NSDictionary *) params
                          httpMethod:(NSString *) httpMethod
                            delegate:(id<FBRequestDelegate>) delegate
                          requestURL:(NSString *) url {

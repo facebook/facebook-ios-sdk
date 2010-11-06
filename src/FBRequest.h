@@ -26,7 +26,7 @@
   id<FBRequestDelegate> _delegate;
   NSString*             _url;
   NSString*             _httpMethod;
-  NSMutableDictionary*  _params;
+  NSDictionary*         _params;
   NSURLConnection*      _connection;
   NSMutableData*        _responseText;
 }
@@ -50,7 +50,7 @@
  * These values in the dictionary will be converted to strings using the 
  * standard Objective-C object-to-string conversion facilities.
  */
-@property(nonatomic,assign) NSMutableDictionary* params;
+@property(nonatomic,assign) NSDictionary* params;
 
 
 @property(nonatomic,assign) NSURLConnection*  connection;
@@ -59,7 +59,7 @@
 
 
                         
-+ (FBRequest*)getRequestWithParams:(NSMutableDictionary *) params
++ (FBRequest*)getRequestWithParams:(NSDictionary *) params
                         httpMethod:(NSString *) httpMethod
                           delegate:(id<FBRequestDelegate>)delegate
                         requestURL:(NSString *) url;

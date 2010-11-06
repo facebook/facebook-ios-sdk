@@ -48,11 +48,11 @@
 
 - (void) logout:(id<FBSessionDelegate>) delegate;
 
-- (FBRequest *) requestWithParams:(NSMutableDictionary *) params
+- (FBRequest *) requestWithParams:(NSDictionary *) params
                       andDelegate:(id <FBRequestDelegate>) delegate;
 
 - (FBRequest *) requestWithMethodName:(NSString *) methodName
-                            andParams:(NSMutableDictionary *) params
+                            andParams:(NSDictionary *) params
                         andHttpMethod:(NSString *) httpMethod
                           andDelegate:(id <FBRequestDelegate>) delegate;
 
@@ -60,11 +60,11 @@
                          andDelegate:(id <FBRequestDelegate>) delegate;
 
 - (FBRequest *) requestWithGraphPath:(NSString *)graphPath
-                           andParams:(NSMutableDictionary *) params
+                           andParams:(NSDictionary *) params
                          andDelegate:(id <FBRequestDelegate>) delegate;
 
 - (FBRequest *) requestWithGraphPath:(NSString *)graphPath
-                           andParams:(NSMutableDictionary *) params
+                           andParams:(NSDictionary *) params
                        andHttpMethod:(NSString *) httpMethod
                          andDelegate:(id <FBRequestDelegate>) delegate;
 
@@ -72,7 +72,7 @@
     andDelegate:(id<FBDialogDelegate>) delegate;
 
 - (void) dialog:(NSString *) action 
-      andParams:(NSMutableDictionary *) params 
+      andParams:(NSDictionary *) params
     andDelegate:(id <FBDialogDelegate>) delegate;
 
 - (BOOL) isSessionValid;
