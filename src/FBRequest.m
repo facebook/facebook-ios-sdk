@@ -294,6 +294,14 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 }
 
 /**
+ * Cancels this request
+ */
+
+- (void)cancel {
+    [_connection cancel];
+}
+
+/**
  * Free internal structure
  */
 - (void)dealloc {
