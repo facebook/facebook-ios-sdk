@@ -30,11 +30,11 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 @implementation FBRequest
 
-@synthesize delegate     = _delegate,
-            url          = _url,
-            httpMethod   = _httpMethod,
-            params       = _params,
-            connection   = _connection,
+@synthesize delegate = _delegate,
+            url = _url,
+            httpMethod = _httpMethod,
+            params = _params,
+            connection = _connection,
             responseText = _responseText;
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,13 +44,13 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                          httpMethod:(NSString *) httpMethod
                            delegate:(id<FBRequestDelegate>) delegate
                          requestURL:(NSString *) url {
-  FBRequest* request    = [[[FBRequest alloc] init] autorelease];
-  request.delegate      = [delegate retain];
-  request.url           = [url retain];
-  request.httpMethod    = [httpMethod retain];
-  request.params        = [params retain];
-  request.connection    = nil;
-  request.responseText  = nil;
+  FBRequest* request = [[[FBRequest alloc] init] autorelease];
+  request.delegate = delegate;
+  request.url = url;
+  request.httpMethod = httpMethod;
+  request.params = params;
+  request.connection = nil;
+  request.responseText = nil;
 
   return request;
 }
@@ -58,8 +58,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
-+ (NSString*)serializeURL:(NSString *)baseUrl
-                   params:(NSDictionary*)params {
++ (NSString *)serializeURL:(NSString *)baseUrl
+                   params:(NSDictionary *)params {
   return [self serializeURL:baseUrl params:params httpMethod:@"GET"];
 }
 
@@ -67,7 +67,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * Generate get URL
  */
 + (NSString*)serializeURL:(NSString *)baseUrl
-                   params:(NSDictionary*)params
+                   params:(NSDictionary *)params
                httpMethod:(NSString *)httpMethod {
 
   NSURL* parsedURL = [NSURL URLWithString:baseUrl];
@@ -101,7 +101,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /**
  * Body append for POST method
  */
-- (void)utfAppendBody:(NSMutableData*)body data:(NSString*)data {
+- (void)utfAppendBody:(NSMutableData *)body data:(NSString *)data {
   [body appendData:[data dataUsingEncoding:NSUTF8StringEncoding]];
 }
 
@@ -166,7 +166,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /**
  * Formulate the NSError
  */
-- (id) formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
+- (id)formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
    return [NSError errorWithDomain:@"facebookErrDomain" code:code userInfo:errorData];
 
 }
@@ -174,7 +174,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /**
  * parse the response data
  */
-- (id)parseJsonResponse:(NSData*)data error:(NSError**)error {
+- (id)parseJsonResponse:(NSData *)data error:(NSError **)error {
 
   NSString* responseString = [[[NSString alloc] initWithData:data
                                                     encoding:NSUTF8StringEncoding]
@@ -231,7 +231,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /*
  * private helper function: call the delegate function when the request fail with Error
  */
-- (void)failWithError:(NSError*)error {
+- (void)failWithError:(NSError *)error {
   if ([_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
     [_delegate request:self didFailWithError:error];
   }
@@ -240,7 +240,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 /*
  * private helper function: handle the response data
  */
-- (void)handleResponseData:(NSData*)data {
+- (void)handleResponseData:(NSData *)data {
   if ([_delegate respondsToSelector:@selector(request:didLoadRawResponse:)]) {
     [_delegate request:self didLoadRawResponse:data];
   }
@@ -307,7 +307,6 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 - (void)dealloc {
   [_connection cancel];
   [_connection release];
-  [_delegate release];
   [_responseText release];
   [_url release];
   [_httpMethod release];
@@ -318,7 +317,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // NSURLConnectionDelegate
 
-- (void)connection:(NSURLConnection*)connection didReceiveResponse:(NSURLResponse*)response {
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
   _responseText = [[NSMutableData alloc] init];
 
   NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
@@ -327,16 +326,16 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   }
 }
 
--(void)connection:(NSURLConnection*)connection didReceiveData:(NSData*)data {
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
   [_responseText appendData:data];
 }
 
-- (NSCachedURLResponse*)connection:(NSURLConnection*)connection
+- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
     willCacheResponse:(NSCachedURLResponse*)cachedResponse {
   return nil;
 }
 
--(void)connectionDidFinishLoading:(NSURLConnection*)connection {
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
   [self handleResponseData:_responseText];
 
   [_responseText release];
@@ -345,7 +344,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   _connection = nil;
 }
 
-- (void)connection:(NSURLConnection*)connection didFailWithError:(NSError*)error {
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
   [self failWithError:error];
 
   [_responseText release];

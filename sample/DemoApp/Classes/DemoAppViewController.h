@@ -38,14 +38,14 @@ FBSessionDelegate>{
 
 @property(readonly) Facebook *facebook;
 
--(IBAction) fbButtonClick: (id) sender;
+-(IBAction)fbButtonClick:(id)sender;
 
--(IBAction) getUserInfo: (id) sender;
+-(IBAction)getUserInfo:(id)sender;
 
--(IBAction) getPublicInfo: (id) sender;
+-(IBAction)getPublicInfo:(id)sender;
 
--(IBAction) publishStream: (id) sender;
+-(IBAction)publishStream:(id)sender;
 
--(IBAction) uploadPhoto: (id)sender;
+-(IBAction)uploadPhoto:(id)sender;
 
 @end
