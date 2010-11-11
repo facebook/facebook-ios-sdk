@@ -74,13 +74,13 @@ Authorizing a user allows your application to make authenticated API calls on th
 
 To authorize a user, do the following:
 
-* Bind your application to a URL scheme corresponding to your Facebook application ID. The URL scheme you must bind to is of the format "fb<appId>://", where <appId> is your Facebook application ID. Without this, your application won't be able to handle authorization callbacks. Modify your application's _.plist_ file as follows:
+* Bind your application to a URL scheme corresponding to your Facebook application ID. The URL scheme you must bind to is of the format "fb\[appId\]://", where \[appId\] is your Facebook application ID. Without this, your application won't be able to handle authorization callbacks. Modify your application's _.plist_ file as follows:
 
   * Under the root key ("Information Property List") add a new row and name the key "URL types".
   * Under the "URL types" key that you just added, you should see a key named "Item 0". If not, add a new row with key "Item 0".
   * Under the "Item 0" key, add a new row and name the key "URL Schemes".
   * Under the "URL Schemes" key that you just added, you should see a key named "Item 0". If not, add a new row with key "Item 0".
-  * Set the value of "Item 0" to "fb<appId>" where <appId> is your Facebook application ID. Make sure there are no spaces anywhere in this value.
+  * Set the value of "Item 0" to "fb\[appId\]" where \[appId\] is your Facebook application ID. Make sure there are no spaces anywhere in this value. For example, if your application's id is 1234, the value should be "fb1234".
 
 * Modify your application's main AppDelegate class as follows:
 
@@ -183,5 +183,5 @@ The Facebook Application version 3.2.3 or higher will support single sign-on. Us
 
 * During single sign-on, the Facebook application isn't redirecting back to my application after a user authorizes it. What's wrong?
 
-Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb<appId>:// URL scheme (where "<appId>" is your Facebook application ID).
+Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).
 
