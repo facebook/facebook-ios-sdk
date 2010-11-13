@@ -59,12 +59,20 @@
                 andHttpMethod:(NSString *)httpMethod
                   andDelegate:(id <FBRequestDelegate>)delegate;
 
+- (FBRequest *) getRequestWithGraphPath:(NSString *) graphPath 
+                            andDelegate:(id <FBRequestDelegate>) delegate;
+
 - (void)requestWithGraphPath:(NSString *)graphPath
                  andDelegate:(id <FBRequestDelegate>)delegate;
 
 - (void)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params
                  andDelegate:(id <FBRequestDelegate>)delegate;
+
+- (FBRequest *) getRequestWithGraphPath:(NSString *)graphPath 
+                              andParams:(NSMutableDictionary *)params 
+                          andHttpMethod:(NSString *)httpMethod 
+                            andDelegate:(id <FBRequestDelegate>)delegate;
 
 - (void)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params

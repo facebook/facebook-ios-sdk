@@ -259,10 +259,15 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 }
 
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // public
+
+/**
+ * @return the serialized URL for this request.
+ */
+- (NSString*) getConnectURL {
+  return [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+}
 
 /**
  * @return boolean - whether this request is processing
@@ -280,7 +285,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [_delegate requestLoading:self];
   }
 
-  NSString* url = [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+  NSString* url = [self getConnectURL];
   NSMutableURLRequest* request =
     [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                             cachePolicy:NSURLRequestReloadIgnoringLocalCacheData

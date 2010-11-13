@@ -69,6 +69,9 @@
                         httpMethod:(NSString *) httpMethod
                           delegate:(id<FBRequestDelegate>)delegate
                         requestURL:(NSString *) url;
+
+- (NSString*) getConnectURL;
+
 - (BOOL) loading;
 
 - (void) connect;

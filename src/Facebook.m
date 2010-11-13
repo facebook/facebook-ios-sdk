@@ -59,6 +59,36 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
+ * A private helper function for creating the FBRequest.
+ *
+ * @param url
+ *            url to send http request
+ * @param params
+ *            parameters to append to the url
+ * @param httpMethod
+ *            http method @"GET" or @"POST"
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ */
+
+- (FBRequest *) requestForUrl:(NSString *)url 
+                       params:(NSMutableDictionary *)params 
+                   httpMethod:(NSString *)httpMethod 
+                     delegate:(id<FBRequestDelegate>)delegate {
+  [params setValue:@"json" forKey:@"format"];
+  [params setValue:kSDKVersion forKey:@"sdk"];
+  [params setValue:kSDKVersion forKey:@"sdk_version"];
+  if ([self isSessionValid]) {
+    [params setValue:self.accessToken forKey:@"access_token"];
+  }
+  return [FBRequest getRequestWithParams:params
+                              httpMethod:httpMethod
+                                delegate:delegate
+                              requestURL:url];
+}
+
+/**
  * A private helper function for sending HTTP requests.
  *
  * @param url
@@ -71,24 +101,18 @@ static NSString* kSDKVersion = @"2";
  *            Callback interface for notifying the calling application when
  *            the request has received response
  */
-- (void)openUrl:(NSString *)url
-         params:(NSMutableDictionary *)params
-     httpMethod:(NSString *)httpMethod
-       delegate:(id<FBRequestDelegate>)delegate {
-  [params setValue:@"json" forKey:@"format"];
-  [params setValue:kSDK forKey:@"sdk"];
-  [params setValue:kSDKVersion forKey:@"sdk_version"];
-  if ([self isSessionValid]) {
-    [params setValue:self.accessToken forKey:@"access_token"];
-  }
-
+- (void) openUrl:(NSString *)url 
+          params:(NSMutableDictionary *)params 
+      httpMethod:(NSString *)httpMethod 
+        delegate:(id<FBRequestDelegate>)delegate {
   [_request release];
-  _request = [[FBRequest getRequestWithParams:params
-                                   httpMethod:httpMethod
-                                     delegate:delegate
-                                   requestURL:url] retain];
+  _request = [[self requestForUrl:url
+                           params:params
+                       httpMethod:httpMethod
+                         delegate:delegate] retain];
   [_request connect];
 }
+
 
 /**
  * A private function for opening the authorization dialog.
@@ -414,6 +438,21 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
+ * Get the FBRequest for contacting the Facebook Graph API without any parameters.
+ *
+ * See requesWithGraphPath:graphPath:andDelegate
+ *
+ */
+- (FBRequest *) getRequestWithGraphPath:(NSString *)graphPath 
+                            andDelegate:(id <FBRequestDelegate>)delegate {
+  
+  return [self getRequestWithGraphPath:graphPath 
+                             andParams:[NSMutableDictionary dictionary] 
+                         andHttpMethod:@"GET" 
+                           andDelegate:delegate];
+}
+
+/**
  * Make a request to the Facebook Graph API with the given string
  * parameters using an HTTP GET (default method).
  *
@@ -475,6 +514,21 @@ static NSString* kSDKVersion = @"2";
                  andDelegate:(id <FBRequestDelegate>)delegate {
   NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
   [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
+}
+
+/**
+ * Get the FBRequest for contacting the Facebook Graph API with the given
+ * HTTP method and string parameters.
+ *
+ * See requesWithGraphPath:graphPath:andParams:andHttpMethod:andDelegate
+ *
+ */
+- (FBRequest *) getRequestWithGraphPath:(NSString *)graphPath 
+                              andParams:(NSMutableDictionary *)params 
+                          andHttpMethod:(NSString *)httpMethod 
+                            andDelegate:(id <FBRequestDelegate>)delegate {
+  NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
+  return [self requestForUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
 }
 
 /**
