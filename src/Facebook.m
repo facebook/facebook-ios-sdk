@@ -116,8 +116,15 @@ static NSString* kSDKVersion = @"2";
   // This minimizes the chance that the user will have to enter his or
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
+
+  // The multitasking can be disabled in the Info.plist, too.
+  BOOL multitaskingDisabled = [[[NSBundle mainBundle]
+    objectForInfoDictionaryKey:@"UIApplicationExitsOnSuspend"] boolValue];
   UIDevice *device = [UIDevice currentDevice];
-  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
+  BOOL haveMultitasking = [device respondsToSelector:@selector(isMultitaskingSupported)]
+    && [device isMultitaskingSupported] && !multitaskingDisabled;
+
+  if (haveMultitasking) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
