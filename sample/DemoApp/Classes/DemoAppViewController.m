@@ -22,7 +22,8 @@
 // See http://www.facebook.com/developers/createapp.php
 // Also, your application must bind to the fb[app_id]:// URL
 // scheme (substitue [app_id] for your real Facebook app id).
-static NSString* kAppId = nil;
+NSString* const kAppId = nil;
+
 
 @implementation DemoAppViewController
 
@@ -55,6 +56,10 @@ static NSString* kAppId = nil;
  */
 - (void)viewDidLoad {
   _facebook = [[Facebook alloc] init];
+  // Uncomment the following line if you want to use the Facebook application or Safari
+  // to authenticate the end user instead of a UIWebView even on device with no 
+  // multitasking support. 
+  // [_facebook setForceNativeLogin:YES];
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden = YES;
   _getPublicInfoButton.hidden = YES;

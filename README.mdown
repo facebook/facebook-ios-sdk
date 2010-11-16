@@ -110,7 +110,13 @@ If the app is running in a version of iOS that supports multitasking, and if the
 
 If the device is running in a version of iOS that supports multitasking, but it doesn't have the Facebook app of version 3.2.3 or greater installed, the SDK will open the authorization dialog in Safari. After the user grants or revokes the authorization, Safari redirects back to the calling app. Similar to the Facebook app based authorization, this allows multiple applications to share the same Facebook user session through the Safari cookie.
 
-If the app is running a version of iOS that does not support multitasking, the SDK uses the old mechanism of popping up an inline UIWebView, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
+If the app is running a version of iOS that does not support multitasking, the SDK uses the old mechanism of popping up an inline UIWebView, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout. 
+
+Note : If you want to open the authorization dialog within Facebook app or Safari even on non multitasking devices, there is a property in the Facebook object to force use of native UI:
+
+        [facebook  setForceNativeLogin:YES];
+
+You must aware that in this case you must persist and restore your app's state manually. You'll find a sample use of this property in the demo app.
 
 Logging Out
 -----------

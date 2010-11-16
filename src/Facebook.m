@@ -38,12 +38,25 @@ static NSString* kSDKVersion = @"2";
 
 @synthesize accessToken = _accessToken,
          expirationDate = _expirationDate,
-        sessionDelegate = _sessionDelegate;
+        sessionDelegate = _sessionDelegate,
+                  appId = _appId,
+       forceNativeLogin = _forceNativeLogin;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Override NSObject : clean initialization 
+ */
+- (Facebook *) init
+{
+	if (self = [super init]) {
+		[self setForceNativeLogin:NO];
+	}
+	return self;
+}
+
 /**
  * Override NSObject : free the space
  */
@@ -94,7 +107,9 @@ static NSString* kSDKVersion = @"2";
  * A private function for opening the authorization dialog.
  */
 - (void)authorizeWithFBAppAuth:(BOOL)tryFBAppAuth
-                    safariAuth:(BOOL)trySafariAuth {
+                    safariAuth:(BOOL)trySafariAuth 
+                   nativeLogin:(BOOL)useNativeLogin {
+	
   NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  _appId, @"client_id",
                                  @"user_agent", @"type",
@@ -115,9 +130,16 @@ static NSString* kSDKVersion = @"2";
   // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
   // This minimizes the chance that the user will have to enter his or
   // her credentials in order to authorize the application.
+  // If the device is not running a version of iOS that support multitasking,
+  // the developer can still force the fast app switching and use the Facebook app
+  // or Safari for the user authentication process using the 'useNativeLogin'
+  // parameter. The developer must be aware that in this case he must persist 
+  // and restore its app's state manually. 
+
   BOOL didOpenOtherApp = NO;
   UIDevice *device = [UIDevice currentDevice];
-  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
+  if (([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported])
+      || useNativeLogin) {
     if (tryFBAppAuth) {
       NSString *fbAppUrl = [FBRequest serializeURL:kFBAppAuthURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
@@ -209,7 +231,7 @@ static NSString* kSDKVersion = @"2";
 
   _sessionDelegate = delegate;
 
-  [self authorizeWithFBAppAuth:YES safariAuth:YES];
+  [self authorizeWithFBAppAuth:YES safariAuth:YES nativeLogin:self.forceNativeLogin];
 }
 
 /**
@@ -255,14 +277,14 @@ static NSString* kSDKVersion = @"2";
     // If the error response indicates that we should try again using Safari, open
     // the authorization dialog in Safari.
     if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
-      [self authorizeWithFBAppAuth:NO safariAuth:YES];
+      [self authorizeWithFBAppAuth:NO safariAuth:YES nativeLogin:self.forceNativeLogin];
       return YES;
     }
     
     // If the error response indicates that we should try the authorization flow
     // in an inline dialog, do that.
     if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
-      [self authorizeWithFBAppAuth:NO safariAuth:NO];
+      [self authorizeWithFBAppAuth:NO safariAuth:NO nativeLogin:NO];
       return YES;
     }
 

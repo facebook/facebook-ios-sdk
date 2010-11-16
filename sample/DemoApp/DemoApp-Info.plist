@@ -9,12 +9,12 @@
 			<string></string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb[your-app-id]</string>
+				<string>fb155031251206434</string>
 			</array>
 		</dict>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
+	<string></string>
 	<key>CFBundleDisplayName</key>
 	<string>${PRODUCT_NAME}</string>
 	<key>CFBundleExecutable</key>

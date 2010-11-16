@@ -35,7 +35,25 @@
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-  return [[controller facebook] handleOpenURL:url];
+  UIDevice *device = [UIDevice currentDevice];
+  if (([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported])) {
+    return [[controller facebook] handleOpenURL:url];
+  }
+  else {
+    // If we enter in this part of the code, it means that the developer
+    // chose to use fast app swith even on devices with no multitasking support.
+    // To do that, he set the forceNativeLogin propertyof the Facebook object
+    // to YES. Defaut value for this property is NO.
+    [[controller facebook] setAppId:kAppId];
+    if([[controller facebook] handleOpenURL:url])
+    {
+      [controller fbDidLogin];
+      return YES;
+    }
+    NSLog(@"returned NO");
+      
+    return NO;      
+  }
 }
 
 - (void)dealloc {

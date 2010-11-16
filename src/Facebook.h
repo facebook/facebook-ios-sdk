@@ -34,11 +34,16 @@
   FBDialog* _fbDialog;
   NSString* _appId;
   NSArray* _permissions;
+  BOOL _forceNativeLogin;
 }
 
 @property(nonatomic, copy) NSString* accessToken;
 
 @property(nonatomic, copy) NSDate* expirationDate;
+
+@property(nonatomic) BOOL forceNativeLogin;
+
+@property(nonatomic, copy) NSString* appId;
 
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 
