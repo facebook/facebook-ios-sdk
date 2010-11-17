@@ -18,17 +18,14 @@
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 
-static NSString* kOAuthURL = @"https://www.facebook.com/dialog/oauth";
+static NSString* kDialogBaseURL = @"https://m.facebook.com/dialog/";
+static NSString* kGraphBaseURL = @"https://graph.facebook.com/";
+static NSString* kRestserverBaseURL = @"https://api.facebook.com/method/";
+
 static NSString* kFBAppAuthURL = @"fbauth://authorize";
 static NSString* kRedirectURL = @"fbconnect://success";
-static NSString* kGraphBaseURL = @"https://graph.facebook.com/";
-static NSString* kRestApiURL = @"https://api.facebook.com/method/";
-static NSString* kUIServerBaseURL = @"http://www.facebook.com/connect/uiserver.php";
 
-// Use this url when you pass access tokens to the server
-static NSString* kUIServerSecureURL = @"https://www.facebook.com/connect/uiserver.php";
-static NSString* kCancelURL = @"fbconnect://cancel";
-static NSString* kLogin = @"login";
+static NSString* kLogin = @"oauth";
 static NSString* kSDK = @"ios";
 static NSString* kSDKVersion = @"2";
 
@@ -103,6 +100,8 @@ static NSString* kSDKVersion = @"2";
                                  kSDKVersion, @"sdk",
                                  nil];
 
+  NSString *loginDialogURL = [kDialogBaseURL stringByAppendingString:kLogin];
+
   if (_permissions != nil) {
     NSString* scope = [_permissions componentsJoinedByString:@","];
     [params setValue:scope forKey:@"scope"];
@@ -127,7 +126,7 @@ static NSString* kSDKVersion = @"2";
       NSString *nextUrl = [NSString stringWithFormat:@"fb%@://authorize", _appId];
       [params setValue:nextUrl forKey:@"redirect_uri"];
 
-      NSString *fbAppUrl = [FBRequest serializeURL:kOAuthURL params:params];
+      NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
     }
   }
@@ -136,10 +135,9 @@ static NSString* kSDKVersion = @"2";
   // enter his or her credentials.
   if (!didOpenOtherApp) {
     [_loginDialog release];
-    _loginDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL
+    _loginDialog = [[FBLoginDialog alloc] initWithURL:loginDialogURL
                                           loginParams:params
                                              delegate:self];
-
     [_loginDialog show];
   }
 }
@@ -251,14 +249,14 @@ static NSString* kSDKVersion = @"2";
   // If the URL doesn't contain the access token, an error has occurred.
   if (!accessToken) {
     NSString *errorReason = [params valueForKey:@"error"];
-    
+
     // If the error response indicates that we should try again using Safari, open
     // the authorization dialog in Safari.
     if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
       [self authorizeWithFBAppAuth:NO safariAuth:YES];
       return YES;
     }
-    
+
     // If the error response indicates that we should try the authorization flow
     // in an inline dialog, do that.
     if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
@@ -387,7 +385,7 @@ static NSString* kSDKVersion = @"2";
                     andParams:(NSMutableDictionary *)params
                 andHttpMethod:(NSString *)httpMethod
                   andDelegate:(id <FBRequestDelegate>)delegate {
-  NSString * fullURL = [kRestApiURL stringByAppendingString:methodName];
+  NSString * fullURL = [kRestserverBaseURL stringByAppendingString:methodName];
   [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
 }
 
@@ -509,37 +507,22 @@ static NSString* kSDKVersion = @"2";
      andParams:(NSMutableDictionary *)params
    andDelegate:(id <FBDialogDelegate>)delegate {
 
-  NSString *dialogURL = nil;
+  [_fbDialog release];
+
+  NSString *dialogURL = [kDialogBaseURL stringByAppendingString:action];
   [params setObject:@"touch" forKey:@"display"];
-  [params setObject: kSDKVersion forKey:@"sdk"];
+  [params setObject:kSDKVersion forKey:@"sdk"];
+  [params setObject:kRedirectURL forKey:@"redirect_uri"];
 
   if (action == kLogin) {
     [params setObject:@"user_agent" forKey:@"type"];
-    [params setObject:kRedirectURL forKey:@"redirect_uri"];
-
-    [_fbDialog release];
-    _fbDialog = [[FBLoginDialog alloc] initWithURL:kOAuthURL loginParams:params delegate:self];
-
+    _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
   } else {
-    [params setObject:action forKey:@"method"];
-    [params setObject:kRedirectURL forKey:@"next"];
-    [params setObject:kCancelURL forKey:@"cancel_url"];
-
     if ([self isSessionValid]) {
-      [params setValue:
-       [self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+      [params setValue:[self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                 forKey:@"access_token"];
-      dialogURL = [kUIServerSecureURL copy];
-    } else {
-      dialogURL = [kUIServerBaseURL copy];
     }
-
-    [_fbDialog release];
-    _fbDialog = [[FBDialog alloc] initWithURL:dialogURL
-                                       params:params
-                                     delegate:delegate];
-    [dialogURL release];
-
+    _fbDialog = [[FBDialog alloc] initWithURL:dialogURL params:params delegate:delegate];
   }
 
   [_fbDialog show];
