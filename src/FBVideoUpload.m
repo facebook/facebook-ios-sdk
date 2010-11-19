@@ -61,7 +61,9 @@ static NSString *const kAPIURL = @"http://api-video.facebook.com/restserver.php"
     [params setObject:[self sessionID] forKey:@"session_key"];
     [params setObject:apiKey forKey:@"api_key"];
     [params setObject:[self signatureForParams:params] forKey:@"sig"];
-    [params setObject:[NSData dataWithContentsOfURL:movieURL] forKey:@"video.mov"];
+    [params
+        setObject:[NSData dataWithContentsOfURL:movieURL]
+        forKey:[movieURL lastPathComponent]];
     [[FBRequest getRequestWithParams:params
         httpMethod:@"POST" delegate:delegate requestURL:kAPIURL] connect];
 }
