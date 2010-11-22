@@ -1,7 +1,19 @@
 #import "FBRequest.h"
 
-// Uploads video to Facebook using a combination
-// of the old and the new API/SDK.
+/*
+    Uploads video to Facebook using a combination of the old
+    and the new API/SDK.
+
+    Please note that this code parses the access token from
+    the Facebook class, which is quite brittle, unofficial and
+    could easily break with the upcoming SDK releases. Also it
+    seems to only work with the older, pop-up authentication and
+    not the new one that uses app switching. (The new authentication
+    scheme seems to result in a different auth token format
+    that we can’t parse.)
+
+    http://bugs.developers.facebook.net/show_bug.cgi?id=10214
+*/
 @interface FBVideoUpload : NSObject
 {
     NSString *accessToken;
