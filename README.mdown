@@ -32,6 +32,10 @@ To build and run the sample application with Xcode (3.2):
 
 * Verify your compiler settings by checking the menu items under _Project_->_Set Active SDK_ and _Project_->_Set Active Executable_. For most developers, the defaults should be OK. Note that if you compile against a version of the iOS SDK that does not support multitasking, not all features of the Facebook SDK may be available. See the "Debugging" section below for more information.
 
+* Create a Facebook App ID (see http://www.facebook.com/developers/createapp.php)
+
+* Specify your Facebook AppId in DemoAppViewController.m
+
 * Finally, select _Build_->_Build and Run_. This should compile the application and launch it.
 
 Integrate With Your Own Application
