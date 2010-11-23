@@ -34,7 +34,7 @@ To build and run the sample application with Xcode (3.2):
 
 * Create a Facebook App ID (see http://www.facebook.com/developers/createapp.php)
 
-* Specify your Facebook AppId in DemoAppViewController.m
+* Specify your Facebook AppId in DemoAppViewController.m and DemoApp-Info.plist (under URL types > Item 0 > URL Schemes > Item 0)
 
 * Finally, select _Build_->_Build and Run_. This should compile the application and launch it.
 
