@@ -151,6 +151,7 @@ The [Old REST API](http://developers.facebook.com/docs/reference/rest/) is also 
         [facebook requestWithMethodName: @"users.getInfo" andParams: params andHttpMethod: @"GET" andDelegate: self];
 
 
+<a name="dialogs" /a>
 Displaying Dialogs
 ------------------
 
