@@ -29,7 +29,7 @@ static NSString* kUIServerBaseURL = @"http://www.facebook.com/connect/uiserver.p
 static NSString* kUIServerSecureURL = @"https://www.facebook.com/connect/uiserver.php";
 static NSString* kCancelURL = @"fbconnect://cancel";
 static NSString* kLogin = @"login";
-static NSString* kSDK = @"ios";
+//static NSString* kSDK = @"ios";
 static NSString* kSDKVersion = @"2";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
