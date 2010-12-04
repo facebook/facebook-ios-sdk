@@ -287,7 +287,6 @@ BOOL FBIsDeviceIPad() {
 
 - (void)cancel {
   [self dialogDidCancel:nil];
-  [self dismissWithSuccess:NO animated:YES];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
