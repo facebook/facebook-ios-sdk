@@ -54,7 +54,7 @@ static NSString* kAppId = nil;
  * Set initial view
  */
 - (void)viewDidLoad {
-  _facebook = [[Facebook alloc] init];
+  _facebook = [[Facebook alloc] initWithAppId:kAppId];
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden = YES;
   _getPublicInfoButton.hidden = YES;
@@ -86,7 +86,7 @@ static NSString* kAppId = nil;
  * Show the authorization dialog.
  */
 - (void)login {
-  [_facebook authorize:kAppId permissions:_permissions delegate:self];
+  [_facebook authorize:_permissions delegate:self];
 }
 
 /**
@@ -150,14 +150,13 @@ static NSString* kAppId = nil;
                                @"http://itsti.me/", @"href", nil];
   NSString *attachmentStr = [jsonWriter stringWithObject:attachment];
   NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                 kAppId, @"api_key",
                                  @"Share on Facebook",  @"user_message_prompt",
                                  actionLinksStr, @"action_links",
                                  attachmentStr, @"attachment",
                                  nil];
 
 
-  [_facebook dialog:@"stream.publish"
+  [_facebook dialog:@"feed"
           andParams:params
         andDelegate:self];
 

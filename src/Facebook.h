@@ -42,9 +42,9 @@
 
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 
+- (id)initWithAppId:(NSString *)app_id;
 
-- (void)authorize:(NSString *)application_id
-      permissions:(NSArray *)permissions
+- (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate;
 
 - (BOOL)handleOpenURL:(NSURL *)url;

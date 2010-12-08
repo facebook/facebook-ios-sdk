@@ -40,7 +40,19 @@ static NSString* kSDKVersion = @"2";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Initialize the Facebook object with application ID.
+ */
+- (id)initWithAppId:(NSString *)app_id {
+  self = [super init];
+  if (self) {
+    [_appId release];
+    _appId = [app_id copy];
+  }
+  return self;
+}
+
 /**
  * Override NSObject : free the space
  */
@@ -196,11 +208,8 @@ static NSString* kSDKVersion = @"2";
  *            Callback interface for notifying the calling application when
  *            the user has logged in.
  */
-- (void)authorize:(NSString *)application_id
-      permissions:(NSArray *)permissions
+- (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate {
-  [_appId release];
-  _appId = [application_id copy];
 
   [_permissions release];
   _permissions = [permissions retain];
@@ -518,6 +527,7 @@ static NSString* kSDKVersion = @"2";
     [params setObject:@"user_agent" forKey:@"type"];
     _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
   } else {
+    [params setObject:_appId forKey:@"app_id"];
     if ([self isSessionValid]) {
       [params setValue:[self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                 forKey:@"access_token"];
