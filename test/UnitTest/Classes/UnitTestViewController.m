@@ -64,7 +64,7 @@ static NSString* kTestUser =@"499095509";
                                  nil];
   
   
-  [_facebook dialog: @"stream.publish"
+  [_facebook dialog: @"feed"
           andParams: params
         andDelegate:self];
   
@@ -161,7 +161,7 @@ static NSString* kTestUser =@"499095509";
                                  nil];
   
   
-  [_facebook dialog: @"stream.publish"
+  [_facebook dialog: @"feed"
           andParams: params
         andDelegate:self];
   

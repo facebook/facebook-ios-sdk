@@ -61,7 +61,9 @@ Usage
 
 Begin by instantiating the Facebook object:
 
-        Facebook* facebook = [[Facebook alloc] init];
+        Facebook* facebook = [[Facebook alloc] initWithAppId:appId];
+
+Where _appId_ is your Facebook application ID string.
 
 With the iOS SDK, you can do three main things:
 
@@ -96,8 +98,8 @@ To authorize a user, do the following:
 
 * Finally, make a call to the _authorize_ method:
 
-        Facebook* facebook = [[Facebook alloc] init];
-        [facebook authorize:appId permissions:permissions delegate:self];
+        Facebook* facebook = [[Facebook alloc] initWithAppId:appId];
+        [facebook authorize:permissions delegate:self];
 
 Where _appId_ is your Facebook application ID string, _permissions_ is an array of strings containing each permission your application requires, and _delegate_ is the delegate object you wish to receive callbacks. For more information, refer to the code or sample application.
 
@@ -155,12 +157,11 @@ The [Old REST API](http://developers.facebook.com/docs/reference/rest/) is also 
 Displaying Dialogs
 ------------------
 
-This SDK provides a method for popping up a Facebook dialog. The currently supported dialogs are the login and permissions dialogs used in the authorization flow, and a dialog for publishing posts to a user's stream.
+This SDK provides a method for popping up a Facebook dialog. The currently supported dialogs are the login and permissions dialogs used in the authorization flow, and a dialog for publishing posts to a user's feed.
 
 To invoke a dialog:
 
-        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys: apiKey, @"api_key", nil];
-        [facebook dialog:@"stream.publish" andParams:params andDelegate:self];
+        [facebook dialog:@"feed" andDelegate:self];
 
 This allows you to provide basic Facebook functionality in your application with a singe line of code -- no need to build native dialogs, make API calls, or handle responses. For further examples, refer to the included sample application.
 
