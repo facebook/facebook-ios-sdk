@@ -131,7 +131,7 @@ Note that logging out will not revoke your application's permissions, but simply
 Making API Calls
 ----------------
 
-The (http://developers.facebook.com/docs/api)[Facebook Graph API] presents a simple, consistent view of the Facebook social graph, uniformly representing objects in the graph (e.g., people, photos, events, and fan pages) and the connections between them (e.g., friend relationships, shared content, and photo tags).
+The [Facebook Graph API](http://developers.facebook.com/docs/api) presents a simple, consistent view of the Facebook social graph, uniformly representing objects in the graph (e.g., people, photos, events, and fan pages) and the connections between them (e.g., friend relationships, shared content, and photo tags).
 
 You can access the Graph API by passing the Graph Path to the request() method. For example, to access information about the logged in user, call
 
