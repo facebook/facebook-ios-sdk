@@ -125,10 +125,10 @@ static NSString* kAppId = nil;
   NSMutableDictionary * params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                   @"SELECT uid,name FROM user WHERE uid=4", @"query",
                                   nil];
-  [_facebook requestWithMethodName: @"fql.query"
-                         andParams: params
-                     andHttpMethod: @"POST"
-                       andDelegate: self];
+  [_facebook requestWithMethodName:@"fql.query"
+                         andParams:params
+                     andHttpMethod:@"POST"
+                       andDelegate:self];
 }
 
 /**
@@ -221,7 +221,7 @@ static NSString* kAppId = nil;
 }
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // FBRequestDelegate
 
 /**
@@ -232,14 +232,16 @@ static NSString* kAppId = nil;
  */
 - (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response {
   NSLog(@"received response");
-};
+}
 
 /**
- * Called when a request returns and its response has been parsed into an object.
- * The resulting object may be a dictionary, an array, a string, or a number, depending
- * on the format of the API response.
- * If you need access to the raw response, use
- * (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response.
+ * Called when a request returns and its response has been parsed into
+ * an object. The resulting object may be a dictionary, an array, a string,
+ * or a number, depending on the format of the API response. If you need access
+ * to the raw response, use:
+ *
+ * (void)request:(FBRequest *)request
+ *      didReceiveResponse:(NSURLResponse *)response
  */
 - (void)request:(FBRequest *)request didLoad:(id)result {
   if ([result isKindOfClass:[NSArray class]]) {
@@ -253,14 +255,15 @@ static NSString* kAppId = nil;
 };
 
 /**
- * Called when an error prevents the Facebook API request from completing successfully.
+ * Called when an error prevents the Facebook API request from completing
+ * successfully.
  */
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
   [self.label setText:[error localizedDescription]];
 };
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 // FBDialogDelegate
 
 /**

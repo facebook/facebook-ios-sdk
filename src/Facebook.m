@@ -80,10 +80,11 @@ static NSString* kSDKVersion = @"2";
  *            Callback interface for notifying the calling application when
  *            the request has received response
  */
-- (void)openUrl:(NSString *)url
-         params:(NSMutableDictionary *)params
-     httpMethod:(NSString *)httpMethod
-       delegate:(id<FBRequestDelegate>)delegate {
+- (FBRequest*)openUrl:(NSString *)url
+               params:(NSMutableDictionary *)params
+           httpMethod:(NSString *)httpMethod
+             delegate:(id<FBRequestDelegate>)delegate {
+
   [params setValue:@"json" forKey:@"format"];
   [params setValue:kSDK forKey:@"sdk"];
   [params setValue:kSDKVersion forKey:@"sdk_version"];
@@ -97,6 +98,7 @@ static NSString* kSDKVersion = @"2";
                                      delegate:delegate
                                    requestURL:url] retain];
   [_request connect];
+  return _request;
 }
 
 /**
@@ -353,21 +355,23 @@ static NSString* kSDKVersion = @"2";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
  */
-- (void)requestWithParams:(NSMutableDictionary *)params
-              andDelegate:(id <FBRequestDelegate>)delegate {
+- (FBRequest*)requestWithParams:(NSMutableDictionary *)params
+                    andDelegate:(id <FBRequestDelegate>)delegate {
   if ([params objectForKey:@"method"] == nil) {
     NSLog(@"API Method must be specified");
-    return;
+    return nil;
   }
 
   NSString * methodName = [params objectForKey:@"method"];
   [params removeObjectForKey:@"method"];
 
-  [self requestWithMethodName:methodName
-                    andParams:params
-                andHttpMethod:@"GET"
-                  andDelegate:delegate];
+  return [self requestWithMethodName:methodName
+                           andParams:params
+                       andHttpMethod:@"GET"
+                         andDelegate:delegate];
 }
 
 /**
@@ -389,13 +393,18 @@ static NSString* kSDKVersion = @"2";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
  */
-- (void)requestWithMethodName:(NSString *)methodName
+- (FBRequest*)requestWithMethodName:(NSString *)methodName
                     andParams:(NSMutableDictionary *)params
                 andHttpMethod:(NSString *)httpMethod
                   andDelegate:(id <FBRequestDelegate>)delegate {
   NSString * fullURL = [kRestserverBaseURL stringByAppendingString:methodName];
-  [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
+  return [self openUrl:fullURL
+                params:params
+            httpMethod:httpMethod
+              delegate:delegate];
 }
 
 /**
@@ -410,14 +419,16 @@ static NSString* kSDKVersion = @"2";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
  */
-- (void)requestWithGraphPath:(NSString *)graphPath
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                  andDelegate:(id <FBRequestDelegate>)delegate {
 
-  [self requestWithGraphPath:graphPath
-                   andParams:[NSMutableDictionary dictionary]
-               andHttpMethod:@"GET"
-                 andDelegate:delegate];
+  return [self requestWithGraphPath:graphPath
+                          andParams:[NSMutableDictionary dictionary]
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
 }
 
 /**
@@ -439,14 +450,17 @@ static NSString* kSDKVersion = @"2";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
  */
-- (void)requestWithGraphPath:(NSString *)graphPath
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params
                  andDelegate:(id <FBRequestDelegate>)delegate {
-  [self requestWithGraphPath:graphPath
-                   andParams:params
-               andHttpMethod:@"GET"
-                 andDelegate:delegate];
+
+  return [self requestWithGraphPath:graphPath
+                          andParams:params
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
 }
 
 /**
@@ -475,13 +489,19 @@ static NSString* kSDKVersion = @"2";
  * @param delegate
  *            Callback interface for notifying the calling application when
  *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
  */
-- (void)requestWithGraphPath:(NSString *)graphPath
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                    andParams:(NSMutableDictionary *)params
                andHttpMethod:(NSString *)httpMethod
                  andDelegate:(id <FBRequestDelegate>)delegate {
+
   NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
-  [self openUrl:fullURL params:params httpMethod:httpMethod delegate:delegate];
+  return [self openUrl:fullURL
+                params:params
+            httpMethod:httpMethod
+              delegate:delegate];
 }
 
 /**

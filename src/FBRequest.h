@@ -51,10 +51,7 @@
  * standard Objective-C object-to-string conversion facilities.
  */
 @property(nonatomic,retain) NSMutableDictionary* params;
-
-
 @property(nonatomic,assign) NSURLConnection*  connection;
-
 @property(nonatomic,assign) NSMutableData* responseText;
 
 
@@ -75,7 +72,7 @@
 
 @end
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 /*
  *Your application should implement this delegate
@@ -100,10 +97,11 @@
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error;
 
 /**
- * Called when a request returns and its response has been parsed into an object.
+ * Called when a request returns and its response has been parsed into
+ * an object.
  *
- * The resulting object may be a dictionary, an array, a string, or a number, depending
- * on thee format of the API response.
+ * The resulting object may be a dictionary, an array, a string, or a number,
+ * depending on thee format of the API response.
  */
 - (void)request:(FBRequest *)request didLoad:(id)result;
 
