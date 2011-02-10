@@ -1,6 +1,8 @@
 sample/DemoApp/build/
 sample/DemoApp/DemoApp.xcodeproj/*.pbxuser
 sample/DemoApp/DemoApp.xcodeproj/*.mode*
+sample/DemoApp/DemoApp.xcodeproj/xcuserdata*
+sample/DemoApp/DemoApp.xcodeproj/project.xcworkspace
 sample/theRunAround/build/
 sample/theRunAround/theRunAround.xcodeproj/*.pbxuser
 sample/theRunAround/theRunAround.xcodeproj/*.mode*
@@ -12,3 +14,4 @@ test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
 *~
 *#
+.arcconfig
