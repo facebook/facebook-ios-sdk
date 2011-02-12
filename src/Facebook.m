@@ -213,12 +213,20 @@ static NSString* kSDKVersion = @"2";
 - (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate {
 
+  [self authorize:permissions delegate:delegate appAuth:YES safariAuth:YES];
+}
+
+- (void)authorize:(NSArray *)permissions
+         delegate:(id<FBSessionDelegate>)delegate
+          appAuth:(BOOL)tryFBAppAuth
+       safariAuth:(BOOL)trySafariAuth {
+    
   [_permissions release];
   _permissions = [permissions retain];
-
+    
   _sessionDelegate = delegate;
-
-  [self authorizeWithFBAppAuth:YES safariAuth:YES];
+    
+  [self authorizeWithFBAppAuth:tryFBAppAuth safariAuth:trySafariAuth];
 }
 
 /**

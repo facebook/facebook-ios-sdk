@@ -47,6 +47,11 @@
 - (void)authorize:(NSArray *)permissions
          delegate:(id<FBSessionDelegate>)delegate;
 
+- (void)authorize:(NSArray *)permissions
+         delegate:(id<FBSessionDelegate>)delegate
+          appAuth:(BOOL)tryFBAppAuth
+       safariAuth:(BOOL)trySafariAuth;
+
 - (BOOL)handleOpenURL:(NSURL *)url;
 
 - (void)logout:(id<FBSessionDelegate>)delegate;
