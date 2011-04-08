@@ -1,11 +1,17 @@
 sample/DemoApp/build/
 sample/DemoApp/DemoApp.xcodeproj/*.pbxuser
 sample/DemoApp/DemoApp.xcodeproj/*.mode*
+sample/DemoApp/DemoApp.xcodeproj/*.xcworkspace/
+sample/DemoApp/DemoApp.xcodeproj/xcuserdata/
 sample/theRunAround/build/
 sample/theRunAround/theRunAround.xcodeproj/*.pbxuser
 sample/theRunAround/theRunAround.xcodeproj/*.mode*
+sample/theRunAround/theRunAround.xcodeproj/*.xcworkspace/
+sample/theRunAround/theRunAround.xcodeproj/xcuserdata/
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
+src/facebook-ios-sdk.xcodeproj/*.xcworkspace/
+src/facebook-ios-sdk.xcodeproj/xcuserdata/
 src/build/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
