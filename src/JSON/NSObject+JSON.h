@@ -27,27 +27,27 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "NSObject+SBJSON.h"
-#import "SBJsonWriter.h"
+#import <Foundation/Foundation.h>
 
-@implementation NSObject (NSObject_SBJSON)
+#pragma mark JSON Writing
 
-- (NSString *)JSONFragment {
-    SBJsonWriter *jsonWriter = [SBJsonWriter new];
-    NSString *json = [jsonWriter stringWithFragment:self];    
-    if (!json)
-        NSLog(@"-JSONFragment failed. Error trace is: %@", [jsonWriter errorTrace]);
-    [jsonWriter release];
-    return json;
-}
+/// Adds JSON generation to NSObject
+@interface NSObject (NSObject_SBJsonWriting)
 
-- (NSString *)JSONRepresentation {
-    SBJsonWriter *jsonWriter = [SBJsonWriter new];    
-    NSString *json = [jsonWriter stringWithObject:self];
-    if (!json)
-        NSLog(@"-JSONRepresentation failed. Error trace is: %@", [jsonWriter errorTrace]);
-    [jsonWriter release];
-    return json;
-}
+/// Returns a string containing the receiver encoded in JSON.
+- (NSString *)JSONRepresentation;
 
 @end
+
+
+#pragma mark JSON Parsing
+
+/// Adds JSON parsing methods to NSString
+@interface NSString (NSString_SBJsonParsing)
+
+/// Returns the NSDictionary or NSArray represented by the receiver's JSON representation, or nil on error
+- (id)JSONValue;
+
+@end
+
+
