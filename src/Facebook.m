@@ -574,7 +574,9 @@ static NSString* kSDKVersion = @"2";
  * Set the authToken and expirationDate after login succeed
  */
 - (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
-  self.accessToken = token;
+  NSString *pcenToken = [(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) token, NULL, (CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8) autorelease];
+  self.accessToken = pcenToken;
+  NSLog(@"access token is %@", self.accessToken);
   self.expirationDate = expirationDate;
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogin)]) {
     [_sessionDelegate fbDidLogin];
