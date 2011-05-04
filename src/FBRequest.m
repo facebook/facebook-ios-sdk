@@ -360,4 +360,11 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   _connection = nil;
 }
 
+- (void)connection:(NSURLConnection *)connection didSendBodyData:(NSInteger)bytesWritten totalBytesWritten:(NSInteger)totalBytesWritten totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    if ([_delegate respondsToSelector:
+         @selector(request:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
+        [_delegate request:self didSendBodyData:bytesWritten totalBytesWritten:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+    }
+}
+
 @end
