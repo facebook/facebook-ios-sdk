@@ -110,6 +110,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * Generate body for POST method
  */
 - (NSMutableData *)generatePostBody {
+  NSString *filename = nil;
   NSMutableData *body = [NSMutableData data];
   NSString *endLine = [NSString stringWithFormat:@"\r\n--%@\r\n", kStringBoundary];
   NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionary];
@@ -124,6 +125,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
       [dataDictionary setObject:[_params valueForKey:key] forKey:key];
       continue;
 
+    }
+
+    // If filename key
+    if ([key isEqualToString:@"filename"]) {
+        filename = [_params valueForKey:key];
+        continue;
     }
 
     [self utfAppendBody:body
@@ -142,7 +149,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
         NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
         [self utfAppendBody:body
                        data:[NSString stringWithFormat:
-                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
+                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", (filename) ? filename : key]];
         [self utfAppendBody:body
                        data:[NSString stringWithString:@"Content-Type: image/png\r\n\r\n"]];
         [body appendData:imageData];
@@ -151,7 +158,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                  @"dataParam must be a UIImage or NSData");
         [self utfAppendBody:body
                        data:[NSString stringWithFormat:
-                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
+                             @"Content-Disposition: form-data; filename=\"%@\"\r\n", (filename) ? filename : key]];
         [self utfAppendBody:body
                        data:[NSString stringWithString:@"Content-Type: content/unknown\r\n\r\n"]];
         [body appendData:(NSData*)dataParam];
