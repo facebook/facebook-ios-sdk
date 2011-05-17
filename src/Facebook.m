@@ -35,8 +35,6 @@ static NSString* kSDKVersion = @"2";
 @interface Facebook ()
 
 // private properties
-
-@property(nonatomic, copy) NSString* appId;
 @property(nonatomic, retain) NSArray* permissions;
 
 @end
@@ -49,7 +47,6 @@ static NSString* kSDKVersion = @"2";
          expirationDate = _expirationDate,
         sessionDelegate = _sessionDelegate,
             permissions = _permissions,
-                  appId = _appId,
              localAppId = _localAppId;
 
 
@@ -238,8 +235,6 @@ static NSString* kSDKVersion = @"2";
  * Also note that requests may be made to the API without calling
  * authorize() first, in which case only public information is returned.
  *
- * @param appId
- *            The Facebook application id, e.g. "350685531728".
  * @param permissions
  *            A list of permission required for this application: e.g.
  *            "read_stream", "publish_stream", or "offline_access". see
