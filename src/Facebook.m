@@ -263,7 +263,7 @@ static NSString* kSDKVersion = @"2";
  *            their URL schemes and always redirect the user back to the
  *            correct app, even if both the free and the app is installed
  *            on the device.
- *            localAppId is supported on version 3.4 and above of the Facebook
+ *            localAppId is supported on version 3.4.1 and above of the Facebook
  *            app. If the user has an older version of the Facebook app
  *            installed and your app uses localAppId parameter, the SDK will
  *            proceed as if the Facebook app isn't installed on the device
