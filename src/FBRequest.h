@@ -32,7 +32,7 @@
 }
 
 
-@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+@property(nonatomic,retain) id<FBRequestDelegate> delegate;
 
 /**
  * The URL which will be contacted to execute the request.
