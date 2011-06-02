@@ -286,7 +286,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [_delegate requestLoading:self];
   }
 
-  NSString* url = [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+  BOOL usePOST = [self.httpMethod isEqualToString: @"POST"];
+  NSString* url = usePOST ? _url : [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
   NSMutableURLRequest* request =
     [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
                             cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
@@ -295,7 +296,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 
   [request setHTTPMethod:self.httpMethod];
-  if ([self.httpMethod isEqualToString: @"POST"]) {
+  if (usePOST) {
     NSString* contentType = [NSString
                              stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
     [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
