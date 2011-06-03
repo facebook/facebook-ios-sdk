@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2011 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -27,52 +27,25 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+#import "SBJsonStreamParserAccumulator.h"
 
+@implementation SBJsonStreamParserAccumulator
 
-@implementation SBJsonBase
-
-@synthesize errorTrace;
-@synthesize maxDepth;
-
-- (id)init {
-    self = [super init];
-    if (self)
-        self.maxDepth = 512;
-    return self;
-}
+@synthesize value;
 
 - (void)dealloc {
-    [errorTrace release];
+    [value release];
     [super dealloc];
 }
 
-- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str {
-    NSDictionary *userInfo;
-    if (!errorTrace) {
-        errorTrace = [NSMutableArray new];
-        userInfo = [NSDictionary dictionaryWithObject:str forKey:NSLocalizedDescriptionKey];
-        
-    } else {
-        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                    str, NSLocalizedDescriptionKey,
-                    [errorTrace lastObject], NSUnderlyingErrorKey,
-                    nil];
-    }
-    
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+#pragma mark SBJsonStreamParserAdapterDelegate
 
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace addObject:error];
-    [self didChangeValueForKey:@"errorTrace"];
+- (void)parser:(SBJsonStreamParser*)parser foundArray:(NSArray *)array {
+	value = [array retain];
 }
 
-- (void)clearErrorTrace {
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace release];
-    errorTrace = nil;
-    [self didChangeValueForKey:@"errorTrace"];
+- (void)parser:(SBJsonStreamParser*)parser foundObject:(NSDictionary *)dict {
+	value = [dict retain];
 }
 
 @end

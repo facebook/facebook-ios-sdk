@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2011 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -27,32 +27,30 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-
-/**
- @brief Adds JSON parsing methods to NSString
- 
-This is a category on NSString that adds methods for parsing the target string.
-*/
-@interface NSString (NSString_SBJSON)
+#import "SBJsonStreamWriterAccumulator.h"
 
 
-/**
- @brief Returns the object represented in the receiver, or nil on error. 
- 
- Returns a a scalar object represented by the string's JSON fragment representation.
- 
- @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
- */
-- (id)JSONFragmentValue;
+@implementation SBJsonStreamWriterAccumulator
 
-/**
- @brief Returns the NSDictionary or NSArray represented by the current string's JSON representation.
- 
- Returns the dictionary or array represented in the receiver, or nil on error.
+@synthesize data;
 
- Returns the NSDictionary or NSArray represented by the current string's JSON representation.
- */
-- (id)JSONValue;
+- (id)init {
+    self = [super init];
+    if (self) {
+        data = [[NSMutableData alloc] initWithCapacity:8096u];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [data release];
+    [super dealloc];
+}
+
+#pragma mark SBJsonStreamWriterDelegate
+
+- (void)writer:(SBJsonStreamWriter *)writer appendBytes:(const void *)bytes length:(NSUInteger)length {
+    [data appendBytes:bytes length:length];
+}
 
 @end
