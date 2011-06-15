@@ -559,6 +559,20 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
+ * Make a request to the Facebook Graph API with the given URL.
+ *
+ * @param fullURL
+ *            URL to the graph API that we get from paging
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ */
+- (void)requestWithURLString:(NSString *)fullURL
+                 andDelegate:(id <FBRequestDelegate>)delegate {
+    [self openUrl:fullURL params:nil httpMethod:@"GET" delegate:delegate];
+}
+
+/**
  * Generate a UI dialog for the request action.
  *
  * @param action
