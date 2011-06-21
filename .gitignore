@@ -8,6 +8,8 @@ sample/theRunAround/theRunAround.xcodeproj/*.pbxuser
 sample/theRunAround/theRunAround.xcodeproj/*.mode*
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
+src/facebook-ios-sdk.xcodeproj/project.xcworkspace/xcuserdata/
+src/facebook-ios-sdk.xcodeproj/xcuserdata/
 src/build/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*

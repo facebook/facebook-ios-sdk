@@ -28,14 +28,39 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonBase.h"
 
 /**
- @brief Options for the writer class.
+ @brief The JSON writer class.
  
- This exists so the SBJSON facade can implement the options in the writer without having to re-declare them.
+ This uses SBJsonStreamWriter internally.
+ 
+ @see @ref json2objc
  */
-@protocol SBJsonWriter
+
+@interface SBJsonWriter : NSObject {
+@private
+    NSString *error;
+    NSUInteger maxDepth;
+    BOOL sortKeys, humanReadable;
+}
+
+/**
+ @brief The maximum recursing depth.
+ 
+ Defaults to 32. If the input is nested deeper than this the input will be deemed to be
+ malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
+ turn off this security feature by setting the maxDepth value to 0.
+ */
+@property NSUInteger maxDepth;
+
+/**
+ @brief Return an error trace, or nil if there was no errors.
+ 
+ Note that this method returns the trace of the last method that failed.
+ You need to check the return value of the call you're making to figure out
+ if the call actually failed, before you know call this method.
+ */
+@property (readonly, copy) NSString *error;
 
 /**
  @brief Whether we are generating human-readable (multiline) JSON.
@@ -56,74 +81,35 @@
 @property BOOL sortKeys;
 
 /**
+ @brief Return JSON representation for the given object.
+ 
+ Returns a string containing JSON representation of the passed in value, or nil on error.
+ If nil is returned and @p error is not NULL, @p *error can be interrogated to find the cause of the error.
+ 
+ @param value any instance that can be represented as JSON text.
+ */
+- (NSString*)stringWithObject:(id)value;
+
+/**
+ @brief Return JSON representation for the given object.
+ 
+ Returns an NSData object containing JSON represented as UTF8 text, or nil on error.
+ 
+ @param value any instance that can be represented as JSON text.
+ */
+- (NSData*)dataWithObject:(id)value;
+
+/**
  @brief Return JSON representation (or fragment) for the given object.
  
  Returns a string containing JSON representation of the passed in value, or nil on error.
  If nil is returned and @p error is not NULL, @p *error can be interrogated to find the cause of the error.
  
  @param value any instance that can be represented as a JSON fragment
+ @param error pointer to object to be populated with NSError on failure
  
- */
-- (NSString*)stringWithObject:(id)value;
+ */- (NSString*)stringWithObject:(id)value
+                           error:(NSError**)error;
+
 
 @end
-
-
-/**
- @brief The JSON writer class.
- 
- Objective-C types are mapped to JSON types in the following way:
- 
- @li NSNull -> Null
- @li NSString -> String
- @li NSArray -> Array
- @li NSDictionary -> Object
- @li NSNumber (-initWithBool:) -> Boolean
- @li NSNumber -> Number
- 
- In JSON the keys of an object must be strings. NSDictionary keys need
- not be, but attempting to convert an NSDictionary with non-string keys
- into JSON will throw an exception.
- 
- NSNumber instances created with the +initWithBool: method are
- converted into the JSON boolean "true" and "false" values, and vice
- versa. Any other NSNumber instances are converted to a JSON number the
- way you would expect.
- 
- */
-@interface SBJsonWriter : SBJsonBase <SBJsonWriter> {
-
-@private
-    BOOL sortKeys, humanReadable;
-}
-
-@end
-
-// don't use - exists for backwards compatibility. Will be removed in 2.3.
-@interface SBJsonWriter (Private)
-- (NSString*)stringWithFragment:(id)value;
-@end
-
-/**
- @brief Allows generation of JSON for otherwise unsupported classes.
- 
- If you have a custom class that you want to create a JSON representation for you can implement
- this method in your class. It should return a representation of your object defined
- in terms of objects that can be translated into JSON. For example, a Person
- object might implement it like this:
- 
- @code
- - (id)jsonProxyObject {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
-        name, @"name",
-        phone, @"phone",
-        email, @"email",
-        nil];
- }
- @endcode
- 
- */
-@interface NSObject (SBProxyForJson)
-- (id)proxyForJson;
-@end
-

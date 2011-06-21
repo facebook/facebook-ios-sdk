@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2011 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -27,52 +27,30 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+#import "SBJsonStreamWriterAccumulator.h"
 
 
-@implementation SBJsonBase
+@implementation SBJsonStreamWriterAccumulator
 
-@synthesize errorTrace;
-@synthesize maxDepth;
+@synthesize data;
 
 - (id)init {
     self = [super init];
-    if (self)
-        self.maxDepth = 512;
+    if (self) {
+        data = [[NSMutableData alloc] initWithCapacity:8096u];
+    }
     return self;
 }
 
 - (void)dealloc {
-    [errorTrace release];
+    [data release];
     [super dealloc];
 }
 
-- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str {
-    NSDictionary *userInfo;
-    if (!errorTrace) {
-        errorTrace = [NSMutableArray new];
-        userInfo = [NSDictionary dictionaryWithObject:str forKey:NSLocalizedDescriptionKey];
-        
-    } else {
-        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                    str, NSLocalizedDescriptionKey,
-                    [errorTrace lastObject], NSUnderlyingErrorKey,
-                    nil];
-    }
-    
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+#pragma mark SBJsonStreamWriterDelegate
 
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace addObject:error];
-    [self didChangeValueForKey:@"errorTrace"];
-}
-
-- (void)clearErrorTrace {
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace release];
-    errorTrace = nil;
-    [self didChangeValueForKey:@"errorTrace"];
+- (void)writer:(SBJsonStreamWriter *)writer appendBytes:(const void *)bytes length:(NSUInteger)length {
+    [data appendBytes:bytes length:length];
 }
 
 @end
