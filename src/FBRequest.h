@@ -53,6 +53,7 @@
 @property(nonatomic,retain) NSMutableDictionary* params;
 @property(nonatomic,assign) NSURLConnection*  connection;
 @property(nonatomic,assign) NSMutableData* responseText;
+@property(readonly,getter=serializedURL) NSString* serializedURL;
 
 
 + (NSString*)serializeURL:(NSString *)baseUrl

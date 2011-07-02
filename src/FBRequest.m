@@ -265,6 +265,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 }
 
+/**
+ * @return the serialized URL for this request.
+ */
+- (NSString*)serializedURL {
+  return [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,9 +292,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [_delegate requestLoading:self];
   }
 
-  NSString* url = [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
   NSMutableURLRequest* request =
-    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.serializedURL]
                             cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                         timeoutInterval:kTimeoutInterval];
   [request setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];

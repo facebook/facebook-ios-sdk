@@ -1,3 +1,42 @@
+# Mac OS X Finder and whatnot
+.DS_Store
+.arcconfig
+
+# Sparkle distribution Private Key (Don't check me in!)
+dsa_priv.pem
+
+# XCode (and ancestors) per-user config (very noisy, and not relevant)
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.pbxuser
+
+# Generated files
+VersionX-revision.h
+
+# build products
+build/
+*/build/
+*.[oa]
+
+# Other source repository archive directories (protects when importing)
+.hg
+.svn
+CVS
+
+# automatic backup files
+*~.nib
+*.swp
+*~
+*#
+*(Autosaved).rtfd/
+Backup[ ]of[ ]*.pages/
+Backup[ ]of[ ]*.key/
+Backup[ ]of[ ]*.numbers/
+
+#facebook connect specifics
 sample/DemoApp/build/
 sample/DemoApp/DemoApp.xcodeproj/*.pbxuser
 sample/DemoApp/DemoApp.xcodeproj/*.mode*
@@ -12,6 +51,5 @@ src/build/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
-*~
-*#
 .arcconfig
+
