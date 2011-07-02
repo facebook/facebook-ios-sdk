@@ -82,10 +82,10 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
- * A private helper function for sending HTTP requests.
+ * A private helper function for creating HTTP requests.
  *
  * @param url
- *            url to send http request
+ *            url to create the http request for
  * @param params
  *            parameters to append to the url
  * @param httpMethod
@@ -94,10 +94,10 @@ static NSString* kSDKVersion = @"2";
  *            Callback interface for notifying the calling application when
  *            the request has received response
  */
-- (FBRequest*)openUrl:(NSString *)url
-               params:(NSMutableDictionary *)params
-           httpMethod:(NSString *)httpMethod
-             delegate:(id<FBRequestDelegate>)delegate {
+- (FBRequest*)createRequest:(NSString *)url
+                     params:(NSMutableDictionary *)params
+                 httpMethod:(NSString *)httpMethod
+                   delegate:(id<FBRequestDelegate>)delegate {
 
   [params setValue:@"json" forKey:@"format"];
   [params setValue:kSDK forKey:@"sdk"];
@@ -111,7 +111,6 @@ static NSString* kSDKVersion = @"2";
                                    httpMethod:httpMethod
                                      delegate:delegate
                                    requestURL:url] retain];
-  [_request connect];
   return _request;
 }
 
@@ -397,6 +396,38 @@ static NSString* kSDKVersion = @"2";
 }
 
 /**
+ * Create a request to Facebook's REST API with the given
+ * parameters. One of the parameter keys must be "method" and its value
+ * should be a valid REST server API method.
+ *
+ * See http://developers.facebook.com/docs/reference/rest/
+ *
+ * @param parameters
+ *            Key-value pairs of parameters to the request. Refer to the
+ *            documentation: one of the parameters must be "method".
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
+ */
+- (FBRequest*)createRequestWithParams:(NSMutableDictionary *)params
+                    andDelegate:(id <FBRequestDelegate>)delegate {
+  if ([params objectForKey:@"method"] == nil) {
+    NSLog(@"API Method must be specified");
+    return nil;
+  }
+  
+  NSString * methodName = [params objectForKey:@"method"];
+  [params removeObjectForKey:@"method"];
+  
+  return [self createRequestWithMethodName:methodName
+                           andParams:params
+                       andHttpMethod:@"GET"
+                         andDelegate:delegate];
+}
+
+/**
  * Make a request to Facebook's REST API with the given
  * parameters. One of the parameter keys must be "method" and its value
  * should be a valid REST server API method.
@@ -414,18 +445,43 @@ static NSString* kSDKVersion = @"2";
  */
 - (FBRequest*)requestWithParams:(NSMutableDictionary *)params
                     andDelegate:(id <FBRequestDelegate>)delegate {
-  if ([params objectForKey:@"method"] == nil) {
-    NSLog(@"API Method must be specified");
-    return nil;
-  }
+  FBRequest* request = [self createRequestWithParams:params
+                                          andDelegate:delegate];
+  [request connect];
+  return request;
+}
 
-  NSString * methodName = [params objectForKey:@"method"];
-  [params removeObjectForKey:@"method"];
-
-  return [self requestWithMethodName:methodName
-                           andParams:params
-                       andHttpMethod:@"GET"
-                         andDelegate:delegate];
+/**
+ * Create a request to Facebook's REST API with the given method name and
+ * parameters.
+ *
+ * See http://developers.facebook.com/docs/reference/rest/
+ *
+ *
+ * @param methodName
+ *             a valid REST server API method.
+ * @param parameters
+ *            Key-value pairs of parameters to the request. Refer to the
+ *            documentation: one of the parameters must be "method". To upload
+ *            a file, you should specify the httpMethod to be "POST" and the
+ *            “params” you passed in should contain a value of the type
+ *            (UIImage *) or (NSData *) which contains the content that you
+ *            want to upload
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
+ */
+- (FBRequest*)createRequestWithMethodName:(NSString *)methodName
+                          andParams:(NSMutableDictionary *)params
+                      andHttpMethod:(NSString *)httpMethod
+                        andDelegate:(id <FBRequestDelegate>)delegate {
+  NSString * fullURL = [kRestserverBaseURL stringByAppendingString:methodName];
+  return [self createRequest:fullURL
+                      params:params
+                  httpMethod:httpMethod
+                    delegate:delegate];
 }
 
 /**
@@ -454,11 +510,36 @@ static NSString* kSDKVersion = @"2";
                     andParams:(NSMutableDictionary *)params
                 andHttpMethod:(NSString *)httpMethod
                   andDelegate:(id <FBRequestDelegate>)delegate {
-  NSString * fullURL = [kRestserverBaseURL stringByAppendingString:methodName];
-  return [self openUrl:fullURL
-                params:params
-            httpMethod:httpMethod
-              delegate:delegate];
+  FBRequest* request = [self createRequestWithMethodName:methodName
+                                                andParams:params
+                                            andHttpMethod:httpMethod
+                                              andDelegate:delegate];
+  [request connect];
+  return request;
+}
+
+/**
+ * Create a request to the Facebook Graph API without any parameters.
+ *
+ * See http://developers.facebook.com/docs/api
+ *
+ * @param graphPath
+ *            Path to resource in the Facebook graph, e.g., to fetch data
+ *            about the currently logged authenticated user, provide "me",
+ *            which will fetch http://graph.facebook.com/me
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
+ */
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  
+  return [self createRequestWithGraphPath:graphPath
+                          andParams:[NSMutableDictionary dictionary]
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
 }
 
 /**
@@ -477,10 +558,42 @@ static NSString* kSDKVersion = @"2";
  *            Returns a pointer to the FBRequest object.
  */
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                 andDelegate:(id <FBRequestDelegate>)delegate {
-
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  
   return [self requestWithGraphPath:graphPath
                           andParams:[NSMutableDictionary dictionary]
+                      andHttpMethod:@"GET"
+                        andDelegate:delegate];
+}
+
+/**
+ * Create a request to the Facebook Graph API with the given string
+ * parameters using an HTTP GET (default method).
+ *
+ * See http://developers.facebook.com/docs/api
+ *
+ *
+ * @param graphPath
+ *            Path to resource in the Facebook graph, e.g., to fetch data
+ *            about the currently logged authenticated user, provide "me",
+ *            which will fetch http://graph.facebook.com/me
+ * @param parameters
+ *            key-value string parameters, e.g. the path "search" with
+ *            parameters "q" : "facebook" would produce a query for the
+ *            following graph resource:
+ *            https://graph.facebook.com/search?q=facebook
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
+ */
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  
+  return [self createRequestWithGraphPath:graphPath
+                          andParams:params
                       andHttpMethod:@"GET"
                         andDelegate:delegate];
 }
@@ -508,13 +621,54 @@ static NSString* kSDKVersion = @"2";
  *            Returns a pointer to the FBRequest object.
  */
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                   andParams:(NSMutableDictionary *)params
-                 andDelegate:(id <FBRequestDelegate>)delegate {
-
+                         andParams:(NSMutableDictionary *)params
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  
   return [self requestWithGraphPath:graphPath
                           andParams:params
                       andHttpMethod:@"GET"
                         andDelegate:delegate];
+}
+
+/**
+ * Create a request to the Facebook Graph API with the given
+ * HTTP method and string parameters. Note that binary data parameters
+ * (e.g. pictures) are not yet supported by this helper function.
+ *
+ * See http://developers.facebook.com/docs/api
+ *
+ *
+ * @param graphPath
+ *            Path to resource in the Facebook graph, e.g., to fetch data
+ *            about the currently logged authenticated user, provide "me",
+ *            which will fetch http://graph.facebook.com/me
+ * @param parameters
+ *            key-value string parameters, e.g. the path "search" with
+ *            parameters {"q" : "facebook"} would produce a query for the
+ *            following graph resource:
+ *            https://graph.facebook.com/search?q=facebook
+ *            To upload a file, you should specify the httpMethod to be
+ *            "POST" and the “params” you passed in should contain a value
+ *            of the type (UIImage *) or (NSData *) which contains the
+ *            content that you want to upload
+ * @param httpMethod
+ *            http verb, e.g. "GET", "POST", "DELETE"
+ * @param delegate
+ *            Callback interface for notifying the calling application when
+ *            the request has received response
+ * @return FBRequest*
+ *            Returns a pointer to the FBRequest object.
+ */
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  
+  NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
+  return [self createRequest:fullURL
+                      params:params
+                  httpMethod:httpMethod
+                    delegate:delegate];
 }
 
 /**
@@ -547,15 +701,15 @@ static NSString* kSDKVersion = @"2";
  *            Returns a pointer to the FBRequest object.
  */
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
-                   andParams:(NSMutableDictionary *)params
-               andHttpMethod:(NSString *)httpMethod
-                 andDelegate:(id <FBRequestDelegate>)delegate {
-
-  NSString * fullURL = [kGraphBaseURL stringByAppendingString:graphPath];
-  return [self openUrl:fullURL
-                params:params
-            httpMethod:httpMethod
-              delegate:delegate];
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
+                       andDelegate:(id <FBRequestDelegate>)delegate {
+  FBRequest* request = [self createRequestWithGraphPath:graphPath
+                                               andParams:params
+                                           andHttpMethod:httpMethod
+                                             andDelegate:delegate];
+  [request connect];
+  return request;
 }
 
 /**

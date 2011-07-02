@@ -265,6 +265,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 }
 
+/**
+ * @return the serialized URL for this request.
+ */
+- (NSString*)serializedURL {
+  return [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
