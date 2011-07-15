@@ -178,7 +178,7 @@ BOOL FBIsDeviceIPad() {
   CGFloat width = floor(scale_factor * frame.size.width) - kPadding * 2;
   CGFloat height = floor(scale_factor * frame.size.height) - kPadding * 2;
 
-  _orientation = [UIApplication sharedApplication].statusBarOrientation;
+	_orientation = [UIDevice currentDevice].orientation;
   if (UIInterfaceOrientationIsLandscape(_orientation)) {
     self.frame = CGRectMake(kPadding, kPadding, height, width);
   } else {
@@ -449,7 +449,7 @@ BOOL FBIsDeviceIPad() {
 // UIDeviceOrientationDidChangeNotification
 
 - (void)deviceOrientationDidChange:(void*)object {
-  UIDeviceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+	UIDeviceOrientation orientation = [UIDevice currentDevice].orientation;
   if (!_showingKeyboard && [self shouldRotateToOrientation:orientation]) {
     [self updateWebOrientation];
 
