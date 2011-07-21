@@ -41,6 +41,7 @@
 @property(nonatomic, copy) NSDate* expirationDate;
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* localAppId;
+@property(readonly) FBRequest* currentRequest;
 
 - (id)initWithAppId:(NSString *)app_id;
 
