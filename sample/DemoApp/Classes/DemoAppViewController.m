@@ -44,7 +44,7 @@ static NSString* kAppId = nil;
 
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
     _permissions =  [[NSArray arrayWithObjects:
-                      @"read_stream", @"offline_access",nil] retain];
+                      @"read_stream", @"publish_stream", @"offline_access",nil] retain];
   }
 
   return self;
@@ -159,7 +159,6 @@ static NSString* kAppId = nil;
   [_facebook dialog:@"feed"
           andParams:params
         andDelegate:self];
-
 }
 
 /**
@@ -174,10 +173,12 @@ static NSString* kAppId = nil;
   NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  img, @"picture",
                                  nil];
-  [_facebook requestWithMethodName:@"photos.upload"
-                         andParams:params
-                     andHttpMethod:@"POST"
-                       andDelegate:self];
+
+  [_facebook requestWithGraphPath:@"me/photos"
+                        andParams:params
+                        andHttpMethod:@"POST"
+                        andDelegate:self];
+
   [img release];
 }
 

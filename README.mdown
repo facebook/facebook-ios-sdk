@@ -191,3 +191,6 @@ The Facebook Application version 3.2.3 or higher will support single sign-on. Us
 
 Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).
 
+* After upgrading to Xcode 4 the Demo app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
+
+Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the DemoApp project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
