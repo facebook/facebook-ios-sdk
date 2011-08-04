@@ -168,7 +168,8 @@ static NSString* kSDKVersion = @"2";
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
     }
 
-    if (trySafariAuth && !didOpenOtherApp) {
+    BOOL urlSchemeProperlyRegistered = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString: [self getOwnBaseUrl]]];
+    if (trySafariAuth && !didOpenOtherApp && urlSchemeProperlyRegistered) {
       NSString *nextUrl = [self getOwnBaseUrl];
       [params setValue:nextUrl forKey:@"redirect_uri"];
 
