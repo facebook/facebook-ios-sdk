@@ -57,11 +57,13 @@ static NSString* kSDKVersion = @"2";
 /**
  * Initialize the Facebook object with application ID.
  */
-- (id)initWithAppId:(NSString *)app_id {
+- (id)initWithAppId:(NSString *)appId
+           andDelegate:(id<FBSessionDelegate>)delegate {
   self = [super init];
   if (self) {
     [_appId release];
-    _appId = [app_id copy];
+    _appId = [appId copy];
+    self.sessionDelegate = delegate;
   }
   return self;
 }
@@ -209,10 +211,8 @@ static NSString* kSDKVersion = @"2";
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 //public
 
-- (void)authorize:(NSArray *)permissions
-         delegate:(id<FBSessionDelegate>)delegate {
+- (void)authorize:(NSArray *)permissions {
   [self authorize:permissions
-         delegate:delegate
        localAppId:nil];
 }
 
@@ -265,12 +265,9 @@ static NSString* kSDKVersion = @"2";
  *            and redirect the user to Safari.
  */
 - (void)authorize:(NSArray *)permissions
-         delegate:(id<FBSessionDelegate>)delegate
        localAppId:(NSString *)localAppId {
   self.localAppId = localAppId;
   self.permissions = permissions;
-
-  _sessionDelegate = delegate;
 
   [self authorizeWithFBAppAuth:YES safariAuth:YES];
 }
@@ -370,7 +367,7 @@ static NSString* kSDKVersion = @"2";
  */
 - (void)logout:(id<FBSessionDelegate>)delegate {
 
-  _sessionDelegate = delegate;
+  self.sessionDelegate = delegate;
 
   NSMutableDictionary * params = [[NSMutableDictionary alloc] init];
   [self requestWithMethodName:@"auth.expireSession"
