@@ -159,26 +159,26 @@ static NSString* kSDKVersion = @"2";
   // This minimizes the chance that the user will have to enter his or
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
-  UIDevice *device = [UIDevice currentDevice];
-  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
-    if (tryFBAppAuth) {
-      NSString *scheme = kFBAppAuthURLScheme;
-      if (_localAppId) {
-        scheme = [scheme stringByAppendingString:@"2"];
-      }
-      NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, kFBAppAuthURLPath];
-      NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
-      didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
-    }
-
-    if (trySafariAuth && !didOpenOtherApp) {
-      NSString *nextUrl = [self getOwnBaseUrl];
-      [params setValue:nextUrl forKey:@"redirect_uri"];
-
-      NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
-      didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
-    }
-  }
+  // UIDevice *device = [UIDevice currentDevice];
+  //   if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
+  //     if (tryFBAppAuth) {
+  //       NSString *scheme = kFBAppAuthURLScheme;
+  //       if (_localAppId) {
+  //         scheme = [scheme stringByAppendingString:@"2"];
+  //       }
+  //       NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, kFBAppAuthURLPath];
+  //       NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
+  //       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+  //     }
+  // 
+  //     if (trySafariAuth && !didOpenOtherApp) {
+  //       NSString *nextUrl = [self getOwnBaseUrl];
+  //       [params setValue:nextUrl forKey:@"redirect_uri"];
+  // 
+  //       NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
+  //       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+  //     }
+  //   }
 
   // If single sign-on failed, open an inline login dialog. This will require the user to
   // enter his or her credentials.
@@ -658,6 +658,53 @@ static NSString* kSDKVersion = @"2";
  */
 - (void)request:(FBRequest*)request didFailWithError:(NSError*)error{
   NSLog(@"Failed to expire the session");
+}
+
+//block
+
+- (void) requestWithGraphPath:(NSString *) _graphPath
+                       params:(NSMutableDictionary*) _params
+                       method:(NSString*) _method
+                     callback:(void(^)(FBRequest *request, id result, NSError *error)) _block
+{
+    NSString * fullURL = [kGraphBaseURL stringByAppendingString:_graphPath];
+    [_params setValue:@"json" forKey:@"format"];
+    [_params setValue:kSDK forKey:@"sdk"];
+    [_params setValue:kSDKVersion forKey:@"sdk_version"];
+    if ([self isSessionValid]) {
+        [_params setValue:self.accessToken forKey:@"access_token"];
+    }
+ 
+    [_request release];
+    //modify request to have block
+    _request = [[FBRequest getRequestWithParams:_params
+                                     httpMethod:_method
+                                       callback:_block
+                                     requestURL:fullURL] retain];
+    [_request connect];
+}
+ 
+- (void) requestWithMethodName:(NSString *) _methodName
+                     andParams:(NSMutableDictionary *) _params
+                 andHttpMethod:(NSString *) _method
+                      callback:(void(^)(FBRequest *request, id result, NSError *error)) _block
+{
+    NSString * fullURL = [kRestserverBaseURL stringByAppendingString:_methodName];
+    [_params setValue:@"json" forKey:@"format"];
+    [_params setValue:kSDK forKey:@"sdk"];
+    [_params setValue:kSDKVersion forKey:@"sdk_version"];
+    if ([self isSessionValid]) {
+        [_params setValue:self.accessToken forKey:@"access_token"];
+    }
+ 
+    [_request release];
+    //modify request to have block
+    _request = [[FBRequest getRequestWithParams:_params
+                                     httpMethod:_method
+                                       callback:_block
+                                     requestURL:fullURL] retain];
+    [_request connect];
+ 
 }
 
 @end

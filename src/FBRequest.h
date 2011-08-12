@@ -32,6 +32,8 @@
 }
 
 
+@property (copy) void (^FBRequestCallback)(FBRequest*, id, NSError*);
+@property (nonatomic, assign)  BOOL usesBlockCallback;
 @property(nonatomic,assign) id<FBRequestDelegate> delegate;
 
 /**
@@ -54,6 +56,10 @@
 @property(nonatomic,assign) NSURLConnection*  connection;
 @property(nonatomic,assign) NSMutableData* responseText;
 
++ (FBRequest*) getRequestWithParams:(NSMutableDictionary *)params
+                         httpMethod:(NSString *)httpMethod
+                           callback:(void(^)(FBRequest *request, id result, NSError *error)) _block
+                         requestURL:(NSString *)url;
 
 + (NSString*)serializeURL:(NSString *)baseUrl
                    params:(NSDictionary *)params;
