@@ -99,6 +99,9 @@ static NSString* kSDKVersion = @"2";
            httpMethod:(NSString *)httpMethod
              delegate:(id<FBRequestDelegate>)delegate {
 
+  if (params == nil) {
+    params = [NSMutableDictionary dictionary];
+  }
   [params setValue:@"json" forKey:@"format"];
   [params setValue:kSDK forKey:@"sdk"];
   [params setValue:kSDKVersion forKey:@"sdk_version"];
