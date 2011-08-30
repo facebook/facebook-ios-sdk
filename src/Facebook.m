@@ -119,9 +119,46 @@ static NSString* kSDKVersion = @"2";
  * A private function for getting the app's base url.
  */
 - (NSString *)getOwnBaseUrl {
+    
+  // this is hard-coded because facebook only accepts redirects in the app web domain or
+  // 'https://www.facebook.com/connect/login_success.html' or 'fbconnect://authorize' or 
+  // 'fbAPP_ID://authorize'.
+  // Also, the facebook app always redirects to 'fbAPP_ID://authorize'
   return [NSString stringWithFormat:@"fb%@%@://authorize",
           _appId,
           _localAppId ? _localAppId : @""];
+}
+
+/**
+ * A private function that checks if we respond to the provided url.
+ *
+ * note: aparently there is no way to be 100% sure that we
+ * are the responders of that url scheme, lets call this 99% sure.
+ */
+- (BOOL) respondsToUrl:url
+{
+    BOOL schemeIsInPlist = NO; // find out if the sceme is in the plist file.
+    NSBundle* mainBundle = [NSBundle mainBundle];
+    NSArray* cfBundleURLTypes = [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"];
+    if ([cfBundleURLTypes isKindOfClass:[NSArray class]] && [cfBundleURLTypes lastObject]) {
+        NSDictionary* cfBundleURLTypes0 = [cfBundleURLTypes objectAtIndex:0];
+        if ([cfBundleURLTypes0 isKindOfClass:[NSDictionary class]]) {
+            NSArray* cfBundleURLSchemes = [cfBundleURLTypes0 objectForKey:@"CFBundleURLSchemes"];
+            if ([cfBundleURLSchemes isKindOfClass:[NSArray class]]) {
+                for (NSString* scheme in cfBundleURLSchemes) {
+                    if ([scheme isKindOfClass:[NSString class]] && [url hasPrefix:scheme]) {
+                        schemeIsInPlist = YES;
+                        break;
+                    }
+                }
+            }
+        }
+        
+    }
+    
+    BOOL canOpenUrl = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString: url]];
+    
+    return schemeIsInPlist && canOpenUrl;
 }
 
 /**
@@ -147,18 +184,22 @@ static NSString* kSDKVersion = @"2";
   if (_localAppId) {
     [params setValue:_localAppId forKey:@"local_client_id"];
   }
+
+  BOOL urlSchemeProperlyRegistered = [self respondsToUrl: [self getOwnBaseUrl]];
   
-  // If the device is running a version of iOS that supports multitasking,
-  // try to obtain the access token from the Facebook app installed
-  // on the device.
-  // If the Facebook app isn't installed or it doesn't support
-  // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
+  // If the device is running a version of iOS that supports multitasking 
+  // and this application callbacks are working, use single-sign on.
+  //
   // This minimizes the chance that the user will have to enter his or
   // her credentials in order to authorize the application.
   BOOL didOpenOtherApp = NO;
   UIDevice *device = [UIDevice currentDevice];
-  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
-    if (tryFBAppAuth) {
+  if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported] && 
+      urlSchemeProperlyRegistered) {
+  
+    // try to obtain the access token from the Facebook app installed
+    // on the device.
+    if (tryFBAppAuth && urlSchemeProperlyRegistered) {
       NSString *scheme = kFBAppAuthURLScheme;
       if (_localAppId) {
         scheme = [scheme stringByAppendingString:@"2"];
@@ -168,7 +209,8 @@ static NSString* kSDKVersion = @"2";
       didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
     }
 
-    BOOL urlSchemeProperlyRegistered = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString: [self getOwnBaseUrl]]];
+    // If the Facebook app isn't installed or it doesn't support
+    // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
     if (trySafariAuth && !didOpenOtherApp && urlSchemeProperlyRegistered) {
       NSString *nextUrl = [self getOwnBaseUrl];
       [params setValue:nextUrl forKey:@"redirect_uri"];
