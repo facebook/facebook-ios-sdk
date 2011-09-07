@@ -47,7 +47,8 @@ static NSString* kSDKVersion = @"2";
          expirationDate = _expirationDate,
         sessionDelegate = _sessionDelegate,
             permissions = _permissions,
-             localAppId = _localAppId;
+             localAppId = _localAppId,
+         currentRequest = _request;
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
