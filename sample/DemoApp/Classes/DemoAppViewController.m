@@ -21,7 +21,7 @@
 // Your Facebook APP Id must be set before running this example
 // See http://www.facebook.com/developers/createapp.php
 // Also, your application must bind to the fb[app_id]:// URL
-// scheme (substitue [app_id] for your real Facebook app id).
+// scheme (substitute [app_id] for your real Facebook app id).
 static NSString* kAppId = nil;
 
 @implementation DemoAppViewController
@@ -44,7 +44,9 @@ static NSString* kAppId = nil;
 
   if ((self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil])) {
     _permissions =  [[NSArray arrayWithObjects:
-                      @"read_stream", @"offline_access",nil] retain];
+                      @"read_stream", @"publish_stream", @"offline_access",nil] retain];
+    _facebook = [[Facebook alloc] initWithAppId:kAppId
+                                    andDelegate:self];
   }
 
   return self;
@@ -54,7 +56,6 @@ static NSString* kAppId = nil;
  * Set initial view
  */
 - (void)viewDidLoad {
-  _facebook = [[Facebook alloc] initWithAppId:kAppId];
   [self.label setText:@"Please log in"];
   _getUserInfoButton.hidden = YES;
   _getPublicInfoButton.hidden = YES;
@@ -86,7 +87,7 @@ static NSString* kAppId = nil;
  * Show the authorization dialog.
  */
 - (void)login {
-  [_facebook authorize:_permissions delegate:self];
+  [_facebook authorize:_permissions];
 }
 
 /**
@@ -159,7 +160,6 @@ static NSString* kAppId = nil;
   [_facebook dialog:@"feed"
           andParams:params
         andDelegate:self];
-
 }
 
 /**
@@ -174,10 +174,12 @@ static NSString* kAppId = nil;
   NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  img, @"picture",
                                  nil];
-  [_facebook requestWithMethodName:@"photos.upload"
-                         andParams:params
-                     andHttpMethod:@"POST"
-                       andDelegate:self];
+
+  [_facebook requestWithGraphPath:@"me/photos"
+                        andParams:params
+                        andHttpMethod:@"POST"
+                        andDelegate:self];
+
   [img release];
 }
 
