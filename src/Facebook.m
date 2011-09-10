@@ -312,18 +312,18 @@ static NSString* kSDKVersion = @"2";
   if (!accessToken) {
     NSString *errorReason = [params valueForKey:@"error"];
 
-    // If the error response indicates that we should try again using Safari, open
-    // the authorization dialog in Safari.
-    if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
-      [self authorizeWithFBAppAuth:NO safariAuth:YES];
-      return YES;
-    }
-
-    // If the error response indicates that we should try the authorization flow
-    // in an inline dialog, do that.
-    if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
-      [self authorizeWithFBAppAuth:NO safariAuth:NO];
-      return YES;
+    if (errorReason) {
+        // If the error response indicates that we should try again using Safari, open
+        // the authorization dialog in Safari.
+        if ([errorReason isEqualToString:@"service_disabled_use_browser"]) {
+            [self authorizeWithFBAppAuth:NO safariAuth:YES];
+        }
+        // Any other error response indicates that we should try the authorization flow
+        // in an inline dialog
+        else {
+            [self authorizeWithFBAppAuth:NO safariAuth:NO];
+        }
+        return YES;
     }
 
     // The facebook app may return an error_code parameter in case it
@@ -346,7 +346,6 @@ static NSString* kSDKVersion = @"2";
       expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
     }
   }
-
   [self fbDialogLogin:accessToken expirationDate:expirationDate];
   return YES;
 }
