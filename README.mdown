@@ -1,3 +1,13 @@
+Important Notice on Issue Reporting
+===============
+
+We will no longer be supporting issue reporting on GitHub. Bugs will be handled via an external bug tracking tool and any technical questions via Stack Overflow.
+
+We are migrating any active GitHub issues that are bugs to our external bug tracking tool - bugs.developers.facebook.net. If you have any urgent issues please re-poste them on that site.
+
+Facebook and Stack Exchange have partnered to support the Facebook Developer community on facebook.stackoverflow.com. Many Facebook engineers actively participate on Stack Overflow, along with many of the best Facebook developers, making it one of the best places for developers to get help with their technical questions. So re-post any questions you have in that forum.
+
+
 Facebook iOS SDK
 ===========================
 
@@ -48,7 +58,7 @@ If you want to integrate Facebook with an existing application, then follow thes
   * With your own application project open in Xcode, drag and drop the "FBConnect" folder from the Facebook SDK project into your application's project.
   * Include the FBConnect headers in your code:
 
-        #import "FBConnect/FBConnect.h"
+        \#import "FBConnect/FBConnect.h"
 
   * You should now be able to compile your project successfully.
 
@@ -61,9 +71,9 @@ Usage
 
 Begin by instantiating the Facebook object:
 
-        Facebook* facebook = [[Facebook alloc] initWithAppId:appId];
+        Facebook* facebook = [[Facebook alloc] initWithAppId:appId andDelegate:self];
 
-Where _appId_ is your Facebook application ID string.
+Where _appId_ is your Facebook application ID string and _delegate_ is the delegate object you wish to receive callbacks.
 
 With the iOS SDK, you can do three main things:
 
@@ -98,8 +108,8 @@ To authorize a user, do the following:
 
 * Finally, make a call to the _authorize_ method:
 
-        Facebook* facebook = [[Facebook alloc] initWithAppId:appId];
-        [facebook authorize:permissions delegate:self];
+        Facebook* facebook = [[Facebook alloc] initWithAppId:appId andDelegate:self];
+        [facebook authorize:permissions];
 
 Where _appId_ is your Facebook application ID string, _permissions_ is an array of strings containing each permission your application requires, and _delegate_ is the delegate object you wish to receive callbacks. For more information, refer to the code or sample application.
 
