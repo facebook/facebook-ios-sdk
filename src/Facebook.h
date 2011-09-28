@@ -33,14 +33,14 @@
   FBDialog* _loginDialog;
   FBDialog* _fbDialog;
   NSString* _appId;
-  NSString* _localAppId;
+  NSString* _urlSchemeSuffix;
   NSArray* _permissions;
 }
 
 @property(nonatomic, copy) NSString* accessToken;
 @property(nonatomic, copy) NSDate* expirationDate;
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
-@property(nonatomic, copy) NSString* localAppId;
+@property(nonatomic, copy) NSString* urlSchemeSuffix;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
@@ -48,7 +48,7 @@
 - (void)authorize:(NSArray *)permissions;
 
 - (void)authorize:(NSArray *)permissions
-       localAppId:(NSString *)localAppId;
+  urlSchemeSuffix:(NSString *)urlSchemeSuffix;
 
 - (BOOL)handleOpenURL:(NSURL *)url;
 
