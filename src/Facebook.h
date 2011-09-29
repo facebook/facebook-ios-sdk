@@ -45,10 +45,11 @@
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
 
-- (void)authorize:(NSArray *)permissions;
+- (id)initWithAppId:(NSString *)appId
+    urlSchemeSuffix:(NSString *)urlSchemeSuffix
+        andDelegate:(id<FBSessionDelegate>)delegate;
 
-- (void)authorize:(NSArray *)permissions
-  urlSchemeSuffix:(NSString *)urlSchemeSuffix;
+- (void)authorize:(NSArray *)permissions;
 
 - (BOOL)handleOpenURL:(NSURL *)url;
 
