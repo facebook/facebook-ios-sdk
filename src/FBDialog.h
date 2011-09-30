@@ -35,7 +35,7 @@
   UIImageView* _iconView;
   UILabel* _titleLabel;
   UIButton* _closeButton;
-  UIDeviceOrientation _orientation;
+  UIInterfaceOrientation _orientation;
   BOOL _showingKeyboard;
 
   // Ensures that UI elements behind the dialog are disabled.
