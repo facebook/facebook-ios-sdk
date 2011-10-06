@@ -1,7 +1,12 @@
-//
-// Prefix header for all source files of the 'CocoaTouchStaticLibrary' target in the 'CocoaTouchStaticLibrary' project.
-//
+// Put header files here for code that rarely changes. http://j.mp/mmGElg
 
 #ifdef __OBJC__
-    #import <Foundation/Foundation.h>
+
+// Frameworks
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
+// Libraries
+#import "JSONKit.h"
+
 #endif
