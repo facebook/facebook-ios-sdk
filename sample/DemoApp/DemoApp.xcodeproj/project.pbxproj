@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -214,8 +214,11 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "DemoApp" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -283,6 +286,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = DemoApp_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "DemoApp-Info.plist";
 				PRODUCT_NAME = DemoApp;
 				PROVISIONING_PROFILE = "";
@@ -302,6 +306,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = DemoApp_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "DemoApp-Info.plist";
 				PRODUCT_NAME = DemoApp;
 				PROVISIONING_PROFILE = "";
@@ -324,7 +329,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = NO;
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv6";
 			};
@@ -342,7 +346,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				VALID_ARCHS = "armv7 armv6";
 			};
