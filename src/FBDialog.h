@@ -32,8 +32,6 @@
   NSURL* _loadingURL;
   UIWebView* _webView;
   UIActivityIndicatorView* _spinner;
-  UIImageView* _iconView;
-  UILabel* _titleLabel;
   UIButton* _closeButton;
   UIDeviceOrientation _orientation;
   BOOL _showingKeyboard;
@@ -51,11 +49,6 @@
  * The parameters.
  */
 @property(nonatomic, retain) NSMutableDictionary* params;
-
-/**
- * The title that is shown in the header atop the view.
- */
-@property(nonatomic,copy) NSString* title;
 
 - (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle;
 

@@ -1,11 +1,9 @@
 Important Notice on Issue Reporting
 ===============
 
-We will no longer be supporting issue reporting on GitHub. Bugs will be handled via an external bug tracking tool and any technical questions via Stack Overflow.
+We will no longer be supporting issue reporting on GitHub. Bugs will be handled via our [bug tracking tool](https://developers.facebook.com/bugs/) and any technical questions via [Stack Overflow](http://facebook.stackoverflow.com/).
 
-We are migrating any active GitHub issues that are bugs to our external bug tracking tool - bugs.developers.facebook.net. If you have any urgent issues please re-poste them on that site.
-
-Facebook and Stack Exchange have partnered to support the Facebook Developer community on facebook.stackoverflow.com. Many Facebook engineers actively participate on Stack Overflow, along with many of the best Facebook developers, making it one of the best places for developers to get help with their technical questions. So re-post any questions you have in that forum.
+If you have reported issues on GitHub, please re-post any active ones to the relevant forum.
 
 
 Facebook iOS SDK
@@ -18,176 +16,26 @@ Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache Lic
 Getting Started
 ===============
 
-The SDK is lightweight and has no external dependencies. Getting started is easy.
-
-Setup Your Environment
-----------------------
-
-* If you haven't already done so, set up your iPhone development environment by following the [iPhone Dev Center Getting Started Documents](https://developer.apple.com/iphone/index.action).
-
-* Install [Git](http://git-scm.com/).
-
-* Pull this SDK from GitHub:
-
-       git clone git://github.com/facebook/facebook-ios-sdk.git
+See our [iOS Tutorial](https://developers.facebook.com/docs/mobile/ios/build/)
 
 Sample Applications
--------------------
+===============
 
 This SDK comes with a sample application that demonstrates authorization, making API calls, and invoking a dialog, to guide you in development.
 
-To build and run the sample application with Xcode (3.2):
+To build and run the sample application with Xcode:
 
-* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting sample/DemoApp/DemoApp.xcodeproj.
+* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting sample/Hackbook/Hackbook.xcodeproj.
 
 * Verify your compiler settings by checking the menu items under _Project_->_Set Active SDK_ and _Project_->_Set Active Executable_. For most developers, the defaults should be OK. Note that if you compile against a version of the iOS SDK that does not support multitasking, not all features of the Facebook SDK may be available. See the "Debugging" section below for more information.
 
-* Create a Facebook App ID (see http://www.facebook.com/developers/createapp.php)
-
-* Specify your Facebook AppId in DemoAppViewController.m and DemoApp-Info.plist (under URL types > Item 0 > URL Schemes > Item 0)
-
 * Finally, select _Build_->_Build and Run_. This should compile the application and launch it.
 
-Integrate With Your Own Application
------------------------------------
-
-If you want to integrate Facebook with an existing application, then follow these steps:
-
-* Copy the Facebook SDK into your Xcode project:
-  * In Xcode, open the Facebook SDK by selecting _File_->_Open..._ and selecting src/facebook-ios-sdk.xcodeproj.
-  * With your own application project open in Xcode, drag and drop the "FBConnect" folder from the Facebook SDK project into your application's project.
-  * Include the FBConnect headers in your code:
-
-        \#import "FBConnect/FBConnect.h"
-
-  * You should now be able to compile your project successfully.
-
-* Register your application with Facebook:
-  * Create a new Facebook application at: http://www.facebook.com/developers/createapp.php. If you already have a related web application, you can use the same application ID.
-  * Set your application's name and picture. This is what users will see when they authorize your application.
-
-Usage
------
-
-Begin by instantiating the Facebook object:
-
-        Facebook* facebook = [[Facebook alloc] initWithAppId:appId andDelegate:self];
-
-Where _appId_ is your Facebook application ID string and _delegate_ is the delegate object you wish to receive callbacks.
-
-With the iOS SDK, you can do three main things:
-
-* Authentication and Authorization: Prompt users to log in to Facebook and grant permissions to your application.
-
-* Make API Calls: Fetch user profile data, as well as information about a user's friends.
-
-* Display a Dialog: Interact with a user via a UIWebView--this is useful for enabling quick Facebook interactions (such as publishing to a user's stream) without requiring upfront permissions or implementing a native UI.
-
-Authentication and Authorization
---------------------------------
-
-Authorizing a user allows your application to make authenticated API calls on the user's behalf. By default your application will have access to the user's basic information, including their name, profile picture, and their list of friends, along with any other information the user has made public. If your application requires access to private information, it may request (http://developers.facebook.com/docs/authentication/permissions)[additional permissions].
-
-To authorize a user, do the following:
-
-* Bind your application to a URL scheme corresponding to your Facebook application ID. The URL scheme you must bind to is of the format "fb\[appId\]://", where \[appId\] is your Facebook application ID. Without this, your application won't be able to handle authorization callbacks. Modify your application's _.plist_ file as follows:
-
-  * Under the root key ("Information Property List") add a new row and name the key "URL types".
-  * Under the "URL types" key that you just added, you should see a key named "Item 0". If not, add a new row with key "Item 0".
-  * Under the "Item 0" key, add a new row and name the key "URL Schemes".
-  * Under the "URL Schemes" key that you just added, you should see a key named "Item 0". If not, add a new row with key "Item 0".
-  * Set the value of "Item 0" to "fb\[appId\]" where \[appId\] is your Facebook application ID. Make sure there are no spaces anywhere in this value. For example, if your application's id is 1234, the value should be "fb1234".
-
-* Modify your application's main AppDelegate class as follows:
-
-  * Add a method with the following signature (if it doesn't exist alrady):
-
-        - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
-
-  * In this method, call your application's Facebook object's _handleOpenURL_ method, making sure to pass in the _url_ parameter.
-
-* Finally, make a call to the _authorize_ method:
-
-        Facebook* facebook = [[Facebook alloc] initWithAppId:appId andDelegate:self];
-        [facebook authorize:permissions];
-
-Where _appId_ is your Facebook application ID string, _permissions_ is an array of strings containing each permission your application requires, and _delegate_ is the delegate object you wish to receive callbacks. For more information, refer to the code or sample application.
-
-See the sample application for a more specific code example.
-
-Single Sign-On
---------------
-
-In the initial release of the SDK, the authorize method always opened an inline dialog containing a UIWebView in which the authorization UI was shown to the user. Each iOS application has its own cookie jar, so this mechnism had a major disadvantage: it required users to enter their credentials separately for each app they authorized.
-
-In the updated version of the SDK, we changed the authorization mechanism so that users no longer have to re-enter their credentials for every application on the device they want to authorize. The new mechanism relies on iOS's fast app switching. It works as follows:
-
-If the app is running in a version of iOS that supports multitasking, and if the device has the Facebook app of version 3.2.3 or greater installed, the SDK attempts to open the authorization dialog withing the Facebook app. After the user grants or declines the authorization, the Facebook app redirects back to the calling app, passing the authorization token, expiration, and any other parameters the Facebook OAuth server may return.
-
-If the device is running in a version of iOS that supports multitasking, but it doesn't have the Facebook app of version 3.2.3 or greater installed, the SDK will open the authorization dialog in Safari. After the user grants or revokes the authorization, Safari redirects back to the calling app. Similar to the Facebook app based authorization, this allows multiple applications to share the same Facebook user session through the Safari cookie.
-
-If the app is running a version of iOS that does not support multitasking, the SDK uses the old mechanism of popping up an inline UIWebView, prompting the user to log in and grant access. The FBSessionDelegate is a callback interface that your application should implement: it's methods will be invoked when the application successful login or logout.
-
-Logging Out
------------
-
-When the user wants to stop using Facebook integration with your application, you can call the logout method to clear all application state and make a server request to invalidate the current access token.
-
-        [facebook logout:self];
-
-Note that logging out will not revoke your application's permissions, but simply clears your application's access token. If a user that has previously logged out of your application returns, he will simply see a notification that he's logging into your application, not a notification to grant permissions. To modify or revoke an application's permissions, a user must visit the ["Applications, Games, and Websites" tab of their Facebook privacy settings dashboard](http://www.facebook.com/settings/?tab=privacy).
-
-
-Making API Calls
-----------------
-
-The [Facebook Graph API](http://developers.facebook.com/docs/api) presents a simple, consistent view of the Facebook social graph, uniformly representing objects in the graph (e.g., people, photos, events, and fan pages) and the connections between them (e.g., friend relationships, shared content, and photo tags).
-
-You can access the Graph API by passing the Graph Path to the request() method. For example, to access information about the logged in user, call
-
-        [facebook requestWithGraphPath:@"me" andDelegate:self];             // get information about the currently logged in user
-        [facebook requestWithGraphPath:@"platform/posts" andDelegate:self]; // get the posts made by the "platform" page
-        [facebook requestWithGraphPath:@"me/friends" andDelegate:self];     // get the logged-in user's friends
-
-Your delegate object should implement the FBRequestDelegate interface to handle your request responses.
-
-Note that the server response will be in JSON string format. The SDK uses an open source JSON library (http://code.google.com/p/json-framework/) to parse the result. If a parsing error occurs, the SDK will callback request:didFailWithError: in your delegate.
-
-A successful request will callback request:didLoad: in your delegate. The result passed to your delegate can be an NSArray, if there are multiple results, or an NSDictionary if there is only a single result.
-
-Advanced applications may want to provide their own custom parsing and/or error handling, depending on their individual needs.
-
-The [Old REST API](http://developers.facebook.com/docs/reference/rest/) is also supported. To access REST methods, pass in the named parameters and the method name as an NSDictionary.
-
-        NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys: @"4", @"uids", @"name", @"fields", nil];
-        [facebook requestWithMethodName: @"users.getInfo" andParams: params andHttpMethod: @"GET" andDelegate: self];
-
-
-<a name="dialogs" /a>
-Displaying Dialogs
-------------------
-
-This SDK provides a method for popping up a Facebook dialog. The currently supported dialogs are the login and permissions dialogs used in the authorization flow, and a dialog for publishing posts to a user's feed.
-
-To invoke a dialog:
-
-        [facebook dialog:@"feed" andDelegate:self];
-
-This allows you to provide basic Facebook functionality in your application with a singe line of code -- no need to build native dialogs, make API calls, or handle responses. For further examples, refer to the included sample application.
-
-Error Handling
---------------
-
-Errors are handled by the FBRequestDelegate and FBDialogDelegate interfaces. Applications can implement these interfaces and specify delegates as necessary to handle any errors.
 
 Debugging
----------
+===============
 
 Common problems and solutions:
-
-* The sample app won't run. What's the deal?
-
-Check the setup instructions inline with the code and make sure you've set your Facebook application ID in DemoAppViewController.kAppId.
 
 * What version of the iOS SDK must I compile my application against to use single sign-on?
 
@@ -201,6 +49,6 @@ The Facebook Application version 3.2.3 or higher will support single sign-on. Us
 
 Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).
 
-* After upgrading to Xcode 4 the Demo app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
+* After upgrading to Xcode 4 the sample app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
 
-Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the DemoApp project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
+Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the Hackbook project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
