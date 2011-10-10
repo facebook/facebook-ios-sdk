@@ -36,8 +36,8 @@ static CGFloat kPadding = 10;
 static CGFloat kBorderWidth = 10;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-BOOL FBIsDeviceIPad() {
+BOOL FBIsDeviceIPad(void);
+BOOL FBIsDeviceIPad(void) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
   if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
     return YES;
@@ -135,7 +135,7 @@ BOOL FBIsDeviceIPad() {
   CGColorSpaceRelease(space);
 }
 
-- (BOOL)shouldRotateToOrientation:(UIDeviceOrientation)orientation {
+- (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation {
   if (orientation == _orientation) {
     return NO;
   } else {
@@ -296,7 +296,7 @@ BOOL FBIsDeviceIPad() {
   if (self = [super initWithFrame:CGRectZero]) {
     _delegate = nil;
     _loadingURL = nil;
-    _orientation = UIDeviceOrientationUnknown;
+    _orientation = UIInterfaceOrientationPortrait;
     _showingKeyboard = NO;
 
     self.backgroundColor = [UIColor clearColor];
@@ -448,7 +448,7 @@ BOOL FBIsDeviceIPad() {
 // UIDeviceOrientationDidChangeNotification
 
 - (void)deviceOrientationDidChange:(void*)object {
-  UIDeviceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   if (!_showingKeyboard && [self shouldRotateToOrientation:orientation]) {
     [self updateWebOrientation];
 

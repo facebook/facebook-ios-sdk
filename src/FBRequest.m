@@ -196,31 +196,33 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   id result = [jsonParser objectWithString:responseString];
 
-  if (![result isKindOfClass:[NSArray class]]) {
-    if ([result objectForKey:@"error"] != nil) {
+  if (![result isKindOfClass:[NSArray class]])
+  {
+	NSDictionary *resultDictionary = (NSDictionary *)result;
+    if ([resultDictionary objectForKey:@"error"] != nil) {
       if (error != nil) {
         *error = [self formError:kGeneralErrorCode
-                        userInfo:result];
+                        userInfo:resultDictionary];
       }
       return nil;
     }
 
-    if ([result objectForKey:@"error_code"] != nil) {
+    if ([resultDictionary objectForKey:@"error_code"] != nil) {
       if (error != nil) {
-        *error = [self formError:[[result objectForKey:@"error_code"] intValue] userInfo:result];
+        *error = [self formError:[[resultDictionary objectForKey:@"error_code"] intValue] userInfo:result];
       }
       return nil;
     }
 
-    if ([result objectForKey:@"error_msg"] != nil) {
+    if ([resultDictionary objectForKey:@"error_msg"] != nil) {
       if (error != nil) {
-        *error = [self formError:kGeneralErrorCode userInfo:result];
+        *error = [self formError:kGeneralErrorCode userInfo:resultDictionary];
       }
     }
 
-    if ([result objectForKey:@"error_reason"] != nil) {
+    if ([resultDictionary objectForKey:@"error_reason"] != nil) {
       if (error != nil) {
-        *error = [self formError:kGeneralErrorCode userInfo:result];
+        *error = [self formError:kGeneralErrorCode userInfo:resultDictionary];
       }
     }
   }
