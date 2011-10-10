@@ -244,8 +244,8 @@ BOOL FBIsDeviceIPad() {
 
 - (void)addObservers {
   [[NSNotificationCenter defaultCenter] addObserver:self
-    selector:@selector(deviceOrientationDidChange:)
-    name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    selector:@selector(statusBarOrientationDidChange:)
+    name:@"UIApplicationDidChangeStatusBarOrientationNotification" object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
     selector:@selector(keyboardWillShow:) name:@"UIKeyboardWillShowNotification" object:nil];
   [[NSNotificationCenter defaultCenter] addObserver:self
@@ -254,7 +254,7 @@ BOOL FBIsDeviceIPad() {
 
 - (void)removeObservers {
   [[NSNotificationCenter defaultCenter] removeObserver:self
-    name:@"UIDeviceOrientationDidChangeNotification" object:nil];
+    name:@"UIApplicationDidChangeStatusBarOrientationNotification" object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self
     name:@"UIKeyboardWillShowNotification" object:nil];
   [[NSNotificationCenter defaultCenter] removeObserver:self
@@ -445,9 +445,9 @@ BOOL FBIsDeviceIPad() {
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// UIDeviceOrientationDidChangeNotification
+// UIApplicationDidChangeStatusBarOrientationNotification
 
-- (void)deviceOrientationDidChange:(void*)object {
+- (void)statusBarOrientationDidChange:(void*)object {
   UIDeviceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   if (!_showingKeyboard && [self shouldRotateToOrientation:orientation]) {
     [self updateWebOrientation];
