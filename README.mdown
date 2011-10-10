@@ -16,7 +16,9 @@ Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache Lic
 Getting Started
 ===============
 
-See our [iOS Tutorial](https://developers.facebook.com/docs/mobile/ios/build/)
+See our [iOS Tutorial](https://developers.facebook.com/docs/guides/mobile/ios/) for a tutorial to get you up and running.
+
+See our [iOS SDK Reference](https://developers.facebook.com/docs/reference/iossdk/) for more information on the SDK methods and protocols.
 
 Sample Applications
 ===============
