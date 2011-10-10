@@ -397,9 +397,10 @@ BOOL FBIsDeviceIPad() {
   NSURL* url = request.URL;
 
   if ([url.scheme isEqualToString:@"fbconnect"]) {
-    if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"]) {
-      NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
-      NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
+	NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
+    NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
+    if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"] ||
+		([[url.resourceSpecifier substringToIndex:9] isEqualToString:@"//success"] && errorCode && errorStr)) {
       if (errorCode) {
         NSDictionary * errorData = [NSDictionary dictionaryWithObject:errorStr forKey:@"error_msg"];
         NSError * error = [NSError errorWithDomain:@"facebookErrDomain"
