@@ -23,12 +23,12 @@
 
 static NSString* kDefaultTitle = @"Connect to Facebook";
 
-static CGFloat kFacebookBlue[4] = {0.42578125, 0.515625, 0.703125, 1.0};
-static CGFloat kBorderGray[4] = {0.3, 0.3, 0.3, 0.8};
-static CGFloat kBorderBlack[4] = {0.3, 0.3, 0.3, 1};
-static CGFloat kBorderBlue[4] = {0.23, 0.35, 0.6, 1.0};
+static CGFloat kFacebookBlue[4] = {0.42578125f, 0.515625f, 0.703125f, 1.0f};
+static CGFloat kBorderGray[4] = {0.3f, 0.3f, 0.3f, 0.8f};
+static CGFloat kBorderBlack[4] = {0.3f, 0.3f, 0.3f, 1.0f};
+static CGFloat kBorderBlue[4] = {0.23f, 0.35f, 0.6f, 1.0f};
 
-static CGFloat kTransitionDuration = 0.3;
+static CGFloat kTransitionDuration = 0.3f;
 
 static CGFloat kTitleMarginX = 8;
 static CGFloat kTitleMarginY = 4;
@@ -64,8 +64,8 @@ BOOL FBIsDeviceIPad() {
     CGContextTranslateCTM(context, CGRectGetMinX(rect), CGRectGetMinY(rect));
     CGContextAddRect(context, rect);
   } else {
-    rect = CGRectOffset(CGRectInset(rect, 0.5, 0.5), 0.5, 0.5);
-    CGContextTranslateCTM(context, CGRectGetMinX(rect)-0.5, CGRectGetMinY(rect)-0.5);
+    rect = CGRectOffset(CGRectInset(rect, 0.5f, 0.5f), 0.5f, 0.5f);
+    CGContextTranslateCTM(context, CGRectGetMinX(rect)-0.5f, CGRectGetMinY(rect)-0.5f);
     CGContextScaleCTM(context, radius, radius);
     float fw = CGRectGetWidth(rect) / radius;
     float fh = CGRectGetHeight(rect) / radius;
@@ -107,26 +107,26 @@ BOOL FBIsDeviceIPad() {
   CGContextSaveGState(context);
   CGContextSetStrokeColorSpace(context, space);
   CGContextSetStrokeColor(context, strokeColor);
-  CGContextSetLineWidth(context, 1.0);
+  CGContextSetLineWidth(context, 1.0f);
 
   {
-    CGPoint points[] = {{rect.origin.x+0.5, rect.origin.y-0.5},
-      {rect.origin.x+rect.size.width, rect.origin.y-0.5}};
+    CGPoint points[] = {{rect.origin.x+0.5f, rect.origin.y-0.5f},
+      {rect.origin.x+rect.size.width, rect.origin.y-0.5f}};
     CGContextStrokeLineSegments(context, points, 2);
   }
   {
-    CGPoint points[] = {{rect.origin.x+0.5, rect.origin.y+rect.size.height-0.5},
-      {rect.origin.x+rect.size.width-0.5, rect.origin.y+rect.size.height-0.5}};
+    CGPoint points[] = {{rect.origin.x+0.5f, rect.origin.y+rect.size.height-0.5f},
+      {rect.origin.x+rect.size.width-0.5f, rect.origin.y+rect.size.height-0.5f}};
     CGContextStrokeLineSegments(context, points, 2);
   }
   {
-    CGPoint points[] = {{rect.origin.x+rect.size.width-0.5, rect.origin.y},
-      {rect.origin.x+rect.size.width-0.5, rect.origin.y+rect.size.height}};
+    CGPoint points[] = {{rect.origin.x+rect.size.width-0.5f, rect.origin.y},
+      {rect.origin.x+rect.size.width-0.5f, rect.origin.y+rect.size.height}};
     CGContextStrokeLineSegments(context, points, 2);
   }
   {
-    CGPoint points[] = {{rect.origin.x+0.5, rect.origin.y},
-      {rect.origin.x+0.5, rect.origin.y+rect.size.height}};
+    CGPoint points[] = {{rect.origin.x+0.5f, rect.origin.y},
+      {rect.origin.x+0.5f, rect.origin.y+rect.size.height}};
     CGContextStrokeLineSegments(context, points, 2);
   }
 
@@ -149,11 +149,11 @@ BOOL FBIsDeviceIPad() {
 - (CGAffineTransform)transformForOrientation {
   UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   if (orientation == UIInterfaceOrientationLandscapeLeft) {
-    return CGAffineTransformMakeRotation(M_PI*1.5);
+    return CGAffineTransformMakeRotation((CGFloat)M_PI*1.5f);
   } else if (orientation == UIInterfaceOrientationLandscapeRight) {
-    return CGAffineTransformMakeRotation(M_PI/2);
+    return CGAffineTransformMakeRotation((CGFloat)M_PI/2);
   } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
-    return CGAffineTransformMakeRotation(-M_PI);
+    return CGAffineTransformMakeRotation((CGFloat)-M_PI);
   } else {
     return CGAffineTransformIdentity;
   }
@@ -166,8 +166,8 @@ BOOL FBIsDeviceIPad() {
 
   CGRect frame = [UIScreen mainScreen].applicationFrame;
   CGPoint center = CGPointMake(
-    frame.origin.x + ceil(frame.size.width/2),
-    frame.origin.y + ceil(frame.size.height/2));
+    frame.origin.x + ceilf(frame.size.width/2),
+    frame.origin.y + ceilf(frame.size.height/2));
 
   CGFloat scale_factor = 1.0f;
   if (FBIsDeviceIPad()) {
@@ -175,8 +175,8 @@ BOOL FBIsDeviceIPad() {
     scale_factor = 0.6f;
   }
 
-  CGFloat width = floor(scale_factor * frame.size.width) - kPadding * 2;
-  CGFloat height = floor(scale_factor * frame.size.height) - kPadding * 2;
+  CGFloat width = floorf(scale_factor * frame.size.width) - kPadding * 2;
+  CGFloat height = floorf(scale_factor * frame.size.height) - kPadding * 2;
 
   _orientation = [UIApplication sharedApplication].statusBarOrientation;
   if (UIInterfaceOrientationIsLandscape(_orientation)) {
@@ -207,7 +207,7 @@ BOOL FBIsDeviceIPad() {
   [UIView setAnimationDuration:kTransitionDuration/2];
   [UIView setAnimationDelegate:self];
   [UIView setAnimationDidStopSelector:@selector(bounce2AnimationStopped)];
-  self.transform = CGAffineTransformScale([self transformForOrientation], 0.9, 0.9);
+  self.transform = CGAffineTransformScale([self transformForOrientation], 0.9f, 0.9f);
   [UIView commitAnimations];
 }
 
@@ -293,7 +293,7 @@ BOOL FBIsDeviceIPad() {
 // NSObject
 
 - (id)init {
-  if (self = [super initWithFrame:CGRectZero]) {
+  if ((self = [super initWithFrame:CGRectZero])) {
     _delegate = nil;
     _loadingURL = nil;
     _orientation = UIDeviceOrientationUnknown;
@@ -310,7 +310,7 @@ BOOL FBIsDeviceIPad() {
     _iconView = [[UIImageView alloc] initWithImage:iconImage];
     [self addSubview:_iconView];
 
-    UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
+    UIColor* color = [UIColor colorWithRed:167.0f/255 green:184.0f/255 blue:216.0f/255 alpha:1];
     _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
     [_closeButton setImage:closeImage forState:UIControlStateNormal];
     [_closeButton setTitleColor:color forState:UIControlStateNormal];
@@ -374,17 +374,17 @@ BOOL FBIsDeviceIPad() {
 // UIView
 
 - (void)drawRect:(CGRect)rect {
-  CGRect grayRect = CGRectOffset(rect, -0.5, -0.5);
+  CGRect grayRect = CGRectOffset(rect, -0.5f, -0.5f);
   [self drawRect:grayRect fill:kBorderGray radius:10];
 
   CGRect headerRect = CGRectMake(
-    ceil(rect.origin.x + kBorderWidth), ceil(rect.origin.y + kBorderWidth),
+    ceilf(rect.origin.x + kBorderWidth), ceilf(rect.origin.y + kBorderWidth),
     rect.size.width - kBorderWidth*2, _titleLabel.frame.size.height);
   [self drawRect:headerRect fill:kFacebookBlue radius:0];
   [self strokeLines:headerRect stroke:kBorderBlue];
 
   CGRect webRect = CGRectMake(
-    ceil(rect.origin.x + kBorderWidth), headerRect.origin.y + headerRect.size.height,
+    ceilf(rect.origin.x + kBorderWidth), headerRect.origin.y + headerRect.size.height,
     rect.size.width - kBorderWidth*2, _webView.frame.size.height+1);
   [self strokeLines:webRect stroke:kBorderBlack];
 }
@@ -452,7 +452,8 @@ BOOL FBIsDeviceIPad() {
   if (!_showingKeyboard && [self shouldRotateToOrientation:orientation]) {
     [self updateWebOrientation];
 
-    CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
+    CGFloat duration =
+      (CGFloat)[UIApplication sharedApplication].statusBarOrientationAnimationDuration;
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:duration];
     [self sizeToFitOrientation:YES];
@@ -566,7 +567,7 @@ BOOL FBIsDeviceIPad() {
 
   _iconView.frame = CGRectMake(
     kBorderWidth + kTitleMarginX,
-    kBorderWidth + floor(_titleLabel.frame.size.height/2 - _iconView.frame.size.height/2),
+    kBorderWidth + floorf(_titleLabel.frame.size.height/2 - _iconView.frame.size.height/2),
     _iconView.frame.size.width,
     _iconView.frame.size.height);
 
@@ -599,12 +600,12 @@ BOOL FBIsDeviceIPad() {
 
   [self dialogWillAppear];
 
-  self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);
+  self.transform = CGAffineTransformScale([self transformForOrientation], 0.001f, 0.001f);
   [UIView beginAnimations:nil context:nil];
-  [UIView setAnimationDuration:kTransitionDuration/1.5];
+  [UIView setAnimationDuration:kTransitionDuration/1.5f];
   [UIView setAnimationDelegate:self];
   [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];
-  self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
+  self.transform = CGAffineTransformScale([self transformForOrientation], 1.1f, 1.1f);
   [UIView commitAnimations];
 
   [self addObservers];
