@@ -86,7 +86,7 @@ With the iOS SDK, you can do three main things:
 Authentication and Authorization
 --------------------------------
 
-Authorizing a user allows your application to make authenticated API calls on the user's behalf. By default your application will have access to the user's basic information, including their name, profile picture, and their list of friends, along with any other information the user has made public. If your application requires access to private information, it may request (http://developers.facebook.com/docs/authentication/permissions)[additional permissions].
+Authorizing a user allows your application to make authenticated API calls on the user's behalf. By default your application will have access to the user's basic information, including their name, profile picture, and their list of friends, along with any other information the user has made public. If your application requires access to private information, it may request [additional permissions](http://developers.facebook.com/docs/authentication/permissions).
 
 To authorize a user, do the following:
 
