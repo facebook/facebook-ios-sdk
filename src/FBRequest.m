@@ -184,13 +184,16 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   if ([responseString isEqualToString:@"true"]) {
     return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
   } else if ([responseString isEqualToString:@"false"]) {
-    if (error != nil) {
+    if (*error == nil) {
+      return [NSDictionary dictionaryWithObject:@"false" forKey:@"result"];
+    }
+    else {
       *error = [self formError:kGeneralErrorCode
                       userInfo:[NSDictionary
                                 dictionaryWithObject:@"This operation can not be completed"
                                 forKey:@"error_msg"]];
+      return nil;
     }
-    return nil;
   }
 
 
@@ -265,6 +268,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 }
 
+/**
+ * @return the serialized URL for this request.
+ */
+- (NSString*)serializedURL {
+  return [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
+}
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -286,9 +295,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [_delegate requestLoading:self];
   }
 
-  NSString* url = [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
   NSMutableURLRequest* request =
-    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
+    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:self.serializedURL]
                             cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                         timeoutInterval:kTimeoutInterval];
   [request setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];

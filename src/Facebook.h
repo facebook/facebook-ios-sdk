@@ -55,19 +55,39 @@
 
 - (void)logout:(id<FBSessionDelegate>)delegate;
 
+- (FBRequest*)createRequestWithParams:(NSMutableDictionary *)params
+                    andDelegate:(id <FBRequestDelegate>)delegate;
+
 - (FBRequest*)requestWithParams:(NSMutableDictionary *)params
                     andDelegate:(id <FBRequestDelegate>)delegate;
+
+- (FBRequest*)createRequestWithMethodName:(NSString *)methodName
+                          andParams:(NSMutableDictionary *)params
+                      andHttpMethod:(NSString *)httpMethod
+                        andDelegate:(id <FBRequestDelegate>)delegate;
 
 - (FBRequest*)requestWithMethodName:(NSString *)methodName
                           andParams:(NSMutableDictionary *)params
                       andHttpMethod:(NSString *)httpMethod
                         andDelegate:(id <FBRequestDelegate>)delegate;
 
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                       andDelegate:(id <FBRequestDelegate>)delegate;
+
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                       andDelegate:(id <FBRequestDelegate>)delegate;
+
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
                        andDelegate:(id <FBRequestDelegate>)delegate;
 
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
                          andParams:(NSMutableDictionary *)params
+                       andDelegate:(id <FBRequestDelegate>)delegate;
+
+- (FBRequest*)createRequestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
                        andDelegate:(id <FBRequestDelegate>)delegate;
 
 - (FBRequest*)requestWithGraphPath:(NSString *)graphPath
