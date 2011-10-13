@@ -968,7 +968,7 @@
         {
             NSArray *resultData = [result objectForKey:@"data"];
             // Check that the user has friends
-            if ([result count] > 0) {
+            if ([resultData count] > 0) {
                 // Pick a random friend to post the feed to
                 int randomNumber = arc4random() % [resultData count];
                 [self apiDialogFeedFriend:[[resultData objectAtIndex:randomNumber] objectForKey:@"id"]];
@@ -980,8 +980,8 @@
         case kAPIGetAppUsersFriendsNotUsing:
         {
             // Save friend results
-            savedAPIResult = nil;
             [savedAPIResult release];
+            savedAPIResult = nil;
             // Many results
             if ([result isKindOfClass:[NSArray class]]) {
                 savedAPIResult = [[NSMutableArray alloc] initWithArray:result copyItems:YES];
