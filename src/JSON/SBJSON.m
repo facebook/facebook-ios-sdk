@@ -42,12 +42,6 @@
     return self;
 }
 
-- (void)dealloc {
-    [jsonWriter release];
-    [jsonParser release];
-    [super dealloc];
-}
-
 #pragma mark Writer 
 
 
@@ -56,7 +50,6 @@
     if (repr)
         return repr;
     
-    [errorTrace release];
     errorTrace = [[jsonWriter errorTrace] mutableCopy];
     return nil;
 }
@@ -77,7 +70,6 @@
     if (json)
         return json;
 
-    [errorTrace release];
     errorTrace = [[jsonWriter errorTrace] mutableCopy];
     
     if (error)
@@ -120,7 +112,6 @@
     if (obj)
         return obj;
 
-    [errorTrace release];
     errorTrace = [[jsonParser errorTrace] mutableCopy];
     
     return nil;
@@ -142,7 +133,6 @@
     if (obj)
         return obj;
     
-    [errorTrace release];
     errorTrace = [[jsonParser errorTrace] mutableCopy];
 
     if (error)
