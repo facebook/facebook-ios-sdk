@@ -33,7 +33,7 @@
   UIWebView* _webView;
   UIActivityIndicatorView* _spinner;
   UIButton* _closeButton;
-  UIDeviceOrientation _orientation;
+  UIInterfaceOrientation _orientation;
   BOOL _showingKeyboard;
 
   // Ensures that UI elements behind the dialog are disabled.
