@@ -6,6 +6,11 @@ sample/DemoApp/DemoApp.xcodeproj/project.xcworkspace
 sample/theRunAround/build/
 sample/theRunAround/theRunAround.xcodeproj/*.pbxuser
 sample/theRunAround/theRunAround.xcodeproj/*.mode*
+sample/Hackbook/build/
+sample/Hackbook/Hackbook.xcodeproj/*.pbxuser
+sample/Hackbook/Hackbook.xcodeproj/*.mode*
+sample/Hackbook/Hackbook.xcodeproj/xcuserdata*
+sample/Hackbook/Hackbook.xcodeproj/project.xcworkspace
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
 src/build/
