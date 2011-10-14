@@ -197,7 +197,11 @@
 			isa = PBXProject;
 			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "facebook-ios-sdk" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				en,
+			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* facebook-ios-sdk */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
 			projectDirPath = "";
@@ -244,6 +248,7 @@
 				GCC_PREFIX_HEADER = facebook_ios_sdk_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = facebook_ios_sdk;
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -258,6 +263,7 @@
 				GCC_PREFIX_HEADER = facebook_ios_sdk_Prefix.pch;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = facebook_ios_sdk;
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
