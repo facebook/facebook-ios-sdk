@@ -178,7 +178,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   NSString* responseString = [[NSString alloc] initWithData:data
                                                     encoding:NSUTF8StringEncoding];
-  SBJSON *jsonParser = [SBJSON new];
+  SBJsonParser *jsonParser = [SBJsonParser new];
   if ([responseString isEqualToString:@"true"]) {
     return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
   } else if ([responseString isEqualToString:@"false"]) {
