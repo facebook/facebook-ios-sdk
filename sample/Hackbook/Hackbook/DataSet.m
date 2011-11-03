@@ -26,7 +26,8 @@
  methods each menu calls are defined here. 
  */
 - (id) init {
-    if ((self == [super init])) {
+    self = [super init];
+    if (self) {
 
         _apiConfigData = [[NSMutableArray alloc] initWithCapacity:1];
         
