@@ -290,6 +290,23 @@
     }
 }
 
+/**
+ * Helper method to parse URL query parameters
+ */
+- (NSDictionary *) parseURLParams:(NSString *)query {
+	NSArray *pairs = [query componentsSeparatedByString:@"&"];
+	NSMutableDictionary *params = [[[NSMutableDictionary alloc] init] autorelease];
+	for (NSString *pair in pairs) {
+		NSArray *kv = [pair componentsSeparatedByString:@"="];
+		NSString *val =
+        [[kv objectAtIndex:1]
+         stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+		[params setObject:val forKey:[kv objectAtIndex:0]];
+	}
+    return params;
+}
+
 #pragma mark - Facebook API Calls
 /*
  * Graph API: Method to get the user's friends.
@@ -1160,14 +1177,45 @@
 #pragma mark - FBDialogDelegate Methods
 
 /**
- * Called when a UIServer Dialog successfully return.
+ * Called when a UIServer Dialog successfully return. Using this callback
+ * instead of dialogDidComplete: to properly handle successful shares/sends
+ * that return ID data back.
  */
-- (void)dialogDidComplete:(FBDialog *)dialog {
+- (void)dialogCompleteWithUrl:(NSURL *)url {
+    if (![url query]) {
+        NSLog(@"User canceled dialog or there was an error");
+        return;
+    }
+    
+    NSDictionary *params = [self parseURLParams:[url query]];
     switch (currentAPICall) {
         case kDialogFeedUser:
         case kDialogFeedFriend:
         {
-            [self showMessage:@"Published feed successfully."];
+            // Successful posts return a post_id
+            if ([params valueForKey:@"post_id"]) {
+                [self showMessage:@"Published feed successfully."];
+                NSLog(@"Feed post ID: %@", [params valueForKey:@"post_id"]);
+            }
+            break;
+        }
+        case kDialogRequestsSendToMany:
+        case kDialogRequestsSendToSelect:
+        case kDialogRequestsSendToTarget:
+        {
+            // Successful requests return one or more request_ids.
+            // Get any request IDs, will be in the URL in the form
+            // request_ids[0]=1001316103543&request_ids[1]=10100303657380180
+            NSMutableArray *requestIDs = [[NSMutableArray alloc] init];
+            for (NSString *paramKey in params) {
+                if ([paramKey hasPrefix:@"request_ids"]) {
+                    [requestIDs addObject:[params objectForKey:paramKey]];
+                }
+            }
+            if ([requestIDs count] > 0) {
+                [self showMessage:@"Sent request successfully."];
+                NSLog(@"Request ID(s): %@", requestIDs);
+            }
             break;
         }
         default:
