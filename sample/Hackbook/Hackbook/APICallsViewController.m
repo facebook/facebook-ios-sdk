@@ -334,7 +334,8 @@
 - (void)apiLogout {
     currentAPICall = kAPILogout;
     HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [[delegate facebook] logout:self];
+    [delegate facebook].sessionDelegate = self;
+    [[delegate facebook] logout];
 }
 
 /*

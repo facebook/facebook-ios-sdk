@@ -365,14 +365,9 @@ static NSString* kSDKVersion = @"2";
  * it just removes the access token. To unauthorize the application,
  * the user must remove the app in the app settings page under the privacy
  * settings screen on facebook.com.
- *
- * @param delegate
- *            Callback interface for notifying the calling application when
- *            the application has logged out
  */
-- (void)logout:(id<FBSessionDelegate>)delegate {
+- (void)logout {
 
-  self.sessionDelegate = delegate;
   [_accessToken release];
   _accessToken = nil;
   [_expirationDate release];
@@ -398,7 +393,7 @@ static NSString* kSDKVersion = @"2";
  *
  * See http://developers.facebook.com/docs/reference/rest/
  *
- * @param parameters
+ * @param params
  *            Key-value pairs of parameters to the request. Refer to the
  *            documentation: one of the parameters must be "method".
  * @param delegate
@@ -432,7 +427,7 @@ static NSString* kSDKVersion = @"2";
  *
  * @param methodName
  *             a valid REST server API method.
- * @param parameters
+ * @param params
  *            Key-value pairs of parameters to the request. Refer to the
  *            documentation: one of the parameters must be "method". To upload
  *            a file, you should specify the httpMethod to be "POST" and the
@@ -491,7 +486,7 @@ static NSString* kSDKVersion = @"2";
  *            Path to resource in the Facebook graph, e.g., to fetch data
  *            about the currently logged authenticated user, provide "me",
  *            which will fetch http://graph.facebook.com/me
- * @param parameters
+ * @param params
  *            key-value string parameters, e.g. the path "search" with
  *            parameters "q" : "facebook" would produce a query for the
  *            following graph resource:
@@ -524,7 +519,7 @@ static NSString* kSDKVersion = @"2";
  *            Path to resource in the Facebook graph, e.g., to fetch data
  *            about the currently logged authenticated user, provide "me",
  *            which will fetch http://graph.facebook.com/me
- * @param parameters
+ * @param params
  *            key-value string parameters, e.g. the path "search" with
  *            parameters {"q" : "facebook"} would produce a query for the
  *            following graph resource:
@@ -575,7 +570,7 @@ static NSString* kSDKVersion = @"2";
  * @param action
  *            String representation of the desired method: e.g. "login",
  *            "feed", ...
- * @param parameters
+ * @param params
  *            key-value string parameters
  * @param delegate
  *            Callback interface to notify the calling application when the

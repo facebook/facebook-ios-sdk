@@ -150,7 +150,8 @@
  */
 - (void)logout {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [[delegate facebook] logout:self];
+    [delegate facebook].sessionDelegate = self;
+    [[delegate facebook] logout];
 }
 
 /**
@@ -325,7 +326,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     //create the button
