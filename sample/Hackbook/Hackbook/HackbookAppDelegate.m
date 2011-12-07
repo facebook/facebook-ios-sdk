@@ -37,8 +37,7 @@ static NSString* kAppId = @"210849718975311";
 
 @synthesize userPermissions;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Setup view controllers
     RootViewController *rootViewController = [[RootViewController alloc] init];
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
@@ -125,8 +124,7 @@ static NSString* kAppId = @"210849718975311";
     return [self.facebook handleOpenURL:url];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_window release];
     [_navigationController release];
     [facebook release];
@@ -136,8 +134,7 @@ static NSString* kAppId = @"210849718975311";
 }
 
 #pragma mark - UIAlertViewDelegate methods
-- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
-{
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     // Quit the app
     exit(1);
 }

@@ -17,7 +17,7 @@
 #import <UIKit/UIKit.h>
 #import "FBConnect.h"
 
-@interface APIResultsViewController : UIViewController 
+@interface APIResultsViewController : UIViewController
 <FBRequestDelegate,
 FBSessionDelegate,
 UITableViewDataSource,
@@ -33,6 +33,6 @@ UITableViewDelegate>{
 @property (nonatomic, retain) UILabel *messageLabel;
 @property (nonatomic, retain) UIView *messageView;
 
-- (id)initWithTitle:(NSString *) title data:(NSArray *)data action:(NSString *)action;
+- (id)initWithTitle:(NSString *)title data:(NSArray *)data action:(NSString *)action;
 
 @end
