@@ -15,6 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "APICallsViewController.h"
 #import "FBConnect.h"
 
 @interface RootViewController : UIViewController
@@ -34,6 +35,8 @@ UITableViewDelegate>{
     UIView *headerView;
     UILabel *nameLabel;
     UIImageView *profilePhotoImageView;
+    
+    APICallsViewController *pendingApiCallsController;
 }
 
 @property (nonatomic, retain) NSArray *permissions;

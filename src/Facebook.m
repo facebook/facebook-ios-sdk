@@ -365,30 +365,24 @@ static NSString* kSDKVersion = @"2";
  * it just removes the access token. To unauthorize the application,
  * the user must remove the app in the app settings page under the privacy
  * settings screen on facebook.com.
- *
- * @param delegate
- *            Callback interface for notifying the calling application when
- *            the application has logged out
  */
-- (void)logout:(id<FBSessionDelegate>)delegate {
-
-  self.sessionDelegate = delegate;
-  [_accessToken release];
-  _accessToken = nil;
-  [_expirationDate release];
-  _expirationDate = nil;
-
-  NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-  NSArray* facebookCookies = [cookies cookiesForURL:
-    [NSURL URLWithString:@"http://login.facebook.com"]];
-
-  for (NSHTTPCookie* cookie in facebookCookies) {
-    [cookies deleteCookie:cookie];
-  }
-
-  if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogout)]) {
-    [_sessionDelegate fbDidLogout];
-  }
+- (void)logout {
+    [_accessToken release];
+    _accessToken = nil;
+    [_expirationDate release];
+    _expirationDate = nil;
+    
+    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray* facebookCookies = [cookies cookiesForURL:
+                                [NSURL URLWithString:@"http://login.facebook.com"]];
+    
+    for (NSHTTPCookie* cookie in facebookCookies) {
+        [cookies deleteCookie:cookie];
+    }
+    
+    if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogout)]) {
+        [self.sessionDelegate fbDidLogout];
+    }
 }
 
 /**
@@ -626,7 +620,7 @@ static NSString* kSDKVersion = @"2";
   self.accessToken = token;
   self.expirationDate = expirationDate;
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogin)]) {
-    [_sessionDelegate fbDidLogin];
+    [self.sessionDelegate fbDidLogin];
   }
 
 }
@@ -636,7 +630,7 @@ static NSString* kSDKVersion = @"2";
  */
 - (void)fbDialogNotLogin:(BOOL)cancelled {
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidNotLogin:)]) {
-    [_sessionDelegate fbDidNotLogin:cancelled];
+    [self.sessionDelegate fbDidNotLogin:cancelled];
   }
 }
 

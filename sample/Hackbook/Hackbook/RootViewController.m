@@ -92,26 +92,8 @@
  * Show the logged in menu
  */
 
-- (void)showLoggedOut:(BOOL)clearInfo {
+- (void)showLoggedOut {
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    // Remove saved authorization information if it exists and it is
-    // ok to clear it (logout, session invalid, app unauthorized)
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (clearInfo && [defaults objectForKey:@"FBAccessTokenKey"]) {
-        [defaults removeObjectForKey:@"FBAccessTokenKey"];
-        [defaults removeObjectForKey:@"FBExpirationDateKey"];
-        [defaults synchronize];
-
-        // Nil out the session variables to prevent
-        // the app from thinking there is a valid session
-        HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-        if (nil != [[delegate facebook] accessToken]) {
-            [delegate facebook].accessToken = nil;
-        }
-        if (nil != [[delegate facebook] expirationDate]) {
-            [delegate facebook].expirationDate = nil;
-        }
-    }
 
     self.menuTableView.hidden = YES;
     self.backgroundImageView.hidden = NO;
@@ -121,6 +103,8 @@
     nameLabel.text = @"";
     // Get the profile image
     [profilePhotoImageView setImage:nil];
+    
+    [[self navigationController] popToRootViewControllerAnimated:YES];
 }
 
 /**
@@ -128,15 +112,7 @@
  */
 - (void)login {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    // Check and retrieve authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"]
-        && [defaults objectForKey:@"FBExpirationDateKey"]) {
-        [delegate facebook].accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-        [delegate facebook].expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-    }
     if (![[delegate facebook] isSessionValid]) {
-        [delegate facebook].sessionDelegate = self;
         [[delegate facebook] authorize:permissions];
     } else {
         [self showLoggedIn];
@@ -148,7 +124,7 @@
  */
 - (void)logout {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[delegate facebook] logout:self];
+    [[delegate facebook] logout];
 }
 
 /**
@@ -162,6 +138,7 @@
     // which menu button was clicked.
     APICallsViewController *controller = [[APICallsViewController alloc]
                                        initWithIndex:[sender tag]];
+    pendingApiCallsController = controller;
     [self.navigationController pushViewController:controller animated:YES];
     [controller release];
 }
@@ -254,6 +231,7 @@
 
     [self.view addSubview:menuTableView];
 
+    pendingApiCallsController = nil;
 }
 
 - (void)viewDidUnload {
@@ -275,7 +253,7 @@
         [delegate facebook].expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
     }
     if (![[delegate facebook] isSessionValid]) {
-        [self showLoggedOut:NO];
+        [self showLoggedOut];
     } else {
         [self showLoggedIn];
     }
@@ -351,20 +329,31 @@
     [defaults setObject:[[delegate facebook] accessToken] forKey:@"FBAccessTokenKey"];
     [defaults setObject:[[delegate facebook] expirationDate] forKey:@"FBExpirationDateKey"];
     [defaults synchronize];
+    
+    [pendingApiCallsController userDidGrantPermission];
 }
 
 /**
  * Called when the user canceled the authorization dialog.
  */
 -(void)fbDidNotLogin:(BOOL)cancelled {
-    NSLog(@"did not login");
+    [pendingApiCallsController userDidNotGrantPermission];
 }
 
 /**
  * Called when the request logout has succeeded.
  */
 - (void)fbDidLogout {
-    [self showLoggedOut:YES];
+    pendingApiCallsController = nil;
+
+    // Remove saved authorization information if it exists and it is
+    // ok to clear it (logout, session invalid, app unauthorized)
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"FBAccessTokenKey"];
+    [defaults removeObjectForKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+
+    [self showLoggedOut];
 }
 
 #pragma mark - FBRequestDelegate Methods
@@ -447,7 +436,7 @@
     // 2. the user logged out of Facebook from m.facebook.com or the Facebook app
     // 3. the user has changed their password
     if ([error code] == 190) {
-        [self showLoggedOut:YES];
+        [self fbDidLogout];
     }
 }
 

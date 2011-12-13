@@ -146,27 +146,6 @@
 
 #pragma mark - Private Helper Methods
 /*
- * This method is called after the user logs out or unauthorized the application
- * and returns the flow back to the main menu.
- */
-- (void)backToMain {
-    // Remove saved authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:@"FBAccessTokenKey"];
-    [defaults removeObjectForKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-
-    // Pop to main view
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    RootViewController *rootViewController = (RootViewController *)[[self.navigationController viewControllers] objectAtIndex:0];
-    // Set the delegate to the main root view controller
-    // to ensure if an SSO request comes in this controller
-    // will handle it.
-    [delegate facebook].sessionDelegate = rootViewController;
-    [[delegate navigationController] popToRootViewControllerAnimated:YES];
-}
-
-/*
  * This method is called to store the check-in permissions
  * in the app session after the permissions have been updated.
  */
@@ -319,7 +298,6 @@
 - (void)apiPromptCheckinPermissions {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSArray *checkinPermissions = [[NSArray alloc] initWithObjects:@"user_checkins", @"publish_checkins", nil];
-    [delegate facebook].sessionDelegate = self;
     [[delegate facebook] authorize:checkinPermissions];
     [checkinPermissions release];
 }
@@ -336,7 +314,7 @@
 - (void)apiLogout {
     currentAPICall = kAPILogout;
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    [[delegate facebook] logout:self];
+    [[delegate facebook] logout];
 }
 
 /*
@@ -362,7 +340,6 @@
     currentAPICall = kDialogPermissionsExtended;
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSArray *extendedPermissions = [[NSArray alloc] initWithObjects:@"user_likes", nil];
-    [delegate facebook].sessionDelegate = self;
     [[delegate facebook] authorize:extendedPermissions];
     [extendedPermissions release];
 }
@@ -954,7 +931,10 @@
             // the app from thinking there is a valid session
             [delegate facebook].accessToken = nil;
             [delegate facebook].expirationDate = nil;
-            [self backToMain];
+
+            // Notify the root view about the logout.
+            RootViewController *rootViewController = (RootViewController *)[[self.navigationController viewControllers] objectAtIndex:0];
+            [rootViewController fbDidLogout];
             break;
         }
         case kAPIFriendsForDialogFeed:
@@ -1208,19 +1188,10 @@
     [self showMessage:@"Oops, something went haywire."];
 }
 
-#pragma mark - FBSessionDelegate Methods
 /**
- * Called when the user has logged in successfully.
+ * Called when the user granted additional permissions.
  */
-- (void)fbDidLogin {
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-
-    // Save updated authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[[delegate facebook] accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[[delegate facebook] expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-
+- (void)userDidGrantPermission {
     // After permissions granted follow up with next API call
     switch (currentAPICall) {
         case kDialogPermissionsCheckinForRecent:
@@ -1256,18 +1227,8 @@
 /**
  * Called when the user canceled the authorization dialog.
  */
-- (void)fbDidNotLogin:(BOOL)cancelled {
-    NSLog(@"did not login");
+- (void)userDidNotGrantPermission {
     [self showMessage:@"Extended permissions not granted."];
 }
-
-/**
- * Called when the request logout has succeeded.
- */
-- (void)fbDidLogout {
-    // Go back to main menu
-    [self backToMain];
-}
-
 
 @end
