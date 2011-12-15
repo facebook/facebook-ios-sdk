@@ -19,6 +19,14 @@
 
 @protocol FBRequestDelegate;
 
+enum {
+  kFBRequestStateReady,
+  kFBRequestStateLoading,
+  kFBRequestStateComplete,
+  kFBRequestStateError
+};
+typedef NSUInteger FBRequestState;
+
 /**
  * Do not use this interface directly, instead, use method in Facebook.h
  */
@@ -29,6 +37,8 @@
   NSMutableDictionary*  _params;
   NSURLConnection*      _connection;
   NSMutableData*        _responseText;
+  FBRequestState        _state;
+  NSError*              _error;
 }
 
 
@@ -51,8 +61,14 @@
  * standard Objective-C object-to-string conversion facilities.
  */
 @property(nonatomic,retain) NSMutableDictionary* params;
-@property(nonatomic,assign) NSURLConnection*  connection;
-@property(nonatomic,assign) NSMutableData* responseText;
+@property(nonatomic,retain) NSURLConnection*  connection;
+@property(nonatomic,retain) NSMutableData* responseText;
+@property(nonatomic,readonly) FBRequestState state;
+
+/**
+ * Error returned by the server in case of request's failure (or nil otherwise).
+ */
+@property(nonatomic,retain) NSError* error;
 
 
 + (NSString*)serializeURL:(NSString *)baseUrl
