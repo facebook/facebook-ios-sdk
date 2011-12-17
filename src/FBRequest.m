@@ -242,6 +242,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   if ([_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
     [_delegate request:self didFailWithError:error];
   }
+  self.state = kFBRequestStateError;
 }
 
 /*
@@ -355,7 +356,9 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   self.responseText = nil;
   self.connection = nil;
 
-  self.state = kFBRequestStateComplete;
+  if (self.state != kFBRequestStateError) {
+    self.state = kFBRequestStateComplete;
+  }
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {

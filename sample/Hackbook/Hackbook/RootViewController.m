@@ -356,6 +356,22 @@
     [self showLoggedOut];
 }
 
+/**
+ * Called when the session has expired.
+ */
+- (void)fbSessionInvalidated {   
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:@"Auth Exception" 
+                              message:@"Your session has expired." 
+                              delegate:nil 
+                              cancelButtonTitle:@"OK" 
+                              otherButtonTitles:nil, 
+                              nil];
+    [alertView show];
+    [alertView release];
+    [self fbDidLogout];
+}
+
 #pragma mark - FBRequestDelegate Methods
 /**
  * Called when the Facebook API request has returned a response. This callback
@@ -430,14 +446,6 @@
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
     NSLog(@"Err code: %d", [error code]);
-
-    // Show logged out state if:
-    // 1. the app is no longer authorized
-    // 2. the user logged out of Facebook from m.facebook.com or the Facebook app
-    // 3. the user has changed their password
-    if ([error code] == 190) {
-        [self fbDidLogout];
-    }
 }
 
 @end
