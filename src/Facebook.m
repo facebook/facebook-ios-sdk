@@ -30,6 +30,10 @@ static NSString* kLogin = @"oauth";
 static NSString* kSDK = @"ios";
 static NSString* kSDKVersion = @"2";
 
+// If the last time we extended the access token was more than 24 hours ago
+// we try to refresh the access token again.
+static const int kTokenExtendThreshold = 24;
+
 static NSString *requestFinishedKeyPath = @"state";
 static void *finishedContext = @"finishedContext";
 
@@ -93,10 +97,11 @@ static void *finishedContext = @"finishedContext";
 - (id)initWithAppId:(NSString *)appId
     urlSchemeSuffix:(NSString *)urlSchemeSuffix
         andDelegate:(id<FBSessionDelegate>)delegate {
-  
+
   self = [super init];
   if (self) {
     _requests = [[NSMutableSet alloc] init];
+    _lastAccessTokenUpdate = [[NSDate distantPast] retain];
     self.appId = appId;
     self.sessionDelegate = delegate;
     self.urlSchemeSuffix = urlSchemeSuffix;
@@ -111,6 +116,7 @@ static void *finishedContext = @"finishedContext";
   for (FBRequest* _request in _requests) {
     [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
   }
+  [_lastAccessTokenUpdate release];
   [_accessToken release];
   [_expirationDate release];
   [_requests release];
@@ -125,11 +131,11 @@ static void *finishedContext = @"finishedContext";
 - (void)invalidateSession {
   self.accessToken = nil;
   self.expirationDate = nil;
-    
+
   NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
   NSArray* facebookCookies = [cookies cookiesForURL:
                                 [NSURL URLWithString:@"http://login.facebook.com"]];
-    
+
   for (NSHTTPCookie* cookie in facebookCookies) {
     [cookies deleteCookie:cookie];
   }
@@ -159,6 +165,8 @@ static void *finishedContext = @"finishedContext";
   if ([self isSessionValid]) {
     [params setValue:self.accessToken forKey:@"access_token"];
   }
+
+  [self extendAccessTokenIfNeeded];
 
   FBRequest* _request = [FBRequest getRequestWithParams:params
                                              httpMethod:httpMethod
@@ -221,7 +229,7 @@ static void *finishedContext = @"finishedContext";
   if (_urlSchemeSuffix) {
     [params setValue:_urlSchemeSuffix forKey:@"local_client_id"];
   }
-  
+
   // If the device is running a version of iOS that supports multitasking,
   // try to obtain the access token from the Facebook app installed
   // on the device.
@@ -319,6 +327,56 @@ static void *finishedContext = @"finishedContext";
 }
 
 /**
+ * Attempt to extend the access token.
+ *
+ * Access tokens typically expire within 30-60 days. When the user uses the
+ * app, the app should periodically try to obtain a new access token. Once an
+ * access token has expired, the app can no longer renew it. The app then has
+ * to ask the user to re-authorize it to obtain a new access token.
+ *
+ * To ensure your app always has a fresh access token for active users, it's
+ * recommended that you call extendAccessTokenIfNeeded in your application's
+ * applicationDidBecomeActive: UIApplicationDelegate method.
+ */
+- (void)extendAccessToken {
+    if (_isExtendingAccessToken) {
+        return;
+    }
+    _isExtendingAccessToken = YES;
+    NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                   @"auth.extendSSOAccessToken", @"method",
+                                   nil];
+    [self requestWithParams:params andDelegate:self];
+}
+
+/**
+ * Calls extendAccessToken if shouldExtendAccessToken returns YES.
+ */
+- (void)extendAccessTokenIfNeeded {
+  if ([self shouldExtendAccessToken]) {
+    [self extendAccessToken];
+  }
+}
+
+/**
+ * Returns YES if the last time a new token was obtained was over 24 hours ago.
+ */
+- (BOOL)shouldExtendAccessToken {
+  if ([self isSessionValid]){
+    NSCalendar *calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
+    NSDateComponents *components = [calendar components:NSHourCalendarUnit
+                                              fromDate:_lastAccessTokenUpdate
+                                                toDate:[NSDate date]
+                                                options:0];
+
+    if (components.hour >= kTokenExtendThreshold) {
+      return YES;
+    }
+  }
+  return NO;
+}
+
+/**
  * This function processes the URL the Facebook application or Safari used to
  * open your application during a single sign-on flow.
  *
@@ -408,7 +466,7 @@ static void *finishedContext = @"finishedContext";
  */
 - (void)logout {
   [self invalidateSession];
-    
+
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogout)]) {
     [self.sessionDelegate fbDidLogout];
   }
@@ -623,6 +681,7 @@ static void *finishedContext = @"finishedContext";
     if ([self isSessionValid]) {
       [params setValue:[self.accessToken stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
                 forKey:@"access_token"];
+      [self extendAccessTokenIfNeeded];
     }
     _fbDialog = [[FBDialog alloc] initWithURL:dialogURL params:params delegate:delegate];
   }
@@ -648,6 +707,8 @@ static void *finishedContext = @"finishedContext";
 - (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
   self.accessToken = token;
   self.expirationDate = expirationDate;
+  [_lastAccessTokenUpdate release];
+  _lastAccessTokenUpdate = [[NSDate date] retain];
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogin)]) {
     [self.sessionDelegate fbDidLogin];
   }
@@ -661,6 +722,47 @@ static void *finishedContext = @"finishedContext";
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidNotLogin:)]) {
     [self.sessionDelegate fbDidNotLogin:cancelled];
   }
+}
+
+#pragma mark - FBRequestDelegate Methods
+// These delegate methods are only called for requests that extendAccessToken initiated
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+  _isExtendingAccessToken = NO;
+}
+
+- (void)request:(FBRequest *)request didLoad:(id)result {
+  _isExtendingAccessToken = NO;
+  NSString* accessToken = [result objectForKey:@"access_token"];
+  NSString* expTime = [result objectForKey:@"expires_at"];
+
+  if (accessToken == nil || expTime == nil) {
+   return;
+  }
+
+  self.accessToken = accessToken;
+
+  NSTimeInterval timeInterval = [expTime doubleValue];
+  NSDate *expirationDate = [NSDate distantFuture];
+  if (timeInterval != 0) {
+    expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+  }
+  self.expirationDate = expirationDate;
+  [_lastAccessTokenUpdate release];
+  _lastAccessTokenUpdate = [[NSDate date] retain];
+
+  if ([self.sessionDelegate respondsToSelector:@selector(fbDidExtendToken:expiresAt:)]) {
+    [self.sessionDelegate fbDidExtendToken:accessToken expiresAt:expirationDate];
+  }
+}
+
+- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data {
+}
+
+- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response{
+}
+
+- (void)requestLoading:(FBRequest *)request{
 }
 
 @end
