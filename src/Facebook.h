@@ -25,7 +25,7 @@
  * and Graph APIs, and start user interface interactions (such as
  * pop-ups promoting for credentials, permissions, stream posts, etc.)
  */
-@interface Facebook : NSObject<FBLoginDialogDelegate, FBRequestDelegate>{
+@interface Facebook : NSObject<FBLoginDialogDelegate>{
   NSString* _accessToken;
   NSDate* _expirationDate;
   id<FBSessionDelegate> _sessionDelegate;
