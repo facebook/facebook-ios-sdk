@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007-2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2009 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -27,49 +27,32 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
-#import "SBJsonParser.h"
+#import "NSObject+SBJson.h"
 #import "SBJsonWriter.h"
+#import "SBJsonParser.h"
 
-/**
- @brief Facade for SBJsonWriter/SBJsonParser.
+@implementation NSObject (NSObject_SBJsonWriting)
 
- Requests are forwarded to instances of SBJsonWriter and SBJsonParser.
- */
-@interface SBJSON : SBJsonBase <SBJsonParser, SBJsonWriter> {
-
-@private    
-    SBJsonParser *jsonParser;
-    SBJsonWriter *jsonWriter;
+- (NSString *)JSONRepresentation {
+    SBJsonWriter *writer = [[[SBJsonWriter alloc] init] autorelease];    
+    NSString *json = [writer stringWithObject:self];
+    if (!json)
+        NSLog(@"-JSONRepresentation failed. Error is: %@", writer.error);
+    return json;
 }
 
-
-/// Return the fragment represented by the given string
-- (id)fragmentWithString:(NSString*)jsonrep
-                   error:(NSError**)error;
-
-/// Return the object represented by the given string
-- (id)objectWithString:(NSString*)jsonrep
-                 error:(NSError**)error;
-
-/// Parse the string and return the represented object (or scalar)
-- (id)objectWithString:(id)value
-           allowScalar:(BOOL)x
-    			 error:(NSError**)error;
+@end
 
 
-/// Return JSON representation of an array  or dictionary
-- (NSString*)stringWithObject:(id)value
-                        error:(NSError**)error;
 
-/// Return JSON representation of any legal JSON value
-- (NSString*)stringWithFragment:(id)value
-                          error:(NSError**)error;
+@implementation NSString (NSString_SBJsonParsing)
 
-/// Return JSON representation (or fragment) for the given object
-- (NSString*)stringWithObject:(id)value
-                  allowScalar:(BOOL)x
-    					error:(NSError**)error;
-
+- (id)JSONValue {
+    SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
+    id repr = [parser objectWithString:self];
+    if (!repr)
+        NSLog(@"-JSONValue failed. Error is: %@", parser.error);
+    return repr;
+}
 
 @end
