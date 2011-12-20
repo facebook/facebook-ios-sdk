@@ -28,27 +28,6 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonBase.h"
-
-/**
-  @brief Options for the parser class.
- 
- This exists so the SBJSON facade can implement the options in the parser without having to re-declare them.
- */
-@protocol SBJsonParser
-
-/**
- @brief Return the object represented by the given string.
- 
- Returns the object represented by the passed-in string or nil on error. The returned object can be
- a string, number, boolean, null, array or dictionary.
- 
- @param repr the json string to parse
- */
-- (id)objectWithString:(NSString *)repr;
-
-@end
-
 
 /**
  @brief The JSON parser class.
@@ -60,28 +39,75 @@
  @li Array -> NSMutableArray
  @li Object -> NSMutableDictionary
  @li Boolean -> NSNumber (initialised with -initWithBool:)
- @li Number -> NSDecimalNumber
+ @li Number -> (NSNumber | NSDecimalNumber)
  
  Since Objective-C doesn't have a dedicated class for boolean values, these turns into NSNumber
  instances. These are initialised with the -initWithBool: method, and 
  round-trip back to JSON properly. (They won't silently suddenly become 0 or 1; they'll be
  represented as 'true' and 'false' again.)
  
- JSON numbers turn into NSDecimalNumber instances,
- as we can thus avoid any loss of precision. (JSON allows ridiculously large numbers.)
+ As an optimisation short JSON integers turn into NSNumber instances, while complex ones turn into NSDecimalNumber instances.
+ We can thus avoid any loss of precision as JSON allows ridiculously large numbers.
  
  */
-@interface SBJsonParser : SBJsonBase <SBJsonParser> {
-    
-@private
-    const char *c;
+
+@interface SBJsonParser : NSObject {
+	id value;
+	NSString *error;
+    NSUInteger depth, maxDepth;
+
 }
 
-@end
+/**
+ @brief The maximum recursing depth.
+ 
+ Defaults to 512. If the input is nested deeper than this the input will be deemed to be
+ malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
+ turn off this security feature by setting the maxDepth value to 0.
+ */
+@property NSUInteger maxDepth;
 
-// don't use - exists for backwards compatibility with 2.1.x only. Will be removed in 2.3.
-@interface SBJsonParser (Private)
-- (id)fragmentWithString:(id)repr;
+/**
+ @brief Return an error trace, or nil if there was no errors.
+ 
+ Note that this method returns the trace of the last method that failed.
+ You need to check the return value of the call you're making to figure out
+ if the call actually failed, before you know call this method.
+ */
+@property(copy) NSString *error;
+
+/**
+ @brief Return the object represented by the given NSData object.
+ 
+ The data *must* be UTF8 encoded.
+ @param data the data to parse.
+ 
+ */
+- (id)objectWithData:(NSData*)data;
+
+/**
+ @brief Return the object represented by the given string
+ 
+ Returns the object represented by the passed-in string or nil on error. The returned object can be
+ a string, number, boolean, null, array or dictionary.
+ 
+ @param repr the json string to parse
+ */
+- (id)objectWithString:(NSString *)repr;
+
+/**
+ @brief Return the object represented by the given string
+ 
+ Returns the object represented by the passed-in string or nil on error. The returned object can be
+ a string, number, boolean, null, array or dictionary.
+ 
+ @param jsonText the json string to parse
+ @param error pointer to an NSError object to populate on error
+ */
+
+- (id)objectWithString:(NSString*)jsonText
+                 error:(NSError**)error;
+
 @end
 
 
