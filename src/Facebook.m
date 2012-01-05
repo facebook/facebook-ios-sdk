@@ -35,7 +35,7 @@ static NSString* kSDKVersion = @"2";
 @interface Facebook ()
 
 // private properties
-@property(nonatomic, retain) NSArray* permissions;
+@property(nonatomic, strong) NSArray* permissions;
 
 @end
 

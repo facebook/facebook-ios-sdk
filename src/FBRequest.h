@@ -29,7 +29,7 @@
 }
 
 
-@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+@property(nonatomic,unsafe_unretained) id<FBRequestDelegate> delegate;
 
 /**
  * The URL which will be contacted to execute the request.
@@ -47,9 +47,9 @@
  * These values in the dictionary will be converted to strings using the
  * standard Objective-C object-to-string conversion facilities.
  */
-@property(nonatomic,retain) NSMutableDictionary* params;
-@property(nonatomic,retain) NSURLConnection*  connection;
-@property(nonatomic,retain) NSMutableData* responseText;
+@property(nonatomic,strong) NSMutableDictionary* params;
+@property(nonatomic,strong) NSURLConnection*  connection;
+@property(nonatomic,strong) NSMutableData* responseText;
 
 
 + (NSString*)serializeURL:(NSString *)baseUrl
