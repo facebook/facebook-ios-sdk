@@ -43,37 +43,44 @@ static NSString* kAppId = @"210849718975311";
     UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
     [navController.navigationBar setTintColor:[UIColor colorWithRed:0/255.0
                                                               green:51.0/255.0
-                                                               blue:102.0/255.0 
+                                                               blue:102.0/255.0
                                                               alpha:1.0]];
     [navController.navigationBar setBarStyle:UIBarStyleBlackTranslucent];
     self.navigationController = navController;
     [rootViewController release];
     [navController release];
-    
+
     // Initialize Facebook
     facebook = [[Facebook alloc] initWithAppId:kAppId andDelegate:rootViewController];
-    
+
+    // Check and retrieve authorization information
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if ([defaults objectForKey:@"FBAccessTokenKey"] && [defaults objectForKey:@"FBExpirationDateKey"]) {
+        facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
+        facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
+    }
+
     // Initialize API data (for views, etc.)
     apiData = [[DataSet alloc] init];
-    
+
     // Initialize user permissions
     userPermissions = [[NSMutableDictionary alloc] initWithCapacity:1];
-    
+
     // Override point for customization after application launch.
     // Add the navigation controller's view to the window and display.
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
-    
+
     // Check App ID:
     // This is really a warning for the developer, this should not
     // happen in a completed app
     if (!kAppId) {
-        UIAlertView *alertView = [[UIAlertView alloc] 
-                                  initWithTitle:@"Setup Error" 
-                                  message:@"Missing app ID. You cannot run the app until you provide this in the code." 
-                                  delegate:self 
-                                  cancelButtonTitle:@"OK" 
-                                  otherButtonTitles:nil, 
+        UIAlertView *alertView = [[UIAlertView alloc]
+                                  initWithTitle:@"Setup Error"
+                                  message:@"Missing app ID. You cannot run the app until you provide this in the code."
+                                  delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil,
                                   nil];
         [alertView show];
         [alertView release];
@@ -83,7 +90,7 @@ static NSString* kAppId = @"210849718975311";
         NSString *url = [NSString stringWithFormat:@"fb%@://authorize",kAppId];
         BOOL bSchemeInPlist = NO; // find out if the sceme is in the plist file.
         NSArray* aBundleURLTypes = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleURLTypes"];
-        if ([aBundleURLTypes isKindOfClass:[NSArray class]] && 
+        if ([aBundleURLTypes isKindOfClass:[NSArray class]] &&
             ([aBundleURLTypes count] > 0)) {
             NSDictionary* aBundleURLTypes0 = [aBundleURLTypes objectAtIndex:0];
             if ([aBundleURLTypes0 isKindOfClass:[NSDictionary class]]) {
@@ -91,7 +98,7 @@ static NSString* kAppId = @"210849718975311";
                 if ([aBundleURLSchemes isKindOfClass:[NSArray class]] &&
                     ([aBundleURLSchemes count] > 0)) {
                     NSString *scheme = [aBundleURLSchemes objectAtIndex:0];
-                    if ([scheme isKindOfClass:[NSString class]] && 
+                    if ([scheme isKindOfClass:[NSString class]] &&
                         [url hasPrefix:scheme]) {
                         bSchemeInPlist = YES;
                     }
@@ -101,19 +108,27 @@ static NSString* kAppId = @"210849718975311";
         // Check if the authorization callback will work
         BOOL bCanOpenUrl = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString: url]];
         if (!bSchemeInPlist || !bCanOpenUrl) {
-            UIAlertView *alertView = [[UIAlertView alloc] 
-                                      initWithTitle:@"Setup Error" 
-                                      message:@"Invalid or missing URL scheme. You cannot run the app until you set up a valid URL scheme in your .plist." 
-                                      delegate:self 
-                                      cancelButtonTitle:@"OK" 
-                                      otherButtonTitles:nil, 
+            UIAlertView *alertView = [[UIAlertView alloc]
+                                      initWithTitle:@"Setup Error"
+                                      message:@"Invalid or missing URL scheme. You cannot run the app until you set up a valid URL scheme in your .plist."
+                                      delegate:self
+                                      cancelButtonTitle:@"OK"
+                                      otherButtonTitles:nil,
                                       nil];
             [alertView show];
             [alertView release];
         }
     }
-    
+
     return YES;
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Although the SDK attempts to refresh its access tokens when it makes API calls,
+    // it's a good practice to refresh the access token also when the app becomes active.
+    // This gives apps that seldom make api calls a higher chance of having a non expired
+    // access token.
+    [[self facebook] extendAccessTokenIfNeeded];
 }
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {

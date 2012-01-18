@@ -103,7 +103,7 @@
     nameLabel.text = @"";
     // Get the profile image
     [profilePhotoImageView setImage:nil];
-    
+
     [[self navigationController] popToRootViewControllerAnimated:YES];
 }
 
@@ -245,19 +245,11 @@
     [super viewWillAppear:animated];
 
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    // Check and retrieve authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"]
-        && [defaults objectForKey:@"FBExpirationDateKey"]) {
-        [delegate facebook].accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-        [delegate facebook].expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-    }
     if (![[delegate facebook] isSessionValid]) {
         [self showLoggedOut];
     } else {
         [self showLoggedIn];
     }
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -315,6 +307,13 @@
 
 }
 
+- (void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+}
+
 #pragma mark - FBSessionDelegate Methods
 /**
  * Called when the user has logged in successfully.
@@ -323,14 +322,14 @@
     [self showLoggedIn];
 
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
 
-    // Save authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[[delegate facebook] accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[[delegate facebook] expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
-    
     [pendingApiCallsController userDidGrantPermission];
+}
+
+-(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+    NSLog(@"token extended");
+    [self storeAuthData:accessToken expiresAt:expiresAt];
 }
 
 /**
@@ -359,13 +358,13 @@
 /**
  * Called when the session has expired.
  */
-- (void)fbSessionInvalidated {   
+- (void)fbSessionInvalidated {
     UIAlertView *alertView = [[UIAlertView alloc]
-                              initWithTitle:@"Auth Exception" 
-                              message:@"Your session has expired." 
-                              delegate:nil 
-                              cancelButtonTitle:@"OK" 
-                              otherButtonTitles:nil, 
+                              initWithTitle:@"Auth Exception"
+                              message:@"Your session has expired."
+                              delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil,
                               nil];
     [alertView show];
     [alertView release];

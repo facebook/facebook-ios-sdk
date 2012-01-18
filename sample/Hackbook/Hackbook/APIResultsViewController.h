@@ -19,7 +19,6 @@
 
 @interface APIResultsViewController : UIViewController
 <FBRequestDelegate,
-FBSessionDelegate,
 UITableViewDataSource,
 UITableViewDelegate>{
     NSMutableArray *myData;
