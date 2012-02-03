@@ -37,7 +37,7 @@ static CGFloat kBorderWidth = 10;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-BOOL FBIsDeviceIPad() {
+static BOOL FBIsDeviceIPad() {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 30200
   if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
     return YES;
