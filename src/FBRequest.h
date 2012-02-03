@@ -39,6 +39,7 @@ typedef NSUInteger FBRequestState;
   NSMutableData*        _responseText;
   FBRequestState        _state;
   NSError*              _error;
+  BOOL                  _sessionDidExpire;
 }
 
 
@@ -64,6 +65,7 @@ typedef NSUInteger FBRequestState;
 @property(nonatomic,retain) NSURLConnection*  connection;
 @property(nonatomic,retain) NSMutableData* responseText;
 @property(nonatomic,readonly) FBRequestState state;
+@property(nonatomic,readonly) BOOL sessionDidExpire;
 
 /**
  * Error returned by the server in case of request's failure (or nil otherwise).

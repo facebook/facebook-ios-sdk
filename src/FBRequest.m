@@ -23,6 +23,7 @@
 static NSString* kUserAgent = @"FacebookConnect";
 static NSString* kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 static const int kGeneralErrorCode = 10000;
+static const int kRESTAPIAccessTokenErrorCode = 190;
 
 static const NSTimeInterval kTimeoutInterval = 180.0;
 
@@ -30,6 +31,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 @interface FBRequest ()
 @property (nonatomic,readwrite) FBRequestState state;
+@property (nonatomic,readwrite) BOOL sessionDidExpire;
 @end
 
 @implementation FBRequest
@@ -41,6 +43,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
             connection = _connection,
             responseText = _responseText,
             state = _state,
+            sessionDidExpire = _sessionDidExpire,
             error = _error;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
@@ -239,10 +242,12 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  *                          fails with error
  */
 - (void)failWithError:(NSError *)error {
+  if ([error code] == kRESTAPIAccessTokenErrorCode) {
+    self.sessionDidExpire = YES;
+  }
   if ([_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
     [_delegate request:self didFailWithError:error];
   }
-  self.state = kFBRequestStateError;
 }
 
 /*
@@ -313,6 +318,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
   self.state = kFBRequestStateLoading;
+  self.sessionDidExpire = NO;
 }
 
 /**
@@ -355,10 +361,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   self.responseText = nil;
   self.connection = nil;
-
-  if (self.state != kFBRequestStateError) {
-    self.state = kFBRequestStateComplete;
-  }
+  self.state = kFBRequestStateComplete;
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
@@ -366,8 +369,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   self.responseText = nil;
   self.connection = nil;
-
-  self.state = kFBRequestStateError;
+  self.state = kFBRequestStateComplete;
 }
 
 @end

@@ -182,13 +182,13 @@ static void *finishedContext = @"finishedContext";
   if (context == finishedContext) {
     FBRequest* _request = (FBRequest*)object;
     FBRequestState requestState = [_request state];
-    if (requestState == kFBRequestStateError) {
-      [self invalidateSession];
-      if ([self.sessionDelegate respondsToSelector:@selector(fbSessionInvalidated)]) {
-        [self.sessionDelegate fbSessionInvalidated];
+    if (requestState == kFBRequestStateComplete) {
+      if ([_request sessionDidExpire]) {
+        [self invalidateSession];
+        if ([self.sessionDelegate respondsToSelector:@selector(fbSessionInvalidated)]) {
+          [self.sessionDelegate fbSessionInvalidated];
+        }
       }
-    }
-    if (requestState == kFBRequestStateComplete || requestState == kFBRequestStateError) {
       [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
       [_requests removeObject:_request];
     }
