@@ -13,9 +13,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D2AAC07D0554694100DB518D"
-               BuildableName = "libfacebook_ios_sdk.a"
-               BlueprintName = "facebook-ios-sdk"
+               BlueprintIdentifier = "98E1216814CDEF42009CE4EE"
+               BuildableName = "Facebook Universal Framework"
+               BlueprintName = "Facebook Universal Framework"
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,21 +32,20 @@
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.GDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.GDB"
-      displayScaleIsEnabled = "NO"
-      displayScale = "1.00"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Debug">
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES"
+      allowLocationSimulation = "YES">
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      displayScaleIsEnabled = "NO"
-      displayScale = "1.00"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release">
+      buildConfiguration = "Release"
+      debugDocumentVersioning = "YES">
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

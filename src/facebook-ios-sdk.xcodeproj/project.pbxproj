@@ -6,7 +6,45 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		98E1216814CDEF42009CE4EE /* Facebook Universal Framework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 98E1216914CDEF42009CE4EE /* Build configuration list for PBXAggregateTarget "Facebook Universal Framework" */;
+			buildPhases = (
+				98E1216E14CDEF4C009CE4EE /* ShellScript */,
+			);
+			dependencies = (
+				98A30E0414CDF2D800DF81EF /* PBXTargetDependency */,
+			);
+			name = "Facebook Universal Framework";
+			productName = Facebook;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
+		98A1E3A614CDED5C00D4AB9D /* JSON.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1411D52959000A4545 /* JSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3A714CDED5C00D4AB9D /* NSObject+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1511D52959000A4545 /* NSObject+SBJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3A814CDED5C00D4AB9D /* NSString+SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1711D52959000A4545 /* NSString+SBJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3A914CDED5C00D4AB9D /* SBJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1911D52959000A4545 /* SBJSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AA14CDED5C00D4AB9D /* SBJsonBase.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1B11D52959000A4545 /* SBJsonBase.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AB14CDED5C00D4AB9D /* SBJsonParser.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1D11D52959000A4545 /* SBJsonParser.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AC14CDED5C00D4AB9D /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1F11D52959000A4545 /* SBJsonWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AD14CDED6500D4AB9D /* FBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0111D5293B000A4545 /* FBConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AE14CDED6500D4AB9D /* FBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0211D5293B000A4545 /* FBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3AF14CDED6500D4AB9D /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0511D5293B000A4545 /* Facebook.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3B014CDED6500D4AB9D /* FBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0811D5293B000A4545 /* FBDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		98A1E3B114CDED7400D4AB9D /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
+		98A1E3BC14CDED9000D4AB9D /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1611D52959000A4545 /* NSObject+SBJSON.m */; };
+		98A1E3BD14CDED9000D4AB9D /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1811D52959000A4545 /* NSString+SBJSON.m */; };
+		98A1E3BE14CDED9000D4AB9D /* SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1A11D52959000A4545 /* SBJSON.m */; };
+		98A1E3BF14CDED9000D4AB9D /* SBJsonBase.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1C11D52959000A4545 /* SBJsonBase.m */; };
+		98A1E3C014CDED9000D4AB9D /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1E11D52959000A4545 /* SBJsonParser.m */; };
+		98A1E3C114CDED9000D4AB9D /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
+		98A1E3C214CDED9000D4AB9D /* FBRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0311D5293B000A4545 /* FBRequest.m */; };
+		98A1E3C314CDED9000D4AB9D /* Facebook.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0411D5293B000A4545 /* Facebook.m */; };
+		98A1E3C414CDED9000D4AB9D /* FBLoginDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0711D5293B000A4545 /* FBLoginDialog.m */; };
+		98A1E3C514CDED9000D4AB9D /* FBDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B0911D5293B000A4545 /* FBDialog.m */; };
+		98A1E3C614CDEDBA00D4AB9D /* FBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0611D5293B000A4545 /* FBLoginDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		AEA93B0A11D5293B000A4545 /* FBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0111D5293B000A4545 /* FBConnect.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -33,7 +71,23 @@
 		AEA93B2D11D52959000A4545 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		98A30E0314CDF2D800DF81EF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 98A1E39414CDED2C00D4AB9D;
+			remoteInfo = "Facebook Framework";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		98A1E39514CDED2C00D4AB9D /* Facebook.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Facebook.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		98A1E39614CDED2C00D4AB9D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		98A1E39A14CDED2C00D4AB9D /* Facebook-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Facebook-Info.plist"; sourceTree = "<group>"; };
+		98A1E39C14CDED2C00D4AB9D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		98A1E39E14CDED2C00D4AB9D /* Facebook-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Facebook-Prefix.pch"; sourceTree = "<group>"; };
+		98A1E3A314CDED3B00D4AB9D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facebook_ios_sdk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AE3FC32211F19C18001C05F3 /* FBDialog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBDialog.bundle; sourceTree = "<group>"; };
@@ -63,6 +117,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		98A1E39214CDED2C00D4AB9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2AAC07C0554694100DB518D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				D2AAC07E0554694100DB518D /* libfacebook_ios_sdk.a */,
+				98A1E39514CDED2C00D4AB9D /* Facebook.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -85,8 +147,10 @@
 		0867D691FE84028FC02AAC07 /* facebook-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
+				98A1E3A314CDED3B00D4AB9D /* Foundation.framework */,
 				08FB77AEFE84172EC02AAC07 /* FBConnect */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
+				98A1E39814CDED2C00D4AB9D /* Facebook */,
 				0867D69AFE84028FC02AAC07 /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -97,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				AACBBE490F95108600F1A2B1 /* Foundation.framework */,
+				98A1E39614CDED2C00D4AB9D /* CoreFoundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -127,6 +192,24 @@
 			name = "Other Sources";
 			sourceTree = "<group>";
 		};
+		98A1E39814CDED2C00D4AB9D /* Facebook */ = {
+			isa = PBXGroup;
+			children = (
+				98A1E39914CDED2C00D4AB9D /* Supporting Files */,
+			);
+			path = Facebook;
+			sourceTree = "<group>";
+		};
+		98A1E39914CDED2C00D4AB9D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				98A1E39A14CDED2C00D4AB9D /* Facebook-Info.plist */,
+				98A1E39B14CDED2C00D4AB9D /* InfoPlist.strings */,
+				98A1E39E14CDED2C00D4AB9D /* Facebook-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		AEA93B1311D52959000A4545 /* JSON */ = {
 			isa = PBXGroup;
 			children = (
@@ -150,6 +233,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		98A1E3A514CDED4100D4AB9D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98A1E3A614CDED5C00D4AB9D /* JSON.h in Headers */,
+				98A1E3A714CDED5C00D4AB9D /* NSObject+SBJSON.h in Headers */,
+				98A1E3A814CDED5C00D4AB9D /* NSString+SBJSON.h in Headers */,
+				98A1E3A914CDED5C00D4AB9D /* SBJSON.h in Headers */,
+				98A1E3AA14CDED5C00D4AB9D /* SBJsonBase.h in Headers */,
+				98A1E3AB14CDED5C00D4AB9D /* SBJsonParser.h in Headers */,
+				98A1E3AC14CDED5C00D4AB9D /* SBJsonWriter.h in Headers */,
+				98A1E3AD14CDED6500D4AB9D /* FBConnect.h in Headers */,
+				98A1E3AE14CDED6500D4AB9D /* FBRequest.h in Headers */,
+				98A1E3AF14CDED6500D4AB9D /* Facebook.h in Headers */,
+				98A1E3C614CDEDBA00D4AB9D /* FBLoginDialog.h in Headers */,
+				98A1E3B014CDED6500D4AB9D /* FBDialog.h in Headers */,
+				98A1E3B114CDED7400D4AB9D /* facebook_ios_sdk_Prefix.pch in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2AAC07A0554694100DB518D /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -173,6 +276,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		98A1E39414CDED2C00D4AB9D /* Facebook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 98A1E3A114CDED2C00D4AB9D /* Build configuration list for PBXNativeTarget "Facebook" */;
+			buildPhases = (
+				98A1E3A514CDED4100D4AB9D /* Headers */,
+				98A1E39114CDED2C00D4AB9D /* Sources */,
+				98A1E39214CDED2C00D4AB9D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Facebook;
+			productName = Facebook;
+			productReference = 98A1E39514CDED2C00D4AB9D /* Facebook.framework */;
+			productType = "com.apple.product-type.bundle";
+		};
 		D2AAC07D0554694100DB518D /* facebook-ios-sdk */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "facebook-ios-sdk" */;
@@ -211,11 +331,46 @@
 			projectRoot = "";
 			targets = (
 				D2AAC07D0554694100DB518D /* facebook-ios-sdk */,
+				98A1E39414CDED2C00D4AB9D /* Facebook */,
+				98E1216814CDEF42009CE4EE /* Facebook Universal Framework */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		98E1216E14CDEF4C009CE4EE /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sets the target folders and the final framework product.\nFMK_NAME=Facebook\nFMK_VERSION=A\n\n# Install dir will be the final output to the framework.\n# The following line create it in the root folder of the current project.\nINSTALL_DIR=${SRCROOT}/Products/${FMK_NAME}.framework\n\n# Working dir will be deleted after the framework creation.\nWRK_DIR=build\nDEVICE_DIR=${WRK_DIR}/Release-iphoneos/${FMK_NAME}.framework\nSIMULATOR_DIR=${WRK_DIR}/Release-iphonesimulator/${FMK_NAME}.framework\n\n# Building both architectures.\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphoneos\nxcodebuild -configuration \"Release\" -target \"${FMK_NAME}\" -sdk iphonesimulator\n\n# Cleaning the oldest.\nif [ -d \"${INSTALL_DIR}\" ]\nthen\nrm -rf \"${INSTALL_DIR}\"\nfi\n\n# Creates and renews the final product folder.\nmkdir -p \"${INSTALL_DIR}\"\nmkdir -p \"${INSTALL_DIR}/Versions\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources\"\nmkdir -p \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers\"\n\n# Creates the internal links.\n# It MUST uses relative path, otherwise will not work when the folder is copied/moved.\nln -s \"${FMK_VERSION}\" \"${INSTALL_DIR}/Versions/Current\"\nln -s \"Versions/Current/Headers\" \"${INSTALL_DIR}/Headers\"\nln -s \"Versions/Current/Resources\" \"${INSTALL_DIR}/Resources\"\nln -s \"Versions/Current/${FMK_NAME}\" \"${INSTALL_DIR}/${FMK_NAME}\"\n\n# Copies the headers and resources files to the final product folder.\ncp -R \"${DEVICE_DIR}/Headers/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Headers/\"\ncp -R \"${DEVICE_DIR}/\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/\"\n\n# Removes the binary and header from the resources folder.\nrm -r \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/Headers\" \"${INSTALL_DIR}/Versions/${FMK_VERSION}/Resources/${FMK_NAME}\"\n\n# Uses the Lipo Tool to merge both binary files (i386 + armv6/armv7) into one Universal final product.\nlipo -create \"${DEVICE_DIR}/${FMK_NAME}\" \"${SIMULATOR_DIR}/${FMK_NAME}\" -output \"${INSTALL_DIR}/Versions/${FMK_VERSION}/${FMK_NAME}\"\n\nrm -r \"${WRK_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		98A1E39114CDED2C00D4AB9D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				98A1E3BC14CDED9000D4AB9D /* NSObject+SBJSON.m in Sources */,
+				98A1E3BD14CDED9000D4AB9D /* NSString+SBJSON.m in Sources */,
+				98A1E3BE14CDED9000D4AB9D /* SBJSON.m in Sources */,
+				98A1E3BF14CDED9000D4AB9D /* SBJsonBase.m in Sources */,
+				98A1E3C014CDED9000D4AB9D /* SBJsonParser.m in Sources */,
+				98A1E3C114CDED9000D4AB9D /* SBJsonWriter.m in Sources */,
+				98A1E3C214CDED9000D4AB9D /* FBRequest.m in Sources */,
+				98A1E3C314CDED9000D4AB9D /* Facebook.m in Sources */,
+				98A1E3C414CDED9000D4AB9D /* FBLoginDialog.m in Sources */,
+				98A1E3C514CDED9000D4AB9D /* FBDialog.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D2AAC07B0554694100DB518D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -235,12 +390,35 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		98A30E0414CDF2D800DF81EF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 98A1E39414CDED2C00D4AB9D /* Facebook */;
+			targetProxy = 98A30E0314CDF2D800DF81EF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		98A1E39B14CDED2C00D4AB9D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				98A1E39C14CDED2C00D4AB9D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		1DEB921F08733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					armv6,
+					armv7,
+				);
 				COPY_PHASE_STRIP = NO;
 				DSTROOT = /tmp/facebook_ios_sdk.dst;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -260,7 +438,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					armv6,
+					armv7,
+				);
 				DSTROOT = /tmp/facebook_ios_sdk.dst;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -276,7 +458,11 @@
 		1DEB922308733DC00010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					armv6,
+					armv7,
+				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -289,12 +475,99 @@
 		1DEB922408733DC00010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				ARCHS = (
+					i386,
+					armv6,
+					armv7,
+				);
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+		98A1E39F14CDED2C00D4AB9D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Facebook/Facebook-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "Facebook/Facebook-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALID_ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		98A1E3A014CDED2C00D4AB9D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
+				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Facebook/Facebook-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "Facebook/Facebook-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Bundles";
+				LINK_WITH_STANDARD_LIBRARIES = NO;
+				MACH_O_TYPE = mh_object;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALID_ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
+		98E1216A14CDEF42009CE4EE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		98E1216B14CDEF42009CE4EE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
 		};
@@ -315,6 +588,24 @@
 			buildConfigurations = (
 				1DEB922308733DC00010E9CD /* Debug */,
 				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		98A1E3A114CDED2C00D4AB9D /* Build configuration list for PBXNativeTarget "Facebook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98A1E39F14CDED2C00D4AB9D /* Debug */,
+				98A1E3A014CDED2C00D4AB9D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		98E1216914CDEF42009CE4EE /* Build configuration list for PBXAggregateTarget "Facebook Universal Framework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				98E1216A14CDEF42009CE4EE /* Debug */,
+				98E1216B14CDEF42009CE4EE /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
