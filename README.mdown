@@ -12,6 +12,15 @@ See our [iOS Tutorial](https://developers.facebook.com/docs/guides/mobile/ios/) 
 
 See our [iOS SDK Reference](https://developers.facebook.com/docs/reference/iossdk/) for more information on the SDK methods and protocols.
 
+Downloading the SDK
+===============
+
+In order to download all the source code, including SBJson, you must use the --recursive argument to git like this:
+
+`git clone https://github.com/facebook/facebook-ios-sdk.git --recursive`
+
+If you DO NOT pass theh --recursive flag, your src/JSON directory will be empty. Also note that clicking the Downloads button to download a copy of this repository from Github WILL NOT download the SBJson submodule (so make sure to use git to download the source).
+
 Sample Applications
 ===============
 
