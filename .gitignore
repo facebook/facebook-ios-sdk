@@ -20,3 +20,6 @@ test/UnitTest/build/
 *~
 *#
 .arcconfig
+.DS_Store
+project.xcworkspace
+xcuserdata

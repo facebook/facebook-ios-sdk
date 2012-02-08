@@ -473,6 +473,22 @@ static void *finishedContext = @"finishedContext";
 }
 
 /**
+ * Invalidate the current user session by removing the access token in
+ * memory and clearing the browser cookie.
+ *
+ * @deprecated Use of a single session delegate, set at app init, is preferred
+ */
+- (void)logout:(id<FBSessionDelegate>)delegate {
+  [self logout];
+  // preserve deprecated callback behavior, but leave cached delegate intact
+  // avoid calling twice if the passed and cached delegates are the same
+  if (delegate != self.sessionDelegate &&
+    [delegate respondsToSelector:@selector(fbDidLogout)]) {
+    [delegate fbDidLogout];
+  }
+}
+
+/**
  * Make a request to Facebook's REST API with the given
  * parameters. One of the parameter keys must be "method" and its value
  * should be a valid REST server API method.
