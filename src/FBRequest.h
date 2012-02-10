@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
-
+ 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,10 +20,10 @@
 @protocol FBRequestDelegate;
 
 enum {
-  kFBRequestStateReady,
-  kFBRequestStateLoading,
-  kFBRequestStateComplete,
-  kFBRequestStateError
+    kFBRequestStateReady,
+    kFBRequestStateLoading,
+    kFBRequestStateComplete,
+    kFBRequestStateError
 };
 typedef NSUInteger FBRequestState;
 
@@ -31,15 +31,15 @@ typedef NSUInteger FBRequestState;
  * Do not use this interface directly, instead, use method in Facebook.h
  */
 @interface FBRequest : NSObject {
-  id<FBRequestDelegate> _delegate;
-  NSString*             _url;
-  NSString*             _httpMethod;
-  NSMutableDictionary*  _params;
-  NSURLConnection*      _connection;
-  NSMutableData*        _responseText;
-  FBRequestState        _state;
-  NSError*              _error;
-  BOOL                  _sessionDidExpire;
+    id<FBRequestDelegate> _delegate;
+    NSString*             _url;
+    NSString*             _httpMethod;
+    NSMutableDictionary*  _params;
+    NSURLConnection*      _connection;
+    NSMutableData*        _responseText;
+    FBRequestState        _state;
+    NSError*              _error;
+    BOOL                  _sessionDidExpire;
 }
 
 

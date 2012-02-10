@@ -16,6 +16,7 @@
 
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
+#import "FBFrictionlessRequestSettings.h"
 
 @protocol FBSessionDelegate;
 
@@ -26,23 +27,26 @@
  * pop-ups promoting for credentials, permissions, stream posts, etc.)
  */
 @interface Facebook : NSObject<FBLoginDialogDelegate,FBRequestDelegate>{
-  NSString* _accessToken;
-  NSDate* _expirationDate;
-  id<FBSessionDelegate> _sessionDelegate;
-  NSMutableSet* _requests;
-  FBDialog* _loginDialog;
-  FBDialog* _fbDialog;
-  NSString* _appId;
-  NSString* _urlSchemeSuffix;
-  NSArray* _permissions;
-  BOOL _isExtendingAccessToken;
-  NSDate* _lastAccessTokenUpdate;
+    NSString* _accessToken;
+    NSDate* _expirationDate;
+    id<FBSessionDelegate> _sessionDelegate;
+    NSMutableSet* _requests;
+    FBDialog* _loginDialog;
+    FBDialog* _fbDialog;
+    NSString* _appId;
+    NSString* _urlSchemeSuffix;
+    NSArray* _permissions;
+    BOOL _isExtendingAccessToken;
+    NSDate* _lastAccessTokenUpdate;
+    FBFrictionlessRequestSettings* _frictionlessRequestSettings;
 }
 
 @property(nonatomic, copy) NSString* accessToken;
 @property(nonatomic, copy) NSDate* expirationDate;
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* urlSchemeSuffix;
+@property(nonatomic, readonly, getter=isFrictionlessRequestsEnabled) 
+    BOOL isFrictionlessRequestsEnabled;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
@@ -93,6 +97,14 @@
    andDelegate:(id <FBDialogDelegate>)delegate;
 
 - (BOOL)isSessionValid;
+
+- (void)enableFrictionlessRequests;
+
+- (void)reloadFrictionlessRecipientCache;
+
+- (BOOL)isFrictionlessEnabledForRecipient:(id)fbid;
+
+- (BOOL)isFrictionlessEnabledForRecipients:(NSArray*)fbids;
 
 @end
 

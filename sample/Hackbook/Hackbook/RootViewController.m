@@ -44,7 +44,7 @@
 - (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-
+    
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -61,9 +61,9 @@
                                    nil];
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     [[delegate facebook] requestWithMethodName:@"fql.query"
-                          andParams:params
-                      andHttpMethod:@"POST"
-                        andDelegate:self];
+                                     andParams:params
+                                 andHttpMethod:@"POST"
+                                   andDelegate:self];
 }
 
 - (void)apiGraphUserPermissions {
@@ -80,11 +80,11 @@
 
 - (void)showLoggedIn {
     [self.navigationController setNavigationBarHidden:NO animated:NO];
-
+    
     self.backgroundImageView.hidden = YES;
     loginButton.hidden = YES;
     self.menuTableView.hidden = NO;
-
+    
     [self apiFQLIMe];
 }
 
@@ -94,16 +94,16 @@
 
 - (void)showLoggedOut {
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-
+    
     self.menuTableView.hidden = YES;
     self.backgroundImageView.hidden = NO;
     loginButton.hidden = NO;
-
+    
     // Clear personal info
     nameLabel.text = @"";
     // Get the profile image
     [profilePhotoImageView setImage:nil];
-
+    
     [[self navigationController] popToRootViewControllerAnimated:YES];
 }
 
@@ -137,7 +137,7 @@
     // From this object we can then read the tag property to determine
     // which menu button was clicked.
     APICallsViewController *controller = [[APICallsViewController alloc]
-                                       initWithIndex:[sender tag]];
+                                          initWithIndex:[sender tag]];
     pendingApiCallsController = controller;
     [self.navigationController pushViewController:controller animated:YES];
     [controller release];
@@ -151,10 +151,10 @@
     [view setBackgroundColor:[UIColor whiteColor]];
     self.view = view;
     [view release];
-
+    
     // Initialize permissions
     permissions = [[NSArray alloc] initWithObjects:@"offline_access", nil];
-
+    
     // Main menu items
     mainMenuItems = [[NSMutableArray alloc] initWithCapacity:1];
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -162,27 +162,27 @@
     for (NSUInteger i=0; i < [apiInfo count]; i++) {
         [mainMenuItems addObject:[[apiInfo objectAtIndex:i] objectForKey:@"title"]];
     }
-
+    
     // Set up the view programmatically
     self.view.backgroundColor = [UIColor whiteColor];
-
+    
     self.navigationItem.title = @"Hackbook for iOS";
-
+    
     self.navigationItem.backBarButtonItem =
     [[[UIBarButtonItem alloc] initWithTitle:@"Back"
                                       style:UIBarButtonItemStyleBordered
                                      target:nil
                                      action:nil] autorelease];
-
+    
     // Background Image
     backgroundImageView = [[UIImageView alloc]
-                          initWithFrame:CGRectMake(0,0,
-                                                   self.view.bounds.size.width,
-                                                   self.view.bounds.size.height)];
+                           initWithFrame:CGRectMake(0,0,
+                                                    self.view.bounds.size.width,
+                                                    self.view.bounds.size.height)];
     [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
     //[backgroundImageView setAlpha:0.25];
     [self.view addSubview:backgroundImageView];
-
+    
     // Login Button
     loginButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
     CGFloat xLoginButtonOffset = self.view.center.x - (318/2);
@@ -199,7 +199,7 @@
                  forState:UIControlStateHighlighted];
     [loginButton sizeToFit];
     [self.view addSubview:loginButton];
-
+    
     // Main Menu Table
     menuTableView = [[UITableView alloc] initWithFrame:self.view.bounds
                                                  style:UITableViewStylePlain];
@@ -210,7 +210,7 @@
     menuTableView.delegate = self;
     menuTableView.hidden = YES;
     //[self.view addSubview:menuTableView];
-
+    
     // Table header
     headerView = [[UIView alloc]
                   initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 100)];
@@ -228,9 +228,9 @@
     nameLabel.text = @"";
     [headerView addSubview:nameLabel];
     menuTableView.tableHeaderView = headerView;
-
+    
     [self.view addSubview:menuTableView];
-
+    
     pendingApiCallsController = nil;
 }
 
@@ -243,7 +243,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     //[self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
-
+    
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     if (![[delegate facebook] isSessionValid]) {
         [self showLoggedOut];
@@ -279,13 +279,13 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
-
+    
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
-
+    
     //create the button
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     button.frame = CGRectMake(20, 20, (cell.contentView.frame.size.width-40), 44);
@@ -299,12 +299,12 @@
     [button addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     button.tag = indexPath.row;
     [cell.contentView addSubview:button];
-
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-
+    
 }
 
 - (void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
@@ -320,10 +320,10 @@
  */
 - (void)fbDidLogin {
     [self showLoggedIn];
-
+    
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     [self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
-
+        
     [pendingApiCallsController userDidGrantPermission];
 }
 
@@ -344,14 +344,14 @@
  */
 - (void)fbDidLogout {
     pendingApiCallsController = nil;
-
+    
     // Remove saved authorization information if it exists and it is
     // ok to clear it (logout, session invalid, app unauthorized)
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"FBAccessTokenKey"];
     [defaults removeObjectForKey:@"FBExpirationDateKey"];
     [defaults synchronize];
-
+    
     [self showLoggedOut];
 }
 
@@ -403,7 +403,7 @@
         nameLabel.text = [result objectForKey:@"name"];
         // Get the profile image
         UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:[result objectForKey:@"pic"]]]];
-
+        
         // Resize, crop the image to make sure it is square and renders
         // well on Retina display
         float ratio;
@@ -428,7 +428,7 @@
         [image drawInRect:clipRect];
         UIImage *imgThumb =   UIGraphicsGetImageFromCurrentImageContext();
         [imgThumb retain];
-
+        
         [profilePhotoImageView setImage:imgThumb];
         [self apiGraphUserPermissions];
     } else {

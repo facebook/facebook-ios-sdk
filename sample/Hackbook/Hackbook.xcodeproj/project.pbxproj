@@ -38,6 +38,7 @@
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
 		30ED588F14358F9400A226C3 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588E14358F9400A226C3 /* Icon@2x.png */; };
+		84E7D99614D9CC13006A6299 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -92,6 +93,8 @@
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30ED588E14358F9400A226C3 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBFrictionlessRequestSettings.h; path = ../../src/FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
+		84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBFrictionlessRequestSettings.m; path = ../../src/FBFrictionlessRequestSettings.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +200,8 @@
 				30EA73D613F5D523003DC0D2 /* FBLoginDialog.m */,
 				30EA73D713F5D523003DC0D2 /* FBRequest.h */,
 				30EA73D813F5D523003DC0D2 /* FBRequest.m */,
+				84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */,
+				84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */,
 				30EA73D913F5D523003DC0D2 /* JSON */,
 			);
 			name = FBConnect;
@@ -310,6 +315,7 @@
 				30EA73F013F5D523003DC0D2 /* SBJsonBase.m in Sources */,
 				30EA73F113F5D523003DC0D2 /* SBJsonParser.m in Sources */,
 				30EA73F213F5D523003DC0D2 /* SBJsonWriter.m in Sources */,
+				84E7D99614D9CC13006A6299 /* FBFrictionlessRequestSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
