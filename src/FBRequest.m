@@ -248,6 +248,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   if ([_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
     [_delegate request:self didFailWithError:error];
   }
+  self.delegate = nil;
 }
 
 /*
@@ -275,7 +276,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     }
 
   }
-
+  self.delegate = nil;
 }
 
 
@@ -325,6 +326,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  * Free internal structure
  */
 - (void)dealloc {
+  self.delegate = nil;
   [_connection cancel];
   [_connection release];
   [_responseText release];
