@@ -721,7 +721,8 @@ static void *finishedContext = @"finishedContext";
  * Set the authToken and expirationDate after login succeed
  */
 - (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
-  self.accessToken = token;
+  NSString *pcenToken = [(NSString *)CFURLCreateStringByAddingPercentEscapes(NULL, (CFStringRef) token, NULL, (CFStringRef) @"!*'();:@&=+$,/?%#[]", kCFStringEncodingUTF8) autorelease];
+  self.accessToken = pcenToken;
   self.expirationDate = expirationDate;
   [_lastAccessTokenUpdate release];
   _lastAccessTokenUpdate = [[NSDate date] retain];
