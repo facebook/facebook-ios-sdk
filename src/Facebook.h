@@ -51,6 +51,7 @@
     urlSchemeSuffix:(NSString *)urlSchemeSuffix
         andDelegate:(id<FBSessionDelegate>)delegate;
 
+- (void)authorize:(NSArray *)permissions tryingSingleSignOn:(BOOL)singleSignOn;
 - (void)authorize:(NSArray *)permissions;
 
 - (void)extendAccessToken;

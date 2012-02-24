@@ -320,11 +320,16 @@ static void *finishedContext = @"finishedContext";
  *            Callback interface for notifying the calling application when
  *            the user has logged in.
  */
-- (void)authorize:(NSArray *)permissions {
+- (void)authorize:(NSArray *)permissions tryingSingleSignOn:(BOOL)singleSignOn {
   self.permissions = permissions;
 
-  [self authorizeWithFBAppAuth:YES safariAuth:YES];
+  [self authorizeWithFBAppAuth:singleSignOn safariAuth:singleSignOn];
 }
+
+- (void)authorize:(NSArray *)permissions {
+    [self authorize:permissions tryingSingleSignOn:YES];
+}
+
 
 /**
  * Attempt to extend the access token.
