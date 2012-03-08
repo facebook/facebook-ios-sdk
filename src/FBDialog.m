@@ -566,7 +566,10 @@ params   = _params;
         if (start.location != 0) {
             c = [url characterAtIndex:start.location - 1];
         }
-        if (c == '?' || c == '&') {        
+        // kristofvanlandschoot: I seem to get a url like this today
+        // fbconnect://success#access_token=AAADIsZAj7...
+        // so also allow the '#' character to preceed the needle
+        if (c == '?' || c == '&' || c == '#') {        
             NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
             NSUInteger offset = start.location+start.length;
             str = end.location == NSNotFound ?
