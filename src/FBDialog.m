@@ -566,7 +566,7 @@ params   = _params;
         if (start.location != 0) {
             c = [url characterAtIndex:start.location - 1];
         }
-        if (c == '?' || c == '&') {        
+        if (c == '?' || c == '&' || c == '#') {        
             NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
             NSUInteger offset = start.location+start.length;
             str = end.location == NSNotFound ?
