@@ -24,8 +24,7 @@
 @synthesize messageLabel;
 @synthesize messageView;
 
-- (id)initWithTitle:(NSString *) title data:(NSArray *)data action:(NSString *)action
-{
+- (id)initWithTitle:(NSString *)title data:(NSArray *)data action:(NSString *)action {
     self = [super init];
     if (self) {
         if (nil != data) {
@@ -37,8 +36,7 @@
     return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [myData release];
     [myAction release];
     [messageLabel release];
@@ -46,80 +44,76 @@
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
-    
+
     // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
 
-- (void)loadView
-{
-    UIView *view = [[UIView alloc] initWithFrame:[UIScreen 
-                                                  mainScreen].applicationFrame]; 
-    [view setBackgroundColor:[UIColor whiteColor]]; 
-    self.view = view; 
-    [view release]; 
-    
+- (void)loadView {
+    UIView *view = [[UIView alloc] initWithFrame:[UIScreen
+                                                  mainScreen].applicationFrame];
+    [view setBackgroundColor:[UIColor whiteColor]];
+    self.view = view;
+    [view release];
+
     // Main Menu Table
-    UITableView *myTableView = [[UITableView alloc] initWithFrame:self.view.bounds 
+    UITableView *myTableView = [[UITableView alloc] initWithFrame:self.view.bounds
                                                             style:UITableViewStylePlain];
     [myTableView setBackgroundColor:[UIColor whiteColor]];
     myTableView.dataSource = self;
     myTableView.delegate = self;
     myTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     if ([self.myAction isEqualToString:@"places"]) {
-        UILabel *headerLabel = [[[UILabel alloc] 
+        UILabel *headerLabel = [[[UILabel alloc]
                                  initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 30)] autorelease];
         headerLabel.text = @"  Tap selection to check in";
         headerLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0];
         headerLabel.backgroundColor = [UIColor colorWithRed:255.0/255.0
                                                       green:248.0/255.0
-                                                       blue:228.0/255.0 
-                                                      alpha:1]; 
+                                                       blue:228.0/255.0
+                                                      alpha:1];
         myTableView.tableHeaderView = headerLabel;
     }
     [self.view addSubview:myTableView];
     [myTableView release];
-    
+
     // Message Label for showing confirmation and status messages
     CGFloat yLabelViewOffset = self.view.bounds.size.height-self.navigationController.navigationBar.frame.size.height-30;
-    messageView = [[UIView alloc] 
+    messageView = [[UIView alloc]
                    initWithFrame:CGRectMake(0, yLabelViewOffset, self.view.bounds.size.width, 30)];
     messageView.backgroundColor = [UIColor lightGrayColor];
-    
-    UIView *messageInsetView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, self.view.bounds.size.width-1, 28)]; 
+
+    UIView *messageInsetView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, self.view.bounds.size.width-1, 28)];
     messageInsetView.backgroundColor = [UIColor colorWithRed:255.0/255.0
                                                        green:248.0/255.0
-                                                        blue:228.0/255.0 
+                                                        blue:228.0/255.0
                                                        alpha:1];
-    messageLabel = [[UILabel alloc] 
+    messageLabel = [[UILabel alloc]
                     initWithFrame:CGRectMake(4, 1, self.view.bounds.size.width-10, 26)];
     messageLabel.text = @"";
     messageLabel.font = [UIFont fontWithName:@"Helvetica" size:14.0];
     messageLabel.backgroundColor = [UIColor colorWithRed:255.0/255.0
                                                    green:248.0/255.0
-                                                    blue:228.0/255.0 
+                                                    blue:228.0/255.0
                                                    alpha:0.6];
     [messageInsetView addSubview:messageLabel];
-    [messageView addSubview:messageInsetView];    
+    [messageView addSubview:messageInsetView];
     [messageInsetView release];
     messageView.hidden = YES;
     [self.view addSubview:messageView];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
@@ -127,24 +121,24 @@
 /*
  * Graph API: Check in a user to the location selected in the previous view.
  */
-- (void) apiGraphUserCheckins:(NSUInteger)index {
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
+- (void)apiGraphUserCheckins:(NSUInteger)index {
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     SBJSON *jsonWriter = [[SBJSON new] autorelease];
-    
+
     NSDictionary *coordinates = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"latitude"],@"latitude",
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"longitude"],@"longitude",
                                   nil];
-    
+
     NSString *coordinatesStr = [jsonWriter stringWithObject:coordinates];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    [[myData objectAtIndex:index] objectForKey:@"id"], @"place",
                                    coordinatesStr, @"coordinates",
                                    @"", @"message",
                                    nil];
-    [[delegate facebook] requestWithGraphPath:@"me/checkins" 
-                                    andParams:params 
-                                andHttpMethod:@"POST" 
+    [[delegate facebook] requestWithGraphPath:@"me/checkins"
+                                    andParams:params
+                                andHttpMethod:@"POST"
                                   andDelegate:self];
 }
 
@@ -154,7 +148,7 @@
  * Helper method to return the picture endpoint for a given Facebook
  * object. Useful for displaying user, friend, or location pictures.
  */
-- (UIImage *) imageForObject:(NSString *)objectID {
+- (UIImage *)imageForObject:(NSString *)objectID {
     // Get the object image
     NSString *url = [[NSString alloc] initWithFormat:@"https://graph.facebook.com/%@/picture",objectID];
     UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
@@ -166,15 +160,13 @@
  * This method is used to display API confirmation and
  * error messages to the user.
  */
--(void)showMessage:(NSString *)message
-{
-    
+- (void)showMessage:(NSString *)message {
     CGRect labelFrame = messageView.frame;
     labelFrame.origin.y = [UIScreen mainScreen].bounds.size.height - self.navigationController.navigationBar.frame.size.height - 20;
     messageView.frame = labelFrame;
     messageLabel.text = message;
     messageView.hidden = NO;
-    
+
     // Use animation to show the message from the bottom then
     // hide it.
     [UIView animateWithDuration:0.5
@@ -184,7 +176,7 @@
                          CGRect labelFrame = messageView.frame;
                          labelFrame.origin.y -= labelFrame.size.height;
                          messageView.frame = labelFrame;
-                     } 
+                     }
                      completion:^(BOOL finished){
                          if (finished) {
                              [UIView animateWithDuration:0.5
@@ -194,11 +186,11 @@
                                                   CGRect labelFrame = messageView.frame;
                                                   labelFrame.origin.y += messageView.frame.size.height;
                                                   messageView.frame = labelFrame;
-                                              } 
+                                              }
                                               completion:^(BOOL finished){
                                                   if (finished) {
                                                       messageView.hidden = YES;
-                                                      messageLabel.text = @"";  
+                                                      messageLabel.text = @"";
                                                   }
                                               }];
                          }
@@ -209,8 +201,7 @@
  * This method hides the message, only needed if view closed
  * and animation still going on.
  */
--(void)hideMessage
-{
+- (void)hideMessage {
     messageView.hidden = YES;
     messageLabel.text = @"";
 }
@@ -225,27 +216,23 @@
 }
 
 #pragma mark - UITableView Datasource and Delegate Methods
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 80.0;
 }
 
 // Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [myData count];
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
-    
+
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
@@ -255,7 +242,7 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
     }
-    
+
     cell.textLabel.text = [[myData objectAtIndex:indexPath.row] objectForKey:@"name"];
     cell.textLabel.font = [UIFont boldSystemFontOfSize:14.0];
     cell.textLabel.lineBreakMode = UILineBreakModeWordWrap;
@@ -273,8 +260,7 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     // Only handle taps if the view is related to showing nearby places that
     // the user can check-in to.
     if ([self.myAction isEqualToString:@"places"]) {

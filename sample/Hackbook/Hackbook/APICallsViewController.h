@@ -44,10 +44,9 @@ typedef enum apiCall {
     kAPIGraphUserVideosPost,
 } apiCall;
 
-@interface APICallsViewController : UIViewController 
+@interface APICallsViewController : UIViewController
 <FBRequestDelegate,
 FBDialogDelegate,
-FBSessionDelegate,
 UITableViewDataSource,
 UITableViewDelegate,
 CLLocationManagerDelegate>{
@@ -75,5 +74,9 @@ CLLocationManagerDelegate>{
 @property (nonatomic, retain) UIView *messageView;
 
 - (id)initWithIndex:(NSUInteger)index;
+
+- (void)userDidGrantPermission;
+
+- (void)userDidNotGrantPermission;
 
 @end

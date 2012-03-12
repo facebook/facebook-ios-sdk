@@ -1,11 +1,3 @@
-Important Notice on Issue Reporting
-===============
-
-We will no longer be supporting issue reporting on GitHub. Bugs will be handled via our [bug tracking tool](https://developers.facebook.com/bugs/) and any technical questions via [Stack Overflow](http://facebook.stackoverflow.com/).
-
-If you have reported issues on GitHub, please re-post any active ones to the relevant forum.
-
-
 Facebook iOS SDK
 ===========================
 
@@ -54,3 +46,10 @@ Make sure you've edited your application's .plist file properly, so that your ap
 * After upgrading to Xcode 4 the sample app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
 
 Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the Hackbook project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
+
+
+Report Issues/Bugs
+===============
+[Bugs](https://developers.facebook.com/bugs)
+
+[Questions](http://facebook.stackoverflow.com/questions/tagged/android)

@@ -29,8 +29,7 @@
 @synthesize nameLabel;
 @synthesize profilePhotoImageView;
 
-- (void)dealloc
-{
+- (void)dealloc {
     [permissions release];
     [backgroundImageView release];
     [loginButton release];
@@ -42,8 +41,7 @@
     [super dealloc];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
@@ -54,22 +52,22 @@
 /**
  * Make a Graph API Call to get information about the current logged in user.
  */
-- (void) apiFQLIMe {
+- (void)apiFQLIMe {
     // Using the "pic" picture since this currently has a maximum width of 100 pixels
     // and since the minimum profile picture size is 180 pixels wide we should be able
     // to get a 100 pixel wide version of the profile picture
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"SELECT uid, name, pic FROM user WHERE uid=me()", @"query",
                                    nil];
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     [[delegate facebook] requestWithMethodName:@"fql.query"
-                          andParams:params
-                      andHttpMethod:@"POST"
-                        andDelegate:self];
+                                     andParams:params
+                                 andHttpMethod:@"POST"
+                                   andDelegate:self];
 }
 
-- (void) apiGraphUserPermissions {
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate]; 
+- (void)apiGraphUserPermissions {
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     [[delegate facebook] requestWithGraphPath:@"me/permissions" andDelegate:self];
 }
 
@@ -80,7 +78,7 @@
  * Show the logged in menu
  */
 
-- (void) showLoggedIn {
+- (void)showLoggedIn {
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     
     self.backgroundImageView.hidden = YES;
@@ -94,26 +92,8 @@
  * Show the logged in menu
  */
 
-- (void) showLoggedOut:(BOOL)clearInfo {
+- (void)showLoggedOut {
     [self.navigationController setNavigationBarHidden:YES animated:NO];
-    // Remove saved authorization information if it exists and it is
-    // ok to clear it (logout, session invalid, app unauthorized)
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (clearInfo && [defaults objectForKey:@"FBAccessTokenKey"]) {
-        [defaults removeObjectForKey:@"FBAccessTokenKey"];
-        [defaults removeObjectForKey:@"FBExpirationDateKey"];
-        [defaults synchronize];
-        
-        // Nil out the session variables to prevent
-        // the app from thinking there is a valid session
-        HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-        if (nil != [[delegate facebook] accessToken]) {
-            [delegate facebook].accessToken = nil;
-        }
-        if (nil != [[delegate facebook] expirationDate]) {
-            [delegate facebook].expirationDate = nil;
-        }
-    }
     
     self.menuTableView.hidden = YES;
     self.backgroundImageView.hidden = NO;
@@ -123,22 +103,16 @@
     nameLabel.text = @"";
     // Get the profile image
     [profilePhotoImageView setImage:nil];
+    
+    [[self navigationController] popToRootViewControllerAnimated:YES];
 }
 
 /**
  * Show the authorization dialog.
  */
 - (void)login {
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    // Check and retrieve authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"] 
-        && [defaults objectForKey:@"FBExpirationDateKey"]) {
-        [delegate facebook].accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-        [delegate facebook].expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-    }
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     if (![[delegate facebook] isSessionValid]) {
-        [delegate facebook].sessionDelegate = self;
         [[delegate facebook] authorize:permissions];
     } else {
         [self showLoggedIn];
@@ -149,42 +123,41 @@
  * Invalidate the access token and clear the cookie.
  */
 - (void)logout {
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    [[delegate facebook] logout:self];
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [[delegate facebook] logout];
 }
 
 /**
  * Helper method called when a menu button is clicked
  */
-- (void)menuButtonClicked:(id) sender
-{
+- (void)menuButtonClicked:(id)sender {
     // Each menu button in the UITableViewController is initialized
     // with a tag representing the table cell row. When the button
     // is clicked the button is passed along in the sender object.
     // From this object we can then read the tag property to determine
     // which menu button was clicked.
-    APICallsViewController *controller = [[APICallsViewController alloc] 
-                                       initWithIndex:[sender tag]];
+    APICallsViewController *controller = [[APICallsViewController alloc]
+                                          initWithIndex:[sender tag]];
+    pendingApiCallsController = controller;
     [self.navigationController pushViewController:controller animated:YES];
     [controller release];
 }
 
 #pragma mark - View lifecycle
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-    UIView *view = [[UIView alloc] initWithFrame:[UIScreen 
-                                                  mainScreen].applicationFrame]; 
-    [view setBackgroundColor:[UIColor whiteColor]]; 
-    self.view = view; 
-    [view release]; 
-
+- (void)loadView {
+    UIView *view = [[UIView alloc] initWithFrame:[UIScreen
+                                                  mainScreen].applicationFrame];
+    [view setBackgroundColor:[UIColor whiteColor]];
+    self.view = view;
+    [view release];
+    
     // Initialize permissions
     permissions = [[NSArray alloc] initWithObjects:@"offline_access", nil];
     
     // Main menu items
     mainMenuItems = [[NSMutableArray alloc] initWithCapacity:1];
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     NSArray *apiInfo = [[delegate apiData] apiConfigData];
     for (NSUInteger i=0; i < [apiInfo count]; i++) {
         [mainMenuItems addObject:[[apiInfo objectAtIndex:i] objectForKey:@"title"]];
@@ -202,10 +175,10 @@
                                      action:nil] autorelease];
     
     // Background Image
-    backgroundImageView = [[UIImageView alloc] 
-                          initWithFrame:CGRectMake(0,0, 
-                                                   self.view.bounds.size.width, 
-                                                   self.view.bounds.size.height)];
+    backgroundImageView = [[UIImageView alloc]
+                           initWithFrame:CGRectMake(0,0,
+                                                    self.view.bounds.size.width,
+                                                    self.view.bounds.size.height)];
     [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
     //[backgroundImageView setAlpha:0.25];
     [self.view addSubview:backgroundImageView];
@@ -219,16 +192,16 @@
                     action:@selector(login)
           forControlEvents:UIControlEventTouchUpInside];
     [loginButton setImage:
-     [UIImage imageNamed:@"FBConnect.bundle/images/LoginWithFacebookNormal@2x.png"] 
+     [UIImage imageNamed:@"FBConnect.bundle/images/LoginWithFacebookNormal@2x.png"]
                  forState:UIControlStateNormal];
     [loginButton setImage:
-     [UIImage imageNamed:@"FBConnect.bundle/images/LoginWithFacebookPressed@2x.png"] 
+     [UIImage imageNamed:@"FBConnect.bundle/images/LoginWithFacebookPressed@2x.png"]
                  forState:UIControlStateHighlighted];
     [loginButton sizeToFit];
     [self.view addSubview:loginButton];
     
     // Main Menu Table
-    menuTableView = [[UITableView alloc] initWithFrame:self.view.bounds 
+    menuTableView = [[UITableView alloc] initWithFrame:self.view.bounds
                                                  style:UITableViewStylePlain];
     [menuTableView setBackgroundColor:[UIColor whiteColor]];
     menuTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -239,16 +212,16 @@
     //[self.view addSubview:menuTableView];
     
     // Table header
-    headerView = [[UIView alloc] 
+    headerView = [[UIView alloc]
                   initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, 100)];
     headerView.autoresizingMask =  UIViewAutoresizingFlexibleWidth;
     headerView.backgroundColor = [UIColor whiteColor];
     CGFloat xProfilePhotoOffset = self.view.center.x - 25.0;
-    profilePhotoImageView = [[UIImageView alloc] 
+    profilePhotoImageView = [[UIImageView alloc]
                              initWithFrame:CGRectMake(xProfilePhotoOffset, 20, 50, 50)];
     profilePhotoImageView.autoresizingMask =  UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [headerView addSubview:profilePhotoImageView];
-    nameLabel = [[UILabel alloc] 
+    nameLabel = [[UILabel alloc]
                  initWithFrame:CGRectMake(0, 75, self.view.bounds.size.width, 20.0)];
     nameLabel.autoresizingMask =  UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     nameLabel.textAlignment = UITextAlignmentCenter;
@@ -258,84 +231,69 @@
     
     [self.view addSubview:menuTableView];
     
+    pendingApiCallsController = nil;
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
 
-- (void) viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     //[self.navigationController setNavigationBarHidden:YES animated:animated];
     [super viewWillAppear:animated];
     
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    // Check and retrieve authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"FBAccessTokenKey"] 
-        && [defaults objectForKey:@"FBExpirationDateKey"]) {
-        [delegate facebook].accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
-        [delegate facebook].expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
-    }
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
     if (![[delegate facebook] isSessionValid]) {
-        [self showLoggedOut:NO];
+        [self showLoggedOut];
     } else {
         [self showLoggedIn];
     }
-    
 }
 
-- (void) viewWillDisappear:(BOOL)animated
-{
+- (void)viewWillDisappear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:NO animated:animated];
     [super viewWillDisappear:animated];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return YES;
 }
 
 #pragma mark - UITableViewDatasource and UITableViewDelegate Methods
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 60.0;
 }
 
 // Customize the number of sections in the table view.
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [mainMenuItems count];
 }
 
 // Customize the appearance of table view cells.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-        cell.selectionStyle = UITableViewCellEditingStyleNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
     //create the button
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     button.frame = CGRectMake(20, 20, (cell.contentView.frame.size.width-40), 44);
     button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleRightMargin;
-    [button setBackgroundImage:[[UIImage imageNamed:@"MenuButton.png"] 
-                                stretchableImageWithLeftCapWidth:9 topCapHeight:9] 
+    [button setBackgroundImage:[[UIImage imageNamed:@"MenuButton.png"]
+                                stretchableImageWithLeftCapWidth:9 topCapHeight:9]
                       forState:UIControlStateNormal];
-    [button setTitle:[mainMenuItems objectAtIndex:indexPath.row] 
+    [button setTitle:[mainMenuItems objectAtIndex:indexPath.row]
             forState:UIControlStateNormal];
     [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [button addTarget:self action:@selector(menuButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
@@ -345,9 +303,15 @@
     return cell;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+}
 
+- (void)storeAuthData:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:accessToken forKey:@"FBAccessTokenKey"];
+    [defaults setObject:expiresAt forKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
 }
 
 #pragma mark - FBSessionDelegate Methods
@@ -357,27 +321,54 @@
 - (void)fbDidLogin {
     [self showLoggedIn];
     
-    HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
-    
-    // Save authorization information
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:[[delegate facebook] accessToken] forKey:@"FBAccessTokenKey"];
-    [defaults setObject:[[delegate facebook] expirationDate] forKey:@"FBExpirationDateKey"];
-    [defaults synchronize];
+    HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
+    [self storeAuthData:[[delegate facebook] accessToken] expiresAt:[[delegate facebook] expirationDate]];
+        
+    [pendingApiCallsController userDidGrantPermission];
+}
+
+-(void)fbDidExtendToken:(NSString *)accessToken expiresAt:(NSDate *)expiresAt {
+    NSLog(@"token extended");
+    [self storeAuthData:accessToken expiresAt:expiresAt];
 }
 
 /**
  * Called when the user canceled the authorization dialog.
  */
 -(void)fbDidNotLogin:(BOOL)cancelled {
-    NSLog(@"did not login");
+    [pendingApiCallsController userDidNotGrantPermission];
 }
 
 /**
  * Called when the request logout has succeeded.
  */
 - (void)fbDidLogout {
-    [self showLoggedOut:YES];
+    pendingApiCallsController = nil;
+    
+    // Remove saved authorization information if it exists and it is
+    // ok to clear it (logout, session invalid, app unauthorized)
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"FBAccessTokenKey"];
+    [defaults removeObjectForKey:@"FBExpirationDateKey"];
+    [defaults synchronize];
+    
+    [self showLoggedOut];
+}
+
+/**
+ * Called when the session has expired.
+ */
+- (void)fbSessionInvalidated {
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:@"Auth Exception"
+                              message:@"Your session has expired."
+                              delegate:nil
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil,
+                              nil];
+    [alertView show];
+    [alertView release];
+    [self fbDidLogout];
 }
 
 #pragma mark - FBRequestDelegate Methods
@@ -442,7 +433,7 @@
         [self apiGraphUserPermissions];
     } else {
         // Processing permissions information
-        HackbookAppDelegate *delegate = (HackbookAppDelegate *) [[UIApplication sharedApplication] delegate];
+        HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
         [delegate setUserPermissions:[[result objectForKey:@"data"] objectAtIndex:0]];
     }
 }
@@ -454,14 +445,6 @@
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"Err message: %@", [[error userInfo] objectForKey:@"error_msg"]);
     NSLog(@"Err code: %d", [error code]);
-    
-    // Show logged out state if:
-    // 1. the app is no longer authorized
-    // 2. the user logged out of Facebook from m.facebook.com or the Facebook app
-    // 3. the user has changed their password
-    if ([error code] == 190) {
-        [self showLoggedOut:YES];
-    }
 }
 
 @end

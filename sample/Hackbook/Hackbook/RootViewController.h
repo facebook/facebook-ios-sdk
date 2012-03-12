@@ -15,25 +15,28 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "APICallsViewController.h"
 #import "FBConnect.h"
 
-@interface RootViewController : UIViewController 
+@interface RootViewController : UIViewController
 <FBRequestDelegate,
 FBDialogDelegate,
 FBSessionDelegate,
 UITableViewDataSource,
 UITableViewDelegate>{
     NSArray *permissions;
-    
+
     UIImageView *backgroundImageView;
     UIButton *loginButton;
     UITableView *menuTableView;
-    
+
     NSMutableArray *mainMenuItems;
-    
+
     UIView *headerView;
     UILabel *nameLabel;
     UIImageView *profilePhotoImageView;
+    
+    APICallsViewController *pendingApiCallsController;
 }
 
 @property (nonatomic, retain) NSArray *permissions;
