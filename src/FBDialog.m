@@ -367,6 +367,11 @@ params   = _params;
         
         _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
                     UIActivityIndicatorViewStyleWhiteLarge];
+        if ([_spinner respondsToSelector:@selector(setColor:)]) {
+            [_spinner setColor:[UIColor grayColor]];
+        } else {
+            [_spinner setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        }
         _spinner.autoresizingMask =
         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
