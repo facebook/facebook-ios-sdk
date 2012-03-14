@@ -85,8 +85,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params valueForKey:key] isKindOfClass:[UIImage class]])
-            ||([[params valueForKey:key] isKindOfClass:[NSData class]])) {
+        if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
+            ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
             if ([httpMethod isEqualToString:@"GET"]) {
                 NSLog(@"can not use GET to upload a file");
             }
@@ -127,10 +127,10 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     for (id key in [_params keyEnumerator]) {
         
-        if (([[_params valueForKey:key] isKindOfClass:[UIImage class]])
-            ||([[_params valueForKey:key] isKindOfClass:[NSData class]])) {
+        if (([[_params objectForKey:key] isKindOfClass:[UIImage class]])
+            ||([[_params objectForKey:key] isKindOfClass:[NSData class]])) {
             
-            [dataDictionary setObject:[_params valueForKey:key] forKey:key];
+            [dataDictionary setObject:[_params objectForKey:key] forKey:key];
             continue;
             
         }
@@ -139,14 +139,14 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
                        data:[NSString
                              stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",
                              key]];
-        [self utfAppendBody:body data:[_params valueForKey:key]];
+        [self utfAppendBody:body data:[_params objectForKey:key]];
         
         [self utfAppendBody:body data:endLine];
     }
     
     if ([dataDictionary count] > 0) {
         for (id key in dataDictionary) {
-            NSObject *dataParam = [dataDictionary valueForKey:key];
+            NSObject *dataParam = [dataDictionary objectForKey:key];
             if ([dataParam isKindOfClass:[UIImage class]]) {
                 NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
                 [self utfAppendBody:body
