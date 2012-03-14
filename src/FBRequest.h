@@ -105,7 +105,11 @@ typedef NSUInteger FBRequestState;
 - (void)requestLoading:(FBRequest *)request;
 
 /**
- * Called when the server responds and begins to send back data.
+ * Called when the Facebook API request has returned a response.
+ *
+ * This callback gives you access to the raw response. It's called before
+ * (void)request:(FBRequest *)request didLoad:(id)result,
+ * which is passed the parsed response object.
  */
 - (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response;
 
@@ -118,8 +122,12 @@ typedef NSUInteger FBRequestState;
  * Called when a request returns and its response has been parsed into
  * an object.
  *
- * The resulting object may be a dictionary, an array, a string, or a number,
- * depending on thee format of the API response.
+ * The resulting object may be a dictionary, an array or a string, depending
+ * on the format of the API response. If you need access to the raw response,
+ * use:
+ *
+ * (void)request:(FBRequest *)request
+ *      didReceiveResponse:(NSURLResponse *)response
  */
 - (void)request:(FBRequest *)request didLoad:(id)result;
 
