@@ -19,4 +19,6 @@
 #include "FBDialog.h"
 #include "FBLoginDialog.h"
 #include "FBRequest.h"
-#include "SBJSON.h"
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 50000
+#import "SBJSON.h"
+#endif

@@ -15,7 +15,9 @@
  */
 
 #import "FBRequest.h"
-#import "JSON.h"
+#if __IPHONE_OS_VERSION_MIN_REQUIRED < 50000
+#import "SBJSON.h"
+#endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -185,26 +187,50 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  */
 - (id)parseJsonResponse:(NSData *)data error:(NSError **)error {
 
-  NSString* responseString = [[[NSString alloc] initWithData:data
-                                                    encoding:NSUTF8StringEncoding]
-                              autorelease];
-  SBJSON *jsonParser = [[SBJSON new] autorelease];
-  if ([responseString isEqualToString:@"true"]) {
-    return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
-  } else if ([responseString isEqualToString:@"false"]) {
-    if (error != nil) {
-      *error = [self formError:kGeneralErrorCode
-                      userInfo:[NSDictionary
-                                dictionaryWithObject:@"This operation can not be completed"
-                                forKey:@"error_msg"]];
+  id result = nil;
+  id NSJSONSerializationClass = NSClassFromString(@"NSJSONSerialization");
+  if (NSJSONSerializationClass) {
+    result = [NSJSONSerializationClass JSONObjectWithData:data options:NSJSONReadingAllowFragments error:error];
+    if (error != nil && *error != nil) return nil;
+    if ([result isKindOfClass:[NSNumber class]]) {
+      if ([result boolValue]) {
+        return [NSDictionary dictionaryWithObject:@"true"  forKey:@"result"];
+      }
+      else {
+        if (error != nil) {
+          *error = [self formError:kGeneralErrorCode
+                          userInfo:[NSDictionary
+                                    dictionaryWithObject:@"This operation can not be completed"
+                                    forKey:@"error_msg"]];
+        }
+      }
+      return nil;
     }
-    return nil;
+  }
+  else {
+    id SBJSONClass = NSClassFromString(@"SBJSON");
+    NSAssert(SBJSONClass, @"Application must either support iOS5 NSJSONSerialization or link with SBJSON library");
+    id jsonParser = [[SBJSONClass new] autorelease];
+
+    NSString* responseString = [[[NSString alloc] initWithData:data
+                                                      encoding:NSUTF8StringEncoding]
+                                autorelease];
+
+    if ([responseString isEqualToString:@"true"]) {
+      return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
+    } else if ([responseString isEqualToString:@"false"]) {
+      if (error != nil) {
+        *error = [self formError:kGeneralErrorCode
+                        userInfo:[NSDictionary
+                                  dictionaryWithObject:@"This operation can not be completed"
+                                  forKey:@"error_msg"]];
+      }
+      return nil;
+    }
+    result = [jsonParser performSelector:@selector(objectWithString:) withObject:responseString];
   }
 
-
-  id result = [jsonParser objectWithString:responseString];
-
-  if (![result isKindOfClass:[NSArray class]]) {
+  if ([result isKindOfClass:[NSDictionary class]]) {
     if ([result objectForKey:@"error"] != nil) {
       if (error != nil) {
         *error = [self formError:kGeneralErrorCode
