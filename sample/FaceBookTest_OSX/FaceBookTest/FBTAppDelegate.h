@@ -12,7 +12,7 @@
 
 @interface FBTAppDelegate : NSObject <NSApplicationDelegate>
 
-@property (unsafe_unretained) IBOutlet NSWindow *window;
+@property (strong) IBOutlet NSWindow *window;
 @property (unsafe_unretained) IBOutlet FBTMainViewController *controller;
 @property (copy) Facebook *facebook;
 @property (assign) BOOL loggedIn;

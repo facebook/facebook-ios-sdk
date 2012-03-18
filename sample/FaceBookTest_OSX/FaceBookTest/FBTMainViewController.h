@@ -13,7 +13,7 @@
 
 @property (copy) NSArray *permissions;
 
-@property (weak) IBOutlet NSButton *loginButton;
+@property (unsafe_unretained) IBOutlet NSButton *loginButton;
 
 - (IBAction)toggleState:(id)sender;
 
