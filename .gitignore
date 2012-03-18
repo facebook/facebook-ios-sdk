@@ -24,3 +24,5 @@ test/UnitTest/build/
 .DS_Store
 project.xcworkspace
 xcuserdata
+
+src/FBDialog.m.bak
