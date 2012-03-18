@@ -23,7 +23,7 @@
 #if TARGET_OS_IPHONE
 int const FBFlexibleWidth = UIViewAutoresizingFlexibleWidth;
 int const FBFlexibleHeight = UIViewAutoresizingFlexibleHeight;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 int const FBFlexibleWidth = NSViewWidthSizable;
 int const FBFlexibleHeight = NSViewHeightSizable;
 #endif
@@ -88,7 +88,7 @@ params   = _params;
 - (void)drawRect:(CGRect)rect fill:(const CGFloat*)fillColors radius:(CGFloat)radius {
 #if TARGET_OS_IPHONE    
     CGContextRef context = UIGraphicsGetCurrentContext();
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
     CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
@@ -111,7 +111,7 @@ params   = _params;
 - (void)strokeLines:(CGRect)rect stroke:(const CGFloat*)strokeColor {
 #if TARGET_OS_IPHONE    
     CGContextRef context = UIGraphicsGetCurrentContext();
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 #endif
     CGColorSpaceRef space = CGColorSpaceCreateDeviceRGB();
@@ -305,7 +305,7 @@ params   = _params;
         [self postDismissCleanup];
 #if TARGET_OS_IPHONE
     }
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     [NSApp endSheet:_sheet];
 #endif
 }
@@ -365,7 +365,7 @@ params   = _params;
         _webView = [[FBWebView alloc] initWithFrame:CGRectMake(kPadding, kPadding, 480, 480)];
 #if TARGET_OS_IPHONE
         _webView.delegate = self;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
         _webView.resourceLoadDelegate = self;
         _webView.frameLoadDelegate = self;
 #endif
@@ -404,7 +404,7 @@ params   = _params;
         _spinner.autoresizingMask =
         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
         NSColor* color = [NSColor colorWithCalibratedRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
         _closeButton = [[[NSButton alloc] init] retain];
         [_closeButton setImage:closeImage];
@@ -432,7 +432,7 @@ params   = _params;
 - (void)dealloc {
 #if TARGET_OS_IPHONE
     _webView.delegate = nil;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     _webView.resourceLoadDelegate = nil;
     [_sheet release];
 #endif
@@ -503,7 +503,7 @@ params   = _params;
 #if TARGET_OS_IPHONE
     [_spinner startAnimating];	
     _spinner.center = _webView.center;
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     [_spinner startAnimation:self];
 #endif
 }	
@@ -511,7 +511,7 @@ params   = _params;
 - (void)hideSpinner {	
 #if TARGET_OS_IPHONE
     [_spinner stopAnimating];	
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     [_spinner stopAnimation:self];
 #endif
     _spinner.hidden = YES;	
@@ -559,7 +559,7 @@ params   = _params;
         return YES;
     }
 }
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 -(NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
     return request;
 }
@@ -569,7 +569,7 @@ params   = _params;
 #endif    
 #if TARGET_OS_IPHONE
 - (void)webViewDidFinishLoad:(FBWebView *)webView {
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)webView:(FBWebView *)webView resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource {
 #endif
     if (_isViewInvisible) {
@@ -588,7 +588,7 @@ params   = _params;
         
 #if TARGET_OS_IPHONE
 - (void)webView:(FBWebView *)webView didFailLoadWithError:(NSError *)error {
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
 - (void)webView:(WebView *)webView resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource {
 #endif
     // 102 == WebKitErrorFrameLoadInterruptedByPolicyChange
@@ -703,7 +703,7 @@ params   = _params;
                 
 #if TARGET_OS_IPHONE
     [_webView loadRequest:request];
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
     [[_webView mainFrame] loadRequest:request];
 #endif
 }

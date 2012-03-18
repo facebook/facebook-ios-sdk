@@ -151,7 +151,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
             if ([dataParam isKindOfClass:[FBImage class]]) {
 #if TARGET_OS_IPHONE                
                 NSData* imageData = UIImagePNGRepresentation((FBImage*)dataParam);
-#elif TARGET_OS_MAC
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
                 NSBitmapImageRep *bits = [[(FBImage*)dataParam representations] objectAtIndex:0];
                 NSData* imageData = [bits representationUsingType:NSPNGFileType properties:nil];
 #endif
