@@ -22,7 +22,7 @@ static NSString* kAppId = @"210849718975311";
 
 - (void)dealloc
 {
-    [super dealloc];
+    
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification

@@ -11,9 +11,9 @@
 
 @interface FBTMainViewController : NSViewController <FBRequestDelegate, FBDialogDelegate, FBSessionDelegate>
 
-@property (retain) NSArray *permissions;
+@property (copy) NSArray *permissions;
 
-@property (assign) IBOutlet NSButton *loginButton;
+@property (weak) IBOutlet NSButton *loginButton;
 
 - (IBAction)toggleState:(id)sender;
 
