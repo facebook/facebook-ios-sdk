@@ -396,11 +396,6 @@ params   = _params;
         
         _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
                     UIActivityIndicatorViewStyleWhiteLarge];
-        if ([_spinner respondsToSelector:@selector(setColor:)]) {
-            [_spinner setColor:[UIColor grayColor]];
-        } else {
-            [_spinner setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
-        }
         _spinner.autoresizingMask =
         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -418,7 +413,6 @@ params   = _params;
         
         _spinner = [[NSProgressIndicator alloc] init];
         [_spinner setStyle:NSProgressIndicatorSpinningStyle];
-        
 #endif
         [self addSubview:_closeButton];
         [self addSubview:_spinner];
@@ -459,12 +453,11 @@ params   = _params;
     
     [self strokeLines:webRect stroke:kBorderBlack];
 }
-
-- (void)didEndSheet:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
-{
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
+- (void)didEndSheet:(NSWindow *)sheet returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo {
     [sheet orderOut:self];
 }
-
+#endif
 // Display the dialog's WebView with a slick pop-up animation	
 - (void)showWebView {	
     
@@ -487,7 +480,7 @@ params   = _params;
 #endif    
     [self dialogWillAppear];	
     [self addObservers];
-#if TARGET_OS_MAC
+#if TARGET_OS_MAC && !TARGET_OS_IPHONE
     _sheet = [[NSWindow alloc] init];
     [_sheet setFrame:CGRectMake(kPadding, kPadding, 480, 520) display:YES];
     [_sheet setContentView:self];
@@ -519,31 +512,54 @@ params   = _params;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // UIWebViewDelegate
+
+- (BOOL)checkURL:(NSURL*)url {
+    if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"]) {
+        NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
+        NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
+        if (errorCode) {
+            NSDictionary * errorData = [NSDictionary dictionaryWithObject:errorStr forKey:@"error_msg"];
+            NSError * error = [NSError errorWithDomain:@"facebookErrDomain"
+                                                  code:[errorCode intValue]
+                                              userInfo:errorData];
+            [self dismissWithError:error animated:YES];
+        } else {
+            [self dialogDidCancel:url];
+        }
+    } else {
+        if (_frictionlessSettings.enabled) {
+            [self dialogSuccessHandleFrictionlessResponses:url];
+        }
+        [self dialogDidSucceed:url];
+    }
+    return NO;
+}
+
 #if TARGET_OS_IPHONE
 - (BOOL)webView:(FBWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    BOOL begin = NO;
     NSURL* url = request.URL;
     
     if ([url.scheme isEqualToString:@"fbconnect"]) {
-        if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"]) {
-            NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
-            NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
-            if (errorCode) {
-                NSDictionary * errorData = [NSDictionary dictionaryWithObject:errorStr forKey:@"error_msg"];
-                NSError * error = [NSError errorWithDomain:@"facebookErrDomain"
-                                                      code:[errorCode intValue]
-                                                  userInfo:errorData];
-                [self dismissWithError:error animated:YES];
-            } else {
-                [self dialogDidCancel:url];
-            }
-        } else {
-            if (_frictionlessSettings.enabled) {
-                [self dialogSuccessHandleFrictionlessResponses:url];
-            }
-            [self dialogDidSucceed:url];
-        }
-        return NO;
+//        if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"]) {
+//            NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
+//            NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
+//            if (errorCode) {
+//                NSDictionary * errorData = [NSDictionary dictionaryWithObject:errorStr forKey:@"error_msg"];
+//                NSError * error = [NSError errorWithDomain:@"facebookErrDomain"
+//                                                      code:[errorCode intValue]
+//                                                  userInfo:errorData];
+//                [self dismissWithError:error animated:YES];
+//            } else {
+//                [self dialogDidCancel:url];
+//            }
+//        } else {
+//            if (_frictionlessSettings.enabled) {
+//                [self dialogSuccessHandleFrictionlessResponses:url];
+//            }
+//            [self dialogDidSucceed:url];
+//        }
+//        return NO;
+        return [self checkURL:url];
     } else if ([_loadingURL isEqual:url]) {
         return YES;
     } else if (navigationType == UIWebViewNavigationTypeLinkClicked) {
@@ -560,11 +576,10 @@ params   = _params;
     }
 }
 #elif TARGET_OS_MAC && !TARGET_OS_IPHONE
--(NSURLRequest *)webView:(WebView *)sender resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
-    return request;
-}
 -(void)webView:(WebView *)sender willPerformClientRedirectToURL:(NSURL *)URL delay:(NSTimeInterval)seconds fireDate:(NSDate *)date forFrame:(WebFrame *)frame {
-    NSLog(@"Redirect URL: %@", URL);
+    BOOL proceed = [self checkURL:URL];
+    if(!proceed)
+        [sender stopLoading:sender];
 }
 #endif    
 #if TARGET_OS_IPHONE

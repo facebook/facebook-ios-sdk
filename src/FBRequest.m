@@ -86,7 +86,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
+        if (([[params objectForKey:key] isKindOfClass:[FBImage class]])
             ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
             if ([httpMethod isEqualToString:@"GET"]) {
                 NSLog(@"can not use GET to upload a file");
