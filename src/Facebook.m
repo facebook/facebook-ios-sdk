@@ -415,11 +415,11 @@ static void *finishedContext = @"finishedContext";
     }
     
     NSDictionary *params = [self parseURLParams:query];
-    NSString *accessToken = [params valueForKey:@"access_token"];
+    NSString *accessToken = [params objectForKey:@"access_token"];
     
     // If the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
-        NSString *errorReason = [params valueForKey:@"error"];
+        NSString *errorReason = [params objectForKey:@"error"];
         
         // If the error response indicates that we should try again using Safari, open
         // the authorization dialog in Safari.
@@ -438,7 +438,7 @@ static void *finishedContext = @"finishedContext";
         // The facebook app may return an error_code parameter in case it
         // encounters a UIWebViewDelegate error. This should not be treated
         // as a cancel.
-        NSString *errorCode = [params valueForKey:@"error_code"];
+        NSString *errorCode = [params objectForKey:@"error_code"];
         
         BOOL userDidCancel =
         !errorCode && (!errorReason || [errorReason isEqualToString:@"access_denied"]);
@@ -447,7 +447,7 @@ static void *finishedContext = @"finishedContext";
     }
     
     // We have an access token, so parse the expiration date.
-    NSString *expTime = [params valueForKey:@"expires_in"];
+    NSString *expTime = [params objectForKey:@"expires_in"];
     NSDate *expirationDate = [NSDate distantFuture];
     if (expTime != nil) {
         int expVal = [expTime intValue];
