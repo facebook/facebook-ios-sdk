@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import "FBTypeDefs.h"
 #import "FBRequest.h"
 #import "JSON.h"
 
@@ -85,7 +86,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params valueForKey:key] isKindOfClass:[UIImage class]])
+        if (([[params valueForKey:key] isKindOfClass:[FBImage class]])
             ||([[params valueForKey:key] isKindOfClass:[NSData class]])) {
             if ([httpMethod isEqualToString:@"GET"]) {
                 NSLog(@"can not use GET to upload a file");
@@ -127,7 +128,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     for (id key in [_params keyEnumerator]) {
         
-        if (([[_params valueForKey:key] isKindOfClass:[UIImage class]])
+        if (([[_params valueForKey:key] isKindOfClass:[FBImage class]])
             ||([[_params valueForKey:key] isKindOfClass:[NSData class]])) {
             
             [dataDictionary setObject:[_params valueForKey:key] forKey:key];
@@ -147,8 +148,13 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     if ([dataDictionary count] > 0) {
         for (id key in dataDictionary) {
             NSObject *dataParam = [dataDictionary valueForKey:key];
-            if ([dataParam isKindOfClass:[UIImage class]]) {
-                NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
+            if ([dataParam isKindOfClass:[FBImage class]]) {
+#if TARGET_OS_IPHONE                
+                NSData* imageData = UIImagePNGRepresentation((FBImage*)dataParam);
+#elif TARGET_OS_MAC
+                NSBitmapImageRep *bits = [[(FBImage*)dataParam representations] objectAtIndex:0];
+                NSData* imageData = [bits representationUsingType:NSPNGFileType properties:nil];
+#endif
                 [self utfAppendBody:body
                                data:[NSString stringWithFormat:
                                      @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
