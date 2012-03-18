@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../../src/facebook-osx-sdk.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:FaceBookTest_OSX.xcodeproj">
+   </FileRef>
+</Workspace>
