@@ -1,5 +1,13 @@
+Facebook iOS / OSX SDK
+======================
+
+This is a fork of the root facebook-ios-sdk. This fork includes support for OSX. The iOS code is inline with the Mac code. The login dialog is displayed as a sheet locked to the keyWindow.
+
+
+
+
 Facebook iOS SDK
-===========================
+----------------------------
 
 This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
