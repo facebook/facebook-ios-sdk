@@ -13,9 +13,9 @@
 		F71642AA150EEA78003376EF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F71642A8150EEA78003376EF /* Credits.rtf */; };
 		F71642AD150EEA78003376EF /* FBTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F71642AC150EEA78003376EF /* FBTAppDelegate.m */; };
 		F71642B0150EEA78003376EF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F71642AE150EEA78003376EF /* MainMenu.xib */; };
-		F7778F6C1512DABD002961BE /* FBTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7778F6A1512DABD002961BE /* FBTMainViewController.m */; };
 		F7B9EE6E150EF53100ED00AF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B9EE6D150EF53100ED00AF /* WebKit.framework */; };
 		F7BCA1E9151631DC007801A4 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */; };
+		F7C80D0D15164DAA005C2949 /* FBTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,11 +32,11 @@
 		F71642AB150EEA78003376EF /* FBTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBTAppDelegate.h; sourceTree = "<group>"; };
 		F71642AC150EEA78003376EF /* FBTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBTAppDelegate.m; sourceTree = "<group>"; };
 		F71642AF150EEA78003376EF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		F7778F691512DABD002961BE /* FBTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTMainViewController.h; path = ../FBTMainViewController.h; sourceTree = "<group>"; };
-		F7778F6A1512DABD002961BE /* FBTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTMainViewController.m; path = ../FBTMainViewController.m; sourceTree = "<group>"; };
 		F7B9EE6D150EF53100ED00AF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libfacebook_ios_sdk.a; path = ../../src/build/Release/libfacebook_ios_sdk.a; sourceTree = "<group>"; };
+		F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfacebook_ios_sdk.a; path = ../../src/build/Release/libfacebook_ios_sdk.a; sourceTree = "<group>"; };
 		F7BCA20715163D39007801A4 /* Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		F7C80D0B15164DAA005C2949 /* FBTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTMainViewController.h; sourceTree = "<group>"; };
+		F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTMainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,8 +94,8 @@
 		F716429F150EEA77003376EF /* FaceBookTest */ = {
 			isa = PBXGroup;
 			children = (
-				F7778F691512DABD002961BE /* FBTMainViewController.h */,
-				F7778F6A1512DABD002961BE /* FBTMainViewController.m */,
+				F7C80D0B15164DAA005C2949 /* FBTMainViewController.h */,
+				F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */,
 				F71642AB150EEA78003376EF /* FBTAppDelegate.h */,
 				F71642AC150EEA78003376EF /* FBTAppDelegate.m */,
 				F71642AE150EEA78003376EF /* MainMenu.xib */,
@@ -183,7 +183,7 @@
 			files = (
 				F71642A6150EEA78003376EF /* main.m in Sources */,
 				F71642AD150EEA78003376EF /* FBTAppDelegate.m in Sources */,
-				F7778F6C1512DABD002961BE /* FBTMainViewController.m in Sources */,
+				F7C80D0D15164DAA005C2949 /* FBTMainViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

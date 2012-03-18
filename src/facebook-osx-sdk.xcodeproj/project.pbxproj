@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22297EB114FC1413003CE798 /* FBFrictionlessRequestSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 22297EAF14FC1412003CE798 /* FBFrictionlessRequestSettings.h */; };
+		22297EB114FC1413003CE798 /* FBFrictionlessRequestSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 22297EAF14FC1412003CE798 /* FBFrictionlessRequestSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22297EB214FC1413003CE798 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 22297EB014FC1412003CE798 /* FBFrictionlessRequestSettings.m */; };
 		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -33,7 +33,7 @@
 		AEA93B2B11D52959000A4545 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1E11D52959000A4545 /* SBJsonParser.m */; };
 		AEA93B2C11D52959000A4545 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1F11D52959000A4545 /* SBJsonWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AEA93B2D11D52959000A4545 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
-		F7BCA158151585AF007801A4 /* FBTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F7BCA157151585AF007801A4 /* FBTypeDefs.h */; };
+		F7BCA158151585AF007801A4 /* FBTypeDefs.h in Headers */ = {isa = PBXBuildFile; fileRef = F7BCA157151585AF007801A4 /* FBTypeDefs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -163,6 +163,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F7BCA158151585AF007801A4 /* FBTypeDefs.h in Headers */,
 				AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */,
 				AEA93B0A11D5293B000A4545 /* FBConnect.h in Headers */,
 				AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */,
@@ -175,9 +176,8 @@
 				AEA93B2611D52959000A4545 /* SBJSON.h in Headers */,
 				AEA93B2811D52959000A4545 /* SBJsonBase.h in Headers */,
 				AEA93B2A11D52959000A4545 /* SBJsonParser.h in Headers */,
-				AEA93B2C11D52959000A4545 /* SBJsonWriter.h in Headers */,
 				22297EB114FC1413003CE798 /* FBFrictionlessRequestSettings.h in Headers */,
-				F7BCA158151585AF007801A4 /* FBTypeDefs.h in Headers */,
+				AEA93B2C11D52959000A4545 /* SBJsonWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
