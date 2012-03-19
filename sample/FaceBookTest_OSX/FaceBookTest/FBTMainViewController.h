@@ -7,7 +7,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import "FBConnect.h"
+#import <FacebookOSXSDK/FBConnect.h>
 
 @interface FBTMainViewController : NSViewController <FBRequestDelegate, FBDialogDelegate, FBSessionDelegate>
 
