@@ -15,6 +15,7 @@
  */
 
 #import "Facebook.h"
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "JSON.h"
