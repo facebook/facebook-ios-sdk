@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import "FBRequest.h"
+#import "Facebook.h"
 #import "JSON.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,16 +36,6 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
 @implementation FBRequest
 
-@synthesize delegate = _delegate,
-            url = _url,
-            httpMethod = _httpMethod,
-            params = _params,
-            connection = _connection,
-            responseText = _responseText,
-            state = _state,
-            sessionDidExpire = _sessionDidExpire,
-            error = _error;
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // class public
 
@@ -63,6 +53,108 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     request.responseText = nil;
     
     return request;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// public property impls (deprecated)
+
+//@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+- (id<FBRequestDelegate>)delegate {
+    return _delegate;
+}
+
+- (void)setDelegate:(id<FBRequestDelegate>)newValue {
+    _delegate = newValue;
+}
+
+//@property(nonatomic,copy) NSString* url;
+- (NSString*)url {
+    return _url;
+}
+
+- (void)setUrl:(NSString*)newValue {
+    if (_url != newValue) {
+        [_url release];
+        _url = [newValue copy];
+    }
+}
+
+//@property(nonatomic,copy) NSString* httpMethod;
+- (NSString*)httpMethod {
+    return _httpMethod;
+}
+
+- (void)setHttpMethod:(NSString*)newValue {
+    if (_httpMethod != newValue) {
+        [_httpMethod release];
+        _httpMethod = [newValue copy];
+    }
+}
+
+//@property(nonatomic,retain) NSMutableDictionary* params;
+- (NSMutableDictionary*)params {
+    return _params;
+}
+
+- (void)setParams:(NSMutableDictionary*)newValue {
+    if (_params != newValue) {
+        [_params release];
+        _params = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSURLConnection*  connection;
+- (NSURLConnection*)connection {
+    return _connection;
+}
+
+- (void)setConnection:(NSURLConnection*)newValue {
+    if (_connection != newValue) {
+        [_connection release];
+        _connection = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSMutableData* responseText;
+- (NSMutableData*)responseText {
+    return _responseText;
+}
+
+- (void)setResponseText:(NSMutableData*)newValue {
+    if (_responseText != newValue) {
+        [_responseText release];
+        _responseText = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSError* error;
+- (NSError*)error {
+    return _error;
+}
+
+- (void)setError:(NSError*)newValue {
+    if (_error != newValue) {
+        [_error release];
+        _error = [newValue retain];
+    }
+}
+
+//@property(nonatomic,readonly+readwrite) FBRequestState state;
+- (FBRequestState)state {
+    return _state;
+}
+
+- (void)setState:(FBRequestState)newValue {
+    _state = newValue;
+}
+
+//@property(nonatomic,readonly+readwrite) BOOL sessionDidExpire;
+- (BOOL)sessionDidExpire {
+    return _sessionDidExpire;
+}
+
+- (void)setSessionDidExpire:(BOOL)newValue {
+    _sessionDidExpire = newValue;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

@@ -41,7 +41,7 @@ static void *finishedContext = @"finishedContext";
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-@interface Facebook ()
+@interface Facebook () <FBRequestDelegate>
 
 // private properties
 @property(nonatomic, retain) NSArray* permissions;

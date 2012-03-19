@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2012 Facebook
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,35 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIKit.h>
+#import "FBRequestConnection.h"
 
+// up-front decl's
 @protocol FBRequestDelegate;
+@class FBSession;
 
-enum {
-    kFBRequestStateReady,
-    kFBRequestStateLoading,
-    kFBRequestStateComplete,
-    kFBRequestStateError
-};
-typedef NSUInteger FBRequestState;
+// FBRequestState is deprecated, use of it and related
+// api is discouraged for new code
+typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 
-/**
- * Do not use this interface directly, instead, use method in Facebook.h
- */
+// FBRequest class
+//
+// Summary:
+// FBRequest object is used to construct requests, and provides helper
+// methods which make it simple to connect, and fetch responses
+// from Facebook's graph and rest APIs. An FBSession object is required
+// for all authenticated uses of FBRequest, but unauthenticated requests 
+// are also supported.
+// 
+// Behavior notes:
+// An instance of FBRequest represents the arguments and setup for a connection 
+// to Facebook. At connection time, an FBRequestConnection object is created to
+// manage a single connection. Class and instance methods prefixed with start*
+// can be used to connect and setup with a single method. An FBRequest object
+// may be used to issue multiple connections to Facebook. To cancel a connection
+// use the instance method on FBRequestConnection.
+//
 @interface FBRequest : NSObject {
+@private
     id<FBRequestDelegate> _delegate;
     NSString*             _url;
     NSString*             _httpMethod;
@@ -42,101 +55,104 @@ typedef NSUInteger FBRequestState;
     BOOL                  _sessionDidExpire;
 }
 
+// creating a request
 
-@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+// init
+//
+// Summary:
+// Following are the descriptions of the arguments along with 
+// their defaults when ommitted.
+//   session:              - the session object representing the identity of the
+//                         Facebook user making the request; nil implies an
+//                         unauthenticated request; default=nil
+//   graphPath:            - specifies a path for a graph request, as well as
+//                         indicates to the object to use the graph subdomain; 
+//                         before start is one of graphPath or restMethod
+//                         must be non-nil and the other must be nil
+//   restMethod:           - restMethod specifies the method for a request
+//                         to the deprecated Facebook rest API
+//   parameters            - specifies url parameters for the request; nil
+//                         implies that automatically handled parameters such as
+//                         access_token should be set, but no additional
+//                         parameters will be set; default=nil
+//   HTTPMethod:           - indicates the HTTP method to use; nil implies GET;
+//                         default=nil
+//
+- (id)init;
 
-/**
- * The URL which will be contacted to execute the request.
- */
-@property(nonatomic,copy) NSString* url;
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath;
 
-/**
- * The API method which will be called.
- */
-@property(nonatomic,copy) NSString* httpMethod;
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+           parameters:(NSDictionary *)parameters
+           HTTPMethod:(NSString *)HTTPMethod;
 
-/**
- * The dictionary of parameters to pass to the method.
- *
- * These values in the dictionary will be converted to strings using the
- * standard Objective-C object-to-string conversion facilities.
- */
-@property(nonatomic,retain) NSMutableDictionary* params;
-@property(nonatomic,retain) NSURLConnection*  connection;
-@property(nonatomic,retain) NSMutableData* responseText;
-@property(nonatomic,readonly) FBRequestState state;
-@property(nonatomic,readonly) BOOL sessionDidExpire;
+- (id)initWithSession:(FBSession*)session
+           restMethod:(NSString *)restMethod
+           parameters:(NSDictionary *)parameters
+           HTTPMethod:(NSString *)HTTPMethod;
 
-/**
- * Error returned by the server in case of request's failure (or nil otherwise).
- */
-@property(nonatomic,retain) NSError* error;
+// properties
+//
+// Summary:
+// Properties may be used to read values automatically set by the object,
+// as well as to set or make modifications prior to calls to start.
 
+// instance readonly properties
+@property(readonly) NSMutableDictionary *parameters;
+@property(readonly) NSMutableURLRequest *URLRequest;
 
-+ (NSString*)serializeURL:(NSString *)baseUrl
-                   params:(NSDictionary *)params;
+// instance readwrite properties
+@property(readwrite, retain) FBSession *session;
+@property(readwrite, retain) NSString *graphPath;
+@property(readwrite, retain) NSString *restMethod;
+@property(readwrite, retain) NSString *HTTPMethod;
 
-+ (NSString*)serializeURL:(NSString *)baseUrl
-                   params:(NSDictionary *)params
-               httpMethod:(NSString *)httpMethod;
+// instance methods
 
-+ (FBRequest*)getRequestWithParams:(NSMutableDictionary *) params
-                        httpMethod:(NSString *) httpMethod
-                          delegate:(id<FBRequestDelegate>)delegate
-                        requestURL:(NSString *) url;
-- (BOOL) loading;
+// connectionWithCompletionHandler initiates a connection with Facebook
+//
+// Summary:
+// Used to create a ready-to-start connection. The block is called in all three
+// completion cases: success, error, & cancel.
+//   completionHandler:    - handler block, called when the request completes
+//                         with success, error, or cancel
+//
+- (FBRequestConnection*)connectionWithCompletionHandler:(FBRequestHandler)handler;
 
-- (void) connect;
+// class methods
+
+// connection*
+//
+// Summary:
+// Helper methods used to create a request and connection in a single method 
+//
+//   session:              - the session object representing the identity of the
+//                         Facebook user making the request; nil implies an
+//                         unauthenticated request; default=nil
+//   graphPath:            - specifies a path for a graph request, as well as
+//                         indicates to the object to use the graph subdomain; 
+//                         before start is one of graphPath or restMethod
+//                         must be non-nil and the other must be nil
+//   parameters            - specifies url parameters for the request; nil
+//                         implies that automatically handled parameters such as
+//                         access_token should be set, but no additional
+//                         parameters will be set; default=nil
+//   HTTPMethod:           - indicates the HTTP method to use; nil implies GET;
+//                         default=nil
+//
++ (FBRequestConnection*)connectionWithGraphPath:(NSString*)graphPath
+                                completionHandler:(FBRequestHandler)handler;
+
++ (FBRequestConnection*)connectionWithSession:(FBSession*)
+                                      graphPath:(NSString*)graphPath
+                              completionHandler:(FBRequestHandler)handler;
+
++ (FBRequestConnection*)connectionWithSession:(FBSession*)
+                                      graphPath:(NSString*)graphPath
+                                     parameters:(NSDictionary*)parameters
+                                     HTTPMethod:(NSString*)HTTPMethod
+                              completionHandler:(FBRequestHandler)handler;
 
 @end
-
-////////////////////////////////////////////////////////////////////////////////
-
-/*
- *Your application should implement this delegate
- */
-@protocol FBRequestDelegate <NSObject>
-
-@optional
-
-/**
- * Called just before the request is sent to the server.
- */
-- (void)requestLoading:(FBRequest *)request;
-
-/**
- * Called when the Facebook API request has returned a response.
- *
- * This callback gives you access to the raw response. It's called before
- * (void)request:(FBRequest *)request didLoad:(id)result,
- * which is passed the parsed response object.
- */
-- (void)request:(FBRequest *)request didReceiveResponse:(NSURLResponse *)response;
-
-/**
- * Called when an error prevents the request from completing successfully.
- */
-- (void)request:(FBRequest *)request didFailWithError:(NSError *)error;
-
-/**
- * Called when a request returns and its response has been parsed into
- * an object.
- *
- * The resulting object may be a dictionary, an array or a string, depending
- * on the format of the API response. If you need access to the raw response,
- * use:
- *
- * (void)request:(FBRequest *)request
- *      didReceiveResponse:(NSURLResponse *)response
- */
-- (void)request:(FBRequest *)request didLoad:(id)result;
-
-/**
- * Called when a request returns a response.
- *
- * The result object is the raw response from the server of type NSData
- */
-- (void)request:(FBRequest *)request didLoadRawResponse:(NSData *)data;
-
-@end
-

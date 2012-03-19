@@ -40,9 +40,9 @@ typedef enum _FBSessionStatus {
     
 } FBSessionStatus;
 
-typedef void (^FBSessionStatusCallback)(FBSession *session, 
-                                        FBSessionStatus status, 
-                                        NSError *error);
+typedef void (^FBSessionStatusHandler)(FBSession *session, 
+                                       FBSessionStatus status, 
+                                       NSError *error);
 
 // FBSession class
 //
@@ -58,16 +58,16 @@ typedef void (^FBSessionStatusCallback)(FBSession *session,
 // b) session instances post the "FBSessionLogin" and "FBSessionInvalid"
 // notifications, which may be observed via NSNotificationCenter
 // c) the object supports KVO for property changes
+//
 @interface FBSession : NSObject
 
 // creating a session
 
-// session/sessionWithPermissions returns a session instance
+// init
 //
 // Summary:
-// The simplest factory method requires only an appId to initiate a session with
-// Facebook. Following are the descriptions of the arguments along with 
-// their defaults when ommitted.
+// Following are the descriptions of the arguments along with their 
+// defaults when ommitted.
 //   permissions:          - array of strings naming permissions to authorize; a 
 //                         nil value indicates access to basic information; 
 //                         default=nil
@@ -85,7 +85,8 @@ typedef void (^FBSessionStatusCallback)(FBSession *session,
 //
 // Behavior notes: For a first cut at this, we are removing the public ability
 // to force an extension to an access token; instead we will implicitly do this
-// when requests are made. 
+// when requests are made.
+//
 - (id)init;
 
 - (id)initWithPermissions:(NSArray*)permissions;
@@ -111,18 +112,21 @@ typedef void (^FBSessionStatusCallback)(FBSession *session,
 // Summary:
 // Login using Facebook
 //   WithCompletionBlock   - a block to call with the login result; default=nil
-- (void)loginWithCompletionBlock:(FBSessionStatusCallback)handler;
+//
+- (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler;
 
 // invalidate
 //
 // Summary:
 // Invalidates the local session object
+//
 - (void)invalidate;
 
 // logout
 //
 // Summary:
 // Logout invalidates the in-memory session, and clears any persisted cache
+//
 - (void)logout;
 
 // handleOpenURL
@@ -131,6 +135,7 @@ typedef void (^FBSessionStatusCallback)(FBSession *session,
 // Helper method, used to provide an implementation for 
 // [UIApplicationDelegate application:openUrl:*] capable of updating a session
 // based on the url
+//
 - (BOOL)handleOpenURL:(NSURL*)url;
 
 @end
@@ -140,6 +145,7 @@ typedef void (^FBSessionStatusCallback)(FBSession *session,
 // Summary:
 // Implementors execute token and expiration-date caching and fetching logic
 // for a Facebook integrated application
+//
 @interface FBSessionTokenCachingStrategy : NSObject
 
 + (id)init;

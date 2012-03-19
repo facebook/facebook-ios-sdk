@@ -93,8 +93,11 @@
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30ED588E14358F9400A226C3 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		84AB662F1510F36300D9EE5F /* FacebookSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacebookSDK.h; path = ../../src/FacebookSDK.h; sourceTree = "<group>"; };
+		84AB66301510F36300D9EE5F /* FBSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSession.h; path = ../../src/FBSession.h; sourceTree = "<group>"; };
 		84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBFrictionlessRequestSettings.h; path = ../../src/FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
 		84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBFrictionlessRequestSettings.m; path = ../../src/FBFrictionlessRequestSettings.m; sourceTree = "<group>"; };
+		84F4400415194EBC00CEECD5 /* FBRequestConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBRequestConnection.h; path = ../../src/FBRequestConnection.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,10 +193,14 @@
 		30EA73CC13F5D50D003DC0D2 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
+				30EA73D013F5D523003DC0D2 /* FBDialog.bundle */,
+				30EA73D913F5D523003DC0D2 /* JSON */,
 				30EA73CD13F5D523003DC0D2 /* Facebook.h */,
+				84F4400415194EBC00CEECD5 /* FBRequestConnection.h */,
+				84AB662F1510F36300D9EE5F /* FacebookSDK.h */,
+				84AB66301510F36300D9EE5F /* FBSession.h */,
 				30EA73CE13F5D523003DC0D2 /* Facebook.m */,
 				30EA73CF13F5D523003DC0D2 /* FBConnect.h */,
-				30EA73D013F5D523003DC0D2 /* FBDialog.bundle */,
 				30EA73D113F5D523003DC0D2 /* FBDialog.h */,
 				30EA73D213F5D523003DC0D2 /* FBDialog.m */,
 				30EA73D513F5D523003DC0D2 /* FBLoginDialog.h */,
@@ -202,7 +209,6 @@
 				30EA73D813F5D523003DC0D2 /* FBRequest.m */,
 				84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */,
 				84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */,
-				30EA73D913F5D523003DC0D2 /* JSON */,
 			);
 			name = FBConnect;
 			sourceTree = "<group>";

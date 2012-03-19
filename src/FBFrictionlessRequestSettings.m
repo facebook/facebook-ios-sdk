@@ -20,7 +20,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private interface
 //
-@interface FBFrictionlessRequestSettings ()
+@interface FBFrictionlessRequestSettings () <FBRequestDelegate>
 
 @property (readwrite, retain) NSArray *     allowedRecipients;
 @property (readwrite, retain) FBRequest*    activeRequest;

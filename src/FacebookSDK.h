@@ -15,6 +15,7 @@
  */
 
 #import "FBSession.h"
+#import "FBRequest.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -86,12 +87,12 @@
                                         NSError *error) {
      if (session.isValid) {
          // request basic information for the user
-         [FBRequest requestWithGraphPath:@"me"
-                              forSession:session
-                   completeResultToBlock:^void(FBRequest *request, 
-                                               FBRequestStatus status,
-                                               id result) {
-             if (status == FBRequestStatusSuccess) {
+         [FBRequest startRequestWithSession:session
+                                  graphPath:@"me"
+                          completionHandler:^void(FBRequest *request, 
+                                                  id result,
+                                                  NSError *error) {
+             if (!error) {
                  // get json from result
              }
          }];
