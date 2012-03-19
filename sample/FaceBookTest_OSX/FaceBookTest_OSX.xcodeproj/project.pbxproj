@@ -13,8 +13,8 @@
 		F71642AA150EEA78003376EF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F71642A8150EEA78003376EF /* Credits.rtf */; };
 		F71642AD150EEA78003376EF /* FBTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F71642AC150EEA78003376EF /* FBTAppDelegate.m */; };
 		F71642B0150EEA78003376EF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F71642AE150EEA78003376EF /* MainMenu.xib */; };
+		F78B97CE1516CE8B00585045 /* FacebookOSXSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F78B97CD1516CE8B00585045 /* FacebookOSXSDK.framework */; };
 		F7B9EE6E150EF53100ED00AF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B9EE6D150EF53100ED00AF /* WebKit.framework */; };
-		F7BCA1E9151631DC007801A4 /* libfacebook_ios_sdk.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */; };
 		F7C80D0D15164DAA005C2949 /* FBTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -32,8 +32,8 @@
 		F71642AB150EEA78003376EF /* FBTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBTAppDelegate.h; sourceTree = "<group>"; };
 		F71642AC150EEA78003376EF /* FBTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBTAppDelegate.m; sourceTree = "<group>"; };
 		F71642AF150EEA78003376EF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F78B97CD1516CE8B00585045 /* FacebookOSXSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = FacebookOSXSDK.framework; path = ../../src/build/Release/FacebookOSXSDK.framework; sourceTree = "<group>"; };
 		F7B9EE6D150EF53100ED00AF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libfacebook_ios_sdk.a; path = ../../src/build/Release/libfacebook_ios_sdk.a; sourceTree = "<group>"; };
 		F7BCA20715163D39007801A4 /* Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		F7C80D0B15164DAA005C2949 /* FBTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTMainViewController.h; sourceTree = "<group>"; };
 		F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTMainViewController.m; sourceTree = "<group>"; };
@@ -44,7 +44,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F7BCA1E9151631DC007801A4 /* libfacebook_ios_sdk.a in Frameworks */,
+				F78B97CE1516CE8B00585045 /* FacebookOSXSDK.framework in Frameworks */,
 				F7B9EE6E150EF53100ED00AF /* WebKit.framework in Frameworks */,
 				F716429A150EEA77003376EF /* Cocoa.framework in Frameworks */,
 			);
@@ -56,7 +56,7 @@
 		F716428A150EEA77003376EF = {
 			isa = PBXGroup;
 			children = (
-				F7BCA1E8151631DC007801A4 /* libfacebook_ios_sdk.a */,
+				F78B97CD1516CE8B00585045 /* FacebookOSXSDK.framework */,
 				F716429F150EEA77003376EF /* FaceBookTest */,
 				F7164298150EEA77003376EF /* Frameworks */,
 				F7164296150EEA77003376EF /* Products */,
