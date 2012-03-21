@@ -19,7 +19,8 @@ die() {
 }
 
 # The Xcode bin path
-XCODEBUILD_PATH=/Developer/usr/bin
+XCODEBUILD_PATH=`xcode-select -print-path`
+XCODEBUILD_PATH=$XCODEBUILD_PATH/usr/bin
 XCODEBUILD=$XCODEBUILD_PATH/xcodebuild
 
 # Get the script path and set the relative directories used
