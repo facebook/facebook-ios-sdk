@@ -17,6 +17,9 @@
 #import <Foundation/Foundation.h>
 #import "FBRequestConnection.h"
 
+// constants
+extern NSString* const FBGraphBasePath;
+
 // up-front decl's
 @protocol FBRequestDelegate;
 @class FBSession;

@@ -17,6 +17,11 @@
 #import "Facebook.h"
 #import "JSON.h"
 
+// TODO: This will need to be scrubbed when this file is rewritten
+// constants
+NSString* const FBGraphBasePath = @"http://graph.facebook.com";
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
 
