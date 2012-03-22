@@ -50,7 +50,10 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
     NSMutableDictionary*  _params;
     NSURLConnection*      _connection;
     NSMutableData*        _responseText;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     FBRequestState        _state;
+#pragma GCC diagnostic pop
     NSError*              _error;
     BOOL                  _sessionDidExpire;
 }

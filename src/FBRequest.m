@@ -30,7 +30,10 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 @interface FBRequest ()
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 @property (nonatomic,readwrite) FBRequestState state;
+#pragma GCC diagnostic pop
 @property (nonatomic,readwrite) BOOL sessionDidExpire;
 @end
 
@@ -140,6 +143,8 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 }
 
 //@property(nonatomic,readonly+readwrite) FBRequestState state;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (FBRequestState)state {
     return _state;
 }
@@ -147,6 +152,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 - (void)setState:(FBRequestState)newValue {
     _state = newValue;
 }
+#pragma GCC diagnostic pop
 
 //@property(nonatomic,readonly+readwrite) BOOL sessionDidExpire;
 - (BOOL)sessionDidExpire {

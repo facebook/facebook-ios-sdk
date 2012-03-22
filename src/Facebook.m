@@ -188,7 +188,10 @@ static void *finishedContext = @"finishedContext";
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == finishedContext) {
         FBRequest* _request = (FBRequest*)object;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         FBRequestState requestState = [_request state];
+#pragma GCC diagnostic pop
         if (requestState == kFBRequestStateComplete) {
             if ([_request sessionDidExpire]) {
                 [self invalidateSession];

@@ -205,7 +205,10 @@ enum {
 @property(nonatomic,retain) NSMutableDictionary* params;
 @property(nonatomic,retain) NSURLConnection*  connection;
 @property(nonatomic,retain) NSMutableData* responseText;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 @property(nonatomic,readonly) FBRequestState state;
+#pragma GCC diagnostic pop
 @property(nonatomic,readonly) BOOL sessionDidExpire;
 
 /**
