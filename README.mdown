@@ -19,7 +19,7 @@ This SDK comes with a sample application that demonstrates authorization, making
 
 To build and run the sample application with Xcode:
 
-* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting sample/Hackbook/Hackbook.xcodeproj.
+* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting samples/Hackbook/Hackbook.xcodeproj.
 
 * Verify your compiler settings by checking the menu items under _Project_->_Set Active SDK_ and _Project_->_Set Active Executable_. For most developers, the defaults should be OK. Note that if you compile against a version of the iOS SDK that does not support multitasking, not all features of the Facebook SDK may be available. See the "Debugging" section below for more information.
 

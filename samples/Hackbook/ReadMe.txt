@@ -12,7 +12,7 @@ iPhone OS 4.0 or later
 
 Using the Sample
 Install the Facebook iOS SDK.
-Launch the Hackbook project using Xcode from the <iOS SDK>/sample/Hackbook directory.
+Launch the Hackbook project using Xcode from the <iOS SDK>/samples/Hackbook directory.
 
 
 Packaging List
@@ -29,7 +29,7 @@ APIResultsViewController.{h/m} -
 View controllers pushed from the API calls view controller. Handles mostly displaying API call results that are not simple confirmations. Also handles any post-result API calls, such as checking in from a list of nearby places.
 
 DataSet.{h/m} -
-Class that defines the UI data for the app. The main menu, sub menus, and methods each menu calls are defined here. 
+Class that defines the UI data for the app. The main menu, sub menus, and methods each menu calls are defined here.
 
 Changes from Previous Versions
 1.0 - First release.
