@@ -26,6 +26,7 @@
 @property (retain, nonatomic) FBAsyncDataLoader* loader;
 @property (retain, nonatomic) UIImageView* imageView;
 
+- (void)initialize;
 - (void)refreshImage;
 
 @end
@@ -37,8 +38,7 @@
 @synthesize loader = _loader;
 @synthesize imageView = _imageView;
 
-#pragma mark -
-#pragma mark Lifecycle
+#pragma mark - Lifecycle
 
 - (void)dealloc
 {
@@ -52,17 +52,7 @@
 {
     self = [super init];
     if (self) {
-        UIImageView* imageView = 
-            [[UIImageView alloc] initWithFrame:self.bounds];
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.autoresizingMask = 
-            UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        self.imageView = imageView;
-        [imageView release];
-
-        self.autoresizesSubviews = true;
-        self.clipsToBounds = true;
-        [self addSubview:self.imageView];
+        [self initialize];
     }
     
     return self;
@@ -77,6 +67,25 @@
         self.userID = userID;
     }
     
+    return self;
+}
+
+- (id)initWithFrame:(CGRect)frame 
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self initialize];
+    }
+    
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initialize];
+    }
     return self;
 }
 
@@ -109,6 +118,21 @@
         default:
             return @"square";
     }
+}
+
+- (void)initialize
+{
+    UIImageView* imageView = 
+        [[UIImageView alloc] initWithFrame:self.bounds];
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    imageView.autoresizingMask = 
+        UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    self.imageView = imageView;
+    [imageView release];
+
+    self.autoresizesSubviews = true;
+    self.clipsToBounds = true;
+    [self addSubview:self.imageView];
 }
 
 - (void)refreshImage 
