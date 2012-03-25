@@ -18,8 +18,10 @@
 
 NSString *const FBiOSSDKDomain = @"com.facebook.FBiOSSDK";
 NSString *const FBErrorInnerErrorKey = @"com.facebook.FBiOSSDK:ErrorInnerErrorKey";
+NSString *const FBErrorParsedJSONResponseKey = @"com.facebook.FBiOSSDK:ParsedJSONResponseKey";
+NSString *const FBErrorHTTPStatusCodeKey = @"com.facebook.FBiOSSDK:HTTPStatusCode";
+
 NSString *const FBErrorLoginFailedReason = @"com.facebook.FBiOSSDK:ErrorLoginFailedReason";
 NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.FBiOSSDK:ErrorLoginFailedOriginalErrorCode";
 
 NSString *const FBInvalidOperationException = @"com.facebook.FBiOSSDK:InvalidOperationException";
-

@@ -68,6 +68,9 @@
 		E23E5A0C1521161900A011A8 /* FBError.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0A1521161900A011A8 /* FBError.m */; };
 		E23E5A0F1521163C00A011A8 /* FBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = E23E5A0D1521163C00A011A8 /* FBURLConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E23E5A101521163C00A011A8 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0E1521163C00A011A8 /* FBURLConnection.m */; };
+		E29B4E65152631FB00D1BE21 /* FBRequestBody.h in Headers */ = {isa = PBXBuildFile; fileRef = E29B4E62152631FB00D1BE21 /* FBRequestBody.h */; };
+		E29B4E66152631FB00D1BE21 /* FBRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B4E63152631FB00D1BE21 /* FBRequestBody.m */; };
+		E29B4E67152631FB00D1BE21 /* FBRequestConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B4E64152631FB00D1BE21 /* FBRequestConnection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +151,9 @@
 		E23E5A0A1521161900A011A8 /* FBError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBError.m; sourceTree = "<group>"; };
 		E23E5A0D1521163C00A011A8 /* FBURLConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBURLConnection.h; sourceTree = "<group>"; };
 		E23E5A0E1521163C00A011A8 /* FBURLConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBURLConnection.m; sourceTree = "<group>"; };
+		E29B4E62152631FB00D1BE21 /* FBRequestBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequestBody.h; sourceTree = "<group>"; };
+		E29B4E63152631FB00D1BE21 /* FBRequestBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBRequestBody.m; sourceTree = "<group>"; };
+		E29B4E64152631FB00D1BE21 /* FBRequestConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBRequestConnection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -215,6 +221,9 @@
 		08FB77AEFE84172EC02AAC07 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
+				E29B4E62152631FB00D1BE21 /* FBRequestBody.h */,
+				E29B4E63152631FB00D1BE21 /* FBRequestBody.m */,
+				E29B4E64152631FB00D1BE21 /* FBRequestConnection.m */,
 				B9DC7F3D151AB55900DF1158 /* Controls */,
 				AEA93B1311D52959000A4545 /* JSON */,
 				AEA93B0511D5293B000A4545 /* Facebook.h */,
@@ -350,6 +359,7 @@
 				AEA93B2811D52959000A4545 /* SBJsonBase.h in Headers */,
 				AEA93B2A11D52959000A4545 /* SBJsonParser.h in Headers */,
 				AEA93B2C11D52959000A4545 /* SBJsonWriter.h in Headers */,
+				E29B4E65152631FB00D1BE21 /* FBRequestBody.h in Headers */,
 				84F43FFE15194E4800CEECD5 /* FBRequestConnection.h in Headers */,
 				B9DC7F40151AB56100DF1158 /* FBProfilePictureView.h in Headers */,
 				E23E5A0F1521163C00A011A8 /* FBURLConnection.h in Headers */,
@@ -482,6 +492,8 @@
 				AEA93B2D11D52959000A4545 /* SBJsonWriter.m in Sources */,
 				B9DC7F41151AB56100DF1158 /* FBProfilePictureView.m in Sources */,
 				E23E5A0C1521161900A011A8 /* FBError.m in Sources */,
+				E29B4E66152631FB00D1BE21 /* FBRequestBody.m in Sources */,
+				E29B4E67152631FB00D1BE21 /* FBRequestConnection.m in Sources */,
 				E23E5A101521163C00A011A8 /* FBURLConnection.m in Sources */,
 				8446FDA6151BC5C2000BE007 /* FBSession.m in Sources */,
 				8446FDAE151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m in Sources */,

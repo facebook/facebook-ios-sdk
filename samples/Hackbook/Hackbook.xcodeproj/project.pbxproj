@@ -44,6 +44,8 @@
 		84630EAB1523C0B80081A028 /* FBSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 84630EA71523C0B80081A028 /* FBSession.m */; };
 		84630EAC1523C0B80081A028 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84630EA91523C0B80081A028 /* FBSessionTokenCachingStrategy.m */; };
 		84E7D99614D9CC13006A6299 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */; };
+		E2F5AFCD152D5999002D0D96 /* FBRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F5AFCB152D5999002D0D96 /* FBRequestBody.m */; };
+		E2F5AFCE152D5999002D0D96 /* FBRequestConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2F5AFCC152D5999002D0D96 /* FBRequestConnection.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -112,6 +114,9 @@
 		84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBFrictionlessRequestSettings.h; path = ../../src/FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
 		84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBFrictionlessRequestSettings.m; path = ../../src/FBFrictionlessRequestSettings.m; sourceTree = "<group>"; };
 		84F4400415194EBC00CEECD5 /* FBRequestConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBRequestConnection.h; path = ../../src/FBRequestConnection.h; sourceTree = "<group>"; };
+		E2F5AFCA152D5999002D0D96 /* FBRequestBody.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBRequestBody.h; path = ../../src/FBRequestBody.h; sourceTree = "<group>"; };
+		E2F5AFCB152D5999002D0D96 /* FBRequestBody.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBRequestBody.m; path = ../../src/FBRequestBody.m; sourceTree = "<group>"; };
+		E2F5AFCC152D5999002D0D96 /* FBRequestConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBRequestConnection.m; path = ../../src/FBRequestConnection.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +211,9 @@
 		30EA73CC13F5D50D003DC0D2 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
+				E2F5AFCA152D5999002D0D96 /* FBRequestBody.h */,
+				E2F5AFCB152D5999002D0D96 /* FBRequestBody.m */,
+				E2F5AFCC152D5999002D0D96 /* FBRequestConnection.m */,
 				30EA73CA13F5D502003DC0D2 /* FBConnect.bundle */,
 				30EA73D013F5D523003DC0D2 /* FBDialog.bundle */,
 				30EA73D913F5D523003DC0D2 /* JSON */,
@@ -350,6 +358,8 @@
 				84630EAC1523C0B80081A028 /* FBSessionTokenCachingStrategy.m in Sources */,
 				84137163152B9BD600B2C0E1 /* FBSessionManualTokenCachingStrategy.m in Sources */,
 				84137164152B9BD600B2C0E1 /* FBURLConnection.m in Sources */,
+				E2F5AFCD152D5999002D0D96 /* FBRequestBody.m in Sources */,
+				E2F5AFCE152D5999002D0D96 /* FBRequestConnection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
