@@ -15,7 +15,7 @@
  */
 
 #import "FBProfilePictureView.h"
-#import "FBAsyncDataLoader.h"
+#import "FBURLConnection.h"
 #import "FBRequest.h"
 
 @interface FBProfilePictureView()
@@ -23,7 +23,7 @@
 @property (readonly, nonatomic) NSURL* imageGraphURL;
 @property (readonly, nonatomic) NSString* imageType;
 
-@property (retain, nonatomic) FBAsyncDataLoader* loader;
+@property (retain, nonatomic) FBURLConnection* connection;
 @property (retain, nonatomic) UIImageView* imageView;
 
 - (void)initialize;
@@ -35,7 +35,7 @@
 
 @synthesize userID = _userID;
 @synthesize pictureSize = _pictureSize;
-@synthesize loader = _loader;
+@synthesize connection = _connection;
 @synthesize imageView = _imageView;
 
 #pragma mark - Lifecycle
@@ -43,7 +43,7 @@
 - (void)dealloc
 {
     self.imageView = nil;
-    self.loader = nil;
+    self.connection = nil;
 
     [super dealloc];
 }
@@ -138,26 +138,22 @@
 - (void)refreshImage 
 {
     if (self.userID) {
-        [self.loader cancel];
-        
-        FBAsyncDataHandler loadHandler = 
-            ^(FBAsyncDataLoader* loader, NSError* error, NSData* data) {
-                NSAssert(self.loader == loader, @"Inconsistent loader state");
+        [self.connection cancel];
 
-                self.loader = nil;
+        FBURLConnectionHandler handler = 
+            ^(FBURLConnection* connection, NSError* error, NSURLResponse* response, NSData* data) {
+                NSAssert(self.connection == connection, @"Inconsistent connection state");
+
+                self.connection = nil;
                 if (!error) {
                     self.imageView.image = [UIImage imageWithData:data];
                 }
             };
 
         NSURL* url = self.imageGraphURL;
-        FBAsyncDataLoader* loader = 
-            [FBAsyncDataLoader 
-                loaderWithURL:url
-                handler:loadHandler
-            ];
-        self.loader = loader;
-        [loader start];
+        self.connection = [[[FBURLConnection alloc]
+                             initWithURL:url
+                             completionHandler:handler] autorelease];
     } else {
         NSString* blankImageName = 
             [NSString stringWithFormat:@"fb_blank_profile_%@", self.imageType];

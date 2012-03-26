@@ -1,10 +1,10 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2012 Facebook
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
  
  * Unless required by applicable law or agreed to in writing, software
@@ -14,26 +14,18 @@
  * limitations under the License.
  */
 
-// INTERNAL - THIS WILL BE SUPERSEDED BY MMARUCHECK's FBREQUEST HELPER
- 
 #import <Foundation/Foundation.h>
 
-@class FBAsyncDataLoader;
+// The error domain of all error codes returned by the Facebook SDK
+extern NSString *const FBiOSSDKDomain;
 
-typedef void(^FBAsyncDataHandler)(
-    FBAsyncDataLoader* loader, 
-    NSError* error, 
-    NSData* data);
+// Error codes returned by the Facebook SDK in NSError.  These are
+// valid only in the scope of FBiOSSDKDomain.
+typedef enum FBErrorCode {
+    // Like nil for FBErrorCode values, represents an error code that
+    // has not been initialized yet.
+    FBErrorInvalid = 0,
 
-@interface FBAsyncDataLoader : NSObject
-
-- (id)initWithURL:(NSURL*)URL
-    handler:(FBAsyncDataHandler)handler;
-
-- (void)start;
-- (void)cancel;
-
-+ (FBAsyncDataLoader*)loaderWithURL:(NSURL*)URL
-    handler:(FBAsyncDataHandler)handler;
-
-@end
+    // The operation failed because it was cancelled.
+    FBErrorOperationCancelled,
+} FBErrorCode;
