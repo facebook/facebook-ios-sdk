@@ -375,6 +375,7 @@ params   = _params;
         _spinner.autoresizingMask =
         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+        _spinner.color = [UIColor blackColor];
         [self addSubview:_spinner];
         _modalBackgroundView = [[UIView alloc] init];
     }
