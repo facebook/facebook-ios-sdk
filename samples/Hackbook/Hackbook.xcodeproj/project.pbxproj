@@ -38,6 +38,9 @@
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
 		30ED588F14358F9400A226C3 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588E14358F9400A226C3 /* Icon@2x.png */; };
+		84630EAA1523C0B80081A028 /* FBError.m in Sources */ = {isa = PBXBuildFile; fileRef = 84630EA61523C0B80081A028 /* FBError.m */; };
+		84630EAB1523C0B80081A028 /* FBSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 84630EA71523C0B80081A028 /* FBSession.m */; };
+		84630EAC1523C0B80081A028 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84630EA91523C0B80081A028 /* FBSessionTokenCachingStrategy.m */; };
 		84E7D99614D9CC13006A6299 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E7D99514D9CC13006A6299 /* FBFrictionlessRequestSettings.m */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +96,11 @@
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30ED588E14358F9400A226C3 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		84630EA51523C0B80081A028 /* FBError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBError.h; path = ../../src/FBError.h; sourceTree = "<group>"; };
+		84630EA61523C0B80081A028 /* FBError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBError.m; path = ../../src/FBError.m; sourceTree = "<group>"; };
+		84630EA71523C0B80081A028 /* FBSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSession.m; path = ../../src/FBSession.m; sourceTree = "<group>"; };
+		84630EA81523C0B80081A028 /* FBSessionTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSessionTokenCachingStrategy.h; path = ../../src/FBSessionTokenCachingStrategy.h; sourceTree = "<group>"; };
+		84630EA91523C0B80081A028 /* FBSessionTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSessionTokenCachingStrategy.m; path = ../../src/FBSessionTokenCachingStrategy.m; sourceTree = "<group>"; };
 		84AB662F1510F36300D9EE5F /* FacebookSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacebookSDK.h; path = ../../src/FacebookSDK.h; sourceTree = "<group>"; };
 		84AB66301510F36300D9EE5F /* FBSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSession.h; path = ../../src/FBSession.h; sourceTree = "<group>"; };
 		84E7D99414D9CC13006A6299 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBFrictionlessRequestSettings.h; path = ../../src/FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
@@ -193,6 +201,11 @@
 		30EA73CC13F5D50D003DC0D2 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
+				84630EA51523C0B80081A028 /* FBError.h */,
+				84630EA61523C0B80081A028 /* FBError.m */,
+				84630EA71523C0B80081A028 /* FBSession.m */,
+				84630EA81523C0B80081A028 /* FBSessionTokenCachingStrategy.h */,
+				84630EA91523C0B80081A028 /* FBSessionTokenCachingStrategy.m */,
 				30EA73D013F5D523003DC0D2 /* FBDialog.bundle */,
 				30EA73D913F5D523003DC0D2 /* JSON */,
 				30EA73CD13F5D523003DC0D2 /* Facebook.h */,
@@ -322,6 +335,9 @@
 				30EA73F113F5D523003DC0D2 /* SBJsonParser.m in Sources */,
 				30EA73F213F5D523003DC0D2 /* SBJsonWriter.m in Sources */,
 				84E7D99614D9CC13006A6299 /* FBFrictionlessRequestSettings.m in Sources */,
+				84630EAA1523C0B80081A028 /* FBError.m in Sources */,
+				84630EAB1523C0B80081A028 /* FBSession.m in Sources */,
+				84630EAC1523C0B80081A028 /* FBSessionTokenCachingStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -364,7 +380,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
@@ -378,7 +394,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;

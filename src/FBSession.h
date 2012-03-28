@@ -24,24 +24,27 @@
 //
 // Summary:
 // Passed to handler block when a login call has completed
-typedef enum _FBSessionStatus {
+typedef enum _FBSessionState {
     // initial pre-valid invalid state
-    FBSessionStatusInitial              = 0,
+    FBSessionStateCreated               = 0,
     
-    // valid session status values
-    FBSessionStatusLoggedIn             = 1001,  
-    FBSessionStatusTokenExtended        = 1002,  
-    FBSessionStatusValidCachedToken     = 1003,
+    // valid session status values    
+    FBSessionStateLoadedValidToken      = 1001,
+    FBSessionStateLoggedIn              = 1002,  
+    FBSessionStateExtendedToken         = 1003,
     
     // invalid session status values
-    FBSessionStatusLoggedOut            = 1,
-    FBSessionStatusLoginFailed          = 2, // NSError obj w/more info
-    FBSessionStatusSessionInvalidated   = 3, // "
+    FBSessionStateLoggedOut             = 1,
+    FBSessionStateLoginFailed           = 2, // NSError obj w/more info    
+    FBSessionStateInvalidated           = 3, // "
     
-} FBSessionStatus;
+} FBSessionState;
+
+// helper macro to test for states that imply a valid session
+#define FB_ISSESSIONVALIDWITHSTATE(state) (state > 1000)
 
 typedef void (^FBSessionStatusHandler)(FBSession *session, 
-                                       FBSessionStatus status, 
+                                       FBSessionState status, 
                                        NSError *error);
 
 // FBSession class
@@ -83,7 +86,8 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 //                         "FBAccessTokenKey", and "FBExpirationDateKey";
 //                         default=nil
 //
-// Behavior notes: For a first cut at this, we are removing the public ability
+// Behavior notes:
+// For a first cut at this, we are removing the public ability
 // to force an extension to an access token; instead we will implicitly do this
 // when requests are made.
 //
@@ -98,12 +102,12 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 
 // instance readonly properties
 @property(readonly) BOOL isValid;
-@property(readonly) FBSessionStatus status;
-@property(nonatomic, readonly) NSString *appID;
-@property(nonatomic, readonly) NSString *urlSchemeSuffix;
-@property(retain, readonly) NSString *accessToken;
-@property(retain, readonly) NSDate *expirationDate;
-@property(copy, readonly) NSArray *permissions;
+@property(readonly) FBSessionState status;
+@property(readonly, copy) NSString *appID;
+@property(readonly, copy) NSString *urlSchemeSuffix;
+@property(readonly, copy) NSString *accessToken;
+@property(readonly, copy) NSDate *expirationDate;
+@property(readonly, copy) NSArray *permissions;
 
 // instance methods
 
@@ -112,6 +116,9 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 // Summary:
 // Login using Facebook
 //   WithCompletionBlock   - a block to call with the login result; default=nil
+//
+// Behavior notes:
+// Login may be called zero or 1 time; calling more than once results in an exception.
 //
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler;
 
@@ -137,23 +144,5 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 // based on the url
 //
 - (BOOL)handleOpenURL:(NSURL*)url;
-
-@end
-
-// FBSessionTokenCachingStrategy
-//
-// Summary:
-// Implementors execute token and expiration-date caching and fetching logic
-// for a Facebook integrated application
-//
-@interface FBSessionTokenCachingStrategy : NSObject
-
-+ (id)init;
-+ (id)initWithNSUserDefaultAccessTokenKeyName:(NSString*)tokenKeyName
-                         expirationDateKeyName:(NSString*)dateKeyName;
-
-- (void)cacheToken:(NSString*)token expirationDate:(NSDate*)date;
-- (NSString*)fetchTokenAndExpirationDate:(NSDate**)date;
-- (void)clearToken:(NSString*)token;
 
 @end

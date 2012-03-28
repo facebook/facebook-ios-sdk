@@ -17,4 +17,9 @@
 #import "FBError.h"
 
 NSString *const FBiOSSDKDomain = @"com.facebook.FBiOSSDK";
-NSString *const FBErrorInnerErrorKey = @"InnerError";
+NSString *const FBErrorInnerErrorKey = @"com.facebook.FBiOSSDK:ErrorInnerErrorKey";
+NSString *const FBErrorLoginFailedReason = @"com.facebook.FBiOSSDK:ErrorLoginFailedReason";
+NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.FBiOSSDK:ErrorLoginFailedOriginalErrorCode";
+
+NSString *const FBInvalidOperationException = @"com.facebook.FBiOSSDK:InvalidOperationException";
+

@@ -185,13 +185,12 @@ static void *finishedContext = @"finishedContext";
     return _request;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == finishedContext) {
         FBRequest* _request = (FBRequest*)object;
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
         FBRequestState requestState = [_request state];
-#pragma GCC diagnostic pop
         if (requestState == kFBRequestStateComplete) {
             if ([_request sessionDidExpire]) {
                 [self invalidateSession];
@@ -204,6 +203,7 @@ static void *finishedContext = @"finishedContext";
         }
     }
 }
+#pragma GCC diagnostic pop
 
 /**
  * A private function for getting the app's base url.

@@ -28,4 +28,27 @@ typedef enum FBErrorCode {
 
     // The operation failed because it was cancelled.
     FBErrorOperationCancelled,
+    
+    // A login attempt failed
+    FBErrorLoginFailedOrCancelled,
 } FBErrorCode;
+
+// The key in the userInfo NSDictionary of NSError where you can find
+// the inner NSError (if any).
+extern NSString *const FBErrorInnerErrorKey;
+
+// The NSError key used by session to capture login failure reason
+extern NSString *const FBErrorLoginFailedReason;
+
+// the NSError key used by session to capture login failure error code
+extern NSString *const FBErrorLoginFailedOriginalErrorCode;
+
+// Exception strings raised by the Facebook SDK
+
+// This exception is raised by methods in the Facebook SDK to indicate
+// that an attempted operation is invalid
+extern NSString *const FBInvalidOperationException;
+
+// Facebook SDK also raises exceptions the following common exceptions:
+//  NSInvalidArgumentException
+
