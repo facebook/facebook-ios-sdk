@@ -39,7 +39,7 @@
 
 @protocol FBLoginDialogDelegate <NSObject>
 
-- (void)fbDialogLogin:(NSString*)token expirationDate:(NSDate*)expirationDate;
+- (void)fbDialogLogin:(NSString*)token expirationDate:(NSDate*)expirationDate authorizationCode:(NSString*)authorizationCode signedRequest:(NSString *)signedRequest;
 
 - (void)fbDialogNotLogin:(BOOL)cancelled;
 

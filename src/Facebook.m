@@ -53,6 +53,8 @@ static void *finishedContext = @"finishedContext";
 
 @synthesize accessToken = _accessToken,
          expirationDate = _expirationDate,
+      authorizationCode = _authorizationCode,
+          signedRequest = _signedRequest,
         sessionDelegate = _sessionDelegate,
             permissions = _permissions,
         urlSchemeSuffix = _urlSchemeSuffix,
@@ -411,6 +413,8 @@ static void *finishedContext = @"finishedContext";
 
   NSDictionary *params = [self parseURLParams:query];
   NSString *accessToken = [params valueForKey:@"access_token"];
+  NSString *authorizationCode = [params valueForKey:@"code"];
+  NSString *signedRequest = [params valueForKey:@"signed_request"];
 
   // If the URL doesn't contain the access token, an error has occurred.
   if (!accessToken) {
@@ -451,7 +455,7 @@ static void *finishedContext = @"finishedContext";
     }
   }
 
-  [self fbDialogLogin:accessToken expirationDate:expirationDate];
+    [self fbDialogLogin:accessToken expirationDate:expirationDate authorizationCode:authorizationCode signedRequest:signedRequest];
   return YES;
 }
 
@@ -720,9 +724,11 @@ static void *finishedContext = @"finishedContext";
 /**
  * Set the authToken and expirationDate after login succeed
  */
-- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
+- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate authorizationCode:(NSString *)authorizationCode signedRequest:(NSString *) signedRequest{
   self.accessToken = token;
   self.expirationDate = expirationDate;
+  self.authorizationCode = authorizationCode;
+  self.signedRequest = signedRequest;
   [_lastAccessTokenUpdate release];
   _lastAccessTokenUpdate = [[NSDate date] retain];
   if ([self.sessionDelegate respondsToSelector:@selector(fbDidLogin)]) {
