@@ -17,6 +17,8 @@
 
 #import "FBDialog.h"
 #import "Facebook.h"
+#import "FBFrictionlessRequestSettings.h"
+#import "JSON.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -263,7 +265,13 @@ params   = _params;
 
 - (void)dismiss:(BOOL)animated {
     [self dialogWillDisappear];
-    
+
+    // If the dialog has been closed, then we need to cancel the order to open it.	
+    // This happens in the case of a frictionless request, see webViewDidFinishLoad for details	
+    [NSObject cancelPreviousPerformRequestsWithTarget:self 
+                                             selector:@selector(showWebView)
+                                               object:nil];
+
     [_loadingURL release];
     _loadingURL = nil;
     
@@ -281,6 +289,39 @@ params   = _params;
 
 - (void)cancel {
     [self dialogDidCancel:nil];
+}
+
+- (BOOL)testBoolUrlParam:(NSURL *)url param:(NSString *)param {
+    NSString *paramVal = [self getStringFromUrl: [url absoluteString] 
+                                         needle: param];
+    return [paramVal boolValue];
+}
+
+- (void)dialogSuccessHandleFrictionlessResponses:(NSURL *)url {
+    // did we receive a recipient list?
+    NSString *recipientJson = [self getStringFromUrl:[url absoluteString]
+                                              needle:@"frictionless_recipients="];
+    if (recipientJson) {
+        // if value parses as an array, treat as set of fbids
+        SBJsonParser *parser = [[[SBJsonParser alloc]
+                                 init]
+                                autorelease];
+        id recipients = [parser objectWithString:recipientJson];
+
+        // if we got something usable, copy the ids out and update the cache
+        if ([recipients isKindOfClass:[NSArray class]]) { 
+            NSMutableArray *ids = [[[NSMutableArray alloc]
+                                    initWithCapacity:[recipients count]]
+                                   autorelease];
+            for (id recipient in recipients) {
+                NSString *fbid = [NSString stringWithFormat:@"%@", recipient];
+                [ids addObject:fbid];
+            }
+            // we may be tempted to terminate outstanding requests before this
+            // point, but that would cause problems if the user cancelled a dialog
+            [_frictionlessSettings updateRecipientCacheWithRecipients:ids];
+        }
+    }
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -326,6 +367,11 @@ params   = _params;
         
         _spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:
                     UIActivityIndicatorViewStyleWhiteLarge];
+        if ([_spinner respondsToSelector:@selector(setColor:)]) {
+            [_spinner setColor:[UIColor grayColor]];
+        } else {
+            [_spinner setActivityIndicatorViewStyle:UIActivityIndicatorViewStyleGray];
+        }
         _spinner.autoresizingMask =
         UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin
         | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -344,6 +390,7 @@ params   = _params;
     [_closeButton release];
     [_loadingURL release];
     [_modalBackgroundView release];
+    [_frictionlessSettings release];
     [super dealloc];
 }
 
@@ -359,6 +406,41 @@ params   = _params;
     
     [self strokeLines:webRect stroke:kBorderBlack];
 }
+
+// Display the dialog's WebView with a slick pop-up animation	
+- (void)showWebView {	
+    UIWindow* window = [UIApplication sharedApplication].keyWindow;	
+    if (!window) {	
+        window = [[UIApplication sharedApplication].windows objectAtIndex:0];	
+    }	
+    _modalBackgroundView.frame = window.frame;	
+    [_modalBackgroundView addSubview:self];	
+    [window addSubview:_modalBackgroundView];	
+    
+    self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);	
+    [UIView beginAnimations:nil context:nil];	
+    [UIView setAnimationDuration:kTransitionDuration/1.5];	
+    [UIView setAnimationDelegate:self];	
+    [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];	
+    self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);	
+    [UIView commitAnimations];	
+    
+    [self dialogWillAppear];	
+    [self addObservers];	
+}	
+
+// Show a spinner during the loading time for the dialog. This is designed to show	
+// on top of the webview but before the contents have loaded.	
+- (void)showSpinner {	
+    [_spinner sizeToFit];	
+    [_spinner startAnimating];	
+    _spinner.center = _webView.center;	
+}	
+
+- (void)hideSpinner {	
+    [_spinner stopAnimating];	
+    _spinner.hidden = YES;	
+}	
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // UIWebViewDelegate
@@ -381,6 +463,9 @@ params   = _params;
                 [self dialogDidCancel:url];
             }
         } else {
+            if (_frictionlessSettings.enabled) {
+                [self dialogSuccessHandleFrictionlessResponses:url];
+            }
             [self dialogDidSucceed:url];
         }
         return NO;
@@ -401,9 +486,15 @@ params   = _params;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    [_spinner stopAnimating];
-    _spinner.hidden = YES;
-    
+    if (_isViewInvisible) {
+        // if our cache asks us to hide the view, then we do, but
+        // in case of a stale cache, we will display the view in a moment
+        // note that showing the view now would cause a visible white
+        // flash in the common case where the cache is up to date
+        [self performSelector:@selector(showWebView) withObject:nil afterDelay:.05]; 	
+    } else {
+        [self hideSpinner];	
+    }
     [self updateWebOrientation];
 }
 
@@ -475,25 +566,35 @@ params   = _params;
     NSString * str = nil;
     NSRange start = [url rangeOfString:needle];
     if (start.location != NSNotFound) {
-        NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
-        NSUInteger offset = start.location+start.length;
-        str = end.location == NSNotFound
-        ? [url substringFromIndex:offset]
-        : [url substringWithRange:NSMakeRange(offset, end.location)];
-        str = [str stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    }
-    
+        // confirm that the parameter is not a partial name match
+        unichar c = '?';
+        if (start.location != 0) {
+            c = [url characterAtIndex:start.location - 1];
+        }
+        if (c == '?' || c == '&' || c == '#') {        
+            NSRange end = [[url substringFromIndex:start.location+start.length] rangeOfString:@"&"];
+            NSUInteger offset = start.location+start.length;
+            str = end.location == NSNotFound ?
+                [url substringFromIndex:offset] : 
+                [url substringWithRange:NSMakeRange(offset, end.location)];
+            str = [str stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        }
+    }    
     return str;
 }
 
 - (id)initWithURL: (NSString *) serverURL
            params: (NSMutableDictionary *) params
+  isViewInvisible: (BOOL)isViewInvisible
+     frictionlessSettings: (FBFrictionlessRequestSettings*) frictionlessSettings
          delegate: (id <FBDialogDelegate>) delegate {
     
     self = [self init];
     _serverURL = [serverURL retain];
-    _params = [params retain];
+    _params = [params retain];    
     _delegate = delegate;
+    _isViewInvisible = isViewInvisible;
+    _frictionlessSettings = [frictionlessSettings retain];
     
     return self;
 }
@@ -503,7 +604,7 @@ params   = _params;
 }
 
 - (void)loadURL:(NSString*)url get:(NSDictionary*)getParams {
-    
+
     [_loadingURL release];
     _loadingURL = [[self generateURL:url params:getParams] retain];
     NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:_loadingURL];
@@ -530,32 +631,10 @@ params   = _params;
                                 innerWidth,
                                 self.frame.size.height - (1 + kBorderWidth*2));
     
-    [_spinner sizeToFit];
-    [_spinner startAnimating];
-    _spinner.center = _webView.center;
-    
-    UIWindow* window = [UIApplication sharedApplication].keyWindow;
-    if (!window) {
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+    if (!_isViewInvisible) {	
+        [self showSpinner];	
+        [self showWebView];
     }
-    
-    _modalBackgroundView.frame = window.frame;
-    [_modalBackgroundView addSubview:self];
-    [window addSubview:_modalBackgroundView];
-    
-    [window addSubview:self];
-    
-    [self dialogWillAppear];
-    
-    self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDuration:kTransitionDuration/1.5];
-    [UIView setAnimationDelegate:self];
-    [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];
-    self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
-    [UIView commitAnimations];
-    
-    [self addObservers];
 }
 
 - (void)dismissWithSuccess:(BOOL)success animated:(BOOL)animated {

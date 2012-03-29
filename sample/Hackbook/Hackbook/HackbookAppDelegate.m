@@ -49,28 +49,28 @@ static NSString* kAppId = @"210849718975311";
     self.navigationController = navController;
     [rootViewController release];
     [navController release];
-
+    
     // Initialize Facebook
     facebook = [[Facebook alloc] initWithAppId:kAppId andDelegate:rootViewController];
-
+    
     // Check and retrieve authorization information
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if ([defaults objectForKey:@"FBAccessTokenKey"] && [defaults objectForKey:@"FBExpirationDateKey"]) {
         facebook.accessToken = [defaults objectForKey:@"FBAccessTokenKey"];
         facebook.expirationDate = [defaults objectForKey:@"FBExpirationDateKey"];
     }
-
+    
     // Initialize API data (for views, etc.)
     apiData = [[DataSet alloc] init];
-
+    
     // Initialize user permissions
     userPermissions = [[NSMutableDictionary alloc] initWithCapacity:1];
-
+    
     // Override point for customization after application launch.
     // Add the navigation controller's view to the window and display.
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
-
+    
     // Check App ID:
     // This is really a warning for the developer, this should not
     // happen in a completed app
@@ -119,7 +119,7 @@ static NSString* kAppId = @"210849718975311";
             [alertView release];
         }
     }
-
+    
     return YES;
 }
 
