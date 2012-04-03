@@ -15,18 +15,14 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FBProfilePictureView.h"
+#import <FBiOSSDK/FacebookSDK.h>
 
-@interface ViewController : UIViewController
+@class JLViewController;
 
-@property (retain, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
+@interface JLAppDelegate : UIResponder <UIApplicationDelegate>
 
-- (IBAction)showJasonProfile:(id)sender;
-- (IBAction)showMichaelProfile:(id)sender;
-- (IBAction)showVijayeProfile:(id)sender;
-- (IBAction)showRandomProfile:(id)sender;
-- (IBAction)makePictureSmall:(id)sender;
-- (IBAction)makePictureNormal:(id)sender;
-- (IBAction)makePictureLarge:(id)sender;
+@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) JLViewController *viewController;
+@property (strong, nonatomic) FBSession *session;
 
 @end

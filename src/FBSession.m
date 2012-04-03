@@ -66,7 +66,6 @@ static NSString *FBPLISTAppID = nil;
     
     // private property and non-property ivars
     FBSessionTokenCachingStrategy *_tokenCachingStrategy;
-    BOOL _isLoginCallable;
     BOOL _isInStateTransition;
     FBSessionStatusHandler _loginHandler;
     FBLoginDialog *_loginDialog;
@@ -151,9 +150,9 @@ static NSString *FBPLISTAppID = nil;
         if (!appID) {
             [[NSException exceptionWithName:FBInvalidOperationException
                                      reason:@"FBSession: No AppID provided; either provide an "
-                                             "AppID to init, or add a string valued key with the "
-                                             "appropriate id named FacebookAppID to the bundle *.plist; to "
-                                             "create a Facebook AppID, visit https://developers.facebook.com/apps"
+                                            @"AppID to init, or add a string valued key with the "
+                                            @"appropriate id named FacebookAppID to the bundle *.plist; to "
+                                            @"create a Facebook AppID, visit https://developers.facebook.com/apps"
                                    userInfo:nil]
              raise];
         }
@@ -165,7 +164,6 @@ static NSString *FBPLISTAppID = nil;
         self.tokenCachingStrategy = tokenCachingStrategy;
         
         // additional setup
-        _isLoginCallable = YES;
         _isInStateTransition = NO;
         self.status = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
@@ -223,19 +221,20 @@ static NSString *FBPLISTAppID = nil;
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
     
-    if (!_isLoginCallable) {
-        // login may only be called once
+    if (!(self.status == FBSessionStateCreated || 
+          self.status == FBSessionStateLoadedValidToken)) {
+        // login may only be called once, and only from one of the two initial states
         [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@""
+                                 reason:@"FBSession: an attempt was made to login an already logged in or invalid"
+                                        @"session"
                                userInfo:nil]
          raise];
     }
-    _isLoginCallable = NO;
     self.loginHandler = handler;
     if (self.status == FBSessionStateCreated) {
         [self authorizeWithFBAppAuth:YES
                           safariAuth:YES];
-    } else if (self.status == FBSessionStateLoadedValidToken) {
+    } else { // self.status == FBSessionStateLoadedValidToken
         // this case implies that a valid cached token was found, and preserves the
         // "1-session-1-identity" rule, by transitioning to logged in, without a transition to login UX
         [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
@@ -243,15 +242,6 @@ static NSString *FBPLISTAppID = nil;
                                           token:nil
                                  expirationDate:nil
                                     shouldCache:NO];
-    } else {
-        // this case is odd, but preserves the promise of a callback -- in this case login
-        // has been called after the session is in active use; callback is passed current status,
-        // and not state transition is made (current state is passed for readability)
-        [self transitionAndCallHandlerWithState:self.status
-                                          error:nil
-                                          token:nil
-                                 expirationDate:nil
-                                    shouldCache:NO];       
     }
 }
 
@@ -404,7 +394,12 @@ static NSString *FBPLISTAppID = nil;
         case FBSessionStateLoginFailed:
             isValidTransition = statePrior == FBSessionStateCreated;
             break;
-        case FBSessionStateExtendedToken:            
+        case FBSessionStateExtendedToken:
+            isValidTransition = (
+                                 statePrior == FBSessionStateLoggedIn ||                                 
+                                 statePrior == FBSessionStateExtendedToken
+                                 );
+            break;
         case FBSessionStateLoggedOut:
         case FBSessionStateInvalidated:
             isValidTransition = (
@@ -425,9 +420,9 @@ static NSString *FBPLISTAppID = nil;
     if (_isInStateTransition) {
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:@"FBSession: An attempt to change an FBSession object was "
-                                        "made while a change was in flight; this is most likely due to "
-                                        "a KVO observer calling a method on FBSession while handling a "
-                                        "NSKeyValueObservingOptionPrior notification"
+                                        @"made while a change was in flight; this is most likely due to "
+                                        @"a KVO observer calling a method on FBSession while handling a "
+                                        @"NSKeyValueObservingOptionPrior notification"
                                userInfo:nil]
          raise];
     }
@@ -623,7 +618,11 @@ static NSString *FBPLISTAppID = nil;
     // release the object's count on the handler, but retain a 
     // stack ref to use as our callback outside of the lock
     FBSessionStatusHandler handler = [self.loginHandler retain];
-    self.loginHandler = nil;
+    
+    // the moment we transition to a terminal state, we release our handler
+    if (didTransition && FB_ISSESSIONSTATETERMINAL(self.status)) {
+        self.loginHandler = nil;
+    }
         
     // if we have a handler, call it and release our
     // final retain on the handler

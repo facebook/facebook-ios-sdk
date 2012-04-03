@@ -20,28 +20,37 @@
 @class FBSession;
 @class FBSessionTokenCachingStrategy;
 
+// helper macro to test for states that imply a valid session
+#define FB_SESSIONSTATETERMINALBIT (1 << 8)
+
+// helper macro to test for states that are terminal
+#define FB_SESSIONSTATEVALIDBIT (1 << 9)
+
 // FBSessionStatus enum
 //
 // Summary:
 // Passed to handler block when a login call has completed
 typedef enum _FBSessionState {
     // initial pre-valid invalid state
-    FBSessionStateCreated               = 0,
+    FBSessionStateCreated               = 0,    
+    FBSessionStateLoadedValidToken      = 1,
     
-    // valid session status values    
-    FBSessionStateLoadedValidToken      = 1001,
-    FBSessionStateLoggedIn              = 1002,  
-    FBSessionStateExtendedToken         = 1003,
+    // valid session status values
+    FBSessionStateLoggedIn              = 1 | FB_SESSIONSTATEVALIDBIT,  
+    FBSessionStateExtendedToken         = 2 | FB_SESSIONSTATEVALIDBIT,
     
     // invalid session status values
-    FBSessionStateLoggedOut             = 1,
-    FBSessionStateLoginFailed           = 2, // NSError obj w/more info    
-    FBSessionStateInvalidated           = 3, // "
+    FBSessionStateLoggedOut             = 1 | FB_SESSIONSTATETERMINALBIT,
+    FBSessionStateLoginFailed           = 2 | FB_SESSIONSTATETERMINALBIT, // NSError obj w/more info    
+    FBSessionStateInvalidated           = 3 | FB_SESSIONSTATETERMINALBIT, // "
     
 } FBSessionState;
 
 // helper macro to test for states that imply a valid session
-#define FB_ISSESSIONVALIDWITHSTATE(state) (state > 1000)
+#define FB_ISSESSIONVALIDWITHSTATE(state) (0 != (state & FB_SESSIONSTATEVALIDBIT))
+
+// helper macro to test for states that are terminal
+#define FB_ISSESSIONSTATETERMINAL(state) (0 != (state & FB_SESSIONSTATETERMINALBIT))
 
 typedef void (^FBSessionStatusHandler)(FBSession *session, 
                                        FBSessionState status, 
@@ -115,11 +124,13 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 //
 // Summary:
 // Login using Facebook
-//   WithCompletionBlock   - a block to call with the login result; default=nil
+//   WithCompletionHandler   - a block to call with the login result; default=nil
 //
 // Behavior notes:
-// Login may be called zero or 1 time; calling more than once results in an exception.
-//
+// Login may be called zero or 1 time, and must be called after init, but before 
+// logout or invalidate; calling login at an invalide time results in an exception;
+// if a block is passed to login, it is called each time the sessions status 
+// changes; the block is released when the session transitions to an invalid state
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler;
 
 // invalidate

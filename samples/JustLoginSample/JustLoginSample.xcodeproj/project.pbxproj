@@ -1,0 +1,305 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84C757BD152A38770070DD9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757BC152A38770070DD9C /* UIKit.framework */; };
+		84C757BF152A38770070DD9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757BE152A38770070DD9C /* Foundation.framework */; };
+		84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757C0152A38770070DD9C /* CoreGraphics.framework */; };
+		84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84C757C5152A38770070DD9C /* InfoPlist.strings */; };
+		84C757C9152A38770070DD9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757C8152A38770070DD9C /* main.m */; };
+		84C757CD152A38770070DD9C /* JLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CC152A38770070DD9C /* JLAppDelegate.m */; };
+		84C757D0152A38770070DD9C /* JLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CF152A38770070DD9C /* JLViewController.m */; };
+		84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */; };
+		84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D4152A38780070DD9C /* JLViewController_iPad.xib */; };
+		84C757DD152A3A230070DD9C /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757DC152A3A220070DD9C /* FBiOSSDK.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		84C757B8152A38770070DD9C /* JustLoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustLoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84C757BC152A38770070DD9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		84C757BE152A38770070DD9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		84C757C0152A38770070DD9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		84C757C4152A38770070DD9C /* JustLoginSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JustLoginSample-Info.plist"; sourceTree = "<group>"; };
+		84C757C6152A38770070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		84C757C8152A38770070DD9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		84C757CA152A38770070DD9C /* JustLoginSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustLoginSample-Prefix.pch"; sourceTree = "<group>"; };
+		84C757CB152A38770070DD9C /* JLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JLAppDelegate.h; sourceTree = "<group>"; };
+		84C757CC152A38770070DD9C /* JLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JLAppDelegate.m; sourceTree = "<group>"; };
+		84C757CE152A38770070DD9C /* JLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JLViewController.h; sourceTree = "<group>"; };
+		84C757CF152A38770070DD9C /* JLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JLViewController.m; sourceTree = "<group>"; };
+		84C757D2152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPhone.xib; sourceTree = "<group>"; };
+		84C757D5152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPad.xib; sourceTree = "<group>"; };
+		84C757DC152A3A220070DD9C /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		84C757B5152A38770070DD9C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84C757BD152A38770070DD9C /* UIKit.framework in Frameworks */,
+				84C757BF152A38770070DD9C /* Foundation.framework in Frameworks */,
+				84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */,
+				84C757DD152A3A230070DD9C /* FBiOSSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		84C757AD152A38770070DD9C = {
+			isa = PBXGroup;
+			children = (
+				84C757C2152A38770070DD9C /* JustLoginSample */,
+				84C757BB152A38770070DD9C /* Frameworks */,
+				84C757B9152A38770070DD9C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		84C757B9152A38770070DD9C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84C757B8152A38770070DD9C /* JustLoginSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		84C757BB152A38770070DD9C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84C757DC152A3A220070DD9C /* FBiOSSDK.framework */,
+				84C757BC152A38770070DD9C /* UIKit.framework */,
+				84C757BE152A38770070DD9C /* Foundation.framework */,
+				84C757C0152A38770070DD9C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		84C757C2152A38770070DD9C /* JustLoginSample */ = {
+			isa = PBXGroup;
+			children = (
+				84C757CB152A38770070DD9C /* JLAppDelegate.h */,
+				84C757CC152A38770070DD9C /* JLAppDelegate.m */,
+				84C757CE152A38770070DD9C /* JLViewController.h */,
+				84C757CF152A38770070DD9C /* JLViewController.m */,
+				84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */,
+				84C757D4152A38780070DD9C /* JLViewController_iPad.xib */,
+				84C757C3152A38770070DD9C /* Supporting Files */,
+			);
+			path = JustLoginSample;
+			sourceTree = "<group>";
+		};
+		84C757C3152A38770070DD9C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				84C757C4152A38770070DD9C /* JustLoginSample-Info.plist */,
+				84C757C5152A38770070DD9C /* InfoPlist.strings */,
+				84C757C8152A38770070DD9C /* main.m */,
+				84C757CA152A38770070DD9C /* JustLoginSample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		84C757B7152A38770070DD9C /* JustLoginSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "JustLoginSample" */;
+			buildPhases = (
+				84C757B4152A38770070DD9C /* Sources */,
+				84C757B5152A38770070DD9C /* Frameworks */,
+				84C757B6152A38770070DD9C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = JustLoginSample;
+			productName = JustLoginSample;
+			productReference = 84C757B8152A38770070DD9C /* JustLoginSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		84C757AF152A38770070DD9C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+			};
+			buildConfigurationList = 84C757B2152A38770070DD9C /* Build configuration list for PBXProject "JustLoginSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 84C757AD152A38770070DD9C;
+			productRefGroup = 84C757B9152A38770070DD9C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				84C757B7152A38770070DD9C /* JustLoginSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		84C757B6152A38770070DD9C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */,
+				84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */,
+				84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		84C757B4152A38770070DD9C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84C757C9152A38770070DD9C /* main.m in Sources */,
+				84C757CD152A38770070DD9C /* JLAppDelegate.m in Sources */,
+				84C757D0152A38770070DD9C /* JLViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		84C757C5152A38770070DD9C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84C757C6152A38770070DD9C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84C757D2152A38780070DD9C /* en */,
+			);
+			name = JLViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		84C757D4152A38780070DD9C /* JLViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				84C757D5152A38780070DD9C /* en */,
+			);
+			name = JLViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		84C757D7152A38780070DD9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		84C757D8152A38780070DD9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		84C757DA152A38780070DD9C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JustLoginSample/JustLoginSample-Prefix.pch";
+				INFOPLIST_FILE = "JustLoginSample/JustLoginSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		84C757DB152A38780070DD9C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "JustLoginSample/JustLoginSample-Prefix.pch";
+				INFOPLIST_FILE = "JustLoginSample/JustLoginSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		84C757B2152A38770070DD9C /* Build configuration list for PBXProject "JustLoginSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84C757D7152A38780070DD9C /* Debug */,
+				84C757D8152A38780070DD9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "JustLoginSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84C757DA152A38780070DD9C /* Debug */,
+				84C757DB152A38780070DD9C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 84C757AF152A38770070DD9C /* Project object */;
+}

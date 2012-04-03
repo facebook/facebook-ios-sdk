@@ -15,18 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import "FBProfilePictureView.h"
 
-@interface ViewController : UIViewController
-
-@property (retain, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
-
-- (IBAction)showJasonProfile:(id)sender;
-- (IBAction)showMichaelProfile:(id)sender;
-- (IBAction)showVijayeProfile:(id)sender;
-- (IBAction)showRandomProfile:(id)sender;
-- (IBAction)makePictureSmall:(id)sender;
-- (IBAction)makePictureNormal:(id)sender;
-- (IBAction)makePictureLarge:(id)sender;
+@interface JLViewController : UIViewController
 
 @end
