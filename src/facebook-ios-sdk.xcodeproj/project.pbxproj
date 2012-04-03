@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		840FDCBD152B5D9200F9C927 /* FBFrictionlessRequestSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 840FDCBB152B5D9200F9C927 /* FBFrictionlessRequestSettings.h */; };
 		840FDCBE152B5D9200F9C927 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 840FDCBC152B5D9200F9C927 /* FBFrictionlessRequestSettings.m */; };
+		84137158152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h in Headers */ = {isa = PBXBuildFile; fileRef = 84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */; };
+		84137159152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */; };
 		8446FDA6151BC5C2000BE007 /* FBSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDA5151BC5C2000BE007 /* FBSession.m */; };
 		8446FDAD151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8446FDAE151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */; };
@@ -76,6 +78,8 @@
 /* Begin PBXFileReference section */
 		840FDCBB152B5D9200F9C927 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
 		840FDCBC152B5D9200F9C927 /* FBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFrictionlessRequestSettings.m; sourceTree = "<group>"; };
+		84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionManualTokenCachingStrategy.h; sourceTree = "<group>"; };
+		84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionManualTokenCachingStrategy.m; sourceTree = "<group>"; };
 		8446FDA5151BC5C2000BE007 /* FBSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSession.m; sourceTree = "<group>"; };
 		8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionTokenCachingStrategy.h; sourceTree = "<group>"; };
 		8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionTokenCachingStrategy.m; sourceTree = "<group>"; };
@@ -204,13 +208,13 @@
 				AEA93B0511D5293B000A4545 /* Facebook.h */,
 				AEA93B0411D5293B000A4545 /* Facebook.m */,
 				84AB66251510F21200D9EE5F /* FacebookSDK.h */,
+				B9C6E1301525219600E46808 /* FBCacheIndex.h */,
+				B9C6E1311525219600E46808 /* FBCacheIndex.m */,
 				AEA93B0111D5293B000A4545 /* FBConnect.h */,
 				B9DC7F37151AB53D00DF1158 /* Resources */,
 				AEA93B0511D5293B000A4545 /* Facebook.h */,
 				AEA93B0411D5293B000A4545 /* Facebook.m */,
 				84AB66251510F21200D9EE5F /* FacebookSDK.h */,
-				B9C6E1301525219600E46808 /* FBCacheIndex.h */,
-				B9C6E1311525219600E46808 /* FBCacheIndex.m */,
 				AEA93B0111D5293B000A4545 /* FBConnect.h */,
 				B9C6E1321525219600E46808 /* FBDataDiskCache.h */,
 				B9C6E1331525219600E46808 /* FBDataDiskCache.m */,
@@ -221,8 +225,6 @@
 				E23E5A0A1521161900A011A8 /* FBError.m */,
 				840FDCBB152B5D9200F9C927 /* FBFrictionlessRequestSettings.h */,
 				840FDCBC152B5D9200F9C927 /* FBFrictionlessRequestSettings.m */,
-				22297EAF14FC1412003CE798 /* FBFrictionlessRequestSettings.h */,
-				22297EB014FC1412003CE798 /* FBFrictionlessRequestSettings.m */,
 				AEA93B0611D5293B000A4545 /* FBLoginDialog.h */,
 				AEA93B0711D5293B000A4545 /* FBLoginDialog.m */,
 				AEA93B0211D5293B000A4545 /* FBRequest.h */,
@@ -230,13 +232,12 @@
 				84F43FFD15194E4800CEECD5 /* FBRequestConnection.h */,
 				84BEDF4C151BC24F00F89C3B /* FBSession.h */,
 				8446FDA5151BC5C2000BE007 /* FBSession.m */,
+				84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */,
+				84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */,
 				8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */,
 				8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */,
-				84AB66261510F21200D9EE5F /* FBSession.h */,
 				E23E5A0D1521163C00A011A8 /* FBURLConnection.h */,
 				E23E5A0E1521163C00A011A8 /* FBURLConnection.m */,
-				22297EAF14FC1412003CE798 /* FBFrictionlessRequestSettings.h */,
-				22297EB014FC1412003CE798 /* FBFrictionlessRequestSettings.m */,
 			);
 			name = FBConnect;
 			sourceTree = "<group>";
@@ -340,6 +341,7 @@
 				840FDCBD152B5D9200F9C927 /* FBFrictionlessRequestSettings.h in Headers */,
 				B9C6E1341525219600E46808 /* FBCacheIndex.h in Headers */,
 				B9C6E1361525219600E46808 /* FBDataDiskCache.h in Headers */,
+				84137158152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -467,6 +469,7 @@
 				840FDCBE152B5D9200F9C927 /* FBFrictionlessRequestSettings.m in Sources */,
 				B9C6E1351525219600E46808 /* FBCacheIndex.m in Sources */,
 				B9C6E1371525219600E46808 /* FBDataDiskCache.m in Sources */,
+				84137159152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

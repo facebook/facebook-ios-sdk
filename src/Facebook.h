@@ -16,6 +16,7 @@
 
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
+#import "FBSessionManualTokenCachingStrategy.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FacebookSDK.h"
 
@@ -40,15 +41,13 @@
  * pop-ups promoting for credentials, permissions, stream posts, etc.)
  */
 @interface Facebook : NSObject<FBLoginDialogDelegate>{
-    NSString* _accessToken;
-    NSDate* _expirationDate;
     id<FBSessionDelegate> _sessionDelegate;
     NSMutableSet* _requests;
-    FBDialog* _loginDialog;
+    FBSession* _session;    
+    FBSessionManualTokenCachingStrategy *_tokenCaching;
     FBDialog* _fbDialog;
     NSString* _appId;
     NSString* _urlSchemeSuffix;
-    NSArray* _permissions;
     BOOL _isExtendingAccessToken;
     NSDate* _lastAccessTokenUpdate;
     FBFrictionlessRequestSettings* _frictionlessRequestSettings;
@@ -59,7 +58,7 @@
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* urlSchemeSuffix;
 @property(nonatomic, readonly, getter=isFrictionlessRequestsEnabled) 
-    BOOL isFrictionlessRequestsEnabled;
+BOOL isFrictionlessRequestsEnabled;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;

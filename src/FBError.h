@@ -43,6 +43,10 @@ extern NSString *const FBErrorLoginFailedReason;
 // the NSError key used by session to capture login failure error code
 extern NSString *const FBErrorLoginFailedOriginalErrorCode;
 
+// used by session when an inline dialog fails
+extern NSString *const FBErrorLoginFailedReasonInlineCancelledValue;
+extern NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue;
+
 // Exception strings raised by the Facebook SDK
 
 // This exception is raised by methods in the Facebook SDK to indicate

@@ -24,6 +24,10 @@
 #import "Facebook.h"
 #import "FBLoginDialog.h"
 
+// these are helpful macros for testing various login methods, should always checkin as NO/NO
+#define TEST_DISABLE_MULTITASKING_LOGIN (NO)
+#define TEST_DISABLE_SSO (NO)
+
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
@@ -529,8 +533,10 @@ static NSString *FBPLISTAppID = nil;
     BOOL didOpenOtherApp = NO;
     UIDevice *device = [UIDevice currentDevice];
     if ([device respondsToSelector:@selector(isMultitaskingSupported)] && 
-        [device isMultitaskingSupported]) {
-        if (tryFBAppAuth) {
+        [device isMultitaskingSupported] &&
+        !TEST_DISABLE_MULTITASKING_LOGIN) {
+        if (tryFBAppAuth &&
+            !TEST_DISABLE_SSO) {
             NSString *scheme = FBAuthURLScheme;
             if (_urlSchemeSuffix) {
                 scheme = [scheme stringByAppendingString:@"2"];
@@ -552,9 +558,10 @@ static NSString *FBPLISTAppID = nil;
     // If single sign-on failed, open an inline login dialog. This will require the user to
     // enter his or her credentials.
     if (!didOpenOtherApp) {
-        self.loginDialog = [[FBLoginDialog alloc] initWithURL:loginDialogURL
+        self.loginDialog = [[[FBLoginDialog alloc] initWithURL:loginDialogURL
                                                   loginParams:params
-                                                     delegate:self];
+                                                     delegate:self]
+                            autorelease];
         [self.loginDialog show];
     }
 }
