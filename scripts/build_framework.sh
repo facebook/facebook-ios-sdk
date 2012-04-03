@@ -6,11 +6,14 @@
 # This script builds the FBiOSSDK.framework that is distributed at
 # https://github.com/facebook/facebook-ios-sdk/downloads/FBiOSSDK.framework.tgz
 
+# our only parameter so far, valid arguments are: no-value, "Debug" and "Release" (default)
+BUILDCONFIGURATION=${1:-Release}
+
 . $(dirname $0)/common.sh
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 test -x "$LIPO" || die 'Could not find lipo in $PATH'
 
-FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/Release-universal/$FB_SDK_BINARY_NAME
+FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/${BUILDCONFIGURATION}-universal/$FB_SDK_BINARY_NAME
 
 # -----------------------------------------------------------------------------
 # Compile binaries 
@@ -25,7 +28,7 @@ function xcode_build_target() {
   $XCODEBUILD \
     -target "facebook-ios-sdk" \
     -sdk $1 \
-    -configuration "Release" \
+    -configuration "${2}" \
     SYMROOT=$FB_SDK_BUILD \
     CURRENT_PROJECT_VERSION=$FB_SDK_VERSION_FULL \
     clean build \
@@ -33,8 +36,8 @@ function xcode_build_target() {
     || die "XCode build failed for platform: ${1}."
 }
 
-xcode_build_target "iphonesimulator"
-xcode_build_target "iphoneos"
+xcode_build_target "iphonesimulator" "$BUILDCONFIGURATION"
+xcode_build_target "iphoneos" "$BUILDCONFIGURATION"
 
 # -----------------------------------------------------------------------------
 # Merge lib files for different platforms into universal binary
@@ -44,8 +47,8 @@ mkdir -p $(dirname $FB_SDK_UNIVERSAL_BINARY)
 
 $LIPO \
   -create \
-    $FB_SDK_BUILD/Release-iphonesimulator/libfacebook_ios_sdk.a \
-    $FB_SDK_BUILD/Release-iphoneos/libfacebook_ios_sdk.a \
+    $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a \
+    $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a \
   -output $FB_SDK_UNIVERSAL_BINARY \
   >>$FB_SDK_BUILD_LOG 2>&1 \
   || die "lipo failed - could not create universal static library"
@@ -65,7 +68,7 @@ mkdir $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders
 mkdir $FB_SDK_FRAMEWORK/Versions/A/Resources
 
 \cp \
-  $FB_SDK_BUILD/Release-iphoneos/facebook-ios-sdk/*.h \
+  $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk/*.h \
   $FB_SDK_FRAMEWORK/Versions/A/Headers \
   || die "Error building framework while copying SDK headers"
 \cp \

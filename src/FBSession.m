@@ -83,7 +83,7 @@ static NSString *FBPLISTAppID = nil;
 
 // private properties
 @property(readwrite, retain) FBSessionTokenCachingStrategy *tokenCachingStrategy;
-@property(readwrite, retain) FBSessionStatusHandler loginHandler;
+@property(readwrite, copy) FBSessionStatusHandler loginHandler;
 @property(readonly) NSString* appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
@@ -178,7 +178,7 @@ static NSString *FBPLISTAppID = nil;
         NSString *cachedToken = [tokenCachingStrategy fetchTokenAndExpirationDate:&cachedTokenExpirationDate];
         if (cachedToken) {        
             // check to see if expiration date is later than now
-            if (NSOrderedDescending == [self.expirationDate compare:[NSDate date]]) {
+            if (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]]) {
                 // set the state and token info
                 [self transitionToState:FBSessionStateLoadedValidToken
                          andUpdateToken:cachedToken
