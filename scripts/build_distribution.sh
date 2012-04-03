@@ -15,7 +15,6 @@ FB_SDK_FRAMEWORK_TGZ=${FB_SDK_FRAMEWORK}-${FB_SDK_VERSION_FULL}.tgz
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_TEMPLATES=$FB_SDK_BUILD_PACKAGE/Library/Developer/XCode/Templates/FacebookSDK
 FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/Library/Developer/FacebookSDK
-FB_SDK_BUILD_PACKAGE_RESOURCES=$FB_SDK_BUILD/Resources
 
 # -----------------------------------------------------------------------------
 # Call out to build .framework
@@ -43,12 +42,9 @@ mkdir $FB_SDK_BUILD_PACKAGE \
   || die "Could not create directory $FB_SDK_BUILD_PACKAGE"
 mkdir -p $FB_SDK_BUILD_PACKAGE_TEMPLATES
 mkdir -p $FB_SDK_BUILD_PACKAGE_FRAMEWORK
-mkdir -p $FB_SDK_BUILD_PACKAGE_RESOURCES
 
 \cp -r $FB_SDK_TEMPLATES/* $FB_SDK_BUILD_PACKAGE_TEMPLATES \
   || die "Could not copy $FB_SDK_TEMPLATES"
-\cp -r $FB_SDK_SRC/Package/Resources $FB_SDK_BUILD_PACKAGE_RESOURCES \
-  || die "Could not copy $FB_SDK_SRC/Package/Resources"
 \cp -R $FB_SDK_FRAMEWORK $FB_SDK_BUILD_PACKAGE_FRAMEWORK \
   || die "Could not copy $FB_SDK_FRAMEWORK"
 
@@ -58,8 +54,7 @@ mkdir -p $FB_SDK_BUILD_PACKAGE_RESOURCES
 echo "Building .pkg from package directory."
 \rm -rf $FB_SDK_PKG
 $PACKAGEMAKER \
-  --root $FB_SDK_BUILD_PACKAGE \
-  --id com.facebook.$FB_SDK_BINARY_NAME \
+  --doc $FB_SDK_SRC/Package/FBiOSSDK.pmdoc \
   --domain user \
   --target 10.5 \
   --version $FB_SDK_VERSION \
