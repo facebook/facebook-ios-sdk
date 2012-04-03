@@ -46,7 +46,7 @@ static NSString *const FBLoginUXRedirectURI = @"redirect_uri";
 static NSString *const FBLoginUXTouch = @"touch";
 static NSString *const FBLoginUXDisplay = @"display";
 static NSString *const FBLoginUXIOS = @"ios";
-static NSString *const FBLoginUXSDK = @"sdk"; 
+static NSString *const FBLoginUXSDK = @"sdk";
 
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
@@ -67,7 +67,7 @@ static NSString *FBPLISTAppID = nil;
     NSString *_accessToken;
     NSDate *_expirationDate;
     NSArray *_permissions;
-    
+
     // private property and non-property ivars
     FBSessionTokenCachingStrategy *_tokenCachingStrategy;
     BOOL _isInStateTransition;
@@ -93,7 +93,7 @@ static NSString *FBPLISTAppID = nil;
 
 // private members
 - (void)notifyOfState:(FBSessionState)state;
-- (BOOL)transitionToState:(FBSessionState)state  
+- (BOOL)transitionToState:(FBSessionState)state
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
               shouldCache:(BOOL)shouldCache;
@@ -119,15 +119,15 @@ static NSString *FBPLISTAppID = nil;
 #pragma mark Lifecycle
 
 - (id)init {
-    return [self initWithAppID:nil 
-                   permissions:nil 
+    return [self initWithAppID:nil
+                   permissions:nil
                urlSchemeSuffix:nil
             tokenCacheStrategy:nil];
 }
 
 - (id)initWithPermissions:(NSArray*)permissions {
-    return [self initWithAppID:nil 
-                   permissions:permissions 
+    return [self initWithAppID:nil
+                   permissions:permissions
                urlSchemeSuffix:nil
             tokenCacheStrategy:nil];
 }
@@ -138,7 +138,7 @@ static NSString *FBPLISTAppID = nil;
  tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy {
     self = [super init];
     if (self) {
-        
+
         // setup values where nil implies a default
         if (!appID) {
             appID = [FBSession appIDFromPLIST];
@@ -149,7 +149,7 @@ static NSString *FBPLISTAppID = nil;
         if (!tokenCachingStrategy) {
             tokenCachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
         }
-        
+
         // of we don't have an appID by here, fail -- this is almost certainly an app-bug
         if (!appID) {
             [[NSException exceptionWithName:FBInvalidOperationException
@@ -160,13 +160,13 @@ static NSString *FBPLISTAppID = nil;
                                    userInfo:nil]
              raise];
         }
-        
+
         // assign arguments;
         self.appID = appID;
         self.permissions = permissions;
         self.urlSchemeSuffix = urlSchemeSuffix;
         self.tokenCachingStrategy = tokenCachingStrategy;
-        
+
         // additional setup
         _isInStateTransition = NO;
         self.status = FBSessionStateCreated;
@@ -178,7 +178,7 @@ static NSString *FBPLISTAppID = nil;
         // use cached token if present
         NSDate *cachedTokenExpirationDate = nil;
         NSString *cachedToken = [tokenCachingStrategy fetchTokenAndExpirationDate:&cachedTokenExpirationDate];
-        if (cachedToken) {        
+        if (cachedToken) {
             // check to see if expiration date is later than now
             if (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]]) {
                 // set the state and token info
@@ -190,7 +190,7 @@ static NSString *FBPLISTAppID = nil;
                 // else this token is expired and should be cleared from cache
                 [tokenCachingStrategy clearToken:cachedToken];
             }
-        }                
+        }
     }
     return self;
 }
@@ -205,7 +205,7 @@ static NSString *FBPLISTAppID = nil;
     [_permissions release];
     [_tokenCachingStrategy release];
     [_affinitizedThread release];
-    
+
     [super dealloc];
 }
 
@@ -224,8 +224,8 @@ static NSString *FBPLISTAppID = nil;
 
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
-    
-    if (!(self.status == FBSessionStateCreated || 
+
+    if (!(self.status == FBSessionStateCreated ||
           self.status == FBSessionStateLoadedValidToken)) {
         // login may only be called once, and only from one of the two initial states
         [[NSException exceptionWithName:FBInvalidOperationException
@@ -251,7 +251,7 @@ static NSString *FBPLISTAppID = nil;
 
 - (void)invalidate {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
-    
+
     [self transitionAndCallHandlerWithState:FBSessionStateInvalidated
                                       error:nil
                                       token:nil
@@ -261,7 +261,7 @@ static NSString *FBPLISTAppID = nil;
 
 - (void)logout {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
-    
+
     [self.tokenCachingStrategy clearToken:self.accessToken];
     [self transitionAndCallHandlerWithState:FBSessionStateLoggedOut
                                       error:nil
@@ -272,12 +272,12 @@ static NSString *FBPLISTAppID = nil;
 
 - (BOOL)handleOpenURL:(NSURL *)url {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
-    
+
     // if the URL's structure doesn't match the structure used for Facebook authorization, abort.
     if (![[url absoluteString] hasPrefix:self.appBaseUrl]) {
         return NO;
     }
-    
+
     // version 3.2.3 of the Facebook app encodes the parameters in the query but
     // version 3.3 and above encode the parameters in the fragment; check first for
     // fragment, and if missing fall back to query
@@ -285,28 +285,28 @@ static NSString *FBPLISTAppID = nil;
     if (!query) {
         query = [url query];
     }
-    
+
     NSDictionary *params = [FBSession dictionaryByParsingURLQueryPart:query];
     NSString *accessToken = [params objectForKey:@"access_token"];
-    
+
     // if the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
         NSString *errorReason = [params objectForKey:@"error"];
-        
+
         // if the error response indicates that we should try again using Safari, open
         // the authorization dialog in Safari.
         if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
             [self authorizeWithFBAppAuth:NO safariAuth:YES];
             return YES;
         }
-        
+
         // if the error response indicates that we should try the authorization flow
         // in an inline dialog, do that.
         if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
             [self authorizeWithFBAppAuth:NO safariAuth:NO];
             return YES;
         }
-        
+
         // the facebook app may return an error_code parameter in case it
         // encounters a UIWebViewDelegate error
         NSString *errorCode = [params objectForKey:@"error_code"];
@@ -314,7 +314,7 @@ static NSString *FBPLISTAppID = nil;
         // create an error object with additional info regarding failed login
         NSError *error = [FBSession errorLoginFailedWithReason:errorReason
                                                     errorCode:errorCode];
-        
+
         // state transition, and call the handler if there is one
         [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
                                           error:error
@@ -322,7 +322,7 @@ static NSString *FBPLISTAppID = nil;
                                  expirationDate:nil
                                     shouldCache:NO];
     } else {
-    
+
         // we have an access token, so parse the expiration date.
         NSString *expTime = [params objectForKey:@"expires_in"];
         NSDate *expirationDate = [NSDate distantFuture];
@@ -332,7 +332,7 @@ static NSString *FBPLISTAppID = nil;
                 expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
             }
         }
-        
+
         // set token and date, state transition, and call the handler if there is one
         [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
                                           error:nil
@@ -344,7 +344,7 @@ static NSString *FBPLISTAppID = nil;
 }
 
 - (BOOL)isValid {
-    return FB_ISSESSIONVALIDWITHSTATE(self.status); 
+    return FB_ISSESSIONVALIDWITHSTATE(self.status);
 }
 
 - (NSString*)urlSchemeSuffix {
@@ -357,10 +357,10 @@ static NSString *FBPLISTAppID = nil;
     if (_urlSchemeSuffix != newValue) {
         [_urlSchemeSuffix release];
         _urlSchemeSuffix = [(newValue ? newValue : @"") copy];
-    }    
+    }
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Private Members
 
 @synthesize     tokenCachingStrategy = _tokenCachingStrategy,
@@ -372,22 +372,22 @@ static NSString *FBPLISTAppID = nil;
 // core session members
 
 // core member that owns all state transitions as well as property setting for status and isValid
-- (BOOL)transitionToState:(FBSessionState)state 
+- (BOOL)transitionToState:(FBSessionState)state
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
-              shouldCache:(BOOL)shouldCache 
+              shouldCache:(BOOL)shouldCache
 {
-        
+
     // is this a valid transition?
     BOOL isValidTransition;
     FBSessionState statePrior;
-    
+
     statePrior = self.status;
-    switch (state) {            
+    switch (state) {
         default:
         case FBSessionStateCreated:
             isValidTransition = NO;
-            break;            
+            break;
         case FBSessionStateLoggedIn:
             isValidTransition = (
                                  statePrior == FBSessionStateCreated ||
@@ -400,26 +400,26 @@ static NSString *FBPLISTAppID = nil;
             break;
         case FBSessionStateExtendedToken:
             isValidTransition = (
-                                 statePrior == FBSessionStateLoggedIn ||                                 
+                                 statePrior == FBSessionStateLoggedIn ||
                                  statePrior == FBSessionStateExtendedToken
                                  );
             break;
         case FBSessionStateLoggedOut:
         case FBSessionStateInvalidated:
             isValidTransition = (
-                                 statePrior == FBSessionStateLoggedIn ||                                 
+                                 statePrior == FBSessionStateLoggedIn ||
                                  statePrior == FBSessionStateExtendedToken ||
                                  statePrior == FBSessionStateLoadedValidToken
                                  );
-            break;        
+            break;
     }
-    
+
     // invalid transition short circuits
     if (!isValidTransition) {
         NSLog(@"FBSession !transitionToState:%i fromState:%i", state, statePrior);
         return false;
     }
-    
+
     // if this is yes, someone called a method on FBSession from within a KVO will change handler
     if (_isInStateTransition) {
         [[NSException exceptionWithName:FBInvalidOperationException
@@ -430,12 +430,12 @@ static NSString *FBPLISTAppID = nil;
                                userInfo:nil]
          raise];
     }
-    
-    // valid transitions notify        
+
+    // valid transitions notify
     NSLog(@"FBSession transitionToState:%i fromState:%i", state, statePrior);
-        
+
     // identify whether we will update token and date, and what the values will be
-    BOOL changingTokenAndDate = false;    
+    BOOL changingTokenAndDate = false;
     if (token && date) {
         changingTokenAndDate = true;
     } else if (!FB_ISSESSIONVALIDWITHSTATE(state) &&
@@ -449,51 +449,51 @@ static NSString *FBPLISTAppID = nil;
 
     // should only ever be YES from here...
     _isInStateTransition = YES;
-    
+
     // KVO property will change notifications, for state change
     [self willChangeValueForKey:FBstatusPropertyName];
     if (changingIsInvalid) {
         [self willChangeValueForKey:FBisValidPropertyName];
     }
-        
+
     if (changingTokenAndDate) {
         // KVO property will-change notifications for token and date
         [self willChangeValueForKey:FBaccessTokenPropertyName];
         [self willChangeValueForKey:FBexpirationDatePropertyName];
-        
+
         // change the token and date values, should be kept near to state change following the conditional
         self.accessToken = token;
         self.expirationDate = date;
     }
-    
+
     // change the actual state
     // note: we should not inject any callbacks between this and the token/date changes above
     self.status = state;
-    
-    // ... to here -- if YES 
+
+    // ... to here -- if YES
     _isInStateTransition = NO;
-    
+
     // internal state change notification
     [self notifyOfState:state];
-    
-    if (changingTokenAndDate) {        
+
+    if (changingTokenAndDate) {
         // update the cache
         if (shouldCache) {
             [self.tokenCachingStrategy cacheToken:token expirationDate:date];
         }
-        
+
         // KVO property change notifications token and date
         [self didChangeValueForKey:FBexpirationDatePropertyName];
         [self didChangeValueForKey:FBaccessTokenPropertyName];
     }
-    
+
     // KVO property did change notifications, for state change
     if (changingIsInvalid) {
         [self didChangeValueForKey:FBisValidPropertyName];
     }
     [self didChangeValueForKey:FBstatusPropertyName];
-            
-    // Note! It is important that no processing occur after the KVO notifications have been raised, in order to 
+
+    // Note! It is important that no processing occur after the KVO notifications have been raised, in order to
     // assure the state is cohesive in common reintrant scenarios
 
     // the NO case short-circuits after the state switch/case
@@ -509,20 +509,20 @@ static NSString *FBPLISTAppID = nil;
                                    FBLoginUXUserAgent, FBLoginUXType,
                                    FBRedirectURL, FBLoginUXRedirectURI,
                                    FBLoginUXTouch, FBLoginUXDisplay,
-                                   FBLoginUXIOS, FBLoginUXSDK, 
+                                   FBLoginUXIOS, FBLoginUXSDK,
                                    nil];
-    
+
     NSString *loginDialogURL = [FBDialogBaseURL stringByAppendingString:FBLoginDialogMethod];
-    
+
     if (_permissions != nil) {
         NSString* scope = [_permissions componentsJoinedByString:@","];
         [params setValue:scope forKey:@"scope"];
     }
-    
+
     if (_urlSchemeSuffix) {
         [params setValue:_urlSchemeSuffix forKey:@"local_client_id"];
     }
-    
+
     // If the device is running a version of iOS that supports multitasking,
     // try to obtain the access token from the Facebook app installed
     // on the device.
@@ -532,7 +532,7 @@ static NSString *FBPLISTAppID = nil;
     // her credentials in order to authorize the application.
     BOOL didOpenOtherApp = NO;
     UIDevice *device = [UIDevice currentDevice];
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)] && 
+    if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         if (tryFBAppAuth &&
@@ -545,16 +545,16 @@ static NSString *FBPLISTAppID = nil;
             NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
             didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
-        
+
         if (trySafariAuth && !didOpenOtherApp) {
             NSString *nextUrl = self.appBaseUrl;
             [params setValue:nextUrl forKey:@"redirect_uri"];
-            
+
             NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
             didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
     }
-    
+
     // If single sign-on failed, open an inline login dialog. This will require the user to
     // enter his or her credentials.
     if (!didOpenOtherApp) {
@@ -570,7 +570,7 @@ static NSString *FBPLISTAppID = nil;
 - (void)fbDialogLogin:(NSString *)accessToken expirationDate:(NSDate *)expirationDate {
     // no reason to keep this object
     self.loginDialog = nil;
-    
+
     // set token and date, state transition, and call the handler if there is one
     [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
                                       error:nil
@@ -591,7 +591,7 @@ static NSString *FBPLISTAppID = nil;
     // create an error object with additional info regarding failed login
     NSError *error = [FBSession errorLoginFailedWithReason:reason
                                                  errorCode:nil];
-    
+
     // state transition, and call the handler if there is one
     [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
                                       error:error
@@ -600,7 +600,7 @@ static NSString *FBPLISTAppID = nil;
                                 shouldCache:NO];
 }
 
-// internal notification distrubtion 
+// internal notification distrubtion
 - (void)notifyOfState:(FBSessionState)state {
     // TODO: implement this once we have session contributors wired up
 }
@@ -609,7 +609,7 @@ static NSString *FBPLISTAppID = nil;
 
 // helper to wrap-up handler callback and state-change
 - (void)transitionAndCallHandlerWithState:(FBSessionState)status
-                                    error:(NSError*)error 
+                                    error:(NSError*)error
                                     token:(NSString*)token
                            expirationDate:(NSDate*)date
                               shouldCache:(BOOL)shouldCache {
@@ -619,25 +619,25 @@ static NSString *FBPLISTAppID = nil;
                                   andUpdateToken:token
                                andExpirationDate:date
                                      shouldCache:shouldCache];
-    
+
     // if we are given a handler, we promise to call it once and only once
-    
-    // release the object's count on the handler, but retain a 
+
+    // release the object's count on the handler, but retain a
     // stack ref to use as our callback outside of the lock
     FBSessionStatusHandler handler = [self.loginHandler retain];
-    
+
     // the moment we transition to a terminal state, we release our handler
     if (didTransition && FB_ISSESSIONSTATETERMINAL(self.status)) {
         self.loginHandler = nil;
     }
-        
+
     // if we have a handler, call it and release our
     // final retain on the handler
     if (handler) {
         @try {
             // unsuccessful transitions don't change state and don't propegate the error object
-            handler(self, 
-                    self.status, 
+            handler(self,
+                    self.status,
                     didTransition ? error : nil);
         }
         @finally {
@@ -656,19 +656,19 @@ static NSString *FBPLISTAppID = nil;
 // a couple of URL parsing helpers
 // TODO: consider a more centralized utils class, or a nice category over URL
 + (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString {
-    
+
     NSMutableDictionary *result = [NSMutableDictionary dictionary];
     NSArray *parts = [encodedString componentsSeparatedByString:@"&"];
-    
+
     for (NSString *part in parts) {
         if ([part length] == 0) {
             continue;
         }
-        
+
         NSRange index = [part rangeOfString:@"="];
         NSString *key;
         NSString *value;
-        
+
         if (index.location == NSNotFound) {
             key = part;
             value = @"";
@@ -676,11 +676,11 @@ static NSString *FBPLISTAppID = nil;
             key = [part substringToIndex:index.location];
             value = [part substringFromIndex:index.location + index.length];
         }
-        
-        if (key && value) {			
+
+        if (key && value) {
             [result setObject:[FBSession stringByURLUnescapingString:value]
                        forKey:[FBSession stringByURLUnescapingString:key]];
-        }        
+        }
     }
     return result;
 }
@@ -695,7 +695,7 @@ static NSString *FBPLISTAppID = nil;
     if (!FBPLISTAppID) {
         // pickup the AppID from Info.plist
         NSBundle* bundle = [NSBundle mainBundle];
-        FBPLISTAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];        
+        FBPLISTAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
     }
     return FBPLISTAppID;
 }
@@ -709,10 +709,10 @@ static NSString *FBPLISTAppID = nil;
                      forKey:FBErrorLoginFailedReason];
     }
     if (errorCode) {
-        [userinfo setObject:errorCode 
+        [userinfo setObject:errorCode
                      forKey:FBErrorLoginFailedOriginalErrorCode];
     }
-    
+
     // create error object
     NSError *err = [NSError errorWithDomain:FBiOSSDKDomain
                                       code:FBErrorLoginFailedOrCancelled
@@ -722,7 +722,7 @@ static NSString *FBPLISTAppID = nil;
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
-    // these properties must manually notify for KVO    
+    // these properties must manually notify for KVO
     if ([key isEqualToString:FBisValidPropertyName] ||
         [key isEqualToString:FBaccessTokenPropertyName] ||
         [key isEqualToString:FBexpirationDatePropertyName] ||

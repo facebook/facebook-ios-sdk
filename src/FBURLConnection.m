@@ -62,14 +62,27 @@
 - (void)cancel
 {
     [self.connection cancel];
+    if (self.handler == nil) {
+        return;
+    }
 
     NSError *error = [[NSError alloc] initWithDomain:FBiOSSDKDomain
                                                 code:FBErrorOperationCancelled
                                             userInfo:nil];
 
-    self.handler(self, error, nil, nil);
+    // We are retaining ourselves (and releasing explicitly) because unlike the
+    // other cases where we call the handler, we are not being held by anyone
+    // else.
+    [self retain];
+    FBURLConnectionHandler handler = [self.handler retain];
     self.handler = nil;
-    [error release];
+    @try {
+        handler(self, error, nil, nil);
+    } @finally {
+        [handler release];
+        [self release];
+        [error release];
+    }
 }
 
 - (void)connection:(NSURLConnection *)connection
@@ -89,14 +102,20 @@ didReceiveResponse:(NSURLResponse *)response
   didFailWithError:(NSError *)error
 {
     // TODO: translate well-known errors
-    self.handler(self, error, nil, nil);
-    self.handler = nil;
+    @try {
+        self.handler(self, error, nil, nil);
+    } @finally {
+        self.handler = nil;
+    }
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
-    self.handler(self, nil, self.response, self.data);
-    self.handler = nil;
+    @try {
+        self.handler(self, nil, self.response, self.data);
+    } @finally {
+        self.handler = nil;
+    }
 }
 
 @end

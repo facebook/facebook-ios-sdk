@@ -1,12 +1,12 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2012 Facebook
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,6 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import "FBPlace.h"
 #import "FBSession.h"
 
 @class FBPlacesPickerView;
@@ -40,7 +39,7 @@
 @property (assign, nonatomic) NSInteger radius;
 @property (assign, nonatomic) CLLocationCoordinate2D locationCoordinate;
 
-@property (assign, nonatomic) id delegate;
+@property (assign, nonatomic) id<FBPlacesPickerActionDelegate> delegate;
 
 // inits and returns a FBPlacesPickerView
 //
@@ -52,7 +51,7 @@
 - (id)initWithSession:(FBSession*)session
              location:(CLLocationCoordinate2D)location
            searchText:(NSString*)searchText;
-           
+
 - (void)loadData;
 
 @end

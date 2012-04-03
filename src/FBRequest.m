@@ -19,7 +19,7 @@
 
 // TODO: This will need to be scrubbed when this file is rewritten
 // constants
-NSString* const FBGraphBasePath = @"http://graph.facebook.com";
+NSString* const FBGraphBasePath = @"https://graph.facebook.com";
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////

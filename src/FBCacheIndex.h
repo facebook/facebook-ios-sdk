@@ -40,7 +40,6 @@
     id <FBCacheIndexFileDelegate> _delegate;
     
     NSCache* _cachedEntries;
-    NSString* _folderPath;
   
     NSUInteger _currentDiskUsage;
     NSUInteger _diskCapacity;
