@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B90C8A97152E4A6C00C94CD8 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */; };
+		B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */; };
+		B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */; };
+		B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */; };
+		B9AF4BB3152E43EE00E9BA6C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */; };
+		B9AF4BB5152E43EE00E9BA6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BB4152E43EE00E9BA6C /* main.m */; };
+		B9AF4BB9152E43EE00E9BA6C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BB8152E43EE00E9BA6C /* AppDelegate.m */; };
+		B9AF4BBC152E43EE00E9BA6C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BBB152E43EE00E9BA6C /* ViewController.m */; };
+		B9AF4BBF152E43EE00E9BA6C /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BBD152E43EE00E9BA6C /* ViewController_iPhone.xib */; };
+		B9AF4BC2152E43EE00E9BA6C /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */; };
+		B9AF4C35152E448D00E9BA6C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */; };
+		B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C36152E449300E9BA6C /* CoreLocation.framework */; };
+		B9AF4C39152E449900E9BA6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C38152E449900E9BA6C /* QuartzCore.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+		B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacesPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B9AF4BB0152E43EE00E9BA6C /* PlacesPickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlacesPickerSample-Info.plist"; sourceTree = "<group>"; };
+		B9AF4BB2152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B9AF4BB4152E43EE00E9BA6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B9AF4BB6152E43EE00E9BA6C /* PlacesPickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlacesPickerSample-Prefix.pch"; sourceTree = "<group>"; };
+		B9AF4BB7152E43EE00E9BA6C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B9AF4BB8152E43EE00E9BA6C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		B9AF4BBA152E43EE00E9BA6C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		B9AF4BBB152E43EE00E9BA6C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B9AF4BBE152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
+		B9AF4BC1152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		B9AF4C36152E449300E9BA6C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		B9AF4C38152E449900E9BA6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B9AF4BA1152E43EE00E9BA6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AF4C39152E449900E9BA6C /* QuartzCore.framework in Frameworks */,
+				B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */,
+				B9AF4C35152E448D00E9BA6C /* libsqlite3.dylib in Frameworks */,
+				B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */,
+				B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */,
+				B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */,
+				B90C8A97152E4A6C00C94CD8 /* FBiOSSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B9AF4B99152E43EE00E9BA6C = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BAE152E43EE00E9BA6C /* PlacesPickerSample */,
+				B9AF4BA7152E43EE00E9BA6C /* Frameworks */,
+				B9AF4BA5152E43EE00E9BA6C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B9AF4BA5152E43EE00E9BA6C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B9AF4BA7152E43EE00E9BA6C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */,
+				B9AF4C36152E449300E9BA6C /* CoreLocation.framework */,
+				B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */,
+				B9AF4C38152E449900E9BA6C /* QuartzCore.framework */,
+				B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */,
+				B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */,
+				B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9AF4BAE152E43EE00E9BA6C /* PlacesPickerSample */ = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BB7152E43EE00E9BA6C /* AppDelegate.h */,
+				B9AF4BB8152E43EE00E9BA6C /* AppDelegate.m */,
+				B9AF4BBA152E43EE00E9BA6C /* ViewController.h */,
+				B9AF4BBB152E43EE00E9BA6C /* ViewController.m */,
+				B9AF4BBD152E43EE00E9BA6C /* ViewController_iPhone.xib */,
+				B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */,
+				B9AF4BAF152E43EE00E9BA6C /* Supporting Files */,
+			);
+			path = PlacesPickerSample;
+			sourceTree = "<group>";
+		};
+		B9AF4BAF152E43EE00E9BA6C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BB0152E43EE00E9BA6C /* PlacesPickerSample-Info.plist */,
+				B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */,
+				B9AF4BB4152E43EE00E9BA6C /* main.m */,
+				B9AF4BB6152E43EE00E9BA6C /* PlacesPickerSample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B9AF4BA3152E43EE00E9BA6C /* PlacesPickerSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacesPickerSample" */;
+			buildPhases = (
+				B9AF4BA0152E43EE00E9BA6C /* Sources */,
+				B9AF4BA1152E43EE00E9BA6C /* Frameworks */,
+				B9AF4BA2152E43EE00E9BA6C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PlacesPickerSample;
+			productName = PlacesPickerSample;
+			productReference = B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B9AF4B9B152E43EE00E9BA6C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacesPickerSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B9AF4B99152E43EE00E9BA6C;
+			productRefGroup = B9AF4BA5152E43EE00E9BA6C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9AF4BA3152E43EE00E9BA6C /* PlacesPickerSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B9AF4BA2152E43EE00E9BA6C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AF4BB3152E43EE00E9BA6C /* InfoPlist.strings in Resources */,
+				B9AF4BBF152E43EE00E9BA6C /* ViewController_iPhone.xib in Resources */,
+				B9AF4BC2152E43EE00E9BA6C /* ViewController_iPad.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B9AF4BA0152E43EE00E9BA6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AF4BB5152E43EE00E9BA6C /* main.m in Sources */,
+				B9AF4BB9152E43EE00E9BA6C /* AppDelegate.m in Sources */,
+				B9AF4BBC152E43EE00E9BA6C /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BB2152E43EE00E9BA6C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B9AF4BBD152E43EE00E9BA6C /* ViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BBE152E43EE00E9BA6C /* en */,
+			);
+			name = ViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BC1152E43EE00E9BA6C /* en */,
+			);
+			name = ViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B9AF4BC3152E43EE00E9BA6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9AF4BC4152E43EE00E9BA6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B9AF4BC6152E43EE00E9BA6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B9AF4BC7152E43EE00E9BA6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacesPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AF4BC3152E43EE00E9BA6C /* Debug */,
+				B9AF4BC4152E43EE00E9BA6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacesPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AF4BC6152E43EE00E9BA6C /* Debug */,
+				B9AF4BC7152E43EE00E9BA6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B9AF4B9B152E43EE00E9BA6C /* Project object */;
+}

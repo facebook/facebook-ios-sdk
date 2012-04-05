@@ -86,6 +86,13 @@ if [ -z $FB_SDK_ENV ]; then
     exit 1
   }
 
+  # < XCode 4.3.1
+  XCODEBUILD=/Developer/usr/bin/xcodebuild
+  if [ ! -x XCODEBUILD ]; then
+    # XCode from app store
+    XCODEBUILD=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
+  fi
+
   test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
   test -n "$LIPO"         || LIPO=$(which lipo)
   test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)

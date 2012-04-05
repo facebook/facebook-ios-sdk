@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
  
  * Unless required by applicable law or agreed to in writing, software
@@ -15,18 +15,17 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FBProfilePictureView.h>
+#import <CoreLocation/CoreLocation.h>
+#import <FBiOSSDK/FBPlacesPickerView.h>
 
 @interface ViewController : UIViewController
 
-@property (retain, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
+@property (retain, nonatomic) IBOutlet FBPlacesPickerView *placesPickerView;
 
-- (IBAction)showJasonProfile:(id)sender;
-- (IBAction)showMichaelProfile:(id)sender;
-- (IBAction)showVijayeProfile:(id)sender;
-- (IBAction)showRandomProfile:(id)sender;
-- (IBAction)makePictureSmall:(id)sender;
-- (IBAction)makePictureNormal:(id)sender;
-- (IBAction)makePictureLarge:(id)sender;
+- (IBAction)onClickRefresh:(id)sender;
+- (IBAction)filterNone:(id)sender;
+- (IBAction)filterRestaurants:(id)sender;
+- (IBAction)filterLocalBusinesses:(id)sender;
+- (IBAction)filterHotels:(id)sender;
 
 @end

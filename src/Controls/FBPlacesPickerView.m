@@ -170,12 +170,17 @@ static const NSString* FBPlacesQueryString =
     
     NSString* accessToken = self.session.accessToken;
     NSString* url = [NSString stringWithFormat:(NSString*)FBPlacesQueryString,
-            FBGraphBasePath,
+        FBGraphBasePath,
         self.maxCount,
         self.locationCoordinate.latitude,
         self.locationCoordinate.longitude,
         self.radius,
         accessToken];
+    if (self.searchText) {
+        // TODO: we need to urlencode the search text.  This will be 
+        // superseded by FBRequest
+        url = [url stringByAppendingFormat:@"&q=%@", self.searchText];
+    }
         
     FBURLConnectionHandler connHandler = 
         ^(FBURLConnection* connection, 
