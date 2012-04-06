@@ -133,7 +133,8 @@ typedef enum FBRequestConnectionState {
                         data:(NSData *)data
                      orError:(NSError *)error;
 
-- (NSArray *)parseJSONResponse:(NSData *)data;
+- (NSArray *)parseJSONResponse:(NSData *)data
+                         error:(NSError **)error;
 
 - (void)completeDeprecatedWithData:(NSData *)data
                            results:(NSArray *)results
@@ -541,8 +542,10 @@ typedef enum FBRequestConnectionState {
 
     NSArray *results = nil;
     if (!error) {
-        results = [self parseJSONResponse:data];
-
+        results = [self parseJSONResponse:data error:&error];
+    }
+    
+    if (!error) {
         if ([self.requests count] != [results count]) {
             NSLog(@"Expected %d results, got %d", [self.requests count], [results count]);
             error = [self errorWithCode:FBErrorProtocolMismatch
@@ -562,15 +565,37 @@ typedef enum FBRequestConnectionState {
 }
 
 - (NSArray *)parseJSONResponse:(NSData *)data
+                         error:(NSError **)error
 {
     SBJSON *parser = [[SBJSON alloc] init];
-    NSString* responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    id parsed = [parser objectWithString:responseUTF8];
+    
+    // Graph API can return "true" or "false", which is not valid JSON.
+    // Translate that before asking JSON parser to look at it.
+    NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSString *parseUTF8;
+    
+    if ([responseUTF8 isEqualToString:@"false"]) {
+        *error = [self errorWithCode:FBErrorRequestConnectionApi
+                          statusCode:200
+                  parsedJSONResponse:NO];
+    } else if ([responseUTF8 isEqualToString:@"true"]) {
+        parseUTF8 = @"{}";
+    } else {
+        parseUTF8 = responseUTF8;
+    }
+
+    id parsed = nil;
+    if (!(*error)) {
+        parsed = [parser objectWithString:parseUTF8 error:error];
+    }
+
     [responseUTF8 release];
     [parser release];
 
     NSArray *results;
-    if ([self.requests count] == 1) {
+    if (*error) {
+        results = nil;
+    } else if ([self.requests count] == 1) {
         NSMutableArray *mutable = [[[NSMutableArray alloc] init] autorelease];
         [mutable addObject:parsed];
         results = mutable;

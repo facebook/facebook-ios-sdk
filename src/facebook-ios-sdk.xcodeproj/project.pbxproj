@@ -66,7 +66,7 @@
 		B9DC7F41151AB56100DF1158 /* FBProfilePictureView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DC7F3F151AB56100DF1158 /* FBProfilePictureView.m */; };
 		E23E5A0B1521161900A011A8 /* FBError.h in Headers */ = {isa = PBXBuildFile; fileRef = E23E5A091521161900A011A8 /* FBError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E23E5A0C1521161900A011A8 /* FBError.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0A1521161900A011A8 /* FBError.m */; };
-		E23E5A0F1521163C00A011A8 /* FBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = E23E5A0D1521163C00A011A8 /* FBURLConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E23E5A0F1521163C00A011A8 /* FBURLConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = E23E5A0D1521163C00A011A8 /* FBURLConnection.h */; settings = {ATTRIBUTES = (); }; };
 		E23E5A101521163C00A011A8 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0E1521163C00A011A8 /* FBURLConnection.m */; };
 		E29B4E65152631FB00D1BE21 /* FBRequestBody.h in Headers */ = {isa = PBXBuildFile; fileRef = E29B4E62152631FB00D1BE21 /* FBRequestBody.h */; };
 		E29B4E66152631FB00D1BE21 /* FBRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B4E63152631FB00D1BE21 /* FBRequestBody.m */; };
