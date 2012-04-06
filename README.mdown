@@ -25,6 +25,9 @@ Framework
 
 This SDK installs a framework for you to include in iOS projects.  The framework is installed at "~/Library/Developer/FacebookSDK/FBiOSSDK.framework".
 
+The Facebook FBiOSSDK.framework includes caching functionality, which depends on sqlite.  You will
+also need to add a dependency on libsqlite3.dylib and QuartzCore.framework.
+
 Xcode provides several ways to add a framework to your project.  Here is one:
 
 * In your project left-pane, choose "Project explorer" in the top left.
@@ -44,6 +47,8 @@ Xcode provides several ways to add a framework to your project.  Here is one:
 * Select the FBiOSSDK.framework and click "Open".
 
 * In the project left-pane, you can drag the FBiOSSDK.framework to the "Frameworks" group.
+
+* Repeat these steps for "libsqlite3.dylib" and "QuartzCore.framework".
 
 When you are including framework headers in your project, prefix them with "FBiOSSDK", as in:
 

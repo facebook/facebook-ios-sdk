@@ -17,6 +17,8 @@
 		84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */; };
 		84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D4152A38780070DD9C /* JLViewController_iPad.xib */; };
 		84C757DD152A3A230070DD9C /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757DC152A3A220070DD9C /* FBiOSSDK.framework */; };
+		E2507CE7152FB612009D048D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2507CE6152FB612009D048D /* libsqlite3.dylib */; };
+		E2507CEA152FB61A009D048D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2507CE9152FB61A009D048D /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		84C757D2152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPhone.xib; sourceTree = "<group>"; };
 		84C757D5152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPad.xib; sourceTree = "<group>"; };
 		84C757DC152A3A220070DD9C /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+		E2507CE6152FB612009D048D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E2507CE9152FB61A009D048D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +46,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2507CEA152FB61A009D048D /* QuartzCore.framework in Frameworks */,
+				E2507CE7152FB612009D048D /* libsqlite3.dylib in Frameworks */,
 				84C757BD152A38770070DD9C /* UIKit.framework in Frameworks */,
 				84C757BF152A38770070DD9C /* Foundation.framework in Frameworks */,
 				84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */,
@@ -72,6 +78,8 @@
 		84C757BB152A38770070DD9C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E2507CE9152FB61A009D048D /* QuartzCore.framework */,
+				E2507CE6152FB612009D048D /* libsqlite3.dylib */,
 				84C757DC152A3A220070DD9C /* FBiOSSDK.framework */,
 				84C757BC152A38770070DD9C /* UIKit.framework */,
 				84C757BE152A38770070DD9C /* Foundation.framework */,
@@ -298,6 +306,7 @@
 				84C757DB152A38780070DD9C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
