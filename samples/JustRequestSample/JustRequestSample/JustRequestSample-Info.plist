@@ -44,13 +44,13 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>FacebookAppID</key>
-	<string>380615018626574</string>
+	<string>327064487357152</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb380615018626574</string>
+				<string>fb327064487357152</string>
 			</array>
 		</dict>
 	</array>
