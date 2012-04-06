@@ -20,22 +20,34 @@ This SDK includes several sample applications.  Each includes a Xcode project yo
 
 * Hackbook:  legacy sample that runs unmodified against the deprecated Facebook api.  This is used to verify backwards compatibility of the SDK.  Do not base new code off this sample.
 
-Templates
+Framework
 ===============
 
-This SDK installs a template for new iOS projects that want to use the framework.  To use the template:
+This SDK installs a framework for you to include in iOS projects.  The framework is installed at "~/Library/Developer/FacebookSDK/FBiOSSDK.framework".
 
-* Go to https://developers.facebook.com/apps and create a Facebook application.  Record the "App ID" number from your application.
+Xcode provides several ways to add a framework to your project.  Here is one:
 
-* Create a new project in Xcode
+* In your project left-pane, choose "Project explorer" in the top left.
 
-* In "Choose a template for your new project:", under iOS select the "FacebookSDK" tab, and choose the "Facebook App" template.
+* Select your target at the top.
 
-* Click "Next".
+* In the next pane, choose the target (not the project).
 
-* In "Choose options for your new project", set "Facebook App Id" to the "App ID" value you recorded in the first step.  Fill out the rest of the options as appropriate for your application.
+* Click the "Build Phases" tab.
 
-* Click "Next".
+* Expand "Link Binary With Libraries" and click the "+" in the bottom left.
+
+* Click "Add Other".
+
+* Press Shift-Command-G, and type "~/Library/Developer/FacebookSDK".
+
+* Select the FBiOSSDK.framework and click "Open".
+
+* In the project left-pane, you can drag the FBiOSSDK.framework to the "Frameworks" group.
+
+When you are including framework headers in your project, prefix them with "FBiOSSDK", as in:
+
+* #import <FBiOSSDK/FacebookSDK.h>
 
 Debugging
 ===============
