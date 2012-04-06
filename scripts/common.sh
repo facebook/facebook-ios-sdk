@@ -34,7 +34,7 @@ if [ $(dirname $0) != "$FB_SDK_SCRIPT" ]; then
 
   # Path to sample files for Facebook SDK
   FB_SDK_SAMPLES=$FB_SDK_ROOT/samples
-  
+
   # Path to template files for Facebook SDK
   FB_SDK_TEMPLATES=$FB_SDK_ROOT/templates
 
@@ -94,16 +94,18 @@ if [ -z $FB_SDK_ENV ]; then
   test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)
 
   # < XCode 4.3.1
-  if [ ! -x $XCODEBUILD ]; then
+  if [ ! -x "$XCODEBUILD" ]; then
     # XCode from app store
     XCODEBUILD=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
   fi
 
- echo $XCODEBUILD
-  
-  # PackageMaker is not typically in $PATH
-  test -n "$PACKAGEMAKER" \
-    || PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+  if [ ! -x "$PACKAGEMAKER" ]; then
+    PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+  fi
+
+  if [ ! -x "$PACKAGEMAKER" ]; then
+    PACKAGEMAKER=/Applications/PackageMaker.app/Contents/MacOS/PackageMaker
+  fi
 fi
 
 # Increment depth every time we . this file.  At the end of any script
