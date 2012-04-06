@@ -17,6 +17,8 @@
 #import "FBError.h"
 #import "FBSession.h"
 #import "FBRequest.h"
+#import "Controls/FBProfilePictureView.h"
+#import "Controls/FBPlacesPickerView.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

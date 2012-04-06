@@ -1,0 +1,19 @@
+Just Login sample
+
+Demonstrates how to use the FBSession object to login to Facebook and manage access tokens.
+
+Build Requirements
+iOS 4.0 SDK
+
+Runtime Requirements
+iPhone OS 4.0 or later
+
+Using the Sample
+Install the Facebook iOS SDK.
+Launch the JustLoginSample project using Xcode from the
+<iOS SDK>/samples/JustLoginSample directory.
+
+Changes from Previous Versions
+1.0 - First release.
+
+Copyright (c) 2012 Facebook
