@@ -158,4 +158,16 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
                                      HTTPMethod:(NSString*)HTTPMethod
                               completionHandler:(FBRequestHandler)handler;
 
+// request*
+//
+// Summary:
+// Helper methods used to create common request objects which can be used to create single or batch connections
+//
+//   session:              - the session object representing the identity of the
+//                         Facebook user making the request; nil implies an
+//                         unauthenticated request; default=nil
++ (FBRequest*)requestMeForSession:(FBSession*)session;
+
++ (FBRequest*)requestMyFriendsForSession:(FBSession*)session;
+
 @end

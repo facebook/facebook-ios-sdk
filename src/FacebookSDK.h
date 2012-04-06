@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2012 Facebook/Users/jacl/src/facebook-ios-sdk-private/src/FacebookSDK.h
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,20 @@
  * limitations under the License.
  */
 
-#import "FBError.h"
+// core
 #import "FBSession.h"
 #import "FBRequest.h"
+#import "FBError.h"
+
+// controls
 #import "FBProfilePictureView.h"
 #import "FBPlacesPickerView.h"
+
+// graph
+#import "FBGraphPerson.h"
+#import "FBGraphPlace.h"
+#import "FBGraphLocation.h"
+#import "NSDictionary+FBGraphObject.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

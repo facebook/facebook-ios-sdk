@@ -17,6 +17,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
 #import "FBSession.h"
+#import "FBGraphPlace.h"
 
 @class FBPlacesPickerView;
 
@@ -26,7 +27,7 @@
 
 // Informs the delegate that a place has been picked
 - (void) placesPicker:(FBPlacesPickerView*)placesPicker
-    didPickPlace:(NSDictionary*)place;
+    didPickPlace:(NSDictionary<FBGraphPlace>*)place;
 
 @end
 

@@ -717,6 +717,7 @@ typedef enum FBRequestConnectionState {
         if (!itemError && [result isKindOfClass:[NSDictionary class]]) {
             NSDictionary *resultDictionary = (NSDictionary *)result;
             body = [resultDictionary objectForKey:@"body"];
+            [body treatAsGraphObject];
         }
 
         if ([self isInvalidSessionError:itemError]) {

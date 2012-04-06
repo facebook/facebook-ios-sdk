@@ -16,8 +16,9 @@
 
 #import "ViewController.h"
 #import "AppDelegate.h"
+#import <FBiOSSDK/FBGraphPlace.h>
 
-@interface ViewController () <CLLocationManagerDelegate>
+@interface ViewController () <CLLocationManagerDelegate, FBPlacesPickerActionDelegate>
 
 @property (strong, nonatomic) CLLocationManager* locationManager;
 
@@ -56,6 +57,17 @@
             }
         ];
     }
+}
+
+- (void) placesPicker:(FBPlacesPickerView*)placesPicker
+         didPickPlace:(NSDictionary<FBGraphPlace>*)place {
+    // we'll use logging to show the simple typed property access to place and location info
+    NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
+          place.name,
+          place.location.city,
+          place.location.state,
+          place.location.latitude,
+          place.location.longitude);
 }
 
 - (IBAction)onClickManual:(id)sender 
@@ -107,6 +119,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.placesPickerView.delegate = self;
     [self refresh];
 }
 

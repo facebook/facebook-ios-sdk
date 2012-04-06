@@ -139,6 +139,22 @@ static NSString *const kDefaultHTTPMethod = @"GET";
     return [request connectionWithCompletionHandler:handler];
 }
 
++ (FBRequest*)requestMeForSession:(FBSession*)session {
+    return [[[FBRequest alloc] initWithSession:session
+                                     graphPath:@"me"]
+            autorelease];
+}
+
++ (FBRequest*)requestMyFriendsForSession:(FBSession*)session {
+    return [[[FBRequest alloc] initWithSession:session
+                                     graphPath:@"me/friends"
+                                    parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                @"id,name,username,first_name,last_name", @"fields",
+                                                nil]
+                                    HTTPMethod:nil]
+            autorelease];
+}
+
 @end
 
 // ----------------------------------------------------------------------------
@@ -294,3 +310,12 @@ static NSString *const kDefaultHTTPMethod = @"GET";
 }
 
 @end
+
+// BUG:
+// a dummy function, referencing another dummy in NSDictionary+FBGraphObject.m avoiding the need
+// for applications to use the -all_load or -force_load linker flags
+// http://stackoverflow.com/questions/6820778/linking-objective-c-categories-in-a-static-library
+void BUG_MITIGATION_LINK_CATEGORY();
+void BUG_MITIGATION() {
+    BUG_MITIGATION_LINK_CATEGORY();
+}

@@ -19,6 +19,7 @@
 #import "FBURLConnection.h"
 #import "SBJSON.h"
 #import "FBSubtitledTableViewCell.h"
+#import "NSDictionary+FBGraphObject.h"
 
 static const NSInteger FBPlacesDefaultMaxCount = 100;
 static const NSInteger FBPlacesDefaultRadius = 1000; // 1km
@@ -350,8 +351,9 @@ static const NSString* FBPlacesQueryString =
 - (void)tableView:(UITableView *)tableView 
     didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary* dataItem = [self.placesList objectAtIndex:indexPath.row];
+    NSDictionary<FBGraphPlace> *dataItem = [self.placesList objectAtIndex:indexPath.row];
     if (self.delegate) {
+        [dataItem treatAsGraphObject];
         [self.delegate placesPicker:self didPickPlace:dataItem];
     }
 }

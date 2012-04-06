@@ -17,7 +17,7 @@
 #import "MPViewController.h"
 
 #import "MPAppDelegate.h"
-#import <FBiOSSDK/FBProfilePictureView.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
 @interface MPViewController ()
 
@@ -62,35 +62,31 @@
         // valid account UI
         
         // Once logged in, get "my" information.
-        FBRequestConnection *newConnection = 
-        [FBRequest connectionWithSession: appDelegate.session 
-                               graphPath:@"me" 
-                       completionHandler:
-         ^(FBRequestConnection *connection, id result, NSError *error) {
-             
-             // Request completed...
-             
-             if (connection != self.requestConnection) {
-                 // not the completion we were waiting for...
-                 return;
-             }
-             
-             self.requestConnection = nil;
-             NSString *text, *fbid;
-             if (error) {
-                 text = error.localizedDescription;
-                 fbid = nil;   // default profile pic
-             } else {
-                 NSDictionary *dictionary = (NSDictionary *)result;        
-                 NSString *firstName = (NSString *)[dictionary objectForKey:@"first_name"];
-                 text = [NSString stringWithFormat:@"Yo %@, make this app yours!", firstName];
-                 fbid = (NSString *)[dictionary objectForKey:@"id"];
-             }
-             
-             self.labelFirstName.text = text;
-             profilePic.userID = fbid;
-             
-         }];
+        FBRequest *me = [FBRequest requestMeForSession:appDelegate.session];
+        FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
+        [newConnection addRequest:me
+                completionHandler: ^(FBRequestConnection *connection, 
+                                     NSDictionary<FBGraphPerson> *my, // expecting a person here
+                                     NSError *error) {             
+                    // Request completed...
+                    if (connection != self.requestConnection) {
+                        // not the completion we were waiting for...
+                        return;
+                    }
+                    
+                    self.requestConnection = nil;
+                    NSString *text = nil, *fbid = nil;
+                    if (!error) {
+                        text = [NSString stringWithFormat:@"Yo %@, make this app yours!", my.first_name];
+                        fbid = my.id;
+                    } else {
+                        text = error.localizedDescription;
+                        fbid = nil;   // default profile pic
+                    }  
+                    
+                    self.labelFirstName.text = text;
+                    profilePic.userID = fbid;
+                }];
         
         // If there's an outstanding connection, just cancel
         [self.requestConnection cancel];
