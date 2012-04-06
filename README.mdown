@@ -5,26 +5,37 @@ This open source iOS library allows you to integrate Facebook into your iOS appl
 
 Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Getting Started
-===============
-
-See our [iOS Tutorial](https://developers.facebook.com/docs/guides/mobile/ios/) for a tutorial to get you up and running.
-
-See our [iOS SDK Reference](https://developers.facebook.com/docs/reference/iossdk/) for more information on the SDK methods and protocols.
-
 Sample Applications
 ===============
 
-This SDK comes with a sample application that demonstrates authorization, making API calls, and invoking a dialog, to guide you in development.
+This SDK includes several sample applications.  Each includes a Xcode project you can use to build and run the sample.  By default the samples are installed to ~/Documents/FacebookSDKSamples.
 
-To build and run the sample application with Xcode:
+* JustLoginSample:  demonstrates login via FBSession.
 
-* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting samples/Hackbook/Hackbook.xcodeproj.
+* JustRequestSample:  demonstrates making a request of Facebook via FBRequest and FBRequestSession.
 
-* Verify your compiler settings by checking the menu items under _Project_->_Set Active SDK_ and _Project_->_Set Active Executable_. For most developers, the defaults should be OK. Note that if you compile against a version of the iOS SDK that does not support multitasking, not all features of the Facebook SDK may be available. See the "Debugging" section below for more information.
+* ProfilePictureSample:  demonstrates using the FBPrilfePictureView control.
 
-* Finally, select _Build_->_Build and Run_. This should compile the application and launch it.
+* PlacesPickerSample:  demonstrates using the FBPlacesPickerView control.
 
+* Hackbook:  legacy sample that runs unmodified against the deprecated Facebook api.  This is used to verify backwards compatibility of the SDK.  Do not base new code off this sample.
+
+Templates
+===============
+
+This SDK installs a template for new iOS projects that want to use the framework.  To use the template:
+
+* Go to https://developers.facebook.com/apps and create a Facebook application.  Record the "App ID" number from your application.
+
+* Create a new project in Xcode
+
+* In "Choose a template for your new project:", under iOS select the "FacebookSDK" tab, and choose the "Facebook App" template.
+
+* Click "Next".
+
+* In "Choose options for your new project", set "Facebook App Id" to the "App ID" value you recorded in the first step.  Fill out the rest of the options as appropriate for your application.
+
+* Click "Next".
 
 Debugging
 ===============
@@ -41,7 +52,7 @@ The Facebook Application version 3.2.3 or higher will support single sign-on. Us
 
 * During single sign-on, the Facebook application isn't redirecting back to my application after a user authorizes it. What's wrong?
 
-Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).
+Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).  This is handled automatically by the template if you enter the correct Facebook App Id when creating the project.
 
 * After upgrading to Xcode 4 the sample app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
 

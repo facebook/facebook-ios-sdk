@@ -119,7 +119,7 @@ typedef enum FBRequestConnectionState {
         andNameAttachments:(NSMutableDictionary *)attachments;
 
 - (void)addRequest:(FBRequestMetadata *)metadata
-           toBatch:(NSArray *)batch
+           toBatch:(NSMutableArray *)batch
       includeToken:(BOOL)includeToken
        attachments:(NSDictionary *)attachments;
 
@@ -135,6 +135,9 @@ typedef enum FBRequestConnectionState {
 
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error;
+
+- (id)parseJSONOrBool:(NSString *)utf8
+                error:(NSError **)error;
 
 - (void)completeDeprecatedWithData:(NSData *)data
                            results:(NSArray *)results
@@ -445,7 +448,7 @@ typedef enum FBRequestConnectionState {
 // corresponding token to each JSON request.
 //
 - (void)addRequest:(FBRequestMetadata *)metadata
-           toBatch:(NSArray *)batch
+           toBatch:(NSMutableArray *)batch
       includeToken:(BOOL)includeToken
        attachments:(NSDictionary *)attachments
 {
@@ -487,6 +490,8 @@ typedef enum FBRequestConnectionState {
     if ([attachmentNames length]) {
         [requestElement setObject:attachmentNames forKey:kBatchAttachmentKey];
     }
+
+    [batch addObject:requestElement];
 }
 
 - (BOOL)isAttachment:(id)item
@@ -564,48 +569,93 @@ typedef enum FBRequestConnectionState {
     self.urlResponse = (NSHTTPURLResponse *)response;
 }
 
+//
+// If there is one request, the JSON is the response.
+// If there are multiple requests, the JSON has an array of dictionaries whose
+// body property is the response.
+//   [{ "code":200,
+//      "body":"JSON-response-as-a-string" },
+//    { "code":200,
+//      "body":"JSON-response-as-a-string" }]
+//
+// In both cases, this function returns an NSArray containing the results.
+// The NSArray looks just like the multiple request case except the body
+// value is converted from a string to parsed JSON.
+//
 - (NSArray *)parseJSONResponse:(NSData *)data
                          error:(NSError **)error
 {
-    SBJSON *parser = [[SBJSON alloc] init];
-    
     // Graph API can return "true" or "false", which is not valid JSON.
     // Translate that before asking JSON parser to look at it.
     NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    NSString *parseUTF8;
-    
-    if ([responseUTF8 isEqualToString:@"false"]) {
-        *error = [self errorWithCode:FBErrorRequestConnectionApi
+    NSArray *results = nil;
+    id response = [self parseJSONOrBool:responseUTF8 error:error];
+
+    if (*error) {
+        // no-op
+    } else if ([self.requests count] == 1) {
+        // response is the entry, so put it in a dictionary under "body" and add
+        // that to array of responses.
+        NSMutableDictionary *result = [[[NSMutableDictionary alloc] init] autorelease];
+        [result setObject:[NSNumber numberWithInt:200] forKey:@"code"];
+        [result setObject:response forKey:@"body"];
+
+        NSMutableArray *mutableResults = [[[NSMutableArray alloc] init] autorelease];
+        [mutableResults addObject:result];
+        results = mutableResults;
+    } else if ([response isKindOfClass:[NSArray class]]) {
+        // response is the array of responses, but the body element of each needs
+        // to be decoded from JSON.
+        NSMutableArray *mutableResults = [[[NSMutableArray alloc] init] autorelease];
+        for (id item in response) {
+            if (![item isKindOfClass:[NSDictionary class]]) {
+                [mutableResults addObject:item];
+            } else {
+                NSDictionary *itemDictionary = (NSDictionary *)item;
+                NSMutableDictionary *result = [[[NSMutableDictionary alloc] init] autorelease];
+                for (NSString *key in [itemDictionary keyEnumerator]) {
+                    if ([key isEqualToString:@"body"]) {
+                        id value = [itemDictionary objectForKey:key];
+                        id body = [self parseJSONOrBool:value error:error];
+                        [result setObject:body forKey:key];
+                    } else {
+                        [result setObject:[itemDictionary objectForKey:key] forKey:key];
+                    }
+                }
+                [mutableResults addObject:result];
+            }
+        }
+        results = mutableResults;
+    } else {
+        *error = [self errorWithCode:FBErrorProtocolMismatch
                           statusCode:200
-                  parsedJSONResponse:NO];
-    } else if ([responseUTF8 isEqualToString:@"true"]) {
+                  parsedJSONResponse:results];
+    }
+
+    [responseUTF8 release];
+    return results;
+}
+
+- (id)parseJSONOrBool:(NSString *)utf8
+                error:(NSError **)error
+{
+    NSString *parseUTF8;
+
+    if ([utf8 isEqualToString:@"false"]) {
+        parseUTF8 = @"{\"error\":\"false\"}";
+    } else if ([utf8 isEqualToString:@"true"]) {
         parseUTF8 = @"{}";
     } else {
-        parseUTF8 = responseUTF8;
+        parseUTF8 = utf8;
     }
 
     id parsed = nil;
     if (!(*error)) {
+        SBJSON *parser = [[SBJSON alloc] init];
         parsed = [parser objectWithString:parseUTF8 error:error];
+        [parser release];
     }
-
-    [responseUTF8 release];
-    [parser release];
-
-    NSArray *results;
-    if (*error) {
-        results = nil;
-    } else if ([self.requests count] == 1) {
-        NSMutableArray *mutable = [[[NSMutableArray alloc] init] autorelease];
-        [mutable addObject:parsed];
-        results = mutable;
-    } else if ([parsed isKindOfClass:[NSArray class]]) {
-        results = (NSArray *)parsed;
-    } else {
-        results = nil;
-    }
-
-    return results;
+    return parsed;
 }
 
 - (void)completeDeprecatedWithData:(NSData *)data
@@ -613,6 +663,11 @@ typedef enum FBRequestConnectionState {
                            orError:(NSError *)error
 {
     id result = [results objectAtIndex:0];
+    if ([result isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *resultDictionary = (NSDictionary *)result;
+        result = [resultDictionary objectForKey:@"body"];
+    }
+
     id<FBRequestDelegate> delegate = [self.deprecatedRequest delegate];
 
     if (!error) {
@@ -657,11 +712,17 @@ typedef enum FBRequestConnectionState {
         id result = error ? nil : [results objectAtIndex:i];
         NSError *itemError = error ? error : [self errorFromResult:result];
 
+        id body = nil;
+        if (!itemError && [result isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *resultDictionary = (NSDictionary *)result;
+            body = [resultDictionary objectForKey:@"body"];
+        }
+
         if ([self isInvalidSessionError:itemError]) {
             [metadata.request.session invalidate];
         }
 
-        metadata.completionHandler(self, result, itemError);
+        metadata.completionHandler(self, body, itemError);
     }
 }
 
@@ -669,7 +730,7 @@ typedef enum FBRequestConnectionState {
 {
     if ([idResult isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = (NSDictionary *)idResult;
-        
+
         if ([dictionary valueForKey:@"error"] ||
             [dictionary valueForKey:@"error_code"] ||
             [dictionary valueForKey:@"error_msg"] ||
@@ -681,8 +742,13 @@ typedef enum FBRequestConnectionState {
             return [self errorWithCode:FBErrorRequestConnectionApi
                             statusCode:200
                     parsedJSONResponse:idResult];
+        }
 
-            //return [self checkConnectionError:nil statusCode:200 parsedJSONResponse:idResult];
+        NSNumber *code = [dictionary valueForKey:@"code"];
+        if (code) {
+            return [self checkConnectionError:nil
+                                   statusCode:[code intValue]
+                           parsedJSONResponse:idResult];
         }
     }
 
