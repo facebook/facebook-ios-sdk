@@ -47,10 +47,9 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 //
 @interface FBRequest : NSObject {
 @private
+    FBRequestHandler      _handler;
     id<FBRequestDelegate> _delegate;
     NSString*             _url;
-    NSString*             _httpMethod;
-    NSMutableDictionary*  _params;
     NSURLConnection*      _connection;
     NSMutableData*        _responseText;
 #pragma GCC diagnostic push
@@ -106,14 +105,13 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 // as well as to set or make modifications prior to calls to start.
 
 // instance readonly properties
-@property(readonly) NSMutableDictionary *parameters;
-@property(readonly) NSMutableURLRequest *URLRequest;
+@property(nonatomic, retain, readonly) NSMutableDictionary *parameters;
 
 // instance readwrite properties
-@property(readwrite, retain) FBSession *session;
-@property(readwrite, retain) NSString *graphPath;
-@property(readwrite, retain) NSString *restMethod;
-@property(readwrite, retain) NSString *HTTPMethod;
+@property(nonatomic, retain) FBSession *session;
+@property(nonatomic, copy) NSString *graphPath;
+@property(nonatomic, copy) NSString *restMethod;
+@property(nonatomic, copy) NSString *HTTPMethod;
 
 // instance methods
 
@@ -151,11 +149,11 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 + (FBRequestConnection*)connectionWithGraphPath:(NSString*)graphPath
                                 completionHandler:(FBRequestHandler)handler;
 
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)
++ (FBRequestConnection*)connectionWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                               completionHandler:(FBRequestHandler)handler;
 
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)
++ (FBRequestConnection*)connectionWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                                      parameters:(NSDictionary*)parameters
                                      HTTPMethod:(NSString*)HTTPMethod

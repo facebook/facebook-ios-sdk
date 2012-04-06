@@ -19,20 +19,11 @@
 // up-front decl's
 @class FBRequest;
 @class FBRequestConnection;
+enum FBRequestConnectionState;
 
 typedef void (^FBRequestHandler)(FBRequestConnection *connection, 
                                  id result,
                                  NSError *error);
-
-// NSError domains and keys
-extern NSString *const FBiOSSDKDomain;
-
-// BOOL-style user keys for NSError, if present, value is always YES
-extern NSString *const FBRequestConnectionCancelledKey;
-extern NSString *const FBRequestConnectionApiErrorKey;
-extern NSString *const FBRequestConnectionTransportErrorKey;
-extern NSString *const FBRequestConnectionInvalidBatchKey;
-extern NSString *const FBRequestConnectionInvalidRequestKey;
 
 // FBRequestConnection class
 //
@@ -42,7 +33,10 @@ extern NSString *const FBRequestConnectionInvalidRequestKey;
 // FBRequestConnection encapsulates the concerns of a single communication
 // (e.g. starting and canceling a connection, batching.)
 //
-@interface FBRequestConnection : NSObject
+@interface FBRequestConnection : NSObject {
+@private
+    NSMutableURLRequest *_urlRequest;
+}
 
 // creating a request
 
@@ -51,16 +45,18 @@ extern NSString *const FBRequestConnectionInvalidRequestKey;
 // Summary:
 // FBRequestConnection objects are used to issue one or more requests as a
 // single request/response connection with Facebook. For a single request, the
-// useual method for creating an FBRequestConnection object is to call one of
+// usual method for creating an FBRequestConnection object is to call one of
 // the start* methods on FBRequest. However, it is allowable to init an
 // FBRequestConnection object directly, and call addRequest to add one or more
 // request objects to the connection, before calling start.
 //     
 - (id)init;
+- (id)initWithTimeout:(NSTimeInterval)timeout;
 
 // properties
 //
-@property(readonly) NSHTTPURLResponse *URLResponse; 
+@property(nonatomic, retain, readwrite) NSMutableURLRequest *urlRequest;
+@property(nonatomic, retain, readonly) NSHTTPURLResponse *urlResponse; 
 
 // instance methods
 

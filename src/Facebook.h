@@ -206,30 +206,23 @@ enum {
 @property(nonatomic,retain) NSMutableData* responseText;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-@property(nonatomic,readonly) FBRequestState state;
+@property(nonatomic) FBRequestState state;
 #pragma GCC diagnostic pop
-@property(nonatomic,readonly) BOOL sessionDidExpire;
+@property(nonatomic) BOOL sessionDidExpire;
 
 /**
  * Error returned by the server in case of request's failure (or nil otherwise).
  */
 @property(nonatomic,retain) NSError* error;
 
+- (BOOL) loading;
 
-+ (NSString*)serializeURL:(NSString *)baseUrl
-                   params:(NSDictionary *)params;
++ (NSString *)serializeURL:(NSString *)baseUrl
+                    params:(NSDictionary *)params;
 
 + (NSString*)serializeURL:(NSString *)baseUrl
                    params:(NSDictionary *)params
                httpMethod:(NSString *)httpMethod;
-
-+ (FBRequest*)getRequestWithParams:(NSMutableDictionary *) params
-                        httpMethod:(NSString *) httpMethod
-                          delegate:(id<FBRequestDelegate>)delegate
-                        requestURL:(NSString *) url;
-- (BOOL) loading;
-
-- (void) connect;
 
 @end
 

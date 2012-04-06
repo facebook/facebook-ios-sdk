@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import "FBError.h"
 #import "FBSession.h"
 #import "FBRequest.h"
 

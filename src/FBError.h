@@ -19,6 +19,20 @@
 // The error domain of all error codes returned by the Facebook SDK
 extern NSString *const FBiOSSDKDomain;
 
+// ----------------------------------------------------------------------------
+// Keys in the userInfo NSDictionary of NSError where you can find additional
+// information about the error.  All are optional.
+
+// The key for an inner NSError.
+extern NSString *const FBErrorInnerErrorKey;
+
+// The key for parsed JSON response from the server.
+extern NSString *const FBErrorParsedJSONResponseKey;
+
+// The key for HTTP status code.
+extern NSString *const FBErrorHTTPStatusCodeKey;
+
+// ----------------------------------------------------------------------------
 // Error codes returned by the Facebook SDK in NSError.  These are
 // valid only in the scope of FBiOSSDKDomain.
 typedef enum FBErrorCode {
@@ -31,6 +45,22 @@ typedef enum FBErrorCode {
     
     // A login attempt failed
     FBErrorLoginFailedOrCancelled,
+
+    // The graph API returned an error for this operation.
+    FBErrorRequestConnectionApi,
+
+    // The operation failed because the server returned an unexpected
+    // response.  You can get this error if you are not using the most
+    // recent SDK, or if you set your application's migration settings
+    // incorrectly for the version of the SDK you are using.
+    //
+    // If this occurs on the current SDK with proper app migration
+    // settings, you may need to try changing to one request per batch.
+    FBErrorProtocolMismatch,
+
+    // Non-success HTTP status code was returned from the operation.
+    FBErrorHTTPError,
+
 } FBErrorCode;
 
 // The key in the userInfo NSDictionary of NSError where you can find
