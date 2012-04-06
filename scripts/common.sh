@@ -32,6 +32,9 @@ if [ $(dirname $0) != "$FB_SDK_SCRIPT" ]; then
   # Path to source files for Facebook SDK
   FB_SDK_SRC=$FB_SDK_ROOT/src
 
+  # Path to sample files for Facebook SDK
+  FB_SDK_SAMPLES=$FB_SDK_ROOT/samples
+  
   # Path to template files for Facebook SDK
   FB_SDK_TEMPLATES=$FB_SDK_ROOT/templates
 
@@ -86,17 +89,18 @@ if [ -z $FB_SDK_ENV ]; then
     exit 1
   }
 
-  # < XCode 4.3.1
-  XCODEBUILD=/Developer/usr/bin/xcodebuild
-  if [ ! -x XCODEBUILD ]; then
-    # XCode from app store
-    XCODEBUILD=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
-  fi
-
   test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
   test -n "$LIPO"         || LIPO=$(which lipo)
   test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)
 
+  # < XCode 4.3.1
+  if [ ! -x $XCODEBUILD ]; then
+    # XCode from app store
+    XCODEBUILD=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
+  fi
+
+ echo $XCODEBUILD
+  
   # PackageMaker is not typically in $PATH
   test -n "$PACKAGEMAKER" \
     || PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
