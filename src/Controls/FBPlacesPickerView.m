@@ -27,6 +27,10 @@ static const NSString* FBPlacesQueryString =
     @"%@/search?type=place&limit=%d&center=%lf,%lf&distance=%d&access_token=%@";
 
 @interface FBPlacesPickerView() <UITableViewDataSource, UITableViewDelegate>
+{
+    BOOL _imageFetchedSynchronously;
+    UIImage* _genericPinImage;
+}
 
 @property (retain, nonatomic) UITableView* tableView;
 @property (retain, nonatomic) UIActivityIndicatorView* spinner;
@@ -36,7 +40,8 @@ static const NSString* FBPlacesQueryString =
 
 - (void)initialize;
 - (void)gatherPlacesList;
-- (void)assignPictureToCellForIndex:(NSIndexPath*)indexPath;
+- (void)assignPictureToCellForIndex:(NSIndexPath*)indexPath 
+    tableCell:(UITableViewCell*)cell;
 
 @end
 
@@ -68,6 +73,7 @@ static const NSString* FBPlacesQueryString =
     [_spinner release];
     [_placesList release];
     [_cdnURLMap release];
+    [_genericPinImage release];
     
     [_outstandingConnection cancel]; // Okay to cancel even if not outstanding
     [_outstandingConnection release];
@@ -132,6 +138,7 @@ static const NSString* FBPlacesQueryString =
 - (void)initialize
 {
     // Default values
+    _genericPinImage = [[UIImage imageNamed:@"fb_generic_place.png"] retain];
     self.cdnURLMap = [[[NSMutableDictionary alloc] init] autorelease];
     self.placesList = [[[NSMutableArray alloc] init] autorelease];
     self.maxCount = FBPlacesDefaultMaxCount;
@@ -181,7 +188,7 @@ static const NSString* FBPlacesQueryString =
         // superseded by FBRequest
         url = [url stringByAppendingFormat:@"&q=%@", self.searchText];
     }
-        
+     
     FBURLConnectionHandler connHandler = 
         ^(FBURLConnection* connection, 
             NSError* error, 
@@ -271,8 +278,10 @@ static const NSString* FBPlacesQueryString =
 }
 
 - (void)assignPictureToCellForIndex:(NSIndexPath*)indexPath
+    tableCell:(UITableViewCell*)cell
 {
     static NSString* urlTemplate = @"%@/%@/picture";
+    cell.imageView.image = _genericPinImage;
     
     NSDictionary* dataItem = [self.placesList objectAtIndex:indexPath.row];
     if (!dataItem) {
@@ -285,7 +294,6 @@ static const NSString* FBPlacesQueryString =
         return;
     }
     
-    // Check in cache
     NSURL* url = [self.cdnURLMap objectForKey:placeId];
     if (!url) {
         NSString* urlStr = 
@@ -294,6 +302,7 @@ static const NSString* FBPlacesQueryString =
     }
     
     // Let the FBURLConnection cache kick in here
+    _imageFetchedSynchronously = YES;
     [[[FBURLConnection alloc] 
         initWithURL:url 
         completionHandler:^(FBURLConnection *connection, 
@@ -302,20 +311,26 @@ static const NSString* FBPlacesQueryString =
             NSData *responseData) 
         {
             if (!error) {
-                if (![self.cdnURLMap objectForKey:placeId]) {
+                if (![self.cdnURLMap objectForKey:placeId] && 
+                    response != nil) {
                     [self.cdnURLMap setObject:response.URL forKey:placeId];
                 }
 
                 UIImage* image = [UIImage imageWithData:responseData];
-                UITableViewCell* cell = 
-                    [self.tableView cellForRowAtIndexPath:indexPath];
+                UITableViewCell* currentCell = cell;
+                if (!_imageFetchedSynchronously) {
+                    currentCell = 
+                        [self.tableView cellForRowAtIndexPath:indexPath];
+                }
                 
-                if (cell) {
+                if (currentCell) {
                     // Only if the cell is still visible
-                    cell.imageView.image = image;
+                    currentCell.imageView.image = image;
                 }
             }
         }] autorelease];
+    _imageFetchedSynchronously = NO;
+    
 }
 
 #pragma mark - Table View protocol implementation
@@ -368,9 +383,8 @@ static const NSString* FBPlacesQueryString =
     
     cell.title = name;
     cell.subtitle = subtitle;
-    cell.imageView.image = [UIImage imageNamed:@"fb_generic_place.png"];
 
-    [self assignPictureToCellForIndex:indexPath];    
+    [self assignPictureToCellForIndex:indexPath tableCell:cell];
     return cell;
 }
 

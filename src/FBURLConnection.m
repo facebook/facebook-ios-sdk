@@ -16,6 +16,9 @@
 
 #import "FBURLConnection.h"
 #import "FBError.h"
+#import "FBDataDiskCache.h"
+
+static NSArray* _cdnHosts;
 
 @interface FBURLConnection ()
 
@@ -23,6 +26,8 @@
 @property (nonatomic, retain) NSMutableData *data;
 @property (nonatomic, copy) FBURLConnectionHandler handler;
 @property (nonatomic, retain) NSURLResponse *response;
+
+- (BOOL)isCDNURL:(NSURL *)url;
 
 @end
 
@@ -32,6 +37,18 @@
 @synthesize data = _data;
 @synthesize handler = _handler;
 @synthesize response = _response;
+
+#pragma mark - Lifecycle
+
++ (void)initialize
+{
+    if (_cdnHosts == nil) {
+        _cdnHosts = [[NSArray arrayWithObjects:
+            @"akamaihd.net", 
+            @"fbcdn.net", 
+            nil] retain];
+    }
+}
 
 - (FBURLConnection *)initWithURL:(NSURL *)url
                completionHandler:(FBURLConnectionHandler)handler
@@ -44,9 +61,21 @@
                    completionHandler:(FBURLConnectionHandler)handler
 {
     if (self = [super init]) {
-        _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        _data = [[NSMutableData alloc] init];
-        self.handler = handler;
+        // Check if this url is cached
+        NSURL* url = request.URL;
+        NSData* cachedData = [[FBDataDiskCache sharedCache] dataForURL:url];
+        if (cachedData) {
+            // TODO: It seems wrong to call this within init.  There are cases
+            // with UI where this is not ideal.  We should talk about this.
+            handler(self, nil, nil, cachedData);  
+        } else {    
+            _connection = [[NSURLConnection alloc] 
+                initWithRequest:request 
+                delegate:self];
+            _data = [[NSMutableData alloc] init];
+            
+            self.handler = handler;
+        }
     }
     return self;
 }
@@ -111,11 +140,60 @@ didReceiveResponse:(NSURLResponse *)response
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    NSURL* dataURL = self.response.URL;
+    if ([self isCDNURL:dataURL]) {
+        // Cache this data
+        [[FBDataDiskCache sharedCache] setData:self.data forURL:dataURL];
+    }
+
     @try {
         self.handler(self, nil, self.response, self.data);
     } @finally {
         self.handler = nil;
     }
+}
+
+-(NSURLRequest *)connection:(NSURLConnection *)connection
+            willSendRequest:(NSURLRequest *)request
+           redirectResponse:(NSURLResponse *)redirectResponse
+{
+    if (redirectResponse) {
+        NSURL* redirectURL = request.URL;
+        
+        // Check for cache and short-circuit
+        NSData* cachedData = 
+            [[FBDataDiskCache sharedCache] dataForURL:redirectURL];
+        if (cachedData) {
+            @try {
+                // Fake a response
+                NSURLResponse* cacheResponse = 
+                    [[NSURLResponse alloc] initWithURL:redirectURL
+                        MIMEType:@"application/octet-stream" 
+                        expectedContentLength:cachedData.length 
+                        textEncodingName:@"utf8"];
+                self.handler(self, nil, cacheResponse, cachedData);
+            } @finally {
+                self.handler = nil;
+            }
+
+            [connection cancel];
+            return nil;
+        }
+    }
+    
+    return request;
+}
+
+- (BOOL)isCDNURL:(NSURL *)url
+{
+    NSString* urlHost = url.host;
+    for (NSString* host in _cdnHosts) {
+        if ([urlHost hasSuffix:host]) {
+            return YES;
+        }
+    }
+
+    return NO;
 }
 
 @end
