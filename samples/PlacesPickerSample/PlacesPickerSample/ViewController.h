@@ -22,7 +22,10 @@
 
 @property (retain, nonatomic) IBOutlet FBPlacesPickerView *placesPickerView;
 
-- (IBAction)onClickRefresh:(id)sender;
+- (IBAction)onClickManual:(id)sender;
+- (IBAction)onClickSanFrancisco:(id)sender;
+- (IBAction)onClickSeattle:(id)sender;
+
 - (IBAction)filterNone:(id)sender;
 - (IBAction)filterRestaurants:(id)sender;
 - (IBAction)filterLocalBusinesses:(id)sender;

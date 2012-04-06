@@ -29,6 +29,7 @@
 {
     [_window release];
     [_viewController release];
+    [_session release];
     [super dealloc];
 }
 

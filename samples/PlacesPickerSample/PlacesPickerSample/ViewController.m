@@ -46,11 +46,9 @@
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session.isValid) {
         self.placesPickerView.session = appDelegate.session;
-        
-        self.locationManager = [[[CLLocationManager alloc] init] autorelease];
-        self.locationManager.delegate = self;
 
-        [self.locationManager startUpdatingLocation];
+        // Default to Seattle
+        [self onClickSeattle:nil];
     } else {
         [appDelegate.session loginWithCompletionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
@@ -72,33 +70,50 @@
     }
 }
 
-- (IBAction)onClickRefresh:(id)sender 
+- (IBAction)onClickManual:(id)sender 
 {
-    [self refresh];
+    self.locationManager = [[[CLLocationManager alloc] init] autorelease];
+    self.locationManager.delegate = self;
+
+    [self.locationManager startUpdatingLocation];
+}
+
+- (IBAction)onClickSanFrancisco:(id)sender 
+{
+    self.placesPickerView.locationCoordinate = 
+        CLLocationCoordinate2DMake(37.7750, -122.4183);
+    [self.placesPickerView loadData];
+}
+
+- (IBAction)onClickSeattle:(id)sender 
+{
+    self.placesPickerView.locationCoordinate = 
+        CLLocationCoordinate2DMake(47.6097, -122.3331);
+    [self.placesPickerView loadData];
 }
 
 - (IBAction)filterNone:(id)sender 
 {
     self.placesPickerView.searchText = nil;
-    [self refresh];
+    [self.placesPickerView loadData];
 }
 
 - (IBAction)filterRestaurants:(id)sender 
 {
     self.placesPickerView.searchText = @"restaurant";
-    [self refresh];
+    [self.placesPickerView loadData];
 }
 
 - (IBAction)filterLocalBusinesses:(id)sender 
 {
     self.placesPickerView.searchText = @"business";
-    [self refresh];
+    [self.placesPickerView loadData];
 }
 
 - (IBAction)filterHotels:(id)sender 
 {
     self.placesPickerView.searchText = @"hotel";
-    [self refresh];
+    [self.placesPickerView loadData];
 }
 
 - (void)viewDidLoad
