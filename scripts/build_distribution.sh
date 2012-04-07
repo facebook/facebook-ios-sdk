@@ -53,6 +53,10 @@ mkdir -p $FB_SDK_BUILD_PACKAGE_SAMPLES
 \cp -R $FB_SDK_SAMPLES/ $FB_SDK_BUILD_PACKAGE_SAMPLES \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
 
+# Don't include Hackbook in the .pkg since it uses src files that are not
+# included in .pkg
+\rm -R $FB_SDK_BUILD_PACKAGE_SAMPLES/Hackbook
+
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
