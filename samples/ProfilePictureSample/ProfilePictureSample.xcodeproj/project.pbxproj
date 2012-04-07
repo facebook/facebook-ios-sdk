@@ -17,6 +17,8 @@
 		B98686D0151D0B3700616412 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686CF151D0B3700616412 /* ViewController.m */; };
 		B98686D3151D0B3700616412 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D1151D0B3700616412 /* ViewController_iPhone.xib */; };
 		B98686D6151D0B3700616412 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D4151D0B3700616412 /* ViewController_iPad.xib */; };
+		E2507CF9152FB6E4009D048D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2507CF8152FB6E4009D048D /* libsqlite3.dylib */; };
+		E2507CFC152FB6ED009D048D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2507CFB152FB6ED009D048D /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +37,8 @@
 		B98686CF151D0B3700616412 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B98686D2151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		B98686D5151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		E2507CF8152FB6E4009D048D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		E2507CFB152FB6ED009D048D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +46,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2507CFC152FB6ED009D048D /* QuartzCore.framework in Frameworks */,
+				E2507CF9152FB6E4009D048D /* libsqlite3.dylib in Frameworks */,
 				B98686BD151D0B3700616412 /* UIKit.framework in Frameworks */,
 				B98686BF151D0B3700616412 /* Foundation.framework in Frameworks */,
 				B98686C1151D0B3700616412 /* CoreGraphics.framework in Frameworks */,
@@ -72,6 +78,8 @@
 		B98686BB151D0B3700616412 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E2507CFB152FB6ED009D048D /* QuartzCore.framework */,
+				E2507CF8152FB6E4009D048D /* libsqlite3.dylib */,
 				B90C8A9D152E4B1600C94CD8 /* FBiOSSDK.framework */,
 				B98686BC151D0B3700616412 /* UIKit.framework */,
 				B98686BE151D0B3700616412 /* Foundation.framework */,
