@@ -16,7 +16,8 @@
 
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
-#import "FBFrictionlessRequestSettings.h"
+
+@class FBFrictionlessRequestSettings;
 
 @protocol FBSessionDelegate;
 
