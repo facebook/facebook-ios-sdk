@@ -19,8 +19,8 @@
 
 @interface JLViewController () 
 
-@property (retain, nonatomic) IBOutlet UIButton *buttonLoginLogout;
-@property (retain, nonatomic) IBOutlet UITextView *textNoteOrLink;
+@property (strong, nonatomic) IBOutlet UIButton *buttonLoginLogout;
+@property (strong, nonatomic) IBOutlet UITextView *textNoteOrLink;
 
 - (IBAction)buttonClickHandler:(id)sender;
 - (void)updateForSessionChange;
@@ -59,7 +59,7 @@
         [textNoteOrLink setText:@"Login to create a link to fetch account data"];
         
         // create a fresh session object in case of subsequent login
-        appDelegate.session = [[[FBSession alloc] init] autorelease]; 
+        appDelegate.session = [[FBSession alloc] init]; 
         if (appDelegate.session.status == FBSessionStateLoadedValidToken) {
             // even though we had a cached token, we need to login to make the session usable
             [appDelegate.session loginWithCompletionHandler:^(FBSession *session, 
@@ -136,12 +136,6 @@
     } else {
         return YES;
     }
-}
-
-- (void)dealloc {
-    [buttonLoginLogout release];
-    [textNoteOrLink release];
-    [super dealloc];
 }
 
 #pragma mark -

@@ -42,6 +42,7 @@
 
 - (void)dealloc
 {
+    self.userID = nil;
     self.imageView = nil;
     self.connection = nil;
 

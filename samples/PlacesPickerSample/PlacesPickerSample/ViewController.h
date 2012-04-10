@@ -20,7 +20,7 @@
 
 @interface ViewController : UIViewController
 
-@property (retain, nonatomic) IBOutlet FBPlacesPickerView *placesPickerView;
+@property (strong, nonatomic) IBOutlet FBPlacesPickerView *placesPickerView;
 
 - (IBAction)onClickManual:(id)sender;
 - (IBAction)onClickSanFrancisco:(id)sender;

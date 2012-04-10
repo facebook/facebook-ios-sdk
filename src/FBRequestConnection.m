@@ -250,6 +250,7 @@ typedef enum FBRequestConnectionState {
                                                            completionHandler:handler
                                                               batchEntryName:name];
     [self.requests addObject:metadata];
+    [metadata release];
 }
 
 - (FBRequestConnection *)start

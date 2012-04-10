@@ -41,21 +41,14 @@
 
 #pragma mark Template generated code
 
-- (void)dealloc
-{
-    [_window release];
-    [_viewController release];
-    [super dealloc];
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[JLViewController alloc] initWithNibName:@"JLViewController_iPhone" bundle:nil] autorelease];
+        self.viewController = [[JLViewController alloc] initWithNibName:@"JLViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[[JLViewController alloc] initWithNibName:@"JLViewController_iPad" bundle:nil] autorelease];
+        self.viewController = [[JLViewController alloc] initWithNibName:@"JLViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

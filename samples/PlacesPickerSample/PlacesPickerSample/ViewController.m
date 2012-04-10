@@ -30,17 +30,6 @@
 @synthesize placesPickerView = _placesPickerView;
 @synthesize locationManager = _locationManager;
 
-#pragma mark - Lifecycle
-
-- (void)dealloc
-{
-    [_locationManager release];
-    [_placesPickerView release];
-    [super dealloc];
-}
-
-#pragma mark -
-
 - (void)refresh
 {
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
@@ -63,7 +52,6 @@
                         cancelButtonTitle:@"OK" 
                         otherButtonTitles:nil];
                     [alertView show];
-                    [alertView release];
                 }
             }
         ];
@@ -72,7 +60,7 @@
 
 - (IBAction)onClickManual:(id)sender 
 {
-    self.locationManager = [[[CLLocationManager alloc] init] autorelease];
+    self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
 
     [self.locationManager startUpdatingLocation];

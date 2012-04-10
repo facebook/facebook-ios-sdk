@@ -82,6 +82,7 @@ static NSArray* _cdnHosts;
 
 - (void)dealloc
 {
+    [_response release];
     [_connection release];
     [_data release];
     [_handler release];
@@ -172,6 +173,7 @@ didReceiveResponse:(NSURLResponse *)response
                         expectedContentLength:cachedData.length 
                         textEncodingName:@"utf8"];
                 self.handler(self, nil, cacheResponse, cachedData);
+                [cacheResponse release];
             } @finally {
                 self.handler = nil;
             }
