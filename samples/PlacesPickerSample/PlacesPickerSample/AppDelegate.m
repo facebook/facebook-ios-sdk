@@ -23,18 +23,6 @@
 @synthesize viewController = _viewController;
 @synthesize session = _session;
 
-#pragma mark - Lifecycle
-
-- (void)dealloc
-{
-    [_window release];
-    [_viewController release];
-    [_session release];
-    [super dealloc];
-}
-
-#pragma mark =
-
 // Necessary for FB login to work
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication annotation:(id)annotation 
@@ -56,13 +44,13 @@
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
     [FBPlacesPickerView class];
     
-    self.session = [[[FBSession alloc] init] autorelease];
+    self.session = [[FBSession alloc] init];
     
-    self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil] autorelease];
+        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil] autorelease];
+        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

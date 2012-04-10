@@ -33,10 +33,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
 // FBRequestConnection encapsulates the concerns of a single communication
 // (e.g. starting and canceling a connection, batching.)
 //
-@interface FBRequestConnection : NSObject {
-@private
-    NSMutableURLRequest *_urlRequest;
-}
+@interface FBRequestConnection : NSObject
 
 // creating a request
 

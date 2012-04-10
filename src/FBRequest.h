@@ -47,7 +47,6 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 //
 @interface FBRequest : NSObject {
 @private
-    FBRequestHandler      _handler;
     id<FBRequestDelegate> _delegate;
     NSString*             _url;
     NSURLConnection*      _connection;
