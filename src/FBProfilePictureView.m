@@ -157,7 +157,9 @@
                              completionHandler:handler] autorelease];
     } else {
         NSString* blankImageName = 
-            [NSString stringWithFormat:@"fb_blank_profile_%@", self.imageType];
+            [NSString 
+                stringWithFormat:@"FBiOSSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
+                self.imageType];
 
         self.imageView.image = [UIImage imageNamed:blankImageName];
     }

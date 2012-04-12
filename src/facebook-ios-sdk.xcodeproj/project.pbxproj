@@ -109,9 +109,9 @@
 		84E2DA27153492DE007F886C /* FBGraphPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphPlace.h; sourceTree = "<group>"; };
 		84E2DA2B1535342F007F886C /* FBGraphLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphLocation.h; sourceTree = "<group>"; };
 		84F43FFD15194E4800CEECD5 /* FBRequestConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequestConnection.h; sourceTree = "<group>"; };
+		85D0ED201537781D00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facebook_ios_sdk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		AE3FC32211F19C18001C05F3 /* FBDialog.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBDialog.bundle; sourceTree = "<group>"; };
 		AEA93B0211D5293B000A4545 /* FBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequest.h; sourceTree = "<group>"; };
 		AEA93B0311D5293B000A4545 /* FBRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBRequest.m; sourceTree = "<group>"; };
 		AEA93B0611D5293B000A4545 /* FBLoginDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLoginDialog.h; sourceTree = "<group>"; };
@@ -135,7 +135,6 @@
 		B90B5433152A4621003E33BC /* FBPlacesPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPlacesPickerView.m; sourceTree = "<group>"; };
 		B966ADFA152D020E005FC07B /* FBSubtitledTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSubtitledTableViewCell.h; sourceTree = "<group>"; };
 		B966ADFB152D020E005FC07B /* FBSubtitledTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSubtitledTableViewCell.m; sourceTree = "<group>"; };
-		B966ADFF152D0C0A005FC07B /* fb_generic_place.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fb_generic_place.png; path = Resources/fb_generic_place.png; sourceTree = "<group>"; };
 		B96F15E2152B927E00A52896 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C6E1301525219600E46808 /* FBCacheIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBCacheIndex.h; sourceTree = "<group>"; };
 		B9C6E1311525219600E46808 /* FBCacheIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBCacheIndex.m; sourceTree = "<group>"; };
@@ -152,10 +151,6 @@
 		B9CC137215266B9000443948 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		B9DC7F3E151AB56100DF1158 /* FBProfilePictureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBProfilePictureView.h; sourceTree = "<group>"; };
 		B9DC7F3F151AB56100DF1158 /* FBProfilePictureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBProfilePictureView.m; sourceTree = "<group>"; };
-		B9FA078915225AE700F7AD8B /* fb_blank_profile_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fb_blank_profile_large.png; path = Resources/fb_blank_profile_large.png; sourceTree = "<group>"; };
-		B9FA078A15225AE700F7AD8B /* fb_blank_profile_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fb_blank_profile_normal.png; path = Resources/fb_blank_profile_normal.png; sourceTree = "<group>"; };
-		B9FA078B15225AE700F7AD8B /* fb_blank_profile_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fb_blank_profile_small.png; path = Resources/fb_blank_profile_small.png; sourceTree = "<group>"; };
-		B9FA078C15225AE700F7AD8B /* fb_blank_profile_square.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fb_blank_profile_square.png; path = Resources/fb_blank_profile_square.png; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfacebook_ios_sdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E23E5A091521161900A011A8 /* FBError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBError.h; sourceTree = "<group>"; };
 		E23E5A0A1521161900A011A8 /* FBError.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBError.m; sourceTree = "<group>"; };
@@ -231,9 +226,8 @@
 		08FB77AEFE84172EC02AAC07 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
-				B9DC7F37151AB53D00DF1158 /* Resources */,
+				85D0ED201537781D00D88664 /* FBiOSSDKResources.bundle */,
 				AEA93B1311D52959000A4545 /* JSON */,
-				AE3FC32211F19C18001C05F3 /* FBDialog.bundle */,
 				84E0CA07153619D400778DA4 /* Facebook.h */,
 				84E0CA08153619D400778DA4 /* Facebook.m */,
 				84E0CA03153618E500778DA4 /* FacebookSDK.h */,
@@ -325,18 +319,6 @@
 				B9CBC54815254CD40036AA71 /* FacebookSDKTests-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		B9DC7F37151AB53D00DF1158 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B966ADFF152D0C0A005FC07B /* fb_generic_place.png */,
-				B9FA078915225AE700F7AD8B /* fb_blank_profile_large.png */,
-				B9FA078A15225AE700F7AD8B /* fb_blank_profile_normal.png */,
-				B9FA078B15225AE700F7AD8B /* fb_blank_profile_small.png */,
-				B9FA078C15225AE700F7AD8B /* fb_blank_profile_square.png */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

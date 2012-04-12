@@ -139,7 +139,7 @@ static const NSString* FBPlacesQueryString =
 - (void)initialize
 {
     // Default values
-    _genericPinImage = [[UIImage imageNamed:@"fb_generic_place.png"] retain];
+    _genericPinImage = [[UIImage imageNamed:@"FBiOSSDKResources.bundle/FBPlacesPickerView/images/fb_generic_place.png"] retain];
     self.cdnURLMap = [[[NSMutableDictionary alloc] init] autorelease];
     self.placesList = [[[NSMutableArray alloc] init] autorelease];
     self.maxCount = FBPlacesDefaultMaxCount;

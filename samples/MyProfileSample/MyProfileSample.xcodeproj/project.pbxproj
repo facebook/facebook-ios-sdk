@@ -19,6 +19,7 @@
 		5F6AF1B41532B0BE00DDBD75 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */; };
 		5F6AF1B61532B0C600DDBD75 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */; };
 		5F6AF20F1533752700DDBD75 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */; };
+		85D0ED221537790E00D88664 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,6 +40,7 @@
 		5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+		85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 		5F6AF18C1532A37B00DDBD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */,
 				5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */,
 				5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */,
 				5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */,
@@ -166,6 +169,7 @@
 				5F6AF1981532A37B00DDBD75 /* InfoPlist.strings in Resources */,
 				5F6AF1A41532A37B00DDBD75 /* MPViewController_iPhone.xib in Resources */,
 				5F6AF1A71532A37B00DDBD75 /* MPViewController_iPad.xib in Resources */,
+				85D0ED221537790E00D88664 /* FBiOSSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
