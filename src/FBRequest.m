@@ -310,12 +310,3 @@ static NSString *const kDefaultHTTPMethod = @"GET";
 }
 
 @end
-
-// BUG:
-// a dummy function, referencing another dummy in NSDictionary+FBGraphObject.m avoiding the need
-// for applications to use the -all_load or -force_load linker flags
-// http://stackoverflow.com/questions/6820778/linking-objective-c-categories-in-a-static-library
-void BUG_MITIGATION_LINK_CATEGORY();
-void BUG_MITIGATION() {
-    BUG_MITIGATION_LINK_CATEGORY();
-}

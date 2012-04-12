@@ -27,35 +27,26 @@
 #import "FBGraphPerson.h"
 #import "FBGraphPlace.h"
 #import "FBGraphLocation.h"
-#import "NSDictionary+FBGraphObject.h"
+#import "FBGraphObject.h"           // + design summary for graph component-group
 
 ////////////////////////////////////////////////////////////////////////////////
 
 /* 
- Summary: this diff summarizes changes to the Facebook iOS SDK that we are
- considering for the next few months. This is a header-only diff, and is not
- a complete description of our thinking, but is meant to provide context
- sufficient for review by others.
- 
- Files:
- FacebookSDK.h   - this file, high-level description of the effort and goals
- FBSession.h     - example spec for FBSession class 
- 
- Goals:
+ Summary: this header summarizes the structure and goals of the Facebook iOS
+ SDK. Goals:
  * Leverage and work well with modern features of iOS (e.g. blocks, ARC, etc.)
  * Patterned after best of breed iOS frameworks (e.g. naming, pattern-use, etc.)
  * Light and/or commodity integration experience is painless & easy to describe
- * Deep support for at least one "key scenario" (e.g. publishing OG app)
+ * Deep support for a growing list of scenarios over time
  
  Notes on approaches:
- 1) We are using our key scenario (owned by Eddie O'Neil) to drive 
-    prioritization of work
- 2) We will be building-atop/refactoring the existing iOS SDK implementation
- 3) We have prototyped an incremental approach where we can choose to maintain
+ 1) We use a key scenario to drive prioritization of work for a given update
+ 2) We building-atop/refactoring, rather than replace, existing iOS SDK releases
+ 3) We use take an incremental approach where we can choose to maintain
     as little or as much compatibility with the existing SDK needed
     3.a) and so we will be developing to this approach
-    3.b) and then at push-time we will decide when/what to break on a
-         feature by feature basis
+    3.b) and then at push-time for a release we will decide when/what to break
+         on a feature by feature basis
  4) Some light but critical infrastructure is needed to support both the goals
     and the execution of this change (e.g. a build/package/deploy process)
  
@@ -66,16 +57,14 @@
  such (e.g. FBOpenGraphEntity, FBLocalEntityCache, etc.)
  
  As we add features, it will no longer be appropriate to host all functionality
- in the Facebook class. We may (presently undecided) keep the Facebook class to 
- aid the ultra-simple use cases, and to perhaps preserve compatibility with the 
- existing SDK. However, it will cease to be the central design point of the 
- and will become a lighter-weight helper class, that wraps other public objects.
+ in the Facebook class, though it will be maintained for some time for migration
+ purposes. Instead functionality lives in related collections of classes.
  
                *------------* *----------*  *----------------* *---*
-  Scenario --> |FBPersonView| |FBLikeView|  |FBLocationFinder| | F |
+  Scenario --> |FBPersonView| |FBLikeView|  | FBPlacesPicker | | F |
                *------------* *----------*  *----------------* | a |
                *-------------------*  *----------*  *--------* | c |
- Component --> | FBOpenGraphEntity |  | FBDialog |  | FBView | | e |
+ Component --> |   FBGraphObject   |  | FBDialog |  | FBView | | e |
                *-------------------*  *----------*  *--------* | b |
                *---------* *---------* *---------------------* | o |
       Core --> |FBSession| |FBRequest| |Utilities (e.g. JSON)| | o |
@@ -86,8 +75,8 @@
  layers loosely organize the SDK into *Core Objects* necessary to interface 
  with Facebook, higher-level *Framework Components* that feel like natural
  extensions to existing frameworks such as UIKit and Foundation, but which
- reuse surface broadly applicable Facebook-specific behavior, and finally the
- *Scenario Objects*, which provide deeper turnkey capibilities for useful 
+ surface behavior broadly applicable to Facebook, and finally the
+ *Scenario Objects*, which provide deeper turn-key capibilities for useful 
  mobile scenarios.
  
  Use example (low barrier use case):

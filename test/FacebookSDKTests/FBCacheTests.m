@@ -153,7 +153,7 @@ static FBCacheIndex* initTempCacheIndex(
 
     __block FBCacheEntityInfo *info = nil;
     dispatch_sync(cacheIndex.databaseQueue, ^{
-        info = [cacheIndex _readEntryFromDatabase:@"test1"];
+        info = [cacheIndex performSelector:@selector(_readEntryFromDatabase:) withObject:@"test1"];
     });
 
     STAssertNotNil(info, @"Index not written to disk!");

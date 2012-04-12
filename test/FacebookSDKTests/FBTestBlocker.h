@@ -15,20 +15,15 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "FBGraphLocation.h"
-#import "FBGraphObject.h"
 
-// FBGraphPlace protocol (graph accessor)
+// FBTestBlocker class
 //
 // Summary:
-// represents commonly used properties of a Facebook place object, may be used to access an 
-// NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
-// enable typed access to Facebook graph objects
-@protocol FBGraphPlace<FBGraphObject>
+// Lightweight helper to make unit tests more linear and readable; currently supports blocks,
+// can be extended to support delegates as needed
+@interface FBTestBlocker : NSObject
 
-@property (copy, nonatomic) NSString *id;
-@property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *category;
-@property (retain, nonatomic) NSDictionary<FBGraphLocation> *location;
+- (void)signal;
+- (void)wait;
 
 @end

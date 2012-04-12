@@ -23,6 +23,7 @@
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "Facebook.h"
+#import "FBGraphObject.h"
 
 // URL construction constants
 NSString *const kGraphURL = @"https://graph.facebook.com";
@@ -716,8 +717,7 @@ typedef enum FBRequestConnectionState {
         id body = nil;
         if (!itemError && [result isKindOfClass:[NSDictionary class]]) {
             NSDictionary *resultDictionary = (NSDictionary *)result;
-            body = [resultDictionary objectForKey:@"body"];
-            [body treatAsGraphObject];
+            body = [FBGraphObject graphObjectWrappingDictionary:[resultDictionary objectForKey:@"body"]];
         }
 
         if ([self isInvalidSessionError:itemError]) {
