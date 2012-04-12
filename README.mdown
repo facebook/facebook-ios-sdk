@@ -3,7 +3,7 @@ Facebook iOS SDK
 
 This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
-Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
+The Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
 Getting Started
 ===============
@@ -19,7 +19,9 @@ Setup Your Environment
 
 * Pull this SDK from GitHub:
 
-       git clone git://github.com/facebook/facebook-ios-sdk.git
+       git clone git@github.com:lolay/facebook-ios-sdk.git
+
+* Instal SBJSON
 
 Sample Applications
 -------------------
