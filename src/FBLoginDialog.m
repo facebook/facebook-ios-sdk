@@ -81,10 +81,18 @@
     }
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+#if TARGET_OS_IPHONE
+- (void)webView:(FBWebView *)webView didFailLoadWithError:(NSError *)error {
+#elif TARGET_OS_MAC
+- (void)webView:(WebView *)webView resource:(id)identifier didFailLoadingWithError:(NSError *)error fromDataSource:(WebDataSource *)dataSource {
+#endif
     if (!(([error.domain isEqualToString:@"NSURLErrorDomain"] && error.code == -999) ||
           ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
+#if TARGET_OS_IPHONE        
         [super webView:webView didFailLoadWithError:error];
+#elif TARGET_OS_MAC
+        [super webView:webView resource:identifier didFailLoadingWithError:error fromDataSource:dataSource];
+#endif
         if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
             [_loginDelegate fbDialogNotLogin:NO];
         }

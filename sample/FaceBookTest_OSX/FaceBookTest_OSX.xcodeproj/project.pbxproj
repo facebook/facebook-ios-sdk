@@ -1,0 +1,329 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F716429A150EEA77003376EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7164299150EEA77003376EF /* Cocoa.framework */; };
+		F71642A4150EEA77003376EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F71642A2150EEA77003376EF /* InfoPlist.strings */; };
+		F71642A6150EEA78003376EF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F71642A5150EEA77003376EF /* main.m */; };
+		F71642AA150EEA78003376EF /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = F71642A8150EEA78003376EF /* Credits.rtf */; };
+		F71642AD150EEA78003376EF /* FBTAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F71642AC150EEA78003376EF /* FBTAppDelegate.m */; };
+		F71642B0150EEA78003376EF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = F71642AE150EEA78003376EF /* MainMenu.xib */; };
+		F78B97F61516D3DF00585045 /* FacebookOSXSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F78B97F51516D3DF00585045 /* FacebookOSXSDK.framework */; };
+		F7B9EE6E150EF53100ED00AF /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7B9EE6D150EF53100ED00AF /* WebKit.framework */; };
+		F7C80D0D15164DAA005C2949 /* FBTMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		F7164295150EEA77003376EF /* FaceBookTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FaceBookTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F7164299150EEA77003376EF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		F716429C150EEA77003376EF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		F716429D150EEA77003376EF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F716429E150EEA77003376EF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F71642A1150EEA77003376EF /* FaceBookTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FaceBookTest-Info.plist"; sourceTree = "<group>"; };
+		F71642A3150EEA77003376EF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F71642A5150EEA77003376EF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F71642A7150EEA78003376EF /* FaceBookTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FaceBookTest-Prefix.pch"; sourceTree = "<group>"; };
+		F71642A9150EEA78003376EF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		F71642AB150EEA78003376EF /* FBTAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBTAppDelegate.h; sourceTree = "<group>"; };
+		F71642AC150EEA78003376EF /* FBTAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBTAppDelegate.m; sourceTree = "<group>"; };
+		F71642AF150EEA78003376EF /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		F78B97F51516D3DF00585045 /* FacebookOSXSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = file; name = FacebookOSXSDK.framework; path = ../../src/build/Release/FacebookOSXSDK.framework; sourceTree = "<group>"; };
+		F7B9EE6D150EF53100ED00AF /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		F7BCA20715163D39007801A4 /* Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
+		F7C80D0B15164DAA005C2949 /* FBTMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTMainViewController.h; sourceTree = "<group>"; };
+		F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTMainViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F7164292150EEA77003376EF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F78B97F61516D3DF00585045 /* FacebookOSXSDK.framework in Frameworks */,
+				F7B9EE6E150EF53100ED00AF /* WebKit.framework in Frameworks */,
+				F716429A150EEA77003376EF /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F716428A150EEA77003376EF = {
+			isa = PBXGroup;
+			children = (
+				F78B97F51516D3DF00585045 /* FacebookOSXSDK.framework */,
+				F716429F150EEA77003376EF /* FaceBookTest */,
+				F7164298150EEA77003376EF /* Frameworks */,
+				F7164296150EEA77003376EF /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F7164296150EEA77003376EF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F7164295150EEA77003376EF /* FaceBookTest.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F7164298150EEA77003376EF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F7164299150EEA77003376EF /* Cocoa.framework */,
+				F716429B150EEA77003376EF /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F716429B150EEA77003376EF /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F7B9EE6D150EF53100ED00AF /* WebKit.framework */,
+				F716429C150EEA77003376EF /* AppKit.framework */,
+				F716429D150EEA77003376EF /* CoreData.framework */,
+				F716429E150EEA77003376EF /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		F716429F150EEA77003376EF /* FaceBookTest */ = {
+			isa = PBXGroup;
+			children = (
+				F7C80D0B15164DAA005C2949 /* FBTMainViewController.h */,
+				F7C80D0C15164DAA005C2949 /* FBTMainViewController.m */,
+				F71642AB150EEA78003376EF /* FBTAppDelegate.h */,
+				F71642AC150EEA78003376EF /* FBTAppDelegate.m */,
+				F71642AE150EEA78003376EF /* MainMenu.xib */,
+				F71642A0150EEA77003376EF /* Supporting Files */,
+			);
+			path = FaceBookTest;
+			sourceTree = "<group>";
+		};
+		F71642A0150EEA77003376EF /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F7BCA20715163D39007801A4 /* Prefix.pch */,
+				F71642A1150EEA77003376EF /* FaceBookTest-Info.plist */,
+				F71642A2150EEA77003376EF /* InfoPlist.strings */,
+				F71642A5150EEA77003376EF /* main.m */,
+				F71642A7150EEA78003376EF /* FaceBookTest-Prefix.pch */,
+				F71642A8150EEA78003376EF /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F7164294150EEA77003376EF /* FaceBookTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F71642B3150EEA78003376EF /* Build configuration list for PBXNativeTarget "FaceBookTest" */;
+			buildPhases = (
+				F7164291150EEA77003376EF /* Sources */,
+				F7164292150EEA77003376EF /* Frameworks */,
+				F7164293150EEA77003376EF /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FaceBookTest;
+			productName = FaceBookTest;
+			productReference = F7164295150EEA77003376EF /* FaceBookTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F716428C150EEA77003376EF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Code No Evil LLC";
+			};
+			buildConfigurationList = F716428F150EEA77003376EF /* Build configuration list for PBXProject "FaceBookTest_OSX" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = F716428A150EEA77003376EF;
+			productRefGroup = F7164296150EEA77003376EF /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F7164294150EEA77003376EF /* FaceBookTest */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F7164293150EEA77003376EF /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F71642A4150EEA77003376EF /* InfoPlist.strings in Resources */,
+				F71642AA150EEA78003376EF /* Credits.rtf in Resources */,
+				F71642B0150EEA78003376EF /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F7164291150EEA77003376EF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F71642A6150EEA78003376EF /* main.m in Sources */,
+				F71642AD150EEA78003376EF /* FBTAppDelegate.m in Sources */,
+				F7C80D0D15164DAA005C2949 /* FBTMainViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		F71642A2150EEA77003376EF /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F71642A3150EEA77003376EF /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F71642A8150EEA78003376EF /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F71642A9150EEA78003376EF /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		F71642AE150EEA78003376EF /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F71642AF150EEA78003376EF /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F71642B1150EEA78003376EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		F71642B2150EEA78003376EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		F71642B4150EEA78003376EF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FaceBookTest/FaceBookTest-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
+				IBC_PLUGIN_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/**";
+				INFOPLIST_FILE = "FaceBookTest/FaceBookTest-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F71642B5150EEA78003376EF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FaceBookTest/FaceBookTest-Prefix.pch";
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/**";
+				IBC_PLUGIN_SEARCH_PATHS = "$(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/**";
+				INFOPLIST_FILE = "FaceBookTest/FaceBookTest-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F716428F150EEA77003376EF /* Build configuration list for PBXProject "FaceBookTest_OSX" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F71642B1150EEA78003376EF /* Debug */,
+				F71642B2150EEA78003376EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F71642B3150EEA78003376EF /* Build configuration list for PBXNativeTarget "FaceBookTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F71642B4150EEA78003376EF /* Debug */,
+				F71642B5150EEA78003376EF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F716428C150EEA77003376EF /* Project object */;
+}

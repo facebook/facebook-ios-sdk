@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'facebook-osx-sdk' target in the 'facebook-osx-sdk' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

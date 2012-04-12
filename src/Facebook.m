@@ -246,6 +246,7 @@ static void *finishedContext = @"finishedContext";
     // This minimizes the chance that the user will have to enter his or
     // her credentials in order to authorize the application.
     BOOL didOpenOtherApp = NO;
+#if TARGET_OS_IPHONE
     UIDevice *device = [UIDevice currentDevice];
     if ([device respondsToSelector:@selector(isMultitaskingSupported)] && [device isMultitaskingSupported]) {
         if (tryFBAppAuth) {
@@ -266,7 +267,7 @@ static void *finishedContext = @"finishedContext";
             didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
     }
-    
+#endif    
     // If single sign-on failed, open an inline login dialog. This will require the user to
     // enter his or her credentials.
     if (!didOpenOtherApp) {
@@ -417,11 +418,11 @@ static void *finishedContext = @"finishedContext";
     }
     
     NSDictionary *params = [self parseURLParams:query];
-    NSString *accessToken = [params objectForKey:@"access_token"];
+    NSString *accessToken = [params valueForKey:@"access_token"];
     
     // If the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
-        NSString *errorReason = [params objectForKey:@"error"];
+        NSString *errorReason = [params valueForKey:@"error"];
         
         // If the error response indicates that we should try again using Safari, open
         // the authorization dialog in Safari.
@@ -440,7 +441,7 @@ static void *finishedContext = @"finishedContext";
         // The facebook app may return an error_code parameter in case it
         // encounters a UIWebViewDelegate error. This should not be treated
         // as a cancel.
-        NSString *errorCode = [params objectForKey:@"error_code"];
+        NSString *errorCode = [params valueForKey:@"error_code"];
         
         BOOL userDidCancel =
         !errorCode && (!errorReason || [errorReason isEqualToString:@"access_denied"]);
@@ -449,7 +450,7 @@ static void *finishedContext = @"finishedContext";
     }
     
     // We have an access token, so parse the expiration date.
-    NSString *expTime = [params objectForKey:@"expires_in"];
+    NSString *expTime = [params valueForKey:@"expires_in"];
     NSDate *expirationDate = [NSDate distantFuture];
     if (expTime != nil) {
         int expVal = [expTime intValue];

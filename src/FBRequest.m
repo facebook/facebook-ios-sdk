@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import "FBTypeDefs.h"
 #import "FBRequest.h"
 #import "JSON.h"
 
@@ -85,7 +86,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
+        if (([[params objectForKey:key] isKindOfClass:[FBImage class]])
             ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
             if ([httpMethod isEqualToString:@"GET"]) {
                 NSLog(@"can not use GET to upload a file");
@@ -126,9 +127,9 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [self utfAppendBody:body data:[NSString stringWithFormat:@"--%@\r\n", kStringBoundary]];
     
     for (id key in [_params keyEnumerator]) {
-        
-        if (([[_params objectForKey:key] isKindOfClass:[UIImage class]])
-            ||([[_params objectForKey:key] isKindOfClass:[NSData class]])) {
+
+        if (([[_params valueForKey:key] isKindOfClass:[FBImage class]])
+            ||([[_params valueForKey:key] isKindOfClass:[NSData class]])) {
             
             [dataDictionary setObject:[_params objectForKey:key] forKey:key];
             continue;
@@ -146,9 +147,14 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     if ([dataDictionary count] > 0) {
         for (id key in dataDictionary) {
-            NSObject *dataParam = [dataDictionary objectForKey:key];
-            if ([dataParam isKindOfClass:[UIImage class]]) {
-                NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
+            NSObject *dataParam = [dataDictionary valueForKey:key];
+            if ([dataParam isKindOfClass:[FBImage class]]) {
+#if TARGET_OS_IPHONE                
+                NSData* imageData = UIImagePNGRepresentation((FBImage*)dataParam);
+#elif TARGET_OS_MAC && !TARGET_OS_IPHONE
+                NSBitmapImageRep *bits = [[(FBImage*)dataParam representations] objectAtIndex:0];
+                NSData* imageData = [bits representationUsingType:NSPNGFileType properties:nil];
+#endif
                 [self utfAppendBody:body
                                data:[NSString stringWithFormat:
                                      @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
