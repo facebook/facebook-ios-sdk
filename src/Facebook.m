@@ -121,6 +121,7 @@ static void *finishedContext = @"finishedContext";
     _requestExtendingAccessToken.delegate = nil;
     for (FBRequest* _request in _requests) {
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
+        _request.delegate = nil;
     }
     [_lastAccessTokenUpdate release];
     [_accessToken release];
