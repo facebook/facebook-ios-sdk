@@ -28,6 +28,7 @@
  */
 @interface Facebook : NSObject<FBLoginDialogDelegate,FBRequestDelegate>{
     NSString* _accessToken;
+    NSString* _signedRequest;
     NSDate* _expirationDate;
     id<FBSessionDelegate> _sessionDelegate;
     NSMutableSet* _requests;
@@ -43,6 +44,7 @@
 }
 
 @property(nonatomic, copy) NSString* accessToken;
+@property(nonatomic, copy) NSString* signedRequest;
 @property(nonatomic, copy) NSDate* expirationDate;
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* urlSchemeSuffix;

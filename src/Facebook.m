@@ -55,6 +55,7 @@ static void *finishedContext = @"finishedContext";
 @implementation Facebook
 
 @synthesize    accessToken = _accessToken,
+             signedRequest = _signedRequest,
             expirationDate = _expirationDate,
            sessionDelegate = _sessionDelegate,
                permissions = _permissions,
@@ -124,6 +125,7 @@ static void *finishedContext = @"finishedContext";
     }
     [_lastAccessTokenUpdate release];
     [_accessToken release];
+    [_signedRequest release];
     [_expirationDate release];
     [_requests release];
     [_loginDialog release];
@@ -137,6 +139,7 @@ static void *finishedContext = @"finishedContext";
 
 - (void)invalidateSession {
     self.accessToken = nil;
+    self.signedRequest = nil;
     self.expirationDate = nil;
     
     NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
@@ -460,6 +463,7 @@ static void *finishedContext = @"finishedContext";
     }
     
     [self fbDialogLogin:accessToken expirationDate:expirationDate];
+    self.signedRequest = [params objectForKey:@"signed_request"];
     return YES;
 }
 
