@@ -347,9 +347,10 @@ static void *finishedContext = @"finishedContext";
  * applicationDidBecomeActive: UIApplicationDelegate method.
  */
 - (void)extendAccessToken {
-    if (_requestExtendingAccessToken) {
+    if (_isExtendingAccessToken) {
         return;
     }
+    _isExtendingAccessToken = YES;
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"auth.extendSSOAccessToken", @"method",
                                    nil];
@@ -805,10 +806,12 @@ static void *finishedContext = @"finishedContext";
 // These delegate methods are only called for requests that extendAccessToken initiated
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
+    _isExtendingAccessToken = NO;
     _requestExtendingAccessToken = nil;
 }
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
+    _isExtendingAccessToken = NO;
     _requestExtendingAccessToken = nil;
     NSString* accessToken = [result objectForKey:@"access_token"];
     NSString* expTime = [result objectForKey:@"expires_at"];
