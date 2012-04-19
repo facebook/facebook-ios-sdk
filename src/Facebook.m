@@ -227,6 +227,7 @@ static void *finishedContext = @"finishedContext";
                                    @"user_agent", @"type",
                                    kRedirectURL, @"redirect_uri",
                                    @"touch", @"display",
+                                   @"token,signed_request", @"response_type",
                                    kSDK, @"sdk",
                                    nil];
     
