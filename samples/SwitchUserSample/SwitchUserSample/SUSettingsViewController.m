@@ -67,15 +67,16 @@
 - (void)updateCell:(SUProfileTableViewCell*)cell forSlot:(int)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-    id<FBGraphPerson> user = [userManager getUserInSlot:slot];
+
+    NSString *userID = [userManager getUserIDInSlot:slot];
     
     cell.accessoryType = UITableViewCellAccessoryNone;
-    if (user == nil) {
+    if (userID == nil) {
         cell.userName = @"Empty slot";
         cell.userID = nil;
     } else {
-        cell.userName = user.name;
-        cell.userID = user.id;
+        cell.userName = [userManager getUserNameInSlot:slot];
+        cell.userID = userID;
         if (slot == [userManager currentUserSlot]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
         }
@@ -177,7 +178,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
-    return [userManager getUserInSlot:indexPath.row] != nil;
+    return [userManager getUserIDInSlot:indexPath.row] != nil;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {

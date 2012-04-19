@@ -20,7 +20,8 @@
 
 NSString *const SUInvalidSlotNumber = @"com.facebook.SwitchUserSample:InvalidSlotNumber";
 
-static NSString *const SUUserKeyFormat = @"SUUser%d";
+static NSString *const SUUserIDKeyFormat = @"SUUserID%d";
+static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 
 @implementation SUUserManager
 
@@ -66,24 +67,39 @@ static NSString *const SUUserKeyFormat = @"SUUser%d";
     return session;
 }
 
-- (id<FBGraphPerson>)getUserInSlot:(int)slot {
+- (NSString*)getUserNameInSlot:(int)slot {
     [self validateSlotNumber:slot];
 
-    NSString *key = [NSString stringWithFormat:SUUserKeyFormat, slot];    
+    NSString *key = [NSString stringWithFormat:SUUserNameKeyFormat, slot];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
+    // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
+    //  may have saved only a plain NSDictionary.
     return [defaults objectForKey:key];
 }
 
-- (void)updateUser:(id<FBGraphPerson>)user inSlot:(int)slot {
+- (NSString*)getUserIDInSlot:(int)slot {
     [self validateSlotNumber:slot];
     
-    NSString *key = [NSString stringWithFormat:SUUserKeyFormat, slot];    
+    NSString *key = [NSString stringWithFormat:SUUserIDKeyFormat, slot];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
+    // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
+    //  may have saved only a plain NSDictionary.
+    return [defaults objectForKey:key];
+}
+
+- (void)updateUser:(NSDictionary<FBGraphPerson>*)user inSlot:(int)slot {
+    [self validateSlotNumber:slot];
+
+    NSString *idKey = [NSString stringWithFormat:SUUserIDKeyFormat, slot];
+    NSString *nameKey = [NSString stringWithFormat:SUUserNameKeyFormat, slot];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (user != nil ) {
         NSLog(@"SUUserManager updating slot %d: fbid = %@, name = %@", slot, user.id, user.name);
-        [defaults setObject:user forKey:key];
+        [defaults setObject:user.id forKey:idKey];
+        [defaults setObject:user.name forKey:nameKey];
     } else {
         NSLog(@"SUUserManager clearing slot %d", slot);
 
@@ -96,7 +112,8 @@ static NSString *const SUUserKeyFormat = @"SUUser%d";
         FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
         [tokenCachingStrategy clearToken:nil];
         
-        [defaults removeObjectForKey:key];        
+        [defaults removeObjectForKey:idKey];
+        [defaults removeObjectForKey:nameKey];
     }
     
     [defaults synchronize];
