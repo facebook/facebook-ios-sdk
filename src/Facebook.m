@@ -15,6 +15,7 @@
  */
 
 #import "Facebook.h"
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "JSON.h"
@@ -117,6 +118,8 @@ static void *finishedContext = @"finishedContext";
  * Override NSObject : free the space
  */
 - (void)dealloc {
+    // this is the one case where the delegate is this object
+    _requestExtendingAccessToken.delegate = nil;
     for (FBRequest* _request in _requests) {
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
     }
@@ -352,7 +355,7 @@ static void *finishedContext = @"finishedContext";
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"auth.extendSSOAccessToken", @"method",
                                    nil];
-    [self requestWithParams:params andDelegate:self];
+    _requestExtendingAccessToken = [self requestWithParams:params andDelegate:self];
 }
 
 /**
@@ -807,10 +810,12 @@ static void *finishedContext = @"finishedContext";
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
 }
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
     NSString* accessToken = [result objectForKey:@"access_token"];
     NSString* expTime = [result objectForKey:@"expires_at"];
     
