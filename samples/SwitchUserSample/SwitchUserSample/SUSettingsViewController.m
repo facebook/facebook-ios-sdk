@@ -137,8 +137,15 @@
         return;
     }
     
+    // We assume that the first time a user chooses a slot, they want to do so
+    //  as the currently logged-in user (if any) via SSO, and subsequently we will
+    //  prompt for credentials and ignore SSO. This logic may or may not be appropriate
+    //  for any given app.
+    FBSessionLoginBehavior behavior = [userManager areAllSlotsEmpty] ?
+        FBSessionLoginBehaviorSSOWithFallback :
+        FBSessionLoginBehaviorSuppressSSO;
     FBSession *session = [userManager switchToUserInSlot:slot];
-    [session loginWithBehavior:FBSessionLoginBehaviorSuppressSSO
+    [session loginWithBehavior:behavior
              completionHandler:^(FBSession *session,
                                  FBSessionState status,
                                  NSError *error) {

@@ -57,6 +57,20 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return tokenCachingStrategy;
 }
 
+- (BOOL)isSlotEmpty:(int)slot {
+    return [self getUserIDInSlot:slot] == nil;
+}
+
+- (BOOL)areAllSlotsEmpty {
+    int numSlots = [self maximumUserSlots];
+    for (int i = 0; i < numSlots; ++i) {
+        if ([self isSlotEmpty:i] == NO) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 - (FBSession*)createSessionForSlot:(int)slot {
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
     
