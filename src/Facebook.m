@@ -20,6 +20,7 @@
 #import "FBError.h"
 #import "FBSessionManualTokenCachingStrategy.h"
 #import "JSON.h"
+#import "FBSession+Internal.h"
 
 static NSString* kDialogBaseURL = @"https://m.facebook.com/dialog/";
 static NSString* kGraphBaseURL = @"https://graph.facebook.com/";
@@ -155,13 +156,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     [self.session invalidate];
     [self.tokenCaching clearToken:nil];
     
-    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSArray* facebookCookies = [cookies cookiesForURL:
-                                [NSURL URLWithString:@"http://login.facebook.com"]];
-    
-    for (NSHTTPCookie* cookie in facebookCookies) {
-        [cookies deleteCookie:cookie];
-    }
+    [FBSession deleteFacebookCookies];
     
     // setting to nil also terminates any active request for whitelist
     [_frictionlessRequestSettings updateRecipientCacheWithRecipients:nil]; 

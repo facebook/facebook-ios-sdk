@@ -56,6 +56,18 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
                                        FBSessionState status, 
                                        NSError *error);
 
+
+// FBSessionLoginBehavior enum
+//
+// Summary:
+// Passed to login to indicate whether single-sign-on (SSO) should be attempted
+// before falling back to asking the user for credentials.
+typedef enum _FBSessionLoginBehavior {
+    FBSessionLoginBehaviorSSOWithFallback   = 0,    // Attempt SSO, ask user for credentials if necessary
+    FBSessionLoginBehaviorSSOOnly           = 1,    // Attempt SSO, login fails if SSO fails
+    FBSessionLoginBehaviorSuppressSSO       = 2,    // Do not attempt SSO, ask user for credentials
+} FBSessionLoginBehavior;
+
 // FBSession class
 //
 // Summary:
@@ -124,14 +136,20 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 //
 // Summary:
 // Login using Facebook
-//   WithCompletionHandler   - a block to call with the login result; default=nil
+//   completionHandler   - a block to call with the login result; default=nil
+//   behavior            - control whether to allow/force/prohibit SSO (default
+//                          is FBSessionLoginBehaviorSSOWithFallback)
 //
 // Behavior notes:
 // Login may be called zero or 1 time, and must be called after init, but before 
 // logout or invalidate; calling login at an invalide time results in an exception;
 // if a block is passed to login, it is called each time the sessions status 
 // changes; the block is released when the session transitions to an invalid state
+//
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler;
+
+- (void)loginWithBehavior:(FBSessionLoginBehavior)behavior
+        completionHandler:(FBSessionStatusHandler)handler;
 
 // invalidate
 //

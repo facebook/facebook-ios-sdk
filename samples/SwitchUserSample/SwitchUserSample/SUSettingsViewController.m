@@ -138,9 +138,13 @@
     }
     
     FBSession *session = [userManager switchToUserInSlot:slot];
-    [session loginWithCompletionHandler:^(FBSession *session, 
-                                                      FBSessionState status, 
-                                                      NSError *error) {
+    [session loginWithBehavior:FBSessionLoginBehaviorSuppressSSO
+             completionHandler:^(FBSession *session,
+                                 FBSessionState status,
+                                 NSError *error) {
+        if (error) {
+            [userManager switchToNoActiveUser];
+        }
         [self updateForSessionChangeForSlot:slot];
     }];
 }

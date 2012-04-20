@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIDevice.h>
 #import "FBSession.h"
+#import "FBSession+Internal.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBError.h"
 
@@ -87,6 +88,7 @@ static NSString *FBPLISTAppID = nil;
 // private properties
 @property(readwrite, retain) FBSessionTokenCachingStrategy *tokenCachingStrategy;
 @property(readwrite, copy) FBSessionStatusHandler loginHandler;
+@property(readwrite) FBSessionLoginBehavior loginBehavior;
 @property(readonly) NSString* appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
@@ -219,10 +221,17 @@ static NSString *FBPLISTAppID = nil;
             // changes to static property name variables (e.g. FBisValidPropertyName)
             status = _status,
             accessToken = _accessToken,
-            expirationDate = _expirationDate;
+            expirationDate = _expirationDate,
+            loginBehavior = _loginBehavior;
 
 
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
+    [self loginWithBehavior:FBSessionLoginBehaviorSSOWithFallback completionHandler:handler];
+}
+
+- (void)loginWithBehavior:(FBSessionLoginBehavior)behavior
+    completionHandler:(FBSessionStatusHandler)handler {
+
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
     if (!(self.status == FBSessionStateCreated ||
@@ -235,7 +244,10 @@ static NSString *FBPLISTAppID = nil;
          raise];
     }
     self.loginHandler = handler;
+    self.loginBehavior = behavior;
+
     if (self.status == FBSessionStateCreated) {
+        // Note that authorizeWithFBAppAuth may ignore these, depending on loginBehavior.
         [self authorizeWithFBAppAuth:YES
                           safariAuth:YES];
     } else { // self.status == FBSessionStateLoadedValidToken
@@ -523,6 +535,14 @@ static NSString *FBPLISTAppID = nil;
         [params setValue:_urlSchemeSuffix forKey:@"local_client_id"];
     }
 
+    BOOL trySSO = (self.loginBehavior == FBSessionLoginBehaviorSSOOnly) ||
+        (self.loginBehavior == FBSessionLoginBehaviorSSOWithFallback);
+    BOOL tryFallback = (self.loginBehavior == FBSessionLoginBehaviorSSOWithFallback) ||
+        (self.loginBehavior == FBSessionLoginBehaviorSuppressSSO);
+
+    // To avoid surprises, delete any cookies we currently have.
+    [FBSession deleteFacebookCookies];
+
     // If the device is running a version of iOS that supports multitasking,
     // try to obtain the access token from the Facebook app installed
     // on the device.
@@ -532,7 +552,8 @@ static NSString *FBPLISTAppID = nil;
     // her credentials in order to authorize the application.
     BOOL didOpenOtherApp = NO;
     UIDevice *device = [UIDevice currentDevice];
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
+    if (trySSO &&
+        [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         if (tryFBAppAuth &&
@@ -555,14 +576,27 @@ static NSString *FBPLISTAppID = nil;
         }
     }
 
-    // If single sign-on failed, open an inline login dialog. This will require the user to
-    // enter his or her credentials.
+    // If single sign-on failed, see if we should attempt to fallback
     if (!didOpenOtherApp) {
-        self.loginDialog = [[[FBLoginDialog alloc] initWithURL:loginDialogURL
-                                                  loginParams:params
-                                                     delegate:self]
-                            autorelease];
-        [self.loginDialog show];
+        if (tryFallback) {
+            // open an inline login dialog. This will require the user to enter his or her credentials.
+            self.loginDialog = [[[FBLoginDialog alloc] initWithURL:loginDialogURL
+                                                       loginParams:params
+                                                          delegate:self]
+                                autorelease];
+            [self.loginDialog show];
+        } else {
+            // Can't fallback and SSO failed, so transition to an error state
+            NSError *error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonInlineNotCancelledValue
+                                                         errorCode:nil];
+
+            // state transition, and call the handler if there is one
+            [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+                                              error:error
+                                              token:nil
+                                     expirationDate:nil
+                                        shouldCache:NO];
+        }
     }
 }
 
@@ -734,5 +768,17 @@ static NSString *FBPLISTAppID = nil;
 }
 
 #pragma mark -
+#pragma mark Internal members
 
++ (void)deleteFacebookCookies {
+    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray* facebookCookies = [cookies cookiesForURL:
+                                [NSURL URLWithString:@"http://login.facebook.com"]];
+
+    for (NSHTTPCookie* cookie in facebookCookies) {
+        [cookies deleteCookie:cookie];
+    }
+}
+
+#pragma mark -
 @end
