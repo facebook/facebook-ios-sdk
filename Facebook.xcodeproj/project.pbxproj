@@ -327,6 +327,10 @@
 		0086C9F915434635006B5B39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Facebook.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -345,6 +349,10 @@
 		0086C9FA15434635006B5B39 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD_32_BIT)",
+					armv6,
+				);
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Facebook.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -370,6 +378,7 @@
 				004AFBCE15448AF200FE0E17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		004AFBD015448AFE00FE0E17 /* Build configuration list for PBXLegacyTarget "Facebook-Rake" */ = {
 			isa = XCConfigurationList;
@@ -378,6 +387,7 @@
 				004AFBD215448AFE00FE0E17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		0086C9E515434635006B5B39 /* Build configuration list for PBXProject "Facebook" */ = {
 			isa = XCConfigurationList;
