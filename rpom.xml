@@ -1,0 +1,36 @@
+<project>
+	<name>Facebook iOS library</name>
+	<groupId>com.eharmony.mobile.external</groupId>
+	<version>1.0.1</version>
+	<scm>git</scm>
+	
+	<artifacts>
+		<artifact>
+			<artifactId>facebook</artifactId>
+			<name>Facebook</name>
+			<silenceXcode>true</silenceXcode>
+			<target>
+				<name>Facebook-Universal</name>
+				<configuration>Release</configuration>
+				<buildFolder>Universal</buildFolder>
+			</target>
+		</artifact>
+	</artifacts>
+    
+    <dependencies>
+		<dependency>
+			<groupId>com.eharmony.mobile.external</groupId>
+			<artifactId>sbjson</artifactId>
+			<version>[1.0.1, 1.1.0)</version>
+			<name>SBJSON</name>
+		</dependency>
+        <dependency>
+			<groupId>com.eharmony.mobile.external</groupId>
+			<artifactId>jsonkit</artifactId>
+			<version>[1.2.1, 1.3.0)</version>
+			<name>JSONKit</name>
+		</dependency>
+	</dependencies>
+
+    
+</project>

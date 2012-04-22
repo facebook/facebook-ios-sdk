@@ -15,8 +15,17 @@
  * limitations under the License.
  */
 
+// import relevant json library based on compilation flags
+#if SBJSON == 1
+#import <SBJson/SBJSon.h>
+#endif
+
+#if JSONKIT == 1
+#import <JSONKit/JSONKit.h>
+#endif
+
+
 #import "FBRequest.h"
-#import "SBJSON.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -179,7 +188,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
 
   NSString* responseString = [[NSString alloc] initWithData:data
                                                     encoding:NSUTF8StringEncoding];
-  SBJsonParser *jsonParser = [SBJsonParser new];
+
   if ([responseString isEqualToString:@"true"]) {
     return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
   } else if ([responseString isEqualToString:@"false"]) {
@@ -193,7 +202,15 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
   }
 
 
-  id result = [jsonParser objectWithString:responseString];
+    id result = nil;
+#if JSONKIT == 1
+    JSONDecoder *decoder = [[JSONDecoder alloc] initWithParseOptions: JKParseOptionLooseUnicode];
+    result = [decoder objectWithData:data];
+#endif
+#if SBJSON == 1
+    SBJsonParser *jsonParser = [SBJsonParser new];
+    result = [jsonParser objectWithString:responseString];
+#endif
 
   if (![result isKindOfClass:[NSArray class]]) {
     if ([result objectForKey:@"error"] != nil) {
