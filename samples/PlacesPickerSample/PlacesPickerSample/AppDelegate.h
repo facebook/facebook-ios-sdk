@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FBSession.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
 @class ViewController;
 

@@ -28,6 +28,7 @@
 #import "FBGraphPlace.h"
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"           // + design summary for graph component-group
+#import "FBOpenGraphAction.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 

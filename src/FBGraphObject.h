@@ -100,7 +100,7 @@
 //
 // Summary:
 // The base interface for accessing graph objects (see above documentation for details)
-@protocol FBGraphObject
+@protocol FBGraphObject<NSObject>
 
 - (NSUInteger)count;
 - (id)objectForKey:(id)aKey;

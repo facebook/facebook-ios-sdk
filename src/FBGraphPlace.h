@@ -26,9 +26,9 @@
 // enable typed access to Facebook graph objects
 @protocol FBGraphPlace<FBGraphObject>
 
-@property (copy, nonatomic) NSString *id;
-@property (copy, nonatomic) NSString *name;
-@property (copy, nonatomic) NSString *category;
-@property (retain, nonatomic) NSDictionary<FBGraphLocation> *location;
+@property (retain, nonatomic) NSString *id;
+@property (retain, nonatomic) NSString *name;
+@property (retain, nonatomic) NSString *category;
+@property (retain, nonatomic) id<FBGraphLocation> location;
 
 @end

@@ -20,7 +20,8 @@
 // constants
 NSString *const FBGraphBasePath = @"https://graph.facebook.com";
 
-static NSString *const kDefaultHTTPMethod = @"GET";
+static NSString *const kGetHTTPMethod = @"GET";
+static NSString *const kPostHTTPMethod = @"POST";
 
 // ----------------------------------------------------------------------------
 // FBRequest
@@ -38,7 +39,7 @@ static NSString *const kDefaultHTTPMethod = @"GET";
     return [self initWithSession:nil
                        graphPath:nil
                       parameters:nil
-                      HTTPMethod:kDefaultHTTPMethod];
+                      HTTPMethod:nil];
 }
 
 - (id)initWithSession:(FBSession*)session
@@ -47,7 +48,7 @@ static NSString *const kDefaultHTTPMethod = @"GET";
     return [self initWithSession:session
                        graphPath:graphPath
                       parameters:nil
-                      HTTPMethod:kDefaultHTTPMethod];
+                      HTTPMethod:nil];
 }
 
 - (id)initWithSession:(FBSession*)session
@@ -56,6 +57,11 @@ static NSString *const kDefaultHTTPMethod = @"GET";
            HTTPMethod:(NSString *)HTTPMethod
 {
     if (self = [super init]) {
+        // set default for nil
+        if (!HTTPMethod) {
+            HTTPMethod = kGetHTTPMethod;
+        }
+        
         self.session = session;
         self.graphPath = graphPath;
         self.HTTPMethod = HTTPMethod;
@@ -64,6 +70,19 @@ static NSString *const kDefaultHTTPMethod = @"GET";
         if (parameters) {
             [self.parameters addEntriesFromDictionary:parameters];
         }
+    }
+    return self;
+}
+
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+          graphObject:(id<FBGraphObject>)object {
+    self = [self initWithSession:session
+                       graphPath:graphPath
+                      parameters:nil
+                      HTTPMethod:kPostHTTPMethod];
+    if (self) {
+        self.graphObject = object;
     }
     return self;
 }
@@ -88,12 +107,29 @@ static NSString *const kDefaultHTTPMethod = @"GET";
 
 - (void)dealloc
 {
+    [_graphObject release];
     [_session release];
     [_graphPath release];
     [_restMethod release];
     [_HTTPMethod release];
     [_parameters release];
     [super dealloc];
+}
+
+//@property(nonatomic,retain) id<FBGraphObject> graphObject;
+- (id<FBGraphObject>)graphObject {
+    return _graphObject;
+}
+
+- (void)setGraphObject:(id<FBGraphObject>)newValue {
+    if (_graphObject != newValue) {
+        [_graphObject release];
+        _graphObject = [newValue retain];
+    }
+    
+    // setting this property implies you want a post, if you really
+    // want a get, reset the method to get after setting this property
+    self.HTTPMethod = kPostHTTPMethod;
 }
 
 - (FBRequestConnection*)connectionWithCompletionHandler:(FBRequestHandler)handler
@@ -109,7 +145,7 @@ static NSString *const kDefaultHTTPMethod = @"GET";
     return [FBRequest connectionWithSession:nil
                                   graphPath:graphPath
                                  parameters:nil
-                                 HTTPMethod:kDefaultHTTPMethod
+                                 HTTPMethod:nil
                           completionHandler:handler];
 }
 
@@ -120,7 +156,7 @@ static NSString *const kDefaultHTTPMethod = @"GET";
     return [FBRequest connectionWithSession:session
                                   graphPath:graphPath
                                  parameters:nil
-                                 HTTPMethod:kDefaultHTTPMethod
+                                 HTTPMethod:nil
                           completionHandler:handler];
 }
 

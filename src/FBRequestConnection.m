@@ -44,6 +44,8 @@ NSString *const kBundleVersionKey = @"CFBundleVersion";
 static const int kRESTAPIAccessTokenErrorCode = 190;
 static const NSTimeInterval kDefaultTimeout = 180.0;
 
+typedef void (^KeyValueActionHandler)(NSString *key, id value);
+
 // ----------------------------------------------------------------------------
 // Private class to store requests and their metadata.
 //
@@ -129,6 +131,9 @@ typedef enum FBRequestConnectionState {
 - (void)appendAttachments:(NSDictionary *)attachments
                    toBody:(FBRequestBody *)body
               addFormData:(BOOL)addFormData;
+
++ (void)processGraphObject:(id<FBGraphObject>)object
+                       withAction:(KeyValueActionHandler)action;
 
 - (void)completeWithResponse:(NSURLResponse *)response
                         data:(NSData *)data
@@ -326,6 +331,14 @@ typedef enum FBRequestConnectionState {
         [self appendAttachments:metadata.request.parameters
                          toBody:body
                     addFormData:[httpMethod isEqualToString:@"POST"]];
+        
+        // if we have a post object, also roll that into the body 
+        if (metadata.request.graphObject) {
+            [FBRequestConnection processGraphObject:metadata.request.graphObject
+                                                withAction:^(NSString *key, id value) {
+                [body appendWithKey:key formValue:value];
+            }];
+        }
     } else {
         NSString *commonToken = [self commonAccessToken:requests];
         if (commonToken) {
@@ -488,6 +501,29 @@ typedef enum FBRequestConnectionState {
             [requestElement setObject:value forKey:key];
         }
     }
+    
+    // if we have a post object, also roll that into the body 
+    if (metadata.request.graphObject) {
+        NSMutableString *bodyValue = [[[NSMutableString alloc] init] autorelease];
+        __block NSString *delimeter = @"";
+        [FBRequestConnection
+         processGraphObject:metadata.request.graphObject
+         withAction:^(NSString *key, id value) {
+             // escape the value
+             value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
+                                                                         NULL,
+                                                                         (CFStringRef)[value description],
+                                                                         NULL,
+                                                                         (CFStringRef)@"<>{}\"|~^`!*'();:@&=+$,/?%#[]",
+                                                                         kCFStringEncodingUTF8);
+             [bodyValue appendFormat:@"%@%@=%@",
+              delimeter,
+              key,
+              value];
+             delimeter = @"&";
+         }];
+        [requestElement setObject:bodyValue forKey:@"body"];
+    }
 
     if ([attachmentNames length]) {
         [requestElement setObject:attachmentNames forKey:kBatchAttachmentKey];
@@ -522,6 +558,30 @@ typedef enum FBRequestConnectionState {
             [body appendWithKey:key imageValue:(UIImage *)value];
         } else if ([value isKindOfClass:[NSData class]]) {
             [body appendWithKey:key dataValue:(NSData *)value];
+        }
+    }
+}
+
++ (void)processGraphObject:(id<FBGraphObject>)object
+                                withAction:(KeyValueActionHandler)action {
+    for (NSString *key in [object keyEnumerator]) {
+        NSObject *value = [object objectForKey:key];
+        // if we are handling a referenced object
+        if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
+            // for referenced objects we may send a URL or an FBID
+            id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
+            NSString *subValue;
+            if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
+                action(key, subValue);
+                //[body appendWithKey:key formValue:subValue];
+            } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
+                //[body appendWithKey:key formValue:subValue];
+                action(key, subValue);
+            }
+        // if we are handling a string
+        } else if ([value isKindOfClass:[NSString class]]) {
+            //[body appendWithKey:key formValue:(NSString *)value];
+            action(key, value);
         }
     }
 }

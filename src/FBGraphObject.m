@@ -141,8 +141,10 @@ typedef enum _SelectorInferredImplType {
         case SelectorInferredImplTypeSet: {
             // property setter impl uses the selector name as an argument...
             NSMutableString *propertyName = [NSMutableString stringWithString:NSStringFromSelector([invocation selector])];
-            // remove 'set' and lowercase the new first character
-            [propertyName deleteCharactersInRange:NSMakeRange(0, 3)];
+            // remove 'set' and trailing ':', and lowercase the new first character
+            [propertyName deleteCharactersInRange:NSMakeRange(0, 3)];                       // "set"
+            [propertyName deleteCharactersInRange:NSMakeRange(propertyName.length - 1, 1)]; // ":"
+            
             NSString *firstChar = [[propertyName substringWithRange:NSMakeRange(0,1)] lowercaseString];
             [propertyName replaceCharactersInRange:NSMakeRange(0, 1) withString:firstChar];
             // the object argument is already in the right place (2), but we need to set the key argument
@@ -225,7 +227,7 @@ typedef enum _SelectorInferredImplType {
         // otherwise we consider a setter if...
     } else if (parameterCount == 1 &&                   // ... we have the correct arity
                [selectorName hasPrefix:@"set"] &&       // ... we have the proper prefix
-               selectorName.length > 3) {               // ... there are characters after "set"
+               selectorName.length > 4) {               // ... there are characters other than "set" & ":"
         return SelectorInferredImplTypeSet;
     } 
     

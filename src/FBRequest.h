@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import "FBRequestConnection.h"
+#import "FBGraphObject.h"
 
 // constants
 extern NSString* const FBGraphBasePath;
@@ -57,6 +58,7 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 #pragma GCC diagnostic pop
     NSError*              _error;
     BOOL                  _sessionDidExpire;
+    id<FBGraphObject>     _graphObject;
 }
 
 // creating a request
@@ -73,6 +75,7 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 //                         indicates to the object to use the graph subdomain; 
 //                         before start is one of graphPath or restMethod
 //                         must be non-nil and the other must be nil
+//   graphObject           - an object or open graph action to post
 //   restMethod:           - restMethod specifies the method for a request
 //                         to the deprecated Facebook rest API
 //   parameters            - specifies url parameters for the request; nil
@@ -93,6 +96,10 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
            HTTPMethod:(NSString *)HTTPMethod;
 
 - (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+          graphObject:(id<FBGraphObject>)object;
+
+- (id)initWithSession:(FBSession*)session
            restMethod:(NSString *)restMethod
            parameters:(NSDictionary *)parameters
            HTTPMethod:(NSString *)HTTPMethod;
@@ -111,6 +118,7 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 @property(nonatomic, copy) NSString *graphPath;
 @property(nonatomic, copy) NSString *restMethod;
 @property(nonatomic, copy) NSString *HTTPMethod;
+@property(nonatomic, retain) id<FBGraphObject> graphObject;
 
 // instance methods
 
