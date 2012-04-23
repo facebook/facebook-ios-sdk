@@ -24,7 +24,7 @@ extern NSString *const SUInvalidSlotNumber;
 @interface SUUserManager : NSObject
 
 @property (readonly) int maximumUserSlots;
-@property (readonly) FBSession *currentSession;
+@property (strong, readonly) FBSession *currentSession;
 @property (readonly) int currentUserSlot;
 
 - (SUUserManager *)init;

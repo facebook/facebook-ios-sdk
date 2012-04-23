@@ -27,6 +27,8 @@ static const CGFloat pictureHeight = 50;
 
 @property (strong, nonatomic) FBProfilePictureView *profilePic;
 
+- (void)initializeSubViews;
+
 @end
 
 @implementation SUProfileTableViewCell
