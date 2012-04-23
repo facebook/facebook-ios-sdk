@@ -332,7 +332,6 @@ static NSString *const kPostHTTPMethod = @"POST";
         }
         
         NSString* escaped_value = [FBUtility stringByURLEncodingString:[params objectForKey:key]];
-        
         [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
     }
     NSString* query = [pairs componentsJoinedByString:@"&"];

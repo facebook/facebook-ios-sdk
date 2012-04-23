@@ -22,6 +22,7 @@
 // controls
 #import "FBProfilePictureView.h"
 #import "FBPlacesPickerView.h"
+#import "FBFriendPickerViewController.h"
 
 // graph
 #import "FBGraphUser.h"
