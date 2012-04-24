@@ -23,12 +23,17 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *usersTableView;
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
+@property (nonatomic) int pendingLoginForSlot;
+
+- (int)userSlotFromIndexPath:(NSIndexPath*)indexPath;
+
 @end
 
 @implementation SUSettingsViewController
 
 @synthesize usersTableView;
 @synthesize requestConnection = _requestConnection;
+@synthesize pendingLoginForSlot = _pendingLoginForSlot;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -36,6 +41,7 @@
     if (self) {
         self.title = NSLocalizedString(@"Settings", @"Settings");
         self.tabBarItem.image = [UIImage imageNamed:@"second"];
+        self.pendingLoginForSlot = -1;
     }
     return self;
 }
@@ -53,6 +59,15 @@
     self.usersTableView.delegate = nil;
     self.usersTableView.dataSource = nil;
     self.usersTableView = nil;
+}
+
+- (void)loginDefaultUser {
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
+    SUUserManager *userManager = appDelegate.userManager;
+
+    if (![userManager isSlotEmpty:0]) {
+        [self loginSlot:0];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -75,7 +90,11 @@
         cell.userName = @"Empty slot";
         cell.userID = nil;
     } else {
-        cell.userName = [userManager getUserNameInSlot:slot];
+        if (slot == self.pendingLoginForSlot) {
+            cell.userName = @"Logging in...";
+        } else {
+            cell.userName = [userManager getUserNameInSlot:slot];
+        }
         cell.userID = userID;
         if (slot == [userManager currentUserSlot]) {
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -85,7 +104,7 @@
 
 - (void)updateCellForSlot:(int)slot {    
     SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[self.usersTableView cellForRowAtIndexPath:
-                                                              [NSIndexPath indexPathForRow:slot inSection:0]];
+                                                              [self indexPathFromUserSlot:slot]];
     [self updateCell:cell forSlot:slot];
 }
 
@@ -97,13 +116,17 @@
     if (session.isValid) {       
         FBRequest *me = [FBRequest requestMeForSession:session];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
+
         [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
                                                              NSDictionary<FBGraphUser> *result,
                                                              NSError *error) {
             if (connection != self.requestConnection) {
                 return;
             }
+
             self.requestConnection = nil;
+            self.pendingLoginForSlot = -1;
+
             if (error) {
                 NSLog(@"Couldn't switch user: %@", error.localizedDescription);
                 [userManager switchToNoActiveUser];
@@ -136,15 +159,31 @@
     if (slot < 0 || slot >= userManager.maximumUserSlots) {
         return;
     }
+
+    int currentUserSlot = userManager.currentUserSlot;
+
+    // If we can't log in as new user, we don't want to still be logged in as previous user,
+    //  particularly if it might not be obvious to the user that the login failed.
+    [userManager switchToNoActiveUser];
+    self.pendingLoginForSlot = slot;
+
+    if (slot != currentUserSlot) {
+        // Update the previously active user's cell
+        if (currentUserSlot >= 0 && currentUserSlot < [userManager maximumUserSlots]) {
+            [self updateCellForSlot:currentUserSlot];
+        }
+    }
     
-    // We assume that the first time a user chooses a slot, they want to do so
-    //  as the currently logged-in user (if any) via SSO, and subsequently we will
-    //  prompt for credentials and ignore SSO. This logic may or may not be appropriate
-    //  for any given app.
-    FBSessionLoginBehavior behavior = [userManager areAllSlotsEmpty] ?
+    // We assume that the primary user is going to log on via SSO, while guest users will
+    //  specify their name via the login dialog. The decision of when to try SSO vs.
+    //  force entering of credentials will be specific to the needs of an app.
+    FBSessionLoginBehavior behavior = (slot == 0) ?
         FBSessionLoginBehaviorSSOWithFallback :
         FBSessionLoginBehaviorSuppressSSO;
+
     FBSession *session = [userManager switchToUserInSlot:slot];
+    [self updateCellForSlot:slot];
+
     [session loginWithBehavior:behavior
              completionHandler:^(FBSession *session,
                                  FBSessionState status,
@@ -156,12 +195,33 @@
     }];
 }
 
-// UITableViewDataSource methods
+- (int)userSlotFromIndexPath:(NSIndexPath*)indexPath {
+    // This relies on the fact that there's only one user in the first section.
+    return indexPath.section + indexPath.row;
+}
+
+- (NSIndexPath*)indexPathFromUserSlot:(int)slot {
+    // See comment in userSlotFromIndexPath:
+    return [NSIndexPath indexPathForRow:(slot == 0) ? 0 : (slot - 1)
+                              inSection:(slot == 0) ? 0 : 1];
+}
+
+#pragma mark UITableViewDataSource methods
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-    return [userManager maximumUserSlots];
+
+    switch (section) {
+        case 0:
+            return 1;
+        default:
+            return [userManager maximumUserSlots] - 1;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -174,34 +234,41 @@
 
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-    int row = indexPath.row;
-    if (row >= 0 && row < [userManager maximumUserSlots] ) {
-        [self updateCell:cell forSlot:row];
+    int slot = [self userSlotFromIndexPath:indexPath];
+    if (slot >= 0 && slot < [userManager maximumUserSlots] ) {
+        [self updateCell:cell forSlot:slot];
     }
     
     return cell;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return @"Active User:";
+    switch (section) {
+        case 0:
+            return @"Primary User:";
+        default:
+            return @"Guest Users:";
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
-    return [userManager getUserIDInSlot:indexPath.row] != nil;
+    return [userManager getUserIDInSlot:[self userSlotFromIndexPath:indexPath]] != nil;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [userManager updateUser:nil inSlot:indexPath.row];
-        [self updateCellForSlot:indexPath.row];
+        int slot = [self userSlotFromIndexPath:indexPath];
+        [userManager updateUser:nil inSlot:slot];
+        [self updateCellForSlot:slot];
     }
 }
 
-// UITableViewDelegate methods
+#pragma mark -
+#pragma mark UITableViewDelegate methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     SUProfileTableViewCell *cell = (SUProfileTableViewCell*)[self tableView:tableView
@@ -214,19 +281,15 @@
     SUUserManager *userManager = [appDelegate userManager];
     
     int currentUserSlot = userManager.currentUserSlot;
-    
-    [userManager switchToNoActiveUser];
-    [self updateCellForSlot:indexPath.row];
-    
-    if (indexPath.row != currentUserSlot) {
-        // TODO clean this up
-        [self loginSlot:indexPath.row];
-        // Update the previously active user's cell
-        if (currentUserSlot >= 0 && currentUserSlot < [userManager maximumUserSlots]) {
-            [self updateCellForSlot:currentUserSlot];
-        }
-        
+    int slot = [self userSlotFromIndexPath:indexPath];
+
+    if (slot == currentUserSlot) {
+        [userManager switchToNoActiveUser];
+        [self updateCellForSlot:slot];
+    } else {
+        [self loginSlot:slot];
     }
+
     [tableView deselectRowAtIndexPath:indexPath animated:YES];    
     return;
 }
@@ -235,5 +298,7 @@
 {
     return @"Forget";
 }
+
+#pragma mark -
 
 @end

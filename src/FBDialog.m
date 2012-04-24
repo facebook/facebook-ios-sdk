@@ -222,7 +222,6 @@ params   = _params;
             NSString* value = [params objectForKey:key];
             NSString* escaped_value = [FBUtility stringByURLEncodingString:value];
             [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
-            [escaped_value release];
         }
         
         NSString* query = [pairs componentsJoinedByString:@"&"];

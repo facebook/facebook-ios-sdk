@@ -36,6 +36,9 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return self;
 }
 
+- (void)sendNotification {
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SUUserManagerUserChanged" object:nil];
+}
 
 - (void)validateSlotNumber:(int)slot {
     if (slot < 0 || slot >= [self maximumUserSlots]) {
@@ -131,12 +134,15 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     }
     
     [defaults synchronize];
+
+    [self sendNotification];
 }
 
 - (void)switchToNoActiveUser {
     NSLog(@"SUUserManager switching to no active user");
     _currentSession = nil;
     _currentUserSlot = -1;
+    [self sendNotification];
 }
 
 - (FBSession *)switchToUserInSlot:(int)slot {
@@ -147,6 +153,8 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     
     _currentSession = session;
     _currentUserSlot = slot;
+
+    [self sendNotification];
     
     return session;
 }

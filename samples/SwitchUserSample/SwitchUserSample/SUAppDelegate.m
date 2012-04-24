@@ -29,9 +29,12 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.userManager = [[SUUserManager alloc] init];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    UIViewController *viewController1, *viewController2;
+    SUUsingViewController *viewController1;
+    SUSettingsViewController *viewController2;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         viewController1 = [[SUUsingViewController alloc] initWithNibName:@"SUUsingViewController_iPhone" bundle:nil];
         viewController2 = [[SUSettingsViewController alloc] initWithNibName:@"SUSettingsViewController_iPhone" bundle:nil];
@@ -44,7 +47,7 @@
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     
-    self.userManager = [[SUUserManager alloc] init];
+    [viewController2 loginDefaultUser];
     
     return YES;
 }

@@ -18,4 +18,6 @@
 
 @interface SUSettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+- (void)loginDefaultUser;
+
 @end

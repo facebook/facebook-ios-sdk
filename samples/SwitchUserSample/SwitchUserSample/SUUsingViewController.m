@@ -52,6 +52,11 @@
     
     if (userManager.currentUserSlot != -1 &&
         userManager.currentSession.isValid) {
+        // There could be a delay while we retrieve user profile. Hide controls until data is there.
+        self.nameLabel.hidden = YES;
+        self.picView.hidden = YES;
+        self.birthdayLabel.hidden = YES;
+
         FBRequest *me = [FBRequest requestMeForSession:userManager.currentSession];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
         [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
@@ -66,16 +71,18 @@
                 NSLog(@"Couldn't get info : %@", error.localizedDescription);
                 return;
             }
-            
+
             self.nameLabel.text = [NSString stringWithFormat:@"Hello, %@!", user.first_name];
-            self.picView.hidden = NO;
             self.picView.userID = user.id;
-            self.birthdayLabel.hidden = NO;
             if (user.birthday.length > 0) {
                 self.birthdayLabel.text = [NSString stringWithFormat:@"Your birthday is: %@", user.birthday];            
             } else {
                 self.birthdayLabel.text = @"Your birthday isn't set.";
             }
+
+            self.nameLabel.hidden = NO;
+            self.picView.hidden = NO;
+            self.birthdayLabel.hidden = NO;
         }];
 
         [self.requestConnection cancel];
@@ -84,21 +91,30 @@
         [requestConnection start];        
     } else {
         self.nameLabel.text = @"No active user. Go to Settings tab to log in!";
+        self.nameLabel.hidden = NO;
         self.picView.hidden = YES;
         self.birthdayLabel.hidden = YES;
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    // In a more robust implementation, we would look for a notification that SUUserManager has changed
-    //  the current user.
+- (void)userDidChange:(NSNotification*)notification {
+    [self updateControls];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self updateControls];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.picView.pictureSize = FBProfilePictureSizeLarge;
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(userDidChange:)
+                                                 name:@"SUUserManagerUserChanged" object:nil];
+
     [self updateControls];
 }
 
@@ -110,6 +126,10 @@
     self.nameLabel = nil;
     self.birthdayLabel = nil;
     self.picView = nil;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:@"SUUserManagerUserChanged" object:nil];
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
