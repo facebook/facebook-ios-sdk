@@ -697,7 +697,7 @@ static void *finishedContext = @"finishedContext";
     [params setObject:kSDKVersion forKey:@"sdk"];
     [params setObject:kRedirectURL forKey:@"redirect_uri"];
     
-    if (action == kLogin) {
+    if ([action isEqualToString:kLogin]) {
         [params setObject:@"user_agent" forKey:@"type"];
         _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
     } else {
@@ -712,7 +712,7 @@ static void *finishedContext = @"finishedContext";
         BOOL invisible = NO;
         
         // frictionless handling for application requests
-        if (action == kApprequests) {        
+        if ([action isEqualToString:kApprequests]) {        
             // if frictionless requests are enabled
             if (self.isFrictionlessRequestsEnabled) {
                 //  1. show the "Don't show this again for these friends" checkbox
