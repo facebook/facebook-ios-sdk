@@ -76,6 +76,7 @@ extern NSString *const FBErrorLoginFailedOriginalErrorCode;
 // used by session when an inline dialog fails
 extern NSString *const FBErrorLoginFailedReasonInlineCancelledValue;
 extern NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue;
+extern NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized;
 
 // Exception strings raised by the Facebook SDK
 

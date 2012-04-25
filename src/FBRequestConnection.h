@@ -21,6 +21,9 @@
 @class FBRequestConnection;
 enum FBRequestConnectionState;
 
+// response object property/key
+extern NSString *const FBNonJSONResponseProperty;
+
 typedef void (^FBRequestHandler)(FBRequestConnection *connection, 
                                  id result,
                                  NSError *error);

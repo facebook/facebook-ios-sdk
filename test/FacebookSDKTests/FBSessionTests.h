@@ -15,14 +15,7 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "FBCacheIndex.h"
-#import "FBDataDiskCache.h"
 
-@interface FBCacheTests : SenTestCase<FBCacheIndexFileDelegate>
-{
-    NSString* _dataCachePath;
-}
-
-@property (retain, nonatomic) NSString* dataCachePath;
+@interface FBSessionTests : SenTestCase
 
 @end

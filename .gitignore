@@ -16,3 +16,4 @@ test/UnitTest/build/
 .DS_Store
 project.xcworkspace
 xcuserdata
+.arc

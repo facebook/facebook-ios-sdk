@@ -20,22 +20,16 @@
     BOOL _keepRunning;
 }
 
-- (id)init {
-    self = [super init];
-    if (self) {
-        _keepRunning = YES;
-    }
-    return self;
-}
-
-- (void)signal {
+- (void)wait {
+    _keepRunning = YES;
+    
     // loop until the previous call completes
     do {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.1]];
     } while (_keepRunning);
 }
 
-- (void)wait {
+- (void)signal {
     _keepRunning = false;
 }
 

@@ -23,7 +23,7 @@
 // can be extended to support delegates as needed
 @interface FBTestBlocker : NSObject
 
-- (void)signal;
 - (void)wait;
+- (void)signal;
 
 @end

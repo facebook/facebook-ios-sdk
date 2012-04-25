@@ -34,14 +34,25 @@
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
+NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized = @"com.facebook.FBiOSSDK:UnitTestResponseUnrecognized";
 
 // const strings
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
+// for unit testing mode only (DO NOT store application secrets in a published application plist)
+static NSString *const FBPLISTAppSecretKey = @"FacebookAppSecret";
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
 static NSString *const FBRedirectURL = @"fbconnect://success";
 static NSString *const FBDialogBaseURL = @"https://m.facebook.com/dialog/";
 static NSString *const FBLoginDialogMethod = @"oauth";
+static NSString *const FBLoginAuthTestUserURLPath = @"oauth/access_token";
+static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
+static NSString *const FBLoginTestUserClientID = @"client_id";
+static NSString *const FBLoginTestUserClientSecret = @"client_secret";
+static NSString *const FBLoginTestUserGrantType = @"grant_type";
+static NSString *const FBLoginTestUserGrantTypeClientCredentials = @"client_credentials";
+static NSString *const FBLoginTestUserAccessToken = @"access_token";
+static NSString *const FBLoginTestUserID = @"id";
 static NSString *const FBLoginUXClientID = @"client_id";
 static NSString *const FBLoginUXUserAgent = @"user_agent";
 static NSString *const FBLoginUXType = @"type";
@@ -69,15 +80,17 @@ static NSSet *g_loggingBehavior;
     NSString *_appID;
     NSString *_urlSchemeSuffix;
     NSString *_accessToken;
+    NSString *_userID;
     NSDate *_expirationDate;
     NSArray *_permissions;
 
     // private property and non-property ivars
-    FBSessionTokenCachingStrategy *_tokenCachingStrategy;
     BOOL _isInStateTransition;
     FBSessionStatusHandler _loginHandler;
     FBLoginDialog *_loginDialog;
     NSThread *_affinitizedThread;
+    // in app-use cases this value is always non-nil, for unit testing this value is nil
+    FBSessionTokenCachingStrategy *_tokenCachingStrategy;
 }
 
 // private setters
@@ -91,9 +104,11 @@ static NSSet *g_loggingBehavior;
 // private properties
 @property(readwrite, retain) FBSessionTokenCachingStrategy *tokenCachingStrategy;
 @property(readwrite, copy) FBSessionStatusHandler loginHandler;
-@property(readonly) NSString* appBaseUrl;
+@property(readonly) NSString *appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
+@property(readonly) BOOL isForUnitTesting;
+@property(readwrite, copy) NSString *userID;
 
 // private members
 - (void)notifyOfState:(FBSessionState)state;
@@ -104,16 +119,25 @@ static NSSet *g_loggingBehavior;
 - (void)authorizeWithFBAppAuth:(BOOL)tryFBAppAuth
                     safariAuth:(BOOL)trySafariAuth
                       fallback:(BOOL)tryFallback;
+- (void)authorizeUnitTestUser;
 - (void)transitionAndCallHandlerWithState:(FBSessionState)status
                                     error:(NSError*)error
                                     token:(NSString*)token
                            expirationDate:(NSDate*)date
                               shouldCache:(BOOL)shouldCache;
 
+// private initializer is the designated initializer
+- (id)initWithAppID:(NSString*)appID
+        permissions:(NSArray*)permissions
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
+   isForUnitTesting:(BOOL)isForUnitTesting;
+
 // class members
 + (NSString*)appIDFromPLIST;
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode;
++ (void)deleteUnitTestUser:(NSString*)userID accessToken:(NSString*)accessToken;
 
 @end
 
@@ -125,20 +149,34 @@ static NSSet *g_loggingBehavior;
     return [self initWithAppID:nil
                    permissions:nil
                urlSchemeSuffix:nil
-            tokenCacheStrategy:nil];
+            tokenCacheStrategy:nil
+              isForUnitTesting:NO];
 }
 
 - (id)initWithPermissions:(NSArray*)permissions {
     return [self initWithAppID:nil
                    permissions:permissions
                urlSchemeSuffix:nil
-            tokenCacheStrategy:nil];
+            tokenCacheStrategy:nil
+              isForUnitTesting:NO];
 }
 
 - (id)initWithAppID:(NSString*)appID
         permissions:(NSArray*)permissions
     urlSchemeSuffix:(NSString*)urlSchemeSuffix
  tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy {
+    return [self initWithAppID:nil
+                   permissions:permissions
+               urlSchemeSuffix:nil
+            tokenCacheStrategy:nil
+              isForUnitTesting:NO];
+}
+
+- (id)initWithAppID:(NSString*)appID
+        permissions:(NSArray*)permissions
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy 
+   isForUnitTesting:(BOOL)isForUnitTesting {
     self = [super init];
     if (self) {
 
@@ -149,17 +187,48 @@ static NSSet *g_loggingBehavior;
         if (!permissions) {
             permissions = [NSArray array];
         }
-        if (!tokenCachingStrategy) {
+        if (!tokenCachingStrategy && !isForUnitTesting) {
             tokenCachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
         }
+        NSAssert(!(tokenCachingStrategy && isForUnitTesting), 
+                 @"Invalid to have a caching strategy when for unit testing, public interface should dissallow");
+        
+        // if we are built for unit testing, then assert and setup a few things
+        if (self.isForUnitTesting) {
+            NSAssert(!urlSchemeSuffix, 
+                     @"Invalid to have a urlSchemeSuffix when for unit testing, public interface should dissallow");
+            NSAssert(!appID, 
+                     @"Invalid to have an explicit appID when for unit testing, public interface should dissallow");
+            
+            // building-up an appID and initial app-token
+            
+            // first fetch documents directory 
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDirectory = [paths objectAtIndex:0];
+            
+            // fetch config contents
+            NSString *configfilename = [documentsDirectory stringByAppendingPathComponent:@"FBiOSSDK-UnitTestConfig.plist"];
+            NSDictionary *configsettings = [NSDictionary dictionaryWithContentsOfFile:configfilename];
+            
+            NSString *appIDUT = [configsettings objectForKey:FBPLISTAppIDKey];
+            NSString *appSecret = [configsettings objectForKey:FBPLISTAppSecretKey];
+            if (appIDUT && appSecret) {
+                appID = appIDUT;
+                self.accessToken = [NSString stringWithFormat:@"%@|%@", appID, appSecret];
+            } else {
+                appID = nil; // this assures we trigger the following exception
+            }
+        }
 
-        // of we don't have an appID by here, fail -- this is almost certainly an app-bug
+        // if we don't have an appID by here, fail -- this is almost certainly an app-bug
         if (!appID) {
             [[NSException exceptionWithName:FBInvalidOperationException
-                                     reason:@"FBSession: No AppID provided; either provide an "
+                                     reason:@"FBSession: No AppID provided; either pass an "
                                             @"AppID to init, or add a string valued key with the "
-                                            @"appropriate id named FacebookAppID to the bundle *.plist; to "
-                                            @"create a Facebook AppID, visit https://developers.facebook.com/apps"
+                                            @"appropriate id named FacebookAppID to the bundle *.plist; if this "
+                                            @"is a unit testing session, then FBiOSSDK-UnitTestConfig.plist is "
+                                            @"is missing or invalid; to create a Facebook AppID, "
+                                            @"visit https://developers.facebook.com/apps"
                                    userInfo:nil]
              raise];
         }
@@ -222,7 +291,8 @@ static NSSet *g_loggingBehavior;
             // changes to static property name variables (e.g. FBisValidPropertyName)
             status = _status,
             accessToken = _accessToken,
-            expirationDate = _expirationDate;
+            expirationDate = _expirationDate,
+            userID = _userID;
 
 
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
@@ -245,23 +315,32 @@ static NSSet *g_loggingBehavior;
     }
     self.loginHandler = handler;
 
-    if (self.status == FBSessionStateCreated) {
-        BOOL trySSO = (behavior == FBSessionLoginBehaviorSSOOnly) ||
-        (behavior == FBSessionLoginBehaviorSSOWithFallback);
-        BOOL tryFallback = (behavior == FBSessionLoginBehaviorSSOWithFallback) ||
-        (behavior == FBSessionLoginBehaviorSuppressSSO);
-
-        [self authorizeWithFBAppAuth:trySSO
-                          safariAuth:trySSO
-                            fallback:tryFallback];
-    } else { // self.status == FBSessionStateLoadedValidToken
-        // this case implies that a valid cached token was found, and preserves the
-        // "1-session-1-identity" rule, by transitioning to logged in, without a transition to login UX
-        [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
-                                          error:nil
-                                          token:nil
-                                 expirationDate:nil
-                                    shouldCache:NO];
+    if (!self.isForUnitTesting) {
+        // normal login depends on the availability of a valid cached token
+        if (self.status == FBSessionStateCreated) {
+            BOOL trySSO = (behavior == FBSessionLoginBehaviorSSOOnly) ||
+            (behavior == FBSessionLoginBehaviorSSOWithFallback);
+            BOOL tryFallback = (behavior == FBSessionLoginBehaviorSSOWithFallback) ||
+            (behavior == FBSessionLoginBehaviorSuppressSSO);
+            
+            [self authorizeWithFBAppAuth:trySSO
+                              safariAuth:trySSO
+                                fallback:tryFallback];
+        } else { // self.status == FBSessionStateLoadedValidToken
+            // this case implies that a valid cached token was found, and preserves the
+            // "1-session-1-identity" rule, by transitioning to logged in, without a transition to login UX
+            [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+                                              error:nil
+                                              token:nil
+                                     expirationDate:nil
+                                        shouldCache:NO];
+        }
+    } else {
+        // unit testing login is different from normal app login flow in a couple ways:
+        // * There will be no UX
+        // * A test user is created dynamically
+        // * Cached credentials are fetched (by init) from a special unit testing config file
+        [self authorizeUnitTestUser];
     }
 }
 
@@ -374,6 +453,17 @@ static NSSet *g_loggingBehavior;
         [_urlSchemeSuffix release];
         _urlSchemeSuffix = [(newValue ? newValue : @"") copy];
     }
+}
+
+// our sole public static member, used to create a unit-test instance
++ (id)sessionForUnitTestingWithPermissions:(NSArray*)permissions {
+    // call our internal delegated initializer to create a unit-testing instance
+    return [[[FBSession alloc] initWithAppID:nil
+                                permissions:permissions 
+                            urlSchemeSuffix:nil
+                         tokenCacheStrategy:nil
+                           isForUnitTesting:YES]
+            autorelease];
 }
 
 #pragma mark -
@@ -614,6 +704,59 @@ static NSSet *g_loggingBehavior;
     }
 }
 
+// core authorization unit testing (no UX + test user) flow
+- (void)authorizeUnitTestUser {    
+    // fetch a test user and token
+    // note, this fetch uses a manually constructed app token using the appid|appsecret approach,
+    // if there is demand for support for apps for which this will not work, we may consider handling 
+    // failure by falling back and fetching an app-token via a request; the current approach reduces 
+    // traffic for commin unit testing configuration, which seems like the right tradeoff to start with
+    if (!self.permissions.count) {
+        self.permissions = [NSArray arrayWithObjects:@"email", @"publish_actions", nil];
+    }
+    [[FBRequest connectionWithSession:nil
+                            graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
+                           parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                       @"true", @"installed",
+                                       [self.permissions componentsJoinedByString:@","], @"permissions",
+                                       @"post", @"method",
+                                       self.accessToken, @"access_token",
+                                       nil]
+                           HTTPMethod:nil
+                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                        id userToken;
+                        id userID;
+                        if ([result isKindOfClass:[NSDictionary class]] &&
+                            (userToken = [result objectForKey:FBLoginTestUserAccessToken]) &&
+                            [userToken isKindOfClass:[NSString class]] &&
+                            (userID = [result objectForKey:FBLoginTestUserID]) &&
+                            [userID isKindOfClass:[NSString class]]) {
+                            
+                            // capture the id for future use (delete)
+                            self.userID = userID;
+                            
+                            // set token and date, state transition, and call the handler if there is one
+                            [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+                                                              error:nil
+                                                              token:userToken
+                                                     expirationDate:[NSDate distantFuture]
+                                                        shouldCache:NO];
+                        } else {
+                            // we fetched something unexpected when requesting an app token
+                            NSError *loginError = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
+                                                                         errorCode:nil];
+                            
+                            // state transition, and call the handler if there is one
+                            [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+                                                              error:loginError
+                                                              token:nil
+                                                     expirationDate:nil
+                                                        shouldCache:NO];
+                        }
+                    }] 
+     start];
+}
+
 // core handler for inline UX flow
 - (void)fbDialogLogin:(NSString *)accessToken expirationDate:(NSDate *)expirationDate {
     // no reason to keep this object
@@ -662,6 +805,10 @@ static NSSet *g_loggingBehavior;
                            expirationDate:(NSDate*)date
                               shouldCache:(BOOL)shouldCache {
 
+    // in case we need these after the transition
+    NSString *userID = self.userID;
+    NSString *accessToken = self.accessToken;
+    
     // lets get the state transition out of the way
     BOOL didTransition = [self transitionToState:status
                                   andUpdateToken:token
@@ -675,8 +822,12 @@ static NSSet *g_loggingBehavior;
     FBSessionStatusHandler handler = [self.loginHandler retain];
 
     // the moment we transition to a terminal state, we release our handler
+    // and in the unit test case, we may delete the test user
     if (didTransition && FB_ISSESSIONSTATETERMINAL(self.status)) {
         self.loginHandler = nil;
+        if (self.isForUnitTesting) {
+            [FBSession deleteUnitTestUser:userID accessToken:accessToken]; 
+        }
     }
 
     // if we have a handler, call it and release our
@@ -699,6 +850,11 @@ static NSSet *g_loggingBehavior;
     return [NSString stringWithFormat:@"fb%@%@://authorize",
             self.appID,
             self.urlSchemeSuffix];
+}
+
+- (BOOL)isForUnitTesting {
+    // we use the absence of a tokenCachingStrategy to signal the instance is for unit-testing
+    return self.tokenCachingStrategy == nil;
 }
 
 + (NSString*) appIDFromPLIST {
@@ -741,6 +897,35 @@ static NSSet *g_loggingBehavior;
         return NO;
     } else {
         return [super automaticallyNotifiesObserversForKey:key];
+    }
+}
+
++ (void)deleteUnitTestUser:(NSString*)userID accessToken:(NSString*)accessToken {
+    if (userID && accessToken) {
+        // use FBRequest to create an NSURLRequest
+        NSURLRequest *request = [FBRequest connectionWithSession:nil
+                                graphPath:userID
+                               parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                           @"delete", @"method",
+                                           accessToken, @"access_token",
+                                           nil]
+                               HTTPMethod:nil
+                        completionHandler:nil].urlRequest;
+        
+        // synchronously delete the user
+        NSURLResponse *response;
+        NSError *error = nil;
+        NSData *data;
+        data = [NSURLConnection sendSynchronousRequest:request 
+                                     returningResponse:&response
+                                                 error:&error];
+        // if !data or if data == false, log
+        NSString *body = !data ? nil : [[[NSString alloc] initWithData:data
+                                                              encoding:NSUTF8StringEncoding]
+                                         autorelease];
+        if (!data || [body isEqualToString:@"false"]) {
+            NSLog(@"FBSession !delete test user with id:%@ error:%@", userID, error ? error : body);
+        }         
     }
 }
 

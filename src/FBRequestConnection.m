@@ -43,6 +43,9 @@ NSString *const kSDKVersion = @"2";
 NSString *const kUserAgentBase = @"FBiOSSDK";
 NSString *const kBundleVersionKey = @"CFBundleVersion";
 
+// response object property/key
+NSString *const FBNonJSONResponseProperty = @"FBiOSSDK_NON_JSON_RESULT";
+
 static const int kRESTAPIAccessTokenErrorCode = 190;
 static const NSTimeInterval kDefaultTimeout = 180.0;
 
@@ -765,20 +768,25 @@ typedef enum FBRequestConnectionState {
 - (id)parseJSONOrBool:(NSString *)utf8
                 error:(NSError **)error
 {
-    NSString *parseUTF8;
-
-    if ([utf8 isEqualToString:@"false"]) {
-        parseUTF8 = @"{\"error\":\"false\"}";
-    } else if ([utf8 isEqualToString:@"true"]) {
-        parseUTF8 = @"{}";
-    } else {
-        parseUTF8 = utf8;
-    }
-
     id parsed = nil;
     if (!(*error)) {
         SBJSON *parser = [[SBJSON alloc] init];
-        parsed = [parser objectWithString:parseUTF8 error:error];
+        parsed = [parser objectWithString:utf8 error:error];
+        // if we fail parse we attemp a reparse of a modified input to support results in the form "foo=bar", "true", etc.
+        if (*error) {
+            // we round-trip our hand-wired response through the parser in order to remain
+            // consistent with the rest of the output of this function (note, if perf turns out
+            // to be a problem -- unlikely -- we can return the following dictionary outright)
+            NSDictionary *original = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      utf8, FBNonJSONResponseProperty,
+                                      nil];
+            NSString *jsonrep = [parser stringWithObject:original];
+            NSError *reparseError;
+            parsed = [parser objectWithString:jsonrep error:&reparseError];
+            if (!reparseError) {
+                *error = nil;
+            }
+        }
         [parser release];
     }
     return parsed;
@@ -857,10 +865,10 @@ typedef enum FBRequestConnectionState {
     if ([idResult isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = (NSDictionary *)idResult;
 
-        if ([dictionary valueForKey:@"error"] ||
-            [dictionary valueForKey:@"error_code"] ||
-            [dictionary valueForKey:@"error_msg"] ||
-            [dictionary valueForKey:@"error_reason"]) {
+        if ([dictionary objectForKey:@"error"] ||
+            [dictionary objectForKey:@"error_code"] ||
+            [dictionary objectForKey:@"error_msg"] ||
+            [dictionary objectForKey:@"error_reason"]) {
 
             // TODO: align errors between batch items and single item
             NSMutableDictionary *userInfo = [[[NSMutableDictionary alloc] init] autorelease];
