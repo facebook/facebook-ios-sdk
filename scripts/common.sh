@@ -50,6 +50,10 @@ if [ $(dirname $0) != "$FB_SDK_SCRIPT" ]; then
 
   # The path to the built Facebook iOS SDK .framework
   FB_SDK_FRAMEWORK=$FB_SDK_BUILD/$FB_SDK_FRAMEWORK_NAME
+
+  # The path to the framework docs
+  FB_SDK_FRAMEWORK_DOCS=$FB_SDK_BUILD/docs
+
 fi
 
 # Set up one-time variables

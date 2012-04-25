@@ -40,6 +40,7 @@
 		84137163152B9BD600B2C0E1 /* FBSessionManualTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84137160152B9BD600B2C0E1 /* FBSessionManualTokenCachingStrategy.m */; };
 		84137164152B9BD600B2C0E1 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 84137162152B9BD600B2C0E1 /* FBURLConnection.m */; };
 		84251917153DD460003EAD24 /* FBGraphObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 84251914153DD460003EAD24 /* FBGraphObject.m */; };
+		843D2DE31547C39900873F7C /* FBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 843D2DE21547C39900873F7C /* FBUtility.m */; };
 		84501D07153DD504000E4DD7 /* FBCacheIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 84501CFE153DD504000E4DD7 /* FBCacheIndex.m */; };
 		84501D08153DD504000E4DD7 /* FBDataDiskCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 84501D00153DD504000E4DD7 /* FBDataDiskCache.m */; };
 		84501D09153DD504000E4DD7 /* FBPlacesPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 84501D02153DD504000E4DD7 /* FBPlacesPickerView.m */; };
@@ -116,6 +117,9 @@
 		84251915153DD460003EAD24 /* FBGraphPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphPerson.h; path = ../../src/FBGraphPerson.h; sourceTree = "<group>"; };
 		84251916153DD460003EAD24 /* FBGraphPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphPlace.h; path = ../../src/FBGraphPlace.h; sourceTree = "<group>"; };
 		8435190015461CE0001F2675 /* FBOpenGraphAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBOpenGraphAction.h; path = ../../src/FBOpenGraphAction.h; sourceTree = "<group>"; };
+		843D2DE01547C39900873F7C /* FBSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSession+Internal.h"; path = "../../src/FBSession+Internal.h"; sourceTree = "<group>"; };
+		843D2DE11547C39900873F7C /* FBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBUtility.h; path = ../../src/FBUtility.h; sourceTree = "<group>"; };
+		843D2DE21547C39900873F7C /* FBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBUtility.m; path = ../../src/FBUtility.m; sourceTree = "<group>"; };
 		84501CFD153DD504000E4DD7 /* FBCacheIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBCacheIndex.h; path = ../../src/FBCacheIndex.h; sourceTree = "<group>"; };
 		84501CFE153DD504000E4DD7 /* FBCacheIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBCacheIndex.m; path = ../../src/FBCacheIndex.m; sourceTree = "<group>"; };
 		84501CFF153DD504000E4DD7 /* FBDataDiskCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBDataDiskCache.h; path = ../../src/FBDataDiskCache.h; sourceTree = "<group>"; };
@@ -239,6 +243,11 @@
 		30EA73CC13F5D50D003DC0D2 /* FBConnect */ = {
 			isa = PBXGroup;
 			children = (
+				30EA73CA13F5D502003DC0D2 /* FBConnect.bundle */,
+				30EA73D913F5D523003DC0D2 /* JSON */,
+				843D2DE01547C39900873F7C /* FBSession+Internal.h */,
+				843D2DE11547C39900873F7C /* FBUtility.h */,
+				843D2DE21547C39900873F7C /* FBUtility.m */,
 				84501CFD153DD504000E4DD7 /* FBCacheIndex.h */,
 				84501CFE153DD504000E4DD7 /* FBCacheIndex.m */,
 				84501CFF153DD504000E4DD7 /* FBDataDiskCache.h */,
@@ -258,8 +267,6 @@
 				E2F5AFCA152D5999002D0D96 /* FBRequestBody.h */,
 				E2F5AFCB152D5999002D0D96 /* FBRequestBody.m */,
 				E2F5AFCC152D5999002D0D96 /* FBRequestConnection.m */,
-				30EA73CA13F5D502003DC0D2 /* FBConnect.bundle */,
-				30EA73D913F5D523003DC0D2 /* JSON */,
 				30EA73CD13F5D523003DC0D2 /* Facebook.h */,
 				30EA73CE13F5D523003DC0D2 /* Facebook.m */,
 				8413715F152B9BD600B2C0E1 /* FBSessionManualTokenCachingStrategy.h */,
@@ -408,6 +415,7 @@
 				84501D09153DD504000E4DD7 /* FBPlacesPickerView.m in Sources */,
 				84501D0A153DD504000E4DD7 /* FBProfilePictureView.m in Sources */,
 				84501D0B153DD504000E4DD7 /* FBSubtitledTableViewCell.m in Sources */,
+				843D2DE31547C39900873F7C /* FBUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

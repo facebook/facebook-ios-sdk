@@ -20,6 +20,7 @@
 #import "FBSession+Internal.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBError.h"
+#import "FBUtility.h"
 
 // the sooner we can remove these the better
 #import "Facebook.h"
@@ -109,8 +110,6 @@ static NSString *FBPLISTAppID = nil;
 
 // class members
 + (NSString*)appIDFromPLIST;
-+ (NSString *)stringByURLUnescapingString:(NSString*)escapedString;
-+ (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString;
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode;
 
@@ -301,7 +300,7 @@ static NSString *FBPLISTAppID = nil;
         query = [url query];
     }
 
-    NSDictionary *params = [FBSession dictionaryByParsingURLQueryPart:query];
+    NSDictionary *params = [FBUtility dictionaryByParsingURLQueryPart:query];
     NSString *accessToken = [params objectForKey:@"access_token"];
 
     // if the URL doesn't contain the access token, an error has occurred.
@@ -683,43 +682,6 @@ static NSString *FBPLISTAppID = nil;
     return [NSString stringWithFormat:@"fb%@%@://authorize",
             self.appID,
             self.urlSchemeSuffix];
-}
-
-// a couple of URL parsing helpers
-// TODO: consider a more centralized utils class, or a nice category over URL
-+ (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString {
-
-    NSMutableDictionary *result = [NSMutableDictionary dictionary];
-    NSArray *parts = [encodedString componentsSeparatedByString:@"&"];
-
-    for (NSString *part in parts) {
-        if ([part length] == 0) {
-            continue;
-        }
-
-        NSRange index = [part rangeOfString:@"="];
-        NSString *key;
-        NSString *value;
-
-        if (index.location == NSNotFound) {
-            key = part;
-            value = @"";
-        } else {
-            key = [part substringToIndex:index.location];
-            value = [part substringFromIndex:index.location + index.length];
-        }
-
-        if (key && value) {
-            [result setObject:[FBSession stringByURLUnescapingString:value]
-                       forKey:[FBSession stringByURLUnescapingString:key]];
-        }
-    }
-    return result;
-}
-
-+ (NSString *)stringByURLUnescapingString:(NSString*)escapedString {
-    return [[escapedString stringByReplacingOccurrencesOfString:@"+" withString:@" "]
-            stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 }
 
 + (NSString*) appIDFromPLIST {

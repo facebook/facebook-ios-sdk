@@ -16,6 +16,7 @@
 
 #import "Facebook.h"
 #import "JSON.h"
+#import "FBUtility.h"
 
 // constants
 NSString *const FBGraphBasePath = @"https://graph.facebook.com";
@@ -330,12 +331,7 @@ static NSString *const kPostHTTPMethod = @"POST";
             continue;
         }
         
-        NSString* escaped_value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                                      NULL, /* allocator */
-                                                                                      (CFStringRef)[params objectForKey:key],
-                                                                                      NULL, /* charactersToLeaveUnescaped */
-                                                                                      (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                      kCFStringEncodingUTF8);
+        NSString* escaped_value = [FBUtility stringByURLEncodingString:[params objectForKey:key]];
         
         [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
         [escaped_value release];

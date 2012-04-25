@@ -17,6 +17,30 @@
 #import "FBGraphObject.h"
 #import <objc/runtime.h>
 
+// Module Summary:
+// this is the module that does the heavy lifting to implement the public-facing 
+// developer-model described in FBGraphObject.h, namely typed protocol
+// accessors over "duck-typed" dictionaries, for interating with Facebook Graph and
+// Open Graph objects and actions
+//
+// Message forwarding is used as described here:
+// https://developer.apple.com/library/mac/#documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtForwarding.html
+// in order to infer implementations for property getter 
+// and setter selectors, backed by objectForKey: and setObject:forKey: respectively
+//
+// The basic flow is straightforward, though there are a number of details; 
+// The flow is:
+// * System doesn't recognize a selector
+// * It calls methodSignatureForSelector:
+// * We return a new signature if we intend to handle the selector
+// * The system populates the invoke object with the old selector and the new signature
+// * The system passes the invocation to forwardInvocation:
+// * We swap out selectors and invoke
+//
+// Additional details include, deferred wrapping of objects as they are fetched by callers, 
+// implementations for common methods such as respondsToSelector and conformsToProtocol, as
+// suggested in the previously referenced documentation
+
 static NSString *const FBIsGraphObjectKey = @"com.facebook.FBIsGraphObjectKey";
 
 // used internally by the category impl

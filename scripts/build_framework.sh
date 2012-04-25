@@ -100,6 +100,13 @@ ln -s ./Versions/A/Resources ./Resources
 ln -s ./Versions/A/FBiOSSDK ./FBiOSSDK
 
 # -----------------------------------------------------------------------------
+# Build docs 
+#
+echo "Building docs."
+
+\headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
+
+# -----------------------------------------------------------------------------
 # Done
 #
 common_success

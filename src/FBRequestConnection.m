@@ -24,6 +24,7 @@
 #import "FBRequest.h"
 #import "Facebook.h"
 #import "FBGraphObject.h"
+#import "FBUtility.h"
 
 // URL construction constants
 NSString *const kGraphURL = @"https://graph.facebook.com";
@@ -510,12 +511,7 @@ typedef enum FBRequestConnectionState {
          processGraphObject:metadata.request.graphObject
          withAction:^(NSString *key, id value) {
              // escape the value
-             value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                         NULL,
-                                                                         (CFStringRef)[value description],
-                                                                         NULL,
-                                                                         (CFStringRef)@"<>{}\"|~^`!*'();:@&=+$,/?%#[]",
-                                                                         kCFStringEncodingUTF8);
+             value = [FBUtility stringByURLEncodingString:[value description]];
              [bodyValue appendFormat:@"%@%@=%@",
               delimeter,
               key,
