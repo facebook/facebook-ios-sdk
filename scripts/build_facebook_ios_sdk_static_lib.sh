@@ -20,11 +20,11 @@ die() {
 
 # The Xcode bin path
 if [ -d "/Developer/usr/bin" ]; then
-   # < XCode 4.3.1
+   # < Xcode 4.3.1
   XCODEBUILD_PATH=/Developer/usr/bin
 else
-  # >= XCode 4.3.1, or from App store
-  XCODEBUILD_PATH=/Applications/XCode.app/Contents/Developer/usr/bin
+  # >= Xcode 4.3.1, or from App store
+  XCODEBUILD_PATH=/Applications/Xcode.app/Contents/Developer/usr/bin
 fi
 XCODEBUILD=$XCODEBUILD_PATH/xcodebuild
 test -x "$XCODEBUILD" || die "Could not find xcodebuild in $XCODEBUILD_PATH"
