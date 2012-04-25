@@ -64,7 +64,7 @@
         [self dismissWithSuccess:NO animated:YES];
     } else {
         if ([_loginDelegate respondsToSelector:@selector(fbDialogLogin:expirationDate:)]) {
-            [_loginDelegate fbDialogLogin:token expirationDate:expirationDate];
+            [_loginDelegate fbDialogLogin:token expirationDate:expirationDate authorizationCode:NULL];
         }
         [self dismissWithSuccess:YES animated:YES];
     }

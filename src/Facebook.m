@@ -56,6 +56,7 @@ static void *finishedContext = @"finishedContext";
 
 @synthesize    accessToken = _accessToken,
             expirationDate = _expirationDate,
+         authorizationCode = _authorizationCode,
            sessionDelegate = _sessionDelegate,
                permissions = _permissions,
            urlSchemeSuffix = _urlSchemeSuffix,
@@ -451,6 +452,7 @@ static void *finishedContext = @"finishedContext";
     
     // We have an access token, so parse the expiration date.
     NSString *expTime = [params objectForKey:@"expires_in"];
+    NSString *authorizationCode = [params valueForKey:@"code"];
     NSDate *expirationDate = [NSDate distantFuture];
     if (expTime != nil) {
         int expVal = [expTime intValue];
@@ -459,7 +461,7 @@ static void *finishedContext = @"finishedContext";
         }
     }
     
-    [self fbDialogLogin:accessToken expirationDate:expirationDate];
+    [self fbDialogLogin:accessToken expirationDate:expirationDate authorizationCode:authorizationCode];
     return YES;
 }
 
@@ -781,9 +783,10 @@ static void *finishedContext = @"finishedContext";
 /**
  * Set the authToken and expirationDate after login succeed
  */
-- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
+- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate authorizationCode:(NSString *)authorizationCode {
     self.accessToken = token;
     self.expirationDate = expirationDate;
+    self.authorizationCode = authorizationCode;
     [_lastAccessTokenUpdate release];
     _lastAccessTokenUpdate = [[NSDate date] retain];
     [self reloadFrictionlessRecipientCache];
