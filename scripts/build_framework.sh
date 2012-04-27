@@ -94,10 +94,11 @@ mkdir $FB_SDK_FRAMEWORK/Versions/A/Resources
 
 # Current directory matters to ln.
 cd $FB_SDK_FRAMEWORK
-ln -s ./Versions/A ./Versions/Current
 ln -s ./Versions/A/Headers ./Headers
 ln -s ./Versions/A/Resources ./Resources
 ln -s ./Versions/A/FBiOSSDK ./FBiOSSDK
+cd $FB_SDK_FRAMEWORK/Versions
+ln -s ./A ./Current
 
 # -----------------------------------------------------------------------------
 # Build docs 
