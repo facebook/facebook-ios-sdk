@@ -114,7 +114,7 @@
 		84251912153DD460003EAD24 /* FBGraphLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphLocation.h; path = ../../src/FBGraphLocation.h; sourceTree = "<group>"; };
 		84251913153DD460003EAD24 /* FBGraphObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphObject.h; path = ../../src/FBGraphObject.h; sourceTree = "<group>"; };
 		84251914153DD460003EAD24 /* FBGraphObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBGraphObject.m; path = ../../src/FBGraphObject.m; sourceTree = "<group>"; };
-		84251915153DD460003EAD24 /* FBGraphPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphPerson.h; path = ../../src/FBGraphPerson.h; sourceTree = "<group>"; };
+		84251915153DD460003EAD24 /* FBGraphUser.h */ = {isa = PBXFileReference; fileEncoding = 4; name = FBGraphUser.h; path = ../../src/FBGraphUser.h; sourceTree = "<group>"; };
 		84251916153DD460003EAD24 /* FBGraphPlace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBGraphPlace.h; path = ../../src/FBGraphPlace.h; sourceTree = "<group>"; };
 		8435190015461CE0001F2675 /* FBOpenGraphAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBOpenGraphAction.h; path = ../../src/FBOpenGraphAction.h; sourceTree = "<group>"; };
 		843D2DE01547C39900873F7C /* FBSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSession+Internal.h"; path = "../../src/FBSession+Internal.h"; sourceTree = "<group>"; };
@@ -261,7 +261,7 @@
 				84251912153DD460003EAD24 /* FBGraphLocation.h */,
 				84251913153DD460003EAD24 /* FBGraphObject.h */,
 				84251914153DD460003EAD24 /* FBGraphObject.m */,
-				84251915153DD460003EAD24 /* FBGraphPerson.h */,
+				84251915153DD460003EAD24 /* FBGraphUser.h */,
 				84251916153DD460003EAD24 /* FBGraphPlace.h */,
 				8435190015461CE0001F2675 /* FBOpenGraphAction.h */,
 				E2F5AFCA152D5999002D0D96 /* FBRequestBody.h */,

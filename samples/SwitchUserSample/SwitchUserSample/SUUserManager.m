@@ -16,7 +16,7 @@
 
 #import "SUUserManager.h"
 #import <FBiOSSDK/FBSessionTokenCachingStrategy.h>
-#import <FBiOSSDK/FBGraphPerson.h>
+#import <FBiOSSDK/FBGraphUser.h>
 
 NSString *const SUInvalidSlotNumber = @"com.facebook.SwitchUserSample:InvalidSlotNumber";
 
@@ -103,7 +103,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return [defaults objectForKey:key];
 }
 
-- (void)updateUser:(NSDictionary<FBGraphPerson>*)user inSlot:(int)slot {
+- (void)updateUser:(NSDictionary<FBGraphUser>*)user inSlot:(int)slot {
     [self validateSlotNumber:slot];
 
     NSString *idKey = [NSString stringWithFormat:SUUserIDKeyFormat, slot];

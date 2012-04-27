@@ -98,7 +98,7 @@
         FBRequest *me = [FBRequest requestMeForSession:session];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
         [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
-                                                             NSDictionary<FBGraphPerson> *result, 
+                                                             NSDictionary<FBGraphUser> *result,
                                                              NSError *error) {
             if (connection != self.requestConnection) {
                 return;

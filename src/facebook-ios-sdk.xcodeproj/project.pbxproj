@@ -26,7 +26,7 @@
 		84AE5DA4152EA02500C4DE54 /* FBGraphObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */; };
 		84B2F69E1525096B00E93C17 /* FBSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BEDF4C151BC24F00F89C3B /* FBSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84D2FC13153CC34300D7F814 /* FBGraphObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */; };
-		84E0C9F91535ED5A00778DA4 /* FBGraphPerson.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0C9F81535ED5A00778DA4 /* FBGraphPerson.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		84E0C9F91535ED5A00778DA4 /* FBGraphUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0C9F81535ED5A00778DA4 /* FBGraphUser.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84E0CA04153618E500778DA4 /* FacebookSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0CA03153618E500778DA4 /* FacebookSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84E0CA061536198400778DA4 /* FBConnect.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0CA051536198400778DA4 /* FBConnect.h */; };
 		84E0CA0A153619D500778DA4 /* Facebook.h in Headers */ = {isa = PBXBuildFile; fileRef = 84E0CA07153619D400778DA4 /* Facebook.h */; };
@@ -127,7 +127,7 @@
 		84AE5DA1152EA02500C4DE54 /* FBGraphObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObject.h; sourceTree = "<group>"; };
 		84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObject.m; sourceTree = "<group>"; };
 		84BEDF4C151BC24F00F89C3B /* FBSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSession.h; sourceTree = "<group>"; };
-		84E0C9F81535ED5A00778DA4 /* FBGraphPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphPerson.h; sourceTree = "<group>"; };
+		84E0C9F81535ED5A00778DA4 /* FBGraphUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphUser.h; sourceTree = "<group>"; };
 		84E0CA03153618E500778DA4 /* FacebookSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FacebookSDK.h; sourceTree = "<group>"; };
 		84E0CA051536198400778DA4 /* FBConnect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBConnect.h; sourceTree = "<group>"; };
 		84E0CA07153619D400778DA4 /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Facebook.h; sourceTree = "<group>"; };
@@ -278,7 +278,7 @@
 				84E2DA2B1535342F007F886C /* FBGraphLocation.h */,
 				84AE5DA1152EA02500C4DE54 /* FBGraphObject.h */,
 				84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */,
-				84E0C9F81535ED5A00778DA4 /* FBGraphPerson.h */,
+				84E0C9F81535ED5A00778DA4 /* FBGraphUser.h */,
 				84E2DA27153492DE007F886C /* FBGraphPlace.h */,
 				AEA93B0611D5293B000A4545 /* FBLoginDialog.h */,
 				AEA93B0711D5293B000A4545 /* FBLoginDialog.m */,
@@ -396,7 +396,7 @@
 				84AE5DA3152EA02500C4DE54 /* FBGraphObject.h in Headers */,
 				84E2DA28153492DE007F886C /* FBGraphPlace.h in Headers */,
 				84E2DA2C15353430007F886C /* FBGraphLocation.h in Headers */,
-				84E0C9F91535ED5A00778DA4 /* FBGraphPerson.h in Headers */,
+				84E0C9F91535ED5A00778DA4 /* FBGraphUser.h in Headers */,
 				84E0CA04153618E500778DA4 /* FacebookSDK.h in Headers */,
 				84E0CA061536198400778DA4 /* FBConnect.h in Headers */,
 				84E0CA0A153619D500778DA4 /* Facebook.h in Headers */,

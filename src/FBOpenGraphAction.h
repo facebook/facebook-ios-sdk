@@ -36,7 +36,7 @@
 @property (retain, nonatomic) id<FBGraphPlace>      place;
 @property (retain, nonatomic) NSArray               *tags;
 @property (retain, nonatomic) NSArray               *images;
-@property (retain, nonatomic) id<FBGraphPerson>     from;
+@property (retain, nonatomic) id<FBGraphUser>       from;
 @property (retain, nonatomic) NSArray               *likes;
 @property (retain, nonatomic) id<FBGraphObject>     application;
 @property (retain, nonatomic) NSArray               *comments;

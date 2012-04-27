@@ -24,7 +24,7 @@
 #import "FBPlacesPickerView.h"
 
 // graph
-#import "FBGraphPerson.h"
+#import "FBGraphUser.h"
 #import "FBGraphPlace.h"
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"           // + design summary for graph component-group

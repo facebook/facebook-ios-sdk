@@ -71,7 +71,7 @@
 // The following layer diagram depicts some of the concepts discussed thus far:
 // 
 //                      *-------------* *------------* *-------------**--------------------------*
-//           Facade --> |FBGraphPerson| |FBGraphPlace| | MyGraphThing|| MyGraphPersonExtentension| ...
+//           Facade --> | FBGraphUser | |FBGraphPlace| | MyGraphThing|| MyGraphPersonExtentension| ...
 //                      *-------------* *------------* *-------------**--------------------------*
 //                      *-----------------------------------------* *---------------------------------*
 // Transparent impl --> | FBGraphObject<FBGraphObject> (instaces) | |   CustomClass<FBGraphObject>    |

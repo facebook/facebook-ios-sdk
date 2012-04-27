@@ -66,7 +66,7 @@
         FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
         [newConnection addRequest:me
                 completionHandler: ^(FBRequestConnection *connection, 
-                                     NSDictionary<FBGraphPerson> *my, // expecting a person here
+                                     NSDictionary<FBGraphUser> *my, // expecting a person here
                                      NSError *error) {             
                     // Request completed...
                     if (connection != self.requestConnection) {

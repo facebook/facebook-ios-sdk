@@ -18,13 +18,13 @@
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"
 
-// FBGraphPerson protocol (graph accessor)
+// FBGraphUser protocol (graph accessor)
 //
 // Summary:
-// represents commonly used properties of a Facebook place object, may be used to access an 
+// represents commonly used properties of a Facebook User object, may be used to access an
 // NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
 // enable typed access to Facebook graph objects
-@protocol FBGraphPerson<FBGraphObject>
+@protocol FBGraphUser<FBGraphObject>
 
 @property (retain, nonatomic) NSString *id;
 @property (retain, nonatomic) NSString *name;
