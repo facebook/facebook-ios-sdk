@@ -15,7 +15,7 @@
  */
 
 #import "FBRequest.h"
-#import "JSON.h"
+#import "JSONKit.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -178,7 +178,6 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
  */
 - (id)formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
     return [NSError errorWithDomain:@"facebookErrDomain" code:code userInfo:errorData];
-    
 }
 
 /**
@@ -202,9 +201,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     }
     
     
-    SBJSON *jsonParser = [[SBJSON alloc] init];
-    id result = [jsonParser objectWithString:responseString];
-    [jsonParser release];
+    id result = [data objectFromJSONData];
 
     if (result == nil) {
         return responseString;
