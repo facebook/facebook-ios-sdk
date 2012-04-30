@@ -30,6 +30,21 @@
 /*! helper macro to test for states that are terminal */
 #define FB_SESSIONSTATEVALIDBIT (1 << 9)
 
+/*
+ * Constants defining logging behavior.  Use with [FBSession setLoggingLevel]
+ */
+
+/*! Log requests from FBRequest* classes */
+#define FB_LOG_BEHAVIOR_FB_REQUESTS @"fb_log_fb_requests"
+
+/*! Log requests from FBURLConnection* classes */
+#define FB_LOG_BEHAVIOR_FBURL_CONNECTIONS @"fb_log_fburl_connections"
+
+/*! Include access token in logging. */
+#define FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS @"fb_log_include_access_tokens"
+
+/*! Log session state transitions. */
+#define FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS @"fb_log_session_state_transitions"
 
 /*! 
  @typedef FBSessionState enum
@@ -246,5 +261,26 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
  based on the url
 */
 - (BOOL)handleOpenURL:(NSURL*)url;
+
+/*!
+ @methodgroup Class methods
+ */
+
+/*!
+ @method
+ 
+ @abstract retrieve the current FB SDK logging behavior.
+ 
+ */
++ (NSSet *)loggingBehavior;
+
+/*!
+ @method
+ 
+ @abstract set the current FB SDK logging behavior.  Should consist of strings defined as constants with FB_LOG_BEHAVIOR_* above,
+           and can be constructed with [NSSet initWithObjects:]
+ 
+ */
++ (void)setLoggingBehavior:(NSSet *)loggingBehavior;
 
 @end

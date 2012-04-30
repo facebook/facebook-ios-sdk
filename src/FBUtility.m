@@ -15,6 +15,8 @@
  */
 
 #import "FBUtility.h"
+#import "FBSession.h"
+#include <sys/time.h>
 
 @implementation FBUtility
 
@@ -64,6 +66,12 @@
                                                                            kCFStringEncodingUTF8);
     [result autorelease];
     return result;
+}
+
++ (unsigned long)currentTimeInMilliseconds {
+    struct timeval time; 
+    gettimeofday(&time, NULL); 
+    return (time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
 @end

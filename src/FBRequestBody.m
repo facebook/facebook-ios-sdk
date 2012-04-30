@@ -66,16 +66,19 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 
 - (void)appendWithKey:(NSString *)key
             formValue:(NSString *)value
+               logger:(FBLogger *)logger
 {
     NSString *disposition =
         [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n", key];
     [self appendUTF8:disposition];
     [self appendUTF8:value];
     [self appendRecordBoundary];
+    [logger appendFormat:@"\n    %@:\t%@", key, (NSString *)value];
 }
 
 - (void)appendWithKey:(NSString *)key
-           imageValue:(UIImage *)image
+                 imageValue:(UIImage *)image
+               logger:(FBLogger *)logger
 {
     NSString *disposition =
         [NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"%@\"\r\n", key];
@@ -84,10 +87,12 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
     NSData *data = UIImagePNGRepresentation(image);
     [self.mutableData appendData:data];
     [self appendRecordBoundary];
+    [logger appendFormat:@"\n    %@:\t<Image - %d kB>", key, [data length] / 1024];
 }
 
 - (void)appendWithKey:(NSString *)key
             dataValue:(NSData *)data
+               logger:(FBLogger *)logger
 {
     NSString *disposition =
         [NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"%@\"\r\n", key];
@@ -95,6 +100,7 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
     [self appendUTF8:@"Content-Type: content/unknown\r\n\r\n"];
     [self.mutableData appendData:data];
     [self appendRecordBoundary];
+    [logger appendFormat:@"\n    %@:\t<Data - %d kB>", key, [data length] / 1024];
 }
 
 - (NSData *)data

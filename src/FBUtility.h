@@ -22,4 +22,6 @@
 + (NSString *)stringByURLDecodingString:(NSString*)escapedString;
 + (NSString*)stringByURLEncodingString:(NSString*)unescapedString;
 
++ (unsigned long)currentTimeInMilliseconds; 
+
 @end

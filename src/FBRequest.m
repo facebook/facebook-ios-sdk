@@ -33,7 +33,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 @synthesize session = _session;
 @synthesize graphPath = _graphPath;
 @synthesize restMethod = _restMethod;
-@synthesize HTTPMethod = _HTTPMethod;
+@synthesize HTTPMethod = _HTTPMethod; 
 
 - (id)init
 {
@@ -311,7 +311,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(NSDictionary *)params {
-    return [self serializeURL:baseUrl params:params httpMethod:@"GET"];
+    return [self serializeURL:baseUrl params:params httpMethod:kGetHTTPMethod];
 }
 
 + (NSString*)serializeURL:(NSString *)baseUrl
@@ -325,7 +325,7 @@ static NSString *const kPostHTTPMethod = @"POST";
     for (NSString* key in [params keyEnumerator]) {
         if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
             ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
-            if ([httpMethod isEqualToString:@"GET"]) {
+            if ([httpMethod isEqualToString:kGetHTTPMethod]) {
                 NSLog(@"can not use GET to upload a file");
             }
             continue;

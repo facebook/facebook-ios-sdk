@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIImage.h>
+#import "FBLogger.h"
 
 @interface FBRequestBody : NSObject
 
@@ -24,13 +25,16 @@
 - (id)init;
 
 - (void)appendWithKey:(NSString *)key
-            formValue:(NSString *)value;
+            formValue:(NSString *)value
+               logger:(FBLogger *)logger;
 
 - (void)appendWithKey:(NSString *)key
-           imageValue:(UIImage *)image;
+           imageValue:(UIImage *)image
+               logger:(FBLogger *)logger;
 
 - (void)appendWithKey:(NSString *)key
-            dataValue:(NSData *)data;
+            dataValue:(NSData *)data
+               logger:(FBLogger *)logger;
 
 + (NSString *)mimeContentType;
 

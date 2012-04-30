@@ -24,6 +24,7 @@
 #import "FBRequest.h"
 #import "Facebook.h"
 #import "FBGraphObject.h"
+#import "FBLogger.h"
 #import "FBUtility.h"
 
 // URL construction constants
@@ -109,6 +110,8 @@ typedef enum FBRequestConnectionState {
 @property (nonatomic, retain) NSMutableURLRequest *internalUrlRequest;
 @property (nonatomic, retain, readwrite) NSHTTPURLResponse *urlResponse;
 @property (nonatomic, retain) FBRequest *deprecatedRequest;
+@property (nonatomic, retain) FBLogger *logger;
+@property (nonatomic) unsigned long requestStartTime;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -120,7 +123,8 @@ typedef enum FBRequestConnectionState {
 - (void)appendJSONRequests:(NSArray *)requests
                     toBody:(FBRequestBody *)body
              includeTokens:(BOOL)includeTokens
-        andNameAttachments:(NSMutableDictionary *)attachments;
+        andNameAttachments:(NSMutableDictionary *)attachments
+                    logger:(FBLogger *)logger;
 
 - (void)addRequest:(FBRequestMetadata *)metadata
            toBatch:(NSMutableArray *)batch
@@ -131,7 +135,8 @@ typedef enum FBRequestConnectionState {
 
 - (void)appendAttachments:(NSDictionary *)attachments
                    toBody:(FBRequestBody *)body
-              addFormData:(BOOL)addFormData;
+              addFormData:(BOOL)addFormData
+                   logger:(FBLogger *)logger;
 
 + (void)processGraphObject:(id<FBGraphObject>)object
                        withAction:(KeyValueActionHandler)action;
@@ -168,6 +173,8 @@ typedef enum FBRequestConnectionState {
 
 - (BOOL)isInvalidSessionError:(NSError *)error;
 
+- (void)registerTokenToOmitFromLog:(NSString *)token; 
+
 + (NSString *)userAgent;
 
 @end
@@ -187,6 +194,8 @@ typedef enum FBRequestConnectionState {
 @synthesize internalUrlRequest = _internalUrlRequest;
 @synthesize urlResponse = _urlResponse;
 @synthesize deprecatedRequest = _deprecatedRequest;
+@synthesize logger = _logger;
+@synthesize requestStartTime = _requestStartTime;
 
 - (NSMutableURLRequest *)urlRequest
 {
@@ -222,6 +231,7 @@ typedef enum FBRequestConnectionState {
         _requests = [[NSMutableArray alloc] init];
         _timeout = timeout;
         _state = kStateCreated;
+        _logger = [[FBLogger alloc] initWithLoggingBehavior:FB_LOG_BEHAVIOR_FB_REQUESTS];
     }
     return self;
 }
@@ -234,6 +244,7 @@ typedef enum FBRequestConnectionState {
     [_internalUrlRequest release];
     [_urlResponse release];
     [_deprecatedRequest release];
+    [_logger release];
     [super dealloc];
 }
 
@@ -278,12 +289,15 @@ typedef enum FBRequestConnectionState {
     }
 
     NSMutableURLRequest *request = self.urlRequest;
+    _requestStartTime = [FBUtility currentTimeInMilliseconds];
     FBURLConnectionHandler handler =
         ^(FBURLConnection *connection,
           NSError *error,
           NSURLResponse *response,
           NSData *responseData) {
-        [self completeWithResponse:response data:responseData orError:error];
+        [self completeWithResponse:response 
+                              data:responseData 
+                           orError:error];
     };
 
     id<FBRequestDelegate> deprecatedDelegate = [self.deprecatedRequest delegate];
@@ -318,8 +332,11 @@ typedef enum FBRequestConnectionState {
                                   timeout:(NSTimeInterval)timeout
 {
     FBRequestBody *body = [[FBRequestBody alloc] init];
+    FBLogger *bodyLogger = [[FBLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];  
+    FBLogger *attachmentLogger = [[FBLogger alloc] initWithLoggingBehavior:_logger.loggingBehavior];
+    
     NSMutableURLRequest *request;
-
+    
     if ([requests count] == 1) {
         FBRequestMetadata *metadata = [requests objectAtIndex:0];
         NSURL *url = [self urlWithSingleRequest:metadata.request];
@@ -328,46 +345,72 @@ typedef enum FBRequestConnectionState {
                                       timeoutInterval:timeout];
 
         NSString *httpMethod = metadata.request.HTTPMethod;
-        [request setHTTPMethod:httpMethod];
+        [request setHTTPMethod:httpMethod]; 
         [self appendAttachments:metadata.request.parameters
                          toBody:body
-                    addFormData:[httpMethod isEqualToString:@"POST"]];
+                    addFormData:[httpMethod isEqualToString:@"POST"]
+                         logger:attachmentLogger];
         
         // if we have a post object, also roll that into the body 
         if (metadata.request.graphObject) {
             [FBRequestConnection processGraphObject:metadata.request.graphObject
                                                 withAction:^(NSString *key, id value) {
-                [body appendWithKey:key formValue:value];
+                [body appendWithKey:key formValue:value logger:bodyLogger];
             }];
         }
     } else {
         NSString *commonToken = [self commonAccessToken:requests];
         if (commonToken) {
-            [body appendWithKey:kAccessTokenKey formValue:commonToken];
+            [body appendWithKey:kAccessTokenKey formValue:commonToken logger:bodyLogger];
+            [self registerTokenToOmitFromLog:commonToken];
         }
 
         NSMutableDictionary *attachments = [[NSMutableDictionary alloc] init];
+        
         [self appendJSONRequests:requests
                           toBody:body
                    includeTokens:(!commonToken)
-              andNameAttachments:attachments];
-
-        [self appendAttachments:attachments toBody:body addFormData:NO];
+              andNameAttachments:attachments
+                          logger:bodyLogger];
+        
+        [self appendAttachments:attachments 
+                         toBody:body 
+                    addFormData:NO
+                         logger:attachmentLogger];
+        
         [attachments release];
-
+        
         request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:kGraphURL]
                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                       timeoutInterval:timeout];
         [request setHTTPMethod:@"POST"];
-
     }
 
     [request setHTTPBody:[body data]];
+    NSUInteger bodyLength = [[body data] length] / 1024;
     [body release];
 
     [request setValue:[FBRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
     [request setValue:[FBRequestBody mimeContentType] forHTTPHeaderField:@"Content-Type"];
-
+    
+    if (_logger.isActive) {
+        [_logger appendFormat:@"Request <#%d>:\n", _logger.loggerSerialNumber];
+        [_logger appendKey:@"URL" value:[[request URL] absoluteString]];
+        [_logger appendKey:@"Method" value:[request HTTPMethod]];
+        [_logger appendKey:@"UserAgent" value:[FBRequestConnection userAgent]];
+        [_logger appendKey:@"MIME" value:[FBRequestBody mimeContentType]];
+        [_logger appendKey:@"Body Size" value:[NSString stringWithFormat:@"%d kB", bodyLength / 1024]];
+        [_logger appendKey:@"Body (w/o attachments)" value:bodyLogger.contents];
+        [_logger appendKey:@"Attachments" value:attachmentLogger.contents];
+        [_logger appendString:@"\n"];
+        
+        [_logger emitToNSLog];
+    }
+    
+    // Safely release now that everything's serialized into the logger.
+    [bodyLogger release];
+    [attachmentLogger release];
+    
     return request;
 }
 
@@ -389,6 +432,7 @@ typedef enum FBRequestConnectionState {
     NSString *token = request.session.accessToken;
     if (token) {
         [request.parameters setValue:token forKey:kAccessTokenKey];
+        [self registerTokenToOmitFromLog:token];
     }
 
     NSString *baseURL;
@@ -440,6 +484,7 @@ typedef enum FBRequestConnectionState {
                     toBody:(FBRequestBody *)body
              includeTokens:(BOOL)includeTokens
         andNameAttachments:(NSMutableDictionary *)attachments
+                    logger:(FBLogger *)logger
 {
     NSMutableArray *batch = [[NSMutableArray alloc] init];
     for (FBRequestMetadata *metadata in requests) {
@@ -448,13 +493,13 @@ typedef enum FBRequestConnectionState {
             includeToken:includeTokens
              attachments:attachments];
     }
-
+    
     SBJSON *writer = [[SBJSON alloc] init];
     NSString *jsonBatch = [writer stringWithObject:batch];
     [writer release];
     [batch release];
 
-    [body appendWithKey:kBatchKey formValue:jsonBatch];
+    [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
 }
 
 //
@@ -482,6 +527,7 @@ typedef enum FBRequestConnectionState {
         NSString *token = metadata.request.session.accessToken;
         if (token) {
             [metadata.request.parameters setObject:token forKey:kAccessTokenKey];
+            [self registerTokenToOmitFromLog:token];
         }
     }
 
@@ -538,12 +584,14 @@ typedef enum FBRequestConnectionState {
 - (void)appendAttachments:(NSDictionary *)attachments
                    toBody:(FBRequestBody *)body
               addFormData:(BOOL)addFormData
-{
+                   logger:(FBLogger *)logger
+{   
+    // key is name for both, first case is string which we can print, second pass grabs object
     if (addFormData) {
         for (NSString *key in [attachments keyEnumerator]) {
             NSObject *value = [attachments objectForKey:key];
             if ([value isKindOfClass:[NSString class]]) {
-                [body appendWithKey:key formValue:(NSString *)value];
+                [body appendWithKey:key formValue:(NSString *)value logger:logger];
             }
         }
     }
@@ -551,9 +599,9 @@ typedef enum FBRequestConnectionState {
     for (NSString *key in [attachments keyEnumerator]) {
         NSObject *value = [attachments objectForKey:key];
         if ([value isKindOfClass:[UIImage class]]) {
-            [body appendWithKey:key imageValue:(UIImage *)value];
+            [body appendWithKey:key imageValue:(UIImage *)value logger:logger];
         } else if ([value isKindOfClass:[NSData class]]) {
-            [body appendWithKey:key dataValue:(NSData *)value];
+            [body appendWithKey:key dataValue:(NSData *)value logger:logger];
         }
     }
 }
@@ -601,12 +649,15 @@ typedef enum FBRequestConnectionState {
     }
 
     int statusCode = self.urlResponse.statusCode;
-    error = [self checkConnectionError:error statusCode:statusCode parsedJSONResponse:nil];
-
+    
     NSArray *results = nil;
     if (!error) {
         results = [self parseJSONResponse:data error:&error];
     }
+        
+    error = [self checkConnectionError:error 
+                            statusCode:statusCode 
+                    parsedJSONResponse:results];
     
     if (!error) {
         if ([self.requests count] != [results count]) {
@@ -616,7 +667,24 @@ typedef enum FBRequestConnectionState {
                           parsedJSONResponse:results];
         }
     }
-
+    
+    if (!error) {
+        
+        [_logger appendFormat:@"Response <#%d>\nDuration: %lu msec\nSize: %d kB\nResponse Body:\n%@\n\n",
+         [_logger loggerSerialNumber],
+         [FBUtility currentTimeInMilliseconds] - _requestStartTime,
+         [data length],
+         results];
+        
+    } else {
+        
+        [_logger appendFormat:@"Response <#%d> <Error>:\n%@\n\n",
+         [_logger loggerSerialNumber],
+         [error localizedDescription]];
+        
+    }
+    [_logger emitToNSLog];
+    
     if (self.deprecatedRequest) {
         [self completeDeprecatedWithData:data results:results orError:error];
     } else {
@@ -864,6 +932,13 @@ typedef enum FBRequestConnectionState {
     return (idStatusCode && (((int)idStatusCode) == kRESTAPIAccessTokenErrorCode));
 }
 
+- (void)registerTokenToOmitFromLog:(NSString *)token 
+{
+    if (![[FBSession loggingBehavior] containsObject:FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS]) {
+        [FBLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
+    }
+}
+
 + (NSString *)userAgent
 {
     static NSString *agent = nil;
@@ -876,5 +951,6 @@ typedef enum FBRequestConnectionState {
 
     return agent;
 }
+
 
 @end

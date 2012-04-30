@@ -20,6 +20,7 @@
 #import "FBSession+Internal.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBError.h"
+#import "FBLogger.h"
 #import "FBUtility.h"
 
 // the sooner we can remove these the better
@@ -59,6 +60,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 // module scoped globals
 static NSString *FBPLISTAppID = nil;
+static NSSet *g_loggingBehavior;
 
 @interface FBSession () <FBLoginDialogDelegate> {
     @private
@@ -366,12 +368,25 @@ static NSString *FBPLISTAppID = nil;
     return _urlSchemeSuffix ? _urlSchemeSuffix : @"";
 }
 
-// actually a private member, but wanted to be close to its public collegue
+// actually a private member, but wanted to be close to its public colleague
 - (void)setUrlSchemeSuffix:(NSString*)newValue {
     if (_urlSchemeSuffix != newValue) {
         [_urlSchemeSuffix release];
         _urlSchemeSuffix = [(newValue ? newValue : @"") copy];
     }
+}
+
+#pragma mark -
+#pragma mark Class Methods
+
++ (NSSet *)loggingBehavior {
+    return g_loggingBehavior;
+}
+
++ (void)setLoggingBehavior:(NSSet *)newValue {
+    [g_loggingBehavior release];
+    g_loggingBehavior = newValue;
+    [g_loggingBehavior retain];
 }
 
 #pragma mark -
@@ -430,7 +445,8 @@ static NSString *FBPLISTAppID = nil;
 
     // invalid transition short circuits
     if (!isValidTransition) {
-        NSLog(@"FBSession !transitionToState:%i fromState:%i", state, statePrior);
+        [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS
+                            logEntry:[NSString stringWithFormat:@"FBSession !transitionToState:%i fromState:%i", state, statePrior]];
         return false;
     }
 
@@ -446,8 +462,9 @@ static NSString *FBPLISTAppID = nil;
     }
 
     // valid transitions notify
-    NSLog(@"FBSession transitionToState:%i fromState:%i", state, statePrior);
-
+    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS
+                        logEntry:[NSString stringWithFormat:@"FBSession transitionToState:%i fromState:%i", state, statePrior]];
+    
     // identify whether we will update token and date, and what the values will be
     BOOL changingTokenAndDate = false;
     if (token && date) {
