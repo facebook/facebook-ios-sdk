@@ -290,9 +290,6 @@
  *      didReceiveResponse:(NSURLResponse *)response
  */
 - (void)request:(FBRequest *)request didLoad:(id)result {
-    if ([result isKindOfClass:[NSArray class]]) {
-        result = [result objectAtIndex:0];
-    }
     [self showMessage:@"Checked in successfully"];
 }
 

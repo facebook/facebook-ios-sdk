@@ -540,6 +540,29 @@
 }
 
 /*
+ * API: Enable frictionless in the SDK, retrieve friends enabled for frictionless send
+ */
+- (void)enableFrictionlessAppRequests {
+    HackbookAppDelegate *delegate = 
+        (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    // Enable frictionless app requests
+    [[delegate facebook] enableFrictionlessRequests];
+    
+    UIAlertView *alertView = [[UIAlertView alloc]
+                              initWithTitle:@"Enabled Frictionless Requests"
+                              message:@"Request actions such as\n"
+                                      @"Send Request and Send Invite\n"
+                                      @"now support frictionless behavior."
+                              delegate:self
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil,
+                              nil];
+    [alertView show];
+    [alertView release];
+}
+
+/*
  * --------------------------------------------------------------------------
  * Graph API
  * --------------------------------------------------------------------------
@@ -675,6 +698,8 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    img, @"picture",
                                    nil];
+    [img release];
+    
     [[delegate facebook] requestWithGraphPath:@"me/photos"
                           andParams:params
                       andHttpMethod:@"POST"
@@ -939,12 +964,13 @@
         }
         case kAPIFriendsForDialogFeed:
         {
-            NSArray *resultData = [result objectForKey:@"data"];
+            NSArray *resultData = [result objectForKey: @"data"];
             // Check that the user has friends
             if ([resultData count] > 0) {
                 // Pick a random friend to post the feed to
                 int randomNumber = arc4random() % [resultData count];
-                [self apiDialogFeedFriend:[[resultData objectAtIndex:randomNumber] objectForKey:@"id"]];
+                [self apiDialogFeedFriend: 
+                    [[resultData objectAtIndex: randomNumber] objectForKey: @"id"]];
             } else {
                 [self showMessage:@"You do not have any friends to post to."];
             }
@@ -972,15 +998,17 @@
             NSMutableArray *friendsWithApp = [[NSMutableArray alloc] initWithCapacity:1];
             // Many results
             if ([result isKindOfClass:[NSArray class]]) {
-                friendsWithApp = [[NSMutableArray alloc] initWithArray:result copyItems:YES];
+                [friendsWithApp addObjectsFromArray:result];
             } else if ([result isKindOfClass:[NSDecimalNumber class]]) {
-                friendsWithApp = [[NSMutableArray alloc] initWithObjects:[result stringValue], nil];
+                [friendsWithApp addObject: [result stringValue]];
             }
+            
             if ([friendsWithApp count] > 0) {
                 [self apiDialogRequestsSendToUsers:friendsWithApp];
             } else {
                 [self showMessage:@"None of your friends are using the app."];
             }
+            
             [friendsWithApp release];
             break;
         }
@@ -1015,17 +1043,24 @@
         }
         case kAPIFriendsForTargetDialogRequests:
         {
-            NSArray *resultData = [result objectForKey:@"data"];
-            if ([resultData count] > 0) {
-                [self apiDialogRequestsSendTarget:[[resultData objectAtIndex:0] objectForKey:@"id"]];
+            NSArray *resultData = [result objectForKey: @"data"];
+            // got friends?
+            if ([resultData count] > 0) { 
+                // pick a random one to send a request to
+                int randomIndex = arc4random() % [resultData count];	
+                NSString* randomFriend = 
+                    [[resultData objectAtIndex: randomIndex] objectForKey: @"id"];
+                [self apiDialogRequestsSendTarget:randomFriend];
             } else {
-                [self showMessage:@"You have no friends to select."];
+                [self showMessage: @"You have no friends to select."];
             }
             break;
         }
         case kAPIGraphMe:
         {
-            NSString *nameID = [[NSString alloc] initWithFormat:@"%@ (%@)", [result objectForKey:@"name"], [result objectForKey:@"id"]];
+            NSString *nameID = [[NSString alloc] initWithFormat: @"%@ (%@)", 
+                                [result objectForKey:@"name"], 
+                                [result objectForKey:@"id"]];
             NSMutableArray *userData = [[NSMutableArray alloc] initWithObjects:
                                         [NSDictionary dictionaryWithObjectsAndKeys:
                                          [result objectForKey:@"id"], @"id",
@@ -1162,7 +1197,7 @@
             // Successful requests return one or more request_ids.
             // Get any request IDs, will be in the URL in the form
             // request_ids[0]=1001316103543&request_ids[1]=10100303657380180
-            NSMutableArray *requestIDs = [[NSMutableArray alloc] init];
+            NSMutableArray *requestIDs = [[[NSMutableArray alloc] init] autorelease];
             for (NSString *paramKey in params) {
                 if ([paramKey hasPrefix:@"request_ids"]) {
                     [requestIDs addObject:[params objectForKey:paramKey]];

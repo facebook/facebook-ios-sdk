@@ -101,13 +101,20 @@
                                       @"Send request", @"button",
                                       @"getUserFriendTargetDialogRequest", @"method",
                                       nil];
+        NSDictionary *requestMenu5 = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                      @"Enable frictionless requests", @"title",
+                                      @"To enable a no-prompt request and invite experience, enable frictionless requests.", @"description",
+                                      @"Enable frictionless", @"button",
+                                      @"enableFrictionlessAppRequests", @"method",
+                                      nil];
 
         NSArray *requestMenuItems = [[NSArray alloc] initWithObjects:
                                      requestMenu1,
                                      requestMenu2,
                                      requestMenu3,
                                      requestMenu4,
-                                  nil];
+                                     requestMenu5,
+                                     nil];
 
         NSDictionary *requestConfigData = [[NSDictionary alloc] initWithObjectsAndKeys:
                                         @"Requests", @"title",
@@ -122,6 +129,7 @@
         [requestMenu2 release];
         [requestMenu3 release];
         [requestMenu4 release];
+        [requestMenu5 release];
         [requestMenuItems release];
         [requestConfigData release];
 
