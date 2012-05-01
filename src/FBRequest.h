@@ -179,8 +179,11 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 //   session:              - the session object representing the identity of the
 //                         Facebook user making the request; nil implies an
 //                         unauthenticated request; default=nil
-+ (FBRequest*)requestMeForSession:(FBSession*)session;
++ (FBRequest*)requestForMeWithSession:(FBSession*)session;
 
-+ (FBRequest*)requestMyFriendsForSession:(FBSession*)session;
++ (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session;
+
++ (FBRequest *)requestForUploadPhoto:(UIImage *)photo
+                             session:(FBSession *)session;
 
 @end

@@ -189,13 +189,13 @@ static NSString *const kPostHTTPMethod = @"POST";
     return [request connectionWithCompletionHandler:handler];
 }
 
-+ (FBRequest*)requestMeForSession:(FBSession*)session {
++ (FBRequest*)requestForMeWithSession:(FBSession*)session {
     return [[[FBRequest alloc] initWithSession:session
                                      graphPath:@"me"]
             autorelease];
 }
 
-+ (FBRequest*)requestMyFriendsForSession:(FBSession*)session {
++ (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session {
     return [[[FBRequest alloc] initWithSession:session
                                      graphPath:@"me/friends"
                                     parameters:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -203,6 +203,24 @@ static NSString *const kPostHTTPMethod = @"POST";
                                                 nil]
                                     HTTPMethod:nil]
             autorelease];
+}
+
++ (FBRequest *)requestForUploadPhoto:(UIImage *)photo
+                             session:(FBSession *)session
+{
+    NSString *graphPath = @"me/photos";
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:photo forKey:@"picture"];
+
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:graphPath
+                                                  parameters:parameters
+                                                  HTTPMethod:@"POST"]
+                          autorelease];
+
+    [parameters release];
+
+    return request;
 }
 
 @end
