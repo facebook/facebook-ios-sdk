@@ -16,8 +16,8 @@
 
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
-#import "FBFrictionlessRequestSettings.h"
 
+@class FBFrictionlessRequestSettings;
 @protocol FBSessionDelegate;
 
 /**
@@ -37,6 +37,7 @@
     NSString* _urlSchemeSuffix;
     NSArray* _permissions;
     BOOL _isExtendingAccessToken;
+    FBRequest *_requestExtendingAccessToken;
     NSDate* _lastAccessTokenUpdate;
     FBFrictionlessRequestSettings* _frictionlessRequestSettings;
 }

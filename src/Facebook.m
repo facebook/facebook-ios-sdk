@@ -15,6 +15,7 @@
  */
 
 #import "Facebook.h"
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "JSON.h"
@@ -116,6 +117,8 @@ static void *finishedContext = @"finishedContext";
  * Override NSObject : free the space
  */
 - (void)dealloc {
+    // this is the one case where the delegate is this object
+    _requestExtendingAccessToken.delegate = nil;
     for (FBRequest* _request in _requests) {
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
     }
@@ -351,7 +354,7 @@ static void *finishedContext = @"finishedContext";
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"auth.extendSSOAccessToken", @"method",
                                    nil];
-    [self requestWithParams:params andDelegate:self];
+    _requestExtendingAccessToken = [self requestWithParams:params andDelegate:self];
 }
 
 /**
@@ -415,11 +418,11 @@ static void *finishedContext = @"finishedContext";
     }
     
     NSDictionary *params = [self parseURLParams:query];
-    NSString *accessToken = [params valueForKey:@"access_token"];
+    NSString *accessToken = [params objectForKey:@"access_token"];
     
     // If the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
-        NSString *errorReason = [params valueForKey:@"error"];
+        NSString *errorReason = [params objectForKey:@"error"];
         
         // If the error response indicates that we should try again using Safari, open
         // the authorization dialog in Safari.
@@ -438,7 +441,7 @@ static void *finishedContext = @"finishedContext";
         // The facebook app may return an error_code parameter in case it
         // encounters a UIWebViewDelegate error. This should not be treated
         // as a cancel.
-        NSString *errorCode = [params valueForKey:@"error_code"];
+        NSString *errorCode = [params objectForKey:@"error_code"];
         
         BOOL userDidCancel =
         !errorCode && (!errorReason || [errorReason isEqualToString:@"access_denied"]);
@@ -447,7 +450,7 @@ static void *finishedContext = @"finishedContext";
     }
     
     // We have an access token, so parse the expiration date.
-    NSString *expTime = [params valueForKey:@"expires_in"];
+    NSString *expTime = [params objectForKey:@"expires_in"];
     NSDate *expirationDate = [NSDate distantFuture];
     if (expTime != nil) {
         int expVal = [expTime intValue];
@@ -694,7 +697,7 @@ static void *finishedContext = @"finishedContext";
     [params setObject:kSDKVersion forKey:@"sdk"];
     [params setObject:kRedirectURL forKey:@"redirect_uri"];
     
-    if (action == kLogin) {
+    if ([action isEqualToString:kLogin]) {
         [params setObject:@"user_agent" forKey:@"type"];
         _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
     } else {
@@ -709,7 +712,7 @@ static void *finishedContext = @"finishedContext";
         BOOL invisible = NO;
         
         // frictionless handling for application requests
-        if (action == kApprequests) {        
+        if ([action isEqualToString:kApprequests]) {        
             // if frictionless requests are enabled
             if (self.isFrictionlessRequestsEnabled) {
                 //  1. show the "Don't show this again for these friends" checkbox
@@ -804,10 +807,12 @@ static void *finishedContext = @"finishedContext";
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
 }
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
     NSString* accessToken = [result objectForKey:@"access_token"];
     NSString* expTime = [result objectForKey:@"expires_at"];
     

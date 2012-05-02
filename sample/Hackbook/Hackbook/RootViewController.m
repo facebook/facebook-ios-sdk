@@ -373,8 +373,9 @@
 
 #pragma mark - FBRequestDelegate Methods
 /**
- * Called when the Facebook API request has returned a response. This callback
- * gives you access to the raw response. It's called before
+ * Called when the Facebook API request has returned a response.
+ *
+ * This callback gives you access to the raw response. It's called before
  * (void)request:(FBRequest *)request didLoad:(id)result,
  * which is passed the parsed response object.
  */
@@ -384,9 +385,11 @@
 
 /**
  * Called when a request returns and its response has been parsed into
- * an object. The resulting object may be a dictionary, an array, a string,
- * or a number, depending on the format of the API response. If you need access
- * to the raw response, use:
+ * an object.
+ *
+ * The resulting object may be a dictionary, an array or a string, depending
+ * on the format of the API response. If you need access to the raw response,
+ * use:
  *
  * (void)request:(FBRequest *)request
  *      didReceiveResponse:(NSURLResponse *)response
@@ -426,10 +429,10 @@
         UIGraphicsBeginImageContext(CGSizeMake(px, px));
         UIRectClip(clipRect);
         [image drawInRect:clipRect];
-        UIImage *imgThumb =   UIGraphicsGetImageFromCurrentImageContext();
-        [imgThumb retain];
-        
+        UIImage *imgThumb = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
         [profilePhotoImageView setImage:imgThumb];
+        
         [self apiGraphUserPermissions];
     } else {
         // Processing permissions information
