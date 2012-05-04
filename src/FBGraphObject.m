@@ -113,6 +113,20 @@ typedef enum _SelectorInferredImplType {
     return [FBGraphObject graphObjectWrappingObject:jsonDictionary];
 }
 
++ (BOOL)isGraphObjectID:(id<FBGraphObject>)anObject sameAs:(id<FBGraphObject>)anotherObject {
+    if (anObject != nil &&
+        anObject == anotherObject) {
+        return YES;
+    }
+    id anID = [anObject objectForKey:@"id"];
+    id anotherID = [anotherObject objectForKey:@"id"];
+    if ([anID isKindOfClass:[NSString class]] &&
+        [anotherID isKindOfClass:[NSString class]]) {
+        return [(NSString*)anID isEqualToString:anotherID];
+    }
+    return NO;
+}
+
 #pragma mark -
 #pragma mark NSObject overrides
 

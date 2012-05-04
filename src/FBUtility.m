@@ -17,6 +17,7 @@
 #import "FBUtility.h"
 #import "FBSession.h"
 #include <sys/time.h>
+#import "FBGraphObject.h"
 
 @implementation FBUtility
 
@@ -72,6 +73,15 @@
     struct timeval time; 
     gettimeofday(&time, NULL); 
     return (time.tv_sec * 1000) + (time.tv_usec / 1000);
+}
+
++ (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item {
+    for (id<FBGraphObject> obj in array) {
+        if ([FBGraphObject isGraphObjectID:obj sameAs:item]) {
+            return obj;
+        }
+    }
+    return nil;
 }
 
 @end

@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *    http://www.apache.org/licenses/LICENSE-2.0
  
  * Unless required by applicable law or agreed to in writing, software
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
-@protocol FBGraphObject;
+@class SCViewController;
 
-@interface FBUtility : NSObject
+@interface SCAppDelegate : UIResponder <UIApplicationDelegate>
 
-+ (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString;
-+ (NSString *)stringByURLDecodingString:(NSString*)escapedString;
-+ (NSString*)stringByURLEncodingString:(NSString*)unescapedString;
-+ (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item;
+@property (strong, nonatomic) FBSession *session;
+@property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) SCViewController *viewController;
 
-+ (unsigned long)currentTimeInMilliseconds; 
+- (FBSession *)invalidateAndGetNewSession;
 
 @end

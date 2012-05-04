@@ -15,6 +15,7 @@
  */
 
 #import "FBGraphObjectTableSelection.h"
+#import "FBUtility.h"
 
 @interface FBGraphObjectTableSelection() <UITableViewDelegate, FBGraphObjectSelectionQueryDelegate> {
     FBGraphObjectTableDataSource *_dataSource;
@@ -69,7 +70,7 @@
 - (void)selectItem:(FBGraphObject *)item
               cell:(UITableViewCell *)cell
 {
-    if (![self.selection containsObject:item]) {
+    if ([FBUtility graphObjectInArray:self.selection withSameIDAs:item] == nil) {
         NSMutableArray *selection = [[NSMutableArray alloc] initWithArray:self.selection];
         [selection addObject:item];
         self.selection = selection;
@@ -82,9 +83,10 @@
 - (void)deselectItem:(FBGraphObject *)item
                 cell:(UITableViewCell *)cell
 {
-    if ([self.selection containsObject:item]) {
+    id<FBGraphObject> selectedItem = [FBUtility graphObjectInArray:self.selection withSameIDAs:item];
+    if (selectedItem) {
         NSMutableArray *selection = [[NSMutableArray alloc] initWithArray:self.selection];
-        [selection removeObject:item];
+        [selection removeObject:selectedItem];
         self.selection = selection;
         [selection release];
     }
@@ -105,7 +107,7 @@
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
              selectionIncludesItem:(id<FBGraphObject>)item
 {
-    return [self.selection containsObject:item];
+    return [FBUtility graphObjectInArray:self.selection withSameIDAs:item] != nil;
 }
 
 #pragma mark - UITableViewDelegate

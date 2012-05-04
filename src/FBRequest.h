@@ -161,6 +161,11 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
                               completionHandler:(FBRequestHandler)handler;
 
 + (FBRequestConnection*)connectionWithSession:(FBSession*)session
+                                    graphPath:(NSString*)graphPath
+                                  graphObject:(id<FBGraphObject>)object
+                            completionHandler:(FBRequestHandler)handler;
+
++ (FBRequestConnection*)connectionWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                                      parameters:(NSDictionary*)parameters
                                      HTTPMethod:(NSString*)HTTPMethod

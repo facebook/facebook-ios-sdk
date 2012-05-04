@@ -64,7 +64,8 @@
 		84FA427A153E1968009CEEF8 /* FBTestBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FA4279153E1968009CEEF8 /* FBTestBlocker.m */; };
 		85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */; };
 		85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
-		85954B88155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
+		85954AD51558637500FABA9A /* FBGraphObjectTableDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */; };
+		85954AD71558637800FABA9A /* FBGraphObjectTableSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */; };
 		85AA4B8F1545C54800E5352E /* FBSession+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 85AA4B8E1545C54800E5352E /* FBSession+Internal.h */; };
 		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -579,6 +580,8 @@
 				84B5F1191552E7A600A55DDC /* FBDialog.m in Sources */,
 				8460F3E015595BE800038963 /* FBLogger.m in Sources */,
 				85954B88155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
+				85954AD51558637500FABA9A /* FBGraphObjectTableDataSource.m in Sources */,
+				85954AD71558637800FABA9A /* FBGraphObjectTableSelection.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

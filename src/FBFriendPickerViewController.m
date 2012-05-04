@@ -205,6 +205,8 @@ static NSString *defaultImageName =
 
         UITextField *searchTextField = [[UITextField alloc] initWithFrame:frame];
         searchTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        searchTextField.backgroundColor = [UIColor whiteColor];
+        searchTextField.borderStyle = UITextBorderStyleRoundedRect;
 
         self.searchTextField = searchTextField;
         [self.view addSubview:searchTextField];

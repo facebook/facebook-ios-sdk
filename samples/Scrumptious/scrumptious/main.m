@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * 
  *    http://www.apache.org/licenses/LICENSE-2.0
  
  * Unless required by applicable law or agreed to in writing, software
@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-@protocol FBGraphObject;
+#import "SCAppDelegate.h"
 
-@interface FBUtility : NSObject
-
-+ (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString;
-+ (NSString *)stringByURLDecodingString:(NSString*)escapedString;
-+ (NSString*)stringByURLEncodingString:(NSString*)unescapedString;
-+ (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item;
-
-+ (unsigned long)currentTimeInMilliseconds; 
-
-@end
+int main(int argc, char *argv[])
+{
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([SCAppDelegate class]));
+    }
+}

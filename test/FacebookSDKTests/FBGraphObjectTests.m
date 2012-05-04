@@ -151,4 +151,46 @@
     [blocker wait];
 }
 
+- (void)testGraphObjectSameID
+{
+    NSString *anID = @"1234567890";
+
+    id obj = [NSMutableDictionary dictionary];
+    [obj setObject:anID forKey:@"id"];
+    obj = [FBGraphObject graphObjectWrappingDictionary:obj];
+
+    id objSameID = [NSMutableDictionary dictionary];
+    [objSameID setObject:anID forKey:@"id"];
+    objSameID = [FBGraphObject graphObjectWrappingDictionary:objSameID];
+
+    id objDifferentID = [NSMutableDictionary dictionary];
+    [objDifferentID setObject:@"999999" forKey:@"id"];
+    objDifferentID = [FBGraphObject graphObjectWrappingDictionary:objDifferentID];
+
+    id objNoID = [NSMutableDictionary dictionary];
+    objNoID = [FBGraphObject graphObjectWrappingDictionary:objNoID];
+    id objAnotherNoID = [NSMutableDictionary dictionary];
+    objAnotherNoID = [FBGraphObject graphObjectWrappingDictionary:objAnotherNoID];
+    
+    STAssertTrue([FBGraphObject isGraphObjectID:obj sameAs:objSameID], @"same ID");
+    STAssertTrue([FBGraphObject isGraphObjectID:obj sameAs:obj], @"same object");
+    
+    STAssertFalse([FBGraphObject isGraphObjectID:obj sameAs:objDifferentID], @"not same ID");
+    
+    // Objects with no ID should never match
+    STAssertFalse([FBGraphObject isGraphObjectID:obj sameAs:objNoID], @"no ID");
+    STAssertFalse([FBGraphObject isGraphObjectID:objNoID sameAs:obj], @"no ID");
+    
+    // Nil objects should never match an object with an ID
+    STAssertFalse([FBGraphObject isGraphObjectID:obj sameAs:nil], @"nil object");
+    STAssertFalse([FBGraphObject isGraphObjectID:nil sameAs:obj], @"nil object");
+    
+    // Having no ID is different than being a nil object
+    STAssertFalse([FBGraphObject isGraphObjectID:objNoID sameAs:nil], @"nil object");
+    
+    // Two objects with no ID shouldn't match unless they are the same object.
+    STAssertFalse([FBGraphObject isGraphObjectID:objNoID sameAs:objAnotherNoID], @"no IDs but different objects");
+    STAssertTrue([FBGraphObject isGraphObjectID:objNoID sameAs:objNoID], @"no ID but same object");
+}
+
 @end

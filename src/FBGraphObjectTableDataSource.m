@@ -44,7 +44,7 @@
 - (NSString *)indexKeyOfItem:(FBGraphObject *)item;
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item;
 - (void)addOrRemovePendingConnection:(FBURLConnection *)connection;
-- (BOOL)isLastIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)isActivityIndicatorIndexPath:(NSIndexPath *)indexPath;
 - (BOOL)isLastSection:(NSInteger)section;
 
 @end

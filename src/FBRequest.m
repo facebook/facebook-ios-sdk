@@ -162,6 +162,19 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequestConnection*)connectionWithSession:(FBSession*)session
+                                    graphPath:(NSString*)graphPath
+                                  graphObject:(id<FBGraphObject>)object
+                            completionHandler:(FBRequestHandler)handler
+{
+  FBRequest *request = [[[FBRequest alloc] initWithSession:session
+					   graphPath:graphPath
+					   graphObject:object]
+			 autorelease];
+    
+  return [request connectionWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection*)connectionWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                                      parameters:(NSDictionary*)parameters
                                      HTTPMethod:(NSString*)HTTPMethod
