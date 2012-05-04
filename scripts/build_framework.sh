@@ -9,7 +9,8 @@
 # our only parameter so far, valid arguments are: no-value, "Debug" and "Release" (default)
 BUILDCONFIGURATION=${1:-Release}
 
-. $(dirname $0)/common.sh
+. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 test -x "$LIPO" || die 'Could not find lipo in $PATH'
 

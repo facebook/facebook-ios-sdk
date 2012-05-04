@@ -6,7 +6,7 @@
 # This script builds the FBiOSSDK.framework that is distributed at
 # https://github.com/facebook/facebook-ios-sdk/downloads/FBiOSSDK.framework.zip
 
-. $(dirname $0)/common.sh
+. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 test -x "$PACKAGEMAKER" || die 'Could not find packagemaker in $PATH'
 
 FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_FULL}.pkg
@@ -21,8 +21,10 @@ FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDKSamples
 # -----------------------------------------------------------------------------
 # Call out to build .framework
 #
-echo "Building framework."
-. $FB_SDK_SCRIPT/build_framework.sh
+if is_outermost_build; then
+    echo "Building framework."
+    . $FB_SDK_SCRIPT/build_framework.sh
+fi
 
 # -----------------------------------------------------------------------------
 # Compress framework for standalone distribution

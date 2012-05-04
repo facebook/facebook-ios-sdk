@@ -6,7 +6,7 @@
 # This script sets up a consistent environment for the other scripts in this directory.
 
 # Set up paths for a specific clone of the SDK source
-if [ $(dirname $0) != "$FB_SDK_SCRIPT" ]; then
+if [ -z "$FB_SDK_SCRIPT" ]; then
   # ---------------------------------------------------------------------------
   # Versioning for the SDK
   #
@@ -65,6 +65,11 @@ if [ -z $FB_SDK_ENV ]; then
   # we hit a fatal error.
   function show_summary() {
     test -r $FB_SDK_BUILD_LOG && echo "Build log is at $FB_SDK_BUILD_LOG"
+  }
+
+  # Determines whether this is out the outermost build.
+  function is_outermost_build() {
+      test 1 -eq $FB_SDK_BUILD_DEPTH
   }
 
   # Calls show_summary if this is the outermost build.
