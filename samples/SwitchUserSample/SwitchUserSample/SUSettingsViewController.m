@@ -26,6 +26,8 @@
 @property (nonatomic) int pendingLoginForSlot;
 
 - (int)userSlotFromIndexPath:(NSIndexPath*)indexPath;
+- (void)loginSlot:(int)slot;
+- (NSIndexPath*)indexPathFromUserSlot:(int)slot;
 
 @end
 
