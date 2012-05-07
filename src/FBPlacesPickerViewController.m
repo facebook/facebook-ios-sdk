@@ -16,16 +16,18 @@
 
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
-#import "FBFriendPickerViewController.h"
+#import "FBPlacesPickerViewController.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBError.h"
 
+static const NSInteger defaultResultsLimit = 100;
+static const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
-@"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
+@"FBiOSSDKResources.bundle/FBPlacesPickerView/images/fb_generic_place.png";
 
-@interface FBFriendPickerViewController () <FBFriendPickerDelegate,
-                                            FBGraphObjectSelectionChangedDelegate, 
+@interface FBPlacesPickerViewController () <FBPlacesPickerDelegate,
+                                            FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate>
 
 @property (nonatomic, retain) FBRequestConnection *connection;
@@ -39,36 +41,42 @@ static NSString *defaultImageName =
                    error:(NSError *)error;
 
 - (void)searchTextChanged:(UITextField *)textField;
+
 - (void)searchTextEndedEdit:(UITextField *)textField;
 
 @end
 
-@implementation FBFriendPickerViewController {
-    BOOL _allowsMultipleSelection;
+@implementation FBPlacesPickerViewController {
     FBRequestConnection *_connection;
     FBGraphObjectTableDataSource *_dataSource;
-    id<FBFriendPickerDelegate> _delegate;
-    BOOL _searchTextEnabled;
+    id<FBPlacesPickerDelegate> _delegate;
     NSSet *_fieldsForRequest;
+    CLLocationCoordinate2D _locationCoordinate;
+    NSInteger _radius;
+    NSInteger _resultsLimit;
+    NSString *_searchText;
     UITextField *_searchTextField;
+    BOOL _searchTextEnabled;
     FBGraphObjectTableSelection *_selectionManager;
     FBSession *_session;
     UIActivityIndicatorView *_spinner;
     UITableView *_tableView;
-    NSString *_userID;
 }
 
 @synthesize connection = _connection;
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
-@synthesize searchTextEnabled = _searchTextEnabled;
 @synthesize fieldsForRequest = _fieldsForRequest;
+@synthesize locationCoordinate = _locationCoordinate;
+@synthesize radius = _radius;
+@synthesize resultsLimit = _resultsLimit;
+@synthesize searchText = _searchText;
+@synthesize searchTextEnabled = _searchTextEnabled;
 @synthesize searchTextField = _searchTextField;
 @synthesize selectionManager = _selectionManager;
 @synthesize session = _session;
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
-@synthesize userID = _userID;
 
 - (id)init
 {
@@ -110,7 +118,7 @@ static NSString *defaultImageName =
                                                 init];
     dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
-    dataSource.groupByField = @"name";
+    dataSource.itemSubtitleEnabled = YES;
     self.dataSource = dataSource;
 
     // Selection Manager
@@ -119,13 +127,13 @@ static NSString *defaultImageName =
     selectionManager.delegate = self;
 
     // Self
-    self.allowsMultipleSelection = YES;
     self.dataSource = dataSource;
     self.delegate = self;
-    self.itemPicturesEnabled = YES;
     self.selectionManager = selectionManager;
     self.searchTextEnabled = YES;
-    self.userID = @"me";
+    self.resultsLimit = defaultResultsLimit;
+    self.radius = defaultRadius;
+    self.itemPicturesEnabled = YES;
 
     // cleanup
     [selectionManager release];
@@ -136,34 +144,21 @@ static NSString *defaultImageName =
 {
     [_connection cancel];
     _dataSource.controllerDelegate = nil;
-    
+
     [_connection release];
     [_dataSource release];
     [_fieldsForRequest release];
+    [_searchText release];
     [_searchTextField release];
     [_selectionManager release];
     [_session release];
     [_spinner release];
     [_tableView release];
-    [_userID release];
     
     [super dealloc];
 }
 
 #pragma mark - Custom Properties
-
-- (BOOL)allowsMultipleSelection
-{
-    return _allowsMultipleSelection;
-}
-
-- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
-{
-    _allowsMultipleSelection = allowsMultipleSelection;
-    if (self.isViewLoaded) {
-        self.tableView.allowsMultipleSelection = allowsMultipleSelection;
-    }
-}
 
 - (BOOL)itemPicturesEnabled
 {
@@ -175,9 +170,14 @@ static NSString *defaultImageName =
     self.dataSource.itemPicturesEnabled = itemPicturesEnabled;
 }
 
-- (NSArray *)selection
+- (id<FBGraphPlace>)selection
 {
-    return self.selectionManager.selection;
+    NSArray *selection = self.selectionManager.selection;
+    if ([selection count]) {
+        return [selection objectAtIndex:0];
+    } else {
+        return nil;
+    }
 }
 
 #pragma mark - Public Methods
@@ -207,6 +207,7 @@ static NSString *defaultImageName =
         }
 
         UITableView *tableView = [[UITableView alloc] initWithFrame:frame];
+        tableView.allowsMultipleSelection = NO;
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -217,7 +218,6 @@ static NSString *defaultImageName =
 
     if (!self.spinner) {
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:bounds];
-        spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         spinner.hidesWhenStopped = YES;
         spinner.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -235,7 +235,6 @@ static NSString *defaultImageName =
                    forControlEvents:(UIControlEventEditingDidEnd |
                                      UIControlEventEditingDidEndOnExit)];
 
-    self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.dataSource = self.dataSource;
     self.tableView.delegate = self.selectionManager;
 }
@@ -253,21 +252,30 @@ static NSString *defaultImageName =
 
 - (void)loadData
 {
-    NSMutableString *graphPath = [[NSMutableString alloc] initWithString:self.userID];
-    [graphPath appendString:@"/friends"];
-
     NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
-                        @"id", @"name", @"first_name", @"last_name", @"picture", nil];
+                        @"id", @"name", @"location", @"category", @"picture", nil];
+    NSString *limit = [NSString stringWithFormat:@"%d", self.resultsLimit];
+    NSString *center = [NSString stringWithFormat:@"%lf,%lf",
+                        self.locationCoordinate.latitude,
+                        self.locationCoordinate.longitude];
+    NSString *distance = [NSString stringWithFormat:@"%d", self.radius];
 
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:@"place" forKey:@"type"];
     [parameters setObject:fields forKey:@"fields"];
+    [parameters setObject:limit forKey:@"limit"];
+    [parameters setObject:center forKey:@"center"];
+    [parameters setObject:distance forKey:@"distance"];
+
+    if ([self.searchText length]) {
+        [parameters setObject:self.searchText forKey:@"q"];
+    }
 
     FBRequest *request = [[FBRequest alloc] initWithSession:self.session
-                                                  graphPath:graphPath
+                                                  graphPath:@"search"
                                                  parameters:parameters
                                                  HTTPMethod:@"GET"];
     [parameters release];
-    [graphPath release];
 
     [self.connection cancel];
     self.connection = [request connectionWithCompletionHandler:
@@ -301,7 +309,7 @@ static NSString *defaultImageName =
 {
     self.connection = nil;
     NSArray *data = nil;
-
+    
     if (!error && [result isKindOfClass:[NSDictionary class]]) {
         id rawData = [((NSDictionary *)result) objectForKey:@"data"];
         if ([rawData isKindOfClass:[NSArray class]]) {
@@ -317,25 +325,26 @@ static NSString *defaultImageName =
                                         userInfo:userInfo]
                  autorelease];
     }
-
+    
     if (error) {
-        if ([self.delegate
-             respondsToSelector:@selector(friendPickerViewController:handleError:)]) {
-            [self.delegate friendPickerViewController:self handleError:error];
+        if ([self.delegate respondsToSelector:@selector(placesPickerViewController:handleError:)]) {
+            [self.delegate placesPickerViewController:self handleError:error];
         }
     } else {
         [self.dataSource setViewData:data];
     }
-
+    
     [self updateView];
 }
 
 - (void)searchTextChanged:(UITextField *)textField
 {
     if (textField == self.searchTextField) {
-        [self updateView];
+        self.searchText = textField.text;
+        [self loadData];
     }
 }
+
 - (void)searchTextEndedEdit:(UITextField *)textField
 {
     if ((textField = self.searchTextField) && ([textField isFirstResponder])) {
@@ -353,8 +362,8 @@ static NSString *defaultImageName =
     }
 
     if ([self.delegate respondsToSelector:
-         @selector(friendPickerViewControllerSelectionDidChange:)]) {
-        [self.delegate friendPickerViewControllerSelectionDidChange:self];
+         @selector(placesPickerViewControllerSelectionDidChange:)]) {
+        [self.delegate placesPickerViewControllerSelectionDidChange:self];
     }
 }
 
@@ -363,16 +372,12 @@ static NSString *defaultImageName =
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                 filterIncludesItem:(id<FBGraphObject>)item
 {
-    id<FBGraphUser> user = (id<FBGraphUser>)item;
+    id<FBGraphPlace> place = (id<FBGraphPlace>)item;
 
-    if (self.searchTextEnabled && [self.searchTextField.text length]) {
-        NSRange range = [user.name rangeOfString:self.searchTextField.text
-                                         options:NSCaseInsensitiveSearch];
-        return (range.location != NSNotFound);
-    } else if ([self.delegate
-                respondsToSelector:@selector(friendPickerViewController:shouldIncludeUser:)]) {
-        return [self.delegate friendPickerViewController:self
-                                       shouldIncludeUser:user];
+    if ([self.delegate
+         respondsToSelector:@selector(placesPickerViewController:shouldIncludePlace:)]) {
+        return [self.delegate placesPickerViewController:self
+                                      shouldIncludePlace:place];
     } else {
         return YES;
     }
@@ -384,6 +389,18 @@ static NSString *defaultImageName =
     return [graphObject objectForKey:@"name"];
 }
 
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                          subtitleOfItem:(id<FBGraphObject>)graphObject
+{
+    id<FBGraphPlace> place = (id<FBGraphPlace>)graphObject;
+    id<FBGraphLocation> location = place.location;
+    NSString *street = location.street;
+    if (street) {
+        return street;
+    }
+    return location.city;
+}
+
 - (UIImage *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
@@ -391,3 +408,4 @@ static NSString *defaultImageName =
 }
 
 @end
+

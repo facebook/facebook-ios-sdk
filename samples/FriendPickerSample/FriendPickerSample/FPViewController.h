@@ -17,6 +17,6 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
-@interface FPViewController : UIViewController
+@interface FPViewController : FBFriendPickerViewController
 
 @end

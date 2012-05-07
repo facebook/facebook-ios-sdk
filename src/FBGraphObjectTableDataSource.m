@@ -22,24 +22,24 @@
 @interface FBGraphObjectTableDataSource () {
     NSArray *_data;
     UIImage *_defaultPicture;
-    NSString *_displayPicturePropertyName;
-    NSString *_displayPrimaryPropertyName;
-    NSString *_displaySecondaryPropertyName;
-    id<FBGraphObjectFilterDelegate> _filterDelegate;
-    NSString *_groupByPropertyName;
+    id<FBGraphObjectViewControllerDelegate> _controllerDelegate;
+    NSString *_groupByField;
     NSArray *_indexKeys;
     NSDictionary *_indexMap;
+    BOOL _itemPicturesEnabled;
+    BOOL _itemSubtitleEnabled;
     NSMutableSet *_pendingURLConnections;
     id<FBGraphObjectSelectionQueryDelegate> _selectionDelegate;
+    NSArray *_sortDescriptors;
 }
 
+@property (nonatomic, retain) NSArray *data;
 @property (nonatomic, retain) NSArray *indexKeys;
 @property (nonatomic, retain) NSDictionary *indexMap;
 @property (nonatomic, retain) NSMutableSet *pendingURLConnections;
 
 - (BOOL)filterIncludesItem:(FBGraphObject *)item;
 - (NSArray *)ensureSortDescriptors;
-- (BOOL)hasSubtitle;
 - (UITableViewCell *)cellWithTableView:(UITableView *)tableView;
 - (NSString *)indexKeyOfItem:(FBGraphObject *)item;
 - (NSIndexPath *)indexPathForItem:(FBGraphObject *)item;
@@ -52,13 +52,12 @@
 
 @synthesize data = _data;
 @synthesize defaultPicture = _defaultPicture;
-@synthesize displayPicturePropertyName = _displayPicturePropertyName;
-@synthesize displayPrimaryPropertyName = _displayPrimaryPropertyName;
-@synthesize displaySecondaryPropertyName = _displaySecondaryPropertyName;
-@synthesize filterDelegate = _filterDelegate;
-@synthesize groupByPropertyName = _groupByPropertyName;
+@synthesize controllerDelegate = _controllerDelegate;
+@synthesize groupByField = _groupByField;
 @synthesize indexKeys = _indexKeys;
 @synthesize indexMap = _indexMap;
+@synthesize itemPicturesEnabled = _itemPicturesEnabled;
+@synthesize itemSubtitleEnabled = _itemSubtitleEnabled;
 @synthesize pendingURLConnections = _pendingURLConnections;
 @synthesize selectionDelegate = _selectionDelegate;
 @synthesize sortDescriptors = _sortDescriptors;
@@ -68,10 +67,6 @@
     self = [super init];
     
     if (self) {
-        self.displayPrimaryPropertyName = @"name";
-        self.displayPicturePropertyName = @"picture";
-        self.groupByPropertyName = @"name";
-
         NSMutableSet *pendingURLConnections = [[NSMutableSet alloc] init];
         self.pendingURLConnections = pendingURLConnections;
         [pendingURLConnections release];
@@ -87,10 +82,7 @@
 
     [_data release];
     [_defaultPicture release];
-    [_displayPicturePropertyName release];
-    [_displayPrimaryPropertyName release];
-    [_displaySecondaryPropertyName release];
-    [_groupByPropertyName release];
+    [_groupByField release];
     [_indexKeys release];
     [_indexMap release];
     [_pendingURLConnections release];
@@ -101,20 +93,43 @@
 
 #pragma mark - Public Methods
 
-- (void)addRequestPropertyNamesToSet:(NSMutableSet *)properties
+- (NSString *)fieldsForRequestIncluding:(NSSet *)customFields, ...
 {
-    if (self.displayPrimaryPropertyName) {
-        [properties addObject:self.displayPrimaryPropertyName];
+    // Start with custom fields.
+    NSMutableSet *nameSet = [[NSMutableSet alloc] initWithSet:customFields];
+
+    // Iterate through varargs after the initial set, and add them
+    id vaName;
+    va_list vaArguments;
+    va_start(vaArguments, customFields);
+    while ((vaName = va_arg(vaArguments, id))) {
+        [nameSet addObject:vaName];
     }
-    if (self.displaySecondaryPropertyName) {
-        [properties addObject:self.displaySecondaryPropertyName];
+    va_end(vaArguments);
+
+    // Add fields needed for data source functionality.
+    if (self.groupByField) {
+        [nameSet addObject:self.groupByField];
     }
-    if (self.displayPicturePropertyName) {
-        [properties addObject:self.displayPicturePropertyName];
+
+    // Build the comma-separated string
+    NSMutableString *fields = [[[NSMutableString alloc] init] autorelease];
+
+    for (NSString *field in nameSet) {
+        if ([fields length]) {
+            [fields appendString:@","];
+        }
+        [fields appendString:field];
     }
-    if (self.groupByPropertyName) {
-        [properties addObject:self.groupByPropertyName];
-    }
+
+    [nameSet release];
+
+    return fields;
+}
+
+- (void)setViewData:(NSArray *)data
+{
+    self.data = data;
 }
 
 - (void)cancelPendingRequests
@@ -178,13 +193,13 @@
 
 - (BOOL)filterIncludesItem:(FBGraphObject *)item
 {
-    if (![self.filterDelegate respondsToSelector:
+    if (![self.controllerDelegate respondsToSelector:
           @selector(graphObjectTableDataSource:filterIncludesItem:)]) {
         return YES;
     }
 
-    return [self.filterDelegate graphObjectTableDataSource:self
-                                        filterIncludesItem:item];
+    return [self.controllerDelegate graphObjectTableDataSource:self
+                                            filterIncludesItem:item];
 }
 
 - (NSArray *)ensureSortDescriptors
@@ -200,20 +215,15 @@
     return self.sortDescriptors;
 }
 
-- (BOOL)hasSubtitle
-{
-    return self.displaySecondaryPropertyName != nil;
-}
-
 - (UITableViewCell *)cellWithTableView:(UITableView *)tableView
 {
     static NSString *titleOnlyCellKey = @"fbCellTitleOnly";
     static NSString *titleAndSubtitleCellKey = @"fbCellTitleAndSubtitle";
-    NSString *cellKey = [self hasSubtitle] ? titleAndSubtitleCellKey : titleOnlyCellKey;
+    NSString *cellKey = self.itemSubtitleEnabled ? titleAndSubtitleCellKey : titleOnlyCellKey;
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellKey];
     if (!cell) {
-        if ([self hasSubtitle]) {
+        if (self.itemSubtitleEnabled) {
             cell = [[FBSubtitledTableViewCell alloc]
                     initWithStyle:UITableViewCellStyleDefault
                     reuseIdentifier:titleAndSubtitleCellKey];
@@ -223,7 +233,7 @@
                     reuseIdentifier:titleOnlyCellKey];
         }
         [cell autorelease];
-        
+
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
@@ -234,8 +244,8 @@
 {
     NSString *text = @"";
     
-    if (self.groupByPropertyName) {
-        text = [item objectForKey:self.groupByPropertyName];
+    if (self.groupByField) {
+        text = [item objectForKey:self.groupByField];
     }
     
     if ([text length] > 1) {
@@ -278,7 +288,8 @@
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item
 {
     __block UIImage *image = nil;
-    NSString *urlString = [item objectForKey:self.displayPicturePropertyName];
+    NSString *urlString = [self.controllerDelegate graphObjectTableDataSource:self
+                                                             pictureUrlOfItem:item];
     if (urlString) {
         FBURLConnectionHandler handler =
         ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *data) {
@@ -360,17 +371,18 @@
 {
     UITableViewCell *cell = [self cellWithTableView:tableView];
     FBGraphObject *item = [self itemAtIndexPath:indexPath];
-    
-    NSString *primary = [item objectForKey:self.displayPrimaryPropertyName];
-    if ([self hasSubtitle]) {
-        NSString *secondary = [item objectForKey:self.displaySecondaryPropertyName];
-        ((FBSubtitledTableViewCell *)cell).subtitle = secondary;
-        ((FBSubtitledTableViewCell *)cell).title = primary;
+    NSString *title = [self.controllerDelegate graphObjectTableDataSource:self
+                                                              titleOfItem:item];
+    if (self.itemSubtitleEnabled) {
+        NSString *subtitle = [self.controllerDelegate graphObjectTableDataSource:self
+                                                                  subtitleOfItem:item];
+        ((FBSubtitledTableViewCell *)cell).subtitle = subtitle;
+        ((FBSubtitledTableViewCell *)cell).title = title;
     } else {
-        cell.textLabel.text = primary;
+        cell.textLabel.text = title;
     }
-    
-    if (self.displayPicturePropertyName) {
+
+    if (self.itemPicturesEnabled) {
         cell.imageView.image = [self tableView:tableView imageForItem:item];
     } else {
         cell.imageView.image = nil;
@@ -379,8 +391,10 @@
     if ([self.selectionDelegate graphObjectTableDataSource:self
                                      selectionIncludesItem:item]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        cell.selected = YES;
     } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.selected = NO;
     }
     
     return cell;

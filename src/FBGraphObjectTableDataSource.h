@@ -17,22 +17,22 @@
 #import <UIKit/UIKit.h>
 #import "FBGraphObject.h"
 
-@protocol FBGraphObjectFilterDelegate;
+@protocol FBGraphObjectViewControllerDelegate;
 @protocol FBGraphObjectSelectionQueryDelegate;
 
 @interface FBGraphObjectTableDataSource : NSObject<UITableViewDataSource>
 
-@property (nonatomic, retain) NSArray *data;
 @property (nonatomic, retain) UIImage *defaultPicture;
-@property (nonatomic, copy) NSString *displayPicturePropertyName;
-@property (nonatomic, copy) NSString *displayPrimaryPropertyName;
-@property (nonatomic, copy) NSString *displaySecondaryPropertyName;
-@property (nonatomic, assign) id<FBGraphObjectFilterDelegate> filterDelegate;
-@property (nonatomic, copy) NSString *groupByPropertyName;
+@property (nonatomic, assign) id<FBGraphObjectViewControllerDelegate> controllerDelegate;
+@property (nonatomic, copy) NSString *groupByField;
+@property (nonatomic) BOOL itemPicturesEnabled;
+@property (nonatomic) BOOL itemSubtitleEnabled;
 @property (nonatomic, assign) id<FBGraphObjectSelectionQueryDelegate> selectionDelegate;
 @property (nonatomic, copy) NSArray *sortDescriptors;
 
-- (void)addRequestPropertyNamesToSet:(NSMutableSet *)properties;
+- (NSString *)fieldsForRequestIncluding:(NSSet *)customFields, ...;
+
+- (void)setViewData:(NSArray *)data;
 
 - (void)cancelPendingRequests;
 
@@ -45,7 +45,19 @@
 
 @end
 
-@protocol FBGraphObjectFilterDelegate <NSObject>
+@protocol FBGraphObjectViewControllerDelegate <NSObject>
+@required
+
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                             titleOfItem:(id<FBGraphObject>)graphObject;
+
+@optional
+
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                          subtitleOfItem:(id<FBGraphObject>)graphObject;
+
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                        pictureUrlOfItem:(id<FBGraphObject>)graphObject;
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                 filterIncludesItem:(id<FBGraphObject>)item;

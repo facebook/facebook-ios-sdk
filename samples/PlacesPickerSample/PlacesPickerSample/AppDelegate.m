@@ -37,13 +37,7 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // BUG:
-    // Nib files require the type to have been loaded before they can do the
-    // wireup successfully.  
-    // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
-    [FBPlacesPickerView class];
-    
+{    
     self.session = [[FBSession alloc] init];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

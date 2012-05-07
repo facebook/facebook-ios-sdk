@@ -16,19 +16,8 @@
 
 #import <UIKit/UIKit.h>
 #import <CoreLocation/CoreLocation.h>
-#import <FBiOSSDK/FBPlacesPickerView.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
-@interface ViewController : UIViewController
-
-@property (strong, nonatomic) IBOutlet FBPlacesPickerView *placesPickerView;
-
-- (IBAction)onClickManual:(id)sender;
-- (IBAction)onClickSanFrancisco:(id)sender;
-- (IBAction)onClickSeattle:(id)sender;
-
-- (IBAction)filterNone:(id)sender;
-- (IBAction)filterRestaurants:(id)sender;
-- (IBAction)filterLocalBusinesses:(id)sender;
-- (IBAction)filterHotels:(id)sender;
+@interface ViewController : FBPlacesPickerViewController
 
 @end

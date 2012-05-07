@@ -16,11 +16,19 @@
 
 #import "ViewController.h"
 #import "AppDelegate.h"
-#import <FBiOSSDK/FBGraphPlace.h>
 
-@interface ViewController () <CLLocationManagerDelegate, FBPlacesPickerActionDelegate>
+@interface ViewController () <CLLocationManagerDelegate, FBPlacesPickerDelegate>
 
 @property (strong, nonatomic) CLLocationManager* locationManager;
+
+- (IBAction)onClickManual:(id)sender;
+- (IBAction)onClickSanFrancisco:(id)sender;
+- (IBAction)onClickSeattle:(id)sender;
+
+- (IBAction)filterNone:(id)sender;
+- (IBAction)filterRestaurants:(id)sender;
+- (IBAction)filterLocalBusinesses:(id)sender;
+- (IBAction)filterHotels:(id)sender;
 
 - (void)refresh;
 
@@ -28,14 +36,22 @@
 
 @implementation ViewController
 
-@synthesize placesPickerView = _placesPickerView;
 @synthesize locationManager = _locationManager;
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+{
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        self.searchTextEnabled = NO;
+    }
+    return self;
+}
 
 - (void)refresh
 {
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session.isValid) {
-        self.placesPickerView.session = appDelegate.session;
+        self.session = appDelegate.session;
 
         // Default to Seattle
         [self onClickSeattle:nil];
@@ -59,8 +75,10 @@
     }
 }
 
-- (void) placesPicker:(FBPlacesPickerView*)placesPicker
-         didPickPlace:(NSDictionary<FBGraphPlace>*)place {
+- (void)placesPickerViewControllerSelectionDidChange:(FBPlacesPickerViewController *)placesPicker
+{
+    id<FBGraphPlace> place = placesPicker.selection;
+
     // we'll use logging to show the simple typed property access to place and location info
     NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
           place.name,
@@ -80,53 +98,46 @@
 
 - (IBAction)onClickSanFrancisco:(id)sender 
 {
-    self.placesPickerView.locationCoordinate = 
+    self.locationCoordinate = 
         CLLocationCoordinate2DMake(37.7750, -122.4183);
-    [self.placesPickerView loadData];
+    [self loadData];
 }
 
 - (IBAction)onClickSeattle:(id)sender 
 {
-    self.placesPickerView.locationCoordinate = 
+    self.locationCoordinate = 
         CLLocationCoordinate2DMake(47.6097, -122.3331);
-    [self.placesPickerView loadData];
+    [self loadData];
 }
 
 - (IBAction)filterNone:(id)sender 
 {
-    self.placesPickerView.searchText = nil;
-    [self.placesPickerView loadData];
+    self.searchText = nil;
+    [self loadData];
 }
 
 - (IBAction)filterRestaurants:(id)sender 
 {
-    self.placesPickerView.searchText = @"restaurant";
-    [self.placesPickerView loadData];
+    self.searchText = @"restaurant";
+    [self loadData];
 }
 
 - (IBAction)filterLocalBusinesses:(id)sender 
 {
-    self.placesPickerView.searchText = @"business";
-    [self.placesPickerView loadData];
+    self.searchText = @"business";
+    [self loadData];
 }
 
 - (IBAction)filterHotels:(id)sender 
 {
-    self.placesPickerView.searchText = @"hotel";
-    [self.placesPickerView loadData];
+    self.searchText = @"hotel";
+    [self loadData];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.placesPickerView.delegate = self;
     [self refresh];
-}
-
-- (void)viewDidUnload
-{
-    [self setPlacesPickerView:nil];
-    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:
@@ -146,8 +157,8 @@
         [self.locationManager stopUpdatingLocation];
         self.locationManager = nil;
         
-        self.placesPickerView.locationCoordinate = newLocation.coordinate;
-        [self.placesPickerView loadData];
+        self.locationCoordinate = newLocation.coordinate;
+        [self loadData];
     }
 }
 

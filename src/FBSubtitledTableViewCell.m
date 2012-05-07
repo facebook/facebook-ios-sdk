@@ -105,9 +105,9 @@
     self.subtitleLabel = subtitleLabel;
     [subtitleLabel release];
     
-    [self addSubview:titleLabel];
-    [self addSubview:subtitleLabel];
-    
+    [self.contentView addSubview:titleLabel];
+    [self.contentView addSubview:subtitleLabel];
+
     self.clipsToBounds = YES;
     self.autoresizesSubviews = YES;
 }
