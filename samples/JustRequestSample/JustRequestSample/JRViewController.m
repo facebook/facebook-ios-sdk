@@ -121,7 +121,7 @@ static NSString *loadingText = @"Loading...";
 }
 
 //
-// Report any results
+// Report any results.  Invoked once for each request we make.
 - (void)requestCompleted:(FBRequestConnection *)connection
                  forFbID:fbID
                   result:(id)result
@@ -130,8 +130,7 @@ static NSString *loadingText = @"Loading...";
     // not the completion we were looking for...
     if (connection != self.requestConnection) {
         return;
-    }    
-    self.requestConnection = nil;
+    }
 
     if ([self.textOutput.text isEqualToString:loadingText]) {
         self.textOutput.text = @"";
