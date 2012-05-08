@@ -120,6 +120,7 @@ static void *finishedContext = @"finishedContext";
     // this is the one case where the delegate is this object
     _requestExtendingAccessToken.delegate = nil;
     for (FBRequest* _request in _requests) {
+        _request.delegate = nil;
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
     }
     [_lastAccessTokenUpdate release];
