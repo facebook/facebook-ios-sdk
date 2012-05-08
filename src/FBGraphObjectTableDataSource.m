@@ -277,22 +277,15 @@
 
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item
 {
-    static NSString *cachedPictureKey = @"com.facebook.FBCachedPicture";
-
-    UIImage *cachedPicture = [item objectForKey:cachedPictureKey];
-    if (cachedPicture) {
-        return cachedPicture;
-    }
-
+    __block UIImage *image = nil;
     NSString *urlString = [item objectForKey:self.displayPicturePropertyName];
     if (urlString) {
         FBURLConnectionHandler handler =
         ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *data) {
             [self addOrRemovePendingConnection:connection];
             if (!error) {
-                UIImage *image = [UIImage imageWithData:data];
-                [item setObject:image forKey:cachedPictureKey];
-            
+                image = [UIImage imageWithData:data];
+
                 NSIndexPath *indexPath = [self indexPathForItem:item];
                 if (indexPath) {
                     UITableViewCell *cell = [tableView
@@ -312,15 +305,13 @@
 
         [self addOrRemovePendingConnection:connection];
     }
-    
+
     // If the picture had not been fetched yet by this object, but is cached in the
     // URL cache, we can complete synchronously above.  In this case, we will not
-    // find the cell in the table because we are in the process of creating it.  To
-    // handle this, we check the item again to see if the picture was attached by
-    // the handler completing synchronously.
-    UIImage *synchronousPicture = [item objectForKey:cachedPictureKey];
-    if (synchronousPicture) {
-        return synchronousPicture;
+    // find the cell in the table because we are in the process of creating it. We can
+    // just return the object here.
+    if (image) {
+        return image;
     }
 
     return self.defaultPicture;

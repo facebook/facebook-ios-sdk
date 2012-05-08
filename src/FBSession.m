@@ -194,7 +194,7 @@ static NSSet *g_loggingBehavior;
                  @"Invalid to have a caching strategy when for unit testing, public interface should dissallow");
         
         // if we are built for unit testing, then assert and setup a few things
-        if (self.isForUnitTesting) {
+        if (isForUnitTesting) {
             NSAssert(!urlSchemeSuffix, 
                      @"Invalid to have a urlSchemeSuffix when for unit testing, public interface should dissallow");
             NSAssert(!appID, 
