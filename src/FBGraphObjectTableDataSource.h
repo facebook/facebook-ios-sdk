@@ -34,6 +34,8 @@
 
 - (void)setViewData:(NSArray *)data;
 
+- (void)bindTableView:(UITableView *)tableView;
+
 - (void)cancelPendingRequests;
 
 // Call this when updating any property or if

@@ -50,7 +50,7 @@
 		84FA426A153E15A3009CEEF8 /* FBRequestConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B4E64152631FB00D1BE21 /* FBRequestConnection.m */; };
 		84FA426B153E15A3009CEEF8 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */; };
 		84FA426C153E15A3009CEEF8 /* FBSessionManualTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */; };
-		84FA426D153E15A3009CEEF8 /* FBSubtitledTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B966ADFB152D020E005FC07B /* FBSubtitledTableViewCell.m */; };
+		84FA426D153E15A3009CEEF8 /* FBGraphObjectTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B966ADFB152D020E005FC07B /* FBGraphObjectTableCell.m */; };
 		84FA426E153E15A3009CEEF8 /* FBRequestBody.m in Sources */ = {isa = PBXBuildFile; fileRef = E29B4E63152631FB00D1BE21 /* FBRequestBody.m */; };
 		84FA426F153E15A3009CEEF8 /* FBURLConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0E1521163C00A011A8 /* FBURLConnection.m */; };
 		84FA4270153E15D1009CEEF8 /* FBError.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0A1521161900A011A8 /* FBError.m */; };
@@ -82,8 +82,8 @@
 		AEA93B2B11D52959000A4545 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B1E11D52959000A4545 /* SBJsonParser.m */; };
 		AEA93B2C11D52959000A4545 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B1F11D52959000A4545 /* SBJsonWriter.h */; settings = {ATTRIBUTES = (); }; };
 		AEA93B2D11D52959000A4545 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
-		B966ADFC152D020E005FC07B /* FBSubtitledTableViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = B966ADFA152D020E005FC07B /* FBSubtitledTableViewCell.h */; };
-		B966ADFD152D020E005FC07B /* FBSubtitledTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B966ADFB152D020E005FC07B /* FBSubtitledTableViewCell.m */; };
+		B966ADFC152D020E005FC07B /* FBGraphObjectTableCell.h in Headers */ = {isa = PBXBuildFile; fileRef = B966ADFA152D020E005FC07B /* FBGraphObjectTableCell.h */; };
+		B966ADFD152D020E005FC07B /* FBGraphObjectTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B966ADFB152D020E005FC07B /* FBGraphObjectTableCell.m */; };
 		B96F15E3152B927E00A52896 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96F15E2152B927E00A52896 /* CoreLocation.framework */; };
 		B9C6E1341525219600E46808 /* FBCacheIndex.h in Headers */ = {isa = PBXBuildFile; fileRef = B9C6E1301525219600E46808 /* FBCacheIndex.h */; };
 		B9C6E1351525219600E46808 /* FBCacheIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C6E1311525219600E46808 /* FBCacheIndex.m */; };
@@ -182,8 +182,8 @@
 		AEA93B1E11D52959000A4545 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
 		AEA93B1F11D52959000A4545 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		AEA93B2011D52959000A4545 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		B966ADFA152D020E005FC07B /* FBSubtitledTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSubtitledTableViewCell.h; sourceTree = "<group>"; };
-		B966ADFB152D020E005FC07B /* FBSubtitledTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSubtitledTableViewCell.m; sourceTree = "<group>"; };
+		B966ADFA152D020E005FC07B /* FBGraphObjectTableCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObjectTableCell.h; sourceTree = "<group>"; };
+		B966ADFB152D020E005FC07B /* FBGraphObjectTableCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectTableCell.m; sourceTree = "<group>"; };
 		B96F15E2152B927E00A52896 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C6E1301525219600E46808 /* FBCacheIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBCacheIndex.h; sourceTree = "<group>"; };
 		B9C6E1311525219600E46808 /* FBCacheIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBCacheIndex.m; sourceTree = "<group>"; };
@@ -306,6 +306,8 @@
 				84E2DA2B1535342F007F886C /* FBGraphLocation.h */,
 				84AE5DA1152EA02500C4DE54 /* FBGraphObject.h */,
 				84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */,
+				B966ADFA152D020E005FC07B /* FBGraphObjectTableCell.h */,
+				B966ADFB152D020E005FC07B /* FBGraphObjectTableCell.m */,
 				E2B99CEF1549CD7F002AEA86 /* FBGraphObjectTableDataSource.h */,
 				E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */,
 				E2B99CF31549E02A002AEA86 /* FBGraphObjectTableSelection.h */,
@@ -334,8 +336,6 @@
 				8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */,
 				84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */,
 				84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */,
-				B966ADFA152D020E005FC07B /* FBSubtitledTableViewCell.h */,
-				B966ADFB152D020E005FC07B /* FBSubtitledTableViewCell.m */,
 				843D2DD61547C33000873F7C /* FBUtility.h */,
 				843D2DD71547C33000873F7C /* FBUtility.m */,
 				E23E5A0D1521163C00A011A8 /* FBURLConnection.h */,
@@ -427,7 +427,7 @@
 				840FDCBD152B5D9200F9C927 /* FBFrictionlessRequestSettings.h in Headers */,
 				B9C6E1341525219600E46808 /* FBCacheIndex.h in Headers */,
 				84137158152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h in Headers */,
-				B966ADFC152D020E005FC07B /* FBSubtitledTableViewCell.h in Headers */,
+				B966ADFC152D020E005FC07B /* FBGraphObjectTableCell.h in Headers */,
 				84AE5DA3152EA02500C4DE54 /* FBGraphObject.h in Headers */,
 				84E2DA28153492DE007F886C /* FBGraphPlace.h in Headers */,
 				84E2DA2C15353430007F886C /* FBGraphLocation.h in Headers */,
@@ -553,7 +553,7 @@
 				84FA426A153E15A3009CEEF8 /* FBRequestConnection.m in Sources */,
 				84FA426B153E15A3009CEEF8 /* FBSessionTokenCachingStrategy.m in Sources */,
 				84FA426C153E15A3009CEEF8 /* FBSessionManualTokenCachingStrategy.m in Sources */,
-				84FA426D153E15A3009CEEF8 /* FBSubtitledTableViewCell.m in Sources */,
+				84FA426D153E15A3009CEEF8 /* FBGraphObjectTableCell.m in Sources */,
 				84FA426E153E15A3009CEEF8 /* FBRequestBody.m in Sources */,
 				84FA426F153E15A3009CEEF8 /* FBURLConnection.m in Sources */,
 				84FA4270153E15D1009CEEF8 /* FBError.m in Sources */,
@@ -597,7 +597,7 @@
 				B9C6E1351525219600E46808 /* FBCacheIndex.m in Sources */,
 				B9C6E1371525219600E46808 /* FBDataDiskCache.m in Sources */,
 				84137159152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m in Sources */,
-				B966ADFD152D020E005FC07B /* FBSubtitledTableViewCell.m in Sources */,
+				B966ADFD152D020E005FC07B /* FBGraphObjectTableCell.m in Sources */,
 				84AE5DA4152EA02500C4DE54 /* FBGraphObject.m in Sources */,
 				84E0CA0B153619D500778DA4 /* Facebook.m in Sources */,
 				843D2DD91547C33000873F7C /* FBUtility.m in Sources */,

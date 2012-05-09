@@ -15,7 +15,7 @@
  */
 
 #import "FBGraphObjectTableDataSource.h"
-#import "FBSubtitledTableViewCell.h"
+#import "FBGraphObjectTableCell.h"
 #import "FBGraphObject.h"
 #import "FBURLConnection.h"
 
@@ -40,7 +40,7 @@
 
 - (BOOL)filterIncludesItem:(FBGraphObject *)item;
 - (NSArray *)ensureSortDescriptors;
-- (UITableViewCell *)cellWithTableView:(UITableView *)tableView;
+- (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView;
 - (NSString *)indexKeyOfItem:(FBGraphObject *)item;
 - (NSIndexPath *)indexPathForItem:(FBGraphObject *)item;
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item;
@@ -132,6 +132,12 @@
     self.data = data;
 }
 
+- (void)bindTableView:(UITableView *)tableView
+{
+    tableView.dataSource = self;
+    tableView.rowHeight = [FBGraphObjectTableCell rowHeight];
+}
+
 - (void)cancelPendingRequests
 {
     // Cancel all active connections.
@@ -215,23 +221,16 @@
     return self.sortDescriptors;
 }
 
-- (UITableViewCell *)cellWithTableView:(UITableView *)tableView
+- (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView
 {
-    static NSString *titleOnlyCellKey = @"fbCellTitleOnly";
-    static NSString *titleAndSubtitleCellKey = @"fbCellTitleAndSubtitle";
-    NSString *cellKey = self.itemSubtitleEnabled ? titleAndSubtitleCellKey : titleOnlyCellKey;
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellKey];
+    static NSString * const cellKey = @"fbTableCell";
+    FBGraphObjectTableCell *cell =
+    (FBGraphObjectTableCell*)[tableView dequeueReusableCellWithIdentifier:cellKey];
+
     if (!cell) {
-        if (self.itemSubtitleEnabled) {
-            cell = [[FBSubtitledTableViewCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault
-                    reuseIdentifier:titleAndSubtitleCellKey];
-        } else {
-            cell = [[UITableViewCell alloc]
-                    initWithStyle:UITableViewCellStyleDefault
-                    reuseIdentifier:titleOnlyCellKey];
-        }
+        cell = [[FBGraphObjectTableCell alloc]
+                initWithStyle:UITableViewCellStyleDefault
+                reuseIdentifier:cellKey];
         [cell autorelease];
 
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -299,11 +298,11 @@
 
                 NSIndexPath *indexPath = [self indexPathForItem:item];
                 if (indexPath) {
-                    UITableViewCell *cell = [tableView
-                                             cellForRowAtIndexPath:indexPath];
+                    FBGraphObjectTableCell *cell =
+                    (FBGraphObjectTableCell*)[tableView cellForRowAtIndexPath:indexPath];
+
                     if (cell) {
-                        cell.imageView.image = image;
-                        [cell setNeedsLayout];
+                        cell.picture = image;
                     }
                 }
             }
@@ -369,24 +368,24 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self cellWithTableView:tableView];
+    FBGraphObjectTableCell *cell = [self cellWithTableView:tableView];
     FBGraphObject *item = [self itemAtIndexPath:indexPath];
-    NSString *title = [self.controllerDelegate graphObjectTableDataSource:self
-                                                              titleOfItem:item];
-    if (self.itemSubtitleEnabled) {
-        NSString *subtitle = [self.controllerDelegate graphObjectTableDataSource:self
-                                                                  subtitleOfItem:item];
-        ((FBSubtitledTableViewCell *)cell).subtitle = subtitle;
-        ((FBSubtitledTableViewCell *)cell).title = title;
+    
+    if (self.itemPicturesEnabled) {
+        cell.picture = [self tableView:tableView imageForItem:item];
     } else {
-        cell.textLabel.text = title;
+        cell.picture = nil;
     }
 
-    if (self.itemPicturesEnabled) {
-        cell.imageView.image = [self tableView:tableView imageForItem:item];
+    if (self.itemSubtitleEnabled) {
+        cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
+                                                             subtitleOfItem:item];
     } else {
-        cell.imageView.image = nil;
+        cell.subtitle = nil;
     }
+
+    cell.title = [self.controllerDelegate graphObjectTableDataSource:self
+                                                         titleOfItem:item];
     
     if ([self.selectionDelegate graphObjectTableDataSource:self
                                      selectionIncludesItem:item]) {

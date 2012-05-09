@@ -236,8 +236,8 @@ static NSString *defaultImageName =
                                      UIControlEventEditingDidEndOnExit)];
 
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
-    self.tableView.dataSource = self.dataSource;
     self.tableView.delegate = self.selectionManager;
+    [self.dataSource bindTableView:self.tableView];
 }
 
 - (void)viewDidUnload

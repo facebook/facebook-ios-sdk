@@ -235,8 +235,8 @@ static NSString *defaultImageName =
                    forControlEvents:(UIControlEventEditingDidEnd |
                                      UIControlEventEditingDidEndOnExit)];
 
-    self.tableView.dataSource = self.dataSource;
     self.tableView.delegate = self.selectionManager;
+    [self.dataSource bindTableView:self.tableView];
 }
 
 - (void)viewDidUnload
