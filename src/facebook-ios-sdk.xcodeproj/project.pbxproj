@@ -62,6 +62,9 @@
 		84FA4276153E15EE009CEEF8 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
 		84FA4277153E1609009CEEF8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96F15E2152B927E00A52896 /* CoreLocation.framework */; };
 		84FA427A153E1968009CEEF8 /* FBTestBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FA4279153E1968009CEEF8 /* FBTestBlocker.m */; };
+		85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */; };
+		85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
+		85954B88155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
 		85AA4B8F1545C54800E5352E /* FBSession+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 85AA4B8E1545C54800E5352E /* FBSession+Internal.h */; };
 		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
@@ -159,6 +162,8 @@
 		84F43FFD15194E4800CEECD5 /* FBRequestConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequestConnection.h; sourceTree = "<group>"; };
 		84FA4278153E1968009CEEF8 /* FBTestBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTestBlocker.h; path = ../test/FacebookSDKTests/FBTestBlocker.h; sourceTree = "<group>"; };
 		84FA4279153E1968009CEEF8 /* FBTestBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTestBlocker.m; path = ../test/FacebookSDKTests/FBTestBlocker.m; sourceTree = "<group>"; };
+		85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObjectPagingLoader.h; sourceTree = "<group>"; };
+		85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectPagingLoader.m; sourceTree = "<group>"; };
 		85AA4B8E1545C54800E5352E /* FBSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSession+Internal.h"; sourceTree = "<group>"; };
 		85D0ED201537781D00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facebook_ios_sdk_Prefix.pch; sourceTree = SOURCE_ROOT; };
@@ -308,6 +313,8 @@
 				84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */,
 				B966ADFA152D020E005FC07B /* FBGraphObjectTableCell.h */,
 				B966ADFB152D020E005FC07B /* FBGraphObjectTableCell.m */,
+				85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */,
+				85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */,
 				E2B99CEF1549CD7F002AEA86 /* FBGraphObjectTableDataSource.h */,
 				E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */,
 				E2B99CF31549E02A002AEA86 /* FBGraphObjectTableSelection.h */,
@@ -444,6 +451,7 @@
 				E2B99CF51549E02A002AEA86 /* FBGraphObjectTableSelection.h in Headers */,
 				5F7CB4201553ACC600C183CF /* FBLogger.h in Headers */,
 				E2223AEB1554573900126FD2 /* FBPlacesPickerViewController.h in Headers */,
+				85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,6 +578,7 @@
 				84B5F1181552E78E00A55DDC /* FBLoginDialog.m in Sources */,
 				84B5F1191552E7A600A55DDC /* FBDialog.m in Sources */,
 				8460F3E015595BE800038963 /* FBLogger.m in Sources */,
+				85954B88155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -606,6 +615,7 @@
 				E2B99CF61549E02A002AEA86 /* FBGraphObjectTableSelection.m in Sources */,
 				5F7CB4211553ACC600C183CF /* FBLogger.m in Sources */,
 				E2223AEC1554573900126FD2 /* FBPlacesPickerViewController.m in Sources */,
+				85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

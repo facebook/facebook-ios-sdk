@@ -24,4 +24,7 @@
 
 + (CGFloat)rowHeight;
 
+- (void)startAnimatingActivityIndicator;
+- (void)stopAnimatingActivityIndicator;
+
 @end

@@ -19,6 +19,7 @@
 
 @protocol FBGraphObjectViewControllerDelegate;
 @protocol FBGraphObjectSelectionQueryDelegate;
+@protocol FBGraphObjectDataSourceDataNeededDelegate;
 
 @interface FBGraphObjectTableDataSource : NSObject<UITableViewDataSource>
 
@@ -28,11 +29,18 @@
 @property (nonatomic) BOOL itemPicturesEnabled;
 @property (nonatomic) BOOL itemSubtitleEnabled;
 @property (nonatomic, assign) id<FBGraphObjectSelectionQueryDelegate> selectionDelegate;
+@property (nonatomic, assign) id<FBGraphObjectDataSourceDataNeededDelegate> dataNeededDelegate;
 @property (nonatomic, copy) NSArray *sortDescriptors;
 
 - (NSString *)fieldsForRequestIncluding:(NSSet *)customFields, ...;
 
-- (void)setViewData:(NSArray *)data;
+- (void)setSortingBySingleField:(NSString*)fieldName ascending:(BOOL)ascending;
+
+// Clears all graph objects from the data source.
+- (void)clearGraphObjects;
+// Adds additional graph objects (pass nil to indicate all objects have been added).
+- (void)appendGraphObjects:(NSArray *)data;
+- (BOOL)hasGraphObjects;
 
 - (void)bindTableView:(UITableView *)tableView;
 
@@ -44,6 +52,9 @@
 
 // Returns the graph object at a given indexPath.
 - (FBGraphObject *)itemAtIndexPath:(NSIndexPath *)indexPath;
+
+// Returns the indexPath for a given graph object.
+- (NSIndexPath *)indexPathForItem:(FBGraphObject *)item;
 
 @end
 
@@ -70,5 +81,11 @@
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
              selectionIncludesItem:(id<FBGraphObject>)item;
+
+@end
+
+@protocol FBGraphObjectDataSourceDataNeededDelegate <NSObject>
+
+- (void)graphObjectTableDataSourceNeedsData:(FBGraphObjectTableDataSource *)dataSource triggeredByIndexPath:(NSIndexPath*)indexPath;
 
 @end

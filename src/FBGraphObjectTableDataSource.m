@@ -37,14 +37,15 @@
 @property (nonatomic, retain) NSArray *indexKeys;
 @property (nonatomic, retain) NSDictionary *indexMap;
 @property (nonatomic, retain) NSMutableSet *pendingURLConnections;
+@property (nonatomic) BOOL expectingMoreGraphObjects;
 
 - (BOOL)filterIncludesItem:(FBGraphObject *)item;
-- (NSArray *)ensureSortDescriptors;
 - (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView;
 - (NSString *)indexKeyOfItem:(FBGraphObject *)item;
-- (NSIndexPath *)indexPathForItem:(FBGraphObject *)item;
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item;
 - (void)addOrRemovePendingConnection:(FBURLConnection *)connection;
+- (BOOL)isLastIndexPath:(NSIndexPath *)indexPath;
+- (BOOL)isLastSection:(NSInteger)section;
 
 @end
 
@@ -61,6 +62,8 @@
 @synthesize pendingURLConnections = _pendingURLConnections;
 @synthesize selectionDelegate = _selectionDelegate;
 @synthesize sortDescriptors = _sortDescriptors;
+@synthesize dataNeededDelegate = _dataNeededDelegate;
+@synthesize expectingMoreGraphObjects = _expectingMoreGraphObjects;
 
 - (id)init
 {
@@ -70,6 +73,7 @@
         NSMutableSet *pendingURLConnections = [[NSMutableSet alloc] init];
         self.pendingURLConnections = pendingURLConnections;
         [pendingURLConnections release];
+        self.expectingMoreGraphObjects = YES;
     }
     
     return self;
@@ -127,9 +131,25 @@
     return fields;
 }
 
-- (void)setViewData:(NSArray *)data
+- (void)clearGraphObjects {
+    self.data = nil;
+    self.expectingMoreGraphObjects = YES;
+}
+
+- (void)appendGraphObjects:(NSArray *)data
 {
-    self.data = data;
+    if (self.data) {
+        self.data = [self.data arrayByAddingObjectsFromArray:data];
+    } else {
+        self.data = data;
+    }
+    if (data == nil) {
+        self.expectingMoreGraphObjects = NO;
+    }
+}
+
+- (BOOL)hasGraphObjects {
+    return self.data && self.data.count > 0;
 }
 
 - (void)bindTableView:(UITableView *)tableView
@@ -184,10 +204,11 @@
         }
     }
     
-    NSArray *sortDescriptors = [self ensureSortDescriptors];
-    for (NSString *key in indexKeys) {
-        [[indexMap objectForKey:key]
-         sortUsingDescriptors:sortDescriptors];
+    if (self.sortDescriptors) {
+        for (NSString *key in indexKeys) {
+            [[indexMap objectForKey:key]
+             sortUsingDescriptors:self.sortDescriptors];
+        }
     }
     [indexKeys sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
@@ -208,17 +229,12 @@
                                             filterIncludesItem:item];
 }
 
-- (NSArray *)ensureSortDescriptors
-{
-    if (!self.sortDescriptors) {
-        NSSortDescriptor *sortBy = [NSSortDescriptor
-                                    sortDescriptorWithKey:@"name"
-                                    ascending:YES
-                                    selector:@selector(localizedCaseInsensitiveCompare:)];
-        self.sortDescriptors = [NSArray arrayWithObjects:sortBy, nil];
-    }
-    
-    return self.sortDescriptors;
+- (void)setSortingBySingleField:(NSString*)fieldName ascending:(BOOL)ascending {
+    NSSortDescriptor *sortBy = [NSSortDescriptor
+                                sortDescriptorWithKey:fieldName
+                                ascending:ascending
+                                selector:@selector(localizedCaseInsensitiveCompare:)];
+    self.sortDescriptors = [NSArray arrayWithObjects:sortBy, nil];
 }
 
 - (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView
@@ -282,6 +298,23 @@
     }
     
     return [NSIndexPath indexPathForRow:itemIndex inSection:sectionIndex];
+}
+
+- (BOOL)isLastSection:(NSInteger)section {
+    return section == self.indexKeys.count - 1;
+}
+
+- (BOOL)isActivityIndicatorIndexPath:(NSIndexPath *)indexPath {
+    if ([self isLastSection:indexPath.section]) {
+        id key = [self.indexKeys objectAtIndex:indexPath.section];
+        NSArray *sectionItems = [self.indexMap objectForKey:key];
+        
+        if (indexPath.row == sectionItems.count) {
+            // Last section has one more row that items if we are expecting more objects.
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item
@@ -352,7 +385,16 @@
 {
     id key = [self.indexKeys objectAtIndex:section];
     NSArray *sectionItems = [self.indexMap objectForKey:key];
-    return [sectionItems count];
+    
+    int count = [sectionItems count];
+    // If we are expecting more objects to be loaded via paging, add 1 to the
+    // row count for the last section.
+    if (self.expectingMoreGraphObjects &&
+        self.dataNeededDelegate &&
+        [self isLastSection:section]) {
+        ++count;
+    }
+    return count;
 }
 
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
@@ -369,31 +411,48 @@
          cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     FBGraphObjectTableCell *cell = [self cellWithTableView:tableView];
-    FBGraphObject *item = [self itemAtIndexPath:indexPath];
     
-    if (self.itemPicturesEnabled) {
-        cell.picture = [self tableView:tableView imageForItem:item];
-    } else {
+    if ([self isActivityIndicatorIndexPath:indexPath]) {
         cell.picture = nil;
-    }
-
-    if (self.itemSubtitleEnabled) {
-        cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
-                                                             subtitleOfItem:item];
-    } else {
         cell.subtitle = nil;
-    }
-
-    cell.title = [self.controllerDelegate graphObjectTableDataSource:self
-                                                         titleOfItem:item];
-    
-    if ([self.selectionDelegate graphObjectTableDataSource:self
-                                     selectionIncludesItem:item]) {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        cell.selected = YES;
-    } else {
+        cell.title = nil;
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selected = NO;
+        
+        [cell startAnimatingActivityIndicator];
+        
+        [self.dataNeededDelegate graphObjectTableDataSourceNeedsData:self
+                                                triggeredByIndexPath:indexPath];
+    } else {
+        FBGraphObject *item = [self itemAtIndexPath:indexPath];
+        
+        // This is a no-op if it doesn't have an activity indicator.
+        [cell stopAnimatingActivityIndicator];
+        
+        if (self.itemPicturesEnabled) {
+            cell.picture = [self tableView:tableView imageForItem:item];
+        } else {
+            cell.picture = nil;
+        }
+        
+        if (self.itemSubtitleEnabled) {
+            cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
+                                                                 subtitleOfItem:item];
+        } else {
+            cell.subtitle = nil;
+        }
+        
+        cell.title = [self.controllerDelegate graphObjectTableDataSource:self
+                                                             titleOfItem:item];
+        
+        if ([self.selectionDelegate graphObjectTableDataSource:self
+                                         selectionIncludesItem:item]) {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.selected = YES;
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.selected = NO;
+        }
     }
     
     return cell;

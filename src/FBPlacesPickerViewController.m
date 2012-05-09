@@ -16,6 +16,7 @@
 
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
+#import "FBGraphObjectPagingLoader.h"
 #import "FBPlacesPickerViewController.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
@@ -28,26 +29,21 @@ static NSString *defaultImageName =
 
 @interface FBPlacesPickerViewController () <FBPlacesPickerDelegate,
                                             FBGraphObjectSelectionChangedDelegate,
-                                            FBGraphObjectViewControllerDelegate>
+                                            FBGraphObjectViewControllerDelegate,
+                                            FBGraphObjectPagingLoaderDelegate>
 
-@property (nonatomic, retain) FBRequestConnection *connection;
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) FBGraphObjectTableSelection *selectionManager;
+@property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
 
 - (void)initialize;
 
-- (void)requestCompleted:(FBRequestConnection *)connection
-                  result:(id)result
-                   error:(NSError *)error;
-
 - (void)searchTextChanged:(UITextField *)textField;
-
 - (void)searchTextEndedEdit:(UITextField *)textField;
 
 @end
 
 @implementation FBPlacesPickerViewController {
-    FBRequestConnection *_connection;
     FBGraphObjectTableDataSource *_dataSource;
     id<FBPlacesPickerDelegate> _delegate;
     NSSet *_fieldsForRequest;
@@ -58,12 +54,10 @@ static NSString *defaultImageName =
     UITextField *_searchTextField;
     BOOL _searchTextEnabled;
     FBGraphObjectTableSelection *_selectionManager;
-    FBSession *_session;
     UIActivityIndicatorView *_spinner;
     UITableView *_tableView;
 }
 
-@synthesize connection = _connection;
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
 @synthesize fieldsForRequest = _fieldsForRequest;
@@ -74,9 +68,9 @@ static NSString *defaultImageName =
 @synthesize searchTextEnabled = _searchTextEnabled;
 @synthesize searchTextField = _searchTextField;
 @synthesize selectionManager = _selectionManager;
-@synthesize session = _session;
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
+@synthesize loader = _loader;
 
 - (id)init
 {
@@ -126,6 +120,10 @@ static NSString *defaultImageName =
                                                      initWithDataSource:dataSource];
     selectionManager.delegate = self;
 
+    // Paging loader (wired to tableView in viewDidLoad)
+    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource];
+    self.loader.delegate = self;
+
     // Self
     self.dataSource = dataSource;
     self.delegate = self;
@@ -142,16 +140,17 @@ static NSString *defaultImageName =
 
 - (void)dealloc
 {
-    [_connection cancel];
+    [_loader cancel];
+    _loader.delegate = nil;
+    [_loader release];
+    
     _dataSource.controllerDelegate = nil;
 
-    [_connection release];
     [_dataSource release];
     [_fieldsForRequest release];
     [_searchText release];
     [_searchTextField release];
     [_selectionManager release];
-    [_session release];
     [_spinner release];
     [_tableView release];
     
@@ -178,6 +177,15 @@ static NSString *defaultImageName =
     } else {
         return nil;
     }
+}
+
+// We don't really need to store session, let the loader hold it.
+- (void)setSession:(FBSession *)session {
+    self.loader.session = session;
+}
+
+- (FBSession*)session {
+    return self.loader.session;
 }
 
 #pragma mark - Public Methods
@@ -219,8 +227,11 @@ static NSString *defaultImageName =
     if (!self.spinner) {
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:bounds];
         spinner.hidesWhenStopped = YES;
+        spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         spinner.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        // We want user to be able to scroll while we load.
+        spinner.userInteractionEnabled = NO;
 
         self.spinner = spinner;
         [self.view addSubview:spinner];
@@ -237,14 +248,16 @@ static NSString *defaultImageName =
 
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
+
+    self.loader.tableView = self.tableView;
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
 
-    [self.dataSource cancelPendingRequests];
-
+    self.loader.tableView = nil;
+    
     self.searchTextField = nil;
     self.tableView = nil;
     self.spinner = nil;
@@ -277,65 +290,17 @@ static NSString *defaultImageName =
                                                  HTTPMethod:@"GET"];
     [parameters release];
 
-    [self.connection cancel];
-    self.connection = [request connectionWithCompletionHandler:
-                       ^(FBRequestConnection *connection, id result, NSError *error) {
-                           [self requestCompleted:connection result:result error:error];
-                       }];
+    [self.loader startLoadingWithRequest:request];
     [request release];
-
-    [self updateView];
-    [self.connection start];
 }
 
 - (void)updateView
 {
-    if (self.connection) {
-        [self.spinner startAnimating];
-    } else {
-        [self.spinner stopAnimating];
-    }
-
     [self.dataSource update];
     [self.tableView reloadData];
 }
 
 #pragma mark - private methods
-
-// Handles the completion of a request to FB service.
-- (void)requestCompleted:(FBRequestConnection *)connection
-                  result:(id)result
-                   error:(NSError *)error
-{
-    self.connection = nil;
-    NSArray *data = nil;
-    
-    if (!error && [result isKindOfClass:[NSDictionary class]]) {
-        id rawData = [((NSDictionary *)result) objectForKey:@"data"];
-        if ([rawData isKindOfClass:[NSArray class]]) {
-            data = (NSArray *)rawData;
-        }
-    }
-
-    if (!error && !data) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:result
-                                                             forKey:FBErrorParsedJSONResponseKey];
-        error = [[[NSError alloc] initWithDomain:FBiOSSDKDomain
-                                            code:FBErrorProtocolMismatch
-                                        userInfo:userInfo]
-                 autorelease];
-    }
-    
-    if (error) {
-        if ([self.delegate respondsToSelector:@selector(placesPickerViewController:handleError:)]) {
-            [self.delegate placesPickerViewController:self handleError:error];
-        }
-    } else {
-        [self.dataSource setViewData:data];
-    }
-    
-    [self updateView];
-}
 
 - (void)searchTextChanged:(UITextField *)textField
 {
@@ -405,6 +370,27 @@ static NSString *defaultImageName =
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
     return [graphObject objectForKey:@"picture"];
+}
+
+#pragma mark FBGraphObjectPagingLoaderDelegate members
+
+- (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader willLoadURL:(NSString*)url {
+    // We only want to display our spinner on loading the first page. After that,
+    // a spinner will display in the last cell to indicate to the user that data is loading.
+    if (!self.dataSource.hasGraphObjects) {
+        [self.spinner startAnimating];
+    }
+}
+
+- (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
+    [self.spinner stopAnimating];
+}
+
+- (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {
+    if ([self.delegate respondsToSelector:@selector(placesPickerViewController:handleError:)]) {
+        [self.delegate placesPickerViewController:self handleError:error];
+    }
+    
 }
 
 @end

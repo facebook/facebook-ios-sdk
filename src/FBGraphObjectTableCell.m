@@ -32,6 +32,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 @property (nonatomic, retain) UIImageView *pictureView;
 @property (nonatomic, retain) UILabel* subtitleLabel;
 @property (nonatomic, retain) UILabel* titleLabel;
+@property (nonatomic, retain) UIActivityIndicatorView *activityIndicator;
 
 @end
 
@@ -45,6 +46,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 @synthesize pictureView = _pictureView;
 @synthesize titleLabel = _titleLabel;
 @synthesize subtitleLabel = _subtitleLabel;
+@synthesize activityIndicator = _activityIndicator;
 
 #pragma mark - Lifecycle
 
@@ -123,6 +125,27 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 + (CGFloat)rowHeight
 {
     return pictureEdge + (2 * pictureMargin) + 1;
+}
+
+- (void)startAnimatingActivityIndicator {
+    if (!self.activityIndicator) {
+        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:self.bounds];
+        activityIndicator.hidesWhenStopped = YES;
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        activityIndicator.autoresizingMask =
+            UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        self.activityIndicator = activityIndicator;
+        [self addSubview:activityIndicator];
+        [activityIndicator release];        
+    }
+    [self.activityIndicator startAnimating];
+}
+
+- (void)stopAnimatingActivityIndicator {
+    if (self.activityIndicator) {
+        [self.activityIndicator stopAnimating];
+    }
 }
 
 #pragma mark - Properties
