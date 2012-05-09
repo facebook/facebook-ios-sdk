@@ -16,6 +16,36 @@
  
 #import "ViewController.h"
 
+const char* interestingIDs[] = {
+    "zuck",
+    // Recent Presidents and nominees
+    "barackobama",
+    "mittromney",
+    "johnmccain",
+    "johnkerry",
+    "georgewbush",
+    "algore",
+    // Places too!
+    "Disneyland",
+    "SpaceNeedle",
+    "TourEiffel",
+    "sydneyoperahouse",
+    // A selection of 1986 Mets
+    "166020963458360",
+    "108084865880237",
+    "40885519486",
+    "111825495501392",
+    // The cast of Saved by the Bell
+    "108168249210849",
+    "TiffaniThiessen",
+    "108126672542534",
+    "112886105391693",
+    "MarioLopezExtra",
+    "108504145837165",
+    "dennishaskins",
+};
+const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]);
+
 @interface ViewController ()
 
 @end
@@ -41,9 +71,9 @@
 
 - (IBAction)showRandomProfile:(id)sender
 {
-    // Generate a random number between 100000 & 400000 and use that as id
-    u_int32_t randomId = 100000 + arc4random_uniform(300000);
-    profilePictureView.userID = [NSString stringWithFormat:@"%u", randomId];
+    int index = arc4random() % kNumInterestingIDs;
+    profilePictureView.userID = [NSString stringWithCString:interestingIDs[index]
+                                               encoding:NSASCIIStringEncoding];
 }
 
 - (IBAction)makePictureSmall:(id)sender 
@@ -72,7 +102,7 @@
 {
     [super viewDidLoad];
 
-    profilePictureView.pictureSize = FBProfilePictureSizeLarge;
+    [self makePictureLarge:self];
     profilePictureView.userID = @"45963418107"; // Hello world
 }
 
