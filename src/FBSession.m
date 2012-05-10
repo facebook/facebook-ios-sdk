@@ -165,10 +165,10 @@ static NSSet *g_loggingBehavior;
         permissions:(NSArray*)permissions
     urlSchemeSuffix:(NSString*)urlSchemeSuffix
  tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy {
-    return [self initWithAppID:nil
+    return [self initWithAppID:appID
                    permissions:permissions
-               urlSchemeSuffix:nil
-            tokenCacheStrategy:nil
+               urlSchemeSuffix:urlSchemeSuffix
+            tokenCacheStrategy:tokenCachingStrategy
               isForUnitTesting:NO];
 }
 

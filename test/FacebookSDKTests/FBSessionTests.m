@@ -50,4 +50,75 @@
     [session invalidate];
 }
 
+// All code under test must be linked into the Unit Test bundle
+- (void)testSessionInvalidate
+{
+    // create valid
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    
+    __block BOOL wasNotifiedOfInvalid = NO;
+    
+    FBSession *session = [FBSession sessionForUnitTestingWithPermissions:nil];
+    [session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateInvalidated) {
+            wasNotifiedOfInvalid = YES;
+        }
+        [blocker signal];
+    }];
+    
+    [blocker wait];
+    
+    STAssertTrue(session.isValid, @"Session should be valid, and is not");
+    
+    __block NSString *userID;
+    [[FBRequest connectionWithSession:session
+                            graphPath:@"me" 
+                    completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+                        userID = [me.id retain];
+                        STAssertTrue(userID.length > 0, @"user id should be non-empty");
+                        [blocker signal];
+                    }] 
+     start];
+    
+    [blocker wait];
+    
+    // use FBRequest to create an NSURLRequest
+    NSURLRequest *request = [FBRequest connectionWithSession:session
+                                                   graphPath:userID
+                                                  parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                              @"delete", @"method",
+                                                              nil]
+                                                  HTTPMethod:nil
+                                           completionHandler:nil].urlRequest;
+    
+    [userID release];
+    
+    // synchronously delete the user
+    NSURLResponse *response;
+    NSError *error = nil;
+    NSData *data;
+    data = [NSURLConnection sendSynchronousRequest:request 
+                                 returningResponse:&response
+                                             error:&error];
+    // if !data or if data == false, log
+    NSString *body = !data ? nil : [[[NSString alloc] initWithData:data
+                                                          encoding:NSUTF8StringEncoding]
+                                    autorelease];    
+    STAssertTrue([body isEqualToString:@"true"], @"body should return 'true'");
+        
+    [[FBRequest connectionWithSession:session
+                            graphPath:@"me" 
+                    completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+                        STAssertTrue(error != nil, @"response should be an error due to deleted user");
+                        [blocker signal];
+                    }] 
+     start];
+
+    STAssertFalse(wasNotifiedOfInvalid, @"should not have invalidated the token yet");
+    [blocker wait];
+    STAssertTrue(wasNotifiedOfInvalid, @"should have invalidated the token by now");
+    
+    [session invalidate];
+}
+
 @end
