@@ -19,7 +19,10 @@ die() {
 }
 
 # The Xcode bin path
-if [ -d "/Developer/usr/bin" ]; then
+if [ -x "/usr/bin/xcode-select" ]; then
+   # Use what Xcode tells us
+  XCODEBUILD_PATH=`/usr/bin/xcode-select -print-path`/usr/bin
+elif [ -d "/Developer/usr/bin" ]; then
    # < XCode 4.3.1
   XCODEBUILD_PATH=/Developer/usr/bin
 else
