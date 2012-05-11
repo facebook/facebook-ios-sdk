@@ -385,6 +385,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Takuma Kudo (F6RGJLWTJJ)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Takuma Kudo (F6RGJLWTJJ)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -392,6 +394,8 @@
 				INFOPLIST_FILE = "Hackbook/Hackbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				PRODUCT_NAME = Hackbook;
+				PROVISIONING_PROFILE = "E3635EDD-CC34-416E-8584-99AF44E2BAC2";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "E3635EDD-CC34-416E-8584-99AF44E2BAC2";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
