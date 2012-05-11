@@ -55,8 +55,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 
 - (FBSessionTokenCachingStrategy*)createCachingStrategyForSlot:(int)slot {
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [[FBSessionTokenCachingStrategy alloc]
-                                                           initWithNSUserDefaultAccessTokenKeyName:[NSString stringWithFormat:@"SUUserToken%d", slot]
-                                                           expirationDateKeyName:[NSString stringWithFormat:@"SUExpDate%d", slot]];
+                                                           initWithUserDefaultTokenInformationKeyName:[NSString stringWithFormat:@"SUUserTokenInfo%d", slot]];
     return tokenCachingStrategy;
 }
 

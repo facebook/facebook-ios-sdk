@@ -17,76 +17,69 @@
 #import "FBSessionTokenCachingStrategy.h"
 
 // const strings
-static NSString *const FBAccessTokenKeyName = @"FBAccessTokenKey";
-static NSString *const FBExpirationDateKeyName = @"FBExpirationDateKey";
+static NSString *const FBAccessTokenInformationKeyName = @"FBAccessTokenInformationKey";
+
+NSString *const FBTokenInformationTokenKey = @"com.facebook.FBiOSSDK:TokenInformationTokenKey";
+NSString *const FBTokenInformationExpirationDateKey = @"com.facebook.FBiOSSDK:TokenInformationExpirationDateKey";
+NSString *const FBTokenInformationRefreshDateKey = @"com.facebook.FBiOSSDK:TokenInformationRefreshDateKey";
+NSString *const FBTokenInformationUserFBIDKey = @"com.facebook.FBiOSSDK:TokenInformationUserFBIDKey";
 
 @implementation FBSessionTokenCachingStrategy {
-    NSString *_accessTokenKeyName;
-    NSString *_expirationDateKeyName;
+    NSString *_accessTokenInformationKeyName;
 }
 
 #pragma mark Lifecycle
 
 - (id)init {
-    return [self initWithNSUserDefaultAccessTokenKeyName:nil
-                                   expirationDateKeyName:nil];
+    return [self initWithUserDefaultTokenInformationKeyName:nil];
 }
 
-- (id)initWithNSUserDefaultAccessTokenKeyName:(NSString*)accessTokenKeyName
-                        expirationDateKeyName:(NSString*)expirationDateKeyName {
+- (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName {
+    
     self = [super init];
     if (self) {
         // get-em
-        _accessTokenKeyName = accessTokenKeyName ? accessTokenKeyName : FBAccessTokenKeyName;
-        _expirationDateKeyName = expirationDateKeyName ? expirationDateKeyName : FBExpirationDateKeyName;
+        _accessTokenInformationKeyName = tokenInformationKeyName ? tokenInformationKeyName : FBAccessTokenInformationKeyName;
 
         // keep-em
-        [_accessTokenKeyName retain];
-        [_expirationDateKeyName retain];
+        [_accessTokenInformationKeyName retain];
     }
     return self;    
 }
 
 - (void)dealloc {
     // let-em go
-    [_accessTokenKeyName release];
-    [_expirationDateKeyName release];
+    [_accessTokenInformationKeyName release];
     [super dealloc];
 }
 
 #pragma mark - 
 #pragma mark Public Members
 
-- (void)cacheToken:(NSString*)token expirationDate:(NSDate*)date {
+- (void)cacheTokenInformation:(NSDictionary*)tokenInformation {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:token forKey:_accessTokenKeyName];
-    [defaults setObject:date forKey:_expirationDateKeyName];
+    [defaults setObject:tokenInformation forKey:_accessTokenInformationKeyName];
     [defaults synchronize];
 }
 
-- (NSString*)fetchTokenAndExpirationDate:(NSDate**)date {
-    NSString *accessToken = nil;
-    NSDate *expirationDate = nil;
-    
+- (NSDictionary*)fetchTokenInformation {
     // fetch values from defaults
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    accessToken = [defaults objectForKey:_accessTokenKeyName];
-    expirationDate = [defaults objectForKey:_expirationDateKeyName];
-
-    // if we have both return both
-    if (accessToken && expirationDate) {
-        *date = expirationDate;
-    } else {
-        accessToken = nil; // else return nil
-    }
-    return accessToken;
+    return [defaults objectForKey:_accessTokenInformationKeyName];
 }
 
 - (void)clearToken:(NSString*)token {        
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:_accessTokenKeyName];
-    [defaults removeObjectForKey:_expirationDateKeyName];    
+    [defaults removeObjectForKey:_accessTokenInformationKeyName];
     [defaults synchronize];
+}
+
++ (BOOL)isValidTokenInformation:(NSDictionary*)tokenInformation {
+    id token = [tokenInformation objectForKey:FBTokenInformationTokenKey];
+    id expirationDate = [tokenInformation objectForKey:FBTokenInformationExpirationDateKey];
+    return  [token isKindOfClass:[NSString class]] &&
+            ([token length] > 0) &&
+            [expirationDate isKindOfClass:[NSDate class]];
 }
 
 + (FBSessionTokenCachingStrategy*)defaultInstance {

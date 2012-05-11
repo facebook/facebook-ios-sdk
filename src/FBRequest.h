@@ -95,9 +95,9 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
            parameters:(NSDictionary *)parameters
            HTTPMethod:(NSString *)HTTPMethod;
 
-- (id)initWithSession:(FBSession*)session
-            graphPath:(NSString *)graphPath
-          graphObject:(id<FBGraphObject>)object;
+- (id)initForPostWithSession:(FBSession*)session
+                   graphPath:(NSString *)graphPath
+                 graphObject:(id<FBGraphObject>)object;
 
 - (id)initWithSession:(FBSession*)session
            restMethod:(NSString *)restMethod
@@ -160,10 +160,10 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
                                       graphPath:(NSString*)graphPath
                               completionHandler:(FBRequestHandler)handler;
 
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)session
-                                    graphPath:(NSString*)graphPath
-                                  graphObject:(id<FBGraphObject>)object
-                            completionHandler:(FBRequestHandler)handler;
++ (FBRequestConnection*)connectionForPostWithSession:(FBSession*)session
+                                           graphPath:(NSString*)graphPath
+                                         graphObject:(id<FBGraphObject>)object
+                                   completionHandler:(FBRequestHandler)handler;
 
 + (FBRequestConnection*)connectionWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath

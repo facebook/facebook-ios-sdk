@@ -26,14 +26,13 @@
 @interface FBSessionTokenCachingStrategy : NSObject
 
 - (id)init;
-- (id)initWithNSUserDefaultAccessTokenKeyName:(NSString*)tokenKeyName
-                        expirationDateKeyName:(NSString*)dateKeyName;
+- (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName;
 
-- (void)cacheToken:(NSString*)token expirationDate:(NSDate*)date;
+- (void)cacheTokenInformation:(NSDictionary*)tokenInformation;
 
 // an overriding implementation should only return a token if it
 // can also return an expiration date, otherwise return nil
-- (NSString*)fetchTokenAndExpirationDate:(NSDate**)date;
+- (NSDictionary*)fetchTokenInformation;
 
 // an overriding implementation should be able to tolerate a nil or
 // already cleared token value
@@ -41,4 +40,19 @@
 
 + (FBSessionTokenCachingStrategy*)defaultInstance;
 
++ (BOOL)isValidTokenInformation:(NSDictionary*)tokenInformation;
+
 @end
+
+// The key to use with token information dictionaries to get and set the token value
+extern NSString *const FBTokenInformationTokenKey;
+
+// The to use with token information dictionaries to get and set the expiration date
+extern NSString *const FBTokenInformationExpirationDateKey;
+
+// The to use with token information dictionaries to get and set the refresh date
+extern NSString *const FBTokenInformationRefreshDateKey;
+
+// The key to use with token information dictionaries to get the related user's fbid
+extern NSString *const FBTokenInformationUserFBIDKey;
+

@@ -158,9 +158,9 @@
         action.anothertruthvalue = [BOGFirstViewController ogObjectForTruthValue:right];
         
         // create the request and post the action
-        FBRequest *req = [[FBRequest alloc] initWithSession:appDelegate.session
-                                                  graphPath:actionPath
-                                                graphObject:action];
+        FBRequest *req = [[FBRequest alloc] initForPostWithSession:appDelegate.session
+                                                         graphPath:actionPath
+                                                       graphObject:action];
         FBRequestConnection *conn = [[FBRequestConnection alloc] init];
         [conn addRequest:req completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {

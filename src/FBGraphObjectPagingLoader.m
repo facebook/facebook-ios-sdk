@@ -24,6 +24,9 @@
 @property (nonatomic, retain) FBRequestConnection *connection;
 
 - (void)followNextLink;
+- (void)requestCompleted:(FBRequestConnection *)connection
+                  result:(id)result
+                   error:(NSError *)error;
 
 @end
 

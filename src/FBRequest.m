@@ -75,9 +75,9 @@ static NSString *const kPostHTTPMethod = @"POST";
     return self;
 }
 
-- (id)initWithSession:(FBSession*)session
-            graphPath:(NSString *)graphPath
-          graphObject:(id<FBGraphObject>)object {
+- (id)initForPostWithSession:(FBSession*)session
+                   graphPath:(NSString *)graphPath
+                 graphObject:(id<FBGraphObject>)object {
     self = [self initWithSession:session
                        graphPath:graphPath
                       parameters:nil
@@ -161,12 +161,12 @@ static NSString *const kPostHTTPMethod = @"POST";
                           completionHandler:handler];
 }
 
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)session
-                                    graphPath:(NSString*)graphPath
-                                  graphObject:(id<FBGraphObject>)object
-                            completionHandler:(FBRequestHandler)handler
++ (FBRequestConnection*)connectionForPostWithSession:(FBSession*)session
+                                           graphPath:(NSString*)graphPath
+                                         graphObject:(id<FBGraphObject>)object
+                                   completionHandler:(FBRequestHandler)handler
 {
-  FBRequest *request = [[[FBRequest alloc] initWithSession:session
+  FBRequest *request = [[[FBRequest alloc] initForPostWithSession:session
 					   graphPath:graphPath
 					   graphObject:object]
 			 autorelease];

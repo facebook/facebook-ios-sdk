@@ -100,10 +100,10 @@
 
     // Create the request and post the action to the "me/scrumps:eat" path.
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    FBRequestConnection *conn = [FBRequest connectionWithSession:appDelegate.session
-                                                       graphPath:@"me/scrumps:eat"
-                                                     graphObject:action
-                                               completionHandler:
+    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:appDelegate.session
+                                                              graphPath:@"me/scrumps:eat"
+                                                            graphObject:action
+                                                      completionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
             if (!error) {
                 // successful post, do something with the action id    

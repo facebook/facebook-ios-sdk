@@ -248,9 +248,10 @@ static NSSet *g_loggingBehavior;
         [self notifyOfState:self.status];
 
         // use cached token if present
-        NSDate *cachedTokenExpirationDate = nil;
-        NSString *cachedToken = [tokenCachingStrategy fetchTokenAndExpirationDate:&cachedTokenExpirationDate];
-        if (cachedToken) {
+        NSDictionary *tokenInfo = [tokenCachingStrategy fetchTokenInformation];
+        if ([FBSessionTokenCachingStrategy isValidTokenInformation:tokenInfo]) {
+            NSDate *cachedTokenExpirationDate = [tokenInfo objectForKey:FBTokenInformationExpirationDateKey];
+            NSString *cachedToken = [tokenInfo objectForKey:FBTokenInformationTokenKey];
             // check to see if expiration date is later than now
             if (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]]) {
                 // set the state and token info
@@ -600,7 +601,11 @@ static NSSet *g_loggingBehavior;
     if (changingTokenAndDate) {
         // update the cache
         if (shouldCache) {
-            [self.tokenCachingStrategy cacheToken:token expirationDate:date];
+            NSDictionary *tokenInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       token, FBTokenInformationTokenKey,
+                                       date, FBTokenInformationExpirationDateKey,
+                                       nil];
+            [self.tokenCachingStrategy cacheTokenInformation:tokenInfo];
         }
 
         // KVO property change notifications token and date
