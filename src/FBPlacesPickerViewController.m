@@ -48,7 +48,7 @@ static NSString *defaultImageName =
     id<FBPlacesPickerDelegate> _delegate;
     NSSet *_fieldsForRequest;
     CLLocationCoordinate2D _locationCoordinate;
-    NSInteger _radius;
+    NSInteger _radiusInMeters;
     NSInteger _resultsLimit;
     NSString *_searchText;
     UITextField *_searchTextField;
@@ -62,7 +62,7 @@ static NSString *defaultImageName =
 @synthesize delegate = _delegate;
 @synthesize fieldsForRequest = _fieldsForRequest;
 @synthesize locationCoordinate = _locationCoordinate;
-@synthesize radius = _radius;
+@synthesize radiusInMeters = _radiusInMeters;
 @synthesize resultsLimit = _resultsLimit;
 @synthesize searchText = _searchText;
 @synthesize searchTextEnabled = _searchTextEnabled;
@@ -130,7 +130,7 @@ static NSString *defaultImageName =
     self.selectionManager = selectionManager;
     self.searchTextEnabled = YES;
     self.resultsLimit = defaultResultsLimit;
-    self.radius = defaultRadius;
+    self.radiusInMeters = defaultRadius;
     self.itemPicturesEnabled = YES;
 
     // cleanup
@@ -271,7 +271,7 @@ static NSString *defaultImageName =
     NSString *center = [NSString stringWithFormat:@"%lf,%lf",
                         self.locationCoordinate.latitude,
                         self.locationCoordinate.longitude];
-    NSString *distance = [NSString stringWithFormat:@"%d", self.radius];
+    NSString *distance = [NSString stringWithFormat:@"%d", self.radiusInMeters];
 
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:@"place" forKey:@"type"];

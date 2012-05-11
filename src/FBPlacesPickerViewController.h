@@ -31,7 +31,7 @@
 @property (nonatomic, copy) NSSet *fieldsForRequest;
 @property (nonatomic) BOOL itemPicturesEnabled;
 @property (nonatomic) CLLocationCoordinate2D locationCoordinate;
-@property (nonatomic) NSInteger radius;
+@property (nonatomic) NSInteger radiusInMeters;
 @property (nonatomic) NSInteger resultsLimit;
 @property (nonatomic, copy) NSString *searchText;
 @property (nonatomic) BOOL searchTextEnabled;
