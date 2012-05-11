@@ -42,7 +42,6 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.searchTextEnabled = NO;
     }
     return self;
 }

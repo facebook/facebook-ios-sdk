@@ -22,6 +22,7 @@
 #import "FBRequest.h"
 #import "FBError.h"
 
+static const NSInteger searchTextChangedTimerInterval = 2;
 static const NSInteger defaultResultsLimit = 100;
 static const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
@@ -35,6 +36,8 @@ static NSString *defaultImageName =
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) FBGraphObjectTableSelection *selectionManager;
 @property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
+@property (nonatomic, retain) NSTimer *searchTextChangedTimer;
+@property (nonatomic) BOOL hasSearchTextChangedSinceLastQuery;
 
 - (void)initialize;
 
@@ -71,6 +74,8 @@ static NSString *defaultImageName =
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
 @synthesize loader = _loader;
+@synthesize searchTextChangedTimer = _searchTextChangedTimer;
+@synthesize hasSearchTextChangedSinceLastQuery = _hasSearchTextChangedSinceLastQuery;
 
 - (id)init
 {
@@ -153,6 +158,7 @@ static NSString *defaultImageName =
     [_selectionManager release];
     [_spinner release];
     [_tableView release];
+    [_searchTextChangedTimer release];
     
     [super dealloc];
 }
@@ -293,6 +299,8 @@ static NSString *defaultImageName =
 
     [self.loader startLoadingWithRequest:request];
     [request release];
+    
+    self.hasSearchTextChangedSinceLastQuery = NO;
 }
 
 - (void)updateView
@@ -303,11 +311,42 @@ static NSString *defaultImageName =
 
 #pragma mark - private methods
 
+- (NSTimer *)createSearchTextChangedTimer {
+    NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:searchTextChangedTimerInterval
+                                                      target:self 
+                                                    selector:@selector(searchTextChangedTimerFired:) 
+                                                    userInfo:nil 
+                                                     repeats:YES];
+    return timer;
+}
+
+- (void)searchTextChangedTimerFired:(NSTimer *)timer
+{
+    if (self.hasSearchTextChangedSinceLastQuery) {
+        [self loadData];
+    } else {
+        // Nothing has changed in 2 seconds. Invalidate and forget about this timer.
+        // Next time the user types, we will fire a query immediately again.
+        [self.searchTextChangedTimer invalidate];
+        self.searchTextChangedTimer = nil;
+    }
+}
+
 - (void)searchTextChanged:(UITextField *)textField
 {
     if (textField == self.searchTextField) {
         self.searchText = textField.text;
-        [self loadData];
+
+        // Sending a request on every keystroke is wasteful of bandwidth. Send a
+        // request the first time the user types something, then set up a 2-second timer
+        // and send whatever changes the user has made since then. (If nothing has changed
+        // in 2 seconds, we reset so the next change will cause an immediate re-query.)
+        if (!self.searchTextChangedTimer) {
+            [self loadData];
+            self.searchTextChangedTimer = [self createSearchTextChangedTimer];
+        } else {
+            self.hasSearchTextChangedSinceLastQuery = YES;
+        }
     }
 }
 

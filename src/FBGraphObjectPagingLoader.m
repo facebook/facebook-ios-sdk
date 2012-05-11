@@ -180,7 +180,8 @@
 - (void)startLoadingWithRequest:(FBRequest*)request {
     [self.dataSource clearGraphObjects];
     
-     FBRequestConnection *connection = [request connectionWithCompletionHandler:
+    
+    FBRequestConnection *connection = [request connectionWithCompletionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
             [self requestCompleted:connection result:result error:error];
         }];
@@ -190,6 +191,7 @@
         [self.delegate pagingLoader:self willLoadURL:urlString];
     }
 
+    [self.connection cancel];
     self.connection = connection;
     [self.connection start];
 }
