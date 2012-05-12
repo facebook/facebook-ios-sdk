@@ -54,7 +54,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 // private properties
 @property(nonatomic, copy) NSString* appId;
 // session and tokenCaching object implement login logic and token state in Facebook class
-@property(nonatomic, retain) FBSession *session;
+@property(nonatomic, readwrite, retain) FBSession *session;
 @property(nonatomic) BOOL hasUpdatedAccessToken;
 @property(nonatomic, retain) FBSessionManualTokenCachingStrategy *tokenCaching;
 
@@ -289,16 +289,17 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 - (void)authorize:(NSArray *)permissions {
     
     // if we already have a session, git rid of it
-    [_session invalidate];
-    [_session release];
+    [self.session invalidate];
+    self.session = nil;
     [self.tokenCaching clearToken:nil];
     
-    _session = [[FBSession alloc] initWithAppID:_appId
-                                    permissions:permissions 
-                                urlSchemeSuffix:_urlSchemeSuffix 
-                             tokenCacheStrategy:self.tokenCaching];
+    self.session = [[[FBSession alloc] initWithAppID:_appId
+                                        permissions:permissions 
+                                    urlSchemeSuffix:_urlSchemeSuffix 
+                                 tokenCacheStrategy:self.tokenCaching]
+                    autorelease];
     
-    [_session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [self.session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         switch (status) {
             case FBSessionStateLoggedIn:
                 // call the legacy session delegate
@@ -410,7 +411,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  *   by SDK, NO otherwise.
  */
 - (BOOL)handleOpenURL:(NSURL *)url {
-    return [_session handleOpenURL:url];
+    return [self.session handleOpenURL:url];
 }
 
 /**

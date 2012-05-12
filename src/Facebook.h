@@ -57,8 +57,8 @@
 @property(nonatomic, copy) NSDate* expirationDate;
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* urlSchemeSuffix;
-@property(nonatomic, readonly, getter=isFrictionlessRequestsEnabled) 
-BOOL isFrictionlessRequestsEnabled;
+@property(nonatomic, readonly) BOOL isFrictionlessRequestsEnabled;
+@property(nonatomic, readonly, retain) FBSession *session;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
