@@ -20,6 +20,7 @@
 #import "FBURLConnection.h"
 #import "FBRequestBody.h"
 #import "FBSession.h"
+#import "FBSession+Internal.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "Facebook.h"
@@ -860,6 +861,44 @@ typedef enum FBRequestConnectionState {
         if ([self isInvalidSessionError:itemError 
                             resultIndex:error == itemError ? i : 0]) {
             [metadata.request.session invalidate];
+        } else if ([metadata.request.session shouldExtendAccessToken]) {
+            FBSession *session = metadata.request.session;
+            FBRequest *request = [[FBRequest alloc] initWithSession:session
+                                                         restMethod:@"auth.extendSSOAccessToken"
+                                                         parameters:nil
+                                                         HTTPMethod:nil];
+            
+            FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+            [connection addRequest:request
+                 completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                     // extract what we care about
+                     id token = [result objectForKey:@"access_token"];
+                     id expireTime = [result objectForKey:@"expires_at"];
+                     
+                     // if we have a token and it is not a string (?) punt
+                     if (token && ![token isKindOfClass:[NSString class]]) {
+                         expireTime = nil;
+                     }
+                     
+                     // get a date if possible
+                     NSDate *expirationDate = nil;
+                     if (expireTime) {
+                         NSTimeInterval timeInterval = [expireTime doubleValue];
+                         if (timeInterval != 0) {
+                             expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                         }
+                     }
+                     
+                     // if we ended up with at least a date (and maybe a token) refresh the session token
+                     if (expirationDate) {
+                         [session refreshAccessToken:token
+                                      expirationDate:expirationDate];
+                     }
+                 }];            
+            [connection start];
+            
+            [connection release];
+            [request release];
         }
 
         metadata.completionHandler(self, body, itemError);

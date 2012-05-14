@@ -69,6 +69,9 @@ static NSString *const FBstatusPropertyName = @"status";
 static NSString *const FBaccessTokenPropertyName = @"accessToken";
 static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
+static int const FBTokenExtendThresholdSeconds = 24 * 60 * 60;  // day
+static int const FBTokenRetryExtendSeconds = 60 * 60;           // hour
+
 // module scoped globals
 static NSString *FBPLISTAppID = nil;
 static NSSet *g_loggingBehavior;
@@ -86,6 +89,9 @@ static NSSet *g_loggingBehavior;
 
     // private property and non-property ivars
     BOOL _isInStateTransition;
+    BOOL _isSSOToken;
+    NSDate *_attemptedRefreshDate;
+    NSDate *_refreshDate;    
     FBSessionStatusHandler _loginHandler;
     FBLoginDialog *_loginDialog;
     NSThread *_affinitizedThread;
@@ -103,6 +109,8 @@ static NSSet *g_loggingBehavior;
 
 // private properties
 @property(readwrite, retain) FBSessionTokenCachingStrategy *tokenCachingStrategy;
+@property(readwrite, copy) NSDate *refreshDate;
+@property(readwrite, copy) NSDate *attemptedRefreshDate;
 @property(readwrite, copy) FBSessionStatusHandler loginHandler;
 @property(readonly) NSString *appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
@@ -241,6 +249,9 @@ static NSSet *g_loggingBehavior;
 
         // additional setup
         _isInStateTransition = NO;
+        _isSSOToken = NO;
+        self.attemptedRefreshDate = [NSDate distantPast];
+        self.refreshDate = nil;
         self.status = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
 
@@ -254,6 +265,11 @@ static NSSet *g_loggingBehavior;
             NSString *cachedToken = [tokenInfo objectForKey:FBTokenInformationTokenKey];
             // check to see if expiration date is later than now
             if (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]]) {
+                
+                // if we have cached an optional refresh date or SSO indicator, pick them up here
+                self.refreshDate = [tokenInfo objectForKey:FBTokenInformationRefreshDateKey];
+                _isSSOToken = [[tokenInfo objectForKey:FBTokenInformationIsSSOKey] boolValue];
+                
                 // set the state and token info
                 [self transitionToState:FBSessionStateLoadedValidToken
                          andUpdateToken:cachedToken
@@ -269,7 +285,9 @@ static NSSet *g_loggingBehavior;
 }
 
 - (void)dealloc {
-    [_loginDialog release];
+    [_loginDialog release]; 
+    [_attemptedRefreshDate release];
+    [_refreshDate release];
     [_loginHandler release];
     [_appID release];
     [_urlSchemeSuffix release];
@@ -287,6 +305,8 @@ static NSSet *g_loggingBehavior;
 
 @synthesize appID = _appID,
             permissions = _permissions,
+            attemptedRefreshDate = _attemptedRefreshDate,
+            refreshDate = _refreshDate,
             loginHandler = _loginHandler,
             // following properties use manual KVO -- changes to names require
             // changes to static property name variables (e.g. FBisValidPropertyName)
@@ -421,13 +441,16 @@ static NSSet *g_loggingBehavior;
 
         // we have an access token, so parse the expiration date.
         NSString *expTime = [params objectForKey:@"expires_in"];
-        NSDate *expirationDate = [NSDate distantFuture];
-        if (expTime != nil) {
-            int expVal = [expTime intValue];
-            if (expVal != 0) {
-                expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
-            }
+        NSDate *expirationDate = [FBSession expirationDateFromExpirationTimeString:expTime];
+        if (!expirationDate) {
+            expirationDate = [NSDate distantFuture];
         }
+                
+        // this is one of two ways that we get an SSO token (the other is from cache) 
+        _isSSOToken = YES;
+        
+        // we received a token just now
+        self.refreshDate = [NSDate date];
 
         // set token and date, state transition, and call the handler if there is one
         [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
@@ -601,10 +624,20 @@ static NSSet *g_loggingBehavior;
     if (changingTokenAndDate) {
         // update the cache
         if (shouldCache) {
-            NSDictionary *tokenInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                                       token, FBTokenInformationTokenKey,
-                                       date, FBTokenInformationExpirationDateKey,
-                                       nil];
+            NSMutableDictionary *tokenInfo = [NSMutableDictionary dictionaryWithCapacity:4];
+            // we don't consider it a valid cache without these two values
+            [tokenInfo setObject:token forKey:FBTokenInformationTokenKey];
+            [tokenInfo setObject:date forKey:FBTokenInformationExpirationDateKey];
+            
+            // but these next two values are optional
+            if (self.refreshDate) {
+                [tokenInfo setObject:self.refreshDate forKey:FBTokenInformationRefreshDateKey];
+            }
+            
+            if (_isSSOToken) {
+                [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsSSOKey];
+            }
+            
             [self.tokenCachingStrategy cacheTokenInformation:tokenInfo];
         }
 
@@ -762,10 +795,40 @@ static NSSet *g_loggingBehavior;
      start];
 }
 
+
+- (void)refreshAccessToken:(NSString*)token 
+            expirationDate:(NSDate*)expireDate {
+    // refreshing now
+    self.refreshDate = [NSDate date];
+    
+    // refresh token and date, state transition, and call the handler if there is one
+    [self transitionAndCallHandlerWithState:FBSessionStateExtendedToken
+                                      error:nil
+                                      token:token ? token : self.accessToken
+                             expirationDate:expireDate
+                                shouldCache:YES];
+}
+
+- (BOOL)shouldExtendAccessToken {
+    BOOL result = NO;
+    NSDate *now = [NSDate date];
+    if (self.isValid &&
+        _isSSOToken &&
+        [now timeIntervalSinceDate:self.attemptedRefreshDate] > FBTokenRetryExtendSeconds &&
+        [now timeIntervalSinceDate:self.refreshDate] > FBTokenExtendThresholdSeconds) {
+        result = YES;
+        self.attemptedRefreshDate = now;
+    }
+    return result;
+}
+
 // core handler for inline UX flow
 - (void)fbDialogLogin:(NSString *)accessToken expirationDate:(NSDate *)expirationDate {
     // no reason to keep this object
     self.loginDialog = nil;
+    
+    // though this is not SSO our policy is to cache the refresh date if we have it
+    self.refreshDate = [NSDate date];
 
     // set token and date, state transition, and call the handler if there is one
     [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
@@ -945,6 +1008,17 @@ static NSSet *g_loggingBehavior;
     for (NSHTTPCookie* cookie in facebookCookies) {
         [cookies deleteCookie:cookie];
     }
+}
+
++ (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime {
+    NSDate *expirationDate = nil;
+    if (expirationTime != nil) {
+        int expValue = [expirationTime intValue];
+        if (expValue != 0) {
+            expirationDate = [NSDate dateWithTimeIntervalSinceNow:expValue];
+        }
+    }
+    return expirationDate;
 }
 
 #pragma mark -

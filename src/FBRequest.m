@@ -94,6 +94,11 @@ static NSString *const kPostHTTPMethod = @"POST";
            HTTPMethod:(NSString *)HTTPMethod
 {
     if (self = [super init]) {
+        // set default for nil
+        if (!HTTPMethod) {
+            HTTPMethod = kGetHTTPMethod;
+        }
+        
         self.session = session;
         self.restMethod = restMethod;
         self.HTTPMethod = HTTPMethod;

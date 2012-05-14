@@ -18,6 +18,10 @@
 
 @interface FBSession (Internal)
 
+- (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
+- (BOOL)shouldExtendAccessToken;
+
 + (void)deleteFacebookCookies;
++ (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime;
 
 @end
