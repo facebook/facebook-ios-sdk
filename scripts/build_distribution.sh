@@ -14,9 +14,10 @@ FB_SDK_FRAMEWORK_TGZ=${FB_SDK_FRAMEWORK}-${FB_SDK_VERSION_FULL}.tgz
 
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_TEMPLATES=$FB_SDK_BUILD_PACKAGE/Library/Developer/XCode/Templates/FacebookSDK
-FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Library/Developer/FacebookSDK
+FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Documents/FacebookSDK
 FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR
-FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDKSamples
+FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
+FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Documentation
 
 # -----------------------------------------------------------------------------
 # Call out to build .framework
@@ -47,6 +48,7 @@ mkdir $FB_SDK_BUILD_PACKAGE \
 mkdir -p $FB_SDK_BUILD_PACKAGE_TEMPLATES
 mkdir -p $FB_SDK_BUILD_PACKAGE_FRAMEWORK
 mkdir -p $FB_SDK_BUILD_PACKAGE_SAMPLES
+mkdir -p $FB_SDK_BUILD_PACKAGE_DOCS
 
 \cp -r $FB_SDK_TEMPLATES/* $FB_SDK_BUILD_PACKAGE_TEMPLATES \
   || die "Could not copy $FB_SDK_TEMPLATES"
@@ -54,12 +56,16 @@ mkdir -p $FB_SDK_BUILD_PACKAGE_SAMPLES
   || die "Could not copy $FB_SDK_FRAMEWORK"
 \cp -R $FB_SDK_SAMPLES/ $FB_SDK_BUILD_PACKAGE_SAMPLES \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
+\cp -R $FB_SDK_FRAMEWORK_DOCS/ $FB_SDK_BUILD_PACKAGE_DOCS \
+  || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS"
+\cp $FB_SDK_ROOT/README.mdown $FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK \
+  || die "Could not copy README.mdown"
 
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
 for fname in $(find $FB_SDK_BUILD_PACKAGE_SAMPLES -name "project.pbxproj" -print); do \
-  sed "s|../../build|../../../${FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g" \
+  sed "s|../../build|../../../../${FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
 

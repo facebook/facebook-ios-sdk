@@ -62,7 +62,7 @@
         // valid account UI
         
         // Once logged in, get "my" information.
-        FBRequest *me = [FBRequest requestMeForSession:appDelegate.session];
+        FBRequest *me = [FBRequest requestForMeWithSession:appDelegate.session];
         FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
         [newConnection addRequest:me
                 completionHandler: ^(FBRequestConnection *connection, 

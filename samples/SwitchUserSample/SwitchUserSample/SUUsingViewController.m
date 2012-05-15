@@ -57,7 +57,7 @@
         self.picView.hidden = YES;
         self.birthdayLabel.hidden = YES;
 
-        FBRequest *me = [FBRequest requestMeForSession:userManager.currentSession];
+        FBRequest *me = [FBRequest requestForMeWithSession:userManager.currentSession];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
         [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
                                                              NSDictionary<FBGraphUser> *user,

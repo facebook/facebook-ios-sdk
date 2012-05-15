@@ -116,7 +116,7 @@
     FBSession *session = userManager.currentSession;
     
     if (session.isValid) {       
-        FBRequest *me = [FBRequest requestMeForSession:session];
+        FBRequest *me = [FBRequest requestForMeWithSession:session];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
 
         [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
