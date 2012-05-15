@@ -23,9 +23,8 @@
 
 @interface FBPlacesPickerViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet UITextField *searchTextField;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 @property (nonatomic, assign) id<FBPlacesPickerDelegate> delegate;
 @property (nonatomic, copy) NSSet *fieldsForRequest;
@@ -34,7 +33,6 @@
 @property (nonatomic) NSInteger radiusInMeters;
 @property (nonatomic) NSInteger resultsLimit;
 @property (nonatomic, copy) NSString *searchText;
-@property (nonatomic) BOOL searchTextEnabled;
 @property (nonatomic, retain) FBSession *session;
 
 // The place that is currently selected in the view.  This is nil
@@ -51,6 +49,14 @@
 
 @protocol FBPlacesPickerDelegate <NSObject>
 @optional
+
+// Called whenever data is loaded.
+//
+// The tableView is automatically reloaded when this happens, but if
+// another tableView (such as for a UISearchBar) is showing data then
+// it may need to be reloaded too.
+- (void)placesPickerViewControllerDataDidChange:
+(FBPlacesPickerViewController *)placesPicker;
 
 // Called whenever the selection changes.
 - (void)placesPickerViewControllerSelectionDidChange:

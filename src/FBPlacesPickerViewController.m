@@ -40,9 +40,7 @@ static NSString *defaultImageName =
 @property (nonatomic) BOOL hasSearchTextChangedSinceLastQuery;
 
 - (void)initialize;
-
-- (void)searchTextChanged:(UITextField *)textField;
-- (void)searchTextEndedEdit:(UITextField *)textField;
+- (void)loadDataPostThrottle;
 
 @end
 
@@ -54,8 +52,6 @@ static NSString *defaultImageName =
     NSInteger _radiusInMeters;
     NSInteger _resultsLimit;
     NSString *_searchText;
-    UITextField *_searchTextField;
-    BOOL _searchTextEnabled;
     FBGraphObjectTableSelection *_selectionManager;
     UIActivityIndicatorView *_spinner;
     UITableView *_tableView;
@@ -64,18 +60,16 @@ static NSString *defaultImageName =
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
 @synthesize fieldsForRequest = _fieldsForRequest;
+@synthesize hasSearchTextChangedSinceLastQuery = _hasSearchTextChangedSinceLastQuery;
+@synthesize loader = _loader;
 @synthesize locationCoordinate = _locationCoordinate;
 @synthesize radiusInMeters = _radiusInMeters;
 @synthesize resultsLimit = _resultsLimit;
 @synthesize searchText = _searchText;
-@synthesize searchTextEnabled = _searchTextEnabled;
-@synthesize searchTextField = _searchTextField;
+@synthesize searchTextChangedTimer = _searchTextChangedTimer;
 @synthesize selectionManager = _selectionManager;
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
-@synthesize loader = _loader;
-@synthesize searchTextChangedTimer = _searchTextChangedTimer;
-@synthesize hasSearchTextChangedSinceLastQuery = _hasSearchTextChangedSinceLastQuery;
 
 - (id)init
 {
@@ -125,7 +119,7 @@ static NSString *defaultImageName =
                                                      initWithDataSource:dataSource];
     selectionManager.delegate = self;
 
-    // Paging loader (wired to tableView in viewDidLoad)
+    // Paging loader
     self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource];
     self.loader.delegate = self;
 
@@ -133,7 +127,6 @@ static NSString *defaultImageName =
     self.dataSource = dataSource;
     self.delegate = self;
     self.selectionManager = selectionManager;
-    self.searchTextEnabled = YES;
     self.resultsLimit = defaultResultsLimit;
     self.radiusInMeters = defaultRadius;
     self.itemPicturesEnabled = YES;
@@ -154,11 +147,10 @@ static NSString *defaultImageName =
     [_dataSource release];
     [_fieldsForRequest release];
     [_searchText release];
-    [_searchTextField release];
+    [_searchTextChangedTimer release];
     [_selectionManager release];
     [_spinner release];
     [_tableView release];
-    [_searchTextChangedTimer release];
     
     [super dealloc];
 }
@@ -185,7 +177,6 @@ static NSString *defaultImageName =
     }
 }
 
-// We don't really need to store session, let the loader hold it.
 - (void)setSession:(FBSession *)session {
     self.loader.session = session;
 }
@@ -200,32 +191,13 @@ static NSString *defaultImageName =
 {
     [super viewDidLoad];
     CGRect bounds = self.view.bounds;
-
-    if (self.searchTextEnabled && !self.searchTextField) {
-        CGRect frame = bounds;
-        frame.size.height = 32;
-
-        UITextField *searchTextField = [[UITextField alloc] initWithFrame:frame];
-        searchTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        searchTextField.backgroundColor = [UIColor whiteColor];
-        searchTextField.borderStyle = UITextBorderStyleRoundedRect;
-        self.searchTextField = searchTextField;
-        [self.view addSubview:searchTextField];
-        [searchTextField release];
-    }
-
+    
     if (!self.tableView) {
-        CGRect frame = bounds;
-        if (self.searchTextEnabled) {
-            frame.size.height -= 40;
-            frame.origin.y += 40;
-        }
-
-        UITableView *tableView = [[UITableView alloc] initWithFrame:frame];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
         tableView.allowsMultipleSelection = NO;
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
+        
         self.tableView = tableView;
         [self.view addSubview:tableView];
         [tableView release];
@@ -245,17 +217,8 @@ static NSString *defaultImageName =
         [spinner release];
     }
 
-    [self.searchTextField addTarget:self
-                             action:@selector(searchTextChanged:)
-                   forControlEvents:UIControlEventEditingChanged];
-    [self.searchTextField addTarget:self
-                             action:@selector(searchTextEndedEdit:)
-                   forControlEvents:(UIControlEventEditingDidEnd |
-                                     UIControlEventEditingDidEndOnExit)];
-
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
-
     self.loader.tableView = self.tableView;
 }
 
@@ -264,13 +227,25 @@ static NSString *defaultImageName =
     [super viewDidUnload];
 
     self.loader.tableView = nil;
-    
-    self.searchTextField = nil;
-    self.tableView = nil;
     self.spinner = nil;
+    self.tableView = nil;
 }
 
 - (void)loadData
+{
+    // Sending a request on every keystroke is wasteful of bandwidth. Send a
+    // request the first time the user types something, then set up a 2-second timer
+    // and send whatever changes the user has made since then. (If nothing has changed
+    // in 2 seconds, we reset so the next change will cause an immediate re-query.)
+    if (!self.searchTextChangedTimer) {
+        self.searchTextChangedTimer = [self createSearchTextChangedTimer];
+        [self loadDataPostThrottle];
+    } else {
+        self.hasSearchTextChangedSinceLastQuery = YES;
+    }
+}
+
+- (void)loadDataPostThrottle
 {
     FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:self.locationCoordinate 
                                                         radiusInMeters:self.radiusInMeters
@@ -306,7 +281,7 @@ static NSString *defaultImageName =
 - (void)searchTextChangedTimerFired:(NSTimer *)timer
 {
     if (self.hasSearchTextChangedSinceLastQuery) {
-        [self loadData];
+        [self loadDataPostThrottle];
     } else {
         // Nothing has changed in 2 seconds. Invalidate and forget about this timer.
         // Next time the user types, we will fire a query immediately again.
@@ -315,40 +290,11 @@ static NSString *defaultImageName =
     }
 }
 
-- (void)searchTextChanged:(UITextField *)textField
-{
-    if (textField == self.searchTextField) {
-        self.searchText = textField.text;
-
-        // Sending a request on every keystroke is wasteful of bandwidth. Send a
-        // request the first time the user types something, then set up a 2-second timer
-        // and send whatever changes the user has made since then. (If nothing has changed
-        // in 2 seconds, we reset so the next change will cause an immediate re-query.)
-        if (!self.searchTextChangedTimer) {
-            [self loadData];
-            self.searchTextChangedTimer = [self createSearchTextChangedTimer];
-        } else {
-            self.hasSearchTextChangedSinceLastQuery = YES;
-        }
-    }
-}
-
-- (void)searchTextEndedEdit:(UITextField *)textField
-{
-    if ((textField = self.searchTextField) && ([textField isFirstResponder])) {
-        [textField resignFirstResponder];
-    }
-}
-
 #pragma mark - FBGraphObjectSelectionChangedDelegate
 
 - (void)graphObjectTableSelectionDidChange:
 (FBGraphObjectTableSelection *)selection
 {
-    if ([self.searchTextField isFirstResponder]) {
-        [self.searchTextField resignFirstResponder];
-    }
-
     if ([self.delegate respondsToSelector:
          @selector(placesPickerViewControllerSelectionDidChange:)]) {
         [self.delegate placesPickerViewControllerSelectionDidChange:self];
@@ -407,6 +353,9 @@ static NSString *defaultImageName =
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
     [self.spinner stopAnimating];
+    if ([self.delegate respondsToSelector:@selector(placesPickerViewControllerDataDidChange:)]) {
+        [self.delegate placesPickerViewControllerDataDidChange:self];
+    }
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

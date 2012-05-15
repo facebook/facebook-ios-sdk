@@ -25,6 +25,4 @@
 @property (strong, nonatomic) FPViewController *viewController;
 @property (strong, nonatomic) UIWindow *window;
 
-- (FBSession *)logoutAndGetNewSession;
-
 @end

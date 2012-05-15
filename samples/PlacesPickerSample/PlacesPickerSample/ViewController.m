@@ -17,18 +17,18 @@
 #import "ViewController.h"
 #import "AppDelegate.h"
 
+enum SampleLocation {
+    SampleLocationSeattle,
+    SampleLocationSanFrancisco,
+    SampleLocationGPS,
+};
+
 @interface ViewController () <CLLocationManagerDelegate, FBPlacesPickerDelegate>
 
 @property (strong, nonatomic) CLLocationManager* locationManager;
-
-- (IBAction)onClickManual:(id)sender;
-- (IBAction)onClickSanFrancisco:(id)sender;
-- (IBAction)onClickSeattle:(id)sender;
-
-- (IBAction)filterNone:(id)sender;
-- (IBAction)filterRestaurants:(id)sender;
-- (IBAction)filterLocalBusinesses:(id)sender;
-- (IBAction)filterHotels:(id)sender;
+@property (nonatomic) NSInteger viewStateSearchScopeIndex;
+@property (nonatomic, copy) NSString *viewStateSearchText;
+@property (nonatomic) BOOL viewStateSearchWasActive;
 
 - (void)refresh;
 
@@ -37,14 +37,9 @@
 @implementation ViewController
 
 @synthesize locationManager = _locationManager;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-    }
-    return self;
-}
+@synthesize viewStateSearchScopeIndex = _viewStateSearchScopeIndex;
+@synthesize viewStateSearchText = _viewStateSearchText;
+@synthesize viewStateSearchWasActive = _viewStateSearchWasActive;
 
 - (void)refresh
 {
@@ -53,7 +48,8 @@
         self.session = appDelegate.session;
 
         // Default to Seattle
-        [self onClickSeattle:nil];
+        [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
+        [self loadData];
     } else {
         [appDelegate.session loginWithCompletionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
@@ -74,6 +70,48 @@
     }
 }
 
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller
+shouldReloadTableForSearchScope:(NSInteger)searchOption
+{
+    [self.spinner startAnimating];
+
+    switch (searchOption) {
+        case SampleLocationSeattle:
+            self.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
+            [self loadData];
+            break;
+        case SampleLocationSanFrancisco:
+            self.locationCoordinate = CLLocationCoordinate2DMake(37.7750, -122.4183);
+            [self loadData];
+            break;
+        case SampleLocationGPS:
+            self.locationManager = [[CLLocationManager alloc] init];
+            self.locationManager.delegate = self;
+            [self.locationManager startUpdatingLocation];
+            break;
+    }
+    
+    // When startUpdatingLocation/loadData finish, we will reload then.
+    return NO;
+}
+
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller
+shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self.spinner startAnimating];
+
+    self.searchText = searchString;
+    [self loadData];
+
+    // Setting self.searchText will reload the table when results arrive
+    return NO;
+}
+
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller
+{
+    [self.tableView reloadData];
+}
+
 - (void)placesPickerViewControllerSelectionDidChange:(FBPlacesPickerViewController *)placesPicker
 {
     id<FBGraphPlace> place = placesPicker.selection;
@@ -87,56 +125,37 @@
           place.location.longitude);
 }
 
-- (IBAction)onClickManual:(id)sender 
-{
-    self.locationManager = [[CLLocationManager alloc] init];
-    self.locationManager.delegate = self;
-
-    [self.locationManager startUpdatingLocation];
-}
-
-- (IBAction)onClickSanFrancisco:(id)sender 
-{
-    self.locationCoordinate = 
-        CLLocationCoordinate2DMake(37.7750, -122.4183);
-    [self loadData];
-}
-
-- (IBAction)onClickSeattle:(id)sender 
-{
-    self.locationCoordinate = 
-        CLLocationCoordinate2DMake(47.6097, -122.3331);
-    [self loadData];
-}
-
-- (IBAction)filterNone:(id)sender 
-{
-    self.searchText = nil;
-    [self loadData];
-}
-
-- (IBAction)filterRestaurants:(id)sender 
-{
-    self.searchText = @"restaurant";
-    [self loadData];
-}
-
-- (IBAction)filterLocalBusinesses:(id)sender 
-{
-    self.searchText = @"business";
-    [self loadData];
-}
-
-- (IBAction)filterHotels:(id)sender 
-{
-    self.searchText = @"hotel";
-    [self loadData];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    self.searchDisplayController.searchResultsDataSource = self.tableView.dataSource;
+    self.searchDisplayController.searchResultsDelegate = self.tableView.delegate;
+
+    if (self.viewStateSearchText) {
+        [self.searchDisplayController.searchBar
+         setSelectedScopeButtonIndex:self.viewStateSearchScopeIndex];
+        [self.searchDisplayController.searchBar setText:self.viewStateSearchText];
+        [self.searchDisplayController setActive:self.viewStateSearchWasActive];
+        
+        self.viewStateSearchText = nil;
+    }
+
     [self refresh];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+
+    self.viewStateSearchScopeIndex = [self.searchDisplayController.searchBar selectedScopeButtonIndex];
+    self.viewStateSearchText = [self.searchDisplayController.searchBar text];
+    self.viewStateSearchWasActive = [self.searchDisplayController isActive];
+}
+
+- (void)placesPickerViewControllerDataDidChange:(FBPlacesPickerViewController *)placesPicker
+{
+    [self.searchDisplayController.searchResultsTableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:

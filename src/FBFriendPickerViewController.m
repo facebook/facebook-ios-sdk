@@ -36,9 +36,6 @@ static NSString *defaultImageName =
 
 - (void)initialize;
 
-- (void)searchTextChanged:(UITextField *)textField;
-- (void)searchTextEndedEdit:(UITextField *)textField;
-
 @end
 
 @implementation FBFriendPickerViewController {
@@ -46,9 +43,7 @@ static NSString *defaultImageName =
     FBRequestConnection *_connection;
     FBGraphObjectTableDataSource *_dataSource;
     id<FBFriendPickerDelegate> _delegate;
-    BOOL _searchTextEnabled;
     NSSet *_fieldsForRequest;
-    UITextField *_searchTextField;
     FBGraphObjectTableSelection *_selectionManager;
     UIActivityIndicatorView *_spinner;
     UITableView *_tableView;
@@ -57,9 +52,7 @@ static NSString *defaultImageName =
 
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
-@synthesize searchTextEnabled = _searchTextEnabled;
 @synthesize fieldsForRequest = _fieldsForRequest;
-@synthesize searchTextField = _searchTextField;
 @synthesize selectionManager = _selectionManager;
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
@@ -115,7 +108,7 @@ static NSString *defaultImageName =
                                                      initWithDataSource:dataSource];
     selectionManager.delegate = self;
 
-    // Paging loader (wired to tableView in viewDidLoad)
+    // Paging loader
     self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource];
     self.loader.pagingMode = FBGraphObjectPagingModeImmediate;
     self.loader.delegate = self;
@@ -126,7 +119,6 @@ static NSString *defaultImageName =
     self.delegate = self;
     self.itemPicturesEnabled = YES;
     self.selectionManager = selectionManager;
-    self.searchTextEnabled = YES;
     self.userID = @"me";
 
     // cleanup
@@ -144,7 +136,6 @@ static NSString *defaultImageName =
     
     [_dataSource release];
     [_fieldsForRequest release];
-    [_searchTextField release];
     [_selectionManager release];
     [_spinner release];
     [_tableView release];
@@ -199,28 +190,8 @@ static NSString *defaultImageName =
     [super viewDidLoad];
     CGRect bounds = self.view.bounds;
 
-    if (self.searchTextEnabled && !self.searchTextField) {
-        CGRect frame = bounds;
-        frame.size.height = 32;
-
-        UITextField *searchTextField = [[UITextField alloc] initWithFrame:frame];
-        searchTextField.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        searchTextField.backgroundColor = [UIColor whiteColor];
-        searchTextField.borderStyle = UITextBorderStyleRoundedRect;
-
-        self.searchTextField = searchTextField;
-        [self.view addSubview:searchTextField];
-        [searchTextField release];
-    }
-
     if (!self.tableView) {
-        CGRect frame = bounds;
-        if (self.searchTextEnabled) {
-            frame.size.height -= 40;
-            frame.origin.y += 40;
-        }
-
-        UITableView *tableView = [[UITableView alloc] initWithFrame:frame];
+        UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
@@ -243,18 +214,9 @@ static NSString *defaultImageName =
         [spinner release];
     }
 
-    [self.searchTextField addTarget:self
-                             action:@selector(searchTextChanged:)
-                   forControlEvents:UIControlEventEditingChanged];
-    [self.searchTextField addTarget:self
-                             action:@selector(searchTextEndedEdit:)
-                   forControlEvents:(UIControlEventEditingDidEnd |
-                                     UIControlEventEditingDidEndOnExit)];
-
     self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
-
     self.loader.tableView = self.tableView;
 }
 
@@ -263,10 +225,8 @@ static NSString *defaultImageName =
     [super viewDidUnload];
 
     self.loader.tableView = nil;
-    
-    self.searchTextField = nil;
-    self.tableView = nil;
     self.spinner = nil;
+    self.tableView = nil;
 }
 
 - (void)loadData
@@ -286,31 +246,11 @@ static NSString *defaultImageName =
     [self.tableView reloadData];
 }
 
-
-#pragma mark - private methods
-
-- (void)searchTextChanged:(UITextField *)textField
-{
-    if (textField == self.searchTextField) {
-        [self updateView];
-    }
-}
-- (void)searchTextEndedEdit:(UITextField *)textField
-{
-    if ((textField = self.searchTextField) && ([textField isFirstResponder])) {
-        [textField resignFirstResponder];
-    }
-}
-
 #pragma mark - FBGraphObjectSelectionChangedDelegate
 
 - (void)graphObjectTableSelectionDidChange:
 (FBGraphObjectTableSelection *)selection
 {
-    if ([self.searchTextField isFirstResponder]) {
-        [self.searchTextField resignFirstResponder];
-    }
-
     if ([self.delegate respondsToSelector:
          @selector(friendPickerViewControllerSelectionDidChange:)]) {
         [self.delegate friendPickerViewControllerSelectionDidChange:self];
@@ -324,12 +264,8 @@ static NSString *defaultImageName =
 {
     id<FBGraphUser> user = (id<FBGraphUser>)item;
 
-    if (self.searchTextEnabled && [self.searchTextField.text length]) {
-        NSRange range = [user.name rangeOfString:self.searchTextField.text
-                                         options:NSCaseInsensitiveSearch];
-        return (range.location != NSNotFound);
-    } else if ([self.delegate
-                respondsToSelector:@selector(friendPickerViewController:shouldIncludeUser:)]) {
+    if ([self.delegate
+         respondsToSelector:@selector(friendPickerViewController:shouldIncludeUser:)]) {
         return [self.delegate friendPickerViewController:self
                                        shouldIncludeUser:user];
     } else {
@@ -357,6 +293,9 @@ static NSString *defaultImageName =
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
     [self.spinner stopAnimating];
+    if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
+        [self.delegate friendPickerViewControllerDataDidChange:self];
+    }
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

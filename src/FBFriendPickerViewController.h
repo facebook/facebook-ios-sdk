@@ -22,15 +22,13 @@
 
 @interface FBFriendPickerViewController : UIViewController
 
-@property (nonatomic, retain) IBOutlet UITextField *searchTextField;
-@property (nonatomic, retain) IBOutlet UITableView *tableView;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
+@property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 @property (nonatomic) BOOL allowsMultipleSelection;
 @property (nonatomic, assign) id<FBFriendPickerDelegate> delegate;
 @property (nonatomic) BOOL itemPicturesEnabled;
 @property (nonatomic, copy) NSSet *fieldsForRequest;
-@property (nonatomic) BOOL searchTextEnabled;
 @property (nonatomic, retain) FBSession *session;
 @property (nonatomic, copy) NSString *userID;
 
@@ -57,6 +55,14 @@
 // of the view.
 @protocol FBFriendPickerDelegate <NSObject>
 @optional
+
+// Called whenever data is loaded.
+//
+// The tableView is automatically reloaded when this happens, but if
+// another tableView (such as for a UISearchBar) is showing data then
+// it may need to be reloaded too.
+- (void)friendPickerViewControllerDataDidChange:
+(FBFriendPickerViewController *)friendPicker;
 
 // Called whenever the selection changes.
 - (void)friendPickerViewControllerSelectionDidChange:

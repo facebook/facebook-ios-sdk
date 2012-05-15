@@ -35,13 +35,6 @@
     return [self.session handleOpenURL:url]; 
 }
 
-- (FBSession *)logoutAndGetNewSession
-{
-    [self.session logout];
-    self.session = [[FBSession alloc] init];
-    return self.session;
-}
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // BUG:

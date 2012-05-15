@@ -19,18 +19,15 @@
 
 @interface FPViewController () <FBFriendPickerDelegate>
 
-@property (strong, nonatomic) IBOutlet UITextView *friendResults;
-@property (strong, nonatomic) IBOutlet UIButton *logoutButton;
+@property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
 
 - (void)sessionChanged;
-- (IBAction)logoutClicked;
 
 @end
 
 @implementation FPViewController
 
-@synthesize friendResults = _friendResultText;
-@synthesize logoutButton = _logoutButton;
+@synthesize selectedFriendsView = _friendResultText;
 
 - (void)viewDidLoad
 {
@@ -59,7 +56,6 @@
                                           cancelButtonTitle:@"OK"
                                           otherButtonTitles:nil];
                          [alertView show];
-                         [self logoutClicked];
                      }
                      break;
                  default:
@@ -67,13 +63,6 @@
              }
          }];
     }
-}
-
-- (IBAction)logoutClicked
-{
-    FPAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate logoutAndGetNewSession];
-    [self sessionChanged];
 }
 
 #pragma mark - FBFriendPickerDelegate implementation
@@ -90,7 +79,7 @@
         [text appendString:user.name];
     }
 
-    self.friendResults.text = text;
+    self.selectedFriendsView.text = text;
 }
 
 @end
