@@ -23,6 +23,7 @@
 #import "FBGraphUser.h"
 #import "FBGraphPlace.h"
 #import "FBTestBlocker.h"
+#import "FBUtility.h"
 
 @interface FBCommonRequestTests ()
 
@@ -67,6 +68,51 @@
                    @"[replyData objectForKey:id]");
     STAssertNotNil([replyData objectForKey:@"post_id"],
                    @"[replyData objectForKey:post_id]");
+}
+
+- (void)testRequestPlaceSearchWithNoSearchText
+{
+    FBSession *session = [self loginTestUserWithPermissions:nil];
+
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
+    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
+                                                              radiusInMeters:100 
+                                                                resultsLimit:100 
+                                                                  searchText:nil 
+                                                                     session:session];
+    NSArray *response = [self sendRequests:searchRequest, nil];
+    NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
+    NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
+    
+    id<FBGraphPlace> targetPlace = (id<FBGraphPlace>)[FBGraphObject graphObject];
+    targetPlace.id = @"131308453580417";
+    targetPlace.name = @"Washington Monument National Monument";
+    
+    id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];
+    STAssertNotNil(foundPlace, @"didn't find Washington Monument");
+}
+
+- (void)testRequestPlaceSearchWithSearchText
+{
+    FBSession *session = [self loginTestUserWithPermissions:nil];
+    
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
+    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
+                                                              radiusInMeters:100 
+                                                                resultsLimit:100 
+                                                                  searchText:@"Lincoln Memorial" 
+                                                                     session:session];
+    NSArray *response = [self sendRequests:searchRequest, nil];
+    NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
+    NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
+    
+    id<FBGraphPlace> targetPlace = (id<FBGraphPlace>)[FBGraphObject graphObject];
+    targetPlace.id = @"154981434517851";
+    targetPlace.name = @"Lincoln Memorial";
+    
+    STAssertEquals((int)data.count, 1, @"should only have one response");
+    id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];
+    STAssertNotNil(foundPlace, @"didn't find Lincoln Memorial");
 }
 
 - (FBSession *)loginTestUserWithPermissions:(NSString *)firstPermission, ...

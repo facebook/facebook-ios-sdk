@@ -228,6 +228,32 @@ static NSString *const kPostHTTPMethod = @"POST";
     return request;
 }
 
++ (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                  radiusInMeters:(NSInteger)radius
+                                    resultsLimit:(NSInteger)limit
+                                      searchText:(NSString*)searchText
+                                         session:(FBSession*)session
+{
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:@"place" forKey:@"type"];
+    [parameters setObject:[NSString stringWithFormat:@"%d", limit] forKey:@"limit"];
+    [parameters setObject:[NSString stringWithFormat:@"%lf,%lf", coordinate.latitude, coordinate.longitude]
+                   forKey:@"center"];
+    [parameters setObject:[NSString stringWithFormat:@"%d", radius] forKey:@"distance"];
+    if ([searchText length]) {
+        [parameters setObject:searchText forKey:@"q"];
+    }
+
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:@"search"
+                                                  parameters:parameters
+                                                  HTTPMethod:nil]
+                          autorelease];
+    [parameters release];
+
+    return request;
+}
+
 @end
 
 // ----------------------------------------------------------------------------

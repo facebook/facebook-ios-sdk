@@ -272,35 +272,18 @@ static NSString *defaultImageName =
 
 - (void)loadData
 {
+    FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:self.locationCoordinate 
+                                                        radiusInMeters:self.radiusInMeters
+                                                          resultsLimit:self.resultsLimit
+                                                            searchText:self.searchText
+                                                               session:self.session];
+    
     NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
                         @"id", @"name", @"location", @"category", @"picture", nil];
-    NSString *limit = [NSString stringWithFormat:@"%d", self.resultsLimit];
-    NSString *center = [NSString stringWithFormat:@"%lf,%lf",
-                        self.locationCoordinate.latitude,
-                        self.locationCoordinate.longitude];
-    NSString *distance = [NSString stringWithFormat:@"%d", self.radiusInMeters];
+    [request.parameters setObject:fields forKey:@"fields"];
 
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    [parameters setObject:@"place" forKey:@"type"];
-    [parameters setObject:fields forKey:@"fields"];
-    [parameters setObject:limit forKey:@"limit"];
-    [parameters setObject:center forKey:@"center"];
-    [parameters setObject:distance forKey:@"distance"];
-
-    if ([self.searchText length]) {
-        [parameters setObject:self.searchText forKey:@"q"];
-    }
-
-    FBRequest *request = [[FBRequest alloc] initWithSession:self.session
-                                                  graphPath:@"search"
-                                                 parameters:parameters
-                                                 HTTPMethod:@"GET"];
-    [parameters release];
-
-    [self.loader startLoadingWithRequest:request];
-    [request release];
-    
     self.hasSearchTextChangedSinceLastQuery = NO;
+    [self.loader startLoadingWithRequest:request];
 }
 
 - (void)updateView

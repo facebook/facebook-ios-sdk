@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 #import "FBRequestConnection.h"
 #import "FBGraphObject.h"
 
@@ -183,7 +184,13 @@ typedef NSUInteger FBRequestState DEPRECATED_ATTRIBUTE;
 
 + (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session;
 
-+ (FBRequest *)requestForUploadPhoto:(UIImage *)photo
++ (FBRequest*)requestForUploadPhoto:(UIImage *)photo
                              session:(FBSession *)session;
+
++ (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                  radiusInMeters:(NSInteger)radius
+                                    resultsLimit:(NSInteger)limit
+                                      searchText:(NSString*)searchText
+                                         session:(FBSession*)session;
 
 @end

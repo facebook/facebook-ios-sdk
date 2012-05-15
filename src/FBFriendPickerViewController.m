@@ -271,24 +271,13 @@ static NSString *defaultImageName =
 
 - (void)loadData
 {
-    NSMutableString *graphPath = [[NSMutableString alloc] initWithString:self.userID];
-    [graphPath appendString:@"/friends"];
+    FBRequest *request = [FBRequest requestForMyFriendsWithSession:self.session];
 
     NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
                         @"id", @"name", @"first_name", @"last_name", @"picture", nil];
-
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    [parameters setObject:fields forKey:@"fields"];
-
-    FBRequest *request = [[FBRequest alloc] initWithSession:self.session
-                                                  graphPath:graphPath
-                                                 parameters:parameters
-                                                 HTTPMethod:@"GET"];
-    [parameters release];
-    [graphPath release];
-
+    [request.parameters setObject:fields forKey:@"fields"];
+    
     [self.loader startLoadingWithRequest:request];
-    [request release];
 }
 
 - (void)updateView

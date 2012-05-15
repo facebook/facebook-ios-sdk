@@ -393,7 +393,9 @@
         self.locationManager = nil;
         
         self.placesPickerController.locationCoordinate = newLocation.coordinate;
-        [self.placesPickerController loadData];
+        if (self.placesPickerController.session) {
+            [self.placesPickerController loadData];
+        }
     }
 }
 
