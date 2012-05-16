@@ -1,27 +1,47 @@
 Facebook iOS SDK
-===========================
+===============
 
 This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
 
 Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Sample Applications
-===============
+Samples
+=======
 
-This SDK includes several sample applications.  Each includes a Xcode project you can use to build and run the sample.  By default the samples are installed to ~/Documents/FacebookSDKSamples.
+This SDK includes several sample applications.  Each includes an Xcode project you can use to build and run the sample.  By default the samples are installed to ~/Documents/FacebookSDK/Samples.
+
+Single purpose samples:
+
+* ProfilePictureSample:  demonstrates non-logged-in usage of the FBProfilePictureView control.
 
 * JustLoginSample:  demonstrates login via FBSession.
 
-* JustRequestSample:  demonstrates making a request of Facebook via FBRequest and FBRequestSession.
+* JustRequestSample:  demonstrates logged in user making a request of Facebook via FBRequest and FBRequestConnection, including batched requests.
 
-* ProfilePictureSample:  demonstrates using the FBPrilfePictureView control.
+* PlacesPickerSample:  demonstrates logged-in usage of the FBPlacesPickerView control.
 
-* PlacesPickerSample:  demonstrates using the FBPlacesPickerView control.
+* MyProfileSample:  combines use of FBSession, simple FBRequest, and the FBProfilePictureView control to show the logged in user's profile and name.
 
-Framework
-===============
+* FriendPickerSample: demonstrates usage of the native multi-friend selector control to choose amongst the logged-in users' friends.
 
-This SDK installs a framework for you to include in iOS projects.  The framework is installed at "~/Library/Developer/FacebookSDK/FBiOSSDK.framework".
+* BooleanOGSample: demonstrates publishing an Open Graph custom action type.
+
+* SwitchUserSample: demonstrate scenario for multiple users using a single app, one using device "single sign-on", and the rest using sign-on specific to the app.
+
+
+Integrated sample app:
+
+* Scrumptious: integrated sample app demonstrating the use of login, requests, Place Picker, Friend Picker, Picture Upload, and Open Graph Publishing.
+
+Documentation
+=============
+
+HeaderDoc-based documentation is included in the installed package at ~/Documents/FacebookSDK/Documentation
+
+Building your Project with the FacebookSDK Xcode Framework
+=================================================
+
+This SDK installs a framework for you to include in iOS projects.  The framework is installed at "~/Documents/FacebookSDK/FBiOSSDK.framework".
 
 Xcode provides several ways to add a framework to your project.  Here is one:
 
@@ -35,20 +55,42 @@ Xcode provides several ways to add a framework to your project.  Here is one:
 
 * Expand "Link Binary With Libraries" and click the "+" in the bottom left.
 
+* Add both QuartzCore.framework and libsqlite3.dylib.
+
 * Click "Add Other".
 
-* Press Shift-Command-G, and type "~/Library/Developer/FacebookSDK".
+* Press Shift-Command-G, and type "~/Documents/FacebookSDK".
 
 * Select the FBiOSSDK.framework and click "Open".
 
-* In the project left-pane, you can drag the FBiOSSDK.framework to the "Frameworks" group.
+* Now add in the SDK's resource bundle by choosing "Copy Bundle Resources" in the Build Phases tab, clicking "+", "Add Other...", and getting the FBiOSSDKResources.bundle from ~/Documents/FacebookSDK/FBiOSSDK.framework/Resources/.
+
+* In the project left-pane, you can drag all the files you just added to the "Frameworks" group.
 
 When you are including framework headers in your project, prefix them with "FBiOSSDK", as in:
 
 * #import <FBiOSSDK/FacebookSDK.h>
 
+Getting started with a simple Xcode template
+==================================
+
+Most of the steps above are taken care of automatically when you use the installed Xcode project template to create
+a project.  This template creates a single view application that is modeled after the MyProfileSample sample app.
+Being a template-generated project, you can choose a prefix for your code, and also specify the Facebook AppID to
+be automatically inserted into the created application's plist.
+
+To create a project using the Xcode template:
+
+* Select "File" -> "New" -> "New Project..."
+
+* On the "Choose a Template" screen, select "FacebookSDK" under "iOS".  Then select "FacebookApp".
+
+* You will then be asked for the typical things that a single-view app template requests, as well as for a Facebook App ID that will be used to identify the app.
+
+After you fill these in and save, your project will be generated with your App ID in place, your class prefix, etc.  At that point you'll want to modify it to become your own app.
+
 Debugging
-===============
+=========
 
 Common problems and solutions:
 
@@ -68,9 +110,14 @@ Make sure you've edited your application's .plist file properly, so that your ap
 
 Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
 
+Source Code
+==========
+
+Source for the SDK is not included in this installed package, but is available on github.
 
 Report Issues/Bugs
 ===============
+
 [Bugs](https://developers.facebook.com/bugs)
 
 [Questions](http://facebook.stackoverflow.com/questions/tagged/ios)
