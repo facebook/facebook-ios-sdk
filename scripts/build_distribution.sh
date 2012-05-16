@@ -20,16 +20,13 @@ FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
 FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Documentation
 
 # -----------------------------------------------------------------------------
-
-echo Building Distribution.
-
-# -----------------------------------------------------------------------------
 # Call out to build prerequisites.
 #
 if is_outermost_build; then
     . $FB_SDK_SCRIPT/build_framework.sh
     . $FB_SDK_SCRIPT/build_documentation.sh
 fi
+echo Building Distribution.
 
 # -----------------------------------------------------------------------------
 # Compress framework for standalone distribution
