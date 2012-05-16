@@ -63,35 +63,32 @@
         
         // Once logged in, get "my" information.
         FBRequest *me = [FBRequest requestForMeWithSession:appDelegate.session];
-        FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
-        [newConnection addRequest:me
-                completionHandler: ^(FBRequestConnection *connection, 
-                                     NSDictionary<FBGraphUser> *my, // expecting a person here
-                                     NSError *error) {             
-                    // Request completed...
-                    if (connection != self.requestConnection) {
-                        // not the completion we were waiting for...
-                        return;
-                    }
-                    
-                    self.requestConnection = nil;
-                    NSString *text = nil, *fbid = nil;
-                    if (!error) {
-                        text = [NSString stringWithFormat:@"Yo %@, make this app yours!", my.first_name];
-                        fbid = my.id;
-                    } else {
-                        text = error.localizedDescription;
-                        fbid = nil;   // default profile pic
-                    }  
-                    
-                    self.labelFirstName.text = text;
-                    profilePic.userID = fbid;
-                }];
+        FBRequestConnection *newConnection = 
+          [[me connectionWithCompletionHandler: ^(FBRequestConnection *connection, 
+                                                 NSDictionary<FBGraphUser> *my, // expecting a person here
+                                                 NSError *error) {
+              // Request completed...
+              if (connection != self.requestConnection) {
+                  // not the completion we were waiting for...
+                  return;
+              }
+                
+              self.requestConnection = nil;
+              NSString *text = nil, *fbid = nil;
+              if (!error) {
+                  text = [NSString stringWithFormat:@"Yo %@, make this app yours!", my.first_name];
+                  fbid = my.id;
+              } else {
+                  text = error.localizedDescription;
+                  fbid = nil;   // default profile pic
+              }  
+                
+              self.labelFirstName.text = text;
+              profilePic.userID = fbid;
+          }] start];
         
         // If there's an outstanding connection, just cancel
         [self.requestConnection cancel];
-        
-        [newConnection start];
         self.requestConnection = newConnection;
         
         buttonLoginLogout.title = @"Logout";  

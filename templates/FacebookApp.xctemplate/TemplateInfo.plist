@@ -92,6 +92,13 @@
 // FBSample logic
 // main helper method to react to session changes, including creation of session
 // object when one has gone invalid, or at init time
+//
+// NOTE: TODO: this code was generated through an Xcode template, and Xcode templates can't insert
+// a resource bundle into the project.  Please manually include FBiOSSDKResources.bundle from
+// ~/Documents/FacebookSDK/FBiOSSDK.framework/Resources by dragging it from Finder into the Frameworks
+// folder in the project.  Otherwise you won't be including resources referenced by the SDK code used
+// in this project.
+//
 - (void)updateForSessionChange {
     // get the app delegate
     ___VARIABLE_classPrefix:identifier___AppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
@@ -99,42 +106,35 @@
         // valid account UI
         
         // Once logged in, get "my" information.
+        FBRequest *me = [FBRequest requestForMeWithSession:appDelegate.session];
         FBRequestConnection *newConnection = 
-        [FBRequest connectionWithSession: appDelegate.session 
-                               graphPath:@"me" 
-                       completionHandler:
-         ^(FBRequestConnection *connection, id result, NSError *error) {
-             
-             // Request completed...
-             
-             if (connection != self.requestConnection) {
-                 // not the completion we were waiting for...
-                 return;
-             }
-             
-             self.requestConnection = nil;
-             NSString *text, *fbid;
-             if (error) {
-                 text = error.localizedDescription;
-                 fbid = nil;   // default profile pic
-             } else {
-                 NSDictionary *dictionary = (NSDictionary *)result;        
-                 NSString *firstName = (NSString *)[dictionary objectForKey:@"first_name"];
-                 text = [NSString stringWithFormat:@"Yo %@, make this app yours!", firstName];
-                 fbid = (NSString *)[dictionary objectForKey:@"id"];
-             }
-             
-             self.labelFirstName.text = text;
-             profilePic.userID = fbid;
-             
-         }];
+          [[me connectionWithCompletionHandler: ^(FBRequestConnection *connection, 
+                                                 NSDictionary&lt;FBGraphUser&gt; *my, // expecting a person here
+                                                 NSError *error) {
+              // Request completed...
+              if (connection != self.requestConnection) {
+                  // not the completion we were waiting for...
+                  return;
+              }
+                
+              self.requestConnection = nil;
+              NSString *text = nil, *fbid = nil;
+              if (!error) {
+                  text = [NSString stringWithFormat:@"Yo %@, make this app yours!", my.first_name];
+                  fbid = my.id;
+              } else {
+                  text = error.localizedDescription;
+                  fbid = nil;   // default profile pic
+              }  
+                
+              self.labelFirstName.text = text;
+              profilePic.userID = fbid;
+          }] start];
         
         // If there's an outstanding connection, just cancel
         [self.requestConnection cancel];
-        
-        [newConnection start];
         self.requestConnection = newConnection;
-        
+
         buttonLoginLogout.title = @"Logout";  
         
     } else {
@@ -436,9 +436,9 @@ self.window.rootViewController = self.viewController;</string>
                         <key>SharedSettings</key>
 	                <dict>
                            <key>FRAMEWORK_SEARCH_PATHS</key>
-                           <string>~/Library/Developer/FacebookSDK /System/Library/Frameworks</string>
+                           <string>~/Documents/FacebookSDK /System/Library/Frameworks</string>
                            <key>LIBRARY_SEARCH_PATHS</key>
-                           <string>~/Library/Developer/FacebookSDK/FBiOSSDK.framework /System/Library/Frameworks</string>
+                           <string>~/Documents/FacebookSDK/FBiOSSDK.framework /System/Library/Frameworks</string>
                            <key>OTHER_LDFLAGS</key>
                            <string>-lsqlite3.0</string>
                         </dict>
