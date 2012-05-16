@@ -22,7 +22,7 @@ do
     "?")
       echo "$0 -c [Debug|Release] -n"
       echo "       -c sets configuration"
-      echo "       -n no test run, no docs"
+      echo "       -n no test run"
       die
       ;;
     ":")
@@ -41,6 +41,10 @@ test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 test -x "$LIPO" || die 'Could not find lipo in $PATH'
 
 FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/${BUILDCONFIGURATION}-universal/$FB_SDK_BINARY_NAME
+
+# -----------------------------------------------------------------------------
+
+echo Building Framework.
 
 # -----------------------------------------------------------------------------
 # Compile binaries 
@@ -137,17 +141,6 @@ else
   echo "Running unit tests."
   cd $FB_SDK_SRC
   $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests build
-fi
-
-# -----------------------------------------------------------------------------
-# Build docs 
-#
-
-if [ ${NOEXTRAS:-0} -eq  1 ];then
-  echo "Skipping docs."
-else
-  echo "Building docs."
-  \headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
 fi
 
 # -----------------------------------------------------------------------------

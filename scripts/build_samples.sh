@@ -13,10 +13,13 @@ BUILDCONFIGURATION=${1:-Release}
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 
 # -----------------------------------------------------------------------------
+
+echo Building samples.
+
+# -----------------------------------------------------------------------------
 # Call out to build .framework
 #
 if is_outermost_build; then
-  echo "Building framework."
   . $FB_SDK_SCRIPT/build_framework.sh
 fi
 
