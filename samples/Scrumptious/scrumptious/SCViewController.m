@@ -37,16 +37,19 @@
 @property (strong, nonatomic) NSObject<FBGraphPlace>* selectedPlace;
 @property (strong, nonatomic) NSString* selectedMeal;
 @property (strong, nonatomic) NSArray* selectedFriends;
-@property (strong, nonatomic) NSMutableDictionary* selectedPhoto;
+@property (strong, nonatomic) UIImage* selectedPhoto;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
+@property (strong, nonatomic) FBSession *session;
 
 - (IBAction)announce:(id)sender;
 - (void)populateUserDetails;
 - (void)updateSelections;
 - (void)updateCellIndex:(int)index withSubtitle:(NSString*)subtitle;
 - (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal;
+- (void)postPhotoThenOpenGraphAction;
+- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoID;
 
 @end
 
@@ -65,10 +68,12 @@
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
+@synthesize session = _session;
 
 #pragma mark open graph
 
-- (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal {
+- (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal 
+{
     // This URL is specific to this sample, and can be used to create arbitrary
     // OG objects for this app; your OG objects will have URLs hosted by your server.
     NSString *format =  
@@ -78,7 +83,7 @@
         @"og:image=https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png&"
         @"body=%@";
     
-    // We create an FBGraphObject object, but we can treat it as an CGOGMeal with typed
+    // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
     // properties, etc. See <FBiOSSDK/FBGraphObject.h> for more details.
     id<SCOGMeal> result = (id<SCOGMeal>)[FBGraphObject graphObject];
     
@@ -88,7 +93,7 @@
     return result;
 }
 
-- (IBAction)announce:(id)sender
+- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoURL
 {
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
@@ -96,12 +101,24 @@
     // Now create an Open Graph eat action with the meal, our location, and the people we were with.
     id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
     action.meal = mealObject;
-    action.place = self.selectedPlace;
-    action.tags = self.selectedFriends;
+    if (self.selectedPlace) {
+        action.place = self.selectedPlace;
+    }
+    if (self.selectedFriends.count > 0) {
+        action.tags = self.selectedFriends;
+    }
+    if (photoURL) {
+        NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
+        [image setObject:photoURL forKey:@"url"];
 
+        NSMutableArray *images = [[NSMutableArray alloc] init];
+        [images addObject:image];
+        
+        action.image = images;
+    }
+    
     // Create the request and post the action to the "me/scrumps:eat" path.
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:appDelegate.session
+    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:self.session
                                                               graphPath:@"me/scrumps:eat"
                                                             graphObject:action
                                                       completionHandler:
@@ -115,16 +132,55 @@
     [conn start];
 }
 
+- (void)postPhotoThenOpenGraphAction
+{
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+
+    // First request uploads the photo.
+    FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto
+                                                   session:self.session];
+    [connection addRequest:request1
+        completionHandler:
+        ^(FBRequestConnection *connection, id result, NSError *error) {
+            if (!error) {
+            }
+        }
+            batchEntryName:@"photopost"
+    ];
+
+    // Second request retrieves photo information for just-created photo so we can grab its source.
+    FBRequest *request2 = [FBRequest requestForGraphPath:@"{result=photopost:$.id}"
+                                                 session:self.session];
+    [connection addRequest:request2
+         completionHandler:
+        ^(FBRequestConnection *connection, id result, NSError *error) {
+            if (!error &&
+                result) {
+                NSString *source = [result objectForKey:@"source"];
+                [self postOpenGraphActionWithPhotoURL:source];
+            }
+        }
+    ];
+
+    [connection start];
+}
+
+- (IBAction)announce:(id)sender
+{
+    if (self.selectedPhoto) {
+        [self postPhotoThenOpenGraphAction];
+    } else {
+        [self postOpenGraphActionWithPhotoURL:nil];
+    }
+}
+
 #pragma mark UIImagePickerControllerDelegate methods
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
         didFinishPickingImage:(UIImage *)image
                   editingInfo:(NSDictionary *)editingInfo
 {
-    if (!self.selectedPhoto) {
-        self.selectedPhoto = [[NSMutableDictionary alloc] init];
-    }
-    [self.selectedPhoto setObject:image forKey:@"image"];
+    self.selectedPhoto = image;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self.popover dismissPopoverAnimated:YES];
@@ -147,11 +203,11 @@
 
 - (void)updateSelections 
 {
-    [self updateCellIndex:0 withSubtitle:(self.selectedPlace ? 
-                                          self.selectedPlace.name :
-                                          @"Select One")];
-    [self updateCellIndex:1 withSubtitle:(self.selectedMeal ? 
+    [self updateCellIndex:0 withSubtitle:(self.selectedMeal ?
                                           self.selectedMeal : 
+                                          @"Select One")];
+    [self updateCellIndex:1 withSubtitle:(self.selectedPlace ?
+                                          self.selectedPlace.name :
                                           @"Select One")];
     
     NSString* friendsSubtitle = @"Select friends";
@@ -176,16 +232,13 @@
     
     [self updateCellIndex:3 withSubtitle:(self.selectedPhoto ? @"Ready" : @"Take one")];
     
-    self.announceButton.enabled = self.selectedPlace && 
-        self.selectedMeal && 
-        (self.selectedFriends.count > 0);
+    self.announceButton.enabled = (self.selectedMeal != nil);
 }
 
 - (void)populateUserDetails 
 {
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isValid) {
-        FBRequestConnection *requestConnection = [FBRequest connectionWithSession:appDelegate.session
+    if (self.session.isValid) {
+        FBRequestConnection *requestConnection = [FBRequest connectionWithSession:self.session
                                                                         graphPath:@"me"
                                                                 completionHandler:
             ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
@@ -231,7 +284,10 @@
     
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session && appDelegate.session.isValid) {
-        [self populateUserDetails];
+        if (appDelegate.session != self.session) {
+            self.session = appDelegate.session;
+            [self populateUserDetails];
+        }
     } else {
         [self showLoginView];
     }
@@ -282,15 +338,15 @@
     
     switch (indexPath.row) {
         case 0:
-            cell.textLabel.text = @"Where are you?";
-            cell.detailTextLabel.text = @"Select one";
-            cell.imageView.image = [UIImage imageNamed:@"house.png"];
-            break;
-            
-        case 1:
             cell.textLabel.text = @"What are you eating?";
             cell.detailTextLabel.text = @"Select one";
             cell.imageView.image = [UIImage imageNamed:@"food.png"];
+            break;
+            
+        case 1:
+            cell.textLabel.text = @"Where are you?";
+            cell.detailTextLabel.text = @"Select one";
+            cell.imageView.image = [UIImage imageNamed:@"house.png"];
             break;
             
         case 2:
@@ -324,23 +380,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     UIViewController* target;
     
     switch (indexPath.row) {
         case 0:
-            if (!self.placesPickerController) {
-                self.placesPickerController = [[FBPlacesPickerViewController alloc] initWithNibName:nil bundle:nil];
-                self.placesPickerController.delegate = self;
-                self.placesPickerController.title = @"Select a restaurant";
-            }
-            self.placesPickerController.locationCoordinate = self.locationManager.location.coordinate;
-            self.placesPickerController.session = appDelegate.session;
-            [self.placesPickerController loadData];
-            target = self.placesPickerController;
-            break;
-        
-        case 1:
             if (!self.mealViewController) {
                 __block SCViewController* myself = self;
                 self.mealViewController = [[SCMealViewController alloc]initWithNibName:@"SCMealViewController" bundle:nil];
@@ -351,6 +394,18 @@
             }
             target = self.mealViewController;
             break;
+        
+        case 1:
+            if (!self.placesPickerController) {
+                self.placesPickerController = [[FBPlacesPickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.placesPickerController.delegate = self;
+                self.placesPickerController.title = @"Select a restaurant";
+            }
+            self.placesPickerController.locationCoordinate = self.locationManager.location.coordinate;
+            self.placesPickerController.session = self.session;
+            [self.placesPickerController loadData];
+            target = self.placesPickerController;
+            break;
             
         case 2:
             if (!self.friendPickerController) {
@@ -358,7 +413,7 @@
                 self.friendPickerController.delegate = self;
                 self.friendPickerController.title = @"Select friends";
             }
-            self.friendPickerController.session = appDelegate.session;
+            self.friendPickerController.session = self.session;
             [self.friendPickerController loadData];
             target = self.friendPickerController;
             break;
@@ -405,13 +460,9 @@
 {
     self.selectedPlace = placesPicker.selection;
     [self updateSelections];
-}
-
-#pragma mark LoginViewControllerDelegate methods
-
-- (void)loginDidSucceed:(FBSession*)session {
-    [self dismissModalViewControllerAnimated:true];
-    [self populateUserDetails];
+    if (self.selectedPlace.count > 0) {
+        [self.navigationController popViewControllerAnimated:true];
+    }
 }
 
 #pragma mark CLLocationManagerDelegate methods

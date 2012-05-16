@@ -33,7 +33,7 @@
 
 - (IBAction)performLogin:(id)sender 
 {
-    [self.spinner stopAnimating];
+    [self.spinner startAnimating];
     
     SCAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
     FBSession *session = [appDelegate invalidateAndGetNewSession];

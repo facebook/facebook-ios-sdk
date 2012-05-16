@@ -535,7 +535,7 @@ typedef enum FBRequestConnectionState {
         }
     }
 
-    NSMutableString *attachmentNames = [NSString string];
+    NSMutableString *attachmentNames = [NSMutableString string];
 
     for (id key in [metadata.request.parameters keyEnumerator]) {
         NSObject *value = [metadata.request.parameters objectForKey:key];
@@ -610,27 +610,38 @@ typedef enum FBRequestConnectionState {
     }
 }
 
-+ (void)processGraphObject:(id<FBGraphObject>)object
-                                withAction:(KeyValueActionHandler)action {
++ (void)processGraphObjectPropertyKey:(NSString*)key value:(id)value action:(KeyValueActionHandler)action {
+    // if we are handling a referenced object
+    if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
+        // for referenced objects we may send a URL or an FBID
+        id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
+        NSString *subValue;
+        if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
+            action(key, subValue);
+            //[body appendWithKey:key formValue:subValue];
+        } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
+            //[body appendWithKey:key formValue:subValue];
+            action(key, subValue);
+        }
+        // if we are handling a string
+    } else if ([value isKindOfClass:[NSString class]]) {
+        //[body appendWithKey:key formValue:(NSString *)value];
+        action(key, value);
+    } else if ([value isKindOfClass:[NSArray class]]) {
+        NSArray *array = (NSArray*)value;
+        int count = array.count;
+        for (int i = 0; i < count; ++i) {
+            NSString *subKey = [NSString stringWithFormat:@"%@[%d]", key, i];
+            id subValue = [array objectAtIndex:i];
+            [self processGraphObjectPropertyKey:subKey value:subValue action:action];
+        }
+    }
+}
+
++ (void)processGraphObject:(id<FBGraphObject>)object withAction:(KeyValueActionHandler)action {
     for (NSString *key in [object keyEnumerator]) {
         NSObject *value = [object objectForKey:key];
-        // if we are handling a referenced object
-        if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
-            // for referenced objects we may send a URL or an FBID
-            id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
-            NSString *subValue;
-            if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
-                action(key, subValue);
-                //[body appendWithKey:key formValue:subValue];
-            } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
-                //[body appendWithKey:key formValue:subValue];
-                action(key, subValue);
-            }
-        // if we are handling a string
-        } else if ([value isKindOfClass:[NSString class]]) {
-            //[body appendWithKey:key formValue:(NSString *)value];
-            action(key, value);
-        }
+        [self processGraphObjectPropertyKey:key value:value action:action];
     }
 }
 

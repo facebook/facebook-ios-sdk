@@ -24,6 +24,13 @@
 #import "FBGraphPlace.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
+#import "FBTests.h"
+
+#if defined(FBIOSSDK_SKIP_COMMON_REQUEST_TESTS)
+
+#pragma message ("warning: Skipping FBCommonRequestTests")
+
+#else
 
 @interface FBCommonRequestTests ()
 
@@ -247,3 +254,5 @@ size_t getBlackPixels(void *info, void *buffer, size_t count) {
 }
 
 @end
+
+#endif

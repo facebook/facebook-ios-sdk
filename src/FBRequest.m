@@ -228,6 +228,17 @@ static NSString *const kPostHTTPMethod = @"POST";
     return request;
 }
 
++ (FBRequest*)requestForGraphPath:(NSString*)graphPath
+                          session:(FBSession *)session
+{
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:graphPath
+                                                  parameters:nil
+                                                  HTTPMethod:nil]
+                          autorelease];
+    return request;
+}
+
 + (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
                                   radiusInMeters:(NSInteger)radius
                                     resultsLimit:(NSInteger)limit

@@ -22,6 +22,13 @@
 #import "FBGraphPlace.h"
 #import "FBGraphLocation.h"
 #import "FBTestBlocker.h"
+#import "FBTests.h"
+
+#if defined(FBIOSSDK_SKIP_GRAPH_OBJECT_TESTS)
+
+#pragma message ("warning: Skipping FBGraphObjectTests")
+
+#else
 
 @protocol TestGraphProtocolTooManyArgs<FBGraphObject>
 - (int)thisMethod:(int)has too:(int)many args:(int)yikes;
@@ -193,15 +200,41 @@
     STAssertTrue([FBGraphObject isGraphObjectID:objNoID sameAs:objNoID], @"no ID but same object");
 }
 
+- (id)graphObjectWithUnwrappedData 
+{
+    NSDictionary *rawDictionary1 = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"hello", nil];
+    NSDictionary *rawDictionary2 = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"bye", nil];
+    NSArray *rawArray1 = [NSArray arrayWithObjects:@"anda1", @"anda2", @"anda3", nil];
+    NSArray *rawArray2 = [NSArray arrayWithObjects:@"anda1", @"anda2", @"anda3", nil];
+    
+    NSDictionary *rawObject = [NSDictionary dictionaryWithObjectsAndKeys:
+                               rawDictionary1, @"dict1", 
+                               rawDictionary2, @"dict2", 
+                               rawArray1, @"array1",
+                               rawArray2, @"array2",
+                               nil];
+    NSDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObjectWrappingDictionary:rawObject];
+
+    return graphObject;    
+}
+
+- (void)testFastEnumeration
+{
+    id graphObject = [self graphObjectWithUnwrappedData];
+    for (NSString *key in graphObject) {
+        STAssertNotNil([graphObject objectForKey:key], @"missing value");
+    }
+}
+
 - (void)testEnumeration
 {
-    NSDictionary *rawDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"hello", nil];
-    NSDictionary *rawObject = [NSDictionary dictionaryWithObjectsAndKeys:rawDictionary, @"data", nil];
-    NSDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObjectWrappingDictionary:rawObject];
-    
-    for (NSString *key in graphObject) {
-        id value = [graphObject objectForKey:key];
+    id graphObject = [self graphObjectWithUnwrappedData];
+    for (NSString *key in [graphObject keyEnumerator]) {
+        STAssertNotNil([graphObject objectForKey:key], @"missing value");
     }
 }
 
 @end
+
+#endif
+

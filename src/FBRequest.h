@@ -459,6 +459,27 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
 /*!
  @method
+ 
+ @abstract
+ Creates a request to get an arbitrary graph object or objects.
+ 
+ @discussion
+ Simplifies preparing a get graph objects.
+ 
+ This does not initialize a FBRequestConnection, so the app still needs
+ to call connectionWithCompletionHandler: and then start on the result.
+ 
+ @param graphPath        the path to the graph object(s) to retrieve.
+ 
+ @param session          the session object representing the identity of the
+ Facebook user making the request; nil implies an
+ unauthenticated request; default=nil
+ */
++ (FBRequest*)requestForGraphPath:(NSString*)graphPath
+                          session:(FBSession *)session;
+
+/*!
+ @method
 
  @abstract
  Creates a request to get an array of FBGraphPlace objects near a location.

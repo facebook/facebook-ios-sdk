@@ -293,4 +293,16 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
  */
 + (id)sessionForUnitTestingWithPermissions:(NSArray*)permissions;
 
+/*!
+ @abstract
+ Accessor for test user ID.
+ 
+ @description
+ Returns the ID of the test user created via sessionForUnitTestingWithPermissions:. Should not be
+ used in application code.
+ 
+ @param session         the session to return a test user for
+ */
++ (NSString *)testUserIDForSession:(FBSession*)session;
+
 @end

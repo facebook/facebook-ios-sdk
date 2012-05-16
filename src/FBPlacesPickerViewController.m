@@ -191,7 +191,7 @@ static NSString *defaultImageName =
 {
     [super viewDidLoad];
     CGRect bounds = self.view.bounds;
-    
+
     if (!self.tableView) {
         UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
         tableView.allowsMultipleSelection = NO;
@@ -259,6 +259,7 @@ static NSString *defaultImageName =
 
     self.hasSearchTextChangedSinceLastQuery = NO;
     [self.loader startLoadingWithRequest:request];
+    [self updateView];
 }
 
 - (void)updateView

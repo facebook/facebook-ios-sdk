@@ -19,6 +19,13 @@
 #import "FBRequest.h"
 #import "FBGraphUser.h"
 #import "FBTestBlocker.h"
+#import "FBTests.h"
+
+#if defined(FBIOSSDK_SKIP_SESSION_TESTS)
+
+#pragma message ("warning: Skipping FBSessionTests")
+
+#else
 
 @implementation FBSessionTests
 
@@ -122,3 +129,5 @@
 }
 
 @end
+
+#endif

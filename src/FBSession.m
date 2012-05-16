@@ -83,7 +83,7 @@ static NSSet *g_loggingBehavior;
     NSString *_appID;
     NSString *_urlSchemeSuffix;
     NSString *_accessToken;
-    NSString *_userID;
+    NSString *_testUserID;
     NSDate *_expirationDate;
     NSArray *_permissions;
 
@@ -116,7 +116,7 @@ static NSSet *g_loggingBehavior;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
 @property(readonly) BOOL isForUnitTesting;
-@property(readwrite, copy) NSString *userID;
+@property(readwrite, copy) NSString *testUserID;
 
 // private members
 - (void)notifyOfState:(FBSessionState)state;
@@ -313,7 +313,7 @@ static NSSet *g_loggingBehavior;
             status = _status,
             accessToken = _accessToken,
             expirationDate = _expirationDate,
-            userID = _userID;
+            testUserID = _testUserID;
 
 
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
@@ -488,6 +488,10 @@ static NSSet *g_loggingBehavior;
                          tokenCacheStrategy:nil
                            isForUnitTesting:YES]
             autorelease];
+}
+
++ (NSString *)testUserIDForSession:(FBSession*)session {
+    return session.testUserID;
 }
 
 #pragma mark -
@@ -771,7 +775,7 @@ static NSSet *g_loggingBehavior;
                             [userID isKindOfClass:[NSString class]]) {
                             
                             // capture the id for future use (delete)
-                            self.userID = userID;
+                            self.testUserID = userID;
                             
                             // set token and date, state transition, and call the handler if there is one
                             [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
@@ -874,7 +878,7 @@ static NSSet *g_loggingBehavior;
                               shouldCache:(BOOL)shouldCache {
 
     // in case we need these after the transition
-    NSString *userID = self.userID;
+    NSString *userID = self.testUserID;
     NSString *accessToken = self.accessToken;
     
     // lets get the state transition out of the way
@@ -885,8 +889,8 @@ static NSSet *g_loggingBehavior;
 
     // if we are given a handler, we promise to call it once and only once
 
-    // release the object's count on the handler, but retain a
-    // stack ref to use as our callback outside of the lock
+    // release the object's count on the handler, but copy (not retain, since it is a block)
+    // a stack ref to use as our callback outside of the lock
     FBSessionStatusHandler handler = [self.loginHandler retain];
 
     // the moment we transition to a terminal state, we release our handler

@@ -17,6 +17,13 @@
 #import "FBCacheTests.h"
 #import "FBDataDiskCache.h"
 #import "FBCacheIndex.h"
+#import "FBTests.h"
+
+#if defined(FBIOSSDK_SKIP_CACHE_TESTS)
+
+#pragma message ("warning: Skipping FBCacheTests")
+
+#else
 
 @class FBCacheEntityInfo;
 
@@ -364,3 +371,5 @@ static FBCacheIndex* initTempCacheIndex(
 
 
 @end
+
+#endif

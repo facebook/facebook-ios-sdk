@@ -28,7 +28,7 @@ fi
 #
 
 # Certain subdirs of samples are not samples to be built, exclude them from the find query
-FB_SAMPLES_EXCLUDED=(FBConnect.bundle Scrumptious)
+FB_SAMPLES_EXCLUDED=(FBConnect.bundle)
 for excluded in "${FB_SAMPLES_EXCLUDED[@]}"; do
   if [ -n "$FB_FIND_ARGS" ]; then
     FB_FIND_ARGS="$FB_FIND_ARGS -o"

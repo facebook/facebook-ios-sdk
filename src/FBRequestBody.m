@@ -81,7 +81,7 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
                logger:(FBLogger *)logger
 {
     NSString *disposition =
-        [NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"%@\"\r\n", key];
+        [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", key, key];
     [self appendUTF8:disposition];
     [self appendUTF8:@"Content-Type: image/png\r\n\r\n"];
     NSData *data = UIImagePNGRepresentation(image);
@@ -95,7 +95,7 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
                logger:(FBLogger *)logger
 {
     NSString *disposition =
-        [NSString stringWithFormat:@"Content-Disposition: form-data; filename=\"%@\"\r\n", key];
+        [NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"%@\"\r\n", key, key];
     [self appendUTF8:disposition];
     [self appendUTF8:@"Content-Type: content/unknown\r\n\r\n"];
     [self.mutableData appendData:data];

@@ -55,6 +55,8 @@ typedef enum _SelectorInferredImplType {
 @interface FBGraphObjectArray : NSMutableArray
 
 - (id)initWrappingArray:(NSArray *)otherArray;
+- (id)graphObjectifyAtIndex:(NSUInteger)index;
+- (void)graphObjectifyAll;
 
 @end
 
@@ -62,6 +64,8 @@ typedef enum _SelectorInferredImplType {
 @interface FBGraphObject ()
 
 - (id)initWrappingDictionary:(NSDictionary *)otherDictionary;
+- (void)graphObjectifyAll;
+- (id)graphObjectifyAtKey:(id)key;
 
 + (id)graphObjectWrappingObject:(id)originalObject;
 + (SelectorInferredImplType)inferredImplTypeForSelector:(SEL)sel;
@@ -199,15 +203,7 @@ typedef enum _SelectorInferredImplType {
     }
 }
 
-#pragma mark -
-
-#pragma mark NSDictionary and NSMutableDictionary overrides
-
-- (NSUInteger)count {
-    return _jsonObject.count;
-}
-
-- (id)objectForKey:(id)key {
+- (id)graphObjectifyAtKey:(id)key {
     id object = [_jsonObject objectForKey:key];
     // make certain it is FBObjectGraph-ified
     id possibleReplacement = [FBGraphObject graphObjectWrappingObject:object];
@@ -219,7 +215,28 @@ typedef enum _SelectorInferredImplType {
     return object;
 }
 
+- (void)graphObjectifyAll {
+    NSArray *keys = [_jsonObject allKeys];
+    for (NSString *key in keys) {
+        [self graphObjectifyAtKey:key];
+    }
+}
+
+
+#pragma mark -
+
+#pragma mark NSDictionary and NSMutableDictionary overrides
+
+- (NSUInteger)count {
+    return _jsonObject.count;
+}
+
+- (id)objectForKey:(id)key {
+    return [self graphObjectifyAtKey:key];
+}
+
 - (NSEnumerator *)keyEnumerator {
+    [self graphObjectifyAll];
     return _jsonObject.keyEnumerator;
 }
 
@@ -376,7 +393,7 @@ typedef enum _SelectorInferredImplType {
     return _jsonArray.count;
 }
 
-- (id)objectAtIndex:(NSUInteger)index {
+- (id)graphObjectifyAtIndex:(NSUInteger)index {
     id object = [_jsonArray objectAtIndex:index];
     // make certain it is FBObjectGraph-ified
     id possibleReplacement = [FBGraphObject graphObjectWrappingObject:object];
@@ -386,6 +403,27 @@ typedef enum _SelectorInferredImplType {
         object = possibleReplacement;
     }
     return object;
+}
+
+- (void)graphObjectifyAll {
+    int count = [_jsonArray count];
+    for (int i = 0; i < count; ++i) {
+        [self graphObjectifyAtIndex:i];
+    }
+}
+
+- (id)objectAtIndex:(NSUInteger)index {
+    return [self graphObjectifyAtIndex:index];
+}
+
+- (NSEnumerator *)objectEnumerator {
+    [self graphObjectifyAll];
+    return _jsonArray.objectEnumerator;
+}
+
+- (NSEnumerator *)reverseObjectEnumerator {
+    [self graphObjectifyAll];
+    return _jsonArray.reverseObjectEnumerator;
 }
 
 - (void)insertObject:(id)object atIndex:(NSUInteger)index {
