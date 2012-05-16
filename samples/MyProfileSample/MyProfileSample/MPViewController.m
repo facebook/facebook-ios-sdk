@@ -136,15 +136,10 @@
 
 - (void)viewDidUnload
 {
-    [self setButtonLoginLogout:nil];
-    [self setButtonLoginLogout:nil];
-    [self setLabelFirstName:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    
-    self.profilePic.userID = nil;
+    self.buttonLoginLogout = nil;
+    self.labelFirstName = nil;
     self.profilePic = nil;
+    [super viewDidUnload];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

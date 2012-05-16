@@ -73,7 +73,7 @@
 
 		<!-- implementation stuff -->
 		
-		<key>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:viewControllerBody</key>
+		<key>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:viewDidLoad</key>
 		<string>
 - (void)viewDidLoad
 {    
@@ -85,10 +85,23 @@
     // FBSample logic
     // bootstrap call to updateForSessionChange gets a fresh new session object
     [self updateForSessionChange];
-    
 }
+                </string>
 
+		<key>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:viewDidUnload</key>
+		<string>
+- (void)viewDidUnload
+{
+    self.buttonLoginLogout = nil;
+    self.labelFirstName = nil;
+    self.profilePic = nil;
 
+    [super viewDidUnload];
+}
+                </string>
+
+		<key>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:viewControllerBody</key>
+		<string>
 // FBSample logic
 // main helper method to react to session changes, including creation of session
 // object when one has gone invalid, or at init time
@@ -128,21 +141,21 @@
               }  
                 
               self.labelFirstName.text = text;
-              profilePic.userID = fbid;
+              self.profilePic.userID = fbid;
           }] start];
         
         // If there's an outstanding connection, just cancel
         [self.requestConnection cancel];
         self.requestConnection = newConnection;
 
-        buttonLoginLogout.title = @"Logout";  
+        self.buttonLoginLogout.title = @"Logout";  
         
     } else {
         
         // invalid account UI, or just logged out.
-        buttonLoginLogout.title = @"Login"; 
-        labelFirstName.text = @"&lt;Press Login&gt;";
-        profilePic.userID = nil; // default profile pic
+        self.buttonLoginLogout.title = @"Login"; 
+        self.labelFirstName.text = @"&lt;Press Login&gt;";
+        self.profilePic.userID = nil; // default profile pic
         
         // create a fresh session object in case of subsequent login
         appDelegate.session = [[FBSession alloc] init]; 
@@ -177,20 +190,6 @@
         }];
     } 
 }
-
-- (void)viewDidUnload
-{
-    [self setButtonLoginLogout:nil];
-    [self setButtonLoginLogout:nil];
-    [self setLabelFirstName:nil];
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-    
-    self.profilePic.userID = nil;
-    self.profilePic = nil;
-}
-
                 </string>
 
 
@@ -296,9 +295,9 @@
 		<string>___VARIABLE_classPrefix:identifier___ViewController.m:import:___VARIABLE_classPrefix:identifier___AppDelegate.h</string>
 		<string>___VARIABLE_classPrefix:identifier___ViewController.m:private</string>
 		
-		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:buttonLoginLogout</string>
-		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:labelFirstName</string>
-		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:profilePic</string>
+		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:buttonLoginLogout = _buttonLoginLogout</string>
+		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:labelFirstName = _labelFirstName</string>
+		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:profilePic = _profilePic</string>
 		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:synthesize:requestConnection = _requestConnection</string>
 		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:dealloc:_buttonLoginLogout</string>
 		<string>___VARIABLE_classPrefix:identifier___ViewController.m:implementation:dealloc:_labelFirstName</string>
