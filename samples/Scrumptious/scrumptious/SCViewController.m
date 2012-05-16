@@ -39,7 +39,7 @@
 @property (strong, nonatomic) NSArray* selectedFriends;
 @property (strong, nonatomic) NSMutableDictionary* selectedPhoto;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-
+@property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
 
 - (IBAction)announce:(id)sender;
@@ -64,6 +64,7 @@
 @synthesize mealViewController = _mealViewController;
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
+@synthesize popover = _popover;
 
 #pragma mark open graph
 
@@ -124,7 +125,14 @@
         self.selectedPhoto = [[NSMutableDictionary alloc] init];
     }
     [self.selectedPhoto setObject:image forKey:@"image"];
-    [self dismissModalViewControllerAnimated:true];
+    
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self.popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:true];
+    }
+
+    [self updateSelections];
 }
 
 #pragma mark -
@@ -197,22 +205,12 @@
     [self presentModalViewController:loginView animated:NO];
 }
 
-- (void)createViewControllers 
+- (void)dealloc
 {
-    __block SCViewController* myself = self;
-    self.placesPickerController = [[FBPlacesPickerViewController alloc] initWithNibName:nil bundle:nil];
-    self.placesPickerController.delegate = self;
-    
-    _mealViewController = [[SCMealViewController alloc]initWithNibName:@"SCMealViewController" bundle:nil];
-    _mealViewController.selectItemCallback = ^(id sender, id selectedItem) {
-        myself.selectedMeal = selectedItem;
-        [myself updateSelections];
-    };
-    self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
-    self.friendPickerController.delegate = self;
-    
-    self.imagePicker = [[UIImagePickerController alloc] init];
-    self.imagePicker.delegate = self;    
+    _locationManager.delegate = nil;
+    _placesPickerController.delegate = nil;
+    _friendPickerController.delegate = nil;
+    _imagePicker.delegate = nil;
 }
 
 - (void)viewDidLoad
@@ -221,11 +219,10 @@
     
 	// Do any additional setup after loading the view, typically from a nib.
     self.title = @"Scrumptious";
-    [self createViewControllers];
 
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    [_locationManager startUpdatingLocation];
+    [self.locationManager startUpdatingLocation];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -248,6 +245,7 @@
     self.friendPickerController = nil;
     self.mealViewController = nil;
     self.imagePicker = nil;
+    self.popover = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -331,25 +329,59 @@
     
     switch (indexPath.row) {
         case 0:
+            if (!self.placesPickerController) {
+                self.placesPickerController = [[FBPlacesPickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.placesPickerController.delegate = self;
+                self.placesPickerController.title = @"Select a restaurant";
+            }
+            self.placesPickerController.locationCoordinate = self.locationManager.location.coordinate;
             self.placesPickerController.session = appDelegate.session;
-            self.placesPickerController.title = @"Select a restaurant";
             [self.placesPickerController loadData];
             target = self.placesPickerController;
             break;
         
         case 1:
-            target = _mealViewController;
+            if (!self.mealViewController) {
+                __block SCViewController* myself = self;
+                self.mealViewController = [[SCMealViewController alloc]initWithNibName:@"SCMealViewController" bundle:nil];
+                self.mealViewController.selectItemCallback = ^(id sender, id selectedItem) {
+                    myself.selectedMeal = selectedItem;
+                    [myself updateSelections];
+                };
+            }
+            target = self.mealViewController;
             break;
             
         case 2:
+            if (!self.friendPickerController) {
+                self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.friendPickerController.delegate = self;
+                self.friendPickerController.title = @"Select friends";
+            }
             self.friendPickerController.session = appDelegate.session;
-            self.friendPickerController.title = @"Select friends";
             [self.friendPickerController loadData];
             target = self.friendPickerController;
             break;
             
         case 3:
-            [self presentModalViewController:_imagePicker animated:true];
+            if (!self.imagePicker) {
+                self.imagePicker = [[UIImagePickerController alloc] init];
+                self.imagePicker.delegate = self;
+
+                // In a real app, we would probably let the user either pick an image or take one using
+                // the camera. For sample purposes in the simulator, the camera is not available.
+                self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            }
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                // Can't use presentModalViewController for image picker on iPad
+                if (!self.popover) {
+                    self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
+                }
+                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
+                [self.popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+            } else {
+                [self presentModalViewController:self.imagePicker animated:true];
+            }
             // Return rather than execute below code
             return;
     }
@@ -390,7 +422,6 @@
         newLocation.horizontalAccuracy < 100) {
         // We wait for a precision of 100m and turn the GPS off
         [self.locationManager stopUpdatingLocation];
-        self.locationManager = nil;
         
         self.placesPickerController.locationCoordinate = newLocation.coordinate;
         if (self.placesPickerController.session) {
