@@ -6,10 +6,36 @@
 # This script builds the FBiOSSDK.framework that is distributed at
 # https://github.com/facebook/facebook-ios-sdk/downloads/FBiOSSDK.framework.tgz
 
-# our only parameter so far, valid arguments are: no-value, "Debug" and "Release" (default)
-BUILDCONFIGURATION=${1:-Release}
-
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+
+# process options, valid arguments -c [Debug|Release] -n 
+BUILDCONFIGURATION=Release
+while getopts ":nc:" OPTNAME
+do
+  case "$OPTNAME" in
+    "c")
+      BUILDCONFIGURATION=$OPTARG
+      ;;
+    "n")
+      NOEXTRAS=1
+      ;;
+    "?")
+      echo "$0 -c [Debug|Release] -n"
+      echo "       -c sets configuration"
+      echo "       -n no test run, no docs"
+      die
+      ;;
+    ":")
+      echo "Missing argument value for option $OPTARG"
+      die
+      ;;
+    *)
+    # Should not occur
+      echo "Unknown error while processing options"
+      die
+      ;;
+  esac
+done
 
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 test -x "$LIPO" || die 'Could not find lipo in $PATH'
@@ -102,11 +128,27 @@ cd $FB_SDK_FRAMEWORK/Versions
 ln -s ./A ./Current
 
 # -----------------------------------------------------------------------------
+# Run unit tests 
+#
+
+if [ ${NOEXTRAS:-0} -eq  1 ];then
+  echo "Skipping unit tests."
+else
+  echo "Running unit tests."
+  cd $FB_SDK_SRC
+  $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests build
+fi
+
+# -----------------------------------------------------------------------------
 # Build docs 
 #
-echo "Building docs."
 
-\headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
+if [ ${NOEXTRAS:-0} -eq  1 ];then
+  echo "Skipping docs."
+else
+  echo "Building docs."
+  \headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
+fi
 
 # -----------------------------------------------------------------------------
 # Done

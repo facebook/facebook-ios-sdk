@@ -143,9 +143,8 @@
                                        FBSessionState status,
                                        NSError *error) {
         STAssertTrue(!error, @"!error");
-        if (session.isValid) {
-            [blocker signal];
-        }
+        
+        [blocker signal];
     };
 
     [session loginWithCompletionHandler:handler];

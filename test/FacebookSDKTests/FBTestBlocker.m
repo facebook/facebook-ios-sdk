@@ -34,3 +34,17 @@
 }
 
 @end
+
+
+// this is unrelated to test-blocker, but is a useful hack to make it easy to retarget the url
+// without checking certs
+@interface NSURLRequest (NSURLRequestWithIgnoreSSL) 
++(BOOL)allowsAnyHTTPSCertificateForHost:(NSString*)host;
+@end
+
+@implementation NSURLRequest (NSURLRequestWithIgnoreSSL) 
++(BOOL)allowsAnyHTTPSCertificateForHost:(NSString*)host
+{
+    return YES;
+}
+@end

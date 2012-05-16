@@ -12,12 +12,13 @@ if [ "$#" -ne 2 ]; then
       die 'Arguments do not conform to usage'
 fi
 
-SIMULATOR_DIR=$HOME/Library/Application\ Support/iPhone\ Simulator
+function write_plist {
+      SIMULATOR_CONFIG_DIR="$1"/Documents
+      SIMULATOR_CONFIG_FILE="$SIMULATOR_CONFIG_DIR"/FBiOSSDK-UnitTestConfig.plist
 
-test -x "$SIMULATOR_DIR" || die 'Could not find simulator directory'
-
-for VERSION_DIR in "${SIMULATOR_DIR}"/[45].*; do
-      SIMULATOR_CONFIG_FILE="$VERSION_DIR/Documents/FBiOSSDK-UnitTestConfig.plist"
+      if [ ! -d "$SIMULATOR_CONFIG_DIR" ]; then
+            mkdir "$SIMULATOR_CONFIG_DIR"
+      fi
 
       # use heredoc syntax to output the plist
       cat > "$SIMULATOR_CONFIG_FILE" \
@@ -26,15 +27,24 @@ for VERSION_DIR in "${SIMULATOR_DIR}"/[45].*; do
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>FacebookAppID</key>
-	<string>$1</string>
-	<key>FacebookAppSecret</key>
-	<string>$2</string>
+        <key>FacebookAppID</key>
+        <string>$2</string>
+        <key>FacebookAppSecret</key>
+        <string>$3</string>
 </dict>
 </plist>
 DELIMIT
 # end heredoc
 
-      echo "wrote unit test config file at $SIMULATOR_CONFIG_FILE"
+      echo "wrote unit test config file at $SIMULATOR_CONFIG_FILE" 
+}
 
+SIMULATOR_DIR=$HOME/Library/Application\ Support/iPhone\ Simulator
+
+test -x "$SIMULATOR_DIR" || die 'Could not find simulator directory'
+
+write_plist "$SIMULATOR_DIR" $1 $2
+
+for VERSION_DIR in "${SIMULATOR_DIR}"/[45].*; do
+      write_plist "$VERSION_DIR" $1 $2
 done

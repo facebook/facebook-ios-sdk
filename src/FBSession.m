@@ -213,7 +213,7 @@ static NSSet *g_loggingBehavior;
             // first fetch documents directory 
             NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString *documentsDirectory = [paths objectAtIndex:0];
-            
+                        
             // fetch config contents
             NSString *configfilename = [documentsDirectory stringByAppendingPathComponent:@"FBiOSSDK-UnitTestConfig.plist"];
             NSDictionary *configsettings = [NSDictionary dictionaryWithContentsOfFile:configfilename];
