@@ -50,17 +50,21 @@ typedef enum _SelectorInferredImplType {
     SelectorInferredImplTypeSet = 2
 } SelectorInferredImplType;
 
+
 // internal-only wrapper
 @interface FBGraphObjectArray : NSMutableArray
--(id)initWrappingArray:(NSArray *)otherArray;
+
+- (id)initWrappingArray:(NSArray *)otherArray;
+
 @end
 
 
 @interface FBGraphObject ()
 
 - (id)initWrappingDictionary:(NSDictionary *)otherDictionary;
+
 + (id)graphObjectWrappingObject:(id)originalObject;
-+ (SelectorInferredImplType)inferedImplTypeForSelector:(SEL)sel;
++ (SelectorInferredImplType)inferredImplTypeForSelector:(SEL)sel;
 + (BOOL)isProtocolImplementationInferable:(Protocol *)protocol checkFBGraphObjectAdoption:(BOOL)checkAdoption;
 
 @end
@@ -87,11 +91,7 @@ typedef enum _SelectorInferredImplType {
             // no wrapper needed, returning the object that was provided
             return (FBGraphObject*)jsonObject;
         } else {
-            if ([jsonObject isKindOfClass:[NSMutableDictionary class]] ) {
-                _jsonObject = (NSMutableDictionary*)[jsonObject retain];
-            } else {
-                _jsonObject = [[NSMutableDictionary dictionaryWithDictionary:jsonObject] retain];
-            }
+            _jsonObject = [[NSMutableDictionary dictionaryWithDictionary:jsonObject] retain];
         }
     }
     return self;
@@ -134,7 +134,7 @@ typedef enum _SelectorInferredImplType {
 - (BOOL)respondsToSelector:(SEL)sel
 {
     return  [super respondsToSelector:sel] ||
-    ([FBGraphObject inferedImplTypeForSelector:sel] != SelectorInferredImplTypeNone);
+    ([FBGraphObject inferredImplTypeForSelector:sel] != SelectorInferredImplTypeNone);
 }
 
 - (BOOL)conformsToProtocol:(Protocol *)protocol {
@@ -148,7 +148,7 @@ typedef enum _SelectorInferredImplType {
     SEL alternateSelector = sel;
     
     // if we should forward, to where?
-    switch ([FBGraphObject inferedImplTypeForSelector:sel]) {
+    switch ([FBGraphObject inferredImplTypeForSelector:sel]) {
         case SelectorInferredImplTypeGet:
             alternateSelector = @selector(objectForKey:);
             break;
@@ -166,7 +166,7 @@ typedef enum _SelectorInferredImplType {
 // forwards otherwise missing selectors that match the FBGraphObject convention
 - (void)forwardInvocation:(NSInvocation *)invocation {
     // if we should forward, to where?
-    switch ([FBGraphObject inferedImplTypeForSelector:[invocation selector]]) {
+    switch ([FBGraphObject inferredImplTypeForSelector:[invocation selector]]) {
         case SelectorInferredImplTypeGet: {
             // property getter impl uses the selector name as an argument...
             NSString *propertyName = NSStringFromSelector([invocation selector]);
@@ -200,6 +200,7 @@ typedef enum _SelectorInferredImplType {
 }
 
 #pragma mark -
+
 #pragma mark NSDictionary and NSMutableDictionary overrides
 
 - (NSUInteger)count {
@@ -252,7 +253,7 @@ typedef enum _SelectorInferredImplType {
 }
 
 // helper method used by the catgory implementation to determine whether a selector should be handled 
-+ (SelectorInferredImplType)inferedImplTypeForSelector:(SEL)sel {
++ (SelectorInferredImplType)inferredImplTypeForSelector:(SEL)sel {
     // the overhead in this impl is high relative to the cost of a normal property
     // accessor; if needed we will optimize by caching results of the following 
     // processing, indexed by selector
@@ -302,7 +303,7 @@ typedef enum _SelectorInferredImplType {
                                                      YES,   // instance
                                                      &count);
         for (int index = 0; index < count; index++) {
-            if ([FBGraphObject inferedImplTypeForSelector:methods[index].name] == SelectorInferredImplTypeNone) {
+            if ([FBGraphObject inferredImplTypeForSelector:methods[index].name] == SelectorInferredImplTypeNone) {
                 // we have a bad actor, short circuit
                 return NO;
             }
@@ -360,11 +361,7 @@ typedef enum _SelectorInferredImplType {
             // no wrapper needed, returning the object that was provided
             return (FBGraphObjectArray*)jsonArray;
         } else {
-        if ([jsonArray isKindOfClass:[NSMutableArray class]] ) {
-            _jsonArray = (NSMutableArray*)[jsonArray retain];
-        } else {
             _jsonArray = [[NSMutableArray arrayWithArray:jsonArray] retain];
-        }
         }
     }
     return self;

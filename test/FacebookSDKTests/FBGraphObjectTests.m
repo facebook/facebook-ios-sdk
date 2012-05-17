@@ -193,4 +193,15 @@
     STAssertTrue([FBGraphObject isGraphObjectID:objNoID sameAs:objNoID], @"no ID but same object");
 }
 
+- (void)testEnumeration
+{
+    NSDictionary *rawDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"hello", nil];
+    NSDictionary *rawObject = [NSDictionary dictionaryWithObjectsAndKeys:rawDictionary, @"data", nil];
+    NSDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObjectWrappingDictionary:rawObject];
+    
+    for (NSString *key in graphObject) {
+        id value = [graphObject objectForKey:key];
+    }
+}
+
 @end
