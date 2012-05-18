@@ -21,53 +21,161 @@
 
 @protocol FBPlacesPickerDelegate;
 
+/*!
+ @class FBPlacesPickerViewController
+ 
+ @abstract
+ FBPlacesPickerViewController object is used to create and coordinate UI
+ for viewing and picking places.
+ 
+ @unsorted
+ */
 @interface FBPlacesPickerViewController : UIViewController
 
+/*!
+ @abstract
+ Outlet for the spinner object used by the view controller
+ */
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
+
+/*!
+ @abstract
+ Outlet for the tableView object used by the view controller
+ */
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
+/*!
+ @abstract
+ Delegate used by the view controller to notify of selection changes, and handle
+ errors and filtering.
+ */
 @property (nonatomic, assign) id<FBPlacesPickerDelegate> delegate;
+
+/*!
+ @abstract
+ Set of fields which should be requested by the view controler for use either in display or filtering
+ */
 @property (nonatomic, copy) NSSet *fieldsForRequest;
+
+/*!
+ @abstract
+ Indicates whether items pictures should be fetched and displayed
+ */
 @property (nonatomic) BOOL itemPicturesEnabled;
+
+/*!
+ @abstract
+ Sets the coordinates to use for place discovery
+ */
 @property (nonatomic) CLLocationCoordinate2D locationCoordinate;
+
+/*!
+ @abstract
+ Sets the radius to use for place discovery
+ */
 @property (nonatomic) NSInteger radiusInMeters;
+
+/*!
+ @abstract
+ Maximum number of places to fetch
+ */
 @property (nonatomic) NSInteger resultsLimit;
+
+/*!
+ @abstract
+ Search words used to narrow results returned
+ */
 @property (nonatomic, copy) NSString *searchText;
+
+/*!
+ @abstract
+ User session
+ */
 @property (nonatomic, retain) FBSession *session;
 
-// The place that is currently selected in the view.  This is nil
-// if nothing is selected.
+/*!
+ @abstract
+ The place that is currently selected in the view.  This is nil
+ if nothing is selected.
+  */
 @property (nonatomic, retain, readonly) id<FBGraphPlace> selection;
 
+/*!
+ @abstract
+ Initializes an instance of the view controller
+ */
 - (id)init;
+
+/*!
+ @abstract
+ Initializes an instance of the view controller
+ */
 - (id)initWithCoder:(NSCoder *)aDecoder;
+
+/*!
+ @abstract
+ Initializes an instance of the view controller
+ */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
+/*!
+ @abstract
+ Causes the view controller to fetch data, either initialler, or in order to update the view
+ as a result of changes to search criteria, filter, location, etc.
+ */
 - (void)loadData;
 
 @end
 
+/*!
+ @abstract
+ If a conforming delegate is provided, the view controller will notify the delegate of selection change,
+ filter and error events
+ */
 @protocol FBPlacesPickerDelegate <NSObject>
 @optional
 
-// Called whenever data is loaded.
-//
-// The tableView is automatically reloaded when this happens, but if
-// another tableView (such as for a UISearchBar) is showing data then
-// it may need to be reloaded too.
+/*!
+ @abstract
+ Called whenever data is loaded.
+
+ @discussion
+ The tableView is automatically reloaded when this happens, but if
+ another tableView (such as for a UISearchBar) is showing data then
+ it may need to be reloaded too.
+ 
+ @param placesPicker   the view controller object sending the notification
+ */
 - (void)placesPickerViewControllerDataDidChange:
 (FBPlacesPickerViewController *)placesPicker;
 
-// Called whenever the selection changes.
+/*!
+ @abstract
+ Called whenever the selection changes.
+ @discussion
+ The tableView is automatically reloaded when this happens, but if
+ another tableView (such as for a UISearchBar) is showing data then
+ it may need to be reloaded too.
+ 
+ @param placesPicker   the view controller object sending the notification
+ */
 - (void)placesPickerViewControllerSelectionDidChange:
 (FBPlacesPickerViewController *)placesPicker;
 
-// Called on each user to determine whether they show up in the list.
-// This can be used to implement a search bar that filters the list.
+/*!
+ @abstract
+ Called on each user to determine whether they show up in the list.
+  
+ @discussion
+ This can be used to implement a search bar that filters the list.
+ */
 - (BOOL)placesPickerViewController:(FBPlacesPickerViewController *)placesPicker
                 shouldIncludePlace:(id <FBGraphPlace>)place;
 
-// Called if there is a communication error.
+/*!
+ @abstract
+ Called if there is a communication error.
+ */
 - (void)placesPickerViewController:(FBPlacesPickerViewController *)placesPicker
                        handleError:(NSError *)error;
 

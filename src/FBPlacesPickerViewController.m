@@ -41,21 +41,12 @@ static NSString *defaultImageName =
 
 - (void)initialize;
 - (void)loadDataPostThrottle;
+- (NSTimer *)createSearchTextChangedTimer;
+- (void)updateView;
 
 @end
 
-@implementation FBPlacesPickerViewController {
-    FBGraphObjectTableDataSource *_dataSource;
-    id<FBPlacesPickerDelegate> _delegate;
-    NSSet *_fieldsForRequest;
-    CLLocationCoordinate2D _locationCoordinate;
-    NSInteger _radiusInMeters;
-    NSInteger _resultsLimit;
-    NSString *_searchText;
-    FBGraphObjectTableSelection *_selectionManager;
-    UIActivityIndicatorView *_spinner;
-    UITableView *_tableView;
-}
+@implementation FBPlacesPickerViewController
 
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
@@ -187,6 +178,22 @@ static NSString *defaultImageName =
 
 #pragma mark - Public Methods
 
+- (void)loadData
+{
+    // Sending a request on every keystroke is wasteful of bandwidth. Send a
+    // request the first time the user types something, then set up a 2-second timer
+    // and send whatever changes the user has made since then. (If nothing has changed
+    // in 2 seconds, we reset so the next change will cause an immediate re-query.)
+    if (!self.searchTextChangedTimer) {
+        self.searchTextChangedTimer = [self createSearchTextChangedTimer];
+        [self loadDataPostThrottle];
+    } else {
+        self.hasSearchTextChangedSinceLastQuery = YES;
+    }
+}
+
+#pragma mark - private methods
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -231,20 +238,6 @@ static NSString *defaultImageName =
     self.tableView = nil;
 }
 
-- (void)loadData
-{
-    // Sending a request on every keystroke is wasteful of bandwidth. Send a
-    // request the first time the user types something, then set up a 2-second timer
-    // and send whatever changes the user has made since then. (If nothing has changed
-    // in 2 seconds, we reset so the next change will cause an immediate re-query.)
-    if (!self.searchTextChangedTimer) {
-        self.searchTextChangedTimer = [self createSearchTextChangedTimer];
-        [self loadDataPostThrottle];
-    } else {
-        self.hasSearchTextChangedSinceLastQuery = YES;
-    }
-}
-
 - (void)loadDataPostThrottle
 {
     FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:self.locationCoordinate 
@@ -267,8 +260,6 @@ static NSString *defaultImageName =
     [self.dataSource update];
     [self.tableView reloadData];
 }
-
-#pragma mark - private methods
 
 - (NSTimer *)createSearchTextChangedTimer {
     NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:searchTextChangedTimerInterval
