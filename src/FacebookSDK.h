@@ -31,9 +31,17 @@
 #import "FBGraphObject.h"           // + design summary for graph component-group
 #import "FBOpenGraphAction.h"
 
+/*!
+ @header
+ 
+ @abstract  Library header, import this to import all of the public types
+            in the Facebook SDK
+ 
+ @discussion
+
 ////////////////////////////////////////////////////////////////////////////////
 
-/* 
+
  Summary: this header summarizes the structure and goals of the Facebook iOS
  SDK. Goals:
  * Leverage and work well with modern features of iOS (e.g. blocks, ARC, etc.)
@@ -42,14 +50,13 @@
  * Deep support for a growing list of scenarios over time
  
  Notes on approaches:
- 1) We use a key scenario to drive prioritization of work for a given update
- 2) We building-atop/refactoring, rather than replace, existing iOS SDK releases
- 3) We use take an incremental approach where we can choose to maintain
-    as little or as much compatibility with the existing SDK needed
-    3.a) and so we will be developing to this approach
-    3.b) and then at push-time for a release we will decide when/what to break
+ 1. We use a key scenario to drive prioritization of work for a given update
+ 2. We are building-atop and refactoring, rather than replacing, existing iOS SDK releases
+ 3. We use take an incremental approach where we can choose to maintain as little or as much compatibility with the existing SDK needed
+    a) and so we will be developing to this approach
+    b) and then at push-time for a release we will decide when/what to break
          on a feature by feature basis
- 4) Some light but critical infrastructure is needed to support both the goals
+ 4. Some light but critical infrastructure is needed to support both the goals
     and the execution of this change (e.g. a build/package/deploy process)
  
  Design points:
@@ -61,6 +68,9 @@
  As we add features, it will no longer be appropriate to host all functionality
  in the Facebook class, though it will be maintained for some time for migration
  purposes. Instead functionality lives in related collections of classes.
+
+ <pre>
+ @textblock
  
                *------------* *----------*  *----------------* *---*
   Scenario --> |FBPersonView| |FBLikeView|  | FBPlacesPicker | | F |
@@ -71,7 +81,10 @@
                *---------* *---------* *---------------------* | o |
       Core --> |FBSession| |FBRequest| |Utilities (e.g. JSON)| | o |
                *---------* *---------* *---------------------* * k *
-                                                               
+
+ @/textblock
+ </pre>
+
  The figure above describes three layers of functionality, with the existing
  Facebook on the side as a helper proxy to a subset of the overal SDK. The
  layers loosely organize the SDK into *Core Objects* necessary to interface 
@@ -82,6 +95,9 @@
  mobile scenarios.
  
  Use example (low barrier use case):
+
+ <pre>
+ @textblock
  
  // log on to Facebook
  _fbsession = [[FBSession alloc] init];
@@ -101,5 +117,8 @@
          }];
      }
  }];
+ 
+ @/textblock
+ </pre>
 
 */

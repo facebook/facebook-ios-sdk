@@ -16,72 +16,84 @@
 
 #import <Foundation/Foundation.h>
 
-// The error domain of all error codes returned by the Facebook SDK
+/// The error domain of all error codes returned by the Facebook SDK
 extern NSString *const FBiOSSDKDomain;
 
 // ----------------------------------------------------------------------------
 // Keys in the userInfo NSDictionary of NSError where you can find additional
 // information about the error.  All are optional.
 
-// The key for an inner NSError.
+/// The key for an inner NSError.
 extern NSString *const FBErrorInnerErrorKey;
 
-// The key for parsed JSON response from the server.
+/// The key for parsed JSON response from the server.
 extern NSString *const FBErrorParsedJSONResponseKey;
 
-// The key for HTTP status code.
+/// The key for HTTP status code.
 extern NSString *const FBErrorHTTPStatusCodeKey;
 
 // ----------------------------------------------------------------------------
-// Error codes returned by the Facebook SDK in NSError.  These are
-// valid only in the scope of FBiOSSDKDomain.
+/*!
+ @abstract Error codes returned by the Facebook SDK in NSError.  
+ 
+ @discussion
+ These are valid only in the scope of FBiOSSDKDomain.
+ */
 typedef enum FBErrorCode {
-    // Like nil for FBErrorCode values, represents an error code that
-    // has not been initialized yet.
+    /*! 
+     Like nil for FBErrorCode values, represents an error code that
+     has not been initialized yet.
+     */
     FBErrorInvalid = 0,
 
-    // The operation failed because it was cancelled.
+    /// The operation failed because it was cancelled.
     FBErrorOperationCancelled,
     
-    // A login attempt failed
+    /// A login attempt failed
     FBErrorLoginFailedOrCancelled,
 
-    // The graph API returned an error for this operation.
+    /// The graph API returned an error for this operation.
     FBErrorRequestConnectionApi,
 
-    // The operation failed because the server returned an unexpected
-    // response.  You can get this error if you are not using the most
-    // recent SDK, or if you set your application's migration settings
-    // incorrectly for the version of the SDK you are using.
-    //
-    // If this occurs on the current SDK with proper app migration
-    // settings, you may need to try changing to one request per batch.
+    /*!
+     The operation failed because the server returned an unexpected
+     response.  You can get this error if you are not using the most
+     recent SDK, or if you set your application's migration settings
+     incorrectly for the version of the SDK you are using.
+    
+     If this occurs on the current SDK with proper app migration
+     settings, you may need to try changing to one request per batch.
+     */
     FBErrorProtocolMismatch,
 
-    // Non-success HTTP status code was returned from the operation.
+    /// Non-success HTTP status code was returned from the operation.
     FBErrorHTTPError,
 
 } FBErrorCode;
 
-// The key in the userInfo NSDictionary of NSError where you can find
-// the inner NSError (if any).
+/*!
+ The key in the userInfo NSDictionary of NSError where you can find
+ the inner NSError (if any).
+ */
 extern NSString *const FBErrorInnerErrorKey;
 
-// The NSError key used by session to capture login failure reason
+/// The NSError key used by session to capture login failure reason
 extern NSString *const FBErrorLoginFailedReason;
 
-// the NSError key used by session to capture login failure error code
+/// the NSError key used by session to capture login failure error code
 extern NSString *const FBErrorLoginFailedOriginalErrorCode;
 
-// used by session when an inline dialog fails
+/// used by session when an inline dialog fails
 extern NSString *const FBErrorLoginFailedReasonInlineCancelledValue;
 extern NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue;
 extern NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized;
 
 // Exception strings raised by the Facebook SDK
 
-// This exception is raised by methods in the Facebook SDK to indicate
-// that an attempted operation is invalid
+/*!
+ This exception is raised by methods in the Facebook SDK to indicate
+ that an attempted operation is invalid
+ */
 extern NSString *const FBInvalidOperationException;
 
 // Facebook SDK also raises exceptions the following common exceptions:

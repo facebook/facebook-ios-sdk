@@ -25,6 +25,7 @@ test -d $FB_SDK_BUILD \
 cd $FB_SDK_SRC
 
 \headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
+\gatherheaderdoc $FB_SDK_FRAMEWORK_DOCS
 
 # -----------------------------------------------------------------------------
 # Done
