@@ -49,8 +49,17 @@
     FBSession *session = [self loginTestUserWithPermissions:nil];
     FBRequest *requestMe = [FBRequest requestForMeWithSession:session];
     NSArray *results = [self sendRequests:requestMe, nil];
-    id<FBGraphUser> me = [results objectAtIndex:0];
 
+    STAssertNotNil(results, @"results");
+    STAssertTrue([results isKindOfClass:[NSArray class]],
+                 @"[results isKindOfClass:[NSArray class]]");
+    STAssertTrue([results count] == 1, @"[results count] == 1");
+    STAssertTrue(![[results objectAtIndex:0] isKindOfClass:[NSError class]],
+                 @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
+    STAssertTrue([[results objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+                 @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
+
+    id<FBGraphUser> me = [results objectAtIndex:0];
     STAssertNotNil(me.id, @"me.id");
     STAssertNotNil(me.name, @"me.name");
 }
@@ -63,10 +72,12 @@
                                                         session:session];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
 
-    STAssertNotNil(responses,
-                   @"responses");
-    STAssertTrue([responses count] == 1,
-                 @"[responses count] == 1");
+    STAssertNotNil(responses, @"responses");
+    STAssertTrue([responses isKindOfClass:[NSArray class]],
+                 @"[responses isKindOfClass:[NSArray class]]");
+    STAssertTrue([responses count] == 1, @"[responses count] == 1");
+    STAssertTrue(![[responses objectAtIndex:0] isKindOfClass:[NSError class]],
+                 @"![[responses objectAtIndex:0] isKindOfClass:[NSError class]]");
     STAssertTrue([[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"[[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
@@ -88,6 +99,16 @@
                                                                   searchText:nil 
                                                                      session:session];
     NSArray *response = [self sendRequests:searchRequest, nil];
+
+    STAssertNotNil(response, @"response");
+    STAssertTrue([response isKindOfClass:[NSArray class]],
+                 @"[response isKindOfClass:[NSArray class]]");
+    STAssertTrue([response count] == 1, @"[response count] == 1");
+    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+                 @"![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
+    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+                 @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
+
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
     
@@ -110,6 +131,16 @@
                                                                   searchText:@"Lincoln Memorial" 
                                                                      session:session];
     NSArray *response = [self sendRequests:searchRequest, nil];
+
+    STAssertNotNil(response, @"response");
+    STAssertTrue([response isKindOfClass:[NSArray class]],
+                 @"[response isKindOfClass:[NSArray class]]");
+    STAssertTrue([response count] == 1, @"[response count] == 1");
+    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+                 @"![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
+    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+                 @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
+
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
     
