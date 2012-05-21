@@ -20,60 +20,150 @@
 
 @protocol FBFriendPickerDelegate;
 
+/*! 
+ @class
+ 
+ @abstract 
+ FBFriendPickerViewController object is used to create and coordinate UI
+ for viewing and selecting friends.
+ */
 @interface FBFriendPickerViewController : UIViewController
 
+/*!
+ @abstract
+ Outlet for the spinner object used by the view controller
+ */
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
+
+/*!
+ @abstract
+ Outlet for the tableView used by the view controller
+ */
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
+/*!
+ @abstract
+ specifies whether multi-selelect is enabled
+ */
 @property (nonatomic) BOOL allowsMultipleSelection;
+
+/*!
+ @abstract
+ Optional delegate
+ */
 @property (nonatomic, assign) id<FBFriendPickerDelegate> delegate;
+
+/*!
+ @abstract
+ Indicates whether pictures are enabled for the items
+ */
 @property (nonatomic) BOOL itemPicturesEnabled;
+
+/*!
+ @abstract
+ Fields to use when fetching data for the view
+ */
 @property (nonatomic, copy) NSSet *fieldsForRequest;
+
+/*!
+ @abstract
+ Indicates the session to use with the view
+ */
 @property (nonatomic, retain) FBSession *session;
+
+/*!
+ @abstract
+ Indicates the fbid of the user whose friends are being viewed
+ */
 @property (nonatomic, copy) NSString *userID;
 
-// The list of people that are currently selected in the veiw.
-// The items in the array are id<FBGraphUser>.
+/*!
+ @abstract
+ The list of people that are currently selected in the veiw.
+ The items in the array are id<FBGraphUser>.
+ */
 @property (nonatomic, retain, readonly) NSArray *selection;
 
+/*!
+ @abstract
+ Used to initialize the object
+ */
 - (id)init;
+
+/*!
+ @abstract
+ Used to initialize the object
+ */
 - (id)initWithCoder:(NSCoder *)aDecoder;
+
+/*!
+ @abstract
+ Used to initialize the object
+ */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
-// Starts a query against the server for a set of friends.  It is legal
-// to call this more than once.
+/*!
+ @abstract
+ Starts a query against the server for a set of friends.  It is legal
+ to call this more than once.
+ */
 - (void)loadData;
 
-// Updates the view locally without requerying data from the server.
-// Use this if filter/sort properties change that would affect which
-// people appear or what order they appear in.
+/*!
+ @abstract
+ Updates the view locally without requerying data from the server.
+ 
+ @discussion
+ Use this if filter/sort properties change that would affect which
+ people appear or what order they appear in.
+ */
 - (void)updateView;
 
 @end
 
-// An optional protocol that enables deeper control of certain aspects
-// of the view.
+/*! 
+ @protocol
+ 
+ @abstract 
+ Used by the FBFriendPickerViewController to (optionally) notify clients of events and allow for
+ deeper control of the view
+ */
 @protocol FBFriendPickerDelegate <NSObject>
 @optional
 
-// Called whenever data is loaded.
-//
-// The tableView is automatically reloaded when this happens, but if
-// another tableView (such as for a UISearchBar) is showing data then
-// it may need to be reloaded too.
+/*!  
+ @abstract 
+ Called whenever data is loaded.
+
+ @discussion
+ The tableView is automatically reloaded when this happens, but if
+ another tableView (such as for a UISearchBar) is showing data then
+ it may need to be reloaded too.
+ */
 - (void)friendPickerViewControllerDataDidChange:
 (FBFriendPickerViewController *)friendPicker;
 
-// Called whenever the selection changes.
+/*!  
+ @abstract
+ Called whenever the selection changes.
+ */
 - (void)friendPickerViewControllerSelectionDidChange:
 (FBFriendPickerViewController *)friendPicker;
 
-// Called on each user to determine whether they show up in the list.
-// This can be used to implement a search bar that filters the list.
+/*!  
+ @abstract
+ Called on each user to determine whether they show up in the list.
+ 
+ @discussion
+ This can be used to implement a search bar that filters the list.
+ */
 - (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                  shouldIncludeUser:(id <FBGraphUser>)user;
 
-// Called if there is a communication error.
+/*!  
+ @abstract
+ Called if there is a communication error.
+ */
 - (void)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                        handleError:(NSError *)error;
 

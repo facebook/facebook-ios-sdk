@@ -19,19 +19,7 @@
 #import "FBGraphObject.h"
 #import "FBURLConnection.h"
 
-@interface FBGraphObjectTableDataSource () {
-    NSArray *_data;
-    UIImage *_defaultPicture;
-    id<FBGraphObjectViewControllerDelegate> _controllerDelegate;
-    NSString *_groupByField;
-    NSArray *_indexKeys;
-    NSDictionary *_indexMap;
-    BOOL _itemPicturesEnabled;
-    BOOL _itemSubtitleEnabled;
-    NSMutableSet *_pendingURLConnections;
-    id<FBGraphObjectSelectionQueryDelegate> _selectionDelegate;
-    NSArray *_sortDescriptors;
-}
+@interface FBGraphObjectTableDataSource ()
 
 @property (nonatomic, retain) NSArray *data;
 @property (nonatomic, retain) NSArray *indexKeys;

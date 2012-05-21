@@ -16,30 +16,78 @@
 
 #import <Foundation/Foundation.h>
 
-
-// FBSessionTokenCachingStrategy
-//
-// Summary:
-// Implementors execute token and expiration-date caching and fetching logic
-// for a Facebook integrated application
-//
+/*! 
+ @class
+ 
+ @abstract
+ Implementors execute token and expiration-date caching and fetching logic
+ for a Facebook integrated application
+ 
+ @discussion
+ FBSessionTokenCachingStrategy is designed to be used as a base class. Inheritors should override
+ cacheTokenInformation, fetchTokenInformation, and clearToken. This enables any token caching scheme
+ to be used by an application, including no token-caching at all. Implementing a custom FBSessionTokenCachingStrategy
+ is an advanced technique; most applications will use the default token caching strategy implemented by the SDK.
+ @unsorted
+ */
 @interface FBSessionTokenCachingStrategy : NSObject
 
+/*!
+ @abstract Initializes and returns an instance
+ */
 - (id)init;
+
+/*!
+ @abstract 
+ Initializes and returns an instance
+ 
+ @param tokenInformationKeyName     Specifies a key name to use for cached token information in NSUserDefaults, nil
+                                    indicates a default value of @"FBAccessTokenInformationKey"
+ */
 - (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName;
 
+/*!
+ @abstract 
+ Called by FBSession (and overridden by inheritors), in order to cache token information.
+ 
+ @param tokenInformation            Dictionary containing token information to be cached by the method
+ */
 - (void)cacheTokenInformation:(NSDictionary*)tokenInformation;
 
-// an overriding implementation should only return a token if it
-// can also return an expiration date, otherwise return nil
+/*!
+ @abstract 
+ Called by FBSession (and overridden by inheritors), in order to fetch cached token information
+ 
+ @discussion
+ An overriding implementation should only return a token if it
+ can also return an expiration date, otherwise return nil
+ */
 - (NSDictionary*)fetchTokenInformation;
 
-// an overriding implementation should be able to tolerate a nil or
-// already cleared token value
+/*!
+ @abstract 
+ Called by FBSession (and overridden by inheritors), in order delete any cached information for a given token
+ 
+ @discussion
+ Not all implementations will make use of the token value passedas an argument; however advanced implementations
+ may need the token value in order to locate and delete the cache. An overriding implementation must be able to
+ tolerate a nil token, as well as a token value for which no cached information exists
+ */
 - (void)clearToken:(NSString*)token;
 
+/*!
+ @abstract 
+ Helper function called by the SDK as well as apps, in order to fetch the default strategy instance.
+ */
 + (FBSessionTokenCachingStrategy*)defaultInstance;
 
+/*!
+ @abstract 
+ Helper function called by the SDK as well as application code, used to determine whether a given dictionary
+ contains the minimum token information usable by the FBSession.
+ 
+ @param tokenInformation            Dictionary containing token information to be validated
+ */
 + (BOOL)isValidTokenInformation:(NSDictionary*)tokenInformation;
 
 @end

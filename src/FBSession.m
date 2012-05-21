@@ -78,25 +78,12 @@ static NSSet *g_loggingBehavior;
 
 @interface FBSession () <FBLoginDialogDelegate> {
     @private
-    // public property ivars
-    FBSessionState _status;
-    NSString *_appID;
+    // public-property ivars
     NSString *_urlSchemeSuffix;
-    NSString *_accessToken;
-    NSString *_testUserID;
-    NSDate *_expirationDate;
-    NSArray *_permissions;
 
     // private property and non-property ivars
     BOOL _isInStateTransition;
-    BOOL _isSSOToken;
-    NSDate *_attemptedRefreshDate;
-    NSDate *_refreshDate;    
-    FBSessionStatusHandler _loginHandler;
-    FBLoginDialog *_loginDialog;
-    NSThread *_affinitizedThread;
-    // in app-use cases this value is always non-nil, for unit testing this value is nil
-    FBSessionTokenCachingStrategy *_tokenCachingStrategy;
+    BOOL _isSSOToken;    
 }
 
 // private setters
@@ -150,6 +137,26 @@ static NSSet *g_loggingBehavior;
 @end
 
 @implementation FBSession : NSObject
+
+@synthesize
+            // public properties
+            appID = _appID,
+            permissions = _permissions,
+
+            // following properties use manual KVO -- changes to names require
+            // changes to static property name variables (e.g. FBisValidPropertyName)
+            status = _status,
+            accessToken = _accessToken,
+            expirationDate = _expirationDate,
+
+            // private properties
+            tokenCachingStrategy = _tokenCachingStrategy,
+            refreshDate = _refreshDate,
+            attemptedRefreshDate = _attemptedRefreshDate,
+            loginDialog = _loginDialog,
+            affinitizedThread = _affinitizedThread,
+            testUserID = _testUserID,
+            loginHandler = _loginHandler;
 
 #pragma mark Lifecycle
 
@@ -302,19 +309,6 @@ static NSSet *g_loggingBehavior;
 
 #pragma mark -
 #pragma mark Public Members
-
-@synthesize appID = _appID,
-            permissions = _permissions,
-            attemptedRefreshDate = _attemptedRefreshDate,
-            refreshDate = _refreshDate,
-            loginHandler = _loginHandler,
-            // following properties use manual KVO -- changes to names require
-            // changes to static property name variables (e.g. FBisValidPropertyName)
-            status = _status,
-            accessToken = _accessToken,
-            expirationDate = _expirationDate,
-            testUserID = _testUserID;
-
 
 - (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
     [self loginWithBehavior:FBSessionLoginBehaviorSSOWithFallback completionHandler:handler];
@@ -509,10 +503,6 @@ static NSSet *g_loggingBehavior;
 
 #pragma mark -
 #pragma mark Private Members
-
-@synthesize     tokenCachingStrategy = _tokenCachingStrategy,
-                loginDialog = _loginDialog,
-                affinitizedThread = _affinitizedThread;
 
 // private methods are broken into two categories: core session and helpers
 

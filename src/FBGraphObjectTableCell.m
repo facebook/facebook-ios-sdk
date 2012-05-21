@@ -36,12 +36,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 @end
 
-@implementation FBGraphObjectTableCell {
-@private
-    UIImageView *_pictureView;
-    UILabel *_subtitleLabel;
-    UILabel *_titleLabel;
-}
+@implementation FBGraphObjectTableCell
 
 @synthesize pictureView = _pictureView;
 @synthesize titleLabel = _titleLabel;

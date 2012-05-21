@@ -56,6 +56,7 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
 // Private class to store requests and their metadata.
 //
 @interface FBRequestMetadata : NSObject
+
 @property (nonatomic, retain) FBRequest *request;
 @property (nonatomic, copy) FBRequestHandler completionHandler;
 @property (nonatomic, copy) NSString *batchEntryName;
@@ -63,9 +64,11 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
 - (id) initWithRequest:(FBRequest *)request
      completionHandler:(FBRequestHandler)handler
         batchEntryName:(NSString *)name;
+
 @end
 
 @implementation FBRequestMetadata
+
 @synthesize batchEntryName = _batchEntryName;
 @synthesize completionHandler = _completionHandler;
 @synthesize request = _request;

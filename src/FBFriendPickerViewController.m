@@ -40,14 +40,6 @@ static NSString *defaultImageName =
 
 @implementation FBFriendPickerViewController {
     BOOL _allowsMultipleSelection;
-    FBRequestConnection *_connection;
-    FBGraphObjectTableDataSource *_dataSource;
-    id<FBFriendPickerDelegate> _delegate;
-    NSSet *_fieldsForRequest;
-    FBGraphObjectTableSelection *_selectionManager;
-    UIActivityIndicatorView *_spinner;
-    UITableView *_tableView;
-    NSString *_userID;
 }
 
 @synthesize dataSource = _dataSource;

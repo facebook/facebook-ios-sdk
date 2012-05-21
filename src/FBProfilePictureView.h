@@ -16,24 +16,61 @@
 
 #import <UIKit/UIKit.h>
 
-typedef enum _FBProfilePictureSize {
+/*! 
+ @typedef FBProfilePictureSize enum
+ 
+ @abstract 
+ Type used to specify the size and format of the profile picture
+ 
+ @discussion
+ */
+typedef enum {
+    /*! Square (default) */
     FBProfilePictureSizeSquare      = 0,
+    
+    /*! Small */
     FBProfilePictureSizeSmall       = 1,
+    
+    /*! Normal */
     FBProfilePictureSizeNormal      = 2,
+    
+    /*! Large */
     FBProfilePictureSizeLarge       = 3
 } FBProfilePictureSize;
 
+/*!
+ @class
+ @abstract
+ View used to display a profile picture
+ */
 @interface FBProfilePictureView : UIView
 
+/*!
+ @abstract
+ Specifies the fbid for the user, place or object for which a picture should be fetched and displayed
+ */
 @property (copy, nonatomic) NSString* userID;
+
+/*!
+ @abstract
+ Specifies the format and size of the picture displayed
+ */
 @property (nonatomic) FBProfilePictureSize pictureSize;
 
-// inits and returns a ProfilePictureView
-//
-// Summary:
-//  Initializes the profile view with the specified user id and picture size.
-//  Picture size can be one of FBProfilePictureSize enum.
+/*!
+ @abstract
+ Initializes and returns a ProfilePictureView
+ */
 - (id)init;
+
+/*!
+ @abstract
+ Initializes and returns a ProfilePictureView
+ 
+ @param userID          Specifies the fbid for the object for which a picture should be fetched and displayed
+ @param pictureSize     Specifies the format and size of the picture displayed; picture size 
+                        can be one of FBProfilePictureSize enum.
+ */
 - (id)initWithUserID:(NSString*)userID 
       andPictureSize:(FBProfilePictureSize)pictureSize;
 

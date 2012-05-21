@@ -17,11 +17,7 @@
 #import "FBGraphObjectTableSelection.h"
 #import "FBUtility.h"
 
-@interface FBGraphObjectTableSelection() <UITableViewDelegate, FBGraphObjectSelectionQueryDelegate> {
-    FBGraphObjectTableDataSource *_dataSource;
-    id<FBGraphObjectSelectionChangedDelegate> _delegate;
-    NSArray *_selection;
-}
+@interface FBGraphObjectTableSelection() <UITableViewDelegate, FBGraphObjectSelectionQueryDelegate> 
 
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) NSArray *selection;
