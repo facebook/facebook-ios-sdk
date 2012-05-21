@@ -18,21 +18,65 @@
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"
 
-// FBGraphUser protocol (graph accessor)
-//
-// Summary:
-// represents commonly used properties of a Facebook User object, may be used to access an
-// NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
-// enable typed access to Facebook graph objects
+/*!
+ @protocol 
+ 
+ @abstract
+ A graph accessor protocol used to access facebook user information
+ 
+ @discussion
+ Represents commonly used properties of a Facebook User object, may be used to access an
+ NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
+ enable typed access to Facebook graph objects
+ */
 @protocol FBGraphUser<FBGraphObject>
 
+/*!
+ @property
+ @abstract Typed access to user's id
+ */
 @property (retain, nonatomic) NSString *id;
+
+/*!
+ @property
+ @abstract Typed access to user's name
+ */
 @property (retain, nonatomic) NSString *name;
+
+/*!
+ @property
+ @abstract Typed access to user's first name
+ */
 @property (retain, nonatomic) NSString *first_name;
+
+/*!
+ @property
+ @abstract Typed access to user's last name
+ */
 @property (retain, nonatomic) NSString *last_name;
+
+/*!
+ @property 
+ @abstract Typed access to user's link
+ */
 @property (retain, nonatomic) NSString *link;
+
+/*!
+ @property 
+ @abstract Typed access to user's username
+ */
 @property (retain, nonatomic) NSString *username;
+
+/*!
+ @property 
+ @abstract Typed access to user's birthday
+ */
 @property (retain, nonatomic) NSString *birthday;
+
+/*!
+ @property 
+ @abstract Typed access to user's location
+ */
 @property (retain, nonatomic) id<FBGraphLocation> location;
 
 @end

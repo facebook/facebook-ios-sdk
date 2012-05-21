@@ -18,17 +18,41 @@
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"
 
-// FBGraphPlace protocol (graph accessor)
-//
-// Summary:
-// represents commonly used properties of a Facebook place object, may be used to access an 
-// NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
-// enable typed access to Facebook graph objects
+/*!
+ @protocol 
+ 
+ @abstract
+ A graph accessor protocol used to access information about places
+ 
+ @discussion
+ Represents commonly used properties of a Facebook place object, may be used to access an 
+ NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
+ enable typed access to Facebook graph objects
+ */
 @protocol FBGraphPlace<FBGraphObject>
 
+/*!
+ @property
+ @abstract Typed access to place's id
+ */
 @property (retain, nonatomic) NSString *id;
+
+/*!
+ @property
+ @abstract Typed access to place's name
+ */
 @property (retain, nonatomic) NSString *name;
+
+/*!
+ @property
+ @abstract Typed access to place's id
+ */
 @property (retain, nonatomic) NSString *category;
+
+/*!
+ @property
+ @abstract Typed access to place's id
+ */
 @property (retain, nonatomic) id<FBGraphLocation> location;
 
 @end

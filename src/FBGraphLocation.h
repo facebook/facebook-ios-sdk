@@ -17,20 +17,58 @@
 #import <Foundation/Foundation.h>
 #import "FBGraphObject.h"
 
-// FBGraphLocation protocol (graph accessor)
-//
-// Summary:
-// represents commonly used properties of a Facebook place object, may be used to access an 
-// NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
-// enable typed access to Facebook graph objects
+/*!
+ @protocol
+ 
+ @abstract
+ A graph accessor protocol used to access location information
+ 
+ @discussion
+ Represents commonly used properties of a Facebook place object, may be used to access an NSDictionary object for which
+ the graphObjectWrappingDictionary method has been called; graph accessors enable typed access to Facebook graph objects
+ */
 @protocol FBGraphLocation<FBGraphObject>
 
+/*!
+ @property
+ @abstract Typed access to location's street
+ */
 @property (retain, nonatomic) NSString *street;
+
+/*!
+ @property
+ @abstract Typed access to location's city
+ */
 @property (retain, nonatomic) NSString *city;
+
+/*!
+ @property
+ @abstract Typed access to location's state
+ */
 @property (retain, nonatomic) NSString *state;
+
+/*!
+ @property
+ @abstract Typed access to location's country
+ */
 @property (retain, nonatomic) NSString *country;
+
+/*!
+ @property
+ @abstract Typed access to location's zip
+ */
 @property (retain, nonatomic) NSString *zip;
+
+/*!
+ @property
+ @abstract Typed access to location's latitude
+ */
 @property (retain, nonatomic) NSNumber *latitude; 
+
+/*!
+ @property
+ @abstract Typed access to location's longitude
+ */
 @property (retain, nonatomic) NSNumber *longitude;
 
 @end

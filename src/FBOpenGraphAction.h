@@ -20,28 +20,106 @@
 @protocol FBGraphPlace;
 @protocol FBGraphUser;
 
-// FBOpenGraphAction protocol (graph accessor)
-//
-// Summary:
-// represents an Open Graph custom action, to be used directly, or from which to
-// derive custom action protocols with custom properties
+/*!
+ @protocol
+ 
+ @abstract
+ A graph accessor recognized by the SDK to indicate a custom Open Graph action
+ 
+ @discussion
+ Represents an Open Graph custom action, to be used directly, or from which to
+ derive custom action protocols with custom properties
+ */
 @protocol FBOpenGraphAction<FBGraphObject>
 
+/*!
+ @property
+ @abstract Typed access to action's id
+ */
 @property (retain, nonatomic) NSString              *id;
+
+/*!
+ @property
+ @abstract Typed access to action's start time
+ */
 @property (retain, nonatomic) NSString              *start_time;
+
+/*!
+ @property
+ @abstract Typed access to action's end time
+ */
 @property (retain, nonatomic) NSString              *end_time;
+
+/*!
+ @property
+ @abstract Typed access to action's publication time
+ */
 @property (retain, nonatomic) NSString              *publish_time;
+
+/*!
+ @property
+ @abstract Typed access to action's creation time
+ */
 @property (retain, nonatomic) NSString              *created_time;
+
+/*!
+ @property
+ @abstract Typed access to action's expiration time
+ */
 @property (retain, nonatomic) NSString              *expires_time;
+
+/*!
+ @property
+ @abstract Typed access to action's ref
+ */
 @property (retain, nonatomic) NSString              *ref;
+
+/*!
+ @property
+ @abstract Typed access to action's user message
+ */
 @property (retain, nonatomic) NSString              *user_message;
 
+/*!
+ @property
+ @abstract Typed access to action's place
+ */
 @property (retain, nonatomic) id<FBGraphPlace>      place;
+
+/*!
+ @property
+ @abstract Typed access to action's tags
+ */
 @property (retain, nonatomic) NSArray               *tags;
+
+/*!
+ @property
+ @abstract Typed access to action's images
+ */
 @property (retain, nonatomic) NSArray               *image;
+
+/*!
+ @property
+ @abstract Typed access to action's from-user
+ */
 @property (retain, nonatomic) id<FBGraphUser>       from;
+
+/*!
+ @property
+ @abstract Typed access to action's likes
+ */
 @property (retain, nonatomic) NSArray               *likes;
+
+/*!
+ @property
+ @abstract Typed access to action's application
+ */
 @property (retain, nonatomic) id<FBGraphObject>     application;
+
+/*!
+ @property
+ @abstract Typed access to action's comments
+ */
 @property (retain, nonatomic) NSArray               *comments;
 
 @end
