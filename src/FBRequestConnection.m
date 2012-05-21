@@ -40,7 +40,7 @@ NSString *const kBatchFileNamePrefix = @"file";
 
 NSString *const kAccessTokenKey = @"access_token";
 NSString *const kSDK = @"ios";
-NSString *const kSDKVersion = @"2";
+NSString *const kSDKVersion = @"3";
 NSString *const kUserAgentBase = @"FBiOSSDK";
 NSString *const kBundleVersionKey = @"CFBundleVersion";
 
