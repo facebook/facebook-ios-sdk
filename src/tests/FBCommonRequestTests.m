@@ -177,7 +177,7 @@
 {
     __block FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
 
-    FBSessionStatusHandler handler = ^(FBSession *session,
+    FBSessionStateHandler handler = ^(FBSession *session,
                                        FBSessionState status,
                                        NSError *error) {
         STAssertTrue(!error, @"!error");
@@ -185,10 +185,10 @@
         [blocker signal];
     };
 
-    [session loginWithCompletionHandler:handler];
+    [session openWithCompletionHandler:handler];
 
     [blocker wait];
-    STAssertTrue(session.isValid, @"session.isValid");
+    STAssertTrue(session.isOpen, @"session.isOpen");
 
     return session;
 }

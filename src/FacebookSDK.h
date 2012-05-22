@@ -101,10 +101,10 @@
  
  // log on to Facebook
  _fbsession = [[FBSession alloc] init];
- [_fbsession loginWithCompletionBlock:^(FBSession *session, 
-                                        FBSessionStatus status, 
-                                        NSError *error) {
-     if (session.isValid) {
+ [_fbsession openWithCompletionBlock:^(FBSession *session, 
+                                       FBSessionStatus status, 
+                                       NSError *error) {
+     if (session.isOpen) {
          // request basic information for the user
          [FBRequest startRequestWithSession:session
                                   graphPath:@"me"

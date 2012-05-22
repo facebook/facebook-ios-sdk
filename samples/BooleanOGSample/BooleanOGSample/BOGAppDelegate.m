@@ -34,7 +34,7 @@
     [self.window makeKeyAndVisible];
     
     self.session = [[FBSession alloc] initWithPermissions:[NSArray arrayWithObjects:@"publish_actions", nil]];
-    [self.session loginWithCompletionHandler:
+    [self.session openWithCompletionHandler:
      ^(FBSession *session, FBSessionState status, NSError *error) 
      {
          if (error) {

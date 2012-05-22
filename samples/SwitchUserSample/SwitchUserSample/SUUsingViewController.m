@@ -51,7 +51,7 @@
     SUUserManager *userManager = appDelegate.userManager;
     
     if (userManager.currentUserSlot != -1 &&
-        userManager.currentSession.isValid) {
+        userManager.currentSession.isOpen) {
         // There could be a delay while we retrieve user profile. Hide controls until data is there.
         self.nameLabel.hidden = YES;
         self.picView.hidden = YES;

@@ -153,7 +153,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 - (void)invalidateSession {
     
-    [self.session invalidate];
+    [self.session close];
     [self.tokenCaching clearToken:nil];
     
     [FBSession deleteFacebookCookies];
@@ -242,7 +242,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
         // invalidate current session and create a new one with the same permissions
         NSArray *permissions = self.session.permissions;
-        [self.session invalidate];    
+        [self.session close];    
         self.session = [[[FBSession alloc] initWithAppID:_appId
                                              permissions:permissions 
                                          urlSchemeSuffix:_urlSchemeSuffix 
@@ -250,7 +250,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                            autorelease];
     
         // get the session into a valid state
-        [self.session loginWithCompletionHandler:nil];
+        [self.session openWithCompletionHandler:nil];
     }
 }
 
@@ -289,7 +289,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 - (void)authorize:(NSArray *)permissions {
     
     // if we already have a session, git rid of it
-    [self.session invalidate];
+    [self.session close];
     self.session = nil;
     [self.tokenCaching clearToken:nil];
     
@@ -299,13 +299,13 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                                  tokenCacheStrategy:self.tokenCaching]
                     autorelease];
     
-    [self.session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [self.session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         switch (status) {
-            case FBSessionStateLoggedIn:
+            case FBSessionStateOpen:
                 // call the legacy session delegate
                 [self fbDialogLogin:session.accessToken expirationDate:session.expirationDate];
                 break;
-            case FBSessionStateLoginFailed:
+            case FBSessionStateClosedLoginFailed:
                 { // prefer to keep decls near to their use
                     
                     // unpack the error code and reason in order to compute cancel bool

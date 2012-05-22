@@ -115,7 +115,7 @@
     SUUserManager *userManager = appDelegate.userManager;
     FBSession *session = userManager.currentSession;
     
-    if (session.isValid) {       
+    if (session.isOpen) {       
         FBRequest *me = [FBRequest requestForMeWithSession:session];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
 
@@ -143,9 +143,9 @@
         
         [requestConnection start];
     } else {
-        if (session.status == FBSessionStateLoadedValidToken) {
+        if (session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
-            [session loginWithCompletionHandler:^(FBSession *session, 
+            [session openWithCompletionHandler:^(FBSession *session, 
                                                   FBSessionState status, 
                                                   NSError *error) {
                 [self updateForSessionChangeForSlot:slot];
@@ -186,10 +186,10 @@
     FBSession *session = [userManager switchToUserInSlot:slot];
     [self updateCellForSlot:slot];
 
-    [session loginWithBehavior:behavior
-             completionHandler:^(FBSession *session,
-                                 FBSessionState status,
-                                 NSError *error) {
+    [session openWithBehavior:behavior
+            completionHandler:^(FBSession *session,
+                                FBSessionState status,
+                                NSError *error) {
         if (error) {
             [userManager switchToNoActiveUser];
         }

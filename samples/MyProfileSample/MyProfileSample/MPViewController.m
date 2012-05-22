@@ -58,7 +58,7 @@
 - (void)updateForSessionChange {
     // get the app delegate
     MPAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    if (appDelegate.session.isValid) {        
+    if (appDelegate.session.isOpen) {        
         // valid account UI
         
         // Once logged in, get "my" information.
@@ -102,11 +102,11 @@
         
         // create a fresh session object in case of subsequent login
         appDelegate.session = [[FBSession alloc] init]; 
-        if (appDelegate.session.status == FBSessionStateLoadedValidToken) {
+        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
-            [appDelegate.session loginWithCompletionHandler:^(FBSession *session, 
-                                                              FBSessionState status, 
-                                                              NSError *error) {
+            [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
+                                                             FBSessionState status, 
+                                                             NSError *error) {
                 [self updateForSessionChange];
             }];
         }
@@ -121,14 +121,14 @@
     MPAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     
     // this button's job is to flip-flop the session from valid to invalid
-    if (appDelegate.session.isValid) {
+    if (appDelegate.session.isOpen) {
         // if a user logs out explicitly, we logout the session, which deletes any cached token 
-        [appDelegate.session logout];
+        [appDelegate.session closeAndClearTokenInformation];
     } else {
         // in order to get the FBSession object up and running
-        [appDelegate.session loginWithCompletionHandler:^(FBSession *session, 
-                                                          FBSessionState status, 
-                                                          NSError *error) {
+        [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
+                                                         FBSessionState status, 
+                                                         NSError *error) {
             [self updateForSessionChange];
         }];
     } 

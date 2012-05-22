@@ -36,7 +36,7 @@
 {
     // FBSample logic
     // if the app is going away, we invalidate the token if present
-    [self.session invalidate];
+    [self.session close];
 }
 
 #pragma mark Template generated code

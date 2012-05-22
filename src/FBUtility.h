@@ -28,3 +28,5 @@
 + (unsigned long)currentTimeInMilliseconds; 
 
 @end
+
+#define FB_BASE_URL @"facebook.com"

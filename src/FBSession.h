@@ -20,11 +20,11 @@
 @class FBSession;
 @class FBSessionTokenCachingStrategy;
 
-/*! helper macro to test for states that imply a valid session */
+/*! helper macro to test for states that imply a open session */
 #define FB_SESSIONSTATETERMINALBIT (1 << 8)
 
 /*! helper macro to test for states that are terminal */
-#define FB_SESSIONSTATEVALIDBIT (1 << 9)
+#define FB_SESSIONSTATEOPENBIT (1 << 9)
 
 /*
  * Constants defining logging behavior.  Use with [FBSession setLoggingLevel]
@@ -45,34 +45,32 @@
 /*! 
  @typedef FBSessionState enum
  
- @abstract Passed to handler block when a login call has completed
+ @abstract Passed to handler block each time a session state changes
  
  @discussion
  */
 typedef enum {
     /*! One of two initial states indicating that no valid cached token was found */
-    FBSessionStateCreated               = 0,
-    /*! One of two initial session states indicating that a valid cached token was loaded;
-     when a session is in this state, a call to login* will result in a valid session,
+    FBSessionStateCreated                   = 0,
+    /*! One of two initial session states indicating that a cached token was loaded;
+     when a session is in this state, a call to open* will result in an open session,
      without UX or app-switching*/
-    FBSessionStateLoadedValidToken      = 1,
+    FBSessionStateCreatedTokenLoaded        = 1,
     
-    /*! Valid session state indicating user is logged in */
-    FBSessionStateLoggedIn              = 1 | FB_SESSIONSTATEVALIDBIT,
-    /*! Valid session state indicating token has been extended */
-    FBSessionStateExtendedToken         = 2 | FB_SESSIONSTATEVALIDBIT,
+    /*! Open session state indicating user has logged in or a cached token is available */
+    FBSessionStateOpen                      = 1 | FB_SESSIONSTATEOPENBIT,
+    /*! Open session state indicating token has been extended */
+    FBSessionStateOpenTokenExtended         = 2 | FB_SESSIONSTATEOPENBIT,
     
-    /*! Invalid session state indicating the user was logged out */
-    FBSessionStateLoggedOut             = 1 | FB_SESSIONSTATETERMINALBIT,
-    /*! Invalid session state indicating that a login attempt failed */
-    FBSessionStateLoginFailed           = 2 | FB_SESSIONSTATETERMINALBIT, // NSError obj w/more info
-    /*! Invalid session state indicating that the token was invalidated, but the users session 
+    /*! Closed session state indicating that a login attempt failed */
+    FBSessionStateClosedLoginFailed         = 1 | FB_SESSIONSTATETERMINALBIT, // NSError obj w/more info
+    /*! Closed session state indicating that the session was closed, but the users token 
         remains cached on the device for later use */
-    FBSessionStateInvalidated           = 3 | FB_SESSIONSTATETERMINALBIT, // "
+    FBSessionStateClosed                    = 2 | FB_SESSIONSTATETERMINALBIT, // "
 } FBSessionState;
 
-/*! helper macro to test for states that imply a valid session */
-#define FB_ISSESSIONVALIDWITHSTATE(state) (0 != (state & FB_SESSIONSTATEVALIDBIT))
+/*! helper macro to test for states that imply an open session */
+#define FB_ISSESSIONOPENWITHSTATE(state) (0 != (state & FB_SESSIONSTATEOPENBIT))
 
 /*! helper macro to test for states that are terminal */
 #define FB_ISSESSIONSTATETERMINAL(state) (0 != (state & FB_SESSIONSTATETERMINALBIT))
@@ -96,12 +94,12 @@ typedef enum {
 } FBSessionLoginBehavior;
 
 /*! 
- @typedef FBSessionStatusHandler block
+ @typedef
  
- @abstract Block type used to define blocks callable by FBSession for status updates
+ @abstract Block type used to define blocks callable by FBSession for state updates
  @discussion
  */
-typedef void (^FBSessionStatusHandler)(FBSession *session, 
+typedef void (^FBSessionStateHandler)(FBSession *session, 
                                        FBSessionState status, 
                                        NSError *error);
 
@@ -117,12 +115,9 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
  Instances of the FBSession class notifiy of state changes in these ways:
  
  a) callers of certain session* methods may provide a block to be called
- back in the course of processing the single operation (e.g. login)
+ back in the course of state transitions for the session (e.g. login, session closed, etc.)
  
- b) session instances post the "FBSessionLogin" and "FBSessionInvalid"
- notifications, which may be observed via NSNotificationCenter
- 
- c) the object supports KVO for property changes
+ b) the object supports KVO for property changes
  
  @unsorted
  */
@@ -180,11 +175,11 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 
 // instance readonly properties         
 
-/*! @abstract indicates whether the session is valid and ready for use with FBRequest, et al. */
-@property(readonly) BOOL isValid;                      
+/*! @abstract indicates whether the session is open and ready for use with FBRequest, et al. */
+@property(readonly) BOOL isOpen;                      
 
-/*! @abstract detailed session status */
-@property(readonly) FBSessionState status;              
+/*! @abstract detailed session state */
+@property(readonly) FBSessionState state;              
 
 /*! @abstract identifies the aplication which the session object represents */
 @property(readonly, copy) NSString *appID;              
@@ -208,17 +203,23 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
 /*! 
  @method
 
- @abstract logs a user on to Facebook
+ @abstract opens a session for a user on Facebook
 
  @description
- Login may be called zero or 1 time, and must be called after init, but before 
- logout or invalidate; calling login at an invalid time results in an exception;
- if a block is passed to login, it is called each time the sessions status 
- changes; the block is released when the session transitions to an invalid state
+ A session may not be used with FBRequest and other classes in the SDK until it is open. If, prior 
+ to calling open, the session is in the FBSessionStateCreatedTokenLoaded state, then no UX occurs, and 
+ the session becomes available for use. If the session is in the FBSessionStateCreated state, prior
+ to calling open, then a call to open causes login UX to occur, either via the Facebook application
+ or via Safari.
+ 
+ Open may be called zero or 1 time, and must be called after init, but before 
+ close; calling open at an invalid time results in an exception;
+ if a block is passed to open, it is called each time the sessions status 
+ changes; the block is released when the session transitions to an closed state
 
- @param handler                 a block to call with the login result; default=nil
+ @param handler                 a block to call with the state changes; default=nil
 */
-- (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler;
+- (void)openWithCompletionHandler:(FBSessionStateHandler)handler;
 
 /*! 
  @method
@@ -226,29 +227,35 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
  @abstract logs a user on to Facebook
  
  @description
- Login may be called zero or 1 time, and must be called after init, but before 
- logout or invalidate; calling login at an invalid time results in an exception;
- if a block is passed to login, it is called each time the sessions status 
- changes; the block is released when the session transitions to an invalid state
+ A session may not be used with FBRequest and other classes in the SDK until it is open. If, prior 
+ to calling open, the session is in the FBSessionStateCreatedTokenLoaded state, then no UX occurs, and 
+ the session becomes available for use. If the session is in the FBSessionStateCreated state, prior
+ to calling open, then a call to open causes login UX to occur, either via the Facebook application
+ or via Safari.
+ 
+ Open may be called zero or 1 time, and must be called after init, but before 
+ close; calling open at an invalid time results in an exception;
+ if a block is passed to open, it is called each time the sessions status 
+ changes; the block is released when the session transitions to an closed state
  
  @param behavior                control whether to allow/force/prohibit SSO (default
                                 is FBSessionLoginBehaviorSSOWithFallback)
- @param handler                 a block to call with the login result; default=nil
+ @param handler                 a block to call with state changes; default=nil
  */
-- (void)loginWithBehavior:(FBSessionLoginBehavior)behavior
-        completionHandler:(FBSessionStatusHandler)handler;
+- (void)openWithBehavior:(FBSessionLoginBehavior)behavior
+        completionHandler:(FBSessionStateHandler)handler;
 
 /*!
  @abstract
- Invalidates the local session object, and does not clear the persisted cache
+ Closes the local in-memory session object, but does not clear the persisted token cache
  */
-- (void)invalidate;
+- (void)close;
 
 /*!
  @abstract
- Logout invalidates the in-memory session, and clears any persisted cache
+ Closes the in-memory session, and clears any persisted cache related to the session
 */
-- (void)logout;
+- (void)closeAndClearTokenInformation;
 
 /*!
  @abstract
@@ -284,8 +291,8 @@ typedef void (^FBSessionStatusHandler)(FBSession *session,
  Constructor helper to create a session for use in unit tests
  
  @description
- This method creates a session object which creates a test user on login, and destroys the user on
- invalidate; This method should not be used in application code -- but is useful for creating unit tests
+ This method creates a session object which creates a test user on open, and destroys the user on
+ close; This method should not be used in application code -- but is useful for creating unit tests
  that use the Facebook iOS SDK.
  
  @param permissions     array of strings naming permissions to authorize; nil indicates 

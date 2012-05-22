@@ -28,7 +28,7 @@
 
 - (FBSession *)invalidateAndGetNewSession
 {
-    [self.session invalidate];
+    [self.session close];
     
     NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
     self.session = [[FBSession alloc] initWithPermissions:permissions];

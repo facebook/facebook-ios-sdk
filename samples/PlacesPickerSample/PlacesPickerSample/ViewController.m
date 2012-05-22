@@ -44,14 +44,14 @@ enum SampleLocation {
 - (void)refresh
 {
     AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isValid) {
+    if (appDelegate.session.isOpen) {
         self.session = appDelegate.session;
 
         // Default to Seattle
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
         [self loadData];
     } else {
-        [appDelegate.session loginWithCompletionHandler:
+        [appDelegate.session openWithCompletionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
             {
                 if (!error) {

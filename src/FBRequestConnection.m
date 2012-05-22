@@ -29,9 +29,9 @@
 #import "FBUtility.h"
 
 // URL construction constants
-NSString *const kGraphURL = @"https://graph.facebook.com";
-NSString *const kGraphBaseURL = @"https://graph.facebook.com/";
-NSString *const kRestBaseURL = @"https://api.facebook.com/method/";
+NSString *const kGraphURL = @"https://graph." FB_BASE_URL;
+NSString *const kGraphBaseURL = @"https://graph." FB_BASE_URL @"/";
+NSString *const kRestBaseURL = @"https://api." FB_BASE_URL @"/method/";
 NSString *const kBatchKey = @"batch";
 NSString *const kBatchMethodKey = @"method";
 NSString *const kBatchRelativeURLKey = @"relative_url";
@@ -843,7 +843,7 @@ typedef enum FBRequestConnectionState {
     } else {
         if ([self isInvalidSessionError:error resultIndex:0]) {
             [self.deprecatedRequest setSessionDidExpire:YES];
-            [self.deprecatedRequest.session invalidate];
+            [self.deprecatedRequest.session close];
         }
 
         [self.deprecatedRequest setError:error];
@@ -874,7 +874,7 @@ typedef enum FBRequestConnectionState {
 
         if ([self isInvalidSessionError:itemError 
                             resultIndex:error == itemError ? i : 0]) {
-            [metadata.request.session invalidate];
+            [metadata.request.session close];
         } else if ([metadata.request.session shouldExtendAccessToken]) {
             FBSession *session = metadata.request.session;
             FBRequest *request = [[FBRequest alloc] initWithSession:session

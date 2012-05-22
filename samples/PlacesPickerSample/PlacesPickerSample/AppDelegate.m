@@ -32,8 +32,8 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    // Invalidate the session token before quitting
-    [self.session invalidate];
+    // Close the session token before quitting
+    [self.session close];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions

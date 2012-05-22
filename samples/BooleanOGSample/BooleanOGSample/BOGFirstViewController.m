@@ -147,7 +147,7 @@
             result:(BOOL)result {
     // if we have a valid session, then we post the action to the users wall
     BOGAppDelegate* appDelegate = (BOGAppDelegate*)[UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isValid) {
+    if (appDelegate.session.isOpen) {
         
         // create an object to hold our action information
         id<BOGGraphBooleanAction> action = (id<BOGGraphBooleanAction>)[FBGraphObject graphObject];

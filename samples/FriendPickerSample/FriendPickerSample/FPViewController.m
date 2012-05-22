@@ -38,14 +38,14 @@
 - (void)sessionChanged
 {
     FPAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isValid) {
+    if (appDelegate.session.isOpen) {
         self.session = appDelegate.session;
         [self loadData];
     } else {
-        [appDelegate.session loginWithCompletionHandler:
+        [appDelegate.session openWithCompletionHandler:
          ^(FBSession *session, FBSessionState state, NSError *error) {
              switch (state) {
-                 case FBSessionStateLoggedIn:
+                 case FBSessionStateOpen:
                      if (!error) {
                          [self sessionChanged];
                      } else {

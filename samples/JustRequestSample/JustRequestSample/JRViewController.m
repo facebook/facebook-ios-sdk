@@ -57,12 +57,12 @@ static NSString *loadingText = @"Loading...";
 - (void)buttonRequestClickHandler:(id)sender
 {
     JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if ([appDelegate.session isValid]) {
+    if (appDelegate.session.isOpen) {
         [self sendRequests];
     } else {
         appDelegate.session = [[FBSession alloc] init];
 
-        FBSessionStatusHandler handler =
+        FBSessionStateHandler handler =
             ^(FBSession *session, 
               FBSessionState status, 
               NSError *error) {
@@ -73,12 +73,12 @@ static NSString *loadingText = @"Loading...";
                                                       cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
-            } else if (FB_ISSESSIONVALIDWITHSTATE(status)) {
+            } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
                 [self sendRequests];
             }
         };
 
-        [appDelegate.session loginWithCompletionHandler:handler];
+        [appDelegate.session openWithCompletionHandler:handler];
     }
 }
 

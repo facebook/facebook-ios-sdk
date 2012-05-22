@@ -36,7 +36,7 @@
 
 - (void)dealloc
 {
-    [_session invalidate];
+    [_session close];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -55,7 +55,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application
 {
-    [self.session invalidate];
+    [self.session close];
 }
 
 #pragma mark end Template generated code

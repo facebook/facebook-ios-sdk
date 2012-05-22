@@ -53,7 +53,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_unlock(&mutex);
 
     for (FBSession *session in sessions) {
-        [session invalidate];
+        [session close];
     }
     [sessions release];
 } 
@@ -90,7 +90,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
-    FBSessionStatusHandler handler = ^(FBSession *session,
+    FBSessionStateHandler handler = ^(FBSession *session,
                                        FBSessionState status,
                                        NSError *error) {
         STAssertTrue(!error, @"!error");
@@ -100,10 +100,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         blocker = nil;
     };
     
-    [session loginWithCompletionHandler:handler];
+    [session openWithCompletionHandler:handler];
     
     [blocker wait];
-    STAssertTrue(session.isValid, @"session.isValid");
+    STAssertTrue(session.isOpen, @"session.isOpen");
     
     return session;
 }

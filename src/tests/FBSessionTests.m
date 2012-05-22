@@ -36,13 +36,13 @@
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     
     FBSession *session = [FBSession sessionForUnitTestingWithPermissions:nil];
-    [session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
     
     [blocker wait];
     
-    STAssertTrue(session.isValid, @"Session should be valid, and is not");
+    STAssertTrue(session.isOpen, @"Session should be valid, and is not");
     
     [[FBRequest connectionWithSession:session
                             graphPath:@"me" 
@@ -54,7 +54,7 @@
     
     [blocker wait];
     
-    [session invalidate];
+    [session close];
 }
 
 // All code under test must be linked into the Unit Test bundle
@@ -66,8 +66,8 @@
     __block BOOL wasNotifiedOfInvalid = NO;
     
     FBSession *session = [FBSession sessionForUnitTestingWithPermissions:nil];
-    [session loginWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        if (status == FBSessionStateInvalidated) {
+    [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateClosed) {
             wasNotifiedOfInvalid = YES;
         }
         [blocker signal];
@@ -75,7 +75,7 @@
     
     [blocker wait];
     
-    STAssertTrue(session.isValid, @"Session should be valid, and is not");
+    STAssertTrue(session.isOpen, @"Session should be open, and is not");
     
     __block NSString *userID;
     [[FBRequest connectionWithSession:session
@@ -125,7 +125,7 @@
     [blocker wait];
     STAssertTrue(wasNotifiedOfInvalid, @"should have invalidated the token by now");
     
-    [session invalidate];
+    [session close];
 }
 
 @end

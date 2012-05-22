@@ -237,7 +237,7 @@
 
 - (void)populateUserDetails 
 {
-    if (self.session.isValid) {
+    if (self.session.isOpen) {
         FBRequestConnection *requestConnection = [FBRequest connectionWithSession:self.session
                                                                         graphPath:@"me"
                                                                 completionHandler:
@@ -283,7 +283,7 @@
     [super viewWillAppear:animated];
     
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session && appDelegate.session.isValid) {
+    if (appDelegate.session && appDelegate.session.isOpen) {
         if (appDelegate.session != self.session) {
             self.session = appDelegate.session;
             [self populateUserDetails];

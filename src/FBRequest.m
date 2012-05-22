@@ -19,7 +19,7 @@
 #import "FBUtility.h"
 
 // constants
-NSString *const FBGraphBasePath = @"https://graph.facebook.com";
+NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
 
 static NSString *const kGetHTTPMethod = @"GET";
 static NSString *const kPostHTTPMethod = @"POST";

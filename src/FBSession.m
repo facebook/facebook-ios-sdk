@@ -43,7 +43,7 @@ static NSString *const FBPLISTAppSecretKey = @"FacebookAppSecret";
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
 static NSString *const FBRedirectURL = @"fbconnect://success";
-static NSString *const FBDialogBaseURL = @"https://m.facebook.com/dialog/";
+static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
 static NSString *const FBLoginDialogMethod = @"oauth";
 static NSString *const FBLoginAuthTestUserURLPath = @"oauth/access_token";
 static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
@@ -87,7 +87,7 @@ static NSSet *g_loggingBehavior;
 }
 
 // private setters
-@property(readwrite) FBSessionState status;
+@property(readwrite) FBSessionState state;
 @property(readwrite, copy) NSString *appID;
 @property(readwrite, copy) NSString *urlSchemeSuffix;
 @property(readwrite, copy) NSString *accessToken;
@@ -98,7 +98,7 @@ static NSSet *g_loggingBehavior;
 @property(readwrite, retain) FBSessionTokenCachingStrategy *tokenCachingStrategy;
 @property(readwrite, copy) NSDate *refreshDate;
 @property(readwrite, copy) NSDate *attemptedRefreshDate;
-@property(readwrite, copy) FBSessionStatusHandler loginHandler;
+@property(readwrite, copy) FBSessionStateHandler loginHandler;
 @property(readonly) NSString *appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
@@ -145,7 +145,7 @@ static NSSet *g_loggingBehavior;
 
             // following properties use manual KVO -- changes to names require
             // changes to static property name variables (e.g. FBisValidPropertyName)
-            status = _status,
+            state = _state,
             accessToken = _accessToken,
             expirationDate = _expirationDate,
 
@@ -259,11 +259,11 @@ static NSSet *g_loggingBehavior;
         _isSSOToken = NO;
         self.attemptedRefreshDate = [NSDate distantPast];
         self.refreshDate = nil;
-        self.status = FBSessionStateCreated;
+        self.state = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
 
         //first notification
-        [self notifyOfState:self.status];
+        [self notifyOfState:self.state];
 
         // use cached token if present
         NSDictionary *tokenInfo = [tokenCachingStrategy fetchTokenInformation];
@@ -278,7 +278,7 @@ static NSSet *g_loggingBehavior;
                 _isSSOToken = [[tokenInfo objectForKey:FBTokenInformationIsSSOKey] boolValue];
                 
                 // set the state and token info
-                [self transitionToState:FBSessionStateLoadedValidToken
+                [self transitionToState:FBSessionStateCreatedTokenLoaded
                          andUpdateToken:cachedToken
                       andExpirationDate:cachedTokenExpirationDate
                             shouldCache:NO];
@@ -310,17 +310,17 @@ static NSSet *g_loggingBehavior;
 #pragma mark -
 #pragma mark Public Members
 
-- (void)loginWithCompletionHandler:(FBSessionStatusHandler)handler {
-    [self loginWithBehavior:FBSessionLoginBehaviorSSOWithFallback completionHandler:handler];
+- (void)openWithCompletionHandler:(FBSessionStateHandler)handler {
+    [self openWithBehavior:FBSessionLoginBehaviorSSOWithFallback completionHandler:handler];
 }
 
-- (void)loginWithBehavior:(FBSessionLoginBehavior)behavior
-    completionHandler:(FBSessionStatusHandler)handler {
+- (void)openWithBehavior:(FBSessionLoginBehavior)behavior
+    completionHandler:(FBSessionStateHandler)handler {
 
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
-    if (!(self.status == FBSessionStateCreated ||
-          self.status == FBSessionStateLoadedValidToken)) {
+    if (!(self.state == FBSessionStateCreated ||
+          self.state == FBSessionStateCreatedTokenLoaded)) {
         // login may only be called once, and only from one of the two initial states
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:@"FBSession: an attempt was made to login an already logged in or invalid"
@@ -332,7 +332,7 @@ static NSSet *g_loggingBehavior;
 
     if (!self.isForUnitTesting) {
         // normal login depends on the availability of a valid cached token
-        if (self.status == FBSessionStateCreated) {
+        if (self.state == FBSessionStateCreated) {
             BOOL trySSO = (behavior == FBSessionLoginBehaviorSSOOnly) ||
             (behavior == FBSessionLoginBehaviorSSOWithFallback);
             BOOL tryFallback = (behavior == FBSessionLoginBehaviorSSOWithFallback) ||
@@ -344,7 +344,7 @@ static NSSet *g_loggingBehavior;
         } else { // self.status == FBSessionStateLoadedValidToken
             // this case implies that a valid cached token was found, and preserves the
             // "1-session-1-identity" rule, by transitioning to logged in, without a transition to login UX
-            [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+            [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                               error:nil
                                               token:nil
                                      expirationDate:nil
@@ -359,21 +359,21 @@ static NSSet *g_loggingBehavior;
     }
 }
 
-- (void)invalidate {
+- (void)close {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
-    [self transitionAndCallHandlerWithState:FBSessionStateInvalidated
+    [self transitionAndCallHandlerWithState:FBSessionStateClosed
                                       error:nil
                                       token:nil
                              expirationDate:nil
                                 shouldCache:NO];
 }
 
-- (void)logout {
+- (void)closeAndClearTokenInformation {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
     [self.tokenCachingStrategy clearToken:self.accessToken];
-    [self transitionAndCallHandlerWithState:FBSessionStateLoggedOut
+    [self transitionAndCallHandlerWithState:FBSessionStateClosed
                                       error:nil
                                       token:nil
                              expirationDate:nil
@@ -426,7 +426,7 @@ static NSSet *g_loggingBehavior;
                                                     errorCode:errorCode];
 
         // state transition, and call the handler if there is one
-        [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+        [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                           error:error
                                           token:nil
                                  expirationDate:nil
@@ -447,7 +447,7 @@ static NSSet *g_loggingBehavior;
         self.refreshDate = [NSDate date];
 
         // set token and date, state transition, and call the handler if there is one
-        [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+        [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                           error:nil
                                           token:accessToken
                                  expirationDate:expirationDate
@@ -456,8 +456,8 @@ static NSSet *g_loggingBehavior;
     return YES;
 }
 
-- (BOOL)isValid {
-    return FB_ISSESSIONVALIDWITHSTATE(self.status);
+- (BOOL)isOpen {
+    return FB_ISSESSIONOPENWITHSTATE(self.state);
 }
 
 - (NSString*)urlSchemeSuffix {
@@ -519,34 +519,33 @@ static NSSet *g_loggingBehavior;
     BOOL isValidTransition;
     FBSessionState statePrior;
 
-    statePrior = self.status;
+    statePrior = self.state;
     switch (state) {
         default:
         case FBSessionStateCreated:
             isValidTransition = NO;
             break;
-        case FBSessionStateLoggedIn:
+        case FBSessionStateOpen:
             isValidTransition = (
                                  statePrior == FBSessionStateCreated ||
-                                 statePrior == FBSessionStateLoadedValidToken
+                                 statePrior == FBSessionStateCreatedTokenLoaded
                                  );
             break;
-        case FBSessionStateLoadedValidToken:
-        case FBSessionStateLoginFailed:
+        case FBSessionStateCreatedTokenLoaded:
+        case FBSessionStateClosedLoginFailed:
             isValidTransition = statePrior == FBSessionStateCreated;
             break;
-        case FBSessionStateExtendedToken:
+        case FBSessionStateOpenTokenExtended:
             isValidTransition = (
-                                 statePrior == FBSessionStateLoggedIn ||
-                                 statePrior == FBSessionStateExtendedToken
+                                 statePrior == FBSessionStateOpen ||
+                                 statePrior == FBSessionStateOpenTokenExtended
                                  );
             break;
-        case FBSessionStateLoggedOut:
-        case FBSessionStateInvalidated:
+        case FBSessionStateClosed:
             isValidTransition = (
-                                 statePrior == FBSessionStateLoggedIn ||
-                                 statePrior == FBSessionStateExtendedToken ||
-                                 statePrior == FBSessionStateLoadedValidToken
+                                 statePrior == FBSessionStateOpen ||
+                                 statePrior == FBSessionStateOpenTokenExtended ||
+                                 statePrior == FBSessionStateCreatedTokenLoaded
                                  );
             break;
     }
@@ -577,14 +576,14 @@ static NSSet *g_loggingBehavior;
     BOOL changingTokenAndDate = false;
     if (token && date) {
         changingTokenAndDate = true;
-    } else if (!FB_ISSESSIONVALIDWITHSTATE(state) &&
-               FB_ISSESSIONVALIDWITHSTATE(statePrior)) {
+    } else if (!FB_ISSESSIONOPENWITHSTATE(state) &&
+               FB_ISSESSIONOPENWITHSTATE(statePrior)) {
         changingTokenAndDate = true;
         token = nil;
         date = nil;
     }
 
-    BOOL changingIsInvalid = FB_ISSESSIONVALIDWITHSTATE(state) == FB_ISSESSIONVALIDWITHSTATE(statePrior);
+    BOOL changingIsInvalid = FB_ISSESSIONOPENWITHSTATE(state) == FB_ISSESSIONOPENWITHSTATE(statePrior);
 
     // should only ever be YES from here...
     _isInStateTransition = YES;
@@ -607,7 +606,7 @@ static NSSet *g_loggingBehavior;
 
     // change the actual state
     // note: we should not inject any callbacks between this and the token/date changes above
-    self.status = state;
+    self.state = state;
 
     // ... to here -- if YES
     _isInStateTransition = NO;
@@ -727,7 +726,7 @@ static NSSet *g_loggingBehavior;
                                                          errorCode:nil];
 
             // state transition, and call the handler if there is one
-            [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+            [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                               error:error
                                               token:nil
                                      expirationDate:nil
@@ -768,7 +767,7 @@ static NSSet *g_loggingBehavior;
                             self.testUserID = userID;
                             
                             // set token and date, state transition, and call the handler if there is one
-                            [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+                            [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                                               error:nil
                                                               token:userToken
                                                      expirationDate:[NSDate distantFuture]
@@ -779,7 +778,7 @@ static NSSet *g_loggingBehavior;
                                                                          errorCode:nil];
                             
                             // state transition, and call the handler if there is one
-                            [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+                            [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                                               error:loginError
                                                               token:nil
                                                      expirationDate:nil
@@ -796,7 +795,7 @@ static NSSet *g_loggingBehavior;
     self.refreshDate = [NSDate date];
     
     // refresh token and date, state transition, and call the handler if there is one
-    [self transitionAndCallHandlerWithState:FBSessionStateExtendedToken
+    [self transitionAndCallHandlerWithState:FBSessionStateOpenTokenExtended
                                       error:nil
                                       token:token ? token : self.accessToken
                              expirationDate:expireDate
@@ -806,7 +805,7 @@ static NSSet *g_loggingBehavior;
 - (BOOL)shouldExtendAccessToken {
     BOOL result = NO;
     NSDate *now = [NSDate date];
-    if (self.isValid &&
+    if (self.isOpen &&
         _isSSOToken &&
         [now timeIntervalSinceDate:self.attemptedRefreshDate] > FBTokenRetryExtendSeconds &&
         [now timeIntervalSinceDate:self.refreshDate] > FBTokenExtendThresholdSeconds) {
@@ -825,7 +824,7 @@ static NSSet *g_loggingBehavior;
     self.refreshDate = [NSDate date];
 
     // set token and date, state transition, and call the handler if there is one
-    [self transitionAndCallHandlerWithState:FBSessionStateLoggedIn
+    [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                       error:nil
                                       token:accessToken
                              expirationDate:expirationDate
@@ -846,7 +845,7 @@ static NSSet *g_loggingBehavior;
                                                  errorCode:nil];
 
     // state transition, and call the handler if there is one
-    [self transitionAndCallHandlerWithState:FBSessionStateLoginFailed
+    [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                       error:error
                                       token:nil
                              expirationDate:nil
@@ -881,11 +880,11 @@ static NSSet *g_loggingBehavior;
 
     // release the object's count on the handler, but copy (not retain, since it is a block)
     // a stack ref to use as our callback outside of the lock
-    FBSessionStatusHandler handler = [self.loginHandler retain];
+    FBSessionStateHandler handler = [self.loginHandler retain];
 
     // the moment we transition to a terminal state, we release our handler
     // and in the unit test case, we may delete the test user
-    if (didTransition && FB_ISSESSIONSTATETERMINAL(self.status)) {
+    if (didTransition && FB_ISSESSIONSTATETERMINAL(self.state)) {
         self.loginHandler = nil;
         if (self.isForUnitTesting) {
             [FBSession deleteUnitTestUser:userID accessToken:accessToken]; 
@@ -898,7 +897,7 @@ static NSSet *g_loggingBehavior;
         @try {
             // unsuccessful transitions don't change state and don't propegate the error object
             handler(self,
-                    self.status,
+                    self.state,
                     didTransition ? error : nil);
         }
         @finally {
@@ -997,7 +996,7 @@ static NSSet *g_loggingBehavior;
 + (void)deleteFacebookCookies {
     NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray* facebookCookies = [cookies cookiesForURL:
-                                [NSURL URLWithString:@"http://login.facebook.com"]];
+                                [NSURL URLWithString:@"http://login." FB_BASE_URL]];
 
     for (NSHTTPCookie* cookie in facebookCookies) {
         [cookies deleteCookie:cookie];

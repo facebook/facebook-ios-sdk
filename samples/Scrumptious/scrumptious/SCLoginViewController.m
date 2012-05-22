@@ -37,11 +37,11 @@
     
     SCAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
     FBSession *session = [appDelegate invalidateAndGetNewSession];
-    [session loginWithCompletionHandler:
+    [session openWithCompletionHandler:
         ^(FBSession *session, FBSessionState state, NSError *error) {
             [self.spinner stopAnimating];
             switch (state) {
-                case FBSessionStateLoggedIn:
+                case FBSessionStateOpen:
                     if (!error) {
                         [self dismissModalViewControllerAnimated:YES];
                     }
