@@ -513,7 +513,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                                                  parameters:params
                                                  HTTPMethod:httpMethod];
     [request setDelegate:delegate];
-    [[request connectionWithCompletionHandler:nil] start];
+    [request startWithCompletionHandler:nil];
 
     return request;
 }
@@ -615,7 +615,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                                                  parameters:params
                                                  HTTPMethod:httpMethod];
     [request setDelegate:delegate];
-    [[request connectionWithCompletionHandler:nil] start];
+    [request startWithCompletionHandler:nil];
 
     return request;
 }

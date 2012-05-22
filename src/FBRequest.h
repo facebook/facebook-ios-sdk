@@ -264,32 +264,28 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- initiates a connection with Facebook
+ starts a connection with Facebook
 
  @discussion
- Used to create a ready-to-start connection. The block is called in all three
+ Used to start a connection. The block is called in all three
  completion cases: success, error, & cancel.
 
  @param completionHandler   handler block, called when the request completes
                             with success, error, or cancel
 */
-- (FBRequestConnection*)connectionWithCompletionHandler:(FBRequestHandler)handler;
+- (FBRequestConnection*)startWithCompletionHandler:(FBRequestHandler)handler;
 
 /*!
- @methodgroup FBRequestConnection factory methods
+ @methodgroup FBRequestConnection start methods
 
  @abstract
- These methods initialize a FBRequestConnection.  All that remains is to call start.
+ These methods start a FBRequestConnection.
 
  @discussion
  These simplify the process of preparing a request to send.  These
  handle the steps of initializing a FBRequest, initializing a
  FBRequestConnection, and adding the FBRequest to the
  FBRequestConnection.
-
- Note that these methods do not call start on the returned
- FBRequestConnection.  The application must still call start to send
- the request.
 */
 
 /*!
@@ -300,7 +296,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
  @seealso connectionWithSession:graphPath:parameters:HTTPMethod:handler:
 */
-+ (FBRequestConnection*)connectionWithGraphPath:(NSString*)graphPath
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
                                 completionHandler:(FBRequestHandler)handler;
 
 /*!
@@ -311,7 +307,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
  @seealso connectionWithSession:graphPath:parameters:HTTPMethod:handler:
 */
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)session
++ (FBRequestConnection*)startWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                               completionHandler:(FBRequestHandler)handler;
 
@@ -336,7 +332,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @param handler          handler block, called when the request completes
                          with success, error, or cancel
 */
-+ (FBRequestConnection*)connectionForPostWithSession:(FBSession*)session
++ (FBRequestConnection*)startForPostWithSession:(FBSession*)session
                                            graphPath:(NSString*)graphPath
                                          graphObject:(id<FBGraphObject>)object
                                    completionHandler:(FBRequestHandler)handler;
@@ -367,7 +363,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @param handler          handler block, called when the request completes
                          with success, error, or cancel
 */
-+ (FBRequestConnection*)connectionWithSession:(FBSession*)session
++ (FBRequestConnection*)startWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
                                      parameters:(NSDictionary*)parameters
                                      HTTPMethod:(NSString*)HTTPMethod

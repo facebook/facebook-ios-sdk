@@ -64,10 +64,10 @@
         // Once logged in, get "my" information.
         FBRequest *me = [FBRequest requestForMeWithSession:appDelegate.session];
         FBRequestConnection *newConnection = 
-          [[me connectionWithCompletionHandler: ^(FBRequestConnection *connection, 
-                                                 NSDictionary<FBGraphUser> *my, // expecting a person here
-                                                 NSError *error) {
-              // Request completed...
+        [me startWithCompletionHandler: ^(FBRequestConnection *connection, 
+                                          NSDictionary<FBGraphUser> *my, // expecting a person here
+                                          NSError *error) {
+            // Request completed...
               if (connection != self.requestConnection) {
                   // not the completion we were waiting for...
                   return;
@@ -85,7 +85,7 @@
                 
               self.labelFirstName.text = text;
               profilePic.userID = fbid;
-          }] start];
+          }];
         
         // If there's an outstanding connection, just cancel
         [self.requestConnection cancel];

@@ -120,29 +120,27 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     NSString *graphPath2 = [NSString stringWithFormat:@"me/friends/%@", id2];
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:session1
-                                                              graphPath:graphPath2
-                                                            graphObject:nil
-                                                      completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            STAssertTrue(!error, @"!error");
-            [blocker signal];
-        }];
+    [FBRequest startForPostWithSession:session1
+                             graphPath:graphPath2
+                           graphObject:nil
+                     completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"!error");
+         [blocker signal];
+     }];
     
-    [conn start];
     [blocker wait];
 
     blocker = [[FBTestBlocker alloc] init];
-    conn = [FBRequest connectionForPostWithSession:session2
-                                         graphPath:graphPath1
-                                       graphObject:nil
-                                 completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            STAssertTrue(!error, @"!error");
-            [blocker signal];
-        }];
+    [FBRequest startForPostWithSession:session2
+                             graphPath:graphPath1
+                           graphObject:nil
+                     completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"!error");
+         [blocker signal];
+     }];
     
-    [conn start];
     [blocker wait];
 }
 

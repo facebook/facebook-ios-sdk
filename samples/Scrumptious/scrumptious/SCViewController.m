@@ -118,18 +118,16 @@
     }
     
     // Create the request and post the action to the "me/scrumps:eat" path.
-    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:self.session
-                                                              graphPath:@"me/scrumps:eat"
-                                                            graphObject:action
-                                                      completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            if (!error) {
-                // successful post, do something with the action id    
-            } 
-        }
-    ];
-    
-    [conn start];
+    [FBRequest startForPostWithSession:self.session
+                             graphPath:@"me/scrumps:eat"
+                           graphObject:action
+                     completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         if (!error) {
+             // successful post, do something with the action id    
+         } 
+     }
+     ];
 }
 
 - (void)postPhotoThenOpenGraphAction
@@ -238,16 +236,15 @@
 - (void)populateUserDetails 
 {
     if (self.session.isOpen) {
-        FBRequestConnection *requestConnection = [FBRequest connectionWithSession:self.session
-                                                                        graphPath:@"me"
-                                                                completionHandler:
-            ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-            if (!error) {
-                self.userNameLabel.text = user.name;
-                self.userProfileImage.userID = user.id;
-            }
-        }];
-        [requestConnection start];        
+        [FBRequest startWithSession:self.session
+                          graphPath:@"me"
+                  completionHandler:
+         ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+             if (!error) {
+                 self.userNameLabel.text = user.name;
+                 self.userProfileImage.userID = user.id;
+             }
+         }];   
     }
 }
 

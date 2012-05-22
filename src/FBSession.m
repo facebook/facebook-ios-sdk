@@ -745,16 +745,16 @@ static NSSet *g_loggingBehavior;
     if (!self.permissions.count) {
         self.permissions = [NSArray arrayWithObjects:@"email", @"publish_actions", nil];
     }
-    [[FBRequest connectionWithSession:nil
-                            graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
-                           parameters:[NSDictionary dictionaryWithObjectsAndKeys:
-                                       @"true", @"installed",
-                                       [self.permissions componentsJoinedByString:@","], @"permissions",
-                                       @"post", @"method",
-                                       self.accessToken, @"access_token",
-                                       nil]
-                           HTTPMethod:nil
-                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [FBRequest startWithSession:nil
+                       graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
+                      parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"true", @"installed",
+                                  [self.permissions componentsJoinedByString:@","], @"permissions",
+                                  @"post", @"method",
+                                  self.accessToken, @"access_token",
+                                  nil]
+                      HTTPMethod:nil
+               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                         id userToken;
                         id userID;
                         if ([result isKindOfClass:[NSDictionary class]] &&
@@ -784,8 +784,7 @@ static NSSet *g_loggingBehavior;
                                                      expirationDate:nil
                                                         shouldCache:NO];
                         }
-                    }] 
-     start];
+                    }];
 }
 
 
@@ -963,15 +962,19 @@ static NSSet *g_loggingBehavior;
 
 + (void)deleteUnitTestUser:(NSString*)userID accessToken:(NSString*)accessToken {
     if (userID && accessToken) {
-        // use FBRequest to create an NSURLRequest
-        NSURLRequest *request = [FBRequest connectionWithSession:nil
-                                graphPath:userID
-                               parameters:[NSDictionary dictionaryWithObjectsAndKeys:
-                                           @"delete", @"method",
-                                           accessToken, @"access_token",
-                                           nil]
-                               HTTPMethod:nil
-                        completionHandler:nil].urlRequest;
+        // use FBRequest/FBRequestConnection to create an NSURLRequest
+        FBRequest *temp = [[FBRequest alloc ] initWithSession:nil
+                                                    graphPath:userID
+                                                   parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                               @"delete", @"method",
+                                                               accessToken, @"access_token",
+                                                               nil]
+                                                   HTTPMethod:nil];
+        FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+        [connection addRequest:temp completionHandler:nil];
+        NSURLRequest *request = connection.urlRequest;
+        [temp release];
+        [connection release];
         
         // synchronously delete the user
         NSURLResponse *response;

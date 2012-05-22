@@ -162,7 +162,7 @@
         
         FBRequest *request = [[FBRequest alloc] initWithSession:self.session
                                                       graphPath:nil];
-        FBRequestConnection *connection = [request connectionWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        FBRequestConnection *connection = [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             self.connection = nil;
             [self requestCompleted:connection result:result error:error];
         }];
@@ -184,7 +184,7 @@
     [self.dataSource clearGraphObjects];
     
     
-    FBRequestConnection *connection = [request connectionWithCompletionHandler:
+    FBRequestConnection *connection = [request startWithCompletionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
             [self requestCompleted:connection result:result error:error];
         }];

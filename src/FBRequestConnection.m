@@ -278,7 +278,7 @@ typedef enum FBRequestConnectionState {
     [metadata release];
 }
 
-- (FBRequestConnection *)start
+- (void)start
 {
     NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
              @"Cannot call start again after calling start or cancel.");
@@ -317,8 +317,6 @@ typedef enum FBRequestConnectionState {
                                      completionHandler:handler];
     self.connection = connection;
     [connection release];
-
-    return self;
 }
 
 - (void)cancel {
@@ -915,7 +913,9 @@ typedef enum FBRequestConnectionState {
             [request release];
         }
 
-        metadata.completionHandler(self, body, itemError);
+        if (metadata.completionHandler) {
+            metadata.completionHandler(self, body, itemError);
+        }
     }
 }
 

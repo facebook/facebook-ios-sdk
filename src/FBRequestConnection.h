@@ -194,10 +194,9 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  @/textblock
  </pre>
   
- Start is idempotent, and if no requests are associated with an
- FBRequestConnection object, the method nominally succeeds.
+ Start may not be called twice.
 */
-- (FBRequestConnection*)start;
+- (void)start;
 
 /*!
  @method

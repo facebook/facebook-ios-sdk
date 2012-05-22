@@ -63,43 +63,39 @@
     action.test = testObject;
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:session
-                                                                      graphPath:@"me/fbiossdktests:run"
-                                                                    graphObject:action
-                                                              completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            STAssertTrue(!error, @"!error");
-            if (!error) {
-            } 
-            [blocker signal];
-    }];
-    
-    [conn start];
+    [FBRequest startForPostWithSession:session
+                             graphPath:@"me/fbiossdktests:run"
+                           graphObject:action
+                     completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"!error");
+         if (!error) {
+         } 
+         [blocker signal];
+     }];
     [blocker wait];
 }
 
 - (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    FBRequestConnection *conn = [FBRequest connectionWithSession:session
-                                                       graphPath:idString
-                                                       completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            STAssertTrue(!error, @"!error");
-            STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
-            for (NSString *propertyName in propertyNames) {
-                STAssertNotNil([result objectForKey:propertyName], 
-                               [NSString stringWithFormat:@"missing property '%@'", propertyName]);
-            }
-            [blocker signal];
-        }];
-        
-    [conn start];
+    [FBRequest startWithSession:session
+                      graphPath:idString
+              completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"!error");
+         STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
+         for (NSString *propertyName in propertyNames) {
+             STAssertNotNil([result objectForKey:propertyName], 
+                            [NSString stringWithFormat:@"missing property '%@'", propertyName]);
+         }
+         [blocker signal];
+     }];
     [blocker wait];
 }
 
 - (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    FBRequestConnection *conn = [FBRequest connectionForPostWithSession:session
+    [FBRequest startForPostWithSession:session
                                                               graphPath:graphPath
                                                             graphObject:graphObject
                                                       completionHandler:
@@ -113,10 +109,7 @@
             } 
             [blocker signal];
         }];
-    
-    [conn start];
-    [blocker wait];
-    
+    [blocker wait];    
 }
 
 - (void)testPostingComplexOpenGraphAction {
