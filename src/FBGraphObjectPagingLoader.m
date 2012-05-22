@@ -183,20 +183,17 @@
 - (void)startLoadingWithRequest:(FBRequest*)request {
     [self.dataSource clearGraphObjects];
     
-    
-    FBRequestConnection *connection = [request startWithCompletionHandler:
+    [self.connection cancel];
+
+    self.connection = [request startWithCompletionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
             [self requestCompleted:connection result:result error:error];
         }];
 
-    NSString *urlString = [[[connection urlRequest] URL] absoluteString];
+    NSString *urlString = [[[self.connection urlRequest] URL] absoluteString];
     if ([self.delegate respondsToSelector:@selector(pagingLoader:willLoadURL:)]) {
         [self.delegate pagingLoader:self willLoadURL:urlString];
     }
-
-    [self.connection cancel];
-    self.connection = connection;
-    [self.connection start];
 }
 
 - (void)cancel {

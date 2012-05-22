@@ -757,6 +757,9 @@ static NSSet *g_loggingBehavior;
                completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                         id userToken;
                         id userID;
+                        if (error) {
+                            NSLog(@"Error: [FBSession authorizeUnitTestUser] failed with error: %@", error.description);
+                        }
                         if ([result isKindOfClass:[NSDictionary class]] &&
                             (userToken = [result objectForKey:FBLoginTestUserAccessToken]) &&
                             [userToken isKindOfClass:[NSString class]] &&
@@ -776,7 +779,6 @@ static NSSet *g_loggingBehavior;
                             // we fetched something unexpected when requesting an app token
                             NSError *loginError = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
                                                                          errorCode:nil];
-                            
                             // state transition, and call the handler if there is one
                             [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                                               error:loginError
