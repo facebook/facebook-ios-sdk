@@ -162,11 +162,13 @@
         
         FBRequest *request = [[FBRequest alloc] initWithSession:self.session
                                                       graphPath:nil];
-        FBRequestConnection *connection = [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+
+        FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+        [connection addRequest:request completionHandler:
+         ^(FBRequestConnection *connection, id result, NSError *error) {
             self.connection = nil;
             [self requestCompleted:connection result:result error:error];
         }];
-        [request release];
         
         // Override the URL using the one passed back in 'next'.
         NSURL *url = [NSURL URLWithString:self.nextLink];
@@ -177,6 +179,9 @@
         
         self.connection = connection;
         [self.connection start];
+        
+        [request release];
+        [connection release];
     }
 }
 
