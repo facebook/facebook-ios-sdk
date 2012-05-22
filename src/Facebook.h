@@ -47,7 +47,9 @@
 @property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
 @property(nonatomic, copy) NSString* urlSchemeSuffix;
 @property(nonatomic, readonly, getter=isFrictionlessRequestsEnabled) 
-    BOOL isFrictionlessRequestsEnabled;
+BOOL isFrictionlessRequestsEnabled;
+
+- (NSDictionary*)parseURLParams:(NSString *)query;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
