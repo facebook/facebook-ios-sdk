@@ -30,7 +30,7 @@
 {
     [self.session close];
     
-    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
+    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
     self.session = [[FBSession alloc] initWithPermissions:permissions];
 
     return self.session;

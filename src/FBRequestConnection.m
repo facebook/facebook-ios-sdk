@@ -44,6 +44,9 @@ NSString *const kSDKVersion = @"3";
 NSString *const kUserAgentBase = @"FBiOSSDK";
 NSString *const kBundleVersionKey = @"CFBundleVersion";
 
+NSString *const kExtendTokenRestMethod = @"auth.extendSSOAccessToken";
+NSString *const kBatchRestMethodBaseURL = @"method/";
+
 // response object property/key
 NSString *const FBNonJSONResponseProperty = @"FBiOSSDK_NON_JSON_RESULT";
 
@@ -123,7 +126,7 @@ typedef enum FBRequestConnectionState {
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
 
-- (NSURL *)urlWithSingleRequest:(FBRequest *)request;
+- (NSString *)urlStringForSingleRequest:(FBRequest *)request forBatch:(BOOL)forBatch;
 
 - (NSString *)commonAccessToken:(NSArray *)requests;
 
@@ -183,6 +186,8 @@ typedef enum FBRequestConnectionState {
 - (void)registerTokenToOmitFromLog:(NSString *)token; 
 
 + (NSString *)userAgent;
+
++ (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;
 
 @end
 
@@ -280,10 +285,6 @@ typedef enum FBRequestConnectionState {
 
 - (void)start
 {
-    NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
-             @"Cannot call start again after calling start or cancel.");
-    self.state = kStateStarted;
-
     if ([self.requests count] == 1) {
         FBRequestMetadata *firstMetadata = [self.requests objectAtIndex:0];
         if ([firstMetadata.request delegate]) {
@@ -295,8 +296,32 @@ typedef enum FBRequestConnectionState {
         }
     }
 
+    if (self.internalUrlRequest == nil) {
+        // If we have all Graph API calls, see if we want to piggyback any internal calls onto
+        // the request to reduce round-trips. (The piggybacked calls may themselves be non-Graph
+        // API calls, but must be limited to API calls which are batchable. Not all are, which is
+        // why we won't piggyback on top of a REST API call.) Don't try this if the caller gave us
+        // an already-formed request object, since we don't know its structure.
+        BOOL safeForPiggyback = YES;
+        for (FBRequestMetadata *requestMetadata in self.requests) {
+            if (requestMetadata.request.restMethod) {
+                safeForPiggyback = NO;
+                break;
+            }
+        }
+        if (safeForPiggyback) {
+            [self addPiggybackRequests];
+        }
+    }
+    
     NSMutableURLRequest *request = self.urlRequest;
+
+    NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
+             @"Cannot call start again after calling start or cancel.");
+    self.state = kStateStarted;
+    
     _requestStartTime = [FBUtility currentTimeInMilliseconds];
+
     FBURLConnectionHandler handler =
         ^(FBURLConnection *connection,
           NSError *error,
@@ -344,7 +369,7 @@ typedef enum FBRequestConnectionState {
     
     if ([requests count] == 1) {
         FBRequestMetadata *metadata = [requests objectAtIndex:0];
-        NSURL *url = [self urlWithSingleRequest:metadata.request];
+        NSURL *url = [NSURL URLWithString:[self urlStringForSingleRequest:metadata.request forBatch:NO]];
         request = [NSMutableURLRequest requestWithURL:url
                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                       timeoutInterval:timeout];
@@ -429,7 +454,7 @@ typedef enum FBRequestConnectionState {
 //
 // Attachments are named and referenced by name in the URL.
 //
-- (NSURL *)urlWithSingleRequest:(FBRequest *)request
+- (NSString *)urlStringForSingleRequest:(FBRequest *)request forBatch:(BOOL)forBatch
 {
     [request.parameters setValue:@"json" forKey:@"format"];
     [request.parameters setValue:kSDK forKey:@"sdk"];
@@ -442,9 +467,17 @@ typedef enum FBRequestConnectionState {
 
     NSString *baseURL;
     if (request.restMethod) {
-        baseURL = [kRestBaseURL stringByAppendingString:request.restMethod];
+        if (forBatch) {
+            baseURL = [kBatchRestMethodBaseURL stringByAppendingString:request.restMethod];
+        } else {
+            baseURL = [kRestBaseURL stringByAppendingString:request.restMethod];
+        }
     } else {
-        baseURL = [kGraphBaseURL stringByAppendingString:request.graphPath];
+        if (forBatch) {
+            baseURL = request.graphPath;
+        } else {
+            baseURL = [kGraphBaseURL stringByAppendingString:request.graphPath];
+        }
     }
 
     // TODO: move serializeURL to a utility class next to isAttachment and
@@ -453,7 +486,7 @@ typedef enum FBRequestConnectionState {
     NSString *url = [FBRequest serializeURL:baseURL
                                      params:request.parameters
                                  httpMethod:request.HTTPMethod];
-    return [NSURL URLWithString:url];
+    return url;
 }
 
 //
@@ -521,7 +554,8 @@ typedef enum FBRequestConnectionState {
     NSMutableDictionary *requestElement = [[[NSMutableDictionary alloc] init] autorelease];
 
     // TODO: error if things are not set
-    [requestElement setObject:metadata.request.graphPath forKey:kBatchRelativeURLKey];
+    [requestElement setObject:[self urlStringForSingleRequest:metadata.request forBatch:YES]
+                       forKey:kBatchRelativeURLKey];
     [requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
     if (metadata.batchEntryName) {
@@ -549,8 +583,6 @@ typedef enum FBRequestConnectionState {
             }
             [attachmentNames appendString:name];
             [attachments setValue:value forKey:name];
-        } else {
-            [requestElement setObject:value forKey:key];
         }
     }
     
@@ -754,21 +786,27 @@ typedef enum FBRequestConnectionState {
         // to be decoded from JSON.
         NSMutableArray *mutableResults = [[[NSMutableArray alloc] init] autorelease];
         for (id item in response) {
+            // Don't let errors parsing one response stop us from parsing another.
+            NSError *batchResultError = nil;
             if (![item isKindOfClass:[NSDictionary class]]) {
                 [mutableResults addObject:item];
             } else {
                 NSDictionary *itemDictionary = (NSDictionary *)item;
                 NSMutableDictionary *result = [[[NSMutableDictionary alloc] init] autorelease];
                 for (NSString *key in [itemDictionary keyEnumerator]) {
+                    id value = [itemDictionary objectForKey:key];
                     if ([key isEqualToString:@"body"]) {
-                        id value = [itemDictionary objectForKey:key];
-                        id body = [self parseJSONOrOtherwise:value error:error];
+                        id body = [self parseJSONOrOtherwise:value error:&batchResultError];
                         [result setObject:body forKey:key];
                     } else {
-                        [result setObject:[itemDictionary objectForKey:key] forKey:key];
+                        [result setObject:value forKey:key];
                     }
                 }
                 [mutableResults addObject:result];
+            }
+            if (batchResultError) {
+                // We'll report back the last error we saw.
+                *error = batchResultError;
             }
         }
         results = mutableResults;
@@ -874,43 +912,13 @@ typedef enum FBRequestConnectionState {
                             resultIndex:error == itemError ? i : 0]) {
             [metadata.request.session close];
         } else if ([metadata.request.session shouldExtendAccessToken]) {
-            FBSession *session = metadata.request.session;
-            FBRequest *request = [[FBRequest alloc] initWithSession:session
-                                                         restMethod:@"auth.extendSSOAccessToken"
-                                                         parameters:nil
-                                                         HTTPMethod:nil];
-            
+            // If we have not had the opportunity to piggyback a token-extension request,
+            // but we need to, do so now as a separate request.
             FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-            [connection addRequest:request
-                 completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                     // extract what we care about
-                     id token = [result objectForKey:@"access_token"];
-                     id expireTime = [result objectForKey:@"expires_at"];
-                     
-                     // if we have a token and it is not a string (?) punt
-                     if (token && ![token isKindOfClass:[NSString class]]) {
-                         expireTime = nil;
-                     }
-                     
-                     // get a date if possible
-                     NSDate *expirationDate = nil;
-                     if (expireTime) {
-                         NSTimeInterval timeInterval = [expireTime doubleValue];
-                         if (timeInterval != 0) {
-                             expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
-                         }
-                     }
-                     
-                     // if we ended up with at least a date (and maybe a token) refresh the session token
-                     if (expirationDate) {
-                         [session refreshAccessToken:token
-                                      expirationDate:expirationDate];
-                     }
-                 }];            
+            [FBRequestConnection addRequestToExtendTokenForSession:metadata.request.session 
+                                                        connection:connection];
             [connection start];
-            
             [connection release];
-            [request release];
         }
 
         if (metadata.completionHandler) {
@@ -1033,5 +1041,59 @@ typedef enum FBRequestConnectionState {
     return agent;
 }
 
+- (void)addPiggybackRequests
+{
+    // Get the set of sessions used by our requests
+    NSMutableSet *sessions = [[NSMutableSet alloc] init];
+    for (FBRequestMetadata *requestMetadata in self.requests) {
+        // Have we seen this session yet? If not, assume we'll extend its token if it wants us to.
+        if (requestMetadata.request.session) {
+            [sessions addObject:requestMetadata.request.session];
+        }
+    }
+    
+    for (FBSession *session in sessions) {
+        if ([session shouldExtendAccessToken]) {
+            [FBRequestConnection addRequestToExtendTokenForSession:session connection:self];
+        }
+    }
+    
+    [sessions release];
+}
+
++ (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection
+{
+    FBRequest *request = [[FBRequest alloc] initWithSession:session
+                                                 restMethod:kExtendTokenRestMethod
+                                                 parameters:nil
+                                                 HTTPMethod:nil];
+    [connection addRequest:request
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             // extract what we care about
+             id token = [result objectForKey:@"access_token"];
+             id expireTime = [result objectForKey:@"expires_at"];
+             
+             // if we have a token and it is not a string (?) punt
+             if (token && ![token isKindOfClass:[NSString class]]) {
+                 expireTime = nil;
+             }
+             
+             // get a date if possible
+             NSDate *expirationDate = nil;
+             if (expireTime) {
+                 NSTimeInterval timeInterval = [expireTime doubleValue];
+                 if (timeInterval != 0) {
+                     expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                 }
+             }
+             
+             // if we ended up with at least a date (and maybe a token) refresh the session token
+             if (expirationDate) {
+                 [session refreshAccessToken:token
+                              expirationDate:expirationDate];
+             }
+         }];            
+    [request release];
+}
 
 @end

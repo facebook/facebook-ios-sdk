@@ -25,7 +25,7 @@
 //#define FBIOSSDK_SKIP_GRAPH_OBJECT_TESTS
 //#define FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS
 //#define FBIOSSDK_SKIP_SESSION_TESTS
-
+//#define FBIOSSDK_SKIP_BATCH_REQUEST_TESTS
 
 @class FBSession;
 
@@ -38,5 +38,7 @@
 - (FBSession *)loginSession:(FBSession *)session;
 - (void)makeTestUserInSession:(FBSession*)session1 friendsWithTestUserInSession:(FBSession*)session2;
 
+- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session;
+- (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames;
 
 @end

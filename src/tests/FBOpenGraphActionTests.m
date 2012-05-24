@@ -76,42 +76,6 @@
     [blocker wait];
 }
 
-- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session {
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startWithSession:session
-                      graphPath:idString
-              completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
-         STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
-         for (NSString *propertyName in propertyNames) {
-             STAssertNotNil([result objectForKey:propertyName], 
-                            [NSString stringWithFormat:@"missing property '%@'", propertyName]);
-         }
-         [blocker signal];
-     }];
-    [blocker wait];
-}
-
-- (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session
-                                                              graphPath:graphPath
-                                                            graphObject:graphObject
-                                                      completionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            STAssertTrue(!error, @"!error");
-            if (!error) {
-                NSString *newObjectId = [result objectForKey:@"id"];
-                    [self validateGraphObjectWithId:newObjectId
-                                      hasProperties:propertyNames
-                                        withSession:session];
-            } 
-            [blocker signal];
-        }];
-    [blocker wait];    
-}
-
 - (void)testPostingComplexOpenGraphAction {
     FBSession *session1 = [self loginTestUserWithPermissions:nil];
     FBSession *session2 = [self loginTestUserWithPermissions:nil];
