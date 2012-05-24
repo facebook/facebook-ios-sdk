@@ -19,6 +19,6 @@
 
 @interface SCMealViewController : UIViewController
 
-@property (strong, nonatomic) SelectItemCallback selectItemCallback;
+@property (copy, nonatomic) SelectItemCallback selectItemCallback;
 
 @end
