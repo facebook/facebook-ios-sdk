@@ -4,11 +4,16 @@
 #
 
 # this script configures your iOS simulator for unit tests
+# Note: On Mac OS X, an easy way to generate a MACHINE_UNIQUE_USER_TAG is with the following:
+#   system_profiler SPHardwareDataType | grep -i "Serial Number (system):" | awk '{print $4}'
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
-if [ "$#" -ne 2 ]; then
-      echo "Usage: $0 APP_ID APP_SECRET"
+if [ "$#" -lt 2 ]; then
+      echo "Usage: $0 APP_ID APP_SECRET [MACHINE_UNIQUE_USER_KEY]"
+      echo "  APP_ID                   your unit-testing Facebook application's App ID"
+      echo "  APP_SECRET               your unit-testing Facebook application's App Secret"
+      echo "  MACHINE_UNIQUE_USER_TAG  optional text used to ensure this machine will use its own set of test users rather than sharing"
       die 'Arguments do not conform to usage'
 fi
 
@@ -31,6 +36,8 @@ function write_plist {
         <string>$2</string>
         <key>FacebookAppSecret</key>
         <string>$3</string>
+        <key>UniqueUserTag</key>
+        <string>$4</string>
 </dict>
 </plist>
 DELIMIT
@@ -43,8 +50,8 @@ SIMULATOR_DIR=$HOME/Library/Application\ Support/iPhone\ Simulator
 
 test -x "$SIMULATOR_DIR" || die 'Could not find simulator directory'
 
-write_plist "$SIMULATOR_DIR" $1 $2
+write_plist "$SIMULATOR_DIR" $1 $2 $3
 
 for VERSION_DIR in "${SIMULATOR_DIR}"/[45].*; do
-      write_plist "$VERSION_DIR" $1 $2
+      write_plist "$VERSION_DIR" $1 $2 $3
 done

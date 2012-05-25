@@ -15,6 +15,7 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "FBTestSession.h"
 
 // The following #defines are designed as a convenience during development
 // to disable certain categories of tests. They should never be left on
@@ -27,20 +28,31 @@
 //#define FBIOSSDK_SKIP_SESSION_TESTS
 //#define FBIOSSDK_SKIP_BATCH_REQUEST_TESTS
 //#define FBIOSSDK_SKIP_REQUEST_CONNECTION_TESTS
-
-@class FBTestSession;
+//#define FBIOSSDK_SKIP_TEST_SESSION_TESTS
 
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during
 // tear-down.
 @interface FBTests : SenTestCase
 
-- (FBTestSession *)createAndLoginTestUserWithPermissions:(NSString *)firstPermission, ...;
-//- (FBTestSession *)loginSharedTestUser:(NSUInteger)index permissions:(NSString *)firstPermission, ...;
+// For many test case scenarios, we just need a single session with a set of permissions
+// that can be shared and used by each individual test. For the simple case, this is that
+// session.
+@property (readonly, retain) FBTestSession *defaultTestSession;
+
+- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions;
+- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions 
+                                             uniqueUserTag:(NSString*)uniqueUserTag;
+
 - (FBTestSession *)loginSession:(FBTestSession *)session;
 - (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2;
 
 - (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBTestSession*)session;
 - (void)postAndValidateWithSession:(FBTestSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames;
+
+// Subclasses can define this to get defaultTestSessions with specific permissions.
+// The set of permissions should be static, as no guarantee is made how many times this will be called.
+// The default is nil.
+- (NSArray*)permissionsForDefaultTestSession;
 
 @end

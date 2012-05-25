@@ -15,7 +15,8 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "FBTests.h"
 
-@interface FBSessionTests : SenTestCase
+@interface FBSessionTests : FBTests
 
 @end

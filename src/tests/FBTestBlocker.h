@@ -23,7 +23,9 @@
 // can be extended to support delegates as needed
 @interface FBTestBlocker : NSObject
 
+- (id)init;
 - (void)wait;
+- (BOOL)waitWithTimeout:(NSUInteger)timeout;
 - (void)signal;
 
 @end

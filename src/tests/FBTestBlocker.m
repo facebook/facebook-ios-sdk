@@ -15,24 +15,52 @@
  */
 
 #import "FBTestBlocker.h"
+#import <SenTestingKit/SenTestingKit.h>
+
+@interface FBTestBlocker ()
+
+- (void)reset;
+
+@end
 
 @implementation FBTestBlocker {
     BOOL _keepRunning;
 }
 
+- (id)init {
+    if (self = [super init]) {
+        _keepRunning = YES;
+    }
+    return self;
+}
+
 - (void)wait {
-    _keepRunning = YES;
+    [self waitWithTimeout:0];
+}
+
+- (BOOL)waitWithTimeout:(NSUInteger)timeout {
+    NSDate *start = [NSDate date];
     
     // loop until the previous call completes
-    do {
+    while (_keepRunning) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.1]];
-    } while (_keepRunning);
+        if (timeout > 0 &&
+            [[NSDate date] timeIntervalSinceDate:start] > timeout) {
+            [self reset];
+            return NO;
+        } 
+    };
+    [self reset];
+    return YES;
 }
 
 - (void)signal {
-    _keepRunning = false;
+    _keepRunning = NO;
 }
 
+- (void)reset {
+    _keepRunning = YES;
+}
 @end
 
 

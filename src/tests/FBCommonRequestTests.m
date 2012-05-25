@@ -34,8 +34,6 @@
 
 @interface FBCommonRequestTests ()
 
-- (FBSession *)loginTestUserWithPermissions:(NSString *)firstPermission, ...;
-- (FBSession *)loginSession:(FBSession *)session;
 - (NSArray *)sendRequests:(FBRequest *)firstRequest, ...;
 - (NSArray *)sendRequestArray:(NSArray *)requests;
 - (UIImage *)imageForTest;
@@ -46,8 +44,7 @@
 
  - (void)testRequestMe
 {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
-    FBRequest *requestMe = [FBRequest requestForMeWithSession:session];
+    FBRequest *requestMe = [FBRequest requestForMeWithSession:self.defaultTestSession];
     NSArray *results = [self sendRequests:requestMe, nil];
 
     STAssertNotNil(results, @"results");
@@ -66,10 +63,8 @@
 
 - (void)testRequestUploadPhoto
 {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
-
     FBRequest *uploadRequest = [FBRequest requestForUploadPhoto:[self imageForTest]
-                                                        session:session];
+                                                        session:self.defaultTestSession];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
 
     STAssertNotNil(responses, @"responses");
@@ -90,14 +85,12 @@
 
 - (void)testRequestPlaceSearchWithNoSearchText
 {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
-
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:100 
                                                                 resultsLimit:100 
                                                                   searchText:nil 
-                                                                     session:session];
+                                                                     session:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
     STAssertNotNil(response, @"response");
@@ -122,14 +115,12 @@
 
 - (void)testRequestPlaceSearchWithSearchText
 {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
-    
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:100 
                                                                 resultsLimit:100 
                                                                   searchText:@"Lincoln Memorial" 
-                                                                     session:session];
+                                                                     session:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
     STAssertNotNil(response, @"response");
@@ -151,46 +142,6 @@
     STAssertEquals((int)data.count, 1, @"should only have one response");
     id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];
     STAssertNotNil(foundPlace, @"didn't find Lincoln Memorial");
-}
-
-- (FBSession *)loginTestUserWithPermissions:(NSString *)firstPermission, ...
-{
-    NSMutableArray *permissions = [[[NSMutableArray alloc] init] autorelease];
-
-    if (firstPermission) {
-        [permissions addObject:firstPermission];
-
-        id vaPermission;
-        va_list vaArguments;
-        va_start(vaArguments, firstPermission);
-        while ((vaPermission = va_arg(vaArguments, id))) {
-            [permissions addObject:vaPermission];
-        }
-        va_end(vaArguments);
-    }
-
-    FBSession *session = [FBTestSession sessionForUnitTestingWithPermissions:permissions];
-    return [self loginSession:session];
-}
-
-- (FBSession *)loginSession:(FBSession *)session
-{
-    __block FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-
-    FBSessionStateHandler handler = ^(FBSession *session,
-                                       FBSessionState status,
-                                       NSError *error) {
-        STAssertTrue(!error, @"!error");
-        
-        [blocker signal];
-    };
-
-    [session openWithCompletionHandler:handler];
-
-    [blocker wait];
-    STAssertTrue(session.isOpen, @"session.isOpen");
-
-    return session;
 }
 
 - (NSArray *)sendRequests:(FBRequest *)firstRequest, ...

@@ -654,6 +654,9 @@ typedef enum FBRequestConnectionState {
         id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
         NSString *subValue;
         if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
+            if ([subValue isKindOfClass:[NSDecimalNumber class]]) {
+                subValue = [(NSDecimalNumber*)subValue stringValue];
+            }
             action(key, subValue);
             //[body appendWithKey:key formValue:subValue];
         } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)

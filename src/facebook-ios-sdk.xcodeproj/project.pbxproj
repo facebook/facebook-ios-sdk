@@ -62,6 +62,7 @@
 		84FA4276153E15EE009CEEF8 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = AEA93B2011D52959000A4545 /* SBJsonWriter.m */; };
 		84FA4277153E1609009CEEF8 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B96F15E2152B927E00A52896 /* CoreLocation.framework */; };
 		84FA427A153E1968009CEEF8 /* FBTestBlocker.m in Sources */ = {isa = PBXBuildFile; fileRef = 84FA4279153E1968009CEEF8 /* FBTestBlocker.m */; };
+		85052AF9156F5E1200F8F9A5 /* FBTestSessionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85052AF8156F5E1200F8F9A5 /* FBTestSessionTests.m */; };
 		8525A5B0156EFCA1009F6F3F /* FBRequestConnectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8525A5AF156EFCA1009F6F3F /* FBRequestConnectionTests.m */; };
 		8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 8525A5B8156F2049009F6F3F /* FBTestSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8525A5BB156F2049009F6F3F /* FBTestSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8525A5B9156F2049009F6F3F /* FBTestSession.m */; };
@@ -172,6 +173,8 @@
 		84FA4278153E1968009CEEF8 /* FBTestBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTestBlocker.h; path = tests/FBTestBlocker.h; sourceTree = "<group>"; };
 		84FA4279153E1968009CEEF8 /* FBTestBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTestBlocker.m; path = tests/FBTestBlocker.m; sourceTree = "<group>"; };
 		85052AF5156F50F300F8F9A5 /* FBSession+Protected.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSession+Protected.h"; sourceTree = "<group>"; };
+		85052AF7156F5E1200F8F9A5 /* FBTestSessionTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTestSessionTests.h; path = tests/FBTestSessionTests.h; sourceTree = "<group>"; };
+		85052AF8156F5E1200F8F9A5 /* FBTestSessionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBTestSessionTests.m; path = tests/FBTestSessionTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8525A5AE156EFCA1009F6F3F /* FBRequestConnectionTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBRequestConnectionTests.h; path = tests/FBRequestConnectionTests.h; sourceTree = "<group>"; };
 		8525A5AF156EFCA1009F6F3F /* FBRequestConnectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBRequestConnectionTests.m; path = tests/FBRequestConnectionTests.m; sourceTree = "<group>"; };
 		8525A5B8156F2049009F6F3F /* FBTestSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FBTestSession.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
@@ -426,6 +429,8 @@
 				84FA4279153E1968009CEEF8 /* FBTestBlocker.m */,
 				858E42481565EFC400246151 /* FBTests.h */,
 				858E424D1565FA2E00246151 /* FBTests.m */,
+				85052AF7156F5E1200F8F9A5 /* FBTestSessionTests.h */,
+				85052AF8156F5E1200F8F9A5 /* FBTestSessionTests.m */,
 			);
 			name = FacebookSDKTests;
 			sourceTree = "<group>";
@@ -622,6 +627,7 @@
 				85DF1127156C64140082AA04 /* FBBatchRequestTests.m in Sources */,
 				8525A5B0156EFCA1009F6F3F /* FBRequestConnectionTests.m in Sources */,
 				8525A5BC156F2049009F6F3F /* FBTestSession.m in Sources */,
+				85052AF9156F5E1200F8F9A5 /* FBTestSessionTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -764,6 +770,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "tests/FacebookSDKTests-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = (
 					"DEBUG=1",
 					"$(inherited)",
 				);

@@ -14,28 +14,8 @@
  * limitations under the License.
  */
 
-#import "FBRequestConnectionTests.h"
-#import "FBSession.h"
-#import "FBRequestConnection.h"
-#import "FBRequest.h"
-#import "FBTestBlocker.h"
+#import "FBTEsts.h"
 
-#if defined(FBIOSSDK_SKIP_REQUEST_CONNECTION_TESTS)
-
-#pragma message ("warning: Skipping FBRequestConnectionTests")
-
-#else
-
-@implementation FBRequestConnectionTests
-
-/*
-- (void)testCancellation
-{
-    FBTestSession *session = [self loginSharedTestUser:0 permissions:nil];
-    return;
-}
-*/
+@interface FBTestSessionTests : FBTests
 
 @end
-
-#endif

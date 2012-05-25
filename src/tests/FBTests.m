@@ -15,70 +15,96 @@
  */
 
 #import "FBTests.h"
-#import "FBTestSession.h"
 #import "FBTestBlocker.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 
-static NSMutableDictionary *mapTestClassesToSessions;
+static NSMutableDictionary *mapTestCasesToSessions;
 // Concurrency not an issue today, but guard our static global in any case.
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+
+#pragma mark Private interface
 
 @interface FBTests ()
 
 @end
 
+#pragma mark -
+
 @implementation FBTests
 
-+ (void)setUp
+@synthesize defaultTestSession = _defaultTestSession;
+
+#pragma mark Instance-level lifecycle
+
+- (void)dealloc 
+{   
+    [_defaultTestSession release];
+    [super dealloc];
+}
+
+- (void)setUp
 {
+    [super setUp];
+
     pthread_mutex_lock(&mutex);
     
-    if (!mapTestClassesToSessions) {
-        mapTestClassesToSessions = [[NSMutableDictionary alloc] init];
+    if (!mapTestCasesToSessions) {
+        mapTestCasesToSessions = [[NSMutableDictionary alloc] init];
     }
-    [mapTestClassesToSessions setObject:[[NSMutableArray alloc] init] 
-                                 forKey:self]; 
-                                 
+    [mapTestCasesToSessions setObject:[[NSMutableArray alloc] init] 
+                               forKey:[NSValue valueWithNonretainedObject:self]]; 
+    
     pthread_mutex_unlock(&mutex);
 }
 
-+ (void)tearDown
+- (void)tearDown
 {
     pthread_mutex_lock(&mutex);
     
-    NSMutableArray *sessions = [mapTestClassesToSessions objectForKey:self];
-    [mapTestClassesToSessions removeObjectForKey:self];
-
+    NSMutableArray *sessions = [mapTestCasesToSessions objectForKey:[NSValue valueWithNonretainedObject:self]];
+    [mapTestCasesToSessions removeObjectForKey:[NSValue valueWithNonretainedObject:self]];
+    
     pthread_mutex_unlock(&mutex);
-
+    
     for (FBSession *session in sessions) {
         [session close];
     }
     [sessions release];
-} 
+    
+    [super tearDown];
+}
 
-- (FBTestSession *)createAndLoginTestUserWithPermissions:(NSString *)firstPermission, ...
+#pragma mark -
+#pragma mark FBTestSession creation helpers
+
+- (NSArray*)permissionsForDefaultTestSession
 {
-    NSMutableArray *permissions = [[[NSMutableArray alloc] init] autorelease];
-    
-    if (firstPermission) {
-        [permissions addObject:firstPermission];
-        
-        id vaPermission;
-        va_list vaArguments;
-        va_start(vaArguments, firstPermission);
-        while ((vaPermission = va_arg(vaArguments, id))) {
-            [permissions addObject:vaPermission];
-        }
-        va_end(vaArguments);
+    return nil;
+}
+
+- (FBTestSession*)defaultTestSession
+{
+    if (!_defaultTestSession) {
+        _defaultTestSession = [self getSessionWithSharedUserWithPermissions:[self permissionsForDefaultTestSession]];
     }
+    return _defaultTestSession;
+}
+
+- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions
+{
+    return [self getSessionWithSharedUserWithPermissions:permissions uniqueUserTag:nil];
+}
+
+- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions 
+                                             uniqueUserTag:(NSString*)uniqueUserTag
+{
+    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:permissions uniqueUserTag:uniqueUserTag];
     
-    FBTestSession *session = [FBTestSession sessionForUnitTestingWithPermissions:permissions];
-    
+    // Need to remember all the sessions for this class.
     pthread_mutex_lock(&mutex);
     
-    NSMutableArray *sessions = [mapTestClassesToSessions objectForKey:[self class]];
+    NSMutableArray *sessions = [mapTestCasesToSessions objectForKey:[NSValue valueWithNonretainedObject:self]];
     [sessions addObject:session];
     
     pthread_mutex_unlock(&mutex);
@@ -86,12 +112,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     return [self loginSession:session];
 }
 
-/*
-- (FBTestSession *)loginSharedTestUser:(NSUInteger)index permissions:(NSString *)firstPermission, ...
-{
-    return nil;
-}
-*/
+#pragma mark -
+#pragma mark Miscellaneous helpers
 
 - (FBTestSession *)loginSession:(FBTestSession *)session
 {
@@ -103,13 +125,12 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         STAssertTrue(!error, @"!error");
 
         [blocker signal];
-        // We assume we're only being waited on the first time.
-        blocker = nil;
     };
     
     [session openWithCompletionHandler:handler];
     
-    [blocker wait];
+    BOOL success = [blocker waitWithTimeout:60];
+    STAssertTrue(success, @"blocker timed out");
     STAssertTrue(session.isOpen, @"session.isOpen");
     
     return session;
@@ -132,7 +153,6 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                            graphObject:nil
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
          [blocker signal];
      }];
     
@@ -144,7 +164,6 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                            graphObject:nil
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
          [blocker signal];
      }];
     
@@ -186,6 +205,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
      }];
     [blocker wait];    
 }
+
+#pragma mark -
 
 @end
  

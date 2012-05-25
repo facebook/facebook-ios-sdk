@@ -35,7 +35,7 @@
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     
-    FBTestSession *session = [FBTestSession sessionForUnitTestingWithPermissions:nil];
+    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
@@ -63,8 +63,8 @@
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     
     __block BOOL wasNotifiedOfInvalid = NO;
-    
-    FBSession *session = [FBTestSession sessionForUnitTestingWithPermissions:nil];
+    // TODO this
+    FBTestSession *session = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {
             wasNotifiedOfInvalid = YES;
@@ -75,18 +75,19 @@
     [blocker wait];
     
     STAssertTrue(session.isOpen, @"Session should be open, and is not");
-    
-    __block NSString *userID;
+
+    __block NSString *userID = nil;
     [FBRequest startWithSession:session
-                            graphPath:@"me" 
-                    completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-                        userID = [me.id retain];
-                        STAssertTrue(userID.length > 0, @"user id should be non-empty");
-                        [blocker signal];
-                    }];
+                      graphPath:@"me" 
+              completionHandler:
+        ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+            userID = [me.id retain];
+            STAssertTrue(userID.length > 0, @"user id should be non-empty");
+            [blocker signal];
+        }];
     
     [blocker wait];
-    
+
     // use FBRequest to create an NSURLRequest
     FBRequest *temp = [[FBRequest alloc] initWithSession:session
                                                graphPath:userID

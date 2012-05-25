@@ -56,29 +56,23 @@
 }
 
 - (void)testPostingSimpleOpenGraphAction {
-    FBTestSession *session = [self createAndLoginTestUserWithPermissions:nil];
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];
     
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;
+
+    [self postAndValidateWithSession:self.defaultTestSession 
+                           graphPath:@"me/fbiossdktests:run" 
+                         graphObject:action 
+                       hasProperties:[NSArray arrayWithObjects:
+                                      nil]];
     
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session
-                             graphPath:@"me/fbiossdktests:run"
-                           graphObject:action
-                     completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
-         if (!error) {
-         } 
-         [blocker signal];
-     }];
-    [blocker wait];
 }
 
 - (void)testPostingComplexOpenGraphAction {
-    FBTestSession *session1 = [self createAndLoginTestUserWithPermissions:nil];
-    FBTestSession *session2 = [self createAndLoginTestUserWithPermissions:nil];
+    FBTestSession *session1 = self.defaultTestSession;
+    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kSecondTestUserTag];
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
     
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];

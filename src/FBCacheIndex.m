@@ -205,12 +205,14 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
         sqlite3_stmt* const sbks = _selectByKeyStatement;
         sqlite3_stmt* const rbks = _removeByKeyStatement;
         sqlite3_stmt* const ts = _trimStatement;
+        sqlite3_stmt* const us = _updateStatement;
         dispatch_async(_databaseQueue, ^{
             releaseStatement(is, nil);
             releaseStatement(sbks, nil);
             releaseStatement(rbks, nil);
             releaseStatement(ts, nil);
-
+            releaseStatement(us, nil);
+            
             CHECK_SQLITE_SUCCESS(sqlite3_close(db), nil);
         });
         
