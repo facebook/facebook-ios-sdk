@@ -88,7 +88,7 @@
     id<SCOGMeal> result = (id<SCOGMeal>)[FBGraphObject graphObject];
     
     // Give it a URL that will echo back the name of the meal as its title, description, and body.
-    result.url = [NSString stringWithFormat:format, @"scrumps:meal", meal, meal, meal];
+    result.url = [NSString stringWithFormat:format, @"fb_sample_scrumps:meal", meal, meal, meal];
     
     return result;
 }
@@ -119,7 +119,7 @@
     
     // Create the request and post the action to the "me/scrumps:eat" path.
     [FBRequest startForPostWithSession:self.session
-                             graphPath:@"me/scrumps:eat"
+                             graphPath:@"me/fb_sample_scrumps:eat"
                            graphObject:action
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
