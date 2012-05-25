@@ -286,30 +286,4 @@ typedef void (^FBSessionStateHandler)(FBSession *session,
  */
 + (void)setLoggingBehavior:(NSSet *)loggingBehavior;
 
-/*!
- @abstract
- Constructor helper to create a session for use in unit tests
- 
- @description
- This method creates a session object which creates a test user on open, and destroys the user on
- close; This method should not be used in application code -- but is useful for creating unit tests
- that use the Facebook iOS SDK.
- 
- @param permissions     array of strings naming permissions to authorize; nil indicates 
-                        a common default set of permissions should be used for unit testing
- */
-+ (id)sessionForUnitTestingWithPermissions:(NSArray*)permissions;
-
-/*!
- @abstract
- Accessor for test user ID.
- 
- @description
- Returns the ID of the test user created via sessionForUnitTestingWithPermissions:. Should not be
- used in application code.
- 
- @param session         the session to return a test user for
- */
-+ (NSString *)testUserIDForSession:(FBSession*)session;
-
 @end

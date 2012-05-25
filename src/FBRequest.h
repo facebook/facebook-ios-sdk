@@ -25,6 +25,7 @@ extern NSString* const FBGraphBasePath;
 // up-front decl's
 @protocol FBRequestDelegate;
 @class FBSession;
+@class UIImage;
 
 /*!
  @typedef FBRequestState

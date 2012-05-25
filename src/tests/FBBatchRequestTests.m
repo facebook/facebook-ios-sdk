@@ -15,7 +15,7 @@
  */
 
 #import "FBBatchRequestTests.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
@@ -30,7 +30,7 @@
 
 - (void)testBatchingTwoSearches 
 {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
+    FBTestSession *session = [self createAndLoginTestUserWithPermissions:nil];
 
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *request1 = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 

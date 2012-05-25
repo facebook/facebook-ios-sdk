@@ -15,7 +15,7 @@
  */
 
 #import "FBSessionTests.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
 #import "FBRequest.h"
 #import "FBGraphUser.h"
 #import "FBTestBlocker.h"
@@ -35,7 +35,7 @@
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     
-    FBSession *session = [FBSession sessionForUnitTestingWithPermissions:nil];
+    FBTestSession *session = [FBTestSession sessionForUnitTestingWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
@@ -64,7 +64,7 @@
     
     __block BOOL wasNotifiedOfInvalid = NO;
     
-    FBSession *session = [FBSession sessionForUnitTestingWithPermissions:nil];
+    FBSession *session = [FBTestSession sessionForUnitTestingWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {
             wasNotifiedOfInvalid = YES;

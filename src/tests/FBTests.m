@@ -15,7 +15,7 @@
  */
 
 #import "FBTests.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
 #import "FBTestBlocker.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
@@ -58,7 +58,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     [sessions release];
 } 
 
-- (FBSession *)loginTestUserWithPermissions:(NSString *)firstPermission, ...
+- (FBTestSession *)createAndLoginTestUserWithPermissions:(NSString *)firstPermission, ...
 {
     NSMutableArray *permissions = [[[NSMutableArray alloc] init] autorelease];
     
@@ -74,7 +74,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         va_end(vaArguments);
     }
     
-    FBSession *session = [FBSession sessionForUnitTestingWithPermissions:permissions];
+    FBTestSession *session = [FBTestSession sessionForUnitTestingWithPermissions:permissions];
     
     pthread_mutex_lock(&mutex);
     
@@ -86,7 +86,14 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     return [self loginSession:session];
 }
 
-- (FBSession *)loginSession:(FBSession *)session
+/*
+- (FBTestSession *)loginSharedTestUser:(NSUInteger)index permissions:(NSString *)firstPermission, ...
+{
+    return nil;
+}
+*/
+
+- (FBTestSession *)loginSession:(FBTestSession *)session
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
@@ -108,10 +115,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     return session;
 }
 
-- (void)makeTestUserInSession:(FBSession*)session1 friendsWithTestUserInSession:(FBSession*)session2 
+- (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2 
 {
-    NSString *id1 = [FBSession testUserIDForSession:session1];
-    NSString *id2 = [FBSession testUserIDForSession:session2];
+    NSString *id1 = session1.testUserID;
+    NSString *id2 = session2.testUserID;
     
     STAssertNotNil(id1, @"missing id1");
     STAssertNotNil(id2, @"missing id2");
@@ -161,7 +168,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     [blocker wait];
 }
 
-- (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
+- (void)postAndValidateWithSession:(FBTestSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     [FBRequest startForPostWithSession:session
                              graphPath:graphPath

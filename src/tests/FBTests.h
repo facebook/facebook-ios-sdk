@@ -26,19 +26,21 @@
 //#define FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS
 //#define FBIOSSDK_SKIP_SESSION_TESTS
 //#define FBIOSSDK_SKIP_BATCH_REQUEST_TESTS
+//#define FBIOSSDK_SKIP_REQUEST_CONNECTION_TESTS
 
-@class FBSession;
+@class FBTestSession;
 
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during
 // tear-down.
 @interface FBTests : SenTestCase
 
-- (FBSession *)loginTestUserWithPermissions:(NSString *)firstPermission, ...;
-- (FBSession *)loginSession:(FBSession *)session;
-- (void)makeTestUserInSession:(FBSession*)session1 friendsWithTestUserInSession:(FBSession*)session2;
+- (FBTestSession *)createAndLoginTestUserWithPermissions:(NSString *)firstPermission, ...;
+//- (FBTestSession *)loginSharedTestUser:(NSUInteger)index permissions:(NSString *)firstPermission, ...;
+- (FBTestSession *)loginSession:(FBTestSession *)session;
+- (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2;
 
-- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session;
-- (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames;
+- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBTestSession*)session;
+- (void)postAndValidateWithSession:(FBTestSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames;
 
 @end

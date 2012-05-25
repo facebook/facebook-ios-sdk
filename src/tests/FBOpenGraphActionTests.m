@@ -20,7 +20,7 @@
 #import "FBTestBlocker.h"
 #import "FBGraphPlace.h"
 #import "FBGraphUser.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
 
 #if defined(FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS)
 
@@ -56,7 +56,7 @@
 }
 
 - (void)testPostingSimpleOpenGraphAction {
-    FBSession *session = [self loginTestUserWithPermissions:nil];
+    FBTestSession *session = [self createAndLoginTestUserWithPermissions:nil];
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];
     
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
@@ -77,8 +77,8 @@
 }
 
 - (void)testPostingComplexOpenGraphAction {
-    FBSession *session1 = [self loginTestUserWithPermissions:nil];
-    FBSession *session2 = [self loginTestUserWithPermissions:nil];
+    FBTestSession *session1 = [self createAndLoginTestUserWithPermissions:nil];
+    FBTestSession *session2 = [self createAndLoginTestUserWithPermissions:nil];
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
     
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];
@@ -87,7 +87,7 @@
     placeObject.id = @"154981434517851";
 
     id<FBGraphUser> userObject = (id<FBGraphUser>)[FBGraphObject graphObject];
-    userObject.id = [FBSession testUserIDForSession:session2];
+    userObject.id = session2.testUserID;
     
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;

@@ -18,7 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBCommonRequestTests.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
 #import "FBRequest.h"
 #import "FBGraphUser.h"
 #import "FBGraphPlace.h"
@@ -169,7 +169,7 @@
         va_end(vaArguments);
     }
 
-    FBSession *session = [FBSession sessionForUnitTestingWithPermissions:permissions];
+    FBSession *session = [FBTestSession sessionForUnitTestingWithPermissions:permissions];
     return [self loginSession:session];
 }
 
