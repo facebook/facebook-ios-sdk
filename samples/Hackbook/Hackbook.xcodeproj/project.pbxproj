@@ -27,8 +27,6 @@
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
 		30ED588F14358F9400A226C3 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588E14358F9400A226C3 /* Icon@2x.png */; };
-		84501D0E153DD546000E4DD7 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 84501D0D153DD546000E4DD7 /* libsqlite3.dylib */; };
-		84501D10153DD57B000E4DD7 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84501D0F153DD57B000E4DD7 /* QuartzCore.framework */; };
 		E222E6A7154F140700B3711F /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E222E6A6154F140700B3711F /* FBiOSSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -61,8 +59,6 @@
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		30ED588E14358F9400A226C3 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		84501D0D153DD546000E4DD7 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		84501D0F153DD57B000E4DD7 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E222E6A6154F140700B3711F /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		E222E6A9154F146600B3711F /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Facebook.h; path = ../../build/FBiOSSDK.framework/Versions/A/DeprecatedHeaders/Facebook.h; sourceTree = "<group>"; };
 		E222E6AA154F146600B3711F /* FacebookSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacebookSDK.h; path = ../../build/FBiOSSDK.framework/Versions/A/DeprecatedHeaders/FacebookSDK.h; sourceTree = "<group>"; };
@@ -106,8 +102,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E222E6A7154F140700B3711F /* FBiOSSDK.framework in Frameworks */,
-				84501D10153DD57B000E4DD7 /* QuartzCore.framework in Frameworks */,
-				84501D0E153DD546000E4DD7 /* libsqlite3.dylib in Frameworks */,
 				30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */,
 				30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */,
 				30EA736013F5D21B003DC0D2 /* Foundation.framework in Frameworks */,
@@ -147,9 +141,7 @@
 		30EA735C13F5D21B003DC0D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				84501D0D153DD546000E4DD7 /* libsqlite3.dylib */,
 				E222E6A6154F140700B3711F /* FBiOSSDK.framework */,
-				84501D0F153DD57B000E4DD7 /* QuartzCore.framework */,
 				30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */,
 				30EA735D13F5D21B003DC0D2 /* UIKit.framework */,
 				30EA735F13F5D21B003DC0D2 /* Foundation.framework */,
@@ -392,6 +384,7 @@
 				GCC_PREFIX_HEADER = "Hackbook/Hackbook-Prefix.pch";
 				INFOPLIST_FILE = "Hackbook/Hackbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = Hackbook;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -411,6 +404,7 @@
 				GCC_PREFIX_HEADER = "Hackbook/Hackbook-Prefix.pch";
 				INFOPLIST_FILE = "Hackbook/Hackbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = Hackbook;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

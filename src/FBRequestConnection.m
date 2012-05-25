@@ -185,6 +185,8 @@ typedef enum FBRequestConnectionState {
 
 - (void)registerTokenToOmitFromLog:(NSString *)token; 
 
+- (void)addPiggybackRequests;
+
 + (NSString *)userAgent;
 
 + (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;

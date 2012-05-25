@@ -609,7 +609,7 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 
 - (void)registerAccess
 {
-    _accessTime = CACurrentMediaTime();
+    _accessTime = CFAbsoluteTimeGetCurrent();
     _dirty = YES;
 }
 

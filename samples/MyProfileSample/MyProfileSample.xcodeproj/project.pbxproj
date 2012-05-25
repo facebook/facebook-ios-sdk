@@ -16,8 +16,6 @@
 		5F6AF1A11532A37B00DDBD75 /* MPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A01532A37B00DDBD75 /* MPViewController.m */; };
 		5F6AF1A41532A37B00DDBD75 /* MPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A21532A37B00DDBD75 /* MPViewController_iPhone.xib */; };
 		5F6AF1A71532A37B00DDBD75 /* MPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A51532A37B00DDBD75 /* MPViewController_iPad.xib */; };
-		5F6AF1B41532B0BE00DDBD75 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */; };
-		5F6AF1B61532B0C600DDBD75 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */; };
 		5F6AF20F1533752700DDBD75 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */; };
 		85D0ED221537790E00D88664 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */; };
 /* End PBXBuildFile section */
@@ -37,8 +35,6 @@
 		5F6AF1A01532A37B00DDBD75 /* MPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPViewController.m; sourceTree = "<group>"; };
 		5F6AF1A31532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPhone.xib; sourceTree = "<group>"; };
 		5F6AF1A61532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPad.xib; sourceTree = "<group>"; };
-		5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -51,8 +47,6 @@
 				5F6AF18E1532A37B00DDBD75 /* UIKit.framework in Frameworks */,
 				5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */,
 				5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */,
-				5F6AF1B41532B0BE00DDBD75 /* QuartzCore.framework in Frameworks */,
-				5F6AF1B61532B0C600DDBD75 /* libsqlite3.dylib in Frameworks */,
 				5F6AF20F1533752700DDBD75 /* FBiOSSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,8 +76,6 @@
 			children = (
 				85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */,
 				5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */,
-				5F6AF1B51532B0C600DDBD75 /* libsqlite3.dylib */,
-				5F6AF1B31532B0BE00DDBD75 /* QuartzCore.framework */,
 				5F6AF18D1532A37B00DDBD75 /* UIKit.framework */,
 				5F6AF18F1532A37B00DDBD75 /* Foundation.framework */,
 				5F6AF1911532A37B00DDBD75 /* CoreGraphics.framework */,
@@ -273,6 +265,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyProfileSample/MyProfileSample-Prefix.pch";
 				INFOPLIST_FILE = "MyProfileSample/MyProfileSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -288,6 +281,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MyProfileSample/MyProfileSample-Prefix.pch";
 				INFOPLIST_FILE = "MyProfileSample/MyProfileSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

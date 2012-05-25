@@ -24,8 +24,6 @@
 		84070D421540AA2B00E39703 /* BOGSecondViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84070D401540AA2B00E39703 /* BOGSecondViewController_iPhone.xib */; };
 		84070D451540AA2B00E39703 /* BOGSecondViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84070D431540AA2B00E39703 /* BOGSecondViewController_iPad.xib */; };
 		840969421540C66400479AD9 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840969411540C66400479AD9 /* FBiOSSDK.framework */; };
-		840969451540C87D00479AD9 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 840969441540C87D00479AD9 /* QuartzCore.framework */; };
-		840969471540C89000479AD9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 840969461540C89000479AD9 /* libsqlite3.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,8 +50,6 @@
 		84070D411540AA2B00E39703 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/BOGSecondViewController_iPhone.xib; sourceTree = "<group>"; };
 		84070D441540AA2B00E39703 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/BOGSecondViewController_iPad.xib; sourceTree = "<group>"; };
 		840969411540C66400479AD9 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
-		840969441540C87D00479AD9 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		840969461540C89000479AD9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		8409694E1545D10B00479AD9 /* OGProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGProtocols.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,8 +58,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				840969471540C89000479AD9 /* libsqlite3.dylib in Frameworks */,
-				840969451540C87D00479AD9 /* QuartzCore.framework in Frameworks */,
 				84070D1B1540AA2B00E39703 /* UIKit.framework in Frameworks */,
 				84070D1D1540AA2B00E39703 /* Foundation.framework in Frameworks */,
 				84070D1F1540AA2B00E39703 /* CoreGraphics.framework in Frameworks */,
@@ -94,8 +88,6 @@
 		84070D191540AA2B00E39703 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				840969461540C89000479AD9 /* libsqlite3.dylib */,
-				840969441540C87D00479AD9 /* QuartzCore.framework */,
 				840969411540C66400479AD9 /* FBiOSSDK.framework */,
 				84070D1A1540AA2B00E39703 /* UIKit.framework */,
 				84070D1C1540AA2B00E39703 /* Foundation.framework */,
@@ -317,6 +309,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BooleanOGSample/BooleanOGSample-Prefix.pch";
 				INFOPLIST_FILE = "BooleanOGSample/BooleanOGSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -332,6 +325,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "BooleanOGSample/BooleanOGSample-Prefix.pch";
 				INFOPLIST_FILE = "BooleanOGSample/BooleanOGSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

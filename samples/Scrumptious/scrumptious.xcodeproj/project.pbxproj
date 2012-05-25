@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		85394EAC15546CC400550929 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EAB15546CC400550929 /* FBiOSSDK.framework */; };
 		85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */; };
-		85394EB0155470B400550929 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EAF155470B400550929 /* libsqlite3.dylib */; };
-		85394EB2155470BA00550929 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EB1155470BA00550929 /* QuartzCore.framework */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */; };
 		B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */; };
@@ -40,8 +38,6 @@
 /* Begin PBXFileReference section */
 		85394EAB15546CC400550929 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
-		85394EAF155470B400550929 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		85394EB1155470BA00550929 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
@@ -81,8 +77,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85394EB2155470BA00550929 /* QuartzCore.framework in Frameworks */,
-				85394EB0155470B400550929 /* libsqlite3.dylib in Frameworks */,
 				B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */,
 				B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */,
 				B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */,
@@ -97,8 +91,6 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
-				85394EB1155470BA00550929 /* QuartzCore.framework */,
-				85394EAF155470B400550929 /* libsqlite3.dylib */,
 				B9C1C38515130125008FA5D1 /* app_icon_57.png */,
 				B9C1C38315130122008FA5D1 /* app_icon_114.png */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
@@ -204,7 +196,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */;
+			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -339,6 +331,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -357,6 +350,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -366,7 +360,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */ = {
+		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9CD0A8E150EA4DE00560A93 /* Debug */,

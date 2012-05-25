@@ -18,8 +18,6 @@
 		E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82715413A570050835F /* FPViewController_iPhone.xib */; };
 		E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82A15413A570050835F /* FPViewController_iPad.xib */; };
 		E2D6B83915413D080050835F /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B83815413D070050835F /* FBiOSSDK.framework */; };
-		E2D6B83F1541CFF20050835F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B83E1541CFF20050835F /* libsqlite3.dylib */; };
-		E2D6B8411541CFF90050835F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B8401541CFF90050835F /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,8 +37,6 @@
 		E2D6B82815413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPhone.xib; sourceTree = "<group>"; };
 		E2D6B82B15413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPad.xib; sourceTree = "<group>"; };
 		E2D6B83815413D070050835F /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
-		E2D6B83E1541CFF20050835F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
-		E2D6B8401541CFF90050835F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +44,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E2D6B8411541CFF90050835F /* QuartzCore.framework in Frameworks */,
-				E2D6B83F1541CFF20050835F /* libsqlite3.dylib in Frameworks */,
 				E2D6B83915413D080050835F /* FBiOSSDK.framework in Frameworks */,
 				E2D6B81315413A570050835F /* UIKit.framework in Frameworks */,
 				E2D6B81515413A570050835F /* Foundation.framework in Frameworks */,
@@ -81,8 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */,
-				E2D6B83E1541CFF20050835F /* libsqlite3.dylib */,
-				E2D6B8401541CFF90050835F /* QuartzCore.framework */,
 				E2D6B83815413D070050835F /* FBiOSSDK.framework */,
 				E2D6B81215413A570050835F /* UIKit.framework */,
 				E2D6B81415413A570050835F /* Foundation.framework */,
@@ -273,6 +265,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -288,6 +281,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

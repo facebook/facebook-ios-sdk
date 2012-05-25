@@ -18,9 +18,7 @@
 		B9AF4BBC152E43EE00E9BA6C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BBB152E43EE00E9BA6C /* ViewController.m */; };
 		B9AF4BBF152E43EE00E9BA6C /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BBD152E43EE00E9BA6C /* ViewController_iPhone.xib */; };
 		B9AF4BC2152E43EE00E9BA6C /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */; };
-		B9AF4C35152E448D00E9BA6C /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */; };
 		B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C36152E449300E9BA6C /* CoreLocation.framework */; };
-		B9AF4C39152E449900E9BA6C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C38152E449900E9BA6C /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,9 +38,7 @@
 		B9AF4BBB152E43EE00E9BA6C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		B9AF4BBE152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		B9AF4BC1152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
-		B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		B9AF4C36152E449300E9BA6C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		B9AF4C38152E449900E9BA6C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,9 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B9AF4C39152E449900E9BA6C /* QuartzCore.framework in Frameworks */,
 				B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */,
-				B9AF4C35152E448D00E9BA6C /* libsqlite3.dylib in Frameworks */,
 				B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */,
 				B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */,
 				B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */,
@@ -86,8 +80,6 @@
 				85D0ED2C15377A5C00D88664 /* FBiOSSDKResources.bundle */,
 				B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */,
 				B9AF4C36152E449300E9BA6C /* CoreLocation.framework */,
-				B9AF4C34152E448D00E9BA6C /* libsqlite3.dylib */,
-				B9AF4C38152E449900E9BA6C /* QuartzCore.framework */,
 				B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */,
 				B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */,
 				B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */,
@@ -281,6 +273,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -296,6 +289,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
