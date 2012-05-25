@@ -24,6 +24,7 @@ NSString *const FBTokenInformationExpirationDateKey = @"com.facebook.FBiOSSDK:To
 NSString *const FBTokenInformationRefreshDateKey = @"com.facebook.FBiOSSDK:TokenInformationRefreshDateKey";
 NSString *const FBTokenInformationUserFBIDKey = @"com.facebook.FBiOSSDK:TokenInformationUserFBIDKey";
 NSString *const FBTokenInformationIsSSOKey = @"com.facebook.FBiOSSDK:TokenInformationIsSSOKey";
+NSString *const FBTokenInformationPermissionsKey = @"com.facebook.FBiOSSDK:TokenInformationPermissionsKey";
 
 @implementation FBSessionTokenCachingStrategy {
     NSString *_accessTokenInformationKeyName;

@@ -189,6 +189,8 @@ typedef enum FBRequestConnectionState {
 
 + (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;
 
+- (void)addPiggybackRequests;
+
 @end
 
 // ----------------------------------------------------------------------------

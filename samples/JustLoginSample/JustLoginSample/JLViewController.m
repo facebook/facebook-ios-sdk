@@ -59,7 +59,7 @@
         [textNoteOrLink setText:@"Login to create a link to fetch account data"];
         
         // create a fresh session object in case of subsequent login
-        appDelegate.session = [[FBSession alloc] init]; 
+        appDelegate.session = [[FBSession alloc] init];
         if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
             [appDelegate.session openWithCompletionHandler:^(FBSession *session, 

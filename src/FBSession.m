@@ -133,6 +133,8 @@ static NSSet *g_loggingBehavior;
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode;
 + (void)deleteUnitTestUser:(NSString*)userID accessToken:(NSString*)accessToken;
++ (BOOL)areRequiredPermissions:(NSArray*)requiredPermissions
+          aSubsetOfPermissions:(NSArray*)cachedPermissions;
 
 @end
 
@@ -270,8 +272,19 @@ static NSSet *g_loggingBehavior;
         if ([FBSessionTokenCachingStrategy isValidTokenInformation:tokenInfo]) {
             NSDate *cachedTokenExpirationDate = [tokenInfo objectForKey:FBTokenInformationExpirationDateKey];
             NSString *cachedToken = [tokenInfo objectForKey:FBTokenInformationTokenKey];
-            // check to see if expiration date is later than now
-            if (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]]) {
+                        
+            // get the cached permissions, and do a subset check
+            NSArray *cachedPermissions = [tokenInfo objectForKey:FBTokenInformationPermissionsKey];
+            BOOL isSubset = [FBSession areRequiredPermissions:permissions
+                                         aSubsetOfPermissions:cachedPermissions];
+
+            if (isSubset &&
+                // check to see if expiration date is later than now
+                (NSOrderedDescending == [cachedTokenExpirationDate compare:[NSDate date]])) {           
+                // if we had cached anything at all, use those
+                if (cachedPermissions) {
+                    self.permissions = cachedPermissions;
+                }
                 
                 // if we have cached an optional refresh date or SSO indicator, pick them up here
                 self.refreshDate = [tokenInfo objectForKey:FBTokenInformationRefreshDateKey];
@@ -622,13 +635,17 @@ static NSSet *g_loggingBehavior;
             [tokenInfo setObject:token forKey:FBTokenInformationTokenKey];
             [tokenInfo setObject:date forKey:FBTokenInformationExpirationDateKey];
             
-            // but these next two values are optional
+            // but these following values are optional
             if (self.refreshDate) {
                 [tokenInfo setObject:self.refreshDate forKey:FBTokenInformationRefreshDateKey];
             }
             
             if (_isSSOToken) {
                 [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsSSOKey];
+            }
+            
+            if (self.permissions) {
+                [tokenInfo setObject:self.permissions forKey:FBTokenInformationPermissionsKey];
             }
             
             [self.tokenCachingStrategy cacheTokenInformation:tokenInfo];
@@ -993,6 +1010,13 @@ static NSSet *g_loggingBehavior;
             NSLog(@"FBSession !delete test user with id:%@ error:%@", userID, error ? error : body);
         }         
     }
+}
+
++ (BOOL)areRequiredPermissions:(NSArray*)requiredPermissions
+          aSubsetOfPermissions:(NSArray*)cachedPermissions {
+    NSSet *required = [NSSet setWithArray:requiredPermissions];
+    NSSet *cached = [NSSet setWithArray:cachedPermissions];
+    return [required isSubsetOfSet:cached];
 }
 
 #pragma mark -
