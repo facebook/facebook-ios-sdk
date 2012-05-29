@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
+#import "FBError.h"
+#import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
-#import "FBGraphObjectPagingLoader.h"
+#import "FBLogger.h"
 #import "FBPlacesPickerViewController.h"
-#import "FBRequestConnection.h"
 #import "FBRequest.h"
-#import "FBError.h"
+#import "FBRequestConnection.h"
+#import "FBUtility.h"
+
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 static const NSInteger defaultResultsLimit = 100;
@@ -37,7 +40,6 @@ static NSString *defaultImageName =
 @property (nonatomic, retain) FBGraphObjectTableSelection *selectionManager;
 @property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
 @property (nonatomic, retain) NSTimer *searchTextChangedTimer;
-@property (nonatomic) BOOL hasSearchTextChangedSinceLastQuery;
 
 - (void)initialize;
 - (void)loadDataPostThrottle;
@@ -46,12 +48,14 @@ static NSString *defaultImageName =
 
 @end
 
-@implementation FBPlacesPickerViewController
+@implementation FBPlacesPickerViewController {
+    BOOL _hasSearchTextChangedSinceLastQuery;
+    unsigned long _loadStartTime;
+}
 
 @synthesize dataSource = _dataSource;
 @synthesize delegate = _delegate;
 @synthesize fieldsForRequest = _fieldsForRequest;
-@synthesize hasSearchTextChangedSinceLastQuery = _hasSearchTextChangedSinceLastQuery;
 @synthesize loader = _loader;
 @synthesize locationCoordinate = _locationCoordinate;
 @synthesize radiusInMeters = _radiusInMeters;
@@ -188,7 +192,7 @@ static NSString *defaultImageName =
         self.searchTextChangedTimer = [self createSearchTextChangedTimer];
         [self loadDataPostThrottle];
     } else {
-        self.hasSearchTextChangedSinceLastQuery = YES;
+        _hasSearchTextChangedSinceLastQuery = YES;
     }
 }
 
@@ -197,6 +201,7 @@ static NSString *defaultImageName =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _loadStartTime = [FBUtility currentTimeInMilliseconds];
     CGRect bounds = self.view.bounds;
 
     if (!self.tableView) {
@@ -250,7 +255,7 @@ static NSString *defaultImageName =
                         @"id", @"name", @"location", @"category", @"picture", nil];
     [request.parameters setObject:fields forKey:@"fields"];
 
-    self.hasSearchTextChangedSinceLastQuery = NO;
+    _hasSearchTextChangedSinceLastQuery = NO;
     [self.loader startLoadingWithRequest:request];
     [self updateView];
 }
@@ -272,7 +277,7 @@ static NSString *defaultImageName =
 
 - (void)searchTextChangedTimerFired:(NSTimer *)timer
 {
-    if (self.hasSearchTextChangedSinceLastQuery) {
+    if (_hasSearchTextChangedSinceLastQuery) {
         [self loadDataPostThrottle];
     } else {
         // Nothing has changed in 2 seconds. Invalidate and forget about this timer.
@@ -345,6 +350,17 @@ static NSString *defaultImageName =
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
     [self.spinner stopAnimating];
+    
+    // This logging currently goes here because we're effectively complete with our initial view when 
+    // the first page of results come back.  In the future, when we do caching, we will need to move
+    // this to a more appropriate place (e.g., after the cache has been brought in).
+    if (_loadStartTime != 0) {
+        [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                        formatString:@"Places Picker: first render %d msec", 
+         [FBUtility currentTimeInMilliseconds] - _loadStartTime];
+        _loadStartTime = 0;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(placesPickerViewControllerDataDidChange:)]) {
         [self.delegate placesPickerViewControllerDataDidChange:self];
     }

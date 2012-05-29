@@ -31,16 +31,19 @@
  */
 
 /*! Log requests from FBRequest* classes */
-#define FB_LOG_BEHAVIOR_FB_REQUESTS @"fb_log_fb_requests"
+#define FB_LOG_BEHAVIOR_FB_REQUESTS @"fb_requests"
 
 /*! Log requests from FBURLConnection* classes */
-#define FB_LOG_BEHAVIOR_FBURL_CONNECTIONS @"fb_log_fburl_connections"
+#define FB_LOG_BEHAVIOR_FBURL_CONNECTIONS @"fburl_connections"
 
 /*! Include access token in logging. */
-#define FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS @"fb_log_include_access_tokens"
+#define FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS @"include_access_tokens"
 
 /*! Log session state transitions. */
-#define FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS @"fb_log_session_state_transitions"
+#define FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS @"state_transitions"
+
+/*! Log performance characteristics */
+#define FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS @"perf_characteristics"
 
 /*! 
  @typedef FBSessionState enum

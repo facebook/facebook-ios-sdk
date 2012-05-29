@@ -94,6 +94,7 @@ static NSSet *g_loggingBehavior;
 @property(readonly) NSString *appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
+@property(readwrite) unsigned long previousTransitionBeginTime;
 
 // private members
 - (void)notifyOfState:(FBSessionState)state;
@@ -127,7 +128,8 @@ static NSSet *g_loggingBehavior;
             attemptedRefreshDate = _attemptedRefreshDate,
             loginDialog = _loginDialog,
             affinitizedThread = _affinitizedThread,
-            loginHandler = _loginHandler;
+            loginHandler = _loginHandler,
+            previousTransitionBeginTime = _previousTransitionBeginTime;
 
 #pragma mark Lifecycle
 
@@ -186,6 +188,7 @@ static NSSet *g_loggingBehavior;
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
+        self.previousTransitionBeginTime = [FBUtility currentTimeInMilliseconds];
 
         //first notification
         [self notifyOfState:self.state];
@@ -475,8 +478,14 @@ static NSSet *g_loggingBehavior;
     }
 
     // valid transitions notify
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS
-                        logEntry:[NSString stringWithFormat:@"FBSession transitionToState:%i fromState:%i", state, statePrior]];
+    unsigned long currTime = [FBUtility currentTimeInMilliseconds];
+    NSString *logString = [NSString stringWithFormat:@"FBSession transition toState:%i fromState:%i - %d msec", 
+                           state, 
+                           statePrior,
+                           currTime - self.previousTransitionBeginTime];
+    self.previousTransitionBeginTime = currTime;
+    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS logEntry:logString];
+    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS logEntry:logString];
     
     // identify whether we will update token and date, and what the values will be
     BOOL changingTokenAndDate = false;
@@ -756,13 +765,13 @@ static NSSet *g_loggingBehavior;
     // final retain on the handler
     if (handler) {
         @try {
-            // unsuccessful transitions don't change state and don't propegate the error object
+            // unsuccessful transitions don't change state and don't propagate the error object
             handler(self,
                     self.state,
                     didTransition ? error : nil);
         }
         @finally {
-            // now release our stack referece
+            // now release our stack reference
             [handler release];
         }
     }

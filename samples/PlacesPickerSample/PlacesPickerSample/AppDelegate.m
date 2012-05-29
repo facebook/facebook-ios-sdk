@@ -40,11 +40,6 @@
 {    
     self.session = [[FBSession alloc] init];
 
-    [FBSession setLoggingBehavior:[NSSet setWithObjects:
-                                   FB_LOG_BEHAVIOR_FB_REQUESTS,
-                                   FB_LOG_BEHAVIOR_FBURL_CONNECTIONS,
-                                   nil]];
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];

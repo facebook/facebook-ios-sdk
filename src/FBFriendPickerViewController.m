@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
+#import "FBError.h"
+#import "FBFriendPickerViewController.h"
+#import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
-#import "FBGraphObjectPagingLoader.h"
-#import "FBFriendPickerViewController.h"
-#import "FBRequestConnection.h"
+#import "FBLogger.h"
 #import "FBRequest.h"
-#import "FBError.h"
+#import "FBRequestConnection.h"
+#import "FBUtility.h"
 
 static NSString *defaultImageName =
 @"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
@@ -40,6 +42,7 @@ static NSString *defaultImageName =
 
 @implementation FBFriendPickerViewController {
     BOOL _allowsMultipleSelection;
+    unsigned long _loadStartTime;
 }
 
 @synthesize dataSource = _dataSource;
@@ -180,6 +183,7 @@ static NSString *defaultImageName =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _loadStartTime = [FBUtility currentTimeInMilliseconds];
     CGRect bounds = self.view.bounds;
 
     if (!self.tableView) {
@@ -285,6 +289,17 @@ static NSString *defaultImageName =
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
     [self.spinner stopAnimating];
+    
+    // This logging currently goes here because we're effectively complete with our initial view when 
+    // the first page of results come back.  In the future, when we do caching, we will need to move
+    // this to a more appropriate place (e.g., after the cache has been brought in).
+    if (_loadStartTime != 0) {
+        [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                        formatString:@"Friend Picker: first render %d msec", 
+         [FBUtility currentTimeInMilliseconds] - _loadStartTime];
+        _loadStartTime = 0;
+    }
+    
     if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
         [self.delegate friendPickerViewControllerDataDidChange:self];
     }
@@ -296,5 +311,6 @@ static NSString *defaultImageName =
         [self.delegate friendPickerViewController:self handleError:error];
     }
 }
+
 
 @end
