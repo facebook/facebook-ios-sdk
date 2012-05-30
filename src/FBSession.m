@@ -858,4 +858,47 @@ static NSSet *g_loggingBehavior;
 }
 
 #pragma mark -
+#pragma mark Debugging helpers
+
+- (NSString*)description {
+    NSString *stateDescription = nil;
+    switch (self.state) {
+        case FBSessionStateCreated: 
+            stateDescription = @"FBSessionStateCreated"; 
+            break;
+        case FBSessionStateCreatedTokenLoaded: 
+            stateDescription = @"FBSessionStateCreatedTokenLoaded";
+            break;
+        case FBSessionStateOpen:
+            stateDescription = @"FBSessionStateOpen";
+            break;
+        case FBSessionStateOpenTokenExtended:
+            stateDescription = @"FBSessionStateOpenTokenExtended";
+            break;
+        case FBSessionStateClosedLoginFailed:
+            stateDescription = @"FBSessionStateClosedLoginFailed";
+            break;
+        case FBSessionStateClosed:
+            stateDescription = @"FBSessionStateClosed";
+            break;
+        default:
+            stateDescription = @"[Unknown]";
+            break;
+    }
+	return [NSString stringWithFormat:@"<%@: %p, state: %@, loginHandler: %p, appID: %@, urlSchemeSuffix: %@, tokenCachingStrategy:%@, expirationDate: %@, refreshDate: %@, attemptedRefreshDate: %@, permissions:%@>",
+            NSStringFromClass([self class]), 
+            self, 
+            stateDescription,
+            self.loginHandler,
+            self.appID,
+            self.urlSchemeSuffix,
+            [self.tokenCachingStrategy description],
+            self.expirationDate,
+            self.refreshDate,
+            self.attemptedRefreshDate,
+            [self.permissions description]];    
+}
+
+#pragma mark -
+
 @end

@@ -1103,4 +1103,27 @@ typedef enum FBRequestConnectionState {
     [request release];
 }
 
+#pragma mark Debugging helpers
+
+- (NSString*)description {
+    NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, %d request(s): (\n",
+                               NSStringFromClass([self class]), 
+                               self,
+                               self.requests.count];
+    BOOL comma = NO;
+    for (FBRequestMetadata *metadata in self.requests) {
+        FBRequest *request = metadata.request;
+        if (comma) {
+            [result appendString:@",\n"];
+        }
+        [result appendString:[request description]];
+        comma = YES;
+    }
+    [result appendString:@"\n)>"];
+    return result;
+    
+}
+
+#pragma mark -
+
 @end

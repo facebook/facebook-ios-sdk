@@ -413,4 +413,34 @@ static NSString *const kPostHTTPMethod = @"POST";
     return [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
 }
 
+#pragma mark Debugging helpers
+
+- (NSString*)description {
+    NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, session: %p",
+                               NSStringFromClass([self class]), 
+                               self,
+                               self.session];
+    if (self.graphPath) {
+        [result appendFormat:@", graphPath: %@", self.graphPath];
+    }
+    if (self.graphObject) {
+        [result appendFormat:@", graphObject: %@", self.graphObject];
+        NSString *graphObjectID = [self.graphObject objectForKey:@"id"];
+        if (graphObjectID) {
+            [result appendFormat:@" (id=%@)", graphObjectID];
+        }
+    }
+    if (self.restMethod) {
+        [result appendFormat:@", restMethod: %@", self.restMethod];
+    }
+    if (self.HTTPMethod) {
+        [result appendFormat:@", HTTPMethod: %@", self.HTTPMethod];
+    }
+    [result appendFormat:@", parameters: %@>", [self.parameters description]];
+    return result;
+    
+}
+
+#pragma mark -
+
 @end
