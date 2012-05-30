@@ -41,6 +41,8 @@
 @synthesize connection = _connection;
 @synthesize delegate = _delegate;
 
+#pragma mark Lifecycle methods
+
 - (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource {
     if (self = [super init]) {
         self.dataSource = aDataSource;
@@ -48,6 +50,18 @@
     }
     return self;
 }
+
+- (void)dealloc {
+    [_tableView release];
+    [_dataSource release];
+    [_nextLink release];
+    [_session release];
+    [_connection release];
+    
+    [super dealloc];
+}
+
+#pragma mark -
 
 - (void)setDataSource:(FBGraphObjectTableDataSource *)dataSource {
     [dataSource retain];
