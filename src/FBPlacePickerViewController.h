@@ -19,18 +19,18 @@
 #import "FBGraphPlace.h"
 #import "FBSession.h"
 
-@protocol FBPlacesPickerDelegate;
+@protocol FBPlacePickerDelegate;
 
 /*!
- @class FBPlacesPickerViewController
+ @class FBPlacePickerViewController
  
  @abstract
- FBPlacesPickerViewController object is used to create and coordinate UI
+ FBPlacePickerViewController object is used to create and coordinate UI
  for viewing and picking places.
  
  @unsorted
  */
-@interface FBPlacesPickerViewController : UIViewController
+@interface FBPlacePickerViewController : UIViewController
 
 /*!
  @abstract
@@ -49,7 +49,7 @@
  Delegate used by the view controller to notify of selection changes, and handle
  errors and filtering.
  */
-@property (nonatomic, assign) id<FBPlacesPickerDelegate> delegate;
+@property (nonatomic, assign) id<FBPlacePickerDelegate> delegate;
 
 /*!
  @abstract
@@ -132,7 +132,7 @@
  If a conforming delegate is provided, the view controller will notify the delegate of selection change,
  filter and error events
  */
-@protocol FBPlacesPickerDelegate <NSObject>
+@protocol FBPlacePickerDelegate <NSObject>
 @optional
 
 /*!
@@ -144,10 +144,10 @@
  another tableView (such as for a UISearchBar) is showing data then
  it may need to be reloaded too.
  
- @param placesPicker   the view controller object sending the notification
+ @param placePicker   the view controller object sending the notification
  */
-- (void)placesPickerViewControllerDataDidChange:
-(FBPlacesPickerViewController *)placesPicker;
+- (void)placePickerViewControllerDataDidChange:
+(FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
@@ -157,10 +157,10 @@
  another tableView (such as for a UISearchBar) is showing data then
  it may need to be reloaded too.
  
- @param placesPicker   the view controller object sending the notification
+ @param placePicker   the view controller object sending the notification
  */
-- (void)placesPickerViewControllerSelectionDidChange:
-(FBPlacesPickerViewController *)placesPicker;
+- (void)placePickerViewControllerSelectionDidChange:
+(FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
@@ -169,14 +169,14 @@
  @discussion
  This can be used to implement a search bar that filters the list.
  */
-- (BOOL)placesPickerViewController:(FBPlacesPickerViewController *)placesPicker
+- (BOOL)placePickerViewController:(FBPlacePickerViewController *)placePicker
                 shouldIncludePlace:(id <FBGraphPlace>)place;
 
 /*!
  @abstract
  Called if there is a communication error.
  */
-- (void)placesPickerViewController:(FBPlacesPickerViewController *)placesPicker
+- (void)placePickerViewController:(FBPlacePickerViewController *)placePicker
                        handleError:(NSError *)error;
 
 @end

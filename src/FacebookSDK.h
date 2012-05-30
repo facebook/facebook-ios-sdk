@@ -21,7 +21,7 @@
 
 // controls
 #import "FBProfilePictureView.h"
-#import "FBPlacesPickerViewController.h"
+#import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 
 // graph
@@ -73,7 +73,7 @@
  @textblock
  
                *------------* *----------*  *----------------* *---*
-  Scenario --> |FBPersonView| |FBLikeView|  | FBPlacesPicker | | F |
+  Scenario --> |FBPersonView| |FBLikeView|  | FBPlacePicker  | | F |
                *------------* *----------*  *----------------* | a |
                *-------------------*  *----------*  *--------* | c |
  Component --> |   FBGraphObject   |  | FBDialog |  | FBView | | e |

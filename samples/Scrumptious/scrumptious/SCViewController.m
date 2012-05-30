@@ -22,12 +22,12 @@
 #import <FBiOSSDK/FBRequest.h>
 
 @interface SCViewController()<UITableViewDataSource, UIImagePickerControllerDelegate, FBFriendPickerDelegate,
-    UINavigationControllerDelegate, FBPlacesPickerDelegate,
+    UINavigationControllerDelegate, FBPlacePickerDelegate,
     CLLocationManagerDelegate> {
 }
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
-@property (strong, nonatomic) FBPlacesPickerViewController *placesPickerController;
+@property (strong, nonatomic) FBPlacePickerViewController *placesPickerController;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView* userProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel* userNameLabel;
 @property (strong, nonatomic) IBOutlet UIButton* announceButton;
@@ -394,7 +394,7 @@
         
         case 1:
             if (!self.placesPickerController) {
-                self.placesPickerController = [[FBPlacesPickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.placesPickerController = [[FBPlacePickerViewController alloc] initWithNibName:nil bundle:nil];
                 self.placesPickerController.delegate = self;
                 self.placesPickerController.title = @"Select a restaurant";
             }
@@ -450,12 +450,12 @@
     [self updateSelections];
 }
 
-#pragma mark FBPlacesPickerDelegate methods
+#pragma mark FBPlacePickerDelegate methods
 
-- (void)placesPickerViewControllerSelectionDidChange:
-(FBPlacesPickerViewController *)placesPicker
+- (void)placePickerViewControllerSelectionDidChange:
+(FBPlacePickerViewController *)placePicker
 {
-    self.selectedPlace = placesPicker.selection;
+    self.selectedPlace = placePicker.selection;
     [self updateSelections];
     if (self.selectedPlace.count > 0) {
         [self.navigationController popViewControllerAnimated:true];

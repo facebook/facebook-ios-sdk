@@ -23,7 +23,7 @@ enum SampleLocation {
     SampleLocationGPS,
 };
 
-@interface ViewController () <CLLocationManagerDelegate, FBPlacesPickerDelegate>
+@interface ViewController () <CLLocationManagerDelegate, FBPlacePickerDelegate>
 
 @property (strong, nonatomic) CLLocationManager* locationManager;
 @property (nonatomic) NSInteger viewStateSearchScopeIndex;
@@ -111,9 +111,9 @@ shouldReloadTableForSearchString:(NSString *)searchString
     [self.tableView reloadData];
 }
 
-- (void)placesPickerViewControllerSelectionDidChange:(FBPlacesPickerViewController *)placesPicker
+- (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
 {
-    id<FBGraphPlace> place = placesPicker.selection;
+    id<FBGraphPlace> place = placePicker.selection;
 
     // we'll use logging to show the simple typed property access to place and location info
     NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
@@ -152,7 +152,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
     self.viewStateSearchWasActive = [self.searchDisplayController isActive];
 }
 
-- (void)placesPickerViewControllerDataDidChange:(FBPlacesPickerViewController *)placesPicker
+- (void)placePickerViewControllerDataDidChange:(FBPlacePickerViewController *)placePicker
 {
     [self.searchDisplayController.searchResultsTableView reloadData];
 }

@@ -19,7 +19,7 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
 #import "FBLogger.h"
-#import "FBPlacesPickerViewController.h"
+#import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
@@ -29,9 +29,9 @@ static const NSInteger searchTextChangedTimerInterval = 2;
 static const NSInteger defaultResultsLimit = 100;
 static const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
-@"FBiOSSDKResources.bundle/FBPlacesPickerView/images/fb_generic_place.png";
+@"FBiOSSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
-@interface FBPlacesPickerViewController () <FBPlacesPickerDelegate,
+@interface FBPlacePickerViewController () <FBPlacePickerDelegate,
                                             FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
                                             FBGraphObjectPagingLoaderDelegate>
@@ -48,7 +48,7 @@ static NSString *defaultImageName =
 
 @end
 
-@implementation FBPlacesPickerViewController {
+@implementation FBPlacePickerViewController {
     BOOL _hasSearchTextChangedSinceLastQuery;
     unsigned long _loadStartTime;
 }
@@ -293,8 +293,8 @@ static NSString *defaultImageName =
 (FBGraphObjectTableSelection *)selection
 {
     if ([self.delegate respondsToSelector:
-         @selector(placesPickerViewControllerSelectionDidChange:)]) {
-        [self.delegate placesPickerViewControllerSelectionDidChange:self];
+         @selector(placePickerViewControllerSelectionDidChange:)]) {
+        [self.delegate placePickerViewControllerSelectionDidChange:self];
     }
 }
 
@@ -306,8 +306,8 @@ static NSString *defaultImageName =
     id<FBGraphPlace> place = (id<FBGraphPlace>)item;
 
     if ([self.delegate
-         respondsToSelector:@selector(placesPickerViewController:shouldIncludePlace:)]) {
-        return [self.delegate placesPickerViewController:self
+         respondsToSelector:@selector(placePickerViewController:shouldIncludePlace:)]) {
+        return [self.delegate placePickerViewController:self
                                       shouldIncludePlace:place];
     } else {
         return YES;
@@ -361,14 +361,14 @@ static NSString *defaultImageName =
         _loadStartTime = 0;
     }
     
-    if ([self.delegate respondsToSelector:@selector(placesPickerViewControllerDataDidChange:)]) {
-        [self.delegate placesPickerViewControllerDataDidChange:self];
+    if ([self.delegate respondsToSelector:@selector(placePickerViewControllerDataDidChange:)]) {
+        [self.delegate placePickerViewControllerDataDidChange:self];
     }
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {
-    if ([self.delegate respondsToSelector:@selector(placesPickerViewController:handleError:)]) {
-        [self.delegate placesPickerViewController:self handleError:error];
+    if ([self.delegate respondsToSelector:@selector(placePickerViewController:handleError:)]) {
+        [self.delegate placePickerViewController:self handleError:error];
     }
     
 }

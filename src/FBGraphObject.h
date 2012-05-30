@@ -40,20 +40,21 @@
  its a duck) model which supports an optional static facade. Duck-typing achieves
  the flexibility necessary for Social Graph and OG uses, and the static facade
  increases discoverability, maintainability, robustness and simplicity.
- The following excerpt from the PlacesPickerSample shows a simple use of the 
+ The following excerpt from the PlacePickerSample shows a simple use of the 
  a facade protocol FBGraphPlace by an application: 
  <pre>
  @textblock
-   - (void)placesPicker:(FBPlacesPickerView*)placesPicker
-           didPickPlace:(NSDictionary<FBGraphPlace>*)place {
-       // we'll use logging to show the simple typed property access to place and location info
-       NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
-             place.name,
-             place.location.city,
-             place.location.state,
-             place.location.latitude,
-             place.location.longitude);
-       ...
+   - (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
+   {
+     id<FBGraphPlace> place = placePicker.selection;
+ 
+     // we'll use logging to show the simple typed property access to place and location info
+     NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
+     place.name,
+     place.location.city,
+     place.location.state,
+     place.location.latitude,
+     place.location.longitude);
    }
  @/textblock
  </pre>

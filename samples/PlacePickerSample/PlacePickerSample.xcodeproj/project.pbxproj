@@ -24,18 +24,18 @@
 /* Begin PBXFileReference section */
 		85D0ED2C15377A5C00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
-		B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacesPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacePickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		B9AF4BB0152E43EE00E9BA6C /* PlacesPickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlacesPickerSample-Info.plist"; sourceTree = "<group>"; };
+		B9AF4BB0152E43EE00E9BA6C /* PlacePickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlacePickerSample-Info.plist"; sourceTree = "<group>"; };
 		B9AF4BB2152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B9AF4BB4152E43EE00E9BA6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B9AF4BB6152E43EE00E9BA6C /* PlacesPickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlacesPickerSample-Prefix.pch"; sourceTree = "<group>"; };
+		B9AF4BB6152E43EE00E9BA6C /* PlacePickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlacePickerSample-Prefix.pch"; sourceTree = "<group>"; };
 		B9AF4BB7152E43EE00E9BA6C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B9AF4BB8152E43EE00E9BA6C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B9AF4BBA152E43EE00E9BA6C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B9AF4BBB152E43EE00E9BA6C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B9AF4BBA152E43EE00E9BA6C /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		B9AF4BBB152E43EE00E9BA6C /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		B9AF4BBE152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
 		B9AF4BC1152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
 		B9AF4C36152E449300E9BA6C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -60,7 +60,7 @@
 		B9AF4B99152E43EE00E9BA6C = {
 			isa = PBXGroup;
 			children = (
-				B9AF4BAE152E43EE00E9BA6C /* PlacesPickerSample */,
+				B9AF4BAE152E43EE00E9BA6C /* PlacePickerSample */,
 				B9AF4BA7152E43EE00E9BA6C /* Frameworks */,
 				B9AF4BA5152E43EE00E9BA6C /* Products */,
 			);
@@ -69,7 +69,7 @@
 		B9AF4BA5152E43EE00E9BA6C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */,
+				B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B9AF4BAE152E43EE00E9BA6C /* PlacesPickerSample */ = {
+		B9AF4BAE152E43EE00E9BA6C /* PlacePickerSample */ = {
 			isa = PBXGroup;
 			children = (
 				B9AF4BB7152E43EE00E9BA6C /* AppDelegate.h */,
@@ -98,16 +98,17 @@
 				B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */,
 				B9AF4BAF152E43EE00E9BA6C /* Supporting Files */,
 			);
-			path = PlacesPickerSample;
+			name = PlacePickerSample;
+			path = PlacePickerSample;
 			sourceTree = "<group>";
 		};
 		B9AF4BAF152E43EE00E9BA6C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B9AF4BB0152E43EE00E9BA6C /* PlacesPickerSample-Info.plist */,
+				B9AF4BB0152E43EE00E9BA6C /* PlacePickerSample-Info.plist */,
 				B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */,
 				B9AF4BB4152E43EE00E9BA6C /* main.m */,
-				B9AF4BB6152E43EE00E9BA6C /* PlacesPickerSample-Prefix.pch */,
+				B9AF4BB6152E43EE00E9BA6C /* PlacePickerSample-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -115,9 +116,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B9AF4BA3152E43EE00E9BA6C /* PlacesPickerSample */ = {
+		B9AF4BA3152E43EE00E9BA6C /* PlacePickerSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacesPickerSample" */;
+			buildConfigurationList = B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacePickerSample" */;
 			buildPhases = (
 				B9AF4BA0152E43EE00E9BA6C /* Sources */,
 				B9AF4BA1152E43EE00E9BA6C /* Frameworks */,
@@ -127,9 +128,9 @@
 			);
 			dependencies = (
 			);
-			name = PlacesPickerSample;
-			productName = PlacesPickerSample;
-			productReference = B9AF4BA4152E43EE00E9BA6C /* PlacesPickerSample.app */;
+			name = PlacePickerSample;
+			productName = PlacePickerSample;
+			productReference = B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -140,7 +141,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacesPickerSample" */;
+			buildConfigurationList = B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacePickerSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -152,7 +153,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B9AF4BA3152E43EE00E9BA6C /* PlacesPickerSample */,
+				B9AF4BA3152E43EE00E9BA6C /* PlacePickerSample */,
 			);
 		};
 /* End PBXProject section */
@@ -271,8 +272,8 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
-				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
 				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -287,8 +288,8 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "PlacesPickerSample/PlacesPickerSample-Prefix.pch";
-				INFOPLIST_FILE = "PlacesPickerSample/PlacesPickerSample-Info.plist";
+				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
 				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -298,7 +299,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacesPickerSample" */ = {
+		B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacePickerSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9AF4BC3152E43EE00E9BA6C /* Debug */,
@@ -307,7 +308,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacesPickerSample" */ = {
+		B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacePickerSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9AF4BC6152E43EE00E9BA6C /* Debug */,

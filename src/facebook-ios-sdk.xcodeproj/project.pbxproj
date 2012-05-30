@@ -111,8 +111,8 @@
 		B9CC137515266BB800443948 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CC137215266B9000443948 /* QuartzCore.framework */; };
 		B9DC7F40151AB56100DF1158 /* FBProfilePictureView.h in Headers */ = {isa = PBXBuildFile; fileRef = B9DC7F3E151AB56100DF1158 /* FBProfilePictureView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B9DC7F41151AB56100DF1158 /* FBProfilePictureView.m in Sources */ = {isa = PBXBuildFile; fileRef = B9DC7F3F151AB56100DF1158 /* FBProfilePictureView.m */; };
-		E2223AEB1554573900126FD2 /* FBPlacesPickerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = E2223AE91554573900126FD2 /* FBPlacesPickerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E2223AEC1554573900126FD2 /* FBPlacesPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2223AEA1554573900126FD2 /* FBPlacesPickerViewController.m */; };
+		E2223AEB1554573900126FD2 /* FBPlacePickerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = E2223AE91554573900126FD2 /* FBPlacePickerViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E2223AEC1554573900126FD2 /* FBPlacePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2223AEA1554573900126FD2 /* FBPlacePickerViewController.m */; };
 		E2325EFE1561870000E85A65 /* FBCommonRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E2325EF0155DAD0600E85A65 /* FBCommonRequestTests.m */; };
 		E23E5A0B1521161900A011A8 /* FBError.h in Headers */ = {isa = PBXBuildFile; fileRef = E23E5A091521161900A011A8 /* FBError.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E23E5A0C1521161900A011A8 /* FBError.m in Sources */ = {isa = PBXBuildFile; fileRef = E23E5A0A1521161900A011A8 /* FBError.m */; };
@@ -228,8 +228,8 @@
 		B9DC7F3E151AB56100DF1158 /* FBProfilePictureView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBProfilePictureView.h; sourceTree = "<group>"; };
 		B9DC7F3F151AB56100DF1158 /* FBProfilePictureView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBProfilePictureView.m; sourceTree = "<group>"; };
 		D2AAC07E0554694100DB518D /* libfacebook_ios_sdk.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libfacebook_ios_sdk.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		E2223AE91554573900126FD2 /* FBPlacesPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBPlacesPickerViewController.h; sourceTree = "<group>"; };
-		E2223AEA1554573900126FD2 /* FBPlacesPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPlacesPickerViewController.m; sourceTree = "<group>"; };
+		E2223AE91554573900126FD2 /* FBPlacePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBPlacePickerViewController.h; sourceTree = "<group>"; };
+		E2223AEA1554573900126FD2 /* FBPlacePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBPlacePickerViewController.m; sourceTree = "<group>"; };
 		E2325EEF155DAD0600E85A65 /* FBCommonRequestTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBCommonRequestTests.h; path = tests/FBCommonRequestTests.h; sourceTree = "<group>"; };
 		E2325EF0155DAD0600E85A65 /* FBCommonRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBCommonRequestTests.m; path = tests/FBCommonRequestTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E23E5A091521161900A011A8 /* FBError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBError.h; sourceTree = "<group>"; };
@@ -351,8 +351,8 @@
 				AEA93B0611D5293B000A4545 /* FBLoginDialog.h */,
 				AEA93B0711D5293B000A4545 /* FBLoginDialog.m */,
 				8409694B1541F41100479AD9 /* FBOpenGraphAction.h */,
-				E2223AE91554573900126FD2 /* FBPlacesPickerViewController.h */,
-				E2223AEA1554573900126FD2 /* FBPlacesPickerViewController.m */,
+				E2223AE91554573900126FD2 /* FBPlacePickerViewController.h */,
+				E2223AEA1554573900126FD2 /* FBPlacePickerViewController.m */,
 				B9DC7F3E151AB56100DF1158 /* FBProfilePictureView.h */,
 				B9DC7F3F151AB56100DF1158 /* FBProfilePictureView.m */,
 				AEA93B0211D5293B000A4545 /* FBRequest.h */,
@@ -490,7 +490,7 @@
 				E2B99CF11549CD7F002AEA86 /* FBGraphObjectTableDataSource.h in Headers */,
 				E2B99CF51549E02A002AEA86 /* FBGraphObjectTableSelection.h in Headers */,
 				5F7CB4201553ACC600C183CF /* FBLogger.h in Headers */,
-				E2223AEB1554573900126FD2 /* FBPlacesPickerViewController.h in Headers */,
+				E2223AEB1554573900126FD2 /* FBPlacePickerViewController.h in Headers */,
 				85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */,
 				8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */,
 			);
@@ -663,7 +663,7 @@
 				E2B99CF21549CD7F002AEA86 /* FBGraphObjectTableDataSource.m in Sources */,
 				E2B99CF61549E02A002AEA86 /* FBGraphObjectTableSelection.m in Sources */,
 				5F7CB4211553ACC600C183CF /* FBLogger.m in Sources */,
-				E2223AEC1554573900126FD2 /* FBPlacesPickerViewController.m in Sources */,
+				E2223AEC1554573900126FD2 /* FBPlacePickerViewController.m in Sources */,
 				85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
 				8525A5BB156F2049009F6F3F /* FBTestSession.m in Sources */,
 			);

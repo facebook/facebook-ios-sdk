@@ -1,6 +1,6 @@
-Places Picker View sample
+PlacePickerSample
 
-Demonstrates how to use the Place Picker View provided with Facebook IOS
+Demonstrates how to use the FBPlacePickerViewController provided with Facebook IOS
 SDK.
 
 Build Requirements
@@ -11,8 +11,8 @@ iPhone OS 4.0 or later
 
 Using the Sample
 Install the Facebook iOS SDK.
-Launch the PlacesPickerSample project using Xcode from the
-<iOS SDK>/samples/ProfilePictureSample directory.
+Launch the PlacePickerSample project using Xcode from the
+<iOS SDK>/samples/PlacePickerSample directory.
 
 Changes from Previous Versions
 1.0 - First release.
