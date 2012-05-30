@@ -507,7 +507,8 @@ typedef enum FBRequestConnectionState {
         NSString *firstToken = firstMetadata.request.session.accessToken;
         if (firstToken) {
             for (FBRequestMetadata *metadata in requests) {
-                if (![firstToken isEqualToString:metadata.request.session.accessToken]) {
+                if (![firstToken isEqualToString:metadata.request.session.accessToken] &&
+                    ![firstToken isEqual:[metadata.request.parameters objectForKey:@"access_token"]]) {
                     return nil;
                 }
             }

@@ -102,12 +102,21 @@ typedef enum {
 /*! 
  @typedef
  
- @abstract Block type used to define blocks callable by FBSession for state updates
+ @abstract Block type used to define blocks called by FBSession for state updates
  @discussion
  */
 typedef void (^FBSessionStateHandler)(FBSession *session, 
                                        FBSessionState status, 
                                        NSError *error);
+
+/*! 
+ @typedef
+ 
+ @abstract Block type used to define blocks called by [FBSession reauthorizeWithPermissions]
+ @discussion
+ */
+typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session, 
+                                                  NSError *error);
 
 /*! 
  @class FBSession
@@ -262,6 +271,21 @@ typedef void (^FBSessionStateHandler)(FBSession *session,
  Closes the in-memory session, and clears any persisted cache related to the session
 */
 - (void)closeAndClearTokenInformation;
+
+/*!
+ @abstract
+ Reauthorizes the session, with additional permissions
+  
+ @param permissions         array of strings naming permissions to authorize; a 
+                            nil value indicates access to basic information; 
+                            nil reauthorizes the current permissions
+ @param behavior            control whether to allow/force/prohibit SSO (default
+                            is FBSessionLoginBehaviorSSOWithFallback)
+ @param handler             a block to call with the result of the reauthorize call; nil indicates no callback
+ */
+- (void)reauthorizeWithPermissions:(NSArray*)permissions
+                          behavior:(FBSessionLoginBehavior)behavior
+                 completionHandler:(FBSessionReauthorizeResultHandler)handler;
 
 /*!
  @abstract

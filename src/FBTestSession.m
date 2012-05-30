@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #define SAFE_TO_USE_FBTESTSESSION
 
 #import "FBTestSession.h"
@@ -425,8 +424,9 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 }
 
 // core authorization unit testing (no UX + test user) flow
-- (void)authorizeWithBehavior:(FBSessionLoginBehavior)behavior 
-{
+- (void)authorizeWithPermissions:(NSArray*)permissions
+                        behavior:(FBSessionLoginBehavior)behavior {
+    
     // We ignore behavior, since we aren't going to present UI.
 
     if (self.mode == FBTestSessionModePrivate) {

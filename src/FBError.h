@@ -88,6 +88,12 @@ extern NSString *const FBErrorLoginFailedReasonInlineCancelledValue;
 extern NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue;
 extern NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized;
 
+/// used by session when a reauthorize fails
+extern NSString *const FBErrorReauthorizeFailedReasonSessionClosed;
+extern NSString *const FBErrorReauthorizeFailedReasonUserCancelled;
+extern NSString *const FBErrorReauthorizeFailedReasonWrongUser;
+
+
 // Exception strings raised by the Facebook SDK
 
 /*!

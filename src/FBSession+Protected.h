@@ -29,7 +29,8 @@
                                     token:(NSString*)token
                            expirationDate:(NSDate*)date
                               shouldCache:(BOOL)shouldCache;
-- (void)authorizeWithBehavior:(FBSessionLoginBehavior)behavior;
+- (void)authorizeWithPermissions:(NSArray*)permissions
+                        behavior:(FBSessionLoginBehavior)behavior;
 
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode;

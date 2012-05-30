@@ -24,4 +24,8 @@ NSString *const FBErrorHTTPStatusCodeKey = @"com.facebook.FBiOSSDK:HTTPStatusCod
 NSString *const FBErrorLoginFailedReason = @"com.facebook.FBiOSSDK:ErrorLoginFailedReason";
 NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.FBiOSSDK:ErrorLoginFailedOriginalErrorCode";
 
+NSString *const FBErrorReauthorizeFailedReasonSessionClosed = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonSessionClosed";
+NSString *const FBErrorReauthorizeFailedReasonUserCancelled = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonUserCancelled";
+NSString *const FBErrorReauthorizeFailedReasonWrongUser = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonWrongUser";
+
 NSString *const FBInvalidOperationException = @"com.facebook.FBiOSSDK:InvalidOperationException";
