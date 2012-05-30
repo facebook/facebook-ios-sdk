@@ -349,6 +349,10 @@ typedef enum FBRequestConnectionState {
 }
 
 - (void)cancel {
+    // Cancelling self.connection might trigger error handlers that cause us to
+    // get freed. Make sure we stick around long enough to finish this method call.
+    [[self retain] autorelease];
+    
     [self.connection cancel];
     self.connection = nil;
     self.state = kStateCancelled;
@@ -992,6 +996,11 @@ typedef enum FBRequestConnectionState {
                        statusCode:(int)statusCode
                parsedJSONResponse:response
 {
+    // We don't want to re-wrap our own errors.
+    if (innerError &&
+        [innerError.domain isEqualToString:FBiOSSDKDomain]) {
+        return innerError;
+    }
     NSError *result = nil;
     if (innerError || ((statusCode < 200) || (statusCode >= 300))) {
         NSLog(@"Error: HTTP status code: %d", statusCode);

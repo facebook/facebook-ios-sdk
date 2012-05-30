@@ -50,5 +50,6 @@ typedef enum {
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader willLoadURL:(NSString*)url;
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results;
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error;
+- (void)pagingLoaderWasCancelled:(FBGraphObjectPagingLoader*)pagingLoader;
 
 @end

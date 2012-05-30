@@ -373,5 +373,9 @@ static NSString *defaultImageName =
     
 }
 
+- (void)pagingLoaderWasCancelled:(FBGraphObjectPagingLoader*)pagingLoader {
+    [self.spinner stopAnimating];
+}
+
 @end
 

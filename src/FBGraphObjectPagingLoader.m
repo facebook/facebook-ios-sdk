@@ -244,7 +244,15 @@
     } 
     
     if (error) {
-        if ([self.delegate respondsToSelector:@selector(pagingLoader:handleError:)]) {
+        // Cancellation is not really an error we want to bother the delegate with.
+        BOOL cancelled = [error.domain isEqualToString:FBiOSSDKDomain] &&
+            error.code == FBErrorOperationCancelled;
+
+        if (cancelled) {
+            if ([self.delegate respondsToSelector:@selector(pagingLoaderWasCancelled:)]) {
+                [self.delegate pagingLoaderWasCancelled:self];
+            }
+        } else if ([self.delegate respondsToSelector:@selector(pagingLoader:handleError:)]) {
             [self.delegate pagingLoader:self handleError:error];
         }        
     } else {
