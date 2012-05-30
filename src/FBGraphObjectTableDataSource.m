@@ -262,9 +262,14 @@
 
 - (FBGraphObject *)itemAtIndexPath:(NSIndexPath *)indexPath
 {
-    id key = [self.indexKeys objectAtIndex:indexPath.section];
-    NSArray *sectionItems = [self.indexMap objectForKey:key];
-    return [sectionItems objectAtIndex:indexPath.row];
+    if (indexPath.section >= 0 && indexPath.section < self.indexKeys.count) {
+        id key = [self.indexKeys objectAtIndex:indexPath.section];
+        NSArray *sectionItems = [self.indexMap objectForKey:key];
+        if (indexPath.row >= 0 && indexPath.row < sectionItems.count) {
+            return [sectionItems objectAtIndex:indexPath.row];
+        }
+    }
+    return nil;
 }
 
 - (NSIndexPath *)indexPathForItem:(FBGraphObject *)item
@@ -413,31 +418,39 @@
                                                 triggeredByIndexPath:indexPath];
     } else {
         FBGraphObject *item = [self itemAtIndexPath:indexPath];
-        
+
         // This is a no-op if it doesn't have an activity indicator.
         [cell stopAnimatingActivityIndicator];
         
-        if (self.itemPicturesEnabled) {
-            cell.picture = [self tableView:tableView imageForItem:item];
+        if (item) {            
+            if (self.itemPicturesEnabled) {
+                cell.picture = [self tableView:tableView imageForItem:item];
+            } else {
+                cell.picture = nil;
+            }
+            
+            if (self.itemSubtitleEnabled) {
+                cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
+                                                                     subtitleOfItem:item];
+            } else {
+                cell.subtitle = nil;
+            }
+            
+            cell.title = [self.controllerDelegate graphObjectTableDataSource:self
+                                                                 titleOfItem:item];
+            
+            if ([self.selectionDelegate graphObjectTableDataSource:self
+                                             selectionIncludesItem:item]) {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+                cell.selected = YES;
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                cell.selected = NO;
+            }
         } else {
             cell.picture = nil;
-        }
-        
-        if (self.itemSubtitleEnabled) {
-            cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
-                                                                 subtitleOfItem:item];
-        } else {
             cell.subtitle = nil;
-        }
-        
-        cell.title = [self.controllerDelegate graphObjectTableDataSource:self
-                                                             titleOfItem:item];
-        
-        if ([self.selectionDelegate graphObjectTableDataSource:self
-                                         selectionIncludesItem:item]) {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            cell.selected = YES;
-        } else {
+            cell.title = nil;
             cell.accessoryType = UITableViewCellAccessoryNone;
             cell.selected = NO;
         }
