@@ -20,4 +20,6 @@
 
 @interface SCLoginViewController : UIViewController
 
+- (void)loginFailed;
+
 @end

@@ -23,8 +23,8 @@
 
 @property (strong, nonatomic) FBSession *session;
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) SCViewController *viewController;
 
-- (FBSession *)invalidateAndGetNewSession;
+- (void)openSession;
+- (void)closeSession;
 
 @end

@@ -27,7 +27,7 @@
 }
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
-@property (strong, nonatomic) FBPlacePickerViewController *placesPickerController;
+@property (strong, nonatomic) FBPlacePickerViewController *placePickerController;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView* userProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel* userNameLabel;
 @property (strong, nonatomic) IBOutlet UIButton* announceButton;
@@ -62,7 +62,7 @@
 @synthesize announceButton = _announceButton;
 @synthesize selectedPhoto = _selectedPhoto;
 @synthesize imagePicker = _imagePicker;
-@synthesize placesPickerController = _placesPickerController;
+@synthesize placePickerController = _placePickerController;
 @synthesize friendPickerController = _friendPickerController;
 @synthesize mealViewController = _mealViewController;
 @synthesize menuTableView = _menuTableView;
@@ -123,11 +123,21 @@
                            graphObject:action
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
+         NSString *alertText;
          if (!error) {
-             // successful post, do something with the action id    
-         } 
-     }
-     ];
+             alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
+                          [result objectForKey:@"id"]];
+         } else {
+             alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
+                          error.domain, error.code];
+         }
+         [[[UIAlertView alloc] initWithTitle:@"Result" 
+                                     message:alertText 
+                                    delegate:nil 
+                           cancelButtonTitle:@"Thanks!" 
+                           otherButtonTitles:nil] 
+          show];
+     }];
 }
 
 - (void)postPhotoThenOpenGraphAction
@@ -236,9 +246,7 @@
 - (void)populateUserDetails 
 {
     if (self.session.isOpen) {
-        [FBRequest startWithSession:self.session
-                          graphPath:@"me"
-                  completionHandler:
+        [[FBRequest requestForMeWithSession:self.session] startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;
@@ -258,7 +266,7 @@
 - (void)dealloc
 {
     _locationManager.delegate = nil;
-    _placesPickerController.delegate = nil;
+    _placePickerController.delegate = nil;
     _friendPickerController.delegate = nil;
     _imagePicker.delegate = nil;
 }
@@ -267,12 +275,26 @@
 {
     [super viewDidLoad];
     
-	// Do any additional setup after loading the view, typically from a nib.
     self.title = @"Scrumptious";
 
+    // Get the CLLocationManager going.
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     [self.locationManager startUpdatingLocation];
+    
+    // We want a Logout button in the upper-right.
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
+                                              initWithTitle:@"Logout" 
+                                                style:UIBarButtonItemStyleBordered 
+                                              target:self 
+                                              action:@selector(logoutButtonWasPressed:)];
+
+    // Keep tabs on what's going on with the session so we can repopulate data if it changes.
+    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate addObserver:self
+              forKeyPath:@"session.state"
+                 options:NSKeyValueObservingOptionNew
+                 context:NULL];
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -285,26 +307,51 @@
             self.session = appDelegate.session;
             [self populateUserDetails];
         }
-    } else {
-        [self showLoginView];
     }
+}
+
+-(void)logoutButtonWasPressed:(id)sender {
+    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate closeSession];
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    
+    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    [appDelegate removeObserver:self forKeyPath:@"session.state"];
+    
     // Release any retained subviews of the main view.
-    self.placesPickerController = nil;
+    self.placePickerController = nil;
     self.friendPickerController = nil;
     self.mealViewController = nil;
     self.imagePicker = nil;
     self.popover = nil;
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    SCAppDelegate *appDelegate = object;
+    if ([keyPath isEqual:@"session.state"]) {
+        // A more complex app might check the state to see what the appropriate course of
+        // action is, but our needs are simple, so just make sure our idea of the session is
+        // up to date and repopulate the user's name and picture (which will fail if the session
+        // has become invalid).
+        self.session = appDelegate.session;
+        [self populateUserDetails];
+    }
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
+
+#pragma mark UITableViewDataSource methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
@@ -393,15 +440,15 @@
             break;
         
         case 1:
-            if (!self.placesPickerController) {
-                self.placesPickerController = [[FBPlacePickerViewController alloc] initWithNibName:nil bundle:nil];
-                self.placesPickerController.delegate = self;
-                self.placesPickerController.title = @"Select a restaurant";
+            if (!self.placePickerController) {
+                self.placePickerController = [[FBPlacePickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.placePickerController.delegate = self;
+                self.placePickerController.title = @"Select a restaurant";
             }
-            self.placesPickerController.locationCoordinate = self.locationManager.location.coordinate;
-            self.placesPickerController.session = self.session;
-            [self.placesPickerController loadData];
-            target = self.placesPickerController;
+            self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
+            self.placePickerController.session = self.session;
+            [self.placePickerController loadData];
+            target = self.placePickerController;
             break;
             
         case 2:
@@ -441,6 +488,7 @@
     [self.navigationController pushViewController:target animated:true];
 }
 
+#pragma mark -
 #pragma mark FBFriendPickerDelegate methods
 
 - (void)friendPickerViewControllerSelectionDidChange:
@@ -471,9 +519,9 @@
         // We wait for a precision of 100m and turn the GPS off
         [self.locationManager stopUpdatingLocation];
         
-        self.placesPickerController.locationCoordinate = newLocation.coordinate;
-        if (self.placesPickerController.session) {
-            [self.placesPickerController loadData];
+        self.placePickerController.locationCoordinate = newLocation.coordinate;
+        if (self.placePickerController.session) {
+            [self.placePickerController loadData];
         }
     }
 }

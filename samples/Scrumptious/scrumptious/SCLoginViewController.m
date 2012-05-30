@@ -36,30 +36,7 @@
     [self.spinner startAnimating];
     
     SCAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
-    FBSession *session = [appDelegate invalidateAndGetNewSession];
-    [session openWithCompletionHandler:
-        ^(FBSession *session, FBSessionState state, NSError *error) {
-            [self.spinner stopAnimating];
-            switch (state) {
-                case FBSessionStateOpen:
-                    if (!error) {
-                        [self dismissModalViewControllerAnimated:YES];
-                    }
-                    break;
-                default:
-                    break;
-            }
-            if (error) {
-                UIAlertView *alertView =
-                [[UIAlertView alloc] initWithTitle:@"Error"
-                                           message:error.localizedDescription
-                                          delegate:nil
-                                 cancelButtonTitle:@"OK"
-                                 otherButtonTitles:nil];
-                [alertView show];
-            }
-        }
-    ];
+    [appDelegate openSession];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -69,6 +46,20 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self.spinner stopAnimating];
+}
+
+- (void)loginFailed
+{
+    // User switched back to the app without authorizing. Stay here, but
+    // stop the spinner.
+    [self.spinner stopAnimating];
 }
 
 - (void)viewDidUnload
