@@ -49,7 +49,6 @@ enum SampleLocation {
 
         // Default to Seattle
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
-        [self loadData];
     } else {
         [appDelegate.session openWithCompletionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
