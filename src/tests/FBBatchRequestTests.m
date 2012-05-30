@@ -19,6 +19,7 @@
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
+#import "FBGraphUser.h"
 
 #if defined(FBIOSSDK_SKIP_BATCH_REQUEST_TESTS)
 
@@ -55,6 +56,147 @@
     [blocker release];
 }
 
+- (void)testDifferentAccessTokens 
+{
+    FBTestSession *session1 = self.defaultTestSession;
+    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kSecondTestUserTag];
+    
+    FBRequest *request1 = [FBRequest requestForMeWithSession:session1];
+    FBRequest *request2 = [FBRequest requestForMeWithSession:session2];
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [connection addRequest:request1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             id<FBGraphUser> user = result;
+             STAssertTrue([user.id isEqualToString:self.defaultTestSession.testUserID], @"wrong user");
+         }];
+    [connection addRequest:request2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             id<FBGraphUser> user = result;
+             STAssertTrue([user.id isEqualToString:session2.testUserID], @"wrong user");
+             
+             [blocker signal];
+         }];
+    
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
+
+
+- (void)testBatchWithValidSessionAndNoSession
+{
+    FBRequest *request1 = [FBRequest requestForMeWithSession:self.defaultTestSession];
+    FBRequest *request2 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [connection addRequest:request1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+         }];
+    [connection addRequest:request2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             [blocker signal];
+         }];
+    
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
+
+- (void)testBatchWithNoSessionAndValidSession
+{
+    FBRequest *request1 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    FBRequest *request2 = [FBRequest requestForMeWithSession:self.defaultTestSession];
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [connection addRequest:request1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+         }];
+    [connection addRequest:request2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             [blocker signal];
+         }];
+    
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
+
+- (void)testBatchWithTwoSessionlessRequestsAndNoDefaultAppID
+{
+    [FBSession setDefaultAppID:nil];
+
+    FBRequest *request1 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    FBRequest *request2 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    
+    [connection addRequest:request1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         }];
+    [connection addRequest:request2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         }];
+    
+    STAssertThrows([connection start], @"didn't throw");    
+    [connection release];
+}
+
+- (void)testBatchWithTwoSessionlessRequestsAndDefaultAppID
+{
+    // Only use this to get the unit-testing app ID.
+    FBTestSession *session = self.defaultTestSession;
+    [FBSession setDefaultAppID:session.testAppID];
+    
+    FBRequest *request1 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    FBRequest *request2 = [FBRequest requestForGraphPath: @"zuck" session:nil];
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [connection addRequest:request1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+         }];
+    [connection addRequest:request2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             [blocker signal];
+         }];
+    
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
 
 @end
 

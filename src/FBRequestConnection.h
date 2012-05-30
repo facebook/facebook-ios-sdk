@@ -93,6 +93,9 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  object is to call one of the start* methods on FBRequest. However, it is
  allowable to init an FBRequestConnection object directly, and call addRequest
  to add one or more request objects to the connection, before calling start.
+ Note that if requests are part of a batch, they must have an open
+ FBSession that has an access token associated with it, or a default App ID
+ must be set either in the plist or an explicit call to [FBSession setDefaultAppID].
 
  @param timeout         NSTimeInterval to wait for a response before giving up.
                         The units are in seconds.

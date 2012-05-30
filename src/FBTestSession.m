@@ -262,13 +262,15 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     
     // Map user IDs to test_accounts
     for (NSDictionary *testAccount in testAccounts) {
+        id uid = [[testAccount objectForKey:FBLoginTestUserID] stringValue];
         [testUsers setObject:[NSMutableDictionary dictionaryWithDictionary:testAccount]
-                      forKey:[testAccount objectForKey:FBLoginTestUserID]];
+                      forKey:uid];
     }
     
     // Add the user name to the test_account data.
     for (NSDictionary *user in users) {
-        NSMutableDictionary *testUser = [testUsers objectForKey:[user objectForKey:@"uid"]];
+        id uid = [[user objectForKey:@"uid"] stringValue];
+        NSMutableDictionary *testUser = [testUsers objectForKey:uid];
         [testUser setObject:[user objectForKey:FBLoginTestUserName] forKey:FBLoginTestUserName];
     }
     
@@ -380,8 +382,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     pthread_mutex_unlock(&mutex);
     
     if (matchingTestUser) {
-        // We can use this user.
-        self.testUserID = [matchingTestUser objectForKey:FBLoginTestUserID];
+        // We can use this user. IDs come back as numbers, make sure we return as a string.
+        self.testUserID = [[matchingTestUser objectForKey:FBLoginTestUserID] stringValue];
 
         [self transitionToOpenWithToken:[matchingTestUser objectForKey:FBLoginTestUserAccessToken]];
     } else {

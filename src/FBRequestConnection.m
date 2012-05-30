@@ -129,8 +129,6 @@ typedef enum FBRequestConnectionState {
 
 - (NSString *)urlStringForSingleRequest:(FBRequest *)request forBatch:(BOOL)forBatch;
 
-- (NSString *)commonAccessToken:(NSArray *)requests;
-
 - (void)appendJSONRequests:(NSArray *)requests
                     toBody:(FBRequestBody *)body
              includeTokens:(BOOL)includeTokens
@@ -312,6 +310,11 @@ typedef enum FBRequestConnectionState {
                 break;
             }
         }
+        // If we wouldn't be able to compute a batch_app_id, don't piggyback on this
+        // request.
+        NSString *batchAppID = [self getBatchAppID:self.requests];
+        safeForPiggyback &= (batchAppID != nil) && (batchAppID.length > 0);
+
         if (safeForPiggyback) {
             [self addPiggybackRequests];
         }
@@ -374,6 +377,14 @@ typedef enum FBRequestConnectionState {
     
     NSMutableURLRequest *request;
     
+    if (requests.count == 0) {
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:@"FBRequestConnection: Must have at least one request or urlRequest not specified."
+                               userInfo:nil]
+         raise];
+        
+    }
+
     if ([requests count] == 1) {
         FBRequestMetadata *metadata = [requests objectAtIndex:0];
         NSURL *url = [NSURL URLWithString:[self urlStringForSingleRequest:metadata.request forBatch:NO]];
@@ -396,17 +407,27 @@ typedef enum FBRequestConnectionState {
             }];
         }
     } else {
-        NSString *commonToken = [self commonAccessToken:requests];
-        if (commonToken) {
-            [body appendWithKey:kAccessTokenKey formValue:commonToken logger:bodyLogger];
-            [self registerTokenToOmitFromLog:commonToken];
+        // Find the session with an app ID and use that as the batch_app_id. If we can't
+        // find one, try to load it from the plist. As a last resort, pass 0.
+        NSString *batchAppID = [self getBatchAppID:requests];
+        if (!batchAppID || batchAppID.length == 0) {
+            // The Graph API batch method requires either an access token or batch_app_id.
+            // If we can't determine an App ID to use for the batch, we can't issue it.
+            [[NSException exceptionWithName:FBInvalidOperationException
+                                     reason:@"FBRequestConnection: At least one request in a"
+                                             " batch must have an open FBSession, or a default"
+                                             " app ID must be specified."
+                                   userInfo:nil]
+             raise];
         }
+        
+        [body appendWithKey:@"batch_app_id" formValue:batchAppID logger:bodyLogger];
 
         NSMutableDictionary *attachments = [[NSMutableDictionary alloc] init];
         
         [self appendJSONRequests:requests
                           toBody:body
-                   includeTokens:(!commonToken)
+                   includeTokens:YES
               andNameAttachments:attachments
                           logger:bodyLogger];
         
@@ -496,26 +517,17 @@ typedef enum FBRequestConnectionState {
     return url;
 }
 
-//
-// If all requests in a batch share the same access token, this returns it,
-// otherwise nil.
-//
-- (NSString *)commonAccessToken:(NSArray *)requests
+// Find the first session with an app ID and use that as the batch_app_id. If we can't
+// find one, return the default app ID (which may still be nil if not specified
+// programmatically or via the plist).
+- (NSString *)getBatchAppID:(NSArray*)requests
 {
-    if ([requests count]) {
-        FBRequestMetadata *firstMetadata = [requests objectAtIndex:0];
-        NSString *firstToken = firstMetadata.request.session.accessToken;
-        if (firstToken) {
-            for (FBRequestMetadata *metadata in requests) {
-                if (![firstToken isEqualToString:metadata.request.session.accessToken] &&
-                    ![firstToken isEqual:[metadata.request.parameters objectForKey:@"access_token"]]) {
-                    return nil;
-                }
-            }
-            return firstToken;
+    for (FBRequestMetadata *metadata in requests) {
+        if (metadata.request.session.appID.length > 0) {
+            return metadata.request.session.appID;
         }
     }
-    return nil;
+    return [FBSession defaultAppID];
 }
 
 //
@@ -561,11 +573,6 @@ typedef enum FBRequestConnectionState {
 {
     NSMutableDictionary *requestElement = [[[NSMutableDictionary alloc] init] autorelease];
 
-    // TODO: error if things are not set
-    [requestElement setObject:[self urlStringForSingleRequest:metadata.request forBatch:YES]
-                       forKey:kBatchRelativeURLKey];
-    [requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
-
     if (metadata.batchEntryName) {
         [requestElement setObject:metadata.batchEntryName forKey:@"name"];
     }
@@ -577,6 +584,11 @@ typedef enum FBRequestConnectionState {
             [self registerTokenToOmitFromLog:token];
         }
     }
+
+    // TODO: error if things are not set
+    [requestElement setObject:[self urlStringForSingleRequest:metadata.request forBatch:YES]
+                       forKey:kBatchRelativeURLKey];
+    [requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
     NSMutableString *attachmentNames = [NSMutableString string];
 

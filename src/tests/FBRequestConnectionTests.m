@@ -89,7 +89,13 @@
     
     NSArray *requests = [connection performSelector:@selector(requests)];
     STAssertTrue(requests.count == batchSize, @"piggybacked but shouldn't have");
+    [connection release];
+}
     
+- (void)testNoRequests
+{
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    STAssertThrows([connection start], @"should throw");
     [connection release];
 }
 

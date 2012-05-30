@@ -208,6 +208,16 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     [blocker wait];    
 }
 
+// Unit tests failing? Turn on some logging with this helper.
+- (void)logRequestsAndConnections
+{
+    [FBSession setLoggingBehavior:[NSSet setWithObjects:
+                                   FB_LOG_BEHAVIOR_FB_REQUESTS,
+                                   FB_LOG_BEHAVIOR_FBURL_CONNECTIONS,
+                                   FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS,
+                                   nil]];
+}
+
 #pragma mark -
 #pragma mark Handlers
 

@@ -65,7 +65,7 @@ static int const FBTokenExtendThresholdSeconds = 24 * 60 * 60;  // day
 static int const FBTokenRetryExtendSeconds = 60 * 60;           // hour
 
 // module scoped globals
-static NSString *FBPLISTAppID = nil;
+static NSString *g_defaultAppID = nil;
 static NSSet *g_loggingBehavior;
 
 @interface FBSession () <FBLoginDialogDelegate> {
@@ -110,7 +110,6 @@ static NSSet *g_loggingBehavior;
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error;
 
 // class members
-+ (NSString*)appIDFromPLIST;
 + (BOOL)areRequiredPermissions:(NSArray*)requiredPermissions
           aSubsetOfPermissions:(NSArray*)cachedPermissions;
 + (NSString *)sessionStateDescription:(FBSessionState)sessionState;
@@ -165,7 +164,7 @@ static NSSet *g_loggingBehavior;
 
         // setup values where nil implies a default
         if (!appID) {
-            appID = [FBSession appIDFromPLIST];    
+            appID = [FBSession defaultAppID];    
         }
         if (!permissions) {
             permissions = [NSArray array];
@@ -421,6 +420,20 @@ static NSSet *g_loggingBehavior;
     [g_loggingBehavior release];
     g_loggingBehavior = newValue;
     [g_loggingBehavior retain];
+}
+
++ (void)setDefaultAppID:(NSString*)appID {
+    NSString *oldValue = g_defaultAppID;
+    g_defaultAppID = [appID copy];
+    [oldValue release];
+}
+
++ (NSString*)defaultAppID {
+    if (!g_defaultAppID) {
+        NSBundle* bundle = [NSBundle mainBundle];
+        g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
+    }
+    return g_defaultAppID;
 }
 
 #pragma mark -
@@ -998,16 +1011,6 @@ static NSSet *g_loggingBehavior;
     return [NSString stringWithFormat:@"fb%@%@://authorize",
             self.appID,
             self.urlSchemeSuffix];
-}
-
-+ (NSString*) appIDFromPLIST {
-    // ignoring small race between test and assign due to perf-only implications
-    if (!FBPLISTAppID) {
-        // pickup the AppID from Info.plist
-        NSBundle* bundle = [NSBundle mainBundle];
-        FBPLISTAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
-    }
-    return FBPLISTAppID;
 }
 
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason

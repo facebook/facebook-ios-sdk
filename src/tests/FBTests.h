@@ -61,5 +61,6 @@
 // The set of permissions should be static, as no guarantee is made how many times this will be called.
 // The default is nil.
 - (NSArray*)permissionsForDefaultTestSession;
+- (void)logRequestsAndConnections;
 
 @end

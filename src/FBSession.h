@@ -172,8 +172,8 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
                              nil value indicates access to basic information; 
                              default=nil
  @param appId                returns a session object for the given app id; nil
-                             specifies that the appId should be pulled from the
-                             plist; default=nil
+                             specifies that the default obtained by [FBSession
+                             defaultAppID] is used; default=nil
  @param urlSchemeSuffix      suffix, used for cases where multiple iOS apps use 
                              a single appid; nil indicates the urlSchemeSuffix
                              should be pulled from plist; default=nil
@@ -315,5 +315,22 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  
  */
 + (void)setLoggingBehavior:(NSSet *)loggingBehavior;
+
+/*!
+ @method
+ 
+ @abstract Set the default Facebook App ID to use for sessions. The app ID may be
+ overridden on a per-FBSession basis.
+ */
+
++ (void)setDefaultAppID:(NSString*)appID;
+/*!
+ @method
+ 
+ @abstract Get the default Facebook App ID to use for sessions. If not explicitly
+ set, the default will be read from the application's plist. The app ID may be
+ overridden on a per-FBSession basis.
+ */
++ (NSString*)defaultAppID;
 
 @end
