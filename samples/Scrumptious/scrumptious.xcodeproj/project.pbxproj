@@ -9,14 +9,15 @@
 /* Begin PBXBuildFile section */
 		85394EAC15546CC400550929 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EAB15546CC400550929 /* FBiOSSDK.framework */; };
 		85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */; };
+		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
+		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
+		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */; };
 		B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */; };
 		B9C1C36F1512B153008FA5D1 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C36E1512B153008FA5D1 /* pin.png */; };
 		B9C1C3711512B207008FA5D1 /* fruit.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C3701512B207008FA5D1 /* fruit.png */; };
 		B9C1C3781512BCA7008FA5D1 /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C3771512BCA7008FA5D1 /* profile.png */; };
-		B9C1C38415130123008FA5D1 /* app_icon_114.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C38315130122008FA5D1 /* app_icon_114.png */; };
-		B9C1C38615130125008FA5D1 /* app_icon_57.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C38515130125008FA5D1 /* app_icon_57.png */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
 		B9CD0A78150EA4DD00560A93 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A77150EA4DD00560A93 /* CoreGraphics.framework */; };
@@ -38,6 +39,9 @@
 /* Begin PBXFileReference section */
 		85394EAB15546CC400550929 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
+		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
@@ -46,8 +50,6 @@
 		B9C1C36E1512B153008FA5D1 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pin.png; path = images/pin.png; sourceTree = "<group>"; };
 		B9C1C3701512B207008FA5D1 /* fruit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fruit.png; path = images/fruit.png; sourceTree = "<group>"; };
 		B9C1C3771512BCA7008FA5D1 /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = profile.png; path = images/profile.png; sourceTree = "<group>"; };
-		B9C1C38315130122008FA5D1 /* app_icon_114.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_114.png; sourceTree = "<group>"; };
-		B9C1C38515130125008FA5D1 /* app_icon_57.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_57.png; sourceTree = "<group>"; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B9CD0A75150EA4DD00560A93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -91,8 +93,9 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
-				B9C1C38515130125008FA5D1 /* app_icon_57.png */,
-				B9C1C38315130122008FA5D1 /* app_icon_114.png */,
+				856DC2171577F105001FA6A6 /* Icon-72.png */,
+				856DC2181577F105001FA6A6 /* Icon.png */,
+				856DC2191577F105001FA6A6 /* Icon@2x.png */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
 				B9CD0A70150EA4DD00560A93 /* Products */,
@@ -196,7 +199,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */;
+			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -230,10 +233,11 @@
 				B9C1C36F1512B153008FA5D1 /* pin.png in Resources */,
 				B9C1C3711512B207008FA5D1 /* fruit.png in Resources */,
 				B9C1C3781512BCA7008FA5D1 /* profile.png in Resources */,
-				B9C1C38415130123008FA5D1 /* app_icon_114.png in Resources */,
-				B9C1C38615130125008FA5D1 /* app_icon_57.png in Resources */,
 				B9D12A191513C3F1003A5540 /* pictures.png in Resources */,
 				85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */,
+				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
+				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
+				856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,7 +364,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */ = {
+		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9CD0A8E150EA4DE00560A93 /* Debug */,
