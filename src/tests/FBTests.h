@@ -29,6 +29,7 @@
 //#define FBIOSSDK_SKIP_BATCH_REQUEST_TESTS
 //#define FBIOSSDK_SKIP_REQUEST_CONNECTION_TESTS
 //#define FBIOSSDK_SKIP_TEST_SESSION_TESTS
+//#define FBIOSSDK_SKIP_CONTENT_LINK_TESTS
 
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during

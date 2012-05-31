@@ -127,6 +127,9 @@
 		E2B99CF21549CD7F002AEA86 /* FBGraphObjectTableDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */; };
 		E2B99CF51549E02A002AEA86 /* FBGraphObjectTableSelection.h in Headers */ = {isa = PBXBuildFile; fileRef = E2B99CF31549E02A002AEA86 /* FBGraphObjectTableSelection.h */; };
 		E2B99CF61549E02A002AEA86 /* FBGraphObjectTableSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */; };
+		E7BBCE2E15753C7400B6B8F6 /* FBContentLinkTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E7BBCE2D15753C7400B6B8F6 /* FBContentLinkTests.m */; };
+		E7BBCE3115753C8E00B6B8F6 /* FBContentLink.h in Headers */ = {isa = PBXBuildFile; fileRef = E7BBCE2F15753C8E00B6B8F6 /* FBContentLink.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E7BBCE3315753C8E00B6B8F6 /* FBContentLink.m in Sources */ = {isa = PBXBuildFile; fileRef = E7BBCE3015753C8E00B6B8F6 /* FBContentLink.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -245,6 +248,10 @@
 		E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectTableDataSource.m; sourceTree = "<group>"; };
 		E2B99CF31549E02A002AEA86 /* FBGraphObjectTableSelection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObjectTableSelection.h; sourceTree = "<group>"; };
 		E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectTableSelection.m; sourceTree = "<group>"; };
+		E7BBCE2C15753C7400B6B8F6 /* FBContentLinkTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBContentLinkTests.h; path = tests/FBContentLinkTests.h; sourceTree = "<group>"; };
+		E7BBCE2D15753C7400B6B8F6 /* FBContentLinkTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBContentLinkTests.m; path = tests/FBContentLinkTests.m; sourceTree = "<group>"; };
+		E7BBCE2F15753C8E00B6B8F6 /* FBContentLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBContentLink.h; sourceTree = "<group>"; };
+		E7BBCE3015753C8E00B6B8F6 /* FBContentLink.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBContentLink.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -323,6 +330,8 @@
 				B9C6E1301525219600E46808 /* FBCacheIndex.h */,
 				B9C6E1311525219600E46808 /* FBCacheIndex.m */,
 				84E0CA051536198400778DA4 /* FBConnect.h */,
+				E7BBCE2F15753C8E00B6B8F6 /* FBContentLink.h */,
+				E7BBCE3015753C8E00B6B8F6 /* FBContentLink.m */,
 				84E0CA09153619D500778DA4 /* FBDataDiskCache.h */,
 				B9C6E1331525219600E46808 /* FBDataDiskCache.m */,
 				AEA93B0811D5293B000A4545 /* FBDialog.h */,
@@ -417,6 +426,8 @@
 				B9CBC54215254CBD0036AA71 /* FBCacheTests.m */,
 				E2325EEF155DAD0600E85A65 /* FBCommonRequestTests.h */,
 				E2325EF0155DAD0600E85A65 /* FBCommonRequestTests.m */,
+				E7BBCE2C15753C7400B6B8F6 /* FBContentLinkTests.h */,
+				E7BBCE2D15753C7400B6B8F6 /* FBContentLinkTests.m */,
 				84E374BD153CC1140043B59C /* FBGraphObjectTests.h */,
 				84E374BE153CC1140043B59C /* FBGraphObjectTests.m */,
 				858E424A1565F77400246151 /* FBOpenGraphActionTests.h */,
@@ -493,6 +504,7 @@
 				E2223AEB1554573900126FD2 /* FBPlacePickerViewController.h in Headers */,
 				85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */,
 				8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */,
+				E7BBCE3115753C8E00B6B8F6 /* FBContentLink.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +640,8 @@
 				8525A5B0156EFCA1009F6F3F /* FBRequestConnectionTests.m in Sources */,
 				8525A5BC156F2049009F6F3F /* FBTestSession.m in Sources */,
 				85052AF9156F5E1200F8F9A5 /* FBTestSessionTests.m in Sources */,
+				E7BBCE2E15753C7400B6B8F6 /* FBContentLinkTests.m in Sources */,
+				E7BBCE3315753C8E00B6B8F6 /* FBContentLink.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -666,6 +680,7 @@
 				E2223AEC1554573900126FD2 /* FBPlacePickerViewController.m in Sources */,
 				85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
 				8525A5BB156F2049009F6F3F /* FBTestSession.m in Sources */,
+				E7BBCE3215753C8E00B6B8F6 /* FBContentLink.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
