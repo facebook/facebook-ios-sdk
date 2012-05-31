@@ -89,7 +89,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
 - (void)retrieveTestUsersForApp;
 - (void)findOrCreateSharedUser;
 - (void)transitionToOpenWithToken:(NSString*)token;
-- (NSString*)validNameStringFromInteger:(NSUInteger)input; 
+- (NSString*)validNameStringFromInteger:(NSUInteger)input;
+- (void)raiseException:(NSError*)innerError;
 
 + (void)deleteUnitTestUser:(NSString*)userID accessToken:(NSString*)accessToken;
 + (id)sessionForUnitTestingWithPermissions:(NSArray*)permissions mode:(FBTestSessionMode)mode sessionUniqueUserTag:(NSString*)sessionUniqueUserTag;

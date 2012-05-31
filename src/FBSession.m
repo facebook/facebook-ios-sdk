@@ -271,6 +271,11 @@ static NSSet *g_loggingBehavior;
 
     // normal login depends on the availability of a valid cached token
     if (self.state == FBSessionStateCreated) {
+        // set the state and token info
+        [self transitionToState:FBSessionStateCreatedOpening
+                 andUpdateToken:nil
+              andExpirationDate:nil
+                    shouldCache:NO];
         [self authorizeWithBehavior:behavior];
     } else { // self.status == FBSessionStateLoadedValidToken
         // this case implies that a valid cached token was found, and preserves the
@@ -286,7 +291,14 @@ static NSSet *g_loggingBehavior;
 - (void)close {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
-    [self transitionAndCallHandlerWithState:FBSessionStateClosed
+    FBSessionState state; 
+    if (self.state == FBSessionStateCreatedOpening) {
+        state = FBSessionStateClosedLoginFailed;
+    } else {
+        state = FBSessionStateClosed;
+    }
+
+    [self transitionAndCallHandlerWithState:state
                                       error:nil
                                       token:nil
                              expirationDate:nil
@@ -436,13 +448,16 @@ static NSSet *g_loggingBehavior;
             break;
         case FBSessionStateOpen:
             isValidTransition = (
-                                 statePrior == FBSessionStateCreated ||
-                                 statePrior == FBSessionStateCreatedTokenLoaded
+                                 statePrior == FBSessionStateCreatedTokenLoaded ||
+                                 statePrior == FBSessionStateCreatedOpening
                                  );
             break;
+        case FBSessionStateCreatedOpening:
         case FBSessionStateCreatedTokenLoaded:
-        case FBSessionStateClosedLoginFailed:
             isValidTransition = statePrior == FBSessionStateCreated;
+            break;
+        case FBSessionStateClosedLoginFailed:
+            isValidTransition = statePrior == FBSessionStateCreatedOpening;
             break;
         case FBSessionStateOpenTokenExtended:
             isValidTransition = (

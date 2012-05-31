@@ -59,6 +59,9 @@ typedef enum {
      when a session is in this state, a call to open* will result in an open session,
      without UX or app-switching*/
     FBSessionStateCreatedTokenLoaded        = 1,
+    /*! One of three pre-open session states indicating that an attempt to open the session
+     is underway*/
+    FBSessionStateCreatedOpening            = 2,
     
     /*! Open session state indicating user has logged in or a cached token is available */
     FBSessionStateOpen                      = 1 | FB_SESSIONSTATEOPENBIT,
