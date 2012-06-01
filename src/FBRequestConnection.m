@@ -52,6 +52,7 @@ NSString *const FBNonJSONResponseProperty = @"FBiOSSDK_NON_JSON_RESULT";
 
 static const int kRESTAPIAccessTokenErrorCode = 190;
 static const NSTimeInterval kDefaultTimeout = 180.0;
+static const int kMaximumBatchSize = 50;
 
 typedef void (^KeyValueActionHandler)(NSString *key, id value);
 
@@ -190,8 +191,6 @@ typedef enum FBRequestConnectionState {
 + (NSString *)userAgent;
 
 + (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;
-
-- (void)addPiggybackRequests;
 
 @end
 
@@ -1069,6 +1068,9 @@ typedef enum FBRequestConnectionState {
     }
     
     for (FBSession *session in sessions) {
+        if (self.requests.count >= kMaximumBatchSize) {
+            break;
+        }
         if ([session shouldExtendAccessToken]) {
             [FBRequestConnection addRequestToExtendTokenForSession:session connection:self];
         }

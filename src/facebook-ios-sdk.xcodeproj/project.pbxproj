@@ -75,6 +75,8 @@
 		85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
 		85AA4B8F1545C54800E5352E /* FBSession+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 85AA4B8E1545C54800E5352E /* FBSession+Internal.h */; };
 		85DF1127156C64140082AA04 /* FBBatchRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85DF1126156C64140082AA04 /* FBBatchRequestTests.m */; };
+		85F29E9415785D72001F0531 /* FBTestSession+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 85F29E9315785D72001F0531 /* FBTestSession+Internal.h */; };
+		85F29E9C1578782B001F0531 /* FBContentLink.m in Sources */ = {isa = PBXBuildFile; fileRef = E7BBCE3015753C8E00B6B8F6 /* FBContentLink.m */; };
 		AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */; };
 		AACBBE4A0F95108600F1A2B1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AACBBE490F95108600F1A2B1 /* Foundation.framework */; };
 		AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0211D5293B000A4545 /* FBRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -192,6 +194,7 @@
 		85D0ED201537781D00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		85DF1125156C64140082AA04 /* FBBatchRequestTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBBatchRequestTests.h; path = tests/FBBatchRequestTests.h; sourceTree = "<group>"; };
 		85DF1126156C64140082AA04 /* FBBatchRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBBatchRequestTests.m; path = tests/FBBatchRequestTests.m; sourceTree = "<group>"; };
+		85F29E9315785D72001F0531 /* FBTestSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBTestSession+Internal.h"; sourceTree = "<group>"; };
 		AA747D9E0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facebook_ios_sdk_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		AACBBE490F95108600F1A2B1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AEA93B0211D5293B000A4545 /* FBRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBRequest.h; sourceTree = "<group>"; };
@@ -379,6 +382,7 @@
 				84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */,
 				84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */,
 				8525A5B8156F2049009F6F3F /* FBTestSession.h */,
+				85F29E9315785D72001F0531 /* FBTestSession+Internal.h */,
 				8525A5B9156F2049009F6F3F /* FBTestSession.m */,
 				843D2DD61547C33000873F7C /* FBUtility.h */,
 				843D2DD71547C33000873F7C /* FBUtility.m */,
@@ -505,6 +509,7 @@
 				85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */,
 				8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */,
 				E7BBCE3115753C8E00B6B8F6 /* FBContentLink.h in Headers */,
+				85F29E9415785D72001F0531 /* FBTestSession+Internal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,7 +685,7 @@
 				E2223AEC1554573900126FD2 /* FBPlacePickerViewController.m in Sources */,
 				85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */,
 				8525A5BB156F2049009F6F3F /* FBTestSession.m in Sources */,
-				E7BBCE3215753C8E00B6B8F6 /* FBContentLink.m in Sources */,
+				85F29E9C1578782B001F0531 /* FBContentLink.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

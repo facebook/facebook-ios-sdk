@@ -22,7 +22,7 @@
 
 #if defined(FBIOSSDK_SKIP_BATCH_REQUEST_TESTS)
 
-#pragma message ("warning: Skipping FBCommonRequestTests")
+#pragma message ("warning: Skipping FBBatchRequestTests")
 
 #else
 
@@ -45,18 +45,8 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
 
-    [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
-    }];
-    [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
-
-             [blocker signal];
-    }];
+    [connection addRequest:request1 completionHandler:[self handlerExpectingSuccess]];
+    [connection addRequest:request2 completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
          
     [connection start];
     [blocker wait];
@@ -64,6 +54,7 @@
     [connection release];
     [blocker release];
 }
+
 
 @end
 

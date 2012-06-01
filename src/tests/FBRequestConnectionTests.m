@@ -15,7 +15,8 @@
  */
 
 #import "FBRequestConnectionTests.h"
-#import "FBSession.h"
+#import "FBTestSession.h"
+#import "FBTestSession+Internal.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
@@ -28,13 +29,69 @@
 
 @implementation FBRequestConnectionTests
 
-/*
-- (void)testCancellation
+- (void)testConcurrentRequests
 {
-    FBTestSession *session = [self loginSharedTestUser:0 permissions:nil];
-    return;
+    __block FBTestBlocker *blocker1 = [[FBTestBlocker alloc] init];
+    __block FBTestBlocker *blocker2 = [[FBTestBlocker alloc] init];
+    __block FBTestBlocker *blocker3 = [[FBTestBlocker alloc] init];
+    
+    [[FBRequest requestForMeWithSession:self.defaultTestSession] startWithCompletionHandler:[self handlerExpectingSuccessSignaling:blocker1]];
+    [[FBRequest requestForMeWithSession:self.defaultTestSession] startWithCompletionHandler:[self handlerExpectingSuccessSignaling:blocker2]];
+    [[FBRequest requestForMeWithSession:self.defaultTestSession] startWithCompletionHandler:[self handlerExpectingSuccessSignaling:blocker3]];
+
+    [blocker1 wait];
+    [blocker2 wait];
+    [blocker3 wait];
+    
+    [blocker1 release];
+    [blocker2 release];
+    [blocker3 release];
 }
-*/
+
+- (void)testWillPiggybackTokenExtensionIfNeeded
+{
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    // Note that we don't care if the actual token extension request succeeds or not.
+    // We only care that we try it. 
+    session.forceAccessTokenRefresh = YES;
+
+    FBRequest *request = [FBRequest requestForMeWithSession:session];
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:self.handlerExpectingSuccess];
+    [connection start];
+    // We don't need to wait for the requests to complete to determine success.
+
+    NSArray *requests = [connection performSelector:@selector(requests)];
+    STAssertTrue(requests.count == 2, @"didn't piggyback");
+    
+    [connection release];
+}
+
+- (void)testWillNotPiggybackIfWouldExceedBatchSize
+{
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    session.forceAccessTokenRefresh = YES;
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+
+    const int batchSize = 50;
+    for (int i = 0; i < batchSize; ++i) {
+        FBRequest *request = [FBRequest requestForMeWithSession:session];
+        
+        // Minimize traffic by just getting our id.
+        [request.parameters setObject:@"id" forKey:@"fields"];
+        
+        [connection addRequest:request completionHandler:self.handlerExpectingSuccess];
+    }
+    [connection start];
+    // We don't need to wait for the requests to complete to determine success.
+    
+    NSArray *requests = [connection performSelector:@selector(requests)];
+    STAssertTrue(requests.count == batchSize, @"piggybacked but shouldn't have");
+    
+    [connection release];
+}
 
 @end
 

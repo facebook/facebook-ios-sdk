@@ -16,6 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "FBTestSession.h"
+#import "FBRequestConnection.h"
 
 // The following #defines are designed as a convenience during development
 // to disable certain categories of tests. They should never be left on
@@ -31,6 +32,8 @@
 //#define FBIOSSDK_SKIP_TEST_SESSION_TESTS
 //#define FBIOSSDK_SKIP_CONTENT_LINK_TESTS
 
+@class FBTestBlocker;
+
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during
 // tear-down.
@@ -40,6 +43,9 @@
 // that can be shared and used by each individual test. For the simple case, this is that
 // session.
 @property (readonly, retain) FBTestSession *defaultTestSession;
+
+- (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker;
+- (FBRequestHandler)handlerExpectingSuccess;
 
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions;
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions 

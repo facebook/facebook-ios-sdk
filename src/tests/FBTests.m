@@ -207,6 +207,36 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 #pragma mark -
+#pragma mark Handlers
+
+- (FBRequestHandler)handlerExpectingSuccess {
+    return [self handlerExpectingSuccessSignaling:nil];
+}
+
+- (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker {
+    FBRequestHandler handler = 
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertTrue(!error, @"got unexpected error");
+        STAssertNotNil(result, @"didn't get expected result");
+        [blocker signal];
+    };
+    return [[handler copy] autorelease];
+}
+
+- (FBRequestHandler)handlerExpectingFailure {
+    return [self handlerExpectingFailureSignaling:nil];
+}
+
+- (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker {
+    FBRequestHandler handler = 
+    ^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertNotNil(error, @"didn't get expected error");
+        STAssertTrue(!result, @"got unexpected result");
+        [blocker signal];
+    };
+    return [[handler copy] autorelease];
+}
+
+#pragma mark -
 
 @end
- 

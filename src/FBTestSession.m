@@ -17,9 +17,11 @@
 #define SAFE_TO_USE_FBTESTSESSION
 
 #import "FBTestSession.h"
+#import "FBTestSession+Internal.h"
 #import "FBSessionManualTokenCachingStrategy.h"
 #import "FBError.h"
 #import "FBSession+Protected.h"
+#import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import <pthread.h>
 #import "JSON.h"
@@ -66,7 +68,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #pragma mark Private interface
 
-@interface FBTestSession ()
+@interface FBTestSession () 
+{
+    BOOL _forceAccessTokenRefresh;
+}
 
 @property (readwrite, copy) NSString *appAccessToken;
 @property (readwrite, copy) NSString *testUserID;
@@ -155,82 +160,70 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 
 - (void)createNewTestUserAndRename:(BOOL)rename
 {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                       @"true", @"installed",
+                                       [self permissionsString], @"permissions",
+                                       @"post", @"method",
+                                       self.appAccessToken, @"access_token",
+                                       nil];
+                                       
+    // We don't get the user name back on create, so if we want it later, remember it now.
+    NSString *newName = nil;
+    if (self.mode == FBTestSessionModeShared) {
+        // Rename the user with a hashed representation of our permissions, so we can find it
+        // again later.
+        newName = [NSString stringWithFormat:@"Shared %@ Testuser", self.sharedTestUserIdentifier];
+        [parameters setObject:newName forKey:@"name"];
+    }
+    
     // fetch a test user and token
     // note, this fetch uses a manually constructed app token using the appid|appsecret approach,
     // if there is demand for support for apps for which this will not work, we may consider handling 
     // failure by falling back and fetching an app-token via a request; the current approach reduces 
-    // traffic for commin unit testing configuration, which seems like the right tradeoff to start with
+    // traffic for common unit testing configuration, which seems like the right tradeoff to start with
     [FBRequest startWithSession:nil
                       graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
-                     parameters:[NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"true", @"installed",
-                                 [self permissionsString], @"permissions",
-                                 @"post", @"method",
-                                 self.appAccessToken, @"access_token",
-                                 nil]
+                     parameters:parameters
                      HTTPMethod:nil
               completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         if (error) {
-             NSLog(@"Error: [FBSession authorizeUnitTestUser] failed with error: %@", error.description);
-         }
          id userToken;
          id userID;
-         if ([result isKindOfClass:[NSDictionary class]] &&
+         if (!error &&
+             [result isKindOfClass:[NSDictionary class]] &&
              (userToken = [result objectForKey:FBLoginTestUserAccessToken]) &&
              [userToken isKindOfClass:[NSString class]] &&
              (userID = [result objectForKey:FBLoginTestUserID]) &&
              [userID isKindOfClass:[NSString class]]) {
-             
              // capture the id for future use
              self.testUserID = userID;
 
              // Remember this user if it is going to be shared.
              if (self.mode == FBTestSessionModeShared) {
-                 NSString *userIdentifier = self.sharedTestUserIdentifier;
-                 NSString *newName = [NSString stringWithFormat:@"Shared %@ Testuser", userIdentifier];
-                 NSMutableDictionary *user = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-                                              userID, FBLoginTestUserID,
-                                              userToken, FBLoginTestUserAccessToken,
-                                              newName, FBLoginTestUserName, 
-                                              nil];
-
                  pthread_mutex_lock(&mutex);
                  
+                 NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       userID, FBLoginTestUserID,
+                                       userToken, FBLoginTestUserAccessToken,
+                                       newName, FBLoginTestUserName, 
+                                       nil];
                  [testUsers setObject:user forKey:userID];
                  
                  pthread_mutex_unlock(&mutex);
-
-                 // Rename the user with a hashed representation of our permissions, so we can find it
-                 // again later.
-                 id<FBGraphUser> graphObject = (id<FBGraphUser>)[FBGraphObject graphObject];
-                 graphObject.name = newName;
-                 
-                FBRequest *renameRequest = [[FBRequest alloc] initForPostWithSession:nil 
-                                                                           graphPath:userID 
-                                                                         graphObject:graphObject];
-                [renameRequest.parameters setObject:self.appAccessToken forKey:@"access_token"];
-                [renameRequest startWithCompletionHandler:
-                    ^(FBRequestConnection *connection, id result, NSError *error) {
-                        if (error || !result) {
-                            [self raiseException:error];
-                        }
-                        
-                        // Log it on
-                        [self transitionToOpenWithToken:userToken];
-                }];
-                [renameRequest release];
-             } else {
-                 // Not shared. Just log the user on, don't bother to remember it.
-                 [self transitionToOpenWithToken:userToken];
-             }
+             }                 
+             
+             [self transitionToOpenWithToken:userToken];
          } else {
-             // we fetched something unexpected when requesting an app token
-             NSError *loginError = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
-                                                               errorCode:nil];
+             if (error) {
+                 NSLog(@"Error: [FBSession createNewTestUserAndRename:] failed with error: %@", error.description);
+             } else {
+                 // we fetched something unexpected when requesting an app token
+                 error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
+                                                                   errorCode:nil];
+             }
              // state transition, and call the handler if there is one
              [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
-                                               error:loginError
+                                               error:error
                                                token:nil
                                       expirationDate:nil
                                          shouldCache:NO];
@@ -398,6 +391,14 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     }
 }
 
+- (void)setForceAccessTokenRefresh:(BOOL)forceAccessTokenRefresh {
+    _forceAccessTokenRefresh = forceAccessTokenRefresh;
+}
+
+- (BOOL)forceAccessTokenRefresh {
+    return _forceAccessTokenRefresh;
+}
+
 #pragma mark -
 #pragma mark Overrides
 
@@ -452,6 +453,10 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
             [self retrieveTestUsersForApp];
         }
     }
+}
+
+- (BOOL)shouldExtendAccessToken {
+    return self.forceAccessTokenRefresh || [super shouldExtendAccessToken];
 }
 
 #pragma mark -
