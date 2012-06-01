@@ -1,0 +1,8 @@
+1/ contributors must sign either the iCLA or cCLA [link]
+2/ all contributions must be ASL licensed
+3/ all contributions CAN be copyrighted by the author.  Copyright notice MUST be left in headers for source files.
+
+The SDK uses the Apache Software License (ASL) v2.0, and the SDK projects accept contributions from 3rd parties via Git pull requests.
+
+All contributions MUST be ASL licensed -- e.g. new files must include the ASL 2.0 header that's described here
+All contributions CAN be copyright'ed by the author. The ASL does not require that patch authors assign copyright to Facebook; if a developer chooses to retain copyright, they should include an update to the project's NOTICE file with the pull request that documents which files they are retaining for copyright. An example NOTICE file is here. [Note, this is pending legal approval]
