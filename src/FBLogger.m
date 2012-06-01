@@ -20,11 +20,11 @@
 
 static NSUInteger g_serialNumberCounter = 1111; 
 static NSMutableDictionary *g_stringsToReplace = nil;
+static NSMutableDictionary *g_startTimesWithTags = nil;
 
 @interface FBLogger ()
 
 @property (nonatomic, retain, readonly) NSMutableString *internalContents;
-@property (nonatomic, retain, readonly) NSMutableDictionary *stringsToReplace;
 
 @end
 
@@ -34,7 +34,6 @@ static NSMutableDictionary *g_stringsToReplace = nil;
 @synthesize isActive = _isActive;
 @synthesize loggingBehavior = _loggingBehavior;
 @synthesize loggerSerialNumber = _loggerSerialNumber;
-@synthesize stringsToReplace = _stringsToReplace;
 
 // Lifetime
 
@@ -127,17 +126,70 @@ static NSMutableDictionary *g_stringsToReplace = nil;
 }
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
-              formatString:(NSString *)formatString, ...; {
+              formatString:(NSString *)formatString, ... {
     
     if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
         va_list vaArguments;
         va_start(vaArguments, formatString);                                                                                
-        NSString *logString = [[NSString alloc] initWithFormat:formatString arguments:vaArguments];
+        NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
         va_end(vaArguments);
 
         [self singleShotLogEntry:loggingBehavior logEntry:logString];
     }
 }
+
+
++ (void)singleShotLogEntry:(NSString *)loggingBehavior
+              timestampTag:(NSObject *)timestampTag
+              formatString:(NSString *)formatString, ... {
+    
+    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+        va_list vaArguments;
+        va_start(vaArguments, formatString);  
+        NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
+        va_end(vaArguments);
+        
+        // Start time of this "timestampTag" is stashed in the dictionary.
+        // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
+        // we send in as an object, the dictionary will try to copy it.
+        NSNumber *tagAsNumber = [NSNumber numberWithUnsignedLong:(unsigned long)(void *)timestampTag];
+        NSNumber *startTimeNumber = [g_startTimesWithTags objectForKey:tagAsNumber];
+        
+        // Only log if there's been an associated start time.
+        if (startTimeNumber) {
+            unsigned long elapsed = [FBUtility currentTimeInMilliseconds] - startTimeNumber.unsignedLongValue;
+            [g_startTimesWithTags removeObjectForKey:tagAsNumber];  // served its purpose, remove
+            
+            // Log string is appended with "%d msec", with nothing intervening.  This gives the most control to the caller.
+            logString = [NSString stringWithFormat:@"%@%d msec", logString, elapsed];
+        
+            [self singleShotLogEntry:loggingBehavior logEntry:logString];
+        }
+    }
+}
+
++ (void)registerCurrentTime:(NSString *)loggingBehavior
+                    withTag:(NSObject *)timestampTag {
+
+    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+        
+        if (!g_startTimesWithTags) {
+            g_startTimesWithTags = [[NSMutableDictionary alloc] init];
+        }
+        
+        NSAssert(g_startTimesWithTags.count < 1000,
+                 @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong.");
+        
+        unsigned long currTime = [FBUtility currentTimeInMilliseconds];
+        
+        // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
+        // we send in as an object, the dictionary will try to copy it.
+        unsigned long tagAsNumber = (unsigned long)(void *)timestampTag;
+        [g_startTimesWithTags setObject:[NSNumber numberWithUnsignedLong:currTime]
+                                 forKey:[NSNumber numberWithUnsignedLong:tagAsNumber]];
+    }
+}
+
 
 + (void)registerStringToReplace:(NSString *)replace
                     replaceWith:(NSString *)replaceWith {

@@ -70,6 +70,15 @@
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
               formatString:(NSString *)formatString, ...;
 
++ (void)singleShotLogEntry:(NSString *)loggingBehavior
+              timestampTag:(NSObject *)timestampTag
+              formatString:(NSString *)formatString, ...;
+
+// Register a timestamp label with the "current" time, to then be retrieved by singleShotLogEntry
+// to include a duration.
++ (void)registerCurrentTime:(NSString *)loggingBehavior
+                    withTag:(NSObject *)timestampTag;
+
 // When logging strings, replace all instances of 'replace' with instances of 'replaceWith'.
 + (void)registerStringToReplace:(NSString *)replace
                     replaceWith:(NSString *)replaceWith;

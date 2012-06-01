@@ -94,7 +94,6 @@ static NSSet *g_loggingBehavior;
 @property(readonly) NSString *appBaseUrl;
 @property(readwrite, retain) FBLoginDialog *loginDialog;
 @property(readwrite, retain) NSThread *affinitizedThread;
-@property(readwrite) unsigned long previousTransitionBeginTime;
 
 // private members
 - (void)notifyOfState:(FBSessionState)state;
@@ -106,6 +105,7 @@ static NSSet *g_loggingBehavior;
 + (NSString*)appIDFromPLIST;
 + (BOOL)areRequiredPermissions:(NSArray*)requiredPermissions
           aSubsetOfPermissions:(NSArray*)cachedPermissions;
++ (NSString *)sessionStateDescription:(FBSessionState)sessionState;
 
 @end
 
@@ -128,8 +128,7 @@ static NSSet *g_loggingBehavior;
             attemptedRefreshDate = _attemptedRefreshDate,
             loginDialog = _loginDialog,
             affinitizedThread = _affinitizedThread,
-            loginHandler = _loginHandler,
-            previousTransitionBeginTime = _previousTransitionBeginTime;
+            loginHandler = _loginHandler;
 
 #pragma mark Lifecycle
 
@@ -188,8 +187,8 @@ static NSSet *g_loggingBehavior;
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
-        self.previousTransitionBeginTime = [FBUtility currentTimeInMilliseconds];
-
+        [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                              withTag:self];
         //first notification
         [self notifyOfState:self.state];
 
@@ -477,7 +476,9 @@ static NSSet *g_loggingBehavior;
     // invalid transition short circuits
     if (!isValidTransition) {
         [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS
-                            logEntry:[NSString stringWithFormat:@"FBSession !transitionToState:%i fromState:%i", state, statePrior]];
+                            logEntry:[NSString stringWithFormat:@"FBSession **INVALID** transition from %@ to %@",
+                                      [FBSession sessionStateDescription:statePrior],
+                                      [FBSession sessionStateDescription:state]]];
         return false;
     }
 
@@ -493,14 +494,18 @@ static NSSet *g_loggingBehavior;
     }
 
     // valid transitions notify
-    unsigned long currTime = [FBUtility currentTimeInMilliseconds];
-    NSString *logString = [NSString stringWithFormat:@"FBSession transition toState:%i fromState:%i - %d msec", 
-                           state, 
-                           statePrior,
-                           currTime - self.previousTransitionBeginTime];
-    self.previousTransitionBeginTime = currTime;
+    NSString *logString = [NSString stringWithFormat:@"FBSession transition from %@ to %@ ",
+                           [FBSession sessionStateDescription:statePrior],
+                           [FBSession sessionStateDescription:state]];
     [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS logEntry:logString];
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS logEntry:logString];
+    
+    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS 
+                    timestampTag:self
+                    formatString:@"%@", logString];
+    
+    // Re-start session transition timer for the next time around.
+    [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                          withTag:self];
     
     // identify whether we will update token and date, and what the values will be
     BOOL changingTokenAndDate = false;
@@ -875,9 +880,9 @@ static NSSet *g_loggingBehavior;
 #pragma mark -
 #pragma mark Debugging helpers
 
-- (NSString*)description {
++ (NSString *)sessionStateDescription:(FBSessionState)sessionState {
     NSString *stateDescription = nil;
-    switch (self.state) {
+    switch (sessionState) {
         case FBSessionStateCreated: 
             stateDescription = @"FBSessionStateCreated"; 
             break;
@@ -900,6 +905,13 @@ static NSSet *g_loggingBehavior;
             stateDescription = @"[Unknown]";
             break;
     }
+    
+    return stateDescription;
+}
+
+
+- (NSString*)description {
+    NSString *stateDescription = [FBSession sessionStateDescription:self.state];
 	return [NSString stringWithFormat:@"<%@: %p, state: %@, loginHandler: %p, appID: %@, urlSchemeSuffix: %@, tokenCachingStrategy:%@, expirationDate: %@, refreshDate: %@, attemptedRefreshDate: %@, permissions:%@>",
             NSStringFromClass([self class]), 
             self, 

@@ -22,8 +22,6 @@
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
-#import "FBUtility.h"
-
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 static const NSInteger defaultResultsLimit = 100;
@@ -50,7 +48,6 @@ static NSString *defaultImageName =
 
 @implementation FBPlacePickerViewController {
     BOOL _hasSearchTextChangedSinceLastQuery;
-    unsigned long _loadStartTime;
 }
 
 @synthesize dataSource = _dataSource;
@@ -201,7 +198,8 @@ static NSString *defaultImageName =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _loadStartTime = [FBUtility currentTimeInMilliseconds];
+    [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                          withTag:self];
     CGRect bounds = self.view.bounds;
 
     if (!self.tableView) {
@@ -354,12 +352,9 @@ static NSString *defaultImageName =
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
-    if (_loadStartTime != 0) {
-        [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
-                        formatString:@"Places Picker: first render %d msec", 
-         [FBUtility currentTimeInMilliseconds] - _loadStartTime];
-        _loadStartTime = 0;
-    }
+    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+                    timestampTag:self
+                    formatString:@"Places Picker: first render "];  // logger will append "%d msec"
     
     if ([self.delegate respondsToSelector:@selector(placePickerViewControllerDataDidChange:)]) {
         [self.delegate placePickerViewControllerDataDidChange:self];
