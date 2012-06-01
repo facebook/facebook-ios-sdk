@@ -33,6 +33,7 @@
 //#define FBIOSSDK_SKIP_CONTENT_LINK_TESTS
 
 @class FBTestBlocker;
+@protocol FBGraphObject;
 
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during
@@ -47,6 +48,9 @@
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker;
 - (FBRequestHandler)handlerExpectingSuccess;
 
+- (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker; 
+- (FBRequestHandler)handlerExpectingFailure; 
+
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions;
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions 
                                              uniqueUserTag:(NSString*)uniqueUserTag;
@@ -54,8 +58,18 @@
 - (FBTestSession *)loginSession:(FBTestSession *)session;
 - (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2;
 
-- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBTestSession*)session;
-- (void)postAndValidateWithSession:(FBTestSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames;
+- (void)validateGraphObject:(id<FBGraphObject>)graphObject 
+              hasProperties:(NSArray*)propertyNames;
+- (void)validateGraphObjectWithId:(NSString*)idString 
+                    hasProperties:(NSArray*)propertyNames 
+                      withSession:(FBSession*)session;
+- (void)postAndValidateWithSession:(FBSession*)session
+                         graphPath:(NSString*)graphPath
+                       graphObject:(id)graphObject
+                     hasProperties:(NSArray*)propertyNames;
+- (id)batchedPostAndGetWithSession:(FBSession*)session 
+                         graphPath:(NSString*)graphPath 
+                       graphObject:(id)graphObject;
 
 // Subclasses can define this to get defaultTestSessions with specific permissions.
 // The set of permissions should be static, as no guarantee is made how many times this will be called.

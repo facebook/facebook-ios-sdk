@@ -18,6 +18,7 @@
 #import "FBTestBlocker.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
+#import "FBError.h"
 
 static NSMutableDictionary *mapTestCasesToSessions;
 // Concurrency not an issue today, but guard our static global in any case.
@@ -27,7 +28,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 @interface FBTests ()
 
-- (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker; 
+- (void)issueFriendRequestInSession:(FBTestSession*)session toFriend:(NSString*)userID;
 
 @end
 
@@ -138,38 +139,42 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     return session;
 }
 
-- (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2 
+- (void)issueFriendRequestInSession:(FBTestSession*)session toFriend:(NSString*)userID
 {
-    NSString *id1 = session1.testUserID;
-    NSString *id2 = session2.testUserID;
-    
-    STAssertNotNil(id1, @"missing id1");
-    STAssertNotNil(id2, @"missing id2");
-    
-    NSString *graphPath1 = [NSString stringWithFormat:@"me/friends/%@", id1];
-    NSString *graphPath2 = [NSString stringWithFormat:@"me/friends/%@", id2];
+    STAssertNotNil(userID, @"missing userID");
+    NSString *graphPath = [NSString stringWithFormat:@"me/friends/%@", userID];
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session1
-                             graphPath:graphPath2
+    [FBRequest startForPostWithSession:session
+                             graphPath:graphPath
                            graphObject:nil
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
+         BOOL expected = (result && !error);
+         if (error) {
+             id code = [[error userInfo] objectForKey:FBErrorHTTPStatusCodeKey];
+             // If test users are already friends, we will get a 400.
+             expected = [code integerValue] == 400;
+         }
+         STAssertTrue(expected, @"unexpected result");
          [blocker signal];
      }];
     
     [blocker wait];
+}
 
-    blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session2
-                             graphPath:graphPath1
-                           graphObject:nil
-                     completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         [blocker signal];
-     }];
-    
-    [blocker wait];
+- (void)makeTestUserInSession:(FBTestSession*)session1 friendsWithTestUserInSession:(FBTestSession*)session2 
+{
+    [self issueFriendRequestInSession:session1 toFriend:session2.testUserID];
+    [self issueFriendRequestInSession:session2 toFriend:session1.testUserID];
+}
+
+- (void)validateGraphObject:(id<FBGraphObject>)graphObject hasProperties:(NSArray*)propertyNames
+{
+    for (NSString *propertyName in propertyNames) {
+        STAssertNotNil([graphObject objectForKey:propertyName], 
+                       [NSString stringWithFormat:@"missing property '%@'", propertyName]);
+    }    
 }
 
 - (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session {
@@ -180,16 +185,15 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
      ^(FBRequestConnection *connection, id result, NSError *error) {
          STAssertTrue(!error, @"!error");
          STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
-         for (NSString *propertyName in propertyNames) {
-             STAssertNotNil([result objectForKey:propertyName], 
-                            [NSString stringWithFormat:@"missing property '%@'", propertyName]);
-         }
+
+         [self validateGraphObject:result hasProperties:propertyNames];
+
          [blocker signal];
      }];
     [blocker wait];
 }
 
-- (void)postAndValidateWithSession:(FBTestSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
+- (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     [FBRequest startForPostWithSession:session
                              graphPath:graphPath
@@ -216,6 +220,46 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                                    FB_LOG_BEHAVIOR_FBURL_CONNECTIONS,
                                    FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS,
                                    nil]];
+}
+
+- (id)batchedPostAndGetWithSession:(FBSession*)session 
+                         graphPath:(NSString*)graphPath 
+                       graphObject:(id)graphObject {
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    
+    // Create the thing.
+    FBRequest *postRequest = [[FBRequest alloc] initForPostWithSession:session 
+                                                              graphPath:graphPath 
+                                                                graphObject:graphObject];
+    [connection addRequest:postRequest 
+         completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"got unexpected error");
+     }
+            batchEntryName:@"postRequest"];
+    
+    // Get the thing.
+    FBRequest *getRequest = [[FBRequest alloc] initWithSession:session 
+                                                     graphPath:@"{result=postRequest:$.id}"];
+    __block id createdObject = nil;
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    [connection addRequest:getRequest 
+         completionHandler:
+     ^(FBRequestConnection *connection, id result, NSError *error) {
+         STAssertTrue(!error, @"got unexpected error");
+         STAssertNotNil(result, @"didn't get expected result");
+         createdObject = [result retain];
+         [blocker signal];
+     }];
+ 
+    [connection start];
+    [blocker wait];
+    
+    [postRequest release];
+    [connection release];
+    [blocker release];
+    
+    return [createdObject autorelease];
 }
 
 #pragma mark -

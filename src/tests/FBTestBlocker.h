@@ -21,9 +21,14 @@
 // Summary:
 // Lightweight helper to make unit tests more linear and readable; currently supports blocks,
 // can be extended to support delegates as needed
+// NOTE: Not safe to call outside the context of unit tests, as [FBTestBlocker wait] runs
+// the currentRunLoop, and framework code, etc., is not guaranteed to be re-entrant.
+// SenTestKit does not run tests in the context of a run loop.
+// Also, not thread-safe, expects all signaling to happen on the same thread.
 @interface FBTestBlocker : NSObject
 
 - (id)init;
+- (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount;
 - (void)wait;
 - (BOOL)waitWithTimeout:(NSUInteger)timeout;
 - (void)signal;

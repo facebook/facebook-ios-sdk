@@ -694,8 +694,8 @@ typedef enum FBRequestConnectionState {
 }
 
 + (void)processGraphObjectPropertyKey:(NSString*)key value:(id)value action:(KeyValueActionHandler)action {
-    // if we are handling a referenced object
     if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
+        // We are handling an FBGraphObject.
         // for referenced objects we may send a URL or an FBID
         id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
         NSString *subValue;
@@ -704,16 +704,15 @@ typedef enum FBRequestConnectionState {
                 subValue = [(NSDecimalNumber*)subValue stringValue];
             }
             action(key, subValue);
-            //[body appendWithKey:key formValue:subValue];
         } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
-            //[body appendWithKey:key formValue:subValue];
             action(key, subValue);
         }
-        // if we are handling a string
     } else if ([value isKindOfClass:[NSString class]]) {
-        //[body appendWithKey:key formValue:(NSString *)value];
+        // Strings are serialized as themselves.
         action(key, value);
     } else if ([value isKindOfClass:[NSArray class]]) {
+        // Arrays are serialized as multiple elements with keys of the
+        // form key[0], key[1], etc.
         NSArray *array = (NSArray*)value;
         int count = array.count;
         for (int i = 0; i < count; ++i) {

@@ -22,7 +22,7 @@
 #import "FBGraphUser.h"
 #import "FBTestSession.h"
 
-#if defined(FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS)
+#if defined(FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS) || !defined(UNIT_TEST_OPEN_GRAPH_NAMESPACE)
 
 #pragma message ("warning: Skipping FBOpenGraphActionTests")
 
@@ -50,7 +50,7 @@
     id<FBOGTestObject> result = (id<FBOGTestObject>)[FBGraphObject graphObject];
     
     // Give it a URL that will echo back the name of the meal as its title, description, and body.
-    result.url = [NSString stringWithFormat:format, @"fbiossdktests:test", testName, testName, testName];
+    result.url = [NSString stringWithFormat:format, @UNIT_TEST_OPEN_GRAPH_NAMESPACE":test", testName, testName, testName];
     
     return result;
 }
@@ -62,26 +62,21 @@
     action.test = testObject;
 
     [self postAndValidateWithSession:self.defaultTestSession 
-                           graphPath:@"me/fbiossdktests:run" 
+                           graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run" 
                          graphObject:action 
                        hasProperties:[NSArray arrayWithObjects:
                                       nil]];
     
 }
 
-- (void)testPostingComplexOpenGraphAction {
-    FBTestSession *session1 = self.defaultTestSession;
-    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
-                                                              uniqueUserTag:kSecondTestUserTag];
-    [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
-    
-    id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];
+- (id<FBOGRunTestAction>)createComplexOpenGraphAction:(NSString*)taggedUserID {
+    id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingComplexOpenGraphAction"];
     
     id<FBGraphPlace> placeObject = (id<FBGraphPlace>)[FBGraphObject graphObject];
     placeObject.id = @"154981434517851";
-
+    
     id<FBGraphUser> userObject = (id<FBGraphUser>)[FBGraphObject graphObject];
-    userObject.id = session2.testUserID;
+    userObject.id = taggedUserID;
     
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;
@@ -94,15 +89,45 @@
                                   nil];
     NSMutableArray *images = [NSArray arrayWithObject:image];
     action.image = images;
+
+    return action;    
+}
+
+- (void)testPostingComplexOpenGraphAction {
+    FBTestSession *session1 = self.defaultTestSession;
+    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kSecondTestUserTag];
+    [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
+    
+    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.testUserID];
     
     [self postAndValidateWithSession:session1 
-                           graphPath:@"me/fbiossdktests:run" 
+                           graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run" 
                          graphObject:action 
                        hasProperties:[NSArray arrayWithObjects:
                                       @"image", 
                                       @"place",
                                       @"tags",
                                       nil]];
+}
+
+- (void)testPostingComplexOpenGraphActionInBatch {
+    FBTestSession *session1 = self.defaultTestSession;
+    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kSecondTestUserTag];
+    [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
+    
+    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.testUserID];
+    
+    id postedAction = [self batchedPostAndGetWithSession:session1 graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run" graphObject:action];
+    STAssertNotNil(postedAction, @"nil postedAction");
+    
+    [self validateGraphObject:postedAction
+                hasProperties:[NSArray arrayWithObjects:
+                               @"image", 
+                               @"place",
+                               @"tags",
+                               nil]];
 }
 
 @end
