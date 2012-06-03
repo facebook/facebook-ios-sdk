@@ -50,6 +50,16 @@ static void *finishedContext = @"finishedContext";
 
 @end
 
+#pragma - mark Private class used by the block methods
+@interface FBRequestHandler : NSObject <FBRequestDelegate>
+{
+@public
+  FBCallbackBlock doneCallback;
+  FBCallbackBlock errorCallback;
+}
+@end
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 @implementation Facebook
@@ -843,6 +853,83 @@ static void *finishedContext = @"finishedContext";
 }
 
 - (void)requestLoading:(FBRequest *)request{
+}
+
+#pragma - mark Block methods
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                          callback:(FBCallbackBlock)callback
+                             error:(FBCallbackBlock)error
+{
+  return [self requestWithGraphPath:graphPath
+                          andParams:[NSMutableDictionary dictionary]
+                      andHttpMethod:@"GET"
+                           callback:callback
+                              error:error];
+}
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                          callback:(FBCallbackBlock)callback
+                             error:(FBCallbackBlock)error
+{
+  return [self requestWithGraphPath:graphPath
+                          andParams:params
+                      andHttpMethod:@"GET"
+                           callback:callback
+                              error:error];
+}
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
+                          callback:(FBCallbackBlock)done
+                             error:(FBCallbackBlock)error
+{
+  FBRequestHandler* requestHandler = [[FBRequestHandler alloc] init];
+  requestHandler->doneCallback = [done copy];
+  requestHandler->errorCallback = [error copy];
+  
+  return [self requestWithGraphPath:graphPath
+                           andParams:params
+                       andHttpMethod:httpMethod
+                         andDelegate:requestHandler];
+}
+
+@end
+
+#pragma - mark Implementation of the private class used by the block methods
+
+@implementation FBRequestHandler
+
+- (void)request:(FBRequest *)request didFailWithError:(NSError *)error
+{
+  @try {
+    if (errorCallback) {
+      errorCallback(error);
+    }
+  }
+  @finally {
+    [doneCallback release];
+    [errorCallback release];
+    doneCallback = nil;
+    errorCallback = nil;
+  }
+}
+
+- (void)request:(FBRequest *)request didLoad:(id)result
+{
+  @try {
+    if (doneCallback) {
+      doneCallback(result);
+    }
+  }
+  @finally {
+    [doneCallback release];
+    [errorCallback release];
+    doneCallback = nil;
+    errorCallback = nil;
+  }
 }
 
 @end
