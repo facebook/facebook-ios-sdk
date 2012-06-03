@@ -41,6 +41,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
             httpMethod = _httpMethod,
             params = _params,
             connection = _connection,
+            contentType = _contentType,
             responseText = _responseText,
             state = _state,
             sessionDidExpire = _sessionDidExpire,
@@ -266,8 +267,14 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     }
     
     NSError* error = nil;
-    id result = [self parseJsonResponse:data error:&error];
-    self.error = error;  
+    id result;
+    NSRange range = [_contentType rangeOfString:@"text/javascript"];
+    if (range.location != NSNotFound) {
+        result = [self parseJsonResponse:data error:&error];
+    } else {
+        result = data;
+    }
+    self.error = error;
     
     if ([_delegate respondsToSelector:@selector(request:didLoad:)] ||
         [_delegate respondsToSelector:
@@ -334,6 +341,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     [_connection cancel];
     [_connection release];
     [_responseText release];
+    [_contentType release];
     [_url release];
     [_httpMethod release];
     [_params release];
@@ -347,6 +355,7 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     _responseText = [[NSMutableData alloc] init];
     
     NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
+    self.contentType = [[httpResponse allHeaderFields] objectForKey:@"Content-Type"];
     if ([_delegate respondsToSelector:
          @selector(request:didReceiveResponse:)]) {
         [_delegate request:self didReceiveResponse:httpResponse];

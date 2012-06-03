@@ -36,6 +36,7 @@ typedef NSUInteger FBRequestState;
     NSString*             _httpMethod;
     NSMutableDictionary*  _params;
     NSURLConnection*      _connection;
+    NSString*             _contentType;
     NSMutableData*        _responseText;
     FBRequestState        _state;
     NSError*              _error;
@@ -63,6 +64,7 @@ typedef NSUInteger FBRequestState;
  */
 @property(nonatomic,retain) NSMutableDictionary* params;
 @property(nonatomic,retain) NSURLConnection*  connection;
+@property(nonatomic,retain) NSString*  contentType;
 @property(nonatomic,retain) NSMutableData* responseText;
 @property(nonatomic,readonly) FBRequestState state;
 @property(nonatomic,readonly) BOOL sessionDidExpire;

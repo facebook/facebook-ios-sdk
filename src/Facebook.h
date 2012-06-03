@@ -20,6 +20,8 @@
 @class FBFrictionlessRequestSettings;
 @protocol FBSessionDelegate;
 
+typedef void (^FBCallbackBlock)(id response);
+
 /**
  * Main Facebook interface for interacting with the Facebook developer API.
  * Provides methods to log in and log out a user, make requests using the REST
@@ -89,6 +91,21 @@
                          andParams:(NSMutableDictionary *)params
                      andHttpMethod:(NSString *)httpMethod
                        andDelegate:(id <FBRequestDelegate>)delegate;
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                          callback:(FBCallbackBlock)callback
+                             error:(FBCallbackBlock)error;
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                          callback:(FBCallbackBlock)callback
+                             error:(FBCallbackBlock)error;
+
+- (FBRequest*)requestWithGraphPath:(NSString *)graphPath
+                         andParams:(NSMutableDictionary *)params
+                     andHttpMethod:(NSString *)httpMethod
+                          callback:(FBCallbackBlock)callback
+                             error:(FBCallbackBlock)error;
 
 - (void)dialog:(NSString *)action
    andDelegate:(id<FBDialogDelegate>)delegate;
