@@ -35,9 +35,6 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   # Path to sample files for Facebook SDK
   FB_SDK_SAMPLES=$FB_SDK_ROOT/samples
 
-  # Path to template files for Facebook SDK
-  FB_SDK_TEMPLATES=$FB_SDK_ROOT/templates
-
   # The directory where the target is built
   FB_SDK_BUILD=$FB_SDK_ROOT/build
   FB_SDK_BUILD_LOG=$FB_SDK_BUILD/build.log
