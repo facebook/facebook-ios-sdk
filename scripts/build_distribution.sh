@@ -31,7 +31,7 @@ echo Building Distribution.
 # -----------------------------------------------------------------------------
 # Compress framework for standalone distribution
 #
-echo "Compressing framework for standalone distribution."
+progress_message "Compressing framework for standalone distribution."
 \rm -rf ${FB_SDK_FRAMEWORK_TGZ}
 
 # Current directory matters to tar.
@@ -42,7 +42,7 @@ tar -c -z $FB_SDK_FRAMEWORK_NAME >  $FB_SDK_FRAMEWORK_TGZ \
 # -----------------------------------------------------------------------------
 # Build package directory structure
 #
-echo "Building package directory structure."
+progress_message "Building package directory structure."
 \rm -rf $FB_SDK_BUILD_PACKAGE
 mkdir $FB_SDK_BUILD_PACKAGE \
   || die "Could not create directory $FB_SDK_BUILD_PACKAGE"
@@ -73,7 +73,7 @@ done
 # -----------------------------------------------------------------------------
 # Build .pkg from package directory
 #
-echo "Building .pkg from package directory."
+progress_message "Building .pkg from package directory."
 \rm -rf $FB_SDK_PKG
 $PACKAGEMAKER \
   --doc $FB_SDK_SRC/Package/FBiOSSDK.pmdoc \
@@ -87,7 +87,7 @@ $PACKAGEMAKER \
 # -----------------------------------------------------------------------------
 # Done
 #
-echo "Successfully built SDK distribution:"
-echo "  $FB_SDK_FRAMEWORK_TGZ"
-echo "  $FB_SDK_PKG"
+progress_message "Successfully built SDK distribution:"
+progress_message "  $FB_SDK_FRAMEWORK_TGZ"
+progress_message "  $FB_SDK_PKG"
 common_success

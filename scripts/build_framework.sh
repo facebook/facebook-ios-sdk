@@ -44,7 +44,7 @@ FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/${BUILDCONFIGURATION}-universal/$FB_SDK_BI
 
 # -----------------------------------------------------------------------------
 
-echo Building Framework.
+progress_message Building Framework.
 
 # -----------------------------------------------------------------------------
 # Compile binaries 
@@ -63,7 +63,6 @@ function xcode_build_target() {
     SYMROOT=$FB_SDK_BUILD \
     CURRENT_PROJECT_VERSION=$FB_SDK_VERSION_FULL \
     clean build \
-    >>$FB_SDK_BUILD_LOG 2>&1 \
     || die "XCode build failed for platform: ${1}."
 }
 
@@ -73,7 +72,8 @@ xcode_build_target "iphoneos" "$BUILDCONFIGURATION"
 # -----------------------------------------------------------------------------
 # Merge lib files for different platforms into universal binary
 #
-echo "Building $FB_SDK_BINARY_NAME library using lipo."
+progress_message "Building $FB_SDK_BINARY_NAME library using lipo."
+
 mkdir -p $(dirname $FB_SDK_UNIVERSAL_BINARY)
 
 $LIPO \
@@ -81,13 +81,12 @@ $LIPO \
     $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a \
     $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a \
   -output $FB_SDK_UNIVERSAL_BINARY \
-  >>$FB_SDK_BUILD_LOG 2>&1 \
   || die "lipo failed - could not create universal static library"
 
 # -----------------------------------------------------------------------------
 # Build .framework out of binaries
 #
-echo "Building $FB_SDK_FRAMEWORK_NAME."
+progress_message "Building $FB_SDK_FRAMEWORK_NAME."
 
 \rm -rf $FB_SDK_FRAMEWORK
 mkdir $FB_SDK_FRAMEWORK \
@@ -136,9 +135,9 @@ ln -s ./A ./Current
 #
 
 if [ ${NOEXTRAS:-0} -eq  1 ];then
-  echo "Skipping unit tests."
+  progress_message "Skipping unit tests."
 else
-  echo "Running unit tests."
+  progress_message "Running unit tests."
   cd $FB_SDK_SRC
   $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests build
 fi

@@ -25,15 +25,14 @@ CODE_SIGN_IDENTITY="$4"
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 
 # -----------------------------------------------------------------------------
-echo 'Building Scrumptious (Distribution).'
+progress_message 'Building Scrumptious (Distribution).'
 
 # -----------------------------------------------------------------------------
 # Call out to build .framework
 #
-#if is_outermost_build; then
-# TODO reenable
-#  . $FB_SDK_SCRIPT/build_framework.sh
-#fi
+if is_outermost_build; then
+  . $FB_SDK_SCRIPT/build_framework.sh
+fi
 
 # -----------------------------------------------------------------------------
 # Build Scrumptious
@@ -65,22 +64,23 @@ $XCODEBUILD \
 # -----------------------------------------------------------------------------
 # Build .ipa package
 #
+progress_message Building Package
+
 PACKAGE_DIR=`mktemp -d -t ${PRODUCT_NAME}-inhouse-pkg`
 
-echo Building Package
 pushd "$PACKAGE_DIR" >/dev/null
 PAYLOAD_DIR="Payload"
 mkdir "$PAYLOAD_DIR"
 cp -a "$RESULTS_DIR"/"$APP_NAME" "$PAYLOAD_DIR"
 rm -f "$FINAL_PRODUCT_NAME"
 zip -y -r "$FINAL_PRODUCT_NAME" "$PAYLOAD_DIR" 
-echo ...Package at: "$PACKAGE_DIR"/"$FINAL_PRODUCT_NAME"
+progress_message ...Package at: "$PACKAGE_DIR"/"$FINAL_PRODUCT_NAME"
 
 
 # -----------------------------------------------------------------------------
 # Validate .ipa package
 #
-echo Validating Package
+progress_message Validating Package
 
 # Apple's Validation tool exits with error code 0 even on error, so we have to search the output.
 VALIDATION_TOOL="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/usr/bin/Validation"
@@ -94,7 +94,8 @@ popd >/dev/null
 
 # -----------------------------------------------------------------------------
 # Archive the build and .dSYM symbols
-echo Archiving build and symbols
+progress_message Archiving build and symbols
+
 BUILD_ARCHIVE_DIR=~/iossdkarchive/"$PRODUCT_NAME"/"$BUILD_NUMBER"
 mkdir -p "$BUILD_ARCHIVE_DIR"
 
@@ -102,7 +103,7 @@ pushd "$RESULTS_DIR" >/dev/null
 
 ARCHIVE_PATH="$BUILD_ARCHIVE_DIR"/Archive-"$BUILD_NUMBER".zip
 zip -y -r "$ARCHIVE_PATH" "$APP_NAME" "$APP_NAME".dSYM 
-echo ...Archive at: "$ARCHIVE_PATH"
+progress_message ...Archive at: "$ARCHIVE_PATH"
 
 popd >/dev/null
 

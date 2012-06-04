@@ -13,7 +13,7 @@
 if is_outermost_build; then
     . $FB_SDK_SCRIPT/build_framework.sh -n
 fi
-echo Building Documentation.
+progress_message Building Documentation.
 
 # -----------------------------------------------------------------------------
 # Build docs

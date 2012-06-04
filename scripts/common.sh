@@ -86,6 +86,11 @@ if [ -z $FB_SDK_ENV ]; then
     FB_SDK_BUILD_DEPTH=$(($FB_SDK_BUILD_DEPTH + 1))
   }
 
+  # Echoes a progress message to the terminal regardless of redirection.
+  function progress_message() {
+      echo "$@" >/dev/tty
+  }
+
   # Any script that includes common.sh must call this once if it finishes
   # successfully.
   function common_success() { pop_common; }

@@ -13,8 +13,7 @@ BUILDCONFIGURATION=${1:-Release}
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 
 # -----------------------------------------------------------------------------
-
-echo Building samples.
+progress_message Building samples.
 
 # -----------------------------------------------------------------------------
 # Call out to build .framework
@@ -43,7 +42,7 @@ FB_FIND_SAMPLES_CMD="find $FB_SDK_SAMPLES -type d -depth 1 ! ( $FB_FIND_ARGS )"
 #
 function xcode_build_sample() {
   cd $FB_SDK_SAMPLES/$1
-  echo "Compiling '${1}' for platform '${2}' using configuration '${3}'."
+  progress_message "Compiling '${1}' for platform '${2}' using configuration '${3}'."
   $XCODEBUILD \
     -alltargets \
     -sdk $2 \
@@ -51,7 +50,6 @@ function xcode_build_sample() {
     SYMROOT=$FB_SDK_BUILD \
     CURRENT_PROJECT_VERSION=$FB_SDK_VERSION_FULL \
     clean build \
-    >>$FB_SDK_BUILD_LOG 2>&1 \
     || die "XCode build failed for sample '${1}' on platform: ${2}."
 }
 
