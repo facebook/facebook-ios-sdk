@@ -802,11 +802,11 @@ static NSSet *g_loggingBehavior;
             
             // here we accumulate state from the various callbacks
             if (user && !fbid) {
-                fbid = user.id;
+                fbid = [user.id retain];
             } else if (user && !fbid2) {
-                fbid2 = user.id;
+                fbid2 = [user.id retain];
             } else if (permissions) {
-                permissionsRefreshed = permissions;
+                permissionsRefreshed = [permissions retain];
             }
             
             // if this was our last call, then complete the operation
@@ -839,6 +839,11 @@ static NSSet *g_loggingBehavior;
                                                                  errorCode:nil];
                     [self callReauthorizeHandlerAndClearState:error];
                 }
+                
+                // because these are __block, we manually handle their lifetime
+                [fbid release];
+                [fbid2 release];
+                [permissionsRefreshed release];
             }
         } copy];
                 
