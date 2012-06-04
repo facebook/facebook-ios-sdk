@@ -60,7 +60,6 @@ $XCODEBUILD \
   PROVISIONING_PROFILE="$PROFILE_UUID" \
   FB_BUNDLE_VERSION="$BUILD_NUMBER" \
   clean build \
-  >>$FB_SDK_BUILD_LOG 2>&1 \
   || die "XCode build failed for Scrumptious (Distribution)."
 
 # -----------------------------------------------------------------------------
@@ -74,7 +73,7 @@ PAYLOAD_DIR="Payload"
 mkdir "$PAYLOAD_DIR"
 cp -a "$RESULTS_DIR"/"$APP_NAME" "$PAYLOAD_DIR"
 rm -f "$FINAL_PRODUCT_NAME"
-zip -y -r "$FINAL_PRODUCT_NAME" "$PAYLOAD_DIR" >>$FB_SDK_BUILD_LOG 2>&1
+zip -y -r "$FINAL_PRODUCT_NAME" "$PAYLOAD_DIR" 
 echo ...Package at: "$PACKAGE_DIR"/"$FINAL_PRODUCT_NAME"
 
 
@@ -102,8 +101,7 @@ mkdir -p "$BUILD_ARCHIVE_DIR"
 pushd "$RESULTS_DIR" >/dev/null
 
 ARCHIVE_PATH="$BUILD_ARCHIVE_DIR"/Archive-"$BUILD_NUMBER".zip
-zip -y -r "$ARCHIVE_PATH" "$APP_NAME" "$APP_NAME".dSYM \
-  >>$FB_SDK_BUILD_LOG 2>&1
+zip -y -r "$ARCHIVE_PATH" "$APP_NAME" "$APP_NAME".dSYM 
 echo ...Archive at: "$ARCHIVE_PATH"
 
 popd >/dev/null
