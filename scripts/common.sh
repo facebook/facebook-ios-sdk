@@ -90,7 +90,10 @@ if [ -z $FB_SDK_ENV ]; then
 
   # Any script that includes common.sh must call this once if it finishes
   # successfully.
-  function common_success() { pop_common; }
+  function common_success() { 
+      pop_common
+      return 0
+  }
 
   # Call this when there is an error.  This does not return.
   function die() {
