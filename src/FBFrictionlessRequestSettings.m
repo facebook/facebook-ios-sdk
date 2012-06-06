@@ -147,6 +147,7 @@
 // NSObject
 
 - (void)dealloc {    
+    [[self.activeRequest connection] cancel];
     self.activeRequest = nil;
     self.allowedRecipients = nil;
     [super dealloc];
