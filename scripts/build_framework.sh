@@ -145,4 +145,6 @@ fi
 # -----------------------------------------------------------------------------
 # Done
 #
+
+progress_message "Framework version:" `perl -pe "s/.*@//" < $FB_SDK_SRC/FBSDKVersion-generated.h`
 common_success

@@ -69,6 +69,7 @@
 		8525A5BC156F2049009F6F3F /* FBTestSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8525A5B9156F2049009F6F3F /* FBTestSession.m */; };
 		858E424C1565F77500246151 /* FBOpenGraphActionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 858E424B1565F77400246151 /* FBOpenGraphActionTests.m */; };
 		858E424E1565FA2E00246151 /* FBTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 858E424D1565FA2E00246151 /* FBTests.m */; };
+		8592BE011580245500056680 /* FBiOSSDKVersion.h in Headers */ = {isa = PBXBuildFile; fileRef = 8592BE001580245500056680 /* FBiOSSDKVersion.h */; };
 		85954AD51558637500FABA9A /* FBGraphObjectTableDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF01549CD7F002AEA86 /* FBGraphObjectTableDataSource.m */; };
 		85954AD71558637800FABA9A /* FBGraphObjectTableSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */; };
 		85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */; };
@@ -188,6 +189,7 @@
 		858E424A1565F77400246151 /* FBOpenGraphActionTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBOpenGraphActionTests.h; path = tests/FBOpenGraphActionTests.h; sourceTree = "<group>"; };
 		858E424B1565F77400246151 /* FBOpenGraphActionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBOpenGraphActionTests.m; path = tests/FBOpenGraphActionTests.m; sourceTree = "<group>"; };
 		858E424D1565FA2E00246151 /* FBTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBTests.m; path = tests/FBTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		8592BE001580245500056680 /* FBiOSSDKVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBiOSSDKVersion.h; sourceTree = "<group>"; };
 		85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObjectPagingLoader.h; sourceTree = "<group>"; };
 		85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectPagingLoader.m; sourceTree = "<group>"; };
 		85AA4B8E1545C54800E5352E /* FBSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSession+Internal.h"; sourceTree = "<group>"; };
@@ -358,6 +360,7 @@
 				E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */,
 				84E0C9F81535ED5A00778DA4 /* FBGraphUser.h */,
 				84E2DA27153492DE007F886C /* FBGraphPlace.h */,
+				8592BE001580245500056680 /* FBiOSSDKVersion.h */,
 				5F7CB41E1553ACC600C183CF /* FBLogger.h */,
 				5F7CB41F1553ACC600C183CF /* FBLogger.m */,
 				AEA93B0611D5293B000A4545 /* FBLoginDialog.h */,
@@ -510,6 +513,7 @@
 				8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */,
 				E7BBCE3115753C8E00B6B8F6 /* FBContentLink.h in Headers */,
 				85F29E9415785D72001F0531 /* FBTestSession+Internal.h in Headers */,
+				8592BE011580245500056680 /* FBiOSSDKVersion.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -539,6 +543,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "facebook-ios-sdk" */;
 			buildPhases = (
+				8592BE0315802E7B00056680 /* Run Script */,
 				D2AAC07A0554694100DB518D /* Headers */,
 				D2AAC07B0554694100DB518D /* Sources */,
 				D2AAC07C0554694100DB518D /* Frameworks */,
@@ -589,6 +594,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		8592BE0315802E7B00056680 /* Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "VERSION_HEADER_PATH=$SRCROOT/FBSDKVersion-generated.h\n\n# default\necho '#define FB_IOS_SDK_VERSION_STRING @\"Unknown\"' > $VERSION_HEADER_PATH\n\nGIT_DESCRIBE=`(cd $SRCROOT; git describe --match=\"sdk-version-*\" --tags 2>/dev/null)`\nif [ \"$?\" -eq \"0\" ]; then\t\n    # If we have git and are in a working copy, use the version part of git-describe's output.\n    echo '#define FB_IOS_SDK_VERSION_STRING @\"'`echo $GIT_DESCRIBE | perl -pe \"s/sdk-version-//\"`'\"' > $VERSION_HEADER_PATH\nfi\n\n";
+		};
 		B9CBC517152537270036AA71 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
