@@ -43,7 +43,6 @@ NSString *const kBatchFileNamePrefix = @"file";
 
 NSString *const kAccessTokenKey = @"access_token";
 NSString *const kSDK = @"ios";
-NSString *const kSDKVersion = @"3";
 NSString *const kUserAgentBase = @"FBiOSSDK";
 
 NSString *const kExtendTokenRestMethod = @"auth.extendSSOAccessToken";
@@ -488,7 +487,6 @@ typedef enum FBRequestConnectionState {
 {
     [request.parameters setValue:@"json" forKey:@"format"];
     [request.parameters setValue:kSDK forKey:@"sdk"];
-    [request.parameters setValue:kSDKVersion forKey:@"sdk_version"];
     NSString *token = request.session.accessToken;
     if (token) {
         [request.parameters setValue:token forKey:kAccessTokenKey];
