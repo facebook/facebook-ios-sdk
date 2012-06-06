@@ -83,9 +83,9 @@ if [ -z $FB_SDK_ENV ]; then
     FB_SDK_BUILD_DEPTH=$(($FB_SDK_BUILD_DEPTH + 1))
   }
 
-  # Echoes a progress message to the terminal regardless of redirection.
+  # Echoes a progress message to stderr
   function progress_message() {
-      echo "$@" >/dev/tty
+      echo "$@" >&2
   }
 
   # Any script that includes common.sh must call this once if it finishes
