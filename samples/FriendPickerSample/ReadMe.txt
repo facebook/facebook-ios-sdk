@@ -15,4 +15,3 @@ Launch the FriendPickerSample project using Xcode from the <iOS SDK>/samples/Fri
 Changes from Previous Versions
 1.0 - First release.
 
-Copyright (c) 2012 Facebook

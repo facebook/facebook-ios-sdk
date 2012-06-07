@@ -16,4 +16,3 @@ Launch the ProfilePictureSample project using Xcode from the <iOS SDK>/samples/P
 Changes from Previous Versions
 1.0 - First release.
 
-Copyright (c) 2012 Facebook
