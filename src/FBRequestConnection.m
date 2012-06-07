@@ -1090,7 +1090,7 @@ typedef enum FBRequestConnectionState {
     static NSString *agent = nil;
 
     if (!agent) {
-        agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FB_IOS_SDK_VERSION_STRING];
+        agent = [[NSString stringWithFormat:@"%@.%@", kUserAgentBase, FB_IOS_SDK_VERSION_STRING] retain];
     }
 
     return agent;
