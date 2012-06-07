@@ -45,7 +45,9 @@
     STAssertTrue([contentLink.actionTypes isEqualToArray:testActionType], @"Failed to correctly parse fb_action_types");
     STAssertEqualObjects(@"source", contentLink.source, @"Failed to correctly parse fb_source");
     STAssertTrue([contentLink.ref isEqualToArray:testRef], @"Failed to correctly parse fb_ref");
-    STAssertTrue([contentLink.originalQueryParameters isEqualToDictionary:testOriginalQueryParameters], @"Incorrect originalQueryParameters");  
+    STAssertTrue([contentLink.originalQueryParameters isEqualToDictionary:testOriginalQueryParameters], @"Incorrect originalQueryParameters");
+    
+    [contentLink dealloc];
 }
 
 @end

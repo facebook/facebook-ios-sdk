@@ -17,35 +17,45 @@
 #import "FBContentLink.h"
 #import "FBUtility.h"
 
+@interface FBContentLink ()
+
+@property (readwrite, copy) NSURL *targetURL;
+@property (readwrite, copy) NSArray *actionTypes;
+@property (readwrite, copy) NSString *source;
+@property (readwrite, copy) NSArray *ref;
+@property (readwrite, copy) NSDictionary *originalQueryParameters;
+
+@end
+
 @implementation FBContentLink
 
-@synthesize targetURL = _targetURL;
-@synthesize actionTypes = _actionTypes;
-@synthesize source = _source;
-@synthesize ref =_ref;
-@synthesize originalQueryParameters = _originalQueryParameters;
+@synthesize targetURL;
+@synthesize actionTypes;
+@synthesize source;
+@synthesize ref;
+@synthesize originalQueryParameters;
 
 - (id)initWithURL:(NSURL*)url {
     if (self = [super init]) {
         NSString *query = [url fragment];
         NSDictionary *params = [FBUtility dictionaryByParsingURLQueryPart:query];
-    
-        _targetURL = [[NSURL alloc] initWithString:[params valueForKey:@"target_url"]];
-        _actionTypes = [[params valueForKey:@"fb_action_types"] componentsSeparatedByString:@","];
-        _source = [params valueForKey:@"fb_source"];
-        _ref = [[params valueForKey:@"fb_ref"] componentsSeparatedByString:@","];
-        _originalQueryParameters = params;
+
+        self.targetURL = [[[NSURL alloc] initWithString:[params valueForKey:@"target_url"]] autorelease];
+        self.actionTypes = [[params valueForKey:@"fb_action_types"] componentsSeparatedByString:@","];
+        self.source = [params valueForKey:@"fb_source"];
+        self.ref = [[params valueForKey:@"fb_ref"] componentsSeparatedByString:@","];
+        self.originalQueryParameters = params;
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [_targetURL release];
-    [_actionTypes release];
-    [_source release];
-    [_ref release];
-    [_originalQueryParameters release];
+    self.targetURL = nil;
+    self.actionTypes =nil;
+    self.source = nil;
+    self.ref = nil;
+    self.originalQueryParameters = nil;
     [super dealloc];
 }
 
