@@ -80,7 +80,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
     if (_isActive) {
         va_list vaArguments;
         va_start(vaArguments, formatString);
-        NSString *logString = [[NSString alloc] initWithFormat:formatString arguments:vaArguments];
+        NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
         va_end(vaArguments);
         
         [self appendString:logString];        

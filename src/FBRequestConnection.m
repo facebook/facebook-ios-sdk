@@ -187,6 +187,12 @@ typedef enum FBRequestConnectionState {
 
 - (void)addPiggybackRequests;
 
+- (void)logRequest:(NSMutableURLRequest *)request
+        bodyLength:(int)bodyLength
+        bodyLogger:(FBLogger *)bodyLogger
+  attachmentLogger:(FBLogger *)attachmentLogger;
+
+
 + (NSString *)userAgent;
 
 + (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;
@@ -214,7 +220,13 @@ typedef enum FBRequestConnectionState {
 - (NSMutableURLRequest *)urlRequest
 {
     if (self.internalUrlRequest) {
-        return self.internalUrlRequest;
+        NSMutableURLRequest *request = self.internalUrlRequest;
+        
+        [request setValue:[FBRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];        
+        [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
+        
+        return request;
+        
     } else {
         // CONSIDER: Could move to kStateSerialized here by caching result, but
         // it seems bad for a get accessor to modify state in observable manner.
@@ -452,25 +464,43 @@ typedef enum FBRequestConnectionState {
     [request setValue:[FBRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
     [request setValue:[FBRequestBody mimeContentType] forHTTPHeaderField:@"Content-Type"];
     
-    if (_logger.isActive) {
-        [_logger appendFormat:@"Request <#%d>:\n", _logger.loggerSerialNumber];
-        [_logger appendKey:@"URL" value:[[request URL] absoluteString]];
-        [_logger appendKey:@"Method" value:[request HTTPMethod]];
-        [_logger appendKey:@"UserAgent" value:[FBRequestConnection userAgent]];
-        [_logger appendKey:@"MIME" value:[FBRequestBody mimeContentType]];
-        [_logger appendKey:@"Body Size" value:[NSString stringWithFormat:@"%d kB", bodyLength / 1024]];
-        [_logger appendKey:@"Body (w/o attachments)" value:bodyLogger.contents];
-        [_logger appendKey:@"Attachments" value:attachmentLogger.contents];
-        [_logger appendString:@"\n"];
-        
-        [_logger emitToNSLog];
-    }
+    [self logRequest:request bodyLength:bodyLength bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
     
     // Safely release now that everything's serialized into the logger.
     [bodyLogger release];
     [attachmentLogger release];
     
     return request;
+}
+
+- (void)logRequest:(NSMutableURLRequest *)request
+        bodyLength:(int)bodyLength
+        bodyLogger:(FBLogger *)bodyLogger
+  attachmentLogger:(FBLogger *)attachmentLogger 
+{
+    if (_logger.isActive) {
+        [_logger appendFormat:@"Request <#%d>:\n", _logger.loggerSerialNumber];
+        [_logger appendKey:@"URL" value:[[request URL] absoluteString]];
+        [_logger appendKey:@"Method" value:[request HTTPMethod]];
+        [_logger appendKey:@"UserAgent" value:[request valueForHTTPHeaderField:@"User-Agent"]];
+        [_logger appendKey:@"MIME" value:[request valueForHTTPHeaderField:@"Content-Type"]];
+        
+        if (bodyLength != 0) {
+            [_logger appendKey:@"Body Size" value:[NSString stringWithFormat:@"%d kB", bodyLength / 1024]];
+        }
+        
+        if (bodyLogger != nil) {
+            [_logger appendKey:@"Body (w/o attachments)" value:bodyLogger.contents];
+        }
+        
+        if (attachmentLogger != nil) {
+            [_logger appendKey:@"Attachments" value:attachmentLogger.contents];
+        }
+        
+        [_logger appendString:@"\n"];
+        
+        [_logger emitToNSLog];
+    }
 }
 
 //
