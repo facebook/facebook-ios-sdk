@@ -84,7 +84,6 @@
     action.tags = [NSArray arrayWithObject:userObject];
     
     NSMutableDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  @"true", @"user_generated", 
                                   @"http://fbsdkog.herokuapp.com/1.jpg", @"url",
                                   nil];
     NSMutableArray *images = [NSArray arrayWithObject:image];
@@ -128,6 +127,39 @@
                                @"place",
                                @"tags",
                                nil]];
+}
+
+- (void)testPostingUserGeneratedImageInAction
+{
+    id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingSimpleOpenGraphAction"];
+    
+    id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
+    action.test = testObject;
+
+    // Note: we pass user_generated=false rather than true because apps must be approved for
+    // user-generated photos and that's extra work for the unit-test-app creator. false achieves
+    // the same goal (just checking that it was round-tripped).
+    NSDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
+                           @"false", @"user_generated", 
+                           @"http://fbsdkog.herokuapp.com/1.jpg", @"url",
+                           nil];
+    NSMutableArray *images = [NSArray arrayWithObject:image];
+    action.image = images;
+    
+    id postedAction = [self batchedPostAndGetWithSession:self.defaultTestSession 
+                                               graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run" 
+                                             graphObject:action];
+    STAssertNotNil(postedAction, @"nil postedAction");
+
+    NSArray *postedImages = [postedAction objectForKey:@"image"];
+    STAssertNotNil(postedImages, @"nil images");
+    STAssertTrue(1 == postedImages.count, @"not 1 image");
+    
+    id<FBGraphObject> postedImage = [postedImages objectAtIndex:0];
+    [self validateGraphObject:postedImage hasProperties:[NSArray arrayWithObjects:
+                                                         @"url",
+                                                         @"user_generated",
+                                                         nil]];
 }
 
 @end

@@ -150,6 +150,10 @@ typedef enum FBRequestConnectionState {
               addFormData:(BOOL)addFormData
                    logger:(FBLogger *)logger;
 
++ (void)processGraphObject:(id<FBGraphObject>)object
+                   forPath:(NSString*)path
+                withAction:(KeyValueActionHandler)action;
+
 - (void)completeWithResponse:(NSURLResponse *)response
                         data:(NSData *)data
                      orError:(NSError *)error;
@@ -196,9 +200,6 @@ typedef enum FBRequestConnectionState {
 + (NSString *)userAgent;
 
 + (void)addRequestToExtendTokenForSession:(FBSession*)session connection:(FBRequestConnection*)connection;
-
-+ (void)processGraphObject:(id<FBGraphObject>)object
-                withAction:(KeyValueActionHandler)action;
 
 @end
 
@@ -457,6 +458,7 @@ typedef enum FBRequestConnectionState {
         // if we have a post object, also roll that into the body 
         if (metadata.request.graphObject) {
             [FBRequestConnection processGraphObject:metadata.request.graphObject
+                                            forPath:[url path]
                                                 withAction:^(NSString *key, id value) {
                 [body appendWithKey:key formValue:value logger:bodyLogger];
             }];
@@ -580,9 +582,6 @@ typedef enum FBRequestConnectionState {
         }
     }
 
-    // TODO: move serializeURL to a utility class next to isAttachment and
-    // appendAttachments.  The types it ignores need to be in sync with
-    // the attachment code.
     NSString *url = [FBRequest serializeURL:baseURL
                                      params:request.parameters
                                  httpMethod:request.HTTPMethod];
@@ -657,9 +656,8 @@ typedef enum FBRequestConnectionState {
         }
     }
 
-    // TODO: error if things are not set
-    [requestElement setObject:[self urlStringForSingleRequest:metadata.request forBatch:YES]
-                       forKey:kBatchRelativeURLKey];
+    NSString *urlString = [self urlStringForSingleRequest:metadata.request forBatch:YES];
+    [requestElement setObject:urlString forKey:kBatchRelativeURLKey];
     [requestElement setObject:metadata.request.HTTPMethod forKey:kBatchMethodKey];
 
     NSMutableString *attachmentNames = [NSMutableString string];
@@ -684,6 +682,7 @@ typedef enum FBRequestConnectionState {
         __block NSString *delimeter = @"";
         [FBRequestConnection
          processGraphObject:metadata.request.graphObject
+                    forPath:urlString
          withAction:^(NSString *key, id value) {
              // escape the value
              value = [FBUtility stringByURLEncodingString:[value description]];
@@ -735,19 +734,34 @@ typedef enum FBRequestConnectionState {
     }
 }
 
-+ (void)processGraphObjectPropertyKey:(NSString*)key value:(id)value action:(KeyValueActionHandler)action {
+#pragma mark Graph Object serialization
+
++ (void)processGraphObjectPropertyKey:(NSString*)key 
+                                value:(id)value 
+                               action:(KeyValueActionHandler)action 
+                          passByValue:(BOOL)passByValue {
     if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
-        // We are handling an FBGraphObject.
-        // for referenced objects we may send a URL or an FBID
-        id<FBGraphObject> refObject = (id<FBGraphObject>)value; 
-        NSString *subValue;
-        if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
-            if ([subValue isKindOfClass:[NSDecimalNumber class]]) {
-                subValue = [(NSDecimalNumber*)subValue stringValue];
+        NSDictionary<FBGraphObject> *refObject = (NSDictionary<FBGraphObject>*)value; 
+
+        if (passByValue) {
+            // We need to pass all properties of this object in key[propertyName] format.
+            for (NSString *propertyName in refObject) {
+                NSString *subKey = [NSString stringWithFormat:@"%@[%@]", key, propertyName];
+                id subValue = [refObject objectForKey:propertyName];
+                // Note that passByValue is not inherited by subkeys.
+                [self processGraphObjectPropertyKey:subKey value:subValue action:action passByValue:NO];
             }
-            action(key, subValue);
-        } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
-            action(key, subValue);
+        } else {
+            // Normal case is passing objects by reference, so just pass the ID or URL, if any.
+            NSString *subValue;
+            if ((subValue = [refObject objectForKey:@"id"])) {          // fbid
+                if ([subValue isKindOfClass:[NSDecimalNumber class]]) {
+                    subValue = [(NSDecimalNumber*)subValue stringValue];
+                }
+                action(key, subValue);
+            } else if ((subValue = [refObject objectForKey:@"url"])) {  // canonical url (external)
+                action(key, subValue);
+            }
         }
     } else if ([value isKindOfClass:[NSString class]]) {
         // Strings are serialized as themselves.
@@ -760,17 +774,34 @@ typedef enum FBRequestConnectionState {
         for (int i = 0; i < count; ++i) {
             NSString *subKey = [NSString stringWithFormat:@"%@[%d]", key, i];
             id subValue = [array objectAtIndex:i];
-            [self processGraphObjectPropertyKey:subKey value:subValue action:action];
+            [self processGraphObjectPropertyKey:subKey value:subValue action:action passByValue:passByValue];
         }
     }
 }
 
-+ (void)processGraphObject:(id<FBGraphObject>)object withAction:(KeyValueActionHandler)action {
++ (void)processGraphObject:(id<FBGraphObject>)object forPath:(NSString*)path withAction:(KeyValueActionHandler)action {
+    BOOL isOGAction = NO;
+    if ([path hasPrefix:@"me/"]) {
+        // In general, graph objects are passed by reference (ID/URL). But if this is an OG Action,
+        // we need to pass the entire values of the contents of the 'image' property, as they
+        // contain important metadata beyond just a URL. We don't have a 100% foolproof way of knowing
+        // if we are posting an OG Action, given that batched requests can have parameter substitution,
+        // but passing the OG Action type as a substituted parameter is unlikely.
+        // It looks like an OG Action if it's posted to me/namespace:action[?other=stuff].
+        NSUInteger colonLocation = [path rangeOfString:@":"].location;
+        NSUInteger questionMarkLocation = [path rangeOfString:@"?"].location;
+        isOGAction = (colonLocation != NSNotFound && colonLocation > 3) && 
+            (questionMarkLocation == NSNotFound || colonLocation < questionMarkLocation);
+    }
+
     for (NSString *key in [object keyEnumerator]) {
         NSObject *value = [object objectForKey:key];
-        [self processGraphObjectPropertyKey:key value:value action:action];
+        BOOL passByValue = isOGAction && [key isEqualToString:@"image"];
+        [self processGraphObjectPropertyKey:key value:value action:action passByValue:passByValue];
     }
 }
+
+#pragma mark -
 
 - (void)completeWithResponse:(NSURLResponse *)response
                         data:(NSData *)data
@@ -1038,7 +1069,6 @@ typedef enum FBRequestConnectionState {
             [dictionary objectForKey:@"error_msg"] ||
             [dictionary objectForKey:@"error_reason"]) {
 
-            // TODO: align errors between batch items and single item
             NSMutableDictionary *userInfo = [[[NSMutableDictionary alloc] init] autorelease];
             [userInfo addEntriesFromDictionary:dictionary];
             return [self errorWithCode:FBErrorRequestConnectionApi
