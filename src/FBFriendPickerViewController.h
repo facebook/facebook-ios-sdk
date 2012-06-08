@@ -21,6 +21,35 @@
 @protocol FBFriendPickerDelegate;
 
 /*! 
+ @typedef FBFriendSortOrdering enum
+ 
+ @abstract Indicates the order in which friends should be listed in the friend picker.
+ 
+ @discussion
+ */
+typedef enum {
+    /*! Sort friends by first, middle, last names. */
+    FBFriendSortByFirstName,
+    /*! Sort friends by last, first, middle names. */
+    FBFriendSortByLastName
+} FBFriendSortOrdering;
+
+/*! 
+ @typedef FBFriendDisplayOrdering enum
+ 
+ @abstract Indicates whether friends should be displayed first-name-first or last-name-first.
+ 
+ @discussion
+ */
+typedef enum {
+    /*! Display friends as First Middle Last. */
+    FBFriendDisplayByFirstName,
+    /*! Display friends as Last First Middle. */
+    FBFriendDisplayByLastName,
+} FBFriendDisplayOrdering;
+
+
+/*! 
  @class
  
  @abstract 
@@ -83,6 +112,18 @@
  The items in the array are id<FBGraphUser>.
  */
 @property (nonatomic, retain, readonly) NSArray *selection;
+
+/*!
+ @abstract
+ The order in which friends are sorted in the display.
+ */
+@property (nonatomic) FBFriendSortOrdering sortOrdering;
+
+/*!
+ @abstract
+ The order in which friends' names are constructed.
+ */
+@property (nonatomic) FBFriendDisplayOrdering displayOrdering;
 
 /*!
  @abstract

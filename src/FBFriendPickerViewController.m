@@ -19,6 +19,7 @@
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
+#import "FBGraphObjectTableCell.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
@@ -52,6 +53,8 @@ static NSString *defaultImageName =
 @synthesize tableView = _tableView;
 @synthesize userID = _userID;
 @synthesize loader = _loader;
+@synthesize sortOrdering = _sortOrdering;
+@synthesize displayOrdering = _displayOrdering;
 
 - (id)init
 {
@@ -93,8 +96,7 @@ static NSString *defaultImageName =
                                                 init];
     dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
-    dataSource.groupByField = @"name";
-    [dataSource setSortingBySingleField:@"name" ascending:YES];
+    dataSource.itemTitleSuffixEnabled = YES;
     self.dataSource = dataSource;
 
     // Selection Manager
@@ -114,7 +116,9 @@ static NSString *defaultImageName =
     self.itemPicturesEnabled = YES;
     self.selectionManager = selectionManager;
     self.userID = @"me";
-
+    self.sortOrdering = FBFriendSortByFirstName;
+    self.displayOrdering = FBFriendDisplayByFirstName;
+    
     // cleanup
     [selectionManager release];
     [dataSource release];
@@ -227,10 +231,27 @@ static NSString *defaultImageName =
 
 - (void)loadData
 {
+    // Respect user settings in case they have changed.
+    NSMutableArray *sortFields = [NSMutableArray array];
+    NSString *groupByField = nil;
+    if (self.sortOrdering == FBFriendSortByFirstName) {
+        [sortFields addObject:@"first_name"];
+        [sortFields addObject:@"middle_name"];
+        [sortFields addObject:@"last_name"];
+        groupByField = @"first_name";
+    } else {
+        [sortFields addObject:@"last_name"];
+        [sortFields addObject:@"first_name"];
+        [sortFields addObject:@"middle_name"];
+        groupByField = @"last_name";
+    }
+    [self.dataSource setSortingByFields:sortFields ascending:YES];
+    self.dataSource.groupByField = groupByField;
+
     FBRequest *request = [FBRequest requestForMyFriendsWithSession:self.session];
 
     NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
-                        @"id", @"name", @"first_name", @"last_name", @"picture", nil];
+                        @"id", @"name", @"first_name", @"middle_name", @"last_name", @"picture", nil];
     [request.parameters setObject:fields forKey:@"fields"];
     
     [self.loader startLoadingWithRequest:request];
@@ -270,15 +291,50 @@ static NSString *defaultImageName =
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                             titleOfItem:(id<FBGraphObject>)graphObject
+                             titleOfItem:(id<FBGraphUser>)graphUser
 {
-    return [graphObject objectForKey:@"name"];
+    // Title is either "First Middle" or "Last" depending on display order.
+    if (self.displayOrdering == FBFriendDisplayByFirstName) {
+        if (graphUser.middle_name) {
+            return [NSString stringWithFormat:@"%@ %@", graphUser.first_name, graphUser.middle_name];
+        } else {
+            return graphUser.first_name;
+        }
+    } else {
+        return graphUser.last_name;
+    }
+}
+
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                       titleSuffixOfItem:(id<FBGraphUser>)graphUser
+{
+    // Title suffix is either "Last" or "First Middle" depending on display order.
+    if (self.displayOrdering == FBFriendDisplayByLastName) {
+        if (graphUser.middle_name) {
+            return [NSString stringWithFormat:@"%@ %@", graphUser.first_name, graphUser.middle_name];
+        } else {
+            return graphUser.first_name;
+        }
+    } else {
+        return graphUser.last_name;
+    }
+    
 }
 
 - (UIImage *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
     return [graphObject objectForKey:@"picture"];
+}
+
+- (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
+                customizeTableCell:(FBGraphObjectTableCell*)cell
+{
+    // We want to bold whichever part of the name we are sorting on.
+    cell.boldTitle = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByFirstName) ||
+        (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByLastName);
+    cell.boldTitleSuffix = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByLastName) ||
+        (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByFirstName);    
 }
 
 #pragma mark FBGraphObjectPagingLoaderDelegate members

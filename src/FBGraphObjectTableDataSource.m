@@ -45,6 +45,7 @@
 @synthesize groupByField = _groupByField;
 @synthesize indexKeys = _indexKeys;
 @synthesize indexMap = _indexMap;
+@synthesize itemTitleSuffixEnabled = _itemTitleSuffixEnabled;
 @synthesize itemPicturesEnabled = _itemPicturesEnabled;
 @synthesize itemSubtitleEnabled = _itemSubtitleEnabled;
 @synthesize pendingURLConnections = _pendingURLConnections;
@@ -217,12 +218,20 @@
                                             filterIncludesItem:item];
 }
 
+- (void)setSortingByFields:(NSArray*)fieldNames ascending:(BOOL)ascending {
+    NSMutableArray *sortDescriptors = [NSMutableArray  arrayWithCapacity:fieldNames.count];
+    for (NSString *fieldName in fieldNames) {
+        NSSortDescriptor *sortBy = [NSSortDescriptor
+                                    sortDescriptorWithKey:fieldName
+                                    ascending:ascending
+                                    selector:@selector(localizedCaseInsensitiveCompare:)];
+        [sortDescriptors addObject:sortBy];
+    }
+    self.sortDescriptors = sortDescriptors;
+}
+
 - (void)setSortingBySingleField:(NSString*)fieldName ascending:(BOOL)ascending {
-    NSSortDescriptor *sortBy = [NSSortDescriptor
-                                sortDescriptorWithKey:fieldName
-                                ascending:ascending
-                                selector:@selector(localizedCaseInsensitiveCompare:)];
-    self.sortDescriptors = [NSArray arrayWithObjects:sortBy, nil];
+    [self setSortingByFields:[NSArray arrayWithObject:fieldName] ascending:ascending];
 }
 
 - (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView
@@ -429,6 +438,13 @@
                 cell.picture = nil;
             }
             
+            if (self.itemTitleSuffixEnabled) {
+                cell.titleSuffix = [self.controllerDelegate graphObjectTableDataSource:self
+                                                                     titleSuffixOfItem:item];
+            } else {
+                cell.titleSuffix = nil;
+            }
+            
             if (self.itemSubtitleEnabled) {
                 cell.subtitle = [self.controllerDelegate graphObjectTableDataSource:self
                                                                      subtitleOfItem:item];
@@ -446,6 +462,11 @@
             } else {
                 cell.accessoryType = UITableViewCellAccessoryNone;
                 cell.selected = NO;
+            }
+            
+            if ([self.controllerDelegate respondsToSelector:@selector(graphObjectTableDataSource:customizeTableCell:)]) {
+                [self.controllerDelegate graphObjectTableDataSource:self 
+                                                 customizeTableCell:cell];
             }
         } else {
             cell.picture = nil;

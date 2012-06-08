@@ -29,9 +29,8 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 @interface FBGraphObjectTableCell()
 
-@property (nonatomic, retain) UIImageView *pictureView;
-@property (nonatomic, retain) UILabel* subtitleLabel;
-@property (nonatomic, retain) UILabel* titleLabel;
+@property (nonatomic, retain) UIImageView *pictureView;\
+@property (nonatomic, retain) UILabel* titleSuffixLabel;
 @property (nonatomic, retain) UIActivityIndicatorView *activityIndicator;
 
 @end
@@ -39,9 +38,10 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 @implementation FBGraphObjectTableCell
 
 @synthesize pictureView = _pictureView;
-@synthesize titleLabel = _titleLabel;
-@synthesize subtitleLabel = _subtitleLabel;
+@synthesize titleSuffixLabel = _titleSuffixLabel;
 @synthesize activityIndicator = _activityIndicator;
+@synthesize boldTitle = _boldTitle;
+@synthesize boldTitleSuffix = _boldTitleSuffix;
 
 #pragma mark - Lifecycle
 
@@ -60,23 +60,13 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
         [pictureView release];
         
         // Subtitle
-        UILabel *subtitleLabel = [[UILabel alloc] init];
-        subtitleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        subtitleLabel.textColor = [UIColor colorWithRed:0.4 green:0.6 blue:0.8 alpha:1.0];
-        subtitleLabel.font = [UIFont systemFontOfSize:subtitleFontHeight];
-        
-        self.subtitleLabel = subtitleLabel;
-        [self.contentView addSubview:subtitleLabel];
-        [subtitleLabel release];
-        
+        self.detailTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.detailTextLabel.textColor = [UIColor colorWithRed:0.4 green:0.6 blue:0.8 alpha:1.0];
+        self.detailTextLabel.font = [UIFont systemFontOfSize:subtitleFontHeight];
+                
         // Title
-        UILabel *titleLabel = [[UILabel alloc] init];
-        titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        titleLabel.font = [UIFont systemFontOfSize:titleFontHeight];
-        
-        self.titleLabel = titleLabel;
-        [self.contentView addSubview:titleLabel];
-        [titleLabel release];
+        self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        self.textLabel.font = [UIFont systemFontOfSize:titleFontHeight];
         
         // Content View
         self.contentView.clipsToBounds = YES;
@@ -87,8 +77,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 - (void)dealloc
 {
-    [_titleLabel release];
-    [_subtitleLabel release];
+    [_titleSuffixLabel release];
     [_pictureView release];
     
     [super dealloc];
@@ -100,8 +89,11 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 {
     [super layoutSubviews];
     
+    [self updateFonts];
+    
     BOOL hasPicture = (self.picture != nil);
     BOOL hasSubtitle = (self.subtitle != nil);
+    BOOL hasTitleSuffix = (self.titleSuffix != nil);
     
     CGFloat pictureWidth = hasPicture ? pictureEdge : 0;
     CGSize cellSize = self.contentView.bounds.size;
@@ -110,11 +102,23 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
     CGFloat titleTop = hasSubtitle ? titleTopWithSubtitle : titleTopNoSubtitle;
     
     self.pictureView.frame = CGRectMake(pictureMargin, pictureMargin, pictureEdge, pictureWidth);
-    self.subtitleLabel.frame = CGRectMake(textLeft, subtitleTop, textWidth, subtitleHeight);
-    self.titleLabel.frame = CGRectMake(textLeft, titleTop, textWidth, titleHeight);
+    self.detailTextLabel.frame = CGRectMake(textLeft, subtitleTop, textWidth, subtitleHeight);
+    if (!hasTitleSuffix) {
+        self.textLabel.frame = CGRectMake(textLeft, titleTop, textWidth, titleHeight);
+    } else {
+        CGSize titleSize = [self.textLabel.text sizeWithFont:self.textLabel.font];
+        CGSize spaceSize = [@" " sizeWithFont:self.textLabel.font];
+        CGFloat titleWidth = titleSize.width + spaceSize.width;
+        self.textLabel.frame = CGRectMake(textLeft, titleTop, titleWidth, titleHeight);
+        
+        CGFloat titleSuffixLeft = textLeft + titleWidth;
+        CGFloat titleSuffixWidth = textWidth - titleWidth;
+        self.titleSuffixLabel.frame = CGRectMake(titleSuffixLeft, titleTop, titleSuffixWidth, titleHeight);
+    }
     
     [self.pictureView setHidden:!(hasPicture)];
-    [self.subtitleLabel setHidden:!(hasSubtitle)];
+    [self.detailTextLabel setHidden:!(hasSubtitle)];
+    [self.titleSuffixLabel setHidden:!(hasTitleSuffix)];
 }
 
 + (CGFloat)rowHeight
@@ -143,6 +147,30 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
     }
 }
 
+- (void)updateFonts {
+    if (self.boldTitle) {
+        self.textLabel.font = [UIFont boldSystemFontOfSize:titleFontHeight];
+    } else {
+        self.textLabel.font = [UIFont systemFontOfSize:titleFontHeight];
+    }
+
+    if (self.boldTitleSuffix) {
+        self.titleSuffixLabel.font = [UIFont boldSystemFontOfSize:titleFontHeight];
+    } else {
+        self.titleSuffixLabel.font = [UIFont systemFontOfSize:titleFontHeight];
+    }
+}
+
+- (void)createTitleSuffixLabel {
+    if (!self.titleSuffixLabel) {
+        UILabel *titleSuffixLabel = [[UILabel alloc] init];
+        titleSuffixLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self.contentView addSubview:titleSuffixLabel];
+
+        self.titleSuffixLabel = titleSuffixLabel;
+        [titleSuffixLabel release];
+    }
+}
 #pragma mark - Properties
 
 - (UIImage *)picture
@@ -158,23 +186,37 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 - (NSString*)subtitle
 {
-    return self.subtitleLabel.text;
+    return self.detailTextLabel.text;
 }
 
 - (void)setSubtitle:(NSString *)subtitle
 {
-    self.subtitleLabel.text = subtitle;
+    self.detailTextLabel.text = subtitle;
     [self setNeedsLayout];
 }
 
 - (NSString*)title
 {
-    return self.titleLabel.text;
+    return self.textLabel.text;
 }
 
 - (void)setTitle:(NSString *)title
 {
-    self.titleLabel.text = title;
+    self.textLabel.text = title;
+    [self setNeedsLayout];
+}
+
+- (NSString*)titleSuffix
+{
+    return self.titleSuffixLabel.text;
+}
+
+- (void)setTitleSuffix:(NSString *)titleSuffix
+{
+    if (titleSuffix) {
+        [self createTitleSuffixLabel];
+        self.titleSuffixLabel.text = titleSuffix;
+    }
     [self setNeedsLayout];
 }
 

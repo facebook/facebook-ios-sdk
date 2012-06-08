@@ -18,7 +18,13 @@
 
 @interface FBGraphObjectTableCell : UITableViewCell
 
+// We allow the title to be split into two parts, with one (or both) optionally
+// bolded. titleSuffix will be appended to the end of title with a space in between.
 @property (copy, nonatomic) NSString *title;
+@property (copy, nonatomic) NSString *titleSuffix;
+@property (nonatomic) BOOL boldTitle;
+@property (nonatomic) BOOL boldTitleSuffix;
+
 @property (copy, nonatomic) NSString *subtitle;
 @property (retain, nonatomic) UIImage *picture;
 

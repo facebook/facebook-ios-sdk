@@ -20,12 +20,14 @@
 @protocol FBGraphObjectViewControllerDelegate;
 @protocol FBGraphObjectSelectionQueryDelegate;
 @protocol FBGraphObjectDataSourceDataNeededDelegate;
+@class FBGraphObjectTableCell;
 
 @interface FBGraphObjectTableDataSource : NSObject<UITableViewDataSource>
 
 @property (nonatomic, retain) UIImage *defaultPicture;
 @property (nonatomic, assign) id<FBGraphObjectViewControllerDelegate> controllerDelegate;
 @property (nonatomic, copy) NSString *groupByField;
+@property (nonatomic) BOOL itemTitleSuffixEnabled;
 @property (nonatomic) BOOL itemPicturesEnabled;
 @property (nonatomic) BOOL itemSubtitleEnabled;
 @property (nonatomic, assign) id<FBGraphObjectSelectionQueryDelegate> selectionDelegate;
@@ -35,6 +37,7 @@
 - (NSString *)fieldsForRequestIncluding:(NSSet *)customFields, ...;
 
 - (void)setSortingBySingleField:(NSString*)fieldName ascending:(BOOL)ascending;
+- (void)setSortingByFields:(NSArray*)fieldNames ascending:(BOOL)ascending;
 
 // Clears all graph objects from the data source.
 - (void)clearGraphObjects;
@@ -67,6 +70,9 @@
 @optional
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+                       titleSuffixOfItem:(id<FBGraphObject>)graphObject;
+
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                           subtitleOfItem:(id<FBGraphObject>)graphObject;
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
@@ -75,6 +81,9 @@
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                 filterIncludesItem:(id<FBGraphObject>)item;
 
+- (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
+                customizeTableCell:(FBGraphObjectTableCell*)cell;
+                
 @end
 
 @protocol FBGraphObjectSelectionQueryDelegate <NSObject>

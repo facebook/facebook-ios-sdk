@@ -20,18 +20,30 @@
 @interface FPViewController () <FBFriendPickerDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *sortBySegmentedControl;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *displayBySegmentedControl;
 
 - (void)sessionChanged;
+- (IBAction)sortBySegmentedControlValueChanged:(id)sender;
+- (IBAction)displayBySegmentedControlValueChanged:(id)sender;
 
 @end
 
 @implementation FPViewController
 
 @synthesize selectedFriendsView = _friendResultText;
+@synthesize sortBySegmentedControl = _sortBySegmentedControl;
+@synthesize displayBySegmentedControl = _displayBySegmentedControl;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.sortBySegmentedControl.selectedSegmentIndex = 0;
+    self.sortOrdering = FBFriendSortByFirstName;
+    self.displayBySegmentedControl.selectedSegmentIndex = 0;
+    self.displayOrdering = FBFriendDisplayByFirstName;
+    
     [self sessionChanged];
 }
 
@@ -63,6 +75,18 @@
              }
          }];
     }
+}
+
+- (IBAction)sortBySegmentedControlValueChanged:(id)sender 
+{
+    self.sortOrdering = ([sender selectedSegmentIndex] == 0) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+    [self loadData];
+}
+
+- (IBAction)displayBySegmentedControlValueChanged:(id)sender 
+{
+    self.displayOrdering = ([sender selectedSegmentIndex] == 0) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+    [self loadData];
 }
 
 #pragma mark - FBFriendPickerDelegate implementation

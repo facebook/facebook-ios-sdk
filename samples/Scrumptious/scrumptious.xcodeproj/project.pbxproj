@@ -12,6 +12,8 @@
 		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
 		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
 		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
+		8592BE3A15816CBF00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3915816CBF00056680 /* AddressBook.framework */; };
+		8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3C15816CCC00056680 /* AddressBook.framework */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */; };
 		B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */; };
@@ -42,6 +44,9 @@
 		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		8592BE3915816CBF00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		8592BE3E158173A000056680 /* Scrumptious.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Scrumptious.entitlements; sourceTree = "<group>"; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
@@ -79,11 +84,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8592BE3A15816CBF00056680 /* AddressBook.framework in Frameworks */,
 				B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */,
 				B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */,
 				B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */,
 				B9CD0A78150EA4DD00560A93 /* CoreGraphics.framework in Frameworks */,
 				85394EAC15546CC400550929 /* FBiOSSDK.framework in Frameworks */,
+				8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +100,7 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
+				8592BE3915816CBF00056680 /* AddressBook.framework */,
 				856DC2171577F105001FA6A6 /* Icon-72.png */,
 				856DC2181577F105001FA6A6 /* Icon.png */,
 				856DC2191577F105001FA6A6 /* Icon@2x.png */,
@@ -113,6 +121,7 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8592BE3C15816CCC00056680 /* AddressBook.framework */,
 				85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */,
 				85394EAB15546CC400550929 /* FBiOSSDK.framework */,
 				B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */,
@@ -126,6 +135,7 @@
 		B9CD0A79150EA4DD00560A93 /* Scrumptious */ = {
 			isa = PBXGroup;
 			children = (
+				8592BE3E158173A000056680 /* Scrumptious.entitlements */,
 				B9CD0A98150EBFBD00560A93 /* images */,
 				B9CD0A7A150EA4DD00560A93 /* Supporting Files */,
 				B9CD0A82150EA4DD00560A93 /* SCAppDelegate.h */,
@@ -326,6 +336,7 @@
 		B9CD0A91150EA4DE00560A93 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/../../build\"",
@@ -337,6 +348,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};

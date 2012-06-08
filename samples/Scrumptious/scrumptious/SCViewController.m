@@ -20,6 +20,7 @@
 #import "SCMealViewController.h"
 #import "SCProtocols.h"
 #import <FBiOSSDK/FBRequest.h>
+#import <AddressBook/AddressBook.h>
 
 @interface SCViewController()<UITableViewDataSource, UIImagePickerControllerDelegate, FBFriendPickerDelegate,
     UINavigationControllerDelegate, FBPlacePickerDelegate,
@@ -110,14 +111,14 @@
     if (photoURL) {
         NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
         [image setObject:photoURL forKey:@"url"];
-
+        
         NSMutableArray *images = [[NSMutableArray alloc] init];
         [images addObject:image];
         
         action.image = images;
     }
     
-    // Create the request and post the action to the "me/scrumps:eat" path.
+    // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
     [FBRequest startForPostWithSession:self.session
                              graphPath:@"me/fb_sample_scrumps:eat"
                            graphObject:action
@@ -457,6 +458,18 @@
                 self.friendPickerController.delegate = self;
                 self.friendPickerController.title = @"Select friends";
             }
+
+            // Set up the friend picker to sort and display names the same way as the
+            // iOS Address Book does.
+            
+            // Need to call ABAddressBookCreate in order for the next two calls to do anything.
+            ABAddressBookCreate();
+            ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
+            ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
+            
+            self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+            self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+
             self.friendPickerController.session = self.session;
             [self.friendPickerController loadData];
             target = self.friendPickerController;

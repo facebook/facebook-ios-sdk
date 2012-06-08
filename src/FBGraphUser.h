@@ -51,6 +51,12 @@
 
 /*!
  @property
+ @abstract Typed access to user's middle name
+ */
+@property (retain, nonatomic) NSString *middle_name;
+
+/*!
+ @property
  @abstract Typed access to user's last name
  */
 @property (retain, nonatomic) NSString *last_name;
