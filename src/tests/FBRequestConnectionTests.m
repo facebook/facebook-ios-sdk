@@ -118,6 +118,8 @@
     
     [blocker wait];
     
+    STAssertFalse(connection.isResultFromCache, @"Should not have cached, and should have fetched from server");
+    
     [connection release];
     [blocker release];
     
@@ -136,8 +138,8 @@
     
     // should have completed successfully by here
     STAssertTrue(completedWithoutBlocking, @"Should have called the handler, due to cache hit");
+    STAssertTrue(connection.isResultFromCache, @"Should not have fetched from server");
     [connection release];
-
 }
 
 - (void)testDelete

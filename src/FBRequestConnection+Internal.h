@@ -18,6 +18,8 @@
 
 @interface FBRequestConnection (Internal)
 
+@property (nonatomic, readonly) BOOL isResultFromCache;
+
 - (void)startWithCacheIdentity:(NSString*)cacheIdentity
          skipRoundtripIfCached:(BOOL)consultCache;
 

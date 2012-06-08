@@ -33,6 +33,8 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 @property (nonatomic, retain) UILabel* titleSuffixLabel;
 @property (nonatomic, retain) UIActivityIndicatorView *activityIndicator;
 
+- (void)updateFonts;
+
 @end
 
 @implementation FBGraphObjectTableCell

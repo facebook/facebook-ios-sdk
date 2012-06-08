@@ -16,6 +16,10 @@
 
 #import <Foundation/Foundation.h>
 
+@class FBTestBlocker;
+
+typedef void (^FBTestBlockerPeriodicHandler)(FBTestBlocker *blocker);
+
 // FBTestBlocker class
 //
 // Summary:
@@ -29,8 +33,11 @@
 
 - (id)init;
 - (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount;
+- (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount;
 - (void)wait;
 - (BOOL)waitWithTimeout:(NSUInteger)timeout;
+- (void)waitWithPeriodicHandler:(FBTestBlockerPeriodicHandler)handler;
+- (BOOL)waitWithTimeout:(NSUInteger)timeout periodicHandler:(FBTestBlockerPeriodicHandler)handler;
 - (void)signal;
 
 @end

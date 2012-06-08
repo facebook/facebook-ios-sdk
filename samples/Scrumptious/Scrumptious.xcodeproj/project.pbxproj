@@ -46,7 +46,6 @@
 		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		8592BE3915816CBF00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
-		8592BE3E158173A000056680 /* Scrumptious.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Scrumptious.entitlements; sourceTree = "<group>"; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
@@ -135,7 +134,6 @@
 		B9CD0A79150EA4DD00560A93 /* Scrumptious */ = {
 			isa = PBXGroup;
 			children = (
-				8592BE3E158173A000056680 /* Scrumptious.entitlements */,
 				B9CD0A98150EBFBD00560A93 /* images */,
 				B9CD0A7A150EA4DD00560A93 /* Supporting Files */,
 				B9CD0A82150EA4DD00560A93 /* SCAppDelegate.h */,

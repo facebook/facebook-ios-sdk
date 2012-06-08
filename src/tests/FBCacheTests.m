@@ -18,6 +18,13 @@
 #import "FBDataDiskCache.h"
 #import "FBCacheIndex.h"
 #import "FBTests.h"
+#import "FBTestBlocker.h"
+#import "FBCacheDescriptor.h"
+#import "FBFriendPickerViewController+Internal.h"
+#import "FBFriendPickerViewController.h"
+#import "FBRequest.h"
+#import "FBRequestConnection.h"
+#import "FBRequestConnection+Internal.h"
 
 #if defined(FBIOSSDK_SKIP_CACHE_TESTS)
 
@@ -369,6 +376,58 @@ static FBCacheIndex* initTempCacheIndex(
     [[NSFileManager defaultManager] removeItemAtPath:tempFolder error:NULL];
 }
 
+- (void)testBasicFriendPickerCache {
+    
+    // let's get a user going with some friends
+    FBTestSession *session1 = self.defaultTestSession;
+    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kSecondTestUserTag];
+    [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
+    
+    FBTestSession *session3 = [self getSessionWithSharedUserWithPermissions:nil
+                                                              uniqueUserTag:kThirdTestUserTag];
+    [self makeTestUserInSession:session1 friendsWithTestUserInSession:session3];
+    
+    FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
+    
+    // set the page limit to 1
+    //[cacheDescriptor performSelector:@selector(setUsePageLimitOfOne)];
+        
+    // here we actually perform the prefetch
+    [cacheDescriptor prefetchAndCacheForSession:session1];
+    
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [blocker waitWithPeriodicHandler:^(FBTestBlocker *blocker) {
+        // white-box, using an internal API to determine if fetch completed
+        if ([cacheDescriptor performSelector:@selector(hasCompletedFetch)]) {
+            [blocker signal];
+        }
+    }];
+    [blocker release];
+    blocker = [[FBTestBlocker alloc] init];
+    
+    FBFriendPickerViewController *vc = [[FBFriendPickerViewController alloc] init];
+    vc.session = session1;
+    [vc configureUsingCachedDescriptor:cacheDescriptor];
+    
+    FBRequest *request = [vc performSelector:@selector(requestForLoadData)];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             [blocker signal];
+             STAssertTrue(connection.isResultFromCache, @"This result should have been cached");
+         }];
+    
+    [connection startWithCacheIdentity:FBFriendPickerCacheIdentity
+                 skipRoundtripIfCached:YES];
+    
+    [blocker wait];
+    
+    [blocker release];
+    
+    [connection release];
+}
 
 @end
 

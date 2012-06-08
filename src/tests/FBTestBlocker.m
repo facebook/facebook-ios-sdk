@@ -44,8 +44,18 @@
     [self waitWithTimeout:0];
 }
 
-// Note that after call to wait/waitWithTimeout the blocker resets to its original signal count.
+- (void)waitWithPeriodicHandler:(FBTestBlockerPeriodicHandler)handler {
+    [self waitWithTimeout:0
+          periodicHandler:handler];
+}
+
 - (BOOL)waitWithTimeout:(NSUInteger)timeout {
+    return [self waitWithTimeout:timeout
+                 periodicHandler:nil];
+}
+
+- (BOOL)waitWithTimeout:(NSUInteger)timeout 
+        periodicHandler:(FBTestBlockerPeriodicHandler)handler {
     NSDate *start = [NSDate date];
     
     // loop until the previous call completes
@@ -56,6 +66,9 @@
             [self reset];
             return NO;
         } 
+        if (handler) {
+            handler(self);
+        }
     };
     [self reset];
     return YES;

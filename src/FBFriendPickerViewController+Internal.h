@@ -13,12 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-//
-// Prefix header for all source files of the 'Scrumptious' target in the 'Scrumptious' project
-//
 
-#ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-#endif
+#import <Foundation/Foundation.h>
+#import "FBFriendPickerViewController.h"
+#import "FBRequest.h"
+#import "FBGraphObjectTableDataSource.h"
+#import "FBSession.h"
+
+// This is the cache identity used by both the view controller and cache descriptor objects
+extern NSString *const FBFriendPickerCacheIdentity;
+
+@interface FBFriendPickerViewController (Internal)
+
++ (FBRequest*)requestWithUserID:(NSString*)userID
+                         fields:(NSSet*)fields
+                     dataSource:(FBGraphObjectTableDataSource*)datasource
+                        session:(FBSession*)session;
+
+@end

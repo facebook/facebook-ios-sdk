@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import <FBiOSSDK/FacebookSDK.h>
 #import "SCAppDelegate.h"
 #import "SCViewController.h"
 #import "SCLoginViewController.h"
@@ -71,6 +72,10 @@
                 if ([[topViewController modalViewController] isKindOfClass:[SCLoginViewController class]]) {
                     [topViewController dismissModalViewControllerAnimated:YES];
                 }
+                
+                // fetch and cache the friends for the friend picker as soon as possible
+                FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
+                [cacheDescriptor prefetchAndCacheForSession:session];
             }
             break;
         case FBSessionStateClosed:

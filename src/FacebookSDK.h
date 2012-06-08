@@ -19,10 +19,11 @@
 #import "FBRequest.h"
 #import "FBError.h"
 
-// controls
+// ux
 #import "FBProfilePictureView.h"
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
+#import "FBCacheDescriptor.h"
 
 // graph
 #import "FBGraphUser.h"

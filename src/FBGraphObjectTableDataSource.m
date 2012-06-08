@@ -104,18 +104,22 @@
     if (self.groupByField) {
         [nameSet addObject:self.groupByField];
     }
+    
+    // get a stable order for our fields, because we use the resulting URL as a cache ID
+    NSMutableArray *sortedFields = [[nameSet allObjects] mutableCopy];
+    [sortedFields sortUsingSelector:@selector(caseInsensitiveCompare:)];
+    
+    [nameSet release];
 
     // Build the comma-separated string
     NSMutableString *fields = [[[NSMutableString alloc] init] autorelease];
 
-    for (NSString *field in nameSet) {
+    for (NSString *field in sortedFields) {
         if ([fields length]) {
             [fields appendString:@","];
         }
         [fields appendString:field];
     }
-
-    [nameSet release];
 
     return fields;
 }

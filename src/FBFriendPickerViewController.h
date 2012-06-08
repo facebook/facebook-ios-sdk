@@ -17,8 +17,10 @@
 #import <UIKit/UIKit.h>
 #import "FBGraphUser.h"
 #import "FBSession.h"
+#import "FBCacheDescriptor.h"
 
 @protocol FBFriendPickerDelegate;
+@class FBFriendPickerCacheDescriptor;
 
 /*! 
  @typedef FBFriendSortOrdering enum
@@ -145,6 +147,17 @@ typedef enum {
 
 /*!
  @abstract
+ Configures the properties that impact any queries made by the view controller, using a cacheDescriptor
+ 
+ @discussion
+ Cache descriptors are used to fetch and cache the data used by the ViewController, at some point
+ prior in the execution of the application. If the ViewController finds a cached copy of the data, it will
+ first display the cached content, and then fetch a fresh copy from the server.
+ */
+- (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
+
+/*!
+ @abstract
  Starts a query against the server for a set of friends.  It is legal
  to call this more than once.
  */
@@ -159,6 +172,34 @@ typedef enum {
  people appear or what order they appear in.
  */
 - (void)updateView;
+
+/*!
+ @method
+ 
+ @abstract
+ Creates a cache descriptor based on default settings of FBFriendPickerViewController
+ 
+ @discussion
+ A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
+ may also be used to configure a FBFriendPickerViewController object at time of use
+ */
++ (FBCacheDescriptor*)cacheDescriptor;
+
+/*!
+ @method
+
+ @param userID              fbid of the user whose friends we wish to display; nil='me'
+ @param fieldsForRequest    set of additional fields to include in request for friends 
+ 
+ @abstract
+ Creates a cache descriptor with additional fields and a userID for use with FBFriendPickerViewController
+ 
+ @discussion
+ A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
+ may also be used to configure a FBFriendPickerViewController object at time of use
+ 
+ */
++ (FBCacheDescriptor*)cacheDescriptorWithUserID:(NSString*)userID fieldsForRequest:(NSSet*)fieldsForRequest;
 
 @end
 

@@ -253,7 +253,9 @@ static NSString *defaultImageName =
     [request.parameters setObject:fields forKey:@"fields"];
 
     _hasSearchTextChangedSinceLastQuery = NO;
-    [self.loader startLoadingWithRequest:request];
+    [self.loader startLoadingWithRequest:request
+                           cacheIdentity:nil
+                   skipRoundtripIfCached:NO];
     [self updateView];
 }
 
@@ -352,8 +354,6 @@ static NSString *defaultImageName =
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
-    [self.spinner stopAnimating];
-    
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
@@ -364,6 +364,11 @@ static NSString *defaultImageName =
     if ([self.delegate respondsToSelector:@selector(placePickerViewControllerDataDidChange:)]) {
         [self.delegate placePickerViewControllerDataDidChange:self];
     }
+}
+
+- (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
+    // finished loading, stop spinner
+    [self.spinner stopAnimating];
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

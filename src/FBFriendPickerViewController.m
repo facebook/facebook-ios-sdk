@@ -16,6 +16,8 @@
 
 #import "FBError.h"
 #import "FBFriendPickerViewController.h"
+#import "FBFriendPickerViewController+Internal.h"
+#import "FBFriendPickerCacheDescriptor.h"
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
@@ -25,8 +27,10 @@
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
 
-static NSString *defaultImageName =
-@"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
+NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
+static NSString *defaultImageName = @"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
+
+int const FBRefreshCacheDelaySeconds = 2;
 
 @interface FBFriendPickerViewController () <FBFriendPickerDelegate,
                                             FBGraphObjectSelectionChangedDelegate, 
@@ -39,6 +43,8 @@ static NSString *defaultImageName =
 
 - (void)initialize;
 - (void)centerAndStartSpinner;
+- (void)loadDataSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached;
+- (FBRequest*)requestForLoadData;
 
 @end
 
@@ -227,8 +233,47 @@ static NSString *defaultImageName =
     self.tableView = nil;
 }
 
-- (void)loadData
+- (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor {
+    if (![cacheDescriptor isKindOfClass:[FBFriendPickerCacheDescriptor class]]) {
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:@"FBFriendPickerViewController: An attempt was made to configure "
+                                        @"an instance with a cache descriptor object that was not created "
+                                        @"by the FBFriendPickerViewController class"
+                               userInfo:nil]
+         raise];
+    }
+    FBFriendPickerCacheDescriptor *cd = (FBFriendPickerCacheDescriptor*)cacheDescriptor;
+    self.userID = cd.userID;
+    self.fieldsForRequest = cd.fieldsForRequest;
+}
+
+- (void)loadData {
+    [self loadDataSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
+}
+
+- (void)updateView
 {
+    [self.dataSource update];
+    [self.tableView reloadData];
+}
+
+#pragma mark - public class members
+
++ (FBCacheDescriptor*)cacheDescriptor {
+    return [[[FBFriendPickerCacheDescriptor alloc] init] autorelease];
+}
+
++ (FBCacheDescriptor*)cacheDescriptorWithUserID:(NSString*)userID fieldsForRequest:(NSSet*)fieldsForRequest {
+    return [[[FBFriendPickerCacheDescriptor alloc] initWithUserID:userID
+                                                 fieldsForRequest:fieldsForRequest]
+            autorelease];
+}
+
+
+#pragma mark - private members
+
+- (FBRequest*)requestForLoadData {
+    
     // Respect user settings in case they have changed.
     NSMutableArray *sortFields = [NSMutableArray array];
     NSString *groupByField = nil;
@@ -245,20 +290,46 @@ static NSString *defaultImageName =
     }
     [self.dataSource setSortingByFields:sortFields ascending:YES];
     self.dataSource.groupByField = groupByField;
-
-    FBRequest *request = [FBRequest requestForMyFriendsWithSession:self.session];
-
-    NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
-                        @"id", @"name", @"first_name", @"middle_name", @"last_name", @"picture", nil];
-    [request.parameters setObject:fields forKey:@"fields"];
     
-    [self.loader startLoadingWithRequest:request];
+    // me or one of my friends that also uses the app
+    NSString *user = self.userID;
+    if (!user) {
+        user = @"me";
+    }
+    
+    // create the request and start the loader
+    FBRequest *request = [FBFriendPickerViewController requestWithUserID:user
+                                                                  fields:self.fieldsForRequest
+                                                              dataSource:self.dataSource
+                                                                 session:self.session];
+    return request;
 }
 
-- (void)updateView
-{
-    [self.dataSource update];
-    [self.tableView reloadData];
+- (void)loadDataSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached {
+    [self.loader startLoadingWithRequest:[self requestForLoadData]
+                           cacheIdentity:FBFriendPickerCacheIdentity
+                   skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
+}
+
++ (FBRequest*)requestWithUserID:(NSString*)userID
+                         fields:(NSSet*)fields
+                     dataSource:(FBGraphObjectTableDataSource*)datasource
+                        session:(FBSession*)session {
+    
+    FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]
+                                                session:session];
+    
+    NSString *allFields = [datasource fieldsForRequestIncluding:fields,
+                           @"id", 
+                           @"name", 
+                           @"first_name", 
+                           @"middle_name",
+                           @"last_name", 
+                           @"picture", 
+                           nil];
+    [request.parameters setObject:allFields forKey:@"fields"];
+    
+    return request;
 }
 
 - (void)centerAndStartSpinner
@@ -348,19 +419,29 @@ static NSString *defaultImageName =
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
-    [self.spinner stopAnimating];
-    
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
     [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics
                     timestampTag:self
                     formatString:@"Friend Picker: first render "];  // logger will append "%d msec"
-         
+    
     
     if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
         [self.delegate friendPickerViewControllerDataDidChange:self];
     }
+}
+
+- (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
+    // finished loading, stop animating
+    [self.spinner stopAnimating];
+    
+    // if our current display is from cache, then kick-off a near-term refresh
+    if (pagingLoader.isResultFromCache) {
+        [self performSelector:@selector(loadDataSkippingRoundTripIfCached:) 
+                   withObject:[NSNumber numberWithBool:NO]
+                   afterDelay:FBRefreshCacheDelaySeconds];
+    }    
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

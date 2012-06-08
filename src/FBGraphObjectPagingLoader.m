@@ -17,11 +17,14 @@
 #import "FBGraphObjectPagingLoader.h"
 #import "FBRequest.h"
 #import "FBError.h"
+#import "FBRequestConnection+Internal.h"
 
 @interface FBGraphObjectPagingLoader ()
 
 @property (nonatomic, retain) NSString *nextLink;
 @property (nonatomic, retain) FBRequestConnection *connection;
+@property (nonatomic, copy) NSString *cacheIdentity;
+@property (nonatomic, assign) BOOL skipRoundtripIfCached;
 
 - (void)followNextLink;
 - (void)requestCompleted:(FBRequestConnection *)connection
@@ -40,6 +43,9 @@
 @synthesize session = _session;
 @synthesize connection = _connection;
 @synthesize delegate = _delegate;
+@synthesize isResultFromCache = _isResultFromCache;
+@synthesize cacheIdentity = _cacheIdentity;
+@synthesize skipRoundtripIfCached = _skipRoundtripIfCached;
 
 #pragma mark Lifecycle methods
 
@@ -47,6 +53,7 @@
     if (self = [super init]) {
         self.dataSource = aDataSource;
         self.pagingMode = FBGraphObjectPagingModeAsNeeded;
+        _isResultFromCache = NO;
     }
     return self;
 }
@@ -57,6 +64,7 @@
     [_nextLink release];
     [_session release];
     [_connection release];
+    [_cacheIdentity release];
     
     [super dealloc];
 }
@@ -100,8 +108,9 @@
         [self.dataSource appendGraphObjects:nil];
         [self updateView];
         
-        if ([self.delegate respondsToSelector:@selector(pagingLoader:didLoadData:)]) {
-            [self.delegate pagingLoader:self didLoadData:results];
+        // notify of completion
+        if ([self.delegate respondsToSelector:@selector(pagingLoaderDidFinishLoading:)]) {
+            [self.delegate pagingLoaderDidFinishLoading:self];
         }
         return;
     } else {
@@ -155,11 +164,12 @@
         [self.delegate pagingLoader:self didLoadData:results];
     }
     
-    // If we are supposed to keep paging, do so. But if we have lost our tableView,
-    // take that as a sign to stop (probably because the view was unloaded). If 
-    // tableView is re-set, we will start again.
-    if (self.pagingMode == FBGraphObjectPagingModeImmediate &&
-        self.tableView) {
+    // If we are supposed to keep paging, do so. But unless we are viewless, if we have lost 
+    // our tableView, take that as a sign to stop (probably because the view was unloaded).
+    // If tableView is re-set, we will start again.
+    if ((self.pagingMode == FBGraphObjectPagingModeImmediate &&
+        self.tableView) || 
+        self.pagingMode == FBGraphObjectPagingModeImmediateViewless) {
         [self followNextLink];
     }
 }
@@ -180,9 +190,10 @@
         FBRequestConnection *connection = [[FBRequestConnection alloc] init];
         [connection addRequest:request completionHandler:
          ^(FBRequestConnection *connection, id result, NSError *error) {
-            self.connection = nil;
-            [self requestCompleted:connection result:result error:error];
-        }];
+             _isResultFromCache = _isResultFromCache || connection.isResultFromCache;
+             self.connection = nil;
+             [self requestCompleted:connection result:result error:error];
+         }];
         
         // Override the URL using the one passed back in 'next'.
         NSURL *url = [NSURL URLWithString:self.nextLink];
@@ -192,22 +203,37 @@
         self.nextLink = nil;
         
         self.connection = connection;
-        [self.connection start];
+        [self.connection startWithCacheIdentity:self.cacheIdentity
+                          skipRoundtripIfCached:self.skipRoundtripIfCached];
         
         [request release];
         [connection release];
     }
 }
 
-- (void)startLoadingWithRequest:(FBRequest*)request {
+- (void)startLoadingWithRequest:(FBRequest*)request
+                  cacheIdentity:(NSString*)cacheIdentity 
+          skipRoundtripIfCached:(BOOL)skipRoundtripIfCached {
     [self.dataSource clearGraphObjects];
     
     [self.connection cancel];
+    _isResultFromCache = NO;
+    
+    self.cacheIdentity = cacheIdentity;
+    self.skipRoundtripIfCached = skipRoundtripIfCached;
+    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             _isResultFromCache = _isResultFromCache || connection.isResultFromCache;
+             [self requestCompleted:connection result:result error:error];
+         }];
+    
+    self.connection = connection;
+    [self.connection startWithCacheIdentity:self.cacheIdentity
+                      skipRoundtripIfCached:self.skipRoundtripIfCached];
 
-    self.connection = [request startWithCompletionHandler:
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            [self requestCompleted:connection result:result error:error];
-        }];
+    [connection release];
 
     NSString *urlString = [[[self.connection urlRequest] URL] absoluteString];
     if ([self.delegate respondsToSelector:@selector(pagingLoader:willLoadURL:)]) {

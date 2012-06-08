@@ -24,6 +24,8 @@
 typedef enum {
     // Paging links will be followed as soon as one set of results is loaded
     FBGraphObjectPagingModeImmediate,
+    // Paging links will be followed as soon as one set of results is loaded, even without a view
+    FBGraphObjectPagingModeImmediateViewless,
     // Paging links will be followed only when the user scrolls to the bottom of the table
     FBGraphObjectPagingModeAsNeeded
 } FBGraphObjectPagingMode;
@@ -35,9 +37,12 @@ typedef enum {
 @property (nonatomic, retain) FBSession *session;
 @property (nonatomic, assign) id<FBGraphObjectPagingLoaderDelegate> delegate;
 @property (nonatomic) FBGraphObjectPagingMode pagingMode;
+@property (nonatomic, readonly) BOOL isResultFromCache;
  
 - (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource;
-- (void)startLoadingWithRequest:(FBRequest*)request;
+- (void)startLoadingWithRequest:(FBRequest*)request
+                  cacheIdentity:(NSString*)cacheIdentity 
+          skipRoundtripIfCached:(BOOL)skipRoundtripIfCached;
 - (void)addResultsAndUpdateView:(NSDictionary*)results;
 - (void)cancel;
 
@@ -49,6 +54,7 @@ typedef enum {
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader willLoadURL:(NSString*)url;
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results;
+- (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader*)pagingLoader;
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error;
 - (void)pagingLoaderWasCancelled:(FBGraphObjectPagingLoader*)pagingLoader;
 

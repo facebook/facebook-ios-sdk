@@ -126,6 +126,7 @@ typedef enum FBRequestConnectionState {
 @property (nonatomic, retain) FBRequest *deprecatedRequest;
 @property (nonatomic, retain) FBLogger *logger;
 @property (nonatomic) unsigned long requestStartTime;
+@property (nonatomic, readonly) BOOL isResultFromCache;
 
 - (NSMutableURLRequest *)requestWithBatch:(NSArray *)requests
                                   timeout:(NSTimeInterval)timeout;
@@ -220,6 +221,7 @@ typedef enum FBRequestConnectionState {
 @synthesize deprecatedRequest = _deprecatedRequest;
 @synthesize logger = _logger;
 @synthesize requestStartTime = _requestStartTime;
+@synthesize isResultFromCache = _isResultFromCache;
 
 - (NSMutableURLRequest *)urlRequest
 {
@@ -262,6 +264,7 @@ typedef enum FBRequestConnectionState {
         _timeout = timeout;
         _state = kStateCreated;
         _logger = [[FBLogger alloc] initWithLoggingBehavior:FBLogBehaviorFBRequests];
+        _isResultFromCache = NO;
     }
     return self;
 }
@@ -421,6 +424,8 @@ typedef enum FBRequestConnectionState {
         self.connection = connection;
         [connection release];
     } else {
+        _isResultFromCache = YES;
+        
         // complete on result from cache
         [self completeWithResponse:nil 
                               data:cachedData 
