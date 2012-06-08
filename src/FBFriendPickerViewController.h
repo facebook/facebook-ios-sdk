@@ -136,12 +136,17 @@ typedef enum {
 /*!
  @abstract
  Used to initialize the object
+
+ @param aDecoder        See [UIViewController initWithCoder:].
  */
 - (id)initWithCoder:(NSCoder *)aDecoder;
 
 /*!
  @abstract
  Used to initialize the object
+ 
+ @param nibNameOrNil            See [UIViewController initWithNibName:bundle:].
+ @param nibBundleOrNil          See [UIViewController initWithNibName:bundle:].
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
@@ -153,6 +158,8 @@ typedef enum {
  Cache descriptors are used to fetch and cache the data used by the ViewController, at some point
  prior in the execution of the application. If the ViewController finds a cached copy of the data, it will
  first display the cached content, and then fetch a fresh copy from the server.
+ 
+ @param cacheDescriptor     an <FBCacheDescriptor> to pull properties from
  */
 - (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
 
@@ -213,7 +220,7 @@ typedef enum {
 @protocol FBFriendPickerDelegate <NSObject>
 @optional
 
-/*!  
+/*!
  @abstract 
  Called whenever data is loaded.
 
@@ -221,30 +228,38 @@ typedef enum {
  The tableView is automatically reloaded when this happens, but if
  another tableView (such as for a UISearchBar) is showing data then
  it may need to be reloaded too.
- */
-- (void)friendPickerViewControllerDataDidChange:
-(FBFriendPickerViewController *)friendPicker;
 
-/*!  
+ @param friendPicker        the friend picker whose data changed
+ */
+- (void)friendPickerViewControllerDataDidChange:(FBFriendPickerViewController *)friendPicker;
+
+/*!
  @abstract
  Called whenever the selection changes.
- */
-- (void)friendPickerViewControllerSelectionDidChange:
-(FBFriendPickerViewController *)friendPicker;
 
-/*!  
+ @param friendPicker        the friend picker whose selection changed
+ */
+- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker;
+
+/*!
  @abstract
  Called on each user to determine whether they show up in the list.
  
  @discussion
  This can be used to implement a search bar that filters the list.
+
+ @param friendPicker        the friend picker that is asking whether to display a user
+ @param user                an <FBGraphUser> object representing the user to show (or not)
  */
 - (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                  shouldIncludeUser:(id <FBGraphUser>)user;
 
-/*!  
+/*!
  @abstract
  Called if there is a communication error.
+
+ @param friendPicker        the friend picker that encountered the error
+ @param error               the error that occurred
  */
 - (void)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                        handleError:(NSError *)error;

@@ -34,6 +34,8 @@
  @method
  @abstract
  Fetches and caches the data described by the cache descriptor instance, for the given session.
+ 
+ @param session     the <FBSession> to use for fetching data
  */
 - (void)prefetchAndCacheForSession:(FBSession*)session; 
 

@@ -16,6 +16,7 @@
 #
 
 # This script builds the API documentation from source-level comments.
+# This script requires appldoc be installed: https://github.com/tomaz/appledoc
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
@@ -36,8 +37,28 @@ test -d $FB_SDK_BUILD \
 
 cd $FB_SDK_SRC
 
-\headerdoc2html -o $FB_SDK_FRAMEWORK_DOCS $FB_SDK_FRAMEWORK/Headers >/dev/null 2>&1
-\gatherheaderdoc $FB_SDK_FRAMEWORK_DOCS
+APPLEDOC=appledoc
+hash $APPLEDOC &>/dev/null
+if [ "$?" -eq "0" ]; then
+    APPLEDOC_DOCSET_NAME="Facebook iOS SDK"
+    $APPLEDOC --project-name "$APPLEDOC_DOCSET_NAME" \
+	--project-company "Facebook" \
+	--company-id "com.facebook" \
+	--output "$FB_SDK_BUILD"/com.facebook.Facebook-iOS-SDK.docset \
+	--preprocess-headerdoc \
+	--docset-bundle-name "$APPLEDOC_DOCSET_NAME" \
+	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \
+	--exit-threshold 2 \
+	--no-install-docset \
+	--search-undocumented-doc \
+	--keep-undocumented-members \
+	--keep-undocumented-objects \
+	--explicit-crossref \
+	$FB_SDK_FRAMEWORK/Headers \
+    || die 'appledoc execution failed'
+else
+    die "appledoc not installed, unable to build documentation"
+fi
 
 # -----------------------------------------------------------------------------
 # Done

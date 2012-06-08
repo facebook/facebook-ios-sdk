@@ -42,13 +42,13 @@
  Initializes and returns an instance
  
  @param tokenInformationKeyName     Specifies a key name to use for cached token information in NSUserDefaults, nil
-                                    indicates a default value of @"FBAccessTokenInformationKey"
+ indicates a default value of @"FBAccessTokenInformationKey"
  */
 - (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName;
 
 /*!
  @abstract 
- Called by FBSession (and overridden by inheritors), in order to cache token information.
+ Called by <FBSession> (and overridden by inheritors), in order to cache token information.
  
  @param tokenInformation            Dictionary containing token information to be cached by the method
  */
@@ -56,7 +56,7 @@
 
 /*!
  @abstract 
- Called by FBSession (and overridden by inheritors), in order to fetch cached token information
+ Called by <FBSession> (and overridden by inheritors), in order to fetch cached token information
  
  @discussion
  An overriding implementation should only return a token if it
@@ -66,12 +66,14 @@
 
 /*!
  @abstract 
- Called by FBSession (and overridden by inheritors), in order delete any cached information for a given token
+ Called by <FBSession> (and overridden by inheritors), in order delete any cached information for a given token
  
  @discussion
  Not all implementations will make use of the token value passedas an argument; however advanced implementations
  may need the token value in order to locate and delete the cache. An overriding implementation must be able to
  tolerate a nil token, as well as a token value for which no cached information exists
+ 
+ @param token           the access token to clear
  */
 - (void)clearToken:(NSString*)token;
 
@@ -84,7 +86,7 @@
 /*!
  @abstract 
  Helper function called by the SDK as well as application code, used to determine whether a given dictionary
- contains the minimum token information usable by the FBSession.
+ contains the minimum token information usable by the <FBSession>.
  
  @param tokenInformation            Dictionary containing token information to be validated
  */

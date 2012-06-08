@@ -62,7 +62,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
 
  @discussion
  Represents a single connection to Facebook to service a request. The logical
- request settings are encapsulated in a reusable FBRequest object, and 
+ request settings are encapsulated in a reusable <FBRequest> object, and 
  FBRequestConnection encapsulates the concerns of a single communication
  e.g. starting and canceling a connection, batching.
 
@@ -77,7 +77,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
 /*!
  @method
 
- @seealso initWithTimeout: for parameter details
+ Calls <initWithTimeout:> with a default timeout of 180 seconds.
 */
 - (id)init;
 
@@ -90,16 +90,14 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
 
  @discussion
  For a single request, the usual method for creating an FBRequestConnection
- object is to call one of the start* methods on FBRequest. However, it is
- allowable to init an FBRequestConnection object directly, and call addRequest
- to add one or more request objects to the connection, before calling start.
+ object is to call one of the start* methods on <FBRequest>. However, it is
+ allowable to init an FBRequestConnection object directly, and call <addRequest:completionHandler:>
+ to add one or more request objects to the connection, before calling <start>.
  Note that if requests are part of a batch, they must have an open
  FBSession that has an access token associated with it, or a default App ID
- must be set either in the plist or an explicit call to [FBSession setDefaultAppID].
+ must be set either in the plist or an explicit call to <[FBSession defaultAppID]>.
 
- @param timeout         NSTimeInterval to wait for a response before giving up.
-                        The units are in seconds.
-
+ @param timeout         NSTimeInterval (seconds) to wait for a response before giving up.
 */
      
 - (id)initWithTimeout:(NSTimeInterval)timeout;
@@ -115,7 +113,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  FBRequestConnection to send that request.  It is also legal to set this
  property, and the provided NSMutableURLRequest will be used instead.  However,
  the NSMutableURLRequest must result in an appropriate response.  Further, once
- this property has been set, no more FBRequests can be added to this
+ this property has been set, no more <FBRequest>s can be added to this
  FBRequestConnection.
 */
 @property(nonatomic, retain, readwrite) NSMutableURLRequest *urlRequest;
@@ -129,7 +127,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  the server.
 
  The property is nil until the request completes.  If there was a response,
- it is non-nil during the FBRequestHandler callback.
+ it is non-nil during the <FBRequestHandler> callback.
 */
 @property(nonatomic, retain, readonly) NSHTTPURLResponse *urlResponse; 
 
@@ -139,8 +137,11 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
 
 /*!
  @method
-
- @seealso addRequest:completionHandler:batchEntryName: for parameter details
+ Adds an <FBRequest> to this connection. See <addRequest:completionHandler:batchEntryName:> for 
+ more information.
+ 
+ @param request       See <addRequest:completionHandler:batchEntryName:>.
+ @param handler       See <addRequest:completionHandler:batchEntryName:>.
 */
 - (void)addRequest:(FBRequest*)request
  completionHandler:(FBRequestHandler)handler;
@@ -149,19 +150,20 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  @method
 
  @abstract
- Add one or more requests to the connection, prior to calling start.
+ Add one or more <FBRequest>s to the connection, prior to calling <start>.
 
  @discussion
- The block passed to addRequest is retained until the block is called upon
+ The completion handler is retained until the block is called upon
  completion or cancellation of the connection.
 
  @param request         A request to be included in the round-trip when start is called
 
  @param handler         A handler to call back when the round-trip completes or times out
-
+ 
  @param name            An optional name for this request.  This can be used to feed
-                        the results of one request as an input to another FBRequest in
-                        the same FBRequestConnection; default=nil
+ the results of one request as an input to another <FBRequest> in the same 
+ FBRequestConnection as described at https://developers.facebook.com/docs/reference/api/batch/ ;
+ default=nil
 */
 - (void)addRequest:(FBRequest*)request
  completionHandler:(FBRequestHandler)handler
@@ -186,16 +188,11 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  such cases multiple error conditions may apply, and if so the following
  priority (highest to lowest) is used.
 
- <pre>
- @textblock
- FBRequestConnectionInvalidRequestKey -- when an FBRequest is unable to be 
-                                         encoded for transmission
+ - <FBRequestConnectionInvalidRequestKey> -- when an <FBRequest> is unable to be 
+ encoded for transmission
 
- FBRequestConnectionInvalidBatchKey   -- when any request in the connection 
-                                         cannot be encoded for transmission
-                                         with the batch, all requests fail
- @/textblock
- </pre>
+ - <FBRequestConnectionInvalidBatchKey>   -- when any request in the connection 
+ cannot be encoded for transmission with the batch, all requests fail
   
  Start may not be called twice.
 */

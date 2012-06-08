@@ -50,18 +50,16 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  from Facebook's graph and rest APIs.
 
  @discussion
- An FBSession object is required
+ An <FBSession object> is required
  for all authenticated uses of FBRequest, but unauthenticated requests 
  are also supported.
 
  An instance of FBRequest represents the arguments and setup for a connection 
- to Facebook. At connection time, an FBRequestConnection object is created to
+ to Facebook. At connection time, an <FBRequestConnection> object is created to
  manage a single connection. Class and instance methods prefixed with start*
  can be used to connect and setup with a single method. An FBRequest object
  may be used to issue multiple connections to Facebook. To cancel a connection
- use the instance method on FBRequestConnection.
-
- @unsorted
+ use the instance method on <FBRequestConnection>.
 */
 @interface FBRequest : NSObject {
 @private
@@ -82,15 +80,17 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @methodgroup Creating a request
 
  @method
-
- @seealso initWithSession:graphPath:parameters:HTTPMethod:
+ Calls <initWithSession:graphPath:parameters:HTTPMethod:> with default parameters.
 */
 - (id)init;
 
 /*!
  @method
-
- @seealso initWithSession:graphPath:parameters:HTTPMethod:
+ Calls <initWithSession:graphPath:parameters:HTTPMethod:> with default parameters
+ except for the ones provided to this method.
+ 
+ @param session     See <initWithSession:graphPath:parameters:HTTPMethod:>.
+ @param graphPath   See <initWithSession:graphPath:parameters:HTTPMethod:>.
 */
 - (id)initWithSession:(FBSession*)session
             graphPath:(NSString *)graphPath;
@@ -104,26 +104,22 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Note that this only sets properties on the FBRequest.
 
- To send the request, initialize a FBRequestConnection, add this request,
- and send start to the FBRequestConnection.  See other methods on this
+ To send the request, initialize a <FBRequestConnection>, add this request,
+ and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
-
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
+ 
  @param graphPath        specifies a path for a graph request, as well as
-                         indicates to the object to use the graph subdomain; 
-                         before start is one of graphPath or restMethod
-                         must be non-nil and the other must be nil
-
+ indicates to the object to use the graph subdomain;  before start is one of graphPath 
+ or restMethod must be non-nil and the other must be nil
+ 
  @param parameters       specifies url parameters for the request; nil
-                         implies that automatically handled parameters such as
-                         access_token should be set, but no additional
-                         parameters will be set; default=nil
-
- @param HTTPMethod       indicates the HTTP method to use; nil implies GET;
-                         default=nil
+ implies that automatically handled parameters such as access_token should be set, but 
+ no additional parameters will be set; default=nil
+ 
+ @param HTTPMethod       indicates the HTTP method to use; nil implies GET; default=nil
 */
 - (id)initWithSession:(FBSession*)session
             graphPath:(NSString *)graphPath
@@ -138,24 +134,22 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Note that this only sets properties on the FBRequest.
 
- To send the request, initialize a FBRequestConnection, add this request,
- and send start to the FBRequestConnection.  See other methods on this
+ To send the request, initialize a <FBRequestConnection>, add this request,
+ and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
 
  @param graphPath        specifies a path for a graph request, as well as
-                         indicates to the object to use the graph subdomain; 
-                         before start is one of graphPath or restMethod
-                         must be non-nil and the other must be nil
+ indicates to the object to use the graph subdomain;  before start is one of graphPath 
+ or restMethod must be non-nil and the other must be nil
 
  @param graphObject      an object or open graph action to post
 */
 - (id)initForPostWithSession:(FBSession*)session
                    graphPath:(NSString *)graphPath
-                 graphObject:(id<FBGraphObject>)object;
+                 graphObject:(id<FBGraphObject>)graphObject;
 
 /*!
  @method
@@ -167,24 +161,21 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
  Note that this only sets properties on the FBRequest.
 
- To send the request, initialize a FBRequestConnection, add this request,
- and send start to the FBRequestConnection.  See other methods on this
+ To send the request, initialize a <FBRequestConnection>, add this request,
+ and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
-
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
+ 
  @param restMethod       restMethod specifies the method for a request
-                         to the deprecated Facebook rest API
-
+ to the deprecated Facebook rest API
+ 
  @param parameters       specifies url parameters for the request; nil
-                         implies that automatically handled parameters such as
-                         access_token should be set, but no additional
-                         parameters will be set; default=nil
-
- @param HTTPMethod       indicates the HTTP method to use; nil implies GET;
-                         default=nil
+ implies that automatically handled parameters such as access_token should be set, but 
+ no additional parameters will be set; default=nil
+ 
+ @param HTTPMethod       indicates the HTTP method to use; nil implies GET; default=nil
 */
 - (id)initWithSession:(FBSession*)session
            restMethod:(NSString *)restMethod
@@ -271,8 +262,8 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  Used to start a connection. The block is called in all three
  completion cases: success, error, & cancel.
 
- @param completionHandler   handler block, called when the request completes
-                            with success, error, or cancel
+ @param handler   handler block, called when the request completes
+ with success, error, or cancel
 */
 - (FBRequestConnection*)startWithCompletionHandler:(FBRequestHandler)handler;
 
@@ -280,22 +271,25 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @methodgroup FBRequestConnection start methods
 
  @abstract
- These methods start a FBRequestConnection.
+ These methods start a <FBRequestConnection>.
 
  @discussion
  These simplify the process of preparing a request to send.  These
  handle the steps of initializing a FBRequest, initializing a
- FBRequestConnection, and adding the FBRequest to the
- FBRequestConnection.
+ <FBRequestConnection>, and adding the FBRequest to the
+ <FBRequestConnection>.
 */
 
 /*!
  @method
 
  @abstract
- Creates and links a FBRequest and FBRequestConnection, ready to start.
+ Creates and links a FBRequest and <FBRequestConnection>, ready to start.
 
- @seealso connectionWithSession:graphPath:parameters:HTTPMethod:handler:
+ See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ 
+ @param graphPath        See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ @param handler          See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
 */
 + (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
                                 completionHandler:(FBRequestHandler)handler;
@@ -304,9 +298,13 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- Creates and links a FBRequest and FBRequestConnection, ready to start.
+ Creates and links a FBRequest and <FBRequestConnection>, ready to start.
 
- @seealso connectionWithSession:graphPath:parameters:HTTPMethod:handler:
+ See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+
+ @param session          See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ @param graphPath        See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ @param handler          See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
 */
 + (FBRequestConnection*)startWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
@@ -316,53 +314,47 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- Creates and links a FBRequest and FBRequestConnection, ready to start.
+ Creates and links a FBRequest and <FBRequestConnection>, ready to start.
 
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
-
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
+ 
  @param graphPath        specifies a path for a graph request, as well as
-                         indicates to the object to use the graph subdomain; 
-                         before start is one of graphPath or restMethod
-                         must be non-nil and the other must be nil
-
+ indicates to the object to use the graph subdomain;  before start is one of graphPath 
+ or restMethod must be non-nil and the other must be nil
+ 
  @param graphObject      an object or open graph action to post
-
+ 
  @param handler          handler block, called when the request completes
-                         with success, error, or cancel
+ with success, error, or cancel
 */
 + (FBRequestConnection*)startForPostWithSession:(FBSession*)session
                                            graphPath:(NSString*)graphPath
-                                         graphObject:(id<FBGraphObject>)object
+                                         graphObject:(id<FBGraphObject>)graphObject
                                    completionHandler:(FBRequestHandler)handler;
 
 /*!
  @method
 
  @abstract
- Creates and links a FBRequest and FBRequestConnection, ready to start.
-
+ Creates and links a FBRequest and <FBRequestConnection>, ready to start.
+ 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
-
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
+ 
  @param graphPath        specifies a path for a graph request, as well as
-                         indicates to the object to use the graph subdomain; 
-                         before start is one of graphPath or restMethod
-                         must be non-nil and the other must be nil
-
+ indicates to the object to use the graph subdomain;  before start is one of graphPath 
+ or restMethod must be non-nil and the other must be nil
+ 
  @param parameters       specifies url parameters for the request; nil
-                         implies that automatically handled parameters such as
-                         access_token should be set, but no additional
-                         parameters will be set; default=nil
-
- @param HTTPMethod       indicates the HTTP method to use; nil implies GET;
-                         default=nil
-
+ implies that automatically handled parameters such as access_token should be set, but 
+ no additional parameters will be set; default=nil
+ 
+ @param HTTPMethod       indicates the HTTP method to use; nil implies GET; default=nil
+ 
  @param handler          handler block, called when the request completes
-                         with success, error, or cancel
+ with success, error, or cancel
 */
 + (FBRequestConnection*)startWithSession:(FBSession*)session
                                       graphPath:(NSString*)graphPath
@@ -381,7 +373,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  initialize a FBRequest based on strongly typed parameters that are
  specific to the scenario.
 
- They do not initialize a FBRequestConnection, so the app still needs
+ They do not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
 */
 
@@ -403,12 +395,11 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Simplifies preparing a request to retrieve "me".
 
- This does not initialize a FBRequestConnection, so the app still needs
+ This does not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
-
+ 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
 */
 + (FBRequest*)requestForMeWithSession:(FBSession*)session;
 
@@ -421,12 +412,11 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Simplifies preparing a request to retrieve "me/friends".
 
- This does not initialize a FBRequestConnection, so the app still needs
+ This does not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
 */
 + (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session;
 
@@ -442,14 +432,13 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  To post a photo to a specific album, add a graph object representing
  the album to the parameters under the key @"album".
 
- This does not initialize a FBRequestConnection, so the app still needs
+ This does not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
 
  @param photo            the UIImage to upload.
 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
 */
 + (FBRequest*)requestForUploadPhoto:(UIImage *)photo
                              session:(FBSession *)session;
@@ -463,7 +452,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Simplifies preparing a get graph objects.
  
- This does not initialize a FBRequestConnection, so the app still needs
+ This does not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
  
  @param graphPath        the path to the graph object(s) to retrieve.
@@ -484,23 +473,21 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @discussion
  Simplifies preparing a request to search for places near a coordinate.
 
- This does not initialize a FBRequestConnection, so the app still needs
+ This does not initialize a <FBRequestConnection>, so the app still needs
  to call connectionWithCompletionHandler: and then start on the result.
 
  @param coordinate       the coordinates to search near
 
  @param radius           the radius to search in meters
-
+ 
  @param limit            the maxiumum number of results to return.  It is
-                         possible to receive fewer than this because of
-                         the radius and because of server limits.
-
+ possible to receive fewer than this because of the radius and because of server limits.
+ 
  @param searchText       text to use in the query to narrow the set of places
-                         returned.
-
+ returned.
+ 
  @param session          the session object representing the identity of the
-                         Facebook user making the request; nil implies an
-                         unauthenticated request; default=nil
+ Facebook user making the request; nil implies an unauthenticated request; default=nil
 */
 + (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
                                   radiusInMeters:(NSInteger)radius

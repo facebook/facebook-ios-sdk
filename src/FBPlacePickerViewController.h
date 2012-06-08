@@ -109,12 +109,17 @@
 /*!
  @abstract
  Initializes an instance of the view controller
+ 
+ @param aDecoder        See [UIViewController initWithCoder:].
  */
 - (id)initWithCoder:(NSCoder *)aDecoder;
 
 /*!
  @abstract
  Initializes an instance of the view controller
+ 
+ @param nibNameOrNil            See [UIViewController initWithNibName:bundle:].
+ @param nibBundleOrNil          See [UIViewController initWithNibName:bundle:].
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
@@ -128,6 +133,8 @@
 @end
 
 /*!
+ @protocol 
+ 
  @abstract
  If a conforming delegate is provided, the view controller will notify the delegate of selection change,
  filter and error events
@@ -168,6 +175,9 @@
   
  @discussion
  This can be used to implement a search bar that filters the list.
+ 
+ @param placePicker         the place picker that is asking whether to display a place
+ @param place               an <FBGraphPlace> object representing the place to show (or not)
  */
 - (BOOL)placePickerViewController:(FBPlacePickerViewController *)placePicker
                 shouldIncludePlace:(id <FBGraphPlace>)place;
@@ -175,6 +185,9 @@
 /*!
  @abstract
  Called if there is a communication error.
+
+ @param placePicker         the place picker that encountered the error
+ @param error               the error that occurred
  */
 - (void)placePickerViewController:(FBPlacePickerViewController *)placePicker
                        handleError:(NSError *)error;

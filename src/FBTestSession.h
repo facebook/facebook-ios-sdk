@@ -64,8 +64,6 @@ extern NSString *kThirdTestUserTag;
  test user NOT use a shared test user, or this scheme will break down. If a shared test user
  seems to be in an invalid state, it can be deleted manually via the Web interface at
  https://developers.facebook.com/apps/APP_ID/permissions?role=test+users.
- 
- @unsorted
  */
 @interface FBTestSession : FBSession
 
@@ -82,7 +80,7 @@ extern NSString *kThirdTestUserTag;
  @abstract
  Constructor helper to create a session for use in unit tests
  
- @description
+ @discussion
  This method creates a session object which uses a shared test user with the right permissions,
  creating one if necessary on open (but not deleting it on close, so it can be re-used in later
  tests). Calling this method multiple times may return sessions with the same user. If this is not
@@ -100,7 +98,7 @@ extern NSString *kThirdTestUserTag;
  @abstract
  Constructor helper to create a session for use in unit tests
  
- @description
+ @discussion
  This method creates a session object which uses a shared test user with the right permissions,
  creating one if necessary on open (but not deleting it on close, so it can be re-used in later
  tests). 
@@ -124,7 +122,7 @@ extern NSString *kThirdTestUserTag;
  @abstract
  Constructor helper to create a session for use in unit tests
  
- @description
+ @discussion
  This method creates a session object which creates a test user on open, and destroys the user on
  close; This method should not be used in application code -- but is useful for creating unit tests
  that use the Facebook iOS SDK.

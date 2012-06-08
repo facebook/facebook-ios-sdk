@@ -28,7 +28,7 @@ FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Documents/FacebookSDK
 FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR
 FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
-FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Documentation
+FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Library/Developer/Shared/Documentation/DocSets/$FB_SDK_DOCSET_NAME
 
 # -----------------------------------------------------------------------------
 # Call out to build prerequisites.
@@ -65,8 +65,8 @@ mkdir -p $FB_SDK_BUILD_PACKAGE_DOCS
   || die "Could not copy $FB_SDK_FRAMEWORK"
 \cp -R $FB_SDK_SAMPLES/ $FB_SDK_BUILD_PACKAGE_SAMPLES \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
-\cp -R $FB_SDK_FRAMEWORK_DOCS/ $FB_SDK_BUILD_PACKAGE_DOCS \
-  || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS"
+\cp -R $FB_SDK_FRAMEWORK_DOCS/docset/Contents $FB_SDK_BUILD_PACKAGE_DOCS \
+  || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS/docset/Contents"
 \cp $FB_SDK_ROOT/README.mdown $FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK \
   || die "Could not copy README.mdown"
 
