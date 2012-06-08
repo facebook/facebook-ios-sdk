@@ -72,8 +72,6 @@ enum SampleLocation {
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller
 shouldReloadTableForSearchScope:(NSInteger)searchOption
 {
-    [self.spinner startAnimating];
-
     switch (searchOption) {
         case SampleLocationSeattle:
             self.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
@@ -97,8 +95,6 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller
 shouldReloadTableForSearchString:(NSString *)searchString
 {
-    [self.spinner startAnimating];
-
     self.searchText = searchString;
     [self loadData];
 

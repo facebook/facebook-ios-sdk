@@ -22,6 +22,7 @@
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
+#import "FBUtility.h"
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 static const NSInteger defaultResultsLimit = 100;
@@ -43,6 +44,7 @@ static NSString *defaultImageName =
 - (void)loadDataPostThrottle;
 - (NSTimer *)createSearchTextChangedTimer;
 - (void)updateView;
+- (void)centerAndStartSpinner;
 
 @end
 
@@ -214,11 +216,8 @@ static NSString *defaultImageName =
     }
 
     if (!self.spinner) {
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:bounds];
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         spinner.hidesWhenStopped = YES;
-        spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-        spinner.autoresizingMask =
-            UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         // We want user to be able to scroll while we load.
         spinner.userInteractionEnabled = NO;
 
@@ -285,6 +284,12 @@ static NSString *defaultImageName =
     }
 }
 
+- (void)centerAndStartSpinner
+{
+    [FBUtility centerView:self.spinner tableView:self.tableView];
+    [self.spinner startAnimating];    
+}
+
 #pragma mark - FBGraphObjectSelectionChangedDelegate
 
 - (void)graphObjectTableSelectionDidChange:
@@ -342,7 +347,7 @@ static NSString *defaultImageName =
     // We only want to display our spinner on loading the first page. After that,
     // a spinner will display in the last cell to indicate to the user that data is loading.
     if (!self.dataSource.hasGraphObjects) {
-        [self.spinner startAnimating];
+        [self centerAndStartSpinner];
     }
 }
 

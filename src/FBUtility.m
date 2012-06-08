@@ -84,4 +84,25 @@
     return nil;
 }
 
+// The assumption here is that the view and the tableView share a common parent.
++ (void)centerView:(UIView*)view tableView:(UITableView*)tableView
+{
+    // We want to center the view in the table  as much as possible, but we also want to center it
+    // within a cell so it is visually appealing.
+    CGRect bounds = tableView.bounds;
+    CGPoint center = CGPointMake(bounds.origin.x + bounds.size.width / 2, 
+                                 bounds.origin.y + bounds.size.height / 2);
+    
+    CGFloat rowHeight = tableView.rowHeight;
+    int numRows = bounds.size.height / rowHeight;
+    int centerRow = numRows / 2;
+    CGFloat centerRowCenterY = rowHeight * centerRow + rowHeight / 2;
+    
+    CGSize viewSize = view.bounds.size;
+    bounds = CGRectMake(center.x - viewSize.width / 2, centerRowCenterY - viewSize.width / 2,
+                        viewSize.width, viewSize.height);
+    bounds = [view.superview convertRect:bounds fromView:tableView];
+    view.frame = bounds;
+}
+
 @end

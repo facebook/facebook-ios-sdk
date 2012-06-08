@@ -38,6 +38,7 @@ static NSString *defaultImageName =
 @property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
 
 - (void)initialize;
+- (void)centerAndStartSpinner;
 
 @end
 
@@ -201,11 +202,8 @@ static NSString *defaultImageName =
     }
 
     if (!self.spinner) {
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:bounds];
-        spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         spinner.hidesWhenStopped = YES;
-        spinner.autoresizingMask =
-            UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         // We want user to be able to scroll while we load.
         spinner.userInteractionEnabled = NO;
         
@@ -261,6 +259,12 @@ static NSString *defaultImageName =
 {
     [self.dataSource update];
     [self.tableView reloadData];
+}
+
+- (void)centerAndStartSpinner
+{
+    [FBUtility centerView:self.spinner tableView:self.tableView];
+    [self.spinner startAnimating];    
 }
 
 #pragma mark - FBGraphObjectSelectionChangedDelegate
@@ -340,7 +344,7 @@ static NSString *defaultImageName =
 #pragma mark FBGraphObjectPagingLoaderDelegate members
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader willLoadURL:(NSString*)url {
-    [self.spinner startAnimating];    
+    [self centerAndStartSpinner];
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {

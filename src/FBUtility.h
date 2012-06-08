@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @protocol FBGraphObject;
 
@@ -26,6 +27,7 @@
 + (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item;
 
 + (unsigned long)currentTimeInMilliseconds; 
++ (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
 
 @end
 
