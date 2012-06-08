@@ -15,7 +15,8 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "FBTests.h"
 
-@interface FBGraphObjectTests : SenTestCase
+@interface FBGraphObjectTests : FBTests
 
 @end

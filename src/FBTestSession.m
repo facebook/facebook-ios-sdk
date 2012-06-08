@@ -199,13 +199,14 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 
              // Remember this user if it is going to be shared.
              if (self.mode == FBTestSessionModeShared) {
-                 pthread_mutex_lock(&mutex);
-                 
                  NSDictionary *user = [NSDictionary dictionaryWithObjectsAndKeys:
                                        userID, FBLoginTestUserID,
                                        userToken, FBLoginTestUserAccessToken,
                                        newName, FBLoginTestUserName, 
                                        nil];
+
+                 pthread_mutex_lock(&mutex);
+                 
                  [testUsers setObject:user forKey:userID];
                  
                  pthread_mutex_unlock(&mutex);

@@ -34,4 +34,4 @@ Class that defines the UI data for the app. The main menu, sub menus, and method
 Changes from Previous Versions
 1.0 - First release.
 
-Copyright (C) 2010 Facebook
+

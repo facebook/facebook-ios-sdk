@@ -46,8 +46,8 @@
  SDK. Goals:
  * Leverage and work well with modern features of iOS (e.g. blocks, ARC, etc.)
  * Patterned after best of breed iOS frameworks (e.g. naming, pattern-use, etc.)
- * Light and/or commodity integration experience is painless & easy to describe
- * Deep support for a growing list of scenarios over time
+ * Common integration experience is simple & easy to describe
+ * Factored to enable a growing list of scenarios over time
  
  Notes on approaches:
  1. We use a key scenario to drive prioritization of work for a given update

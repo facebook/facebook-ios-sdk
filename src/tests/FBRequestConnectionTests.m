@@ -18,6 +18,7 @@
 #import "FBTestSession.h"
 #import "FBTestSession+Internal.h"
 #import "FBRequestConnection.h"
+#import "FBRequestConnection+Internal.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
 
@@ -97,6 +98,45 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     STAssertThrows([connection start], @"should throw");
     [connection release];
+}
+
+- (void)testCachedRequests
+{
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    session.forceAccessTokenRefresh = YES;
+    
+    // here we just want to seed the cache, by identifying the cache, and by choosing not to consult the cache
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];    
+    FBRequest *request = [FBRequest requestForMeWithSession:session];
+    [request.parameters setObject:@"id,first_name" forKey:@"fields"];
+    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+    [connection startWithCacheIdentity:@"FBUnitTests"
+                 skipRoundtripIfCached:NO];
+    
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+    
+    __block BOOL completedWithoutBlocking = NO;
+    
+    // here we expect to complete on the cache, so we will confirm that
+    connection = [[FBRequestConnection alloc] init];    
+    request = [FBRequest requestForMeWithSession:session];
+    [request.parameters setObject:@"id,first_name" forKey:@"fields"];
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertNotNil(result, @"Expected a successful result");
+        completedWithoutBlocking = YES;
+    }];
+    [connection startWithCacheIdentity:@"FBUnitTests"
+                 skipRoundtripIfCached:YES];
+    
+    // should have completed successfully by here
+    STAssertTrue(completedWithoutBlocking, @"Should have called the handler, due to cache hit");
+    [connection release];
+
 }
 
 @end

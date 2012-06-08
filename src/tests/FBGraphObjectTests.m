@@ -218,20 +218,75 @@
     return graphObject;    
 }
 
+- (void)traverseGraphObject:(id)graphObject
+{
+    if ([graphObject isKindOfClass:[NSDictionary class]]) {
+        for (NSString *key in graphObject) {
+            id value = [graphObject objectForKey:key];
+            STAssertNotNil(value, @"missing value");
+            [self traverseGraphObject:value];
+        }    
+    } else if ([graphObject isKindOfClass:[NSArray class]]) {
+        for (NSString *value in graphObject) {
+            STAssertNotNil(value, @"missing value");
+            [self traverseGraphObject:value];
+        }            
+    }
+}
+
 - (void)testFastEnumeration
 {
     id graphObject = [self graphObjectWithUnwrappedData];
-    for (NSString *key in graphObject) {
-        STAssertNotNil([graphObject objectForKey:key], @"missing value");
-    }
+    [self traverseGraphObject:graphObject];
 }
 
 - (void)testEnumeration
 {
     id graphObject = [self graphObjectWithUnwrappedData];
-    for (NSString *key in [graphObject keyEnumerator]) {
-        STAssertNotNil([graphObject objectForKey:key], @"missing value");
-    }
+    [self traverseGraphObject:graphObject];
+}
+
+- (id)postStatusUpdate
+{
+    id<FBGraphObject> status = [FBGraphObject graphObject];
+    // Posting duplicate messages will generate an error.
+    NSString *statusMessage = [NSString stringWithFormat:@"Check out my awesome new status update posted at %@.", [NSDate date]];
+    [status setObject:statusMessage forKey:@"message"];
+    
+    return [self batchedPostAndGetWithSession:self.defaultTestSession
+                                    graphPath:@"me/feed" 
+                                  graphObject:status];
+}
+
+- (id)postComment:(id)comment toStatusID:(NSString*)statusID
+{
+    NSString *graphPath = [NSString stringWithFormat:@"%@/comments", statusID];
+    return [self batchedPostAndGetWithSession:self.defaultTestSession
+                                    graphPath:graphPath 
+                                  graphObject:comment];
+}
+
+- (void)testCommentRoundTrip
+{
+    id createdStatus = [self postStatusUpdate];
+    NSString *statusID = [createdStatus objectForKey:@"id"];
+    id<FBGraphObject> comment = [FBGraphObject graphObject];
+    NSString *commentMessage = @"It truly is a wonderful status update.";
+    [comment setObject:commentMessage forKey:@"message"];
+
+    id comment1 = [self postComment:comment toStatusID:statusID];
+
+    // Try posting the same comment to the same status update. We need to clear its ID first.
+    [comment1 removeObjectForKey:@"id"];
+    id comment2 = [self postComment:comment1 toStatusID:statusID];
+  
+    NSString *comment1ID = [comment1 objectForKey:@"id"];
+    NSString *comment2ID = [comment2 objectForKey:@"id"];
+    NSString *comment1Message = [comment1 objectForKey:@"message"];
+    NSString *comment2Message = [comment2 objectForKey:@"message"];
+    
+    STAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
+    STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
 }
 
 @end

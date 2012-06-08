@@ -34,12 +34,12 @@
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *request1 = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                          radiusInMeters:100 
-                                                           resultsLimit:100 
+                                                           resultsLimit:5 
                                                              searchText:@"Lincoln Memorial" 
                                                                 session:self.defaultTestSession];
     FBRequest *request2 = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                          radiusInMeters:100 
-                                                           resultsLimit:100 
+                                                           resultsLimit:5 
                                                              searchText:@"Washington Monument" 
                                                                 session:self.defaultTestSession];
 
@@ -191,6 +191,30 @@
              [blocker signal];
          }];
     
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
+
+- (void)testMixedSuccessAndFailure
+{
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+
+    const int kNumRequests = 8;
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:kNumRequests];
+
+    for (int i = 0; i < kNumRequests; ++i) {
+        BOOL success = (i % 2) == 1;
+        FBRequest *request = [FBRequest requestForGraphPath:success ? @"4" : @"-1"
+                                                    session:self.defaultTestSession];
+        [connection addRequest:request 
+             completionHandler:success ? 
+                [self handlerExpectingSuccessSignaling:blocker] :
+                [self handlerExpectingFailureSignaling:blocker]];
+    }
+
     [connection start];
     [blocker wait];
     

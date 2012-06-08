@@ -24,12 +24,18 @@
 @end
 
 @implementation FBTestBlocker {
-    BOOL _keepRunning;
+    int _signalsRemaining;
+    int _expectedSignalCount;
 }
 
 - (id)init {
+    return [self initWithExpectedSignalCount:1];
+}
+
+- (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount {
     if (self = [super init]) {
-        _keepRunning = YES;
+        _expectedSignalCount = expectedSignalCount;
+        [self reset];
     }
     return self;
 }
@@ -38,11 +44,12 @@
     [self waitWithTimeout:0];
 }
 
+// Note that after call to wait/waitWithTimeout the blocker resets to its original signal count.
 - (BOOL)waitWithTimeout:(NSUInteger)timeout {
     NSDate *start = [NSDate date];
     
     // loop until the previous call completes
-    while (_keepRunning) {
+    while (_signalsRemaining > 0) {
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.1]];
         if (timeout > 0 &&
             [[NSDate date] timeIntervalSinceDate:start] > timeout) {
@@ -55,12 +62,13 @@
 }
 
 - (void)signal {
-    _keepRunning = NO;
+    --_signalsRemaining;
 }
 
 - (void)reset {
-    _keepRunning = YES;
+    _signalsRemaining = _expectedSignalCount;
 }
+
 @end
 
 
