@@ -37,7 +37,9 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     // FBSample logic
-    // bootstrap call to updateForSessionChange gets a fresh new session object
+    // This application uses a single method to handle session transitions and
+    // the related changes to buttons, etc.; we call the method from here in
+    //  order to bootstrap and gets a fresh new session object
     [self updateForSessionChange];
     
 }
@@ -46,25 +48,30 @@
 // main helper method to react to session changes, including creation of session
 // object when one has gone invalid, or at init time
 - (void)updateForSessionChange {
-    // get the app delegate
+    // get the app delegate, so that we can reference the session property
     JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     if (appDelegate.session.isOpen) {        
-        // valid account UI
-        [buttonLoginLogout setTitle:@"Logout" forState:UIControlStateNormal];        
+        // valid account UI is shown whenever the session is open
+        [buttonLoginLogout setTitle:@"Log out" forState:UIControlStateNormal];        
         [textNoteOrLink setText:[NSString stringWithFormat:@"https://graph.facebook.com/me/friends?access_token=%@",
                                  appDelegate.session.accessToken]];
     } else {        
-        // invalid account UI
-        [buttonLoginLogout setTitle:@"Login" forState:UIControlStateNormal];        
+        // login-needed account UI is shown whenever the session is closed
+        [buttonLoginLogout setTitle:@"Log in" forState:UIControlStateNormal];        
         [textNoteOrLink setText:@"Login to create a link to fetch account data"];
         
-        // create a fresh session object in case of subsequent login
+        // create a fresh session object
         appDelegate.session = [[FBSession alloc] init];
+        
+        // if we don't have a cached token, a call to open here would cause UX for login to
+        // occur; we don't want that to happen unless the user clicks the login button, and so
+        // we check here to make sure we have a token before calling open
         if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
             [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
                                                              FBSessionState status, 
                                                              NSError *error) {
+                // we recurse here, in order to update buttons and labels
                 [self updateForSessionChange];
             }];
         }
@@ -74,18 +81,22 @@
 // FBSample logic
 // handler for button click, logs sessions in or out
 - (IBAction)buttonClickHandler:(id)sender {
-    // get the app delegate
+    // get the app delegate so that we can access the session property
     JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     
-    // this button's job is to flip-flop the session from valid to invalid
+    // this button's job is to flip-flop the session from open to closed
     if (appDelegate.session.isOpen) {
-        // if a user logs out explicitly, we logout the session, which deletes any cached token 
+        // if a user logs out explicitly, we delete any cached token information, and next
+        // time they run the applicaiton they will be presented with log in UX again; most
+        // users will simply close the app or switch away, without logging out; this will
+        // cause the implicit cached-token login to occur on next launch of the application
         [appDelegate.session closeAndClearTokenInformation];
     } else {
-        // in order to get the FBSession object up and running
+        // if the session isn't open, let's open it now and present the login UX to the user
         [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
                                                          FBSessionState status, 
                                                          NSError *error) {
+            // and here we make sure to update our UX according to the new session state
             [self updateForSessionChange];
         }];
     } 
@@ -106,26 +117,6 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
