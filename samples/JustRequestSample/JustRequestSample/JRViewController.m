@@ -56,16 +56,23 @@ static NSString *loadingText = @"Loading...";
 //
 - (void)buttonRequestClickHandler:(id)sender
 {
+    // FBSample logic
+    // Get the application delegate in order to access the session property
     JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session.isOpen) {
+        // login is integrated with the send button -- so if open, we send
         [self sendRequests];
     } else {
+        // as mentioned, login is integrated with the send action,
+        // if we don't have an open session already, we attempt to create
+        // one here
         appDelegate.session = [[FBSession alloc] init];
 
         FBSessionStateHandler handler =
             ^(FBSession *session, 
               FBSessionState status, 
               NSError *error) {
+            // if login fails for any reason, we alert
             if (error) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                 message:error.localizedDescription
@@ -73,8 +80,13 @@ static NSString *loadingText = @"Loading...";
                                                       cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
                 [alert show];
+            // if otherwise we check to see if the session is open, an alternative to
+            // to the FB_ISSESSIONOPENWITHSTATE helper-macro would be to check the isOpen
+            // property of the session object; the macros are useful, however, for more
+            // detailed state checking for FBSession objects
             } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
-                [self sendRequests];
+                // send our requests if we successfully logged in
+                [self sendRequests]; 
             }
         };
 
@@ -82,7 +94,7 @@ static NSString *loadingText = @"Loading...";
     }
 }
 
-//
+// FBSample logic
 // Read the ids to request from textObjectID and generate a FBRequest
 // object for each one.  Add these to the FBRequestConnection and
 // then connect to Facebook to get results.  Store the FBRequestConnection
@@ -92,6 +104,7 @@ static NSString *loadingText = @"Loading...";
 //
 - (void)sendRequests
 {
+    // extract the id's for which we will request the profile
     NSArray *fbids = [self.textObjectID.text componentsSeparatedByString:@","];
     
     self.textOutput.text = loadingText;
@@ -99,28 +112,46 @@ static NSString *loadingText = @"Loading...";
         [self.textObjectID resignFirstResponder];
     }
     
+    // get the app delegate for access to the .session property
     JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    
+    // create the connection object
     FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
     
+    // for each fbid in the array, we create a request object to fetch
+    // the profile, along with a handler to respond to the results of the request
     for (NSString *fbid in fbids) {
+        
+        // create a handler block to handle the results of the request for fbid's profile
         FBRequestHandler handler =
             ^(FBRequestConnection *connection, id result, NSError *error) {
+                // output the results of the request
                 [self requestCompleted:connection forFbID:fbid result:result error:error];
             };
         
+        // create the request object, using the fbid as the graph path
+        // as an alternative the request* static methods of the FBRequest class could
+        // be used to fetch common requests, such as /me and /me/friends
         FBRequest *request = [[FBRequest alloc] initWithSession:appDelegate.session
                                                       graphPath:fbid];
+        
+        // add the request to the connection object, if more than one request is added
+        // the connection object will compose the requests as a batch request; whether or
+        // not the request is a batch or a singleton, the handler behavior is the same,
+        // allowing the application to be dynamic in regards to whether a single or multiple
+        // requests are occuring
         [newConnection addRequest:request completionHandler:handler];
     }
     
     // if there's an outstanding connection, just cancel
     [self.requestConnection cancel];    
     
+    // keep track of our connection, and start it
     self.requestConnection = newConnection;    
     [newConnection start];
 }
 
-//
+// FBSample logic
 // Report any results.  Invoked once for each request we make.
 - (void)requestCompleted:(FBRequestConnection *)connection
                  forFbID:fbID
@@ -138,14 +169,20 @@ static NSString *loadingText = @"Loading...";
 
     NSString *text;
     if (error) {
+        // error contains details about why the request failed
         text = error.localizedDescription;
     } else {
+        // result is the json response from a successful request
         NSDictionary *dictionary = (NSDictionary *)result;
+        // we pull the name property out, if there is one, and display it
         text = (NSString *)[dictionary objectForKey:@"name"];
     }
     
     self.textOutput.text = [NSString stringWithFormat:@"%@%@: %@\r\n",
-                            self.textOutput.text, fbID, text];
+                            self.textOutput.text, 
+                            [fbID stringByTrimmingCharactersInSet:
+                             [NSCharacterSet whitespaceAndNewlineCharacterSet]], 
+                            text];
 }
 
 #pragma mark - View lifecycle
