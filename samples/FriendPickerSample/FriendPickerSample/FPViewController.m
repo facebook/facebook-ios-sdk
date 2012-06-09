@@ -58,9 +58,10 @@
          ^(FBSession *session, FBSessionState state, NSError *error) {
              switch (state) {
                  case FBSessionStateOpen:
-                     if (!error) {
-                         [self sessionChanged];
-                     } else {
+                     [self sessionChanged];
+                     break;
+                 case FBSessionStateClosedLoginFailed:
+                    {
                          UIAlertView *alertView =
                          [[UIAlertView alloc] initWithTitle:@"Error"
                                                     message:error.localizedDescription

@@ -66,7 +66,7 @@
 {
     switch (state) {
         case FBSessionStateOpen:
-            if (!error) {
+            {
                 UIViewController *topViewController = [self.navController topViewController];
                 if ([[topViewController modalViewController] isKindOfClass:[SCLoginViewController class]]) {
                     [topViewController dismissModalViewControllerAnimated:YES];
