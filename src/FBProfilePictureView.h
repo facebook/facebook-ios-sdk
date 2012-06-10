@@ -17,31 +17,30 @@
 #import <UIKit/UIKit.h>
 
 /*! 
- @typedef FBProfilePictureSize enum
+ @typedef FBProfilePictureCropping enum
  
  @abstract 
- Type used to specify the size and format of the profile picture
+ Type used to specify the cropping treatment of the profile picture.
  
  @discussion
  */
 typedef enum {
-    /*! Square (default) */
-    FBProfilePictureSizeSquare      = 0,
+    /*! Original (default) - the original profile picture, as uploaded */
+    FBProfilePictureCroppingOriginal    = 0,
     
-    /*! Small */
-    FBProfilePictureSizeSmall       = 1,
+    /*! Square - the square version that the Facebook user defined */
+    FBProfilePictureCroppingSquare      = 1
     
-    /*! Normal */
-    FBProfilePictureSizeNormal      = 2,
-    
-    /*! Large */
-    FBProfilePictureSizeLarge       = 3
-} FBProfilePictureSize;
+} FBProfilePictureCropping;
 
 /*!
  @class
  @abstract
- View used to display a profile picture
+ View used to display a profile picture.  Default behavior of this control centers the profile picture
+ in the control and shrinks it, if necessary, to the controls bounds, preserving aspect ratio. The smallest
+ possible image is downloaded to ensure that scaling up never happens.  Resizing the control may result in 
+ a different size of the image being loaded.  Canonical image sizes are documented in the "Pictures" section
+ of https://developers.facebook.com/docs/reference/api. 
  */
 @interface FBProfilePictureView : UIView
 
@@ -53,9 +52,9 @@ typedef enum {
 
 /*!
  @abstract
- Specifies the format and size of the picture displayed
+ Specifies which cropping of the profile picture to use.
  */
-@property (nonatomic) FBProfilePictureSize pictureSize;
+@property (nonatomic) FBProfilePictureCropping pictureCropping;
 
 /*!
  @abstract
@@ -63,15 +62,16 @@ typedef enum {
  */
 - (id)init;
 
+
 /*!
  @abstract
  Initializes and returns a ProfilePictureView
  
  @param userID          Specifies the fbid for the object for which a picture should be fetched and displayed
- @param pictureSize     Specifies the format and size of the picture displayed; picture size 
-                        can be one of FBProfilePictureSize enum.
+ @param pictureCropping Specifies the cropping for the picture displayed.
  */
 - (id)initWithUserID:(NSString*)userID 
-      andPictureSize:(FBProfilePictureSize)pictureSize;
+  andPictureCropping:(FBProfilePictureCropping)pictureCropping;
+
 
 @end

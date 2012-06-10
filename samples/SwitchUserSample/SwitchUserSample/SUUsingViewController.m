@@ -110,7 +110,6 @@
 {
     [super viewDidLoad];
 
-    self.picView.pictureSize = FBProfilePictureSizeLarge;
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(userDidChange:)
                                                  name:@"SUUserManagerUserChanged" object:nil];

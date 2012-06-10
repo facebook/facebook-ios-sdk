@@ -20,13 +20,17 @@
 @interface ViewController : UIViewController
 
 @property (retain, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
+@property (retain, nonatomic) IBOutlet UIView *profilePictureOuterView;
 
 - (IBAction)showJasonProfile:(id)sender;
 - (IBAction)showMichaelProfile:(id)sender;
 - (IBAction)showVijayeProfile:(id)sender;
 - (IBAction)showRandomProfile:(id)sender;
-- (IBAction)makePictureSmall:(id)sender;
-- (IBAction)makePictureNormal:(id)sender;
-- (IBAction)makePictureLarge:(id)sender;
+
+- (IBAction)makePictureOriginal:(id)sender;
+- (IBAction)makePictureSquare:(id)sender;
+
+- (IBAction)makeViewSmall:(id)sender;
+- (IBAction)makeViewLarge:(id)sender;
 
 @end

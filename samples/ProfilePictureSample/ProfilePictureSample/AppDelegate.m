@@ -16,7 +16,7 @@
  
 #import "AppDelegate.h"
 #import "ViewController.h"
-#import <FBiOSSDK/FBProfilePictureView.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
 @implementation AppDelegate
 
@@ -37,7 +37,7 @@
     // wireup successfully.  
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
     [FBProfilePictureView class];
-    
+     
     self.window = [[[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]] autorelease];
 
     // Override point for customization after application launch.

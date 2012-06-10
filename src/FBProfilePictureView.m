@@ -20,32 +20,35 @@
 
 @interface FBProfilePictureView()
 
-@property (readonly, nonatomic) NSURL* imageGraphURL;
-@property (readonly, nonatomic) NSString* imageType;
+@property (readonly, nonatomic) NSString* imageSize;
+@property (retain, nonatomic) NSString* previousImageSize;
 
 @property (retain, nonatomic) FBURLConnection* connection;
 @property (retain, nonatomic) UIImageView* imageView;
 
 - (void)initialize;
-- (void)refreshImage;
+- (void)refreshImage:(BOOL)forceRefresh;
+- (void)ensureImageViewContentMode;
 
 @end
 
 @implementation FBProfilePictureView
 
 @synthesize userID = _userID;
-@synthesize pictureSize = _pictureSize;
+@synthesize pictureCropping = _pictureCropping;
 @synthesize connection = _connection;
 @synthesize imageView = _imageView;
+@synthesize previousImageSize = _previousImageSize;
 
 #pragma mark - Lifecycle
 
 - (void)dealloc
 {
-    self.userID = nil;
-    self.imageView = nil;
-    self.connection = nil;
-
+    [_userID release];
+    [_imageView release];
+    [_connection release];
+    [_previousImageSize release];
+    
     [super dealloc];
 }
 
@@ -60,11 +63,11 @@
 }
 
 - (id)initWithUserID:(NSString*)userID 
-      andPictureSize:(FBProfilePictureSize)pictureSize 
+    andPictureCropping:(FBProfilePictureCropping)pictureCropping
 {
     self = [self init];
     if (self) {
-        self.pictureSize = pictureSize;
+        self.pictureCropping = pictureCropping;
         self.userID = userID;
     }
     
@@ -92,40 +95,30 @@
 
 #pragma mark -
 
-- (NSURL*)imageGraphURL
+- (NSString*)imageSize 
 {
-    NSString* template = @"%@/%@/picture?type=%@";     
-    NSString* urlString = 
-        [NSString stringWithFormat:template, 
-            FBGraphBasePath,
-            self.userID, 
-            self.imageType];
-    NSURL* url = [NSURL URLWithString:urlString];
-    return url;
-}
-
-- (NSString*)imageType 
-{
-    switch (self.pictureSize) {
-        case FBProfilePictureSizeSmall:
-            return @"small";
-            
-        case FBProfilePictureSizeNormal:
-            return @"normal";
-            
-        case FBProfilePictureSizeLarge:
-            return @"large";
-        
-        default:
-            return @"square";
+    if (self.pictureCropping == FBProfilePictureCroppingSquare) {
+        return @"square";
+    } 
+    
+    // If we're choosing the profile picture size automatically, then
+    // select an actual size to get based on the view dimensions.
+    // Small profile picture is 50 pixels wide, normal is 100, and
+    // large is about 200.
+    CGFloat width = self.bounds.size.width;
+    if (width <= 50) {
+        return @"small";
+    } else if (width <= 100) {
+        return @"normal";
+    } else {
+        return @"large";
     }
 }
 
+
 - (void)initialize
-{
-    UIImageView* imageView = 
-        [[UIImageView alloc] initWithFrame:self.bounds];
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
+{    
+    UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
     imageView.autoresizingMask = 
         UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.imageView = imageView;
@@ -133,12 +126,26 @@
 
     self.autoresizesSubviews = true;
     self.clipsToBounds = true;
+        
     [self addSubview:self.imageView];
 }
 
-- (void)refreshImage 
+- (void)refreshImage:(BOOL)forceRefresh 
 {
+    NSString *newImageSize = self.imageSize;
+    
     if (self.userID) {
+        
+        // If not forcing refresh, check to see if the previous size we used would be the same
+        // as what we'd request now, as this method could be called often on control bounds animation,
+        // and we only want to fetch when needed.
+        if (!forceRefresh && [self.previousImageSize isEqualToString:newImageSize]) {
+            
+            // But we still may need to adjust the contentMode.
+            [self ensureImageViewContentMode];
+            return;
+        }        
+        
         [self.connection cancel];
 
         FBURLConnectionHandler handler = 
@@ -148,10 +155,17 @@
                 self.connection = nil;
                 if (!error) {
                     self.imageView.image = [UIImage imageWithData:data];
+                    [self ensureImageViewContentMode];
                 }
             };
-
-        NSURL* url = self.imageGraphURL;
+                
+        NSString* template = @"%@/%@/picture?type=%@";     
+        NSString* urlString = [NSString stringWithFormat:template, 
+                               FBGraphBasePath,
+                               self.userID, 
+                               newImageSize];
+        NSURL* url = [NSURL URLWithString:urlString];
+        
         self.connection = [[[FBURLConnection alloc]
                              initWithURL:url
                              completionHandler:handler] autorelease];
@@ -159,10 +173,31 @@
         NSString* blankImageName = 
             [NSString 
                 stringWithFormat:@"FBiOSSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
-                self.imageType];
+                newImageSize];
 
         self.imageView.image = [UIImage imageNamed:blankImageName];
+        [self ensureImageViewContentMode];
     }
+    
+    self.previousImageSize = newImageSize;
+}
+
+- (void)ensureImageViewContentMode
+{
+    // Set the image's contentMode such that if the image is larger than the control, we scale it down, preserving aspect 
+    // ratio.  Otherwise, we center it.  This ensures that we never scale up, and pixellate, the image.
+    CGSize viewSize = self.bounds.size;
+    CGSize imageSize = self.imageView.image.size;
+    UIViewContentMode contentMode;
+
+    // If both of the view dimensions are larger than the image, we'll center the image to prevent scaling up.
+    if (viewSize.width > imageSize.width && viewSize.height > imageSize.height) {
+        contentMode = UIViewContentModeCenter;
+    } else {
+        contentMode = UIViewContentModeScaleAspectFit;
+    }
+    
+    self.imageView.contentMode = contentMode;
 }
 
 - (void)setUserID:(NSString*)userID 
@@ -170,16 +205,25 @@
     if (!_userID || ![_userID isEqualToString:userID]) {
         [_userID release];
         _userID = [userID copy];
-        [self refreshImage];
+        [self refreshImage:YES];
     }
 }
 
-- (void)setPictureSize:(FBProfilePictureSize)pictureSize 
+- (void)setPictureCropping:(FBProfilePictureCropping)pictureCropping 
 {
-    if (_pictureSize != pictureSize) {
-        _pictureSize = pictureSize;
-        [self refreshImage];
+    if (_pictureCropping != pictureCropping) {
+        _pictureCropping = pictureCropping;
+        [self refreshImage:YES];
     }
 }
+
+// Lets us catch resizes of the control, or any outer layout, allowing us to potentially
+// choose a different image.
+- (void)layoutSubviews
+{
+    [self refreshImage:NO];
+    [super layoutSubviews];   
+}
+
 
 @end

@@ -43,9 +43,7 @@
 {    
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
-    profilePic.pictureSize = FBProfilePictureSizeLarge;
-    
+        
     // FBSample logic
     // bootstrap call to updateForSessionChange gets a fresh new session object
     [self updateForSessionChange];

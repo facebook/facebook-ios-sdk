@@ -52,6 +52,8 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 
 @implementation ViewController
 @synthesize profilePictureView;
+@synthesize profilePictureOuterView;
+
 
 - (IBAction)showJasonProfile:(id)sender 
 {
@@ -76,22 +78,29 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
                                                encoding:NSASCIIStringEncoding];
 }
 
-- (IBAction)makePictureSmall:(id)sender 
+// Cropping selections
+
+- (IBAction)makePictureOriginal:(id)sender 
 {
-    profilePictureView.pictureSize = FBProfilePictureSizeSmall;
-    profilePictureView.bounds = CGRectMake(0, 0, 40, 40);
+    profilePictureView.pictureCropping = FBProfilePictureCroppingOriginal;
 }
 
-- (IBAction)makePictureNormal:(id)sender 
+- (IBAction)makePictureSquare:(id)sender
 {
-    profilePictureView.pictureSize = FBProfilePictureSizeNormal;
-    profilePictureView.bounds = CGRectMake(0, 0, 80, 80);
+    profilePictureView.pictureCropping = FBProfilePictureCroppingSquare;
 }
 
-- (IBAction)makePictureLarge:(id)sender 
+
+// View size mods
+
+- (IBAction)makeViewSmall:(id)sender
 {
-    profilePictureView.pictureSize = FBProfilePictureSizeLarge;
-    profilePictureView.bounds = CGRectMake(0, 0, 130, 130);
+    profilePictureOuterView.bounds = CGRectMake(0, 0, 100, 100);
+}
+
+- (IBAction)makeViewLarge:(id)sender
+{
+    profilePictureOuterView.bounds = CGRectMake(0, 0, 220, 220);
 }
 
 
@@ -102,7 +111,7 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 {
     [super viewDidLoad];
 
-    [self makePictureLarge:self];
+    // [self makePictureLarge:self];
     profilePictureView.userID = @"45963418107"; // Hello world
 }
 
