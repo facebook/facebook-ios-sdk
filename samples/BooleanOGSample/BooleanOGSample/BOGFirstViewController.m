@@ -20,11 +20,12 @@
 #import "OGProtocols.h"
 
 @interface BOGFirstViewController () <UIPickerViewDelegate>
-+ (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value;
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
       rightOperand:(BOOL)right
             result:(BOOL)result;
+- (NSString*)stringForTruthValue:(BOOL)truthValue;
++ (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value;
 @end
 
 @implementation BOGFirstViewController
@@ -32,47 +33,18 @@
 @synthesize rightPicker;
 @synthesize resultTextView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"First", @"First");
+        self.title = NSLocalizedString(@"You Rock!", @"You Rock!");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
 }
 
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    return 1;
-}
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return 2;
-}
-- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    return row ? @"True" : @"False";
-}
-
-- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    resultTextView.text = @"";
-}
-
-							
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [self setLeftPicker:nil];
     [self setRightPicker:nil];
     [self setResultTextView:nil];
@@ -81,28 +53,7 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-	[super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -111,10 +62,11 @@
     }
 }
 
-- (NSString*)stringForTruthValue:(BOOL)truthValue  {
-    return truthValue ? @"True" : @"False";
-}
+#pragma mark - Button handlers
 
+// FBSample logic
+// Handler for the "And" button, determines the left and right truth values, and then
+// calls a helper to post a custom action
 - (IBAction)pressedAnd:(id)sender {
 
     BOOL left = [leftPicker selectedRowInComponent:0];
@@ -125,13 +77,16 @@
                            [self stringForTruthValue:right],
                            [self stringForTruthValue:result]];
     
-    // posts an "And" OG action
+    // posts an "and" OG action, the path below is the normal form for custom OG actions (in this case 'and')
     [self postAction:@"me/fb_sample_boolean_og:and" 
          leftOperand:left
         rightOperand:right
               result:result];
 }
 
+// FBSample logic
+// Handler for the "Or" button, determines the left and right truth values, and then
+// calls a helper to post a custom action
 - (IBAction)pressedOr:(id)sender {
     
     BOOL left = [leftPicker selectedRowInComponent:0];
@@ -142,53 +97,122 @@
                            [self stringForTruthValue:right],
                            [self stringForTruthValue:result]];
     
-    // posts an "Or" OG action
+    // posts an "or" OG action, the path below is the normal form for custom OG actions (in this case 'or')
     [self postAction:@"me/fb_sample_boolean_og:or" 
          leftOperand:left
         rightOperand:right
               result:result];
 }
 
+#pragma mark - UIPickerViewDelegate impl
+
+// FBSample logic
+// There isn't any real facebook specific logic in the next four methods, they simply wire up the
+// behavior for the two picker-views
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return 2;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView 
+             titleForRow:(NSInteger)row 
+            forComponent:(NSInteger)component {
+    return row ? @"True" : @"False";
+}
+
+- (void)pickerView:(UIPickerView *)pickerView 
+      didSelectRow:(NSInteger)row 
+       inComponent:(NSInteger)component {
+    resultTextView.text = @"";
+}
+
+#pragma mark - private methods
+
+// FBSample logic
+// This is the workhorse method of this view. It sets up the content for a custom OG action, and then posts it
+// using FBRequest/FBRequestConnection. This method also uses the custom protocols defined in 
+// OGProtocols.h (defined in this sample application), in order to create and consume actions in a typed fashion
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
       rightOperand:(BOOL)right
             result:(BOOL)result {
-    // if we have a valid session, then we post the action to the users wall
+    
+    // if we have a valid session, then we post the action to the users wall, else noop
     BOGAppDelegate* appDelegate = (BOGAppDelegate*)[UIApplication sharedApplication].delegate;
     if (appDelegate.session.isOpen) {
         
-        // create an object to hold our action information
+        // create an object to hold our action information, the FBGraphObject class has a lightweight
+        // static method API that supports creating and comparing of objects that implement the 
+        // FBGraphObject protocol
         id<BOGGraphBooleanAction> action = (id<BOGGraphBooleanAction>)[FBGraphObject graphObject];
         
-        // set the ation's results and two truth-value objects
+        // set the action's results and two truth-value objects, using inferred accessor methods
+        // in our custom open graph action protocol
         action.result = result ? @"1" : @"0";
         action.truthvalue = [BOGFirstViewController ogObjectForTruthValue:left];
         action.anothertruthvalue = [BOGFirstViewController ogObjectForTruthValue:right];
         
-        // create the request and post the action
-        FBRequest *req = [[FBRequest alloc] initForPostWithSession:appDelegate.session
-                                                         graphPath:actionPath
-                                                       graphObject:action];
-        FBRequestConnection *conn = [[FBRequestConnection alloc] init];
-        [conn addRequest:req completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-            if (!error) {
-                // successful post, do something with the action id    
-            } 
-        } ];
         
-        [conn start];
+        // post the action using one of the lightweight static start* methods on FBRequest
+        [FBRequest startForPostWithSession:appDelegate.session
+                                 graphPath:actionPath
+                               graphObject:action
+                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                             if (!error) {
+                                 // successful post, in the sample we do nothing with the id, however
+                                 // a more complex applicaiton may want to store or perform addtional actions
+                                 // with the id that represents the just-posted action    
+                             } else {
+                                 // get the basic error message
+                                 NSString *message = error.localizedDescription;
+                                 
+                                 // see if we can improve on it with an error message from the server
+                                 id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
+                                 if ([json isKindOfClass:[NSArray class]] &&
+                                     (json = [json objectAtIndex:0]) &&
+                                     [json isKindOfClass:[NSDictionary class]] &&
+                                     (json = [json objectForKey:@"body"]) &&
+                                     [json isKindOfClass:[NSDictionary class]] &&
+                                     (json = [json objectForKey:@"error"]) &&
+                                     [json isKindOfClass:[NSDictionary class]] &&
+                                     (json = [json objectForKey:@"message"])) {
+                                     message = [json description];
+                                 }
+                                 
+                                 // display the message that we have
+                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
+                                                                                 message:message
+                                                                                delegate:nil
+                                                                       cancelButtonTitle:@"OK"
+                                                                       otherButtonTitles:nil];
+                                 [alert show];
+                             }
+                         }];
     }
 }
 
+// FBSample logic
+// Simple helper here to give us a readable string from a boolean value
+- (NSString*)stringForTruthValue:(BOOL)truthValue  {
+    return truthValue ? @"True" : @"False";
+}
+
+// FBSample logic
+// This is the workhorse method of this view. It sets up the content for a custom OG action, and then posts it
+// using FBR
 + (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value {
-    // this URL is specific to this sample, and can be used to create arbitrary
-    // OG objects for this app; your OG objects will have URLs hosted by your server
+    // NOTE! This URL is temporary, and should not be relied upon beyond running this sample.
+    // The endpoint can be used to create arbitrary OG objects for this app; 
+    // NOTE! Production applications must host OG objects using a server provisioned for use by the app
     NSString *format =  
         @"http://fbsdkog.herokuapp.com/repeater.php?"
         @"fb:app_id=369258453126794&og:type=fb_sample_boolean_og:truthvalue&"
         @"og:title=%@&og:description=%%22%@%%22&og:image=http://fbsdkog.herokuapp.com/%@&body=%@";
     
-    // no need to create more than one of each TruthValue object
+    // no need to create more than one of each TruthValue object, so we will store references here
     static id<BOGGraphTruthValue> trueObj = nil; 
     static id<BOGGraphTruthValue> falseObj = nil;
     

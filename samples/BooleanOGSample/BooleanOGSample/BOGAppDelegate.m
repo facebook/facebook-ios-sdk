@@ -24,8 +24,28 @@
 @synthesize tabBarController = _tabBarController;
 @synthesize session = _session;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+// FBSample logic
+// The native facebook application transitions back to an authenticating application when the user 
+// chooses to either log in, or cancel. This call to handleOpenURL manages that transition. See the
+// "Just Login" sample application for deeper discussion on this topic.
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
+    return [self.session handleOpenURL:url]; 
+}
+
+// FBSample logic
+// Open session objects should be closed when no longer useful 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // all good things must come to an end
+    [self.session close];
+}
+
+// FBSample logic
+// The session management and login behavior of this sample is very simplistic; for deeper coverage of
+// this topic see the "Just Login" or "Switch User" sample applicaitons
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     UIViewController *viewController1, *viewController2;
@@ -40,78 +60,14 @@
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
-    
+
+    // FBSample logic
+    // We create and open a session at the outset here; if login is cancelled or fails, the application ignores
+    // this and continues to provide whatever functionality that it can
     self.session = [[FBSession alloc] initWithPermissions:[NSArray arrayWithObjects:@"publish_actions", nil]];
-    [self.session openWithCompletionHandler:
-     ^(FBSession *session, FBSessionState status, NSError *error) 
-     {
-         if (error) {
-             
-         }
-     }
-     ];
+    [self.session openWithCompletionHandler:nil];
     
     return YES;
 }
-
-// Necessary for FB login to work
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation 
-{
-    return [self.session handleOpenURL:url]; 
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application
-{
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
-}
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
-*/
-
-/*
-// Optional UITabBarControllerDelegate method.
-- (void)tabBarController:(UITabBarController *)tabBarController didEndCustomizingViewControllers:(NSArray *)viewControllers changed:(BOOL)changed
-{
-}
-*/
 
 @end

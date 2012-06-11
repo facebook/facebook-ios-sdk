@@ -17,11 +17,24 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
+// Boolean OG (Rock the Logic!) sample application
+//
+// The purpose of this sample application is to provide an example of 
+// how to publish and read Open Graph actions with Facebook. The goal
+// of the sample is to show how to use FBRequest, FBRequestConnection,
+// and FBSession classes, as well as the FBOpenGraphAction protocol and
+// related types in order to create a social app using Open Graph
+
 @interface BOGAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 
-@property (strong, nonatomic) FBSession* session;
+// FBSample logic
+// In this sample the app delegate maintains a property for the current 
+// active session, and the view controllers reference the session via
+// this property. See the "Just Login" and "Switch User" samples for
+// more detailed coverage of sessions, login and token management
+@property (strong, nonatomic) FBSession *session;
 
 @end

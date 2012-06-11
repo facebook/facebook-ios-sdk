@@ -15,7 +15,10 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <FBiOSSDK/FacebookSDK.h>
 
-@interface BOGSecondViewController : UIViewController
+@interface BOGSecondViewController : FBFriendPickerViewController
+
+@property (strong, nonatomic) IBOutlet UITextView *activityTextView;
 
 @end
