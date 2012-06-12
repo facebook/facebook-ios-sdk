@@ -52,17 +52,18 @@
 - (void)testWillPiggybackTokenExtensionIfNeeded
 {
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
-    // Note that we don't care if the actual token extension request succeeds or not.
-    // We only care that we try it. 
     session.forceAccessTokenRefresh = YES;
 
     FBRequest *request = [FBRequest requestForMeWithSession:session];
 
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    [connection addRequest:request completionHandler:self.handlerExpectingSuccess];
+    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
     [connection start];
-    // We don't need to wait for the requests to complete to determine success.
 
+    [blocker wait];
+    [blocker release];
+    
     NSArray *requests = [connection performSelector:@selector(requests)];
     STAssertTrue(requests.count == 2, @"didn't piggyback");
     
