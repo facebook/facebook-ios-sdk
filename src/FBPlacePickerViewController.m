@@ -353,6 +353,8 @@ static NSString *defaultImageName =
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
+    [self.spinner stopAnimating];
+
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
@@ -366,7 +368,7 @@ static NSString *defaultImageName =
 }
 
 - (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
-    // finished loading, stop spinner
+    // No more results, stop spinner
     [self.spinner stopAnimating];
 }
 
