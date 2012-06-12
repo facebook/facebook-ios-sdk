@@ -31,19 +31,19 @@
  */
 
 /*! Log requests from FBRequest* classes */
-#define FB_LOG_BEHAVIOR_FB_REQUESTS @"fb_requests"
+extern NSString *const FBLogBehaviorFBRequests;
 
 /*! Log requests from FBURLConnection* classes */
-#define FB_LOG_BEHAVIOR_FBURL_CONNECTIONS @"fburl_connections"
+extern NSString *const FBLogBehaviorFBURLConnections;
 
 /*! Include access token in logging. */
-#define FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS @"include_access_tokens"
+extern NSString *const FBLogBehaviorAccessTokens;
 
 /*! Log session state transitions. */
-#define FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS @"state_transitions"
+extern NSString *const FBLogBehaviorSessionStateTransitions;
 
 /*! Log performance characteristics */
-#define FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS @"perf_characteristics"
+extern NSString *const FBLogBehaviorPerformanceCharacteristics;
 
 /*! 
  @typedef FBSessionState enum

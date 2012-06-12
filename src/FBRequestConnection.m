@@ -261,7 +261,7 @@ typedef enum FBRequestConnectionState {
         _requests = [[NSMutableArray alloc] init];
         _timeout = timeout;
         _state = kStateCreated;
-        _logger = [[FBLogger alloc] initWithLoggingBehavior:FB_LOG_BEHAVIOR_FB_REQUESTS];
+        _logger = [[FBLogger alloc] initWithLoggingBehavior:FBLogBehaviorFBRequests];
     }
     return self;
 }
@@ -1169,7 +1169,7 @@ typedef enum FBRequestConnectionState {
 
 - (void)registerTokenToOmitFromLog:(NSString *)token 
 {
-    if (![[FBSession loggingBehavior] containsObject:FB_LOG_BEHAVIOR_INCLUDE_ACCESS_TOKENS]) {
+    if (![[FBSession loggingBehavior] containsObject:FBLogBehaviorAccessTokens]) {
         [FBLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
     }
 }

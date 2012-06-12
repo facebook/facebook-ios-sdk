@@ -187,7 +187,7 @@ static NSString *defaultImageName =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+    [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
                           withTag:self];
     CGRect bounds = self.view.bounds;
 
@@ -353,7 +353,7 @@ static NSString *defaultImageName =
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+    [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics
                     timestampTag:self
                     formatString:@"Friend Picker: first render "];  // logger will append "%d msec"
          

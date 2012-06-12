@@ -77,7 +77,7 @@ static NSArray* _cdnHosts;
         NSURL* url = request.URL;
         NSData* cachedData = [[FBDataDiskCache sharedCache] dataForURL:url];
         if (cachedData) {
-            [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_FBURL_CONNECTIONS
+            [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
                             formatString:@"FBUrlConnection: <#%d>.  Cached response %d kB\n", 
              [url absoluteString],
              [cachedData length] / 1024];
@@ -95,7 +95,7 @@ static NSArray* _cdnHosts;
                 delegate:self];
             _data = [[NSMutableData alloc] init];
                      
-            [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_FBURL_CONNECTIONS
+            [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
                             formatString:@"FBURLConnection <#%d>:\n  URL: '%@'\n\n",
                 _loggerSerialNumber,
                 [url absoluteString]];
@@ -139,7 +139,7 @@ static NSArray* _cdnHosts;
         logEntry = mutableLogEntry;
     }
     
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_FBURL_CONNECTIONS
+    [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
                         logEntry:logEntry]; 
                                  
     handler(self, error, response, responseData);

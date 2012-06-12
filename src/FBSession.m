@@ -54,6 +54,12 @@ static NSString *const FBLoginUXDisplay = @"display";
 static NSString *const FBLoginUXIOS = @"ios";
 static NSString *const FBLoginUXSDK = @"sdk";
 
+NSString *const FBLogBehaviorFBRequests = @"fb_requests";
+NSString *const FBLogBehaviorFBURLConnections = @"fburl_connections";
+NSString *const FBLogBehaviorAccessTokens = @"include_access_tokens";
+NSString *const FBLogBehaviorSessionStateTransitions = @"state_transitions";
+NSString *const FBLogBehaviorPerformanceCharacteristics = @"perf_characteristics";
+
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
 static NSString *const FBisValidPropertyName = @"isValid";
@@ -196,7 +202,7 @@ static NSSet *g_loggingBehavior;
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
-        [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+        [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
                               withTag:self];
         //first notification
         [self notifyOfState:self.state];
@@ -490,7 +496,7 @@ static NSSet *g_loggingBehavior;
 
     // invalid transition short circuits
     if (!isValidTransition) {
-        [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS
+        [FBLogger singleShotLogEntry:FBLogBehaviorSessionStateTransitions
                             logEntry:[NSString stringWithFormat:@"FBSession **INVALID** transition from %@ to %@",
                                       [FBSession sessionStateDescription:statePrior],
                                       [FBSession sessionStateDescription:state]]];
@@ -512,14 +518,14 @@ static NSSet *g_loggingBehavior;
     NSString *logString = [NSString stringWithFormat:@"FBSession transition from %@ to %@ ",
                            [FBSession sessionStateDescription:statePrior],
                            [FBSession sessionStateDescription:state]];
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_SESSION_STATE_TRANSITIONS logEntry:logString];
+    [FBLogger singleShotLogEntry:FBLogBehaviorSessionStateTransitions logEntry:logString];
     
-    [FBLogger singleShotLogEntry:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS 
+    [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics 
                     timestampTag:self
                     formatString:@"%@", logString];
     
     // Re-start session transition timer for the next time around.
-    [FBLogger registerCurrentTime:FB_LOG_BEHAVIOR_PERFORMANCE_CHARACTERISTICS
+    [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
                           withTag:self];
     
     // identify whether we will update token and date, and what the values will be
