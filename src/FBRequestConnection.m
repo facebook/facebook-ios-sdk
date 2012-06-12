@@ -334,10 +334,14 @@ typedef enum FBRequestConnectionState {
         }
     }
     
-    NSMutableURLRequest *request = self.urlRequest;
+    NSMutableURLRequest *request = nil;
     NSData *cachedData = nil;
     NSURL *cacheIdentityURL = nil;
     if (cacheIdentity) {
+        // warning! this property has significant side-effects, and should be executed at the right moment
+        // depending on whether there may be batching or whether we are certain there is no batching
+        request = self.urlRequest;
+        
         // when we generalize this for consumers of FBRequest, then we will use a more 
         // normalized form for our identification scheme than this URL construction; given the only
         // clients are the two pickers -- this scheme achieves stability via being a closed system,
@@ -373,6 +377,12 @@ typedef enum FBRequestConnectionState {
         if (safeForPiggyback) {
             [self addPiggybackRequests];
         }
+    }
+    
+    // warning! this property is side-effecting (and should probably be refactored at some point...)
+    // still, if we have made it this far and still don't have a request object, we need one now
+    if (!request) {
+        request = self.urlRequest;
     }
     
     NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
