@@ -140,6 +140,121 @@
 
 }
 
+- (void)testDelete
+{
+    // this is a longish test, here is the breakdown:
+    // 1) three objects are created in one batch
+    // 2) two objects are deleted with different approaches, and one object created in the next batch
+    // 3) one object is deleted
+    // 4) another object is deleted
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:3] autorelease];
+    
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    session.forceAccessTokenRefresh = YES;
+    
+    FBRequest *request = [FBRequest requestForGraphPath:@"me/feed"
+                                                session:session];
+    [request.parameters setObject:@"dummy status"
+                           forKey:@"name"];
+    [request.parameters setObject:@"http://www.facebook.com"
+                           forKey:@"link"];
+    [request.parameters setObject:@"dummy description"
+                           forKey:@"description"];
+    [request.parameters setObject:@"post"
+                           forKey:@"method"];
+    
+    NSMutableArray *fbids = [NSMutableArray array];
+    
+    FBRequestHandler handler = ^(FBRequestConnection *connection, id<FBGraphObject> result, NSError *error) {
+        STAssertNotNil(result, @"should have a result here");
+        STAssertNil(error, @"should not have an error here");
+        [fbids addObject: [[result objectForKey:@"id"] description]];
+        [blocker signal];
+    };
+    
+    // this creates three objects
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    [connection addRequest:request completionHandler:handler];
+    [connection addRequest:request completionHandler:handler];
+    [connection addRequest:request completionHandler:handler];
+    [connection start];
+    
+    [blocker wait];
+    
+    blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:3];
+    
+    connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *deleteRequest = [[FBRequest alloc] initWithSession:session
+                                                        graphPath:[fbids objectAtIndex:fbids.count-1]
+                                                       parameters:nil
+                                                       HTTPMethod:@"delete"];
+    [connection addRequest:deleteRequest
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNotNil(result, @"should have a result here");
+             STAssertNil(error, @"should not have an error here");
+             [fbids removeObjectAtIndex:fbids.count-1];
+             [blocker signal];             
+         }];
+    
+    deleteRequest = [[FBRequest alloc] initWithSession:session
+                                             graphPath:[fbids objectAtIndex:fbids.count-1]
+                                            parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                        @"delete", @"method",
+                                                        nil]
+                                            HTTPMethod:nil];
+    [connection addRequest:deleteRequest
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNotNil(result, @"should have a result here");
+             STAssertNil(error, @"should not have an error here");
+             [fbids removeObjectAtIndex:fbids.count-1];
+             [blocker signal];             
+         }];
+    
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertNotNil(result, @"should have a result here");
+        STAssertNil(error, @"should not have an error here");
+        [fbids addObject: [[result objectForKey:@"id"] description]];
+        [blocker signal];
+    }];
+    
+    // these deletes two and adds one
+    [connection start];
+    
+    [blocker wait];
+    
+    blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:2] autorelease];
+
+    // delete
+    [FBRequest startWithSession:session
+                      graphPath:[fbids objectAtIndex:fbids.count-1]
+                     parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                 @"delete", @"method",
+                                 nil]
+                     HTTPMethod:nil
+              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                  STAssertNotNil(result, @"should have a result here");
+                  STAssertNil(error, @"should not have an error here");
+                  [fbids removeObjectAtIndex:fbids.count-1];
+                  [blocker signal];
+              }];
+
+    // delete
+    [FBRequest startWithSession:session
+                      graphPath:[fbids objectAtIndex:fbids.count-1]
+                     parameters:nil
+                     HTTPMethod:@"delete"
+              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                  STAssertNotNil(result, @"should have a result here");
+                  STAssertNil(error, @"should not have an error here");
+                  [fbids removeObjectAtIndex:fbids.count-1];
+                  [blocker signal];
+              }];
+    
+    [blocker wait];
+    
+    STAssertTrue(fbids.count == 0, @"Our fbid collection should be empty here");
+}
+
 @end
 
 #endif
