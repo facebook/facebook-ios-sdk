@@ -99,6 +99,15 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
     [super dealloc];
 }
 
+- (NSString*)description {
+    return [NSString stringWithFormat:@"<%@: %p, batchEntryName: %@, completionHandler: %p, request: %@>",
+            NSStringFromClass([self class]),
+            self,
+            self.batchEntryName,
+            self.completionHandler,
+            self.request.description];
+}
+
 @end
 
 // ----------------------------------------------------------------------------

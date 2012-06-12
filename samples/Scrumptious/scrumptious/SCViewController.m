@@ -42,7 +42,6 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
-@property (strong, nonatomic) FBSession *session;
 
 - (IBAction)announce:(id)sender;
 - (void)populateUserDetails;
@@ -51,6 +50,7 @@
 - (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal;
 - (void)postPhotoThenOpenGraphAction;
 - (void)postOpenGraphActionWithPhotoURL:(NSString*)photoID;
+- (FBSession*)session;
 
 @end
 
@@ -69,7 +69,6 @@
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
-@synthesize session = _session;
 
 #pragma mark open graph
 
@@ -302,12 +301,8 @@
 {
     [super viewWillAppear:animated];
     
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session && appDelegate.session.isOpen) {
-        if (appDelegate.session != self.session) {
-            self.session = appDelegate.session;
-            [self populateUserDetails];
-        }
+    if (self.session && self.session.isOpen) {
+        [self populateUserDetails];
     }
 }
 
@@ -336,13 +331,11 @@
                         change:(NSDictionary *)change
                        context:(void *)context
 {
-    SCAppDelegate *appDelegate = object;
     if ([keyPath isEqual:@"session.state"]) {
         // A more complex app might check the state to see what the appropriate course of
         // action is, but our needs are simple, so just make sure our idea of the session is
         // up to date and repopulate the user's name and picture (which will fail if the session
         // has become invalid).
-        self.session = appDelegate.session;
         [self populateUserDetails];
     }
 }
@@ -350,6 +343,12 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (FBSession*)session 
+{
+    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    return appDelegate.session;
 }
 
 #pragma mark UITableViewDataSource methods
