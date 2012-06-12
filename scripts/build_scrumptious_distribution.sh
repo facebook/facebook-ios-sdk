@@ -65,7 +65,7 @@ $XCODEBUILD \
   -alltargets \
   -sdk "$SDK" \
   -configuration "$CONFIGURATION" \
-  -arch "armv7" \
+  -arch "armv7 armv6" \
   SYMROOT="$OUTPUT_DIR" \
   OBJROOT="$OUTPUT_DIR" \
   CURRENT_PROJECT_VERSION="$FB_SDK_VERSION_FULL" \

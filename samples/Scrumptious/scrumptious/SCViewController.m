@@ -51,7 +51,7 @@
 - (void)updateCellIndex:(int)index withSubtitle:(NSString*)subtitle;
 - (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal;
 - (void)postPhotoThenOpenGraphAction;
-- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoID;
+- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoID withUserGeneratedFlag:(BOOL)userGenerated;
 - (FBSession*)session;
 
 @end
@@ -95,7 +95,7 @@
     return result;
 }
 
-- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoURL
+- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoURL withUserGeneratedFlag:(BOOL)userGenerated
 {
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
@@ -112,13 +112,16 @@
     if (photoURL) {
         NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
         [image setObject:photoURL forKey:@"url"];
+        if (userGenerated) {
+            [image setObject:@"true" forKey:@"user_generated"];
+        }
         
         NSMutableArray *images = [[NSMutableArray alloc] init];
         [images addObject:image];
         
         action.image = images;
     }
-    
+
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
     [FBRequest startForPostWithSession:self.session
                              graphPath:@"me/fb_sample_scrumps:eat"
@@ -146,6 +149,12 @@
 {
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
+    // If the picture is big enough, we'd like to use the user_generated flag so it
+    // appears larger than a thumbnail in the OG Action. (This flag is not allowed if
+    // the picture is smaller than 520x520.)
+    BOOL useUserGeneratedFlag = self.selectedPhoto.size.width >= 520 &&
+        self.selectedPhoto.size.height >= 520;
+
     // First request uploads the photo.
     FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto
                                                    session:self.session];
@@ -167,7 +176,7 @@
             if (!error &&
                 result) {
                 NSString *source = [result objectForKey:@"source"];
-                [self postOpenGraphActionWithPhotoURL:source];
+                [self postOpenGraphActionWithPhotoURL:source withUserGeneratedFlag:useUserGeneratedFlag];
             }
         }
     ];
@@ -180,7 +189,7 @@
     if (self.selectedPhoto) {
         [self postPhotoThenOpenGraphAction];
     } else {
-        [self postOpenGraphActionWithPhotoURL:nil];
+        [self postOpenGraphActionWithPhotoURL:nil withUserGeneratedFlag:NO];
     }
 }
 

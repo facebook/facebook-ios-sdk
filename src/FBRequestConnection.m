@@ -807,7 +807,8 @@ typedef enum FBRequestConnectionState {
 
 + (void)processGraphObject:(id<FBGraphObject>)object forPath:(NSString*)path withAction:(KeyValueActionHandler)action {
     BOOL isOGAction = NO;
-    if ([path hasPrefix:@"me/"]) {
+    if ([path hasPrefix:@"me/"] ||
+        [path hasPrefix:@"/me/"]) {
         // In general, graph objects are passed by reference (ID/URL). But if this is an OG Action,
         // we need to pass the entire values of the contents of the 'image' property, as they
         // contain important metadata beyond just a URL. We don't have a 100% foolproof way of knowing

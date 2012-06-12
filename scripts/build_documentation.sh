@@ -16,7 +16,7 @@
 #
 
 # This script builds the API documentation from source-level comments.
-# This script requires appldoc be installed: https://github.com/tomaz/appledoc
+# This script requires appledoc be installed: https://github.com/tomaz/appledoc
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
