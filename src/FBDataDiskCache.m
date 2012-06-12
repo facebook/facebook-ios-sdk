@@ -48,7 +48,7 @@ static NSString* const kCacheInfoFile = @"CacheInfo";
             [[cachePath stringByAppendingPathComponent:kDataDiskCachePath] 
                 copy];
         [[NSFileManager defaultManager] 
-            createDirectoryAtURL:[NSURL fileURLWithPath:_dataCachePath] 
+            createDirectoryAtPath:_dataCachePath 
             withIntermediateDirectories:YES 
             attributes:nil 
             error:nil];
