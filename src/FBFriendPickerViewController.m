@@ -159,8 +159,8 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
 {
     _allowsMultipleSelection = allowsMultipleSelection;
-    if (self.isViewLoaded) {
-        self.tableView.allowsMultipleSelection = allowsMultipleSelection;
+    if (self.selectionManager) {
+        self.selectionManager.allowsMultipleSelection = allowsMultipleSelection;
     }
 }
 
@@ -218,7 +218,7 @@ int const FBRefreshCacheDelaySeconds = 2;
         [spinner release];
     }
 
-    self.tableView.allowsMultipleSelection = self.allowsMultipleSelection;
+    self.selectionManager.allowsMultipleSelection = self.allowsMultipleSelection;
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
     self.loader.tableView = self.tableView;

@@ -206,7 +206,6 @@ static NSString *defaultImageName =
 
     if (!self.tableView) {
         UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
-        tableView.allowsMultipleSelection = NO;
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
