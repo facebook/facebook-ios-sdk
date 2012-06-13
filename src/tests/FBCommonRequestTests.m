@@ -87,7 +87,7 @@
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
-                                                              radiusInMeters:100 
+                                                              radiusInMeters:200 
                                                                 resultsLimit:5 
                                                                   searchText:nil 
                                                                      session:self.defaultTestSession];
@@ -117,7 +117,7 @@
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
-                                                              radiusInMeters:100 
+                                                              radiusInMeters:200 
                                                                 resultsLimit:5 
                                                                   searchText:@"Lincoln Memorial" 
                                                                      session:self.defaultTestSession];

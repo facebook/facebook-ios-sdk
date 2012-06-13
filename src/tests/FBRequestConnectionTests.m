@@ -84,7 +84,7 @@
         // Minimize traffic by just getting our id.
         [request.parameters setObject:@"id" forKey:@"fields"];
         
-        [connection addRequest:request completionHandler:self.handlerExpectingSuccess];
+        [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:nil]];
     }
     [connection start];
     // We don't need to wait for the requests to complete to determine success.
@@ -106,7 +106,6 @@
     FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
-    session.forceAccessTokenRefresh = YES;
     
     // here we just want to seed the cache, by identifying the cache, and by choosing not to consult the cache
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];    
@@ -152,7 +151,6 @@
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:3] autorelease];
     
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
-    session.forceAccessTokenRefresh = YES;
     
     FBRequest *request = [FBRequest requestForGraphPath:@"me/feed"
                                                 session:session];
@@ -168,8 +166,10 @@
     NSMutableArray *fbids = [NSMutableArray array];
     
     FBRequestHandler handler = ^(FBRequestConnection *connection, id<FBGraphObject> result, NSError *error) {
-        STAssertNotNil(result, @"should have a result here");
-        STAssertNil(error, @"should not have an error here");
+        // There's a lot going on in this test. To make failures easier to understand, giving each
+        // of the handlers a number so we can tell what failed.
+        STAssertNotNil(result, @"should have a result here: Handler 1");
+        STAssertNil(error, @"should not have an error here: Handler 1");
         [fbids addObject: [[result objectForKey:@"id"] description]];
         [blocker signal];
     };
@@ -183,6 +183,12 @@
     
     [blocker wait];
     
+    if (fbids.count != 3) {
+        STAssertTrue(fbids.count == 3, @"wrong number of fbids, aborting test");
+        // Things are bad. Continuing isn't going to make them better, and might throw exceptions.
+        return;
+    }
+
     blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:3];
     
     connection = [[[FBRequestConnection alloc] init] autorelease];
@@ -192,8 +198,9 @@
                                                        HTTPMethod:@"delete"];
     [connection addRequest:deleteRequest
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNotNil(result, @"should have a result here");
-             STAssertNil(error, @"should not have an error here");
+             STAssertNotNil(result, @"should have a result here: Handler 2");
+             STAssertNil(error, @"should not have an error here: Handler 2");
+             STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 2");
              [fbids removeObjectAtIndex:fbids.count-1];
              [blocker signal];             
          }];
@@ -206,16 +213,19 @@
                                             HTTPMethod:nil];
     [connection addRequest:deleteRequest
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNotNil(result, @"should have a result here");
-             STAssertNil(error, @"should not have an error here");
+             STAssertNotNil(result, @"should have a result here: Handler 3");
+             STAssertNil(error, @"should not have an error here: Handler 3");
+             STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 3");
              [fbids removeObjectAtIndex:fbids.count-1];
              [blocker signal];             
          }];
     
     [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertNotNil(result, @"should have a result here");
-        STAssertNil(error, @"should not have an error here");
-        [fbids addObject: [[result objectForKey:@"id"] description]];
+        STAssertNotNil(result, @"should have a result here: Handler 4");
+        STAssertNil(error, @"should not have an error here: Handler 4");
+        if (result) {
+            [fbids addObject: [[result objectForKey:@"id"] description]];
+        }
         [blocker signal];
     }];
     
@@ -223,6 +233,11 @@
     [connection start];
     
     [blocker wait];
+    if (fbids.count != 2) {
+        STAssertTrue(fbids.count == 2, @"wrong number of fbids, aborting test");
+        // Things are bad. Continuing isn't going to make them better, and might throw exceptions.
+        return;
+    }
     
     blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:2] autorelease];
 
@@ -234,8 +249,9 @@
                                  nil]
                      HTTPMethod:nil
               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                  STAssertNotNil(result, @"should have a result here");
-                  STAssertNil(error, @"should not have an error here");
+                  STAssertNotNil(result, @"should have a result here: Handler 5");
+                  STAssertNil(error, @"should not have an error here: Handler 5");
+                  STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 5");
                   [fbids removeObjectAtIndex:fbids.count-1];
                   [blocker signal];
               }];
@@ -246,8 +262,9 @@
                      parameters:nil
                      HTTPMethod:@"delete"
               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                  STAssertNotNil(result, @"should have a result here");
-                  STAssertNil(error, @"should not have an error here");
+                  STAssertNotNil(result, @"should have a result here: Handler 6");
+                  STAssertNil(error, @"should not have an error here: Handler 6");
+                  STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 6");
                   [fbids removeObjectAtIndex:fbids.count-1];
                   [blocker signal];
               }];

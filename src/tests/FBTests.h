@@ -46,10 +46,7 @@
 @property (readonly, retain) FBTestSession *defaultTestSession;
 
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker;
-- (FBRequestHandler)handlerExpectingSuccess;
-
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker; 
-- (FBRequestHandler)handlerExpectingFailure; 
 
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions;
 - (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray*)permissions 

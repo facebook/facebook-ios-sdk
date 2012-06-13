@@ -459,7 +459,10 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 }
 
 - (BOOL)shouldExtendAccessToken {
-    return self.forceAccessTokenRefresh || [super shouldExtendAccessToken];
+    // Note: we reset the flag each time we are queried. Tests should set it as needed for more complicated logic.
+    BOOL extend = self.forceAccessTokenRefresh || [super shouldExtendAccessToken];
+    self.forceAccessTokenRefresh = NO;
+    return extend;
 }
 
 #pragma mark -

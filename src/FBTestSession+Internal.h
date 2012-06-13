@@ -18,7 +18,8 @@
 
 @interface FBTestSession (Internal)
 
-// Can be used during testing to force a request for an access token refresh.
+// Can be used during testing to force a request for an access token refresh. This affects only the next
+// connection, when this flag is reset.
 @property (readwrite) BOOL forceAccessTokenRefresh;
 
 @end

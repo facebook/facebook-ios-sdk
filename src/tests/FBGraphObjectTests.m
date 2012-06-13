@@ -234,6 +234,30 @@
     }
 }
 
+- (void)testSimpleGraphGet
+{
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    [FBRequest startWithSession:self.defaultTestSession
+                      graphPath:@"TourEiffel"
+              completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+              
+    [blocker wait];
+    [blocker release];
+
+}
+
+- (void)testSimpleGraphGetWithExpectedFailure
+{
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    [FBRequest startWithSession:self.defaultTestSession
+                      graphPath:@"-1"
+              completionHandler:[self handlerExpectingFailureSignaling:blocker]];
+    
+    [blocker wait];
+    [blocker release];
+    
+}
+
 - (void)testFastEnumeration
 {
     id graphObject = [self graphObjectWithUnwrappedData];

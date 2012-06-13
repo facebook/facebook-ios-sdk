@@ -265,10 +265,6 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 #pragma mark -
 #pragma mark Handlers
 
-- (FBRequestHandler)handlerExpectingSuccess {
-    return [self handlerExpectingSuccessSignaling:nil];
-}
-
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker {
     FBRequestHandler handler = 
      ^(FBRequestConnection *connection, id result, NSError *error) {
@@ -277,10 +273,6 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         [blocker signal];
     };
     return [[handler copy] autorelease];
-}
-
-- (FBRequestHandler)handlerExpectingFailure {
-    return [self handlerExpectingFailureSignaling:nil];
 }
 
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker {

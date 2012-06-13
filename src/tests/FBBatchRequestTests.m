@@ -44,9 +44,9 @@
                                                                 session:self.defaultTestSession];
 
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
 
-    [connection addRequest:request1 completionHandler:[self handlerExpectingSuccess]];
+    [connection addRequest:request1 completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
     [connection addRequest:request2 completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
          
     [connection start];
@@ -207,7 +207,7 @@
 
     for (int i = 0; i < kNumRequests; ++i) {
         BOOL success = (i % 2) == 1;
-        FBRequest *request = [FBRequest requestForGraphPath:success ? @"4" : @"-1"
+        FBRequest *request = [FBRequest requestForGraphPath:success ? @"me" : @"-1"
                                                     session:self.defaultTestSession];
         [connection addRequest:request 
              completionHandler:success ? 

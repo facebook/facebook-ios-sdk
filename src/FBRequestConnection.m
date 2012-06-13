@@ -473,7 +473,8 @@ typedef enum FBRequestConnectionState {
                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                       timeoutInterval:timeout];
 
-        NSString *httpMethod = metadata.request.HTTPMethod;
+        // HTTP methods are case-sensitive; be helpful in case someone provided a mixed case one.
+        NSString *httpMethod = [metadata.request.HTTPMethod uppercaseString];
         [request setHTTPMethod:httpMethod]; 
         [self appendAttachments:metadata.request.parameters
                          toBody:body
@@ -1005,7 +1006,7 @@ typedef enum FBRequestConnectionState {
                                       utf8, FBNonJSONResponseProperty,
                                       nil];
             NSString *jsonrep = [parser stringWithObject:original];
-            NSError *reparseError;
+            NSError *reparseError = nil;
             parsed = [parser objectWithString:jsonrep error:&reparseError];
             if (!reparseError) {
                 *error = nil;
