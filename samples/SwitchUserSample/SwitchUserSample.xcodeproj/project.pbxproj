@@ -291,7 +291,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SwitchUserSample/SwitchUserSample-Prefix.pch";
 				INFOPLIST_FILE = "SwitchUserSample/SwitchUserSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",
@@ -313,7 +313,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SwitchUserSample/SwitchUserSample-Prefix.pch";
 				INFOPLIST_FILE = "SwitchUserSample/SwitchUserSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",

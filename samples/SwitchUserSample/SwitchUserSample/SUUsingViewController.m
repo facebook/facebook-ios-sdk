@@ -22,9 +22,9 @@
 
 //@property (strong, nonatomic) IBOutlet UITableView *usersTableView;
 
-@property (weak, nonatomic) IBOutlet UILabel *nameLabel;
-@property (weak, nonatomic) IBOutlet UILabel *birthdayLabel;
-@property (weak, nonatomic) IBOutlet FBProfilePictureView *picView;
+@property (strong, nonatomic) IBOutlet UILabel *nameLabel;
+@property (strong, nonatomic) IBOutlet UILabel *birthdayLabel;
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *picView;
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
 
 @end

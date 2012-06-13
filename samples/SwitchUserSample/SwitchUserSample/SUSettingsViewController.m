@@ -21,7 +21,7 @@
 
 @interface SUSettingsViewController ()
 
-@property (weak, nonatomic) IBOutlet UITableView *usersTableView;
+@property (strong, nonatomic) IBOutlet UITableView *usersTableView;
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
 @property (nonatomic) int pendingLoginForSlot;
 

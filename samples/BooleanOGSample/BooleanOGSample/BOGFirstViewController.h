@@ -18,9 +18,9 @@
 
 @interface BOGFirstViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UIPickerView *leftPicker;
-@property (weak, nonatomic) IBOutlet UIPickerView *rightPicker;
-@property (weak, nonatomic) IBOutlet UITextView *resultTextView;
+@property (strong, nonatomic) IBOutlet UIPickerView *leftPicker;
+@property (strong, nonatomic) IBOutlet UIPickerView *rightPicker;
+@property (strong, nonatomic) IBOutlet UITextView *resultTextView;
 
 - (IBAction)pressedAnd:(id)sender;
 - (IBAction)pressedOr:(id)sender;
