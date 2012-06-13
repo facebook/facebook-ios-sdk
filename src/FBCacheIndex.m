@@ -325,8 +325,8 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
     CHECK_SQLITE_SUCCESS(sqlite3_bind_text(
         _updateStatement, 
         1, 
-        entry.key.UTF8String, 
-        entry.key.length, 
+        entry.uuid.UTF8String, 
+        entry.uuid.length, 
         nil), _database);
         
     CHECK_SQLITE_SUCCESS(sqlite3_bind_double(
@@ -342,8 +342,8 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
     CHECK_SQLITE_SUCCESS(sqlite3_bind_text(
         _updateStatement, 
         4, 
-        entry.uuid.UTF8String, 
-        entry.uuid.length, 
+        entry.key.UTF8String, 
+        entry.key.length, 
         nil), _database);
     
     CHECK_SQLITE_DONE(sqlite3_step(_updateStatement), _database);

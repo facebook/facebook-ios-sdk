@@ -394,7 +394,7 @@
             break;
             
         case 2:
-            cell.textLabel.text = @"With who?";
+            cell.textLabel.text = @"With whom?";
             cell.detailTextLabel.text = @"Select friends";
             cell.imageView.image = [UIImage imageNamed:@"users.png"];
             break;
