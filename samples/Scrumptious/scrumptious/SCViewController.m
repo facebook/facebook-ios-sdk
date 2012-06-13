@@ -21,10 +21,11 @@
 #import "SCProtocols.h"
 #import <FBiOSSDK/FBRequest.h>
 #import <AddressBook/AddressBook.h>
+#import "TargetConditionals.h"
 
 @interface SCViewController()<UITableViewDataSource, UIImagePickerControllerDelegate, FBFriendPickerDelegate,
     UINavigationControllerDelegate, FBPlacePickerDelegate,
-    CLLocationManagerDelegate> {
+    CLLocationManagerDelegate, UIActionSheetDelegate> {
 }
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
@@ -34,6 +35,7 @@
 @property (strong, nonatomic) IBOutlet UIButton* announceButton;
 @property (strong, nonatomic) IBOutlet UITableView *menuTableView;
 @property (strong, nonatomic) UIImagePickerController* imagePicker;
+@property (strong, nonatomic) UIActionSheet* imagePickerActionSheet;
 
 @property (strong, nonatomic) NSObject<FBGraphPlace>* selectedPlace;
 @property (strong, nonatomic) NSString* selectedMeal;
@@ -69,7 +71,7 @@
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
-
+@synthesize imagePickerActionSheet = _imagePickerActionSheet;
 #pragma mark open graph
 
 - (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal 
@@ -201,6 +203,41 @@
 
 #pragma mark -
 
+#pragma mark UIActionSheetDelegate methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    //If user presses cancel, do nothing
+    if (buttonIndex == 2)
+        return;
+    
+    if (!self.imagePicker) {
+        self.imagePicker = [[UIImagePickerController alloc] init];
+        self.imagePicker.delegate = self;
+    }
+    
+    //Set the source type of the imagePicker to the users selection
+    if (buttonIndex == 0) {
+        //if its the simulator, camera is no good
+        if(TARGET_IPHONE_SIMULATOR){
+            [[[UIAlertView alloc] initWithTitle:@"Camera not supported in simulator." 
+                              message:@"(>'_')>" 
+                              delegate:nil 
+                              cancelButtonTitle:@"Ok" 
+                              otherButtonTitles:nil] show];
+             return;
+        }
+        self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+    } else if (buttonIndex == 1) {
+        self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    }
+    
+    [self presentModalViewController:self.imagePicker animated:true];
+}
+
+
+#pragma mark -
+
 #pragma mark Data fetch
 
 - (void)updateCellIndex:(int)index withSubtitle:(NSString*)subtitle {
@@ -269,6 +306,7 @@
     _placePickerController.delegate = nil;
     _friendPickerController.delegate = nil;
     _imagePicker.delegate = nil;
+    _imagePickerActionSheet.delegate = nil;
 }
 
 - (void)viewDidLoad
@@ -324,6 +362,7 @@
     self.mealViewController = nil;
     self.imagePicker = nil;
     self.popover = nil;
+    self.imagePickerActionSheet = nil;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath
@@ -474,15 +513,7 @@
             target = self.friendPickerController;
             break;
             
-        case 3:
-            if (!self.imagePicker) {
-                self.imagePicker = [[UIImagePickerController alloc] init];
-                self.imagePicker.delegate = self;
-
-                // In a real app, we would probably let the user either pick an image or take one using
-                // the camera. For sample purposes in the simulator, the camera is not available.
-                self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-            }
+        case 3:            
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 // Can't use presentModalViewController for image picker on iPad
                 if (!self.popover) {
@@ -491,7 +522,15 @@
                 CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
                 [self.popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
             } else {
-                [self presentModalViewController:self.imagePicker animated:true];
+                if(! self.imagePickerActionSheet){
+                    self.imagePickerActionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                           delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           destructiveButtonTitle:nil
+                                           otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+                }
+                
+                [self.imagePickerActionSheet showInView:self.view];
             }
             // Return rather than execute below code
             return;
