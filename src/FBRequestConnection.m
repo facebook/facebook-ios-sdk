@@ -187,7 +187,8 @@ typedef enum FBRequestConnectionState {
 - (NSError *)errorWithCode:(FBErrorCode)code
                 statusCode:(int)statusCode
         parsedJSONResponse:(id)response
-                innerError:(NSError *)innerError;
+                innerError:(NSError*)innerError
+                   message:(NSString*)message;
 
 - (NSError *)checkConnectionError:(NSError *)innerError
                        statusCode:(int)statusCode
@@ -427,9 +428,9 @@ typedef enum FBRequestConnectionState {
             [deprecatedDelegate requestLoading:self.deprecatedRequest];
         }
         
-        FBURLConnection *connection = [[FBURLConnection alloc]
-                                       initWithRequest:request
-                                       completionHandler:handler];
+        FBURLConnection *connection = [[FBURLConnection alloc] initWithRequest:request
+                                                         skipRoundTripIfCached:NO
+                                                             completionHandler:handler];
         self.connection = connection;
         [connection release];
     } else {
@@ -843,6 +844,15 @@ typedef enum FBRequestConnectionState {
                  response);
         self.urlResponse = (NSHTTPURLResponse *)response;
         statusCode = self.urlResponse.statusCode;
+        
+        if (!error && [response.MIMEType hasPrefix:@"image"]) {
+            error = [self errorWithCode:FBErrorNonTextMimeTypeReturned
+                             statusCode:0
+                     parsedJSONResponse:nil
+                             innerError:nil
+                                message:@"Response is a non-text MIME type; endpoints that return images and other "
+                                        @"binary data should be fetched using NSURLRequest and NSURLConnection"];
+        }
     } else {
         // the cached case is always successful, from an http perspective
         statusCode = 200; 
@@ -871,7 +881,8 @@ typedef enum FBRequestConnectionState {
             error = [self errorWithCode:FBErrorProtocolMismatch
                              statusCode:statusCode
                      parsedJSONResponse:results
-                             innerError:nil];
+                             innerError:nil
+                                message:nil];
         }
     }
     
@@ -970,7 +981,8 @@ typedef enum FBRequestConnectionState {
         *error = [self errorWithCode:FBErrorProtocolMismatch
                           statusCode:statusCode
                   parsedJSONResponse:results
-                          innerError:nil];
+                          innerError:nil
+                             message:nil];
     }
 
     [responseUTF8 release];
@@ -1098,7 +1110,8 @@ typedef enum FBRequestConnectionState {
             return [self errorWithCode:FBErrorRequestConnectionApi
                             statusCode:200
                     parsedJSONResponse:idResult
-                            innerError:nil];
+                            innerError:nil
+                               message:nil];
         }
 
         NSNumber *code = [dictionary valueForKey:@"code"];
@@ -1115,16 +1128,22 @@ typedef enum FBRequestConnectionState {
 - (NSError *)errorWithCode:(FBErrorCode)code
                 statusCode:(int)statusCode
         parsedJSONResponse:(id)response
-                innerError:(NSError*)innerError {
+                innerError:(NSError*)innerError
+                   message:(NSString*)message {
     NSMutableDictionary *userInfo = [[[NSMutableDictionary alloc] init] autorelease];
     [userInfo setObject:[NSNumber numberWithInt:statusCode] forKey:FBErrorHTTPStatusCodeKey];
-    
+
     if (response) {
         [userInfo setObject:response forKey:FBErrorParsedJSONResponseKey];
     }
     
     if (innerError) {
         [userInfo setObject:innerError forKey:FBErrorInnerErrorKey];
+    }
+    
+    if (message) {
+        [userInfo setObject:message
+                     forKey:NSLocalizedDescriptionKey];
     }
     
     NSError *error = [[[NSError alloc]
@@ -1151,7 +1170,8 @@ typedef enum FBRequestConnectionState {
         result = [self errorWithCode:FBErrorHTTPError
                           statusCode:statusCode
                   parsedJSONResponse:response
-                          innerError:innerError];
+                          innerError:innerError
+                             message:nil];
     }
     return result;
 }

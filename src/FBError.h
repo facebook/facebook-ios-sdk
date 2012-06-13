@@ -68,6 +68,10 @@ typedef enum FBErrorCode {
 
     /// Non-success HTTP status code was returned from the operation.
     FBErrorHTTPError,
+    
+    /// An endpoint that returns a binary response was used with FBRequestConnection;
+    /// endpoints that return image/jpg, etc. should be accessed using NSURLRequest
+    FBErrorNonTextMimeTypeReturned,
 
 } FBErrorCode;
 

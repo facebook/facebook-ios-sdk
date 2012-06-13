@@ -28,6 +28,7 @@ typedef void (^FBURLConnectionHandler)(FBURLConnection *connection,
                completionHandler:(FBURLConnectionHandler)handler;
 
 - (FBURLConnection *)initWithRequest:(NSURLRequest *)request
+               skipRoundTripIfCached:(BOOL)skipRoundtripIfCached
                    completionHandler:(FBURLConnectionHandler)handler;
 
 - (void)cancel;

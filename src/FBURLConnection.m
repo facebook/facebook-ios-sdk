@@ -31,6 +31,7 @@ static NSArray* _cdnHosts;
 @property (nonatomic, retain) NSURLResponse *response;
 @property (nonatomic) unsigned long requestStartTime;
 @property (nonatomic, readonly) NSUInteger loggerSerialNumber;
+@property (nonatomic) BOOL skipRoundtripIfCached;
 
 - (BOOL)isCDNURL:(NSURL *)url;
 
@@ -49,6 +50,7 @@ static NSArray* _cdnHosts;
 @synthesize loggerSerialNumber = _loggerSerialNumber;
 @synthesize requestStartTime = _requestStartTime;
 @synthesize response = _response;
+@synthesize skipRoundtripIfCached = _skipRoundtripIfCached;
 
 #pragma mark - Lifecycle
 
@@ -66,16 +68,22 @@ static NSArray* _cdnHosts;
                completionHandler:(FBURLConnectionHandler)handler
 {
     NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
-    return [self initWithRequest:request completionHandler:handler];
+    return [self initWithRequest:request
+           skipRoundTripIfCached:YES
+               completionHandler:handler];
 }
 
 - (FBURLConnection *)initWithRequest:(NSURLRequest *)request
+               skipRoundTripIfCached:(BOOL)skipRoundtripIfCached
                    completionHandler:(FBURLConnectionHandler)handler
 {
     if (self = [super init]) {
+        self.skipRoundtripIfCached = skipRoundtripIfCached;
+        
         // Check if this url is cached
         NSURL* url = request.URL;
-        NSData* cachedData = [[FBDataDiskCache sharedCache] dataForURL:url];
+        NSData* cachedData = skipRoundtripIfCached ? [[FBDataDiskCache sharedCache] dataForURL:url] : nil;
+        
         if (cachedData) {
             [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
                             formatString:@"FBUrlConnection: <#%d>.  Cached response %d kB\n", 
@@ -223,7 +231,7 @@ didReceiveResponse:(NSURLResponse *)response
             willSendRequest:(NSURLRequest *)request
            redirectResponse:(NSURLResponse *)redirectResponse
 {
-    if (redirectResponse) {
+    if (redirectResponse && self.skipRoundtripIfCached) {
         NSURL* redirectURL = request.URL;
         
         // Check for cache and short-circuit
