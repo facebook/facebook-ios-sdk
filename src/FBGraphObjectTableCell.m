@@ -129,17 +129,20 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 }
 
 - (void)startAnimatingActivityIndicator {
+    CGRect cellBounds = self.bounds;
     if (!self.activityIndicator) {
-        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithFrame:self.bounds];
+        UIActivityIndicatorView *activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         activityIndicator.hidesWhenStopped = YES;
-        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
         activityIndicator.autoresizingMask =
-            UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin);
         
         self.activityIndicator = activityIndicator;
         [self addSubview:activityIndicator];
         [activityIndicator release];        
     }
+
+    self.activityIndicator.center = CGPointMake(CGRectGetMidX(cellBounds), CGRectGetMidY(cellBounds));
+
     [self.activityIndicator startAnimating];
 }
 
