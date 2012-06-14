@@ -123,17 +123,22 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @class FBSession
 
  @abstract
- FBSession object is used to authenticate/authorize a user, as well
- as to manage the related access token. An FBSession object is required
- for all authenticated uses of <FBRequest>.
+ The `FBSession` object is used to authenticate a user and manage the user's session. After
+ initializing a `FBSession` object the Facebook App ID and desired permissions are stored. 
+ Opening the session will initiate the authentication flow after which a valid user session
+ should be available and subsequently cached. Closing the session can optionally clear the
+ cache.
+ 
+ If an  <FBRequest> request requires user authorization then an `FBSession` object should be used.
+
  
  @discussion
- Instances of the FBSession class notifiy of state changes in these ways:
+ Instances of the `FBSession` class provide notification of state changes in the following ways:
  
- a) callers of certain session* methods may provide a block to be called
- back in the course of state transitions for the session (e.g. login, session closed, etc.)
+ 1. Callers of certain `FBSession` methods may provide a block that will be called
+ back in the course of state transitions for the session (e.g. login or session closed).
  
- b) the object supports KVO for property changes
+ 2. The object supports Key-Value Observing (KVO) for property changes.
  */
 @interface FBSession : NSObject
 
@@ -144,18 +149,22 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*!
  @method
 
- @abstract Initializes the object using default values for the parameters to 
- <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
+ @abstract 
+ Returns a newly initialized Facebook session with default values for the parameters
+ to <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
  */
 - (id)init;
 
 /*!
  @method
  
- @abstract Initializes the object using default values for the parameters to 
- <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
+ @abstract
+ Returns a newly initialized Facebook session with the specified permissions and other
+ default values for parameters to <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
  
- @param permissions     See <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
+ @param permissions  An array of strings representing the permissions to request during the
+ authentication flow. A value of nil will indicates basic permissions. The default is nil.
+
  */
 - (id)initWithPermissions:(NSArray*)permissions;
 
@@ -166,20 +175,12 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  Following are the descriptions of the arguments along with their 
  defaults when ommitted.
  
- @discussion
- Note: for a first cut at this, we are removing the public ability
- to force an extension to an access token; instead we will implicitly do this
- when requests are made.
- 
- @param permissions          array of strings naming permissions to authorize; a 
- nil value indicates access to basic information;  default=nil
- @param appID                the Facebook App ID for the session; nil
- specifies that the default obtained by <[FBSession defaultAppID]> is used; default=nil
- @param urlSchemeSuffix      suffix, used for cases where multiple iOS apps use 
- a single appid; nil indicates the urlSchemeSuffix should be pulled from plist; default=nil
- @param tokenCachingStrategy policy object for fetching and storing a cached
- token value; when nil, the token and expiration date are stored using NSUserDefaults with 
- the names "FBAccessTokenKey", and "FBExpirationDateKey"; default=nil
+ @param permissions  An array of strings representing the permissions to request during the
+ authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
+ @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
+ @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
+ indicates a default value of @"FBAccessTokenInformationKey".
  */
 - (id)initWithAppID:(NSString*)appID
            permissions:(NSArray*)permissions
@@ -188,25 +189,25 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 // instance readonly properties         
 
-/*! @abstract indicates whether the session is open and ready for use with <FBRequest>, et al. */
+/*! @abstract Indicates whether the session is open and ready for use. */
 @property(readonly) BOOL isOpen;                      
 
-/*! @abstract detailed session state */
+/*! @abstract Detailed session state */
 @property(readonly) FBSessionState state;              
 
-/*! @abstract identifies the aplication which the session object represents */
+/*! @abstract Identifies the Facebook app which the session object represents. */
 @property(readonly, copy) NSString *appID;              
 
-/*! @abstract identifies the suffix used by the session, used when suites of applications share an appID */
+/*! @abstract Identifies the URL Scheme Suffix used by the session. This is used when multiple iOS apps share a single Facebook app ID. */
 @property(readonly, copy) NSString *urlSchemeSuffix;    
 
-/*! @abstract fetches the access token  */
+/*! @abstract The access token for the session object. */
 @property(readonly, copy) NSString *accessToken;
 
-/*! @abstract fetches the expiration date of the access token */
+/*! @abstract The expiration date of the access token for the session object. */
 @property(readonly, copy) NSDate *expirationDate;    
 
-/*! @abstract fetches an array representing the permissions granted to the access token */
+/*! @abstract The permissions granted to the access token during the authentication flow. */
 @property(readonly, copy) NSArray *permissions;
 
 /*!
@@ -216,70 +217,69 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*! 
  @method
 
- @abstract opens a session for a user on Facebook
+ @abstract Opens a session for the Facebook.
 
  @discussion
  A session may not be used with <FBRequest> and other classes in the SDK until it is open. If, prior 
  to calling open, the session is in the <FBSessionStateCreatedTokenLoaded> state, then no UX occurs, and 
  the session becomes available for use. If the session is in the <FBSessionStateCreated> state, prior
  to calling open, then a call to open causes login UX to occur, either via the Facebook application
- or via Safari.
+ or via mobile Safari.
  
- Open may be called zero or 1 time, and must be called after init, but before 
- close; calling open at an invalid time results in an exception;
- if a block is passed to open, it is called each time the sessions status 
- changes; the block is released when the session transitions to an closed state
+ Open may be called at most once and must be called after the `FBSession` is initialized. Open must
+ be called before the session is closed. Calling an open method at an invalid time will result in
+ an exception. The open session methods may be passed a block that will be called back when the session
+ state changes. The block will be released when the session is closed.
 
- @param handler                 a block to call with the state changes; default=nil
+ @param handler A block to call with the state changes. The default is nil.
 */
 - (void)openWithCompletionHandler:(FBSessionStateHandler)handler;
 
 /*! 
  @method
  
- @abstract logs a user on to Facebook
+ @abstract Logs a user on to Facebook.
  
  @discussion
  A session may not be used with <FBRequest> and other classes in the SDK until it is open. If, prior 
  to calling open, the session is in the <FBSessionStateCreatedTokenLoaded> state, then no UX occurs, and 
  the session becomes available for use. If the session is in the <FBSessionStateCreated> state, prior
  to calling open, then a call to open causes login UX to occur, either via the Facebook application
- or via Safari.
+ or via mobile Safari.
  
- Open may be called zero or 1 time, and must be called after init, but before 
- close; calling open at an invalid time results in an exception;
- if a block is passed to open, it is called each time the sessions status 
- changes; the block is released when the session transitions to an closed state
+ The method may be called at most once and must be called after the `FBSession` is initialized. It must
+ be called before the session is closed. Calling the method at an invalid time will result in
+ an exception. The open session methods may be passed a block that will be called back when the session
+ state changes. The block will be released when the session is closed.
  
- @param behavior                control whether to allow/force/prohibit SSO (default
- is <FBSessionLoginBehaviorSSOWithFallback>)
- @param handler                 a block to call with state changes; default=nil
+ @param behavior Controls whether to allow, force, or prohibit Single Sign On. The default
+ is to allow Single Sign On.
+ @param handler A block to call with session state changes. The default is nil.
  */
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
         completionHandler:(FBSessionStateHandler)handler;
 
 /*!
  @abstract
- Closes the local in-memory session object, but does not clear the persisted token cache
+ Closes the local in-memory session object, but does not clear the persisted token cache.
  */
 - (void)close;
 
 /*!
  @abstract
- Closes the in-memory session, and clears any persisted cache related to the session
+ Closes the in-memory session, and clears any persisted cache related to the session.
 */
 - (void)closeAndClearTokenInformation;
 
 /*!
  @abstract
- Reauthorizes the session, with additional permissions
+ Reauthorizes the session, with additional permissions.
   
- @param permissions         array of strings naming permissions to authorize; a 
- nil value indicates access to basic information; nil reauthorizes the current permissions
- @param behavior            control whether to allow/force/prohibit SSO (default
- is <FBSessionLoginBehaviorSSOWithFallback>)
- @param handler             a block to call with the result of the reauthorize call; 
- nil indicates no callback
+ @param permissions An array of strings representing the permissions to request during the
+ authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ @param behavior Controls whether to allow, force, or prohibit Single Sign On. The default
+ is to allow Single Sign On.
+ @param handler A block to call with session state changes. The default is nil.
  */
 - (void)reauthorizeWithPermissions:(NSArray*)permissions
                           behavior:(FBSessionLoginBehavior)behavior
@@ -287,11 +287,11 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 /*!
  @abstract
- Helper method, used to provide an implementation for 
- [UIApplicationDelegate application:openURL:sourceApplication:annotation:] capable of updating a session
- based on the url
+ A helper method that is used to provide an implementation for 
+ [UIApplicationDelegate application:openURL:sourceApplication:annotation:]. It should be invoked during
+ the Single Sign On flow and will update the session information based on the incoming URL.
  
- @param url     The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
+ @param url The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 */
 - (BOOL)handleOpenURL:(NSURL*)url;
 
@@ -302,7 +302,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*!
  @method
  
- @abstract retrieve the current Facebook SDK logging behavior.
+ @abstract Retrieve the current Facebook SDK logging behavior.
  
  */
 + (NSSet *)loggingBehavior;
@@ -310,10 +310,10 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*!
  @method
  
- @abstract set the current Facebook SDK logging behavior.  Should consist of strings defined as
-  constants with FB_LOG_BEHAVIOR_*, and can be constructed with [NSSet initWithObjects:]
+ @abstract Set the current Facebook SDK logging behavior.  This should consist of strings defined as
+  constants with FBLogBehavior*, and can be constructed with [NSSet initWithObjects:].
  
- @param loggingBehavior         a set of strings indicating what should be logged.
+ @param loggingBehavior A set of strings indicating what information should be logged.
  */
 + (void)setLoggingBehavior:(NSSet *)loggingBehavior;
 
@@ -321,9 +321,9 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @method
  
  @abstract Set the default Facebook App ID to use for sessions. The app ID may be
- overridden on a per-FBSession basis.
+ overridden on a per session basis.
  
- @param appID           the Facebook App ID to use for <FBSession>s unless overridden.
+ @param appID The default Facebook App ID to use for <FBSession> methods.
  */
 + (void)setDefaultAppID:(NSString*)appID;
 
@@ -332,7 +332,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  
  @abstract Get the default Facebook App ID to use for sessions. If not explicitly
  set, the default will be read from the application's plist. The app ID may be
- overridden on a per-FBSession basis.
+ overridden on a per session basis.
  */
 + (NSString*)defaultAppID;
 
