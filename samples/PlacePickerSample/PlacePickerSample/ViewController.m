@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import <FBiOSSDK/FacebookSDK.h>
 #import "ViewController.h"
 #import "AppDelegate.h"
 

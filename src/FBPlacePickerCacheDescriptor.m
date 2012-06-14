@@ -15,7 +15,99 @@
  */
 
 #import "FBPlacePickerCacheDescriptor.h"
+#import "FBGraphObjectTableDataSource.h"
+#import "FBGraphObjectPagingLoader.h"
+#import "FBPlacePickerViewController.h"
+#import "FBPlacePickerViewController+Internal.h"
+
+@interface FBPlacePickerCacheDescriptor () <FBGraphObjectPagingLoaderDelegate>
+
+@property (nonatomic, readwrite) CLLocationCoordinate2D *locationCoordinate; 
+@property (nonatomic, readwrite) NSInteger radiusInMeters; 
+@property (nonatomic, readwrite) NSInteger resultsLimit;
+@property (nonatomic, readwrite, copy) NSString *searchText;
+@property (nonatomic, readwrite, copy) NSSet *fieldsForRequest;
+@property (nonatomic, readwrite, retain) FBGraphObjectPagingLoader *loader;
+
+// this property is only used by unit tests, and should not be removed or made public
+@property (nonatomic, readwrite, assign) BOOL hasCompletedFetch;
+
+@end
 
 @implementation FBPlacePickerCacheDescriptor
+
+@synthesize locationCoordinate = _locationCoordinate,
+            radiusInMeters = _radiusInMeters,
+            resultsLimit = _resultsLimit,
+            searchText = _searchText,
+            fieldsForRequest = _fieldsForRequest,
+            loader = _loader,
+            hasCompletedFetch = _hasCompletedFetch;
+
+- (id)initWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
+                  radiusInMeters:(NSInteger)radiusInMeters
+                      searchText:(NSString*)searchText
+                    resultsLimit:(NSInteger)resultsLimit
+                fieldsForRequest:(NSSet*)fieldsForRequest {
+    self = [super init];
+    if (self) {
+        self.locationCoordinate = locationCoordinate;
+        self.radiusInMeters = radiusInMeters <= 0 ? defaultRadius : radiusInMeters;
+        self.resultsLimit = resultsLimit <= 0 ? defaultResultsLimit : resultsLimit;
+        self.fieldsForRequest = fieldsForRequest;
+        self.hasCompletedFetch = NO;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    self.fieldsForRequest = nil;
+    self.searchText = nil;
+    self.loader = nil;
+    [super dealloc];
+}
+
+- (void)prefetchAndCacheForSession:(FBSession*)session {
+    // datasource has some field ownership, so we need one here
+    FBGraphObjectTableDataSource *datasource = [[FBGraphObjectTableDataSource alloc]
+                                                init];
+    //datasource.groupByField = @"name";
+    
+    // create the request object that we will start with
+    FBRequest *request = [FBPlacePickerViewController requestForPlacesSearchAtCoordinate:self.locationCoordinate
+                                                                          radiusInMeters:self.radiusInMeters
+                                                                            resultsLimit:self.resultsLimit
+                                                                              searchText:self.searchText
+                                                                                  fields:self.fieldsForRequest
+                                                                              datasource:datasource
+                                                                                 session:session];
+    
+    self.loader.delegate = nil;
+    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource];
+    self.loader.session = session;
+    [self.loader release];
+    
+    self.loader.delegate = self;
+    self.loader.pagingMode = FBGraphObjectPagingModeImmediateViewless;
+    
+    // make sure we are around to handle the delegate call
+    [self retain];
+    
+    // seed the cache
+    [self.loader startLoadingWithRequest:request
+                           cacheIdentity:FBPlacePickerCacheIdentity
+                   skipRoundtripIfCached:NO];
+    
+    [datasource release];
+}
+
+- (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
+    self.loader.delegate = nil;
+    self.loader = nil;
+    self.hasCompletedFetch = YES;
+    
+    // this feels like suicide!
+    [self release];    
+}
 
 @end

@@ -18,6 +18,7 @@
 #import <CoreLocation/CoreLocation.h>
 #import "FBGraphPlace.h"
 #import "FBSession.h"
+#import "FBCacheDescriptor.h"
 
 @protocol FBPlacePickerDelegate;
 
@@ -125,10 +126,46 @@
 
 /*!
  @abstract
+ Configures the properties that impact any queries made by the view controller, using a cacheDescriptor
+ 
+ @discussion
+ Cache descriptors are used to fetch and cache the data used by the ViewController, at some point
+ prior in the execution of the application. If the ViewController finds a cached copy of the data, it will
+ first display the cached content, and then fetch a fresh copy from the server.
+ 
+ @param cacheDescriptor     an <FBCacheDescriptor> to pull properties from
+ */
+- (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
+
+/*!
+ @abstract
  Causes the view controller to fetch data, either initialler, or in order to update the view
  as a result of changes to search criteria, filter, location, etc.
  */
 - (void)loadData;
+
+/*!
+ @method
+ 
+ @param locationCoordinate              coordinates for which you wish to pre-fetch results
+ @param radiusInMeters                  radius to search for places; 0 = default
+ @param searchText                      additional search text to refine places list
+ @param resultsLimit                    set maximum results returned; 0 = default
+ @param fieldsForRequest                set of additional fields to include in request for friends 
+ 
+ @abstract
+ Creates a cache descriptor with additional fields and a userID for use with FBFriendPickerViewController
+ 
+ @discussion
+ A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
+ may also be used to configure a FBFriendPickerViewController object at time of use
+ 
+ */
++ (FBCacheDescriptor*)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
+                                             radiusInMeters:(NSInteger)radiusInMeters
+                                                 searchText:(NSString*)searchText
+                                               resultsLimit:(NSInteger)resultsLimit
+                                           fieldsForRequest:(NSSet*)fieldsForRequest;
 
 @end
 

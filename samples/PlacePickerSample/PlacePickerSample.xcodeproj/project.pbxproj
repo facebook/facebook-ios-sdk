@@ -98,7 +98,6 @@
 				B9AF4BC0152E43EE00E9BA6C /* ViewController_iPad.xib */,
 				B9AF4BAF152E43EE00E9BA6C /* Supporting Files */,
 			);
-			name = PlacePickerSample;
 			path = PlacePickerSample;
 			sourceTree = "<group>";
 		};
@@ -274,6 +273,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
 				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -290,6 +290,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
 				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

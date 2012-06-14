@@ -23,10 +23,13 @@
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
+#import "FBPlacePickerCacheDescriptor.h"
+
+NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
 static const NSInteger searchTextChangedTimerInterval = 2;
-static const NSInteger defaultResultsLimit = 100;
-static const NSInteger defaultRadius = 1000; // 1km
+const NSInteger defaultResultsLimit = 100;
+const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
 @"FBiOSSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
@@ -41,7 +44,7 @@ static NSString *defaultImageName =
 @property (nonatomic, retain) NSTimer *searchTextChangedTimer;
 
 - (void)initialize;
-- (void)loadDataPostThrottle;
+- (void)loadDataPostThrottleSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached;
 - (NSTimer *)createSearchTextChangedTimer;
 - (void)updateView;
 - (void)centerAndStartSpinner;
@@ -189,10 +192,42 @@ static NSString *defaultImageName =
     // in 2 seconds, we reset so the next change will cause an immediate re-query.)
     if (!self.searchTextChangedTimer) {
         self.searchTextChangedTimer = [self createSearchTextChangedTimer];
-        [self loadDataPostThrottle];
+        [self loadDataPostThrottleSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
     } else {
         _hasSearchTextChangedSinceLastQuery = YES;
     }
+}
+
+- (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor {
+    if (![cacheDescriptor isKindOfClass:[FBPlacePickerCacheDescriptor class]]) {
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:@"FBPlacePickerViewController: An attempt was made to configure "
+                                        @"an instance with a cache descriptor object that was not created "
+                                        @"by the FBPlacePickerViewController class"
+                               userInfo:nil]
+         raise];
+    }
+    FBPlacePickerCacheDescriptor *cd = (FBPlacePickerCacheDescriptor*)cacheDescriptor;
+    self.locationCoordinate = cd.locationCoordinate;
+    self.radiusInMeters = cd.radiusInMeters;
+    self.resultsLimit = cd.resultsLimit;
+    self.searchText = cd.searchText;
+    self.fieldsForRequest = cd.fieldsForRequest;
+}
+
+#pragma mark - Public Class Methods
+
++ (FBCacheDescriptor*)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
+                                             radiusInMeters:(NSInteger)radiusInMeters
+                                                 searchText:(NSString*)searchText
+                                               resultsLimit:(NSInteger)resultsLimit
+                                           fieldsForRequest:(NSSet*)fieldsForRequest {
+    
+    return [[FBPlacePickerCacheDescriptor alloc] initWithLocationCoordinate:locationCoordinate
+                                                             radiusInMeters:radiusInMeters
+                                                                 searchText:searchText
+                                                               resultsLimit:resultsLimit
+                                                           fieldsForRequest:fieldsForRequest];
 }
 
 #pragma mark - private methods
@@ -239,23 +274,46 @@ static NSString *defaultImageName =
     self.tableView = nil;
 }
 
-- (void)loadDataPostThrottle
-{
-    FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:self.locationCoordinate 
-                                                        radiusInMeters:self.radiusInMeters
-                                                          resultsLimit:self.resultsLimit
-                                                            searchText:self.searchText
-                                                               session:self.session];
++ (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                  radiusInMeters:(NSInteger)radius
+                                    resultsLimit:(NSInteger)resultsLimit
+                                      searchText:(NSString*)searchText
+                                          fields:(NSSet*)fieldsForRequest
+                                      datasource:(FBGraphObjectTableDataSource*)datasource
+                                         session:(FBSession*)session {
     
-    NSString *fields = [self.dataSource fieldsForRequestIncluding:self.fieldsForRequest,
-                        @"id", @"name", @"location", @"category", @"picture", nil];
+    FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
+                                                        radiusInMeters:radius
+                                                          resultsLimit:resultsLimit
+                                                            searchText:searchText
+                                                               session:session];
+    
+    NSString *fields = [datasource fieldsForRequestIncluding:fieldsForRequest,
+                        @"id",
+                        @"name",
+                        @"location",
+                        @"category",
+                        @"picture",
+                        nil];
+    
     [request.parameters setObject:fields forKey:@"fields"];
+    
+    return request;
+}
 
+- (void)loadDataPostThrottleSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached {
+    FBRequest *request = [FBPlacePickerViewController requestForPlacesSearchAtCoordinate:self.locationCoordinate
+                                                                          radiusInMeters:self.radiusInMeters
+                                                                            resultsLimit:self.resultsLimit
+                                                                              searchText:self.searchText
+                                                                                  fields:self.fieldsForRequest
+                                                                              datasource:self.dataSource
+                                                                                 session:self.session];
     _hasSearchTextChangedSinceLastQuery = NO;
     [self.loader startLoadingWithRequest:request
-                           cacheIdentity:nil
-                   skipRoundtripIfCached:NO];
-    [self updateView];
+                           cacheIdentity:FBPlacePickerCacheIdentity
+                   skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
+    [self updateView];    
 }
 
 - (void)updateView
@@ -276,7 +334,7 @@ static NSString *defaultImageName =
 - (void)searchTextChangedTimerFired:(NSTimer *)timer
 {
     if (_hasSearchTextChangedSinceLastQuery) {
-        [self loadDataPostThrottle];
+        [self loadDataPostThrottleSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
     } else {
         // Nothing has changed in 2 seconds. Invalidate and forget about this timer.
         // Next time the user types, we will fire a query immediately again.
@@ -370,6 +428,11 @@ static NSString *defaultImageName =
 - (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
     // No more results, stop spinner
     [self.spinner stopAnimating];
+    
+    // if our current display is from cache, then kick-off a near-term refresh
+    if (pagingLoader.isResultFromCache) {
+        [self loadDataPostThrottleSkippingRoundTripIfCached:[NSNumber numberWithBool:NO]];
+    }    
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

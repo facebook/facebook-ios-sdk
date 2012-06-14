@@ -15,8 +15,22 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
 #import "FBCacheDescriptor.h"
 
 @interface FBPlacePickerCacheDescriptor : FBCacheDescriptor
 
+- (id)initWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
+                  radiusInMeters:(NSInteger)radiusInMeters
+                      searchText:(NSString*)searchText
+                    resultsLimit:(NSInteger)resultsLimit
+                fieldsForRequest:(NSSet*)fieldsForRequest;
+ 
+@property (nonatomic, readonly) CLLocationCoordinate2D locationCoordinate; 
+@property (nonatomic, readonly) NSInteger radiusInMeters; 
+@property (nonatomic, readonly) NSInteger resultsLimit;
+@property (nonatomic, readonly, copy) NSString *searchText;
+@property (nonatomic, readonly, copy) NSSet *fieldsForRequest;
+
 @end
+
