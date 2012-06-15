@@ -55,63 +55,80 @@ typedef enum {
  @class
  
  @abstract 
- FBFriendPickerViewController object is used to create and coordinate UI
- for viewing and selecting friends.
+ The `FBFriendPickerViewController` class creates a controller object that manages 
+ the user interface for displaying and selecting Facebook friends.
+ 
+ @discussion
+ When the `FBFriendPickerViewController` view loads it creates a `UITableView` object 
+ where the friends will be displayed. You can access this view through the `tableView` 
+ property. The friend display can be sorted by first name or last name. Friends'
+ names can be displayed with the first name first or the last name first.
+ 
+ The friend data can be pre-fetched and cached prior to using the view controller. The
+ cache is setup using an <FBCacheDescriptor> object that can trigger the
+ data fetch. Any friend data requests will first check the cache and use that data.
+ If the friend picker is being displayed cached data will initially be shown before
+ a fresh copy is retrieved.
+ 
+ The `delegate` property may be set to an object that conforms to the <FBFriendPickerDelegate>
+ protocol. The `delegate` object will receive updates related to friend selection and
+ data changes. The delegate can also be used to filter the friends to display in the
+ picker.
  */
 @interface FBFriendPickerViewController : UIViewController
 
 /*!
  @abstract
- Outlet for the spinner object used by the view controller
+ Returns an outlet for the spinner used in the view controller.
  */
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
 
 /*!
  @abstract
- Outlet for the tableView used by the view controller
+ Returns an outlet for the table view managed by the view controller.
  */
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 /*!
  @abstract
- specifies whether multi-selelect is enabled
+ A Boolean value that specifies whether multi-selelect is enabled.
  */
 @property (nonatomic) BOOL allowsMultipleSelection;
 
 /*!
  @abstract
- Optional delegate
+ The delegate object that receives updates for selection and display control.
  */
 @property (nonatomic, assign) id<FBFriendPickerDelegate> delegate;
 
 /*!
  @abstract
- Indicates whether pictures are enabled for the items
+ A Boolean value that indicates whether friend profile pictures are displayed.
  */
 @property (nonatomic) BOOL itemPicturesEnabled;
 
 /*!
  @abstract
- Fields to use when fetching data for the view
+ Addtional fields to fetch when making the Graph API call to get friend data.
  */
 @property (nonatomic, copy) NSSet *fieldsForRequest;
 
 /*!
  @abstract
- Indicates the session to use with the view
+ The session that is used in the request for friend data.
  */
 @property (nonatomic, retain) FBSession *session;
 
 /*!
  @abstract
- Indicates the fbid of the user whose friends are being viewed
+ The profile ID of the user whose friends are being viewed.
  */
 @property (nonatomic, copy) NSString *userID;
 
 /*!
  @abstract
- The list of people that are currently selected in the veiw.
- The items in the array are id<FBGraphUser>.
+ The list of friends that are currently selected in the veiw.
+ The items in the array are <FBGraphUser> objects.
  */
 @property (nonatomic, retain, readonly) NSArray *selection;
 
@@ -123,21 +140,21 @@ typedef enum {
 
 /*!
  @abstract
- The order in which friends' names are constructed.
+ The order in which friends' names are displayed.
  */
 @property (nonatomic) FBFriendDisplayOrdering displayOrdering;
 
 /*!
  @abstract
- Used to initialize the object
+ Initializes a friend picker view controller.
  */
 - (id)init;
 
 /*!
  @abstract
- Used to initialize the object
+ Initializes a friend picker view controller.
 
- @param aDecoder        See [UIViewController initWithCoder:].
+ @param aDecoder        An unarchiver object.
  */
 - (id)initWithCoder:(NSCoder *)aDecoder;
 
@@ -145,38 +162,41 @@ typedef enum {
  @abstract
  Used to initialize the object
  
- @param nibNameOrNil            See [UIViewController initWithNibName:bundle:].
- @param nibBundleOrNil          See [UIViewController initWithNibName:bundle:].
+ @param nibNameOrNil            The name of the nib file to associate with the view controller. The nib file name should not contain any leading path information. If you specify nil, the nibName property is set to nil.
+ @param nibBundleOrNil          The bundle in which to search for the nib file. This method looks for the nib file in the bundle's language-specific project directories first, followed by the Resources directory. If nil, this method looks for the nib file in the main bundle.
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
 /*!
  @abstract
- Configures the properties that impact any queries made by the view controller, using a cacheDescriptor
+ Configures the properties used in the caching data queries.
  
  @discussion
- Cache descriptors are used to fetch and cache the data used by the ViewController, at some point
- prior in the execution of the application. If the ViewController finds a cached copy of the data, it will
- first display the cached content, and then fetch a fresh copy from the server.
+ Cache descriptors are used to fetch and cache the data used by the view controller.
+ If the view controller finds a cached copy of the data, it will
+ first display the cached content then fetch a fresh copy from the server.
  
- @param cacheDescriptor     an <FBCacheDescriptor> to pull properties from
+ @param cacheDescriptor     The <FBCacheDescriptor> containing the cache query properties.
  */
 - (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
 
 /*!
  @abstract
- Starts a query against the server for a set of friends.  It is legal
- to call this more than once.
+ Initiates a query to get friend data. 
+ 
+ @discussion
+ A cached copy will be returned if available. The cached view is temporary until a fresh copy is
+ retrieved from the server. It is legal to call this more than once.
  */
 - (void)loadData;
 
 /*!
  @abstract
- Updates the view locally without requerying data from the server.
+ Updates the view locally without fetching data from the server or from cache.
  
  @discussion
- Use this if filter/sort properties change that would affect which
- people appear or what order they appear in.
+ Use this if the filter or sort properties change. This may affect the order or
+ display of friend information but should not need require new data.
  */
 - (void)updateView;
 
@@ -184,27 +204,28 @@ typedef enum {
  @method
  
  @abstract
- Creates a cache descriptor based on default settings of FBFriendPickerViewController
+ Creates a cache descriptor based on default settings of the `FBFriendPickerViewController` object.
  
  @discussion
- A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
- may also be used to configure a FBFriendPickerViewController object at time of use
+ An `FBCacheDescriptor` object may be used to pre-fetch data before it is used by
+ the view controller. It may also be used to configure the `FBFriendPickerViewController` 
+ object.
  */
 + (FBCacheDescriptor*)cacheDescriptor;
 
 /*!
  @method
-
- @param userID              fbid of the user whose friends we wish to display; nil='me'
- @param fieldsForRequest    set of additional fields to include in request for friends 
  
  @abstract
- Creates a cache descriptor with additional fields and a userID for use with FBFriendPickerViewController
+ Creates a cache descriptor with additional fields and a profile ID for use with the `FBFriendPickerViewController` object.
  
  @discussion
- A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
- may also be used to configure a FBFriendPickerViewController object at time of use
+ An `FBCacheDescriptor` object may be used to pre-fetch data before it is used by
+ the view controller. It may also be used to configure the `FBFriendPickerViewController` 
+ object.
  
+ @param userID              The profile ID of the user whose friends will be displayed. A nil value implies a "me" alias. 
+ @param fieldsForRequest    The set of additional fields to include in the request for friend data. 
  */
 + (FBCacheDescriptor*)cacheDescriptorWithUserID:(NSString*)userID fieldsForRequest:(NSSet*)fieldsForRequest;
 
@@ -214,52 +235,53 @@ typedef enum {
  @protocol
  
  @abstract 
- Used by the FBFriendPickerViewController to (optionally) notify clients of events and allow for
- deeper control of the view
+ The `FBFriendPickerDelegate` protocol defines the methods used to receive event 
+ notifications and allow for deeper control of the <FBFriendPickerViewController>
+ view.
  */
 @protocol FBFriendPickerDelegate <NSObject>
 @optional
 
 /*!
  @abstract 
- Called whenever data is loaded.
+ Tells the delegate that data has been loaded.
 
  @discussion
- The tableView is automatically reloaded when this happens, but if
- another tableView (such as for a UISearchBar) is showing data then
- it may need to be reloaded too.
+ The <FBFriendPickerViewController> object's `tableView` property is automatically 
+ reloaded when this happens. However, if another table view, for example the
+ `UISearchBar` is showing data, then it may also need to be reloaded.
 
- @param friendPicker        the friend picker whose data changed
+ @param friendPicker        The friend picker view controller whose data changed.
  */
 - (void)friendPickerViewControllerDataDidChange:(FBFriendPickerViewController *)friendPicker;
 
 /*!
  @abstract
- Called whenever the selection changes.
+ Tells the delegate that the selection has changed.
 
- @param friendPicker        the friend picker whose selection changed
+ @param friendPicker        The friend picker view controller whose selection changed.
  */
 - (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker;
 
 /*!
  @abstract
- Called on each user to determine whether they show up in the list.
+ Asks the delegate whether to include a friend in the list.
  
  @discussion
- This can be used to implement a search bar that filters the list.
+ This can be used to implement a search bar that filters the friend list.
 
- @param friendPicker        the friend picker that is asking whether to display a user
- @param user                an <FBGraphUser> object representing the user to show (or not)
+ @param friendPicker        The friend picker view controller that is requesting this information.
+ @param user                An <FBGraphUser> object representing the friend.
  */
 - (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                  shouldIncludeUser:(id <FBGraphUser>)user;
 
 /*!
  @abstract
- Called if there is a communication error.
+ Tells the delegate that there is a communication error.
 
- @param friendPicker        the friend picker that encountered the error
- @param error               the error that occurred
+ @param friendPicker        The friend picker view controller that encountered the error.
+ @param error               An error object containing details of the error.
  */
 - (void)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                        handleError:(NSError *)error;
