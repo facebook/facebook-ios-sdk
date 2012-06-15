@@ -22,7 +22,7 @@
 
 @interface FBPlacePickerCacheDescriptor () <FBGraphObjectPagingLoaderDelegate>
 
-@property (nonatomic, readwrite) CLLocationCoordinate2D *locationCoordinate; 
+@property (nonatomic, readwrite) CLLocationCoordinate2D locationCoordinate; 
 @property (nonatomic, readwrite) NSInteger radiusInMeters; 
 @property (nonatomic, readwrite) NSInteger resultsLimit;
 @property (nonatomic, readwrite, copy) NSString *searchText;

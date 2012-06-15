@@ -313,6 +313,48 @@
     STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
 }
 
+- (id)postEvent
+{
+    id<FBGraphObject> event = [FBGraphObject graphObject];
+    [event setObject:[NSString stringWithFormat:@"My event on %@", [NSDate date]]
+              forKey:@"name"];
+    [event setObject:@"This is a great event. You should all come."
+              forKey:@"description"];
+    NSDate *startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
+    NSDate *endTime = [NSDate dateWithTimeInterval:3600 sinceDate:startTime];
+    [event setObject:startTime forKey:@"start_time"];
+    [event setObject:endTime forKey:@"end_time"];
+    [event setObject:@"My house" forKey:@"location"];
+    [event setObject:@"CLOSED" forKey:@"privacy"];
+
+    return [self batchedPostAndGetWithSession:self.defaultTestSession
+                                    graphPath:@"me/events"
+                                  graphObject:event];
+}
+
+- (void)testEventRoundTrip
+{
+    [self logRequestsAndConnections];
+
+    id postedEvent = [self postEvent];
+    STAssertNotNil(postedEvent, @"no event");
+    
+    [postedEvent removeObjectForKey:@"id"];
+
+    id event2 = [self batchedPostAndGetWithSession:self.defaultTestSession
+                                         graphPath:@"me/events"
+                                       graphObject:postedEvent];
+    STAssertNotNil(event2, @"no event");
+}
+
+- (NSArray*)permissionsForDefaultTestSession
+{
+    return [NSArray arrayWithObjects:@"email", 
+            @"publish_actions",
+            @"create_event", 
+            nil];
+}
+
 @end
 
 #endif

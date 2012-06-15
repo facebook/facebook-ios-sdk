@@ -72,15 +72,11 @@
 - (id<FBOGRunTestAction>)createComplexOpenGraphAction:(NSString*)taggedUserID {
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingComplexOpenGraphAction"];
     
-    id<FBGraphPlace> placeObject = (id<FBGraphPlace>)[FBGraphObject graphObject];
-    placeObject.id = @"154981434517851";
-    
     id<FBGraphUser> userObject = (id<FBGraphUser>)[FBGraphObject graphObject];
     userObject.id = taggedUserID;
     
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;
-    action.place = placeObject;
     action.tags = [NSArray arrayWithObject:userObject];
     
     NSMutableDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -105,7 +101,6 @@
                          graphObject:action 
                        hasProperties:[NSArray arrayWithObjects:
                                       @"image", 
-                                      @"place",
                                       @"tags",
                                       nil]];
 }
@@ -124,7 +119,6 @@
     [self validateGraphObject:postedAction
                 hasProperties:[NSArray arrayWithObjects:
                                @"image", 
-                               @"place",
                                @"tags",
                                nil]];
 }
