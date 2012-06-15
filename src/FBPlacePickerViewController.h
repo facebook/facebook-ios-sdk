@@ -26,71 +26,84 @@
  @class FBPlacePickerViewController
  
  @abstract
- FBPlacePickerViewController object is used to create and coordinate UI
- for viewing and picking places.
+ The `FBPlacePickerViewController` class creates a controller object that manages 
+ the user interface for displaying and selecting nearby places.
  
- @unsorted
+ @discussion
+ When the `FBPlacePickerViewController` view loads it creates a `UITableView` object 
+ where the places near a given location will be displayed. You can access this view 
+ through the `tableView` property.
+ 
+ The place data can be pre-fetched and cached prior to using the view controller. The
+ cache is setup using an <FBCacheDescriptor> object that can trigger the
+ data fetch. Any place data requests will first check the cache and use that data.
+ If the place picker is being displayed cached data will initially be shown before
+ a fresh copy is retrieved.
+ 
+ The `delegate` property may be set to an object that conforms to the <FBPlacePickerDelegate>
+ protocol. The `delegate` object will receive updates related to place selection and
+ data changes. The delegate can also be used to filter the places to display in the
+ picker.
  */
 @interface FBPlacePickerViewController : UIViewController
 
 /*!
  @abstract
- Outlet for the spinner object used by the view controller
+ Returns an outlet for the spinner used in the view controller.
  */
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *spinner;
 
 /*!
  @abstract
- Outlet for the tableView object used by the view controller
+ Returns an outlet for the table view managed by the view controller.
  */
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
 
 /*!
  @abstract
- Delegate used by the view controller to notify of selection changes, and handle
- errors and filtering.
+ The delegate object that receives updates for selection and display control.
  */
 @property (nonatomic, assign) id<FBPlacePickerDelegate> delegate;
 
 /*!
  @abstract
- Set of fields which should be requested by the view controler for use either in display or filtering
+ Addtional fields to fetch when making the Graph API call to get place data.
  */
 @property (nonatomic, copy) NSSet *fieldsForRequest;
 
 /*!
  @abstract
- Indicates whether items pictures should be fetched and displayed
+ A Boolean value that indicates whether place profile pictures are displayed.
  */
 @property (nonatomic) BOOL itemPicturesEnabled;
 
 /*!
  @abstract
- Sets the coordinates to use for place discovery
+ The coordinates to use for place discovery.
  */
 @property (nonatomic) CLLocationCoordinate2D locationCoordinate;
 
 /*!
  @abstract
- Sets the radius to use for place discovery
+ The radius to use for place discovery.
  */
 @property (nonatomic) NSInteger radiusInMeters;
 
 /*!
  @abstract
- Maximum number of places to fetch
+ The maximum number of places to fetch.
  */
 @property (nonatomic) NSInteger resultsLimit;
 
 /*!
  @abstract
- Search words used to narrow results returned
+ The search words used to narrow down the results returned.
  */
 @property (nonatomic, copy) NSString *searchText;
 
 /*!
  @abstract
- User session
+ The session that is used in the request for place data.
  */
 @property (nonatomic, retain) FBSession *session;
 
@@ -103,63 +116,69 @@
 
 /*!
  @abstract
- Initializes an instance of the view controller
+ Initializes a place picker view controller.
  */
 - (id)init;
 
 /*!
  @abstract
- Initializes an instance of the view controller
+ Initializes a place picker view controller.
  
- @param aDecoder        See [UIViewController initWithCoder:].
+ @param aDecoder        An unarchiver object.
  */
 - (id)initWithCoder:(NSCoder *)aDecoder;
 
 /*!
  @abstract
- Initializes an instance of the view controller
+ Initializes a place picker view controller.
  
- @param nibNameOrNil            See [UIViewController initWithNibName:bundle:].
- @param nibBundleOrNil          See [UIViewController initWithNibName:bundle:].
+ @param nibNameOrNil            The name of the nib file to associate with the view controller. The nib file name should not contain any leading path information. If you specify nil, the nibName property is set to nil.
+ @param nibBundleOrNil          The bundle in which to search for the nib file. This method looks for the nib file in the bundle's language-specific project directories first, followed by the Resources directory. If nil, this method looks for the nib file in the main bundle.
  */
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
 /*!
  @abstract
- Configures the properties that impact any queries made by the view controller, using a cacheDescriptor
+ Configures the properties used in the caching data queries.
  
  @discussion
- Cache descriptors are used to fetch and cache the data used by the ViewController, at some point
- prior in the execution of the application. If the ViewController finds a cached copy of the data, it will
- first display the cached content, and then fetch a fresh copy from the server.
+ Cache descriptors are used to fetch and cache the data used by the view controller.
+ If the view controller finds a cached copy of the data, it will
+ first display the cached content then fetch a fresh copy from the server.
  
- @param cacheDescriptor     an <FBCacheDescriptor> to pull properties from
+ @param cacheDescriptor     The <FBCacheDescriptor> containing the cache query properties.
  */
 - (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
 
 /*!
  @abstract
- Causes the view controller to fetch data, either initialler, or in order to update the view
- as a result of changes to search criteria, filter, location, etc.
+ Initiates a query to get place data the first time or in response to changes in
+ the search criteria, filter, or location information.
+ 
+ 
+ @discussion
+ A cached copy will be returned if available. The cached view is temporary until a fresh copy is
+ retrieved from the server. It is legal to call this more than once.
  */
 - (void)loadData;
 
 /*!
  @method
  
- @param locationCoordinate              coordinates for which you wish to pre-fetch results
- @param radiusInMeters                  radius to search for places; 0 = default
- @param searchText                      additional search text to refine places list
- @param resultsLimit                    set maximum results returned; 0 = default
- @param fieldsForRequest                set of additional fields to include in request for friends 
- 
  @abstract
- Creates a cache descriptor with additional fields and a userID for use with FBFriendPickerViewController
+ Creates a cache descriptor with additional fields and a profile ID for use with the
+ `FBPlacePickerViewController` object.
  
  @discussion
- A cacheDescriptor object may be used to fetch data ahead of use by the FBFriendPickerViewController, and
- may also be used to configure a FBFriendPickerViewController object at time of use
+ An `FBCacheDescriptor` object may be used to pre-fetch data before it is used by
+ the view controller. It may also be used to configure the `FBPlacePickerViewController` 
+ object.
  
+ @param locationCoordinate              The coordinates to use for place discovery.
+ @param radiusInMeters                  The radius to use for place discovery.
+ @param searchText                      The search words used to narrow down the results returned.
+ @param resultsLimit                    The maximum number of places to fetch.
+ @param fieldsForRequest                Addtional fields to fetch when making the Graph API call to get place data. 
  */
 + (FBCacheDescriptor*)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
                                              radiusInMeters:(NSInteger)radiusInMeters
@@ -173,48 +192,45 @@
  @protocol 
  
  @abstract
- If a conforming delegate is provided, the view controller will notify the delegate of selection change,
- filter and error events
+ The `FBPlacePickerDelegate` protocol defines the methods used to receive event 
+ notifications and allow for deeper control of the <FBPlacePickerViewController>
+ view.
  */
 @protocol FBPlacePickerDelegate <NSObject>
 @optional
 
 /*!
  @abstract
- Called whenever data is loaded.
+ Tells the delegate that data has been loaded.
 
  @discussion
- The tableView is automatically reloaded when this happens, but if
- another tableView (such as for a UISearchBar) is showing data then
- it may need to be reloaded too.
+ The <FBPlacePickerViewController> object's `tableView` property is automatically 
+ reloaded when this happens. However, if another table view, for example the
+ `UISearchBar` is showing data, then it may also need to be reloaded.
  
- @param placePicker   the view controller object sending the notification
+ @param placePicker   The place picker view controller whose data changed.
  */
 - (void)placePickerViewControllerDataDidChange:
 (FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
- Called whenever the selection changes.
- @discussion
- The tableView is automatically reloaded when this happens, but if
- another tableView (such as for a UISearchBar) is showing data then
- it may need to be reloaded too.
+ Tells the delegate that the selection has changed.
  
- @param placePicker   the view controller object sending the notification
+ @param placePicker   The place picker view controller whose selection changed.
  */
 - (void)placePickerViewControllerSelectionDidChange:
 (FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
- Called on each user to determine whether they show up in the list.
+ Asks the delegate whether to include a place in the list.
   
  @discussion
- This can be used to implement a search bar that filters the list.
+ This can be used to implement a search bar that filters the places list.
  
- @param placePicker         the place picker that is asking whether to display a place
- @param place               an <FBGraphPlace> object representing the place to show (or not)
+ @param placePicker         The place picker view controller that is requesting this information.
+ @param place               An <FBGraphPlace> object representing the place.
  */
 - (BOOL)placePickerViewController:(FBPlacePickerViewController *)placePicker
                 shouldIncludePlace:(id <FBGraphPlace>)place;
@@ -223,8 +239,8 @@
  @abstract
  Called if there is a communication error.
 
- @param placePicker         the place picker that encountered the error
- @param error               the error that occurred
+ @param placePicker         The place picker view controller that encountered the error.
+ @param error               An error object containing details of the error.
  */
 - (void)placePickerViewController:(FBPlacePickerViewController *)placePicker
                        handleError:(NSError *)error;
