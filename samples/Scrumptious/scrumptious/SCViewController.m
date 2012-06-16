@@ -23,10 +23,13 @@
 #import <AddressBook/AddressBook.h>
 #import "TargetConditionals.h"
 
-@interface SCViewController()<UITableViewDataSource, UIImagePickerControllerDelegate, FBFriendPickerDelegate,
-    UINavigationControllerDelegate, FBPlacePickerDelegate,
-    CLLocationManagerDelegate, UIActionSheetDelegate> {
-}
+@interface SCViewController() < UITableViewDataSource, 
+                                UIImagePickerControllerDelegate,
+                                FBFriendPickerDelegate,
+                                UINavigationControllerDelegate,
+                                FBPlacePickerDelegate,
+                                CLLocationManagerDelegate,
+                                UIActionSheetDelegate>
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (strong, nonatomic) FBPlacePickerViewController *placePickerController;
@@ -495,6 +498,16 @@
             }
             self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
             self.placePickerController.session = self.session;
+            
+            // SIMULATOR BUG:
+            // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
+            // at times the simulator fails to fetch a location; when that happens rather than fetch a
+            // a meal near 0,0 -- let's see if we can find something good in Paris
+            if (!(self.placePickerController.locationCoordinate.latitude || 
+                  self.placePickerController.locationCoordinate.longitude)) {
+                self.placePickerController.locationCoordinate = CLLocationCoordinate2DMake(48.857875, 2.294635);
+            }
+            
             [self.placePickerController loadData];
             target = self.placePickerController;
             break;
