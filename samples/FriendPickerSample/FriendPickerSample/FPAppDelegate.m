@@ -17,26 +17,21 @@
 #import "FPAppDelegate.h"
 #import "FPViewController.h"
 
-@implementation FPAppDelegate {
-@private
-    FBSession *_session;
-    FPViewController *_viewController;
-    UIWindow *_window;
-}
+@implementation FPAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 @synthesize session = _session;
 
 // Necessary for FB login to work
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication annotation:(id)annotation 
-{
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation {
     return [self.session handleOpenURL:url]; 
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // BUG:
     // Nib files require the type to have been loaded before they can do the
     // wireup successfully.  
@@ -57,8 +52,7 @@
     return YES;
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application
-{
+- (void)applicationWillTerminate:(UIApplication *)application {
     // Close the session token before quitting
     [self.session close];
 }

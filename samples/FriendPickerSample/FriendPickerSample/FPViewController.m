@@ -35,8 +35,7 @@
 @synthesize sortBySegmentedControl = _sortBySegmentedControl;
 @synthesize displayBySegmentedControl = _displayBySegmentedControl;
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.sortBySegmentedControl.selectedSegmentIndex = 0;
@@ -47,8 +46,7 @@
     [self sessionChanged];
 }
 
-- (void)sessionChanged
-{
+- (void)sessionChanged {
     FPAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session.isOpen) {
         self.session = appDelegate.session;
@@ -78,23 +76,19 @@
     }
 }
 
-- (IBAction)sortBySegmentedControlValueChanged:(id)sender 
-{
+- (IBAction)sortBySegmentedControlValueChanged:(id)sender {
     self.sortOrdering = ([sender selectedSegmentIndex] == 0) ? FBFriendSortByFirstName : FBFriendSortByLastName;
     [self loadData];
 }
 
-- (IBAction)displayBySegmentedControlValueChanged:(id)sender 
-{
+- (IBAction)displayBySegmentedControlValueChanged:(id)sender {
     self.displayOrdering = ([sender selectedSegmentIndex] == 0) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
     [self loadData];
 }
 
 #pragma mark - FBFriendPickerDelegate implementation
 
-- (void)friendPickerViewControllerSelectionDidChange:
-(FBFriendPickerViewController *)friendPicker
-{
+- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
     NSMutableString *text = [[NSMutableString alloc] init];
 
     for (id<FBGraphUser> user in self.selection) {

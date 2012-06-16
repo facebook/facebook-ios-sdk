@@ -26,7 +26,7 @@ enum SampleLocation {
 
 @interface ViewController () <CLLocationManagerDelegate, FBPlacePickerDelegate>
 
-@property (strong, nonatomic) CLLocationManager* locationManager;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSInteger viewStateSearchScopeIndex;
 @property (nonatomic, copy) NSString *viewStateSearchText;
 @property (nonatomic) BOOL viewStateSearchWasActive;
@@ -42,9 +42,8 @@ enum SampleLocation {
 @synthesize viewStateSearchText = _viewStateSearchText;
 @synthesize viewStateSearchWasActive = _viewStateSearchWasActive;
 
-- (void)refresh
-{
-    AppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+- (void)refresh {
+    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     if (appDelegate.session.isOpen) {
         self.session = appDelegate.session;
 
@@ -57,22 +56,19 @@ enum SampleLocation {
                 if (!error) {
                     [self refresh];
                 } else {
-                    UIAlertView* alertView = 
-                    [[UIAlertView alloc] initWithTitle:@"Error"
-                        message:error.localizedDescription
-                        delegate:nil
-                        cancelButtonTitle:@"OK" 
-                        otherButtonTitles:nil];
-                    [alertView show];
+                    [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                message:error.localizedDescription
+                                               delegate:nil
+                                      cancelButtonTitle:@"OK" 
+                                      otherButtonTitles:nil]
+                     show];
                 }
             }
         ];
     }
 }
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller
-shouldReloadTableForSearchScope:(NSInteger)searchOption
-{
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
     switch (searchOption) {
         case SampleLocationSeattle:
             self.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
@@ -93,9 +89,7 @@ shouldReloadTableForSearchScope:(NSInteger)searchOption
     return NO;
 }
 
-- (BOOL)searchDisplayController:(UISearchDisplayController *)controller
-shouldReloadTableForSearchString:(NSString *)searchString
-{
+- (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     self.searchText = searchString;
     [self loadData];
 
@@ -149,14 +143,11 @@ shouldReloadTableForSearchString:(NSString *)searchString
     self.viewStateSearchWasActive = [self.searchDisplayController isActive];
 }
 
-- (void)placePickerViewControllerDataDidChange:(FBPlacePickerViewController *)placePicker
-{
+- (void)placePickerViewControllerDataDidChange:(FBPlacePickerViewController *)placePicker {
     [self.searchDisplayController.searchResultsTableView reloadData];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:
-    (UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
@@ -164,8 +155,7 @@ shouldReloadTableForSearchString:(NSString *)searchString
 
 - (void)locationManager:(CLLocationManager *)manager
 	didUpdateToLocation:(CLLocation *)newLocation
-	fromLocation:(CLLocation *)oldLocation
-{
+           fromLocation:(CLLocation *)oldLocation {
     if (newLocation.horizontalAccuracy < 100) {
         // We wait for a precision of 100m and turn the GPS off
         [self.locationManager stopUpdatingLocation];

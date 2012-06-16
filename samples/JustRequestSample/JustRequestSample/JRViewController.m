@@ -45,8 +45,7 @@ static NSString *loadingText = @"Loading...";
 @synthesize textOutput = _textOutput;
 @synthesize requestConnection = _requestConnection;
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_requestConnection cancel];
 }
 
@@ -54,8 +53,7 @@ static NSString *loadingText = @"Loading...";
 // When the button is clicked, make sure we have a valid session and
 // call sendRequests.
 //
-- (void)buttonRequestClickHandler:(id)sender
-{
+- (void)buttonRequestClickHandler:(id)sender {
     // FBSample logic
     // Get the application delegate in order to access the session property
     JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
@@ -102,8 +100,7 @@ static NSString *loadingText = @"Loading...";
 //
 // When a request returns results, call requestComplete:result:error.
 //
-- (void)sendRequests
-{
+- (void)sendRequests {
     // extract the id's for which we will request the profile
     NSArray *fbids = [self.textObjectID.text componentsSeparatedByString:@","];
     
@@ -156,8 +153,7 @@ static NSString *loadingText = @"Loading...";
 - (void)requestCompleted:(FBRequestConnection *)connection
                  forFbID:fbID
                   result:(id)result
-                   error:(NSError *)error
-{
+                   error:(NSError *)error {
     // not the completion we were looking for...
     if (connection != self.requestConnection) {
         return;
@@ -187,8 +183,7 @@ static NSString *loadingText = @"Loading...";
 
 #pragma mark - View lifecycle
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     [self.requestConnection cancel];
 
@@ -198,8 +193,7 @@ static NSString *loadingText = @"Loading...";
     self.requestConnection = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);

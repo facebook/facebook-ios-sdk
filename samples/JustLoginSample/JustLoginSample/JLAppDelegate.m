@@ -48,8 +48,7 @@
 // to your application; if a session is not properly closed, a retain cycle may occur between the block
 // and an object that holds a reference to the session object; close releases the handler, breaking any
 // inadvertant retain cycles
-- (void)applicationWillTerminate:(UIApplication *)application
-{
+- (void)applicationWillTerminate:(UIApplication *)application {
     // FBSample logic
     // if the app is going away, we invalidate the token if present
     [self.session close];
@@ -57,8 +56,7 @@
 
 #pragma mark Template generated code
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -77,8 +75,7 @@
 // state in applicationDidBecomeActive, to identify this situation and close the session; a more sophisticated
 // application may choose to notify the user that they switched away from the Facebook application without
 // completely logging in
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */

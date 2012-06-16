@@ -37,13 +37,11 @@ static const CGFloat pictureHeight = 50;
 
 #pragma mark - Lifecycle
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_profilePic removeFromSuperview];
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         [self initializeSubViews];
@@ -52,8 +50,8 @@ static const CGFloat pictureHeight = 50;
     return self;
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
-{
+- (id)initWithStyle:(UITableViewCellStyle)style
+    reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self initializeSubViews];
@@ -70,7 +68,7 @@ static const CGFloat pictureHeight = 50;
 
 #pragma mark -
 
-- (void)initializeSubViews {    
+- (void)initializeSubViews {   
     FBProfilePictureView *profilePic = [[FBProfilePictureView alloc] 
         initWithFrame:CGRectMake(
             leftMargin,

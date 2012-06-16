@@ -16,7 +16,7 @@
  
 #import "ViewController.h"
 
-const char* interestingIDs[] = {
+const char *interestingIDs[] = {
     "zuck",
     // Recent Presidents and nominees
     "barackobama",
@@ -33,7 +33,7 @@ const char* interestingIDs[] = {
     // A selection of 1986 Mets
     "166020963458360",
     "108084865880237",
-    "40885519486",
+    "140447466087679",
     "111825495501392",
     // The cast of Saved by the Bell
     "108168249210849",
@@ -43,6 +43,23 @@ const char* interestingIDs[] = {
     "MarioLopezExtra",
     "108504145837165",
     "dennishaskins",
+    // Eighties bands that have been to Moscow 
+    "7220821999",
+    "31938132882",
+    "108023262558391",
+    "209263392372",
+    "104132506290482",
+    "9721897972",
+    "5461947317",
+    "57084011597",
+    // Three people that have never been in my kitchen
+    "24408579964",
+    "111980872152571",
+    "112427772106500",
+    // Trusted anchormen
+    "113415525338717",
+    "105628452803615",
+    "105533779480538",
 };
 const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]);
 
@@ -55,24 +72,20 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 @synthesize profilePictureOuterView;
 
 
-- (IBAction)showJasonProfile:(id)sender 
-{
+- (IBAction)showJasonProfile:(id)sender {
     // Notice how you can supply either the user's alias or their profile id
     profilePictureView.userID = @"jascla";
 }
 
-- (IBAction)showMichaelProfile:(id)sender 
-{
+- (IBAction)showMichaelProfile:(id)sender {
     profilePictureView.userID = @"michael.marucheck";
 }
 
-- (IBAction)showVijayeProfile:(id)sender 
-{
+- (IBAction)showVijayeProfile:(id)sender {
     profilePictureView.userID = @"vijaye";
 }
 
-- (IBAction)showRandomProfile:(id)sender
-{
+- (IBAction)showRandomProfile:(id)sender {
     int index = arc4random() % kNumInterestingIDs;
     profilePictureView.userID = [NSString stringWithCString:interestingIDs[index]
                                                encoding:NSASCIIStringEncoding];
@@ -80,26 +93,22 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 
 // Cropping selections
 
-- (IBAction)makePictureOriginal:(id)sender 
-{
+- (IBAction)makePictureOriginal:(id)sender {
     profilePictureView.pictureCropping = FBProfilePictureCroppingOriginal;
 }
 
-- (IBAction)makePictureSquare:(id)sender
-{
+- (IBAction)makePictureSquare:(id)sender {
     profilePictureView.pictureCropping = FBProfilePictureCroppingSquare;
 }
 
 
 // View size mods
 
-- (IBAction)makeViewSmall:(id)sender
-{
+- (IBAction)makeViewSmall:(id)sender {
     profilePictureOuterView.bounds = CGRectMake(0, 0, 100, 100);
 }
 
-- (IBAction)makeViewLarge:(id)sender
-{
+- (IBAction)makeViewLarge:(id)sender {
     profilePictureOuterView.bounds = CGRectMake(0, 0, 220, 220);
 }
 
@@ -107,23 +116,20 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 #pragma mark -
 #pragma mark Template generated code
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
     // [self makePictureLarge:self];
     profilePictureView.userID = @"45963418107"; // Hello world
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     self.profilePictureView.userID = nil;
     self.profilePictureView = nil;
     [super viewDidUnload];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {

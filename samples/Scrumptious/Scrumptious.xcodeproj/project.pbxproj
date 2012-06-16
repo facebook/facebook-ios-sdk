@@ -116,6 +116,7 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8592BE3915816CBF00056680 /* AddressBook.framework */,
 				8592BE3C15816CCC00056680 /* AddressBook.framework */,
 				85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */,
 				85394EAB15546CC400550929 /* FBiOSSDK.framework */,

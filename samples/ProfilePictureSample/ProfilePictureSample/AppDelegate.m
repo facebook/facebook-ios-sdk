@@ -23,15 +23,13 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_window release];
     [_viewController release];
     [super dealloc];
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // BUG:
     // Nib files require the type to have been loaded before they can do the
     // wireup successfully.  

@@ -27,11 +27,11 @@ extern NSString *const SUInvalidSlotNumber;
 @property (strong, readonly) FBSession *currentSession;
 @property (readonly) int currentUserSlot;
 
-- (SUUserManager *)init;
+- (id)init;
 
 - (NSString*)getUserIDInSlot:(int)slot;
 - (NSString*)getUserNameInSlot:(int)slot;
-- (void)updateUser:(NSDictionary<FBGraphUser>*)user inSlot:(int)slot;
+- (void)updateUser:(NSDictionary<FBGraphUser> *)user inSlot:(int)slot;
 
 - (BOOL)isSlotEmpty:(int)slot;
 - (BOOL)areAllSlotsEmpty;

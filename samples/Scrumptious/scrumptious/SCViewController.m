@@ -33,17 +33,17 @@
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (strong, nonatomic) FBPlacePickerViewController *placePickerController;
-@property (strong, nonatomic) IBOutlet FBProfilePictureView* userProfileImage;
-@property (strong, nonatomic) IBOutlet UILabel* userNameLabel;
-@property (strong, nonatomic) IBOutlet UIButton* announceButton;
+@property (strong, nonatomic) IBOutlet FBProfilePictureView *userProfileImage;
+@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
+@property (strong, nonatomic) IBOutlet UIButton *announceButton;
 @property (strong, nonatomic) IBOutlet UITableView *menuTableView;
-@property (strong, nonatomic) UIImagePickerController* imagePicker;
-@property (strong, nonatomic) UIActionSheet* imagePickerActionSheet;
+@property (strong, nonatomic) UIImagePickerController *imagePicker;
+@property (strong, nonatomic) UIActionSheet *imagePickerActionSheet;
 
-@property (strong, nonatomic) NSObject<FBGraphPlace>* selectedPlace;
-@property (strong, nonatomic) NSString* selectedMeal;
-@property (strong, nonatomic) NSArray* selectedFriends;
-@property (strong, nonatomic) UIImage* selectedPhoto;
+@property (strong, nonatomic) NSObject<FBGraphPlace> *selectedPlace;
+@property (strong, nonatomic) NSString *selectedMeal;
+@property (strong, nonatomic) NSArray *selectedFriends;
+@property (strong, nonatomic) UIImage *selectedPhoto;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
@@ -51,10 +51,10 @@
 - (IBAction)announce:(id)sender;
 - (void)populateUserDetails;
 - (void)updateSelections;
-- (void)updateCellIndex:(int)index withSubtitle:(NSString*)subtitle;
-- (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal;
+- (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle;
+- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal;
 - (void)postPhotoThenOpenGraphAction;
-- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoID withUserGeneratedFlag:(BOOL)userGenerated;
+- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoID withUserGeneratedFlag:(BOOL)userGenerated;
 - (FBSession*)session;
 
 @end
@@ -77,8 +77,7 @@
 @synthesize imagePickerActionSheet = _imagePickerActionSheet;
 #pragma mark open graph
 
-- (id<SCOGMeal>)mealObjectForMeal:(NSString*)meal 
-{
+- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
     // This URL is specific to this sample, and can be used to create arbitrary
     // OG objects for this app; your OG objects will have URLs hosted by your server.
     NSString *format =  
@@ -98,8 +97,7 @@
     return result;
 }
 
-- (void)postOpenGraphActionWithPhotoURL:(NSString*)photoURL withUserGeneratedFlag:(BOOL)userGenerated
-{
+- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoURL withUserGeneratedFlag:(BOOL)userGenerated {
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
     
@@ -148,8 +146,7 @@
      }];
 }
 
-- (void)postPhotoThenOpenGraphAction
-{
+- (void)postPhotoThenOpenGraphAction {
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
     // If the picture is big enough, we'd like to use the user_generated flag so it
@@ -187,8 +184,7 @@
     [connection start];
 }
 
-- (IBAction)announce:(id)sender
-{
+- (IBAction)announce:(id)sender {
     if (self.selectedPhoto) {
         [self postPhotoThenOpenGraphAction];
     } else {
@@ -200,8 +196,7 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
         didFinishPickingImage:(UIImage *)image
-                  editingInfo:(NSDictionary *)editingInfo
-{
+                  editingInfo:(NSDictionary *)editingInfo {
     self.selectedPhoto = image;
     
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -252,14 +247,13 @@
 
 #pragma mark Data fetch
 
-- (void)updateCellIndex:(int)index withSubtitle:(NSString*)subtitle {
-    UITableViewCell *cell = (UITableViewCell *)[self.menuTableView 
-        cellForRowAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
+- (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle {
+    UITableViewCell *cell = (UITableViewCell *)[self.menuTableView cellForRowAtIndexPath:
+                                                [NSIndexPath indexPathForRow:index inSection:0]];
     cell.detailTextLabel.text = subtitle;
 }
 
-- (void)updateSelections 
-{
+- (void)updateSelections {
     [self updateCellIndex:0 withSubtitle:(self.selectedMeal ?
                                           self.selectedMeal : 
                                           @"Select One")];
@@ -267,7 +261,7 @@
                                           self.selectedPlace.name :
                                           @"Select One")];
     
-    NSString* friendsSubtitle = @"Select friends";
+    NSString *friendsSubtitle = @"Select friends";
     int friendCount = self.selectedFriends.count;
     if (friendCount > 2) {
         // Just to mix things up, don't always show the first friend.
@@ -292,8 +286,7 @@
     self.announceButton.enabled = (self.selectedMeal != nil);
 }
 
-- (void)populateUserDetails 
-{
+- (void)populateUserDetails {
     if (self.session.isOpen) {
         [[FBRequest requestForMeWithSession:self.session] startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
@@ -305,15 +298,13 @@
     }
 }
 
-- (void)showLoginView 
-{
-    SCLoginViewController* loginView = 
+- (void)showLoginView {
+    SCLoginViewController *loginView = 
     [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" bundle:nil];
     [self presentModalViewController:loginView animated:NO];
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     _locationManager.delegate = nil;
     _placePickerController.delegate = nil;
     _friendPickerController.delegate = nil;
@@ -321,8 +312,7 @@
     _imagePickerActionSheet.delegate = nil;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.title = @"Scrumptious";
@@ -347,8 +337,7 @@
                  context:NULL];
 }
 
--(void)viewWillAppear:(BOOL)animated
-{
+-(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
     if (self.session && self.session.isOpen) {
@@ -361,8 +350,7 @@
     [appDelegate closeSession];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
@@ -380,8 +368,7 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath
                       ofObject:(id)object
                         change:(NSDictionary *)change
-                       context:(void *)context
-{
+                       context:(void *)context {
     if ([keyPath isEqual:@"session.state"]) {
         // A more complex app might check the state to see what the appropriate course of
         // action is, but our needs are simple, so just make sure our idea of the session is
@@ -391,25 +378,22 @@
     }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (FBSession*)session 
-{
+- (FBSession*)session {
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     return appDelegate.session;
 }
 
 #pragma mark UITableViewDataSource methods
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return 4;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     static NSString *CellIdentifier = @"Cell";
     
@@ -463,24 +447,21 @@
     return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView 
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return false;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UIViewController* target;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UIViewController *target;
     
     switch (indexPath.row) {
         case 0:
             if (!self.mealViewController) {
-                __block SCViewController* myself = self;
+                __block SCViewController *myself = self;
                 self.mealViewController = [[SCMealViewController alloc]initWithNibName:@"SCMealViewController" bundle:nil];
                 self.mealViewController.selectItemCallback = ^(id sender, id selectedItem) {
                     myself.selectedMeal = selectedItem;
@@ -544,7 +525,7 @@
                 CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
                 [self.popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
             } else {
-                if(! self.imagePickerActionSheet){
+                if(! self.imagePickerActionSheet) {
                     self.imagePickerActionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                            delegate:self
                                            cancelButtonTitle:@"Cancel"
@@ -564,18 +545,14 @@
 #pragma mark -
 #pragma mark FBFriendPickerDelegate methods
 
-- (void)friendPickerViewControllerSelectionDidChange:
-(FBFriendPickerViewController *)friendPicker
-{
+- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
     self.selectedFriends = friendPicker.selection;
     [self updateSelections];
 }
 
 #pragma mark FBPlacePickerDelegate methods
 
-- (void)placePickerViewControllerSelectionDidChange:
-(FBPlacePickerViewController *)placePicker
-{
+- (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker {
     self.selectedPlace = placePicker.selection;
     [self updateSelections];
     if (self.selectedPlace.count > 0) {
@@ -585,8 +562,9 @@
 
 #pragma mark CLLocationManagerDelegate methods
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation 
-{
+- (void)locationManager:(CLLocationManager *)manager 
+    didUpdateToLocation:(CLLocation *)newLocation 
+           fromLocation:(CLLocation *)oldLocation {
     if (self.locationManager &&
         newLocation.horizontalAccuracy < 100) {
         // We wait for a precision of 100m and turn the GPS off
@@ -599,7 +577,8 @@
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+- (void)locationManager:(CLLocationManager *)manager 
+       didFailWithError:(NSError *)error {
 	NSLog(@"%@", error);
 }
 

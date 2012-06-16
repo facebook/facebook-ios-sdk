@@ -28,7 +28,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 @synthesize currentSession = _currentSession;
 @synthesize currentUserSlot = _currentUserSlot;
 
-- (SUUserManager *)init {
+- (id)init {
     self = [super init];
     if (self) {
         _currentUserSlot = -1;
@@ -105,7 +105,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return [defaults objectForKey:key];
 }
 
-- (void)updateUser:(NSDictionary<FBGraphUser>*)user inSlot:(int)slot {
+- (void)updateUser:(NSDictionary<FBGraphUser> *)user inSlot:(int)slot {
     [self validateSlotNumber:slot];
 
     NSString *idKey = [NSString stringWithFormat:SUUserIDKeyFormat, slot];

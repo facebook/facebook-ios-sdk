@@ -21,10 +21,10 @@
 
 @interface SCAppDelegate ()
 
-@property (strong, nonatomic) UINavigationController* navController;
+@property (strong, nonatomic) UINavigationController *navController;
 @property (strong, nonatomic) SCViewController *mainViewController;
 
-- (FBSession *)createNewSession;
+- (FBSession*)createNewSession;
 
 @end
 
@@ -38,22 +38,20 @@
 #pragma mark -
 #pragma mark Facebook Login Code
 
-- (FBSession *)createNewSession
-{
+- (FBSession*)createNewSession {
     NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
     self.session = [[FBSession alloc] initWithPermissions:permissions];
 
     return self.session;
 }
 
-- (void)showLoginView 
-{
+- (void)showLoginView {
     UIViewController *topViewController = [self.navController topViewController];
     UIViewController *modalViewController = [topViewController modalViewController];
     
     if (![modalViewController isKindOfClass:[SCLoginViewController class]]) {
         SCLoginViewController* loginViewController = [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" 
-                                                                                  bundle:nil];
+                                                                                            bundle:nil];
         [topViewController presentModalViewController:loginViewController animated:NO];
     } else {
         SCLoginViewController* loginViewController = (SCLoginViewController*)modalViewController;
@@ -62,12 +60,11 @@
 }
 
 - (void)sessionStateChanged:(FBSession *)session 
-                      state:(FBSessionState) state
+                      state:(FBSessionState)state
                       error:(NSError *)error
 {
     switch (state) {
-        case FBSessionStateOpen:
-            {
+        case FBSessionStateOpen: {
                 UIViewController *topViewController = [self.navController topViewController];
                 if ([[topViewController modalViewController] isKindOfClass:[SCLoginViewController class]]) {
                     [topViewController dismissModalViewControllerAnimated:YES];
@@ -103,35 +100,30 @@
     }    
 }
 
-- (void)openSession
-{
+- (void)openSession {
     [self.session openWithCompletionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          [self sessionStateChanged:session state:state error:error];
      }];    
 }
-- (void)closeSession
-{
+- (void)closeSession {
     [self.session closeAndClearTokenInformation];
 }
 
 - (BOOL)application:(UIApplication *)application 
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication 
-         annotation:(id)annotation 
-{
+         annotation:(id)annotation {
     return [self.session handleOpenURL:url]; 
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application	
-{	
+- (void)applicationDidBecomeActive:(UIApplication *)application	{	
     // this means the user switched back to this app without completing a login in Safari/Facebook App
     if (self.session.state == FBSessionStateCreatedOpening) {	
         [self.session close]; // so we close our session and start over	
     }	
 }
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // BUG WORKAROUND:
     // Nib files require the type to have been loaded before they can do the
     // wireup successfully.  

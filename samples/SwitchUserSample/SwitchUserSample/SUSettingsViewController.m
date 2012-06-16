@@ -25,7 +25,7 @@
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
 @property (nonatomic) int pendingLoginForSlot;
 
-- (int)userSlotFromIndexPath:(NSIndexPath*)indexPath;
+- (int)userSlotFromIndexPath:(NSIndexPath *)indexPath;
 - (void)loginSlot:(int)slot;
 - (NSIndexPath*)indexPathFromUserSlot:(int)slot;
 
@@ -37,8 +37,7 @@
 @synthesize requestConnection = _requestConnection;
 @synthesize pendingLoginForSlot = _pendingLoginForSlot;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Settings", @"Settings");
@@ -48,13 +47,7 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -72,8 +65,7 @@
     }
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
     } else {
@@ -81,7 +73,8 @@
     }
 }
 
-- (void)updateCell:(SUProfileTableViewCell*)cell forSlot:(int)slot {
+- (void)updateCell:(SUProfileTableViewCell *)cell
+           forSlot:(int)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
 
@@ -197,7 +190,7 @@
     }];
 }
 
-- (int)userSlotFromIndexPath:(NSIndexPath*)indexPath {
+- (int)userSlotFromIndexPath:(NSIndexPath *)indexPath {
     // This relies on the fact that there's only one user in the first section.
     return indexPath.section + indexPath.row;
 }
@@ -226,7 +219,7 @@
     }
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     
     SUProfileTableViewCell *cell = (SUProfileTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -234,7 +227,7 @@
         cell = [[SUProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
     int slot = [self userSlotFromIndexPath:indexPath];
     if (slot >= 0 && slot < [userManager maximumUserSlots] ) {
@@ -244,7 +237,7 @@
     return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
         case 0:
             return @"Primary User:";
@@ -254,13 +247,13 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     return [userManager getUserIDInSlot:[self userSlotFromIndexPath:indexPath]] != nil;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         int slot = [self userSlotFromIndexPath:indexPath];
@@ -279,7 +272,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     
     int currentUserSlot = userManager.currentUserSlot;
@@ -296,8 +289,7 @@
     return;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath 
-{
+- (NSString*)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"Forget";
 }
 

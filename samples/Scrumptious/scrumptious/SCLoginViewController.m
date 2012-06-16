@@ -19,8 +19,8 @@
 
 @interface SCLoginViewController ()
 
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView* spinner;
-@property (strong, nonatomic) IBOutlet UIButton* loginButton;
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *spinner;
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
 - (IBAction)performLogin:(id)sender;
 
@@ -31,16 +31,14 @@
 @synthesize spinner = _spinner;
 @synthesize loginButton = _loginButton;
 
-- (IBAction)performLogin:(id)sender 
-{
+- (IBAction)performLogin:(id)sender {
     [self.spinner startAnimating];
     
-    SCAppDelegate* appDelegate = [UIApplication sharedApplication].delegate;
+    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate openSession];
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
@@ -48,22 +46,19 @@
     return self;
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     [self.spinner stopAnimating];
 }
 
-- (void)loginFailed
-{
+- (void)loginFailed {
     // User switched back to the app without authorizing. Stay here, but
     // stop the spinner.
     [self.spinner stopAnimating];
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -71,8 +66,7 @@
     self.loginButton = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
