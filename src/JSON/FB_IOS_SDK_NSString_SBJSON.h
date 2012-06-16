@@ -27,52 +27,32 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+#import <Foundation/Foundation.h>
+
+/**
+ @brief Adds JSON parsing methods to NSString
+ 
+This is a category on NSString that adds methods for parsing the target string.
+*/
+@interface NSString (FB_IOS_SDK_NSString_SBJSON)
 
 
-@implementation SBJsonBase
+/**
+ @brief Returns the object represented in the receiver, or nil on error. 
+ 
+ Returns a a scalar object represented by the string's JSON fragment representation.
+ 
+ @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
+ */
+- (id)JSONFragmentValue;
 
-@synthesize errorTrace;
-@synthesize maxDepth;
+/**
+ @brief Returns the NSDictionary or NSArray represented by the current string's JSON representation.
+ 
+ Returns the dictionary or array represented in the receiver, or nil on error.
 
-- (id)init {
-    self = [super init];
-    if (self)
-        self.maxDepth = 512;
-    return self;
-}
-
-- (void)dealloc {
-    [errorTrace release];
-    [super dealloc];
-}
-
-- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str {
-    NSDictionary *userInfo;
-    if (!errorTrace) {
-        errorTrace = [NSMutableArray new];
-        userInfo = [NSDictionary dictionaryWithObject:str forKey:NSLocalizedDescriptionKey];
-        
-    } else {
-        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                    str, NSLocalizedDescriptionKey,
-                    [errorTrace lastObject], NSUnderlyingErrorKey,
-                    nil];
-    }
-    
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
-
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace addObject:error];
-    [self didChangeValueForKey:@"errorTrace"];
-}
-
-- (void)clearErrorTrace {
-    [self willChangeValueForKey:@"errorTrace"];
-    [errorTrace release];
-    errorTrace = nil;
-    [self didChangeValueForKey:@"errorTrace"];
-}
+ Returns the NSDictionary or NSArray represented by the current string's JSON representation.
+ */
+- (id)JSONValue;
 
 @end

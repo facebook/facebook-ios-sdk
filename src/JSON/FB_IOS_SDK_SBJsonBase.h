@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007-2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2009 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -28,48 +28,59 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonParser.h"
-#import "SBJsonWriter.h"
+
+extern NSString * SBJSONErrorDomain;
+
+
+enum {
+    EUNSUPPORTED = 1,
+    EPARSENUM,
+    EPARSE,
+    EFRAGMENT,
+    ECTRL,
+    EUNICODE,
+    EDEPTH,
+    EESCAPE,
+    ETRAILCOMMA,
+    ETRAILGARBAGE,
+    EEOF,
+    EINPUT
+};
 
 /**
- @brief Facade for SBJsonWriter/SBJsonParser.
+ @brief Common base class for parsing & writing.
 
- Requests are forwarded to instances of SBJsonWriter and SBJsonParser.
+ This class contains the common error-handling code and option between the parser/writer.
  */
-@interface SBJSON : SBJsonBase <SBJsonParser, SBJsonWriter> {
+@interface FB_IOS_SDK_SBJsonBase : NSObject {
+    NSMutableArray *errorTrace;
 
-@private    
-    SBJsonParser *jsonParser;
-    SBJsonWriter *jsonWriter;
+@protected
+    NSUInteger depth, maxDepth;
 }
 
+/**
+ @brief The maximum recursing depth.
+ 
+ Defaults to 512. If the input is nested deeper than this the input will be deemed to be
+ malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
+ turn off this security feature by setting the maxDepth value to 0.
+ */
+@property NSUInteger maxDepth;
 
-/// Return the fragment represented by the given string
-- (id)fragmentWithString:(NSString*)jsonrep
-                   error:(NSError**)error;
+/**
+ @brief Return an error trace, or nil if there was no errors.
+ 
+ Note that this method returns the trace of the last method that failed.
+ You need to check the return value of the call you're making to figure out
+ if the call actually failed, before you know call this method.
+ */
+ @property(copy,readonly) NSArray* errorTrace;
 
-/// Return the object represented by the given string
-- (id)objectWithString:(NSString*)jsonrep
-                 error:(NSError**)error;
+/// @internal for use in subclasses to add errors to the stack trace
+- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str;
 
-/// Parse the string and return the represented object (or scalar)
-- (id)objectWithString:(id)value
-           allowScalar:(BOOL)x
-    			 error:(NSError**)error;
-
-
-/// Return JSON representation of an array  or dictionary
-- (NSString*)stringWithObject:(id)value
-                        error:(NSError**)error;
-
-/// Return JSON representation of any legal JSON value
-- (NSString*)stringWithFragment:(id)value
-                          error:(NSError**)error;
-
-/// Return JSON representation (or fragment) for the given object
-- (NSString*)stringWithObject:(id)value
-                  allowScalar:(BOOL)x
-    					error:(NSError**)error;
-
+/// @internal for use in subclasess to clear the error before a new parsing attempt
+- (void)clearErrorTrace;
 
 @end

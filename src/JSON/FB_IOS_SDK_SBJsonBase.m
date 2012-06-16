@@ -27,42 +27,52 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+#import "FB_IOS_SDK_SBJsonBase.h"
+NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
 
 
-/**
- @brief Adds JSON generation to Foundation classes
- 
- This is a category on NSObject that adds methods for returning JSON representations
- of standard objects to the objects themselves. This means you can call the
- -JSONRepresentation method on an NSArray object and it'll do what you want.
- */
-@interface NSObject (NSObject_SBJSON)
+@implementation FB_IOS_SDK_SBJsonBase
 
-/**
- @brief Returns a string containing the receiver encoded as a JSON fragment.
- 
- This method is added as a category on NSObject but is only actually
- supported for the following objects:
- @li NSDictionary
- @li NSArray
- @li NSString
- @li NSNumber (also used for booleans)
- @li NSNull 
- 
- @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
- */
-- (NSString *)JSONFragment;
+@synthesize errorTrace;
+@synthesize maxDepth;
 
-/**
- @brief Returns a string containing the receiver encoded in JSON.
+- (id)init {
+    self = [super init];
+    if (self)
+        self.maxDepth = 512;
+    return self;
+}
 
- This method is added as a category on NSObject but is only actually
- supported for the following objects:
- @li NSDictionary
- @li NSArray
- */
-- (NSString *)JSONRepresentation;
+- (void)dealloc {
+    [errorTrace release];
+    [super dealloc];
+}
+
+- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str {
+    NSDictionary *userInfo;
+    if (!errorTrace) {
+        errorTrace = [NSMutableArray new];
+        userInfo = [NSDictionary dictionaryWithObject:str forKey:NSLocalizedDescriptionKey];
+        
+    } else {
+        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                    str, NSLocalizedDescriptionKey,
+                    [errorTrace lastObject], NSUnderlyingErrorKey,
+                    nil];
+    }
+    
+    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+
+    [self willChangeValueForKey:@"errorTrace"];
+    [errorTrace addObject:error];
+    [self didChangeValueForKey:@"errorTrace"];
+}
+
+- (void)clearErrorTrace {
+    [self willChangeValueForKey:@"errorTrace"];
+    [errorTrace release];
+    errorTrace = nil;
+    [self didChangeValueForKey:@"errorTrace"];
+}
 
 @end
-

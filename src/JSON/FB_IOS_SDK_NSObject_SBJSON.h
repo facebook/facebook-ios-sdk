@@ -29,58 +29,40 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * SBJSONErrorDomain;
-
-
-enum {
-    EUNSUPPORTED = 1,
-    EPARSENUM,
-    EPARSE,
-    EFRAGMENT,
-    ECTRL,
-    EUNICODE,
-    EDEPTH,
-    EESCAPE,
-    ETRAILCOMMA,
-    ETRAILGARBAGE,
-    EEOF,
-    EINPUT
-};
 
 /**
- @brief Common base class for parsing & writing.
-
- This class contains the common error-handling code and option between the parser/writer.
- */
-@interface SBJsonBase : NSObject {
-    NSMutableArray *errorTrace;
-
-@protected
-    NSUInteger depth, maxDepth;
-}
-
-/**
- @brief The maximum recursing depth.
+ @brief Adds JSON generation to Foundation classes
  
- Defaults to 512. If the input is nested deeper than this the input will be deemed to be
- malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
- turn off this security feature by setting the maxDepth value to 0.
+ This is a category on NSObject that adds methods for returning JSON representations
+ of standard objects to the objects themselves. This means you can call the
+ -JSONRepresentation method on an NSArray object and it'll do what you want.
  */
-@property NSUInteger maxDepth;
+@interface NSObject (FB_IOS_SDK_NSObject_SBJSON)
 
 /**
- @brief Return an error trace, or nil if there was no errors.
+ @brief Returns a string containing the receiver encoded as a JSON fragment.
  
- Note that this method returns the trace of the last method that failed.
- You need to check the return value of the call you're making to figure out
- if the call actually failed, before you know call this method.
+ This method is added as a category on NSObject but is only actually
+ supported for the following objects:
+ @li NSDictionary
+ @li NSArray
+ @li NSString
+ @li NSNumber (also used for booleans)
+ @li NSNull 
+ 
+ @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
  */
- @property(copy,readonly) NSArray* errorTrace;
+- (NSString *)JSONFragment;
 
-/// @internal for use in subclasses to add errors to the stack trace
-- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str;
+/**
+ @brief Returns a string containing the receiver encoded in JSON.
 
-/// @internal for use in subclasess to clear the error before a new parsing attempt
-- (void)clearErrorTrace;
+ This method is added as a category on NSObject but is only actually
+ supported for the following objects:
+ @li NSDictionary
+ @li NSArray
+ */
+- (NSString *)JSONRepresentation;
 
 @end
+
