@@ -123,7 +123,7 @@
  */
 - (void)apiGraphUserCheckins:(NSUInteger)index {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    FB_IOS_SDK_SBJSON *jsonWriter = [[FB_IOS_SDK_SBJSON new] autorelease];
 
     NSDictionary *coordinates = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"latitude"],@"latitude",
