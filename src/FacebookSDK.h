@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook/Users/jacl/src/facebook-ios-sdk-private/src/FacebookSDK.h
+ * Copyright 2012
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,8 +43,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
- Summary: this header summarizes the structure and goals of the Facebook iOS
- SDK. Goals:
+ Summary: this header summarizes the structure and goals of the Facebook SDK for iOS.
+ Goals:
  * Leverage and work well with modern features of iOS (e.g. blocks, ARC, etc.)
  * Patterned after best of breed iOS frameworks (e.g. naming, pattern-use, etc.)
  * Common integration experience is simple & easy to describe
@@ -87,7 +87,7 @@
  </pre>
 
  The figure above describes three layers of functionality, with the existing
- Facebook on the side as a helper proxy to a subset of the overal SDK. The
+ Facebook on the side as a helper proxy to a subset of the overall SDK. The
  layers loosely organize the SDK into *Core Objects* necessary to interface 
  with Facebook, higher-level *Framework Components* that feel like natural
  extensions to existing frameworks such as UIKit and Foundation, but which

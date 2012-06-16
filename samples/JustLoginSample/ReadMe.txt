@@ -9,9 +9,9 @@ Runtime Requirements
 iPhone OS 4.0 or later
 
 Using the Sample
-Install the Facebook iOS SDK.
+Install the Facebook SDK for iOS.
 Launch the JustLoginSample project using Xcode from the
-<iOS SDK>/samples/JustLoginSample directory.
+<Facebook SDK>/samples/JustLoginSample directory.
 
 Changes from Previous Versions
 1.0 - First release.

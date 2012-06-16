@@ -87,7 +87,7 @@ extern NSString *kThirdTestUserTag;
  desired, use the variant sessionWithSharedUserWithPermissions:uniqueUserTag:.
  
  This method should not be used in application code -- but is useful for creating unit tests
- that use the Facebook iOS SDK.
+ that use the Facebook SDK.
  
  @param permissions     array of strings naming permissions to authorize; nil indicates 
  a common default set of permissions should be used for unit testing
@@ -104,7 +104,7 @@ extern NSString *kThirdTestUserTag;
  tests). 
  
  This method should not be used in application code -- but is useful for creating unit tests
- that use the Facebook iOS SDK.
+ that use the Facebook SDK.
  
  @param permissions     array of strings naming permissions to authorize; nil indicates 
  a common default set of permissions should be used for unit testing
@@ -125,7 +125,7 @@ extern NSString *kThirdTestUserTag;
  @discussion
  This method creates a session object which creates a test user on open, and destroys the user on
  close; This method should not be used in application code -- but is useful for creating unit tests
- that use the Facebook iOS SDK.
+ that use the Facebook SDK.
  
  @param permissions     array of strings naming permissions to authorize; nil indicates 
  a common default set of permissions should be used for unit testing

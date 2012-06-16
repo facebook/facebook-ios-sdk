@@ -23,11 +23,11 @@
  Base protocol to enable typed access to graph object data
  
  @discussion
- The FBGraphObject protocol is the core type used by the Facebook iOS SDK to 
+ The FBGraphObject protocol is the core type used by the Facebook SDK for iOS to 
  represent objects in the Facebook Social Graph and the Facebook Open Graph (OG).
  The FBGraphObject class implements useful default functionality, but is rarely
  used directly by applications. The FBGraphObject protocol, in contrast is the
- base protocol for all graph object access via the Facebook iOS SDK. 
+ base protocol for all graph object access via the SDK. 
  
  Goals of the FBGraphObject types:
  <ul>

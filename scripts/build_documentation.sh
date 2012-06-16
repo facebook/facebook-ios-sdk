@@ -40,11 +40,11 @@ cd $FB_SDK_SRC
 APPLEDOC=appledoc
 hash $APPLEDOC &>/dev/null
 if [ "$?" -eq "0" ]; then
-    APPLEDOC_DOCSET_NAME="Facebook iOS SDK"
+    APPLEDOC_DOCSET_NAME="Facebook SDK 3.0 for iOS"
     $APPLEDOC --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
-	--output "$FB_SDK_BUILD"/com.facebook.Facebook-iOS-SDK.docset \
+	--output "$FB_SDK_BUILD"/com.facebook.Facebook-SDK-3_0-for-iOS.docset \
 	--preprocess-headerdoc \
 	--docset-bundle-name "$APPLEDOC_DOCSET_NAME" \
 	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \

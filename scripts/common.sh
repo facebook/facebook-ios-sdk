@@ -38,7 +38,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_SCRIPT=$(pwd)
   popd >/dev/null
 
-  # The root directory where the Facebook iOS SDK is cloned
+  # The root directory where the Facebook SDK for iOS is cloned
   FB_SDK_ROOT=$(dirname $FB_SDK_SCRIPT)
 
   # Path to source files for Facebook SDK
@@ -51,13 +51,13 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_BUILD=$FB_SDK_ROOT/build
   FB_SDK_BUILD_LOG=$FB_SDK_BUILD/build.log
 
-  # The name of the Facebook iOS SDK
+  # The name of the Facebook SDK for iOS
   FB_SDK_BINARY_NAME=FBiOSSDK
 
-  # The name of the Facebook iOS SDK framework
+  # The name of the Facebook SDK for iOS framework
   FB_SDK_FRAMEWORK_NAME=${FB_SDK_BINARY_NAME}.framework
 
-  # The path to the built Facebook iOS SDK .framework
+  # The path to the built Facebook SDK for iOS .framework
   FB_SDK_FRAMEWORK=$FB_SDK_BUILD/$FB_SDK_FRAMEWORK_NAME
 
   # The name of the docset

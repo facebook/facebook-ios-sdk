@@ -176,7 +176,7 @@ enum {
 //
 // Summary
 // The deprecated category is used to maintain back compat and ease migration
-// to the revised iOS SDK
+// to the revised SDK for iOS
 
 /**
  * Do not use this interface directly, instead, use method in Facebook.h

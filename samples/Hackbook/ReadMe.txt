@@ -11,8 +11,8 @@ iPhone OS 4.0 or later
 
 
 Using the Sample
-Install the Facebook iOS SDK.
-Launch the Hackbook project using Xcode from the <iOS SDK>/samples/Hackbook directory.
+Install the Facebook SDK for iOS.
+Launch the Hackbook project using Xcode from the <Facebook SDK>/samples/Hackbook directory.
 
 
 Packaging List

@@ -15,8 +15,8 @@ Runtime Requirements
 iPhone OS 4.0 or later
 
 Using the Sample
-Install the Facebook iOS SDK.
-Launch the SwitchUsersSample project using Xcode from the <iOS SDK>/samples/SwitchUsersSample directory.
+Install the Facebook SDK for iOS.
+Launch the SwitchUsersSample project using Xcode from the <Facebook SDK>/samples/SwitchUsersSample directory.
 
 Changes from Previous Versions
 1.0 - First release.
