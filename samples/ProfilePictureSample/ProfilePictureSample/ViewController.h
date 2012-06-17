@@ -19,6 +19,10 @@
 
 @interface ViewController : UIViewController
 
+// FBSample logic
+// The views and view controllers in the SDK are designed to fit into your application in 
+// a similar fashion to other framework and custom view classes; this is an example of a 
+// typical outlet for the FBPriflePictureView
 @property (retain, nonatomic) IBOutlet FBProfilePictureView *profilePictureView;
 @property (retain, nonatomic) IBOutlet UIView *profilePictureOuterView;
 

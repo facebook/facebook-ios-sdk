@@ -16,6 +16,11 @@
  
 #import <UIKit/UIKit.h>
 
+// Profile Picture sample application
+//
+// The purpose of this sample application is to provide an example of 
+// how use the profile picture view to display a Facebook profile picture
+
 @class ViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>

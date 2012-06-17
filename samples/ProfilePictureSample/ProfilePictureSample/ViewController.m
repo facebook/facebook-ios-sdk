@@ -16,6 +16,10 @@
  
 #import "ViewController.h"
 
+// FBSample logic
+// You may set the profile for an FBProfilePictureView to either an fbid
+// or to a vanity name for the profile; the following list provides
+// examples of each approach, used by the random feature of the sample
 const char *interestingIDs[] = {
     "zuck",
     // Recent Presidents and nominees
@@ -71,13 +75,17 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 @synthesize profilePictureView;
 @synthesize profilePictureOuterView;
 
-
 - (IBAction)showJasonProfile:(id)sender {
-    // Notice how you can supply either the user's alias or their profile id
-    profilePictureView.userID = @"jascla";
+    // FBSample logic
+    // The following example uses an fbid to indicate which profile
+    // picture to display, however a vanity name would work as well
+    profilePictureView.userID = @"100002768941660";
 }
 
 - (IBAction)showMichaelProfile:(id)sender {
+    // FBSample logic
+    // This example and the one after it, in contrast to the prvious one, 
+    // uses a vanity name to indicate which profile picture to display
     profilePictureView.userID = @"michael.marucheck";
 }
 
@@ -88,11 +96,13 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 - (IBAction)showRandomProfile:(id)sender {
     int index = arc4random() % kNumInterestingIDs;
     profilePictureView.userID = [NSString stringWithCString:interestingIDs[index]
-                                               encoding:NSASCIIStringEncoding];
+                                                   encoding:NSASCIIStringEncoding];
 }
 
 // Cropping selections
 
+// FBSample logic
+// Set the cropping for the profile picture view
 - (IBAction)makePictureOriginal:(id)sender {
     profilePictureView.pictureCropping = FBProfilePictureCroppingOriginal;
 }
@@ -112,19 +122,17 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
     profilePictureOuterView.bounds = CGRectMake(0, 0, 220, 220);
 }
 
-
 #pragma mark -
 #pragma mark Template generated code
 
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // [self makePictureLarge:self];
+    [self makeViewLarge:nil];
     profilePictureView.userID = @"45963418107"; // Hello world
 }
 
 - (void)viewDidUnload {
-    self.profilePictureView.userID = nil;
     self.profilePictureView = nil;
     [super viewDidUnload];
 }
@@ -135,12 +143,6 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
     } else {
         return YES;
     }
-}
-
-- (void)dealloc {
-    profilePictureView.userID = nil;
-    [profilePictureView release];
-    [super dealloc];
 }
 
 @end
