@@ -47,6 +47,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
+@property (nonatomic) CGRect popoverFromRect;
 
 - (IBAction)announce:(id)sender;
 - (void)populateUserDetails;
@@ -75,6 +76,8 @@
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
 @synthesize imagePickerActionSheet = _imagePickerActionSheet;
+@synthesize popoverFromRect = _popoverFromRect;
+
 #pragma mark open graph
 
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
@@ -239,7 +242,18 @@
         self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
     }
     
-    [self presentModalViewController:self.imagePicker animated:true];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        // Can't use presentModalViewController for image picker on iPad
+        if (!self.popover) {
+            self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
+        }
+        [self.popover presentPopoverFromRect:self.popoverFromRect 
+                                      inView:self.view 
+                    permittedArrowDirections:UIPopoverArrowDirectionAny 
+                                    animated:YES];
+    } else {
+        [self presentModalViewController:self.imagePicker animated:true];
+    }
 }
 
 
@@ -518,23 +532,17 @@
             
         case 3:            
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-                // Can't use presentModalViewController for image picker on iPad
-                if (!self.popover) {
-                    self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
-                }
-                CGRect rect = [tableView rectForRowAtIndexPath:indexPath];
-                [self.popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-            } else {
-                if(! self.imagePickerActionSheet) {
-                    self.imagePickerActionSheet = [[UIActionSheet alloc] initWithTitle:@""
-                                           delegate:self
-                                           cancelButtonTitle:@"Cancel"
-                                           destructiveButtonTitle:nil
-                                           otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
-                }
-                
-                [self.imagePickerActionSheet showInView:self.view];
+                self.popoverFromRect = [tableView rectForRowAtIndexPath:indexPath];
             }
+            if(!self.imagePickerActionSheet) {
+                self.imagePickerActionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                                                          delegate:self
+                                                                 cancelButtonTitle:@"Cancel"
+                                                            destructiveButtonTitle:nil
+                                                                 otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+            }
+            
+            [self.imagePickerActionSheet showInView:self.view];
             // Return rather than execute below code
             return;
     }
