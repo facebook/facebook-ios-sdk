@@ -19,9 +19,6 @@
 #import "MPViewController.h"
 #import <FBiOSSDK/FBProfilePictureView.h>
 
-@interface MPAppDelegate ()
-@end		  
-
 @implementation MPAppDelegate
 
 @synthesize window = _window;
@@ -29,7 +26,9 @@
 @synthesize session = _session;
 
 // FBSample logic
-// if we have a valid session at the time of openURL call, we handle Facebook transitions
+// If we have a valid session at the time of openURL call, we handle Facebook transitions
+// by passing the url argument to handleOpenURL; see the "Just Login" sample application for
+// a more detailed discussion of handleOpenURL
 - (BOOL)application:(UIApplication *)application 
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
@@ -40,7 +39,7 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // FBSample logic
-    // if the app is going away, we invalidate the token if present
+    // if the app is going away, we close the session object
     [self.session close];
 }
 

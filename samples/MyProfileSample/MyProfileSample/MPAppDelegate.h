@@ -17,12 +17,25 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
+// My Profile sample application
+//
+// The purpose of this sample application is show how to use Facebook to 
+// personalize an application experience. This application shows how to 
+// manage login and logout using FBSession, as well as how to request 
+// and display additional user data using FBRequest and FBProfilePictureView.
+
 @class MPViewController;
 
 @interface MPAppDelegate : UIResponder<UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) MPViewController *viewController;
+
+// FBSample logic
+// In this sample the app delegate maintains a property for the current 
+// active session, and the view controllers reference the session via
+// this property. See the "Just Login" or "Switch User" sample for more
+// detailed discusison around login and token handling
 @property (strong, nonatomic) FBSession *session;
 
 @end
