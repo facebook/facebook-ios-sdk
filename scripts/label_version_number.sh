@@ -40,7 +40,7 @@ fi
 
 TAG_NAME=sdk-version-"$VERSION_STRING"
 
-git tag "$TAG_NAME" HEAD \
+git tag -a "$TAG_NAME" HEAD \
     || die 'Failed to tag HEAD. If this is a duplicate tag, please delete the old one first.'
 
 progress_message "Tagged HEAD as $TAG_NAME"
