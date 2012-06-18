@@ -38,7 +38,7 @@ test -d $FB_SDK_BUILD \
 cd $FB_SDK_SRC
 
 APPLEDOC=appledoc
-DOCSET="$FB_SDK_BUILD"/com.facebook.Facebook-SDK-3_0-for-iOS.docset
+DOCSET="$FB_SDK_BUILD"/"$FB_SDK_DOCSET_NAME"
 
 rm -rf $DOCSET
 

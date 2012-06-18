@@ -61,7 +61,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_FRAMEWORK=$FB_SDK_BUILD/$FB_SDK_FRAMEWORK_NAME
 
   # The name of the docset
-  FB_SDK_DOCSET_NAME=com.facebook.Facebook-iOS-SDK.docset
+  FB_SDK_DOCSET_NAME=com.facebook.Facebook-SDK-3_0-for-iOS.docset
 
   # The path to the framework docs
   FB_SDK_FRAMEWORK_DOCS=$FB_SDK_BUILD/$FB_SDK_DOCSET_NAME

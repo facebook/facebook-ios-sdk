@@ -7,3 +7,4 @@ Except as otherwise noted, the Facebook SDK for iOS is licensed under the Apache
 
 Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at http://developers.facebook.com/ios.
 
+NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK. A simple way to test your install is to build and run the project at ~/Documents/FacebookSDK/Samples/JustRequestSample/JustRequestSample.xcodeproj.
