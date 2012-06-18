@@ -32,8 +32,7 @@ static NSString *defaultImageName = @"FBiOSSDKResources.bundle/FBFriendPickerVie
 
 int const FBRefreshCacheDelaySeconds = 2;
 
-@interface FBFriendPickerViewController () <FBFriendPickerDelegate,
-                                            FBGraphObjectSelectionChangedDelegate, 
+@interface FBFriendPickerViewController () <FBGraphObjectSelectionChangedDelegate, 
                                             FBGraphObjectViewControllerDelegate,
                                             FBGraphObjectPagingLoaderDelegate>
 
@@ -119,7 +118,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     // Self
     self.allowsMultipleSelection = YES;
     self.dataSource = dataSource;
-    self.delegate = self;
+    self.delegate = nil;
     self.itemPicturesEnabled = YES;
     self.selectionManager = selectionManager;
     self.userID = @"me";

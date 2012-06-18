@@ -34,8 +34,7 @@ const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
 @"FBiOSSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
-@interface FBPlacePickerViewController () <FBPlacePickerDelegate,
-                                            FBGraphObjectSelectionChangedDelegate,
+@interface FBPlacePickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
                                             FBGraphObjectPagingLoaderDelegate>
 
@@ -125,7 +124,7 @@ static NSString *defaultImageName =
 
     // Self
     self.dataSource = dataSource;
-    self.delegate = self;
+    self.delegate = nil;
     self.selectionManager = selectionManager;
     self.resultsLimit = defaultResultsLimit;
     self.radiusInMeters = defaultRadius;

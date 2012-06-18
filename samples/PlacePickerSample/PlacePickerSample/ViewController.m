@@ -24,6 +24,10 @@ enum SampleLocation {
     SampleLocationGPS,
 };
 
+// FBSample logic
+// We need to handle some of the UX events related to friend selection, and so we declare
+// that we implement the FBPlacePickerDelegate here; the delegate lets us filter the view
+// as well as handle selection events
 @interface ViewController () <CLLocationManagerDelegate, FBPlacePickerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
@@ -42,14 +46,20 @@ enum SampleLocation {
 @synthesize viewStateSearchText = _viewStateSearchText;
 @synthesize viewStateSearchWasActive = _viewStateSearchWasActive;
 
+// FBSample logic
+// This method is responsible for keeping UX and session state in sync
 - (void)refresh {
     AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
+    // if the session is open, then load the data for our view controller
     if (appDelegate.session.isOpen) {
+        // setting the session here on our base class in order
+        // to enable fetching data for the view controller
         self.session = appDelegate.session;
 
-        // Default to Seattle
+        // Default to Seattle, this method calls loadData
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
     } else {
+        // if the session isn't open, we open it here, which may cause UX to log in the user
         [appDelegate.session openWithCompletionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
             {
@@ -71,6 +81,9 @@ enum SampleLocation {
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchScope:(NSInteger)searchOption {
     switch (searchOption) {
         case SampleLocationSeattle:
+            // FBSample logic
+            // After setting the coordinates for the data we wish to fetch, we call loadData to initiate 
+            // the actual network round-trip with Facebook; likewise for the other two locations
             self.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
             [self loadData];
             break;
@@ -90,6 +103,11 @@ enum SampleLocation {
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
+    // FBSample logic
+    // When search text changes, we update the property on our base class, and then refetch data; the 
+    // Scrumptious sample shows a more complex implementation of this, where frequent updates are aggregated,
+    // and fetching happens on a timed basis to avoid becomming to chatty with the server; this sample takes
+    // a more simplistic approach
     self.searchText = searchString;
     [self loadData];
 
@@ -104,6 +122,9 @@ enum SampleLocation {
 
 - (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
 {
+    // FBSample logic
+    // Here we see a use of the FBGraphPlace protocol, where our code can use dot-notation to 
+    // select name and location data from the selected place
     id<FBGraphPlace> place = placePicker.selection;
 
     // we'll use logging to show the simple typed property access to place and location info
@@ -118,6 +139,11 @@ enum SampleLocation {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // FBSample logic
+    // We are inheriting FBPlacePickerViewController, and so in order to handle events such 
+    // as selection change, we set our base class' delegate property to self
+    self.delegate = self;
 
     self.searchDisplayController.searchResultsDataSource = self.tableView.dataSource;
     self.searchDisplayController.searchResultsDelegate = self.tableView.delegate;

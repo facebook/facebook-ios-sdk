@@ -17,6 +17,14 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
+// Place Picker sample application
+//
+// The purpose of this sample application is to provide a very simple 
+// example of the FBPlacePickerViewController, without other bells and
+// whistles to destract from the widget. This is a single-view application
+// with simplistic authentication with Facebook. The view-controller for
+// the applicaiton (ViewController) inherits FBPlacePicerViewController.
+
 @class ViewController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
