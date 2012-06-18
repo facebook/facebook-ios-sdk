@@ -24,11 +24,13 @@
  @protocol
  
  @abstract
- A graph accessor recognized by the SDK to indicate a custom Open Graph action
+ The `FBOpenGraphAction` protocol is the base protocol for use in posting and retrieving Open Graph actions. 
+ It inherits from the `FBGraphObject` protocol; you may derive custome protocols from `FBOpenGraphAction` in order
+ implement typed access to your applicaitons custom actions.
  
  @discussion
  Represents an Open Graph custom action, to be used directly, or from which to
- derive custom action protocols with custom properties
+ derive custom action protocols with custom properties.
  */
 @protocol FBOpenGraphAction<FBGraphObject>
 

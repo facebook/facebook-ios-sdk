@@ -20,15 +20,27 @@
  @class
  
  @abstract
- Implementors execute token and expiration-date caching and fetching logic
- for a Facebook integrated application
+ The `FBSessionTokenCachingStrategy` class is responsible for persisting and retrieving cached data related to
+ an <FBSession> object, including the user's Facebook access token. 
  
  @discussion
- FBSessionTokenCachingStrategy is designed to be used as a base class. Inheritors should override
- cacheTokenInformation, fetchTokenInformation, and clearToken. This enables any token caching scheme
- to be used by an application, including no token-caching at all. Implementing a custom FBSessionTokenCachingStrategy
- is an advanced technique; most applications will use the default token caching strategy implemented by the SDK.
- @unsorted
+ `FBSessionTokenCachingStrategy` is designed to be instantiated directly or used as a base class. Usually default
+ token caching behavior is sufficient, and you do not need to interface directly with `FBSessionTokenCachingStrategy` objects.
+ However, if you need to control where or how `FBSession` information is cached, then you may take one of two approaches.
+ 
+ The first and simplest approach is to instantiate an instance of `FBSessionTokenCachingStrategy`, and then pass
+ the instance to `FBSession` class' `init` method. This enables your application to control the key name used in
+ `NSUserDefaults` to store session information. You may consider this approach if you plan to cache session information
+ for multiple users.
+ 
+ The second and more advanced approached is to derive a custom class from `FBSessionTokenCachingStrategy`, which will
+ be responsible for caching behavior of your application. This approach is useful if you need to change where the 
+ information is cached, for example if you prefer to use the filesystem or make a network connection to fetch and
+ persist cached tokens.  Inheritors should override the cacheTokenInformation, fetchTokenInformation, and clearToken methods.
+ Doing this enables your application to implement any token caching scheme, including no caching at all.
+ 
+ Direct use of `FBSessionTokenCachingStrategy`is an advanced technique. Most applications use <FBSession> objects without
+ passing an `FBSessionTokenCachingStrategy`, which yields default caching to `NSUserDefaults`.
  */
 @interface FBSessionTokenCachingStrategy : NSObject
 

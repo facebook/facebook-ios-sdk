@@ -20,13 +20,15 @@
  @protocol
  
  @abstract
- Base protocol to enable typed access to graph object data
+ The `FBGraphObject` protocol is the base protocol which enables typed access to graph objects and
+ open graph objects. Inherit from this protocol or a sub-protocol in order to introduce custom types
+ for typed access to Facebook objects.
  
  @discussion
- The FBGraphObject protocol is the core type used by the Facebook SDK for iOS to 
+ The `FBGraphObject` protocol is the core type used by the Facebook SDK for iOS to 
  represent objects in the Facebook Social Graph and the Facebook Open Graph (OG).
- The FBGraphObject class implements useful default functionality, but is rarely
- used directly by applications. The FBGraphObject protocol, in contrast is the
+ The `FBGraphObject` class implements useful default functionality, but is rarely
+ used directly by applications. The `FBGraphObject` protocol, in contrast is the
  base protocol for all graph object access via the SDK. 
  
  Goals of the FBGraphObject types:
@@ -41,7 +43,7 @@
  the flexibility necessary for Social Graph and OG uses, and the static facade
  increases discoverability, maintainability, robustness and simplicity.
  The following excerpt from the PlacePickerSample shows a simple use of the 
- a facade protocol FBGraphPlace by an application: 
+ a facade protocol `FBGraphPlace` by an application: 
 
  <pre>
  &dash; (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
@@ -60,7 +62,7 @@
  
  Note that in this example, access to common place information is available through typed property
  syntax. But if at some point places in the Social Graph supported additional fields "foo" and "bar", not
- reflected in the FBGraphPlace protocol, the application could still access the values like so:
+ reflected in the `FBGraphPlace` protocol, the application could still access the values like so:
 
  <pre>
  NSString *foo = [place objectForKey:@"foo"]; // perhaps located at the ... in the preceding example
@@ -68,7 +70,7 @@
  </pre>
  
  In addition to untyped access, applications and future revisions of the SDK may add facade protocols by 
- declaring a protocol inheriting the FBGraphObject protocol, like so:
+ declaring a protocol inheriting the `FBGraphObject` protocol, like so:
 
  <pre>
  &#064;protocol MyGraphThing&#060;FBGraphObject&#062;
@@ -78,8 +80,8 @@
  </pre>
  
  Important: facade implementations are inferred by graph objects returned by the methods of the SDK. This 
- means that no explicit implementation is required by application or SDK code. Any FBGraphObject instance 
- may be cast to any FBGraphObject facade protocol, and accessed via properties. If a field is not present 
+ means that no explicit implementation is required by application or SDK code. Any `FBGraphObject` instance 
+ may be cast to any `FBGraphObject` facade protocol, and accessed via properties. If a field is not present 
  for a given facade property, the property will return nil.
 
  The following layer diagram depicts some of the concepts discussed thus far:
@@ -88,20 +90,20 @@
                        *-------------* *------------* *-------------**--------------------------*
             Facade --> | FBGraphUser | |FBGraphPlace| | MyGraphThing|| MyGraphPersonExtentension| ...
                        *-------------* *------------* *-------------**--------------------------*
-                       *---------------------------------* *------------------------------------*
-  Transparent impl --> | FBGraphObject       (instances) | |     CustomClass&#060;FBGraphObject&#062;     |
-                       *---------------------------------* *------------------------------------*
+                       *------------------------------------* *--------------------------------------*
+  Transparent impl --> |     FBGraphObject (instances)      | |      CustomClass&#060;FBGraphObject&#062;      |
+                       *------------------------------------* *--------------------------------------*
                        *-------------------**------------------------* *-----------------------------*
      Apparent impl --> |NSMutableDictionary||FBGraphObject (protocol)| |FBGraphObject (class methods)|
                        *-------------------**------------------------* *-----------------------------*
  </pre>
  
  The *Facade* layer is meant for typed access to graph objects. The *Transparent impl* layer (more 
- specifically, the instance capabilities of FBGraphObject) are used by the SDK and app logic
+ specifically, the instance capabilities of `FBGraphObject`) are used by the SDK and app logic
  internally, but are not part of the public interface between application and SDK. The *Apparent impl*
  layer represents the lower-level "duck-typed" use of graph objects.
 
- Implementation note: the SDK returns NSMutableDictionary derived instances with types declared like
+ Implementation note: the SDK returns `NSMutableDictionary` derived instances with types declared like
  one of the following:
  
  <pre>
@@ -109,15 +111,15 @@
  NSMutableDictionary&#060;FBGraphPlace&#062; *person;   // facade specified when possible
  </pre>
  
- However, when passing a graph object to the SDK, NSMutableDictionary is not assumed; only the
+ However, when passing a graph object to the SDK, `NSMutableDictionary` is not assumed; only the
  FBGraphObject protocol is assumed, like so:
 
  <pre>
  id&#060;FBGraphObject&#062; anyGraphObj;
  </pre>
  
- As such, the methods declared on the FBGraphObject protocol represent the methods used by the SDK to 
- consume graph objects. While the FBGraphObject class implements the full NSMutableDictionary and KVC
+ As such, the methods declared on the `FBGraphObject` protocol represent the methods used by the SDK to 
+ consume graph objects. While the `FBGraphObject` class implements the full `NSMutableDictionary` and KVC
  interfaces, these are not consumed directly by the SDK, and are optional for custom implementations.
  */
 @protocol FBGraphObject<NSObject>
@@ -125,13 +127,13 @@
 /*!
  @method
  @abstract
- Returns the number of properties on this FBGraphObject.
+ Returns the number of properties on this `FBGraphObject`.
  */
 - (NSUInteger)count;
 /*!
  @method
  @abstract
- Returns a property on this FBGraphObject.
+ Returns a property on this `FBGraphObject`.
  
  @param aKey        name of the property to return
  */
@@ -139,13 +141,13 @@
 /*!
  @method
  @abstract
- Returns an enumerator of the property naems on this FBGraphObject.
+ Returns an enumerator of the property naems on this `FBGraphObject`.
  */
 - (NSEnumerator *)keyEnumerator;
 /*!
  @method
  @abstract
- Removes a property on this FBGraphObject.
+ Removes a property on this `FBGraphObject`.
 
  @param aKey        name of the property to remove
  */
@@ -153,7 +155,7 @@
 /*!
  @method
  @abstract
- Sets the value of a property on this FBGraphObject.
+ Sets the value of a property on this `FBGraphObject`.
 
  @param anObject    the new value of the property
  @param aKey        name of the property to set
@@ -171,7 +173,7 @@
  @discussion
  The public interface of this class is useful for creating objects that have the same graph characteristics
  of those returned by methods of the SDK. This class also represents the internal implementation of the
- FBGraphObject protocol, used by the Facebook SDK. Application code should not use the FBGraphObject class to 
+ `FBGraphObject` protocol, used by the Facebook SDK. Application code should not use the `FBGraphObject` class to 
  access instances and instance members, favoring the protocol.
  */
 @interface FBGraphObject : NSMutableDictionary<FBGraphObject>
@@ -186,14 +188,14 @@
 /*!
  @method
  @abstract
- Used to wrap an existing dictionary with a FBGraphObject facade
+ Used to wrap an existing dictionary with a `FBGraphObject` facade
 
  @discussion
  Normally you will not need to call this method, as the Facebook SDK already "FBGraphObject-ifys" json objects
- fetch via FBRequest/FBRequest connection. However, you may have other reasons to create json objects in your 
+ fetch via `FBRequest` and `FBRequestConnection`. However, you may have other reasons to create json objects in your 
  application, which you would like to treat as a graph object. The pattern for doing this is that you pass the root
  node of the json to this method, to retrieve a wrapper. From this point, if you traverse the graph, any other objects
- deeper in the hierarchy will be wrapped as FBGraphObject's in a lazy fashion.
+ deeper in the hierarchy will be wrapped as `FBGraphObject`'s in a lazy fashion.
  
  This method is designed to avoid unnecessary memory allocations, and object copying. Due to this, the method does
  not copy the source object if it can be avoided, but rather wraps and uses it as is. The returned object derives 
@@ -207,14 +209,14 @@
 /*!
  @method
  @abstract
- Used to compare two FBGraphObjects to determine if represent the same object. We do not overload
- the concept of equality as there are various types of equality that may be important for an FBGraphObject
- (for instance, two different FBGraphObjects could represent the same object, but contain different
+ Used to compare two `FBGraphObject`s to determine if represent the same object. We do not overload
+ the concept of equality as there are various types of equality that may be important for an `FBGraphObject`
+ (for instance, two different `FBGraphObject`s could represent the same object, but contain different
  subsets of fields).
  
- @param anObject          an FBGraphObject to test
+ @param anObject          an `FBGraphObject` to test
 
- @param anotherObject     the FBGraphObject to compare it against
+ @param anotherObject     the `FBGraphObject` to compare it against
  */
 + (BOOL)isGraphObjectID:(id<FBGraphObject>)anObject sameAs:(id<FBGraphObject>)anotherObject;
 
