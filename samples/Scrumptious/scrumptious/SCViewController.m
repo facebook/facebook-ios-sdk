@@ -345,6 +345,10 @@
     // Get the CLLocationManager going.
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    // We don't want to be notified of small changes in location, preferring to use our
+    // last cached results, if any.
+    self.locationManager.distanceFilter = 50;
     [self.locationManager startUpdatingLocation];
     
     // We want a Logout button in the upper-right.
@@ -507,6 +511,8 @@
             }
             self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
             self.placePickerController.session = self.session;
+            self.placePickerController.radiusInMeters = 1000;
+            self.placePickerController.resultsLimit = 50;
             
             // SIMULATOR BUG:
             // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
@@ -587,14 +593,24 @@
 - (void)locationManager:(CLLocationManager *)manager 
     didUpdateToLocation:(CLLocation *)newLocation 
            fromLocation:(CLLocation *)oldLocation {
-    if (self.locationManager &&
-        newLocation.horizontalAccuracy < 100) {
-        // We wait for a precision of 100m and turn the GPS off
-        [self.locationManager stopUpdatingLocation];
-        
-        self.placePickerController.locationCoordinate = newLocation.coordinate;
-        if (self.placePickerController.session) {
+    if (!oldLocation ||
+        (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
+         oldLocation.coordinate.longitude != newLocation.coordinate.longitude)) {
+        // FBSample logic
+        // If we already have a place picker, reload its data. If not, pre-fetch the
+        // data so it is displayed quickly on first use of the place picker.
+        if (self.placePickerController) {
+            self.placePickerController.locationCoordinate = newLocation.coordinate;
             [self.placePickerController loadData];
+        } else {
+            FBCacheDescriptor *cacheDescriptor = 
+            [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:newLocation.coordinate
+                                                                radiusInMeters:1000
+                                                                    searchText:nil 
+                                                                  resultsLimit:50 
+                                                              fieldsForRequest:nil];
+            [cacheDescriptor prefetchAndCacheForSession:self.session];
+            
         }
     }
 }
