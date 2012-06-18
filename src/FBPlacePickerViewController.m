@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+
 #import "FBError.h"
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
@@ -53,6 +54,7 @@ static NSString *defaultImageName =
 
 @implementation FBPlacePickerViewController {
     BOOL _hasSearchTextChangedSinceLastQuery;
+
 }
 
 @synthesize dataSource = _dataSource;
@@ -93,6 +95,7 @@ static NSString *defaultImageName =
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+
 
     if (self) {
         [self initialize];

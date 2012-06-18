@@ -18,6 +18,9 @@
 
 @class FBSession;
 
+// FBSample logic
+// This view presents a simple UI with a Login button that will log the user in to Facebook,
+// using SSO if possible, otherwise using the web dialog UI.
 @interface SCLoginViewController : UIViewController
 
 - (void)loginFailed;

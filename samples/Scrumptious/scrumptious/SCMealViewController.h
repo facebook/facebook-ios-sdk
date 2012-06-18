@@ -17,6 +17,8 @@
 #import <UIKit/UIKit.h>
 #import "SCViewController.h"
 
+// FBSample logic
+// Presents a simple menu listing a few types of food for the user to pick from.
 @interface SCMealViewController : UIViewController
 
 @property (copy, nonatomic) SelectItemCallback selectItemCallback;

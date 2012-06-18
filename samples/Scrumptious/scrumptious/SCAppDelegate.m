@@ -25,6 +25,7 @@
 @property (strong, nonatomic) SCViewController *mainViewController;
 
 - (FBSession*)createNewSession;
+- (void)showLoginViewWithError:(BOOL)error;
 
 @end
 
@@ -39,21 +40,28 @@
 #pragma mark Facebook Login Code
 
 - (FBSession*)createNewSession {
+    // FBSample logic
+    // This sample requires permissions beyond the default permissions in order to upload
+    // a photo and create an Open Graph Action.
     NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
     self.session = [[FBSession alloc] initWithPermissions:permissions];
 
     return self.session;
 }
 
-- (void)showLoginView {
+- (void)showLoginViewWithError:(BOOL)error {
     UIViewController *topViewController = [self.navController topViewController];
     UIViewController *modalViewController = [topViewController modalViewController];
     
+    // FBSample logic
+    // If the login screen is not already displayed, display it. If we got an error, notify
+    // the controller.
     if (![modalViewController isKindOfClass:[SCLoginViewController class]]) {
         SCLoginViewController* loginViewController = [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" 
                                                                                             bundle:nil];
         [topViewController presentModalViewController:loginViewController animated:NO];
-    } else {
+    } 
+    if (error) {
         SCLoginViewController* loginViewController = (SCLoginViewController*)modalViewController;
         [loginViewController loginFailed];
     }
@@ -63,6 +71,10 @@
                       state:(FBSessionState)state
                       error:(NSError *)error
 {
+    // FBSample logic
+    // Any time the session is closed, we want to display the login controller (the user
+    // cannot use the application unless they are logged in to Facebook). When the session
+    // is opened successfully, hide the login controller and show the main UI.
     switch (state) {
         case FBSessionStateOpen: {
                 UIViewController *topViewController = [self.navController topViewController];
@@ -70,13 +82,15 @@
                     [topViewController dismissModalViewControllerAnimated:YES];
                 }
                 
-                // fetch and cache the friends for the friend picker as soon as possible
+                // FBSample logic
+                // Pre-fetch and cache the friends for the friend picker as soon as possible
                 FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
                 [cacheDescriptor prefetchAndCacheForSession:session];
             }
             break;
         case FBSessionStateClosed:
         case FBSessionStateClosedLoginFailed:
+            // FBSample logic
             // Once the user has logged in, we want them to be looking at the root view.
             [self.navController popToRootViewControllerAnimated:NO];
             
@@ -84,7 +98,7 @@
             self.session = nil;
             
             [self createNewSession];
-            [self showLoginView];
+            [self showLoginViewWithError:(state == FBSessionStateClosedLoginFailed)];
             break;
         default:
             break;
@@ -106,6 +120,7 @@
          [self sessionStateChanged:session state:state error:error];
      }];    
 }
+
 - (void)closeSession {
     [self.session closeAndClearTokenInformation];
 }
@@ -114,6 +129,9 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication 
          annotation:(id)annotation {
+    // FBSample logic
+    // We need to handle URLs by passing them to FBSession in order for SSO authentication
+    // to work.
     return [self.session handleOpenURL:url]; 
 }
 
@@ -137,6 +155,7 @@
     
     [self.window makeKeyAndVisible];
     
+    // FBSample logic
     // Create an FBSession and see if it's got a token.
     [self createNewSession];
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
@@ -144,7 +163,7 @@
         [self openSession];
     } else {
         // No, display the login page.
-        [self showLoginView];
+        [self showLoginViewWithError:NO];
     }
     
     return YES;

@@ -19,11 +19,20 @@
 
 @class SCViewController;
 
+// Scrumptious sample application
+//
+// The purpose of the Scrumptious sample application is to demonstrate a complete real-world
+// application that includes Facebook integration, friend picker, place picker, and Open Graph
+// Action creation and posting.
 @interface SCAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) FBSession *session;
 @property (strong, nonatomic) UIWindow *window;
 
+// FBSample logic
+// The app delegate is responsible for maintaining the current FBSession. The application requires
+// the user to be logged in to Facebook in order to do anything interesting -- if there is no valid
+// FBSession, a login screen is displayed.
 - (void)openSession;
 - (void)closeSession;
 

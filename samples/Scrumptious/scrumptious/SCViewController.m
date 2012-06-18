@@ -80,7 +80,11 @@
 
 #pragma mark open graph
 
-- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
+
+// FBSample logic
+// Creates an Open Graph object using a simple repeater app that just echoes its
+// input back as the properties of the OG object.
+- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {    
     // This URL is specific to this sample, and can be used to create arbitrary
     // OG objects for this app; your OG objects will have URLs hosted by your server.
     NSString *format =  
@@ -100,6 +104,8 @@
     return result;
 }
 
+// FBSample logic
+// Creates the Open Graph Action with an optional photo URL.
 - (void)postOpenGraphActionWithPhotoURL:(NSString *)photoURL withUserGeneratedFlag:(BOOL)userGenerated {
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
@@ -149,6 +155,11 @@
      }];
 }
 
+// FBSample logic
+// Creates an Open Graph Action using the user-specified properties, optionally first
+// uploading a photo to Facebook and attaching it to the action. If the photo is large
+// enough, the user_generated flag is used to indicate that the photo should be displayed
+// in a larger format than a normal image associated with an Open Graph Action.
 - (void)postPhotoThenOpenGraphAction {
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
@@ -187,6 +198,9 @@
     [connection start];
 }
 
+// FBSample logic
+// Handles the user clicking the Announce button, by either creating an Open Graph Action
+// or first uploading a photo and then creating the action.
 - (IBAction)announce:(id)sender {
     if (self.selectedPhoto) {
         [self postPhotoThenOpenGraphAction];
@@ -300,6 +314,9 @@
     self.announceButton.enabled = (self.selectedMeal != nil);
 }
 
+// FBSample logic
+// Displays the user's name and profile picture so they are aware of the Facebook
+// identity they are logged in as.
 - (void)populateUserDetails {
     if (self.session.isOpen) {
         [[FBRequest requestForMeWithSession:self.session] startWithCompletionHandler:
@@ -310,12 +327,6 @@
              }
          }];   
     }
-}
-
-- (void)showLoginView {
-    SCLoginViewController *loginView = 
-    [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" bundle:nil];
-    [self presentModalViewController:loginView animated:NO];
 }
 
 - (void)dealloc {
@@ -359,6 +370,9 @@
     }
 }
 
+// FBSample logic
+// Closes the user's session, which will cause the login screen to be displayed by the
+// [SCAppDelegate sessionStateChanged:state:error:] handler.
 -(void)logoutButtonWasPressed:(id)sender {
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate closeSession];

@@ -19,6 +19,9 @@
 
 typedef void(^SelectItemCallback)(id sender, id selectedItem);
 
+// FBSample logic
+// The main UI for the application, which lets the user select a type of food, tag who they
+// are with and where they are, and choose a photo for attaching to an Open Graph Action.
 @interface SCViewController : UIViewController
 
 @end
