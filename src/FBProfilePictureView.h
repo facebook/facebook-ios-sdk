@@ -25,10 +25,10 @@
  @discussion
  */
 typedef enum {
-    /*! Original (default) - the original profile picture, as uploaded */
+    /*! Original (default) - the original profile picture, as uploaded. */
     FBProfilePictureCroppingOriginal    = 0,
     
-    /*! Square - the square version that the Facebook user defined */
+    /*! Square - the square version that the Facebook user defined. */
     FBProfilePictureCroppingSquare      = 1
     
 } FBProfilePictureCropping;
@@ -36,9 +36,11 @@ typedef enum {
 /*!
  @class
  @abstract
- View used to display a profile picture.  Default behavior of this control centers the profile picture
- in the control and shrinks it, if necessary, to the controls bounds, preserving aspect ratio. The smallest
- possible image is downloaded to ensure that scaling up never happens.  Resizing the control may result in 
+ An instance of `FBProfilePictureView` is used to display a profile picture.  
+ 
+ The default behavior of this control is to center the profile picture
+ in the view and shrinks it, if necessary, to the view's bounds, preserving the aspect ratio. The smallest
+ possible image is downloaded to ensure that scaling up never happens.  Resizing the view may result in 
  a different size of the image being loaded.  Canonical image sizes are documented in the "Pictures" section
  of https://developers.facebook.com/docs/reference/api. 
  */
@@ -46,29 +48,29 @@ typedef enum {
 
 /*!
  @abstract
- Specifies the fbid for the user, place or object for which a picture should be fetched and displayed
+ The Facebook ID of the user, place or object for which a picture should be fetched and displayed.
  */
 @property (copy, nonatomic) NSString* userID;
 
 /*!
  @abstract
- Specifies which cropping of the profile picture to use.
+ The cropping to use for the profile picture.
  */
 @property (nonatomic) FBProfilePictureCropping pictureCropping;
 
 /*!
  @abstract
- Initializes and returns a ProfilePictureView
+ Initializes and returns a profile view object.
  */
 - (id)init;
 
 
 /*!
  @abstract
- Initializes and returns a ProfilePictureView
+ Initializes and returns a profile view object for the given Facebook ID and cropping.
  
- @param userID          Specifies the fbid for the object for which a picture should be fetched and displayed
- @param pictureCropping Specifies the cropping for the picture displayed.
+ @param userID          The Facebook ID of the user, place or object for which a picture should be fetched and displayed.
+ @param pictureCropping The cropping to use for the profile picture.
  */
 - (id)initWithUserID:(NSString*)userID 
   andPictureCropping:(FBProfilePictureCropping)pictureCropping;

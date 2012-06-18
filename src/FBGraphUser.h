@@ -22,66 +22,68 @@
  @protocol 
  
  @abstract
- A graph accessor protocol used to access facebook user information
+ The `FBGraphUser` protocol enables typed access to a user object
+ as represented in the Graph API.
+
  
  @discussion
- Represents commonly used properties of a Facebook User object, may be used to access an
- NSDictionary object for which the treatAsGraphObject method has been called; graph accessors 
- enable typed access to Facebook graph objects
+ The `FBGraphUser` protocol represents the most commonly used properties of a 
+ Facebook user object. It may be used to access an `NSDictionary` object that has
+ been wrapped with an <FBGraphObject> facade.
  */
 @protocol FBGraphUser<FBGraphObject>
 
 /*!
  @property
- @abstract Typed access to user's id
+ @abstract Typed access to the user's ID.
  */
 @property (retain, nonatomic) NSString *id;
 
 /*!
  @property
- @abstract Typed access to user's name
+ @abstract Typed access to the user's name.
  */
 @property (retain, nonatomic) NSString *name;
 
 /*!
  @property
- @abstract Typed access to user's first name
+ @abstract Typed access to the user's first name.
  */
 @property (retain, nonatomic) NSString *first_name;
 
 /*!
  @property
- @abstract Typed access to user's middle name
+ @abstract Typed access to the user's middle name.
  */
 @property (retain, nonatomic) NSString *middle_name;
 
 /*!
  @property
- @abstract Typed access to user's last name
+ @abstract Typed access to the user's last name.
  */
 @property (retain, nonatomic) NSString *last_name;
 
 /*!
  @property 
- @abstract Typed access to user's link
+ @abstract Typed access to the user's profile URL.
  */
 @property (retain, nonatomic) NSString *link;
 
 /*!
  @property 
- @abstract Typed access to user's username
+ @abstract Typed access to the user's username.
  */
 @property (retain, nonatomic) NSString *username;
 
 /*!
  @property 
- @abstract Typed access to user's birthday
+ @abstract Typed access to the user's birthday.
  */
 @property (retain, nonatomic) NSString *birthday;
 
 /*!
  @property 
- @abstract Typed access to user's location
+ @abstract Typed access to the user's current city.
  */
 @property (retain, nonatomic) id<FBGraphLocation> location;
 
