@@ -155,9 +155,13 @@ static NSString *loadingText = @"Loading...";
                   result:(id)result
                    error:(NSError *)error {
     // not the completion we were looking for...
-    if (connection != self.requestConnection) {
+    if (self.requestConnection &&
+        connection != self.requestConnection) {
         return;
     }
+    
+    // clean this up, for posterity
+    self.requestConnection = nil;
 
     if ([self.textOutput.text isEqualToString:loadingText]) {
         self.textOutput.text = @"";
