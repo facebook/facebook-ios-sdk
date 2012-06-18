@@ -72,7 +72,7 @@
     }    
     
     cell.textLabel.text = [_meals objectAtIndex:indexPath.row];
-    cell.imageView.image = [UIImage imageNamed:@"fruit.png"];
+    cell.imageView.image = [UIImage imageNamed:@"action-eating.png"];
     
     return cell;
 }

@@ -17,6 +17,10 @@
 		84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */; };
 		84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D4152A38780070DD9C /* JLViewController_iPad.xib */; };
 		84C757DD152A3A230070DD9C /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757DC152A3A220070DD9C /* FBiOSSDK.framework */; };
+		84E7AF45158FAB2F006009C7 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF41158FAB2F006009C7 /* Icon-72.png */; };
+		84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */; };
+		84E7AF47158FAB2F006009C7 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF43158FAB2F006009C7 /* Icon.png */; };
+		84E7AF48158FAB2F006009C7 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF44158FAB2F006009C7 /* Icon@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +39,10 @@
 		84C757D2152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPhone.xib; sourceTree = "<group>"; };
 		84C757D5152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPad.xib; sourceTree = "<group>"; };
 		84C757DC152A3A220070DD9C /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+		84E7AF41158FAB2F006009C7 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		84E7AF43158FAB2F006009C7 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		84E7AF44158FAB2F006009C7 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +105,10 @@
 		84C757C3152A38770070DD9C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				84E7AF41158FAB2F006009C7 /* Icon-72.png */,
+				84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */,
+				84E7AF43158FAB2F006009C7 /* Icon.png */,
+				84E7AF44158FAB2F006009C7 /* Icon@2x.png */,
 				84C757C4152A38770070DD9C /* JustLoginSample-Info.plist */,
 				84C757C5152A38770070DD9C /* InfoPlist.strings */,
 				84C757C8152A38770070DD9C /* main.m */,
@@ -158,6 +170,10 @@
 				84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */,
 				84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */,
 				84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */,
+				84E7AF45158FAB2F006009C7 /* Icon-72.png in Resources */,
+				84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */,
+				84E7AF47158FAB2F006009C7 /* Icon.png in Resources */,
+				84E7AF48158FAB2F006009C7 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

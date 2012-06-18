@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		846809C1158F85A100F2DBB9 /* action-eating.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BD158F85A100F2DBB9 /* action-eating.png */; };
+		846809C2158F85A100F2DBB9 /* action-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BE158F85A100F2DBB9 /* action-location.png */; };
+		846809C3158F85A100F2DBB9 /* action-people.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BF158F85A100F2DBB9 /* action-people.png */; };
+		846809C4158F85A100F2DBB9 /* action-photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809C0158F85A100F2DBB9 /* action-photo.png */; };
 		85394EAC15546CC400550929 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EAB15546CC400550929 /* FBiOSSDK.framework */; };
 		85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */; };
 		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
@@ -16,9 +20,6 @@
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */; };
 		B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */; };
-		B9C1C36F1512B153008FA5D1 /* pin.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C36E1512B153008FA5D1 /* pin.png */; };
-		B9C1C3711512B207008FA5D1 /* fruit.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C3701512B207008FA5D1 /* fruit.png */; };
-		B9C1C3781512BCA7008FA5D1 /* profile.png in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C3771512BCA7008FA5D1 /* profile.png */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
 		B9CD0A78150EA4DD00560A93 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A77150EA4DD00560A93 /* CoreGraphics.framework */; };
@@ -30,28 +31,24 @@
 		B9CD0A96150EBF5400560A93 /* SCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */; };
 		B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */; };
 		B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A99150EBFFB00560A93 /* facebook.png */; };
-		B9CD0A9C150EC09500560A93 /* app_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A9B150EC09500560A93 /* app_icon.png */; };
-		B9D097311510369C00F92938 /* food.png in Resources */ = {isa = PBXBuildFile; fileRef = B9D0972E1510369C00F92938 /* food.png */; };
-		B9D097321510369C00F92938 /* house.png in Resources */ = {isa = PBXBuildFile; fileRef = B9D0972F1510369C00F92938 /* house.png */; };
-		B9D097331510369C00F92938 /* users.png in Resources */ = {isa = PBXBuildFile; fileRef = B9D097301510369C00F92938 /* users.png */; };
-		B9D12A191513C3F1003A5540 /* pictures.png in Resources */ = {isa = PBXBuildFile; fileRef = B9D12A181513C3F1003A5540 /* pictures.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		846809BD158F85A100F2DBB9 /* action-eating.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-eating.png"; path = "scrumptious/images/action-eating.png"; sourceTree = SOURCE_ROOT; };
+		846809BE158F85A100F2DBB9 /* action-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-location.png"; path = "scrumptious/images/action-location.png"; sourceTree = SOURCE_ROOT; };
+		846809BF158F85A100F2DBB9 /* action-people.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-people.png"; path = "scrumptious/images/action-people.png"; sourceTree = SOURCE_ROOT; };
+		846809C0158F85A100F2DBB9 /* action-photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-photo.png"; path = "scrumptious/images/action-photo.png"; sourceTree = SOURCE_ROOT; };
 		85394EAB15546CC400550929 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
-		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
-		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
-		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
+		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
+		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
 		B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCMealViewController.m; sourceTree = "<group>"; };
 		B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCMealViewController.xib; sourceTree = "<group>"; };
-		B9C1C36E1512B153008FA5D1 /* pin.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pin.png; path = images/pin.png; sourceTree = "<group>"; };
-		B9C1C3701512B207008FA5D1 /* fruit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = fruit.png; path = images/fruit.png; sourceTree = "<group>"; };
-		B9C1C3771512BCA7008FA5D1 /* profile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = profile.png; path = images/profile.png; sourceTree = "<group>"; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B9CD0A75150EA4DD00560A93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -69,11 +66,6 @@
 		B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCLoginViewController.m; sourceTree = "<group>"; };
 		B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCLoginViewController.xib; sourceTree = "<group>"; };
 		B9CD0A99150EBFFB00560A93 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = facebook.png; path = images/facebook.png; sourceTree = "<group>"; };
-		B9CD0A9B150EC09500560A93 /* app_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = app_icon.png; path = images/app_icon.png; sourceTree = "<group>"; };
-		B9D0972E1510369C00F92938 /* food.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = food.png; path = images/food.png; sourceTree = "<group>"; };
-		B9D0972F1510369C00F92938 /* house.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = house.png; path = images/house.png; sourceTree = "<group>"; };
-		B9D097301510369C00F92938 /* users.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = users.png; path = images/users.png; sourceTree = "<group>"; };
-		B9D12A181513C3F1003A5540 /* pictures.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pictures.png; path = images/pictures.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,9 +88,6 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
-				856DC2171577F105001FA6A6 /* Icon-72.png */,
-				856DC2181577F105001FA6A6 /* Icon.png */,
-				856DC2191577F105001FA6A6 /* Icon@2x.png */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
 				B9CD0A70150EA4DD00560A93 /* Products */,
@@ -116,7 +105,6 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8592BE3915816CBF00056680 /* AddressBook.framework */,
 				8592BE3C15816CCC00056680 /* AddressBook.framework */,
 				85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */,
 				85394EAB15546CC400550929 /* FBiOSSDK.framework */,
@@ -163,14 +151,13 @@
 		B9CD0A98150EBFBD00560A93 /* images */ = {
 			isa = PBXGroup;
 			children = (
-				B9D12A181513C3F1003A5540 /* pictures.png */,
-				B9C1C3771512BCA7008FA5D1 /* profile.png */,
-				B9C1C3701512B207008FA5D1 /* fruit.png */,
-				B9C1C36E1512B153008FA5D1 /* pin.png */,
-				B9D0972E1510369C00F92938 /* food.png */,
-				B9D0972F1510369C00F92938 /* house.png */,
-				B9D097301510369C00F92938 /* users.png */,
-				B9CD0A9B150EC09500560A93 /* app_icon.png */,
+				846809BD158F85A100F2DBB9 /* action-eating.png */,
+				846809BE158F85A100F2DBB9 /* action-location.png */,
+				846809BF158F85A100F2DBB9 /* action-people.png */,
+				846809C0158F85A100F2DBB9 /* action-photo.png */,
+				856DC2171577F105001FA6A6 /* Icon-72.png */,
+				856DC2181577F105001FA6A6 /* Icon.png */,
+				856DC2191577F105001FA6A6 /* Icon@2x.png */,
 				B9CD0A99150EBFFB00560A93 /* facebook.png */,
 			);
 			name = images;
@@ -230,19 +217,15 @@
 				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
 				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
 				B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */,
-				B9CD0A9C150EC09500560A93 /* app_icon.png in Resources */,
-				B9D097311510369C00F92938 /* food.png in Resources */,
-				B9D097321510369C00F92938 /* house.png in Resources */,
-				B9D097331510369C00F92938 /* users.png in Resources */,
 				B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */,
-				B9C1C36F1512B153008FA5D1 /* pin.png in Resources */,
-				B9C1C3711512B207008FA5D1 /* fruit.png in Resources */,
-				B9C1C3781512BCA7008FA5D1 /* profile.png in Resources */,
-				B9D12A191513C3F1003A5540 /* pictures.png in Resources */,
 				85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */,
 				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
 				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
 				856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */,
+				846809C1158F85A100F2DBB9 /* action-eating.png in Resources */,
+				846809C2158F85A100F2DBB9 /* action-location.png in Resources */,
+				846809C3158F85A100F2DBB9 /* action-people.png in Resources */,
+				846809C4158F85A100F2DBB9 /* action-photo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

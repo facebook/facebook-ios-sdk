@@ -419,25 +419,25 @@
         case 0:
             cell.textLabel.text = @"What are you eating?";
             cell.detailTextLabel.text = @"Select one";
-            cell.imageView.image = [UIImage imageNamed:@"food.png"];
+            cell.imageView.image = [UIImage imageNamed:@"action-eating.png"];
             break;
             
         case 1:
             cell.textLabel.text = @"Where are you?";
             cell.detailTextLabel.text = @"Select one";
-            cell.imageView.image = [UIImage imageNamed:@"house.png"];
+            cell.imageView.image = [UIImage imageNamed:@"action-location.png"];
             break;
             
         case 2:
             cell.textLabel.text = @"With whom?";
             cell.detailTextLabel.text = @"Select friends";
-            cell.imageView.image = [UIImage imageNamed:@"users.png"];
+            cell.imageView.image = [UIImage imageNamed:@"action-people.png"];
             break;
             
         case 3:
             cell.textLabel.text = @"Got a picture?";
             cell.detailTextLabel.text = @"Take one";
-            cell.imageView.image = [UIImage imageNamed:@"pictures.png"];
+            cell.imageView.image = [UIImage imageNamed:@"action-photo.png"];
             break;
             
         default:
