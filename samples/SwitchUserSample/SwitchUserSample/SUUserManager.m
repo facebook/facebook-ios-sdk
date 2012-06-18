@@ -37,7 +37,8 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 }
 
 - (void)sendNotification {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SUUserManagerUserChanged" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SUUserManagerUserChanged" 
+                                                        object:nil];
 }
 
 - (void)validateSlotNumber:(int)slot {
@@ -54,6 +55,15 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 }
 
 - (FBSessionTokenCachingStrategy*)createCachingStrategyForSlot:(int)slot {
+    // FBSample logic
+    // Token caching strategies are an advanced feature of the SDK; by creating one and passing it to 
+    // FBSession at instantiation time, the SUUserManager class takes control of the token caching 
+    // behavior of session instances; this is useful to do in this application, because there may be up
+    // to four users whose tokens are remembered by the application at one time; and so the names in 
+    // NSUserDefaults used to store these values need to reflect the user whose data is being cached
+    // Note: an application with more advanced token caching needs (beyond NSUserDefaults) can derive
+    // from FBSessionTokenCachingStrategy, and implement any store for the token cache that it needs, 
+    // including storing and retrieving tokens on an application-specific server, filesystem, etc.
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [[FBSessionTokenCachingStrategy alloc]
                                                            initWithUserDefaultTokenInformationKeyName:[NSString stringWithFormat:@"SUUserTokenInfo%d", slot]];
     return tokenCachingStrategy;
@@ -74,8 +84,12 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 }
 
 - (FBSession*)createSessionForSlot:(int)slot {
+    // FBSample logic
+    // Getting the right strategy instance for the right slot matters for this application
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
-    
+  
+    // create a session object, with defaults accross the board, except that we provide a custom
+    // instance of FBSessionTokenCachingStrategy
     FBSession *session = [[FBSession alloc] initWithAppID:nil
                                               permissions:nil 
                                           urlSchemeSuffix:nil 
@@ -90,7 +104,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
-    //  may have saved only a plain NSDictionary.
+    // may have saved only a plain NSDictionary.
     return [defaults objectForKey:key];
 }
 
@@ -101,7 +115,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
-    //  may have saved only a plain NSDictionary.
+    // may have saved only a plain NSDictionary.
     return [defaults objectForKey:key];
 }
 
@@ -124,7 +138,8 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
             [self switchToNoActiveUser];
         }
 
-        // Also need to tell the token cache to forget the tokens for this user.
+        // FBSample logic
+        // Also need to tell the token cache to forget the tokens for this user
         FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
         [tokenCachingStrategy clearToken:nil];
         

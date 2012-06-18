@@ -24,6 +24,8 @@ extern NSString *const SUInvalidSlotNumber;
 @interface SUUserManager : NSObject
 
 @property (readonly) int maximumUserSlots;
+// FBSample logic
+// This is where our active session is maintained
 @property (strong, readonly) FBSession *currentSession;
 @property (readonly) int currentUserSlot;
 

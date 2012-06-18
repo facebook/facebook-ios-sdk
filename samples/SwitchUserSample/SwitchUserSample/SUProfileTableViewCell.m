@@ -25,6 +25,8 @@ static const CGFloat pictureHeight = 50;
 
 @interface SUProfileTableViewCell ()
 
+// FBSample logic
+// This view is used to display the profile pictures within the list of user accounts
 @property (strong, nonatomic) FBProfilePictureView *profilePic;
 
 - (void)initializeSubViews;
@@ -101,6 +103,9 @@ static const CGFloat pictureHeight = 50;
 }
 
 - (void)setUserID:(NSString *)userID {
+    // FBSample logic
+    // Setting the userID property of the profile picture view causes the view to fetch and display
+    // the profile picture for the given user
     self.profilePic.userID = userID;
 }
 

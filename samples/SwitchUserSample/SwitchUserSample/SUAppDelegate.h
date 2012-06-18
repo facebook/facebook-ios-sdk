@@ -18,10 +18,23 @@
 #import <FBiOSSDK/FacebookSDK.h>
 #import "SUUserManager.h"
 
+// Switch User sample application
+//
+// The purpose of this sample application is show a more advanced use of
+// FBSession to manage tokens of multiple users. The idea behind this scenario
+// is an application which supports devices shared by multiple users (e.g. the
+// family iPad), and which remembers multiple users and lets the users easily
+// switch the currently active user
+
 @interface SUAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) SUUserManager *userManager;
 @property (strong, nonatomic) UITabBarController *tabBarController;
+
+// FBSample logic
+// The SUUserManager class is a custom type included with this sample that shows
+// lightweight user-management performed by an application, which utilizes 
+// FBSession to manage login workflow and integration with Facebook
+@property (strong, nonatomic) SUUserManager *userManager;
 
 @end

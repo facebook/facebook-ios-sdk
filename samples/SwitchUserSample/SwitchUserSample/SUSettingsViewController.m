@@ -22,6 +22,10 @@
 @interface SUSettingsViewController ()
 
 @property (strong, nonatomic) IBOutlet UITableView *usersTableView;
+// FBSample logic
+// The app fetches https://graph.facebook.com/me for a user account immedately after successful login;
+// the request object is cached in this property in order to have a means for canceling and identifying
+// the network request while it is in flight
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
 @property (nonatomic) int pendingLoginForSlot;
 
@@ -106,36 +110,55 @@
 - (void)updateForSessionChangeForSlot:(int)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
+    
+    // FBSample logic
+    // Get the current session from the userManager
     FBSession *session = userManager.currentSession;
     
-    if (session.isOpen) {       
+    if (session.isOpen) {
+        // fetch profile info such as name, id, etc. for the open session
         FBRequest *me = [FBRequest requestForMeWithSession:session];
         FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
 
-        [requestConnection addRequest:me completionHandler:^(FBRequestConnection *connection, 
-                                                             NSDictionary<FBGraphUser> *result,
-                                                             NSError *error) {
-            if (connection != self.requestConnection) {
-                return;
-            }
-
-            self.requestConnection = nil;
-            self.pendingLoginForSlot = -1;
-
-            if (error) {
-                NSLog(@"Couldn't switch user: %@", error.localizedDescription);
-                [userManager switchToNoActiveUser];
-                return;
-            }
-            [userManager updateUser:result inSlot:slot];
-            [self updateCellForSlot:slot];
-        }];
+        [requestConnection addRequest:me
+                    completionHandler:^(FBRequestConnection *connection, 
+                                        NSDictionary<FBGraphUser> *result,
+                                        NSError *error) {
+                        // because we have a cached copy of the connection, we can check
+                        // to see if this is the connection we care about; a prematurely 
+                        // cancelled connection will short-circuit here
+                        if (connection != self.requestConnection) {
+                            return;
+                        }
+                        
+                        self.requestConnection = nil;
+                        self.pendingLoginForSlot = -1;
+                        
+                        // we interpret an error in the initial fetch as a reason to 
+                        // fail the user switch, and leave the application without an
+                        // active user (similar to initial state)
+                        if (error) {
+                            NSLog(@"Couldn't switch user: %@", error.localizedDescription);
+                            [userManager switchToNoActiveUser];
+                            return;
+                        }
+                        [userManager updateUser:result inSlot:slot];
+                        [self updateCellForSlot:slot];
+                    }];
         
+        // if there happens to be a connection in flight, we cancel it
+        // Note: it is valid to call cancel multiple times, and the registered 
+        // handler will only be called back once; this does not happen here, but
+        // can be useful in certain circumstances
         [self.requestConnection cancel];
+        // then we replace it with the newly minted one
         self.requestConnection = requestConnection;
         
+        // this method initiates actual communication
         [requestConnection start];
     } else {
+        // in the closed case, we check to see if we picked up a cached token that we
+        // expect to be valid and ready for use; if so then we open the session on the spot
         if (session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
             [session openWithCompletionHandler:^(FBSession *session, 
@@ -158,7 +181,7 @@
     int currentUserSlot = userManager.currentUserSlot;
 
     // If we can't log in as new user, we don't want to still be logged in as previous user,
-    //  particularly if it might not be obvious to the user that the login failed.
+    // particularly if it might not be obvious to the user that the login failed.
     [userManager switchToNoActiveUser];
     self.pendingLoginForSlot = slot;
 
@@ -169,9 +192,11 @@
         }
     }
     
+    // FBSample logic
     // We assume that the primary user is going to log on via SSO, while guest users will
-    //  specify their name via the login dialog. The decision of when to try SSO vs.
-    //  force entering of credentials will be specific to the needs of an app.
+    // specify their name via the login dialog. The decision of when to try SSO vs.
+    // force entering of credentials will be specific to the needs of an app; this app
+    // bases the decision on whether the user logs on the "primary user" or a "guest user"
     FBSessionLoginBehavior behavior = (slot == 0) ?
         FBSessionLoginBehaviorSSOWithFallback :
         FBSessionLoginBehaviorSuppressSSO;
@@ -179,15 +204,19 @@
     FBSession *session = [userManager switchToUserInSlot:slot];
     [self updateCellForSlot:slot];
 
+    // we pass the correct behavior here to indicate the login workflow to use (SSO or otherwise)
     [session openWithBehavior:behavior
             completionHandler:^(FBSession *session,
                                 FBSessionState status,
                                 NSError *error) {
-        if (error) {
-            [userManager switchToNoActiveUser];
-        }
-        [self updateForSessionChangeForSlot:slot];
-    }];
+                // this handler is called back whether the login succeeds or fails; in the 
+                // success case it will also be called back upon each state transition between
+                // session-open and session-close
+                if (error) {
+                    [userManager switchToNoActiveUser];
+                }
+                [self updateForSessionChangeForSlot:slot];
+            }];
 }
 
 - (int)userSlotFromIndexPath:(NSIndexPath *)indexPath {

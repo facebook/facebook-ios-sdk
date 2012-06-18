@@ -15,9 +15,7 @@
  */
 
 #import "SUAppDelegate.h"
-
 #import "SUUsingViewController.h"
-
 #import "SUSettingsViewController.h"
 
 @implementation SUAppDelegate
@@ -26,8 +24,13 @@
 @synthesize tabBarController = _tabBarController;
 @synthesize userManager = _userManager;
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
+    // FBSample logic
+    // Creates an instance of the SUUserManager class, used to manage multiple user logins; note that this
+    // application does not attempt to maintain multiple active users at once; however it does remember
+    // multiple users that have at one time or another logged onto facebook from the application; at any one
+    // time there is only a single active user
     self.userManager = [[SUUserManager alloc] init];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -46,11 +49,17 @@
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
     
+    // FBSample logic
+    // At startup time we attempt to log in the default user that has signed on using SSO
     [viewController2 loginDefaultUser];
     
     return YES;
 }
 
+// FBSample logic
+// As part of the login workflow, the native application or Safari will transition back to this application'
+// this method is then called, which defers the responsibility of parsing the url to the handleOpenURL method
+// of FBSession
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
