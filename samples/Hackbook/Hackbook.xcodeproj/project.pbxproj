@@ -21,12 +21,14 @@
 		30EA739A13F5D372003DC0D2 /* DataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EA739113F5D372003DC0D2 /* DataSet.m */; };
 		30EA739B13F5D372003DC0D2 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 30EA739213F5D372003DC0D2 /* Default.png */; };
 		30EA739C13F5D372003DC0D2 /* APIResultsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 30EA739413F5D372003DC0D2 /* APIResultsViewController.m */; };
-		30EA739E13F5D372003DC0D2 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 30EA739613F5D372003DC0D2 /* Icon.png */; };
 		30EA739F13F5D372003DC0D2 /* MenuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 30EA739713F5D372003DC0D2 /* MenuButton.png */; };
 		30EA73CB13F5D502003DC0D2 /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 30EA73CA13F5D502003DC0D2 /* FBConnect.bundle */; };
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
-		30ED588F14358F9400A226C3 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588E14358F9400A226C3 /* Icon@2x.png */; };
+		85AFB4E4158F9C5B000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */; };
+		85AFB4E5158F9C5B000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */; };
+		85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E2158F9C5B000AF7F5 /* Icon.png */; };
+		85AFB4E7158F9C5B000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */; };
 		E222E6A7154F140700B3711F /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E222E6A6154F140700B3711F /* FBiOSSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -53,12 +55,14 @@
 		30EA739213F5D372003DC0D2 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		30EA739313F5D372003DC0D2 /* APIResultsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APIResultsViewController.h; sourceTree = "<group>"; };
 		30EA739413F5D372003DC0D2 /* APIResultsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = APIResultsViewController.m; sourceTree = "<group>"; };
-		30EA739613F5D372003DC0D2 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		30EA739713F5D372003DC0D2 /* MenuButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuButton.png; sourceTree = "<group>"; };
 		30EA73CA13F5D502003DC0D2 /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBConnect.bundle; path = ../FBConnect.bundle; sourceTree = "<group>"; };
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		30ED588E14358F9400A226C3 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB4E2158F9C5B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		E222E6A6154F140700B3711F /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		E222E6A9154F146600B3711F /* Facebook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Facebook.h; path = ../../build/FBiOSSDK.framework/Versions/A/DeprecatedHeaders/Facebook.h; sourceTree = "<group>"; };
 		E222E6AA154F146600B3711F /* FacebookSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FacebookSDK.h; path = ../../build/FBiOSSDK.framework/Versions/A/DeprecatedHeaders/FacebookSDK.h; sourceTree = "<group>"; };
@@ -173,10 +177,12 @@
 		30EA736413F5D21B003DC0D2 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */,
+				85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */,
+				85AFB4E2158F9C5B000AF7F5 /* Icon.png */,
+				85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */,
 				30EA739213F5D372003DC0D2 /* Default.png */,
 				30ED588B14358F8A00A226C3 /* Default@2x.png */,
-				30EA739613F5D372003DC0D2 /* Icon.png */,
-				30ED588E14358F9400A226C3 /* Icon@2x.png */,
 				30EA739713F5D372003DC0D2 /* MenuButton.png */,
 				3085CC281415D68A00456CCC /* MenuButton@2x.png */,
 				30EA736513F5D21B003DC0D2 /* Hackbook-Info.plist */,
@@ -282,13 +288,15 @@
 				30EA736813F5D21B003DC0D2 /* InfoPlist.strings in Resources */,
 				30EA737113F5D21B003DC0D2 /* MainWindow.xib in Resources */,
 				30EA739B13F5D372003DC0D2 /* Default.png in Resources */,
-				30EA739E13F5D372003DC0D2 /* Icon.png in Resources */,
 				30EA739F13F5D372003DC0D2 /* MenuButton.png in Resources */,
 				30EA73CB13F5D502003DC0D2 /* FBConnect.bundle in Resources */,
 				3018B43A13F9B94D00F61944 /* MainWindow-iPad.xib in Resources */,
 				3085CC291415D68A00456CCC /* MenuButton@2x.png in Resources */,
 				30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */,
-				30ED588F14358F9400A226C3 /* Icon@2x.png in Resources */,
+				85AFB4E4158F9C5B000AF7F5 /* Icon-72.png in Resources */,
+				85AFB4E5158F9C5B000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */,
+				85AFB4E7158F9C5B000AF7F5 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

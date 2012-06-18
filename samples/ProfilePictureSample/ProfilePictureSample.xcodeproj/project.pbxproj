@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		85AFB522158FA1C4000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB51E158FA1C4000AF7F5 /* Icon-72.png */; };
+		85AFB523158FA1C4000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB51F158FA1C4000AF7F5 /* Icon-72@2x.png */; };
+		85AFB524158FA1C4000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB520158FA1C4000AF7F5 /* Icon.png */; };
+		85AFB525158FA1C4000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB521158FA1C4000AF7F5 /* Icon@2x.png */; };
 		85D0ED3415377AD900D88664 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D0ED3315377AD900D88664 /* FBiOSSDKResources.bundle */; };
 		B90C8A9E152E4B1600C94CD8 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B90C8A9D152E4B1600C94CD8 /* FBiOSSDK.framework */; };
 		B98686BD151D0B3700616412 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686BC151D0B3700616412 /* UIKit.framework */; };
@@ -21,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		85AFB51E158FA1C4000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB51F158FA1C4000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB520158FA1C4000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB521158FA1C4000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		85D0ED3315377AD900D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		B90C8A9D152E4B1600C94CD8 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		B98686B8151D0B3700616412 /* ProfilePictureSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfilePictureSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -100,6 +108,10 @@
 		B98686C3151D0B3700616412 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85AFB51E158FA1C4000AF7F5 /* Icon-72.png */,
+				85AFB51F158FA1C4000AF7F5 /* Icon-72@2x.png */,
+				85AFB520158FA1C4000AF7F5 /* Icon.png */,
+				85AFB521158FA1C4000AF7F5 /* Icon@2x.png */,
 				B98686C4151D0B3700616412 /* ProfilePictureSample-Info.plist */,
 				B98686C5151D0B3700616412 /* InfoPlist.strings */,
 				B98686C8151D0B3700616412 /* main.m */,
@@ -162,6 +174,10 @@
 				B98686D3151D0B3700616412 /* ViewController_iPhone.xib in Resources */,
 				B98686D6151D0B3700616412 /* ViewController_iPad.xib in Resources */,
 				85D0ED3415377AD900D88664 /* FBiOSSDKResources.bundle in Resources */,
+				85AFB522158FA1C4000AF7F5 /* Icon-72.png in Resources */,
+				85AFB523158FA1C4000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB524158FA1C4000AF7F5 /* Icon.png in Resources */,
+				85AFB525158FA1C4000AF7F5 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

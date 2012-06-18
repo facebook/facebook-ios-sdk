@@ -24,6 +24,10 @@
 		856DB08B1534B792006F6A33 /* SUSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 856DB0891534B792006F6A33 /* SUSettingsViewController.m */; };
 		856DB08C1534B792006F6A33 /* SUSettingsViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB08A1534B792006F6A33 /* SUSettingsViewController_iPhone.xib */; };
 		856DB08E1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB08D1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib */; };
+		85AFB52F158FA20E000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52B158FA20E000AF7F5 /* Icon-72.png */; };
+		85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */; };
+		85AFB531158FA20E000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52D158FA20E000AF7F5 /* Icon.png */; };
+		85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52E158FA20E000AF7F5 /* Icon@2x.png */; };
 		85D0ED881538A39600D88664 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D0ED871538A39600D88664 /* FBiOSSDKResources.bundle */; };
 		85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */; };
 		85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8E1538BF6200D88664 /* SUUserManager.m */; };
@@ -53,6 +57,10 @@
 		856DB0891534B792006F6A33 /* SUSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSettingsViewController.m; sourceTree = "<group>"; };
 		856DB08A1534B792006F6A33 /* SUSettingsViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUSettingsViewController_iPhone.xib; sourceTree = "<group>"; };
 		856DB08D1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUSettingsViewController_iPad.xib; sourceTree = "<group>"; };
+		85AFB52B158FA20E000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB52D158FA20E000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB52E158FA20E000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		85D0ED871538A39600D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		85D0ED8A1538A9F400D88664 /* SUProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUProfileTableViewCell.h; sourceTree = "<group>"; };
 		85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUProfileTableViewCell.m; sourceTree = "<group>"; };
@@ -133,6 +141,10 @@
 		856DB054153393C3006F6A33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85AFB52B158FA20E000AF7F5 /* Icon-72.png */,
+				85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */,
+				85AFB52D158FA20E000AF7F5 /* Icon.png */,
+				85AFB52E158FA20E000AF7F5 /* Icon@2x.png */,
 				856DB055153393C3006F6A33 /* SwitchUserSample-Info.plist */,
 				856DB056153393C3006F6A33 /* InfoPlist.strings */,
 				856DB059153393C3006F6A33 /* main.m */,
@@ -202,6 +214,10 @@
 				856DB08C1534B792006F6A33 /* SUSettingsViewController_iPhone.xib in Resources */,
 				856DB08E1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib in Resources */,
 				85D0ED881538A39600D88664 /* FBiOSSDKResources.bundle in Resources */,
+				85AFB52F158FA20E000AF7F5 /* Icon-72.png in Resources */,
+				85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB531158FA20E000AF7F5 /* Icon.png in Resources */,
+				85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

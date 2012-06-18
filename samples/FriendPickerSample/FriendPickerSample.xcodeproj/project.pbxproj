@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		85AFB4D7158F9C1D000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */; };
+		85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */; };
+		85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D5158F9C1D000AF7F5 /* Icon.png */; };
+		85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */; };
 		E214BA93154623E8006818DE /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */; };
 		E2D6B81315413A570050835F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81215413A570050835F /* UIKit.framework */; };
 		E2D6B81515413A570050835F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81415413A570050835F /* Foundation.framework */; };
@@ -21,6 +25,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB4D5158F9C1D000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		E2D6B80E15413A570050835F /* FriendPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D6B81215413A570050835F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -100,6 +108,10 @@
 		E2D6B81915413A570050835F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */,
+				85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */,
+				85AFB4D5158F9C1D000AF7F5 /* Icon.png */,
+				85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */,
 				E2D6B81A15413A570050835F /* FriendPickerSample-Info.plist */,
 				E2D6B81B15413A570050835F /* InfoPlist.strings */,
 				E2D6B81E15413A570050835F /* main.m */,
@@ -162,6 +174,10 @@
 				E2D6B81D15413A570050835F /* InfoPlist.strings in Resources */,
 				E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */,
 				E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */,
+				85AFB4D7158F9C1D000AF7F5 /* Icon-72.png in Resources */,
+				85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */,
+				85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
