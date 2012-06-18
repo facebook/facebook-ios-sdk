@@ -121,6 +121,7 @@
         [fields appendString:field];
     }
 
+    [sortedFields release];
     return fields;
 }
 

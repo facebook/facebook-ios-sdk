@@ -225,11 +225,11 @@ static NSString *defaultImageName =
                                                resultsLimit:(NSInteger)resultsLimit
                                            fieldsForRequest:(NSSet*)fieldsForRequest {
     
-    return [[FBPlacePickerCacheDescriptor alloc] initWithLocationCoordinate:locationCoordinate
-                                                             radiusInMeters:radiusInMeters
-                                                                 searchText:searchText
-                                                               resultsLimit:resultsLimit
-                                                           fieldsForRequest:fieldsForRequest];
+    return [[[FBPlacePickerCacheDescriptor alloc] initWithLocationCoordinate:locationCoordinate
+                                                              radiusInMeters:radiusInMeters
+                                                                  searchText:searchText
+                                                                resultsLimit:resultsLimit
+                                                            fieldsForRequest:fieldsForRequest] autorelease];
 }
 
 #pragma mark - private methods
