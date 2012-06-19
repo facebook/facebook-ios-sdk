@@ -1,3 +1,18 @@
+#Facebook iOS SDK With Modifications to allow running newer version of SBJson simultaneously
+===========================
+
+###This is NOT the official Facebook SDK.  Don't bug them with questions or support.  Use Github issue tracker instead.
+
+The simple idea was to allow one to use a more recent version of SBJson in a project that also needs the Facebook iOS SDK.  This is a solution that avoids having to muck with Facebook's code by simply prefixing all SBJson classes and files with "FB_IOS_SDK_".  With this in place one can run the Facebook SDK and also use the latest version of SBJson for other parts of the app.  
+
+Yes, it's a cheap solution to the problem.
+
+
+
+
+###Here's the original notice from Facebook
+
+
 Facebook iOS SDK
 ===========================
 

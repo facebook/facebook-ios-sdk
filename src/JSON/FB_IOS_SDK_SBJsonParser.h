@@ -28,31 +28,60 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "FB_IOS_SDK_SBJsonBase.h"
 
 /**
- @brief Adds JSON parsing methods to NSString
+  @brief Options for the parser class.
  
-This is a category on NSString that adds methods for parsing the target string.
-*/
-@interface NSString (NSString_SBJSON)
-
-
-/**
- @brief Returns the object represented in the receiver, or nil on error. 
- 
- Returns a a scalar object represented by the string's JSON fragment representation.
- 
- @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
+ This exists so the SBJSON facade can implement the options in the parser without having to re-declare them.
  */
-- (id)JSONFragmentValue;
+@protocol FB_IOS_SDK_SBJsonParser
 
 /**
- @brief Returns the NSDictionary or NSArray represented by the current string's JSON representation.
+ @brief Return the object represented by the given string.
  
- Returns the dictionary or array represented in the receiver, or nil on error.
-
- Returns the NSDictionary or NSArray represented by the current string's JSON representation.
+ Returns the object represented by the passed-in string or nil on error. The returned object can be
+ a string, number, boolean, null, array or dictionary.
+ 
+ @param repr the json string to parse
  */
-- (id)JSONValue;
+- (id)objectWithString:(NSString *)repr;
 
 @end
+
+
+/**
+ @brief The JSON parser class.
+ 
+ JSON is mapped to Objective-C types in the following way:
+ 
+ @li Null -> NSNull
+ @li String -> NSMutableString
+ @li Array -> NSMutableArray
+ @li Object -> NSMutableDictionary
+ @li Boolean -> NSNumber (initialised with -initWithBool:)
+ @li Number -> NSDecimalNumber
+ 
+ Since Objective-C doesn't have a dedicated class for boolean values, these turns into NSNumber
+ instances. These are initialised with the -initWithBool: method, and 
+ round-trip back to JSON properly. (They won't silently suddenly become 0 or 1; they'll be
+ represented as 'true' and 'false' again.)
+ 
+ JSON numbers turn into NSDecimalNumber instances,
+ as we can thus avoid any loss of precision. (JSON allows ridiculously large numbers.)
+ 
+ */
+@interface FB_IOS_SDK_SBJsonParser : FB_IOS_SDK_SBJsonBase <FB_IOS_SDK_SBJsonParser> {
+    
+@private
+    const char *c;
+}
+
+@end
+
+// don't use - exists for backwards compatibility with 2.1.x only. Will be removed in 2.3.
+@interface FB_IOS_SDK_SBJsonParser (Private)
+- (id)fragmentWithString:(id)repr;
+@end
+
+

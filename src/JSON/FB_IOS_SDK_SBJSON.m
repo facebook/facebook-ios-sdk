@@ -27,15 +27,15 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJSON.h"
+#import "FB_IOS_SDK_SBJSON.h"
 
-@implementation SBJSON
+@implementation FB_IOS_SDK_SBJSON
 
 - (id)init {
     self = [super init];
     if (self) {
-        jsonWriter = [SBJsonWriter new];
-        jsonParser = [SBJsonParser new];
+        jsonWriter = [FB_IOS_SDK_SBJsonWriter new];
+        jsonParser = [FB_IOS_SDK_SBJsonParser new];
         [self setMaxDepth:512];
 
     }

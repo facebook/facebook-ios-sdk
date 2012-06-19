@@ -28,60 +28,41 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "SBJsonBase.h"
-
-/**
-  @brief Options for the parser class.
- 
- This exists so the SBJSON facade can implement the options in the parser without having to re-declare them.
- */
-@protocol SBJsonParser
-
-/**
- @brief Return the object represented by the given string.
- 
- Returns the object represented by the passed-in string or nil on error. The returned object can be
- a string, number, boolean, null, array or dictionary.
- 
- @param repr the json string to parse
- */
-- (id)objectWithString:(NSString *)repr;
-
-@end
 
 
 /**
- @brief The JSON parser class.
+ @brief Adds JSON generation to Foundation classes
  
- JSON is mapped to Objective-C types in the following way:
- 
- @li Null -> NSNull
- @li String -> NSMutableString
- @li Array -> NSMutableArray
- @li Object -> NSMutableDictionary
- @li Boolean -> NSNumber (initialised with -initWithBool:)
- @li Number -> NSDecimalNumber
- 
- Since Objective-C doesn't have a dedicated class for boolean values, these turns into NSNumber
- instances. These are initialised with the -initWithBool: method, and 
- round-trip back to JSON properly. (They won't silently suddenly become 0 or 1; they'll be
- represented as 'true' and 'false' again.)
- 
- JSON numbers turn into NSDecimalNumber instances,
- as we can thus avoid any loss of precision. (JSON allows ridiculously large numbers.)
- 
+ This is a category on NSObject that adds methods for returning JSON representations
+ of standard objects to the objects themselves. This means you can call the
+ -JSONRepresentation method on an NSArray object and it'll do what you want.
  */
-@interface SBJsonParser : SBJsonBase <SBJsonParser> {
-    
-@private
-    const char *c;
-}
+@interface NSObject (FB_IOS_SDK_NSObject_SBJSON)
+
+/**
+ @brief Returns a string containing the receiver encoded as a JSON fragment.
+ 
+ This method is added as a category on NSObject but is only actually
+ supported for the following objects:
+ @li NSDictionary
+ @li NSArray
+ @li NSString
+ @li NSNumber (also used for booleans)
+ @li NSNull 
+ 
+ @deprecated Given we bill ourselves as a "strict" JSON library, this method should be removed.
+ */
+- (NSString *)JSONFragment;
+
+/**
+ @brief Returns a string containing the receiver encoded in JSON.
+
+ This method is added as a category on NSObject but is only actually
+ supported for the following objects:
+ @li NSDictionary
+ @li NSArray
+ */
+- (NSString *)JSONRepresentation;
 
 @end
-
-// don't use - exists for backwards compatibility with 2.1.x only. Will be removed in 2.3.
-@interface SBJsonParser (Private)
-- (id)fragmentWithString:(id)repr;
-@end
-
 

@@ -27,11 +27,11 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+#import "FB_IOS_SDK_SBJsonBase.h"
+NSString * FB_IOS_SDK_SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
 
 
-@implementation SBJsonBase
+@implementation FB_IOS_SDK_SBJsonBase
 
 @synthesize errorTrace;
 @synthesize maxDepth;
@@ -61,7 +61,7 @@ NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
                     nil];
     }
     
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+    NSError *error = [NSError errorWithDomain:FB_IOS_SDK_SBJSONErrorDomain code:code userInfo:userInfo];
 
     [self willChangeValueForKey:@"errorTrace"];
     [errorTrace addObject:error];

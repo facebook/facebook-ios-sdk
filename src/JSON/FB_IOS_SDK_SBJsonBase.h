@@ -29,7 +29,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString * SBJSONErrorDomain;
+extern NSString * FB_IOS_SDK_SBJSONErrorDomain;
 
 
 enum {
@@ -52,7 +52,7 @@ enum {
 
  This class contains the common error-handling code and option between the parser/writer.
  */
-@interface SBJsonBase : NSObject {
+@interface FB_IOS_SDK_SBJsonBase : NSObject {
     NSMutableArray *errorTrace;
 
 @protected
