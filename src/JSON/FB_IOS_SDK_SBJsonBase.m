@@ -28,7 +28,7 @@
  */
 
 #import "FB_IOS_SDK_SBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+NSString * FB_IOS_SDK_SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
 
 
 @implementation FB_IOS_SDK_SBJsonBase
@@ -61,7 +61,7 @@ NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
                     nil];
     }
     
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+    NSError *error = [NSError errorWithDomain:FB_IOS_SDK_SBJSONErrorDomain code:code userInfo:userInfo];
 
     [self willChangeValueForKey:@"errorTrace"];
     [errorTrace addObject:error];
