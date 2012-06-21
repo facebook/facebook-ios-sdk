@@ -409,10 +409,8 @@ params   = _params;
 
 // Display the dialog's WebView with a slick pop-up animation	
 - (void)showWebView {	
-    UIWindow* window = [UIApplication sharedApplication].keyWindow;	
-    if (!window) {	
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];	
-    }	
+    UIWindow* window = [[UIApplication sharedApplication].windows objectAtIndex:0];	
+
     _modalBackgroundView.frame = window.frame;	
     [_modalBackgroundView addSubview:self];	
     [window addSubview:_modalBackgroundView];	
