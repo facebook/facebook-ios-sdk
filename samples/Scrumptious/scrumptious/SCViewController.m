@@ -18,6 +18,7 @@
 #import "SCAppDelegate.h"
 #import "SCLoginViewController.h"
 #import "SCMealViewController.h"
+#import "SCPhotoViewController.h"
 #import "SCProtocols.h"
 #import <FBiOSSDK/FBRequest.h>
 #import <AddressBook/AddressBook.h>
@@ -47,6 +48,7 @@
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
+@property (strong, nonatomic) SCPhotoViewController *photoViewController;
 @property (nonatomic) CGRect popoverFromRect;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 
@@ -74,6 +76,7 @@
 @synthesize placePickerController = _placePickerController;
 @synthesize friendPickerController = _friendPickerController;
 @synthesize mealViewController = _mealViewController;
+@synthesize photoViewController = _photoViewController;
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
@@ -87,7 +90,7 @@
 // FBSample logic
 // Creates an Open Graph object using a simple repeater app that just echoes its
 // input back as the properties of the OG object.
-- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {    
+- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
     // This URL is specific to this sample, and can be used to create arbitrary
     // OG objects for this app; your OG objects will have URLs hosted by your server.
     NSString *format =  
@@ -207,6 +210,7 @@
     [self.view setUserInteractionEnabled:NO];
     
     if (self.selectedPhoto) {
+        self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
         [self postPhotoThenOpenGraphAction];
     } else {
         [self postOpenGraphActionWithPhotoURL:nil];
@@ -224,15 +228,23 @@
 - (void)imagePickerController:(UIImagePickerController *)picker 
         didFinishPickingImage:(UIImage *)image
                   editingInfo:(NSDictionary *)editingInfo {
-    self.selectedPhoto = image;
     
+    if (!self.photoViewController) {
+        __block SCViewController *myself = self;
+        self.photoViewController = [[SCPhotoViewController alloc]initWithNibName:@"SCPhotoViewController" bundle:nil image:image];
+        self.photoViewController.confirmCallback = ^(id sender, bool confirm) {
+            if(confirm) {
+                myself.selectedPhoto = image;
+            }
+            [myself updateSelections];
+        };
+    }
+    [self.navigationController pushViewController:self.photoViewController animated:true];
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self.popover dismissPopoverAnimated:YES];
     } else {
         [self dismissModalViewControllerAnimated:YES];
     }
-
-    [self updateSelections];
 }
 
 #pragma mark -
@@ -411,6 +423,7 @@
     self.placePickerController = nil;
     self.friendPickerController = nil;
     self.mealViewController = nil;
+    self.photoViewController = nil;
     self.imagePicker = nil;
     self.popover = nil;
     self.imagePickerActionSheet = nil;
@@ -641,5 +654,31 @@
 }
 
 #pragma mark - 
+
+// Rotates an image to the correct orientation, and removes the orientation EXIF data
+// Uploaded photos ignore the orientation EXIF data, so we need to rotate before uploading
+- (UIImage *)normalizedImage:(UIImage *)image {
+    CGSize imageSize = image.size;
+    CGSize newSize;
+    switch (image.imageOrientation) {
+        case UIImageOrientationUp:
+        case UIImageOrientationDown:
+        case UIImageOrientationUpMirrored:
+        case UIImageOrientationDownMirrored:
+            newSize = CGSizeMake(imageSize.width, imageSize.height);
+            break;
+        case UIImageOrientationLeft:
+        case UIImageOrientationRight:
+        case UIImageOrientationLeftMirrored:
+        case UIImageOrientationRightMirrored:
+            newSize = CGSizeMake(imageSize.height, imageSize.width);
+            break;
+    }
+    UIGraphicsBeginImageContext(newSize);
+    [image drawInRect:CGRectMake(0,0,newSize.width, newSize.height)];
+    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
+}
 
 @end
