@@ -19,6 +19,7 @@
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBError.h"
+#include <stdlib.h>
 
 static NSMutableDictionary *mapTestCasesToSessions;
 // Concurrency not an issue today, but guard our static global in any case.
@@ -267,6 +268,50 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     [blocker release];
     
     return [createdObject autorelease];
+}
+
+size_t getPixels(void *info, void *buffer, size_t count) {
+    char *c = buffer;
+    for (int i = 0; i < count; ++i) {
+        *c = arc4random() % 256;
+    }
+    return count;
+}
+
+- (UIImage *)createSquareTestImage:(int)size
+{
+    CGDataProviderSequentialCallbacks providerCallbacks;
+    memset(&providerCallbacks, 0, sizeof(providerCallbacks));
+    providerCallbacks.getBytes = getPixels;
+    
+    CGDataProviderRef provider = CGDataProviderCreateSequential(NULL, &providerCallbacks);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    int width = size;
+    int height = size;
+    int bitsPerComponent = 8;
+    int bitsPerPixel = 8;
+    int bytesPerRow = width * (bitsPerPixel/8);
+    
+    CGImageRef cgImage = CGImageCreate(width,
+                                       height,
+                                       bitsPerComponent,
+                                       bitsPerPixel,
+                                       bytesPerRow,
+                                       colorSpace,
+                                       kCGBitmapByteOrderDefault,
+                                       provider,
+                                       NULL,
+                                       NO,
+                                       kCGRenderingIntentDefault);
+    
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    
+    CGColorSpaceRelease(colorSpace);
+    CGDataProviderRelease(provider);
+    CGImageRelease(cgImage);
+    
+    return image;
 }
 
 #pragma mark -

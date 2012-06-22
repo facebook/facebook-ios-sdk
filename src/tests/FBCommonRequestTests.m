@@ -36,7 +36,6 @@
 
 - (NSArray *)sendRequests:(FBRequest *)firstRequest, ...;
 - (NSArray *)sendRequestArray:(NSArray *)requests;
-- (UIImage *)imageForTest;
 
 @end
 
@@ -63,7 +62,7 @@
 
 - (void)testRequestUploadPhoto
 {
-    FBRequest *uploadRequest = [FBRequest requestForUploadPhoto:[self imageForTest]
+    FBRequest *uploadRequest = [FBRequest requestForUploadPhoto:[self createSquareTestImage:120]
                                                         session:self.defaultTestSession];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
 
@@ -192,47 +191,6 @@
                  @"[results count] == [requests count]");
 
     return results;
-}
-
-size_t getBlackPixels(void *info, void *buffer, size_t count) {
-    memset(buffer, 0x00, count);
-    return count;
-}
-
-- (UIImage *)imageForTest
-{
-    CGDataProviderSequentialCallbacks providerCallbacks;
-    memset(&providerCallbacks, 0, sizeof(providerCallbacks));
-    providerCallbacks.getBytes = getBlackPixels;
-
-    CGDataProviderRef provider = CGDataProviderCreateSequential(NULL, &providerCallbacks);
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
-
-    int width = 12;
-    int height = 16;
-    int bitsPerComponent = 8;
-    int bitsPerPixel = 8;
-    int bytesPerRow = width * (bitsPerPixel/8);
-
-    CGImageRef cgImage = CGImageCreate(width,
-                                       height,
-                                       bitsPerComponent,
-                                       bitsPerPixel,
-                                       bytesPerRow,
-                                       colorSpace,
-                                       kCGBitmapByteOrderDefault,
-                                       provider,
-                                       NULL,
-                                       NO,
-                                       kCGRenderingIntentDefault);
-
-    UIImage *image = [UIImage imageWithCGImage:cgImage];
-
-    CGColorSpaceRelease(colorSpace);
-    CGDataProviderRelease(provider);
-    CGImageRelease(cgImage);
-
-    return image;
 }
 
 @end

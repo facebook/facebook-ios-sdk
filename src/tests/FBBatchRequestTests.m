@@ -222,6 +222,74 @@
     [blocker release];
 }
 
+- (void)testBatchUploadPhoto
+{
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:[NSArray arrayWithObject:@"user_photos"]];
+        
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:4];
+    
+    const int image1Size = 120;
+    const int image2Size = 150;
+    
+    FBRequest *uploadRequest1 = [FBRequest requestForUploadPhoto:[self createSquareTestImage:image1Size]
+                                                         session:session];
+    [connection addRequest:uploadRequest1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             [blocker signal];
+         }
+         batchEntryName:@"uploadRequest1"];
+
+    FBRequest *uploadRequest2 = [FBRequest requestForUploadPhoto:[self createSquareTestImage:image2Size]
+                                                         session:session];
+    [connection addRequest:uploadRequest2
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             [blocker signal];
+         }
+         batchEntryName:@"uploadRequest2"];
+
+    FBRequest *getRequest1 = [[FBRequest alloc] initWithSession:session 
+                                                      graphPath:@"{result=uploadRequest1:$.id}"
+                                                     parameters:nil
+                                                     HTTPMethod:nil];
+    [connection addRequest:getRequest1 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+             
+             NSDecimalNumber *width = [result objectForKey:@"width"];
+             STAssertNotNil(width, @"couldn't get width");
+             STAssertTrue(image1Size == (int)[width doubleValue], @"wrong width");
+             NSLog(@"%@", width);
+
+             [blocker signal];
+         }]; 
+    FBRequest *getRequest2 = [[FBRequest alloc] initWithSession:session 
+                                                      graphPath:@"{result=uploadRequest2:$.id}"
+                                                     parameters:nil
+                                                     HTTPMethod:nil];
+    [connection addRequest:getRequest2 
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertTrue(!error, @"!error");
+             STAssertNotNil(result, @"nil result");
+
+             NSDecimalNumber *width = [result objectForKey:@"width"];
+             STAssertNotNil(width, @"couldn't get width");
+             STAssertTrue(image2Size == (int)[width doubleValue], @"wrong width");
+             NSLog(@"%@", width);
+             
+             [blocker signal];
+         }];
+
+    [connection start];
+    [blocker wait];
+    
+    [connection release];
+    [blocker release];
+}
+
 @end
 
 #endif

@@ -692,8 +692,8 @@ typedef enum FBRequestConnectionState {
         NSObject *value = [metadata.request.parameters objectForKey:key];
         if ([self isAttachment:value]) {
             NSString *name = [NSString stringWithFormat:@"%@%d",
-                                       kBatchFileNamePrefix,
-                                       [attachmentNames length]];
+                              kBatchFileNamePrefix,
+                              [attachments count]];
             if ([attachmentNames length]) {
                 [attachmentNames appendString:@","];
             }

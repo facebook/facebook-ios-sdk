@@ -67,6 +67,7 @@
 - (id)batchedPostAndGetWithSession:(FBSession*)session 
                          graphPath:(NSString*)graphPath 
                        graphObject:(id)graphObject;
+- (UIImage *)createSquareTestImage:(int)size;
 
 // Subclasses can define this to get defaultTestSessions with specific permissions.
 // The set of permissions should be static, as no guarantee is made how many times this will be called.
