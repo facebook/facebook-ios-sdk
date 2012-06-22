@@ -397,15 +397,16 @@ static NSString *const kPostHTTPMethod = @"POST";
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
-            ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
+        id value = [params objectForKey:key];
+        if ([value isKindOfClass:[UIImage class]]
+            || [value isKindOfClass:[NSData class]]) {
             if ([httpMethod isEqualToString:kGetHTTPMethod]) {
                 NSLog(@"can not use GET to upload a file");
             }
             continue;
         }
         
-        NSString* escaped_value = [FBUtility stringByURLEncodingString:[params objectForKey:key]];
+        NSString* escaped_value = [FBUtility stringByURLEncodingString:value];
         [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
     }
     NSString* query = [pairs componentsJoinedByString:@"&"];

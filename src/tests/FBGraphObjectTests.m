@@ -334,8 +334,6 @@
 
 - (void)testEventRoundTrip
 {
-    [self logRequestsAndConnections];
-
     id postedEvent = [self postEvent];
     STAssertNotNil(postedEvent, @"no event");
     

@@ -144,13 +144,11 @@ typedef enum FBRequestConnectionState {
 
 - (void)appendJSONRequests:(NSArray *)requests
                     toBody:(FBRequestBody *)body
-             includeTokens:(BOOL)includeTokens
         andNameAttachments:(NSMutableDictionary *)attachments
                     logger:(FBLogger *)logger;
 
 - (void)addRequest:(FBRequestMetadata *)metadata
            toBatch:(NSMutableArray *)batch
-      includeToken:(BOOL)includeToken
        attachments:(NSDictionary *)attachments;
 
 - (BOOL)isAttachment:(id)item;
@@ -510,7 +508,6 @@ typedef enum FBRequestConnectionState {
         
         [self appendJSONRequests:requests
                           toBody:body
-                   includeTokens:YES
               andNameAttachments:attachments
                           logger:bodyLogger];
         
@@ -637,7 +634,6 @@ typedef enum FBRequestConnectionState {
 //
 - (void)appendJSONRequests:(NSArray *)requests
                     toBody:(FBRequestBody *)body
-             includeTokens:(BOOL)includeTokens
         andNameAttachments:(NSMutableDictionary *)attachments
                     logger:(FBLogger *)logger
 {
@@ -645,7 +641,6 @@ typedef enum FBRequestConnectionState {
     for (FBRequestMetadata *metadata in requests) {
         [self addRequest:metadata
                  toBatch:batch
-            includeToken:includeTokens
              attachments:attachments];
     }
     
@@ -660,12 +655,10 @@ typedef enum FBRequestConnectionState {
 //
 // Adds request data to a batch in a format expected by the JsonWriter.
 // Binary attachments are referenced by name in JSON and added to the
-// attachments dictionary.  If includeToken is set, this will attach the
-// corresponding token to each JSON request.
+// attachments dictionary.  
 //
 - (void)addRequest:(FBRequestMetadata *)metadata
            toBatch:(NSMutableArray *)batch
-      includeToken:(BOOL)includeToken
        attachments:(NSDictionary *)attachments
 {
     NSMutableDictionary *requestElement = [[[NSMutableDictionary alloc] init] autorelease];
@@ -674,12 +667,10 @@ typedef enum FBRequestConnectionState {
         [requestElement setObject:metadata.batchEntryName forKey:@"name"];
     }
 
-    if (includeToken) {
-        NSString *token = metadata.request.session.accessToken;
-        if (token) {
-            [metadata.request.parameters setObject:token forKey:kAccessTokenKey];
-            [self registerTokenToOmitFromLog:token];
-        }
+    NSString *token = metadata.request.session.accessToken;
+    if (token) {
+        [metadata.request.parameters setObject:token forKey:kAccessTokenKey];
+        [self registerTokenToOmitFromLog:token];
     }
 
     NSString *urlString = [self urlStringForSingleRequest:metadata.request forBatch:YES];

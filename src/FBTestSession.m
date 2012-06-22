@@ -89,7 +89,7 @@ sessionUniqueUserTag:(NSString*)sessionUniqueUserTag
                mode:(FBTestSessionMode)mode
         permissions:(NSArray*)permissions 
 tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
-- (void)createNewTestUserAndRename:(BOOL)rename;
+- (void)createNewTestUser;
 - (void)retrieveTestUsersForApp;
 - (void)findOrCreateSharedUser;
 - (void)transitionToOpenWithToken:(NSString*)token;
@@ -157,7 +157,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     return [self.permissions componentsJoinedByString:@","];
 }
 
-- (void)createNewTestUserAndRename:(BOOL)rename
+- (void)createNewTestUser
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                        @"true", @"installed",
@@ -389,7 +389,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
         [self transitionToOpenWithToken:[matchingTestUser objectForKey:FBLoginTestUserAccessToken]];
     } else {
         // Need to create a user. Do so, and rename it using our hashed permissions string.
-        [self createNewTestUserAndRename:YES];
+        [self createNewTestUser];
     }
 }
 
@@ -435,7 +435,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     if (self.mode == FBTestSessionModePrivate) {
         // If we aren't wanting a shared user, just create a user. Don't waste time renaming it since 
         // we will be deleting it when done.
-        [self createNewTestUserAndRename:NO];
+        [self createNewTestUser];
     } else {
         // We need to see if there are any test users that fit the bill.
         
