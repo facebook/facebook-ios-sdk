@@ -48,6 +48,7 @@
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCMealViewController *mealViewController;
 @property (nonatomic) CGRect popoverFromRect;
+@property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 
 - (IBAction)announce:(id)sender;
 - (void)populateUserDetails;
@@ -55,8 +56,9 @@
 - (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle;
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal;
 - (void)postPhotoThenOpenGraphAction;
-- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoID withUserGeneratedFlag:(BOOL)userGenerated;
+- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoID;
 - (FBSession*)session;
+- (void)centerAndShowActivityIndicator;
 
 @end
 
@@ -77,6 +79,7 @@
 @synthesize popover = _popover;
 @synthesize imagePickerActionSheet = _imagePickerActionSheet;
 @synthesize popoverFromRect = _popoverFromRect;
+@synthesize activityIndicator = _activityIndicator;
 
 #pragma mark open graph
 
@@ -106,7 +109,7 @@
 
 // FBSample logic
 // Creates the Open Graph Action with an optional photo URL.
-- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoURL withUserGeneratedFlag:(BOOL)userGenerated {
+- (void)postOpenGraphActionWithPhotoURL:(NSString *)photoURL {
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
     
@@ -122,9 +125,6 @@
     if (photoURL) {
         NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
         [image setObject:photoURL forKey:@"url"];
-        if (userGenerated) {
-            [image setObject:@"true" forKey:@"user_generated"];
-        }
         
         NSMutableArray *images = [[NSMutableArray alloc] init];
         [images addObject:image];
@@ -138,6 +138,9 @@
                            graphObject:action
                      completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
+         [self.activityIndicator stopAnimating];
+         [self.view setUserInteractionEnabled:YES];
+
          NSString *alertText;
          if (!error) {
              alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
@@ -157,17 +160,9 @@
 
 // FBSample logic
 // Creates an Open Graph Action using the user-specified properties, optionally first
-// uploading a photo to Facebook and attaching it to the action. If the photo is large
-// enough, the user_generated flag is used to indicate that the photo should be displayed
-// in a larger format than a normal image associated with an Open Graph Action.
+// uploading a photo to Facebook and attaching it to the action. 
 - (void)postPhotoThenOpenGraphAction {
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-
-    // If the picture is big enough, we'd like to use the user_generated flag so it
-    // appears larger than a thumbnail in the OG Action. (This flag is not allowed if
-    // the picture is smaller than 520x520.)
-    BOOL useUserGeneratedFlag = self.selectedPhoto.size.width >= 520 &&
-        self.selectedPhoto.size.height >= 520;
 
     // First request uploads the photo.
     FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto
@@ -190,7 +185,7 @@
             if (!error &&
                 result) {
                 NSString *source = [result objectForKey:@"source"];
-                [self postOpenGraphActionWithPhotoURL:source withUserGeneratedFlag:useUserGeneratedFlag];
+                [self postOpenGraphActionWithPhotoURL:source];
             }
         }
     ];
@@ -202,13 +197,22 @@
 // Handles the user clicking the Announce button, by either creating an Open Graph Action
 // or first uploading a photo and then creating the action.
 - (IBAction)announce:(id)sender {
+    [self centerAndShowActivityIndicator];
+    [self.view setUserInteractionEnabled:NO];
+    
     if (self.selectedPhoto) {
         [self postPhotoThenOpenGraphAction];
     } else {
-        [self postOpenGraphActionWithPhotoURL:nil withUserGeneratedFlag:NO];
+        [self postOpenGraphActionWithPhotoURL:nil];
     }
 }
 
+- (void)centerAndShowActivityIndicator {
+    CGRect frame = self.view.frame;
+    CGPoint center = CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
+    self.activityIndicator.center = center;
+    [self.activityIndicator startAnimating];
+}
 #pragma mark UIImagePickerControllerDelegate methods
 
 - (void)imagePickerController:(UIImagePickerController *)picker 
@@ -351,6 +355,11 @@
     self.locationManager.distanceFilter = 50;
     [self.locationManager startUpdatingLocation];
     
+    // This avoids a gray background in the table view on iPad.
+    if ([self.menuTableView respondsToSelector:@selector(backgroundView)]) {
+        self.menuTableView.backgroundView = nil;
+    }
+    
     // We want a Logout button in the upper-right.
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
                                               initWithTitle:@"Logout" 
@@ -358,6 +367,10 @@
                                               target:self 
                                               action:@selector(logoutButtonWasPressed:)];
 
+    self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.activityIndicator.hidesWhenStopped = YES;
+    [self.view addSubview:self.activityIndicator];
+    
     // Keep tabs on what's going on with the session so we can repopulate data if it changes.
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     [appDelegate addObserver:self
@@ -513,6 +526,7 @@
             self.placePickerController.session = self.session;
             self.placePickerController.radiusInMeters = 1000;
             self.placePickerController.resultsLimit = 50;
+            self.placePickerController.searchText = @"restaurant";
             
             // SIMULATOR BUG:
             // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68

@@ -126,6 +126,7 @@ static NSString *defaultImageName =
     self.dataSource = dataSource;
     self.delegate = nil;
     self.selectionManager = selectionManager;
+    self.selectionManager.allowsMultipleSelection = NO;
     self.resultsLimit = defaultResultsLimit;
     self.radiusInMeters = defaultRadius;
     self.itemPicturesEnabled = YES;

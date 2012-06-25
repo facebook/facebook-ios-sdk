@@ -21,7 +21,7 @@
 
 @interface FBGraphObjectTableSelection : NSObject<UITableViewDelegate>
 
-@property (nonatomic, assign) id<FBGraphObjectSelectionChangedDelegate> delegate;
+@property (nonatomic, assign) NSObject<FBGraphObjectSelectionChangedDelegate> *delegate;
 @property (nonatomic, retain, readonly) NSArray *selection;
 @property (nonatomic) BOOL allowsMultipleSelection;
 

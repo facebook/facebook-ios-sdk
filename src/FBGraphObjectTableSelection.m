@@ -92,11 +92,29 @@
     [self selectionChanged];
 }
 
+- (void)deselectItems:(NSArray*)items tableView:(UITableView*)tableView
+{
+    // Copy this so it doesn't change from under us.
+    items = [NSArray arrayWithArray:items];
+    
+    for (FBGraphObject *item in items) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForItem:item];
+        
+        UITableViewCell *cell = nil;
+        if (indexPath != nil) {
+            cell = [tableView cellForRowAtIndexPath:indexPath];
+        }
+        
+        [self deselectItem:item cell:cell];
+    }
+}
+
 - (void)selectionChanged
 {
     if ([self.delegate respondsToSelector:
          @selector(graphObjectTableSelectionDidChange:)]) {
-        [self.delegate graphObjectTableSelectionDidChange:self];
+        // Let the table view finish updating its UI before notifying the delegate.
+        [self.delegate performSelector:@selector(graphObjectTableSelectionDidChange:) withObject:self afterDelay:.1];
     }
 }
 
@@ -119,14 +137,16 @@
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     // cell may be nil, which is okay, it will pick up the right selected state when it is created.
-
+   
     FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
     
     // We want to support multi-select on iOS <5.0, so rather than rely on the table view's notion
     // of selection, just treat this as a toggle. If it is already selected, deselect it, and vice versa.
-    // Note: we only care about allowMultipleSelection in didDeselect, as that's what has to worry about
-    // de-selecting the previously-selected item, if any.
     if (![self selectionIncludesItem:item]) {
+        if (self.allowsMultipleSelection == NO) {
+            // No multi-select allowed, deselect what is already selected.
+            [self deselectItems:self.selection tableView:tableView];
+        }
         [self selectItem:item cell:cell];
     } else {
         [self deselectItem:item cell:cell];
@@ -141,11 +161,37 @@
         
         // cell may be nil, which is okay, it will pick up the right selected state when it is created.
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        NSLog(@"didDeselect: indexPath = %@", indexPath.description);
-
+ 
         FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
         [self deselectItem:item cell:cell];
     }
 }
+
+#pragma mark Debugging helpers
+
+- (NSString*)description {
+    NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, allowsMultipleSelection: %@, delegate: %p, selection: [",
+                               NSStringFromClass([self class]), 
+                               self,
+                               self.allowsMultipleSelection ? @"YES" : @"NO",
+                               self.delegate];
+                               
+    bool firstItem = YES;
+    for (FBGraphObject *item in self.selection) {
+        id objectId = [item objectForKey:@"id"];
+        if (!firstItem) {
+            [result appendFormat:@", "];
+        }
+        firstItem = NO;
+        [result appendFormat:@"%@", (objectId != nil) ? objectId : @"<FBGraphObject>"];
+    }
+    [result appendFormat:@"]>"];
+    
+    return result;
+    
+}
+
+
+#pragma mark -
 
 @end

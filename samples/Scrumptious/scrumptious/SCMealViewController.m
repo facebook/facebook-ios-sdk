@@ -48,6 +48,15 @@
     return self;
 }
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // This avoids a gray background in the table view on iPad.
+    if ([self.tableView respondsToSelector:@selector(backgroundView)]) {
+        self.tableView.backgroundView = nil;
+    }
+
+}
 - (void)viewDidUnload {
     [super viewDidUnload];
     // Release any retained subviews of the main view.
