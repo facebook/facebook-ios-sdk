@@ -384,7 +384,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     
     if (matchingTestUser) {
         // We can use this user. IDs come back as numbers, make sure we return as a string.
-        self.testUserID = [[matchingTestUser objectForKey:FBLoginTestUserID] stringValue];
+        self.testUserID = [[matchingTestUser objectForKey:FBLoginTestUserID] description];
 
         [self transitionToOpenWithToken:[matchingTestUser objectForKey:FBLoginTestUserAccessToken]];
     } else {

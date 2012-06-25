@@ -257,7 +257,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @param handler A block to call with session state changes. The default is nil.
  */
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
-        completionHandler:(FBSessionStateHandler)handler;
+       completionHandler:(FBSessionStateHandler)handler;
 
 /*!
  @abstract
@@ -300,6 +300,57 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  */
 
 /*!
+ @abstract
+ This is the simplest method for opening a session with Facebook. Using sessionOpen logs on a user,
+ and sets the static activeSession which becomes the default session object for any Facebook UI widgets
+ used by the application. This session becomes the active session, whether open succeeds or fails.
+ */
++ (FBSession*)sessionOpen;
+
+/*!
+ @abstract
+ This is a simple method for opening a session with Facebook. Using sessionOpen logs on a user,
+ and sets the static activeSession which becomes the default session object for any Facebook UI widgets
+ used by the application. This session becomes the active session, whether open succeeds or fails.
+ 
+ @param permissions     An array of strings representing the permissions to request during the
+                        authentication flow. A value of nil will indicates basic permissions. 
+                        A nil value specifies default permissions.
+ 
+ @param handler         Many applications will benefit from notification when a session becomes invalid
+                        or undergoes other state transitions. If a block is provided, the FBSession
+                        object will call the block each time the session changes state.
+ */
++ (FBSession*)sessionOpenWithPermissions:(NSArray*)permissions
+                      completionHandler:(FBSessionStateHandler)handler;
+
+/*!
+ @abstract
+ An appication may get or set the current active session. Certain high-level components in the SDK
+ will use the activeSession to set default session (e.g. `FBLoginView`, `FBFriendPickerViewController`)
+ 
+ @discussion
+ If sessionOpen* is called, the resulting `FBSession` object also becomes the activeSession. If another
+ session was active at the time, it is closed automatically. If activeSession is called when no session
+ is active, a session object is instatiated and returned; in this case open must be called on the session
+ in order for it to be useable for communication with Facebook.
+ */
++ (FBSession*)activeSession;
+
+/*!
+ @abstract
+ An appication may get or set the current active session. Certain high-level components in the SDK
+ will use the activeSession to set default session (e.g. `FBLoginView`, `FBFriendPickerViewController`)
+ 
+ @param session         The FBSession object to become the active session
+ 
+ @discussion
+ If an application prefers the flexibilility of directly instantiating a session object, an active
+ session can be set directly.
+ */
++ (FBSession*)setActiveSession:(FBSession*)session;
+
+/*!
  @method
  
  @abstract Retrieve the current Facebook SDK logging behavior.
@@ -311,7 +362,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @method
  
  @abstract Set the current Facebook SDK logging behavior.  This should consist of strings defined as
-  constants with FBLogBehavior*, and can be constructed with [NSSet initWithObjects:].
+ constants with FBLogBehavior*, and can be constructed with [NSSet initWithObjects:].
  
  @param loggingBehavior A set of strings indicating what information should be logged.
  */

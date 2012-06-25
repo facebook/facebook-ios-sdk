@@ -52,19 +52,17 @@
 }
 
 // FBSample logic
-// Main helper method to react to session changes, including creation of session
-// object when one has gone closed, or initializing a session at startup time
+// Main helper method to react to session changes, including initial opening of
+// the active session, if it happens to be waiting with a cached token
 - (void)updateForSessionChange {
-    // get the app delegate
-    MPAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    if (appDelegate.session.isOpen) {        
+    if (FBSession.activeSession.isOpen) {        
         // valid account UI
         
         // Once logged in, get "my" information, using a request* static helper,
         // and the FBRequestConnection class; a call to the instance startWithCompletionHelper
         // method returns an FBRequestConnection object, which can be used to cancel the request
         // if needed
-        FBRequest *me = [FBRequest requestForMeWithSession:appDelegate.session];
+        FBRequest *me = [FBRequest requestForMeWithSession:FBSession.activeSession];
         FBRequestConnection *newConnection = [me startWithCompletionHandler: ^(FBRequestConnection *connection,
                                                                                // using typed FBGraphUser protocol,
                                                                                // because we expect a person-shaped
@@ -116,17 +114,12 @@
                                         // it may be that you need to drag the FBiOSSDKResources.bundle 
                                         // into your project
         
-        // create a fresh session object so that the click-handler for login has an object to work with;
-        // Note: a single FBSession object only ever refers to a single user -- by allocating a new
-        // session object, there is a possibility of UX where the user may choose to log in as a new account
-        appDelegate.session = [[FBSession alloc] init]; 
-        if (appDelegate.session.state == FBSessionStateCreatedTokenLoaded) {
-            // it may be that we had a cached token, and just want to open the session on the spot
-            [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
-                                                             FBSessionState status, 
-                                                             NSError *error) {
-                // anytime the session state may have changed we want to call updateForSessionChange in order
-                // to update our UI and internal state to reflect the new session state
+        // because we use this method to bootstrap button setup, we may find that we also need
+        // to open a session that is ready and waiting with a cached token
+        if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
+            [FBSession.activeSession openWithCompletionHandler:^(FBSession *session, 
+                                                                 FBSessionState status, 
+                                                                 NSError *error) {
                 [self updateForSessionChange];
             }];
         }
@@ -137,21 +130,20 @@
 // FBSample logic
 // Handler for login/logout button click, logs sessions in or out
 - (IBAction)performLoginLogout:(id)sender {
-    // get the app delegate
-    MPAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     
     // this button's job is to flip-flop the session from valid to invalid
-    if (appDelegate.session.isOpen) {
+    if (FBSession.activeSession.isOpen) {
         // if a user logs out explicitly, we call closeAndClear* which, like close, closes the
         // in memory FBSession object, and additionally clears any persisted token state and cache
         // for the user; typically an application would only call this method in response to a direct
         // user action that the user would associate with logging-out from an application
-        [appDelegate.session closeAndClearTokenInformation];
+        [FBSession.activeSession closeAndClearTokenInformation];
     } else {
         // in order to get the FBSession object up and running
-        [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
-                                                         FBSessionState status, 
-                                                         NSError *error) {
+        [FBSession sessionOpenWithPermissions:nil
+                            completionHandler:^(FBSession *session, 
+                                                FBSessionState status, 
+                                                NSError *error) {
             [self updateForSessionChange];
         }];
     } 

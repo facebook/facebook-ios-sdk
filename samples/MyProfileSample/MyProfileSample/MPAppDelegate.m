@@ -23,7 +23,6 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-@synthesize session = _session;
 
 // FBSample logic
 // If we have a valid session at the time of openURL call, we handle Facebook transitions
@@ -34,13 +33,13 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     // attempt to extract a token from the url
-    return [self.session handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // FBSample logic
     // if the app is going away, we close the session object
-    [self.session close];
+    [FBSession.activeSession close];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

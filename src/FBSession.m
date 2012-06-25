@@ -72,6 +72,7 @@ static int const FBTokenRetryExtendSeconds = 60 * 60;           // hour
 
 // module scoped globals
 static NSString *g_defaultAppID = nil;
+static FBSession *g_activeSession = nil;
 static NSSet *g_loggingBehavior;
 
 @interface FBSession () <FBLoginDialogDelegate> {
@@ -417,6 +418,52 @@ static NSSet *g_loggingBehavior;
 
 #pragma mark -
 #pragma mark Class Methods
+
+/*!
+ @abstract
+ This is the simplest method for opening a session with Facebook. Using sessionOpen logs on a user,
+ and sets the static activeSession which becomes the default session object for any Facebook UI controls
+ used by the application.
+ */
++ (FBSession*)sessionOpen {
+    return [FBSession sessionOpenWithPermissions:nil
+                               completionHandler:nil];
+}
+
++ (FBSession*)sessionOpenWithPermissions:(NSArray*)permissions
+                       completionHandler:(FBSessionStateHandler)handler {
+    FBSession *session = [[[FBSession alloc] initWithPermissions:permissions] autorelease];
+    [FBSession setActiveSession:session];
+    // we open after the fact, in order to avoid overlapping close
+    // and open handler calls for blocks
+    [session openWithCompletionHandler:handler];
+    return session;
+}
+
++ (FBSession*)activeSession {
+    if (!g_activeSession) {
+        FBSession *session = [[FBSession alloc] init];
+        [FBSession setActiveSession:session];
+        [session release];
+    }
+    return [[g_activeSession retain] autorelease];
+}
+
++ (FBSession*)setActiveSession:(FBSession*)session {
+    
+    // we will close this, but we want any resulting 
+    // handlers see the new active session
+    FBSession *toRelease = g_activeSession;
+    
+    g_activeSession = [session retain];
+    
+    // now the actual close of the prior active
+    [toRelease close];
+    [toRelease release];
+    
+    return session;
+}
+
 
 + (NSSet *)loggingBehavior {
     return g_loggingBehavior;
