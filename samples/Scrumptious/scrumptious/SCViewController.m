@@ -117,10 +117,16 @@
     id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
     action.meal = mealObject;
     if (self.selectedPlace) {
-        action.place = self.selectedPlace;
+        // FBSample logic
+        // We don't use the action.place syntax here because, unfortunately, because setPlace:
+        // and a few other selectors may be flagged as reserved selectors by Apple's App Store
+        // validation tools. While this doesn't necessarily block App Store approval, it
+        // could slow down the approval process. Falling back to the setObjec:forKey:
+        // selector is a useful technique to avoid such naming conflicts.
+        [action setObject:self.selectedPlace forKey:@"place"];
     }
     if (self.selectedFriends.count > 0) {
-        action.tags = self.selectedFriends;
+        [action setObject:self.selectedFriends forKey:@"tags"];
     }
     if (photoURL) {
         NSMutableDictionary *image = [[NSMutableDictionary alloc] init];
@@ -327,7 +333,7 @@
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;
-                 self.userProfileImage.userID = user.id;
+                 self.userProfileImage.userID = [user objectForKey:@"id"];
              }
          }];   
     }

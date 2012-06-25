@@ -821,9 +821,9 @@ static NSSet *g_loggingBehavior;
             
             // here we accumulate state from the various callbacks
             if (user && !fbid) {
-                fbid = [user.id retain];
+                fbid = [[user objectForKey:@"id"] retain];
             } else if (user && !fbid2) {
-                fbid2 = [user.id retain];
+                fbid2 = [[user objectForKey:@"id"] retain];
             } else if (permissions) {
                 permissionsRefreshed = [permissions retain];
             }

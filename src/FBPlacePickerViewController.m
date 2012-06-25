@@ -394,7 +394,7 @@ static NSString *defaultImageName =
     if (street) {
         return street;
     }
-    return location.city;
+    return [location objectForKey:@"city"];
 }
 
 - (UIImage *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
