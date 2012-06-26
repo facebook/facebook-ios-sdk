@@ -223,7 +223,7 @@
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         [self.popover dismissPopoverAnimated:YES];
     } else {
-        [self dismissModalViewControllerAnimated:true];
+        [self dismissModalViewControllerAnimated:YES];
     }
 
     [self updateSelections];
@@ -270,7 +270,7 @@
                     permittedArrowDirections:UIPopoverArrowDirectionAny 
                                     animated:YES];
     } else {
-        [self presentModalViewController:self.imagePicker animated:true];
+        [self presentModalViewController:self.imagePicker animated:YES];
     }
 }
 
@@ -451,13 +451,13 @@
         cell.textLabel.font = [UIFont systemFontOfSize:16];
         cell.textLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
         cell.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        cell.textLabel.clipsToBounds = true;
+        cell.textLabel.clipsToBounds = YES;
 
         cell.detailTextLabel.font = [UIFont systemFontOfSize:12];
         cell.detailTextLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
         cell.detailTextLabel.textColor = [UIColor colorWithRed:0.4 green:0.6 blue:0.8 alpha:1];
         cell.detailTextLabel.lineBreakMode = UILineBreakModeTailTruncation;
-        cell.detailTextLabel.clipsToBounds = true;
+        cell.detailTextLabel.clipsToBounds = YES;
     }
     
     switch (indexPath.row) {
@@ -497,7 +497,7 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return false;
+    return NO;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -581,7 +581,7 @@
             return;
     }
     
-    [self.navigationController pushViewController:target animated:true];
+    [self.navigationController pushViewController:target animated:YES];
 }
 
 #pragma mark -
@@ -598,7 +598,7 @@
     self.selectedPlace = placePicker.selection;
     [self updateSelections];
     if (self.selectedPlace.count > 0) {
-        [self.navigationController popViewControllerAnimated:true];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 

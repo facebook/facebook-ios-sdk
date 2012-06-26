@@ -500,7 +500,7 @@ static NSSet *g_loggingBehavior;
                             logEntry:[NSString stringWithFormat:@"FBSession **INVALID** transition from %@ to %@",
                                       [FBSession sessionStateDescription:statePrior],
                                       [FBSession sessionStateDescription:state]]];
-        return false;
+        return NO;
     }
 
     // if this is yes, someone called a method on FBSession from within a KVO will change handler
@@ -529,12 +529,12 @@ static NSSet *g_loggingBehavior;
                           withTag:self];
     
     // identify whether we will update token and date, and what the values will be
-    BOOL changingTokenAndDate = false;
+    BOOL changingTokenAndDate = NO;
     if (token && date) {
-        changingTokenAndDate = true;
+        changingTokenAndDate = YES;
     } else if (!FB_ISSESSIONOPENWITHSTATE(state) &&
                FB_ISSESSIONOPENWITHSTATE(statePrior)) {
-        changingTokenAndDate = true;
+        changingTokenAndDate = YES;
         token = nil;
         date = nil;
     }
@@ -609,7 +609,7 @@ static NSSet *g_loggingBehavior;
     // assure the state is cohesive in common reintrant scenarios
 
     // the NO case short-circuits after the state switch/case
-    return true;
+    return YES;
 }
 
 // core authorization UX flow

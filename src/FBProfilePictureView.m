@@ -124,8 +124,8 @@
     self.imageView = imageView;
     [imageView release];
 
-    self.autoresizesSubviews = true;
-    self.clipsToBounds = true;
+    self.autoresizesSubviews = YES;
+    self.clipsToBounds = YES;
         
     [self addSubview:self.imageView];
 }

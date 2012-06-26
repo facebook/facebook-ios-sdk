@@ -46,7 +46,7 @@
 
 - (void)enableWithFacebook:(Facebook*)facebook {
     if (!_enabled) {
-        _enabled = true;
+        _enabled = YES;
         [self reloadRecipientCacheWithFacebook:facebook];
     }
 }
