@@ -29,8 +29,7 @@
 
 @interface FPAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) FBSession *session;
-@property (strong, nonatomic) FPViewController *viewController;
+@property (strong, nonatomic) FPViewController *rootViewController;
 @property (strong, nonatomic) UIWindow *window;
 
 @end

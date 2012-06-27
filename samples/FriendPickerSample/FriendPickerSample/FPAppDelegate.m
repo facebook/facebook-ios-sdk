@@ -20,8 +20,7 @@
 @implementation FPAppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
-@synthesize session = _session;
+@synthesize rootViewController = _rootViewController;
 
 // FBSample logic
 // In the login workflow, the Facebook native application, or Safari will transition back to
@@ -31,7 +30,7 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    return [self.session handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -41,20 +40,23 @@
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
     [FBFriendPickerViewController class];
 
-    // FBSample logic
-    // Here we allocate our FBSession object, and assign it to the property referenced by the rest of the 
-    // application
-    self.session = [[FBSession alloc] init];
-
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[FPViewController alloc] initWithNibName:@"FPViewController_iPhone" bundle:nil];
+        self.rootViewController = [[FPViewController alloc] initWithNibName:@"FPViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[FPViewController alloc] initWithNibName:@"FPViewController_iPad" bundle:nil];
+        self.rootViewController = [[FPViewController alloc] initWithNibName:@"FPViewController_iPad" bundle:nil];
     }
-    self.window.rootViewController = self.viewController;
+    self.rootViewController.navigationItem.title = @"Friend Picker";
+    
+    // Set up a UINavigationController as the basis of this app, with the nib generated viewController
+    // as the initial view.
+    UINavigationController *navigationController = 
+         [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
@@ -62,7 +64,7 @@
 // It is important to close any FBSession object that is no longer useful
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Close the session token before quitting
-    [self.session close];
+    [FBSession.activeSession close];
 }
 
 @end

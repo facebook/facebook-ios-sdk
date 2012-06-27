@@ -15,8 +15,9 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FacebookSDK.h>
 
-@interface FPViewController : FBFriendPickerViewController
+@interface FPViewController : UIViewController
+
+- (IBAction)pickFriendsButtonClick:(id)sender;
 
 @end
