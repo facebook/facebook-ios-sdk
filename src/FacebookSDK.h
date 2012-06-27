@@ -20,6 +20,7 @@
 #import "FBError.h"
 
 // ux
+#import "FBLoginView.h"
 #import "FBProfilePictureView.h"
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"

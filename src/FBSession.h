@@ -27,6 +27,16 @@
 #define FB_SESSIONSTATEOPENBIT (1 << 9)
 
 /*
+ * Constants used by NSNotificationCenter for active session notification
+ */
+
+/*! NSNotificationCenter name indicating that a new active session was set */
+extern NSString *const FBSessionDidSetActiveSessionNotification;
+
+/*! NSNotificationCenter name indicating that an active session was unset */
+extern NSString *const FBSessionDidUnsetActiveSessionNotification;
+
+/*
  * Constants defining logging behavior.  Use with <[FBSession setLoggingBehavior]>.
  */
 

@@ -73,7 +73,7 @@ typedef enum {
  @param pictureCropping The cropping to use for the profile picture.
  */
 - (id)initWithUserID:(NSString*)userID 
-  andPictureCropping:(FBProfilePictureCropping)pictureCropping;
+     pictureCropping:(FBProfilePictureCropping)pictureCropping;
 
 
 @end

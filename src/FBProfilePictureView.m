@@ -20,11 +20,11 @@
 
 @interface FBProfilePictureView()
 
-@property (readonly, nonatomic) NSString* imageSize;
-@property (retain, nonatomic) NSString* previousImageSize;
+@property (readonly, nonatomic) NSString *imageSize;
+@property (retain, nonatomic) NSString *previousImageSize;
 
-@property (retain, nonatomic) FBURLConnection* connection;
-@property (retain, nonatomic) UIImageView* imageView;
+@property (retain, nonatomic) FBURLConnection *connection;
+@property (retain, nonatomic) UIImageView *imageView;
 
 - (void)initialize;
 - (void)refreshImage:(BOOL)forceRefresh;
@@ -42,8 +42,7 @@
 
 #pragma mark - Lifecycle
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_userID release];
     [_imageView release];
     [_connection release];
@@ -52,8 +51,7 @@
     [super dealloc];
 }
 
-- (id)init 
-{
+- (id)init {
     self = [super init];
     if (self) {
         [self initialize];
@@ -62,9 +60,8 @@
     return self;
 }
 
-- (id)initWithUserID:(NSString*)userID 
-    andPictureCropping:(FBProfilePictureCropping)pictureCropping
-{
+- (id)initWithUserID:(NSString *)userID 
+     pictureCropping:(FBProfilePictureCropping)pictureCropping {
     self = [self init];
     if (self) {
         self.pictureCropping = pictureCropping;
@@ -74,8 +71,7 @@
     return self;
 }
 
-- (id)initWithFrame:(CGRect)frame 
-{
+- (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
         [self initialize];
@@ -84,8 +80,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
+- (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self initialize];
@@ -95,8 +90,7 @@
 
 #pragma mark -
 
-- (NSString*)imageSize 
-{
+- (NSString *)imageSize  {
     if (self.pictureCropping == FBProfilePictureCroppingSquare) {
         return @"square";
     } 
@@ -116,11 +110,15 @@
 }
 
 
-- (void)initialize
-{    
+- (void)initialize {    
+    // the base class can cause virtual recursion, so
+    // to handle this we make initialize idempotent
+    if (self.imageView) {
+        return;
+    }
+    
     UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
-    imageView.autoresizingMask = 
-        UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.imageView = imageView;
     [imageView release];
 
@@ -130,8 +128,7 @@
     [self addSubview:self.imageView];
 }
 
-- (void)refreshImage:(BOOL)forceRefresh 
-{
+- (void)refreshImage:(BOOL)forceRefresh  {
     NSString *newImageSize = self.imageSize;
     
     if (self.userID) {
@@ -149,7 +146,7 @@
         [self.connection cancel];
 
         FBURLConnectionHandler handler = 
-            ^(FBURLConnection* connection, NSError* error, NSURLResponse* response, NSData* data) {
+            ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *data) {
                 NSAssert(self.connection == connection, @"Inconsistent connection state");
 
                 self.connection = nil;
@@ -159,18 +156,18 @@
                 }
             };
                 
-        NSString* template = @"%@/%@/picture?type=%@";     
-        NSString* urlString = [NSString stringWithFormat:template, 
+        NSString *template = @"%@/%@/picture?type=%@";     
+        NSString *urlString = [NSString stringWithFormat:template, 
                                FBGraphBasePath,
                                self.userID, 
                                newImageSize];
-        NSURL* url = [NSURL URLWithString:urlString];
+        NSURL *url = [NSURL URLWithString:urlString];
         
         self.connection = [[[FBURLConnection alloc]
                              initWithURL:url
                              completionHandler:handler] autorelease];
     } else {
-        NSString* blankImageName = 
+        NSString *blankImageName = 
             [NSString 
                 stringWithFormat:@"FBiOSSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
                 newImageSize];
@@ -182,8 +179,7 @@
     self.previousImageSize = newImageSize;
 }
 
-- (void)ensureImageViewContentMode
-{
+- (void)ensureImageViewContentMode {
     // Set the image's contentMode such that if the image is larger than the control, we scale it down, preserving aspect 
     // ratio.  Otherwise, we center it.  This ensures that we never scale up, and pixellate, the image.
     CGSize viewSize = self.bounds.size;
@@ -200,8 +196,7 @@
     self.imageView.contentMode = contentMode;
 }
 
-- (void)setUserID:(NSString*)userID 
-{
+- (void)setUserID:(NSString*)userID {
     if (!_userID || ![_userID isEqualToString:userID]) {
         [_userID release];
         _userID = [userID copy];
@@ -209,8 +204,7 @@
     }
 }
 
-- (void)setPictureCropping:(FBProfilePictureCropping)pictureCropping 
-{
+- (void)setPictureCropping:(FBProfilePictureCropping)pictureCropping  {
     if (_pictureCropping != pictureCropping) {
         _pictureCropping = pictureCropping;
         [self refreshImage:YES];
@@ -219,8 +213,7 @@
 
 // Lets us catch resizes of the control, or any outer layout, allowing us to potentially
 // choose a different image.
-- (void)layoutSubviews
-{
+- (void)layoutSubviews {
     [self refreshImage:NO];
     [super layoutSubviews];   
 }

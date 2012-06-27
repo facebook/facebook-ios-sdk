@@ -19,7 +19,7 @@
 #import "MPAppDelegate.h"
 #import <FBiOSSDK/FacebookSDK.h>
 
-@interface MPViewController ()
+@interface MPViewController () <FBLoginViewDelegate>
 
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *profilePic;
 @property (strong, nonatomic) UIBarButtonItem *buttonLoginLogout;
@@ -28,16 +28,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonPickFriends;
 @property (strong, nonatomic) IBOutlet UILabel *labelFirstName;
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
-@property (strong, nonatomic) NSDictionary<FBGraphUser> *loggedInUser;
+@property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 @property (strong, nonatomic) FBRequestConnection *requestConnection;
-
-- (void)performLoginLogout:(id)sender;
 
 - (IBAction)postStatusUpdateClick:(UIButton *)sender;
 - (IBAction)postPhotoClick:(UIButton *)sender;
 - (IBAction)pickFriendsClick:(UIButton *)sender;
 
-- (void)updateForSessionChange;
 - (void)showAlert:(NSString *)message
            result:(id)result
             error:(NSError *)error;
@@ -46,6 +43,7 @@
 @end
 
 @implementation MPViewController
+@synthesize loginLabel = _loginLabel;
 
 @synthesize buttonLoginLogout = _buttonLoginLogout;
 @synthesize buttonPostStatus = _buttonPostStatus;
@@ -59,19 +57,12 @@
 
 - (void)viewDidLoad {    
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
     
-    self.buttonLoginLogout = [[UIBarButtonItem alloc] 
-                              initWithTitle:@"Login" 
-                              style:UIBarButtonItemStyleBordered 
-                              target:self 
-                              action:@selector(performLoginLogout:)];
-    self.navigationItem.rightBarButtonItem = self.buttonLoginLogout;
-        
-    // FBSample logic
-    // Bootstrap call to updateForSessionChange gets a fresh new session object
-    [self updateForSessionChange];
+    FBLoginView *loginview = [[FBLoginView alloc] init];
+    loginview.center = CGPointMake(20, 20);
+    loginview.delegate = self;
     
+    [self.view addSubview:loginview];
 }
 
 - (void)viewDidUnload {
@@ -82,6 +73,7 @@
     self.labelFirstName = nil;
     self.loggedInUser = nil;
     self.profilePic = nil;
+    self.loginLabel = nil;
     [super viewDidUnload];
 }
 
@@ -94,120 +86,40 @@
     }
 }
 
-// FBSample logic
-// Main helper method to react to session changes, including initial opening of
-// the active session, if it happens to be waiting with a cached token
-- (void)updateForSessionChange {
-    if (FBSession.activeSession.isOpen) {        
-        // valid account UI
-        
-        // Once logged in, get "my" information, using a request* static helper,
-        // and the FBRequestConnection class; a call to the instance startWithCompletionHelper
-        // method returns an FBRequestConnection object, which can be used to cancel the request
-        // if needed
-        FBRequest *me = [FBRequest requestForMeWithSession:FBSession.activeSession];
-        FBRequestConnection *newConnection = [me startWithCompletionHandler: ^(FBRequestConnection *connection,
-                                                                               // using typed FBGraphUser protocol,
-                                                                               // because we expect a person-shaped
-                                                                               // response
-                                                                               NSDictionary<FBGraphUser> *my, 
-                                                                               NSError *error) {
-            // Request completed...
-            if (connection != self.requestConnection) {
-                // not the completion we were waiting for...
-                return;
-            }
-            
-            self.requestConnection = nil;
-            NSString *text = nil, *fbid = nil;
-            if (!error) {
-                // here we use helper properties of FBGraphUser to dot-through to first_name and
-                // id properties of the json response from the server; alternatively we could use
-                // NSDictionary methods such as objectForKey to get values from the my json object
-                text = [NSString stringWithFormat:@"Hello %@!", my.first_name];
-                fbid = my.id;
-                self.loggedInUser = my;
-            } else {
-                text = error.localizedDescription;
-                fbid = nil;   // default profile pic
-            }  
-            
-            // setting the userID property of the FBProfilePictureView instance
-            // causes the control to fetch and display the profile picture for the user
-            self.profilePic.userID = fbid;            
-            self.labelFirstName.text = text;
-        }];
-        
-        // if there's an outstanding connection, just cancel, which causes
-        // the connection to complete immediately with an error
-        [self.requestConnection cancel];
-        
-        // keep track of the connection that we just created
-        self.requestConnection = newConnection;
-        
-        // if we have an open session, then our login-logout button should be for logging out, and out
-        // "action" buttons are operable.
-        self.buttonLoginLogout.title = @"Logout";  
-        self.buttonPostPhoto.enabled = YES;
-        self.buttonPostStatus.enabled = YES;
-        self.buttonPickFriends.enabled = YES;
-    } else {
-        
-        // if we have a closed session then our login-logout button should be for log-in
-        self.buttonLoginLogout.title = @"Login"; 
-        self.labelFirstName.text = @"<Press Login>";
-        self.profilePic.userID = nil;   // default profile pic; note if you are having trouble getting
-                                        // the default profile pic to display in your own application,
-                                        // it may be that you need to drag the FBiOSSDKResources.bundle 
-                                        // into your project
-        
-        // our "action" buttons only make sense when we're logged in.
-        self.buttonPostPhoto.enabled = NO;
-        self.buttonPostStatus.enabled = NO;
-        self.buttonPickFriends.enabled = NO;
-        
-        // because we use this method to bootstrap button setup, we may find that we also need
-        // to open a session that is ready and waiting with a cached token
-        if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-            [FBSession.activeSession openWithCompletionHandler:^(FBSession *session, 
-                                                                 FBSessionState status, 
-                                                                 NSError *error) {
-                [self updateForSessionChange];
-            }];
-        }
-    }
-}
-
-
-// FBSample logic
-// Handler for login/logout button click, logs sessions in or out
-- (void)performLoginLogout:(id)sender {
+- (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
+    // first get the buttons set for login mode
+    self.buttonPostPhoto.enabled = YES;
+    self.buttonPostStatus.enabled = YES;
+    self.buttonPickFriends.enabled = YES;
     
-    // this button's job is to flip-flop the session from valid to invalid
-    if (FBSession.activeSession.isOpen) {
-        // if a user logs out explicitly, we call closeAndClear* which, like close, closes the
-        // in memory FBSession object, and additionally clears any persisted token state and cache
-        // for the user; typically an application would only call this method in response to a direct
-        // user action that the user would associate with logging-out from an application
-        [FBSession.activeSession closeAndClearTokenInformation];
-    } else {
-        // in order to get the FBSession object up and running, with the necessary permissions.  A more
-        // sophisticated version of this app would create the session without the extended permissions,
-        // wait until an action that required the extended permissions was needed, and then call 
-        // reauthorizeWithPermissions on the existing session.
-        [FBSession sessionOpenWithPermissions:[NSArray arrayWithObject:@"status_update"]
-                            completionHandler:^(FBSession *session, 
-                                                FBSessionState status, 
-                                                NSError *error) {
-            [self updateForSessionChange];
-        }];
-    } 
+    self.loginLabel.text = nil;
 }
 
+- (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
+                            user:(id<FBGraphUser>)user {
+    // here we use helper properties of FBGraphUser to dot-through to first_name and
+    // id properties of the json response from the server; alternatively we could use
+    // NSDictionary methods such as objectForKey to get values from the my json object
+    self.labelFirstName.text = [NSString stringWithFormat:@"Hello %@!", user.first_name];
+    // setting the userID property of the FBProfilePictureView instance
+    // causes the control to fetch and display the profile picture for the user
+    self.profilePic.userID = user.id;
+    self.loggedInUser = user;
+}
+ 
+- (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
+    self.buttonPostPhoto.enabled = NO;
+    self.buttonPostStatus.enabled = NO;
+    self.buttonPickFriends.enabled = NO;
+    
+    self.profilePic.userID = nil;            
+    self.labelFirstName.text = nil;
+    
+    self.loginLabel.text = @"<-- press to log in";
+}
 
 // Post Status Update button handler
 - (IBAction)postStatusUpdateClick:(UIButton *)sender {
-    
     
     // Post a status update to the user's feedm via the Graph API, and display an alert view 
     // with the results or an error.

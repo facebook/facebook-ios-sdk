@@ -60,6 +60,10 @@ NSString *const FBLogBehaviorAccessTokens = @"include_access_tokens";
 NSString *const FBLogBehaviorSessionStateTransitions = @"state_transitions";
 NSString *const FBLogBehaviorPerformanceCharacteristics = @"perf_characteristics";
 
+// the following constant strings are used by NSNotificationCenter
+NSString *const FBSessionDidSetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidSetActiveSessionNotification";
+NSString *const FBSessionDidUnsetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidUnsetActiveSessionNotification";
+
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
 static NSString *const FBisValidPropertyName = @"isValid";
@@ -452,14 +456,25 @@ static NSSet *g_loggingBehavior;
 + (FBSession*)setActiveSession:(FBSession*)session {
     
     // we will close this, but we want any resulting 
-    // handlers see the new active session
+    // handlers to see the new active session
     FBSession *toRelease = g_activeSession;
     
     g_activeSession = [session retain];
     
-    // now the actual close of the prior active
-    [toRelease close];
-    [toRelease release];
+    // some housekeeping needs to happen if we had a previous session
+    if (toRelease) {
+        // now the actual close/notification/release of the prior active
+        [toRelease close];
+        [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidUnsetActiveSessionNotification
+                                                            object:toRelease];
+        [toRelease release];
+    }
+    
+    // we don't notify nil sets
+    if (session) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidSetActiveSessionNotification
+                                                            object:session];
+    }
     
     return session;
 }

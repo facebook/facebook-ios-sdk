@@ -210,8 +210,7 @@
  
  @param placePicker   The place picker view controller whose data changed.
  */
-- (void)placePickerViewControllerDataDidChange:
-(FBPlacePickerViewController *)placePicker;
+- (void)placePickerViewControllerDataDidChange:(FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
@@ -219,8 +218,7 @@
  
  @param placePicker   The place picker view controller whose selection changed.
  */
-- (void)placePickerViewControllerSelectionDidChange:
-(FBPlacePickerViewController *)placePicker;
+- (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker;
 
 /*!
  @abstract
@@ -233,7 +231,7 @@
  @param place               An <FBGraphPlace> object representing the place.
  */
 - (BOOL)placePickerViewController:(FBPlacePickerViewController *)placePicker
-                shouldIncludePlace:(id <FBGraphPlace>)place;
+               shouldIncludePlace:(id <FBGraphPlace>)place;
 
 /*!
  @abstract
@@ -243,6 +241,6 @@
  @param error               An error object containing details of the error.
  */
 - (void)placePickerViewController:(FBPlacePickerViewController *)placePicker
-                       handleError:(NSError *)error;
+                      handleError:(NSError *)error;
 
 @end

@@ -10,6 +10,9 @@
 		5F7CB4201553ACC600C183CF /* FBLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7CB41E1553ACC600C183CF /* FBLogger.h */; };
 		5F7CB4211553ACC600C183CF /* FBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CB41F1553ACC600C183CF /* FBLogger.m */; };
 		8409694C1541F41100479AD9 /* FBOpenGraphAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 8409694B1541F41100479AD9 /* FBOpenGraphAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		840F658C159B3A47005D41AA /* FBLoginView.h in Resources */ = {isa = PBXBuildFile; fileRef = 840F658B159B3A47005D41AA /* FBLoginView.h */; };
+		840F658F159B3A64005D41AA /* FBLoginView.m in Sources */ = {isa = PBXBuildFile; fileRef = 840F658E159B3A64005D41AA /* FBLoginView.m */; };
+		840F6595159B441D005D41AA /* FBLoginView.h in Headers */ = {isa = PBXBuildFile; fileRef = 840F658B159B3A47005D41AA /* FBLoginView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		840FDCBD152B5D9200F9C927 /* FBFrictionlessRequestSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 840FDCBB152B5D9200F9C927 /* FBFrictionlessRequestSettings.h */; };
 		840FDCBE152B5D9200F9C927 /* FBFrictionlessRequestSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 840FDCBC152B5D9200F9C927 /* FBFrictionlessRequestSettings.m */; };
 		841062451582501900FC561C /* FBFriendPickerCacheDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D0A6531581A15E00A2FA5E /* FBFriendPickerCacheDescriptor.m */; };
@@ -163,6 +166,8 @@
 		5F7CB41E1553ACC600C183CF /* FBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLogger.h; sourceTree = "<group>"; };
 		5F7CB41F1553ACC600C183CF /* FBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBLogger.m; sourceTree = "<group>"; };
 		8409694B1541F41100479AD9 /* FBOpenGraphAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBOpenGraphAction.h; sourceTree = "<group>"; };
+		840F658B159B3A47005D41AA /* FBLoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLoginView.h; sourceTree = "<group>"; };
+		840F658E159B3A64005D41AA /* FBLoginView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBLoginView.m; sourceTree = "<group>"; };
 		840FDCBB152B5D9200F9C927 /* FBFrictionlessRequestSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFrictionlessRequestSettings.h; sourceTree = "<group>"; };
 		840FDCBC152B5D9200F9C927 /* FBFrictionlessRequestSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFrictionlessRequestSettings.m; sourceTree = "<group>"; };
 		84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionManualTokenCachingStrategy.h; sourceTree = "<group>"; };
@@ -391,6 +396,8 @@
 				5F7CB41F1553ACC600C183CF /* FBLogger.m */,
 				AEA93B0611D5293B000A4545 /* FBLoginDialog.h */,
 				AEA93B0711D5293B000A4545 /* FBLoginDialog.m */,
+				840F658B159B3A47005D41AA /* FBLoginView.h */,
+				840F658E159B3A64005D41AA /* FBLoginView.m */,
 				8409694B1541F41100479AD9 /* FBOpenGraphAction.h */,
 				84D0A6571581A1C000A2FA5E /* FBPlacePickerCacheDescriptor.h */,
 				84D0A6551581A1A600A2FA5E /* FBPlacePickerCacheDescriptor.m */,
@@ -548,6 +555,7 @@
 				84D0A6591581A20400A2FA5E /* FBFriendPickerCacheDescriptor.h in Headers */,
 				84D0A65A1581A20A00A2FA5E /* FBPlacePickerCacheDescriptor.h in Headers */,
 				84E3132C1589948C004C4169 /* FBPlacePickerViewController+Internal.h in Headers */,
+				840F6595159B441D005D41AA /* FBLoginView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -625,6 +633,7 @@
 				84D0A6521581A12800A2FA5E /* FBFriendPickerCacheDescriptor.h in Resources */,
 				84D0A6561581A1A600A2FA5E /* FBPlacePickerCacheDescriptor.m in Resources */,
 				84D0A6581581A1C000A2FA5E /* FBPlacePickerCacheDescriptor.h in Resources */,
+				840F658C159B3A47005D41AA /* FBLoginView.h in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -749,6 +758,7 @@
 				841062451582501900FC561C /* FBFriendPickerCacheDescriptor.m in Sources */,
 				841062471582502B00FC561C /* FBPlacePickerCacheDescriptor.m in Sources */,
 				84C9FF3015871363000C0C97 /* FBCacheDescriptor.m in Sources */,
+				840F658F159B3A64005D41AA /* FBLoginView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

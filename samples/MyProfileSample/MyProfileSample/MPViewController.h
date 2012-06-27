@@ -17,5 +17,6 @@
 #import <UIKit/UIKit.h>
 
 @interface MPViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UILabel *loginLabel;
 
 @end
