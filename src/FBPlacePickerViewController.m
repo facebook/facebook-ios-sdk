@@ -25,6 +25,7 @@
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
 #import "FBPlacePickerCacheDescriptor.h"
+#import "FBSession+Internal.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
@@ -189,6 +190,13 @@ static NSString *defaultImageName =
 
 - (void)loadData
 {
+    // when the app calls loadData,
+    // if we don't have a session and there is 
+    // an open active session, use that
+    if (!self.session) {
+        self.session = [FBSession activeSessionIfOpen];
+    }
+    
     // Sending a request on every keystroke is wasteful of bandwidth. Send a
     // request the first time the user types something, then set up a 2-second timer
     // and send whatever changes the user has made since then. (If nothing has changed

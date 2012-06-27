@@ -1109,6 +1109,13 @@ static NSSet *g_loggingBehavior;
 #pragma mark -
 #pragma mark Internal members
 
++ (FBSession*)activeSessionIfOpen {
+    if (g_activeSession.isOpen) {
+        return FBSession.activeSession;
+    }
+    return nil;
+}
+
 + (void)deleteFacebookCookies {
     NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray* facebookCookies = [cookies cookiesForURL:

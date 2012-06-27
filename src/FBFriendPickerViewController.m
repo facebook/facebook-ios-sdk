@@ -26,6 +26,7 @@
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
+#import "FBSession+Internal.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
 static NSString *defaultImageName = @"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
@@ -247,6 +248,12 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (void)loadData {
+    // when the app calls loadData,
+    // if we don't have a session and there is 
+    // an open active session, use that
+    if (!self.session) {
+        self.session = [FBSession activeSessionIfOpen];
+    }
     [self loadDataSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
 }
 

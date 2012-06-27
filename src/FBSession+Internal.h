@@ -21,6 +21,8 @@
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;
 
++ (FBSession*)activeSessionIfOpen;
+
 + (void)deleteFacebookCookies;
 + (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime;
 
