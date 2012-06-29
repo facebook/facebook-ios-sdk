@@ -26,7 +26,7 @@
 // The requestConnection property in this class is used to maintain the current active
 // connection with Facebook, used to fetch profile information; and picView displays the 
 // profile for the current active user
-@property (strong, nonatomic) FBRequestConnection *requestConnection;
+@property (strong, nonatomic) FBRequest *pendingRequest;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *picView;
 
 @end
@@ -36,7 +36,7 @@
 @synthesize nameLabel;
 @synthesize birthdayLabel;
 @synthesize picView;
-@synthesize requestConnection = _requestConnection;
+@synthesize pendingRequest = _pendingRequest;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -57,46 +57,43 @@
         self.nameLabel.hidden = YES;
         self.picView.hidden = YES;
         self.birthdayLabel.hidden = YES;
-
+        
         // FBSample logic
         // If the session is open, then we attemt to fetch /me, in order to get the user's
         // name and birthday
-        FBRequest *me = [FBRequest requestForMeWithSession:userManager.currentSession];
-        FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
-        [requestConnection addRequest:me 
-                    completionHandler:^(FBRequestConnection *connection, 
-                                        // we expect a user as a result, and so are using FBGraphUser protocol
-                                        // as our result type; in order to allow us to access first_name and
-                                        // birthday with property syntax
-                                        NSDictionary<FBGraphUser> *user,
-                                        NSError *error) {
-                        if (connection != self.requestConnection) {
-                            return;
-                        }
-                        self.requestConnection = nil;
-                        
-                        if (error) {
-                            NSLog(@"Couldn't get info : %@", error.localizedDescription);
-                            return;
-                        }
-                        
-                        self.nameLabel.text = [NSString stringWithFormat:@"Hello, %@!", user.first_name];
-                        self.picView.userID = user.id;
-                        if (user.birthday.length > 0) {
-                            self.birthdayLabel.text = [NSString stringWithFormat:@"Your birthday is: %@", user.birthday];        
-                        } else {
-                            self.birthdayLabel.text = @"Your birthday isn't set.";
-                        }
-                        
-                        self.nameLabel.hidden = NO;
-                        self.picView.hidden = NO;
-                        self.birthdayLabel.hidden = NO;
-                    }];
-
-        [self.requestConnection cancel];
-        self.requestConnection = requestConnection;
-
-        [requestConnection start];        
+        FBRequest *me = [[FBRequest alloc] initWithSession:userManager.currentSession
+                                                 graphPath:@"me"];
+        [me startWithCompletionHandler:^(FBRequestConnection *connection, 
+                                         // we expect a user as a result, and so are using FBGraphUser protocol
+                                         // as our result type; in order to allow us to access first_name and
+                                         // birthday with property syntax
+                                         NSDictionary<FBGraphUser> *user,
+                                         NSError *error) {
+            if (me != self.pendingRequest) {
+                return;
+            }
+            self.pendingRequest = nil;
+            
+            if (error) {
+                NSLog(@"Couldn't get info : %@", error.localizedDescription);
+                return;
+            }
+            
+            self.nameLabel.text = [NSString stringWithFormat:@"Hello, %@!", user.first_name];
+            self.picView.userID = user.id;
+            if (user.birthday.length > 0) {
+                self.birthdayLabel.text = [NSString stringWithFormat:@"Your birthday is: %@", user.birthday];        
+            } else {
+                self.birthdayLabel.text = @"Your birthday isn't set.";
+            }
+            
+            self.nameLabel.hidden = NO;
+            self.picView.hidden = NO;
+            self.birthdayLabel.hidden = NO;
+        }];
+        
+        self.pendingRequest = me;
+        
     } else {
         self.nameLabel.text = @"No active user. Go to Settings tab to log in!";
         self.nameLabel.hidden = NO;

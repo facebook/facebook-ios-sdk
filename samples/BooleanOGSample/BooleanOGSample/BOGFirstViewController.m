@@ -156,8 +156,7 @@
         
         
         // post the action using one of the lightweight static start* methods on FBRequest
-        [FBRequest startForPostWithSession:FBSession.activeSession
-                                 graphPath:actionPath
+        [FBRequest startForPostWithGraphPath:actionPath
                                graphObject:action
                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                              if (!error) {

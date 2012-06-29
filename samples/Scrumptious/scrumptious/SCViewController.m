@@ -142,10 +142,10 @@
     }
 
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
-    [FBRequest startForPostWithSession:self.session
-                             graphPath:@"me/fb_sample_scrumps:eat"
-                           graphObject:action
-                     completionHandler:
+    FBRequest *request = [[FBRequest alloc] initForPostWithSession:self.session
+                                                          graphPath:@"me/fb_sample_scrumps:eat"
+                                                        graphObject:action];
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
          [self.activityIndicator stopAnimating];
          [self.view setUserInteractionEnabled:YES];
@@ -174,8 +174,9 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
     // First request uploads the photo.
-    FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto
-                                                   session:self.session];
+    FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto];
+    [request1 setSession:self.session];
+    
     [connection addRequest:request1
         completionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
@@ -186,8 +187,9 @@
     ];
 
     // Second request retrieves photo information for just-created photo so we can grab its source.
-    FBRequest *request2 = [FBRequest requestForGraphPath:@"{result=photopost:$.id}"
-                                                 session:self.session];
+    FBRequest *request2 = [FBRequest requestForGraphPath:@"{result=photopost:$.id}"];
+    [request2 setSession:self.session];
+    
     [connection addRequest:request2
          completionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
@@ -341,7 +343,9 @@
 // identity they are logged in as.
 - (void)populateUserDetails {
     if (self.session.isOpen) {
-        [[FBRequest requestForMeWithSession:self.session] startWithCompletionHandler:
+        FBRequest *request = [FBRequest requestForMe];
+        [request setSession:self.session];
+        [request startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;

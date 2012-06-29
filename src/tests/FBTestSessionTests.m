@@ -50,23 +50,24 @@
                                 nil];   
     
     __block int count = 0;
-    [FBRequest startWithSession:fqlSession
-                      graphPath:@"fql"
-                     parameters:parameters
-                     HTTPMethod:nil
-              completionHandler:
+    FBRequest *request = [[[FBRequest alloc] initWithSession:fqlSession
+                                                   graphPath:@"fql"
+                                                  parameters:parameters
+                                                  HTTPMethod:nil]
+                          autorelease];
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertNotNil(result, @"nil result");
-         STAssertNil(error, @"non-nil error");
-         STAssertTrue([result isKindOfClass:[NSDictionary class]], @"not dictionary");
-         
-         id data = [result objectForKey:@"data"];
-         STAssertTrue([data isKindOfClass:[NSArray class]], @"not array");
-         
-         count = [data count];
-         
-         [blocker signal];
-     }];
+        STAssertNotNil(result, @"nil result");
+        STAssertNil(error, @"non-nil error");
+        STAssertTrue([result isKindOfClass:[NSDictionary class]], @"not dictionary");
+        
+        id data = [result objectForKey:@"data"];
+        STAssertTrue([data isKindOfClass:[NSArray class]], @"not array");
+        
+        count = [data count];
+        
+        [blocker signal];
+    }];
      
     [blocker wait];
     [blocker release];

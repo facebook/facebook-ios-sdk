@@ -43,7 +43,8 @@
 
  - (void)testRequestMe
 {
-    FBRequest *requestMe = [FBRequest requestForMeWithSession:self.defaultTestSession];
+    FBRequest *requestMe = [FBRequest requestForMe];
+    [requestMe setSession:self.defaultTestSession];
     NSArray *results = [self sendRequests:requestMe, nil];
 
     STAssertNotNil(results, @"results");
@@ -62,8 +63,8 @@
 
 - (void)testRequestUploadPhoto
 {
-    FBRequest *uploadRequest = [FBRequest requestForUploadPhoto:[self createSquareTestImage:120]
-                                                        session:self.defaultTestSession];
+    FBRequest *uploadRequest = [FBRequest requestForUploadPhoto:[self createSquareTestImage:120]];
+    [uploadRequest setSession:self.defaultTestSession];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
 
     STAssertNotNil(responses, @"responses");
@@ -88,8 +89,8 @@
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:200 
                                                                 resultsLimit:5 
-                                                                  searchText:nil 
-                                                                     session:self.defaultTestSession];
+                                                                  searchText:nil];
+    [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
     STAssertNotNil(response, @"response");
@@ -118,8 +119,8 @@
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:200 
                                                                 resultsLimit:5 
-                                                                  searchText:@"Lincoln Memorial" 
-                                                                     session:self.defaultTestSession];
+                                                                  searchText:@"Lincoln Memorial"];
+    [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
     STAssertNotNil(response, @"response");

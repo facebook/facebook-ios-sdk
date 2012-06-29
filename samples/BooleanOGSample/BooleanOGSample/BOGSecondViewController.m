@@ -102,13 +102,11 @@
 - (void)updateActivityForID:(NSString *)fbid {
     
     // create a request for the "or" activity
-    FBRequest *orActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_boolean_og:or", fbid]
-                                                   session:self.session];
+    FBRequest *orActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_boolean_og:or", fbid]];
     [orActivity.parameters setObject:@"U" forKey:@"date_format"];
     
     // create a request for the "and" activity
-    FBRequest *andActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_boolean_og:and", fbid]
-                                                    session:self.session];
+    FBRequest *andActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_boolean_og:and", fbid]];
     [andActivity.parameters setObject:@"U" forKey:@"date_format"];
     
     // because we have two requests in one batch, we will use this array to gather the aggrigated acticity

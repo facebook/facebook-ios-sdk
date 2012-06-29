@@ -26,7 +26,7 @@
 // The app fetches https://graph.facebook.com/me for a user account immedately after successful login;
 // the request object is cached in this property in order to have a means for canceling and identifying
 // the network request while it is in flight
-@property (strong, nonatomic) FBRequestConnection *requestConnection;
+@property (strong, nonatomic) FBRequest *pendingRequest;
 @property (nonatomic) int pendingLoginForSlot;
 
 - (int)userSlotFromIndexPath:(NSIndexPath *)indexPath;
@@ -38,7 +38,7 @@
 @implementation SUSettingsViewController
 
 @synthesize usersTableView;
-@synthesize requestConnection = _requestConnection;
+@synthesize pendingRequest = _pendingRequest;
 @synthesize pendingLoginForSlot = _pendingLoginForSlot;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -63,7 +63,7 @@
 - (void)loginDefaultUser {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-
+    
     if (![userManager isSlotEmpty:0]) {
         [self loginSlot:0];
     }
@@ -81,7 +81,7 @@
            forSlot:(int)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-
+    
     NSString *userID = [userManager getUserIDInSlot:slot];
     
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -117,53 +117,43 @@
     
     if (session.isOpen) {
         // fetch profile info such as name, id, etc. for the open session
-        FBRequest *me = [FBRequest requestForMeWithSession:session];
-        FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
-
-        [requestConnection addRequest:me
-                    completionHandler:^(FBRequestConnection *connection, 
-                                        NSDictionary<FBGraphUser> *result,
-                                        NSError *error) {
-                        // because we have a cached copy of the connection, we can check
-                        // to see if this is the connection we care about; a prematurely 
-                        // cancelled connection will short-circuit here
-                        if (connection != self.requestConnection) {
-                            return;
-                        }
-                        
-                        self.requestConnection = nil;
-                        self.pendingLoginForSlot = -1;
-                        
-                        // we interpret an error in the initial fetch as a reason to 
-                        // fail the user switch, and leave the application without an
-                        // active user (similar to initial state)
-                        if (error) {
-                            NSLog(@"Couldn't switch user: %@", error.localizedDescription);
-                            [userManager switchToNoActiveUser];
-                            return;
-                        }
-                        [userManager updateUser:result inSlot:slot];
-                        [self updateCellForSlot:slot];
-                    }];
+        FBRequest *me = [[FBRequest alloc] initWithSession:session
+                                                 graphPath:@"me"];
         
-        // if there happens to be a connection in flight, we cancel it
-        // Note: it is valid to call cancel multiple times, and the registered 
-        // handler will only be called back once; this does not happen here, but
-        // can be useful in certain circumstances
-        [self.requestConnection cancel];
-        // then we replace it with the newly minted one
-        self.requestConnection = requestConnection;
+        self.pendingRequest= me;
         
-        // this method initiates actual communication
-        [requestConnection start];
+        [me startWithCompletionHandler:^(FBRequestConnection *connection, 
+                                         NSDictionary<FBGraphUser> *result,
+                                         NSError *error) {
+            // because we have a cached copy of the connection, we can check
+            // to see if this is the connection we care about; a prematurely 
+            // cancelled connection will short-circuit here
+            if (me != self.pendingRequest) {
+                return;
+            }
+            
+            self.pendingRequest = nil;
+            self.pendingLoginForSlot = -1;
+            
+            // we interpret an error in the initial fetch as a reason to 
+            // fail the user switch, and leave the application without an
+            // active user (similar to initial state)
+            if (error) {
+                NSLog(@"Couldn't switch user: %@", error.localizedDescription);
+                [userManager switchToNoActiveUser];
+                return;
+            }
+            [userManager updateUser:result inSlot:slot];
+            [self updateCellForSlot:slot];
+        }];
     } else {
         // in the closed case, we check to see if we picked up a cached token that we
         // expect to be valid and ready for use; if so then we open the session on the spot
         if (session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
             [session openWithCompletionHandler:^(FBSession *session, 
-                                                  FBSessionState status, 
-                                                  NSError *error) {
+                                                 FBSessionState status, 
+                                                 NSError *error) {
                 [self updateForSessionChangeForSlot:slot];
             }];
         }
@@ -177,14 +167,14 @@
     if (slot < 0 || slot >= userManager.maximumUserSlots) {
         return;
     }
-
+    
     int currentUserSlot = userManager.currentUserSlot;
-
+    
     // If we can't log in as new user, we don't want to still be logged in as previous user,
     // particularly if it might not be obvious to the user that the login failed.
     [userManager switchToNoActiveUser];
     self.pendingLoginForSlot = slot;
-
+    
     if (slot != currentUserSlot) {
         // Update the previously active user's cell
         if (currentUserSlot >= 0 && currentUserSlot < [userManager maximumUserSlots]) {
@@ -198,12 +188,12 @@
     // force entering of credentials will be specific to the needs of an app; this app
     // bases the decision on whether the user logs on the "primary user" or a "guest user"
     FBSessionLoginBehavior behavior = (slot == 0) ?
-        FBSessionLoginBehaviorSSOWithFallback :
-        FBSessionLoginBehaviorSuppressSSO;
-
+    FBSessionLoginBehaviorSSOWithFallback :
+    FBSessionLoginBehaviorSuppressSSO;
+    
     FBSession *session = [userManager switchToUserInSlot:slot];
     [self updateCellForSlot:slot];
-
+    
     // we pass the correct behavior here to indicate the login workflow to use (SSO or otherwise)
     [session openWithBehavior:behavior
             completionHandler:^(FBSession *session,
@@ -239,7 +229,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-
+    
     switch (section) {
         case 0:
             return 1;
@@ -255,7 +245,7 @@
     if (cell == nil) {
         cell = [[SUProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
-
+    
     SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
     int slot = [self userSlotFromIndexPath:indexPath];
@@ -306,14 +296,14 @@
     
     int currentUserSlot = userManager.currentUserSlot;
     int slot = [self userSlotFromIndexPath:indexPath];
-
+    
     if (slot == currentUserSlot) {
         [userManager switchToNoActiveUser];
         [self updateCellForSlot:slot];
     } else {
         [self loginSlot:slot];
     }
-
+    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];    
     return;
 }

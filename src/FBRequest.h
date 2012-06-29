@@ -46,7 +46,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
  @abstract
  The `FBRequest` object is used to setup and manage requests to Facebook Graph
- and REST APIs. This class provides helper methods that simplify the connection 
+ and REST APIs. This class provides helper methods that simplify the connection
  and response handling.
 
  @discussion
@@ -54,18 +54,18 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  Requests that do not require an unauthenticated user are also supported and
  do not require an <FBSession> object to be passed in.
 
- An instance of `FBRequest` represents the arguments and setup for a connection 
+ An instance of `FBRequest` represents the arguments and setup for a connection
  to Facebook. After creating an `FBRequest` object it can be used to setup a
- connection to Facebook through the <FBRequestConnection> object. The 
+ connection to Facebook through the <FBRequestConnection> object. The
  <FBRequestConnection> object is created to manage a single connection. To
  cancel a connection use the instance method in the <FBRequestConnection> class.
- 
+
  An `FBRequest` object may be reused to issue multiple connections to Facebook.
  However each <FBRequestConnection> instance will manage one connection.
- 
+
  Class and instance methods prefixed with **start* ** can be used to perform the
  request setup and initiate the connection in a single call.
- 
+
 */
 @interface FBRequest : NSObject {
 @private
@@ -94,9 +94,11 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
  Calls <initWithSession:graphPath:parameters:HTTPMethod:> with default parameters
  except for the ones provided to this method.
- 
- @param session     The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
+
+ @param session     The session object representing the identity of the Facebook user making
+ the request. A nil value indicates a request that requires no token; to
+ use the active session pass `[FBSession activeSession]`.
+
  @param graphPath   The Graph API endpoint to use for the request, for example "me".
 */
 - (id)initWithSession:(FBSession*)session
@@ -115,13 +117,15 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- 
+ @param session          The session object representing the identity of the Facebook user making
+ the request. A nil value indicates a request that requires no token; to
+ use the active session pass `[FBSession activeSession]`.
+
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
- 
- @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
- 
+
+ @param parameters       The parameters for the request. A value of nil sends only the automatically handled
+ parameters, for example, the access token. The default is nil.
+
  @param HTTPMethod       The HTTP method to use for the request. The default is value of nil implies a GET.
 */
 - (id)initWithSession:(FBSession*)session
@@ -141,8 +145,9 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
+ @param session          The session object representing the identity of the Facebook user making
+ the request. A nil value indicates a request that requires no token; to
+ use the active session pass `[FBSession activeSession]`.
 
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
 
@@ -166,13 +171,15 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  and send <[FBRequestConnection start]>.  See other methods on this
  class for shortcuts to simplify this process.
 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- 
+ @param session          The session object representing the identity of the Facebook user making
+ the request. A nil value indicates a request that requires no token; to
+ use the active session pass `[FBSession activeSession]`.
+
  @param restMethod        A valid REST API method.
- 
- @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
- 
+
+ @param parameters       The parameters for the request. A value of nil sends only the automatically handled
+ parameters, for example, the access token. The default is nil.
+
  @param HTTPMethod       The HTTP method to use for the request. The default is value of nil implies a GET.
 
 */
@@ -280,7 +287,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
  @discussion
  These methods simplify the process of preparing a request and starting
- the connection.  The methods handle initializing an `FBRequest` object, 
+ the connection.  The methods handle initializing an `FBRequest` object,
  initializing a <FBRequestConnection> object, adding the `FBRequest`
  object to the to the <FBRequestConnection>, and finally starting the
  connection.
@@ -290,86 +297,60 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- Creates an `FBRequest` object for a Graph API call that does not require
- and authenticated user. Then instantiate an 
+ Creates an `FBRequest` object for a Graph API call, instantiate an
  <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection.
+ connection and finally start the connection. The request uses
+ the active session represented by `[FBSession activeSession]`.
 
  See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
- 
+
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
  @param handler          The handler block to call when the request completes with a success, error, or cancel action.
 */
 + (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                         completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+
+ @abstract
+ Creates an `FBRequest` object for an HTTP POSt Graph API call, instantiate
+ an <FBRequestConnection> object, add the request to the newly created
+ connection and finally start the connection. The request uses
+ the active session represented by `[FBSession activeSession]`.
+
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+
+ @param graphObject      An object or open graph action to post.
+
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+*/
++ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
+                                      graphObject:(id<FBGraphObject>)graphObject
                                 completionHandler:(FBRequestHandler)handler;
 
 /*!
  @method
 
  @abstract
- Creates an `FBRequest` object for a Graph API call, instantiate an 
- <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection.
-
- See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
-
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
- @param handler          The handler block to call when the request completes with a success, error, or cancel action.
-*/
-+ (FBRequestConnection*)startWithSession:(FBSession*)session
-                                      graphPath:(NSString*)graphPath
-                              completionHandler:(FBRequestHandler)handler;
-
-/*!
- @method
-
- @abstract
- Creates an `FBRequest` object for an HTTP POSt Graph API call, instantiate 
- an <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection.
-
-
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- 
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
- 
- @param graphObject      An object or open graph action to post.
- 
- @param handler          The handler block to call when the request completes with a success, error, or cancel action.
-*/
-+ (FBRequestConnection*)startForPostWithSession:(FBSession*)session
-                                           graphPath:(NSString*)graphPath
-                                         graphObject:(id<FBGraphObject>)graphObject
-                                   completionHandler:(FBRequestHandler)handler;
-
-/*!
- @method
-
- @abstract
- Creates an `FBRequest` object for a Graph API call, instantiate an 
+ Creates an `FBRequest` object for a Graph API call, instantiate an
  <FBRequestConnection> object, add the request to the newly created
  connection and finally start the connection. Use this method for
- specifying the request parameters and HTTP Method.
- 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- 
+ specifying the request parameters and HTTP Method. The request uses
+ the active session represented by `[FBSession activeSession]`.
+
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
- 
- @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil. 
- 
+
+ @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
+
  @param HTTPMethod       The HTTP method to use for the request. A nil value implies a GET.
- 
+
  @param handler          The handler block to call when the request completes with a success, error, or cancel action.
 */
-+ (FBRequestConnection*)startWithSession:(FBSession*)session
-                                      graphPath:(NSString*)graphPath
-                                     parameters:(NSDictionary*)parameters
-                                     HTTPMethod:(NSString*)HTTPMethod
-                              completionHandler:(FBRequestHandler)handler;
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                                parameters:(NSDictionary*)parameters
+                                HTTPMethod:(NSString*)HTTPMethod
+                         completionHandler:(FBRequestHandler)handler;
 
 /*!
  @methodgroup FBRequest factory methods
@@ -400,7 +381,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- Creates a request representing a Graph API call to the "me" endpoint.
+ Creates a request representing a Graph API call to the "me" endpoint, using the active session.
 
  @discussion
  Simplifies preparing a request to retrieve the user's identity.
@@ -408,20 +389,20 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  This method does not initialize an <FBRequestConnection> object. To initiate the API
  call first instantiate an <FBRequestConnection> object, add the request to this object,
  then call the `start` method on the connection instance.
- 
+
  A successful Graph API call will return an <FBGraphUser> object representing the
  user's identity.
- 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
+
+ Note you may change the session property after construction if a session other than
+ the active session is preferred.
 */
-+ (FBRequest*)requestForMeWithSession:(FBSession*)session;
++ (FBRequest*)requestForMe;
 
 /*!
  @method
 
  @abstract
- Creates a request representing a Graph API call to the "me/friends" endpoint.
+ Creates a request representing a Graph API call to the "me/friends" endpoint using the active session.
 
  @discussion
  Simplifies preparing a request to retrieve the user's friends.
@@ -429,20 +410,17 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  This method does not initialize an <FBRequestConnection> object. To initiate the API
  call first instantiate an <FBRequestConnection> object, add the request to this object,
  then call the `start` method on the connection instance.
- 
+
  A successful Graph API call will return an array of <FBGraphUser> objects representing the
  user's friends.
-
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
 */
-+ (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session;
++ (FBRequest*)requestForMyFriends;
 
 /*!
  @method
 
  @abstract
- Creates a request representing a Graph API call to upload a photo to the app's album.
+ Creates a request representing a Graph API call to upload a photo to the app's album using the active session.
 
  @discussion
  Simplifies preparing a request to post a photo.
@@ -455,40 +433,32 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  then call the `start` method on the connection instance.
 
  @param photo            A `UIImage` for the photo to upload.
-
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
 */
-+ (FBRequest*)requestForUploadPhoto:(UIImage *)photo
-                             session:(FBSession *)session;
++ (FBRequest*)requestForUploadPhoto:(UIImage *)photo;
 
 /*!
  @method
- 
+
  @abstract
- Returns a newly initialized request object that can be used to make a Graph API call.
- 
+ Returns a newly initialized request object that can be used to make a Graph API call for the active session.
+
  @discussion
  This method simplifies the preparation of a Graph API call.
- 
+
  This method does not initialize an <FBRequestConnection> object. To initiate the API
  call first instantiate an <FBRequestConnection> object, add the request to this object,
  then call the `start` method on the connection instance.
- 
+
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
- 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
- */
-+ (FBRequest*)requestForGraphPath:(NSString*)graphPath
-                          session:(FBSession *)session;
+*/
++ (FBRequest*)requestForGraphPath:(NSString*)graphPath;
 
 /*!
  @method
 
  @abstract
  Creates a request representing a Graph API call to the "search" endpoint
- for a given location.
+ for a given location using the active session.
 
  @discussion
  Simplifies preparing a request to search for places near a coordinate.
@@ -496,27 +466,23 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  This method does not initialize an <FBRequestConnection> object. To initiate the API
  call first instantiate an <FBRequestConnection> object, add the request to this object,
  then call the `start` method on the connection instance.
- 
+
  A successful Graph API call will return an array of <FBGraphPlace> objects representing
  the nearby locations.
 
  @param coordinate       The search coordinates.
 
  @param radius           The search radius in meters.
- 
+
  @param limit            The maxiumum number of results to return.  It is
  possible to receive fewer than this because of the radius and because of server limits.
- 
+
  @param searchText       The text to use in the query to narrow the set of places
  returned.
- 
- @param session          The session object representing the identity of the
- Facebook user making the request. A nil value implies an unauthenticaed request.
 */
 + (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
                                   radiusInMeters:(NSInteger)radius
                                     resultsLimit:(NSInteger)limit
-                                      searchText:(NSString*)searchText
-                                         session:(FBSession*)session;
+                                      searchText:(NSString*)searchText;
 
 @end

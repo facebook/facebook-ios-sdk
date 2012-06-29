@@ -322,8 +322,8 @@ int const FBRefreshCacheDelaySeconds = 2;
                      dataSource:(FBGraphObjectTableDataSource*)datasource
                         session:(FBSession*)session {
     
-    FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]
-                                                session:session];
+    FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]];
+    [request setSession:session];
     
     NSString *allFields = [datasource fieldsForRequestIncluding:fields,
                            @"id", 

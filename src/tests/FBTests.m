@@ -146,20 +146,23 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     NSString *graphPath = [NSString stringWithFormat:@"me/friends/%@", userID];
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session
-                             graphPath:graphPath
-                           graphObject:nil
-                     completionHandler:
+    
+    FBRequest *request = [[[FBRequest alloc] initForPostWithSession:session 
+                                                          graphPath:graphPath 
+                                                        graphObject:nil] 
+                          autorelease];
+    
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         BOOL expected = (result && !error);
-         if (error) {
-             id code = [[error userInfo] objectForKey:FBErrorHTTPStatusCodeKey];
-             // If test users are already friends, we will get a 400.
-             expected = [code integerValue] == 400;
-         }
-         STAssertTrue(expected, @"unexpected result");
-         [blocker signal];
-     }];
+        BOOL expected = (result && !error);
+        if (error) {
+            id code = [[error userInfo] objectForKey:FBErrorHTTPStatusCodeKey];
+            // If test users are already friends, we will get a 400.
+            expected = [code integerValue] == 400;
+        }
+        STAssertTrue(expected, @"unexpected result");
+        [blocker signal];
+    }];
     
     [blocker wait];
 }
@@ -180,36 +183,43 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 - (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startWithSession:session
-                      graphPath:idString
-              completionHandler:
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session 
+                                                   graphPath:idString]
+                          autorelease];
+    
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
-         STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
-
-         [self validateGraphObject:result hasProperties:propertyNames];
-
-         [blocker signal];
-     }];
+        STAssertTrue(!error, @"!error");
+        STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
+        
+        [self validateGraphObject:result hasProperties:propertyNames];
+        
+        [blocker signal];
+    }];
     [blocker wait];
 }
 
 - (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startForPostWithSession:session
-                             graphPath:graphPath
-                           graphObject:graphObject
-                     completionHandler:
+    
+    FBRequest *request = [[[FBRequest alloc] initForPostWithSession:session 
+                                                          graphPath:graphPath 
+                                                        graphObject:graphObject] 
+                          autorelease];
+    
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
-         if (!error) {
-             NSString *newObjectId = [result objectForKey:@"id"];
-             [self validateGraphObjectWithId:newObjectId
-                               hasProperties:propertyNames
-                                 withSession:session];
-         } 
-         [blocker signal];
-     }];
+        STAssertTrue(!error, @"!error");
+        if (!error) {
+            NSString *newObjectId = [result objectForKey:@"id"];
+            [self validateGraphObjectWithId:newObjectId
+                              hasProperties:propertyNames
+                                withSession:session];
+        } 
+        [blocker signal];
+    }];
+    
     [blocker wait];    
 }
 

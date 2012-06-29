@@ -250,7 +250,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 }
 
 - (void)fetchMeInfo {
-    FBRequest *request = [FBRequest requestForMeWithSession:self.session];
+    FBRequest *request = [FBRequest requestForMe];
+    [request setSession:self.session];
     self.request = [[[FBRequestConnection alloc] init] autorelease];
     [self.request addRequest:request
            completionHandler:^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {

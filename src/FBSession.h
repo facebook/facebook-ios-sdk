@@ -396,5 +396,5 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  overridden on a per session basis.
  */
 + (NSString*)defaultAppID;
-
+    
 @end

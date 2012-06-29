@@ -237,10 +237,10 @@
 - (void)testSimpleGraphGet
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startWithSession:self.defaultTestSession
-                      graphPath:@"TourEiffel"
-              completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
-              
+    [FBSession setActiveSession:self.defaultTestSession];
+    [FBRequest startWithGraphPath:@"TourEiffel"
+                completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+    
     [blocker wait];
     [blocker release];
 
@@ -249,10 +249,9 @@
 - (void)testSimpleGraphGetWithExpectedFailure
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBRequest startWithSession:self.defaultTestSession
-                      graphPath:@"-1"
-              completionHandler:[self handlerExpectingFailureSignaling:blocker]];
-    
+    [FBSession setActiveSession:self.defaultTestSession];
+    [FBRequest startWithGraphPath:@"-1"
+                completionHandler:[self handlerExpectingFailureSignaling:blocker]];
     [blocker wait];
     [blocker release];
     

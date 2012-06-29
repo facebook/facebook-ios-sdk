@@ -855,8 +855,8 @@ static NSSet *g_loggingBehavior;
         
         // now we are going to kick-off a batch request, where we confirm that the new token
         // refers to the same fbid as the old, and if so we will succeed the reauthorize call
-        FBRequest *requestSessionMe = [FBRequest requestForGraphPath:@"me" 
-                                                             session:self];      
+        FBRequest *requestSessionMe = [FBRequest requestForGraphPath:@"me"];
+        [requestSessionMe setSession:self];
         FBRequest *requestNewTokenMe = [[[FBRequest alloc] initWithSession:nil
                                                                  graphPath:@"me"
                                                                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -865,8 +865,8 @@ static NSSet *g_loggingBehavior;
                                                                 HTTPMethod:nil]
                                         autorelease];
         
-        FBRequest *requestPermissions = [FBRequest requestForGraphPath:@"me/permissions" 
-                                                               session:self];
+        FBRequest *requestPermissions = [FBRequest requestForGraphPath:@"me/permissions"];
+        [requestPermissions setSession:self];
 
         // we create a block here with related state -- which will be the main handler block for all
         // three requests -- wrapped by smaller blocks to provide context

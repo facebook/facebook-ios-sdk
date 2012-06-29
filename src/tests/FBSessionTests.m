@@ -44,12 +44,14 @@
     
     STAssertTrue(session.isOpen, @"Session should be valid, and is not");
     
-    [FBRequest startWithSession:session
-                            graphPath:@"me" 
-                    completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-                         STAssertTrue(me.id.length > 0, @"user id should be non-empty");
-                         [blocker signal];
-                     }];
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:@"me"]
+                          autorelease];
+    [request startWithCompletionHandler:
+     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+         STAssertTrue(me.id.length > 0, @"user id should be non-empty");
+         [blocker signal];
+     }];
     
     [blocker wait];
     
@@ -71,20 +73,20 @@
         }
         [blocker signal];
     }];
-    
     [blocker wait];
     
     STAssertTrue(session.isOpen, @"Session should be open, and is not");
 
     __block NSString *userID = nil;
-    [FBRequest startWithSession:session
-                      graphPath:@"me" 
-              completionHandler:
-        ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-            userID = [me.id retain];
-            STAssertTrue(userID.length > 0, @"user id should be non-empty");
-            [blocker signal];
-        }];
+    FBRequest *request1 = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:@"me"]
+                          autorelease];
+    [request1 startWithCompletionHandler:
+     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+         userID = [me.id retain];
+         STAssertTrue(userID.length > 0, @"user id should be non-empty");
+         [blocker signal];
+     }];
     
     [blocker wait];
 
@@ -97,7 +99,7 @@
                                               HTTPMethod:nil];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:temp completionHandler:nil];
-    NSURLRequest *request = connection.urlRequest;
+    NSURLRequest *urlRequest = connection.urlRequest;
     [userID release];
     [connection release];
     [temp release];
@@ -106,7 +108,7 @@
     NSURLResponse *response;
     NSError *error = nil;
     NSData *data;
-    data = [NSURLConnection sendSynchronousRequest:request 
+    data = [NSURLConnection sendSynchronousRequest:urlRequest 
                                  returningResponse:&response
                                              error:&error];
     // if !data or if data == false, log
@@ -114,14 +116,16 @@
                                                           encoding:NSUTF8StringEncoding]
                                     autorelease];    
     STAssertTrue([body isEqualToString:@"true"], @"body should return 'true'");
-        
-    [FBRequest startWithSession:session
-                            graphPath:@"me" 
-                    completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-                        STAssertTrue(error != nil, @"response should be an error due to deleted user");
-                        [blocker signal];
-                    }];
-
+    
+    FBRequest *request2 = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:@"me"]
+                          autorelease];
+    [request2 startWithCompletionHandler:
+     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
+        STAssertTrue(error != nil, @"response should be an error due to deleted user");
+        [blocker signal];
+    }];
+    
     STAssertFalse(wasNotifiedOfInvalid, @"should not have invalidated the token yet");
     [blocker wait];
     STAssertTrue(wasNotifiedOfInvalid, @"should have invalidated the token by now");

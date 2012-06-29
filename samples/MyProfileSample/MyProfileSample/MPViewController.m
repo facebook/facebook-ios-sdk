@@ -130,8 +130,7 @@
     
     // use the "startWith" helper static on FBRequest to both create and start a request, with
     // a specified completion handler.
-    [FBRequest startWithSession:[FBSession activeSession]
-                      graphPath:@"me/feed"
+    [FBRequest startWithGraphPath:@"me/feed"
                      parameters:params
                      HTTPMethod:@"POST"
               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -151,7 +150,7 @@
     UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
     
     // Build the request for uploading the photo
-    FBRequest *photoUploadRequest = [FBRequest requestForUploadPhoto:img session:FBSession.activeSession];
+    FBRequest *photoUploadRequest = [FBRequest requestForUploadPhoto:img];
     
     // Then fire it off.
     [photoUploadRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {        

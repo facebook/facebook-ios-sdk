@@ -17,6 +17,7 @@
 #import "Facebook.h"
 #import "JSON.h"
 #import "FBUtility.h"
+#import "FBSession+Internal.h"
 
 // constants
 NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
@@ -66,7 +67,7 @@ static NSString *const kPostHTTPMethod = @"POST";
         self.session = session;
         self.graphPath = graphPath;
         self.HTTPMethod = HTTPMethod;
-
+        
         _parameters = [[NSMutableDictionary alloc] init];
         if (parameters) {
             [self.parameters addEntriesFromDictionary:parameters];
@@ -102,7 +103,7 @@ static NSString *const kPostHTTPMethod = @"POST";
         self.session = session;
         self.restMethod = restMethod;
         self.HTTPMethod = HTTPMethod;
-
+        
         _parameters = [[NSMutableDictionary alloc] init];
         if (parameters) {
             [self.parameters addEntriesFromDictionary:parameters];
@@ -147,62 +148,48 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
-                              completionHandler:(FBRequestHandler)handler
+                         completionHandler:(FBRequestHandler)handler
 {
-    return [FBRequest startWithSession:nil
-                             graphPath:graphPath
-                            parameters:nil
-                            HTTPMethod:nil
-                     completionHandler:handler];
+    return [FBRequest startWithGraphPath:graphPath
+                              parameters:nil
+                              HTTPMethod:nil
+                       completionHandler:handler];
 }
 
-+ (FBRequestConnection*)startWithSession:(FBSession*)session
-                                    graphPath:(NSString*)graphPath
-                            completionHandler:(FBRequestHandler)handler
++ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
+                                      graphObject:(id<FBGraphObject>)graphObject
+                                completionHandler:(FBRequestHandler)handler
 {
-    return [FBRequest startWithSession:session
-                             graphPath:graphPath
-                            parameters:nil
-                            HTTPMethod:nil
-                     completionHandler:handler];
-}
-
-+ (FBRequestConnection*)startForPostWithSession:(FBSession*)session
-                                           graphPath:(NSString*)graphPath
-                                         graphObject:(id<FBGraphObject>)graphObject
-                                   completionHandler:(FBRequestHandler)handler
-{
-    FBRequest *request = [[[FBRequest alloc] initForPostWithSession:session
+    FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
                                                           graphPath:graphPath
                                                         graphObject:graphObject]
                           autorelease];
     
-  return [request startWithCompletionHandler:handler];
+    return [request startWithCompletionHandler:handler];
 }
 
-+ (FBRequestConnection*)startWithSession:(FBSession*)session
-                                      graphPath:(NSString*)graphPath
-                                     parameters:(NSDictionary*)parameters
-                                     HTTPMethod:(NSString*)HTTPMethod
-                              completionHandler:(FBRequestHandler)handler
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                                parameters:(NSDictionary*)parameters
+                                HTTPMethod:(NSString*)HTTPMethod
+                         completionHandler:(FBRequestHandler)handler
 {
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                                    graphPath:graphPath
                                                   parameters:parameters
                                                   HTTPMethod:HTTPMethod]
                           autorelease];
-
+    
     return [request startWithCompletionHandler:handler];
 }
 
-+ (FBRequest*)requestForMeWithSession:(FBSession*)session {
-    return [[[FBRequest alloc] initWithSession:session
++ (FBRequest*)requestForMe {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                      graphPath:@"me"]
             autorelease];
 }
 
-+ (FBRequest*)requestForMyFriendsWithSession:(FBSession*)session {
-    return [[[FBRequest alloc] initWithSession:session
++ (FBRequest*)requestForMyFriends {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                      graphPath:@"me/friends"
                                     parameters:[NSDictionary dictionaryWithObjectsAndKeys:
                                                 @"id,name,username,first_name,last_name", @"fields",
@@ -212,27 +199,25 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequest *)requestForUploadPhoto:(UIImage *)photo
-                             session:(FBSession *)session
 {
     NSString *graphPath = @"me/photos";
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:photo forKey:@"picture"];
-
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                                    graphPath:graphPath
                                                   parameters:parameters
                                                   HTTPMethod:@"POST"]
                           autorelease];
-
+    
     [parameters release];
-
+    
     return request;
 }
 
 + (FBRequest*)requestForGraphPath:(NSString*)graphPath
-                          session:(FBSession *)session
 {
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                                    graphPath:graphPath
                                                   parameters:nil
                                                   HTTPMethod:nil]
@@ -244,7 +229,6 @@ static NSString *const kPostHTTPMethod = @"POST";
                                   radiusInMeters:(NSInteger)radius
                                     resultsLimit:(NSInteger)limit
                                       searchText:(NSString*)searchText
-                                         session:(FBSession*)session
 {
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:@"place" forKey:@"type"];
@@ -255,14 +239,14 @@ static NSString *const kPostHTTPMethod = @"POST";
     if ([searchText length]) {
         [parameters setObject:searchText forKey:@"q"];
     }
-
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                                    graphPath:@"search"
                                                   parameters:parameters
                                                   HTTPMethod:nil]
                           autorelease];
     [parameters release];
-
+    
     return request;
 }
 

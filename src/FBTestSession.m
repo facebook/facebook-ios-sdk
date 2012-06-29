@@ -180,11 +180,12 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     // if there is demand for support for apps for which this will not work, we may consider handling 
     // failure by falling back and fetching an app-token via a request; the current approach reduces 
     // traffic for common unit testing configuration, which seems like the right tradeoff to start with
-    [FBRequest startWithSession:nil
-                      graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
-                     parameters:parameters
-                     HTTPMethod:nil
-              completionHandler:
+    FBRequest *request = [[[FBRequest alloc] initWithSession:nil
+                                                   graphPath:[NSString stringWithFormat:FBLoginAuthTestUserCreatePathFormat, self.appID]
+                                                  parameters:parameters
+                                                  HTTPMethod:nil]
+                          autorelease];
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
          id userToken;
          id userID;
@@ -301,12 +302,12 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                 jsonMultiquery, @"q",
                                 self.appAccessToken, @"access_token",
                                 nil];
-    
-    [FBRequest startWithSession:nil
-                      graphPath:@"fql"
-                     parameters:parameters
-                     HTTPMethod:nil
-              completionHandler:
+    FBRequest *request = [[[FBRequest alloc] initWithSession:nil
+                                                  graphPath:@"fql"
+                                                 parameters:parameters
+                                                 HTTPMethod:nil]
+                         autorelease];
+    [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
          if (error ||
              !result) {

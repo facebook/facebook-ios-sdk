@@ -296,8 +296,8 @@ static NSString *defaultImageName =
     FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                         radiusInMeters:radius
                                                           resultsLimit:resultsLimit
-                                                            searchText:searchText
-                                                               session:session];
+                                                            searchText:searchText];
+    [request setSession:session];
     
     NSString *fields = [datasource fieldsForRequestIncluding:fieldsForRequest,
                         @"id",
