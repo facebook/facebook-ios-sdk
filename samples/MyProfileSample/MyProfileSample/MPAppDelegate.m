@@ -22,7 +22,7 @@
 @implementation MPAppDelegate
 
 @synthesize window = _window;
-@synthesize viewController = _viewController;
+@synthesize rootViewController = _rootViewController;
 
 // FBSample logic
 // If we have a valid session at the time of openURL call, we handle Facebook transitions
@@ -48,16 +48,24 @@
     // wireup successfully.  
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
     [FBProfilePictureView class];
-    
+       
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPhone" bundle:nil];
+        self.rootViewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPad" bundle:nil];
+        self.rootViewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPad" bundle:nil];
     }
-    self.window.rootViewController = self.viewController;
+    self.rootViewController.navigationItem.title = @"Hello, Facebook";
+    
+    // Set up a UINavigationController as the basis of this app, with the nib generated viewController
+    // as the initial view.
+    UINavigationController *navigationController = 
+        [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
+    
+    self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
+    
     return YES;
 }
 

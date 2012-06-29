@@ -20,15 +20,20 @@
 // My Profile sample application
 //
 // The purpose of this sample application is show how to use Facebook to 
-// personalize an application experience. This application shows how to 
-// manage login and logout using FBSession, as well as how to request 
-// and display additional user data using FBRequest and FBProfilePictureView.
+// personalize an application experience and perform a set of typical actions.
+// These include:
+// - managing login and logout using FBSession
+// - how to request and display additional user data using FBRequest
+// - use of FBProfilePictureView to display a profile picture
+// - how to post a Facebook status update
+// - how to upload a photo to Facebook
+// - how to invoke the FBFriendPickerViewController to select a set of friends.
 
 @class MPViewController;
 
 @interface MPAppDelegate : UIResponder<UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) MPViewController *viewController;
+@property (strong, nonatomic) MPViewController *rootViewController;
 
 @end
