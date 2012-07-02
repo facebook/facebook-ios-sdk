@@ -55,18 +55,13 @@ static NSString *loadingText = @"Loading...";
 //
 - (void)buttonRequestClickHandler:(id)sender {
     // FBSample logic
-    // Get the application delegate in order to access the session property
-    JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isOpen) {
+    // Check to see whether we have already opened a session.
+    if (FBSession.activeSession.isOpen) {
         // login is integrated with the send button -- so if open, we send
         [self sendRequests];
     } else {
-        // as mentioned, login is integrated with the send action,
-        // if we don't have an open session already, we attempt to create
-        // one here
-        appDelegate.session = [[FBSession alloc] init];
-
-        FBSessionStateHandler handler =
+        [FBSession sessionOpenWithPermissions:nil
+                            completionHandler:
             ^(FBSession *session, 
               FBSessionState status, 
               NSError *error) {
@@ -86,9 +81,7 @@ static NSString *loadingText = @"Loading...";
                 // send our requests if we successfully logged in
                 [self sendRequests]; 
             }
-        };
-
-        [appDelegate.session openWithCompletionHandler:handler];
+        }];
     }
 }
 
@@ -129,7 +122,7 @@ static NSString *loadingText = @"Loading...";
         // create the request object, using the fbid as the graph path
         // as an alternative the request* static methods of the FBRequest class could
         // be used to fetch common requests, such as /me and /me/friends
-        FBRequest *request = [[FBRequest alloc] initWithSession:appDelegate.session
+        FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession
                                                       graphPath:fbid];
         
         // add the request to the connection object, if more than one request is added

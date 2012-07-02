@@ -42,9 +42,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    BOGAppDelegate* appDelegate = (BOGAppDelegate*)[UIApplication sharedApplication].delegate;
-    self.session = appDelegate.session;
-    if (self.session.isOpen) {
+    if (FBSession.activeSession.isOpen) {
         [self loadData];
     } else {
         // display the message that we have
@@ -116,12 +114,12 @@
     // because we have two requests in one batch, we will use this array to gather the aggrigated acticity
     NSMutableArray *activity = [NSMutableArray array];
     
+    __block int numCalls = 2;
     // this block is the one that does the real handling work for the requests
     void (^handleBatch)(NSString*,id) = ^(NSString* verb, id<BOGGraphBooleanActionList> result) {
-        
-        // if there are already items in the acticity list, then this is our second call, and we 
-        // should also display the results
-        BOOL shouldDisplay = activity.count > 0;
+
+        // If we have gotten all the results we expect, display them.
+        BOOL shouldDisplay = (--numCalls == 0);
         
         // if we have results here, then we loop through each entry, and add it to our activity array
         if (result) {

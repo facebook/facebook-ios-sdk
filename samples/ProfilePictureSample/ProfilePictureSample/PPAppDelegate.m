@@ -14,11 +14,11 @@
  * limitations under the License.
  */
  
-#import "AppDelegate.h"
-#import "ViewController.h"
+#import "PPAppDelegate.h"
+#import "PPViewController.h"
 #import <FBiOSSDK/FacebookSDK.h>
 
-@implementation AppDelegate
+@implementation PPAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
@@ -34,9 +34,9 @@
 
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
+        self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
+        self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

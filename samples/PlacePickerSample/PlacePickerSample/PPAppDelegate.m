@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-#import "AppDelegate.h"
-#import "ViewController.h"
+#import "PPAppDelegate.h"
+#import "PPViewController.h"
 
-@implementation AppDelegate
+@implementation PPAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-@synthesize session = _session;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
-
-    // FBSample logic
-    // Here we allocate our FBSession object, and assign it to the property referenced by the rest of the 
-    // application
-    self.session = [[FBSession alloc] init];
-
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPhone" bundle:nil];
+        self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[ViewController alloc] initWithNibName:@"ViewController_iPad" bundle:nil];
+        self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
@@ -49,14 +42,14 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication 
          annotation:(id)annotation {
-    return [self.session handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 // FBSample logic
 // It is important to close any FBSession object that is no longer useful
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Close the session token before quitting
-    [self.session close];
+    [FBSession.activeSession close];
 }
 
 

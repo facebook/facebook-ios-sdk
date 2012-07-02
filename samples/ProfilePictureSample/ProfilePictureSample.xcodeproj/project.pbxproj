@@ -18,10 +18,10 @@
 		B98686C1151D0B3700616412 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686C0151D0B3700616412 /* CoreGraphics.framework */; };
 		B98686C7151D0B3700616412 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B98686C5151D0B3700616412 /* InfoPlist.strings */; };
 		B98686C9151D0B3700616412 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686C8151D0B3700616412 /* main.m */; };
-		B98686CD151D0B3700616412 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686CC151D0B3700616412 /* AppDelegate.m */; };
-		B98686D0151D0B3700616412 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686CF151D0B3700616412 /* ViewController.m */; };
-		B98686D3151D0B3700616412 /* ViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D1151D0B3700616412 /* ViewController_iPhone.xib */; };
-		B98686D6151D0B3700616412 /* ViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D4151D0B3700616412 /* ViewController_iPad.xib */; };
+		B98686CD151D0B3700616412 /* PPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686CC151D0B3700616412 /* PPAppDelegate.m */; };
+		B98686D0151D0B3700616412 /* PPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B98686CF151D0B3700616412 /* PPViewController.m */; };
+		B98686D3151D0B3700616412 /* PPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D1151D0B3700616412 /* PPViewController_iPhone.xib */; };
+		B98686D6151D0B3700616412 /* PPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B98686D4151D0B3700616412 /* PPViewController_iPad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,12 +39,12 @@
 		B98686C6151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		B98686C8151D0B3700616412 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B98686CA151D0B3700616412 /* ProfilePictureSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ProfilePictureSample-Prefix.pch"; sourceTree = "<group>"; };
-		B98686CB151D0B3700616412 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
-		B98686CC151D0B3700616412 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B98686CE151D0B3700616412 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B98686CF151D0B3700616412 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B98686D2151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPhone.xib; sourceTree = "<group>"; };
-		B98686D5151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController_iPad.xib; sourceTree = "<group>"; };
+		B98686CB151D0B3700616412 /* PPAppDelegate.h */ = {isa = PBXFileReference; path = PPAppDelegate.h; sourceTree = "<group>"; };
+		B98686CC151D0B3700616412 /* PPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPAppDelegate.m; sourceTree = "<group>"; };
+		B98686CE151D0B3700616412 /* PPViewController.h */ = {isa = PBXFileReference; path = PPViewController.h; sourceTree = "<group>"; };
+		B98686CF151D0B3700616412 /* PPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPViewController.m; sourceTree = "<group>"; };
+		B98686D2151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPhone.xib; sourceTree = "<group>"; };
+		B98686D5151D0B3700616412 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPad.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,12 +94,12 @@
 		B98686C2151D0B3700616412 /* ProfilePictureSample */ = {
 			isa = PBXGroup;
 			children = (
-				B98686CB151D0B3700616412 /* AppDelegate.h */,
-				B98686CC151D0B3700616412 /* AppDelegate.m */,
-				B98686CE151D0B3700616412 /* ViewController.h */,
-				B98686CF151D0B3700616412 /* ViewController.m */,
-				B98686D1151D0B3700616412 /* ViewController_iPhone.xib */,
-				B98686D4151D0B3700616412 /* ViewController_iPad.xib */,
+				B98686CB151D0B3700616412 /* PPAppDelegate.h */,
+				B98686CC151D0B3700616412 /* PPAppDelegate.m */,
+				B98686CE151D0B3700616412 /* PPViewController.h */,
+				B98686CF151D0B3700616412 /* PPViewController.m */,
+				B98686D1151D0B3700616412 /* PPViewController_iPhone.xib */,
+				B98686D4151D0B3700616412 /* PPViewController_iPad.xib */,
 				B98686C3151D0B3700616412 /* Supporting Files */,
 			);
 			path = ProfilePictureSample;
@@ -171,8 +171,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B98686C7151D0B3700616412 /* InfoPlist.strings in Resources */,
-				B98686D3151D0B3700616412 /* ViewController_iPhone.xib in Resources */,
-				B98686D6151D0B3700616412 /* ViewController_iPad.xib in Resources */,
+				B98686D3151D0B3700616412 /* PPViewController_iPhone.xib in Resources */,
+				B98686D6151D0B3700616412 /* PPViewController_iPad.xib in Resources */,
 				85D0ED3415377AD900D88664 /* FBiOSSDKResources.bundle in Resources */,
 				85AFB522158FA1C4000AF7F5 /* Icon-72.png in Resources */,
 				85AFB523158FA1C4000AF7F5 /* Icon-72@2x.png in Resources */,
@@ -189,8 +189,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				B98686C9151D0B3700616412 /* main.m in Sources */,
-				B98686CD151D0B3700616412 /* AppDelegate.m in Sources */,
-				B98686D0151D0B3700616412 /* ViewController.m in Sources */,
+				B98686CD151D0B3700616412 /* PPAppDelegate.m in Sources */,
+				B98686D0151D0B3700616412 /* PPViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,20 +205,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		B98686D1151D0B3700616412 /* ViewController_iPhone.xib */ = {
+		B98686D1151D0B3700616412 /* PPViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B98686D2151D0B3700616412 /* en */,
 			);
-			name = ViewController_iPhone.xib;
+			name = PPViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		B98686D4151D0B3700616412 /* ViewController_iPad.xib */ = {
+		B98686D4151D0B3700616412 /* PPViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				B98686D5151D0B3700616412 /* en */,
 			);
-			name = ViewController_iPad.xib;
+			name = PPViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

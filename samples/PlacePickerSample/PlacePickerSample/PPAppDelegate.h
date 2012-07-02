@@ -25,12 +25,11 @@
 // with simplistic authentication with Facebook. The view-controller for
 // the applicaiton (ViewController) inherits FBPlacePicerViewController.
 
-@class ViewController;
+@class PPViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface PPAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) ViewController *viewController;
-@property (strong, nonatomic) FBSession *session;
+@property (strong, nonatomic) PPViewController *viewController;
 
 @end

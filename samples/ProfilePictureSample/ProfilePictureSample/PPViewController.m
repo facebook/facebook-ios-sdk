@@ -14,7 +14,7 @@
  * limitations under the License.
  */
  
-#import "ViewController.h"
+#import "PPViewController.h"
 
 // FBSample logic
 // You may set the profile for an FBProfilePictureView to either an fbid
@@ -67,11 +67,11 @@ const char *interestingIDs[] = {
 };
 const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]);
 
-@interface ViewController ()
+@interface PPViewController ()
 
 @end
 
-@implementation ViewController
+@implementation PPViewController
 @synthesize profilePictureView;
 @synthesize profilePictureOuterView;
 

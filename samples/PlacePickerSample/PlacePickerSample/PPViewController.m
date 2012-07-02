@@ -15,8 +15,8 @@
  */
 
 #import <FBiOSSDK/FacebookSDK.h>
-#import "ViewController.h"
-#import "AppDelegate.h"
+#import "PPViewController.h"
+#import "PPAppDelegate.h"
 
 enum SampleLocation {
     SampleLocationSeattle,
@@ -28,7 +28,7 @@ enum SampleLocation {
 // We need to handle some of the UX events related to friend selection, and so we declare
 // that we implement the FBPlacePickerDelegate here; the delegate lets us filter the view
 // as well as handle selection events
-@interface ViewController () <CLLocationManagerDelegate, FBPlacePickerDelegate>
+@interface PPViewController () <CLLocationManagerDelegate, FBPlacePickerDelegate>
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (nonatomic) NSInteger viewStateSearchScopeIndex;
@@ -39,7 +39,7 @@ enum SampleLocation {
 
 @end
 
-@implementation ViewController
+@implementation PPViewController
 
 @synthesize locationManager = _locationManager;
 @synthesize viewStateSearchScopeIndex = _viewStateSearchScopeIndex;
@@ -49,18 +49,14 @@ enum SampleLocation {
 // FBSample logic
 // This method is responsible for keeping UX and session state in sync
 - (void)refresh {
-    AppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
     // if the session is open, then load the data for our view controller
-    if (appDelegate.session.isOpen) {
-        // setting the session here on our base class in order
-        // to enable fetching data for the view controller
-        self.session = appDelegate.session;
-
+    if (FBSession.activeSession.isOpen) {
         // Default to Seattle, this method calls loadData
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
-    } else {
+    } else { 
         // if the session isn't open, we open it here, which may cause UX to log in the user
-        [appDelegate.session openWithCompletionHandler:
+        [FBSession sessionOpenWithPermissions:nil
+                            completionHandler:
             ^(FBSession *session, FBSessionState status, NSError *error) 
             {
                 if (!error) {

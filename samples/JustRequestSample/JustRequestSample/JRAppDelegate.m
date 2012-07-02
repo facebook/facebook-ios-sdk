@@ -22,7 +22,6 @@
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
-@synthesize session = _session;
 
 #pragma mark Template generated code
 
@@ -47,13 +46,13 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    return [self.session handleOpenURL:url];
+    return [FBSession.activeSession handleOpenURL:url];
 }
 
 // FBSample logic
 // It is important to close any FBSession object that is no longer useful
 - (void)applicationWillTerminate:(UIApplication *)application {
-    [self.session close];
+    [FBSession.activeSession close];
 }
 
 #pragma mark end Template generated code

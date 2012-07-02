@@ -30,11 +30,4 @@
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UITabBarController *tabBarController;
 
-// FBSample logic
-// In this sample the app delegate maintains a property for the current 
-// active session, and the view controllers reference the session via
-// this property. See the "Just Login" and "Switch User" samples for
-// more detailed coverage of sessions, login and token management
-@property (strong, nonatomic) FBSession *session;
-
 @end

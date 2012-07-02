@@ -17,7 +17,7 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FBProfilePictureView.h>
 
-@interface ViewController : UIViewController
+@interface PPViewController : UIViewController
 
 // FBSample logic
 // The views and view controllers in the SDK are designed to fit into your application in 

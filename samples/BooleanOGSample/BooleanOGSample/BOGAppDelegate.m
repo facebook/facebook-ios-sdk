@@ -22,7 +22,6 @@
 
 @synthesize window = _window;
 @synthesize tabBarController = _tabBarController;
-@synthesize session = _session;
 
 // FBSample logic
 // The native facebook application transitions back to an authenticating application when the user 
@@ -32,14 +31,14 @@
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
-    return [self.session handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 // FBSample logic
 // Open session objects should be closed when no longer useful 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // all good things must come to an end
-    [self.session close];
+    [FBSession.activeSession close];
 }
 
 // FBSample logic
@@ -64,8 +63,8 @@
     // FBSample logic
     // We create and open a session at the outset here; if login is cancelled or fails, the application ignores
     // this and continues to provide whatever functionality that it can
-    self.session = [[FBSession alloc] initWithPermissions:[NSArray arrayWithObjects:@"publish_actions", nil]];
-    [self.session openWithCompletionHandler:nil];
+    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
+    [FBSession sessionOpenWithPermissions:permissions completionHandler:nil];
     
     return YES;
 }

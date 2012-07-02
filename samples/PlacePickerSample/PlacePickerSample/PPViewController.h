@@ -18,6 +18,6 @@
 #import <CoreLocation/CoreLocation.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
-@interface ViewController : FBPlacePickerViewController <UISearchDisplayDelegate, UISearchBarDelegate>
+@interface PPViewController : FBPlacePickerViewController <UISearchDisplayDelegate, UISearchBarDelegate>
 
 @end

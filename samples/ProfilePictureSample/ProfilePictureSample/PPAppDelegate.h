@@ -21,11 +21,11 @@
 // The purpose of this sample application is to provide an example of 
 // how use the profile picture view to display a Facebook profile picture
 
-@class ViewController;
+@class PPViewController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface PPAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) ViewController *viewController;
+@property (retain, nonatomic) PPViewController *viewController;
 
 @end

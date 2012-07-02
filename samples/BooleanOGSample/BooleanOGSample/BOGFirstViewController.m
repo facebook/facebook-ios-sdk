@@ -141,8 +141,7 @@
             result:(BOOL)result {
     
     // if we have a valid session, then we post the action to the users wall, else noop
-    BOGAppDelegate* appDelegate = (BOGAppDelegate*)[UIApplication sharedApplication].delegate;
-    if (appDelegate.session.isOpen) {
+    if (FBSession.activeSession.isOpen) {
         
         // create an object to hold our action information, the FBGraphObject class has a lightweight
         // static method API that supports creating and comparing of objects that implement the 
@@ -157,7 +156,7 @@
         
         
         // post the action using one of the lightweight static start* methods on FBRequest
-        [FBRequest startForPostWithSession:appDelegate.session
+        [FBRequest startForPostWithSession:FBSession.activeSession
                                  graphPath:actionPath
                                graphObject:action
                          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
