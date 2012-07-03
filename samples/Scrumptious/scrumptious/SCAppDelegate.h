@@ -17,6 +17,8 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
+extern NSString *const SCSessionStateChangedNotification;
+
 @class SCViewController;
 
 // Scrumptious sample application
@@ -26,7 +28,6 @@
 // Action creation and posting.
 @interface SCAppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) FBSession *session;
 @property (strong, nonatomic) UIWindow *window;
 
 // FBSample logic
@@ -34,6 +35,5 @@
 // the user to be logged in to Facebook in order to do anything interesting -- if there is no valid
 // FBSession, a login screen is displayed.
 - (void)openSession;
-- (void)closeSession;
 
 @end

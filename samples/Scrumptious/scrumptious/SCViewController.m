@@ -59,7 +59,6 @@
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal;
 - (void)postPhotoThenOpenGraphAction;
 - (void)postOpenGraphActionWithPhotoURL:(NSString *)photoID;
-- (FBSession*)session;
 - (void)centerAndShowActivityIndicator;
 
 @end
@@ -142,10 +141,9 @@
     }
 
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
-    FBRequest *request = [[FBRequest alloc] initForPostWithSession:self.session
-                                                          graphPath:@"me/fb_sample_scrumps:eat"
-                                                        graphObject:action];
-    [request startWithCompletionHandler:
+    [FBRequest startForPostWithGraphPath:@"me/fb_sample_scrumps:eat"
+                             graphObject:action
+                       completionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
          [self.activityIndicator stopAnimating];
          [self.view setUserInteractionEnabled:YES];
@@ -175,8 +173,6 @@
 
     // First request uploads the photo.
     FBRequest *request1 = [FBRequest requestForUploadPhoto:self.selectedPhoto];
-    [request1 setSession:self.session];
-    
     [connection addRequest:request1
         completionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
@@ -188,8 +184,6 @@
 
     // Second request retrieves photo information for just-created photo so we can grab its source.
     FBRequest *request2 = [FBRequest requestForGraphPath:@"{result=photopost:$.id}"];
-    [request2 setSession:self.session];
-    
     [connection addRequest:request2
          completionHandler:
         ^(FBRequestConnection *connection, id result, NSError *error) {
@@ -342,10 +336,8 @@
 // Displays the user's name and profile picture so they are aware of the Facebook
 // identity they are logged in as.
 - (void)populateUserDetails {
-    if (self.session.isOpen) {
-        FBRequest *request = [FBRequest requestForMe];
-        [request setSession:self.session];
-        [request startWithCompletionHandler:
+    if (FBSession.activeSession.isOpen) {
+        [[FBRequest requestForMe] startWithCompletionHandler:
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;
@@ -361,6 +353,8 @@
     _friendPickerController.delegate = nil;
     _imagePicker.delegate = nil;
     _imagePickerActionSheet.delegate = nil;
+
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -392,19 +386,17 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.activityIndicator.hidesWhenStopped = YES;
     [self.view addSubview:self.activityIndicator];
-    
-    // Keep tabs on what's going on with the session so we can repopulate data if it changes.
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate addObserver:self
-              forKeyPath:@"session.state"
-                 options:NSKeyValueObservingOptionNew
-                 context:NULL];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+                                             selector:@selector(sessionStateChanged:) 
+                                                 name:SCSessionStateChangedNotification
+                                               object:nil];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
     
-    if (self.session && self.session.isOpen) {
+    if (FBSession.activeSession.isOpen) {
         [self populateUserDetails];
     }
 }
@@ -413,15 +405,11 @@
 // Closes the user's session, which will cause the login screen to be displayed by the
 // [SCAppDelegate sessionStateChanged:state:error:] handler.
 -(void)logoutButtonWasPressed:(id)sender {
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate closeSession];
+    [FBSession.activeSession closeAndClearTokenInformation];
 }
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate removeObserver:self forKeyPath:@"session.state"];
     
     // Release any retained subviews of the main view.
     self.placePickerController = nil;
@@ -433,26 +421,16 @@
     self.imagePickerActionSheet = nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath
-                      ofObject:(id)object
-                        change:(NSDictionary *)change
-                       context:(void *)context {
-    if ([keyPath isEqual:@"session.state"]) {
-        // A more complex app might check the state to see what the appropriate course of
-        // action is, but our needs are simple, so just make sure our idea of the session is
-        // up to date and repopulate the user's name and picture (which will fail if the session
-        // has become invalid).
-        [self populateUserDetails];
-    }
+- (void)sessionStateChanged:(NSNotification*)notification {
+    // A more complex app might check the state to see what the appropriate course of
+    // action is, but our needs are simple, so just make sure our idea of the session is
+    // up to date and repopulate the user's name and picture (which will fail if the session
+    // has become invalid).
+    [self populateUserDetails];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
-
-- (FBSession*)session {
-    SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    return appDelegate.session;
 }
 
 #pragma mark UITableViewDataSource methods
@@ -546,7 +524,6 @@
                 self.placePickerController.title = @"Select a restaurant";
             }
             self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
-            self.placePickerController.session = self.session;
             self.placePickerController.radiusInMeters = 1000;
             self.placePickerController.resultsLimit = 50;
             self.placePickerController.searchText = @"restaurant";
@@ -582,7 +559,6 @@
             self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
             self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
 
-            self.friendPickerController.session = self.session;
             [self.friendPickerController loadData];
             target = self.friendPickerController;
             break;
@@ -646,7 +622,7 @@
                                                                     searchText:nil 
                                                                   resultsLimit:50 
                                                               fieldsForRequest:nil];
-            [cacheDescriptor prefetchAndCacheForSession:self.session];
+            [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
             
         }
     }

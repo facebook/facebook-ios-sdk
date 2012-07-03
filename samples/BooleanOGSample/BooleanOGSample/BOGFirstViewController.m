@@ -20,18 +20,21 @@
 #import "OGProtocols.h"
 
 @interface BOGFirstViewController () <UIPickerViewDelegate>
+
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
       rightOperand:(BOOL)right
             result:(BOOL)result;
-- (NSString*)stringForTruthValue:(BOOL)truthValue;
+- (NSString *)stringForTruthValue:(BOOL)truthValue;
 + (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value;
+
 @end
 
 @implementation BOGFirstViewController
-@synthesize leftPicker;
-@synthesize rightPicker;
-@synthesize resultTextView;
+
+@synthesize leftPicker = _leftPicker;
+@synthesize rightPicker = _rightPicker;
+@synthesize resultTextView = _resultTextView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -45,12 +48,11 @@
 #pragma mark - View lifecycle
 
 - (void)viewDidUnload {
-    [self setLeftPicker:nil];
-    [self setRightPicker:nil];
-    [self setResultTextView:nil];
+    self.leftPicker = nil;
+    self.rightPicker = nil;
+    self.resultTextView = nil;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -69,13 +71,13 @@
 // calls a helper to post a custom action
 - (IBAction)pressedAnd:(id)sender {
 
-    BOOL left = [leftPicker selectedRowInComponent:0];
-    BOOL right = [rightPicker selectedRowInComponent:0];
+    BOOL left = [self.leftPicker selectedRowInComponent:0];
+    BOOL right = [self.rightPicker selectedRowInComponent:0];
     BOOL result = left && right;
-    resultTextView.text = [NSString stringWithFormat:@"%@ AND %@ = %@",
-                           [self stringForTruthValue:left],
-                           [self stringForTruthValue:right],
-                           [self stringForTruthValue:result]];
+    self.resultTextView.text = [NSString stringWithFormat:@"%@ AND %@ = %@",
+                                [self stringForTruthValue:left],
+                                [self stringForTruthValue:right],
+                                [self stringForTruthValue:result]];
     
     // posts an "and" OG action, the path below is the normal form for custom OG actions (in this case 'and')
     [self postAction:@"me/fb_sample_boolean_og:and" 
@@ -89,13 +91,13 @@
 // calls a helper to post a custom action
 - (IBAction)pressedOr:(id)sender {
     
-    BOOL left = [leftPicker selectedRowInComponent:0];
-    BOOL right = [rightPicker selectedRowInComponent:0];
+    BOOL left = [self.leftPicker selectedRowInComponent:0];
+    BOOL right = [self.rightPicker selectedRowInComponent:0];
     BOOL result = left || right;
-    resultTextView.text = [NSString stringWithFormat:@"%@ OR %@ = %@",
-                           [self stringForTruthValue:left],
-                           [self stringForTruthValue:right],
-                           [self stringForTruthValue:result]];
+    self.resultTextView.text = [NSString stringWithFormat:@"%@ OR %@ = %@",
+                                [self stringForTruthValue:left],
+                                [self stringForTruthValue:right],
+                                [self stringForTruthValue:result]];
     
     // posts an "or" OG action, the path below is the normal form for custom OG actions (in this case 'or')
     [self postAction:@"me/fb_sample_boolean_og:or" 
@@ -126,7 +128,7 @@
 - (void)pickerView:(UIPickerView *)pickerView 
       didSelectRow:(NSInteger)row 
        inComponent:(NSInteger)component {
-    resultTextView.text = @"";
+    self.resultTextView.text = @"";
 }
 
 #pragma mark - private methods

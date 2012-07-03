@@ -19,6 +19,8 @@
 #import "SCViewController.h"
 #import "SCLoginViewController.h"
 
+NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:SCSessionStateChangedNotification";
+
 @interface SCAppDelegate ()
 
 @property (strong, nonatomic) UINavigationController *navController;
@@ -33,21 +35,10 @@
 
 @synthesize window = _window;
 @synthesize mainViewController = _viewController;
-@synthesize session = _session;
 @synthesize navController = _navController;
 
 #pragma mark -
 #pragma mark Facebook Login Code
-
-- (FBSession*)createNewSession {
-    // FBSample logic
-    // This sample requires permissions beyond the default permissions in order to upload
-    // a photo and create an Open Graph Action.
-    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
-    self.session = [[FBSession alloc] initWithPermissions:permissions];
-
-    return self.session;
-}
 
 - (void)showLoginViewWithError:(BOOL)error {
     UIViewController *topViewController = [self.navController topViewController];
@@ -94,15 +85,16 @@
             // Once the user has logged in, we want them to be looking at the root view.
             [self.navController popToRootViewControllerAnimated:NO];
             
-            [session closeAndClearTokenInformation];
-            self.session = nil;
+            [FBSession.activeSession closeAndClearTokenInformation];
             
-            [self createNewSession];
             [self showLoginViewWithError:(state == FBSessionStateClosedLoginFailed)];
             break;
         default:
             break;
     }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:SCSessionStateChangedNotification 
+                                                        object:session];
     
     if (error) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
@@ -115,14 +107,11 @@
 }
 
 - (void)openSession {
-    [self.session openWithCompletionHandler:
+    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
+    [FBSession sessionOpenWithPermissions:permissions completionHandler:
      ^(FBSession *session, FBSessionState state, NSError *error) {
          [self sessionStateChanged:session state:state error:error];
      }];    
-}
-
-- (void)closeSession {
-    [self.session closeAndClearTokenInformation];
 }
 
 - (BOOL)application:(UIApplication *)application 
@@ -132,13 +121,13 @@
     // FBSample logic
     // We need to handle URLs by passing them to FBSession in order for SSO authentication
     // to work.
-    return [self.session handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url]; 
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application	{	
     // this means the user switched back to this app without completing a login in Safari/Facebook App
-    if (self.session.state == FBSessionStateCreatedOpening) {	
-        [self.session close]; // so we close our session and start over	
+    if (FBSession.activeSession.state == FBSessionStateCreatedOpening) {	
+        [FBSession.activeSession close]; // so we close our session and start over	
     }	
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -156,9 +145,8 @@
     [self.window makeKeyAndVisible];
     
     // FBSample logic
-    // Create an FBSession and see if it's got a token.
-    [self createNewSession];
-    if (self.session.state == FBSessionStateCreatedTokenLoaded) {
+    // See if we have a valid token for the current state.
+    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
         // Yes, so just open the session (this won't display any UX).
         [self openSession];
     } else {

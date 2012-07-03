@@ -23,42 +23,23 @@
 @property (strong, nonatomic) IBOutlet UITextView *textNoteOrLink;
 
 - (IBAction)buttonClickHandler:(id)sender;
-- (void)updateForSessionChange;
+- (void)updateView;
 
 @end
 
 @implementation JLViewController
-@synthesize textNoteOrLink;
-@synthesize buttonLoginLogout;
+
+@synthesize textNoteOrLink = _textNoteOrLink;
+@synthesize buttonLoginLogout = _buttonLoginLogout;
 
 - (void)viewDidLoad {    
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    // FBSample logic
-    // This application uses a single method to handle session transitions and
-    // the related changes to buttons, etc.; we call the method from here in
-    //  order to bootstrap and gets a fresh new session object
-    [self updateForSessionChange];
+    [self updateView];
     
-}
-
-// FBSample logic
-// main helper method to react to session changes, including creation of session
-// object when one has gone invalid, or at init time
-- (void)updateForSessionChange {
-    // get the app delegate, so that we can reference the session property
     JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
-    if (appDelegate.session.isOpen) {        
-        // valid account UI is shown whenever the session is open
-        [buttonLoginLogout setTitle:@"Log out" forState:UIControlStateNormal];        
-        [textNoteOrLink setText:[NSString stringWithFormat:@"https://graph.facebook.com/me/friends?access_token=%@",
-                                 appDelegate.session.accessToken]];
-    } else {        
-        // login-needed account UI is shown whenever the session is closed
-        [buttonLoginLogout setTitle:@"Log in" forState:UIControlStateNormal];        
-        [textNoteOrLink setText:@"Login to create a link to fetch account data"];
-        
+    if (!appDelegate.session.isOpen) {
         // create a fresh session object
         appDelegate.session = [[FBSession alloc] init];
         
@@ -71,9 +52,26 @@
                                                              FBSessionState status, 
                                                              NSError *error) {
                 // we recurse here, in order to update buttons and labels
-                [self updateForSessionChange];
+                [self updateView];
             }];
         }
+    }
+}
+
+// FBSample logic
+// main helper method to update the UI to reflect the current state of the session.
+- (void)updateView {
+    // get the app delegate, so that we can reference the session property
+    JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    if (appDelegate.session.isOpen) {        
+        // valid account UI is shown whenever the session is open
+        [self.buttonLoginLogout setTitle:@"Log out" forState:UIControlStateNormal];        
+        [self.textNoteOrLink setText:[NSString stringWithFormat:@"https://graph.facebook.com/me/friends?access_token=%@",
+                                 appDelegate.session.accessToken]];
+    } else {        
+        // login-needed account UI is shown whenever the session is closed
+        [self.buttonLoginLogout setTitle:@"Log in" forState:UIControlStateNormal];        
+        [self.textNoteOrLink setText:@"Login to create a link to fetch account data"];        
     }
 }
 
@@ -90,32 +88,28 @@
         // users will simply close the app or switch away, without logging out; this will
         // cause the implicit cached-token login to occur on next launch of the application
         [appDelegate.session closeAndClearTokenInformation];
+        
+        // Create a new, logged out session.
+        appDelegate.session = [[FBSession alloc] init];
     } else {
         // if the session isn't open, let's open it now and present the login UX to the user
         [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
                                                          FBSessionState status, 
                                                          NSError *error) {
             // and here we make sure to update our UX according to the new session state
-            [self updateForSessionChange];
+            [self updateView];
         }];
     } 
 }
 
 #pragma mark Template generated code
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
-
 - (void)viewDidUnload
 {
-    [self setButtonLoginLogout:nil];
-    [self setTextNoteOrLink:nil];
+    self.buttonLoginLogout = nil;
+    self.textNoteOrLink = nil;
+    
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

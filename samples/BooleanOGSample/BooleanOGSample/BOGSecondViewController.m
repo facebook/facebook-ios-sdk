@@ -19,11 +19,14 @@
 #import "OGProtocols.h"
 
 @interface BOGSecondViewController () <FBFriendPickerDelegate>
+
 - (void)updateActivityForID:(NSString *)fbid;
+
 @end
 
 @implementation BOGSecondViewController
-@synthesize activityTextView;
+
+@synthesize activityTextView = _activityTextView;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -58,10 +61,9 @@
 }
 
 - (void)viewDidUnload {
-    [self setActivityTextView:nil];
+    self.activityTextView = nil;
+
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -73,7 +75,7 @@
     }
 }
 
-#pragma mark - FBFriendPickerDelegate impl
+#pragma mark - FBFriendPickerDelegate implementation
 
 // FBSample logic
 // The following two methods implement the FBFriendPickerDelegate protocol. This shows an example of two
@@ -84,7 +86,7 @@
 
 - (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
     if (friendPicker.selection.count) {
-        activityTextView.text = @"";
+        self.activityTextView.text = @"";
         [self updateActivityForID:[[friendPicker.selection objectAtIndex:0] id]];
     }
 }
@@ -156,7 +158,7 @@
                  entry.data.anothertruthvalue.title,                 
                  entry.data.result.boolValue ? @"True" : @"False"];
             }
-            activityTextView.text = output;
+            self.activityTextView.text = output;
         }
     };
     

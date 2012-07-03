@@ -26,7 +26,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
 @property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
 
-- (void)sessionChanged;
 - (void)doneButtonWasPressed:(id)sender;
 - (void)cancelButtonWasPressed:(id)sender;
 - (void)fillTextBoxAndDismiss:(NSString *)text;
@@ -38,40 +37,26 @@
 @synthesize selectedFriendsView = _friendResultText;
 @synthesize friendPickerController = _friendPickerController;
 
+#pragma mark View lifecycle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-     
-    
-    // FBSample logic
-    // We call our session-related workhorse here to update the state of the view and session
-    // in order to reflect current login state. In the case of viewDidLoad, this should result
-    // in the session being opened
-    [self sessionChanged];
-}
 
-// FBSample logic
-// This method is responsible for keeping UX and session state in sync
-- (void)sessionChanged {
-    
+    // FBSample logic
     // if the session is open, then load the data for our view controller
     if (!FBSession.activeSession.isOpen) {
-
         // if the session is closed, then we open it here, and establish a handler for state changes
         [FBSession.activeSession openWithCompletionHandler:^(FBSession *session,
                                                          FBSessionState state,
                                                          NSError *error) {
             switch (state) {
-                case FBSessionStateOpen:
-                    [self sessionChanged];
-                    break;
                 case FBSessionStateClosedLoginFailed:
                 {
-                    UIAlertView *alertView =
-                    [[UIAlertView alloc] initWithTitle:@"Error"
-                                               message:error.localizedDescription
-                                              delegate:nil
-                                     cancelButtonTitle:@"OK"
-                                     otherButtonTitles:nil];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                        message:error.localizedDescription
+                                                                       delegate:nil
+                                                              cancelButtonTitle:@"OK"
+                                                              otherButtonTitles:nil];
                     [alertView show];
                 }
                     break;
@@ -82,6 +67,14 @@
     }
 }
 
+- (void)viewDidUnload {
+    self.selectedFriendsView = nil;
+    self.friendPickerController = nil;
+    
+    [super viewDidUnload];
+}
+
+#pragma mark UI handlers
 
 - (IBAction)pickFriendsButtonClick:(id)sender {
         
@@ -132,5 +125,6 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark -
 
 @end
