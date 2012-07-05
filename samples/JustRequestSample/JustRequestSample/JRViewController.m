@@ -102,9 +102,6 @@ static NSString *loadingText = @"Loading...";
         [self.textObjectID resignFirstResponder];
     }
     
-    // get the app delegate for access to the .session property
-    JRAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    
     // create the connection object
     FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
     

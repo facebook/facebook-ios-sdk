@@ -89,9 +89,12 @@
         // cause the implicit cached-token login to occur on next launch of the application
         [appDelegate.session closeAndClearTokenInformation];
         
-        // Create a new, logged out session.
-        appDelegate.session = [[FBSession alloc] init];
     } else {
+        if (appDelegate.session.state != FBSessionStateCreated) {
+            // Create a new, logged out session.
+            appDelegate.session = [[FBSession alloc] init];
+        }
+        
         // if the session isn't open, let's open it now and present the login UX to the user
         [appDelegate.session openWithCompletionHandler:^(FBSession *session, 
                                                          FBSessionState status, 

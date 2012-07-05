@@ -161,7 +161,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
             [g_startTimesWithTags removeObjectForKey:tagAsNumber];  // served its purpose, remove
             
             // Log string is appended with "%d msec", with nothing intervening.  This gives the most control to the caller.
-            logString = [NSString stringWithFormat:@"%@%d msec", logString, elapsed];
+            logString = [NSString stringWithFormat:@"%@%lu msec", logString, elapsed];
         
             [self singleShotLogEntry:loggingBehavior logEntry:logString];
         }

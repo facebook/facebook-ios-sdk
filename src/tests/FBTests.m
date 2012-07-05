@@ -19,7 +19,7 @@
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBError.h"
-#include <stdlib.h>
+#include <pthread.h>
 
 static NSMutableDictionary *mapTestCasesToSessions;
 // Concurrency not an issue today, but guard our static global in any case.

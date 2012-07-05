@@ -17,6 +17,7 @@
 		5F6AF1A41532A37B00DDBD75 /* MPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A21532A37B00DDBD75 /* MPViewController_iPhone.xib */; };
 		5F6AF1A71532A37B00DDBD75 /* MPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A51532A37B00DDBD75 /* MPViewController_iPad.xib */; };
 		5F6AF20F1533752700DDBD75 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */; };
+		8458462715A63635008A1F16 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458462615A63635008A1F16 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB508158F9D78000AF7F5 /* Icon-72.png */; };
 		85AFB50D158F9D78000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB509158F9D78000AF7F5 /* Icon-72@2x.png */; };
 		85AFB50E158F9D78000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB50A158F9D78000AF7F5 /* Icon.png */; };
@@ -40,6 +41,7 @@
 		5F6AF1A31532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPhone.xib; sourceTree = "<group>"; };
 		5F6AF1A61532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPad.xib; sourceTree = "<group>"; };
 		5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
+		8458462615A63635008A1F16 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85AFB508158F9D78000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB509158F9D78000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB50A158F9D78000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8458462715A63635008A1F16 /* Accounts.framework in Frameworks */,
 				5F6AF18E1532A37B00DDBD75 /* UIKit.framework in Frameworks */,
 				5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */,
 				5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */,
@@ -84,6 +87,7 @@
 			children = (
 				85D0ED211537790E00D88664 /* FBiOSSDKResources.bundle */,
 				5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */,
+				8458462615A63635008A1F16 /* Accounts.framework */,
 				5F6AF18D1532A37B00DDBD75 /* UIKit.framework */,
 				5F6AF18F1532A37B00DDBD75 /* Foundation.framework */,
 				5F6AF1911532A37B00DDBD75 /* CoreGraphics.framework */,

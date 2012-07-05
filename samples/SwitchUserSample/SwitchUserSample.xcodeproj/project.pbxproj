@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		84605AAD15A77AFB00197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AAC15A77AFB00197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		856DB04E153393C3006F6A33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DB04D153393C3006F6A33 /* UIKit.framework */; };
 		856DB050153393C3006F6A33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DB04F153393C3006F6A33 /* Foundation.framework */; };
 		856DB052153393C3006F6A33 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DB051153393C3006F6A33 /* CoreGraphics.framework */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		84605AAC15A77AFB00197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		856DB049153393C3006F6A33 /* SwitchUserSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchUserSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		856DB04D153393C3006F6A33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		856DB04F153393C3006F6A33 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -73,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84605AAD15A77AFB00197AA7 /* Accounts.framework in Frameworks */,
 				856DB07F15339455006F6A33 /* FBiOSSDK.framework in Frameworks */,
 				856DB04E153393C3006F6A33 /* UIKit.framework in Frameworks */,
 				856DB050153393C3006F6A33 /* Foundation.framework in Frameworks */,
@@ -105,6 +108,7 @@
 			children = (
 				85D0ED871538A39600D88664 /* FBiOSSDKResources.bundle */,
 				856DB07E15339455006F6A33 /* FBiOSSDK.framework */,
+				84605AAC15A77AFB00197AA7 /* Accounts.framework */,
 				856DB04D153393C3006F6A33 /* UIKit.framework */,
 				856DB04F153393C3006F6A33 /* Foundation.framework */,
 				856DB051153393C3006F6A33 /* CoreGraphics.framework */,

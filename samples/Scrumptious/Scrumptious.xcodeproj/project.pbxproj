@@ -11,6 +11,7 @@
 		846809C2158F85A100F2DBB9 /* action-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BE158F85A100F2DBB9 /* action-location.png */; };
 		846809C3158F85A100F2DBB9 /* action-people.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BF158F85A100F2DBB9 /* action-people.png */; };
 		846809C4158F85A100F2DBB9 /* action-photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809C0158F85A100F2DBB9 /* action-photo.png */; };
+		84A5DA9615A68A3D00FE54AF /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A5DA9515A68A3D00FE54AF /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85394EAC15546CC400550929 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85394EAB15546CC400550929 /* FBiOSSDK.framework */; };
 		85394EAE15546CCF00550929 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */; };
 		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
@@ -40,6 +41,7 @@
 		846809BE158F85A100F2DBB9 /* action-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-location.png"; path = "scrumptious/images/action-location.png"; sourceTree = SOURCE_ROOT; };
 		846809BF158F85A100F2DBB9 /* action-people.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-people.png"; path = "scrumptious/images/action-people.png"; sourceTree = SOURCE_ROOT; };
 		846809C0158F85A100F2DBB9 /* action-photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-photo.png"; path = "scrumptious/images/action-photo.png"; sourceTree = SOURCE_ROOT; };
+		84A5DA9515A68A3D00FE54AF /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85394EAB15546CC400550929 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
 		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84A5DA9615A68A3D00FE54AF /* Accounts.framework in Frameworks */,
 				B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */,
 				B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */,
 				B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */,
@@ -110,6 +113,7 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84A5DA9515A68A3D00FE54AF /* Accounts.framework */,
 				8592BE3C15816CCC00056680 /* AddressBook.framework */,
 				85394EAD15546CCF00550929 /* FBiOSSDKResources.bundle */,
 				85394EAB15546CC400550929 /* FBiOSSDK.framework */,
@@ -199,7 +203,7 @@
 			attributes = {
 				LastUpgradeCheck = 0430;
 			};
-			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */;
+			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -366,7 +370,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "scrumptious" */ = {
+		B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B9CD0A8E150EA4DE00560A93 /* Debug */,

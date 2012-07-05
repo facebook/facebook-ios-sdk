@@ -348,7 +348,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     // We know each character is a digit. Convert it into a letter starting with 'a'.
     for (int i = 0; i < hashAsString.length; ++i) {
         NSString *ch = [NSString stringWithFormat:@"%C",
-                        [hashAsString characterAtIndex:i] + 'a' - '0'];
+                        (unsigned short)([hashAsString characterAtIndex:i] + 'a' - '0')];
         [result appendString:ch];
     }
     

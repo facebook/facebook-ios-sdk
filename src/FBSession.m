@@ -32,6 +32,11 @@
 #define TEST_DISABLE_MULTITASKING_LOGIN (NO)
 #define TEST_DISABLE_SSO (NO)
 
+// this macro turns on IOS6 preview support
+#ifdef __IPHONE_6_0
+#define IOS6_PREVIEW_SUPPORT
+#endif
+
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
@@ -111,6 +116,7 @@ static NSSet *g_loggingBehavior;
 // private members
 - (void)notifyOfState:(FBSessionState)state;
 - (void)authorizeWithPermissions:(NSArray*)permissions
+                  integratedAuth:(BOOL)tryIntegratedAuth
                        FBAppAuth:(BOOL)tryFBAppAuth
                       safariAuth:(BOOL)trySafariAuth
                         fallback:(BOOL)tryFallback;
@@ -683,12 +689,14 @@ static NSSet *g_loggingBehavior;
     (behavior == FBSessionLoginBehaviorSuppressSSO);
     
     [self authorizeWithPermissions:(NSArray*)permissions
+                    integratedAuth:trySSO
                          FBAppAuth:trySSO
                         safariAuth:trySSO
                           fallback:tryFallback];
 }
 
 - (void)authorizeWithPermissions:(NSArray*)permissions
+                  integratedAuth:(BOOL)tryIntegratedAuth
                        FBAppAuth:(BOOL)tryFBAppAuth
                       safariAuth:(BOOL)trySafariAuth 
                         fallback:(BOOL)tryFallback {
@@ -714,6 +722,87 @@ static NSSet *g_loggingBehavior;
 
     // To avoid surprises, delete any cookies we currently have.
     [FBSession deleteFacebookCookies];
+    
+    // when iOS 6 ships we will have enough cases here to justify refactoring to a nicer
+    // approach to managing our fallback auth methods -- however while we are still previewing
+    // iOS 6 functionality, we will keep the logic essentially as is, with a series of ifs
+
+    BOOL didAuthNWithSystemAccount = NO;
+    
+#ifdef IOS6_PREVIEW_SUPPORT
+    id accountStore = nil;
+    id accountTypeFB = nil;
+    // do we want and have the ability to attempt integrated authn
+    if (tryIntegratedAuth &&
+        (accountStore = [[[NSClassFromString(@"ACAccountStore") alloc] init] autorelease]) &&
+        (accountTypeFB = [accountStore performSelector:@selector(accountTypeWithAccountTypeIdentifier:)
+                                            withObject:@"com.apple.facebook"])) {
+                
+        // looks like we will get to attempt a login with integrated authn
+        didAuthNWithSystemAccount = YES;
+        
+        // BUG: this works around a bug in the current iOS preview that requires
+        // at least one permission in order to get an access token -- user_likes
+        // was selected as a generally innocuous permission to request in the case
+        // where the application only needs basic access; will remove in production
+        NSArray *permissionsToUse = permissions;
+        if (!permissionsToUse.count) {
+            permissionsToUse = [NSArray arrayWithObject:@"user_likes"];
+        }
+        
+        // construct access options
+        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+                                 self.appID, @"ACFacebookAppIdKey",
+                                 permissionsToUse, @"ACFacebookPermissionsKey",
+                                 @"read_write", @"ACFacebookPermissionGroupKey",
+                                 nil];
+        
+        // we will attempt an iOS integrated facebook login
+        [accountStore requestAccessToAccountsWithType:accountTypeFB
+                                              options:options
+                                           completion:^(BOOL granted, NSError *error) {
+                                               // requestAccessToAccountsWithType:options:completion: completes on an
+                                               // arbitrary thread; let's process this back on our main thread
+                                               dispatch_async( dispatch_get_main_queue(), ^{
+                                                   NSString *oauthToken = nil;
+                                                   if (granted) {
+                                                       NSArray *fbAccounts = [accountStore performSelector:@selector(accountsWithAccountType:)
+                                                                                                withObject:accountTypeFB];
+                                                       id account = [fbAccounts objectAtIndex:0];
+                                                       id credential = [account performSelector:@selector(credential)];
+                                                       
+                                                       oauthToken = [credential performSelector:@selector(oauthToken)];
+                                                   }
+                                                   
+                                                   if (oauthToken) {
+                                                       // this is one of two ways that we get an SSO token (the other is from cache)
+                                                       _isSSOToken = YES;
+                                                       
+                                                       // we received a token just now
+                                                       self.refreshDate = [NSDate date];
+                                                       
+                                                       // set token and date, state transition, and call the handler if there is one
+                                                       [self transitionAndCallHandlerWithState:FBSessionStateOpen
+                                                                                         error:nil
+                                                                                         token:oauthToken
+                                                        // BUG: we need a means for fetching the expiration date of the token
+                                                                                expirationDate:[NSDate distantFuture]
+                                                                                   shouldCache:YES];
+                                                   } else {
+                                                       // BUG: in all failed cases we fall back to other authn schemes,
+                                                       // in order to allow for some instability in the new API; post
+                                                       // preview, a failed integrated authentication will result in a
+                                                       // failed login for the session
+                                                       [self authorizeWithPermissions:permissions
+                                                                       integratedAuth:NO
+                                                                            FBAppAuth:YES
+                                                                           safariAuth:YES
+                                                                             fallback:YES];
+                                                   }
+                                               });
+                                           }];
+    }
+#endif
 
     // If the device is running a version of iOS that supports multitasking,
     // try to obtain the access token from the Facebook app installed
@@ -722,9 +811,9 @@ static NSSet *g_loggingBehavior;
     // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
     // This minimizes the chance that the user will have to enter his or
     // her credentials in order to authorize the application.
-    BOOL didOpenOtherApp = NO;
     UIDevice *device = [UIDevice currentDevice];
-    if ([device respondsToSelector:@selector(isMultitaskingSupported)] &&
+    if (!didAuthNWithSystemAccount &&
+        [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         if (tryFBAppAuth &&
@@ -735,20 +824,20 @@ static NSSet *g_loggingBehavior;
             }
             NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, FBAuthURLPath];
             NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
-            didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
 
-        if (trySafariAuth && !didOpenOtherApp) {
+        if (trySafariAuth && !didAuthNWithSystemAccount) {
             NSString *nextUrl = self.appBaseUrl;
             [params setValue:nextUrl forKey:@"redirect_uri"];
 
             NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
-            didOpenOtherApp = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
     }
 
     // If single sign-on failed, see if we should attempt to fallback
-    if (!didOpenOtherApp) {
+    if (!didAuthNWithSystemAccount) {
         if (tryFallback) {
             // open an inline login dialog. This will require the user to enter his or her credentials.
             self.loginDialog = [[[FBLoginDialog alloc] initWithURL:loginDialogURL
@@ -781,6 +870,7 @@ static NSSet *g_loggingBehavior;
         // the authorization dialog in Safari.
         if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
             [self authorizeWithPermissions:self.permissions
+                            integratedAuth:NO
                                  FBAppAuth:NO
                                 safariAuth:YES
                                   fallback:NO];
@@ -791,6 +881,7 @@ static NSSet *g_loggingBehavior;
         // in an inline dialog, do that.
         if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
             [self authorizeWithPermissions:self.permissions
+                            integratedAuth:NO
                                  FBAppAuth:NO
                                 safariAuth:NO
                                   fallback:NO];
