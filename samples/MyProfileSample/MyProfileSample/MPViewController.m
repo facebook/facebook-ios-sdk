@@ -29,7 +29,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelFirstName;
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
-@property (strong, nonatomic) FBRequestConnection *requestConnection;
 
 - (IBAction)postStatusUpdateClick:(UIButton *)sender;
 - (IBAction)postPhotoClick:(UIButton *)sender;
@@ -53,7 +52,6 @@
 @synthesize labelFirstName = _labelFirstName;
 @synthesize loggedInUser = _loggedInUser;
 @synthesize profilePic = _profilePic;
-@synthesize requestConnection = _requestConnection;
 
 - (void)viewDidLoad {    
     [super viewDidLoad];
