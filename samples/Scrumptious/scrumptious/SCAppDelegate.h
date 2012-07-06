@@ -15,7 +15,6 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FacebookSDK.h>
 
 extern NSString *const SCSessionStateChangedNotification;
 

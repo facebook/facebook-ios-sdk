@@ -353,8 +353,6 @@
     _friendPickerController.delegate = nil;
     _imagePicker.delegate = nil;
     _imagePickerActionSheet.delegate = nil;
-
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)viewDidLoad {
@@ -365,7 +363,7 @@
     // Get the CLLocationManager going.
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
     // We don't want to be notified of small changes in location, preferring to use our
     // last cached results, if any.
     self.locationManager.distanceFilter = 50;
@@ -411,6 +409,8 @@
 - (void)viewDidUnload {
     [super viewDidUnload];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
     // Release any retained subviews of the main view.
     self.placePickerController = nil;
     self.friendPickerController = nil;

@@ -82,15 +82,15 @@
     [self loginSession:session];
     [session close];
     
-//    int startingUserCount = [self countTestUsers];
+    int startingUserCount = [self countTestUsers];
     
     // Try getting another shared user.
     session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     [self loginSession:session];
     
-//    int endingUserCount = [self countTestUsers];
+    int endingUserCount = [self countTestUsers];
     
-//    STAssertEquals(startingUserCount, endingUserCount, @"differing counts");
+    STAssertEquals(startingUserCount, endingUserCount, @"differing counts");
     [session close];
 }
 

@@ -26,33 +26,32 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 @property (strong, nonatomic) UINavigationController *navController;
 @property (strong, nonatomic) SCViewController *mainViewController;
 
-- (FBSession*)createNewSession;
-- (void)showLoginViewWithError:(BOOL)error;
+- (void)showLoginView;
 
 @end
 
 @implementation SCAppDelegate
 
 @synthesize window = _window;
-@synthesize mainViewController = _viewController;
+@synthesize mainViewController = _mainViewController;
 @synthesize navController = _navController;
 
 #pragma mark -
 #pragma mark Facebook Login Code
 
-- (void)showLoginViewWithError:(BOOL)error {
+- (void)showLoginView {
     UIViewController *topViewController = [self.navController topViewController];
     UIViewController *modalViewController = [topViewController modalViewController];
     
     // FBSample logic
-    // If the login screen is not already displayed, display it. If we got an error, notify
-    // the controller.
+    // If the login screen is not already displayed, display it. If the login screen is displayed, then
+    // getting back here means the login in progress did not successfully complete. In that case,
+    // notify the login view so it can update its UI appropriately.
     if (![modalViewController isKindOfClass:[SCLoginViewController class]]) {
         SCLoginViewController* loginViewController = [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" 
                                                                                             bundle:nil];
         [topViewController presentModalViewController:loginViewController animated:NO];
-    } 
-    if (error) {
+    } else {
         SCLoginViewController* loginViewController = (SCLoginViewController*)modalViewController;
         [loginViewController loginFailed];
     }
@@ -74,7 +73,8 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                 }
                 
                 // FBSample logic
-                // Pre-fetch and cache the friends for the friend picker as soon as possible
+                // Pre-fetch and cache the friends for the friend picker as soon as possible to improve
+                // responsiveness when the user tags their friends.
                 FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
                 [cacheDescriptor prefetchAndCacheForSession:session];
             }
@@ -87,7 +87,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
             
             [FBSession.activeSession closeAndClearTokenInformation];
             
-            [self showLoginViewWithError:(state == FBSessionStateClosedLoginFailed)];
+            [self showLoginView];
             break;
         default:
             break;
@@ -151,7 +151,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
         [self openSession];
     } else {
         // No, display the login page.
-        [self showLoginViewWithError:NO];
+        [self showLoginView];
     }
     
     return YES;

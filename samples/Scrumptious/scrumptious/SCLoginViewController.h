@@ -23,6 +23,9 @@
 // using SSO if possible, otherwise using the web dialog UI.
 @interface SCLoginViewController : UIViewController
 
+// FBSample logic
+// This method should be called to indicate that a login which was in progress has
+// resulted in a failure.
 - (void)loginFailed;
 
 @end

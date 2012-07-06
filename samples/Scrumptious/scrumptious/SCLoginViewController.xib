@@ -74,17 +74,21 @@
 					<object class="IBUIImageView" id="113215792">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">292</int>
-						<string key="NSFrame">{{20, 20}, {79, 80}}</string>
+						<string key="NSFrame">{{20, 26}, {74, 74}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="144313356"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<int key="IBUIContentMode">1</int>
+						<object class="NSColor" key="IBUIBackgroundColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MSAxIDEAA</bytes>
+						</object>
+						<int key="IBUIContentMode">4</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 						<object class="NSCustomResource" key="IBUIImage">
 							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">app_icon.png</string>
+							<string key="NSResourceName">Icon-72.png</string>
 						</object>
 					</object>
 					<object class="IBUILabel" id="144313356">
@@ -158,7 +162,7 @@
 					</object>
 					<object class="IBUIImageView" id="6500122">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">268</int>
+						<int key="NSvFlags">-2147483380</int>
 						<string key="NSFrame">{{20, 399}, {124, 41}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -191,7 +195,7 @@
 				<reference key="NSNextKeyView" ref="113215792"/>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">2</int>
-					<bytes key="NSRGB">MC4yMDc4NDMxNTQ3IDAuMzgwMzkyMTkzOCAwLjYyMzUyOTQzNDIAA</bytes>
+					<bytes key="NSRGB">MC4yMzEzNzI1NjUgMC4zNDkwMTk2MTY4IDAuNTk2MDc4NDU1NAA</bytes>
 				</object>
 				<object class="IBUISimulatedStatusBarMetrics" key="IBUISimulatedStatusBarMetrics"/>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -362,7 +366,7 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="app_icon.png">{256, 256}</string>
+			<string key="Icon-72.png">{72, 72}</string>
 			<string key="facebook.png">{196, 40}</string>
 		</dictionary>
 		<string key="IBCocoaTouchPluginVersion">1179</string>
