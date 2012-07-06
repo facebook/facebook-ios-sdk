@@ -22,7 +22,6 @@
 @interface MPViewController () <FBLoginViewDelegate>
 
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *profilePic;
-@property (strong, nonatomic) UIBarButtonItem *buttonLoginLogout;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostStatus;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostPhoto;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPickFriends;
@@ -42,9 +41,7 @@
 @end
 
 @implementation MPViewController
-@synthesize loginLabel = _loginLabel;
 
-@synthesize buttonLoginLogout = _buttonLoginLogout;
 @synthesize buttonPostStatus = _buttonPostStatus;
 @synthesize buttonPostPhoto = _buttonPostPhoto;
 @synthesize buttonPickFriends = _buttonPickFriends;
@@ -57,21 +54,19 @@
     [super viewDidLoad];
     
     FBLoginView *loginview = [[FBLoginView alloc] init];
-    loginview.center = CGPointMake(20, 20);
+    loginview.frame = CGRectOffset(loginview.frame, 5, 5);
     loginview.delegate = self;
     
     [self.view addSubview:loginview];
 }
 
 - (void)viewDidUnload {
-    self.buttonLoginLogout = nil;
     self.buttonPickFriends = nil;
     self.buttonPostPhoto = nil;
     self.buttonPostStatus = nil;
     self.labelFirstName = nil;
     self.loggedInUser = nil;
     self.profilePic = nil;
-    self.loginLabel = nil;
     [super viewDidUnload];
 }
 
@@ -89,8 +84,6 @@
     self.buttonPostPhoto.enabled = YES;
     self.buttonPostStatus.enabled = YES;
     self.buttonPickFriends.enabled = YES;
-    
-    self.loginLabel.text = nil;
 }
 
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
@@ -112,8 +105,6 @@
     
     self.profilePic.userID = nil;            
     self.labelFirstName.text = nil;
-    
-    self.loginLabel.text = @"<-- press to log in";
 }
 
 // Post Status Update button handler

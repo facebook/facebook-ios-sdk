@@ -28,12 +28,14 @@ struct FBLoginViewArrangement {
     int profileExtent;
     int profileX, profileY;
     int questionMarkSize;
+    int textButtonWidth;
+    int textButtonHorizMargin;
 };
 
 struct FBLoginViewArrangement arrangements[] = {
-    {32, 32, 12, 0, 20, 32, 0, 0, 26},
-    {48, 48, 16, 0, 32, 48, 0, 0, 32},
-    {64, 32, 32, 32, 0, 32, 0, 0, 28},
+    {32, 32, 12, 0, 20, 32, 0, 0, 26, 80, 3},
+    {48, 48, 16, 0, 32, 48, 0, 0, 32, 80, 3},
+    {64, 32, 32, 32, 0, 32, 0, 0, 28, 80, 3},
 };
 
 NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
@@ -55,7 +57,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 @property (retain, nonatomic) UIImageView *icon;
 @property (retain, nonatomic) FBProfilePictureView *profilePicture;
 @property (retain, nonatomic) UILabel *label;
-@property (retain, nonatomic) UIButton *button;
+@property (retain, nonatomic) UIButton *profileButton;
+@property (retain, nonatomic) UIButton *textButton;
 @property (retain, nonatomic) FBSession *session;
 @property (retain, nonatomic) FBRequestConnection *request;
 @property (retain, nonatomic) id<FBGraphUser> user;
@@ -69,7 +72,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
             icon = _icon,
             profilePicture = _profilePicture,
             label = _label,
-            button = _button,
+            profileButton = _profileButton,
+            textButton = _textButton,
             session = _session,
             request = _request,
             user = _user;
@@ -110,7 +114,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     self.icon = nil;
     self.profilePicture = nil;
     self.label = nil;
-    self.button = nil;
+    self.profileButton = nil;
+    self.textButton = nil;
     self.session = nil;
     self.user = nil;
 
@@ -140,7 +145,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
-    if (self.button) {
+    if (self.profileButton) {
         return;
     }
 
@@ -186,13 +191,19 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
                                            alpha:1];
     self.label.textAlignment = UITextAlignmentCenter;
     
-    // setup button
-    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.button setBackgroundImage:[UIImage imageNamed:@"FBiOSSDKResources.bundle/FBLoginView/images/bluetint.png"]
+    // setup profile button
+    self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.profileButton setBackgroundImage:[UIImage imageNamed:@"FBiOSSDKResources.bundle/FBLoginView/images/bluetint.png"]
                            forState:UIControlStateHighlighted];
-    [self.button addTarget:self 
-                    action:@selector(buttonPressed:) 
-          forControlEvents:UIControlEventTouchUpInside];
+    [self.profileButton addTarget:self 
+                           action:@selector(buttonPressed:) 
+                 forControlEvents:UIControlEventTouchUpInside];
+    
+    // setup text button
+    self.textButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.textButton addTarget:self
+                        action:@selector(buttonPressed:)
+              forControlEvents:UIControlEventTouchUpInside];
     
     [self arrangeViews:0];
     
@@ -200,7 +211,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     [self addSubview:self.profilePicture];
     [self addSubview:self.icon];
     [self addSubview:self.label];
-    [self addSubview:self.button];
+    [self addSubview:self.profileButton];
+    [self addSubview:self.textButton];
     
     if (self.session.isOpen) {
         [self fetchMeInfo];
@@ -213,12 +225,14 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 - (void)arrangeViews:(int)arrangement {
     struct FBLoginViewArrangement a = arrangements[arrangement];
     
-    self.frame = CGRectMake(0, 0, a.width, a.height);
-    self.button.frame = self.frame;
+    self.frame = CGRectMake(0, 0, a.width + a.textButtonWidth + a.textButtonHorizMargin, a.height);
+    self.profileButton.frame = CGRectMake(0, 0, a.width, a.height); 
+
     self.icon.frame = CGRectMake(a.iconX, a.iconY, a.iconExtent, a.iconExtent);
     self.profilePicture.frame = CGRectMake(a.profileX, a.profileY, a.profileExtent, a.profileExtent);
     self.label.frame = self.profilePicture.frame;
     self.label.font = [UIFont systemFontOfSize:a.questionMarkSize];
+    self.textButton.frame = CGRectMake(a.width + a.textButtonHorizMargin, 0, a.textButtonWidth, a.height);
 }
 
 - (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn {
@@ -226,6 +240,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
         // removing the views that we don't need
         [self.label removeFromSuperview];
         [self.icon removeFromSuperview];
+        [self.textButton setTitle:@"Logout" forState:UIControlStateNormal];
         
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
@@ -233,9 +248,11 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     } else {
         // adding the views that we need        
         [self insertSubview:self.icon
-               belowSubview:self.button];
+               belowSubview:self.profileButton];
         [self insertSubview:self.label
-               belowSubview:self.button];
+               belowSubview:self.profileButton];
+        
+        [self.textButton setTitle:@"Login" forState:UIControlStateNormal];
              
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
