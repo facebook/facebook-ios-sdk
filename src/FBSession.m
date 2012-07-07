@@ -29,8 +29,8 @@
 #import "FBLoginDialog.h"
 
 // these are helpful macros for testing various login methods, should always checkin as NO/NO
-#define TEST_DISABLE_MULTITASKING_LOGIN (NO)
-#define TEST_DISABLE_SSO (NO)
+#define TEST_DISABLE_MULTITASKING_LOGIN NO
+#define TEST_DISABLE_FACEBOOKLOGIN NO
 
 // this macro turns on IOS6 preview support
 #ifdef __IPHONE_6_0
@@ -91,7 +91,7 @@ static NSSet *g_loggingBehavior;
 
     // private property and non-property ivars
     BOOL _isInStateTransition;
-    BOOL _isSSOToken;    
+    BOOL _isFacebookLoginToken;    
 }
 
 // private setters
@@ -208,7 +208,7 @@ static NSSet *g_loggingBehavior;
 
         // additional setup
         _isInStateTransition = NO;
-        _isSSOToken = NO;
+        _isFacebookLoginToken = NO;
         self.attemptedRefreshDate = [NSDate distantPast];
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
@@ -237,9 +237,9 @@ static NSSet *g_loggingBehavior;
                     self.permissions = cachedPermissions;
                 }
                 
-                // if we have cached an optional refresh date or SSO indicator, pick them up here
+                // if we have cached an optional refresh date or Facebook Login indicator, pick them up here
                 self.refreshDate = [tokenInfo objectForKey:FBTokenInformationRefreshDateKey];
-                _isSSOToken = [[tokenInfo objectForKey:FBTokenInformationIsSSOKey] boolValue];
+                _isFacebookLoginToken = [[tokenInfo objectForKey:FBTokenInformationIsFacebookLoginKey] boolValue];
                 
                 // set the state and token info
                 [self transitionToState:FBSessionStateCreatedTokenLoaded
@@ -277,7 +277,7 @@ static NSSet *g_loggingBehavior;
 #pragma mark Public Members
 
 - (void)openWithCompletionHandler:(FBSessionStateHandler)handler {
-    [self openWithBehavior:FBSessionLoginBehaviorSSOWithFallback completionHandler:handler];
+    [self openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:handler];
 }
 
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
@@ -651,8 +651,8 @@ static NSSet *g_loggingBehavior;
                 [tokenInfo setObject:self.refreshDate forKey:FBTokenInformationRefreshDateKey];
             }
             
-            if (_isSSOToken) {
-                [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsSSOKey];
+            if (_isFacebookLoginToken) {
+                [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsFacebookLoginKey];
             }
             
             if (self.permissions) {
@@ -683,15 +683,15 @@ static NSSet *g_loggingBehavior;
 // core authorization UX flow
 - (void)authorizeWithPermissions:(NSArray*)permissions
                         behavior:(FBSessionLoginBehavior)behavior {
-    BOOL trySSO = (behavior == FBSessionLoginBehaviorSSOOnly) ||
-    (behavior == FBSessionLoginBehaviorSSOWithFallback);
-    BOOL tryFallback = (behavior == FBSessionLoginBehaviorSSOWithFallback) ||
-    (behavior == FBSessionLoginBehaviorSuppressSSO);
+    BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
+                            (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
+    BOOL tryFallback =  (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
+                        (behavior == FBSessionLoginBehaviorForcingWebView);
     
     [self authorizeWithPermissions:(NSArray*)permissions
-                    integratedAuth:trySSO
-                         FBAppAuth:trySSO
-                        safariAuth:trySSO
+                    integratedAuth:tryFacebookLogin
+                         FBAppAuth:tryFacebookLogin
+                        safariAuth:tryFacebookLogin
                           fallback:tryFallback];
 }
 
@@ -775,8 +775,8 @@ static NSSet *g_loggingBehavior;
                                                    }
                                                    
                                                    if (oauthToken) {
-                                                       // this is one of two ways that we get an SSO token (the other is from cache)
-                                                       _isSSOToken = YES;
+                                                       // this is one of two ways that we get an Facebook Login token (the other is from cache)
+                                                       _isFacebookLoginToken = YES;
                                                        
                                                        // we received a token just now
                                                        self.refreshDate = [NSDate date];
@@ -817,7 +817,7 @@ static NSSet *g_loggingBehavior;
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         if (tryFBAppAuth &&
-            !TEST_DISABLE_SSO) {
+            !TEST_DISABLE_FACEBOOKLOGIN) {
             NSString *scheme = FBAuthURLScheme;
             if (_urlSchemeSuffix) {
                 scheme = [scheme stringByAppendingString:@"2"];
@@ -846,7 +846,7 @@ static NSSet *g_loggingBehavior;
                                 autorelease];
             [self.loginDialog show];
         } else {
-            // Can't fallback and SSO failed, so transition to an error state
+            // Can't fallback and Facebook Login failed, so transition to an error state
             NSError *error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonInlineNotCancelledValue
                                                          errorCode:nil];
 
@@ -911,8 +911,8 @@ static NSSet *g_loggingBehavior;
             expirationDate = [NSDate distantFuture];
         }
         
-        // this is one of two ways that we get an SSO token (the other is from cache) 
-        _isSSOToken = YES;
+        // this is one of two ways that we get an Facebook Login token (the other is from cache) 
+        _isFacebookLoginToken = YES;
         
         // we received a token just now
         self.refreshDate = [NSDate date];
@@ -984,8 +984,8 @@ static NSSet *g_loggingBehavior;
             // if this was our last call, then complete the operation
             if (!--callsPending) {
                 if ([fbid isEqual:fbid2]) {
-                    // this is one of two ways that we get an SSO token (the other is from cache) 
-                    _isSSOToken = YES;
+                    // this is one of two ways that we get an Facebook Login token (the other is from cache) 
+                    _isFacebookLoginToken = YES;
                     
                     // we received a token just now
                     self.refreshDate = [NSDate date];
@@ -1057,7 +1057,7 @@ static NSSet *g_loggingBehavior;
     BOOL result = NO;
     NSDate *now = [NSDate date];
     if (self.isOpen &&
-        _isSSOToken &&
+        _isFacebookLoginToken &&
         [now timeIntervalSinceDate:self.attemptedRefreshDate] > FBTokenRetryExtendSeconds &&
         [now timeIntervalSinceDate:self.refreshDate] > FBTokenExtendThresholdSeconds) {
         result = YES;
@@ -1071,7 +1071,7 @@ static NSSet *g_loggingBehavior;
     // no reason to keep this object
     self.loginDialog = nil;
     
-    // though this is not SSO our policy is to cache the refresh date if we have it
+    // though this is not Facebook Login our policy is to cache the refresh date if we have it
     self.refreshDate = [NSDate date];
 
     // set token and date, state transition, and call the handler if there is one

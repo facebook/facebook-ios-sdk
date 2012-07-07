@@ -183,18 +183,18 @@
     }
     
     // FBSample logic
-    // We assume that the primary user is going to log on via SSO, while guest users will
-    // specify their name via the login dialog. The decision of when to try SSO vs.
-    // force entering of credentials will be specific to the needs of an app; this app
-    // bases the decision on whether the user logs on the "primary user" or a "guest user"
+    // We assume that the primary user is going to log on via Facebook Login, while guest users will
+    // specify their name via the login dialog (Fallback Facebook Login.) The decision of when to try
+    // Facebook Login vs. Fallback (force entering of credentials) will be specific to the needs of
+    // an app; this app bases the decision on whether the user logs on the "primary user" or a "guest user"
     FBSessionLoginBehavior behavior = (slot == 0) ?
-    FBSessionLoginBehaviorSSOWithFallback :
-    FBSessionLoginBehaviorSuppressSSO;
+    FBSessionLoginBehaviorWithFallbackToWebView :
+    FBSessionLoginBehaviorForcingWebView;
     
     FBSession *session = [userManager switchToUserInSlot:slot];
     [self updateCellForSlot:slot];
     
-    // we pass the correct behavior here to indicate the login workflow to use (SSO or otherwise)
+    // we pass the correct behavior here to indicate the login workflow to use (Facebook Login, fallback, etc.)
     [session openWithBehavior:behavior
             completionHandler:^(FBSession *session,
                                 FBSessionState status,

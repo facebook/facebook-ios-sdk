@@ -87,14 +87,14 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  * @param appId the facebook app id
  * @param urlSchemeSuffix
  *   urlSchemeSuffix is a string of lowercase letters that is
- *   appended to the base URL scheme used for SSO. For example,
+ *   appended to the base URL scheme used for Facebook Login. For example,
  *   if your facebook ID is "350685531728" and you set urlSchemeSuffix to
  *   "abcd", the Facebook app will expect your application to bind to
  *   the following URL scheme: "fb350685531728abcd".
  *   This is useful if your have multiple iOS applications that
  *   share a single Facebook application id (for example, if you
  *   have a free and a paid version on the same app) and you want
- *   to use SSO with both apps. Giving both apps different
+ *   to use Facebook Login with both apps. Giving both apps different
  *   urlSchemeSuffix values will allow the Facebook app to disambiguate
  *   their URL schemes and always redirect the user back to the
  *   correct app, even if both the free and the app is installed
@@ -263,7 +263,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  *
  * If the device supports multitasking, we use fast app switching to show
  * the dialog in the Facebook app or, if the Facebook app isn't installed,
- * in Safari (this enables single sign-on by allowing multiple apps on
+ * in Safari (this enables Facebook Login by allowing multiple apps on
  * the device to share the same user session).
  * When the user grants or denies the permissions, the app that
  * showed the dialog (the Facebook app or Safari) redirects back to
@@ -395,7 +395,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 /**
  * This function processes the URL the Facebook application or Safari used to
- * open your application during a single sign-on flow.
+ * open your application during a Facebook Login flow.
  *
  * You MUST call this function in your UIApplicationDelegate's handleOpenURL
  * method (see

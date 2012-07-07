@@ -50,7 +50,7 @@
     [self.window makeKeyAndVisible];
     
     // FBSample logic
-    // At startup time we attempt to log in the default user that has signed on using SSO
+    // At startup time we attempt to log in the default user that has signed on using Facebook Login
     [viewController2 loginDefaultUser];
     
     return YES;

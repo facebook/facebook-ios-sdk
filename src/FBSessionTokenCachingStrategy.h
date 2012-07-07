@@ -118,8 +118,8 @@ extern NSString *const FBTokenInformationRefreshDateKey;
 // The key to use with token information dictionaries to get the related user's fbid
 extern NSString *const FBTokenInformationUserFBIDKey;
 
-// The key to use with token information dictionaries to determine whether the token was fetched via SSO
-extern NSString *const FBTokenInformationIsSSOKey;
+// The key to use with token information dictionaries to determine whether the token was fetched via Facebook Login
+extern NSString *const FBTokenInformationIsFacebookLoginKey;
 
 // The key to use with token information dictionaries to get the latest known permissions
 extern NSString *const FBTokenInformationPermissionsKey;

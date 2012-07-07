@@ -95,18 +95,30 @@ typedef enum {
  @typedef FBSessionLoginBehavior enum
  
  @abstract 
- Passed to login to indicate whether single-sign-on (SSO) should be attempted 
- before falling back to asking the user for credentials.
-
+ Passed to login to indicate whether Facebook Login should allow for fallback to be attempted.
+ 
  @discussion
+ Facebook Login authorizes the application to act on behalf of the user, using the user's 
+ Facebook account. Usually a Facebook Login will rely on an account maintained outside of 
+ the application, by the native Facebook application, the browser, or perhaps the device
+ itself. This avoids the need for a user to enter their username and password directly, and
+ provides the most secure and lowest friction way for a user to authorize the application to
+ interact with Facebook. If a Facebook Login is not possible, a fallback Facebook Login may be 
+ attempted, where the user is prompted to enter their credentials in a web-view hosted directly
+ by the application. 
+ 
+ The `FBSessionLoginBehavior` enum specifies whether to allow fallback, disallow fallback, or
+ force fallback login behavior. Most applications will use the default, which attempts a normal
+ Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disalow
+ fallback Facebook Login completely, or to force a fallback login.
  */
 typedef enum {
-    /*! Attempt SSO, ask user for credentials if necessary */
-    FBSessionLoginBehaviorSSOWithFallback   = 0,    
-    /*! Attempt SSO, login fails if SSO fails */
-    FBSessionLoginBehaviorSSOOnly           = 1,
-    /*! Do not attempt SSO, ask user for credentials */
-    FBSessionLoginBehaviorSuppressSSO       = 2,
+    /*! Attempt Facebook Login, ask user for credentials if necessary */
+    FBSessionLoginBehaviorWithFallbackToWebView      = 0,
+    /*! Attempt Facebook Login, no direct request for credentials will be made */
+    FBSessionLoginBehaviorWithNoFallbackToWebView    = 1,
+    /*! Only attempt WebView Login; ask user for credentials */
+    FBSessionLoginBehaviorForcingWebView             = 2,
 } FBSessionLoginBehavior;
 
 /*! 
@@ -262,8 +274,8 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  an exception. The open session methods may be passed a block that will be called back when the session
  state changes. The block will be released when the session is closed.
  
- @param behavior Controls whether to allow, force, or prohibit Single Sign On. The default
- is to allow Single Sign On.
+ @param behavior Controls whether to allow, force, or prohibit Facebook Login or Inline Facebook Login. The default
+ is to allow Facebook Login, with fallback to Inline Facebook Login.
  @param handler A block to call with session state changes. The default is nil.
  */
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
@@ -287,8 +299,8 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
   
  @param permissions An array of strings representing the permissions to request during the
  authentication flow. A value of nil will indicates basic permissions. The default is nil.
- @param behavior Controls whether to allow, force, or prohibit Single Sign On. The default
- is to allow Single Sign On.
+ @param behavior Controls whether to allow, force, or prohibit Facebook Login. The default
+ is to allow Facebook Login and fall back to Inline Facebook Login if needed.
  @param handler A block to call with session state changes. The default is nil.
  */
 - (void)reauthorizeWithPermissions:(NSArray*)permissions
@@ -299,7 +311,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @abstract
  A helper method that is used to provide an implementation for 
  [UIApplicationDelegate application:openURL:sourceApplication:annotation:]. It should be invoked during
- the Single Sign On flow and will update the session information based on the incoming URL.
+ the Facebook Login flow and will update the session information based on the incoming URL.
  
  @param url The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 */
