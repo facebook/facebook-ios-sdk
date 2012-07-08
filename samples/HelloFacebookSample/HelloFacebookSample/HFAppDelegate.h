@@ -17,7 +17,7 @@
 #import <UIKit/UIKit.h>
 #import <FBiOSSDK/FacebookSDK.h>
 
-// My Profile sample application
+// Hello Facebook sample application
 //
 // The purpose of this sample application is show how to use Facebook to 
 // personalize an application experience and perform a set of typical actions.
@@ -29,11 +29,11 @@
 // - how to upload a photo to Facebook
 // - how to invoke the FBFriendPickerViewController to select a set of friends.
 
-@class MPViewController;
+@class HFViewController;
 
-@interface MPAppDelegate : UIResponder<UIApplicationDelegate>
+@interface HFAppDelegate : UIResponder<UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) MPViewController *rootViewController;
+@property (strong, nonatomic) HFViewController *rootViewController;
 
 @end

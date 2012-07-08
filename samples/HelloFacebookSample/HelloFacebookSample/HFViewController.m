@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#import "MPViewController.h"
+#import "HFViewController.h"
 
-#import "MPAppDelegate.h"
+#import "HFAppDelegate.h"
 #import <FBiOSSDK/FacebookSDK.h>
 
-@interface MPViewController () <FBLoginViewDelegate>
+@interface HFViewController () <FBLoginViewDelegate>
 
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *profilePic;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostStatus;
@@ -40,7 +40,7 @@
 
 @end
 
-@implementation MPViewController
+@implementation HFViewController
 
 @synthesize buttonPostStatus = _buttonPostStatus;
 @synthesize buttonPostPhoto = _buttonPostPhoto;
@@ -196,7 +196,6 @@
         }
         message = text;
     }
-    
     
     [[[UIAlertView alloc] initWithTitle:@"You Picked:" 
                                 message:message 

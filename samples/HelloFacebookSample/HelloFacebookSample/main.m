@@ -16,6 +16,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MPViewController : UIViewController
+#import "HFAppDelegate.h"
 
-@end
+int main(int argc, char *argv[])
+{
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([HFAppDelegate class]));
+    }
+}

@@ -12,10 +12,10 @@
 		5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1911532A37B00DDBD75 /* CoreGraphics.framework */; };
 		5F6AF1981532A37B00DDBD75 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1961532A37B00DDBD75 /* InfoPlist.strings */; };
 		5F6AF19A1532A37B00DDBD75 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF1991532A37B00DDBD75 /* main.m */; };
-		5F6AF19E1532A37B00DDBD75 /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF19D1532A37B00DDBD75 /* MPAppDelegate.m */; };
-		5F6AF1A11532A37B00DDBD75 /* MPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A01532A37B00DDBD75 /* MPViewController.m */; };
-		5F6AF1A41532A37B00DDBD75 /* MPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A21532A37B00DDBD75 /* MPViewController_iPhone.xib */; };
-		5F6AF1A71532A37B00DDBD75 /* MPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A51532A37B00DDBD75 /* MPViewController_iPad.xib */; };
+		5F6AF19E1532A37B00DDBD75 /* HFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF19D1532A37B00DDBD75 /* HFAppDelegate.m */; };
+		5F6AF1A11532A37B00DDBD75 /* HFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A01532A37B00DDBD75 /* HFViewController.m */; };
+		5F6AF1A41532A37B00DDBD75 /* HFViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A21532A37B00DDBD75 /* HFViewController_iPhone.xib */; };
+		5F6AF1A71532A37B00DDBD75 /* HFViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A51532A37B00DDBD75 /* HFViewController_iPad.xib */; };
 		5F6AF20F1533752700DDBD75 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */; };
 		8458462715A63635008A1F16 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458462615A63635008A1F16 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB508158F9D78000AF7F5 /* Icon-72.png */; };
@@ -26,20 +26,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F6AF1891532A37B00DDBD75 /* MyProfileSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyProfileSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F6AF1891532A37B00DDBD75 /* HelloFacebookSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloFacebookSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F6AF18D1532A37B00DDBD75 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5F6AF18F1532A37B00DDBD75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5F6AF1911532A37B00DDBD75 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		5F6AF1951532A37B00DDBD75 /* MyProfileSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MyProfileSample-Info.plist"; sourceTree = "<group>"; };
+		5F6AF1951532A37B00DDBD75 /* HelloFacebookSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "HelloFacebookSample-Info.plist"; sourceTree = "<group>"; };
 		5F6AF1971532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5F6AF1991532A37B00DDBD75 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		5F6AF19B1532A37B00DDBD75 /* MyProfileSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MyProfileSample-Prefix.pch"; sourceTree = "<group>"; };
-		5F6AF19C1532A37B00DDBD75 /* MPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPAppDelegate.h; sourceTree = "<group>"; };
-		5F6AF19D1532A37B00DDBD75 /* MPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPAppDelegate.m; sourceTree = "<group>"; };
-		5F6AF19F1532A37B00DDBD75 /* MPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPViewController.h; sourceTree = "<group>"; };
-		5F6AF1A01532A37B00DDBD75 /* MPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPViewController.m; sourceTree = "<group>"; };
-		5F6AF1A31532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPhone.xib; sourceTree = "<group>"; };
-		5F6AF1A61532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MPViewController_iPad.xib; sourceTree = "<group>"; };
+		5F6AF19B1532A37B00DDBD75 /* HelloFacebookSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HelloFacebookSample-Prefix.pch"; sourceTree = "<group>"; };
+		5F6AF19C1532A37B00DDBD75 /* HFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HFAppDelegate.h; sourceTree = "<group>"; };
+		5F6AF19D1532A37B00DDBD75 /* HFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HFAppDelegate.m; sourceTree = "<group>"; };
+		5F6AF19F1532A37B00DDBD75 /* HFViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HFViewController.h; sourceTree = "<group>"; };
+		5F6AF1A01532A37B00DDBD75 /* HFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HFViewController.m; sourceTree = "<group>"; };
+		5F6AF1A31532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HFViewController_iPhone.xib; sourceTree = "<group>"; };
+		5F6AF1A61532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HFViewController_iPad.xib; sourceTree = "<group>"; };
 		5F6AF20E1533752700DDBD75 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		8458462615A63635008A1F16 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85AFB508158F9D78000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 		5F6AF17E1532A37B00DDBD75 = {
 			isa = PBXGroup;
 			children = (
-				5F6AF1931532A37B00DDBD75 /* MyProfileSample */,
+				5F6AF1931532A37B00DDBD75 /* HelloFacebookSample */,
 				5F6AF18C1532A37B00DDBD75 /* Frameworks */,
 				5F6AF18A1532A37B00DDBD75 /* Products */,
 			);
@@ -77,7 +77,7 @@
 		5F6AF18A1532A37B00DDBD75 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5F6AF1891532A37B00DDBD75 /* MyProfileSample.app */,
+				5F6AF1891532A37B00DDBD75 /* HelloFacebookSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,18 +95,19 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5F6AF1931532A37B00DDBD75 /* MyProfileSample */ = {
+		5F6AF1931532A37B00DDBD75 /* HelloFacebookSample */ = {
 			isa = PBXGroup;
 			children = (
-				5F6AF19C1532A37B00DDBD75 /* MPAppDelegate.h */,
-				5F6AF19D1532A37B00DDBD75 /* MPAppDelegate.m */,
-				5F6AF19F1532A37B00DDBD75 /* MPViewController.h */,
-				5F6AF1A01532A37B00DDBD75 /* MPViewController.m */,
-				5F6AF1A21532A37B00DDBD75 /* MPViewController_iPhone.xib */,
-				5F6AF1A51532A37B00DDBD75 /* MPViewController_iPad.xib */,
+				5F6AF19C1532A37B00DDBD75 /* HFAppDelegate.h */,
+				5F6AF19D1532A37B00DDBD75 /* HFAppDelegate.m */,
+				5F6AF19F1532A37B00DDBD75 /* HFViewController.h */,
+				5F6AF1A01532A37B00DDBD75 /* HFViewController.m */,
+				5F6AF1A21532A37B00DDBD75 /* HFViewController_iPhone.xib */,
+				5F6AF1A51532A37B00DDBD75 /* HFViewController_iPad.xib */,
 				5F6AF1941532A37B00DDBD75 /* Supporting Files */,
 			);
-			path = MyProfileSample;
+			name = HelloFacebookSample;
+			path = HelloFacebookSample;
 			sourceTree = "<group>";
 		};
 		5F6AF1941532A37B00DDBD75 /* Supporting Files */ = {
@@ -116,10 +117,10 @@
 				85AFB509158F9D78000AF7F5 /* Icon-72@2x.png */,
 				85AFB50A158F9D78000AF7F5 /* Icon.png */,
 				85AFB50B158F9D78000AF7F5 /* Icon@2x.png */,
-				5F6AF1951532A37B00DDBD75 /* MyProfileSample-Info.plist */,
+				5F6AF1951532A37B00DDBD75 /* HelloFacebookSample-Info.plist */,
 				5F6AF1961532A37B00DDBD75 /* InfoPlist.strings */,
 				5F6AF1991532A37B00DDBD75 /* main.m */,
-				5F6AF19B1532A37B00DDBD75 /* MyProfileSample-Prefix.pch */,
+				5F6AF19B1532A37B00DDBD75 /* HelloFacebookSample-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -127,9 +128,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5F6AF1881532A37B00DDBD75 /* MyProfileSample */ = {
+		5F6AF1881532A37B00DDBD75 /* HelloFacebookSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5F6AF1AA1532A37B00DDBD75 /* Build configuration list for PBXNativeTarget "MyProfileSample" */;
+			buildConfigurationList = 5F6AF1AA1532A37B00DDBD75 /* Build configuration list for PBXNativeTarget "HelloFacebookSample" */;
 			buildPhases = (
 				5F6AF1851532A37B00DDBD75 /* Sources */,
 				5F6AF1861532A37B00DDBD75 /* Frameworks */,
@@ -139,9 +140,9 @@
 			);
 			dependencies = (
 			);
-			name = MyProfileSample;
-			productName = MyProfileSample;
-			productReference = 5F6AF1891532A37B00DDBD75 /* MyProfileSample.app */;
+			name = HelloFacebookSample;
+			productName = HelloFacebookSample;
+			productReference = 5F6AF1891532A37B00DDBD75 /* HelloFacebookSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -152,7 +153,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = 5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "MyProfileSample" */;
+			buildConfigurationList = 5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "HelloFacebookSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -164,7 +165,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				5F6AF1881532A37B00DDBD75 /* MyProfileSample */,
+				5F6AF1881532A37B00DDBD75 /* HelloFacebookSample */,
 			);
 		};
 /* End PBXProject section */
@@ -175,8 +176,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F6AF1981532A37B00DDBD75 /* InfoPlist.strings in Resources */,
-				5F6AF1A41532A37B00DDBD75 /* MPViewController_iPhone.xib in Resources */,
-				5F6AF1A71532A37B00DDBD75 /* MPViewController_iPad.xib in Resources */,
+				5F6AF1A41532A37B00DDBD75 /* HFViewController_iPhone.xib in Resources */,
+				5F6AF1A71532A37B00DDBD75 /* HFViewController_iPad.xib in Resources */,
 				85D0ED221537790E00D88664 /* FBiOSSDKResources.bundle in Resources */,
 				85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */,
 				85AFB50D158F9D78000AF7F5 /* Icon-72@2x.png in Resources */,
@@ -193,8 +194,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5F6AF19A1532A37B00DDBD75 /* main.m in Sources */,
-				5F6AF19E1532A37B00DDBD75 /* MPAppDelegate.m in Sources */,
-				5F6AF1A11532A37B00DDBD75 /* MPViewController.m in Sources */,
+				5F6AF19E1532A37B00DDBD75 /* HFAppDelegate.m in Sources */,
+				5F6AF1A11532A37B00DDBD75 /* HFViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,20 +210,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		5F6AF1A21532A37B00DDBD75 /* MPViewController_iPhone.xib */ = {
+		5F6AF1A21532A37B00DDBD75 /* HFViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				5F6AF1A31532A37B00DDBD75 /* en */,
 			);
-			name = MPViewController_iPhone.xib;
+			name = HFViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		5F6AF1A51532A37B00DDBD75 /* MPViewController_iPad.xib */ = {
+		5F6AF1A51532A37B00DDBD75 /* HFViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				5F6AF1A61532A37B00DDBD75 /* en */,
 			);
-			name = MPViewController_iPad.xib;
+			name = HFViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -283,11 +284,11 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MyProfileSample/MyProfileSample-Prefix.pch";
-				INFOPLIST_FILE = "MyProfileSample/MyProfileSample-Info.plist";
+				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
+				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = HelloFacebookSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -300,11 +301,11 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MyProfileSample/MyProfileSample-Prefix.pch";
-				INFOPLIST_FILE = "MyProfileSample/MyProfileSample-Info.plist";
+				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
+				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = HelloFacebookSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -312,7 +313,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "MyProfileSample" */ = {
+		5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "HelloFacebookSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5F6AF1A81532A37B00DDBD75 /* Debug */,
@@ -321,7 +322,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5F6AF1AA1532A37B00DDBD75 /* Build configuration list for PBXNativeTarget "MyProfileSample" */ = {
+		5F6AF1AA1532A37B00DDBD75 /* Build configuration list for PBXNativeTarget "HelloFacebookSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5F6AF1AB1532A37B00DDBD75 /* Debug */,

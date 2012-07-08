@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'MyProfileSample' target in the 'MyProfileSample' project
+// Prefix header for all source files of the 'HelloFacebookSample' target in the 'HelloFacebookSample' project
 //
 
 #import <Availability.h>

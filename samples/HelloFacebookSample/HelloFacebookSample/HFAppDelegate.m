@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#import "MPAppDelegate.h"
+#import "HFAppDelegate.h"
 
-#import "MPViewController.h"
+#import "HFViewController.h"
 #import <FBiOSSDK/FBProfilePictureView.h>
 
-@implementation MPAppDelegate
+@implementation HFAppDelegate
 
 @synthesize window = _window;
 @synthesize rootViewController = _rootViewController;
@@ -52,9 +52,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.rootViewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPhone" bundle:nil];
+        self.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPhone" bundle:nil];
     } else {
-        self.rootViewController = [[MPViewController alloc] initWithNibName:@"MPViewController_iPad" bundle:nil];
+        self.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPad" bundle:nil];
     }
     self.rootViewController.navigationItem.title = @"Hello, Facebook";
     
