@@ -53,7 +53,10 @@
 - (void)viewDidLoad {    
     [super viewDidLoad];
     
-    FBLoginView *loginview = [[FBLoginView alloc] init];
+    // Create Login View so that the app will be granted "status_update" permission.
+    FBLoginView *loginview = 
+        [[FBLoginView alloc] initWithPermissions:[NSArray arrayWithObject:@"status_update"]];
+    
     loginview.frame = CGRectOffset(loginview.frame, 5, 5);
     loginview.delegate = self;
     

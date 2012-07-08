@@ -76,11 +76,17 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
             textButton = _textButton,
             session = _session,
             request = _request,
-            user = _user;
+            user = _user,
+            permissions = _permissions;
 
 - (id)init {
+    return [self initWithPermissions:nil];
+}
+
+- (id)initWithPermissions:(NSArray *)permissions {
     self = [super init];
     if (self) {
+        self.permissions = permissions;
         [self initialize];
     }
     return self;
@@ -118,6 +124,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     self.textButton = nil;
     self.session = nil;
     self.user = nil;
+    self.permissions = nil;
 
     [super dealloc];
 }
@@ -156,7 +163,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     // if our session has a cached token ready, we open it; note that
     // it is important that we open it before wiring is in place to cause KVO, etc.
     if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession sessionOpen];
+        [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
@@ -329,7 +336,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession sessionOpen];
+        [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
     }
 }
 
@@ -376,7 +383,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
-            [FBSession sessionOpen];
+            [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
         } else { // logout action sheet
             NSString *name = self.user.name;
             UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Logged in %@",

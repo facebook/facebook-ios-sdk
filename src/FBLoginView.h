@@ -53,9 +53,29 @@ typedef enum {
 
 /*!
  @abstract
- Initializes and returns a `FBLoginView` object.
+ The permissions to login with.  Defaults to nil, meaning basic permissions.@property (readwrite, copy)   NSArray *permissions;
+
+ */
+@property (readwrite, copy) NSArray *permissions;
+
+
+/*!
+ @abstract
+ Initializes and returns an `FBLoginView` object.  The underlying session has basic permissions granted to it.
  */
 - (id)init;
+
+/*!
+ @method
+ 
+ @abstract
+ Initializes and returns an `FBLoginView` object constructed with the specified permissions.
+ 
+ @param permissions  An array of strings representing the permissions to request during the
+ authentication flow. A value of nil will indicates basic permissions. 
+ 
+ */
+- (id)initWithPermissions:(NSArray *)permissions;
 
 /*!
  @abstract
