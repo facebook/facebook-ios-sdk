@@ -15,8 +15,8 @@
  */
 
 #import "SUUserManager.h"
-#import <FBiOSSDK/FBSessionTokenCachingStrategy.h>
-#import <FBiOSSDK/FBGraphUser.h>
+#import <FacebookSDK/FBSessionTokenCachingStrategy.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 NSString *const SUInvalidSlotNumber = @"com.facebook.SwitchUserSample:InvalidSlotNumber";
 

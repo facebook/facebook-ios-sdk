@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 // Just Login sample application
 //

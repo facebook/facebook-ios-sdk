@@ -13,5 +13,4 @@
     #import <Foundation/Foundation.h>
 #endif
 
-#import <FBiOSSDK/FBSession.h>
-#import <FBiOSSDK/FBRequest.h>
+#import <FacebookSDK/FacebookSDK.h>

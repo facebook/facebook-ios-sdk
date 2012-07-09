@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-# This script builds the FBiOSSDK.framework that is distributed at
-# https://github.com/facebook/facebook-ios-sdk/downloads/FBiOSSDK.framework.zip
+# This script builds the FacebookSDK.framework that is distributed at
+# https://github.com/facebook/facebook-ios-sdk/downloads/FacebookSDK.framework.zip
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 test -x "$PACKAGEMAKER" || die 'Could not find packagemaker in $PATH'
@@ -84,7 +84,7 @@ done
 progress_message "Building .pkg from package directory."
 \rm -rf $FB_SDK_PKG
 $PACKAGEMAKER \
-  --doc $FB_SDK_SRC/Package/FBiOSSDK.pmdoc \
+  --doc $FB_SDK_SRC/Package/FacebookSDK.pmdoc \
   --domain user \
   --target 10.5 \
   --version $FB_SDK_VERSION \

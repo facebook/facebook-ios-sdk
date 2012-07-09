@@ -20,7 +20,7 @@
 #import "SCMealViewController.h"
 #import "SCPhotoViewController.h"
 #import "SCProtocols.h"
-#import <FBiOSSDK/FBRequest.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import <AddressBook/AddressBook.h>
 #import "TargetConditionals.h"
 
@@ -100,7 +100,7 @@
         @"body=%@";
     
     // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
-    // properties, etc. See <FBiOSSDK/FBGraphObject.h> for more details.
+    // properties, etc. See <FacebookSDK/FBGraphObject.h> for more details.
     id<SCOGMeal> result = (id<SCOGMeal>)[FBGraphObject graphObject];
     
     // Give it a URL that will echo back the name of the meal as its title, description, and body.

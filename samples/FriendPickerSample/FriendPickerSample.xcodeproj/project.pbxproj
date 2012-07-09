@@ -12,7 +12,8 @@
 		85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */; };
 		85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D5158F9C1D000AF7F5 /* Icon.png */; };
 		85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */; };
-		E214BA93154623E8006818DE /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */; };
+		DD37EA8615ABA4670015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */; };
+		DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA8715ABA46B0015966B /* FacebookSDK.framework */; };
 		E2D6B81315413A570050835F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81215413A570050835F /* UIKit.framework */; };
 		E2D6B81515413A570050835F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81415413A570050835F /* Foundation.framework */; };
 		E2D6B81715413A570050835F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81615413A570050835F /* CoreGraphics.framework */; };
@@ -22,7 +23,6 @@
 		E2D6B82615413A570050835F /* FPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6B82515413A570050835F /* FPViewController.m */; };
 		E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82715413A570050835F /* FPViewController_iPhone.xib */; };
 		E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82A15413A570050835F /* FPViewController_iPad.xib */; };
-		E2D6B83915413D080050835F /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B83815413D070050835F /* FBiOSSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,7 +31,8 @@
 		85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4D5158F9C1D000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
+		DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		DD37EA8715ABA46B0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		E2D6B80E15413A570050835F /* FriendPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D6B81215413A570050835F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E2D6B81415413A570050835F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -46,7 +47,6 @@
 		E2D6B82515413A570050835F /* FPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FPViewController.m; sourceTree = "<group>"; };
 		E2D6B82815413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPhone.xib; sourceTree = "<group>"; };
 		E2D6B82B15413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPad.xib; sourceTree = "<group>"; };
-		E2D6B83815413D070050835F /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,10 +55,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				84605AB315A77C2700197AA7 /* Accounts.framework in Frameworks */,
-				E2D6B83915413D080050835F /* FBiOSSDK.framework in Frameworks */,
 				E2D6B81315413A570050835F /* UIKit.framework in Frameworks */,
 				E2D6B81515413A570050835F /* Foundation.framework in Frameworks */,
 				E2D6B81715413A570050835F /* CoreGraphics.framework in Frameworks */,
+				DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,8 +85,8 @@
 		E2D6B81115413A570050835F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E214BA92154623E8006818DE /* FBiOSSDKResources.bundle */,
-				E2D6B83815413D070050835F /* FBiOSSDK.framework */,
+				DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */,
+				DD37EA8715ABA46B0015966B /* FacebookSDK.framework */,
 				84605AB215A77C2700197AA7 /* Accounts.framework */,
 				E2D6B81215413A570050835F /* UIKit.framework */,
 				E2D6B81415413A570050835F /* Foundation.framework */,
@@ -174,7 +174,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E214BA93154623E8006818DE /* FBiOSSDKResources.bundle in Resources */,
 				E2D6B81D15413A570050835F /* InfoPlist.strings in Resources */,
 				E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */,
 				E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */,
@@ -182,6 +181,7 @@
 				85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */,
 				85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */,
+				DD37EA8615ABA4670015966B /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

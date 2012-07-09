@@ -16,7 +16,7 @@
 
 #import "SUUsingViewController.h"
 #import "SUAppDelegate.h"
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface SUUsingViewController ()
 

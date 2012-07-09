@@ -15,7 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 // FBSample logic
 // The protocols here show how to setup typed access to graph and open graph objects.

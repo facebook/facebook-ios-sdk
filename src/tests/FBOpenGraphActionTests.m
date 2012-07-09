@@ -46,7 +46,7 @@
         @"body=%@";
     
     // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
-    // properties, etc. See <FBiOSSDK/FBGraphObject.h> for more details.
+    // properties, etc. See <FacebookSDK/FBGraphObject.h> for more details.
     id<FBOGTestObject> result = (id<FBOGTestObject>)[FBGraphObject graphObject];
     
     // Give it a URL that will echo back the name of the meal as its title, description, and body.

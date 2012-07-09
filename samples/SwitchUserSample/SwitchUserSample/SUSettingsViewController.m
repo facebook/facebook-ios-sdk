@@ -17,7 +17,7 @@
 #import "SUSettingsViewController.h"
 #import "SUAppDelegate.h"
 #import "SUProfileTableViewCell.h"
-#import <FBiOSSDK/FBProfilePictureView.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface SUSettingsViewController ()
 

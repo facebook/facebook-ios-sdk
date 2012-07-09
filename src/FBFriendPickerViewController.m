@@ -30,7 +30,7 @@
 #import "FBSettings.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
-static NSString *defaultImageName = @"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
+static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBFriendPickerView/images/default.png";
 
 int const FBRefreshCacheDelaySeconds = 2;
 

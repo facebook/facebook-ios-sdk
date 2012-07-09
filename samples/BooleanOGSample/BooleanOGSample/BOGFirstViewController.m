@@ -16,7 +16,7 @@
 
 #import "BOGFirstViewController.h"
 #import "BOGAppDelegate.h"
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "OGProtocols.h"
 
 @interface BOGFirstViewController () <UIPickerViewDelegate>

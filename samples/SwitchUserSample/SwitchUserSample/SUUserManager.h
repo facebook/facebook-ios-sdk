@@ -15,7 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import <FBiOSSDK/FBSession.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 extern NSString *const SUInvalidSlotNumber;
 

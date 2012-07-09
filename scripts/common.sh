@@ -52,7 +52,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_BUILD_LOG=$FB_SDK_BUILD/build.log
 
   # The name of the Facebook SDK for iOS
-  FB_SDK_BINARY_NAME=FBiOSSDK
+  FB_SDK_BINARY_NAME=FacebookSDK
 
   # The name of the Facebook SDK for iOS framework
   FB_SDK_FRAMEWORK_NAME=${FB_SDK_BINARY_NAME}.framework

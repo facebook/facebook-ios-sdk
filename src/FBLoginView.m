@@ -180,7 +180,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     
     // setup icon view
     self.icon = [[[UIImageView alloc] 
-                  initWithImage:[UIImage imageNamed:@"FBiOSSDKResources.bundle/FBLoginView/images/f_logo.png"]]
+                  initWithImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/f_logo.png"]]
                  autorelease];
     
     // setup profile picture
@@ -200,7 +200,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     
     // setup profile button
     self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.profileButton setBackgroundImage:[UIImage imageNamed:@"FBiOSSDKResources.bundle/FBLoginView/images/bluetint.png"]
+    [self.profileButton setBackgroundImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/bluetint.png"]
                            forState:UIControlStateHighlighted];
     [self.profileButton addTarget:self 
                            action:@selector(buttonPressed:) 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import <FBiOSSDK/FBRequest.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "JRAppDelegate.h"
 #import "JRViewController.h"
 

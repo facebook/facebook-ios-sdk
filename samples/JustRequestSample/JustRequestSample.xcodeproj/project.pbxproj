@@ -12,6 +12,7 @@
 		85AFB500158F9D32000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4FC158F9D32000AF7F5 /* Icon-72@2x.png */; };
 		85AFB501158F9D32000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4FD158F9D32000AF7F5 /* Icon.png */; };
 		85AFB502158F9D32000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4FE158F9D32000AF7F5 /* Icon@2x.png */; };
+		DDA290AD15ABA96200F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */; };
 		E2511742152BB6FE00CB342A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511741152BB6FE00CB342A /* UIKit.framework */; };
 		E2511744152BB6FE00CB342A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511743152BB6FE00CB342A /* Foundation.framework */; };
 		E2511746152BB6FE00CB342A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511745152BB6FE00CB342A /* CoreGraphics.framework */; };
@@ -21,7 +22,6 @@
 		E2511755152BB6FE00CB342A /* JRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2511754152BB6FE00CB342A /* JRViewController.m */; };
 		E2511758152BB6FE00CB342A /* JRViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511756152BB6FE00CB342A /* JRViewController_iPhone.xib */; };
 		E251175B152BB6FE00CB342A /* JRViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511759152BB6FE00CB342A /* JRViewController_iPad.xib */; };
-		E2511762152BB99C00CB342A /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511761152BB99C00CB342A /* FBiOSSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +30,7 @@
 		85AFB4FC158F9D32000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4FD158F9D32000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB4FE158F9D32000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		E251173D152BB6FE00CB342A /* JustRequestSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustRequestSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2511741152BB6FE00CB342A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E2511743152BB6FE00CB342A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -44,7 +45,6 @@
 		E2511754152BB6FE00CB342A /* JRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JRViewController.m; sourceTree = "<group>"; };
 		E2511757152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JRViewController_iPhone.xib; sourceTree = "<group>"; };
 		E251175A152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JRViewController_iPad.xib; sourceTree = "<group>"; };
-		E2511761152BB99C00CB342A /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,10 +53,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				84605AB015A77B8600197AA7 /* Accounts.framework in Frameworks */,
-				E2511762152BB99C00CB342A /* FBiOSSDK.framework in Frameworks */,
 				E2511742152BB6FE00CB342A /* UIKit.framework in Frameworks */,
 				E2511744152BB6FE00CB342A /* Foundation.framework in Frameworks */,
 				E2511746152BB6FE00CB342A /* CoreGraphics.framework in Frameworks */,
+				DDA290AD15ABA96200F533F9 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +83,7 @@
 		E2511740152BB6FE00CB342A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				E2511761152BB99C00CB342A /* FBiOSSDK.framework */,
+				DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */,
 				84605AAF15A77B8600197AA7 /* Accounts.framework */,
 				E2511741152BB6FE00CB342A /* UIKit.framework */,
 				E2511743152BB6FE00CB342A /* Foundation.framework */,

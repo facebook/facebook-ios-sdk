@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FBProfilePictureView.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface PPViewController : UIViewController
 

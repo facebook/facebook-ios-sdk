@@ -17,7 +17,7 @@
 #import "HFViewController.h"
 
 #import "HFAppDelegate.h"
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @interface HFViewController () <FBLoginViewDelegate>
 

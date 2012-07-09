@@ -16,7 +16,7 @@
  
 #import "PPAppDelegate.h"
 #import "PPViewController.h"
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 @implementation PPAppDelegate
 

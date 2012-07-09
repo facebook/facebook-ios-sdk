@@ -34,7 +34,7 @@ static const NSInteger searchTextChangedTimerInterval = 2;
 const NSInteger defaultResultsLimit = 100;
 const NSInteger defaultRadius = 1000; // 1km
 static NSString *defaultImageName =
-@"FBiOSSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
+@"FacebookSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
 @interface FBPlacePickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,

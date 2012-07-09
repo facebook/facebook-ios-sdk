@@ -12,8 +12,6 @@
 		85AFB516158FA0A6000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB512158FA0A6000AF7F5 /* Icon-72@2x.png */; };
 		85AFB517158FA0A6000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB513158FA0A6000AF7F5 /* Icon.png */; };
 		85AFB518158FA0A6000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB514158FA0A6000AF7F5 /* Icon@2x.png */; };
-		85D0ED2D15377A5C00D88664 /* FBiOSSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 85D0ED2C15377A5C00D88664 /* FBiOSSDKResources.bundle */; };
-		B90C8A97152E4A6C00C94CD8 /* FBiOSSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */; };
 		B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */; };
 		B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */; };
 		B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */; };
@@ -24,6 +22,8 @@
 		B9AF4BBF152E43EE00E9BA6C /* PPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BBD152E43EE00E9BA6C /* PPViewController_iPhone.xib */; };
 		B9AF4BC2152E43EE00E9BA6C /* PPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BC0152E43EE00E9BA6C /* PPViewController_iPad.xib */; };
 		B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C36152E449300E9BA6C /* CoreLocation.framework */; };
+		DD37EA7615ABA3DF0015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */; };
+		DD37EA7815ABA3E70015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA7715ABA3E70015966B /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,8 +32,6 @@
 		85AFB512158FA0A6000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB513158FA0A6000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB514158FA0A6000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		85D0ED2C15377A5C00D88664 /* FBiOSSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBiOSSDKResources.bundle; path = ../../build/FBiOSSDK.framework/Versions/A/Resources/FBiOSSDKResources.bundle; sourceTree = "<group>"; };
-		B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBiOSSDK.framework; path = ../../build/FBiOSSDK.framework; sourceTree = "<group>"; };
 		B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacePickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -49,6 +47,8 @@
 		B9AF4BBE152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPhone.xib; sourceTree = "<group>"; };
 		B9AF4BC1152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPad.xib; sourceTree = "<group>"; };
 		B9AF4C36152E449300E9BA6C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		DD37EA7715ABA3E70015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 				B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */,
 				B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */,
 				B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */,
-				B90C8A97152E4A6C00C94CD8 /* FBiOSSDK.framework in Frameworks */,
+				DD37EA7815ABA3E70015966B /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,8 +88,8 @@
 		B9AF4BA7152E43EE00E9BA6C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B90C8A96152E4A6C00C94CD8 /* FBiOSSDK.framework */,
-				85D0ED2C15377A5C00D88664 /* FBiOSSDKResources.bundle */,
+				DD37EA7715ABA3E70015966B /* FacebookSDK.framework */,
+				DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */,
 				84605AA915A777A800197AA7 /* Accounts.framework */,
 				B9AF4C36152E449300E9BA6C /* CoreLocation.framework */,
 				B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */,
@@ -181,11 +181,11 @@
 				B9AF4BB3152E43EE00E9BA6C /* InfoPlist.strings in Resources */,
 				B9AF4BBF152E43EE00E9BA6C /* PPViewController_iPhone.xib in Resources */,
 				B9AF4BC2152E43EE00E9BA6C /* PPViewController_iPad.xib in Resources */,
-				85D0ED2D15377A5C00D88664 /* FBiOSSDKResources.bundle in Resources */,
 				85AFB515158FA0A6000AF7F5 /* Icon-72.png in Resources */,
 				85AFB516158FA0A6000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB517158FA0A6000AF7F5 /* Icon.png in Resources */,
 				85AFB518158FA0A6000AF7F5 /* Icon@2x.png in Resources */,
+				DD37EA7615ABA3DF0015966B /* FacebookSDKResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "SUUserManager.h"
 
 // Switch User sample application

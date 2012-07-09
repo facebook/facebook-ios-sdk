@@ -179,7 +179,7 @@
 
         NSString *blankImageName = 
             [NSString 
-                stringWithFormat:@"FBiOSSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
+                stringWithFormat:@"FacebookSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
                 isSquare ? @"square" : @"portrait"];
 
         self.imageView.image = [UIImage imageNamed:blankImageName];

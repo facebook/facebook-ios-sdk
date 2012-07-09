@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import <FBiOSSDK/FacebookSDK.h>
+#import <FacebookSDK/FacebookSDK.h>
 #import "PPViewController.h"
 #import "PPAppDelegate.h"
 

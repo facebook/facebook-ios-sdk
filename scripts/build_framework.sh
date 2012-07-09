@@ -15,8 +15,8 @@
 # limitations under the License.
 #
 
-# This script builds the FBiOSSDK.framework that is distributed at
-# https://github.com/facebook/facebook-ios-sdk/downloads/FBiOSSDK.framework.tgz
+# This script builds the FacebookSDK.framework that is distributed at
+# https://github.com/facebook/facebook-ios-sdk/downloads/FacebookSDK.framework.tgz
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
@@ -131,14 +131,14 @@ mkdir $FB_SDK_FRAMEWORK/Versions/A/Resources
   || die "Error building framework while copying bundle to Resources"
 \cp \
   $FB_SDK_UNIVERSAL_BINARY \
-  $FB_SDK_FRAMEWORK/Versions/A/FBiOSSDK \
-  || die "Error building framework while copying FBiOSSDK"
+  $FB_SDK_FRAMEWORK/Versions/A/FacebookSDK \
+  || die "Error building framework while copying FacebookSDK"
 
 # Current directory matters to ln.
 cd $FB_SDK_FRAMEWORK
 ln -s ./Versions/A/Headers ./Headers
 ln -s ./Versions/A/Resources ./Resources
-ln -s ./Versions/A/FBiOSSDK ./FBiOSSDK
+ln -s ./Versions/A/FacebookSDK ./FacebookSDK
 cd $FB_SDK_FRAMEWORK/Versions
 ln -s ./A ./Current
 
