@@ -107,6 +107,8 @@ typedef enum {
 /*!
  @abstract
  Tells the delegate that the view is has now fetched user info
+
+ @param loginView   The login view that transitioned its view mode
  
  @param user        The user info object describing the logged in user
  */

@@ -37,6 +37,12 @@
 #define IOS6_PREVIEW_SUPPORT
 #endif
 
+// we turn this on for 5 so that we can build our production libs using a production compiler,
+// rather than a preview compiler -- however integrated Facebook support will only be on when running on 6
+#ifdef __IPHONE_5_0
+#define IOS6_PREVIEW_SUPPORT
+#endif
+
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
