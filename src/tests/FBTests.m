@@ -18,6 +18,7 @@
 #import "FBTestBlocker.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
+#import "FBSettings.h"
 #import "FBError.h"
 #include <pthread.h>
 
@@ -226,10 +227,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 // Unit tests failing? Turn on some logging with this helper.
 - (void)logRequestsAndConnections
 {
-    [FBSession setLoggingBehavior:[NSSet setWithObjects:
-                                   FBLogBehaviorFBRequests,
-                                   FBLogBehaviorFBURLConnections,
-                                   FBLogBehaviorAccessTokens,
+    [FBSettings setLoggingBehavior:[NSSet setWithObjects:
+                                   FBLoggingBehaviorFBRequests,
+                                   FBLoggingBehaviorFBURLConnections,
+                                   FBLoggingBehaviorAccessTokens,
                                    nil]];
 }
 

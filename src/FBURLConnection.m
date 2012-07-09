@@ -20,6 +20,7 @@
 #import "FBSession.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
+#import "FBSettings.h"
 
 static NSArray* _cdnHosts;
 
@@ -85,7 +86,7 @@ static NSArray* _cdnHosts;
         NSData* cachedData = skipRoundtripIfCached ? [[FBDataDiskCache sharedCache] dataForURL:url] : nil;
         
         if (cachedData) {
-            [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
+            [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
                             formatString:@"FBUrlConnection: <#%d>.  Cached response %d kB\n", 
              [url absoluteString],
              [cachedData length] / 1024];
@@ -103,7 +104,7 @@ static NSArray* _cdnHosts;
                 delegate:self];
             _data = [[NSMutableData alloc] init];
                      
-            [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
+            [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
                             formatString:@"FBURLConnection <#%d>:\n  URL: '%@'\n\n",
                 _loggerSerialNumber,
                 [url absoluteString]];
@@ -147,7 +148,7 @@ static NSArray* _cdnHosts;
         logEntry = mutableLogEntry;
     }
     
-    [FBLogger singleShotLogEntry:FBLogBehaviorFBURLConnections
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
                         logEntry:logEntry]; 
                                  
     handler(self, error, response, responseData);

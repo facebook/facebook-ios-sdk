@@ -27,6 +27,7 @@
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
+#import "FBSettings.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
 static NSString *defaultImageName = @"FBiOSSDKResources.bundle/FBFriendPickerView/images/default.png";
@@ -192,7 +193,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
+    [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                           withTag:self];
     CGRect bounds = self.view.bounds;
 
@@ -427,7 +428,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
-    [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorPerformanceCharacteristics
                     timestampTag:self
                     formatString:@"Friend Picker: first render "];  // logger will append "%d msec"
     

@@ -18,6 +18,7 @@
 #import "FBSession.h"
 #import "FBRequest.h"
 #import "FBError.h"
+#import "FBSettings.h"
 
 // ux
 #import "FBLoginView.h"

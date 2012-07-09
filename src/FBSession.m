@@ -20,6 +20,7 @@
 #import "FBSession+Internal.h"
 #import "FBSession+Protected.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSettings.h"
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
@@ -79,12 +80,6 @@ static NSString *const FBLoginUXDisplay = @"display";
 static NSString *const FBLoginUXIOS = @"ios";
 static NSString *const FBLoginUXSDK = @"sdk";
 
-NSString *const FBLogBehaviorFBRequests = @"fb_requests";
-NSString *const FBLogBehaviorFBURLConnections = @"fburl_connections";
-NSString *const FBLogBehaviorAccessTokens = @"include_access_tokens";
-NSString *const FBLogBehaviorSessionStateTransitions = @"state_transitions";
-NSString *const FBLogBehaviorPerformanceCharacteristics = @"perf_characteristics";
-
 // the following constant strings are used by NSNotificationCenter
 NSString *const FBSessionDidSetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidSetActiveSessionNotification";
 NSString *const FBSessionDidUnsetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidUnsetActiveSessionNotification";
@@ -102,7 +97,6 @@ static int const FBTokenRetryExtendSeconds = 60 * 60;           // hour
 // module scoped globals
 static NSString *g_defaultAppID = nil;
 static FBSession *g_activeSession = nil;
-static NSSet *g_loggingBehavior;
 
 @interface FBSession () <FBLoginDialogDelegate> {
     @private
@@ -233,7 +227,7 @@ static NSSet *g_loggingBehavior;
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
         self.affinitizedThread = [NSThread currentThread];
-        [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
+        [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                               withTag:self];
         //first notification
         [self notifyOfState:self.state];
@@ -504,17 +498,6 @@ static NSSet *g_loggingBehavior;
     return session;
 }
 
-
-+ (NSSet *)loggingBehavior {
-    return g_loggingBehavior;
-}
-
-+ (void)setLoggingBehavior:(NSSet *)newValue {
-    [g_loggingBehavior release];
-    g_loggingBehavior = newValue;
-    [g_loggingBehavior retain];
-}
-
 + (void)setDefaultAppID:(NSString*)appID {
     NSString *oldValue = g_defaultAppID;
     g_defaultAppID = [appID copy];
@@ -583,7 +566,7 @@ static NSSet *g_loggingBehavior;
 
     // invalid transition short circuits
     if (!isValidTransition) {
-        [FBLogger singleShotLogEntry:FBLogBehaviorSessionStateTransitions
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorSessionStateTransitions
                             logEntry:[NSString stringWithFormat:@"FBSession **INVALID** transition from %@ to %@",
                                       [FBSession sessionStateDescription:statePrior],
                                       [FBSession sessionStateDescription:state]]];
@@ -605,14 +588,14 @@ static NSSet *g_loggingBehavior;
     NSString *logString = [NSString stringWithFormat:@"FBSession transition from %@ to %@ ",
                            [FBSession sessionStateDescription:statePrior],
                            [FBSession sessionStateDescription:state]];
-    [FBLogger singleShotLogEntry:FBLogBehaviorSessionStateTransitions logEntry:logString];
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorSessionStateTransitions logEntry:logString];
     
-    [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics 
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorPerformanceCharacteristics 
                     timestampTag:self
                     formatString:@"%@", logString];
     
     // Re-start session transition timer for the next time around.
-    [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
+    [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                           withTag:self];
     
     // identify whether we will update token and date, and what the values will be

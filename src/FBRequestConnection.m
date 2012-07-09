@@ -21,6 +21,7 @@
 #import "FBRequestBody.h"
 #import "FBSession.h"
 #import "FBSession+Internal.h"
+#import "FBSettings.h"
 #import "FBRequestConnection.h"
 #import "FBRequestConnection+Internal.h"
 #import "FBRequest.h"
@@ -271,7 +272,7 @@ typedef enum FBRequestConnectionState {
         _requests = [[NSMutableArray alloc] init];
         _timeout = timeout;
         _state = kStateCreated;
-        _logger = [[FBLogger alloc] initWithLoggingBehavior:FBLogBehaviorFBRequests];
+        _logger = [[FBLogger alloc] initWithLoggingBehavior:FBLoggingBehaviorFBRequests];
         _isResultFromCache = NO;
     }
     return self;
@@ -1201,7 +1202,7 @@ typedef enum FBRequestConnectionState {
 
 - (void)registerTokenToOmitFromLog:(NSString *)token 
 {
-    if (![[FBSession loggingBehavior] containsObject:FBLogBehaviorAccessTokens]) {
+    if (![[FBSettings loggingBehavior] containsObject:FBLoggingBehaviorAccessTokens]) {
         [FBLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
     }
 }

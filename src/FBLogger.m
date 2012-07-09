@@ -16,6 +16,7 @@
 
 #import "FBLogger.h"
 #import "FBSession.h"
+#import "FBSettings.h"
 #import "FBUtility.h"
 
 static NSUInteger g_serialNumberCounter = 1111; 
@@ -39,7 +40,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
 - (id)initWithLoggingBehavior:(NSString *)loggingBehavior {
     if (self = [super init]) {
-        _isActive = [[FBSession loggingBehavior] containsObject:loggingBehavior];
+        _isActive = [[FBSettings loggingBehavior] containsObject:loggingBehavior];
         _loggingBehavior = loggingBehavior;
         if (_isActive) {
             _internalContents = [[NSMutableString alloc] init];
@@ -117,7 +118,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
                   logEntry:(NSString *)logEntry {
-    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+    if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         FBLogger *logger = [[FBLogger alloc] initWithLoggingBehavior:loggingBehavior];
         [logger appendString:logEntry];
         [logger emitToNSLog];
@@ -128,7 +129,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
               formatString:(NSString *)formatString, ... {
     
-    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+    if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         va_list vaArguments;
         va_start(vaArguments, formatString);                                                                                
         NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
@@ -143,7 +144,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
               timestampTag:(NSObject *)timestampTag
               formatString:(NSString *)formatString, ... {
     
-    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+    if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         va_list vaArguments;
         va_start(vaArguments, formatString);  
         NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
@@ -171,7 +172,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 + (void)registerCurrentTime:(NSString *)loggingBehavior
                     withTag:(NSObject *)timestampTag {
 
-    if ([[FBSession loggingBehavior] containsObject:loggingBehavior]) {
+    if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         
         if (!g_startTimesWithTags) {
             g_startTimesWithTags = [[NSMutableDictionary alloc] init];
@@ -196,7 +197,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
     
     // Strings sent in here never get cleaned up, but that's OK, don't ever expect too many.
     
-    if ([[FBSession loggingBehavior] count] > 0) {  // otherwise there's no logging.
+    if ([[FBSettings loggingBehavior] count] > 0) {  // otherwise there's no logging.
         
         if (!g_stringsToReplace) {
             g_stringsToReplace = [[NSMutableDictionary alloc] init];

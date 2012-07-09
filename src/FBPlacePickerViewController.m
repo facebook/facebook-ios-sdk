@@ -26,6 +26,7 @@
 #import "FBUtility.h"
 #import "FBPlacePickerCacheDescriptor.h"
 #import "FBSession+Internal.h"
+#import "FBSettings.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
@@ -247,7 +248,7 @@ static NSString *defaultImageName =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [FBLogger registerCurrentTime:FBLogBehaviorPerformanceCharacteristics
+    [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                           withTag:self];
     CGRect bounds = self.view.bounds;
 
@@ -428,7 +429,7 @@ static NSString *defaultImageName =
     // This logging currently goes here because we're effectively complete with our initial view when 
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
-    [FBLogger singleShotLogEntry:FBLogBehaviorPerformanceCharacteristics
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorPerformanceCharacteristics
                     timestampTag:self
                     formatString:@"Places Picker: first render "];  // logger will append "%d msec"
     

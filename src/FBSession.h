@@ -36,25 +36,6 @@ extern NSString *const FBSessionDidSetActiveSessionNotification;
 /*! NSNotificationCenter name indicating that an active session was unset */
 extern NSString *const FBSessionDidUnsetActiveSessionNotification;
 
-/*
- * Constants defining logging behavior.  Use with <[FBSession setLoggingBehavior]>.
- */
-
-/*! Log requests from FBRequest* classes */
-extern NSString *const FBLogBehaviorFBRequests;
-
-/*! Log requests from FBURLConnection* classes */
-extern NSString *const FBLogBehaviorFBURLConnections;
-
-/*! Include access token in logging. */
-extern NSString *const FBLogBehaviorAccessTokens;
-
-/*! Log session state transitions. */
-extern NSString *const FBLogBehaviorSessionStateTransitions;
-
-/*! Log performance characteristics */
-extern NSString *const FBLogBehaviorPerformanceCharacteristics;
-
 /*! 
  @typedef FBSessionState enum
  
@@ -371,24 +352,6 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  session can be set directly.
  */
 + (FBSession*)setActiveSession:(FBSession*)session;
-
-/*!
- @method
- 
- @abstract Retrieve the current Facebook SDK logging behavior.
- 
- */
-+ (NSSet *)loggingBehavior;
-
-/*!
- @method
- 
- @abstract Set the current Facebook SDK logging behavior.  This should consist of strings defined as
- constants with FBLogBehavior*, and can be constructed with [NSSet initWithObjects:].
- 
- @param loggingBehavior A set of strings indicating what information should be logged.
- */
-+ (void)setLoggingBehavior:(NSSet *)loggingBehavior;
 
 /*!
  @method
