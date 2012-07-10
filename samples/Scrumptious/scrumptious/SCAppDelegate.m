@@ -126,8 +126,12 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 
 - (void)applicationDidBecomeActive:(UIApplication *)application	{	
     // this means the user switched back to this app without completing a login in Safari/Facebook App
-    if (FBSession.activeSession.state == FBSessionStateCreatedOpening) {	
-        [FBSession.activeSession close]; // so we close our session and start over	
+    if (FBSession.activeSession.state == FBSessionStateCreatedOpening) {
+        // BUG: for the iOS 6 preview we comment this line out to compensate for a race-condition in our
+        // state transition handling for integrated Facebook Login; production code should close a
+        // session in the opening state on transition back to the application; this line will again be
+        // active in the next production rev
+        //[FBSession.activeSession close]; // so we close our session and start over
     }	
 }
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

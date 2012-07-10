@@ -43,6 +43,20 @@
 #define IOS6_PREVIEW_SUPPORT
 #endif
 
+#ifdef IOS6_PREVIEW_SUPPORT
+// we dynamically bind to a few methods, and this protocol helps
+// us manage warnings from the call-sites
+@protocol FBWarningHelperProtocol
+- (id)accountTypeWithAccountTypeIdentifier:(id)type;
+- (void)requestAccessToAccountsWithType:(id)accountTypeFB
+                                options:(id)options
+                             completion:(id)handler;
+- (NSArray*)accountsWithAccountType:(id)type;
+- (id)credential;
+- (id)oauthToken;
+@end
+#endif
+
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
@@ -741,8 +755,7 @@ static NSSet *g_loggingBehavior;
     // do we want and have the ability to attempt integrated authn
     if (tryIntegratedAuth &&
         (accountStore = [[[NSClassFromString(@"ACAccountStore") alloc] init] autorelease]) &&
-        (accountTypeFB = [accountStore performSelector:@selector(accountTypeWithAccountTypeIdentifier:)
-                                            withObject:@"com.apple.facebook"])) {
+        (accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:@"com.apple.facebook"])) {
                 
         // looks like we will get to attempt a login with integrated authn
         didAuthNWithSystemAccount = YES;
@@ -772,12 +785,11 @@ static NSSet *g_loggingBehavior;
                                                dispatch_async( dispatch_get_main_queue(), ^{
                                                    NSString *oauthToken = nil;
                                                    if (granted) {
-                                                       NSArray *fbAccounts = [accountStore performSelector:@selector(accountsWithAccountType:)
-                                                                                                withObject:accountTypeFB];
+                                                       NSArray *fbAccounts = [accountStore accountsWithAccountType:accountTypeFB];
                                                        id account = [fbAccounts objectAtIndex:0];
-                                                       id credential = [account performSelector:@selector(credential)];
+                                                       id credential = [account credential];
                                                        
-                                                       oauthToken = [credential performSelector:@selector(oauthToken)];
+                                                       oauthToken = [credential oauthToken];
                                                    }
                                                    
                                                    if (oauthToken) {
