@@ -247,7 +247,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
         // removing the views that we don't need
         [self.label removeFromSuperview];
         [self.icon removeFromSuperview];
-        [self.textButton setTitle:@"Logout" forState:UIControlStateNormal];
+        [self.textButton setTitle:@"Log Out" forState:UIControlStateNormal];
         
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
@@ -259,7 +259,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
         [self insertSubview:self.label
                belowSubview:self.profileButton];
         
-        [self.textButton setTitle:@"Login" forState:UIControlStateNormal];
+        [self.textButton setTitle:@"Log In" forState:UIControlStateNormal];
              
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
@@ -390,7 +390,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
                                                                          name ? [NSString stringWithFormat:@"as %@", name] : @"using Facebook"]
                                                                delegate:self
                                                       cancelButtonTitle:@"Cancel"
-                                                 destructiveButtonTitle:@"Logout"
+                                                 destructiveButtonTitle:@"Log Out"
                                                       otherButtonTitles:nil];                
             // Show the sheet
             [sheet showInView:self];

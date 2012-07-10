@@ -7,28 +7,15 @@ Except as otherwise noted, the Facebook SDK for iOS is licensed under the Apache
 
 Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at http://developers.facebook.com/ios.
 
-NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK. A simple way to test your install is to build and run the project at ~/Documents/FacebookSDK/Samples/JustRequestSample/JustRequestSample.xcodeproj.
+NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK 
 
-GETTING STARTED
+TRY IT OUT
 
-(Full steps with screenshots are available online at: https://developers.facebook.com/docs/getting-started/getting-started-with-the-ios-sdk)
+1. Test your install; build and run the project at ~/Documents/FacebookSDK/Samples/HelloFacebookSample/HelloFacebookSample.xcodeproj
 
-1. Install Xcode (https://developer.apple.com/xcode/) and, optionally, Git (http://git-scm.com/).
+2. Check-out the tutorials available online at: https://developers.facebook.com/docs/getting-started/getting-started-with-the-ios-sdk
 
-2. Install the Facebook SDK for iOS package (this SDK, which installs to ~/Documents/FacebookSDK).
-
-3. Try the sample projects under the Samples directory.
-
-4. Create a new Facebook App (https://developers.facebook.com/apps/) or use an existing App -- remember its Facebook App ID.
-
-5. Create a new Xcode project
-  -Drag the FBiOSSDK.framework from your SDK folder into the Frameworks section of your project. (Choose 'Create groups for any added folders' and deselect 'Copy items into destination group's folder (if needed)'.)
-  -Drag the FBIOSSDK.framework/Resources/FBiOSSDKResources.bundle into the Frameworks section of your project. (Choose the same settings as above.)
-  -Add the "-lsqlite3.0" library to your Build Settings under "Other Linker Flags".
-  -Place your Facebook App ID in your project's .plist under a new key called "FacebookAppID" (of type "String").
-  -Create an "Array" type key in your .plist called "URL types"; make a single subkey of type "Array" called "URL Schemes". Add a single item called "fbYOURAPPID", replacing YOURAPPID with your Facebook App ID.
-
-6. Start coding! Visit http://developers.facebook.com/ios for tutorials and reference documentation.
+3. Start coding! Visit https://developers.facebook.com/ios for tutorials and reference documentation.
 
 
 
