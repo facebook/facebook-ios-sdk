@@ -5,7 +5,7 @@ This open-source library allows you to integrate Facebook into your iOS app.
 
 Except as otherwise noted, the Facebook SDK for iOS is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html).
 
-Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at http://developers.facebook.com/ios.
+Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/ios
 
 NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK 
 
