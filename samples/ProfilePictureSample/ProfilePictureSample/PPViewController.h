@@ -30,6 +30,7 @@
 - (IBAction)showMichaelProfile:(id)sender;
 - (IBAction)showVijayeProfile:(id)sender;
 - (IBAction)showRandomProfile:(id)sender;
+- (IBAction)showNoProfile:(id)sender;
 
 - (IBAction)makePictureOriginal:(id)sender;
 - (IBAction)makePictureSquare:(id)sender;

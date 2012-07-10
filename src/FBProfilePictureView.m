@@ -20,8 +20,8 @@
 
 @interface FBProfilePictureView()
 
-@property (readonly, nonatomic) NSString *imageSize;
-@property (retain, nonatomic) NSString *previousImageSize;
+@property (readonly, nonatomic) NSString *imageQueryParamString;
+@property (retain, nonatomic) NSString *previousImageQueryParamString;
 
 @property (retain, nonatomic) FBURLConnection *connection;
 @property (retain, nonatomic) UIImageView *imageView;
@@ -38,7 +38,7 @@
 @synthesize pictureCropping = _pictureCropping;
 @synthesize connection = _connection;
 @synthesize imageView = _imageView;
-@synthesize previousImageSize = _previousImageSize;
+@synthesize previousImageQueryParamString = _previousImageQueryParamString;
 
 #pragma mark - Lifecycle
 
@@ -46,7 +46,7 @@
     [_userID release];
     [_imageView release];
     [_connection release];
-    [_previousImageSize release];
+    [_previousImageQueryParamString release];
     
     [super dealloc];
 }
@@ -90,25 +90,26 @@
 
 #pragma mark -
 
-- (NSString *)imageSize  {
+- (NSString *)imageQueryParamString  {
+    int width = (int)self.bounds.size.width;
+
     if (self.pictureCropping == FBProfilePictureCroppingSquare) {
-        return @"square";
+        // Note: final query param is escaped form of 'migration_overrides={october_2012:true}'.  Once the 
+        // October 2012 migration has completed, this can be removed.
+        return [NSString stringWithFormat:@"width=%d&height=%d&migration_overrides=%%7boctober_2012:true%%7d",
+                width, width];
     } 
     
-    // If we're choosing the profile picture size automatically, then
-    // select an actual size to get based on the view dimensions.
-    // Small profile picture is 50 pixels wide, normal is 100, and
-    // large is about 200.
-    CGFloat width = self.bounds.size.width;
+    // For non-square images, we choose between three variants knowing that the small profile picture is 
+    // 50 pixels wide, normal is 100, and large is about 200.
     if (width <= 50) {
-        return @"small";
+        return @"type=small";
     } else if (width <= 100) {
-        return @"normal";
+        return @"type=normal";
     } else {
-        return @"large";
+        return @"type=large";
     }
 }
-
 
 - (void)initialize {    
     // the base class can cause virtual recursion, so
@@ -128,19 +129,19 @@
 }
 
 - (void)refreshImage:(BOOL)forceRefresh  {
-    NSString *newImageSize = self.imageSize;
+    NSString *newImageQueryParamString = self.imageQueryParamString;
+    
+    // If not forcing refresh, check to see if the previous size we used would be the same
+    // as what we'd request now, as this method could be called often on control bounds animation,
+    // and we only want to fetch when needed.
+    if (!forceRefresh && [self.previousImageQueryParamString isEqualToString:newImageQueryParamString]) {
+        
+        // But we still may need to adjust the contentMode.
+        [self ensureImageViewContentMode];
+        return;
+    }      
     
     if (self.userID) {
-        
-        // If not forcing refresh, check to see if the previous size we used would be the same
-        // as what we'd request now, as this method could be called often on control bounds animation,
-        // and we only want to fetch when needed.
-        if (!forceRefresh && [self.previousImageSize isEqualToString:newImageSize]) {
-            
-            // But we still may need to adjust the contentMode.
-            [self ensureImageViewContentMode];
-            return;
-        }        
         
         [self.connection cancel];
 
@@ -155,27 +156,29 @@
                 }
             };
                 
-        NSString *template = @"%@/%@/picture?type=%@";     
+        NSString *template = @"%@/%@/picture?%@";     
         NSString *urlString = [NSString stringWithFormat:template, 
                                FBGraphBasePath,
                                self.userID, 
-                               newImageSize];
+                               newImageQueryParamString];
         NSURL *url = [NSURL URLWithString:urlString];
         
         self.connection = [[[FBURLConnection alloc] initWithURL:url
                                               completionHandler:handler]
                            autorelease];
     } else {
+        BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
+
         NSString *blankImageName = 
             [NSString 
                 stringWithFormat:@"FBiOSSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
-                newImageSize];
+                isSquare ? @"square" : @"portrait"];
 
         self.imageView.image = [UIImage imageNamed:blankImageName];
         [self ensureImageViewContentMode];
     }
     
-    self.previousImageSize = newImageSize;
+    self.previousImageQueryParamString = newImageQueryParamString;
 }
 
 - (void)ensureImageViewContentMode {

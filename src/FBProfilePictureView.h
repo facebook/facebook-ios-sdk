@@ -25,11 +25,12 @@
  @discussion
  */
 typedef enum {
-    /*! Original (default) - the original profile picture, as uploaded. */
-    FBProfilePictureCroppingOriginal    = 0,
     
-    /*! Square - the square version that the Facebook user defined. */
-    FBProfilePictureCroppingSquare      = 1
+    /*! Square (default) - the square version that the Facebook user defined. */
+    FBProfilePictureCroppingSquare      = 0,
+    
+    /*! Original - the original profile picture, as uploaded. */
+    FBProfilePictureCroppingOriginal    = 1
     
 } FBProfilePictureCropping;
 

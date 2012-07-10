@@ -99,6 +99,10 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
                                                    encoding:NSASCIIStringEncoding];
 }
 
+- (IBAction)showNoProfile:(id)sender {
+    profilePictureView.userID = nil;
+}
+
 // Cropping selections
 
 // FBSample logic
