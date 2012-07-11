@@ -1,55 +1,6 @@
-Facebook iOS SDK
+Facebook SDK for iOS
 ===========================
 
-This open source iOS library allows you to integrate Facebook into your iOS application include iPhone, iPad and iPod touch.
+Please see the beta release of the Facebook SDK 3.0 for iOS here:
 
-Except as otherwise noted, the Facebook iOS SDK is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html)
-
-Getting Started
-===============
-
-See our [iOS Tutorial](https://developers.facebook.com/docs/guides/mobile/ios/) for a tutorial to get you up and running.
-
-See our [iOS SDK Reference](https://developers.facebook.com/docs/reference/iossdk/) for more information on the SDK methods and protocols.
-
-Sample Applications
-===============
-
-This SDK comes with a sample application that demonstrates authorization, making API calls, and invoking a dialog, to guide you in development.
-
-To build and run the sample application with Xcode:
-
-* Open the included Xcode Project File by selecting _File_->_Open..._ and selecting sample/Hackbook/Hackbook.xcodeproj.
-
-* Verify your compiler settings by checking the menu items under _Project_->_Set Active SDK_ and _Project_->_Set Active Executable_. For most developers, the defaults should be OK. Note that if you compile against a version of the iOS SDK that does not support multitasking, not all features of the Facebook SDK may be available. See the "Debugging" section below for more information.
-
-* Finally, select _Build_->_Build and Run_. This should compile the application and launch it.
-
-
-Debugging
-===============
-
-Common problems and solutions:
-
-* What version of the iOS SDK must I compile my application against to use single sign-on?
-
-Single sign-on is available for apps built on version of iOS that support multitasking (generall v4.0 and higher--see Apple documentation for more information). Others applications will fall back to inline dialog-based authorization.
-
-* What version of the Facebook Application must a user have installed to use single sign-on?
-
-The Facebook Application version 3.2.3 or higher will support single sign-on. Users with older versions will gracefully fall back to inline dialog-based authorization.
-
-* During single sign-on, the Facebook application isn't redirecting back to my application after a user authorizes it. What's wrong?
-
-Make sure you've edited your application's .plist file properly, so that your applicaition binds to the fb\[appId\]:// URL scheme (where "\[appId\]" is your Facebook application ID).
-
-* After upgrading to Xcode 4 the sample app will not build and I get the following error: [BEROR]No architectures to compile for (ARCHS=i386, VALID_ARCHS=armv7 armv6). What should I do?
-
-Edit your build settings and add i386 to the list of valid architectures for the app. Click the project icon in the project navigator, select the Hackbook project, Build Settings tab, Architecture section, Valid Architectures option. Then click the grey arrow to expand, and double-click on right of Debug. After "armv6 armv7" add "i386".
-
-
-Report Issues/Bugs
-===============
-[Bugs](https://developers.facebook.com/bugs)
-
-[Questions](http://facebook.stackoverflow.com/questions/tagged/android)
+https://github.com/facebook/facebook-ios-sdk/tree/preview
