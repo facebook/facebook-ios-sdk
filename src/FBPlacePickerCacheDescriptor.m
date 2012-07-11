@@ -69,8 +69,7 @@
 
 - (void)prefetchAndCacheForSession:(FBSession*)session {
     // datasource has some field ownership, so we need one here
-    FBGraphObjectTableDataSource *datasource = [[FBGraphObjectTableDataSource alloc]
-                                                init];
+    FBGraphObjectTableDataSource *datasource = [[[FBGraphObjectTableDataSource alloc] init] autorelease];
     //datasource.groupByField = @"name";
     
     // create the request object that we will start with
@@ -83,12 +82,10 @@
                                                                                  session:session];
     
     self.loader.delegate = nil;
-    self.loader = [[FBGraphObjectPagingLoader alloc]
-                   initWithDataSource:datasource
-                           pagingMode:FBGraphObjectPagingModeImmediateViewless];
+    self.loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
+                                                              pagingMode:FBGraphObjectPagingModeImmediateViewless]
+                   autorelease];
     self.loader.session = session;
-    [self.loader release];
-    
     self.loader.delegate = self;
     
     // make sure we are around to handle the delegate call
@@ -98,8 +95,6 @@
     [self.loader startLoadingWithRequest:request
                            cacheIdentity:FBPlacePickerCacheIdentity
                    skipRoundtripIfCached:NO];
-    
-    [datasource release];
 }
 
 - (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
@@ -107,7 +102,7 @@
     self.loader = nil;
     self.hasCompletedFetch = YES;
     
-    // this feels like suicide!
+    // achieving detachment
     [self release];    
 }
 

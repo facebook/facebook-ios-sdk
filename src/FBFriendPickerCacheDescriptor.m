@@ -78,8 +78,7 @@
 
 - (void)prefetchAndCacheForSession:(FBSession*)session {
     // datasource has some field ownership, so we need one here
-    FBGraphObjectTableDataSource *datasource = [[FBGraphObjectTableDataSource alloc]
-                                                init];
+    FBGraphObjectTableDataSource *datasource = [[[FBGraphObjectTableDataSource alloc] init] autorelease];
     datasource.groupByField = @"name";
     
     // me or one of my friends that also uses the app
@@ -101,10 +100,10 @@
     }
     
     self.loader.delegate = nil;
-    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
-                                                             pagingMode:FBGraphObjectPagingModeImmediateViewless];
+    self.loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
+                                                              pagingMode:FBGraphObjectPagingModeImmediateViewless]
+                   autorelease];
     self.loader.session = session;
-    [self.loader release];
     
     self.loader.delegate = self;
     
@@ -115,8 +114,6 @@
     [self.loader startLoadingWithRequest:request
                            cacheIdentity:FBFriendPickerCacheIdentity
                    skipRoundtripIfCached:NO];
-    
-    [datasource release];
 }
 
 - (void)setUsePageLimitOfOne {

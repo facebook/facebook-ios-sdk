@@ -247,10 +247,11 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 {
     NSDictionary *userInfo = nil;
     if (innerError) {
-        userInfo = [[NSDictionary dictionaryWithObjectsAndKeys:
-                    innerError, FBErrorInnerErrorKey, 
-                    nil] autorelease];
+        userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                        innerError, FBErrorInnerErrorKey,
+                        nil];
     }
+    
     [[NSException exceptionWithName:FBInvalidOperationException
                              reason:@"FBTestSession encountered an error"
                            userInfo:userInfo]

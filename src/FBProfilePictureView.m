@@ -117,10 +117,9 @@
         return;
     }
     
-    UIImageView* imageView = [[UIImageView alloc] initWithFrame:self.bounds];
+    UIImageView* imageView = [[[UIImageView alloc] initWithFrame:self.bounds] autorelease];
     imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.imageView = imageView;
-    [imageView release];
 
     self.autoresizesSubviews = YES;
     self.clipsToBounds = YES;
@@ -163,9 +162,9 @@
                                newImageSize];
         NSURL *url = [NSURL URLWithString:urlString];
         
-        self.connection = [[[FBURLConnection alloc]
-                             initWithURL:url
-                             completionHandler:handler] autorelease];
+        self.connection = [[[FBURLConnection alloc] initWithURL:url
+                                              completionHandler:handler]
+                           autorelease];
     } else {
         NSString *blankImageName = 
             [NSString 

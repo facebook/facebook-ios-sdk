@@ -309,8 +309,7 @@ static NSSet *g_loggingBehavior;
           self.state == FBSessionStateCreatedTokenLoaded)) {
         // login may only be called once, and only from one of the two initial states
         [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: an attempt was made to login an already logged in or invalid"
-                                        @"session"
+                                 reason:@"FBSession: an attempt was made to open an already opened or closed session"
                                userInfo:nil]
          raise];
     }

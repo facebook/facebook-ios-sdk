@@ -65,7 +65,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 - (id)init
 {
-    [super init];
+    self = [super init];
 
     if (self) {
         [self initialize];
@@ -76,7 +76,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
+    self = [super initWithCoder:aDecoder];
     
     if (self) {
         [self initialize];
@@ -87,7 +87,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 
     if (self) {
         [self initialize];
@@ -99,22 +99,24 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)initialize
 {
     // Data Source
-    FBGraphObjectTableDataSource *dataSource = [[FBGraphObjectTableDataSource alloc]
-                                                init];
+    FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
+                                                 init]
+                                                autorelease];
     dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
-    self.dataSource = dataSource;
 
     // Selection Manager
-    FBGraphObjectTableSelection *selectionManager = [[FBGraphObjectTableSelection alloc]
-                                                     initWithDataSource:dataSource];
+    FBGraphObjectTableSelection *selectionManager = [[[FBGraphObjectTableSelection alloc]
+                                                      initWithDataSource:dataSource]
+                                                     autorelease];
     selectionManager.delegate = self;
 
     // Paging loader
-    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
-                                                             pagingMode:FBGraphObjectPagingModeImmediate];
-    [_loader release];
+    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
+                                                            pagingMode:FBGraphObjectPagingModeImmediate]
+                 autorelease];
+    self.loader = loader;
     self.loader.delegate = self;
 
     // Self
@@ -126,10 +128,6 @@ int const FBRefreshCacheDelaySeconds = 2;
     self.userID = @"me";
     self.sortOrdering = FBFriendSortByFirstName;
     self.displayOrdering = FBFriendDisplayByFirstName;
-    
-    // cleanup
-    [selectionManager release];
-    [dataSource release];
 }
 
 - (void)dealloc
@@ -199,24 +197,24 @@ int const FBRefreshCacheDelaySeconds = 2;
     CGRect bounds = self.view.bounds;
 
     if (!self.tableView) {
-        UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
+        UITableView *tableView = [[[UITableView alloc] initWithFrame:bounds] autorelease];
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         self.tableView = tableView;
         [self.view addSubview:tableView];
-        [tableView release];
     }
 
     if (!self.spinner) {
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *spinner = [[[UIActivityIndicatorView alloc]
+                                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray]
+                                            autorelease];
         spinner.hidesWhenStopped = YES;
         // We want user to be able to scroll while we load.
         spinner.userInteractionEnabled = NO;
         
         self.spinner = spinner;
         [self.view addSubview:spinner];
-        [spinner release];
     }
 
     self.selectionManager.allowsMultipleSelection = self.allowsMultipleSelection;

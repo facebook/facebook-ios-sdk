@@ -72,7 +72,7 @@ static NSString *defaultImageName =
 
 - (id)init
 {
-    [super init];
+    self = [super init];
 
     if (self) {
         [self initialize];
@@ -83,7 +83,7 @@ static NSString *defaultImageName =
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithCoder:aDecoder];
+    self = [super initWithCoder:aDecoder];
     
     if (self) {
         [self initialize];
@@ -94,7 +94,7 @@ static NSString *defaultImageName =
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 
 
     if (self) {
@@ -107,22 +107,24 @@ static NSString *defaultImageName =
 - (void)initialize
 {
     // Data Source
-    FBGraphObjectTableDataSource *dataSource = [[FBGraphObjectTableDataSource alloc]
-                                                init];
+    FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
+                                                 init]
+                                                autorelease];
     dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
     dataSource.itemSubtitleEnabled = YES;
-    self.dataSource = dataSource;
 
     // Selection Manager
-    FBGraphObjectTableSelection *selectionManager = [[FBGraphObjectTableSelection alloc]
-                                                     initWithDataSource:dataSource];
+    FBGraphObjectTableSelection *selectionManager = [[[FBGraphObjectTableSelection alloc]
+                                                      initWithDataSource:dataSource]
+                                                     autorelease];
     selectionManager.delegate = self;
 
     // Paging loader
-    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
-                                                             pagingMode:FBGraphObjectPagingModeAsNeeded];
-    [_loader release];
+    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
+                                                            pagingMode:FBGraphObjectPagingModeAsNeeded]
+                 autorelease];
+    self.loader = loader;
     self.loader.delegate = self;
 
     // Self
@@ -133,10 +135,6 @@ static NSString *defaultImageName =
     self.resultsLimit = defaultResultsLimit;
     self.radiusInMeters = defaultRadius;
     self.itemPicturesEnabled = YES;
-
-    // cleanup
-    [selectionManager release];
-    [dataSource release];
 }
 
 - (void)dealloc
@@ -240,7 +238,8 @@ static NSString *defaultImageName =
                                                               radiusInMeters:radiusInMeters
                                                                   searchText:searchText
                                                                 resultsLimit:resultsLimit
-                                                            fieldsForRequest:fieldsForRequest] autorelease];
+                                                            fieldsForRequest:fieldsForRequest]
+            autorelease];
 }
 
 #pragma mark - private methods
@@ -253,24 +252,24 @@ static NSString *defaultImageName =
     CGRect bounds = self.view.bounds;
 
     if (!self.tableView) {
-        UITableView *tableView = [[UITableView alloc] initWithFrame:bounds];
+        UITableView *tableView = [[[UITableView alloc] initWithFrame:bounds] autorelease];
         tableView.autoresizingMask =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         self.tableView = tableView;
         [self.view addSubview:tableView];
-        [tableView release];
     }
 
     if (!self.spinner) {
-        UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        UIActivityIndicatorView *spinner = [[[UIActivityIndicatorView alloc]
+                                             initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray]
+                                            autorelease];
         spinner.hidesWhenStopped = YES;
         // We want user to be able to scroll while we load.
         spinner.userInteractionEnabled = NO;
 
         self.spinner = spinner;
         [self.view addSubview:spinner];
-        [spinner release];
     }
 
     self.tableView.delegate = self.selectionManager;

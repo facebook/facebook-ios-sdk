@@ -386,15 +386,15 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
             [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
         } else { // logout action sheet
             NSString *name = self.user.name;
-            UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Logged in %@",
-                                                                         name ? [NSString stringWithFormat:@"as %@", name] : @"using Facebook"]
-                                                               delegate:self
-                                                      cancelButtonTitle:@"Cancel"
-                                                 destructiveButtonTitle:@"Log Out"
-                                                      otherButtonTitles:nil];                
+            UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Logged in %@",
+                                                                          name ? [NSString stringWithFormat:@"as %@", name] : @"using Facebook"]
+                                                                delegate:self
+                                                       cancelButtonTitle:@"Cancel"
+                                                  destructiveButtonTitle:@"Log Out"
+                                                       otherButtonTitles:nil]
+                                    autorelease];
             // Show the sheet
             [sheet showInView:self];
-            [sheet release];
         }
     } else { // state of view out of sync with active session
         // so resync
