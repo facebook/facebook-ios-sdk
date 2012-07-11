@@ -101,12 +101,12 @@
     }
     
     self.loader.delegate = nil;
-    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource];
+    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
+                                                             pagingMode:FBGraphObjectPagingModeImmediateViewless];
     self.loader.session = session;
     [self.loader release];
     
     self.loader.delegate = self;
-    self.loader.pagingMode = FBGraphObjectPagingModeImmediateViewless;
     
     // make sure we are around to handle the delegate call
     [self retain];

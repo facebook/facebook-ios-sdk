@@ -25,6 +25,7 @@
 @property (nonatomic, retain) FBRequestConnection *connection;
 @property (nonatomic, copy) NSString *cacheIdentity;
 @property (nonatomic, assign) BOOL skipRoundtripIfCached;
+@property (nonatomic) FBGraphObjectPagingMode pagingMode;
 
 - (void)followNextLink;
 - (void)requestCompleted:(FBRequestConnection *)connection
@@ -49,10 +50,12 @@
 
 #pragma mark Lifecycle methods
 
-- (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource {
+- (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource
+              pagingMode:(FBGraphObjectPagingMode)pagingMode;{
     if (self = [super init]) {
+        // Note that pagingMode must be set before dataSource.
+        self.pagingMode = pagingMode;
         self.dataSource = aDataSource;
-        self.pagingMode = FBGraphObjectPagingModeAsNeeded;
         _isResultFromCache = NO;
     }
     return self;
@@ -75,7 +78,11 @@
     [dataSource retain];
     [_dataSource release];
     _dataSource = dataSource;
-    _dataSource.dataNeededDelegate = self;
+    if (self.pagingMode == FBGraphObjectPagingModeAsNeeded) {
+        _dataSource.dataNeededDelegate = self;
+    } else {
+        _dataSource.dataNeededDelegate = nil;
+    }
 }
 
 - (void)setTableView:(UITableView*)tableView {

@@ -112,8 +112,9 @@ int const FBRefreshCacheDelaySeconds = 2;
     selectionManager.delegate = self;
 
     // Paging loader
-    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource];
-    self.loader.pagingMode = FBGraphObjectPagingModeImmediate;
+    self.loader = [[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
+                                                             pagingMode:FBGraphObjectPagingModeImmediate];
+    [_loader release];
     self.loader.delegate = self;
 
     // Self

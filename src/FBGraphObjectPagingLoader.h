@@ -36,10 +36,11 @@ typedef enum {
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) FBSession *session;
 @property (nonatomic, assign) id<FBGraphObjectPagingLoaderDelegate> delegate;
-@property (nonatomic) FBGraphObjectPagingMode pagingMode;
+@property (nonatomic, readonly) FBGraphObjectPagingMode pagingMode;
 @property (nonatomic, readonly) BOOL isResultFromCache;
  
-- (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource;
+- (id)initWithDataSource:(FBGraphObjectTableDataSource*)aDataSource
+              pagingMode:(FBGraphObjectPagingMode)pagingMode;
 - (void)startLoadingWithRequest:(FBRequest*)request
                   cacheIdentity:(NSString*)cacheIdentity 
           skipRoundtripIfCached:(BOOL)skipRoundtripIfCached;
