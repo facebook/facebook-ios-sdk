@@ -91,7 +91,7 @@ typedef enum {
 
 /*!
  @abstract
- A Boolean value that specifies whether multi-selelect is enabled.
+ A Boolean value that specifies whether multi-select is enabled.
  */
 @property (nonatomic) BOOL allowsMultipleSelection;
 
