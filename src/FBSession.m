@@ -262,7 +262,7 @@ static FBSession *g_activeSession = nil;
                             shouldCache:NO];
             } else {
                 // else this token is expired and should be cleared from cache
-                [tokenCachingStrategy clearToken:cachedToken];
+                [tokenCachingStrategy clearToken];
             }
         }
     }
@@ -381,7 +381,7 @@ static FBSession *g_activeSession = nil;
 - (void)closeAndClearTokenInformation {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
-    [self.tokenCachingStrategy clearToken:self.accessToken];
+    [self.tokenCachingStrategy clearToken];
     [self transitionAndCallHandlerWithState:FBSessionStateClosed
                                       error:nil
                                       token:nil

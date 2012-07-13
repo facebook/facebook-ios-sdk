@@ -78,16 +78,9 @@
 
 /*!
  @abstract 
- Called by <FBSession> (and overridden by inheritors), in order delete any cached information for a given token
- 
- @discussion
- Not all implementations will make use of the token value passedas an argument; however advanced implementations
- may need the token value in order to locate and delete the cache. An overriding implementation must be able to
- tolerate a nil token, as well as a token value for which no cached information exists
- 
- @param token           the access token to clear
+ Called by <FBSession> (and overridden by inheritors), in order delete any cached information for the current token
  */
-- (void)clearToken:(NSString*)token;
+- (void)clearToken;
 
 /*!
  @abstract 

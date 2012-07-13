@@ -70,7 +70,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.FBiOSSDK:Token
     return [defaults objectForKey:_accessTokenInformationKeyName];
 }
 
-- (void)clearToken:(NSString*)token {        
+- (void)clearToken {        
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:_accessTokenInformationKeyName];
     [defaults synchronize];

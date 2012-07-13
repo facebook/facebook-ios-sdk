@@ -41,7 +41,7 @@
             nil];
 }
 
-- (void)clearToken:(NSString*)token
+- (void)clearToken
 {
     self.accessToken = nil;
     self.expirationDate = nil;

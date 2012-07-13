@@ -141,7 +141,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
         // FBSample logic
         // Also need to tell the token cache to forget the tokens for this user
         FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
-        [tokenCachingStrategy clearToken:nil];
+        [tokenCachingStrategy clearToken];
         
         [defaults removeObjectForKey:idKey];
         [defaults removeObjectForKey:nameKey];

@@ -154,7 +154,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 - (void)invalidateSession {
     
     [self.session close];
-    [self.tokenCaching clearToken:nil];
+    [self.tokenCaching clearToken];
     
     [FBSession deleteFacebookCookies];
     
@@ -291,7 +291,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     // if we already have a session, git rid of it
     [self.session close];
     self.session = nil;
-    [self.tokenCaching clearToken:nil];
+    [self.tokenCaching clearToken];
     
     self.session = [[[FBSession alloc] initWithAppID:_appId
                                         permissions:permissions 
