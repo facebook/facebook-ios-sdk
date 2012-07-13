@@ -91,7 +91,15 @@
 #pragma mark -
 
 - (NSString *)imageQueryParamString  {
-    int width = (int)self.bounds.size.width;
+    
+    static CGFloat screenScaleFactor = 0.0;
+    if (screenScaleFactor == 0.0) {
+        screenScaleFactor = [[UIScreen mainScreen] scale];
+    }
+    
+    // Retina display doesn't increase the bounds that iOS returns.  The larger size to fetch needs
+    // to be calculated using the scale factor accessed above.
+    int width = (int)(self.bounds.size.width * screenScaleFactor);
 
     if (self.pictureCropping == FBProfilePictureCroppingSquare) {
         // Note: final query param is escaped form of 'migration_overrides={october_2012:true}'.  Once the 
@@ -189,6 +197,9 @@
     UIViewContentMode contentMode;
 
     // If both of the view dimensions are larger than the image, we'll center the image to prevent scaling up.
+    // Note that unlike in choosing the image size, we *don't* use any Retina-display scaling factor to choose centering
+    // vs. filling.  If we were to do so, we'd get profile pics shrinking to fill the the view on non-Retina, but getting
+    // centered and clipped on Retina.  
     if (viewSize.width > imageSize.width && viewSize.height > imageSize.height) {
         contentMode = UIViewContentModeCenter;
     } else {
