@@ -697,7 +697,7 @@ typedef enum FBRequestConnectionState {
     // if we have a post object, also roll that into the body 
     if (metadata.request.graphObject) {
         NSMutableString *bodyValue = [[[NSMutableString alloc] init] autorelease];
-        __block NSString *delimeter = @"";
+        __block NSString *delimiter = @"";
         [FBRequestConnection
          processGraphObject:metadata.request.graphObject
                     forPath:urlString
@@ -705,10 +705,10 @@ typedef enum FBRequestConnectionState {
              // escape the value
              value = [FBUtility stringByURLEncodingString:[value description]];
              [bodyValue appendFormat:@"%@%@=%@",
-              delimeter,
+              delimiter,
               key,
               value];
-             delimeter = @"&";
+             delimiter = @"&";
          }];
         [requestElement setObject:bodyValue forKey:@"body"];
     }

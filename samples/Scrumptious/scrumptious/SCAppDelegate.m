@@ -124,6 +124,14 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     return [FBSession.activeSession handleOpenURL:url]; 
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // FBSample logic
+    // if the app is going away, we close the session object; this is a good idea because
+    // things may be hanging off the session, that need releasing (completion block, etc.) and
+    // other components in the app may be awaiting close notification in order to do cleanup
+    [FBSession.activeSession close];
+}
+
 - (void)applicationDidBecomeActive:(UIApplication *)application	{	
     // this means the user switched back to this app without completing a login in Safari/Facebook App
     if (FBSession.activeSession.state == FBSessionStateCreatedOpening) {

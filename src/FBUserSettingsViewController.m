@@ -109,7 +109,7 @@
     [containerView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
 
     // Add profile picture control
-    self.profilePicture = [[[FBProfilePictureView alloc] initWithUserID:nil
+    self.profilePicture = [[[FBProfilePictureView alloc] initWithProfileID:nil
                                                         pictureCropping:FBProfilePictureCroppingSquare]
                            autorelease];
     self.profilePicture.frame = CGRectMake(0, 0, 64, 64);
@@ -187,10 +187,10 @@
         if (self.me != nil) {
             NSString *format = NSLocalizedString(@"Logged in as: %@", @"Logged in as: %@");
             self.connectedStateLabel.text = [NSString stringWithFormat:format, self.me.name];
-            self.profilePicture.userID = [self.me objectForKey:@"id"];
+            self.profilePicture.profileID = [self.me objectForKey:@"id"];
         } else {
             self.connectedStateLabel.text = NSLocalizedString(@"Logged in", @"Logged in");
-            self.profilePicture.userID = nil;
+            self.profilePicture.profileID = nil;
 
             [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                 if (result) {
@@ -202,7 +202,7 @@
     } else {
         self.me = nil;
         self.connectedStateLabel.text = NSLocalizedString(@"Not connected to Facebook", @"Not connected to Facebook");
-        self.profilePicture.userID = nil;
+        self.profilePicture.profileID = nil;
         NSString *loginLogoutText = NSLocalizedString(@"Connect", @"Connect");
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
     }

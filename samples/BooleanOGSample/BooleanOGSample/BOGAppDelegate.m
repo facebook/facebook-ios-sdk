@@ -38,6 +38,9 @@
 // Open session objects should be closed when no longer useful 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // all good things must come to an end
+    // this is a good idea because things may be hanging off the session, that need 
+    // releasing (completion block, etc.) and other components in the app may be awaiting
+    // close notification in order to do cleanup
     [FBSession.activeSession close];
 }
 

@@ -50,7 +50,10 @@
 // inadvertant retain cycles
 - (void)applicationWillTerminate:(UIApplication *)application {
     // FBSample logic
-    // if the app is going away, we invalidate the token if present
+    // if the app is going away, we close the session if it is open
+    // this is a good idea because things may be hanging off the session, that need 
+    // releasing (completion block, etc.) and other components in the app may be awaiting
+    // close notification in order to do cleanup
     [self.session close];
 }
 

@@ -35,6 +35,14 @@
 #import "FBGraphObject.h"           // + design summary for graph component-group
 #import "FBOpenGraphAction.h"
 
+// ux
+#import "FBLoginView.h"
+#import "FBProfilePictureView.h"
+#import "FBPlacePickerViewController.h"
+#import "FBFriendPickerViewController.h"
+#import "FBCacheDescriptor.h"
+#import "FBMyData.h"
+
 /*!
  @header
  

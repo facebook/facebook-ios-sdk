@@ -209,7 +209,6 @@ didReceiveResponse:(NSURLResponse *)response
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error
 {
-    // TODO: translate well-known errors
     @try {
         [self invokeHandler:self.handler error:error response:nil responseData:nil];
     } @finally {

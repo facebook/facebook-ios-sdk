@@ -26,7 +26,7 @@
  @abstract
  The `FBOpenGraphAction` protocol is the base protocol for use in posting and retrieving Open Graph actions. 
  It inherits from the `FBGraphObject` protocol; you may derive custome protocols from `FBOpenGraphAction` in order
- implement typed access to your applicaitons custom actions.
+ implement typed access to your application's custom actions.
  
  @discussion
  Represents an Open Graph custom action, to be used directly, or from which to

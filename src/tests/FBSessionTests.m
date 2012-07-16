@@ -65,7 +65,6 @@
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     
     __block BOOL wasNotifiedOfInvalid = NO;
-    // TODO this
     FBTestSession *session = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {

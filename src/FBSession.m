@@ -130,7 +130,6 @@ static FBSession *g_activeSession = nil;
 @property(readwrite, retain)    NSThread *affinitizedThread;
 
 // private members
-- (void)notifyOfState:(FBSessionState)state;
 - (void)authorizeWithPermissions:(NSArray*)permissions
                   integratedAuth:(BOOL)tryIntegratedAuth
                        FBAppAuth:(BOOL)tryFBAppAuth
@@ -231,8 +230,6 @@ static FBSession *g_activeSession = nil;
         self.affinitizedThread = [NSThread currentThread];
         [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                               withTag:self];
-        //first notification
-        [self notifyOfState:self.state];
 
         // use cached token if present
         NSDictionary *tokenInfo = [tokenCachingStrategy fetchTokenInformation];
@@ -648,9 +645,6 @@ static FBSession *g_activeSession = nil;
 
     // ... to here -- if YES
     _isInStateTransition = NO;
-
-    // internal state change notification
-    [self notifyOfState:state];
 
     if (changingTokenAndDate) {
         // update the cache
@@ -1124,11 +1118,6 @@ static FBSession *g_activeSession = nil;
                                       token:nil
                              expirationDate:nil
                                 shouldCache:NO];
-}
-
-// internal notification distrubtion
-- (void)notifyOfState:(FBSessionState)state {
-    // TODO: implement this once we have session contributors wired up
 }
 
 // private helpers
