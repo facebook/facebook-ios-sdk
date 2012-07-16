@@ -312,9 +312,11 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (void)loadDataSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached {
-    [self.loader startLoadingWithRequest:[self requestForLoadData]
-                           cacheIdentity:FBFriendPickerCacheIdentity
-                   skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
+    if (self.session) {
+        [self.loader startLoadingWithRequest:[self requestForLoadData]
+                               cacheIdentity:FBFriendPickerCacheIdentity
+                       skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
+    }
 }
 
 + (FBRequest*)requestWithUserID:(NSString*)userID

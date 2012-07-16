@@ -315,18 +315,21 @@ static NSString *defaultImageName =
 }
 
 - (void)loadDataPostThrottleSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached {
-    FBRequest *request = [FBPlacePickerViewController requestForPlacesSearchAtCoordinate:self.locationCoordinate
-                                                                          radiusInMeters:self.radiusInMeters
-                                                                            resultsLimit:self.resultsLimit
-                                                                              searchText:self.searchText
-                                                                                  fields:self.fieldsForRequest
-                                                                              datasource:self.dataSource
-                                                                                 session:self.session];
-    _hasSearchTextChangedSinceLastQuery = NO;
-    [self.loader startLoadingWithRequest:request
-                           cacheIdentity:FBPlacePickerCacheIdentity
-                   skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
-    [self updateView];    
+    // Place queries require a session, so do nothing if we don't have one.
+    if (self.session) {
+        FBRequest *request = [FBPlacePickerViewController requestForPlacesSearchAtCoordinate:self.locationCoordinate
+                                                                              radiusInMeters:self.radiusInMeters
+                                                                                resultsLimit:self.resultsLimit
+                                                                                  searchText:self.searchText
+                                                                                      fields:self.fieldsForRequest
+                                                                                  datasource:self.dataSource
+                                                                                     session:self.session];
+        _hasSearchTextChangedSinceLastQuery = NO;
+        [self.loader startLoadingWithRequest:request
+                               cacheIdentity:FBPlacePickerCacheIdentity
+                       skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
+        [self updateView];
+    }
 }
 
 - (void)updateView

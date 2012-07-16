@@ -77,6 +77,11 @@
 }
 
 - (void)prefetchAndCacheForSession:(FBSession*)session {
+    // Friend queries require a session, so do nothing if we don't have one.
+    if (session == nil) {
+        return;
+    }
+
     // datasource has some field ownership, so we need one here
     FBGraphObjectTableDataSource *datasource = [[[FBGraphObjectTableDataSource alloc] init] autorelease];
     datasource.groupByField = @"name";
