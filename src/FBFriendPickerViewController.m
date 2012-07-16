@@ -106,7 +106,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
-
+    
     // Selection Manager
     FBGraphObjectTableSelection *selectionManager = [[[FBGraphObjectTableSelection alloc]
                                                       initWithDataSource:dataSource]
@@ -114,7 +114,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     selectionManager.delegate = self;
 
     // Paging loader
-    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
+    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:dataSource
                                                             pagingMode:FBGraphObjectPagingModeImmediate]
                  autorelease];
     self.loader = loader;

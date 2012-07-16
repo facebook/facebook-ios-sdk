@@ -122,7 +122,7 @@ static NSString *defaultImageName =
     selectionManager.delegate = self;
 
     // Paging loader
-    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:self.dataSource
+    id loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:dataSource
                                                             pagingMode:FBGraphObjectPagingModeAsNeeded]
                  autorelease];
     self.loader = loader;
