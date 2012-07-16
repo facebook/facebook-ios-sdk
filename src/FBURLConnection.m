@@ -120,6 +120,10 @@ static NSArray* _cdnHosts;
              response:(NSURLResponse *)response 
          responseData:(NSData *)responseData 
 {
+    if (self.handler == nil) {
+        return;
+    }
+
     NSString *logEntry;
     
     if (error) {
@@ -252,7 +256,6 @@ didReceiveResponse:(NSURLResponse *)response
                 self.handler = nil;
             }
 
-            [connection cancel];
             return nil;
         }
     }
