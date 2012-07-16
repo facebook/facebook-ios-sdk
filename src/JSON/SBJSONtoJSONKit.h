@@ -1,5 +1,5 @@
 //
-//  JSON.h
+//  SBJSONtoJSONKit.h
 //  simple-share
 //
 //  Created by  on 30.05.12.
@@ -17,4 +17,21 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#import "SBJSONtoJSONKit.h"
+#import <Foundation/Foundation.h>
+#import "JSONKit.h"
+
+@interface SBJSONtoJSONKit : NSObject
+
+- (id) objectWithString:(NSString *)theString;
+
+- (id) objectWithString:(NSString *)theString error:(NSError **)error;
+
+- (NSString*) stringWithObject:(id)value;
+
+@end
+
+@interface SBJSON : SBJSONtoJSONKit
+@end
+
+@interface SBJsonParser : SBJSONtoJSONKit
+@end
