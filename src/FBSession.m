@@ -88,7 +88,7 @@ NSString *const FBSessionDidBecomeClosedActiveSessionNotification = @"com.facebo
 
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
-static NSString *const FBisValidPropertyName = @"isValid";
+static NSString *const FBisOpenPropertyName = @"isOpen";
 static NSString *const FBstatusPropertyName = @"status";
 static NSString *const FBaccessTokenPropertyName = @"accessToken";
 static NSString *const FBexpirationDatePropertyName = @"expirationDate";
@@ -157,7 +157,7 @@ static FBSession *g_activeSession = nil;
             permissions = _permissions,
 
             // following properties use manual KVO -- changes to names require
-            // changes to static property name variables (e.g. FBisValidPropertyName)
+            // changes to static property name variables (e.g. FBisOpenPropertyName)
             state = _state,
             accessToken = _accessToken,
             expirationDate = _expirationDate,
@@ -531,7 +531,7 @@ static FBSession *g_activeSession = nil;
 
 // core session members
 
-// core member that owns all state transitions as well as property setting for status and isValid
+// core member that owns all state transitions as well as property setting for status and isOpen
 - (BOOL)transitionToState:(FBSessionState)state
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
@@ -621,15 +621,15 @@ static FBSession *g_activeSession = nil;
         date = nil;
     }
 
-    BOOL changingIsInvalid = FB_ISSESSIONOPENWITHSTATE(state) == FB_ISSESSIONOPENWITHSTATE(statePrior);
+    BOOL changingIsOpen = FB_ISSESSIONOPENWITHSTATE(state) != FB_ISSESSIONOPENWITHSTATE(statePrior);
 
     // should only ever be YES from here...
     _isInStateTransition = YES;
 
     // KVO property will change notifications, for state change
     [self willChangeValueForKey:FBstatusPropertyName];
-    if (changingIsInvalid) {
-        [self willChangeValueForKey:FBisValidPropertyName];
+    if (changingIsOpen) {
+        [self willChangeValueForKey:FBisOpenPropertyName];
     }
 
     if (changingTokenAndDate) {
@@ -682,13 +682,13 @@ static FBSession *g_activeSession = nil;
     }
 
     // KVO property did change notifications, for state change
-    if (changingIsInvalid) {
-        [self didChangeValueForKey:FBisValidPropertyName];
+    if (changingIsOpen) {
+        [self didChangeValueForKey:FBisOpenPropertyName];
     }
     [self didChangeValueForKey:FBstatusPropertyName];
     
     // if we are the active session, and we changed is-valid, notify
-    if (changingIsInvalid && g_activeSession == self) {
+    if (changingIsOpen && g_activeSession == self) {
         if (FB_ISSESSIONOPENWITHSTATE(state)) {
             [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidBecomeOpenActiveSessionNotification
                                                                 object:self];
@@ -1218,7 +1218,7 @@ static FBSession *g_activeSession = nil;
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     // these properties must manually notify for KVO
-    if ([key isEqualToString:FBisValidPropertyName] ||
+    if ([key isEqualToString:FBisOpenPropertyName] ||
         [key isEqualToString:FBaccessTokenPropertyName] ||
         [key isEqualToString:FBexpirationDatePropertyName] ||
         [key isEqualToString:FBstatusPropertyName]) {

@@ -20,10 +20,8 @@
 @class FBSession;
 @class FBSessionTokenCachingStrategy;
 
-/*! helper macro to test for states that imply a open session */
 #define FB_SESSIONSTATETERMINALBIT (1 << 8)
 
-/*! helper macro to test for states that are terminal */
 #define FB_SESSIONSTATEOPENBIT (1 << 9)
 
 /*
