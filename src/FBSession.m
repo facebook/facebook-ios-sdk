@@ -83,6 +83,8 @@ static NSString *const FBLoginUXSDK = @"sdk";
 // the following constant strings are used by NSNotificationCenter
 NSString *const FBSessionDidSetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidSetActiveSessionNotification";
 NSString *const FBSessionDidUnsetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidUnsetActiveSessionNotification";
+NSString *const FBSessionDidBecomeOpenActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidBecomeOpenActiveSessionNotification";
+NSString *const FBSessionDidBecomeClosedActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidBecomeClosedActiveSessionNotification";
 
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
@@ -474,25 +476,35 @@ static FBSession *g_activeSession = nil;
 
 + (FBSession*)setActiveSession:(FBSession*)session {
     
-    // we will close this, but we want any resulting 
-    // handlers to see the new active session
-    FBSession *toRelease = g_activeSession;
-    
-    g_activeSession = [session retain];
-    
-    // some housekeeping needs to happen if we had a previous session
-    if (toRelease) {
-        // now the actual close/notification/release of the prior active
+    if (session != g_activeSession) {
+        // we will close this, but we want any resulting 
+        // handlers to see the new active session
+        FBSession *toRelease = g_activeSession;
+        
+        // if we are being replaced, then we close you
         [toRelease close];
-        [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidUnsetActiveSessionNotification
-                                                            object:toRelease];
-        [toRelease release];
-    }
-    
-    // we don't notify nil sets
-    if (session) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidSetActiveSessionNotification
-                                                            object:session];
+        
+        // set the new session
+        g_activeSession = [session retain];
+        
+        // some housekeeping needs to happen if we had a previous session
+        if (toRelease) {
+            // now the notification/release of the prior active
+            [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidUnsetActiveSessionNotification
+                                                                object:toRelease];
+            [toRelease release];
+        }
+        
+        // we don't notify nil sets
+        if (session) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidSetActiveSessionNotification
+                                                                object:session];
+            
+            if (session.isOpen) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidBecomeOpenActiveSessionNotification
+                                                                    object:session];    
+            }
+        }
     }
     
     return session;
@@ -674,6 +686,17 @@ static FBSession *g_activeSession = nil;
         [self didChangeValueForKey:FBisValidPropertyName];
     }
     [self didChangeValueForKey:FBstatusPropertyName];
+    
+    // if we are the active session, and we changed is-valid, notify
+    if (changingIsInvalid && g_activeSession == self) {
+        if (FB_ISSESSIONOPENWITHSTATE(state)) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidBecomeOpenActiveSessionNotification
+                                                                object:self];
+        } else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:FBSessionDidBecomeClosedActiveSessionNotification
+                                                                object:self];
+        }
+    }
 
     // Note! It is important that no processing occur after the KVO notifications have been raised, in order to
     // assure the state is cohesive in common reintrant scenarios

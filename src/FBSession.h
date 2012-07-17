@@ -36,6 +36,12 @@ extern NSString *const FBSessionDidSetActiveSessionNotification;
 /*! NSNotificationCenter name indicating that an active session was unset */
 extern NSString *const FBSessionDidUnsetActiveSessionNotification;
 
+/*! NSNotificationCenter name indicating that the active session is open */
+extern NSString *const FBSessionDidBecomeOpenActiveSessionNotification;
+
+/*! NSNotificationCenter name indicating that there is no longer an open active session */
+extern NSString *const FBSessionDidBecomeClosedActiveSessionNotification;
+
 /*! 
  @typedef FBSessionState enum
  
