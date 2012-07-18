@@ -314,7 +314,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @method
 
  @abstract
- Creates an `FBRequest` object for an HTTP POSt Graph API call, instantiate
+ Creates an `FBRequest` object for an HTTP POST Graph API call, instantiate
  an <FBRequestConnection> object, add the request to the newly created
  connection and finally start the connection. The request uses
  the active session represented by `[FBSession activeSession]`.

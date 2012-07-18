@@ -23,6 +23,7 @@
 // ux
 #import "FBLoginView.h"
 #import "FBProfilePictureView.h"
+#import "FBUserSettingsViewController.h"
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 #import "FBCacheDescriptor.h"

@@ -195,7 +195,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     [super viewDidLoad];
     [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                           withTag:self];
-    CGRect bounds = self.view.bounds;
+    CGRect bounds = self.canvasView.bounds;
 
     if (!self.tableView) {
         UITableView *tableView = [[[UITableView alloc] initWithFrame:bounds] autorelease];
@@ -203,7 +203,7 @@ int const FBRefreshCacheDelaySeconds = 2;
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
         self.tableView = tableView;
-        [self.view addSubview:tableView];
+        [self.canvasView addSubview:tableView];
     }
 
     if (!self.spinner) {
@@ -215,7 +215,7 @@ int const FBRefreshCacheDelaySeconds = 2;
         spinner.userInteractionEnabled = NO;
         
         self.spinner = spinner;
-        [self.view addSubview:spinner];
+        [self.canvasView addSubview:spinner];
     }
 
     self.selectionManager.allowsMultipleSelection = self.allowsMultipleSelection;
@@ -353,7 +353,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 {
     if ([self.delegate respondsToSelector:
          @selector(friendPickerViewControllerSelectionDidChange:)]) {
-        [self.delegate friendPickerViewControllerSelectionDidChange:self];
+        [(id)self.delegate friendPickerViewControllerSelectionDidChange:self];
     }
 }
 
@@ -366,7 +366,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 
     if ([self.delegate
          respondsToSelector:@selector(friendPickerViewController:shouldIncludeUser:)]) {
-        return [self.delegate friendPickerViewController:self
+        return [(id)self.delegate friendPickerViewController:self
                                        shouldIncludeUser:user];
     } else {
         return YES;
@@ -404,10 +404,17 @@ int const FBRefreshCacheDelaySeconds = 2;
     
 }
 
-- (UIImage *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
-    return [graphObject objectForKey:@"picture"];
+    id picture = [graphObject objectForKey:@"picture"];
+    // Depending on what migration the app is in, we may get back either a string, or a
+    // dictionary with a "data" property that is a dictionary containing a "url" property.
+    if ([picture isKindOfClass:[NSString class]]) {
+        return picture;
+    }
+    id data = [picture objectForKey:@"data"];
+    return [data objectForKey:@"url"];
 }
 
 - (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
@@ -436,7 +443,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     
     
     if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
-        [self.delegate friendPickerViewControllerDataDidChange:self];
+        [(id)self.delegate friendPickerViewControllerDataDidChange:self];
     }
 }
 
@@ -455,7 +462,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {
     if ([self.delegate
          respondsToSelector:@selector(friendPickerViewController:handleError:)]) {
-        [self.delegate friendPickerViewController:self handleError:error];
+        [(id)self.delegate friendPickerViewController:self handleError:error];
     }
 }
 

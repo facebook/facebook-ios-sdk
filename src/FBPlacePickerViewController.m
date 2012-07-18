@@ -250,7 +250,7 @@ static NSString *defaultImageName =
     [super viewDidLoad];
     [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                           withTag:self];
-    CGRect bounds = self.view.bounds;
+    CGRect bounds = self.canvasView.bounds;
 
     if (!self.tableView) {
         UITableView *tableView = [[[UITableView alloc] initWithFrame:bounds] autorelease];
@@ -258,7 +258,7 @@ static NSString *defaultImageName =
             UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         self.tableView = tableView;
-        [self.view addSubview:tableView];
+        [self.canvasView addSubview:tableView];
     }
 
     if (!self.spinner) {
@@ -270,7 +270,7 @@ static NSString *defaultImageName =
         spinner.userInteractionEnabled = NO;
 
         self.spinner = spinner;
-        [self.view addSubview:spinner];
+        [self.canvasView addSubview:spinner];
     }
 
     self.tableView.delegate = self.selectionManager;
@@ -372,7 +372,7 @@ static NSString *defaultImageName =
 {
     if ([self.delegate respondsToSelector:
          @selector(placePickerViewControllerSelectionDidChange:)]) {
-        [self.delegate placePickerViewControllerSelectionDidChange:self];
+        [(id)self.delegate placePickerViewControllerSelectionDidChange:self];
     }
 }
 
@@ -385,7 +385,7 @@ static NSString *defaultImageName =
 
     if ([self.delegate
          respondsToSelector:@selector(placePickerViewController:shouldIncludePlace:)]) {
-        return [self.delegate placePickerViewController:self
+        return [(id)self.delegate placePickerViewController:self
                                       shouldIncludePlace:place];
     } else {
         return YES;
@@ -410,7 +410,7 @@ static NSString *defaultImageName =
     return [location objectForKey:@"city"];
 }
 
-- (UIImage *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
+- (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
     return [graphObject objectForKey:@"picture"];
@@ -437,7 +437,7 @@ static NSString *defaultImageName =
                     formatString:@"Places Picker: first render "];  // logger will append "%d msec"
     
     if ([self.delegate respondsToSelector:@selector(placePickerViewControllerDataDidChange:)]) {
-        [self.delegate placePickerViewControllerDataDidChange:self];
+        [(id)self.delegate placePickerViewControllerDataDidChange:self];
     }
 }
 
@@ -453,7 +453,7 @@ static NSString *defaultImageName =
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {
     if ([self.delegate respondsToSelector:@selector(placePickerViewController:handleError:)]) {
-        [self.delegate placePickerViewController:self handleError:error];
+        [(id)self.delegate placePickerViewController:self handleError:error];
     }
     
 }

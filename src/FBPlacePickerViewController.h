@@ -19,6 +19,7 @@
 #import "FBGraphPlace.h"
 #import "FBSession.h"
 #import "FBCacheDescriptor.h"
+#import "FBViewController.h"
 
 @protocol FBPlacePickerDelegate;
 
@@ -45,7 +46,7 @@
  data changes. The delegate can also be used to filter the places to display in the
  picker.
  */
-@interface FBPlacePickerViewController : UIViewController
+@interface FBPlacePickerViewController : FBViewController
 
 /*!
  @abstract
@@ -58,12 +59,6 @@
  Returns an outlet for the table view managed by the view controller.
  */
 @property (nonatomic, retain) IBOutlet UITableView *tableView;
-
-/*!
- @abstract
- The delegate object that receives updates for selection and display control.
- */
-@property (nonatomic, assign) id<FBPlacePickerDelegate> delegate;
 
 /*!
  @abstract

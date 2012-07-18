@@ -20,7 +20,6 @@
 #import "SCMealViewController.h"
 #import "SCPhotoViewController.h"
 #import "SCProtocols.h"
-#import <FacebookSDK/FacebookSDK.h>
 #import <AddressBook/AddressBook.h>
 #import "TargetConditionals.h"
 
@@ -34,6 +33,7 @@
 
 @property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (strong, nonatomic) FBPlacePickerViewController *placePickerController;
+@property (strong, nonatomic) FBUserSettingsViewController *settingsViewController;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *userProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (strong, nonatomic) IBOutlet UIButton *announceButton;
@@ -82,6 +82,7 @@
 @synthesize imagePickerActionSheet = _imagePickerActionSheet;
 @synthesize popoverFromRect = _popoverFromRect;
 @synthesize activityIndicator = _activityIndicator;
+@synthesize settingsViewController = _settingsViewController;
 
 #pragma mark open graph
 
@@ -120,7 +121,7 @@
     action.meal = mealObject;
     if (self.selectedPlace) {
         // FBSample logic
-        // We don't use the action.place syntax here because, unfortunately, because setPlace:
+        // We don't use the action.place syntax here because, unfortunately, setPlace:
         // and a few other selectors may be flagged as reserved selectors by Apple's App Store
         // validation tools. While this doesn't necessarily block App Store approval, it
         // could slow down the approval process. Falling back to the setObjec:forKey:
@@ -374,12 +375,11 @@
         self.menuTableView.backgroundView = nil;
     }
     
-    // We want a Logout button in the upper-right.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
-                                              initWithTitle:@"Logout" 
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
+                                              initWithTitle:@"Settings" 
                                                 style:UIBarButtonItemStyleBordered 
                                               target:self 
-                                              action:@selector(logoutButtonWasPressed:)];
+                                              action:@selector(settingsButtonWasPressed:)];
 
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.activityIndicator.hidesWhenStopped = YES;
@@ -399,11 +399,11 @@
     }
 }
 
-// FBSample logic
-// Closes the user's session, which will cause the login screen to be displayed by the
-// [SCAppDelegate sessionStateChanged:state:error:] handler.
--(void)logoutButtonWasPressed:(id)sender {
-    [FBSession.activeSession closeAndClearTokenInformation];
+-(void)settingsButtonWasPressed:(id)sender {
+    if (self.settingsViewController == nil) {
+        self.settingsViewController = [[FBUserSettingsViewController alloc] init];
+    }
+    [self.navigationController pushViewController:self.settingsViewController animated:YES];
 }
 
 - (void)viewDidUnload {
