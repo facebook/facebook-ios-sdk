@@ -80,14 +80,15 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
             }
             break;
         case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed:
-            // FBSample logic
-            // Once the user has logged in, we want them to be looking at the root view.
-            [self.navController popToRootViewControllerAnimated:NO];
-            
-            [FBSession.activeSession closeAndClearTokenInformation];
-            
-            [self showLoginView];
+        case FBSessionStateClosedLoginFailed: {
+                // FBSample logic
+                // Once the user has logged in, we want them to be looking at the root view.
+                [self.navController popToRootViewControllerAnimated:NO];
+                
+                [FBSession.activeSession closeAndClearTokenInformation];
+                
+                [self showLoginView];
+        }
             break;
         default:
             break;
