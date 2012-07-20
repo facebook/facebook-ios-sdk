@@ -79,28 +79,28 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
     // FBSample logic
     // The following example uses an fbid to indicate which profile
     // picture to display, however a vanity name would work as well
-    profilePictureView.userID = @"100002768941660";
+    profilePictureView.profileID = @"100002768941660";
 }
 
 - (IBAction)showMichaelProfile:(id)sender {
     // FBSample logic
     // This example and the one after it, in contrast to the prvious one, 
     // uses a vanity name to indicate which profile picture to display
-    profilePictureView.userID = @"michael.marucheck";
+    profilePictureView.profileID = @"michael.marucheck";
 }
 
 - (IBAction)showVijayeProfile:(id)sender {
-    profilePictureView.userID = @"vijaye";
+    profilePictureView.profileID = @"vijaye";
 }
 
 - (IBAction)showRandomProfile:(id)sender {
     int index = arc4random() % kNumInterestingIDs;
-    profilePictureView.userID = [NSString stringWithCString:interestingIDs[index]
+    profilePictureView.profileID = [NSString stringWithCString:interestingIDs[index]
                                                    encoding:NSASCIIStringEncoding];
 }
 
 - (IBAction)showNoProfile:(id)sender {
-    profilePictureView.userID = nil;
+    profilePictureView.profileID = nil;
 }
 
 // Cropping selections
@@ -133,7 +133,7 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
     [super viewDidLoad];
 
     [self makeViewLarge:nil];
-    profilePictureView.userID = @"45963418107"; // Hello world
+    profilePictureView.profileID = @"45963418107"; // Hello world
 }
 
 - (void)viewDidUnload {

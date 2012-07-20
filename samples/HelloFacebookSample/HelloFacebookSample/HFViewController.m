@@ -95,9 +95,9 @@
     // id properties of the json response from the server; alternatively we could use
     // NSDictionary methods such as objectForKey to get values from the my json object
     self.labelFirstName.text = [NSString stringWithFormat:@"Hello %@!", user.first_name];
-    // setting the userID property of the FBProfilePictureView instance
+    // setting the profileID property of the FBProfilePictureView instance
     // causes the control to fetch and display the profile picture for the user
-    self.profilePic.userID = user.id;
+    self.profilePic.profileID = user.id;
     self.loggedInUser = user;
 }
  
@@ -106,7 +106,7 @@
     self.buttonPostStatus.enabled = NO;
     self.buttonPickFriends.enabled = NO;
     
-    self.profilePic.userID = nil;            
+    self.profilePic.profileID = nil;            
     self.labelFirstName.text = nil;
 }
 

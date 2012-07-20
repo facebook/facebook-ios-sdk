@@ -80,7 +80,7 @@
             }
             
             self.nameLabel.text = [NSString stringWithFormat:@"Hello, %@!", user.first_name];
-            self.picView.userID = user.id;
+            self.picView.profileID = user.id;
             if (user.birthday.length > 0) {
                 self.birthdayLabel.text = [NSString stringWithFormat:@"Your birthday is: %@", user.birthday];        
             } else {

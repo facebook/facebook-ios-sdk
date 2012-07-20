@@ -34,7 +34,7 @@
 
 @implementation FBProfilePictureView
 
-@synthesize userID = _userID;
+@synthesize profileID = _profileID;
 @synthesize pictureCropping = _pictureCropping;
 @synthesize connection = _connection;
 @synthesize imageView = _imageView;
@@ -43,7 +43,7 @@
 #pragma mark - Lifecycle
 
 - (void)dealloc {
-    [_userID release];
+    [_profileID release];
     [_imageView release];
     [_connection release];
     [_previousImageQueryParamString release];
@@ -60,12 +60,12 @@
     return self;
 }
 
-- (id)initWithUserID:(NSString *)userID 
-     pictureCropping:(FBProfilePictureCropping)pictureCropping {
+- (id)initWithProfileID:(NSString *)profileID 
+        pictureCropping:(FBProfilePictureCropping)pictureCropping {
     self = [self init];
     if (self) {
         self.pictureCropping = pictureCropping;
-        self.userID = userID;
+        self.profileID = profileID;
     }
     
     return self;
@@ -149,7 +149,7 @@
         return;
     }      
     
-    if (self.userID) {
+    if (self.profileID) {
         
         [self.connection cancel];
 
@@ -167,7 +167,7 @@
         NSString *template = @"%@/%@/picture?%@";     
         NSString *urlString = [NSString stringWithFormat:template, 
                                FBGraphBasePath,
-                               self.userID, 
+                               self.profileID, 
                                newImageQueryParamString];
         NSURL *url = [NSURL URLWithString:urlString];
         
@@ -209,10 +209,10 @@
     self.imageView.contentMode = contentMode;
 }
 
-- (void)setUserID:(NSString*)userID {
-    if (!_userID || ![_userID isEqualToString:userID]) {
-        [_userID release];
-        _userID = [userID copy];
+- (void)setProfileID:(NSString*)profileID {
+    if (!_profileID || ![_profileID isEqualToString:profileID]) {
+        [_profileID release];
+        _profileID = [profileID copy];
         [self refreshImage:YES];
     }
 }

@@ -342,7 +342,7 @@
          ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
              if (!error) {
                  self.userNameLabel.text = user.name;
-                 self.userProfileImage.userID = [user objectForKey:@"id"];
+                 self.userProfileImage.profileID = [user objectForKey:@"id"];
              }
          }];   
     }

@@ -184,8 +184,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
                  autorelease];
     
     // setup profile picture
-    self.profilePicture = [[[FBProfilePictureView alloc] initWithUserID:nil
-                                                        pictureCropping:FBProfilePictureCroppingSquare]
+    self.profilePicture = [[[FBProfilePictureView alloc] initWithProfileID:nil
+                                                           pictureCropping:FBProfilePictureCroppingSquare]
                            autorelease];
     
     // setup profile picture
@@ -268,7 +268,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
                                                a.profileExtent, 
                                                a.profileExtent);
         
-        self.profilePicture.userID = nil;
+        self.profilePicture.profileID = nil;
         self.user = nil;
     }
 }
@@ -280,11 +280,11 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     [self.request addRequest:request
            completionHandler:^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {
                if (result) {
-                   self.profilePicture.userID = [result objectForKey:@"id"];
+                   self.profilePicture.profileID = [result objectForKey:@"id"];
                    self.user = result;
                    [self informDelegate:YES];
                } else {
-                   self.profilePicture.userID = nil;
+                   self.profilePicture.profileID = nil;
                    self.user = nil;
                }
                self.request = nil;

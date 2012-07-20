@@ -99,14 +99,14 @@ static const CGFloat pictureHeight = 50;
 #pragma mark - Properties
 
 - (NSString*)userID {
-    return self.profilePic.userID;
+    return self.profilePic.profileID;
 }
 
 - (void)setUserID:(NSString *)userID {
     // FBSample logic
-    // Setting the userID property of the profile picture view causes the view to fetch and display
+    // Setting the profileID property of the profile picture view causes the view to fetch and display
     // the profile picture for the given user
-    self.profilePic.userID = userID;
+    self.profilePic.profileID = userID;
 }
 
 - (NSString*)userName {
