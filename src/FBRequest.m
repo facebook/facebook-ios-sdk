@@ -215,6 +215,25 @@ static NSString *const kPostHTTPMethod = @"POST";
     return request;
 }
 
++ (FBRequest *)requestForUploadVideo:(NSData *)video
+{
+    NSString *graphPath = @"me/videos";
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:video forKey:@"video.mp4"];
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:graphPath
+                                                  parameters:parameters
+                                                  HTTPMethod:@"POST"]
+                          autorelease];
+    
+    [parameters release];
+    
+    return request;
+}
+
+
+
 + (FBRequest*)requestForGraphPath:(NSString*)graphPath
 {
     FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
