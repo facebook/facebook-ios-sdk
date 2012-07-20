@@ -122,6 +122,7 @@ typedef void (^FBMyDataResultHandler)(FBMyData *myData,
  Posts a status update for the user, and optionally completes with the id of the status.
  
  @param message     The message to be published to the users feed
+ @param handler     The optional handler to handle the post completion and recieve the id or error for the status.
  */
 - (void)postStatusUpdate:(NSString *)message 
        completionHandler:(FBMyDataResultHandler)handler;
@@ -198,6 +199,8 @@ completionHandler:(FBMyDataResultHandler)handler;
  Notifies the application that the active session is open and represents a user that is
  currently connected with Facebook. This notification can be used to drive UI such as the presence
  of features that only work when a user of an application is connected with Facebook.
+ 
+ @param myData     The `FBMyData` instance that is notifying the delegate.
  */
 - (void)myDataHasLoggedInUser:(FBMyData *)myData;
 
@@ -206,6 +209,9 @@ completionHandler:(FBMyDataResultHandler)handler;
  Notifies the application that a property of `FBMyData` has been fetched or updated. If multiple properties are
  updated, `myDataFetched:property` will be called multiple times; the property argument will only represent a 
  single fetched property per call.
+ 
+ @param myData     The `FBMyData` instance that is notifying the delegate.
+ @param property   Represents the property that has been updated.
  */
 - (void)myDataFetched:(FBMyData *)myData
              property:(FBMyDataProperty)property;
@@ -215,6 +221,8 @@ completionHandler:(FBMyDataResultHandler)handler;
  Notifies the application that the active session is closed and does not represent an active connection with Facebook.
  This notification can be used to drive UI such as the removal or disabling of features that only work when a user
  of an application is connected with Facebook.
+ 
+ @param myData     The `FBMyData` instance that is notifying the delegate.
  */
 - (void)myDataHasLoggedOutUser:(FBMyData *)myData;
 
