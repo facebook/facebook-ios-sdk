@@ -91,6 +91,7 @@
     
     self.canvasView.frame = self.view.bounds;
     [self.view addSubview:self.canvasView];
+    [self.view sendSubviewToBack:self.canvasView];
     
     [self updateBar];
 }
