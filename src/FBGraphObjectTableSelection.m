@@ -65,6 +65,10 @@
     [super dealloc];
 }
 
+- (void)clearSelectionInTableView:(UITableView*)tableView {
+    [self deselectItems:self.selection tableView:tableView];
+}
+
 - (void)selectItem:(FBGraphObject *)item
               cell:(UITableViewCell *)cell
 {

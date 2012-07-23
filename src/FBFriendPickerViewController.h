@@ -196,6 +196,12 @@ typedef enum {
 - (void)updateView;
 
 /*!
+ @abstract
+ Clears the current selection, so the picker is ready for a fresh use.
+ */
+- (void)clearSelection;
+
+/*!
  @method
  
  @abstract

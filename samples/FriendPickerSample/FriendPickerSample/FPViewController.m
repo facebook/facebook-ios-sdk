@@ -77,31 +77,22 @@
 #pragma mark UI handlers
 
 - (IBAction)pickFriendsButtonClick:(id)sender {
-        
-    // Create friend picker, and get data loaded into it.
-    FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
-    self.friendPickerController = friendPicker;
+    if (self.friendPickerController == nil) {
+        // Create friend picker, and get data loaded into it.
+        self.friendPickerController = [[FBFriendPickerViewController alloc] init];
+        self.friendPickerController.title = @"Pick Friends";
+        self.friendPickerController.delegate = self;
+    }
 
-    [friendPicker loadData];
+    [self.friendPickerController loadData];
+    [self.friendPickerController clearSelection];
     
-    // Create navigation controller related UI for the friend picker.
-    friendPicker.navigationItem.title = @"Pick Friends";
-    friendPicker.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
-                                                      initWithTitle:@"Done" 
-                                                      style:UIBarButtonItemStyleBordered 
-                                                      target:self 
-                                                      action:@selector(doneButtonWasPressed:)];
-    friendPicker.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] 
-                                                     initWithTitle:@"Cancel" 
-                                                     style:UIBarButtonItemStyleBordered 
-                                                     target:self 
-                                                     action:@selector(cancelButtonWasPressed:)];
-    
-    // Make current.
-    [self.navigationController pushViewController:friendPicker animated:YES];
+    // iOS 5.0+ apps should use [UIViewController presentViewController:animated:completion:]
+    // rather than this deprecated method, but we want our samples to run on iOS 4.x as well.
+    [self presentModalViewController:self.friendPickerController animated:YES];
 }
 
-- (void)doneButtonWasPressed:(id)sender {
+- (void)facebookViewControllerDoneWasPressed:(id)sender {
     NSMutableString *text = [[NSMutableString alloc] init];
     
     // we pick up the users from the selection, and create a string that we use to update the text view
@@ -113,16 +104,17 @@
         [text appendString:user.name];
     }
     
-    [self fillTextBoxAndDismiss:text];
+    [self fillTextBoxAndDismiss:text.length > 0 ? text : @"<None>"];
 }
 
-- (void)cancelButtonWasPressed:(id)sender {
+- (void)facebookViewControllerCancelWasPressed:(id)sender {
     [self fillTextBoxAndDismiss:@"<Cancelled>"];
 }
 
 - (void)fillTextBoxAndDismiss:(NSString *)text {
     self.selectedFriendsView.text = text;
-    [self.navigationController popViewControllerAnimated:YES];
+    
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark -

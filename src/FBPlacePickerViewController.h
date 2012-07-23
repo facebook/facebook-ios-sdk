@@ -111,6 +111,12 @@
 
 /*!
  @abstract
+ Clears the current selection, so the picker is ready for a fresh use.
+ */
+- (void)clearSelection;
+
+/*!
+ @abstract
  Initializes a place picker view controller.
  */
 - (id)init;
@@ -191,7 +197,7 @@
  notifications and allow for deeper control of the <FBPlacePickerViewController>
  view.
  */
-@protocol FBPlacePickerDelegate <NSObject>
+@protocol FBPlacePickerDelegate <FBViewControllerDelegate>
 @optional
 
 /*!

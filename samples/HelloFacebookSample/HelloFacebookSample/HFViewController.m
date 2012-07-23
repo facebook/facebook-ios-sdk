@@ -17,7 +17,6 @@
 #import "HFViewController.h"
 
 #import "HFAppDelegate.h"
-#import <FacebookSDK/FacebookSDK.h>
 
 @interface HFViewController () <FBLoginViewDelegate>
 
@@ -26,7 +25,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostPhoto;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPickFriends;
 @property (strong, nonatomic) IBOutlet UILabel *labelFirstName;
-@property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 
 - (IBAction)postStatusUpdateClick:(UIButton *)sender;
@@ -45,7 +43,6 @@
 @synthesize buttonPostStatus = _buttonPostStatus;
 @synthesize buttonPostPhoto = _buttonPostPhoto;
 @synthesize buttonPickFriends = _buttonPickFriends;
-@synthesize friendPickerController = _friendPickerController;
 @synthesize labelFirstName = _labelFirstName;
 @synthesize loggedInUser = _loggedInUser;
 @synthesize profilePic = _profilePic;
@@ -155,57 +152,42 @@
 
 // Pick Friends button handler
 - (IBAction)pickFriendsClick:(UIButton *)sender {
-    // Create friend picker, and get data loaded into it.
-    FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
-    self.friendPickerController = friendPicker;
+    FBFriendPickerViewController *friendPickerController = [[FBFriendPickerViewController alloc] init];
+    friendPickerController.title = @"Pick Friends";
+    [friendPickerController loadData];
     
-    [friendPicker loadData];
-    
-    // Create navigation controller related UI for the friend picker.
-    friendPicker.navigationItem.title = @"Pick Friends";
-    
-    friendPicker.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] 
-                                                      initWithTitle:@"Done" 
-                                                      style:UIBarButtonItemStyleBordered 
-                                                      target:self 
-                                                      action:@selector(friendPickerDoneButtonWasPressed:)];
-    friendPicker.navigationItem.hidesBackButton = YES;
-    
-    // Make current.
-    [self.navigationController pushViewController:friendPicker animated:YES];
-}
-
-
-// Handler for when friend picker is dismissed
-- (void)friendPickerDoneButtonWasPressed:(id)sender {
-
-    [self.navigationController popViewControllerAnimated:YES];
-
-    NSString *message;
-    
-    if (self.friendPickerController.selection.count == 0) {
-        message = @"<No Friends Selected>";
-    } else {
-    
-        NSMutableString *text = [[NSMutableString alloc] init];
-        
-        // we pick up the users from the selection, and create a string that we use to update the text view
-        // at the bottom of the display; note that self.selection is a property inherited from our base class
-        for (id<FBGraphUser> user in self.friendPickerController.selection) {
-            if ([text length]) {
-                [text appendString:@", "];
-            }
-            [text appendString:user.name];
-        }
-        message = text;
-    }
-    
-    [[[UIAlertView alloc] initWithTitle:@"You Picked:" 
-                                message:message 
-                               delegate:nil 
-                      cancelButtonTitle:@"OK" 
-                      otherButtonTitles:nil] 
-     show];
+    // Use the modal wrapper method to display the picker.
+    [friendPickerController presentModallyFromViewController:self animated:YES handler:
+     ^(FBViewController *sender, BOOL donePressed) {
+         if (!donePressed) {
+             return;
+         }
+         NSString *message;
+         
+         if (friendPickerController.selection.count == 0) {
+             message = @"<No Friends Selected>";
+         } else {
+             
+             NSMutableString *text = [[NSMutableString alloc] init];
+             
+             // we pick up the users from the selection, and create a string that we use to update the text view
+             // at the bottom of the display; note that self.selection is a property inherited from our base class
+             for (id<FBGraphUser> user in friendPickerController.selection) {
+                 if ([text length]) {
+                     [text appendString:@", "];
+                 }
+                 [text appendString:user.name];
+             }
+             message = text;
+         }
+         
+         [[[UIAlertView alloc] initWithTitle:@"You Picked:" 
+                                     message:message 
+                                    delegate:nil 
+                           cancelButtonTitle:@"OK" 
+                           otherButtonTitles:nil] 
+          show];
+     }];
 }
 
 // UIAlertView helper for post buttons

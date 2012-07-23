@@ -16,6 +16,25 @@
 
 #import <UIKit/UIKit.h>
 
+@class FBViewController;
+
+/*!
+ @typedef FBModalCompletionHandler
+ 
+ @abstract
+ A block that is passed to [FBViewController presentModallyInViewController:animated:handler:]
+ and called when the view controller is dismissed via either Done or Cancel.
+ 
+ @discussion
+ Pass a block of this type when calling addRequest.  This will be called once
+ the request completes.  The call occurs on the UI thread.
+ 
+ @param sender          The <FBViewController> that is being dismissed.
+ 
+ @param donePressed     If YES, Done was pressed. If NO, Cancel was pressed.
+ */
+typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePressed);
+
 /*!
  @protocol 
  
@@ -59,14 +78,18 @@
 /*!
  @abstract
  The Cancel button to display when presented modally. If nil, no Cancel button is displayed.
+ If this button is provided, its target and action will be redirected to internal handlers, replacing
+ any previous target that may have been set.
  */
-@property (nonatomic, retain) UIBarButtonItem *cancelButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *cancelButton;
 
 /*!
  @abstract
  The Done button to display when presented modally. If nil, no Done button is displayed.
+ If this button is provided, its target and action will be redirected to internal handlers, replacing
+ any previous target that may have been set.
  */
-@property (nonatomic, retain) UIBarButtonItem *doneButton;
+@property (nonatomic, retain) IBOutlet UIBarButtonItem *doneButton;
 
 /*!
  @abstract
@@ -81,6 +104,20 @@
  depending on whether or not a toolbar is displayed.
  */
 @property (nonatomic, readonly, retain) UIView *canvasView;
+
+/*!
+ @abstract
+ Provides a wrapper that presents the view controller modally and automatically dismisses it
+ when either the Done or Cancel button is pressed. If Done is pressed, the block provided by the
+ doneHandler parameter is called.
+ 
+ @param viewController  The view controller that is presenting this view controller.
+ @param animated        If YES, presenting and dismissing the view controller is animated.
+ @param handler         The block called when the Done or Cancel button is pressed.
+ */
+- (void)presentModallyFromViewController:(UIViewController*)viewController
+                                animated:(BOOL)animated
+                                 handler:(FBModalCompletionHandler)handler;
 
 @end
 

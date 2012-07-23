@@ -21,6 +21,9 @@
 @property (nonatomic, retain) UIToolbar *toolbar;
 @property (nonatomic, retain) UIView *canvasView;
 @property (nonatomic, retain) UIBarButtonItem *titleLabel;
+@property (nonatomic, copy) FBModalCompletionHandler handler;
+@property (nonatomic) BOOL autoDismiss;
+@property (nonatomic) BOOL dismissAnimated;
 
 - (void)cancelButtonPressed:(id)sender;
 - (void)doneButtonPressed:(id)sender;
@@ -37,39 +40,27 @@
 @synthesize toolbar = _toolbar;
 @synthesize canvasView = _canvasView;
 @synthesize titleLabel = _titleLabel;
+@synthesize handler = _handler;
+@synthesize autoDismiss = _autoDismiss;
+@synthesize dismissAnimated = _dismissAnimated;
 
 #pragma mark View controller lifecycle
 
 - (id)init {
     self = [super init];
     if (self) {
-        [self commonInit];
+        // We do this at init-time rather than in viewDidLoad so the caller can change the buttons if
+        // they want prior to the view loading.
+        self.cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
+                                                                           target:self 
+                                                                           action:@selector(cancelButtonPressed:)] 
+                             autorelease];
+        self.doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
+                                                                         target:self 
+                                                                         action:@selector(doneButtonPressed:)] 
+                           autorelease];
     }
     return self;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        [self commonInit];
-    }
-    return self;
-}
-
-- (void)commonInit {
-    // We do this at init-time rather than in viewDidLoad so the caller can change the buttons if
-    // they want prior to the view loading.
-    self.cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
-                                                                       target:self 
-                                                                       action:@selector(cancelButtonPressed:)] 
-                         autorelease];
-    self.doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-                                                                     target:self 
-                                                                     action:@selector(doneButtonPressed:)] 
-                         autorelease];
-                         
-    self.canvasView = [[[UIView alloc] init] autorelease];
-    [self.canvasView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
 }
 
 - (void)dealloc {
@@ -80,6 +71,7 @@
     [_toolbar release];
     [_canvasView release];
     [_titleLabel release];
+    [_handler release];
 }
 
 #pragma mark View lifecycle
@@ -89,17 +81,28 @@
     
     self.view.autoresizesSubviews = YES;
     
+    self.canvasView = [[[UIView alloc] init] autorelease];
+    [self.canvasView setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+
     self.canvasView.frame = self.view.bounds;
     [self.view addSubview:self.canvasView];
     [self.view sendSubviewToBack:self.canvasView];
     
+    self.autoDismiss = NO;
+
+    self.doneButton.target = self;
+    self.doneButton.action = @selector(doneButtonPressed:);
+    self.cancelButton.target = self;
+    self.cancelButton.action = @selector(cancelButtonPressed:);
+    
     [self updateBar];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    // If the view goes away for any reason, nil out the handler to avoid a retain cycle.
+    self.handler = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -107,10 +110,29 @@
     return YES;
 }
 
+#pragma mark Public methods
+
+- (void)presentModallyFromViewController:(UIViewController*)viewController
+                                animated:(BOOL)animated
+                                 handler:(FBModalCompletionHandler)handler {
+    self.handler = handler;
+    // Assumption: we want to dismiss with the same animated-ness as we present.
+    self.dismissAnimated = animated;
+    
+    if ([viewController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+        [viewController presentViewController:self animated:animated completion:nil];
+    } else {
+        [viewController presentModalViewController:self animated:animated];
+    }
+    
+    // Set this here because we always revert to NO in viewDidLoad.
+    self.autoDismiss = YES;
+}
+
 #pragma mark Implementation
 
 - (void)updateBar {
-    if (self.presentingViewController != nil) {
+    if (self.compatiblePresentingViewController != nil) {
         [self updateBarForPresentedMode];
     } else if (self.navigationController != nil) {
         [self updateBarForNavigationMode];
@@ -118,7 +140,7 @@
 }
 
 - (void)updateBarForPresentedMode {
-    BOOL needBar = (self.doneButton != nil) || (self.cancelButton != nil) || (self.title.length > 0);
+    BOOL needBar = (self.doneButton != nil) || (self.cancelButton != nil);
     if (needBar) {
         // If we need a bar but don't have one, create it.
         if (self.toolbar == nil) {
@@ -217,7 +239,9 @@
 }
 
 - (void)updateBarForNavigationMode {
-    self.navigationItem.rightBarButtonItem = self.doneButton;
+    if (self.navigationItem.rightBarButtonItem == nil) {
+        self.navigationItem.rightBarButtonItem = self.doneButton;
+    }
 }
 
 - (void)setCancelButton:(UIBarButtonItem *)cancelButton {
@@ -241,17 +265,55 @@
     [self updateBar];
 }
 
+- (UIViewController *)compatiblePresentingViewController {
+    if ([self respondsToSelector:@selector(presentingViewController)]) {
+        return [self presentingViewController];
+    } else {
+        UIViewController *parentViewController = [self parentViewController];
+        if (self == [parentViewController modalViewController]) {
+            return parentViewController;
+        }
+    }
+    return nil;
+}
+
 #pragma mark Handlers
 
 - (void)cancelButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(facebookViewControllerCancelWasPressed:)]) {
         [self.delegate facebookViewControllerCancelWasPressed:self];
     }
+    
+    UIViewController *presentingViewController = [self compatiblePresentingViewController];
+    if (self.autoDismiss && presentingViewController) {
+        if ([presentingViewController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [presentingViewController dismissViewControllerAnimated:self.dismissAnimated completion:nil];
+        } else {
+            [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
+        }
+        
+        if (self.handler) {
+            self.handler(self, NO);
+        }
+    }
 }
 
 - (void)doneButtonPressed:(id)sender {
     if ([self.delegate respondsToSelector:@selector(facebookViewControllerDoneWasPressed:)]) {
         [self.delegate facebookViewControllerDoneWasPressed:self];
+    }
+    
+    UIViewController *presentingViewController = [self compatiblePresentingViewController];
+    if (self.autoDismiss && presentingViewController) {
+        if ([presentingViewController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+            [presentingViewController dismissViewControllerAnimated:self.dismissAnimated completion:nil];
+        } else {
+            [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
+        }
+        
+        if (self.handler) {
+            self.handler(self, YES);
+        }
     }
 }
 

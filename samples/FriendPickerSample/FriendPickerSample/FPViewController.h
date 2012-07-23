@@ -16,7 +16,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FPViewController : UIViewController
+@interface FPViewController : UIViewController<FBFriendPickerDelegate>
 
 - (IBAction)pickFriendsButtonClick:(id)sender;
 

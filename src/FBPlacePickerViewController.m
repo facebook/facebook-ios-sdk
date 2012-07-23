@@ -227,6 +227,10 @@ static NSString *defaultImageName =
     self.fieldsForRequest = cd.fieldsForRequest;
 }
 
+- (void)clearSelection {
+    [self.selectionManager clearSelectionInTableView:self.tableView];
+}
+
 #pragma mark - Public Class Methods
 
 + (FBCacheDescriptor*)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate

@@ -26,12 +26,13 @@
 @property (nonatomic) BOOL allowsMultipleSelection;
 
 - (id)initWithDataSource:(FBGraphObjectTableDataSource *)dataSource;
+- (void)clearSelectionInTableView:(UITableView*)tableView;
+
 
 @end
 
 @protocol FBGraphObjectSelectionChangedDelegate <NSObject>
 
-- (void)graphObjectTableSelectionDidChange:
-(FBGraphObjectTableSelection *)selection;
+- (void)graphObjectTableSelectionDidChange:(FBGraphObjectTableSelection *)selection;
 
 @end

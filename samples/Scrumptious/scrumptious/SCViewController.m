@@ -519,9 +519,11 @@
         
         case 1:
             if (!self.placePickerController) {
-                self.placePickerController = [[FBPlacePickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.placePickerController = [[FBPlacePickerViewController alloc] init];
                 self.placePickerController.delegate = self;
                 self.placePickerController.title = @"Select a restaurant";
+                // We don't want a Done button, we update the selection as the user selects them
+                self.placePickerController.doneButton = nil;
             }
             self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
             self.placePickerController.radiusInMeters = 1000;
@@ -543,9 +545,11 @@
             
         case 2:
             if (!self.friendPickerController) {
-                self.friendPickerController = [[FBFriendPickerViewController alloc] initWithNibName:nil bundle:nil];
+                self.friendPickerController = [[FBFriendPickerViewController alloc] init];
                 self.friendPickerController.delegate = self;
                 self.friendPickerController.title = @"Select friends";
+                // We don't want a Done button, we update the selection as the user selects them
+                self.friendPickerController.doneButton = nil;
             }
 
             // Set up the friend picker to sort and display names the same way as the

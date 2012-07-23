@@ -64,8 +64,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 @synthesize sortOrdering = _sortOrdering;
 @synthesize displayOrdering = _displayOrdering;
 
-- (id)init
-{
+- (id)init {
     self = [super init];
 
     if (self) {
@@ -75,8 +74,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
+- (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     
     if (self) {
@@ -86,8 +84,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     return self;
 }
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
 
     if (self) {
@@ -97,8 +94,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     return self;
 }
 
-- (void)initialize
-{
+- (void)initialize {
     // Data Source
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
@@ -131,8 +127,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     self.displayOrdering = FBFriendDisplayByFirstName;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [_loader cancel];
     _loader.delegate = nil;
     [_loader release];
@@ -151,31 +146,26 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 #pragma mark - Custom Properties
 
-- (BOOL)allowsMultipleSelection
-{
+- (BOOL)allowsMultipleSelection {
     return _allowsMultipleSelection;
 }
 
-- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection
-{
+- (void)setAllowsMultipleSelection:(BOOL)allowsMultipleSelection {
     _allowsMultipleSelection = allowsMultipleSelection;
     if (self.selectionManager) {
         self.selectionManager.allowsMultipleSelection = allowsMultipleSelection;
     }
 }
 
-- (BOOL)itemPicturesEnabled
-{
+- (BOOL)itemPicturesEnabled {
     return self.dataSource.itemPicturesEnabled;
 }
 
-- (void)setItemPicturesEnabled:(BOOL)itemPicturesEnabled
-{
+- (void)setItemPicturesEnabled:(BOOL)itemPicturesEnabled {
     self.dataSource.itemPicturesEnabled = itemPicturesEnabled;
 }
 
-- (NSArray *)selection
-{
+- (NSArray *)selection {
     return self.selectionManager.selection;
 }
 
@@ -224,8 +214,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     self.loader.tableView = self.tableView;
 }
 
-- (void)viewDidUnload
-{
+- (void)viewDidUnload {
     [super viewDidUnload];
 
     self.loader.tableView = nil;
@@ -257,10 +246,13 @@ int const FBRefreshCacheDelaySeconds = 2;
     [self loadDataSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
 }
 
-- (void)updateView
-{
+- (void)updateView {
     [self.dataSource update];
     [self.tableView reloadData];
+}
+
+- (void)clearSelection {
+    [self.selectionManager clearSelectionInTableView:self.tableView];
 }
 
 #pragma mark - public class members
@@ -269,7 +261,8 @@ int const FBRefreshCacheDelaySeconds = 2;
     return [[[FBFriendPickerCacheDescriptor alloc] init] autorelease];
 }
 
-+ (FBCacheDescriptor*)cacheDescriptorWithUserID:(NSString*)userID fieldsForRequest:(NSSet*)fieldsForRequest {
++ (FBCacheDescriptor*)cacheDescriptorWithUserID:(NSString*)userID
+                               fieldsForRequest:(NSSet*)fieldsForRequest {
     return [[[FBFriendPickerCacheDescriptor alloc] initWithUserID:userID
                                                  fieldsForRequest:fieldsForRequest]
             autorelease];
@@ -340,17 +333,14 @@ int const FBRefreshCacheDelaySeconds = 2;
     return request;
 }
 
-- (void)centerAndStartSpinner
-{
+- (void)centerAndStartSpinner {
     [FBUtility centerView:self.spinner tableView:self.tableView];
     [self.spinner startAnimating];    
 }
 
 #pragma mark - FBGraphObjectSelectionChangedDelegate
 
-- (void)graphObjectTableSelectionDidChange:
-(FBGraphObjectTableSelection *)selection
-{
+- (void)graphObjectTableSelectionDidChange:(FBGraphObjectTableSelection *)selection {
     if ([self.delegate respondsToSelector:
          @selector(friendPickerViewControllerSelectionDidChange:)]) {
         [(id)self.delegate friendPickerViewControllerSelectionDidChange:self];
@@ -360,8 +350,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 #pragma mark - FBGraphObjectViewControllerDelegate
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                filterIncludesItem:(id<FBGraphObject>)item
-{
+                filterIncludesItem:(id<FBGraphObject>)item {
     id<FBGraphUser> user = (id<FBGraphUser>)item;
 
     if ([self.delegate
@@ -374,8 +363,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                             titleOfItem:(id<FBGraphUser>)graphUser
-{
+                             titleOfItem:(id<FBGraphUser>)graphUser {
     // Title is either "First Middle" or "Last" depending on display order.
     if (self.displayOrdering == FBFriendDisplayByFirstName) {
         if (graphUser.middle_name) {
@@ -389,8 +377,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                       titleSuffixOfItem:(id<FBGraphUser>)graphUser
-{
+                       titleSuffixOfItem:(id<FBGraphUser>)graphUser {
     // Title suffix is either "Last" or "First Middle" depending on display order.
     if (self.displayOrdering == FBFriendDisplayByLastName) {
         if (graphUser.middle_name) {
@@ -405,8 +392,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                       pictureUrlOfItem:(id<FBGraphObject>)graphObject
-{
+                       pictureUrlOfItem:(id<FBGraphObject>)graphObject {
     id picture = [graphObject objectForKey:@"picture"];
     // Depending on what migration the app is in, we may get back either a string, or a
     // dictionary with a "data" property that is a dictionary containing a "url" property.
@@ -418,8 +404,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
-                customizeTableCell:(FBGraphObjectTableCell*)cell
-{
+                customizeTableCell:(FBGraphObjectTableCell*)cell {
     // We want to bold whichever part of the name we are sorting on.
     cell.boldTitle = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByFirstName) ||
         (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByLastName);
