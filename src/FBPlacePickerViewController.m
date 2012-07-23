@@ -43,12 +43,16 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 @property (nonatomic, retain) FBGraphObjectTableSelection *selectionManager;
 @property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
 @property (nonatomic, retain) NSTimer *searchTextChangedTimer;
+@property (nonatomic) BOOL trackActiveSession;
 
 - (void)initialize;
 - (void)loadDataPostThrottleSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached;
 - (NSTimer *)createSearchTextChangedTimer;
 - (void)updateView;
 - (void)centerAndStartSpinner;
+- (void)addSessionObserver:(FBSession*)session;
+- (void)removeSessionObserver:(FBSession*)session;
+- (void)clearData;
 
 @end
 
@@ -69,6 +73,8 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 @synthesize selectionManager = _selectionManager;
 @synthesize spinner = _spinner;
 @synthesize tableView = _tableView;
+@synthesize session = _session;
+@synthesize trackActiveSession = _trackActiveSession;
 
 - (id)init
 {
@@ -135,6 +141,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     self.resultsLimit = defaultResultsLimit;
     self.radiusInMeters = defaultRadius;
     self.itemPicturesEnabled = YES;
+    self.trackActiveSession = YES;
 }
 
 - (void)dealloc
@@ -152,6 +159,9 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     [_selectionManager release];
     [_spinner release];
     [_tableView release];
+    
+    [self removeSessionObserver:_session];
+    [_session release];
     
     [super dealloc];
 }
@@ -179,11 +189,18 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 }
 
 - (void)setSession:(FBSession *)session {
-    self.loader.session = session;
-}
+    if (session != _session) {
+        [self removeSessionObserver:_session];
+        
+        [_session release];
+        _session = [session retain];
 
-- (FBSession*)session {
-    return self.loader.session;
+        [self addSessionObserver:session];
+
+        self.loader.session = session;
+        
+        self.trackActiveSession = (session == nil);
+    }
 }
 
 #pragma mark - Public Methods
@@ -193,8 +210,10 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     // when the app calls loadData,
     // if we don't have a session and there is 
     // an open active session, use that
-    if (!self.session) {
+    if (!self.session || 
+        (self.trackActiveSession && ![self.session isEqual:[FBSession activeSessionIfOpen]])) {
         self.session = [FBSession activeSessionIfOpen];
+        self.trackActiveSession = YES;
     }
     
     // Sending a request on every keystroke is wasteful of bandwidth. Send a
@@ -237,7 +256,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
                                                  searchText:(NSString*)searchText
                                                resultsLimit:(NSInteger)resultsLimit
                                            fieldsForRequest:(NSSet*)fieldsForRequest {
-    
+
     return [[[FBPlacePickerCacheDescriptor alloc] initWithLocationCoordinate:locationCoordinate
                                                               radiusInMeters:radiusInMeters
                                                                   searchText:searchText
@@ -367,6 +386,33 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 {
     [FBUtility centerView:self.spinner tableView:self.tableView];
     [self.spinner startAnimating];    
+}
+
+- (void)addSessionObserver:(FBSession *)session {
+    [session addObserver:self
+              forKeyPath:@"state"
+                 options:NSKeyValueObservingOptionNew
+                 context:nil];
+}
+
+- (void)removeSessionObserver:(FBSession *)session {    
+    [session removeObserver:self
+                 forKeyPath:@"state"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+                      ofObject:(id)object 
+                        change:(NSDictionary *)change 
+                       context:(void *)context {
+    if ([object isEqual:self.session]) {
+        [self clearData];
+    }
+}
+
+- (void)clearData {
+    [self.dataSource clearGraphObjects];
+    [self.selectionManager clearSelectionInTableView:self.tableView];
+    [self.loader reset];
 }
 
 #pragma mark - FBGraphObjectSelectionChangedDelegate

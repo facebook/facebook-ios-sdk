@@ -41,11 +41,15 @@ int const FBRefreshCacheDelaySeconds = 2;
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) FBGraphObjectTableSelection *selectionManager;
 @property (nonatomic, retain) FBGraphObjectPagingLoader *loader;
+@property (nonatomic) BOOL trackActiveSession;
 
 - (void)initialize;
 - (void)centerAndStartSpinner;
 - (void)loadDataSkippingRoundTripIfCached:(NSNumber*)skipRoundTripIfCached;
 - (FBRequest*)requestForLoadData;
+- (void)addSessionObserver:(FBSession*)session;
+- (void)removeSessionObserver:(FBSession*)session;
+- (void)clearData;
 
 @end
 
@@ -63,6 +67,8 @@ int const FBRefreshCacheDelaySeconds = 2;
 @synthesize loader = _loader;
 @synthesize sortOrdering = _sortOrdering;
 @synthesize displayOrdering = _displayOrdering;
+@synthesize trackActiveSession = _trackActiveSession;
+@synthesize session = _session;
 
 - (id)init {
     self = [super init];
@@ -125,6 +131,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     self.userID = @"me";
     self.sortOrdering = FBFriendSortByFirstName;
     self.displayOrdering = FBFriendDisplayByFirstName;
+    self.trackActiveSession = YES;
 }
 
 - (void)dealloc {
@@ -140,6 +147,9 @@ int const FBRefreshCacheDelaySeconds = 2;
     [_spinner release];
     [_tableView release];
     [_userID release];
+    
+    [self removeSessionObserver:_session];
+    [_session release];
     
     [super dealloc];
 }
@@ -171,12 +181,20 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 // We don't really need to store session, let the loader hold it.
 - (void)setSession:(FBSession *)session {
-    self.loader.session = session;
+    if (session != _session) {
+        [self removeSessionObserver:_session];
+        
+        [_session release];
+        _session = [session retain];
+        
+        [self addSessionObserver:session];
+        
+        self.loader.session = session;
+        
+        self.trackActiveSession = (session == nil);
+    }
 }
 
-- (FBSession*)session {
-    return self.loader.session;
-}
 
 #pragma mark - Public Methods
 
@@ -240,8 +258,10 @@ int const FBRefreshCacheDelaySeconds = 2;
     // when the app calls loadData,
     // if we don't have a session and there is 
     // an open active session, use that
-    if (!self.session) {
+    if (!self.session || 
+        (self.trackActiveSession && ![self.session isEqual:[FBSession activeSessionIfOpen]])) {
         self.session = [FBSession activeSessionIfOpen];
+        self.trackActiveSession = YES;
     }
     [self loadDataSkippingRoundTripIfCached:[NSNumber numberWithBool:YES]];
 }
@@ -253,6 +273,33 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 - (void)clearSelection {
     [self.selectionManager clearSelectionInTableView:self.tableView];
+}
+
+- (void)addSessionObserver:(FBSession *)session {
+    [session addObserver:self
+              forKeyPath:@"state"
+                 options:NSKeyValueObservingOptionNew
+                 context:nil];
+}
+
+- (void)removeSessionObserver:(FBSession *)session {    
+    [session removeObserver:self
+                 forKeyPath:@"state"];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath 
+                      ofObject:(id)object 
+                        change:(NSDictionary *)change 
+                       context:(void *)context {
+    if ([object isEqual:self.session]) {
+        [self clearData];
+    }
+}
+
+- (void)clearData {
+    [self.dataSource clearGraphObjects];
+    [self.selectionManager clearSelectionInTableView:self.tableView];
+    [self.loader reset];
 }
 
 #pragma mark - public class members

@@ -46,6 +46,7 @@ typedef enum {
           skipRoundtripIfCached:(BOOL)skipRoundtripIfCached;
 - (void)addResultsAndUpdateView:(NSDictionary*)results;
 - (void)cancel;
+- (void)reset;
 
 @end
 

@@ -252,6 +252,12 @@
     [self.connection cancel];
 }
 
+- (void)reset {
+    [self cancel];
+    self.connection = nil;
+    self.nextLink = nil;
+}
+
 - (void)requestCompleted:(FBRequestConnection *)connection
                   result:(id)result
                    error:(NSError *)error {
