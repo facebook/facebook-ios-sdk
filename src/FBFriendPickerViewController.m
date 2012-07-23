@@ -451,6 +451,12 @@ int const FBRefreshCacheDelaySeconds = 2;
     // finished loading, stop animating
     [self.spinner stopAnimating];
     
+    // Call the delegate from here as well, since this might be the first response of a query
+    // that has no results.
+    if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
+        [(id)self.delegate friendPickerViewControllerDataDidChange:self];
+    }
+
     // if our current display is from cache, then kick-off a near-term refresh
     if (pagingLoader.isResultFromCache) {
         [self performSelector:@selector(loadDataSkippingRoundTripIfCached:) 
