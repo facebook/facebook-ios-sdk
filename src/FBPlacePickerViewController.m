@@ -310,6 +310,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
                         @"location",
                         @"category",
                         @"picture",
+                        @"were_here_count",
                         nil];
     
     [request.parameters setObject:fields forKey:@"fields"];
@@ -404,13 +405,24 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                           subtitleOfItem:(id<FBGraphObject>)graphObject
 {
-    id<FBGraphPlace> place = (id<FBGraphPlace>)graphObject;
-    id<FBGraphLocation> location = place.location;
-    NSString *street = location.street;
-    if (street) {
-        return street;
+    NSString *category = [graphObject objectForKey:@"category"];
+    NSNumber *wereHereCount = [graphObject objectForKey:@"were_here_count"];
+    
+    if (wereHereCount) {
+        NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
+        [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+        NSString *wereHere = [numberFormatter stringFromNumber:wereHereCount];
+        [numberFormatter release];
+        
+        if (category) {
+            return [NSString stringWithFormat:@"%@ • %@ were here", [category capitalizedString], wereHere];
+        }
+        return [NSString stringWithFormat:@"%@ were here", wereHere];
     }
-    return [location objectForKey:@"city"];
+    if (category) {
+        return [category capitalizedString];
+    } 
+    return nil;
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource

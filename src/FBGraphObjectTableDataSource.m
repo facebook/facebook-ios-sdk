@@ -247,7 +247,7 @@
 
     if (!cell) {
         cell = [[FBGraphObjectTableCell alloc]
-                initWithStyle:UITableViewCellStyleDefault
+                initWithStyle:UITableViewCellStyleSubtitle
                 reuseIdentifier:cellKey];
         [cell autorelease];
 
