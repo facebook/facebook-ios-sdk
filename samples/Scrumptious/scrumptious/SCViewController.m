@@ -142,28 +142,29 @@
     }
 
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
-    [FBRequest startForPostWithGraphPath:@"me/fb_sample_scrumps:eat"
-                             graphObject:action
-                       completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         [self.activityIndicator stopAnimating];
-         [self.view setUserInteractionEnabled:YES];
-
-         NSString *alertText;
-         if (!error) {
-             alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
-                          [result objectForKey:@"id"]];
-         } else {
-             alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
-                          error.domain, error.code];
-         }
-         [[[UIAlertView alloc] initWithTitle:@"Result" 
-                                     message:alertText 
-                                    delegate:nil 
-                           cancelButtonTitle:@"Thanks!" 
-                           otherButtonTitles:nil] 
-          show];
-     }];
+    [FBRequestConnection startForPostWithGraphPath:@"me/fb_sample_scrumps:eat"
+                                       graphObject:action
+                                 completionHandler:^(FBRequestConnection *connection,
+                                                     id result,
+                                                     NSError *error) {
+                                     [self.activityIndicator stopAnimating];
+                                     [self.view setUserInteractionEnabled:YES];
+                                     
+                                     NSString *alertText;
+                                     if (!error) {
+                                         alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
+                                                      [result objectForKey:@"id"]];
+                                     } else {
+                                         alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
+                                                      error.domain, error.code];
+                                     }
+                                     [[[UIAlertView alloc] initWithTitle:@"Result" 
+                                                                 message:alertText 
+                                                                delegate:nil 
+                                                       cancelButtonTitle:@"Thanks!" 
+                                                       otherButtonTitles:nil] 
+                                      show];
+                                 }];
 }
 
 // FBSample logic

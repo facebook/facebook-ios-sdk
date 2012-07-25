@@ -137,23 +137,23 @@
 - (void)testGraphObjectTypedRequest
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequest startWithGraphPath:@"4" // Zuck
-                completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
-                    STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
-                    STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
-                    [blocker signal];
-                }];
+    [FBRequestConnection startWithGraphPath:@"4" // Zuck
+                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
+                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
+                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
+                              [blocker signal];
+                          }];
     
     [blocker wait];
     
     blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequest startWithGraphPath:@"100902843288017" // great fried chicken
-                completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
-                    STAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
-                    STAssertTrue([chicken.location.city isEqualToString:@"Woodinville"], @"city wrong");
-                    STAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
-                    [blocker signal];
-                }];
+    [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
+                          completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
+                              STAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
+                              STAssertTrue([chicken.location.city isEqualToString:@"Woodinville"], @"city wrong");
+                              STAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
+                              [blocker signal];
+                          }];
     
     [blocker wait];
 }
@@ -238,8 +238,8 @@
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     [FBSession setActiveSession:self.defaultTestSession];
-    [FBRequest startWithGraphPath:@"TourEiffel"
-                completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+    [FBRequestConnection startWithGraphPath:@"TourEiffel"
+                          completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
     
     [blocker wait];
     [blocker release];
@@ -250,8 +250,8 @@
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     [FBSession setActiveSession:self.defaultTestSession];
-    [FBRequest startWithGraphPath:@"-1"
-                completionHandler:[self handlerExpectingFailureSignaling:blocker]];
+    [FBRequestConnection startWithGraphPath:@"-1"
+                          completionHandler:[self handlerExpectingFailureSignaling:blocker]];
     [blocker wait];
     [blocker release];
     

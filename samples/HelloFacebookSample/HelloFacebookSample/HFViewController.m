@@ -115,18 +115,13 @@
 
     NSString *message = [NSString stringWithFormat:@"Updating %@'s status at %@", 
                          self.loggedInUser.first_name, [NSDate date]];
-    NSDictionary *params = [NSDictionary dictionaryWithObject:message forKey:@"message"];
     
-    // use the "startWith" helper static on FBRequest to both create and start a request, with
-    // a specified completion handler.
-    [FBRequest startWithGraphPath:@"me/feed"
-                     parameters:params
-                     HTTPMethod:@"POST"
-              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                  
-                  [self showAlert:message result:result error:error];
-                  self.buttonPostStatus.enabled = YES;
-              }];
+    [FBRequestConnection startForPostStatusUpdate:message
+                                completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                    
+                                    [self showAlert:message result:result error:error];
+                                    self.buttonPostStatus.enabled = YES;
+                                }];
         
     self.buttonPostStatus.enabled = NO;       
 }

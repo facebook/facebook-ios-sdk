@@ -28,6 +28,7 @@
 
 + (unsigned long)currentTimeInMilliseconds; 
 + (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
++ (NSString *)stringFBIDFromObject:(id)object;
 
 @end
 

@@ -85,8 +85,7 @@
 }
 
 // The assumption here is that the view and the tableView share a common parent.
-+ (void)centerView:(UIView*)view tableView:(UITableView*)tableView
-{
++ (void)centerView:(UIView*)view tableView:(UITableView*)tableView {
     // We want to center the view in the table  as much as possible, but we also want to center it
     // within a cell so it is visually appealing.
     CGRect bounds = tableView.bounds;
@@ -99,6 +98,16 @@
     
     center = [view.superview convertPoint:center fromView:tableView];
     view.center = center;
+}
+
++ (NSString *)stringFBIDFromObject:(id)object {
+    if ([object isKindOfClass:[NSDictionary class]]) {
+        id val = [object objectForKey:@"id"];
+        if ([val isKindOfClass:[NSString class]]) {
+            return val;
+        }
+    }
+    return [object description];
 }
 
 @end

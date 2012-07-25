@@ -147,41 +147,6 @@ static NSString *const kPostHTTPMethod = @"POST";
     return connection;
 }
 
-+ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
-                         completionHandler:(FBRequestHandler)handler
-{
-    return [FBRequest startWithGraphPath:graphPath
-                              parameters:nil
-                              HTTPMethod:nil
-                       completionHandler:handler];
-}
-
-+ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
-                                      graphObject:(id<FBGraphObject>)graphObject
-                                completionHandler:(FBRequestHandler)handler
-{
-    FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
-                                                          graphPath:graphPath
-                                                        graphObject:graphObject]
-                          autorelease];
-    
-    return [request startWithCompletionHandler:handler];
-}
-
-+ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
-                                parameters:(NSDictionary*)parameters
-                                HTTPMethod:(NSString*)HTTPMethod
-                         completionHandler:(FBRequestHandler)handler
-{
-    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
-                                                   graphPath:graphPath
-                                                  parameters:parameters
-                                                  HTTPMethod:HTTPMethod]
-                          autorelease];
-    
-    return [request startWithCompletionHandler:handler];
-}
-
 + (FBRequest*)requestForMe {
     return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                      graphPath:@"me"]
@@ -223,6 +188,59 @@ static NSString *const kPostHTTPMethod = @"POST";
                                                   HTTPMethod:nil]
                           autorelease];
     return request;
+}
+
++ (FBRequest*)requestForPostWithGraphPath:(NSString*)graphPath
+                              graphObject:(id<FBGraphObject>)graphObject {
+    return [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
+                                            graphPath:graphPath
+                                          graphObject:graphObject]
+            autorelease];
+}
+
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message {
+    return [FBRequest requestForPostStatusUpdate:message
+                                           place:nil
+                                            tags:nil];
+}
+
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message
+                                    place:(id)place
+                                     tags:(id<NSFastEnumeration>)tags {
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:message forKey:@"message"];
+    // if we have a place object, use it
+    if (place) {
+        [params setObject:[FBUtility stringFBIDFromObject:place]
+                   forKey:@"place"];
+    }
+    // ditto tags
+    if (tags) {
+        NSMutableString *tagsValue = [NSMutableString string];
+        NSString *format = @"%@";
+        for (id tag in tags) {
+            [tagsValue appendFormat:format, [FBUtility stringFBIDFromObject:tag]];
+            format = @",%@";
+        }
+        if ([tagsValue length]) {
+            [params setObject:tagsValue
+                       forKey:@"tags"];
+        }
+    }
+    
+    return [FBRequest requestWithGraphPath:@"me/feed"
+                                parameters:params
+                                HTTPMethod:@"POST"];
+}
+
++ (FBRequest*)requestWithGraphPath:(NSString*)graphPath
+                        parameters:(NSDictionary*)parameters
+                        HTTPMethod:(NSString*)HTTPMethod {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                     graphPath:graphPath
+                                    parameters:parameters
+                                    HTTPMethod:HTTPMethod]
+            autorelease];
 }
 
 + (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate

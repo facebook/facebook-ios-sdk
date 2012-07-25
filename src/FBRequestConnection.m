@@ -291,7 +291,7 @@ typedef enum FBRequestConnectionState {
 }
 
 // ----------------------------------------------------------------------------
-// Public messages
+// Public methods
 
 - (void)addRequest:(FBRequest *)request
  completionHandler:(FBRequestHandler)handler
@@ -330,7 +330,86 @@ typedef enum FBRequestConnectionState {
 }
 
 // ----------------------------------------------------------------------------
-// Private messages
+// Public class methods
+
++ (FBRequestConnection*)startForMeWithCompletionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForMe];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection*)startForMyFriendsWithCompletionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForMyFriends];
+    return [request startWithCompletionHandler:handler];    
+}
+
++ (FBRequestConnection*)startForUploadPhoto:(UIImage *)photo
+                          completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForUploadPhoto:photo];
+    return [request startWithCompletionHandler:handler];    
+}
+
++ (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
+                                completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForPostStatusUpdate:message];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
+                                            place:(id)place
+                                             tags:(id<NSFastEnumeration>)tags
+                                completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForPostStatusUpdate:message
+                                                         place:place
+                                                          tags:tags];
+    return [request startWithCompletionHandler:handler];    
+}
+
++ (FBRequestConnection*)startForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                          radiusInMeters:(NSInteger)radius
+                                            resultsLimit:(NSInteger)limit
+                                              searchText:(NSString*)searchText
+                                       completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForPlacesSearchAtCoordinate:coordinate
+                                                        radiusInMeters:radius
+                                                          resultsLimit:limit
+                                                            searchText:searchText];
+    
+    return [request startWithCompletionHandler:handler];        
+}
+
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                         completionHandler:(FBRequestHandler)handler
+{
+    return [FBRequestConnection startWithGraphPath:graphPath
+                                        parameters:nil
+                                        HTTPMethod:nil
+                                 completionHandler:handler];
+}
+
++ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
+                                      graphObject:(id<FBGraphObject>)graphObject
+                                completionHandler:(FBRequestHandler)handler
+{
+    FBRequest *request = [FBRequest requestForPostWithGraphPath:graphPath
+                                                    graphObject:graphObject];
+    
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                                parameters:(NSDictionary*)parameters
+                                HTTPMethod:(NSString*)HTTPMethod
+                         completionHandler:(FBRequestHandler)handler
+{
+    FBRequest *request = [FBRequest requestWithGraphPath:graphPath
+                                              parameters:parameters
+                                              HTTPMethod:HTTPMethod];
+    
+    return [request startWithCompletionHandler:handler];
+}
+
+// ----------------------------------------------------------------------------
+// Private methods
 
 - (void)startWithCacheIdentity:(NSString*)cacheIdentity 
          skipRoundtripIfCached:(BOOL)skipRoundtripIfCached

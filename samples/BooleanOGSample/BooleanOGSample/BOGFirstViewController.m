@@ -158,39 +158,39 @@
         
         
         // post the action using one of the lightweight static start* methods on FBRequest
-        [FBRequest startForPostWithGraphPath:actionPath
-                               graphObject:action
-                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                             if (!error) {
-                                 // successful post, in the sample we do nothing with the id, however
-                                 // a more complex applicaiton may want to store or perform addtional actions
-                                 // with the id that represents the just-posted action    
-                             } else {
-                                 // get the basic error message
-                                 NSString *message = error.localizedDescription;
-                                 
-                                 // see if we can improve on it with an error message from the server
-                                 id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
-                                 if ([json isKindOfClass:[NSArray class]] &&
-                                     (json = [json objectAtIndex:0]) &&
-                                     [json isKindOfClass:[NSDictionary class]] &&
-                                     (json = [json objectForKey:@"body"]) &&
-                                     [json isKindOfClass:[NSDictionary class]] &&
-                                     (json = [json objectForKey:@"error"]) &&
-                                     [json isKindOfClass:[NSDictionary class]] &&
-                                     (json = [json objectForKey:@"message"])) {
-                                     message = [json description];
-                                 }
-                                 
-                                 // display the message that we have
-                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
-                                                                                 message:message
-                                                                                delegate:nil
-                                                                       cancelButtonTitle:@"OK"
-                                                                       otherButtonTitles:nil];
-                                 [alert show];
-                             }
-                         }];
+        [FBRequestConnection startForPostWithGraphPath:actionPath
+                                           graphObject:action
+                                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                         if (!error) {
+                                             // successful post, in the sample we do nothing with the id, however
+                                             // a more complex applicaiton may want to store or perform addtional actions
+                                             // with the id that represents the just-posted action    
+                                         } else {
+                                             // get the basic error message
+                                             NSString *message = error.localizedDescription;
+                                             
+                                             // see if we can improve on it with an error message from the server
+                                             id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
+                                             if ([json isKindOfClass:[NSArray class]] &&
+                                                 (json = [json objectAtIndex:0]) &&
+                                                 [json isKindOfClass:[NSDictionary class]] &&
+                                                 (json = [json objectForKey:@"body"]) &&
+                                                 [json isKindOfClass:[NSDictionary class]] &&
+                                                 (json = [json objectForKey:@"error"]) &&
+                                                 [json isKindOfClass:[NSDictionary class]] &&
+                                                 (json = [json objectForKey:@"message"])) {
+                                                 message = [json description];
+                                             }
+                                             
+                                             // display the message that we have
+                                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
+                                                                                             message:message
+                                                                                            delegate:nil
+                                                                                   cancelButtonTitle:@"OK"
+                                                                                   otherButtonTitles:nil];
+                                             [alert show];
+                                         }
+                                     }];
     }
 }
 

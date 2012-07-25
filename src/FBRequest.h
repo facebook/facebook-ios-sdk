@@ -294,65 +294,6 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 */
 
 /*!
- @method
-
- @abstract
- Creates an `FBRequest` object for a Graph API call, instantiate an
- <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection. The request uses
- the active session represented by `[FBSession activeSession]`.
-
- See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
-
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
- @param handler          The handler block to call when the request completes with a success, error, or cancel action.
-*/
-+ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
-                         completionHandler:(FBRequestHandler)handler;
-
-/*!
- @method
-
- @abstract
- Creates an `FBRequest` object for an HTTP POST Graph API call, instantiate
- an <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection. The request uses
- the active session represented by `[FBSession activeSession]`.
-
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
-
- @param graphObject      An object or open graph action to post.
-
- @param handler          The handler block to call when the request completes with a success, error, or cancel action.
-*/
-+ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
-                                      graphObject:(id<FBGraphObject>)graphObject
-                                completionHandler:(FBRequestHandler)handler;
-
-/*!
- @method
-
- @abstract
- Creates an `FBRequest` object for a Graph API call, instantiate an
- <FBRequestConnection> object, add the request to the newly created
- connection and finally start the connection. Use this method for
- specifying the request parameters and HTTP Method. The request uses
- the active session represented by `[FBSession activeSession]`.
-
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
-
- @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
-
- @param HTTPMethod       The HTTP method to use for the request. A nil value implies a GET.
-
- @param handler          The handler block to call when the request completes with a success, error, or cancel action.
-*/
-+ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
-                                parameters:(NSDictionary*)parameters
-                                HTTPMethod:(NSString*)HTTPMethod
-                         completionHandler:(FBRequestHandler)handler;
-
-/*!
  @methodgroup FBRequest factory methods
 
  @abstract
@@ -438,20 +379,43 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 
 /*!
  @method
-
+ 
  @abstract
- Returns a newly initialized request object that can be used to make a Graph API call for the active session.
-
+ Creates a request representing a status update.
+ 
  @discussion
- This method simplifies the preparation of a Graph API call.
-
+ Simplifies preparing a request to post a status update.
+ 
  This method does not initialize an <FBRequestConnection> object. To initiate the API
  call first instantiate an <FBRequestConnection> object, add the request to this object,
  then call the `start` method on the connection instance.
+ 
+ @param message         The message to post.
+ */
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message;
 
- @param graphPath        The Graph API endpoint to use for the request, for example "me".
-*/
-+ (FBRequest*)requestForGraphPath:(NSString*)graphPath;
+/*!
+ @method
+ 
+ @abstract
+ Creates a request representing a status update.
+ 
+ @discussion
+ Simplifies preparing a request to post a status update.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param message         The message to post.
+ @param place           The place to checkin with, or nil. Place may be an fbid or a 
+ graph object representing a place.
+ @param tags            Array of friends to tag in the status update, each element 
+ may be an fbid or a graph object representing a user.
+ */
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message
+                                    place:(id)place
+                                     tags:(id<NSFastEnumeration>)tags;
 
 /*!
  @method
@@ -485,4 +449,56 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
                                     resultsLimit:(NSInteger)limit
                                       searchText:(NSString*)searchText;
 
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to make a Graph API call for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ */
++ (FBRequest*)requestForGraphPath:(NSString*)graphPath;
+
+/*!
+ @method
+ 
+ @abstract
+ Creates a request representing a POST for a graph object.
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ 
+ @param graphObject      An object or open graph action to post.
+ */
++ (FBRequest*)requestForPostWithGraphPath:(NSString*)graphPath
+                              graphObject:(id<FBGraphObject>)graphObject;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to make a Graph API call for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ 
+ @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
+ 
+ @param HTTPMethod       The HTTP method to use for the request. A nil value implies a GET.
+ */
++ (FBRequest*)requestWithGraphPath:(NSString*)graphPath
+                        parameters:(NSDictionary*)parameters
+                        HTTPMethod:(NSString*)HTTPMethod;
 @end

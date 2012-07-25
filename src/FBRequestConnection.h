@@ -15,10 +15,13 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreLocation/CoreLocation.h>
+#import "FBGraphObject.h"
 
 // up-front decl's
 @class FBRequest;
 @class FBRequestConnection;
+@class UIImage;
 
 /*!
  Normally requests return JSON data that is parsed into a set of `NSDictionary`
@@ -220,5 +223,164 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  with the connection.
 */
 - (void)cancel;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API request for user info (/me), creates an <FBRequest> 
+ then uses an <FBRequestConnection> object to start the connection with Facebook. The 
+ request uses the active session represented by `[FBSession activeSession]`.
+ 
+ See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ 
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startForMeWithCompletionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API request for user friends (/me/friends), creates an <FBRequest> 
+ then uses an <FBRequestConnection> object to start the connection with Facebook. The 
+ request uses the active session represented by `[FBSession activeSession]`.
+ 
+ See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ 
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startForMyFriendsWithCompletionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API post of a photo. The request  
+ uses the active session represented by `[FBSession activeSession]`.
+  
+ @param photo            A `UIImage` for the photo to upload.
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startForUploadPhoto:(UIImage *)photo
+                          completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API post of a status update. The request  
+ uses the active session represented by `[FBSession activeSession]`.
+ 
+ @param message         The message to post.
+ */
++ (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
+                                completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API post of a status update. The request  
+ uses the active session represented by `[FBSession activeSession]`.
+ 
+ @param message         The message to post.
+ @param place           The place to checkin with, or nil. Place may be an fbid or a 
+ graph object representing a place.
+ @param tags            Array of friends to tag in the status update, each element 
+ may be an fbid or a graph object representing a user.
+ */
++ (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
+                                            place:(id)place
+                                             tags:(id<NSFastEnumeration>)tags
+                                completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Starts a request representing a Graph API call to the "search" endpoint
+ for a given location using the active session.
+ 
+ @discussion
+ Simplifies starting a request to search for places near a coordinate.
+ 
+ This method creates the necessary <FBRequest> object and initializes and 
+ starts an <FBRequestConnection> object. A successful Graph API call will
+ return an array of <FBGraphPlace> objects representing the nearby locations.
+ 
+ @param coordinate      The search coordinates.
+ 
+ @param radius          The search radius in meters.
+ 
+ @param limit           The maxiumum number of results to return.  It is
+                        possible to receive fewer than this because of the 
+                        radius and because of server limits.
+ 
+ @param searchText      The text to use in the query to narrow the set of places
+                        returned.
+ */
++ (FBRequestConnection*)startForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                          radiusInMeters:(NSInteger)radius
+                                            resultsLimit:(NSInteger)limit
+                                              searchText:(NSString*)searchText
+                                       completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make a graph API request, creates an <FBRequest> object for then
+ uses an <FBRequestConnection> object to start the connection with Facebook. The 
+ request uses the active session represented by `[FBSession activeSession]`.
+ 
+ See <connectionWithSession:graphPath:parameters:HTTPMethod:completionHandler:>
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                         completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Simple method to make post an object using the graph API, creates an <FBRequest> object for 
+ HTTP POST, then uses <FBRequestConnection> to start a connection with Facebook. The request uses
+ the active session represented by `[FBSession activeSession]`.
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ 
+ @param graphObject      An object or open graph action to post.
+ 
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
+                                      graphObject:(id<FBGraphObject>)graphObject
+                                completionHandler:(FBRequestHandler)handler;
+
+/*!
+ @method
+ 
+ @abstract
+ Creates an `FBRequest` object for a Graph API call, instantiate an
+ <FBRequestConnection> object, add the request to the newly created
+ connection and finally start the connection. Use this method for
+ specifying the request parameters and HTTP Method. The request uses
+ the active session represented by `[FBSession activeSession]`.
+ 
+ @param graphPath        The Graph API endpoint to use for the request, for example "me".
+ 
+ @param parameters       The parameters for the request. A value of nil sends only the automatically handled parameters, for example, the access token. The default is nil.
+ 
+ @param HTTPMethod       The HTTP method to use for the request. A nil value implies a GET.
+ 
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
+ */
++ (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
+                                parameters:(NSDictionary*)parameters
+                                HTTPMethod:(NSString*)HTTPMethod
+                         completionHandler:(FBRequestHandler)handler;
 
 @end

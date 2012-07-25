@@ -109,27 +109,25 @@
 
  <pre>
  @textblock
- 
- // log on to Facebook
- _fbsession = [[FBSession alloc] init];
- [_fbsession openWithCompletionBlock:^(FBSession *session, 
-                                       FBSessionStatus status, 
-                                       NSError *error) {
-     if (session.isOpen) {
-         // request basic information for the user
-         [FBRequest startRequestWithSession:session
-                                  graphPath:@"me"
-                          completionHandler:^void(FBRequest *request, 
-                                                  id result,
-                                                  NSError *error) {
-             if (!error) {
-                 // get json from result
-             }
-         }];
-     }
- }];
- 
+
+// log on to Facebook
+[FBSession sessionOpenWithPermissions:nil
+                    completionHandler:^(FBSession *session, 
+                                        FBSessionState status, 
+                                        NSError *error) {
+                        if (session.isOpen) {
+                            // request basic information for the user
+                            [FBRequestConnection startWithGraphPath:@"me"
+                                                  completionHandler:^void(FBRequestConnection *request, 
+                                                                          id result,
+                                                                          NSError *error) {
+                                                      if (!error) {
+                                                          // get json from result
+                                                      }
+                                                  }];
+                        }
+                    }];
  @/textblock
  </pre>
-
-*/
+ 
+ */
