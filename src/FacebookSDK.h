@@ -41,7 +41,6 @@
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 #import "FBCacheDescriptor.h"
-#import "FBMyData.h"
 
 /*!
  @header
