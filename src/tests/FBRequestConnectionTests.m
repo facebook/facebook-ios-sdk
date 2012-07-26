@@ -22,7 +22,7 @@
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
 
-#if defined(FBIOSSDK_SKIP_REQUEST_CONNECTION_TESTS)
+#if defined(FACEBOOKSDK_SKIP_REQUEST_CONNECTION_TESTS)
 
 #pragma message ("warning: Skipping FBRequestConnectionTests")
 

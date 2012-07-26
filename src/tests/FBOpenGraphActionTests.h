@@ -36,4 +36,4 @@
 
 // Open Graph namespaces must be unique, so running these tests against specific
 // Facebook Applications will require choosing a new namespace.
-#define UNIT_TEST_OPEN_GRAPH_NAMESPACE "fbiossdktests"
+#define UNIT_TEST_OPEN_GRAPH_NAMESPACE "facebooksdktests"

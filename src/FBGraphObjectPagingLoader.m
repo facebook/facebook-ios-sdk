@@ -270,7 +270,7 @@
     if (!error && !data) {
         NSDictionary *userInfo = [NSDictionary dictionaryWithObject:result
                                                              forKey:FBErrorParsedJSONResponseKey];
-        error = [[[NSError alloc] initWithDomain:FBiOSSDKDomain
+        error = [[[NSError alloc] initWithDomain:FacebookSDKDomain
                                             code:FBErrorProtocolMismatch
                                         userInfo:userInfo]
                  autorelease];
@@ -278,7 +278,7 @@
     
     if (error) {
         // Cancellation is not really an error we want to bother the delegate with.
-        BOOL cancelled = [error.domain isEqualToString:FBiOSSDKDomain] &&
+        BOOL cancelled = [error.domain isEqualToString:FacebookSDKDomain] &&
             error.code == FBErrorOperationCancelled;
 
         if (cancelled) {

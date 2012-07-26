@@ -31,7 +31,7 @@ fi
 
 function write_plist {
       SIMULATOR_CONFIG_DIR="$1"/Documents
-      SIMULATOR_CONFIG_FILE="$SIMULATOR_CONFIG_DIR"/FBiOSSDK-UnitTestConfig.plist
+      SIMULATOR_CONFIG_FILE="$SIMULATOR_CONFIG_DIR"/FacebookSDK-UnitTestConfig.plist
 
       if [ ! -d "$SIMULATOR_CONFIG_DIR" ]; then
             mkdir "$SIMULATOR_CONFIG_DIR"

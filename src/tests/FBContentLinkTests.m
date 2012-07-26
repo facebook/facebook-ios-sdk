@@ -18,7 +18,7 @@
 #import "FBContentLink.h"
 #import "FBTests.h"
 
-#if defined(FBIOSSDK_SKIP_CONTENT_LINK_TESTS)
+#if defined(FACEBOOKSDK_SKIP_CONTENT_LINK_TESTS)
 
 #pragma message ("warning: Skipping FBContentLinkTests")
 

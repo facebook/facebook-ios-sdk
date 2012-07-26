@@ -16,16 +16,16 @@
 
 #import "FBError.h"
 
-NSString *const FBiOSSDKDomain = @"com.facebook.FBiOSSDK";
-NSString *const FBErrorInnerErrorKey = @"com.facebook.FBiOSSDK:ErrorInnerErrorKey";
-NSString *const FBErrorParsedJSONResponseKey = @"com.facebook.FBiOSSDK:ParsedJSONResponseKey";
-NSString *const FBErrorHTTPStatusCodeKey = @"com.facebook.FBiOSSDK:HTTPStatusCode";
+NSString *const FacebookSDKDomain = @"com.facebook.sdk";
+NSString *const FBErrorInnerErrorKey = @"com.facebook.sdk:ErrorInnerErrorKey";
+NSString *const FBErrorParsedJSONResponseKey = @"com.facebook.sdk:ParsedJSONResponseKey";
+NSString *const FBErrorHTTPStatusCodeKey = @"com.facebook.sdk:HTTPStatusCode";
 
-NSString *const FBErrorLoginFailedReason = @"com.facebook.FBiOSSDK:ErrorLoginFailedReason";
-NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.FBiOSSDK:ErrorLoginFailedOriginalErrorCode";
+NSString *const FBErrorLoginFailedReason = @"com.facebook.sdk:ErrorLoginFailedReason";
+NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.sdk:ErrorLoginFailedOriginalErrorCode";
 
-NSString *const FBErrorReauthorizeFailedReasonSessionClosed = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonSessionClosed";
-NSString *const FBErrorReauthorizeFailedReasonUserCancelled = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonUserCancelled";
-NSString *const FBErrorReauthorizeFailedReasonWrongUser = @"com.facebook.FBiOSSDK:ErrorReauthorizeFailedReasonWrongUser";
+NSString *const FBErrorReauthorizeFailedReasonSessionClosed = @"com.facebook.sdk:ErrorReauthorizeFailedReasonSessionClosed";
+NSString *const FBErrorReauthorizeFailedReasonUserCancelled = @"com.facebook.sdk:ErrorReauthorizeFailedReasonUserCancelled";
+NSString *const FBErrorReauthorizeFailedReasonWrongUser = @"com.facebook.sdk:ErrorReauthorizeFailedReasonWrongUser";
 
-NSString *const FBInvalidOperationException = @"com.facebook.FBiOSSDK:InvalidOperationException";
+NSString *const FBInvalidOperationException = @"com.facebook.sdk:InvalidOperationException";

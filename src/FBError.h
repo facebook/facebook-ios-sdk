@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /// The error domain of all error codes returned by the Facebook SDK
-extern NSString *const FBiOSSDKDomain;
+extern NSString *const FacebookSDKDomain;
 
 // ----------------------------------------------------------------------------
 // Keys in the userInfo NSDictionary of NSError where you can find additional
@@ -37,7 +37,7 @@ extern NSString *const FBErrorHTTPStatusCodeKey;
  @abstract Error codes returned by the Facebook SDK in NSError.  
  
  @discussion
- These are valid only in the scope of FBiOSSDKDomain.
+ These are valid only in the scope of FacebookSDKDomain.
  */
 typedef enum FBErrorCode {
     /*! 

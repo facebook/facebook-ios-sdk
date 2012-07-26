@@ -21,7 +21,7 @@
 #import "FBTestBlocker.h"
 #import "FBTests.h"
 
-#if defined(FBIOSSDK_SKIP_SESSION_TESTS)
+#if defined(FACEBOOKSDK_SKIP_SESSION_TESTS)
 
 #pragma message ("warning: Skipping FBSessionTests")
 

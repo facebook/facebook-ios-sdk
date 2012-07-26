@@ -174,7 +174,7 @@ static NSArray* _cdnHosts;
         return;
     }
 
-    NSError *error = [[NSError alloc] initWithDomain:FBiOSSDKDomain
+    NSError *error = [[NSError alloc] initWithDomain:FacebookSDKDomain
                                                 code:FBErrorOperationCancelled
                                             userInfo:nil];
 

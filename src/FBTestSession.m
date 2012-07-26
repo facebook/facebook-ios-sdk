@@ -56,7 +56,7 @@ static NSString *const FBLoginTestUserName = @"name";
 NSString *kSecondTestUserTag = @"Second";
 NSString *kThirdTestUserTag = @"Third";
 
-NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized = @"com.facebook.FBiOSSDK:UnitTestResponseUnrecognized";
+NSString *const FBErrorLoginFailedReasonUnitTestResponseUnrecognized = @"com.facebook.sdk:UnitTestResponseUnrecognized";
 
 #pragma mark Module scoped global variables
 
@@ -499,7 +499,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     NSString *documentsDirectory = [paths objectAtIndex:0];
     
     // fetch config contents
-    NSString *configFilename = [documentsDirectory stringByAppendingPathComponent:@"FBiOSSDK-UnitTestConfig.plist"];
+    NSString *configFilename = [documentsDirectory stringByAppendingPathComponent:@"FacebookSDK-UnitTestConfig.plist"];
     NSDictionary *configSettings = [NSDictionary dictionaryWithContentsOfFile:configFilename];
     
     NSString *appID = [configSettings objectForKey:FBPLISTAppIDKey];
@@ -507,7 +507,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     if (!appID || !appSecret) {
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:
-          @"FBSession: Missing AppID or AppSecret; FBiOSSDK-UnitTestConfig.plist is "
+          @"FBSession: Missing AppID or AppSecret; FacebookSDK-UnitTestConfig.plist is "
           @"is missing or invalid; to create a Facebook AppID, "
           @"visit https://developers.facebook.com/apps"
                                userInfo:nil]

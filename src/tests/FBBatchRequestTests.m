@@ -21,7 +21,7 @@
 #import "FBTestBlocker.h"
 #import "FBGraphUser.h"
 
-#if defined(FBIOSSDK_SKIP_BATCH_REQUEST_TESTS)
+#if defined(FACEBOOKSDK_SKIP_BATCH_REQUEST_TESTS)
 
 #pragma message ("warning: Skipping FBBatchRequestTests")
 

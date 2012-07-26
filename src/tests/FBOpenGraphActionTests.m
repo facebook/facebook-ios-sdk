@@ -22,7 +22,7 @@
 #import "FBGraphUser.h"
 #import "FBTestSession.h"
 
-#if defined(FBIOSSDK_SKIP_OPEN_GRAPH_ACTION_TESTS) || !defined(UNIT_TEST_OPEN_GRAPH_NAMESPACE)
+#if defined(FACEBOOKSDK_SKIP_OPEN_GRAPH_ACTION_TESTS) || !defined(UNIT_TEST_OPEN_GRAPH_NAMESPACE)
 
 #pragma message ("warning: Skipping FBOpenGraphActionTests")
 
@@ -40,7 +40,7 @@
     // OG objects for this app; your OG objects will have URLs hosted by your server.
     NSString *format =  
         @"http://fbsdkog.herokuapp.com/repeater.php?"
-        @"fb:app_id=171298632997486&og:type=%@&"
+        @"fb:app_id=414221181947517&og:type=%@&"
         @"og:title=%@&og:description=%%22%@%%22&"
         @"og:image=https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png&"
         @"body=%@";

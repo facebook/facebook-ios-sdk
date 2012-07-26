@@ -59,8 +59,8 @@
 #endif
 
 // extern const strings
-NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.FBiOSSDK:InlineLoginCancelled";
-NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.FBiOSSDK:ErrorLoginNotCancelled";
+NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.sdk:InlineLoginCancelled";
+NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.sdk:ErrorLoginNotCancelled";
 
 // const strings
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
@@ -81,10 +81,10 @@ static NSString *const FBLoginUXIOS = @"ios";
 static NSString *const FBLoginUXSDK = @"sdk";
 
 // the following constant strings are used by NSNotificationCenter
-NSString *const FBSessionDidSetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidSetActiveSessionNotification";
-NSString *const FBSessionDidUnsetActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidUnsetActiveSessionNotification";
-NSString *const FBSessionDidBecomeOpenActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidBecomeOpenActiveSessionNotification";
-NSString *const FBSessionDidBecomeClosedActiveSessionNotification = @"com.facebook.FBiOSSDK:FBSessionDidBecomeClosedActiveSessionNotification";
+NSString *const FBSessionDidSetActiveSessionNotification = @"com.facebook.sdk:FBSessionDidSetActiveSessionNotification";
+NSString *const FBSessionDidUnsetActiveSessionNotification = @"com.facebook.sdk:FBSessionDidUnsetActiveSessionNotification";
+NSString *const FBSessionDidBecomeOpenActiveSessionNotification = @"com.facebook.sdk:FBSessionDidBecomeOpenActiveSessionNotification";
+NSString *const FBSessionDidBecomeClosedActiveSessionNotification = @"com.facebook.sdk:FBSessionDidBecomeClosedActiveSessionNotification";
 
 // the following const strings name properties for which KVO is manually handled
 // if name changes occur, these strings must be modified to match, else KVO will fail
@@ -1198,7 +1198,7 @@ static FBSession *g_activeSession = nil;
     }
 
     // create error object
-    NSError *err = [NSError errorWithDomain:FBiOSSDKDomain
+    NSError *err = [NSError errorWithDomain:FacebookSDKDomain
                                       code:FBErrorLoginFailedOrCancelled
                                   userInfo:userinfo];
     [userinfo release];

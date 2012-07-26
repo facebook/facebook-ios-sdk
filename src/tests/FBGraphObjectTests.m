@@ -24,7 +24,7 @@
 #import "FBTestBlocker.h"
 #import "FBTests.h"
 
-#if defined(FBIOSSDK_SKIP_GRAPH_OBJECT_TESTS)
+#if defined(FACEBOOKSDK_SKIP_GRAPH_OBJECT_TESTS)
 
 #pragma message ("warning: Skipping FBGraphObjectTests")
 

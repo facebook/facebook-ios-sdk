@@ -26,7 +26,7 @@
 #import "FBRequestConnection.h"
 #import "FBRequestConnection+Internal.h"
 
-#if defined(FBIOSSDK_SKIP_CACHE_TESTS)
+#if defined(FACEBOOKSDK_SKIP_CACHE_TESTS)
 
 #pragma message ("warning: Skipping FBCacheTests")
 

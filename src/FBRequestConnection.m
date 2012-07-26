@@ -1225,7 +1225,7 @@ typedef enum FBRequestConnectionState {
     }
     
     NSError *error = [[[NSError alloc]
-                       initWithDomain:FBiOSSDKDomain
+                       initWithDomain:FacebookSDKDomain
                        code:code
                        userInfo:userInfo]
                       autorelease];
@@ -1239,7 +1239,7 @@ typedef enum FBRequestConnectionState {
 {
     // We don't want to re-wrap our own errors.
     if (innerError &&
-        [innerError.domain isEqualToString:FBiOSSDKDomain]) {
+        [innerError.domain isEqualToString:FacebookSDKDomain]) {
         return innerError;
     }
     NSError *result = nil;

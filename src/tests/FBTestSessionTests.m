@@ -20,7 +20,7 @@
 #import "FBRequest.h"
 #import <CommonCrypto/CommonDigest.h>
 
-#if defined(FBIOSSDK_SKIP_TEST_SESSION_TESTS)
+#if defined(FACEBOOKSDK_SKIP_TEST_SESSION_TESTS)
 
 #pragma message ("warning: Skipping FBTestSessionTests")
 
