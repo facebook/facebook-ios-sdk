@@ -114,4 +114,28 @@
     return [object description];
 }
 
++ (NSBundle *)facebookSDKBundle {
+    static dispatch_once_t fetchBundleOnce;
+    static NSBundle *bundle = nil;
+    
+    dispatch_once(&fetchBundleOnce, ^{
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"FacebookSDKResources"
+                                                         ofType:@"bundle"];
+        bundle = [NSBundle bundleWithPath:path];
+    });
+    return bundle;
+}
+
++ (NSString *)localizedStringForKey:(NSString *)key
+                        withDefault:(NSString *)value {
+    NSString *result = value;
+    NSBundle *resources = FBUtility.facebookSDKBundle;
+    if (resources) {
+        result = [resources localizedStringForKey:key
+                                            value:value
+                                            table:nil];
+    }
+    return result;
+}
+
 @end

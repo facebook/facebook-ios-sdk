@@ -20,6 +20,7 @@
 #import "FBSession.h"
 #import "FBRequest.h"
 #import "FBViewController+Internal.h"
+#import "FBUtility.h"
 
 @interface FBUserSettingsViewController ()
 
@@ -182,16 +183,19 @@
 
 - (void)updateControls {
     if (FBSession.activeSession.isOpen) {
-        NSString *loginLogoutText = NSLocalizedString(@"Log Out", @"Log Out");
+        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:LogOut"
+                                                         withDefault:@"Log Out"];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
         
         // Do we know the user's name? If not, request it.
         if (self.me != nil) {
-            NSString *format = NSLocalizedString(@"Logged in as: %@", @"Logged in as: %@");
+            NSString *format = [FBUtility localizedStringForKey:@"FBUSVC:LogInAs"
+                                                    withDefault:@"Logged in as: %@"];
             self.connectedStateLabel.text = [NSString stringWithFormat:format, self.me.name];
             self.profilePicture.profileID = [self.me objectForKey:@"id"];
         } else {
-            self.connectedStateLabel.text = NSLocalizedString(@"Logged in", @"Logged in");
+            self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:LoggedIn"
+                                                                 withDefault:@"Logged in"];
             self.profilePicture.profileID = nil;
 
             [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -203,9 +207,11 @@
         }
     } else {
         self.me = nil;
-        self.connectedStateLabel.text = NSLocalizedString(@"Not connected to Facebook", @"Not connected to Facebook");
+        self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotConnectedToFacebook"
+                                                             withDefault:@"Not connected to Facebook"];
         self.profilePicture.profileID = nil;
-        NSString *loginLogoutText = NSLocalizedString(@"Connect", @"Connect");
+        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:NotConnectedToFacebook"
+                                                         withDefault:@"Connect"];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
     }
 }

@@ -20,6 +20,7 @@
 #import "FBRequestConnection+Internal.h"
 #import "FBSession.h"
 #import "FBGraphUser.h"
+#import "FBUtility.h"
 
 struct FBLoginViewArrangement {
     int width, height;
@@ -247,7 +248,9 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
         // removing the views that we don't need
         [self.label removeFromSuperview];
         [self.icon removeFromSuperview];
-        [self.textButton setTitle:@"Log Out" forState:UIControlStateNormal];
+        [self.textButton setTitle:[FBUtility localizedStringForKey:@"FBLV:LogOutButton"
+                                                       withDefault:@"Log Out"]
+                         forState:UIControlStateNormal];
         
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
@@ -259,7 +262,9 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
         [self insertSubview:self.label
                belowSubview:self.profileButton];
         
-        [self.textButton setTitle:@"Log In" forState:UIControlStateNormal];
+        [self.textButton setTitle:[FBUtility localizedStringForKey:@"FBLV:LogInButton"
+                                                       withDefault:@"Log In"]
+                         forState:UIControlStateNormal];
              
         // adjust profile view
         struct FBLoginViewArrangement a = arrangements[self.style];
@@ -386,11 +391,23 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
             [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
         } else { // logout action sheet
             NSString *name = self.user.name;
-            UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:[NSString stringWithFormat:@"Logged in %@",
-                                                                          name ? [NSString stringWithFormat:@"as %@", name] : @"using Facebook"]
+            NSString *title = nil;
+            if (name) {
+                title = [NSString stringWithFormat:[FBUtility localizedStringForKey:@"FBLV:LoggedInAs"
+                                                                        withDefault:@"Logged in as %@"], name];
+            } else {
+                title = [FBUtility localizedStringForKey:@"FBLV:LoggedInUsingFacebook"
+                                            withDefault:@"Logged in using Facebook"];
+            }
+            
+            NSString *cancelTitle = [FBUtility localizedStringForKey:@"FBLV:CancelAction"
+                                                         withDefault:@"Cancel"];
+            NSString *logOutTitle = [FBUtility localizedStringForKey:@"FBLV:LogOutAction"
+                                                         withDefault:@"Log Out"];
+            UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:title
                                                                 delegate:self
-                                                       cancelButtonTitle:@"Cancel"
-                                                  destructiveButtonTitle:@"Log Out"
+                                                       cancelButtonTitle:cancelTitle
+                                                  destructiveButtonTitle:logOutTitle
                                                        otherButtonTitles:nil]
                                     autorelease];
             // Show the sheet

@@ -31,6 +31,13 @@
 + (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
 + (NSString *)stringFBIDFromObject:(id)object;
 
++ (NSBundle *)facebookSDKBundle;
++ (NSString *)localizedStringForKey:(NSString *)key
+                        withDefault:(NSString *)value;
+
 @end
 
 #define FB_BASE_URL @"facebook.com"
+
+
+
