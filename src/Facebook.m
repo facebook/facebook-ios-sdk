@@ -137,8 +137,11 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  * Override NSObject : free the space
  */
 - (void)dealloc {
-    [_session release];
+	[_tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName context:tokenContext];
+	[_tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName context:tokenContext];
     [_tokenCaching release];
+	
+    [_session release];
     for (FBRequest* _request in _requests) {
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
     }
