@@ -144,6 +144,31 @@
     STAssertNotNil(foundPlace, @"didn't find Lincoln Memorial");
 }
 
+- (void)testRestRequestGetUser {
+    FBTestSession *session = self.defaultTestSession;
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
+                                session.testUserID, @"uids",
+                                @"uid,name", @"fields",
+                                nil];
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                  restMethod:@"users.getInfo"
+                                                  parameters:parameters
+                                                  HTTPMethod:nil] 
+                          autorelease];
+
+    NSArray *responses = [self sendRequests:request, nil];
+    STAssertNotNil(responses, @"responses");
+
+    NSArray *firstResponse = (NSArray *)[responses objectAtIndex:0];
+    NSDictionary *firstResult = (NSDictionary *)[firstResponse objectAtIndex:0];
+    STAssertNotNil(firstResult, @"firstResult");
+    
+    NSString *uid = [[firstResult objectForKey:@"uid"] stringValue];
+    STAssertNotNil(uid, @"uid");
+    STAssertTrue([session.testUserID isEqualToString:uid], @"don't match");
+}
+
 - (NSArray *)sendRequests:(FBRequest *)firstRequest, ...
 {
     NSMutableArray *requests = [[[NSMutableArray alloc] init] autorelease];
