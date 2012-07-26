@@ -33,6 +33,7 @@
                       state:(FBSessionState)state
                       error:(NSError *)error;
 - (void)openSession;
+- (void)updateControls;
 
 @end
 
