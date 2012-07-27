@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A68590615C1E37E001D4EDD /* FBSettings+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 2A68590515C1E37E001D4EDD /* FBSettings+Internal.h */; };
 		5F7CB4201553ACC600C183CF /* FBLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F7CB41E1553ACC600C183CF /* FBLogger.h */; };
 		5F7CB4211553ACC600C183CF /* FBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CB41F1553ACC600C183CF /* FBLogger.m */; };
 		8409694C1541F41100479AD9 /* FBOpenGraphAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 8409694B1541F41100479AD9 /* FBOpenGraphAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -171,6 +172,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2A68590515C1E37E001D4EDD /* FBSettings+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSettings+Internal.h"; sourceTree = "<group>"; };
 		5F7CB41E1553ACC600C183CF /* FBLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLogger.h; sourceTree = "<group>"; };
 		5F7CB41F1553ACC600C183CF /* FBLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBLogger.m; sourceTree = "<group>"; };
 		8409694B1541F41100479AD9 /* FBOpenGraphAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBOpenGraphAction.h; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 				84137156152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.h */,
 				84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */,
 				DDB7C34A15A6181100C8DCE6 /* FBSettings.h */,
+				2A68590515C1E37E001D4EDD /* FBSettings+Internal.h */,
 				DDB7C34B15A6181100C8DCE6 /* FBSettings.m */,
 				8525A5B8156F2049009F6F3F /* FBTestSession.h */,
 				85F29E9315785D72001F0531 /* FBTestSession+Internal.h */,
@@ -579,6 +582,7 @@
 				DDB7C34C15A6181100C8DCE6 /* FBSettings.h in Headers */,
 				85E4AC7715B63CB600F17346 /* FBUserSettingsViewController.h in Headers */,
 				85E4AC7D15B63CC500F17346 /* FBViewController.h in Headers */,
+				2A68590615C1E37E001D4EDD /* FBSettings+Internal.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

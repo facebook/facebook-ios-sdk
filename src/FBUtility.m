@@ -75,6 +75,10 @@
     return (time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
++ (NSTimeInterval)randomTimeInterval:(NSTimeInterval)minValue withMaxValue:(NSTimeInterval)maxValue {
+    return minValue + (maxValue - minValue) * (double)arc4random() / UINT32_MAX;
+}
+
 + (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item {
     for (id<FBGraphObject> obj in array) {
         if ([FBGraphObject isGraphObjectID:obj sameAs:item]) {

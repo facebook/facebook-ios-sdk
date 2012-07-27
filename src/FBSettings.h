@@ -47,12 +47,36 @@ extern NSString *const FBLoggingBehaviorPerformanceCharacteristics;
 
 /*!
  @method
- 
+
  @abstract Set the current Facebook SDK logging behavior.  This should consist of strings defined as
  constants with FBLogBehavior*, and can be constructed with [NSSet initWithObjects:].
- 
+
  @param loggingBehavior A set of strings indicating what information should be logged.
  */
 + (void)setLoggingBehavior:(NSSet *)loggingBehavior;
+
+/*! @abstract Retreive the current auto publish behavior.  Defaults to YES. */
++ (BOOL)shouldAutoPublishInstall;
+
+/*!
+ @method
+
+ @abstract Sets whether the SDK will automatically publish an install to Facebook during first FBSession init
+ or on first network request to Facebook.
+ */
++ (void)setShouldAutoPublishInstall:(BOOL)autoPublishInstall;
+
+// For best results, call this function during app activation.
+/*!
+ @method
+
+ @abstract Manually publish an attributed install to the facebook graph.  Use this method if you have disabled
+ auto publish and wish to manually send an install from your code.  This method acquires the current attribution
+ id from the facebook application, queries the graph API to determine if the application has install
+ attribution enabled, publishes the id, and records success to avoid reporting more than once.
+
+ @param appID A specific appID to publish an install for.  If nil, uses [FBSession defaultAppID].
+ */
++ (void) publishInstall:(NSString *)appID;
 
 @end
