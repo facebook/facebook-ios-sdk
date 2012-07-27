@@ -17,6 +17,8 @@
 #import "HFViewController.h"
 
 #import "HFAppDelegate.h"
+#import <CoreLocation/CoreLocation.h>
+
 
 @interface HFViewController () <FBLoginViewDelegate>
 
@@ -24,12 +26,14 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostStatus;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostPhoto;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPickFriends;
+@property (strong, nonatomic) IBOutlet UIButton *buttonPickPlace;
 @property (strong, nonatomic) IBOutlet UILabel *labelFirstName;
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 
 - (IBAction)postStatusUpdateClick:(UIButton *)sender;
 - (IBAction)postPhotoClick:(UIButton *)sender;
 - (IBAction)pickFriendsClick:(UIButton *)sender;
+- (IBAction)pickPlaceClick:(UIButton *)sender;
 
 - (void)showAlert:(NSString *)message
            result:(id)result
@@ -43,6 +47,7 @@
 @synthesize buttonPostStatus = _buttonPostStatus;
 @synthesize buttonPostPhoto = _buttonPostPhoto;
 @synthesize buttonPickFriends = _buttonPickFriends;
+@synthesize buttonPickPlace = _buttonPickPlace;
 @synthesize labelFirstName = _labelFirstName;
 @synthesize loggedInUser = _loggedInUser;
 @synthesize profilePic = _profilePic;
@@ -62,6 +67,7 @@
 
 - (void)viewDidUnload {
     self.buttonPickFriends = nil;
+    self.buttonPickPlace = nil;
     self.buttonPostPhoto = nil;
     self.buttonPostStatus = nil;
     self.labelFirstName = nil;
@@ -84,6 +90,7 @@
     self.buttonPostPhoto.enabled = YES;
     self.buttonPostStatus.enabled = YES;
     self.buttonPickFriends.enabled = YES;
+    self.buttonPickPlace.enabled = YES;
 }
 
 - (void)loginViewFetchedUserInfo:(FBLoginView *)loginView
@@ -102,7 +109,8 @@
     self.buttonPostPhoto.enabled = NO;
     self.buttonPostStatus.enabled = NO;
     self.buttonPickFriends.enabled = NO;
-    
+    self.buttonPickPlace.enabled = NO;
+
     self.profilePic.profileID = nil;            
     self.labelFirstName.text = nil;
 }
@@ -110,7 +118,7 @@
 // Post Status Update button handler
 - (IBAction)postStatusUpdateClick:(UIButton *)sender {
     
-    // Post a status update to the user's feedm via the Graph API, and display an alert view 
+    // Post a status update to the user's feed via the Graph API, and display an alert view 
     // with the results or an error.
 
     NSString *message = [NSString stringWithFormat:@"Updating %@'s status at %@", 
@@ -133,14 +141,11 @@
     // useful way to get an image.
     UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
     
-    // Build the request for uploading the photo
-    FBRequest *photoUploadRequest = [FBRequest requestForUploadPhoto:img];
-    
-    // Then fire it off.
-    [photoUploadRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {        
-        [self showAlert:@"Photo Post" result:result error:error];
-        self.buttonPostPhoto.enabled = YES;
-    }];
+    [FBRequestConnection startForUploadPhoto:img 
+                           completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                               [self showAlert:@"Photo Post" result:result error:error];
+                               self.buttonPostPhoto.enabled = YES;
+                           }];
     
     self.buttonPostPhoto.enabled = NO;
 }
@@ -185,6 +190,29 @@
      }];
 }
 
+// Pick Place button handler
+- (IBAction)pickPlaceClick:(UIButton *)sender {
+    FBPlacePickerViewController *placePickerController = [[FBPlacePickerViewController alloc] init];
+    placePickerController.title = @"Pick a Seattle Place";
+    placePickerController.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
+    [placePickerController loadData];
+    
+    // Use the modal wrapper method to display the picker.
+    [placePickerController presentModallyFromViewController:self animated:YES handler:
+     ^(FBViewController *sender, BOOL donePressed) {
+         if (!donePressed) {
+             return;
+         }
+                
+         [[[UIAlertView alloc] initWithTitle:@"You Picked:" 
+                                     message:placePickerController.selection.name 
+                                    delegate:nil 
+                           cancelButtonTitle:@"OK" 
+                           otherButtonTitles:nil] 
+          show];
+     }];
+}
+
 // UIAlertView helper for post buttons
 - (void)showAlert:(NSString *)message
            result:(id)result
@@ -209,5 +237,7 @@
                                               otherButtonTitles:nil];
     [alertView show];
 }
+
+
 
 @end

@@ -16,6 +16,7 @@
 		5F6AF1A11532A37B00DDBD75 /* HFViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A01532A37B00DDBD75 /* HFViewController.m */; };
 		5F6AF1A41532A37B00DDBD75 /* HFViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A21532A37B00DDBD75 /* HFViewController_iPhone.xib */; };
 		5F6AF1A71532A37B00DDBD75 /* HFViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F6AF1A51532A37B00DDBD75 /* HFViewController_iPad.xib */; };
+		5FC4959815C21151007EE54E /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FC4959715C21151007EE54E /* CoreLocation.framework */; };
 		8458462715A63635008A1F16 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8458462615A63635008A1F16 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB508158F9D78000AF7F5 /* Icon-72.png */; };
 		85AFB50D158F9D78000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB509158F9D78000AF7F5 /* Icon-72@2x.png */; };
@@ -40,6 +41,7 @@
 		5F6AF1A01532A37B00DDBD75 /* HFViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HFViewController.m; sourceTree = "<group>"; };
 		5F6AF1A31532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HFViewController_iPhone.xib; sourceTree = "<group>"; };
 		5F6AF1A61532A37B00DDBD75 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/HFViewController_iPad.xib; sourceTree = "<group>"; };
+		5FC4959715C21151007EE54E /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8458462615A63635008A1F16 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85AFB508158F9D78000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB509158F9D78000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
@@ -59,6 +61,7 @@
 				5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */,
 				5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */,
 				DD37EAC015ABA8FA0015966B /* FacebookSDK.framework in Frameworks */,
+				5FC4959815C21151007EE54E /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +88,7 @@
 		5F6AF18C1532A37B00DDBD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5FC4959715C21151007EE54E /* CoreLocation.framework */,
 				DD37EAC215ABA8FE0015966B /* FacebookSDKResources.bundle */,
 				DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */,
 				8458462615A63635008A1F16 /* Accounts.framework */,
@@ -106,7 +110,6 @@
 				5F6AF1A51532A37B00DDBD75 /* HFViewController_iPad.xib */,
 				5F6AF1941532A37B00DDBD75 /* Supporting Files */,
 			);
-			name = HelloFacebookSample;
 			path = HelloFacebookSample;
 			sourceTree = "<group>";
 		};

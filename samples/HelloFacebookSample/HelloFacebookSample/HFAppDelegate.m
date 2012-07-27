@@ -52,18 +52,11 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPhone" bundle:nil];
+        self.window.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPhone" bundle:nil];
     } else {
-        self.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPad" bundle:nil];
+        self.window.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPad" bundle:nil];
     }
-    self.rootViewController.navigationItem.title = @"Hello, Facebook";
-    
-    // Set up a UINavigationController as the basis of this app, with the nib generated viewController
-    // as the initial view.
-    UINavigationController *navigationController = 
-        [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
-    
-    self.window.rootViewController = navigationController;
+
     [self.window makeKeyAndVisible];
     
     return YES;
