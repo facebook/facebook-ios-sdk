@@ -15,6 +15,7 @@
  */
 
 #import "FBViewController.h"
+#import "FBViewController+Internal.h"
 
 @interface FBViewController ()
 
@@ -24,7 +25,6 @@
 @property (nonatomic, copy) FBModalCompletionHandler handler;
 @property (nonatomic) BOOL autoDismiss;
 @property (nonatomic) BOOL dismissAnimated;
-@property (nonatomic, readonly) UIViewController *compatiblePresentingViewController;
 
 - (void)cancelButtonPressed:(id)sender;
 - (void)doneButtonPressed:(id)sender;
@@ -241,9 +241,7 @@
 }
 
 - (void)updateBarForNavigationMode {
-    if (self.navigationItem.rightBarButtonItem == nil) {
-        self.navigationItem.rightBarButtonItem = self.doneButton;
-    }
+    self.navigationItem.rightBarButtonItem = self.doneButton;
 }
 
 - (void)setCancelButton:(UIBarButtonItem *)cancelButton {

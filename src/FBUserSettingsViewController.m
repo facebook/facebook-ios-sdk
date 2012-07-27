@@ -19,6 +19,7 @@
 #import "FBGraphUser.h"
 #import "FBSession.h"
 #import "FBRequest.h"
+#import "FBViewController+Internal.h"
 
 @interface FBUserSettingsViewController ()
 
@@ -82,7 +83,7 @@
     [super viewDidLoad];
     
     // If we are not being presented modally, we don't need a Done button.
-    if (self.presentingViewController == nil) {
+    if (self.compatiblePresentingViewController == nil) {
         self.doneButton = nil;
     }
     
