@@ -34,24 +34,17 @@
 
 @implementation FBOpenGraphActionTests
 
-- (id<FBOGTestObject>)openGraphTestObject:(NSString*)testName
-{
-    // This URL is specific to this test, and can be used to create arbitrary
-    // OG objects for this app; your OG objects will have URLs hosted by your server.
-    NSString *format =  
-        @"http://fbsdkog.herokuapp.com/repeater.php?"
-        @"fb:app_id=414221181947517&og:type=%@&"
-        @"og:title=%@&og:description=%%22%@%%22&"
-        @"og:image=https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png&"
-        @"body=%@";
-    
+- (id<FBOGTestObject>)openGraphTestObject:(NSString*)testName {    
     // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
     // properties, etc. See <FacebookSDK/FBGraphObject.h> for more details.
     id<FBOGTestObject> result = (id<FBOGTestObject>)[FBGraphObject graphObject];
     
-    // Give it a URL that will echo back the name of the meal as its title, description, and body.
-    result.url = [NSString stringWithFormat:format, @UNIT_TEST_OPEN_GRAPH_NAMESPACE":test", testName, testName, testName];
-    
+    // Give it a URL of sample data that contains the object's name, title, description, and body.
+    if ([testName isEqualToString:@"testPostingSimpleOpenGraphAction"]) {
+        result.url = @"http://samples.ogp.me/414237771945858";
+    } else if ([testName isEqualToString:@"testPostingComplexOpenGraphAction"]) {
+        result.url = @"http://samples.ogp.me/414238245279144";
+    }
     return result;
 }
 

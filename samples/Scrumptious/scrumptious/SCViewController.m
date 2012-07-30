@@ -88,25 +88,33 @@
 
 
 // FBSample logic
-// Creates an Open Graph object using a simple repeater app that just echoes its
-// input back as the properties of the OG object.
+// This is a helper function that returns an FBGraphObject representing a meal
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
-    // This URL is specific to this sample, and can be used to create arbitrary
-    // OG objects for this app; your OG objects will have URLs hosted by your server.
-    NSString *format =  
-        @"http://fbsdkog.herokuapp.com/repeater.php?"
-        @"fb:app_id=233936543368280&og:type=%@&"
-        @"og:title=%@&og:description=%%22%@%%22&"
-        @"og:image=https://s-static.ak.fbcdn.net/images/devsite/attachment_blank.png&"
-        @"body=%@";
     
     // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
     // properties, etc. See <FacebookSDK/FBGraphObject.h> for more details.
     id<SCOGMeal> result = (id<SCOGMeal>)[FBGraphObject graphObject];
     
-    // Give it a URL that will echo back the name of the meal as its title, description, and body.
-    result.url = [NSString stringWithFormat:format, @"fb_sample_scrumps:meal", meal, meal, meal];
-    
+    // Give it a URL of sample data that contains the object's name, title, description, and body.
+    // These OG object URLs were created using the edit open graph feature of the graph tool
+    // at https://www.developers.facebook.com/apps/
+    if ([meal isEqualToString:@"Cheeseburger"]) {
+        result.url = @"http://samples.ogp.me/314483151980285";
+    } else if ([meal isEqualToString:@"Pizza"]) {
+        result.url = @"http://samples.ogp.me/314483221980278";
+    } else if ([meal isEqualToString:@"Hotdog"]) {
+        result.url = @"http://samples.ogp.me/314483265313607";
+    } else if ([meal isEqualToString:@"Italian"]) {
+        result.url = @"http://samples.ogp.me/314483348646932";
+    } else if ([meal isEqualToString:@"French"]) {
+        result.url = @"http://samples.ogp.me/314483375313596";
+    } else if ([meal isEqualToString:@"Chinese"]) {
+        result.url = @"http://samples.ogp.me/314483421980258";
+    } else if ([meal isEqualToString:@"Thai"]) {
+        result.url = @"http://samples.ogp.me/314483451980255";
+    } else if ([meal isEqualToString:@"Indian"]) {
+        result.url = @"http://samples.ogp.me/314483491980251";
+    }
     return result;
 }
 

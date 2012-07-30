@@ -201,16 +201,14 @@
 }
 
 // FBSample logic
-// This is the workhorse method of this view. It sets up the content for a custom OG action, and then posts it
-// using FBR
+// This is a helper function that returns an FBGraphObject representing a truth value, either true or false
 + (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value {
-    // NOTE! This URL is temporary, and should not be relied upon beyond running this sample.
-    // The endpoint can be used to create arbitrary OG objects for this app; 
+    
     // NOTE! Production applications must host OG objects using a server provisioned for use by the app
-    NSString *format =  
-        @"http://fbsdkog.herokuapp.com/repeater.php?"
-        @"fb:app_id=369258453126794&og:type=fb_sample_boolean_og:truthvalue&"
-        @"og:title=%@&og:description=%%22%@%%22&og:image=http://fbsdkog.herokuapp.com/%@&body=%@";
+    // These OG object URLs were created using the edit open graph feature of the graph tool
+    // at https://www.developers.facebook.com/apps/
+    NSString *trueURL = @"http://samples.ogp.me/369360019783304";
+    NSString *falseURL = @"http://samples.ogp.me/369360256449947";
     
     // no need to create more than one of each TruthValue object, so we will store references here
     static id<BOGGraphTruthValue> trueObj = nil; 
@@ -220,13 +218,13 @@
     if (value) {
         if (!trueObj) {
             trueObj = (id<BOGGraphTruthValue>)[FBGraphObject graphObject];
-            trueObj.url = [NSString stringWithFormat:format, @"True", @"Not%20False", @"1.jpg", @"True"];
+            trueObj.url = trueURL;
         }
         return trueObj;
     } else {
         if (!falseObj) {
             falseObj = (id<BOGGraphTruthValue>)[FBGraphObject graphObject];
-            falseObj.url = [NSString stringWithFormat:format, @"False", @"Not%20True", @"0.jpg", @"False"];
+            falseObj.url = falseURL;
         }
         return falseObj;
     }
