@@ -210,7 +210,7 @@
         self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotConnectedToFacebook"
                                                              withDefault:@"Not connected to Facebook"];
         self.profilePicture.profileID = nil;
-        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:NotConnectedToFacebook"
+        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:Connect"
                                                          withDefault:@"Connect"];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
     }
