@@ -63,6 +63,8 @@
     loginview.delegate = self;
     
     [self.view addSubview:loginview];
+
+    [loginview sizeToFit];
 }
 
 - (void)viewDidUnload {

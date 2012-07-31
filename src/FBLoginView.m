@@ -22,29 +22,14 @@
 #import "FBGraphUser.h"
 #import "FBUtility.h"
 
-struct FBLoginViewArrangement {
-    int width, height;
-    int iconExtent;
-    int iconX, iconY;
-    int profileExtent;
-    int profileX, profileY;
-    int questionMarkSize;
-    int textButtonWidth;
-    int textButtonHorizMargin;
-};
+static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
+const int kButtonLabelX = 46;
 
-struct FBLoginViewArrangement arrangements[] = {
-    {32, 32, 12, 0, 20, 32, 0, 0, 26, 80, 3},
-    {48, 48, 16, 0, 32, 48, 0, 0, 32, 80, 3},
-    {64, 32, 32, 32, 0, 32, 0, 0, 28, 80, 3},
-};
-
-NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
+CGSize g_imageSize;
 
 @interface FBLoginView() <UIActionSheetDelegate>
 
 - (void)initialize;
-- (void)arrangeViews:(int)arrangement;
 - (void)buttonPressed:(id)sender;
 - (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn;
 - (void)wireViewForSession:(FBSession *)session;
@@ -55,11 +40,8 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 - (void)handleActiveSessionSetNotifications:(NSNotification *)notification;
 - (void)handleActiveSessionUnsetNotifications:(NSNotification *)notification;
 
-@property (retain, nonatomic) UIImageView *icon;
-@property (retain, nonatomic) FBProfilePictureView *profilePicture;
 @property (retain, nonatomic) UILabel *label;
-@property (retain, nonatomic) UIButton *profileButton;
-@property (retain, nonatomic) UIButton *textButton;
+@property (retain, nonatomic) UIButton *button;
 @property (retain, nonatomic) FBSession *session;
 @property (retain, nonatomic) FBRequestConnection *request;
 @property (retain, nonatomic) id<FBGraphUser> user;
@@ -68,17 +50,13 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 
 @implementation FBLoginView
 
-@synthesize style = _style,
-            delegate = _delegate,
-            icon = _icon,
-            profilePicture = _profilePicture,
-            label = _label,
-            profileButton = _profileButton,
-            textButton = _textButton,
-            session = _session,
-            request = _request,
-            user = _user,
-            permissions = _permissions;
+@synthesize delegate = _delegate,
+    label = _label,
+    button = _button,
+    session = _session,
+    request = _request,
+    user = _user,
+    permissions = _permissions;
 
 - (id)init {
     return [self initWithPermissions:nil];
@@ -117,25 +95,14 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     // if we have an outstanding request, cancel
     [self.request cancel];
     
-    self.request = nil;
-    self.icon = nil;
-    self.profilePicture = nil;
-    self.label = nil;
-    self.profileButton = nil;
-    self.textButton = nil;
-    self.session = nil;
-    self.user = nil;
-    self.permissions = nil;
-
+    [_request release];
+    [_label release];
+    [_button release];
+    [_session release];
+    [_user release];
+    [_permissions release];
+    
     [super dealloc];
-}
-
-- (void)setStyle:(FBLoginViewStyle)style  {
-    if (_style != style && style <= FBLoginViewStyleHorizontal) {
-        _style = style;
-        [self arrangeViews:_style];
-        [self configureViewForStateLoggedIn:self.session.isOpen];
-    }
 }
 
 - (void)setDelegate:(id<FBLoginViewDelegate>)newValue {
@@ -153,10 +120,10 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
-    if (self.profileButton) {
+    if (self.button) {
         return;
     }
-
+    
     // setup view
     self.autoresizesSubviews = YES;
     self.clipsToBounds = YES;
@@ -176,51 +143,52 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
                                              selector:@selector(handleActiveSessionUnsetNotifications:) 
                                                  name:FBSessionDidUnsetActiveSessionNotification
                                                object:nil]; 
-        
+    
     [self wireViewForSession:FBSession.activeSession];
     
-    // setup icon view
-    self.icon = [[[UIImageView alloc] 
-                  initWithImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/f_logo.png"]]
-                 autorelease];
+    // setup button
+    self.button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.button addTarget:self
+                    action:@selector(buttonPressed:)
+          forControlEvents:UIControlEventTouchUpInside];
+    self.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
+    self.button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    // setup profile picture
-    self.profilePicture = [[[FBProfilePictureView alloc] initWithProfileID:nil
-                                                           pictureCropping:FBProfilePictureCroppingSquare]
-                           autorelease];
+    UIImage *image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small.png"] 
+                      stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
+    g_imageSize = image.size;
+    [self.button setBackgroundImage:image forState:UIControlStateNormal];
     
-    // setup profile picture
+    image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small-pressed.png"]
+             stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
+    [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
+    
+    [self addSubview:self.button];
+    
+    // add a label that will appear over the button
     self.label = [[[UILabel alloc] init] autorelease];
-    self.label.text = @"?";
-    self.label.backgroundColor = [UIColor clearColor];
-    self.label.textColor = [UIColor colorWithRed:59.0/255  // make the ? facebook blue
-                                           green:89.0/255
-                                            blue:152.0/255
-                                           alpha:1];
+    self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.label.textAlignment = UITextAlignmentCenter;
-    
-    // setup profile button
-    self.profileButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [self.profileButton setBackgroundImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/bluetint.png"]
-                           forState:UIControlStateHighlighted];
-    [self.profileButton addTarget:self 
-                           action:@selector(buttonPressed:) 
-                 forControlEvents:UIControlEventTouchUpInside];
-    
-    // setup text button
-    self.textButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [self.textButton addTarget:self
-                        action:@selector(buttonPressed:)
-              forControlEvents:UIControlEventTouchUpInside];
-    
-    [self arrangeViews:0];
-    
-    // adding the views that we need
-    [self addSubview:self.profilePicture];
-    [self addSubview:self.icon];
+    self.label.backgroundColor = [UIColor clearColor];
+    self.label.font = [UIFont boldSystemFontOfSize:16.0];
+    self.label.textColor = [UIColor whiteColor];
+    self.label.shadowColor = [UIColor blackColor];
+    self.label.shadowOffset = CGSizeMake(0.0, -1.0);
     [self addSubview:self.label];
-    [self addSubview:self.profileButton];
-    [self addSubview:self.textButton];
+    
+    // We force our height to be the same as the image, but we will let someone make us wider
+    // than the default image.
+    CGFloat width = MAX(self.frame.size.width, g_imageSize.width);
+    CGRect frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,
+                              width, image.size.height);
+    self.frame = frame;
+    
+    CGRect buttonFrame = CGRectMake(0, 0, width, image.size.height);
+    self.button.frame = buttonFrame;
+    
+    self.label.frame = CGRectMake(kButtonLabelX, 0, width - kButtonLabelX, image.size.height);    
+    
+    self.backgroundColor = [UIColor clearColor];
     
     if (self.session.isOpen) {
         [self fetchMeInfo];
@@ -230,50 +198,31 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     }
 }
 
-- (void)arrangeViews:(int)arrangement {
-    struct FBLoginViewArrangement a = arrangements[arrangement];
+- (CGSize)sizeThatFits:(CGSize)size {
+    CGSize logInSize = [[self logInText] sizeWithFont:self.label.font];
+    CGSize logOutSize = [[self logOutText] sizeWithFont:self.label.font];
     
-    self.frame = CGRectMake(0, 0, a.width + a.textButtonWidth + a.textButtonHorizMargin, a.height);
-    self.profileButton.frame = CGRectMake(0, 0, a.width, a.height); 
+    // Leave at least a small margin around the label.
+    CGFloat desiredWidth = kButtonLabelX + 20 + MAX(logInSize.width, logOutSize.width);
+    // Never get smaller than the image
+    CGFloat width = MAX(desiredWidth, g_imageSize.width);
+    
+    return CGSizeMake(width, g_imageSize.height);
+}
 
-    self.icon.frame = CGRectMake(a.iconX, a.iconY, a.iconExtent, a.iconExtent);
-    self.profilePicture.frame = CGRectMake(a.profileX, a.profileY, a.profileExtent, a.profileExtent);
-    self.label.frame = self.profilePicture.frame;
-    self.label.font = [UIFont systemFontOfSize:a.questionMarkSize];
-    self.textButton.frame = CGRectMake(a.width + a.textButtonHorizMargin, 0, a.textButtonWidth, a.height);
+- (NSString *)logInText {
+    return [FBUtility localizedStringForKey:@"FBLV:LogInButton" withDefault:@"Log In"];
+}
+
+- (NSString *)logOutText {
+    return [FBUtility localizedStringForKey:@"FBLV:LogOutButton" withDefault:@"Log Out"];
 }
 
 - (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn {
     if (isLoggedIn) {
-        // removing the views that we don't need
-        [self.label removeFromSuperview];
-        [self.icon removeFromSuperview];
-        [self.textButton setTitle:[FBUtility localizedStringForKey:@"FBLV:LogOutButton"
-                                                       withDefault:@"Log Out"]
-                         forState:UIControlStateNormal];
-        
-        // adjust profile view
-        struct FBLoginViewArrangement a = arrangements[self.style];
-        self.profilePicture.center = CGPointMake(a.width / 2, a.height / 2);
+        self.label.text = [self logOutText];
     } else {
-        // adding the views that we need        
-        [self insertSubview:self.icon
-               belowSubview:self.profileButton];
-        [self insertSubview:self.label
-               belowSubview:self.profileButton];
-        
-        [self.textButton setTitle:[FBUtility localizedStringForKey:@"FBLV:LogInButton"
-                                                       withDefault:@"Log In"]
-                         forState:UIControlStateNormal];
-             
-        // adjust profile view
-        struct FBLoginViewArrangement a = arrangements[self.style];
-        self.profilePicture.frame = CGRectMake(a.profileX, 
-                                               a.profileY, 
-                                               a.profileExtent, 
-                                               a.profileExtent);
-        
-        self.profilePicture.profileID = nil;
+        self.label.text = [self logInText];
         self.user = nil;
     }
 }
@@ -285,18 +234,16 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     [self.request addRequest:request
            completionHandler:^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {
                if (result) {
-                   self.profilePicture.profileID = [result objectForKey:@"id"];
                    self.user = result;
                    [self informDelegate:YES];
                } else {
-                   self.profilePicture.profileID = nil;
                    self.user = nil;
                }
                self.request = nil;
            }];
     [self.request startWithCacheIdentity:FBLoginViewCacheIdentity
                    skipRoundtripIfCached:YES];
-
+    
 }
 
 - (void)informDelegate:(BOOL)userOnly {
@@ -350,7 +297,7 @@ NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
     // to the session object at all
     [self.session removeObserver:self
                       forKeyPath:@"state"];
-     self.session = nil;
+    self.session = nil;
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath

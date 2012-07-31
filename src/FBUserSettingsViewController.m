@@ -25,6 +25,7 @@
 @interface FBUserSettingsViewController ()
 
 @property (nonatomic, retain) FBProfilePictureView *profilePicture;
+@property (nonatomic, retain) UIImageView *backgroundImageView;
 @property (nonatomic, retain) UILabel *connectedStateLabel;
 @property (nonatomic, retain) id<FBGraphUser> me;
 @property (nonatomic, retain) UIButton *loginLogoutButton;
@@ -36,6 +37,7 @@
                       error:(NSError *)error;
 - (void)openSession;
 - (void)updateControls;
+- (void)updateBackgroundImage;
 
 @end
 
@@ -47,6 +49,7 @@
 @synthesize loginLogoutButton = _loginLogoutButton;
 @synthesize permissions = _permissions;
 @synthesize attemptingLogin = _attemptingLogin;
+@synthesize backgroundImageView = _backgroundImageView;
 
 #pragma mark View controller lifecycle
 
@@ -76,6 +79,7 @@
     [_me release];
     [_loginLogoutButton release];
     [_permissions release];
+    [_backgroundImageView release];
 }
 
 #pragma mark View lifecycle
@@ -88,69 +92,84 @@
         self.doneButton = nil;
     }
     
-    UIColor *facebookBlue = [UIColor colorWithRed:(59.0 / 255.0) 
-                                            green:(89.0 / 255.0) 
-                                             blue:(152.0 / 255.0) 
-                                            alpha:1.0];
-
-    self.view.backgroundColor = facebookBlue;
-        
-    // TODO autoresizing, constants for margins, etc.
     const CGFloat kSideMargin = 20.0;
-    const CGFloat kInternalMarginX = 20.0;
     const CGFloat kInternalMarginY = 20.0;
     
     CGRect usableBounds = self.canvasView.bounds;
+
+    self.backgroundImageView = [[[UIImageView alloc] init] autorelease];
+    self.backgroundImageView.frame = usableBounds;
+    self.backgroundImageView.userInteractionEnabled = NO;
+    self.backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [self.canvasView addSubview:self.backgroundImageView];
+    [self updateBackgroundImage];
+    
+    UIImageView *logo = [[[UIImageView alloc] 
+                         initWithImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/facebook.png"]] autorelease];
+    CGPoint center = CGPointMake(CGRectGetMidX(usableBounds), 60);
+    logo.center = center;
+    logo.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    [self.canvasView addSubview:logo];
     
     // We want the profile picture control and label to be grouped together when autoresized,
     // so we put them in a subview.
     UIView *containerView = [[[UIView alloc] init] autorelease];
-    containerView.frame = CGRectMake(kSideMargin, 
-                                     80, 
-                                     usableBounds.size.width - kSideMargin * 2,
-                                     64);
-    [containerView setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+    containerView.frame = CGRectMake(0, 
+                                     logo.frame.origin.y * 2 + logo.frame.size.height, 
+                                     usableBounds.size.width,
+                                     110);
+    containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 
     // Add profile picture control
     self.profilePicture = [[[FBProfilePictureView alloc] initWithProfileID:nil
                                                         pictureCropping:FBProfilePictureCroppingSquare]
                            autorelease];
-    self.profilePicture.frame = CGRectMake(0, 0, 64, 64);
+    self.profilePicture.frame = CGRectMake(containerView.frame.size.width / 2 - 32, 0, 64, 64);
     [containerView addSubview:self.profilePicture];
 
     // Add connected state/name control
     self.connectedStateLabel = [[[UILabel alloc] init] autorelease];
-    self.connectedStateLabel.frame = CGRectMake(64 + kInternalMarginX, 
-                                                0, 
-                                                containerView.frame.size.width - 64 - kInternalMarginX,
-                                                64);
-    self.connectedStateLabel.backgroundColor = facebookBlue;
-    self.connectedStateLabel.textColor = [UIColor whiteColor];
+    self.connectedStateLabel.frame = CGRectMake(0, 
+                                                self.profilePicture.frame.size.height + 16.0, 
+                                                containerView.frame.size.width,
+                                                20);
+    self.connectedStateLabel.backgroundColor = [UIColor clearColor];
     self.connectedStateLabel.textAlignment = UITextAlignmentCenter;
     self.connectedStateLabel.numberOfLines = 0;
-    // TODO font
+    self.connectedStateLabel.font = [UIFont boldSystemFontOfSize:16.0];
+    self.connectedStateLabel.shadowColor = [UIColor blackColor];
+    self.connectedStateLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     [containerView addSubview:self.connectedStateLabel];
     [self.canvasView addSubview:containerView];
     
     // Add the login/logout button
-    self.loginLogoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    self.loginLogoutButton.frame = CGRectMake(kSideMargin,
-                                              CGRectGetMaxY(containerView.frame) + kInternalMarginY,
-                                              CGRectGetWidth(usableBounds) - 2 * kSideMargin,
-                                              32);
+    self.loginLogoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    UIImage *image = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBUserSettingsView/images/silver-button-normal.png"];
+    [self.loginLogoutButton setBackgroundImage:image forState:UIControlStateNormal];
+    image = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBUserSettingsView/images/silver-button-pressed.png"];
+    [self.loginLogoutButton setBackgroundImage:image forState:UIControlStateHighlighted];
+    self.loginLogoutButton.frame = CGRectMake((int)((usableBounds.size.width - image.size.width) / 2),
+                                              CGRectGetMaxY(containerView.frame) + kInternalMarginY * 2,
+                                              image.size.width,
+                                              image.size.height);
     [self.loginLogoutButton addTarget:self
                                action:@selector(loginLogoutButtonPressed:)
                      forControlEvents:UIControlEventTouchUpInside];
-    [self.loginLogoutButton setAutoresizingMask:UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin];
+    self.loginLogoutButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+    UIColor *loginTitleColor = [UIColor colorWithRed:75.0 / 255.0
+                                               green:81.0 / 255.0
+                                                blue:100.0 / 255.0
+                                               alpha:1.0];
+    [self.loginLogoutButton setTitleColor:loginTitleColor forState:UIControlStateNormal];
+    self.loginLogoutButton.titleLabel.font = [UIFont boldSystemFontOfSize:18.0];
+
+    UIColor *loginShadowColor = [UIColor colorWithRed:212.0 / 255.0
+                                                green:218.0 / 255.0
+                                                 blue:225.0 / 255.0
+                                                alpha:1.0];
+    [self.loginLogoutButton setTitleShadowColor:loginShadowColor forState:UIControlStateNormal];
+    self.loginLogoutButton.titleLabel.shadowOffset = CGSizeMake(0.0, 1.0);
     [self.canvasView addSubview:self.loginLogoutButton];
-    
-    /* TODO figure out where, if anywhere, to put the logo
-    UIImageView *logo = [[UIImageView alloc] 
-                                        initWithImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/f_logo.png"]]; // TODO autorelease
-    logo.frame = CGRectMake(bounds.size.width - 64 - 10, 10 + yOffset, 64, 64);
-    
-    [self.view addSubview:logo];
-    */
     
     // We need to know when the active session changes state.
     // We use the same handler for both, because we don't actually care about distinguishing between them.
@@ -166,14 +185,25 @@
     [self updateControls];
 }
 
+- (void)updateBackgroundImage {
+    NSString *orientation = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? @"Portrait" : @"Landscape";
+    NSString *idiom = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? @"IPhone" : @"IPad";
+    NSString *imagePath = [NSString stringWithFormat:@"FacebookSDKResources.bundle/FBUserSettingsView/images/loginBackground%@%@.jpg", idiom, orientation];
+    self.backgroundImageView.image = [UIImage imageNamed:imagePath];
+}
+
 - (void)viewDidUnload {
     [super viewDidUnload];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [self updateBackgroundImage];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return YES;
+    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -187,11 +217,20 @@
                                                          withDefault:@"Log Out"];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
         
+        // Label should be white with a shadow
+        self.connectedStateLabel.textColor = [UIColor whiteColor];
+        self.connectedStateLabel.shadowColor = [UIColor blackColor];
+
+        // Move the label back below the profile view and show the profile view
+        self.connectedStateLabel.frame = CGRectMake(0, 
+                                                    self.profilePicture.frame.size.height + 16.0, 
+                                                    self.connectedStateLabel.frame.size.width,
+                                                    20);
+        self.profilePicture.hidden = NO;
+        
         // Do we know the user's name? If not, request it.
         if (self.me != nil) {
-            NSString *format = [FBUtility localizedStringForKey:@"FBUSVC:LogInAs"
-                                                    withDefault:@"Logged in as: %@"];
-            self.connectedStateLabel.text = [NSString stringWithFormat:format, self.me.name];
+            self.connectedStateLabel.text = self.me.name;
             self.profilePicture.profileID = [self.me objectForKey:@"id"];
         } else {
             self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:LoggedIn"
@@ -207,11 +246,24 @@
         }
     } else {
         self.me = nil;
-        self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotConnectedToFacebook"
-                                                             withDefault:@"Not connected to Facebook"];
+        
+        // Label should be gray and centered in its superview; hide the profile view
+        self.connectedStateLabel.textColor = [UIColor colorWithRed:166.0 / 255.0
+                                                             green:174.0 / 255.0
+                                                              blue:215.0 / 255.0 
+                                                             alpha:1.0];
+        self.connectedStateLabel.shadowColor = nil;
+
+        CGRect parentBounds = self.connectedStateLabel.superview.bounds;
+        self.connectedStateLabel.center = CGPointMake(CGRectGetMidX(parentBounds),
+                                                      CGRectGetMidY(parentBounds));
+        self.profilePicture.hidden = YES;
+        
+        self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotLoggedIn"
+                                                             withDefault:@"Not logged in"];
         self.profilePicture.profileID = nil;
-        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:Connect"
-                                                         withDefault:@"Connect"];
+        NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:LogIn"
+                                                         withDefault:@"Log In..."];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
     }
 }

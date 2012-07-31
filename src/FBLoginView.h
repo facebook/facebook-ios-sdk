@@ -19,37 +19,11 @@
 
 @protocol FBLoginViewDelegate;
 
-/*! 
- @typedef FBLoginViewLoggedInDisplayStyle enum
- 
- @abstract 
- Type used to specify the display style of the button.
- 
- @discussion
- */
-typedef enum {
-    /*! Small square profile image and facebook icon overlayed */
-    FBLoginViewStyleSquareSmall     = 0,
-    
-    /*! Large square profile image and facebook icon overlayed */
-    FBLoginViewStyleSquareLarge     = 1,
-    
-    /*! Facebook image and profile image side-by-side */
-    FBLoginViewStyleHorizontal      = 2,
-        
-} FBLoginViewStyle;
-
 /*!
  @class
  @abstract
  */
 @interface FBLoginView : UIView
-
-/*!
- @abstract
- The display style for the login view.
- */
-@property (nonatomic) FBLoginViewStyle style;
 
 /*!
  @abstract
