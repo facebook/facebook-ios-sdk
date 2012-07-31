@@ -26,8 +26,7 @@
 + (NSString*)stringByURLEncodingString:(NSString*)unescapedString;
 + (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item;
 
-+ (unsigned long)currentTimeInMilliseconds;
-+ (NSTimeInterval)randomTimeInterval:(NSTimeInterval)minValue withMaxValue:(NSTimeInterval)maxValue;
++ (unsigned long)currentTimeInMilliseconds; 
 + (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
 + (NSString *)stringFBIDFromObject:(id)object;
 

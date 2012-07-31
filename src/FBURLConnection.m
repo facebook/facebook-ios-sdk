@@ -21,7 +21,6 @@
 #import "FBLogger.h"
 #import "FBUtility.h"
 #import "FBSettings.h"
-#import "FBSettings+Internal.h"
 
 static NSArray* _cdnHosts;
 
@@ -112,10 +111,6 @@ static NSArray* _cdnHosts;
             
             self.handler = handler;
         }
-
-        // always attempt to autoPublish.  this function internally
-        // handles only executing once.
-        [FBSettings autoPublishInstall:nil];
     }
     return self;
 }
