@@ -30,6 +30,7 @@
 @property (nonatomic, retain) id<FBGraphUser> me;
 @property (nonatomic, retain) UIButton *loginLogoutButton;
 @property (nonatomic) BOOL attemptingLogin;
+@property (nonatomic, retain) NSBundle *bundle;
 
 - (void)loginLogoutButtonPressed:(id)sender;
 - (void)sessionStateChanged:(FBSession *)session 
@@ -50,23 +51,22 @@
 @synthesize permissions = _permissions;
 @synthesize attemptingLogin = _attemptingLogin;
 @synthesize backgroundImageView = _backgroundImageView;
+@synthesize bundle = _bundle;
 
 #pragma mark View controller lifecycle
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        self.cancelButton = nil;
-        self.attemptingLogin = NO;
-    }
-    return self;
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.cancelButton = nil;
         self.attemptingLogin = NO;
+
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"FBUserSettingsViewResources"
+                                                         ofType:@"bundle"];
+        self.bundle = [NSBundle bundleWithPath:path];
+        if (self.bundle == nil) {
+            NSLog(@"WARNING: FBUserSettingsViewController could not find FBUserSettingsViewResources.bundle");
+        }
     }
     return self;
 }
@@ -80,6 +80,7 @@
     [_loginLogoutButton release];
     [_permissions release];
     [_backgroundImageView release];
+    [_bundle release];
 }
 
 #pragma mark View lifecycle
@@ -92,8 +93,14 @@
         self.doneButton = nil;
     }
     
-    const CGFloat kInternalMarginY = 20.0;
-    
+    // If you remove the background images from the resource bundle in order to save space,
+    //  this allows the background to still be rendered in Facebook blue.
+    UIColor *facebookBlue = [UIColor colorWithRed:(59.0 / 255.0)
+                                            green:(89.0 / 255.0)
+                                             blue:(152.0 / 255.0)
+                                            alpha:1.0];
+    self.view.backgroundColor = facebookBlue;
+
     CGRect usableBounds = self.canvasView.bounds;
 
     self.backgroundImageView = [[[UIImageView alloc] init] autorelease];
@@ -104,8 +111,8 @@
     [self updateBackgroundImage];
     
     UIImageView *logo = [[[UIImageView alloc] 
-                         initWithImage:[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/facebook.png"]] autorelease];
-    CGPoint center = CGPointMake(CGRectGetMidX(usableBounds), 60);
+                         initWithImage:[UIImage imageNamed:@"FBUserSettingsViewResources.bundle/images/facebook-logo.png"]] autorelease];
+    CGPoint center = CGPointMake(CGRectGetMidX(usableBounds), 68);
     logo.center = center;
     logo.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.canvasView addSubview:logo];
@@ -114,7 +121,7 @@
     // so we put them in a subview.
     UIView *containerView = [[[UIView alloc] init] autorelease];
     containerView.frame = CGRectMake(0, 
-                                     logo.frame.origin.y * 2 + logo.frame.size.height, 
+                                     135,
                                      usableBounds.size.width,
                                      110);
     containerView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -129,7 +136,7 @@
     // Add connected state/name control
     self.connectedStateLabel = [[[UILabel alloc] init] autorelease];
     self.connectedStateLabel.frame = CGRectMake(0, 
-                                                self.profilePicture.frame.size.height + 16.0, 
+                                                self.profilePicture.frame.size.height + 14.0,
                                                 containerView.frame.size.width,
                                                 20);
     self.connectedStateLabel.backgroundColor = [UIColor clearColor];
@@ -143,12 +150,12 @@
     
     // Add the login/logout button
     self.loginLogoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    UIImage *image = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBUserSettingsView/images/silver-button-normal.png"];
+    UIImage *image = [UIImage imageNamed:@"FBUserSettingsViewResources.bundle/images/silver-button-normal.png"];
     [self.loginLogoutButton setBackgroundImage:image forState:UIControlStateNormal];
-    image = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBUserSettingsView/images/silver-button-pressed.png"];
+    image = [UIImage imageNamed:@"FBUserSettingsViewResources.bundle/images/silver-button-pressed.png"];
     [self.loginLogoutButton setBackgroundImage:image forState:UIControlStateHighlighted];
     self.loginLogoutButton.frame = CGRectMake((int)((usableBounds.size.width - image.size.width) / 2),
-                                              CGRectGetMaxY(containerView.frame) + kInternalMarginY * 2,
+                                              285,
                                               image.size.width,
                                               image.size.height);
     [self.loginLogoutButton addTarget:self
@@ -187,7 +194,7 @@
 - (void)updateBackgroundImage {
     NSString *orientation = UIInterfaceOrientationIsPortrait(self.interfaceOrientation) ? @"Portrait" : @"Landscape";
     NSString *idiom = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) ? @"IPhone" : @"IPad";
-    NSString *imagePath = [NSString stringWithFormat:@"FacebookSDKResources.bundle/FBUserSettingsView/images/loginBackground%@%@.jpg", idiom, orientation];
+    NSString *imagePath = [NSString stringWithFormat:@"FBUserSettingsViewResources.bundle/images/loginBackground%@%@.jpg", idiom, orientation];
     self.backgroundImageView.image = [UIImage imageNamed:imagePath];
 }
 
@@ -213,7 +220,8 @@
 - (void)updateControls {
     if (FBSession.activeSession.isOpen) {
         NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:LogOut"
-                                                         withDefault:@"Log Out"];
+                                                         withDefault:@"Log Out"
+                                                            inBundle:self.bundle];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
         
         // Label should be white with a shadow
@@ -233,7 +241,8 @@
             self.profilePicture.profileID = [self.me objectForKey:@"id"];
         } else {
             self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:LoggedIn"
-                                                                 withDefault:@"Logged in"];
+                                                                 withDefault:@"Logged in"
+                                                                    inBundle:self.bundle];
             self.profilePicture.profileID = nil;
 
             [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -259,10 +268,12 @@
         self.profilePicture.hidden = YES;
         
         self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotLoggedIn"
-                                                             withDefault:@"Not logged in"];
+                                                             withDefault:@"Not logged in"
+                                                                inBundle:self.bundle];
         self.profilePicture.profileID = nil;
         NSString *loginLogoutText = [FBUtility localizedStringForKey:@"FBUSVC:LogIn"
-                                                         withDefault:@"Log In..."];
+                                                         withDefault:@"Log In..."
+                                                            inBundle:self.bundle];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
     }
 }

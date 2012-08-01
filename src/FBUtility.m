@@ -128,12 +128,17 @@
 
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value {
+    return [self localizedStringForKey:key withDefault:value inBundle:FBUtility.facebookSDKBundle];
+}
+
++ (NSString *)localizedStringForKey:(NSString *)key
+                        withDefault:(NSString *)value
+                           inBundle:(NSBundle *)bundle {
     NSString *result = value;
-    NSBundle *resources = FBUtility.facebookSDKBundle;
-    if (resources) {
-        result = [resources localizedStringForKey:key
-                                            value:value
-                                            table:nil];
+    if (bundle) {
+        result = [bundle localizedStringForKey:key
+                                         value:value
+                                         table:nil];
     }
     return result;
 }

@@ -83,6 +83,10 @@
  The `FBUserSettingsViewController` class provides a user interface exposing a user's
  Facebook-related settings. Currently, this is limited to whether they are logged in or out
  of Facebook.
+
+ Because of the size of some graphics used in this view, its resources are packaged as a separate
+ bundle. In order to use `FBUserSettingsViewController`, drag the `FBUserSettingsViewResources.bundle`
+ from the SDK directory into your Xcode project.
  */
 @interface FBUserSettingsViewController : FBViewController
 

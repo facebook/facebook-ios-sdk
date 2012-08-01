@@ -34,6 +34,9 @@
 + (NSBundle *)facebookSDKBundle;
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value;
++ (NSString *)localizedStringForKey:(NSString *)key
+                        withDefault:(NSString *)value
+                           inBundle:(NSBundle *)bundle;
 
 @end
 
