@@ -92,7 +92,6 @@
         self.doneButton = nil;
     }
     
-    const CGFloat kSideMargin = 20.0;
     const CGFloat kInternalMarginY = 20.0;
     
     CGRect usableBounds = self.canvasView.bounds;
