@@ -139,7 +139,6 @@
     targetPlace.id = @"154981434517851";
     targetPlace.name = @"Lincoln Memorial";
     
-    STAssertEquals((int)data.count, 1, @"should only have one response");
     id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];
     STAssertNotNil(foundPlace, @"didn't find Lincoln Memorial");
 }
