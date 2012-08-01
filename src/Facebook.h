@@ -31,6 +31,7 @@
 // whenever possible
 
 // up-front decl's
+@class FBFrictionlessRequestSettings;
 @protocol FBRequestDelegate;
 @protocol FBSessionDelegate;
 
@@ -49,6 +50,7 @@
     NSString* _appId;
     NSString* _urlSchemeSuffix;
     BOOL _isExtendingAccessToken;
+    FBRequest *_requestExtendingAccessToken;
     NSDate* _lastAccessTokenUpdate;
     FBFrictionlessRequestSettings* _frictionlessRequestSettings;
 }

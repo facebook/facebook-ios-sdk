@@ -559,6 +559,7 @@
                               otherButtonTitles:nil,
                               nil];
     [alertView show];
+    [alertView release];
 }
 
 /*
@@ -697,6 +698,8 @@
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    img, @"picture",
                                    nil];
+    [img release];
+    
     [[delegate facebook] requestWithGraphPath:@"me/photos"
                           andParams:params
                       andHttpMethod:@"POST"
@@ -995,15 +998,17 @@
             NSMutableArray *friendsWithApp = [[NSMutableArray alloc] initWithCapacity:1];
             // Many results
             if ([result isKindOfClass:[NSArray class]]) {
-                friendsWithApp = [[NSMutableArray alloc] initWithArray:result copyItems:YES];
+                [friendsWithApp addObjectsFromArray:result];
             } else if ([result isKindOfClass:[NSDecimalNumber class]]) {
-                friendsWithApp = [[NSMutableArray alloc] initWithObjects:[result stringValue], nil];
+                [friendsWithApp addObject: [result stringValue]];
             }
+            
             if ([friendsWithApp count] > 0) {
                 [self apiDialogRequestsSendToUsers:friendsWithApp];
             } else {
                 [self showMessage:@"None of your friends are using the app."];
             }
+            
             [friendsWithApp release];
             break;
         }

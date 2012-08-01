@@ -15,6 +15,7 @@
  */
 
 #import "Facebook.h"
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "FBError.h"
@@ -137,8 +138,13 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  * Override NSObject : free the space
  */
 - (void)dealloc {
+
+    // this is the one case where the delegate is this object
+    _requestExtendingAccessToken.delegate = nil;
+
     [_session release];
     [_tokenCaching release];
+
     for (FBRequest* _request in _requests) {
         [_request removeObserver:self forKeyPath:requestFinishedKeyPath];
     }
@@ -363,7 +369,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"auth.extendSSOAccessToken", @"method",
                                    nil];
-    [self requestWithParams:params andDelegate:self];
+    _requestExtendingAccessToken = [self requestWithParams:params andDelegate:self];
 }
 
 /**
@@ -766,10 +772,12 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
 }
 
 - (void)request:(FBRequest *)request didLoad:(id)result {
     _isExtendingAccessToken = NO;
+    _requestExtendingAccessToken = nil;
     NSString* accessToken = [result objectForKey:@"access_token"];
     NSString* expTime = [result objectForKey:@"expires_at"];
     

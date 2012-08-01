@@ -429,10 +429,10 @@
         UIGraphicsBeginImageContext(CGSizeMake(px, px));
         UIRectClip(clipRect);
         [image drawInRect:clipRect];
-        UIImage *imgThumb =   UIGraphicsGetImageFromCurrentImageContext();
-        [imgThumb retain];
-        
+        UIImage *imgThumb = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
         [profilePhotoImageView setImage:imgThumb];
+        
         [self apiGraphUserPermissions];
     } else {
         // Processing permissions information
