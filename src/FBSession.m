@@ -21,6 +21,7 @@
 #import "FBSession+Protected.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBSettings.h"
+#import "FBSettings+Internal.h"
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
@@ -264,6 +265,8 @@ static FBSession *g_activeSession = nil;
                 [tokenCachingStrategy clearToken];
             }
         }
+
+        [FBSettings autoPublishInstall:self.appID];
     }
     return self;
 }
