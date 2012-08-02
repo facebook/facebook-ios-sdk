@@ -106,12 +106,13 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     }    
 }
 
-- (void)openSession {
+- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
     NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
-    [FBSession sessionOpenWithPermissions:permissions completionHandler:
-     ^(FBSession *session, FBSessionState state, NSError *error) {
-         [self sessionStateChanged:session state:state error:error];
-     }];    
+    return [FBSession openActiveSessionWithPermissions:permissions
+                                          allowLoginUI:allowLoginUI
+                                     completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                         [self sessionStateChanged:session state:state error:error];
+                                     }];    
 }
 
 - (BOOL)application:(UIApplication *)application 
@@ -158,11 +159,8 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     
     // FBSample logic
     // See if we have a valid token for the current state.
-    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        // Yes, so just open the session (this won't display any UX).
-        [self openSession];
-    } else {
-        // No, display the login page.
+    if (![self openSessionWithAllowLoginUI:NO]) {
+        // No? Display the login page.
         [self showLoginView];
     }
     

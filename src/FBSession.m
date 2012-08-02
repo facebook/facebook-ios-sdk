@@ -444,25 +444,26 @@ static FBSession *g_activeSession = nil;
 #pragma mark -
 #pragma mark Class Methods
 
-/*!
- @abstract
- This is the simplest method for opening a session with Facebook. Using sessionOpen logs on a user,
- and sets the static activeSession which becomes the default session object for any Facebook UI controls
- used by the application.
- */
-+ (FBSession*)sessionOpen {
-    return [FBSession sessionOpenWithPermissions:nil
-                               completionHandler:nil];
++ (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI {
+    return [FBSession openActiveSessionWithPermissions:nil
+                                          allowLoginUI:allowLoginUI
+                                     completionHandler:nil];
+    
 }
 
-+ (FBSession*)sessionOpenWithPermissions:(NSArray*)permissions
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
                        completionHandler:(FBSessionStateHandler)handler {
+    BOOL result = NO;
     FBSession *session = [[[FBSession alloc] initWithPermissions:permissions] autorelease];
-    [FBSession setActiveSession:session];
-    // we open after the fact, in order to avoid overlapping close
-    // and open handler calls for blocks
-    [session openWithCompletionHandler:handler];
-    return session;
+    if (allowLoginUI || session.state == FBSessionStateCreatedTokenLoaded) {
+        [FBSession setActiveSession:session];
+        // we open after the fact, in order to avoid overlapping close
+        // and open handler calls for blocks
+        [session openWithCompletionHandler:handler];
+        result = session.isOpen;
+    }
+    return result;
 }
 
 + (FBSession*)activeSession {

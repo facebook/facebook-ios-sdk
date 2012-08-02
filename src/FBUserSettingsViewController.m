@@ -296,10 +296,11 @@
 
     self.attemptingLogin = YES;
 
-    [FBSession sessionOpenWithPermissions:self.permissions completionHandler:
-     ^(FBSession *session, FBSessionState state, NSError *error) {
-         [self sessionStateChanged:session state:state error:error];
-     }];
+    [FBSession openActiveSessionWithPermissions:self.permissions
+                                   allowLoginUI:YES
+                              completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                  [self sessionStateChanged:session state:state error:error];
+                              }];
 }
 
 #pragma mark Handlers

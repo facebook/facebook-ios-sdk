@@ -37,7 +37,7 @@
     // FBSample logic
     // The user has initiated a login, so call the openSession method.
     SCAppDelegate *appDelegate = [UIApplication sharedApplication].delegate;
-    [appDelegate openSession];
+    [appDelegate openSessionWithAllowLoginUI:YES];
 }
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {

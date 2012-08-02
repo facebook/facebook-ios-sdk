@@ -67,7 +67,9 @@
     // We create and open a session at the outset here; if login is cancelled or fails, the application ignores
     // this and continues to provide whatever functionality that it can
     NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
-    [FBSession sessionOpenWithPermissions:permissions completionHandler:nil];
+    [FBSession openActiveSessionWithPermissions:permissions
+                                   allowLoginUI:YES
+                              completionHandler:nil];
     
     return YES;
 }

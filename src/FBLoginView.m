@@ -128,11 +128,11 @@ CGSize g_imageSize;
     self.autoresizesSubviews = YES;
     self.clipsToBounds = YES;
     
-    // if our session has a cached token ready, we open it; note that
-    // it is important that we open it before wiring is in place to cause KVO, etc.
-    if (FBSession.activeSession.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
-    }
+    // if our session has a cached token ready, we open it; note that it is important
+    // that we open the session before notification wiring is in place
+    [FBSession openActiveSessionWithPermissions:self.permissions
+                                   allowLoginUI:NO
+                              completionHandler:nil];
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(handleActiveSessionSetNotifications:) 
@@ -285,11 +285,10 @@ CGSize g_imageSize;
 - (void)wireViewForSession:(FBSession *)session {
     [self wireViewForSessionWithoutOpening:session];
     
-    // anytime we find that our session is created with an available token
-    // we open it on the spot
-    if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
-    }
+    // open the active session on the spot...
+    [FBSession openActiveSessionWithPermissions:self.permissions
+                                   allowLoginUI:NO // ... but only if a token is at the ready
+                              completionHandler:nil];
 }
 
 - (void)unwireViewForSession {
@@ -335,7 +334,9 @@ CGSize g_imageSize;
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
-            [FBSession sessionOpenWithPermissions:self.permissions completionHandler:nil];
+            [FBSession openActiveSessionWithPermissions:self.permissions
+                                           allowLoginUI:YES
+                                      completionHandler:nil];
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;
