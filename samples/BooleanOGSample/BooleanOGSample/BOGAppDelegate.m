@@ -50,26 +50,27 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    UIViewController *viewController1, *viewController2;
+    UIViewController *viewControllerMe, *viewControllerFriends, *viewControllerSettings;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        viewController1 = [[BOGFirstViewController alloc] initWithNibName:@"BOGFirstViewController_iPhone" bundle:nil];
-        viewController2 = [[BOGSecondViewController alloc] initWithNibName:@"BOGSecondViewController_iPhone" bundle:nil];
+        viewControllerMe = [[BOGFirstViewController alloc] initWithNibName:@"BOGFirstViewController_iPhone" bundle:nil];
+        viewControllerFriends = [[BOGSecondViewController alloc] initWithNibName:@"BOGSecondViewController_iPhone" bundle:nil];
     } else {
-        viewController1 = [[BOGFirstViewController alloc] initWithNibName:@"BOGFirstViewController_iPad" bundle:nil];
-        viewController2 = [[BOGSecondViewController alloc] initWithNibName:@"BOGSecondViewController_iPad" bundle:nil];
+        viewControllerMe = [[BOGFirstViewController alloc] initWithNibName:@"BOGFirstViewController_iPad" bundle:nil];
+        viewControllerFriends = [[BOGSecondViewController alloc] initWithNibName:@"BOGSecondViewController_iPad" bundle:nil];
     }
+    viewControllerSettings = [[FBUserSettingsViewController alloc] init];
+    viewControllerSettings.title = @"Facebook Settings";
+    viewControllerSettings.tabBarItem.image = [UIImage imageNamed:@"second"];
+        
     self.tabBarController = [[UITabBarController alloc] init];
-    self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
+    self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewControllerMe, viewControllerFriends, viewControllerSettings, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
 
     // FBSample logic
-    // We create and open a session at the outset here; if login is cancelled or fails, the application ignores
-    // this and continues to provide whatever functionality that it can
-    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
-    [FBSession openActiveSessionWithPermissions:permissions
-                                   allowLoginUI:YES
-                              completionHandler:nil];
+    // We open the session up front, as long as we have a cached token, otherwise rely on the user 
+    // to login explicitly with the FBUserSettingsViewController tab
+    [FBSession openActiveSessionWithAllowLoginUI:NO];
     
     return YES;
 }

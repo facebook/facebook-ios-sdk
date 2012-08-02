@@ -32,7 +32,7 @@
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Rock w/Friends", @"Rock w/Friends");
-        self.tabBarItem.image = [UIImage imageNamed:@"second"];
+        self.tabBarItem.image = [UIImage imageNamed:@"first"];
         self.fieldsForRequest = [NSSet setWithObject:@"installed"];
         self.allowsMultipleSelection = NO;
         self.delegate = self;
@@ -42,8 +42,8 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     if (FBSession.activeSession.isOpen) {
         [self loadData];

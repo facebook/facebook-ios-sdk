@@ -29,6 +29,8 @@
 		85AFB4CC158F9B8B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4C8158F9B8B000AF7F5 /* Icon.png */; };
 		85AFB4CD158F9B8B000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4C9158F9B8B000AF7F5 /* Icon@2x.png */; };
 		DD37EA7F15ABA42D0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA7E15ABA42D0015966B /* FacebookSDK.framework */; };
+		DE1C9C2A15CC8F9A00809B9E /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE1C9C2915CC8F9A00809B9E /* FacebookSDKResources.bundle */; };
+		DE1C9C2C15CC8FE400809B9E /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE1C9C2B15CC8FE400809B9E /* FBUserSettingsViewResources.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +63,8 @@
 		85AFB4C8158F9B8B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB4C9158F9B8B000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		DD37EA7E15ABA42D0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
+		DE1C9C2915CC8F9A00809B9E /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		DE1C9C2B15CC8FE400809B9E /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,8 @@
 		84070D191540AA2B00E39703 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DE1C9C2B15CC8FE400809B9E /* FBUserSettingsViewResources.bundle */,
+				DE1C9C2915CC8F9A00809B9E /* FacebookSDKResources.bundle */,
 				DD37EA7E15ABA42D0015966B /* FacebookSDK.framework */,
 				84605AB515A77C9300197AA7 /* Accounts.framework */,
 				84070D1A1540AA2B00E39703 /* UIKit.framework */,
@@ -210,6 +216,8 @@
 				85AFB4CB158F9B8B000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB4CC158F9B8B000AF7F5 /* Icon.png in Resources */,
 				85AFB4CD158F9B8B000AF7F5 /* Icon@2x.png in Resources */,
+				DE1C9C2A15CC8F9A00809B9E /* FacebookSDKResources.bundle in Resources */,
+				DE1C9C2C15CC8FE400809B9E /* FBUserSettingsViewResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
