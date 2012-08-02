@@ -105,7 +105,14 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
                                                     range:NSMakeRange(0, _internalContents.length)];
         }
         
-        NSLog(@"FBSDKLog: %@", _internalContents);
+        // Xcode 4.4 hangs on extremely long NSLog output (http://openradar.appspot.com/11972490).  Truncate if needed.
+        const int MAX_LOG_STRING_LENGTH = 10000;
+        NSString *logString = _internalContents;
+        if (_internalContents.length > MAX_LOG_STRING_LENGTH) {
+            logString = [NSString stringWithFormat:@"TRUNCATED: %@", [_internalContents substringToIndex:MAX_LOG_STRING_LENGTH]];
+        }
+        NSLog(@"FBSDKLog: %@", logString);
+
         [_internalContents setString:@""];
     }
 }
