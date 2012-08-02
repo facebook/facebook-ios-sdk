@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'JustLoginSample' target in the 'JustLoginSample' project
+// Prefix header for all source files of the 'SessionLoginSample' target in the 'SessionLoginSample' project
 //
 
 #import <Availability.h>

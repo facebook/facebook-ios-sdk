@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#import "JLViewController.h"
-#import "JLAppDelegate.h"
+#import "SLViewController.h"
+#import "SLAppDelegate.h"
 
-@interface JLViewController () 
+@interface SLViewController () 
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonLoginLogout;
 @property (strong, nonatomic) IBOutlet UITextView *textNoteOrLink;
@@ -27,7 +27,7 @@
 
 @end
 
-@implementation JLViewController
+@implementation SLViewController
 
 @synthesize textNoteOrLink = _textNoteOrLink;
 @synthesize buttonLoginLogout = _buttonLoginLogout;
@@ -38,7 +38,7 @@
     
     [self updateView];
     
-    JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    SLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     if (!appDelegate.session.isOpen) {
         // create a fresh session object
         appDelegate.session = [[FBSession alloc] init];
@@ -62,7 +62,7 @@
 // main helper method to update the UI to reflect the current state of the session.
 - (void)updateView {
     // get the app delegate, so that we can reference the session property
-    JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    SLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     if (appDelegate.session.isOpen) {        
         // valid account UI is shown whenever the session is open
         [self.buttonLoginLogout setTitle:@"Log out" forState:UIControlStateNormal];        
@@ -79,7 +79,7 @@
 // handler for button click, logs sessions in or out
 - (IBAction)buttonClickHandler:(id)sender {
     // get the app delegate so that we can access the session property
-    JLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
+    SLAppDelegate *appDelegate = [[UIApplication sharedApplication]delegate];
     
     // this button's job is to flip-flop the session from open to closed
     if (appDelegate.session.isOpen) {

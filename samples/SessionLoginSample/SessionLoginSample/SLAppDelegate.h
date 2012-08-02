@@ -17,19 +17,19 @@
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-// Just Login sample application
+// Session Login sample application
 //
 // The purpose of this sample application is to provide an example of 
 // how to log in with Facebook. The goal of the sample is to show how 
 // to use the FBSession class for this purpose, with minimal additional
 // sample functionality to distract from the core topic.
 
-@class JLViewController;
+@class SLViewController;
 
-@interface JLAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SLAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) JLViewController *viewController;
+@property (strong, nonatomic) SLViewController *viewController;
 
 // FBSample logic
 // In this sample the app delegate maintains a property for the current 

@@ -13,10 +13,10 @@
 		84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757C0152A38770070DD9C /* CoreGraphics.framework */; };
 		84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84C757C5152A38770070DD9C /* InfoPlist.strings */; };
 		84C757C9152A38770070DD9C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757C8152A38770070DD9C /* main.m */; };
-		84C757CD152A38770070DD9C /* JLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CC152A38770070DD9C /* JLAppDelegate.m */; };
-		84C757D0152A38770070DD9C /* JLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CF152A38770070DD9C /* JLViewController.m */; };
-		84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */; };
-		84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D4152A38780070DD9C /* JLViewController_iPad.xib */; };
+		84C757CD152A38770070DD9C /* SLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CC152A38770070DD9C /* SLAppDelegate.m */; };
+		84C757D0152A38770070DD9C /* SLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C757CF152A38770070DD9C /* SLViewController.m */; };
+		84C757D3152A38780070DD9C /* SLViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D1152A38780070DD9C /* SLViewController_iPhone.xib */; };
+		84C757D6152A38780070DD9C /* SLViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84C757D4152A38780070DD9C /* SLViewController_iPad.xib */; };
 		84E7AF45158FAB2F006009C7 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF41158FAB2F006009C7 /* Icon-72.png */; };
 		84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */; };
 		84E7AF47158FAB2F006009C7 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF43158FAB2F006009C7 /* Icon.png */; };
@@ -26,20 +26,20 @@
 
 /* Begin PBXFileReference section */
 		84A5DA9D15A68D1500FE54AF /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
-		84C757B8152A38770070DD9C /* JustLoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustLoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		84C757B8152A38770070DD9C /* SessionLoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SessionLoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C757BC152A38770070DD9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84C757BE152A38770070DD9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		84C757C0152A38770070DD9C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		84C757C4152A38770070DD9C /* JustLoginSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JustLoginSample-Info.plist"; sourceTree = "<group>"; };
+		84C757C4152A38770070DD9C /* SessionLoginSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SessionLoginSample-Info.plist"; sourceTree = "<group>"; };
 		84C757C6152A38770070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		84C757C8152A38770070DD9C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		84C757CA152A38770070DD9C /* JustLoginSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustLoginSample-Prefix.pch"; sourceTree = "<group>"; };
-		84C757CB152A38770070DD9C /* JLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JLAppDelegate.h; sourceTree = "<group>"; };
-		84C757CC152A38770070DD9C /* JLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JLAppDelegate.m; sourceTree = "<group>"; };
-		84C757CE152A38770070DD9C /* JLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JLViewController.h; sourceTree = "<group>"; };
-		84C757CF152A38770070DD9C /* JLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JLViewController.m; sourceTree = "<group>"; };
-		84C757D2152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPhone.xib; sourceTree = "<group>"; };
-		84C757D5152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JLViewController_iPad.xib; sourceTree = "<group>"; };
+		84C757CA152A38770070DD9C /* SessionLoginSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SessionLoginSample-Prefix.pch"; sourceTree = "<group>"; };
+		84C757CB152A38770070DD9C /* SLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLAppDelegate.h; sourceTree = "<group>"; };
+		84C757CC152A38770070DD9C /* SLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLAppDelegate.m; sourceTree = "<group>"; };
+		84C757CE152A38770070DD9C /* SLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SLViewController.h; sourceTree = "<group>"; };
+		84C757CF152A38770070DD9C /* SLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SLViewController.m; sourceTree = "<group>"; };
+		84C757D2152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLViewController_iPhone.xib; sourceTree = "<group>"; };
+		84C757D5152A38780070DD9C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SLViewController_iPad.xib; sourceTree = "<group>"; };
 		84E7AF41158FAB2F006009C7 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		84E7AF43158FAB2F006009C7 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 		84C757AD152A38770070DD9C = {
 			isa = PBXGroup;
 			children = (
-				84C757C2152A38770070DD9C /* JustLoginSample */,
+				84C757C2152A38770070DD9C /* SessionLoginSample */,
 				84C757BB152A38770070DD9C /* Frameworks */,
 				84C757B9152A38770070DD9C /* Products */,
 			);
@@ -75,7 +75,7 @@
 		84C757B9152A38770070DD9C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				84C757B8152A38770070DD9C /* JustLoginSample.app */,
+				84C757B8152A38770070DD9C /* SessionLoginSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -92,18 +92,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		84C757C2152A38770070DD9C /* JustLoginSample */ = {
+		84C757C2152A38770070DD9C /* SessionLoginSample */ = {
 			isa = PBXGroup;
 			children = (
-				84C757CB152A38770070DD9C /* JLAppDelegate.h */,
-				84C757CC152A38770070DD9C /* JLAppDelegate.m */,
-				84C757CE152A38770070DD9C /* JLViewController.h */,
-				84C757CF152A38770070DD9C /* JLViewController.m */,
-				84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */,
-				84C757D4152A38780070DD9C /* JLViewController_iPad.xib */,
+				84C757CB152A38770070DD9C /* SLAppDelegate.h */,
+				84C757CC152A38770070DD9C /* SLAppDelegate.m */,
+				84C757CE152A38770070DD9C /* SLViewController.h */,
+				84C757CF152A38770070DD9C /* SLViewController.m */,
+				84C757D1152A38780070DD9C /* SLViewController_iPhone.xib */,
+				84C757D4152A38780070DD9C /* SLViewController_iPad.xib */,
 				84C757C3152A38770070DD9C /* Supporting Files */,
 			);
-			path = JustLoginSample;
+			path = SessionLoginSample;
 			sourceTree = "<group>";
 		};
 		84C757C3152A38770070DD9C /* Supporting Files */ = {
@@ -113,10 +113,10 @@
 				84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */,
 				84E7AF43158FAB2F006009C7 /* Icon.png */,
 				84E7AF44158FAB2F006009C7 /* Icon@2x.png */,
-				84C757C4152A38770070DD9C /* JustLoginSample-Info.plist */,
+				84C757C4152A38770070DD9C /* SessionLoginSample-Info.plist */,
 				84C757C5152A38770070DD9C /* InfoPlist.strings */,
 				84C757C8152A38770070DD9C /* main.m */,
-				84C757CA152A38770070DD9C /* JustLoginSample-Prefix.pch */,
+				84C757CA152A38770070DD9C /* SessionLoginSample-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -124,9 +124,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		84C757B7152A38770070DD9C /* JustLoginSample */ = {
+		84C757B7152A38770070DD9C /* SessionLoginSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "JustLoginSample" */;
+			buildConfigurationList = 84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "SessionLoginSample" */;
 			buildPhases = (
 				84C757B4152A38770070DD9C /* Sources */,
 				84C757B5152A38770070DD9C /* Frameworks */,
@@ -136,9 +136,9 @@
 			);
 			dependencies = (
 			);
-			name = JustLoginSample;
-			productName = JustLoginSample;
-			productReference = 84C757B8152A38770070DD9C /* JustLoginSample.app */;
+			name = SessionLoginSample;
+			productName = SessionLoginSample;
+			productReference = 84C757B8152A38770070DD9C /* SessionLoginSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -149,7 +149,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = 84C757B2152A38770070DD9C /* Build configuration list for PBXProject "JustLoginSample" */;
+			buildConfigurationList = 84C757B2152A38770070DD9C /* Build configuration list for PBXProject "SessionLoginSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -162,7 +162,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				84C757B7152A38770070DD9C /* JustLoginSample */,
+				84C757B7152A38770070DD9C /* SessionLoginSample */,
 			);
 		};
 /* End PBXProject section */
@@ -173,8 +173,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */,
-				84C757D3152A38780070DD9C /* JLViewController_iPhone.xib in Resources */,
-				84C757D6152A38780070DD9C /* JLViewController_iPad.xib in Resources */,
+				84C757D3152A38780070DD9C /* SLViewController_iPhone.xib in Resources */,
+				84C757D6152A38780070DD9C /* SLViewController_iPad.xib in Resources */,
 				84E7AF45158FAB2F006009C7 /* Icon-72.png in Resources */,
 				84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */,
 				84E7AF47158FAB2F006009C7 /* Icon.png in Resources */,
@@ -190,8 +190,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				84C757C9152A38770070DD9C /* main.m in Sources */,
-				84C757CD152A38770070DD9C /* JLAppDelegate.m in Sources */,
-				84C757D0152A38770070DD9C /* JLViewController.m in Sources */,
+				84C757CD152A38770070DD9C /* SLAppDelegate.m in Sources */,
+				84C757D0152A38770070DD9C /* SLViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,20 +206,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		84C757D1152A38780070DD9C /* JLViewController_iPhone.xib */ = {
+		84C757D1152A38780070DD9C /* SLViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				84C757D2152A38780070DD9C /* en */,
 			);
-			name = JLViewController_iPhone.xib;
+			name = SLViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		84C757D4152A38780070DD9C /* JLViewController_iPad.xib */ = {
+		84C757D4152A38780070DD9C /* SLViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				84C757D5152A38780070DD9C /* en */,
 			);
-			name = JLViewController_iPad.xib;
+			name = SLViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -246,7 +246,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -266,7 +266,7 @@
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -282,11 +282,11 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JustLoginSample/JustLoginSample-Prefix.pch";
-				INFOPLIST_FILE = "JustLoginSample/JustLoginSample-Info.plist";
+				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
+				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -299,11 +299,11 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JustLoginSample/JustLoginSample-Prefix.pch";
-				INFOPLIST_FILE = "JustLoginSample/JustLoginSample-Info.plist";
+				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
+				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
 				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -311,7 +311,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		84C757B2152A38770070DD9C /* Build configuration list for PBXProject "JustLoginSample" */ = {
+		84C757B2152A38770070DD9C /* Build configuration list for PBXProject "SessionLoginSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84C757D7152A38780070DD9C /* Debug */,
@@ -320,7 +320,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "JustLoginSample" */ = {
+		84C757D9152A38780070DD9C /* Build configuration list for PBXNativeTarget "SessionLoginSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				84C757DA152A38780070DD9C /* Debug */,

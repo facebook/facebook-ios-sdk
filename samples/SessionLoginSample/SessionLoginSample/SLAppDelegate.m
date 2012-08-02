@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#import "JLAppDelegate.h"
+#import "SLAppDelegate.h"
 
-#import "JLViewController.h"
+#import "SLViewController.h"
 
-@implementation JLAppDelegate
+@implementation SLAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
@@ -63,9 +63,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[JLViewController alloc] initWithNibName:@"JLViewController_iPhone" bundle:nil];
+        self.viewController = [[SLViewController alloc] initWithNibName:@"SLViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[JLViewController alloc] initWithNibName:@"JLViewController_iPad" bundle:nil];
+        self.viewController = [[SLViewController alloc] initWithNibName:@"SLViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
