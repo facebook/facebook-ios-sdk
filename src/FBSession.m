@@ -34,31 +34,6 @@
 #define TEST_DISABLE_MULTITASKING_LOGIN NO
 #define TEST_DISABLE_FACEBOOKLOGIN NO
 
-// this macro turns on IOS6 preview support
-#ifdef __IPHONE_6_0
-#define IOS6_PREVIEW_SUPPORT
-#endif
-
-// we turn this on for 5 so that we can build our production libs using a production compiler,
-// rather than a preview compiler -- however integrated Facebook support will only be on when running on 6
-#ifdef __IPHONE_5_0
-#define IOS6_PREVIEW_SUPPORT
-#endif
-
-#ifdef IOS6_PREVIEW_SUPPORT
-// we dynamically bind to a few methods, and this protocol helps
-// us manage warnings from the call-sites
-@protocol FBWarningHelperProtocol
-- (id)accountTypeWithAccountTypeIdentifier:(id)type;
-- (void)requestAccessToAccountsWithType:(id)accountTypeFB
-                                options:(id)options
-                             completion:(id)handler;
-- (NSArray*)accountsWithAccountType:(id)type;
-- (id)credential;
-- (id)oauthToken;
-@end
-#endif
-
 // extern const strings
 NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.sdk:InlineLoginCancelled";
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.sdk:ErrorLoginNotCancelled";
@@ -746,84 +721,7 @@ static FBSession *g_activeSession = nil;
     // To avoid surprises, delete any cookies we currently have.
     [FBSession deleteFacebookCookies];
     
-    // when iOS 6 ships we will have enough cases here to justify refactoring to a nicer
-    // approach to managing our fallback auth methods -- however while we are still previewing
-    // iOS 6 functionality, we will keep the logic essentially as is, with a series of ifs
-
     BOOL didAuthNWithSystemAccount = NO;
-    
-#ifdef IOS6_PREVIEW_SUPPORT
-    id accountStore = nil;
-    id accountTypeFB = nil;
-    // do we want and have the ability to attempt integrated authn
-    if (tryIntegratedAuth &&
-        (accountStore = [[[NSClassFromString(@"ACAccountStore") alloc] init] autorelease]) &&
-        (accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:@"com.apple.facebook"])) {
-                
-        // looks like we will get to attempt a login with integrated authn
-        didAuthNWithSystemAccount = YES;
-        
-        // BUG: this works around a bug in the current iOS preview that requires
-        // at least one permission in order to get an access token -- user_likes
-        // was selected as a generally innocuous permission to request in the case
-        // where the application only needs basic access; will remove in production
-        NSArray *permissionsToUse = permissions;
-        if (!permissionsToUse.count) {
-            permissionsToUse = [NSArray arrayWithObject:@"user_likes"];
-        }
-        
-        // construct access options
-        NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 self.appID, @"ACFacebookAppIdKey",
-                                 permissionsToUse, @"ACFacebookPermissionsKey",
-                                 @"read_write", @"ACFacebookPermissionGroupKey",
-                                 nil];
-        
-        // we will attempt an iOS integrated facebook login
-        [accountStore requestAccessToAccountsWithType:accountTypeFB
-                                              options:options
-                                           completion:^(BOOL granted, NSError *error) {
-                                               // requestAccessToAccountsWithType:options:completion: completes on an
-                                               // arbitrary thread; let's process this back on our main thread
-                                               dispatch_async( dispatch_get_main_queue(), ^{
-                                                   NSString *oauthToken = nil;
-                                                   if (granted) {
-                                                       NSArray *fbAccounts = [accountStore accountsWithAccountType:accountTypeFB];
-                                                       id account = [fbAccounts objectAtIndex:0];
-                                                       id credential = [account credential];
-                                                       
-                                                       oauthToken = [credential oauthToken];
-                                                   }
-                                                   
-                                                   if (oauthToken) {
-                                                       // this is one of two ways that we get an Facebook Login token (the other is from cache)
-                                                       _isFacebookLoginToken = YES;
-                                                       
-                                                       // we received a token just now
-                                                       self.refreshDate = [NSDate date];
-                                                       
-                                                       // set token and date, state transition, and call the handler if there is one
-                                                       [self transitionAndCallHandlerWithState:FBSessionStateOpen
-                                                                                         error:nil
-                                                                                         token:oauthToken
-                                                        // BUG: we need a means for fetching the expiration date of the token
-                                                                                expirationDate:[NSDate distantFuture]
-                                                                                   shouldCache:YES];
-                                                   } else {
-                                                       // BUG: in all failed cases we fall back to other authn schemes,
-                                                       // in order to allow for some instability in the new API; post
-                                                       // preview, a failed integrated authentication will result in a
-                                                       // failed login for the session
-                                                       [self authorizeWithPermissions:permissions
-                                                                       integratedAuth:NO
-                                                                            FBAppAuth:YES
-                                                                           safariAuth:YES
-                                                                             fallback:YES];
-                                                   }
-                                               });
-                                           }];
-    }
-#endif
 
     // If the device is running a version of iOS that supports multitasking,
     // try to obtain the access token from the Facebook app installed
