@@ -299,6 +299,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)clearData {
     [self.dataSource clearGraphObjects];
     [self.selectionManager clearSelectionInTableView:self.tableView];
+    [self.tableView reloadData];
     [self.loader reset];
 }
 

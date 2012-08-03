@@ -127,6 +127,8 @@
 
 - (void)clearGraphObjects {
     self.data = nil;
+    self.indexKeys = nil;
+    self.indexMap = nil;
     self.expectingMoreGraphObjects = YES;
 }
 
