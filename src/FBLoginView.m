@@ -285,10 +285,13 @@ CGSize g_imageSize;
 - (void)wireViewForSession:(FBSession *)session {
     [self wireViewForSessionWithoutOpening:session];
     
-    // open the active session on the spot...
-    [FBSession openActiveSessionWithPermissions:self.permissions
-                                   allowLoginUI:NO // ... but only if a token is at the ready
-                              completionHandler:nil];
+    // anytime we find that our session is created with an available token
+    // we open it on the spot
+    if (self.session.state == FBSessionStateCreatedTokenLoaded) {
+        [FBSession openActiveSessionWithPermissions:self.permissions
+                                       allowLoginUI:NO
+                                  completionHandler:nil];
+    }    
 }
 
 - (void)unwireViewForSession {
