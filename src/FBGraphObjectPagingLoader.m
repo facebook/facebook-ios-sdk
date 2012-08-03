@@ -145,26 +145,28 @@
         // (If possible, we choose the second row, to give context above and below and avoid
         // cases where the first row is only barely visible, thus providing little context.)
         NSArray *visibleRowIndexPaths = [self.tableView indexPathsForVisibleRows];
-        int anchorRowIndex = (visibleRowIndexPaths.count > 1) ? 1 : 0;
-        NSIndexPath *anchorIndexPath = [visibleRowIndexPaths objectAtIndex:anchorRowIndex];
-        id anchorObject = [self.dataSource itemAtIndexPath:anchorIndexPath];
-        
-        // What is its rect, and what is the overall contentOffset of the table?
-        CGRect anchorRowRectBefore = [self.tableView rectForRowAtIndexPath:anchorIndexPath];
-        CGPoint contentOffset = self.tableView.contentOffset;
-        
-        // Update with new data and reload the table.
-        [self.dataSource appendGraphObjects:data];
-        [self updateView];
-        
-        // Where is the anchor object now?
-        anchorIndexPath = [self.dataSource indexPathForItem:anchorObject];
-        CGRect anchorRowRectAfter = [self.tableView rectForRowAtIndexPath:anchorIndexPath];
-        
-        // Keep the content offset the same relative to the rect of the row (so if it was
-        // 1/4 scrolled off the top before, it still will be, etc.)
-        contentOffset.y += anchorRowRectAfter.origin.y - anchorRowRectBefore.origin.y;
-        self.tableView.contentOffset = contentOffset;
+        if (visibleRowIndexPaths.count > 0) {
+            int anchorRowIndex = (visibleRowIndexPaths.count > 1) ? 1 : 0;
+            NSIndexPath *anchorIndexPath = [visibleRowIndexPaths objectAtIndex:anchorRowIndex];
+            id anchorObject = [self.dataSource itemAtIndexPath:anchorIndexPath];
+
+            // What is its rect, and what is the overall contentOffset of the table?
+            CGRect anchorRowRectBefore = [self.tableView rectForRowAtIndexPath:anchorIndexPath];
+            CGPoint contentOffset = self.tableView.contentOffset;
+
+            // Update with new data and reload the table.
+            [self.dataSource appendGraphObjects:data];
+            [self updateView];
+
+            // Where is the anchor object now?
+            anchorIndexPath = [self.dataSource indexPathForItem:anchorObject];
+            CGRect anchorRowRectAfter = [self.tableView rectForRowAtIndexPath:anchorIndexPath];
+
+            // Keep the content offset the same relative to the rect of the row (so if it was
+            // 1/4 scrolled off the top before, it still will be, etc.)
+            contentOffset.y += anchorRowRectAfter.origin.y - anchorRowRectBefore.origin.y;
+            self.tableView.contentOffset = contentOffset;
+        }
     }
 
     if ([self.delegate respondsToSelector:@selector(pagingLoader:didLoadData:)]) {

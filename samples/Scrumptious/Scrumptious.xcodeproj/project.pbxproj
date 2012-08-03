@@ -13,7 +13,7 @@
 		846809C4158F85A100F2DBB9 /* action-photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809C0158F85A100F2DBB9 /* action-photo.png */; };
 		84A5DA9615A68A3D00FE54AF /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A5DA9515A68A3D00FE54AF /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8527EC6A15C9DB3800660673 /* Scrumptious.strings */; };
-		8527EC5915C9D73700660673 /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8527EC5815C9D73700660673 /* FBUserSettingsViewResources.bundle */; };
+		8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */; };
 		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
 		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
 		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
@@ -45,8 +45,8 @@
 		846809C0158F85A100F2DBB9 /* action-photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-photo.png"; path = "scrumptious/images/action-photo.png"; sourceTree = SOURCE_ROOT; };
 		84A5DA9515A68A3D00FE54AF /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		8527EC6915C9DB3800660673 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Scrumptious.strings; sourceTree = "<group>"; };
-		8527EC6B15C9DB4A00660673 /* he */ = {isa = PBXFileReference; name = he; path = he.lproj/Scrumptious.strings; sourceTree = "<group>"; };
-		8527EC5815C9D73700660673 /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = ../../src/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
+		8527EC6B15C9DB4A00660673 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Scrumptious.strings; sourceTree = "<group>"; };
+		8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
 		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
 		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8527EC5815C9D73700660673 /* FBUserSettingsViewResources.bundle */,
+				8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */,
 				DD55EAB015ABA246000A64B8 /* FacebookSDKResources.bundle */,
 				DD55EAAE15AB9EDF000A64B8 /* FacebookSDK.framework */,
 				84A5DA9515A68A3D00FE54AF /* Accounts.framework */,
@@ -248,7 +248,7 @@
 				DDBF24B81590050600BAAB8F /* SCPhotoViewController.xib in Resources */,
 				DD55EAB115ABA246000A64B8 /* FacebookSDKResources.bundle in Resources */,
 				8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */,
-				8527EC5915C9D73700660673 /* FBUserSettingsViewResources.bundle in Resources */,
+				8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
