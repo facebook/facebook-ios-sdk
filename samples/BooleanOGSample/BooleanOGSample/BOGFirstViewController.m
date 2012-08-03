@@ -171,9 +171,7 @@
                                              
                                              // see if we can improve on it with an error message from the server
                                              id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
-                                             if ([json isKindOfClass:[NSArray class]] &&
-                                                 (json = [json objectAtIndex:0]) &&
-                                                 [json isKindOfClass:[NSDictionary class]] &&
+                                             if ([json isKindOfClass:[NSDictionary class]] &&
                                                  (json = [json objectForKey:@"body"]) &&
                                                  [json isKindOfClass:[NSDictionary class]] &&
                                                  (json = [json objectForKey:@"error"]) &&

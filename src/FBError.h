@@ -26,7 +26,8 @@ extern NSString *const FacebookSDKDomain;
 /// The key for an inner NSError.
 extern NSString *const FBErrorInnerErrorKey;
 
-/// The key for parsed JSON response from the server.
+/// The key for parsed JSON response from the server. In case of a batch, 
+/// includes the JSON for a single FBRequest.
 extern NSString *const FBErrorParsedJSONResponseKey;
 
 /// The key for HTTP status code.

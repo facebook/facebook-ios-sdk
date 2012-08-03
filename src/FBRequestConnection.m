@@ -1168,6 +1168,28 @@ typedef enum FBRequestConnectionState {
         }
 
         if (metadata.completionHandler) {
+            // task #1256476: in the current implementation, FBErrorParsedJSONResponseKey has two
+            // semantics; both of which are used by the implementation; the right fix is to break the meaning into
+            // two throughout, and surface both in the public API; the following fix is a lower risk and also
+            // less correct solution that improves the public API surface for this release
+            // Unpack FBErrorParsedJSONResponseKey array if present
+            id parsedResponse;
+            if ((parsedResponse = itemError.userInfo) && // do we have an error with userInfo
+                (parsedResponse = [parsedResponse objectForKey:FBErrorParsedJSONResponseKey]) && // response present?
+                ([parsedResponse isKindOfClass:[NSArray class]])) { // array?
+                id newValue = nil;
+                // if we successfully spelunk this far, then we don't want to return FBErrorParsedJSONResponseKey as is
+                // but if there is an empty array here, then we are better off nil-ing the key
+                if ([parsedResponse count]) {
+                    newValue = [parsedResponse objectAtIndex:0];
+                }
+                itemError = [self errorWithCode:itemError.code
+                                     statusCode:[[itemError.userInfo objectForKey:FBErrorHTTPStatusCodeKey] intValue]
+                             parsedJSONResponse:newValue
+                                     innerError:[itemError.userInfo objectForKey:FBErrorInnerErrorKey]
+                                        message:[itemError.userInfo objectForKey:NSLocalizedDescriptionKey]];
+            }
+                 
             metadata.completionHandler(self, body, itemError);
         }
     }
