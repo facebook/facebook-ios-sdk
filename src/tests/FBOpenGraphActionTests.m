@@ -73,7 +73,7 @@
     action.tags = [NSArray arrayWithObject:userObject];
     
     NSMutableDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
-                                  @"http://fbsdkog.herokuapp.com/1.jpg", @"url",
+                                  @"https://sphotos-b.xx.fbcdn.net/hphotos-ash4/387972_10152013102225492_1756755651_n.jpg", @"url",
                                   nil];
     NSMutableArray *images = [NSArray arrayWithObject:image];
     action.image = images;
@@ -128,7 +128,7 @@
     // the same goal (just checking that it was round-tripped).
     NSDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
                            @"false", @"user_generated", 
-                           @"http://fbsdkog.herokuapp.com/1.jpg", @"url",
+                           @"https://sphotos-b.xx.fbcdn.net/hphotos-ash4/387972_10152013102225492_1756755651_n.jpg", @"url",
                            nil];
     NSMutableArray *images = [NSArray arrayWithObject:image];
     action.image = images;
