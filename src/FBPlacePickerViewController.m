@@ -412,6 +412,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 - (void)clearData {
     [self.dataSource clearGraphObjects];
     [self.selectionManager clearSelectionInTableView:self.tableView];
+    [self.tableView reloadData];
     [self.loader reset];
 }
 

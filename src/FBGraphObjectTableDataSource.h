@@ -39,6 +39,7 @@
 - (void)setSortingBySingleField:(NSString*)fieldName ascending:(BOOL)ascending;
 - (void)setSortingByFields:(NSArray*)fieldNames ascending:(BOOL)ascending;
 
+- (void)prepareForNewRequest;
 // Clears all graph objects from the data source.
 - (void)clearGraphObjects;
 // Adds additional graph objects (pass nil to indicate all objects have been added).

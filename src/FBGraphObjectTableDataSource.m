@@ -125,11 +125,15 @@
     return fields;
 }
 
-- (void)clearGraphObjects {
+- (void)prepareForNewRequest {
     self.data = nil;
+    self.expectingMoreGraphObjects = YES;
+}
+
+- (void)clearGraphObjects {
     self.indexKeys = nil;
     self.indexMap = nil;
-    self.expectingMoreGraphObjects = YES;
+    [self prepareForNewRequest];
 }
 
 - (void)appendGraphObjects:(NSArray *)data

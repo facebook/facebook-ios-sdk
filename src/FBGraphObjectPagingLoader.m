@@ -223,7 +223,7 @@
 - (void)startLoadingWithRequest:(FBRequest*)request
                   cacheIdentity:(NSString*)cacheIdentity 
           skipRoundtripIfCached:(BOOL)skipRoundtripIfCached {
-    [self.dataSource clearGraphObjects];
+    [self.dataSource prepareForNewRequest];
     
     [self.connection cancel];
     _isResultFromCache = NO;

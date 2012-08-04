@@ -143,17 +143,18 @@
     // cell may be nil, which is okay, it will pick up the right selected state when it is created.
    
     FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
-    
-    // We want to support multi-select on iOS <5.0, so rather than rely on the table view's notion
-    // of selection, just treat this as a toggle. If it is already selected, deselect it, and vice versa.
-    if (![self selectionIncludesItem:item]) {
-        if (self.allowsMultipleSelection == NO) {
-            // No multi-select allowed, deselect what is already selected.
-            [self deselectItems:self.selection tableView:tableView];
+    if (item != nil) {
+        // We want to support multi-select on iOS <5.0, so rather than rely on the table view's notion
+        // of selection, just treat this as a toggle. If it is already selected, deselect it, and vice versa.
+        if (![self selectionIncludesItem:item]) {
+            if (self.allowsMultipleSelection == NO) {
+                // No multi-select allowed, deselect what is already selected.
+                [self deselectItems:self.selection tableView:tableView];
+            }
+            [self selectItem:item cell:cell];
+        } else {
+            [self deselectItem:item cell:cell];
         }
-        [self selectItem:item cell:cell];
-    } else {
-        [self deselectItem:item cell:cell];
     }
 }
 
