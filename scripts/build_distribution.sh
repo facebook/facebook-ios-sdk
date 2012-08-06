@@ -69,6 +69,8 @@ mkdir -p $FB_SDK_BUILD_PACKAGE_DOCS
   || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS/docset/Contents"
 \cp $FB_SDK_ROOT/README $FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK \
   || die "Could not copy README"
+\cp $FB_SDK_ROOT/LICENSE $FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK \
+  || die "Could not copy LICENSE"
 
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework

@@ -133,6 +133,9 @@ CGSize g_imageSize;
     [FBSession openActiveSessionWithPermissions:self.permissions
                                    allowLoginUI:NO
                               completionHandler:nil];
+
+    // wire-up the current session to the login view, before adding global session-change handlers
+    [self wireViewForSession:FBSession.activeSession];
     
     [[NSNotificationCenter defaultCenter] addObserver:self 
                                              selector:@selector(handleActiveSessionSetNotifications:) 
@@ -143,8 +146,6 @@ CGSize g_imageSize;
                                              selector:@selector(handleActiveSessionUnsetNotifications:) 
                                                  name:FBSessionDidUnsetActiveSessionNotification
                                                object:nil]; 
-    
-    [self wireViewForSession:FBSession.activeSession];
     
     // setup button
     self.button = [UIButton buttonWithType:UIButtonTypeCustom];
