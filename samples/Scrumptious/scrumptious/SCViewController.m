@@ -17,7 +17,6 @@
 #import "SCViewController.h"
 #import "SCAppDelegate.h"
 #import "SCLoginViewController.h"
-#import "SCMealViewController.h"
 #import "SCPhotoViewController.h"
 #import "SCProtocols.h"
 #import <AddressBook/AddressBook.h>
@@ -31,8 +30,6 @@
                                 CLLocationManagerDelegate,
                                 UIActionSheetDelegate>
 
-@property (strong, nonatomic) FBFriendPickerViewController *friendPickerController;
-@property (strong, nonatomic) FBPlacePickerViewController *placePickerController;
 @property (strong, nonatomic) FBUserSettingsViewController *settingsViewController;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *userProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
@@ -40,6 +37,8 @@
 @property (strong, nonatomic) IBOutlet UITableView *menuTableView;
 @property (strong, nonatomic) UIImagePickerController *imagePicker;
 @property (strong, nonatomic) UIActionSheet *imagePickerActionSheet;
+@property (strong, nonatomic) UIActionSheet *mealPickerActionSheet;
+@property (retain, nonatomic) NSArray *mealTypes;
 
 @property (strong, nonatomic) NSObject<FBGraphPlace> *selectedPlace;
 @property (strong, nonatomic) NSString *selectedMeal;
@@ -47,7 +46,6 @@
 @property (strong, nonatomic) UIImage *selectedPhoto;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) UIPopoverController *popover;
-@property (strong, nonatomic) SCMealViewController *mealViewController;
 @property (strong, nonatomic) SCPhotoViewController *photoViewController;
 @property (nonatomic) CGRect popoverFromRect;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
@@ -72,17 +70,16 @@
 @synthesize announceButton = _announceButton;
 @synthesize selectedPhoto = _selectedPhoto;
 @synthesize imagePicker = _imagePicker;
-@synthesize placePickerController = _placePickerController;
-@synthesize friendPickerController = _friendPickerController;
-@synthesize mealViewController = _mealViewController;
 @synthesize photoViewController = _photoViewController;
 @synthesize menuTableView = _menuTableView;
 @synthesize locationManager = _locationManager;
 @synthesize popover = _popover;
 @synthesize imagePickerActionSheet = _imagePickerActionSheet;
+@synthesize mealPickerActionSheet = _mealPickerActionSheet;
 @synthesize popoverFromRect = _popoverFromRect;
 @synthesize activityIndicator = _activityIndicator;
 @synthesize settingsViewController = _settingsViewController;
+@synthesize mealTypes = _mealTypes;
 
 #pragma mark open graph
 
@@ -162,6 +159,12 @@
                                      if (!error) {
                                          alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
                                                       [result objectForKey:@"id"]];
+                                         
+                                         // start over
+                                         self.selectedMeal = nil;
+                                         self.selectedPlace = nil;
+                                         self.selectedFriends = nil;
+                                         [self updateSelections];
                                      } else {
                                          alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
                                                       error.domain, error.code];
@@ -259,42 +262,51 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
-    //If user presses cancel, do nothing
-    if (buttonIndex == 2)
+    // If user presses cancel, do nothing
+    if (buttonIndex == actionSheet.cancelButtonIndex)
         return;
     
-    if (!self.imagePicker) {
-        self.imagePicker = [[UIImagePickerController alloc] init];
-        self.imagePicker.delegate = self;
-    }
-    
-    //Set the source type of the imagePicker to the users selection
-    if (buttonIndex == 0) {
-        //if its the simulator, camera is no good
-        if(TARGET_IPHONE_SIMULATOR){
-            [[[UIAlertView alloc] initWithTitle:@"Camera not supported in simulator." 
-                              message:@"(>'_')>" 
-                              delegate:nil 
-                              cancelButtonTitle:@"Ok" 
-                              otherButtonTitles:nil] show];
-             return;
+    // One method handles the delegate action for two action sheets
+    if (actionSheet == self.mealPickerActionSheet) { 
+        self.selectedMeal = [self.mealTypes objectAtIndex:buttonIndex];
+        [self updateSelections];
+        
+    } else { // self.imagePickerActionSheet
+        NSAssert(actionSheet == self.imagePickerActionSheet, @"Delegate method's else-case should be for image picker");
+        
+        if (!self.imagePicker) {
+            self.imagePicker = [[UIImagePickerController alloc] init];
+            self.imagePicker.delegate = self;
         }
-        self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    } else if (buttonIndex == 1) {
-        self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    }
-    
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
-        // Can't use presentModalViewController for image picker on iPad
-        if (!self.popover) {
-            self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
+        
+        // Set the source type of the imagePicker to the users selection
+        if (buttonIndex == 0) {
+            // If its the simulator, camera is no good
+            if(TARGET_IPHONE_SIMULATOR){
+                [[[UIAlertView alloc] initWithTitle:@"Camera not supported in simulator." 
+                                            message:@"(>'_')>" 
+                                           delegate:nil 
+                                  cancelButtonTitle:@"Ok" 
+                                  otherButtonTitles:nil] show];
+                return;
+            }
+            self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        } else if (buttonIndex == 1) {
+            self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
-        [self.popover presentPopoverFromRect:self.popoverFromRect 
-                                      inView:self.view 
-                    permittedArrowDirections:UIPopoverArrowDirectionAny 
-                                    animated:YES];
-    } else {
-        [self presentModalViewController:self.imagePicker animated:YES];
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            // Can't use presentModalViewController for image picker on iPad
+            if (!self.popover) {
+                self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
+            }
+            [self.popover presentPopoverFromRect:self.popoverFromRect 
+                                          inView:self.view 
+                        permittedArrowDirections:UIPopoverArrowDirectionAny 
+                                        animated:YES];
+        } else {
+            [self presentModalViewController:self.imagePicker animated:YES];
+        } 
     }
 }
 
@@ -359,10 +371,9 @@
 
 - (void)dealloc {
     _locationManager.delegate = nil;
-    _placePickerController.delegate = nil;
-    _friendPickerController.delegate = nil;
     _imagePicker.delegate = nil;
     _imagePickerActionSheet.delegate = nil;
+    _mealPickerActionSheet.delegate = nil;
 }
 
 - (void)viewDidLoad {
@@ -421,13 +432,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     // Release any retained subviews of the main view.
-    self.placePickerController = nil;
-    self.friendPickerController = nil;
-    self.mealViewController = nil;
     self.photoViewController = nil;
     self.imagePicker = nil;
     self.popover = nil;
     self.imagePickerActionSheet = nil;
+    self.mealPickerActionSheet = nil;
 }
 
 - (void)sessionStateChanged:(NSNotification*)notification {
@@ -455,7 +464,7 @@
     UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
         
         cell.textLabel.font = [UIFont systemFontOfSize:16];
@@ -514,53 +523,69 @@
     UIViewController *target;
     
     switch (indexPath.row) {
-        case 0:
-            if (!self.mealViewController) {
-                __block SCViewController *myself = self;
-                self.mealViewController = [[SCMealViewController alloc]initWithNibName:@"SCMealViewController" bundle:nil];
-                self.mealViewController.selectItemCallback = ^(id sender, id selectedItem) {
-                    myself.selectedMeal = selectedItem;
-                    [myself updateSelections];
-                };
+        case 0: {
+            // if we don't yet have an array of meal types, create one now
+            if (!self.mealTypes) {
+                self.mealTypes = [NSArray arrayWithObjects:
+                                  @"Cheeseburger", 
+                                  @"Pizza",
+                                  @"Hotdog",
+                                  @"Italian",
+                                  @"French",
+                                  @"Chinese",
+                                  @"Thai",
+                                  @"Indian",
+                                  nil];
             }
-            target = self.mealViewController;
-            break;
+            self.mealPickerActionSheet = [[UIActionSheet alloc] initWithTitle:@"Select a meal"
+                                                                     delegate:self
+                                                            cancelButtonTitle:nil
+                                                       destructiveButtonTitle:nil
+                                                            otherButtonTitles:nil];
+                                          
+            for( NSString *meal in self.mealTypes) {
+                [self.mealPickerActionSheet addButtonWithTitle:meal]; 
+            }
+            
+            self.mealPickerActionSheet.cancelButtonIndex = [self.mealPickerActionSheet addButtonWithTitle:@"Cancel"];
+            
+            [self.mealPickerActionSheet showInView:self.view];
+            return;
+        }
         
-        case 1:
-            if (!self.placePickerController) {
-                self.placePickerController = [[FBPlacePickerViewController alloc] init];
-                self.placePickerController.delegate = self;
-                self.placePickerController.title = @"Select a restaurant";
-                // We don't want a Done button, we update the selection as the user selects them
-                self.placePickerController.doneButton = nil;
-            }
-            self.placePickerController.locationCoordinate = self.locationManager.location.coordinate;
-            self.placePickerController.radiusInMeters = 1000;
-            self.placePickerController.resultsLimit = 50;
-            self.placePickerController.searchText = @"restaurant";
+        case 1: {
+            FBPlacePickerViewController *placePicker = [[FBPlacePickerViewController alloc] init];
+            
+            placePicker.title = @"Select a restaurant";
+            placePicker.locationCoordinate = self.locationManager.location.coordinate;
+            placePicker.radiusInMeters = 1000;
+            placePicker.resultsLimit = 50;
+            placePicker.searchText = @"restaurant";
             
             // SIMULATOR BUG:
             // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
             // at times the simulator fails to fetch a location; when that happens rather than fetch a
             // a meal near 0,0 -- let's see if we can find something good in Paris
-            if (!(self.placePickerController.locationCoordinate.latitude || 
-                  self.placePickerController.locationCoordinate.longitude)) {
-                self.placePickerController.locationCoordinate = CLLocationCoordinate2DMake(48.857875, 2.294635);
+            if (!(placePicker.locationCoordinate.latitude || 
+                  placePicker.locationCoordinate.longitude)) {
+                placePicker.locationCoordinate = CLLocationCoordinate2DMake(48.857875, 2.294635);
             }
             
-            [self.placePickerController loadData];
-            target = self.placePickerController;
-            break;
+            [placePicker loadData];
+            [placePicker presentModallyFromViewController:self
+                                                 animated:YES
+                                                  handler:^(FBViewController *sender, BOOL donePressed) {
+                                                      if (donePressed) {
+                                                          self.selectedPlace = placePicker.selection;
+                                                          [self updateSelections];
+                                                      }
+                                                  }];
+            return;
+        }
             
-        case 2:
-            if (!self.friendPickerController) {
-                self.friendPickerController = [[FBFriendPickerViewController alloc] init];
-                self.friendPickerController.delegate = self;
-                self.friendPickerController.title = @"Select friends";
-                // We don't want a Done button, we update the selection as the user selects them
-                self.friendPickerController.doneButton = nil;
-            }
-
+        case 2: {
+            FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
+            
             // Set up the friend picker to sort and display names the same way as the
             // iOS Address Book does.
             
@@ -569,12 +594,20 @@
             ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
             ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
             
-            self.friendPickerController.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
-            self.friendPickerController.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
-
-            [self.friendPickerController loadData];
-            target = self.friendPickerController;
-            break;
+            friendPicker.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+            friendPicker.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+            
+            [friendPicker loadData];
+            [friendPicker presentModallyFromViewController:self
+                                                  animated:YES
+                                                   handler:^(FBViewController *sender, BOOL donePressed) {
+                                                       if (donePressed) {
+                                                           self.selectedFriends = friendPicker.selection;
+                                                           [self updateSelections];
+                                                       }
+                                                   }];
+            return;
+        }
             
         case 3:            
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -597,23 +630,6 @@
 }
 
 #pragma mark -
-#pragma mark FBFriendPickerDelegate methods
-
-- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
-    self.selectedFriends = friendPicker.selection;
-    [self updateSelections];
-}
-
-#pragma mark FBPlacePickerDelegate methods
-
-- (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker {
-    self.selectedPlace = placePicker.selection;
-    [self updateSelections];
-    if (self.selectedPlace.count > 0) {
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-}
-
 #pragma mark CLLocationManagerDelegate methods
 
 - (void)locationManager:(CLLocationManager *)manager 
@@ -622,22 +638,16 @@
     if (!oldLocation ||
         (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
          oldLocation.coordinate.longitude != newLocation.coordinate.longitude)) {
-        // FBSample logic
-        // If we already have a place picker, reload its data. If not, pre-fetch the
-        // data so it is displayed quickly on first use of the place picker.
-        if (self.placePickerController) {
-            self.placePickerController.locationCoordinate = newLocation.coordinate;
-            [self.placePickerController loadData];
-        } else {
+            // FBSample logic
+            // If we already have a place picker, reload its data. If not, pre-fetch the
+            // data so it is displayed quickly on first use of the place picker.
             FBCacheDescriptor *cacheDescriptor = 
             [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:newLocation.coordinate
                                                                 radiusInMeters:1000
                                                                     searchText:nil 
                                                                   resultsLimit:50 
                                                               fieldsForRequest:nil];
-            [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
-            
-        }
+            [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];            
     }
 }
 

@@ -19,8 +19,6 @@
 		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
 		8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3C15816CCC00056680 /* AddressBook.framework */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
-		B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */; };
-		B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
 		B9CD0A78150EA4DD00560A93 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A77150EA4DD00560A93 /* CoreGraphics.framework */; };
@@ -53,9 +51,6 @@
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCMealViewController.h; sourceTree = "<group>"; };
-		B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCMealViewController.m; sourceTree = "<group>"; };
-		B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCMealViewController.xib; sourceTree = "<group>"; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B9CD0A75150EA4DD00560A93 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -147,9 +142,6 @@
 				DDBF24B41590050600BAAB8F /* SCPhotoViewController.h */,
 				DDBF24B51590050600BAAB8F /* SCPhotoViewController.m */,
 				DDBF24B61590050600BAAB8F /* SCPhotoViewController.xib */,
-				B9C1C35A1512A637008FA5D1 /* SCMealViewController.h */,
-				B9C1C35B1512A637008FA5D1 /* SCMealViewController.m */,
-				B9C1C35C1512A637008FA5D1 /* SCMealViewController.xib */,
 				85954AE1155889A200FABA9A /* SCProtocols.h */,
 				8527EC6A15C9DB3800660673 /* Scrumptious.strings */,
 			);
@@ -237,7 +229,6 @@
 				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
 				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
 				B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */,
-				B9C1C35E1512A637008FA5D1 /* SCMealViewController.xib in Resources */,
 				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
 				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
 				856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */,
@@ -263,7 +254,6 @@
 				B9CD0A84150EA4DD00560A93 /* SCAppDelegate.m in Sources */,
 				B9CD0A87150EA4DD00560A93 /* SCViewController.m in Sources */,
 				B9CD0A96150EBF5400560A93 /* SCLoginViewController.m in Sources */,
-				B9C1C35D1512A637008FA5D1 /* SCMealViewController.m in Sources */,
 				DDBF24B71590050600BAAB8F /* SCPhotoViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
