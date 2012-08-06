@@ -18,6 +18,7 @@
 #import "FBGraphObjectTableCell.h"
 #import "FBGraphObject.h"
 #import "FBURLConnection.h"
+#import "FBUtility.h"
 
 @interface FBGraphObjectTableDataSource ()
 
@@ -305,7 +306,12 @@
         return nil;
     }
     
-    NSInteger itemIndex = [sectionItems indexOfObjectIdenticalTo:item];
+    id matchingObject = [FBUtility graphObjectInArray:sectionItems withSameIDAs:item];
+    if (matchingObject == nil) {
+        return nil;
+    }
+
+    NSInteger itemIndex = [sectionItems indexOfObject:matchingObject];
     if (itemIndex == NSNotFound) {
         return nil;
     }
