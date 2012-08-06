@@ -53,6 +53,7 @@
     if (self) {
         self.locationCoordinate = locationCoordinate;
         self.radiusInMeters = radiusInMeters <= 0 ? defaultRadius : radiusInMeters;
+        self.searchText = searchText;
         self.resultsLimit = resultsLimit <= 0 ? defaultResultsLimit : resultsLimit;
         self.fieldsForRequest = fieldsForRequest;
         self.hasCompletedFetch = NO;
@@ -75,7 +76,6 @@
 
     // datasource has some field ownership, so we need one here
     FBGraphObjectTableDataSource *datasource = [[[FBGraphObjectTableDataSource alloc] init] autorelease];
-    //datasource.groupByField = @"name";
     
     // create the request object that we will start with
     FBRequest *request = [FBPlacePickerViewController requestForPlacesSearchAtCoordinate:self.locationCoordinate

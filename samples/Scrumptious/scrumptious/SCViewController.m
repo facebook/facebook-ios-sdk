@@ -384,7 +384,7 @@
     // Get the CLLocationManager going.
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     // We don't want to be notified of small changes in location, preferring to use our
     // last cached results, if any.
     self.locationManager.distanceFilter = 50;
@@ -637,14 +637,16 @@
            fromLocation:(CLLocation *)oldLocation {
     if (!oldLocation ||
         (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
-         oldLocation.coordinate.longitude != newLocation.coordinate.longitude)) {
+         oldLocation.coordinate.longitude != newLocation.coordinate.longitude &&
+         newLocation.horizontalAccuracy <= 100.0)) {
             // FBSample logic
             // If we already have a place picker, reload its data. If not, pre-fetch the
-            // data so it is displayed quickly on first use of the place picker.
+            // data so it is displayed quickly on first use of the place picker. Don't waste
+            // time caching data if we aren't at our desired level of accuracy.
             FBCacheDescriptor *cacheDescriptor = 
             [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:newLocation.coordinate
                                                                 radiusInMeters:1000
-                                                                    searchText:nil 
+                                                                    searchText:@"restaurant" 
                                                                   resultsLimit:50 
                                                               fieldsForRequest:nil];
             [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];            
