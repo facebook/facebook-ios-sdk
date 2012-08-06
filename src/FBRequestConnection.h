@@ -273,6 +273,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  uses the active session represented by `[FBSession activeSession]`.
  
  @param message         The message to post.
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
  */
 + (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
                                 completionHandler:(FBRequestHandler)handler;
@@ -289,6 +290,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  graph object representing a place.
  @param tags            Array of friends to tag in the status update, each element 
  may be an fbid or a graph object representing a user.
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
  */
 + (FBRequestConnection *)startForPostStatusUpdate:(NSString *)message
                                             place:(id)place
@@ -319,6 +321,7 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  
  @param searchText      The text to use in the query to narrow the set of places
                         returned.
+ @param handler          The handler block to call when the request completes with a success, error, or cancel action.
  */
 + (FBRequestConnection*)startForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
                                           radiusInMeters:(NSInteger)radius

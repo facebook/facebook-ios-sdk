@@ -63,6 +63,8 @@ extern NSString *const FBLoggingBehaviorPerformanceCharacteristics;
 
  @abstract Sets whether the SDK will automatically publish an install to Facebook during first FBSession init
  or on first network request to Facebook.
+
+ @param autoPublishInstall      If YES, automatically publish the install; if NO, do not.
  */
 + (void)setShouldAutoPublishInstall:(BOOL)autoPublishInstall;
 
