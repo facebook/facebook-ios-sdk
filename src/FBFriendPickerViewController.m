@@ -291,7 +291,8 @@ int const FBRefreshCacheDelaySeconds = 2;
                       ofObject:(id)object 
                         change:(NSDictionary *)change 
                        context:(void *)context {
-    if ([object isEqual:self.session]) {
+    if ([object isEqual:self.session] &&
+        self.session.isOpen == NO) {
         [self clearData];
     }
 }
