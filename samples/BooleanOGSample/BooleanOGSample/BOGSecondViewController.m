@@ -50,9 +50,8 @@
     } else {
         // display the message that we have
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Social Features Disabled"
-                                                        message:@"There is no open session with Facebook, re-run the "
-                                                                @"sample and login, in order to use the social features "
-                                                                 "of the applicaiton."
+                                                        message:@"There is no open session with Facebook. Use the Facebook Settings "
+                                                                @"tab to log in and use the social features of the application."
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
