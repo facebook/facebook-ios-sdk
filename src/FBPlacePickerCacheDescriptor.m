@@ -88,7 +88,7 @@
     
     self.loader.delegate = nil;
     self.loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
-                                                              pagingMode:FBGraphObjectPagingModeImmediateViewless]
+                                                              pagingMode:FBGraphObjectPagingModeAsNeeded]
                    autorelease];
     self.loader.session = session;
     self.loader.delegate = self;

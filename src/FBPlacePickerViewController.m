@@ -351,7 +351,6 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
         [self.loader startLoadingWithRequest:request
                                cacheIdentity:FBPlacePickerCacheIdentity
                        skipRoundtripIfCached:skipRoundTripIfCached.boolValue];
-        [self updateView];
     }
 }
 
@@ -484,7 +483,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader willLoadURL:(NSString*)url {
     // We only want to display our spinner on loading the first page. After that,
     // a spinner will display in the last cell to indicate to the user that data is loading.
-    if (!self.dataSource.hasGraphObjects) {
+    if ([self.dataSource numberOfSectionsInTableView:self.tableView] == 0) {
         [self centerAndStartSpinner];
     }
 }

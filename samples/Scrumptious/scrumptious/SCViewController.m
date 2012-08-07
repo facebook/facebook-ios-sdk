@@ -45,6 +45,7 @@
 @property (strong, nonatomic) NSArray *selectedFriends;
 @property (strong, nonatomic) UIImage *selectedPhoto;
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) FBCacheDescriptor *placeCacheDescriptor;
 @property (strong, nonatomic) UIPopoverController *popover;
 @property (strong, nonatomic) SCPhotoViewController *photoViewController;
 @property (nonatomic) CGRect popoverFromRect;
@@ -58,6 +59,7 @@
 - (void)postPhotoThenOpenGraphAction;
 - (void)postOpenGraphActionWithPhotoURL:(NSString *)photoID;
 - (void)centerAndShowActivityIndicator;
+- (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates;
 
 @end
 
@@ -80,6 +82,7 @@
 @synthesize activityIndicator = _activityIndicator;
 @synthesize settingsViewController = _settingsViewController;
 @synthesize mealTypes = _mealTypes;
+@synthesize placeCacheDescriptor = _placeCacheDescriptor;
 
 #pragma mark open graph
 
@@ -451,6 +454,15 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates {
+    self.placeCacheDescriptor =
+    [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:coordinates
+                                                        radiusInMeters:1000
+                                                            searchText:@"restaurant"
+                                                          resultsLimit:50
+                                                      fieldsForRequest:nil];
+}
+
 #pragma mark UITableViewDataSource methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -557,20 +569,16 @@
             FBPlacePickerViewController *placePicker = [[FBPlacePickerViewController alloc] init];
             
             placePicker.title = @"Select a restaurant";
-            placePicker.locationCoordinate = self.locationManager.location.coordinate;
-            placePicker.radiusInMeters = 1000;
-            placePicker.resultsLimit = 50;
-            placePicker.searchText = @"restaurant";
-            
+
             // SIMULATOR BUG:
             // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
             // at times the simulator fails to fetch a location; when that happens rather than fetch a
             // a meal near 0,0 -- let's see if we can find something good in Paris
-            if (!(placePicker.locationCoordinate.latitude || 
-                  placePicker.locationCoordinate.longitude)) {
-                placePicker.locationCoordinate = CLLocationCoordinate2DMake(48.857875, 2.294635);
+            if (self.placeCacheDescriptor == nil) {
+                [self setPlaceCacheDescriptorForCoordinates:CLLocationCoordinate2DMake(48.857875, 2.294635)];
             }
             
+            [placePicker configureUsingCachedDescriptor:self.placeCacheDescriptor];
             [placePicker loadData];
             [placePicker presentModallyFromViewController:self
                                                  animated:YES
@@ -639,17 +647,9 @@
         (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
          oldLocation.coordinate.longitude != newLocation.coordinate.longitude &&
          newLocation.horizontalAccuracy <= 100.0)) {
-            // FBSample logic
-            // If we already have a place picker, reload its data. If not, pre-fetch the
-            // data so it is displayed quickly on first use of the place picker. Don't waste
-            // time caching data if we aren't at our desired level of accuracy.
-            FBCacheDescriptor *cacheDescriptor = 
-            [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:newLocation.coordinate
-                                                                radiusInMeters:1000
-                                                                    searchText:@"restaurant" 
-                                                                  resultsLimit:50 
-                                                              fieldsForRequest:nil];
-            [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];            
+            // Fetch data at this new location, and remember the cache descriptor.
+            [self setPlaceCacheDescriptorForCoordinates:newLocation.coordinate];
+            [self.placeCacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
     }
 }
 
