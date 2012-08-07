@@ -150,16 +150,8 @@
             self.toolbar.barStyle = UIBarStyleDefault;
             
             [self.toolbar setAutoresizingMask:UIViewAutoresizingFlexibleWidth];
-            [self.toolbar sizeToFit];
             
             [self.view addSubview:self.toolbar];
-            
-            // Make the canvas shorter to account for the toolbar.
-            CGRect bounds = self.view.bounds;
-            CGFloat toolbarHeight = self.toolbar.bounds.size.height;
-            bounds.origin.y += toolbarHeight;
-            bounds.size.height -= toolbarHeight;
-            self.canvasView.frame = bounds;
         }
     } else {
         // If we have a bar but don't need one, get rid of it.
@@ -185,7 +177,6 @@
             [buttons addObject:space];
         }
     }
-    
     if (self.title.length > 0) {
         UIBarButtonItem *space = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace 
                                                                                 target:nil
@@ -215,7 +206,7 @@
         [buttons addObject:space];
         
     }
-    
+
     if (self.doneButton != nil) {
         // If no title, we need a space to right-align
         if (self.title.length == 0) {
@@ -236,6 +227,18 @@
             [buttons addObject:space];
         }
     }
+
+    [self.toolbar sizeToFit];
+    CGRect bounds = self.toolbar.bounds;
+    bounds = CGRectMake(0, 0, self.view.bounds.size.width, bounds.size.height);
+    self.toolbar.bounds = bounds;
+
+    // Make the canvas shorter to account for the toolbar.
+    bounds = self.view.bounds;
+    CGFloat toolbarHeight = self.toolbar.bounds.size.height;
+    bounds.origin.y += toolbarHeight;
+    bounds.size.height -= toolbarHeight;
+    self.canvasView.frame = bounds;
 
     self.toolbar.items = buttons;
 }
