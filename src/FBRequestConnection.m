@@ -865,8 +865,15 @@ typedef enum FBRequestConnectionState {
         // Just serialize these.
         action(key, value);
     } else if ([value isKindOfClass:[NSDate class]]) {
-        // We have two options for serializing dates. This is the easy one.
-        value = [NSString stringWithFormat:@"%.0f", [value timeIntervalSince1970]];
+        // The "Events Timezone" platform migration affects what date/time formats Facebook accepts and returns.
+        // Apps created after 8/1/12 (or apps that have explicitly enabled the migration) should send/receive
+        // dates in ISO-8601 format. Pre-migration apps can send as Unix timestamps. Since the future is ISO-8601,
+        // that is what we support here. Apps that need pre-migration behavior can explicitly send these as
+        // integer timestamps rather than NSDates.
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+
+        value = [dateFormatter stringFromDate:value];
         action(key, value);
     } else if ([value isKindOfClass:[NSArray class]]) {
         // Arrays are serialized as multiple elements with keys of the

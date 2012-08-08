@@ -250,15 +250,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
      }
             batchEntryName:@"postRequest"];
     
-    // Get the thing. We know this is being used mostly for round-tripping objects, including
-    // things with timestamps, so request Unix timestamp format so we don't need to worry about
-    // date parsing just to test other functionality..
-    NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                @"U", @"date_format", 
-                                nil];
     FBRequest *getRequest = [[FBRequest alloc] initWithSession:session 
                                                      graphPath:@"{result=postRequest:$.id}"
-                                                     parameters:parameters
+                                                     parameters:nil
                                                      HTTPMethod:nil];
     __block id createdObject = nil;
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
