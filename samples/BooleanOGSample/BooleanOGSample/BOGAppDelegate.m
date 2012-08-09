@@ -50,7 +50,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-    UIViewController *viewControllerMe, *viewControllerFriends, *viewControllerSettings;
+    UIViewController *viewControllerMe, *viewControllerFriends;
+    FBUserSettingsViewController *viewControllerSettings;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         viewControllerMe = [[BOGFirstViewController alloc] initWithNibName:@"BOGFirstViewController_iPhone" bundle:nil];
         viewControllerFriends = [[BOGSecondViewController alloc] initWithNibName:@"BOGSecondViewController_iPhone" bundle:nil];
@@ -61,6 +62,8 @@
     viewControllerSettings = [[FBUserSettingsViewController alloc] init];
     viewControllerSettings.title = @"Facebook Settings";
     viewControllerSettings.tabBarItem.image = [UIImage imageNamed:@"second"];
+    viewControllerSettings.permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
+    
         
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewControllerMe, viewControllerFriends, viewControllerSettings, nil];
