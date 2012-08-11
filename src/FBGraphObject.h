@@ -141,7 +141,7 @@
 /*!
  @method
  @abstract
- Returns an enumerator of the property naems on this `FBGraphObject`.
+ Returns an enumerator of the property names on this `FBGraphObject`.
  */
 - (NSEnumerator *)keyEnumerator;
 /*!
