@@ -17,6 +17,7 @@
 #import "FBProfilePictureView.h"
 #import "FBURLConnection.h"
 #import "FBRequest.h"
+#import "FBUtility.h"
 
 @interface FBProfilePictureView()
 
@@ -155,7 +156,7 @@
 
         FBURLConnectionHandler handler = 
             ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *data) {
-                NSAssert(self.connection == connection, @"Inconsistent connection state");
+                FBConditionalLog(self.connection == connection, @"Inconsistent connection state");
 
                 self.connection = nil;
                 if (!error) {

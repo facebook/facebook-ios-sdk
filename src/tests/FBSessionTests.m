@@ -20,6 +20,7 @@
 #import "FBGraphUser.h"
 #import "FBTestBlocker.h"
 #import "FBTests.h"
+#import "FBUtility.h"
 
 #if defined(FACEBOOKSDK_SKIP_SESSION_TESTS)
 
@@ -32,6 +33,10 @@
 // All code under test must be linked into the Unit Test bundle
 - (void)testSessionBasic
 {
+    FBConditionalLog(NO, @"Testing conditional %@", @"log");
+    FBConditionalLog(NO, @"Testing conditional log");
+    FBConditionalLog(YES, nil, @"Testing conditional log");
+    
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     

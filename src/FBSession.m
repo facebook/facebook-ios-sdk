@@ -394,7 +394,7 @@ static FBSession *g_activeSession = nil;
             return [self handleOpenURLReauthorize:params
                                       accessToken:accessToken];
         default:
-            NSAssert(NO, @"handleOpenURL should not be called once a session has closed");
+            FBConditionalLog(NO, @"handleOpenURL should not be called once a session has closed");
             return NO;
     }
 }

@@ -39,7 +39,15 @@
                            inBundle:(NSBundle *)bundle;
 
 @end
-
+ 
+#define FBConditionalLog(condition, desc, ...) \
+do { \
+    if (!(condition)) {	\
+        NSString *msg = [NSString stringWithFormat:(desc), ##__VA_ARGS__]; \
+        NSLog(@"FBConditionalLog: %@", msg); \
+    } \
+} while(NO)
+ 
 #define FB_BASE_URL @"facebook.com"
 
 

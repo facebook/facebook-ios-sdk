@@ -185,8 +185,8 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
             g_startTimesWithTags = [[NSMutableDictionary alloc] init];
         }
         
-        NSAssert(g_startTimesWithTags.count < 1000,
-                 @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong.");
+        FBConditionalLog(g_startTimesWithTags.count < 1000,
+                         @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong.");
         
         unsigned long currTime = [FBUtility currentTimeInMilliseconds];
         

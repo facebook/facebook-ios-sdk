@@ -71,8 +71,8 @@
 
 - (void)dealloc
 {
-    NSAssert(![_pendingURLConnections count],
-             @"FBGraphObjectTableDataSource pending connection did not retain self");
+    FBConditionalLog(![_pendingURLConnections count],
+                     @"FBGraphObjectTableDataSource pending connection did not retain self");
 
     [_data release];
     [_defaultPicture release];
