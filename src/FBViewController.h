@@ -96,7 +96,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
  The delegate that will be called when Cancel or Done is pressed. Derived classes may specify
  derived types for their delegates that provide additional functionality.
  */
-@property (nonatomic, assign) id<FBViewControllerDelegate> delegate;
+@property (nonatomic, assign) IBOutlet id<FBViewControllerDelegate> delegate;
 
 /*!
  @abstract

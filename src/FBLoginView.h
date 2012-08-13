@@ -55,7 +55,7 @@
  @abstract
  The delegate object that receives updates for selection and display control.
  */
-@property (nonatomic, assign) id<FBLoginViewDelegate> delegate;
+@property (nonatomic, assign) IBOutlet id<FBLoginViewDelegate> delegate;
 
 @end
 
