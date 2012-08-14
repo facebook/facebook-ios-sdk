@@ -103,6 +103,9 @@
                      andHttpMethod:(NSString *)httpMethod
                        andDelegate:(id <FBRequestDelegate>)delegate;
 
+- (void)requestWithURLString:(NSString *)fullURL
+                 andDelegate:(id <FBRequestDelegate>)delegate;
+
 - (void)dialog:(NSString *)action
    andDelegate:(id<FBDialogDelegate>)delegate;
 
