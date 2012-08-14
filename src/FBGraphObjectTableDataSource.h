@@ -27,6 +27,7 @@
 @property (nonatomic, retain) UIImage *defaultPicture;
 @property (nonatomic, assign) id<FBGraphObjectViewControllerDelegate> controllerDelegate;
 @property (nonatomic, copy) NSString *groupByField;
+@property (nonatomic, assign) BOOL useCollation;
 @property (nonatomic) BOOL itemTitleSuffixEnabled;
 @property (nonatomic) BOOL itemPicturesEnabled;
 @property (nonatomic) BOOL itemSubtitleEnabled;

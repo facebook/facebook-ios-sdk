@@ -338,6 +338,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     }
     [self.dataSource setSortingByFields:sortFields ascending:YES];
     self.dataSource.groupByField = groupByField;
+    self.dataSource.useCollation = YES;
     
     // me or one of my friends that also uses the app
     NSString *user = self.userID;
