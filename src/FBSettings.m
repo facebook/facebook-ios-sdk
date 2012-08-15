@@ -36,14 +36,6 @@ NSString *const FBSupportsAttribution = @"supports_attribution";
 
 NSTimeInterval const FBPublishDelay = 0.1;
 
-@protocol FBActivity<FBGraphObject>
-
-@property (retain, nonatomic) NSString        *event;
-@property (retain, nonatomic) NSString        *attribution;
-
-@end
-
-
 @implementation FBSettings
 
 static NSSet *g_loggingBehavior;
@@ -120,9 +112,9 @@ static dispatch_once_t g_publishInstallOnceToken;
                     [[result objectForKey:FBSupportsAttribution] boolValue]) {
                     // set up the HTTP POST to publish the attribution ID.
                     NSString *publishPath = [NSString stringWithFormat:FBPublishActivityPath, appID, nil];
-                    id<FBActivity> installActivity = (id<FBActivity>)[FBGraphObject graphObject];
-                    installActivity.event = FBMobileInstallEvent;
-                    installActivity.attribution = attributionID;
+                    NSMutableDictionary<FBGraphObject> *installActivity = [FBGraphObject graphObject];
+                    [installActivity setObject:FBMobileInstallEvent forKey:@"event"];
+                    [installActivity setObject:attributionID forKey:@"attribution"];
 
                     FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];
                     [publishRequest startWithCompletionHandler:publishCompletionBlock];
