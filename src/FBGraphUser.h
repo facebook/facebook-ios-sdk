@@ -15,7 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "FBGraphLocation.h"
+#import "FBGraphPlace.h"
 #import "FBGraphObject.h"
 
 /*!
@@ -85,6 +85,6 @@
  @property 
  @abstract Typed access to the user's current city.
  */
-@property (retain, nonatomic) id<FBGraphLocation> location;
+@property (retain, nonatomic) id<FBGraphPlace> location;
 
 @end

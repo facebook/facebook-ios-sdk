@@ -158,6 +158,19 @@
     [blocker wait];
 }
 
+- (void)testGraphObjectTypedRequest2
+{
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    [FBRequestConnection startWithGraphPath:@"4" // Zuck
+                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
+                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
+                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
+                              [blocker signal];
+                          }];
+    
+    [blocker wait];
+}
+
 - (void)testGraphObjectSameID
 {
     NSString *anID = @"1234567890";
