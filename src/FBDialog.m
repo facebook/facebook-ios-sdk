@@ -45,6 +45,15 @@ static BOOL FBIsDeviceIPad() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
+@interface FBDialog ()
+- (void)bounce2AnimationStopped;
+- (void)deviceOrientationDidChange:(void*)object;
+- (void)keyboardWillShow:(NSNotification*)notification;
+- (void)keyboardWillHide:(NSNotification*)notification;
+@end
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
 @implementation FBDialog
 
 @synthesize delegate = _delegate,
