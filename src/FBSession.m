@@ -25,6 +25,7 @@
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
+#import "FBDataDiskCache.h"
 
 // the sooner we can remove these the better
 #import "Facebook.h"
@@ -358,6 +359,7 @@ static FBSession *g_activeSession = nil;
 - (void)closeAndClearTokenInformation {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
+    [[FBDataDiskCache sharedCache] removeDataForSession:self];
     [self.tokenCachingStrategy clearToken];
     [self transitionAndCallHandlerWithState:FBSessionStateClosed
                                       error:nil
