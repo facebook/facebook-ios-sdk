@@ -61,6 +61,7 @@ static const NSInteger kMinimumCountToCollate = 6;
 @synthesize sortDescriptors = _sortDescriptors;
 @synthesize dataNeededDelegate = _dataNeededDelegate;
 @synthesize expectingMoreGraphObjects = _expectingMoreGraphObjects;
+@synthesize collation = _collation;
 
 - (void)setUseCollation:(BOOL)useCollation
 {
