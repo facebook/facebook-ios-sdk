@@ -686,7 +686,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "VERSION_HEADER_PATH=$SRCROOT/FBSDKVersion-generated.h\n\n# default\necho '#define FB_IOS_SDK_VERSION_STRING @\"Unknown\"' > $VERSION_HEADER_PATH\n\nGIT_DESCRIBE=`(cd $SRCROOT; git describe --match=\"sdk-version-*\" --tags 2>/dev/null)`\nif [ \"$?\" -eq \"0\" ]; then\t\n    # If we have git and are in a working copy, use the version part of git-describe's output.\n    echo '#define FB_IOS_SDK_VERSION_STRING @\"'`echo $GIT_DESCRIBE | perl -pe \"s/sdk-version-//\"`'\"' > $VERSION_HEADER_PATH\nfi\n\n";
+			shellScript = "VERSION_HEADER_PATH=$SRCROOT/FBSDKVersion-generated.h\n\n# default\necho '#define FB_IOS_SDK_VERSION_STRING @\"Unknown\"' > $VERSION_HEADER_PATH\n\nGIT_DESCRIBE=`(cd "$SRCROOT"; git describe --match=\"sdk-version-*\" --tags 2>/dev/null)`\nif [ \"$?\" -eq \"0\" ]; then\t\n    # If we have git and are in a working copy, use the version part of git-describe's output.\n    echo '#define FB_IOS_SDK_VERSION_STRING @\"'`echo $GIT_DESCRIBE | perl -pe \"s/sdk-version-//\"`'\"' > $VERSION_HEADER_PATH\nfi\n\n";
 		};
 		B9CBC517152537270036AA71 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
