@@ -475,7 +475,14 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
 {
-    return [graphObject objectForKey:@"picture"];
+    id picture = [graphObject objectForKey:@"picture"];
+    // Depending on what migration the app is in, we may get back either a string, or a
+    // dictionary with a "data" property that is a dictionary containing a "url" property.
+    if ([picture isKindOfClass:[NSString class]]) {
+        return picture;
+    }
+    id data = [picture objectForKey:@"data"];
+    return [data objectForKey:@"url"];
 }
 
 #pragma mark FBGraphObjectPagingLoaderDelegate members
