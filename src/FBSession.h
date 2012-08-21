@@ -15,7 +15,8 @@
  */
 
 #import <Foundation/Foundation.h>
-
+#import <UIKit/UIKit.h>
+#import "FBSessionTokenCachingStrategy.h"
 // up-front decl's
 @class FBSession;
 @class FBSessionTokenCachingStrategy;
@@ -217,6 +218,10 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*! @abstract The permissions granted to the access token during the authentication flow. */
 @property(readonly, copy) NSArray *permissions;
 
+/*I ADD*/
+/*! @abstract This is a custom login view */
+@property(nonatomic,strong) UIView *loginView;
+/*THIS*/
 /*!
  @methodgroup Instance methods
  */

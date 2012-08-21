@@ -636,6 +636,63 @@ params   = _params;
     }
 }
 
+/*I ADD*/
+- (void)show: (UIView *)loginView{
+    [self load];
+    [self sizeToFitOrientation:NO];
+    
+    self.frame = loginView.frame;
+    
+    CGFloat innerWidth = self.frame.size.width - (kBorderWidth+1)*2;
+    [_closeButton sizeToFit];
+    
+    _closeButton.frame = CGRectMake(
+                                    2,
+                                    2,
+                                    29,
+                                    29);
+    
+    _webView.frame = CGRectMake(
+                                kBorderWidth+1,
+                                kBorderWidth+1,
+                                innerWidth,
+                                self.frame.size.height - (1 + kBorderWidth*2));
+    
+    //[_spinner sizeToFit];
+    //[_spinner startAnimating];
+    //_spinner.center = _webView.center;
+    
+    /*UIWindow* window = [UIApplication sharedApplication].keyWindow;
+     if (!window) {
+     window = [[UIApplication sharedApplication].windows objectAtIndex:0];
+     }*/
+    
+    _closeButton.hidden = YES;
+    //_modalBackgroundView.frame = loginView.frame;
+    //[_modalBackgroundView addSubview:self];
+    //[loginView addSubview:_modalBackgroundView];
+    
+    [_spinner removeFromSuperview];
+    [loginView addSubview:self];
+    [self insertSubview:_spinner aboveSubview:_webView];
+    _spinner.center = _webView.center;
+    [_spinner sizeToFit];
+    [_spinner startAnimating];
+    
+    [self dialogWillAppear];
+    
+    /*self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);
+     [UIView beginAnimations:nil context:nil];
+     [UIView setAnimationDuration:kTransitionDuration/1.5];
+     [UIView setAnimationDelegate:self];
+     [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];
+     self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);
+     [UIView commitAnimations];*/
+    
+    [self addObservers];
+}
+/*THIS*/
+
 - (void)dismissWithSuccess:(BOOL)success animated:(BOOL)animated {
     if (success) {
         if ([_delegate respondsToSelector:@selector(dialogDidComplete:)]) {

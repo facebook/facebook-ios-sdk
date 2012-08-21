@@ -146,7 +146,9 @@ static FBSession *g_activeSession = nil;
             loginHandler = _loginHandler,
             reauthorizeHandler = _reauthorizeHandler,
             reauthorizePermissions = _reauthorizePermissions;
-
+/*I ADD*/
+@synthesize loginView = _loginView;
+/*THIS*/
 #pragma mark Lifecycle
 
 - (id)init {
@@ -746,13 +748,15 @@ static FBSession *g_activeSession = nil;
             didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
 
-        if (trySafariAuth && !didAuthNWithSystemAccount) {
-            NSString *nextUrl = self.appBaseUrl;
-            [params setValue:nextUrl forKey:@"redirect_uri"];
-
-            NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
-            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
-        }
+        /*I ADD*/ /* don't use safari, use default facebook-api to login*/
+//        if (trySafariAuth && !didAuthNWithSystemAccount) {
+//            NSString *nextUrl = self.appBaseUrl;
+//            [params setValue:nextUrl forKey:@"redirect_uri"];
+//
+//            NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
+//            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+//        }
+        /*THIS*/ /*!EVIL THING!*/
     }
 
     // If single sign-on failed, see if we should attempt to fallback
@@ -763,7 +767,18 @@ static FBSession *g_activeSession = nil;
                                                        loginParams:params
                                                           delegate:self]
                                 autorelease];
-            [self.loginDialog show];
+            /*I ADD*/
+            //
+            if (!_loginView){
+                //if you WON'T use CUSTOM view, you can use default show
+                [self.loginDialog show];
+            }
+            else {
+                //or you WANT use CUSTOM view, you can use this method
+                [self.loginDialog show:_loginView];
+            }
+            
+            /*THIS*/
         } else {
             // Can't fallback and Facebook Login failed, so transition to an error state
             NSError *error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonInlineNotCancelledValue
@@ -787,15 +802,16 @@ static FBSession *g_activeSession = nil;
         
         // if the error response indicates that we should try again using Safari, open
         // the authorization dialog in Safari.
-        if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
-            [self authorizeWithPermissions:self.permissions
-                            integratedAuth:NO
-                                 FBAppAuth:NO
-                                safariAuth:YES
-                                  fallback:NO];
-            return YES;
-        }
-        
+        /*I ADD*/
+//        if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
+//            [self authorizeWithPermissions:self.permissions
+//                            integratedAuth:NO
+//                                 FBAppAuth:NO
+//                                safariAuth:YES
+//                                  fallback:NO];
+//            return YES;
+//        }
+        /*THIS*/ /*EVIL SAFARI!*/
         // if the error response indicates that we should try the authorization flow
         // in an inline dialog, do that.
         if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
