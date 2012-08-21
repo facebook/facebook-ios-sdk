@@ -124,7 +124,7 @@ sessionUniqueUserTag:(NSString*)sessionUniqueUserTag
 tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 {
     if (self = [super initWithAppID:appID
-                        permissions:permissions
+                    readPermissions:permissions
                     urlSchemeSuffix:nil
                  tokenCacheStrategy:tokenCachingStrategy]) {
         self.testAppID = appID;
@@ -220,7 +220,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
              } else {
                  // we fetched something unexpected when requesting an app token
                  error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
-                                                                   errorCode:nil];
+                                                     errorCode:nil
+                                                    innerError:nil];
              }
              // state transition, and call the handler if there is one
              [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
@@ -427,10 +428,10 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     
     return didTransition;
 }
-
-// core authorization unit testing (no UX + test user) flow
 - (void)authorizeWithPermissions:(NSArray*)permissions
-                        behavior:(FBSessionLoginBehavior)behavior {
+                        behavior:(FBSessionLoginBehavior)behavior
+                 defaultAudience:(FBSessionDefaultAudience)audience
+                   isReauthorize:(BOOL)isReauthorize {
     
     // We ignore behavior, since we aren't going to present UI.
 

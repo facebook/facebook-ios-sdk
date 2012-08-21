@@ -219,15 +219,29 @@
 // Handles the user clicking the Announce button, by either creating an Open Graph Action
 // or first uploading a photo and then creating the action.
 - (IBAction)announce:(id)sender {
-    self.announceButton.enabled = false;
-    [self centerAndShowActivityIndicator];
-    [self.view setUserInteractionEnabled:NO];
-    
-    if (self.selectedPhoto) {
-        self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
-        [self postPhotoThenOpenGraphAction];
+    // if we don't have permission to announce, let's first address that
+    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
+        
+        [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                   behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                                            defaultAudience:FBSessionDefaultAudienceFriends
+                                          completionHandler:^(FBSession *session, NSError *error) {
+                                              if (!error) {
+                                                  // re-call assuming we now have the permission
+                                                  [self announce:sender];
+                                              }
+                                          }];
     } else {
-        [self postOpenGraphActionWithPhotoURL:nil];
+        self.announceButton.enabled = false;
+        [self centerAndShowActivityIndicator];
+        [self.view setUserInteractionEnabled:NO];
+        
+        if (self.selectedPhoto) {
+            self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
+            [self postPhotoThenOpenGraphAction];
+        } else {
+            [self postOpenGraphActionWithPhotoURL:nil];
+        }
     }
 }
 
@@ -239,7 +253,7 @@
 }
 #pragma mark UIImagePickerControllerDelegate methods
 
-- (void)imagePickerController:(UIImagePickerController *)picker 
+- (void)imagePickerController:(UIImagePickerController *)picker
         didFinishPickingImage:(UIImage *)image
                   editingInfo:(NSDictionary *)editingInfo {
     

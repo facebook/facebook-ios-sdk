@@ -251,9 +251,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
         NSArray *permissions = self.session.permissions;
         [self.session close];    
         self.session = [[[FBSession alloc] initWithAppID:_appId
-                                             permissions:permissions 
-                                         urlSchemeSuffix:_urlSchemeSuffix 
-                                      tokenCacheStrategy:self.tokenCaching] 
+                                         readPermissions:permissions
+                                         urlSchemeSuffix:_urlSchemeSuffix
+                                      tokenCacheStrategy:self.tokenCaching]
                            autorelease];
     
         // get the session into a valid state
@@ -301,9 +301,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     [self.tokenCaching clearToken];
     
     self.session = [[[FBSession alloc] initWithAppID:_appId
-                                        permissions:permissions 
-                                    urlSchemeSuffix:_urlSchemeSuffix 
-                                 tokenCacheStrategy:self.tokenCaching]
+                                     readPermissions:permissions
+                                     urlSchemeSuffix:_urlSchemeSuffix
+                                  tokenCacheStrategy:self.tokenCaching]
                     autorelease];
     
     [self.session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -343,11 +343,11 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 -(NSDate*)expirationDate {
     return self.tokenCaching.expirationDate;
-    self.hasUpdatedAccessToken = YES;
 }
 
 -(void)setExpirationDate:(NSDate *)expirationDate {
     self.tokenCaching.expirationDate = expirationDate;
+    self.hasUpdatedAccessToken = YES;
 }
 
 /**

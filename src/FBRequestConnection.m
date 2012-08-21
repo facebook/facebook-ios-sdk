@@ -53,6 +53,7 @@ NSString *const kBatchRestMethodBaseURL = @"method/";
 NSString *const FBNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
 static const int kRESTAPIAccessTokenErrorCode = 190;
+static const int kAPISessionNoLongerActiveErrorCode = 2500;
 static const NSTimeInterval kDefaultTimeout = 180.0;
 static const int kMaximumBatchSize = 50;
 
@@ -1150,7 +1151,7 @@ typedef enum FBRequestConnectionState {
 
         if ([self isInvalidSessionError:itemError 
                             resultIndex:error == itemError ? i : 0]) {
-            [metadata.request.session close];
+            [metadata.request.session closeAndClearTokenInformation];
         } else if ([metadata.request.session shouldExtendAccessToken]) {
             // If we have not had the opportunity to piggyback a token-extension request,
             // but we need to, do so now as a separate request.
@@ -1288,7 +1289,7 @@ typedef enum FBRequestConnectionState {
             (code = [error objectForKey:@"code"]) &&        // response[index].body.error.code
             [code isKindOfClass:[NSNumber class]]) {
             // is it a 190 packaged in the original response, then YES
-            return [code intValue] == kRESTAPIAccessTokenErrorCode;
+            return [code intValue] == kRESTAPIAccessTokenErrorCode || [code intValue] == kAPISessionNoLongerActiveErrorCode;
         }
     }
     // else NO

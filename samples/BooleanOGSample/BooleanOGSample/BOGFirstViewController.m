@@ -135,7 +135,7 @@
 
 // FBSample logic
 // This is the workhorse method of this view. It sets up the content for a custom OG action, and then posts it
-// using FBRequest/FBRequestConnection. This method also uses the custom protocols defined in 
+// using FBRequest/FBRequestConnection. This method also uses the custom protocols defined in
 // OGProtocols.h (defined in this sample application), in order to create and consume actions in a typed fashion
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
@@ -145,50 +145,68 @@
     // if we have a valid session, then we post the action to the users wall, else noop
     if (FBSession.activeSession.isOpen) {
         
-        // create an object to hold our action information, the FBGraphObject class has a lightweight
-        // static method API that supports creating and comparing of objects that implement the 
-        // FBGraphObject protocol
-        id<BOGGraphBooleanAction> action = (id<BOGGraphBooleanAction>)[FBGraphObject graphObject];
-        
-        // set the action's results and two truth-value objects, using inferred accessor methods
-        // in our custom open graph action protocol
-        action.result = result ? @"1" : @"0";
-        action.truthvalue = [BOGFirstViewController ogObjectForTruthValue:left];
-        action.anothertruthvalue = [BOGFirstViewController ogObjectForTruthValue:right];
-        
-        
-        // post the action using one of the lightweight static start* methods on FBRequest
-        [FBRequestConnection startForPostWithGraphPath:actionPath
-                                           graphObject:action
-                                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                         if (!error) {
-                                             // successful post, in the sample we do nothing with the id, however
-                                             // a more complex applicaiton may want to store or perform addtional actions
-                                             // with the id that represents the just-posted action    
-                                         } else {
-                                             // get the basic error message
-                                             NSString *message = error.localizedDescription;
-                                             
-                                             // see if we can improve on it with an error message from the server
-                                             id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
-                                             if ([json isKindOfClass:[NSDictionary class]] &&
-                                                 (json = [json objectForKey:@"body"]) &&
-                                                 [json isKindOfClass:[NSDictionary class]] &&
-                                                 (json = [json objectForKey:@"error"]) &&
-                                                 [json isKindOfClass:[NSDictionary class]] &&
-                                                 (json = [json objectForKey:@"message"])) {
-                                                 message = [json description];
+        // if we don't have permission to post, let's first address that
+        if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
+            
+            [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                       behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                                                defaultAudience:FBSessionDefaultAudienceFriends
+                                              completionHandler:^(FBSession *session, NSError *error) {
+                                                  if (!error) {
+                                                      // re-call assuming we now have the permission
+                                                      [self postAction:actionPath
+                                                           leftOperand:left
+                                                          rightOperand:right
+                                                                result:result];
+                                                  }
+                                              }];
+        } else {
+            
+            // create an object to hold our action information, the FBGraphObject class has a lightweight
+            // static method API that supports creating and comparing of objects that implement the
+            // FBGraphObject protocol
+            id<BOGGraphBooleanAction> action = (id<BOGGraphBooleanAction>)[FBGraphObject graphObject];
+            
+            // set the action's results and two truth-value objects, using inferred accessor methods
+            // in our custom open graph action protocol
+            action.result = result ? @"1" : @"0";
+            action.truthvalue = [BOGFirstViewController ogObjectForTruthValue:left];
+            action.anothertruthvalue = [BOGFirstViewController ogObjectForTruthValue:right];
+            
+            
+            // post the action using one of the lightweight static start* methods on FBRequest
+            [FBRequestConnection startForPostWithGraphPath:actionPath
+                                               graphObject:action
+                                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                             if (!error) {
+                                                 // successful post, in the sample we do nothing with the id, however
+                                                 // a more complex applicaiton may want to store or perform addtional actions
+                                                 // with the id that represents the just-posted action
+                                             } else {
+                                                 // get the basic error message
+                                                 NSString *message = error.localizedDescription;
+                                                 
+                                                 // see if we can improve on it with an error message from the server
+                                                 id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
+                                                 if ([json isKindOfClass:[NSDictionary class]] &&
+                                                     (json = [json objectForKey:@"body"]) &&
+                                                     [json isKindOfClass:[NSDictionary class]] &&
+                                                     (json = [json objectForKey:@"error"]) &&
+                                                     [json isKindOfClass:[NSDictionary class]] &&
+                                                     (json = [json objectForKey:@"message"])) {
+                                                     message = [json description];
+                                                 }
+                                                 
+                                                 // display the message that we have
+                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
+                                                                                                 message:message
+                                                                                                delegate:nil
+                                                                                       cancelButtonTitle:@"OK"
+                                                                                       otherButtonTitles:nil];
+                                                 [alert show];
                                              }
-                                             
-                                             // display the message that we have
-                                             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
-                                                                                             message:message
-                                                                                            delegate:nil
-                                                                                   cancelButtonTitle:@"OK"
-                                                                                   otherButtonTitles:nil];
-                                             [alert show];
-                                         }
-                                     }];
+                                         }];
+        }
     }
 }
 

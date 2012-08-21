@@ -30,9 +30,12 @@
                            expirationDate:(NSDate*)date
                               shouldCache:(BOOL)shouldCache;
 - (void)authorizeWithPermissions:(NSArray*)permissions
-                        behavior:(FBSessionLoginBehavior)behavior;
+                        behavior:(FBSessionLoginBehavior)behavior
+                 defaultAudience:(FBSessionDefaultAudience)audience
+                   isReauthorize:(BOOL)isReauthorize;
 
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
-                             errorCode:(NSString*)errorCode;
+                             errorCode:(NSString*)errorCode
+                            innerError:(NSError*)innerError;
 
 @end

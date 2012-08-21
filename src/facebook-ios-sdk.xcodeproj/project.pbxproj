@@ -28,6 +28,7 @@
 		8446FDAD151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8446FDAE151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */; };
 		8446FDB4151D2674000BE007 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8446FDB3151D2674000BE007 /* UIKit.framework */; };
+		845857A216096ED000CC89E5 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 845857A116096ED000CC89E5 /* Accounts.framework */; };
 		8460F3E015595BE800038963 /* FBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CB41F1553ACC600C183CF /* FBLogger.m */; };
 		849CB18C1523416B00112220 /* FBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0611D5293B000A4545 /* FBLoginDialog.h */; settings = {ATTRIBUTES = (); }; };
 		849CB18D1523416B00112220 /* FBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0811D5293B000A4545 /* FBDialog.h */; settings = {ATTRIBUTES = (); }; };
@@ -184,6 +185,7 @@
 		8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionTokenCachingStrategy.h; sourceTree = "<group>"; };
 		8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionTokenCachingStrategy.m; sourceTree = "<group>"; };
 		8446FDB3151D2674000BE007 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		845857A116096ED000CC89E5 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		847BA63115823BF600C2D56E /* FBFriendPickerViewController+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBFriendPickerViewController+Internal.h"; sourceTree = "<group>"; };
 		84AE5DA1152EA02500C4DE54 /* FBGraphObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObject.h; sourceTree = "<group>"; };
 		84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObject.m; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				845857A216096ED000CC89E5 /* Accounts.framework in Frameworks */,
 				84B5F11C1552FD3C00A55DDC /* CoreGraphics.framework in Frameworks */,
 				84B5F11A1552F82200A55DDC /* UIKit.framework in Frameworks */,
 				B9CC137515266BB800443948 /* QuartzCore.framework in Frameworks */,
@@ -349,6 +352,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				845857A116096ED000CC89E5 /* Accounts.framework */,
 				B9CC137215266B9000443948 /* QuartzCore.framework */,
 				B9CBC53715254AC50036AA71 /* libsqlite3.dylib */,
 				B9CBC53115253F6D0036AA71 /* SenTestingKit.framework */,

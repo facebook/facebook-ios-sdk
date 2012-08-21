@@ -130,9 +130,9 @@ CGSize g_imageSize;
     
     // if our session has a cached token ready, we open it; note that it is important
     // that we open the session before notification wiring is in place
-    [FBSession openActiveSessionWithPermissions:self.permissions
-                                   allowLoginUI:NO
-                              completionHandler:nil];
+    [FBSession openActiveSessionWithReadPermissions:self.permissions
+                                       allowLoginUI:NO
+                                  completionHandler:nil];
 
     // wire-up the current session to the login view, before adding global session-change handlers
     [self wireViewForSession:FBSession.activeSession];
@@ -289,9 +289,9 @@ CGSize g_imageSize;
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession openActiveSessionWithPermissions:self.permissions
-                                       allowLoginUI:NO
-                                  completionHandler:nil];
+        [FBSession openActiveSessionWithReadPermissions:self.permissions
+                                           allowLoginUI:NO
+                                      completionHandler:nil];
     }    
 }
 
@@ -338,9 +338,9 @@ CGSize g_imageSize;
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
-            [FBSession openActiveSessionWithPermissions:self.permissions
-                                           allowLoginUI:YES
-                                      completionHandler:nil];
+            [FBSession openActiveSessionWithReadPermissions:self.permissions
+                                               allowLoginUI:YES
+                                          completionHandler:nil];
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;

@@ -82,7 +82,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
         case FBSessionStateClosed:
         case FBSessionStateClosedLoginFailed:
             // FBSample logic
-            // Once the user has logged in, we want them to be looking at the root view.
+            // Once the user has logged out, we want them to be looking at the root view.
             [self.navController popToRootViewControllerAnimated:NO];
             
             [FBSession.activeSession closeAndClearTokenInformation];
@@ -107,11 +107,11 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 }
 
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
-    return [FBSession openActiveSessionWithPermissions:permissions
-                                          allowLoginUI:allowLoginUI
-                                     completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                         [self sessionStateChanged:session state:state error:error];
+    NSArray *permissions = [NSArray arrayWithObjects:@"user_photos", nil];
+    return [FBSession openActiveSessionWithReadPermissions:permissions
+                                              allowLoginUI:allowLoginUI
+                                         completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                             [self sessionStateChanged:session state:state error:error];
                                      }];    
 }
 

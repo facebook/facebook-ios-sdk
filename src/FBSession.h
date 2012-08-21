@@ -80,7 +80,7 @@ typedef enum {
  @typedef FBSessionLoginBehavior enum
  
  @abstract 
- Passed to login to indicate whether Facebook Login should allow for fallback to be attempted.
+ Passed to open to indicate whether Facebook Login should allow for fallback to be attempted.
  
  @discussion
  Facebook Login authorizes the application to act on behalf of the user, using the user's 
@@ -105,6 +105,29 @@ typedef enum {
     /*! Only attempt WebView Login; ask user for credentials */
     FBSessionLoginBehaviorForcingWebView             = 2,
 } FBSessionLoginBehavior;
+
+/*!
+ @typedef FBSessionDefaultAudience enum
+ 
+ @abstract
+ Passed to open to indicate which default audience to use for sessions that post data to Facebook.
+ 
+ @discussion
+ Certain operations such as publishing a status or publishing a photo require an audience. When the user
+ grants an application permission to perform a publish operation, a default audience is selected as the 
+ publication ceiling for the application. This enumerated value allows the application to select which
+ audience to ask the user to grant publish permission for.
+ */
+typedef enum {
+    /*! No audience needed; this value is useful for cases where data will only be read from Facebook */
+    FBSessionDefaultAudienceNone                = 0,
+    /*! Indicates that only the user is able to see posts made by the application */
+    FBSessionDefaultAudienceOnlyMe              = 10,
+    /*! Indicates that the user's friends are able to see posts made by the application */
+    FBSessionDefaultAudienceFriends             = 20,
+    /*! Indicates that all Facebook users are able to see posts made by the application */
+    FBSessionDefaultAudienceEveryone            = 30,
+} FBSessionDefaultAudience;
 
 /*! 
  @typedef
@@ -169,11 +192,40 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  Returns a newly initialized Facebook session with the specified permissions and other
  default values for parameters to <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
  
- @param permissions  An array of strings representing the permissions to request during the
+ @param readPermissions  An array of strings representing the permissions to request during the
  authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ 
+ @discussion
+ It is required that initial permissions requests represent read-only permissions only. If publish
+ permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
+ well as an audience
 
  */
-- (id)initWithPermissions:(NSArray*)permissions;
+- (id)initWithReadPermissions:(NSArray*)readPermissions;
+
+/*!
+ @method
+ 
+ @abstract
+ Following are the descriptions of the arguments along with their
+ defaults when ommitted.
+ 
+ @param readPermissions  An array of strings representing the permissions to request during the
+ authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
+ @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
+ @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
+ indicates a default value of @"FBAccessTokenInformationKey".
+ 
+ @discussion
+ It is required that initial permissions requests represent read-only permissions only. If publish
+ permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
+ well as an audience
+ */
+- (id)initWithAppID:(NSString*)appID
+    readPermissions:(NSArray*)readPermissions
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
 
 /*!
  @method
@@ -182,17 +234,24 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  Following are the descriptions of the arguments along with their 
  defaults when ommitted.
  
- @param permissions  An array of strings representing the permissions to request during the
+ @param readPermissions  An array of strings representing the permissions to request during the
  authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ @param defaultAudience  Most applications use FBSessionDefaultAudienceNone here, only specifying an audience when using reauthorize to request publish permissions.
  @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
  @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
  @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
  indicates a default value of @"FBAccessTokenInformationKey".
+ 
+ @discussion
+ It is required that initial permissions requests represent read-only permissions only. If publish
+ permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
+ well as an audience
  */
 - (id)initWithAppID:(NSString*)appID
-           permissions:(NSArray*)permissions
-       urlSchemeSuffix:(NSString*)urlSchemeSuffix
-    tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
+    readPermissions:(NSArray*)readPermissions
+    defaultAudience:(FBSessionDefaultAudience)defaultAudience
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
 
 // instance readonly properties         
 
@@ -290,6 +349,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  */
 - (void)reauthorizeWithPermissions:(NSArray*)permissions
                           behavior:(FBSessionLoginBehavior)behavior
+                   defaultAudience:(FBSessionDefaultAudience)audience
                  completionHandler:(FBSessionReauthorizeResultHandler)handler;
 
 /*!
@@ -337,7 +397,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  and sets the static activeSession which becomes the default session object for any Facebook UI widgets
  used by the application. This session becomes the active session, whether open succeeds or fails.
  
- @param permissions     An array of strings representing the permissions to request during the
+ @param readPermissions     An array of strings representing the permissions to request during the
  authentication flow. A value of nil will indicates basic permissions. A nil value specifies 
  default permissions.
   
@@ -358,10 +418,14 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  possible that the user will login, and the session will become open asynchronously. The primary use for
  this return value is to switch-on facebook capabilities in your UX upon startup, in the case were the session
  is opened via cache.
+ 
+ It is required that initial permissions requests represent read-only permissions only. If publish
+ permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
+ well as an audience
  */
-+ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
-                            allowLoginUI:(BOOL)allowLoginUI
-                       completionHandler:(FBSessionStateHandler)handler;
++ (BOOL)openActiveSessionWithReadPermissions:(NSArray*)readPermissions
+                                allowLoginUI:(BOOL)allowLoginUI
+                           completionHandler:(FBSessionStateHandler)handler;
 
 /*!
  @abstract

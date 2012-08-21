@@ -62,7 +62,7 @@
     viewControllerSettings = [[FBUserSettingsViewController alloc] init];
     viewControllerSettings.title = @"Facebook Settings";
     viewControllerSettings.tabBarItem.image = [UIImage imageNamed:@"second"];
-    viewControllerSettings.permissions = [NSArray arrayWithObjects:@"publish_actions", nil];
+    viewControllerSettings.permissions = nil;
     
         
     self.tabBarController = [[UITabBarController alloc] init];
