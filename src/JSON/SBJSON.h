@@ -1,5 +1,5 @@
 /*
- Copyright (C) 2007-2009 Stig Brautaset. All rights reserved.
+ Copyright (C) 2009-2011 Stig Brautaset. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -27,49 +27,58 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import <Foundation/Foundation.h>
+/**
+ @page json2objc JSON to Objective-C
+ 
+ JSON is mapped to Objective-C types in the following way:
+ 
+ @li null    -> NSNull
+ @li string  -> NSString
+ @li array   -> NSMutableArray
+ @li object  -> NSMutableDictionary
+ @li true    -> NSNumber's -numberWithBool:YES
+ @li false   -> NSNumber's -numberWithBool:NO
+ @li integer up to 19 digits -> NSNumber's -numberWithLongLong:
+ @li all other numbers       -> NSDecimalNumber
+ 
+ Since Objective-C doesn't have a dedicated class for boolean values,
+ these turns into NSNumber instances. However, since these are
+ initialised with the -initWithBool: method they round-trip back to JSON
+ properly. In other words, they won't silently suddenly become 0 or 1;
+ they'll be represented as 'true' and 'false' again.
+ 
+ As an optimisation integers up to 19 digits in length (the max length
+ for signed long long integers) turn into NSNumber instances, while
+ complex ones turn into NSDecimalNumber instances. We can thus avoid any
+ loss of precision as JSON allows ridiculously large numbers.
+
+ @page objc2json Objective-C to JSON
+ 
+ Objective-C types are mapped to JSON types in the following way:
+ 
+ @li NSNull        -> null
+ @li NSString      -> string
+ @li NSArray       -> array
+ @li NSDictionary  -> object
+ @li NSNumber's -initWithBool:YES -> true
+ @li NSNumber's -initWithBool:NO  -> false
+ @li NSNumber      -> number
+ 
+ @note In JSON the keys of an object must be strings. NSDictionary
+ keys need not be, but attempting to convert an NSDictionary with
+ non-string keys into JSON will throw an exception.
+ 
+ NSNumber instances created with the -numberWithBool: method are
+ converted into the JSON boolean "true" and "false" values, and vice
+ versa. Any other NSNumber instances are converted to a JSON number the
+ way you would expect.
+
+ */
+
 #import "SBJsonParser.h"
 #import "SBJsonWriter.h"
+#import "SBJsonStreamParser.h"
+#import "SBJsonStreamParserAdapter.h"
+#import "SBJsonStreamWriter.h"
+#import "NSObject+SBJson.h"
 
-/**
- @brief Facade for SBJsonWriter/SBJsonParser.
-
- Requests are forwarded to instances of SBJsonWriter and SBJsonParser.
- */
-@interface SBJSON : SBJsonBase <SBJsonParser, SBJsonWriter> {
-
-@private    
-    SBJsonParser *jsonParser;
-    SBJsonWriter *jsonWriter;
-}
-
-
-/// Return the fragment represented by the given string
-- (id)fragmentWithString:(NSString*)jsonrep
-                   error:(NSError**)error;
-
-/// Return the object represented by the given string
-- (id)objectWithString:(NSString*)jsonrep
-                 error:(NSError**)error;
-
-/// Parse the string and return the represented object (or scalar)
-- (id)objectWithString:(id)value
-           allowScalar:(BOOL)x
-    			 error:(NSError**)error;
-
-
-/// Return JSON representation of an array  or dictionary
-- (NSString*)stringWithObject:(id)value
-                        error:(NSError**)error;
-
-/// Return JSON representation of any legal JSON value
-- (NSString*)stringWithFragment:(id)value
-                          error:(NSError**)error;
-
-/// Return JSON representation (or fragment) for the given object
-- (NSString*)stringWithObject:(id)value
-                  allowScalar:(BOOL)x
-    					error:(NSError**)error;
-
-
-@end

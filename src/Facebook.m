@@ -20,7 +20,7 @@
 #import "FBRequest.h"
 #import "FBError.h"
 #import "FBSessionManualTokenCachingStrategy.h"
-#import "JSON.h"
+#import "SBJSON.h"
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 
