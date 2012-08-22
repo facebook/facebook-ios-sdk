@@ -23,6 +23,7 @@
 		843D2DD81547C33000873F7C /* FBUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 843D2DD61547C33000873F7C /* FBUtility.h */; };
 		843D2DD91547C33000873F7C /* FBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 843D2DD71547C33000873F7C /* FBUtility.m */; };
 		843D2DDA1547C33000873F7C /* FBUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 843D2DD71547C33000873F7C /* FBUtility.m */; };
+		8440A81615E3F2B800565452 /* FBSDKVersion-generated.h in Headers */ = {isa = PBXBuildFile; fileRef = 8440A81515E3F2B800565452 /* FBSDKVersion-generated.h */; };
 		8446FDA6151BC5C2000BE007 /* FBSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDA5151BC5C2000BE007 /* FBSession.m */; };
 		8446FDAD151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h in Headers */ = {isa = PBXBuildFile; fileRef = 8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8446FDAE151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */; };
@@ -185,6 +186,7 @@
 		84137157152B94B000B2C0E1 /* FBSessionManualTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionManualTokenCachingStrategy.m; sourceTree = "<group>"; };
 		843D2DD61547C33000873F7C /* FBUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBUtility.h; sourceTree = "<group>"; };
 		843D2DD71547C33000873F7C /* FBUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBUtility.m; sourceTree = "<group>"; };
+		8440A81515E3F2B800565452 /* FBSDKVersion-generated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKVersion-generated.h"; sourceTree = "<group>"; };
 		8446FDA5151BC5C2000BE007 /* FBSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = FBSession.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		8446FDAB151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionTokenCachingStrategy.h; sourceTree = "<group>"; };
 		8446FDAC151CDB0B000BE007 /* FBSessionTokenCachingStrategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionTokenCachingStrategy.m; sourceTree = "<group>"; };
@@ -379,6 +381,7 @@
 				84E0CA07153619D400778DA4 /* Facebook.h */,
 				84E0CA08153619D400778DA4 /* Facebook.m */,
 				84E0CA03153618E500778DA4 /* FacebookSDK.h */,
+				8440A81515E3F2B800565452 /* FBSDKVersion-generated.h */,
 				84D0A64B1581A0CF00A2FA5E /* FBCacheDescriptor.h */,
 				84D0A64C1581A0CF00A2FA5E /* FBCacheDescriptor.m */,
 				B9C6E1301525219600E46808 /* FBCacheIndex.h */,
@@ -589,6 +592,7 @@
 				85E4AC7D15B63CC500F17346 /* FBViewController.h in Headers */,
 				2A68590615C1E37E001D4EDD /* FBSettings+Internal.h in Headers */,
 				85F99E3F15C3751100D807A5 /* FBViewController+Internal.h in Headers */,
+				8440A81615E3F2B800565452 /* FBSDKVersion-generated.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

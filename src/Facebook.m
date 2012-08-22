@@ -150,6 +150,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     }
     [_lastAccessTokenUpdate release];
     [_requests release];
+    _fbDialog.delegate = nil;
     [_fbDialog release];
     [_appId release];
     [_urlSchemeSuffix release];

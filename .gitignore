@@ -6,7 +6,6 @@ samples/Hackbook/Hackbook.xcodeproj/project.xcworkspace
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
 src/build/
-src/FBSDKVersion-generated.h
 build/
 lib/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser

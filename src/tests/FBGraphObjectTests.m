@@ -328,12 +328,22 @@
 - (id)postEvent
 {
     id<FBGraphObject> event = [FBGraphObject graphObject];
-    NSDate *startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
+   
+    // The "Events Timezone" platform migration affects what date/time formats Facebook accepts and returns.
+    // Apps created after 8/1/12 (or apps that have explicitly enabled the migration) should send/receive
+    // dates in ISO-8601 format. Pre-migration apps can send as Unix timestamps. Since the future is ISO-8601,
+    // that is what we support here. Apps that need pre-migration behavior can explicitly send these as
+    // integer timestamps rather than NSDates.
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
+    id startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
+    id endTime = [dateFormatter stringFromDate:[NSDate dateWithTimeInterval:3600 sinceDate:startTime]];
+    startTime = [dateFormatter stringFromDate:startTime];
+    
     [event setObject:[NSString stringWithFormat:@"My event on %@", startTime]
               forKey:@"name"];
     [event setObject:@"This is a great event. You should all come."
               forKey:@"description"];
-    NSDate *endTime = [NSDate dateWithTimeInterval:3600 sinceDate:startTime];
     [event setObject:startTime forKey:@"start_time"];
     [event setObject:endTime forKey:@"end_time"];
     [event setObject:@"My house" forKey:@"location"];
