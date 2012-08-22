@@ -80,7 +80,7 @@
  @property
  @abstract Typed access to action's user message
  */
-@property (retain, nonatomic) NSString              *user_message;
+@property (retain, nonatomic) NSString              *message;
 
 /*!
  @property
