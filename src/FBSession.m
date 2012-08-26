@@ -64,6 +64,8 @@ NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook
 
 // const strings
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
+static NSString *const FBPLISTURLTypes = @"CFBundleURLTypes";
+static NSString *const FBPLISTURLSchemes = @"CFBundleURLSchemes";
 // for unit testing mode only (DO NOT store application secrets in a published application plist)
 static NSString *const FBPLISTAppSecretKey = @"FacebookAppSecret";
 static NSString *const FBAuthURLScheme = @"fbauth";
@@ -516,7 +518,22 @@ static FBSession *g_activeSession = nil;
 + (NSString*)defaultAppID {
     if (!g_defaultAppID) {
         NSBundle* bundle = [NSBundle mainBundle];
-        g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
+        if ([bundle objectForInfoDictionaryKey:FBPLISTAppIDKey]) {
+            g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
+        } else if ([bundle objectForInfoDictionaryKey:FBPLISTURLTypes]) {
+            for (NSDictionary *schemeDictionary in [bundle objectForInfoDictionaryKey:FBPLISTURLTypes]) {
+                if ([[schemeDictionary objectForKey:FBPLISTURLSchemes] count] > 0) {
+                    NSString *scheme = [[schemeDictionary objectForKey:FBPLISTURLSchemes] objectAtIndex:0];
+                    if (![scheme hasPrefix:@"fb"]) {
+                        continue;
+                    }
+                    
+                    g_defaultAppID = [scheme stringByReplacingOccurrencesOfString:@"fb" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, 2)];
+                    break;
+                }
+            }
+        }
+        
     }
     return g_defaultAppID;
 }
