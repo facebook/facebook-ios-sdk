@@ -209,7 +209,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 @property(readonly, copy) NSString *urlSchemeSuffix;    
 
 /*! @abstract The access token for the session object. */
-@property(readonly, copy) NSString *accessToken;
+@property(readwrite, copy) NSString *accessToken;
 
 /*! @abstract The expiration date of the access token for the session object. */
 @property(readonly, copy) NSDate *expirationDate;    

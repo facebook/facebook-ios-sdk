@@ -90,7 +90,6 @@ static FBSession *g_activeSession = nil;
 @property(readwrite)            FBSessionState state;
 @property(readwrite, copy)      NSString *appID;
 @property(readwrite, copy)      NSString *urlSchemeSuffix;
-@property(readwrite, copy)      NSString *accessToken;
 @property(readwrite, copy)      NSDate *expirationDate;
 @property(readwrite, copy)      NSArray *permissions;
 
