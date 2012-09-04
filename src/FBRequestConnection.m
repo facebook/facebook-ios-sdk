@@ -15,7 +15,7 @@
  */
 
 #import <UIKit/UIImage.h>
-#import "JSON.h"
+#import "FBSBJSON.h"
 #import "FBError.h"
 #import "FBURLConnection.h"
 #import "FBRequestBody.h"
@@ -724,7 +724,7 @@ typedef enum FBRequestConnectionState {
              attachments:attachments];
     }
     
-    SBJSON *writer = [[SBJSON alloc] init];
+    FBSBJSON *writer = [[FBSBJSON alloc] init];
     NSString *jsonBatch = [writer stringWithObject:batch];
     [writer release];
     [batch release];
@@ -1068,7 +1068,7 @@ typedef enum FBRequestConnectionState {
 {
     id parsed = nil;
     if (!(*error)) {
-        SBJSON *parser = [[SBJSON alloc] init];
+        FBSBJSON *parser = [[FBSBJSON alloc] init];
         parsed = [parser objectWithString:utf8 error:error];
         // if we fail parse we attemp a reparse of a modified input to support results in the form "foo=bar", "true", etc.
         if (*error) {

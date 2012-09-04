@@ -28,59 +28,60 @@
  */
 
 #import <Foundation/Foundation.h>
-
-extern NSString * SBJSONErrorDomain;
-
-
-enum {
-    EUNSUPPORTED = 1,
-    EPARSENUM,
-    EPARSE,
-    EFRAGMENT,
-    ECTRL,
-    EUNICODE,
-    EDEPTH,
-    EESCAPE,
-    ETRAILCOMMA,
-    ETRAILGARBAGE,
-    EEOF,
-    EINPUT
-};
+#import "FBSBJsonBase.h"
 
 /**
- @brief Common base class for parsing & writing.
-
- This class contains the common error-handling code and option between the parser/writer.
- */
-@interface SBJsonBase : NSObject {
-    NSMutableArray *errorTrace;
-
-@protected
-    NSUInteger depth, maxDepth;
-}
-
-/**
- @brief The maximum recursing depth.
+  @brief Options for the parser class.
  
- Defaults to 512. If the input is nested deeper than this the input will be deemed to be
- malicious and the parser returns nil, signalling an error. ("Nested too deep".) You can
- turn off this security feature by setting the maxDepth value to 0.
+ This exists so the SBJSON facade can implement the options in the parser without having to re-declare them.
  */
-@property NSUInteger maxDepth;
+@protocol FBSBJsonParser
 
 /**
- @brief Return an error trace, or nil if there was no errors.
+ @brief Return the object represented by the given string.
  
- Note that this method returns the trace of the last method that failed.
- You need to check the return value of the call you're making to figure out
- if the call actually failed, before you know call this method.
+ Returns the object represented by the passed-in string or nil on error. The returned object can be
+ a string, number, boolean, null, array or dictionary.
+ 
+ @param repr the json string to parse
  */
- @property(copy,readonly) NSArray* errorTrace;
-
-/// @internal for use in subclasses to add errors to the stack trace
-- (void)addErrorWithCode:(NSUInteger)code description:(NSString*)str;
-
-/// @internal for use in subclasess to clear the error before a new parsing attempt
-- (void)clearErrorTrace;
+- (id)objectWithString:(NSString *)repr;
 
 @end
+
+
+/**
+ @brief The JSON parser class.
+ 
+ JSON is mapped to Objective-C types in the following way:
+ 
+ @li Null -> NSNull
+ @li String -> NSMutableString
+ @li Array -> NSMutableArray
+ @li Object -> NSMutableDictionary
+ @li Boolean -> NSNumber (initialised with -initWithBool:)
+ @li Number -> NSDecimalNumber
+ 
+ Since Objective-C doesn't have a dedicated class for boolean values, these turns into NSNumber
+ instances. These are initialised with the -initWithBool: method, and 
+ round-trip back to JSON properly. (They won't silently suddenly become 0 or 1; they'll be
+ represented as 'true' and 'false' again.)
+ 
+ JSON numbers turn into NSDecimalNumber instances,
+ as we can thus avoid any loss of precision. (JSON allows ridiculously large numbers.)
+ 
+ */
+@interface FBSBJsonParser : FBSBJsonBase <FBSBJsonParser> {
+    
+@private
+    const char *c;
+}
+
+@end
+
+// don't use - exists for backwards compatibility with 2.1.x only. Will be removed in 2.3.
+@interface FBSBJsonParser (Private)
+- (id)fragmentWithString:(id)repr;
+@end
+
+

@@ -23,7 +23,7 @@
 #import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import <pthread.h>
-#import "JSON.h"
+#import "FBSBJSON.h"
 #import "FBGraphUser.h"
 
 /* 
@@ -295,7 +295,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                 userQuery, @"users",
                                 nil];
 
-    SBJSON *writer = [[SBJSON alloc] init];
+    FBSBJSON *writer = [[FBSBJSON alloc] init];
     NSString *jsonMultiquery = [writer stringWithObject:multiquery];
     [writer release];
 

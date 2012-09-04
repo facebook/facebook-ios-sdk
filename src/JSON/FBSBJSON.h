@@ -27,29 +27,49 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "NSString+SBJSON.h"
-#import "SBJsonParser.h"
+#import <Foundation/Foundation.h>
+#import "FBSBJsonParser.h"
+#import "FBSBJsonWriter.h"
 
-@implementation NSString (NSString_SBJSON)
+/**
+ @brief Facade for SBJsonWriter/SBJsonParser.
 
-- (id)JSONFragmentValue
-{
-    SBJsonParser *jsonParser = [SBJsonParser new];    
-    id repr = [jsonParser fragmentWithString:self];    
-    if (!repr)
-        NSLog(@"-JSONFragmentValue failed. Error trace is: %@", [jsonParser errorTrace]);
-    [jsonParser release];
-    return repr;
+ Requests are forwarded to instances of SBJsonWriter and SBJsonParser.
+ */
+@interface FBSBJSON : FBSBJsonBase <FBSBJsonParser, FBSBJsonWriter> {
+
+@private    
+    FBSBJsonParser *jsonParser;
+    FBSBJsonWriter *jsonWriter;
 }
 
-- (id)JSONValue
-{
-    SBJsonParser *jsonParser = [SBJsonParser new];
-    id repr = [jsonParser objectWithString:self];
-    if (!repr)
-        NSLog(@"-JSONValue failed. Error trace is: %@", [jsonParser errorTrace]);
-    [jsonParser release];
-    return repr;
-}
+
+/// Return the fragment represented by the given string
+- (id)fragmentWithString:(NSString*)jsonrep
+                   error:(NSError**)error;
+
+/// Return the object represented by the given string
+- (id)objectWithString:(NSString*)jsonrep
+                 error:(NSError**)error;
+
+/// Parse the string and return the represented object (or scalar)
+- (id)objectWithString:(id)value
+           allowScalar:(BOOL)x
+    			 error:(NSError**)error;
+
+
+/// Return JSON representation of an array  or dictionary
+- (NSString*)stringWithObject:(id)value
+                        error:(NSError**)error;
+
+/// Return JSON representation of any legal JSON value
+- (NSString*)stringWithFragment:(id)value
+                          error:(NSError**)error;
+
+/// Return JSON representation (or fragment) for the given object
+- (NSString*)stringWithObject:(id)value
+                  allowScalar:(BOOL)x
+    					error:(NSError**)error;
+
 
 @end

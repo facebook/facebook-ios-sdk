@@ -27,9 +27,9 @@
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SBJsonWriter.h"
+#import "FBSBJsonWriter.h"
 
-@interface SBJsonWriter ()
+@interface FBSBJsonWriter ()
 
 - (BOOL)appendValue:(id)fragment into:(NSMutableString*)json;
 - (BOOL)appendArray:(NSArray*)fragment into:(NSMutableString*)json;
@@ -40,7 +40,7 @@
 
 @end
 
-@implementation SBJsonWriter
+@implementation FBSBJsonWriter
 
 static NSMutableCharacterSet *kEscapeChars;
 
