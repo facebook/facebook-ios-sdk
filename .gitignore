@@ -1,16 +1,8 @@
-sample/DemoApp/build/
-sample/DemoApp/DemoApp.xcodeproj/*.pbxuser
-sample/DemoApp/DemoApp.xcodeproj/*.mode*
-sample/DemoApp/DemoApp.xcodeproj/xcuserdata*
-sample/DemoApp/DemoApp.xcodeproj/project.xcworkspace
-sample/theRunAround/build/
-sample/theRunAround/theRunAround.xcodeproj/*.pbxuser
-sample/theRunAround/theRunAround.xcodeproj/*.mode*
-sample/Hackbook/build/
-sample/Hackbook/Hackbook.xcodeproj/*.pbxuser
-sample/Hackbook/Hackbook.xcodeproj/*.mode*
-sample/Hackbook/Hackbook.xcodeproj/xcuserdata*
-sample/Hackbook/Hackbook.xcodeproj/project.xcworkspace
+samples/Hackbook/build/
+samples/Hackbook/Hackbook.xcodeproj/*.pbxuser
+samples/Hackbook/Hackbook.xcodeproj/*.mode*
+samples/Hackbook/Hackbook.xcodeproj/xcuserdata*
+samples/Hackbook/Hackbook.xcodeproj/project.xcworkspace
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
 src/build/
@@ -24,3 +16,4 @@ test/UnitTest/build/
 .DS_Store
 project.xcworkspace
 xcuserdata
+.arc

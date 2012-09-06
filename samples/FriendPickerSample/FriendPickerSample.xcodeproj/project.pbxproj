@@ -1,0 +1,337 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84605AB315A77C2700197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AB215A77C2700197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85AFB4D7158F9C1D000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */; };
+		85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */; };
+		85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D5158F9C1D000AF7F5 /* Icon.png */; };
+		85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */; };
+		DD37EA8615ABA4670015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */; };
+		DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA8715ABA46B0015966B /* FacebookSDK.framework */; };
+		E2D6B81315413A570050835F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81215413A570050835F /* UIKit.framework */; };
+		E2D6B81515413A570050835F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81415413A570050835F /* Foundation.framework */; };
+		E2D6B81715413A570050835F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81615413A570050835F /* CoreGraphics.framework */; };
+		E2D6B81D15413A570050835F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B81B15413A570050835F /* InfoPlist.strings */; };
+		E2D6B81F15413A570050835F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6B81E15413A570050835F /* main.m */; };
+		E2D6B82315413A570050835F /* FPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6B82215413A570050835F /* FPAppDelegate.m */; };
+		E2D6B82615413A570050835F /* FPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D6B82515413A570050835F /* FPViewController.m */; };
+		E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82715413A570050835F /* FPViewController_iPhone.xib */; };
+		E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2D6B82A15413A570050835F /* FPViewController_iPad.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		84605AB215A77C2700197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB4D5158F9C1D000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		DD37EA8715ABA46B0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
+		E2D6B80E15413A570050835F /* FriendPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2D6B81215413A570050835F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		E2D6B81415413A570050835F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		E2D6B81615413A570050835F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		E2D6B81A15413A570050835F /* FriendPickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "FriendPickerSample-Info.plist"; sourceTree = "<group>"; };
+		E2D6B81C15413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		E2D6B81E15413A570050835F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		E2D6B82015413A570050835F /* FriendPickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FriendPickerSample-Prefix.pch"; sourceTree = "<group>"; };
+		E2D6B82115413A570050835F /* FPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPAppDelegate.h; sourceTree = "<group>"; };
+		E2D6B82215413A570050835F /* FPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FPAppDelegate.m; sourceTree = "<group>"; };
+		E2D6B82415413A570050835F /* FPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FPViewController.h; sourceTree = "<group>"; };
+		E2D6B82515413A570050835F /* FPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FPViewController.m; sourceTree = "<group>"; };
+		E2D6B82815413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPhone.xib; sourceTree = "<group>"; };
+		E2D6B82B15413A570050835F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/FPViewController_iPad.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		E2D6B80B15413A570050835F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84605AB315A77C2700197AA7 /* Accounts.framework in Frameworks */,
+				E2D6B81315413A570050835F /* UIKit.framework in Frameworks */,
+				E2D6B81515413A570050835F /* Foundation.framework in Frameworks */,
+				E2D6B81715413A570050835F /* CoreGraphics.framework in Frameworks */,
+				DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		E2D6B80315413A560050835F = {
+			isa = PBXGroup;
+			children = (
+				E2D6B81815413A570050835F /* FriendPickerSample */,
+				E2D6B81115413A570050835F /* Frameworks */,
+				E2D6B80F15413A570050835F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		E2D6B80F15413A570050835F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				E2D6B80E15413A570050835F /* FriendPickerSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E2D6B81115413A570050835F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */,
+				DD37EA8715ABA46B0015966B /* FacebookSDK.framework */,
+				84605AB215A77C2700197AA7 /* Accounts.framework */,
+				E2D6B81215413A570050835F /* UIKit.framework */,
+				E2D6B81415413A570050835F /* Foundation.framework */,
+				E2D6B81615413A570050835F /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2D6B81815413A570050835F /* FriendPickerSample */ = {
+			isa = PBXGroup;
+			children = (
+				E2D6B82115413A570050835F /* FPAppDelegate.h */,
+				E2D6B82215413A570050835F /* FPAppDelegate.m */,
+				E2D6B82415413A570050835F /* FPViewController.h */,
+				E2D6B82515413A570050835F /* FPViewController.m */,
+				E2D6B82715413A570050835F /* FPViewController_iPhone.xib */,
+				E2D6B82A15413A570050835F /* FPViewController_iPad.xib */,
+				E2D6B81915413A570050835F /* Supporting Files */,
+			);
+			path = FriendPickerSample;
+			sourceTree = "<group>";
+		};
+		E2D6B81915413A570050835F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */,
+				85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */,
+				85AFB4D5158F9C1D000AF7F5 /* Icon.png */,
+				85AFB4D6158F9C1D000AF7F5 /* Icon@2x.png */,
+				E2D6B81A15413A570050835F /* FriendPickerSample-Info.plist */,
+				E2D6B81B15413A570050835F /* InfoPlist.strings */,
+				E2D6B81E15413A570050835F /* main.m */,
+				E2D6B82015413A570050835F /* FriendPickerSample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		E2D6B80D15413A570050835F /* FriendPickerSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E2D6B82F15413A570050835F /* Build configuration list for PBXNativeTarget "FriendPickerSample" */;
+			buildPhases = (
+				E2D6B80A15413A570050835F /* Sources */,
+				E2D6B80B15413A570050835F /* Frameworks */,
+				E2D6B80C15413A570050835F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = FriendPickerSample;
+			productName = FriendPickerSample;
+			productReference = E2D6B80E15413A570050835F /* FriendPickerSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		E2D6B80515413A560050835F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = E2D6B80815413A560050835F /* Build configuration list for PBXProject "FriendPickerSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				he,
+			);
+			mainGroup = E2D6B80315413A560050835F;
+			productRefGroup = E2D6B80F15413A570050835F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				E2D6B80D15413A570050835F /* FriendPickerSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		E2D6B80C15413A570050835F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2D6B81D15413A570050835F /* InfoPlist.strings in Resources */,
+				E2D6B82915413A570050835F /* FPViewController_iPhone.xib in Resources */,
+				E2D6B82C15413A570050835F /* FPViewController_iPad.xib in Resources */,
+				85AFB4D7158F9C1D000AF7F5 /* Icon-72.png in Resources */,
+				85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */,
+				85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */,
+				DD37EA8615ABA4670015966B /* FacebookSDKResources.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E2D6B80A15413A570050835F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E2D6B81F15413A570050835F /* main.m in Sources */,
+				E2D6B82315413A570050835F /* FPAppDelegate.m in Sources */,
+				E2D6B82615413A570050835F /* FPViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		E2D6B81B15413A570050835F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2D6B81C15413A570050835F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		E2D6B82715413A570050835F /* FPViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2D6B82815413A570050835F /* en */,
+			);
+			name = FPViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		E2D6B82A15413A570050835F /* FPViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E2D6B82B15413A570050835F /* en */,
+			);
+			name = FPViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		E2D6B82D15413A570050835F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		E2D6B82E15413A570050835F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		E2D6B83015413A570050835F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-lsqlite3.0";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		E2D6B83115413A570050835F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
+				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-lsqlite3.0";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		E2D6B80815413A560050835F /* Build configuration list for PBXProject "FriendPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2D6B82D15413A570050835F /* Debug */,
+				E2D6B82E15413A570050835F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E2D6B82F15413A570050835F /* Build configuration list for PBXNativeTarget "FriendPickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E2D6B83015413A570050835F /* Debug */,
+				E2D6B83115413A570050835F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = E2D6B80515413A560050835F /* Project object */;
+}

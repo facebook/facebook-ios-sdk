@@ -14,68 +14,382 @@
  * limitations under the License.
  */
 
-#import "FBRequest.h"
+#import "Facebook.h"
 #import "JSON.h"
+#import "FBUtility.h"
+#import "FBSession+Internal.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// global
+// constants
+NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
 
-static NSString* kUserAgent = @"FacebookConnect";
-static NSString* kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
-static const int kGeneralErrorCode = 10000;
-static const int kRESTAPIAccessTokenErrorCode = 190;
+static NSString *const kGetHTTPMethod = @"GET";
+static NSString *const kPostHTTPMethod = @"POST";
 
-static const NSTimeInterval kTimeoutInterval = 180.0;
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
-@interface FBRequest ()
-@property (nonatomic,readwrite) FBRequestState state;
-@property (nonatomic,readwrite) BOOL sessionDidExpire;
-@end
+// ----------------------------------------------------------------------------
+// FBRequest
 
 @implementation FBRequest
 
-@synthesize delegate = _delegate,
-            url = _url,
-            httpMethod = _httpMethod,
-            params = _params,
-            connection = _connection,
-            responseText = _responseText,
-            state = _state,
-            sessionDidExpire = _sessionDidExpire,
-            error = _error;
+@synthesize parameters = _parameters;
+@synthesize session = _session;
+@synthesize graphPath = _graphPath;
+@synthesize restMethod = _restMethod;
+@synthesize HTTPMethod = _HTTPMethod; 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// class public
+- (id)init
+{
+    return [self initWithSession:nil
+                       graphPath:nil
+                      parameters:nil
+                      HTTPMethod:nil];
+}
 
-+ (FBRequest *)getRequestWithParams:(NSMutableDictionary *) params
-                         httpMethod:(NSString *) httpMethod
-                           delegate:(id<FBRequestDelegate>) delegate
-                         requestURL:(NSString *) url {
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+{
+    return [self initWithSession:session
+                       graphPath:graphPath
+                      parameters:nil
+                      HTTPMethod:nil];
+}
+
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+           parameters:(NSDictionary *)parameters
+           HTTPMethod:(NSString *)HTTPMethod
+{
+    if (self = [super init]) {
+        // set default for nil
+        if (!HTTPMethod) {
+            HTTPMethod = kGetHTTPMethod;
+        }
+        
+        self.session = session;
+        self.graphPath = graphPath;
+        self.HTTPMethod = HTTPMethod;
+        
+        _parameters = [[NSMutableDictionary alloc] init];
+        if (parameters) {
+            [self.parameters addEntriesFromDictionary:parameters];
+        }
+    }
+    return self;
+}
+
+- (id)initForPostWithSession:(FBSession*)session
+                   graphPath:(NSString *)graphPath
+                 graphObject:(id<FBGraphObject>)graphObject {
+    self = [self initWithSession:session
+                       graphPath:graphPath
+                      parameters:nil
+                      HTTPMethod:kPostHTTPMethod];
+    if (self) {
+        self.graphObject = graphObject;
+    }
+    return self;
+}
+
+- (id)initWithSession:(FBSession*)session
+           restMethod:(NSString *)restMethod
+           parameters:(NSDictionary *)parameters
+           HTTPMethod:(NSString *)HTTPMethod
+{
+    if (self = [super init]) {
+        // set default for nil
+        if (!HTTPMethod) {
+            HTTPMethod = kGetHTTPMethod;
+        }
+        
+        self.session = session;
+        self.restMethod = restMethod;
+        self.HTTPMethod = HTTPMethod;
+
+        _parameters = [[NSMutableDictionary alloc] init];
+        if (parameters) {
+            [self.parameters addEntriesFromDictionary:parameters];
+        }
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    [_graphObject release];
+    [_session release];
+    [_graphPath release];
+    [_restMethod release];
+    [_HTTPMethod release];
+    [_parameters release];
+    [super dealloc];
+}
+
+//@property(nonatomic,retain) id<FBGraphObject> graphObject;
+- (id<FBGraphObject>)graphObject {
+    return _graphObject;
+}
+
+- (void)setGraphObject:(id<FBGraphObject>)newValue {
+    if (_graphObject != newValue) {
+        [_graphObject release];
+        _graphObject = [newValue retain];
+    }
     
-    FBRequest* request = [[[FBRequest alloc] init] autorelease];
-    request.delegate = delegate;
-    request.url = url;
-    request.httpMethod = httpMethod;
-    request.params = params;
-    request.connection = nil;
-    request.responseText = nil;
+    // setting this property implies you want a post, if you really
+    // want a get, reset the method to get after setting this property
+    self.HTTPMethod = kPostHTTPMethod;
+}
+
+- (FBRequestConnection*)startWithCompletionHandler:(FBRequestHandler)handler
+{
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    [connection addRequest:self completionHandler:handler];
+    [connection start];
+    return connection;
+}
+
++ (FBRequest*)requestForMe {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                     graphPath:@"me"]
+            autorelease];
+}
+
++ (FBRequest*)requestForMyFriends {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                     graphPath:@"me/friends"
+                                    parameters:[NSDictionary dictionaryWithObjectsAndKeys:
+                                                @"id,name,username,first_name,last_name", @"fields",
+                                                nil]
+                                    HTTPMethod:nil]
+            autorelease];
+}
+
++ (FBRequest *)requestForUploadPhoto:(UIImage *)photo
+{
+    NSString *graphPath = @"me/photos";
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:photo forKey:@"picture"];
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:graphPath
+                                                  parameters:parameters
+                                                  HTTPMethod:@"POST"]
+                          autorelease];
+    
+    [parameters release];
     
     return request;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// private
++ (FBRequest*)requestForGraphPath:(NSString*)graphPath
+{
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:graphPath
+                                                  parameters:nil
+                                                  HTTPMethod:nil]
+                          autorelease];
+    return request;
+}
+
++ (FBRequest*)requestForPostWithGraphPath:(NSString*)graphPath
+                              graphObject:(id<FBGraphObject>)graphObject {
+    return [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
+                                            graphPath:graphPath
+                                          graphObject:graphObject]
+            autorelease];
+}
+
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message {
+    return [FBRequest requestForPostStatusUpdate:message
+                                           place:nil
+                                            tags:nil];
+}
+
++ (FBRequest *)requestForPostStatusUpdate:(NSString *)message
+                                    place:(id)place
+                                     tags:(id<NSFastEnumeration>)tags {
+    
+    NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObject:message forKey:@"message"];
+    // if we have a place object, use it
+    if (place) {
+        [params setObject:[FBUtility stringFBIDFromObject:place]
+                   forKey:@"place"];
+    }
+    // ditto tags
+    if (tags) {
+        NSMutableString *tagsValue = [NSMutableString string];
+        NSString *format = @"%@";
+        for (id tag in tags) {
+            [tagsValue appendFormat:format, [FBUtility stringFBIDFromObject:tag]];
+            format = @",%@";
+        }
+        if ([tagsValue length]) {
+            [params setObject:tagsValue
+                       forKey:@"tags"];
+        }
+    }
+    
+    return [FBRequest requestWithGraphPath:@"me/feed"
+                                parameters:params
+                                HTTPMethod:@"POST"];
+}
+
++ (FBRequest*)requestWithGraphPath:(NSString*)graphPath
+                        parameters:(NSDictionary*)parameters
+                        HTTPMethod:(NSString*)HTTPMethod {
+    return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                     graphPath:graphPath
+                                    parameters:parameters
+                                    HTTPMethod:HTTPMethod]
+            autorelease];
+}
+
++ (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                  radiusInMeters:(NSInteger)radius
+                                    resultsLimit:(NSInteger)limit
+                                      searchText:(NSString*)searchText
+{
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:@"place" forKey:@"type"];
+    [parameters setObject:[NSString stringWithFormat:@"%d", limit] forKey:@"limit"];
+    [parameters setObject:[NSString stringWithFormat:@"%lf,%lf", coordinate.latitude, coordinate.longitude]
+                   forKey:@"center"];
+    [parameters setObject:[NSString stringWithFormat:@"%d", radius] forKey:@"distance"];
+    if ([searchText length]) {
+        [parameters setObject:searchText forKey:@"q"];
+    }
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:@"search"
+                                                  parameters:parameters
+                                                  HTTPMethod:nil]
+                          autorelease];
+    [parameters release];
+    
+    return request;
+}
+
+@end
+
+// ----------------------------------------------------------------------------
+// Deprecated FBRequest implementation
+
+@implementation FBRequest (Deprecated)
+
+// ----------------------------------------------------------------------------
+// deprecated public properties
+
+//@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+- (id<FBRequestDelegate>)delegate {
+    return _delegate;
+}
+
+- (void)setDelegate:(id<FBRequestDelegate>)newValue {
+    _delegate = newValue;
+}
+
+//@property(nonatomic,copy) NSString* url;
+- (NSString*)url {
+    return _url;
+}
+
+- (void)setUrl:(NSString*)newValue {
+    if (_url != newValue) {
+        [_url release];
+        _url = [newValue copy];
+    }
+}
+
+//@property(nonatomic,copy) NSString* httpMethod;
+- (NSString*)httpMethod {
+    return self.HTTPMethod;
+}
+
+- (void)setHttpMethod:(NSString*)newValue {
+    self.HTTPMethod = newValue;
+}
+
+//@property(nonatomic,retain) NSMutableDictionary* params;
+- (NSMutableDictionary*)params {
+    return _parameters;
+}
+
+- (void)setParams:(NSMutableDictionary*)newValue {
+    if (_parameters != newValue) {
+        [_parameters release];
+        _parameters = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSURLConnection*  connection;
+- (NSURLConnection*)connection {
+    return _connection;
+}
+
+- (void)setConnection:(NSURLConnection*)newValue {
+    if (_connection != newValue) {
+        [_connection release];
+        _connection = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSMutableData* responseText;
+- (NSMutableData*)responseText {
+    return _responseText;
+}
+
+- (void)setResponseText:(NSMutableData*)newValue {
+    if (_responseText != newValue) {
+        [_responseText release];
+        _responseText = [newValue retain];
+    }
+}
+
+//@property(nonatomic,retain) NSError* error;
+- (NSError*)error {
+    return _error;
+}
+
+- (void)setError:(NSError*)newValue {
+    if (_error != newValue) {
+        [_error release];
+        _error = [newValue retain];
+    }
+}
+
+//@property(nonatomic,readonly+readwrite) FBRequestState state;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+- (FBRequestState)state {
+    return _state;
+}
+
+- (void)setState:(FBRequestState)newValue {
+    _state = newValue;
+}
+#pragma GCC diagnostic pop
+
+//@property(nonatomic,readonly+readwrite) BOOL sessionDidExpire;
+- (BOOL)sessionDidExpire {
+    return _sessionDidExpire;
+}
+
+- (void)setSessionDidExpire:(BOOL)newValue {
+    _sessionDidExpire = newValue;
+}
+
+// ----------------------------------------------------------------------------
+// deprecated public methods
+
+- (BOOL)loading
+{
+    return (_state == kFBRequestStateLoading);
+}
 
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(NSDictionary *)params {
-    return [self serializeURL:baseUrl params:params httpMethod:@"GET"];
+    return [self serializeURL:baseUrl params:params httpMethod:kGetHTTPMethod];
 }
 
-/**
- * Generate get URL
- */
 + (NSString*)serializeURL:(NSString *)baseUrl
                    params:(NSDictionary *)params
                httpMethod:(NSString *)httpMethod {
@@ -85,297 +399,51 @@ static const NSTimeInterval kTimeoutInterval = 180.0;
     
     NSMutableArray* pairs = [NSMutableArray array];
     for (NSString* key in [params keyEnumerator]) {
-        if (([[params objectForKey:key] isKindOfClass:[UIImage class]])
-            ||([[params objectForKey:key] isKindOfClass:[NSData class]])) {
-            if ([httpMethod isEqualToString:@"GET"]) {
+        id value = [params objectForKey:key];
+        if ([value isKindOfClass:[UIImage class]]
+            || [value isKindOfClass:[NSData class]]) {
+            if ([httpMethod isEqualToString:kGetHTTPMethod]) {
                 NSLog(@"can not use GET to upload a file");
             }
             continue;
         }
         
-        NSString* escaped_value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                                      NULL, /* allocator */
-                                                                                      (CFStringRef)[params objectForKey:key],
-                                                                                      NULL, /* charactersToLeaveUnescaped */
-                                                                                      (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                      kCFStringEncodingUTF8);
-        
+        NSString* escaped_value = [FBUtility stringByURLEncodingString:value];
         [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
-        [escaped_value release];
     }
     NSString* query = [pairs componentsJoinedByString:@"&"];
     
     return [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
 }
 
-/**
- * Body append for POST method
- */
-- (void)utfAppendBody:(NSMutableData *)body data:(NSString *)data {
-    [body appendData:[data dataUsingEncoding:NSUTF8StringEncoding]];
-}
+#pragma mark Debugging helpers
 
-/**
- * Generate body for POST method
- */
-- (NSMutableData *)generatePostBody {
-    NSMutableData *body = [NSMutableData data];
-    NSString *endLine = [NSString stringWithFormat:@"\r\n--%@\r\n", kStringBoundary];
-    NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionary];
-    
-    [self utfAppendBody:body data:[NSString stringWithFormat:@"--%@\r\n", kStringBoundary]];
-    
-    for (id key in [_params keyEnumerator]) {
-        
-        if (([[_params objectForKey:key] isKindOfClass:[UIImage class]])
-            ||([[_params objectForKey:key] isKindOfClass:[NSData class]])) {
-            
-            [dataDictionary setObject:[_params objectForKey:key] forKey:key];
-            continue;
-            
-        }
-        
-        [self utfAppendBody:body
-                       data:[NSString
-                             stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"\r\n\r\n",
-                             key]];
-        [self utfAppendBody:body data:[_params objectForKey:key]];
-        
-        [self utfAppendBody:body data:endLine];
+- (NSString*)description {
+    NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, session: %p",
+                               NSStringFromClass([self class]), 
+                               self,
+                               self.session];
+    if (self.graphPath) {
+        [result appendFormat:@", graphPath: %@", self.graphPath];
     }
-    
-    if ([dataDictionary count] > 0) {
-        for (id key in dataDictionary) {
-            NSObject *dataParam = [dataDictionary objectForKey:key];
-            if ([dataParam isKindOfClass:[UIImage class]]) {
-                NSData* imageData = UIImagePNGRepresentation((UIImage*)dataParam);
-                [self utfAppendBody:body
-                               data:[NSString stringWithFormat:
-                                     @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
-                [self utfAppendBody:body
-                               data:@"Content-Type: image/png\r\n\r\n"];
-                [body appendData:imageData];
-            } else {
-                NSAssert([dataParam isKindOfClass:[NSData class]],
-                         @"dataParam must be a UIImage or NSData");
-                [self utfAppendBody:body
-                               data:[NSString stringWithFormat:
-                                     @"Content-Disposition: form-data; filename=\"%@\"\r\n", key]];
-                [self utfAppendBody:body
-                               data:@"Content-Type: content/unknown\r\n\r\n"];
-                [body appendData:(NSData*)dataParam];
-            }
-            [self utfAppendBody:body data:endLine];
-            
+    if (self.graphObject) {
+        [result appendFormat:@", graphObject: %@", self.graphObject];
+        NSString *graphObjectID = [self.graphObject objectForKey:@"id"];
+        if (graphObjectID) {
+            [result appendFormat:@" (id=%@)", graphObjectID];
         }
     }
-    
-    return body;
-}
-
-/**
- * Formulate the NSError
- */
-- (id)formError:(NSInteger)code userInfo:(NSDictionary *) errorData {
-    return [NSError errorWithDomain:@"facebookErrDomain" code:code userInfo:errorData];
-    
-}
-
-/**
- * parse the response data
- */
-- (id)parseJsonResponse:(NSData *)data error:(NSError **)error {
-    
-    NSString* responseString = [[[NSString alloc] initWithData:data
-                                                      encoding:NSUTF8StringEncoding]
-                                autorelease];
-    if ([responseString isEqualToString:@"true"]) {
-        return [NSDictionary dictionaryWithObject:@"true" forKey:@"result"];
-    } else if ([responseString isEqualToString:@"false"]) {
-        if (error != nil) {
-            *error = [self formError:kGeneralErrorCode
-                            userInfo:[NSDictionary
-                                      dictionaryWithObject:@"This operation can not be completed"
-                                      forKey:@"error_msg"]];
-        }
-        return nil;
+    if (self.restMethod) {
+        [result appendFormat:@", restMethod: %@", self.restMethod];
     }
-    
-    
-    SBJSON *jsonParser = [[SBJSON alloc] init];
-    id result = [jsonParser objectWithString:responseString];
-    [jsonParser release];
-
-    if (result == nil) {
-        return responseString;
+    if (self.HTTPMethod) {
+        [result appendFormat:@", HTTPMethod: %@", self.HTTPMethod];
     }
-
-    if ([result isKindOfClass:[NSDictionary class]]) {
-        if ([result objectForKey:@"error"] != nil) {
-            if (error != nil) {
-                *error = [self formError:kGeneralErrorCode
-                                userInfo:result];
-            }
-            return nil;
-        }
-        
-        if ([result objectForKey:@"error_code"] != nil) {
-            if (error != nil) {
-                *error = [self formError:[[result objectForKey:@"error_code"] intValue] userInfo:result];
-            }
-            return nil;
-        }
-        
-        if ([result objectForKey:@"error_msg"] != nil) {
-            if (error != nil) {
-                *error = [self formError:kGeneralErrorCode userInfo:result];
-            }
-        }
-        
-        if ([result objectForKey:@"error_reason"] != nil) {
-            if (error != nil) {
-                *error = [self formError:kGeneralErrorCode userInfo:result];
-            }
-        }
-    }
-    
+    [result appendFormat:@", parameters: %@>", [self.parameters description]];
     return result;
     
 }
 
-/*
- * private helper function: call the delegate function when the request
- *                          fails with error
- */
-- (void)failWithError:(NSError *)error {
-    if ([error code] == kRESTAPIAccessTokenErrorCode) {
-        self.sessionDidExpire = YES;
-    }
-    if ([_delegate respondsToSelector:@selector(request:didFailWithError:)]) {
-        [_delegate request:self didFailWithError:error];
-    }
-}
-
-/*
- * private helper function: handle the response data
- */
-- (void)handleResponseData:(NSData *)data {
-    if ([_delegate respondsToSelector:
-         @selector(request:didLoadRawResponse:)]) {
-        [_delegate request:self didLoadRawResponse:data];
-    }
-    
-    NSError* error = nil;
-    id result = [self parseJsonResponse:data error:&error];
-    self.error = error;  
-    
-    if ([_delegate respondsToSelector:@selector(request:didLoad:)] ||
-        [_delegate respondsToSelector:
-         @selector(request:didFailWithError:)]) {
-            
-            if (error) {
-                [self failWithError:error];
-            } else if ([_delegate respondsToSelector:
-                        @selector(request:didLoad:)]) {
-                [_delegate request:self didLoad:result];
-            }
-            
-        }
-    
-}
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// public
-
-/**
- * @return boolean - whether this request is processing
- */
-- (BOOL)loading {
-    return !!_connection;
-}
-
-/**
- * make the Facebook request
- */
-- (void)connect {
-    
-    if ([_delegate respondsToSelector:@selector(requestLoading:)]) {
-        [_delegate requestLoading:self];
-    }
-    
-    NSString* url = [[self class] serializeURL:_url params:_params httpMethod:_httpMethod];
-    NSMutableURLRequest* request =
-    [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]
-                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-                        timeoutInterval:kTimeoutInterval];
-    [request setValue:kUserAgent forHTTPHeaderField:@"User-Agent"];
-
-
-    [request setHTTPMethod:self.httpMethod];
-    if ([self.httpMethod isEqualToString: @"POST"]) {
-        NSString* contentType = [NSString
-                             stringWithFormat:@"multipart/form-data; boundary=%@", kStringBoundary];
-        [request setValue:contentType forHTTPHeaderField:@"Content-Type"];
-
-        [request setHTTPBody:[self generatePostBody]];
-    }
-
-    _connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-    self.state = kFBRequestStateLoading;
-    self.sessionDidExpire = NO;
-}
-
-/**
- * Free internal structure
- */
-- (void)dealloc {
-    [_connection cancel];
-    [_connection release];
-    [_responseText release];
-    [_url release];
-    [_httpMethod release];
-    [_params release];
-    [super dealloc];
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-// NSURLConnectionDelegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    _responseText = [[NSMutableData alloc] init];
-    
-    NSHTTPURLResponse* httpResponse = (NSHTTPURLResponse*)response;
-    if ([_delegate respondsToSelector:
-         @selector(request:didReceiveResponse:)]) {
-        [_delegate request:self didReceiveResponse:httpResponse];
-    }
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
-    [_responseText appendData:data];
-}
-
-- (NSCachedURLResponse *)connection:(NSURLConnection *)connection
-                  willCacheResponse:(NSCachedURLResponse*)cachedResponse {
-    return nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
-    [self handleResponseData:_responseText];
-
-    self.responseText = nil;
-    self.connection = nil;
-    self.state = kFBRequestStateComplete;
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
-    [self failWithError:error];
-
-    self.responseText = nil;
-    self.connection = nil;
-    self.state = kFBRequestStateComplete;
-}
+#pragma mark -
 
 @end

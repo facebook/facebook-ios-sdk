@@ -20,7 +20,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // private interface
 //
-@interface FBFrictionlessRequestSettings ()
+@interface FBFrictionlessRequestSettings () <FBRequestDelegate>
 
 @property (readwrite, retain) NSArray *     allowedRecipients;
 @property (readwrite, retain) FBRequest*    activeRequest;
@@ -46,7 +46,7 @@
 
 - (void)enableWithFacebook:(Facebook*)facebook {
     if (!_enabled) {
-        _enabled = true;
+        _enabled = YES;
         [self reloadRecipientCacheWithFacebook:facebook];
     }
 }

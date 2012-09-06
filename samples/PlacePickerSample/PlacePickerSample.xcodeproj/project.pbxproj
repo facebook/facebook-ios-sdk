@@ -1,0 +1,345 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		84605AAA15A777A800197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AA915A777A800197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85AFB515158FA0A6000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB511158FA0A6000AF7F5 /* Icon-72.png */; };
+		85AFB516158FA0A6000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB512158FA0A6000AF7F5 /* Icon-72@2x.png */; };
+		85AFB517158FA0A6000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB513158FA0A6000AF7F5 /* Icon.png */; };
+		85AFB518158FA0A6000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB514158FA0A6000AF7F5 /* Icon@2x.png */; };
+		B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */; };
+		B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */; };
+		B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */; };
+		B9AF4BB3152E43EE00E9BA6C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */; };
+		B9AF4BB5152E43EE00E9BA6C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BB4152E43EE00E9BA6C /* main.m */; };
+		B9AF4BB9152E43EE00E9BA6C /* PPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BB8152E43EE00E9BA6C /* PPAppDelegate.m */; };
+		B9AF4BBC152E43EE00E9BA6C /* PPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9AF4BBB152E43EE00E9BA6C /* PPViewController.m */; };
+		B9AF4BBF152E43EE00E9BA6C /* PPViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BBD152E43EE00E9BA6C /* PPViewController_iPhone.xib */; };
+		B9AF4BC2152E43EE00E9BA6C /* PPViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9AF4BC0152E43EE00E9BA6C /* PPViewController_iPad.xib */; };
+		B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9AF4C36152E449300E9BA6C /* CoreLocation.framework */; };
+		DD37EA7615ABA3DF0015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */; };
+		DD37EA7815ABA3E70015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA7715ABA3E70015966B /* FacebookSDK.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		84605AA915A777A800197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		85AFB511158FA0A6000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		85AFB512158FA0A6000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		85AFB513158FA0A6000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		85AFB514158FA0A6000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PlacePickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		B9AF4BB0152E43EE00E9BA6C /* PlacePickerSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PlacePickerSample-Info.plist"; sourceTree = "<group>"; };
+		B9AF4BB2152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B9AF4BB4152E43EE00E9BA6C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B9AF4BB6152E43EE00E9BA6C /* PlacePickerSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PlacePickerSample-Prefix.pch"; sourceTree = "<group>"; };
+		B9AF4BB7152E43EE00E9BA6C /* PPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PPAppDelegate.h; sourceTree = "<group>"; };
+		B9AF4BB8152E43EE00E9BA6C /* PPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PPAppDelegate.m; sourceTree = "<group>"; };
+		B9AF4BBA152E43EE00E9BA6C /* PPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = PPViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		B9AF4BBB152E43EE00E9BA6C /* PPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = PPViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		B9AF4BBE152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPhone.xib; sourceTree = "<group>"; };
+		B9AF4BC1152E43EE00E9BA6C /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/PPViewController_iPad.xib; sourceTree = "<group>"; };
+		B9AF4C36152E449300E9BA6C /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
+		DD37EA7715ABA3E70015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B9AF4BA1152E43EE00E9BA6C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84605AAA15A777A800197AA7 /* Accounts.framework in Frameworks */,
+				B9AF4C37152E449300E9BA6C /* CoreLocation.framework in Frameworks */,
+				B9AF4BA9152E43EE00E9BA6C /* UIKit.framework in Frameworks */,
+				B9AF4BAB152E43EE00E9BA6C /* Foundation.framework in Frameworks */,
+				B9AF4BAD152E43EE00E9BA6C /* CoreGraphics.framework in Frameworks */,
+				DD37EA7815ABA3E70015966B /* FacebookSDK.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B9AF4B99152E43EE00E9BA6C = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BAE152E43EE00E9BA6C /* PlacePickerSample */,
+				B9AF4BA7152E43EE00E9BA6C /* Frameworks */,
+				B9AF4BA5152E43EE00E9BA6C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B9AF4BA5152E43EE00E9BA6C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B9AF4BA7152E43EE00E9BA6C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DD37EA7715ABA3E70015966B /* FacebookSDK.framework */,
+				DD37EA7515ABA3DF0015966B /* FacebookSDKResources.bundle */,
+				84605AA915A777A800197AA7 /* Accounts.framework */,
+				B9AF4C36152E449300E9BA6C /* CoreLocation.framework */,
+				B9AF4BA8152E43EE00E9BA6C /* UIKit.framework */,
+				B9AF4BAA152E43EE00E9BA6C /* Foundation.framework */,
+				B9AF4BAC152E43EE00E9BA6C /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B9AF4BAE152E43EE00E9BA6C /* PlacePickerSample */ = {
+			isa = PBXGroup;
+			children = (
+				B9AF4BB7152E43EE00E9BA6C /* PPAppDelegate.h */,
+				B9AF4BB8152E43EE00E9BA6C /* PPAppDelegate.m */,
+				B9AF4BBA152E43EE00E9BA6C /* PPViewController.h */,
+				B9AF4BBB152E43EE00E9BA6C /* PPViewController.m */,
+				B9AF4BBD152E43EE00E9BA6C /* PPViewController_iPhone.xib */,
+				B9AF4BC0152E43EE00E9BA6C /* PPViewController_iPad.xib */,
+				B9AF4BAF152E43EE00E9BA6C /* Supporting Files */,
+			);
+			path = PlacePickerSample;
+			sourceTree = "<group>";
+		};
+		B9AF4BAF152E43EE00E9BA6C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				85AFB511158FA0A6000AF7F5 /* Icon-72.png */,
+				85AFB512158FA0A6000AF7F5 /* Icon-72@2x.png */,
+				85AFB513158FA0A6000AF7F5 /* Icon.png */,
+				85AFB514158FA0A6000AF7F5 /* Icon@2x.png */,
+				B9AF4BB0152E43EE00E9BA6C /* PlacePickerSample-Info.plist */,
+				B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */,
+				B9AF4BB4152E43EE00E9BA6C /* main.m */,
+				B9AF4BB6152E43EE00E9BA6C /* PlacePickerSample-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B9AF4BA3152E43EE00E9BA6C /* PlacePickerSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacePickerSample" */;
+			buildPhases = (
+				B9AF4BA0152E43EE00E9BA6C /* Sources */,
+				B9AF4BA1152E43EE00E9BA6C /* Frameworks */,
+				B9AF4BA2152E43EE00E9BA6C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PlacePickerSample;
+			productName = PlacePickerSample;
+			productReference = B9AF4BA4152E43EE00E9BA6C /* PlacePickerSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B9AF4B9B152E43EE00E9BA6C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacePickerSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				he,
+			);
+			mainGroup = B9AF4B99152E43EE00E9BA6C;
+			productRefGroup = B9AF4BA5152E43EE00E9BA6C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B9AF4BA3152E43EE00E9BA6C /* PlacePickerSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B9AF4BA2152E43EE00E9BA6C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AF4BB3152E43EE00E9BA6C /* InfoPlist.strings in Resources */,
+				B9AF4BBF152E43EE00E9BA6C /* PPViewController_iPhone.xib in Resources */,
+				B9AF4BC2152E43EE00E9BA6C /* PPViewController_iPad.xib in Resources */,
+				85AFB515158FA0A6000AF7F5 /* Icon-72.png in Resources */,
+				85AFB516158FA0A6000AF7F5 /* Icon-72@2x.png in Resources */,
+				85AFB517158FA0A6000AF7F5 /* Icon.png in Resources */,
+				85AFB518158FA0A6000AF7F5 /* Icon@2x.png in Resources */,
+				DD37EA7615ABA3DF0015966B /* FacebookSDKResources.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B9AF4BA0152E43EE00E9BA6C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B9AF4BB5152E43EE00E9BA6C /* main.m in Sources */,
+				B9AF4BB9152E43EE00E9BA6C /* PPAppDelegate.m in Sources */,
+				B9AF4BBC152E43EE00E9BA6C /* PPViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B9AF4BB1152E43EE00E9BA6C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BB2152E43EE00E9BA6C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		B9AF4BBD152E43EE00E9BA6C /* PPViewController_iPhone.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BBE152E43EE00E9BA6C /* en */,
+			);
+			name = PPViewController_iPhone.xib;
+			sourceTree = "<group>";
+		};
+		B9AF4BC0152E43EE00E9BA6C /* PPViewController_iPad.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B9AF4BC1152E43EE00E9BA6C /* en */,
+			);
+			name = PPViewController_iPad.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B9AF4BC3152E43EE00E9BA6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_LDFLAGS = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B9AF4BC4152E43EE00E9BA6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				OTHER_LDFLAGS = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B9AF4BC6152E43EE00E9BA6C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-lsqlite3.0";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B9AF4BC7152E43EE00E9BA6C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../build\"",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PlacePickerSample/PlacePickerSample-Prefix.pch";
+				INFOPLIST_FILE = "PlacePickerSample/PlacePickerSample-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				OTHER_LDFLAGS = "-lsqlite3.0";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacePickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AF4BC3152E43EE00E9BA6C /* Debug */,
+				B9AF4BC4152E43EE00E9BA6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B9AF4BC5152E43EE00E9BA6C /* Build configuration list for PBXNativeTarget "PlacePickerSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B9AF4BC6152E43EE00E9BA6C /* Debug */,
+				B9AF4BC7152E43EE00E9BA6C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B9AF4B9B152E43EE00E9BA6C /* Project object */;
+}

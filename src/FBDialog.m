@@ -19,6 +19,7 @@
 #import "Facebook.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "JSON.h"
+#import "FBUtility.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -219,15 +220,8 @@ params   = _params;
         NSMutableArray* pairs = [NSMutableArray array];
         for (NSString* key in params.keyEnumerator) {
             NSString* value = [params objectForKey:key];
-            NSString* escaped_value = (NSString *)CFURLCreateStringByAddingPercentEscapes(
-                                                                                          NULL, /* allocator */
-                                                                                          (CFStringRef)value,
-                                                                                          NULL, /* charactersToLeaveUnescaped */
-                                                                                          (CFStringRef)@"!*'();:@&=+$,/?%#[]",
-                                                                                          kCFStringEncodingUTF8);
-            
+            NSString* escaped_value = [FBUtility stringByURLEncodingString:value];
             [pairs addObject:[NSString stringWithFormat:@"%@=%@", key, escaped_value]];
-            [escaped_value release];
         }
         
         NSString* query = [pairs componentsJoinedByString:@"&"];
@@ -343,7 +337,7 @@ params   = _params;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_webView];
         
-        UIImage* closeImage = [UIImage imageNamed:@"FBDialog.bundle/images/close.png"];
+        UIImage* closeImage = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBDialog/images/close.png"];
         
         UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
         _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
