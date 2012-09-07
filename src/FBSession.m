@@ -409,7 +409,6 @@ static FBSession *g_activeSession = nil;
 }
 
 // actually a private member, but wanted to be close to its public colleague
-- (void)setUrlSchemeSuffix:(NSString*)newValue {
     if (_urlSchemeSuffix != newValue) {
         [_urlSchemeSuffix release];
         _urlSchemeSuffix = [(newValue ? newValue : @"") copy];
@@ -735,23 +734,40 @@ static FBSession *g_activeSession = nil;
         [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
-        if (tryFBAppAuth &&
-            !TEST_DISABLE_FACEBOOKLOGIN) {
-            NSString *scheme = FBAuthURLScheme;
-            if (_urlSchemeSuffix) {
-                scheme = [scheme stringByAppendingString:@"2"];
+        // For SSO to work the application needs to handle the URL scheme which
+        // Facebook will use to return control to us. This loop verifies that
+        // this is set up correctly so that we do not attempt SSO when it will
+        // not work.
+        BOOL canReturnFromSSO = NO;
+        NSString *returnURLScheme = [@"fb" stringByAppendingString:_appId];
+        if (_urlSchemeSuffix)
+            returnURLScheme = [returnURLScheme stringByAppendingString:_urlSchemeSuffix];
+        for (NSDictionary *type in [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleURLTypes"])
+            for (NSString *urlScheme in [type objectForKey:@"CFBundleURLSchemes"])
+                if ([urlScheme isEqualToString:fbURLScheme]) {
+                    canReturnFromSSO = YES;
+                    goto determinedCanReturnFromSSO;
+                }
+        determinedCanReturnFromSSO:
+        if (canReturnFromSSO) {
+            if (tryFBAppAuth &&
+                !TEST_DISABLE_FACEBOOKLOGIN) {
+                NSString *scheme = FBAuthURLScheme;
+                if (_urlSchemeSuffix) {
+                    scheme = [scheme stringByAppendingString:@"2"];
+                }
+                NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, FBAuthURLPath];
+                NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
+                didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
             }
-            NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, FBAuthURLPath];
-            NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
-            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
-        }
-
-        if (trySafariAuth && !didAuthNWithSystemAccount) {
-            NSString *nextUrl = self.appBaseUrl;
-            [params setValue:nextUrl forKey:@"redirect_uri"];
-
-            NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
-            didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+            
+            if (trySafariAuth && !didAuthNWithSystemAccount) {
+                NSString *nextUrl = self.appBaseUrl;
+                [params setValue:nextUrl forKey:@"redirect_uri"];
+                
+                NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
+                didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+            }
         }
     }
 
