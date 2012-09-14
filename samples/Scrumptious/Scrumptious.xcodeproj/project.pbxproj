@@ -18,6 +18,9 @@
 		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
 		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
 		8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3C15816CCC00056680 /* AddressBook.framework */; };
+		85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC71602B411008AD9A0 /* Default-568h@2x.png */; };
+		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
+		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
@@ -50,6 +53,9 @@
 		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
+		85C69DC71602B411008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "scrumptious/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
+		85C69DC81602B411008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = scrumptious/Default.png; sourceTree = SOURCE_ROOT; };
+		85C69DC91602B411008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "scrumptious/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -151,6 +157,9 @@
 		B9CD0A7A150EA4DD00560A93 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85C69DC71602B411008AD9A0 /* Default-568h@2x.png */,
+				85C69DC81602B411008AD9A0 /* Default.png */,
+				85C69DC91602B411008AD9A0 /* Default@2x.png */,
 				B9CD0A7B150EA4DD00560A93 /* Scrumptious-Info.plist */,
 				B9CD0A7C150EA4DD00560A93 /* InfoPlist.strings */,
 				B9CD0A7F150EA4DD00560A93 /* main.m */,
@@ -240,6 +249,9 @@
 				DD55EAB115ABA246000A64B8 /* FacebookSDKResources.bundle in Resources */,
 				8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */,
 				8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */,
+				85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */,
+				85C69DCB1602B411008AD9A0 /* Default.png in Resources */,
+				85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

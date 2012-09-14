@@ -28,6 +28,9 @@
 		85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */; };
 		85AFB531158FA20E000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52D158FA20E000AF7F5 /* Icon.png */; };
 		85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52E158FA20E000AF7F5 /* Icon@2x.png */; };
+		85C69DBF1602B393008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBC1602B393008AD9A0 /* Default-568h@2x.png */; };
+		85C69DC01602B393008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBD1602B393008AD9A0 /* Default.png */; };
+		85C69DC11602B393008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBE1602B393008AD9A0 /* Default@2x.png */; };
 		85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */; };
 		85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8E1538BF6200D88664 /* SUUserManager.m */; };
 		DD37EA6515ABA33D0015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */; };
@@ -62,6 +65,9 @@
 		85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB52D158FA20E000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB52E158FA20E000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		85C69DBC1602B393008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		85C69DBD1602B393008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		85C69DBE1602B393008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		85D0ED8A1538A9F400D88664 /* SUProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUProfileTableViewCell.h; sourceTree = "<group>"; };
 		85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUProfileTableViewCell.m; sourceTree = "<group>"; };
 		85D0ED8D1538BF6200D88664 /* SUUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUserManager.h; sourceTree = "<group>"; };
@@ -145,6 +151,9 @@
 		856DB054153393C3006F6A33 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				85C69DBC1602B393008AD9A0 /* Default-568h@2x.png */,
+				85C69DBD1602B393008AD9A0 /* Default.png */,
+				85C69DBE1602B393008AD9A0 /* Default@2x.png */,
 				85AFB52B158FA20E000AF7F5 /* Icon-72.png */,
 				85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */,
 				85AFB52D158FA20E000AF7F5 /* Icon.png */,
@@ -223,6 +232,9 @@
 				85AFB531158FA20E000AF7F5 /* Icon.png in Resources */,
 				85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */,
 				DD37EA6515ABA33D0015966B /* FacebookSDKResources.bundle in Resources */,
+				85C69DBF1602B393008AD9A0 /* Default-568h@2x.png in Resources */,
+				85C69DC01602B393008AD9A0 /* Default.png in Resources */,
+				85C69DC11602B393008AD9A0 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
