@@ -343,11 +343,11 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
 -(NSDate*)expirationDate {
     return self.tokenCaching.expirationDate;
-    self.hasUpdatedAccessToken = YES;
 }
 
 -(void)setExpirationDate:(NSDate *)expirationDate {
     self.tokenCaching.expirationDate = expirationDate;
+    self.hasUpdatedAccessToken = YES;
 }
 
 /**
