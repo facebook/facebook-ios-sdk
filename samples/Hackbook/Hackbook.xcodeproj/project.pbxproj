@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A84F0C4160306F3002CB8BD /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A84F0C3160306F3002CB8BD /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		3018B43A13F9B94D00F61944 /* MainWindow-iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3018B43813F9B94D00F61944 /* MainWindow-iPad.xib */; };
 		3085CC291415D68A00456CCC /* MenuButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3085CC281415D68A00456CCC /* MenuButton@2x.png */; };
 		30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA735D13F5D21B003DC0D2 /* UIKit.framework */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A84F0C3160306F3002CB8BD /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		3018B43913F9B94D00F61944 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = "iPad/en.lproj/MainWindow-iPad.xib"; sourceTree = "<group>"; };
 		3085CC281415D68A00456CCC /* MenuButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "MenuButton@2x.png"; sourceTree = "<group>"; };
 		30EA735913F5D21B003DC0D2 /* Hackbook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hackbook.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,6 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A84F0C4160306F3002CB8BD /* AdSupport.framework in Frameworks */,
 				30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */,
 				30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */,
 				30EA736013F5D21B003DC0D2 /* Foundation.framework in Frameworks */,
@@ -133,6 +136,7 @@
 		30EA735C13F5D21B003DC0D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A84F0C3160306F3002CB8BD /* AdSupport.framework */,
 				DD37EA8E15ABA4920015966B /* FacebookSDK.framework */,
 				30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */,
 				30EA735D13F5D21B003DC0D2 /* UIKit.framework */,

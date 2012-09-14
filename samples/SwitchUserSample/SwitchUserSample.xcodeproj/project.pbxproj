@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A84F0E716030A7F002CB8BD /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A84F0E616030A7F002CB8BD /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		84605AAD15A77AFB00197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AAC15A77AFB00197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		856DB04E153393C3006F6A33 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DB04D153393C3006F6A33 /* UIKit.framework */; };
 		856DB050153393C3006F6A33 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 856DB04F153393C3006F6A33 /* Foundation.framework */; };
@@ -38,6 +39,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A84F0E616030A7F002CB8BD /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		84605AAC15A77AFB00197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		856DB049153393C3006F6A33 /* SwitchUserSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwitchUserSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		856DB04D153393C3006F6A33 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -81,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A84F0E716030A7F002CB8BD /* AdSupport.framework in Frameworks */,
 				84605AAD15A77AFB00197AA7 /* Accounts.framework in Frameworks */,
 				856DB04E153393C3006F6A33 /* UIKit.framework in Frameworks */,
 				856DB050153393C3006F6A33 /* Foundation.framework in Frameworks */,
@@ -112,6 +115,7 @@
 		856DB04C153393C3006F6A33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A84F0E616030A7F002CB8BD /* AdSupport.framework */,
 				DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */,
 				DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */,
 				84605AAC15A77AFB00197AA7 /* Accounts.framework */,

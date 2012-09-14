@@ -19,6 +19,7 @@
 #import "FBSettings.h"
 #import "FBSettings+Internal.h"
 
+#import <AdSupport/AdSupport.h>
 #import <UIKit/UIKit.h>
 
 NSString *const FBLoggingBehaviorFBRequests = @"fb_requests";
@@ -63,9 +64,13 @@ static dispatch_once_t g_publishInstallOnceToken;
 + (void)autoPublishInstall:(NSString *)appID {
     if ([FBSettings shouldAutoPublishInstall]) {
         dispatch_once(&g_publishInstallOnceToken, ^{
-            // dispatch_once is great, but not re-entrant.  Inside publishInstall we use FBRequest, which will
-            // cause this function to get invoked a second time.  By scheduling the work, we can sidestep the problem.
-            [[FBSettings class] performSelector:@selector(publishInstall:) withObject:appID afterDelay:FBPublishDelay];
+            @try {
+                // dispatch_once is great, but not re-entrant.  Inside publishInstall we use FBRequest, which will
+                // cause this function to get invoked a second time.  By scheduling the work, we can sidestep the problem.
+                [[FBSettings class] performSelector:@selector(publishInstall:) withObject:appID afterDelay:FBPublishDelay];
+            } @catch (NSException *exception) {
+                NSLog(@"Failure during autoPublishInstall: %@", exception.reason);
+            }
         });
     }
 }
@@ -90,7 +95,15 @@ static dispatch_once_t g_publishInstallOnceToken;
     NSDate *lastPing = [defaults objectForKey:pingKey];
     NSString *attributionID = [[UIPasteboard pasteboardWithName:FBAttributionPasteboard create:NO] string];
 
-    if (attributionID && !lastPing) {
+    // On iOS 6, apple provides an os level identifier.
+    NSString *appleAdId = nil;
+    if ([ASIdentifierManager class]) {
+        ASIdentifierManager *manager = [ASIdentifierManager sharedManager];
+        BOOL isAdvertisingTrackingEnabled = (manager != nil && manager.isAdvertisingTrackingEnabled) ? YES : NO;
+        appleAdId = isAdvertisingTrackingEnabled ? [[manager advertisingIdentifier] UUIDString] : nil;
+    }
+
+    if ((appleAdId || attributionID) && !lastPing) {
         FBRequestHandler publishCompletionBlock = ^(FBRequestConnection *connection,
                                                     id result,
                                                     NSError *error) {
@@ -114,8 +127,13 @@ static dispatch_once_t g_publishInstallOnceToken;
                     NSString *publishPath = [NSString stringWithFormat:FBPublishActivityPath, appID, nil];
                     NSMutableDictionary<FBGraphObject> *installActivity = [FBGraphObject graphObject];
                     [installActivity setObject:FBMobileInstallEvent forKey:@"event"];
-                    [installActivity setObject:attributionID forKey:@"attribution"];
-
+                    if (attributionID) {
+                        [installActivity setObject:attributionID forKey:@"attribution"];
+                    }
+                    if (appleAdId) {
+                        [installActivity setObject:appleAdId forKey:@"advertiser_id"];
+                    }
+                    
                     FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];
                     [publishRequest startWithCompletionHandler:publishCompletionBlock];
                 } else {

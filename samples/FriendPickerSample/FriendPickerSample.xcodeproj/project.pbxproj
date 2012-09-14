@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A84F0C1160306D2002CB8BD /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A84F0C0160306D2002CB8BD /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		84605AB315A77C2700197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AB215A77C2700197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB4D7158F9C1D000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */; };
 		85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */; };
@@ -32,6 +33,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A84F0C0160306D2002CB8BD /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		84605AB215A77C2700197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85AFB4D3158F9C1D000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB4D4158F9C1D000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A84F0C1160306D2002CB8BD /* AdSupport.framework in Frameworks */,
 				84605AB315A77C2700197AA7 /* Accounts.framework in Frameworks */,
 				E2D6B81315413A570050835F /* UIKit.framework in Frameworks */,
 				E2D6B81515413A570050835F /* Foundation.framework in Frameworks */,
@@ -100,6 +103,7 @@
 		E2D6B81115413A570050835F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A84F0C0160306D2002CB8BD /* AdSupport.framework */,
 				DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */,
 				DD37EA8715ABA46B0015966B /* FacebookSDK.framework */,
 				84605AB215A77C2700197AA7 /* Accounts.framework */,

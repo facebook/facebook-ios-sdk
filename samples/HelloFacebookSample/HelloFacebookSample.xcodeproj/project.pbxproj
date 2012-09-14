@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2A84F0C7160306FF002CB8BD /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A84F0C6160306FF002CB8BD /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5F6AF18E1532A37B00DDBD75 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF18D1532A37B00DDBD75 /* UIKit.framework */; };
 		5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF18F1532A37B00DDBD75 /* Foundation.framework */; };
 		5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F6AF1911532A37B00DDBD75 /* CoreGraphics.framework */; };
@@ -33,6 +34,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2A84F0C6160306FF002CB8BD /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		5F6AF1891532A37B00DDBD75 /* HelloFacebookSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloFacebookSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F6AF18D1532A37B00DDBD75 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		5F6AF18F1532A37B00DDBD75 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -68,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A84F0C7160306FF002CB8BD /* AdSupport.framework in Frameworks */,
 				8458462715A63635008A1F16 /* Accounts.framework in Frameworks */,
 				5F6AF18E1532A37B00DDBD75 /* UIKit.framework in Frameworks */,
 				5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */,
@@ -103,6 +106,7 @@
 		5F6AF18C1532A37B00DDBD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2A84F0C6160306FF002CB8BD /* AdSupport.framework */,
 				5FC4959715C21151007EE54E /* CoreLocation.framework */,
 				DD37EAC215ABA8FE0015966B /* FacebookSDKResources.bundle */,
 				DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */,
