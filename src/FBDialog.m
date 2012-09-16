@@ -18,7 +18,6 @@
 #import "FBDialog.h"
 #import "Facebook.h"
 #import "FBFrictionlessRequestSettings.h"
-#import "JSON.h"
 #import "FBUtility.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,13 +296,11 @@ params   = _params;
                                               needle:@"frictionless_recipients="];
     if (recipientJson) {
         // if value parses as an array, treat as set of fbids
-        SBJsonParser *parser = [[[SBJsonParser alloc]
-                                 init]
-                                autorelease];
-        id recipients = [parser objectWithString:recipientJson];
+        NSError *jsonError = nil;
+        id recipients = [NSJSONSerialization JSONObjectWithData:[recipientJson dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&jsonError];
 
         // if we got something usable, copy the ids out and update the cache
-        if ([recipients isKindOfClass:[NSArray class]]) { 
+        if (!jsonError && [recipients isKindOfClass:[NSArray class]]) {
             NSMutableArray *ids = [[[NSMutableArray alloc]
                                     initWithCapacity:[recipients count]]
                                    autorelease];

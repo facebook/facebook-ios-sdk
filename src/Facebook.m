@@ -20,7 +20,6 @@
 #import "FBRequest.h"
 #import "FBError.h"
 #import "FBSessionManualTokenCachingStrategy.h"
-#import "JSON.h"
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 
@@ -695,9 +694,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
             id fbid = [params objectForKey:@"to"];
             if (fbid != nil) {
                 // if value parses as a json array expression get the list that way
-                SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
-                id fbids = [parser objectWithString:fbid];
-                if (![fbids isKindOfClass:[NSArray class]]) {
+                NSError *jsonError = nil;
+                id fbids = [NSJSONSerialization JSONObjectWithData:[fbid dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:&jsonError];
+                if (!jsonError && ![fbids isKindOfClass:[NSArray class]]) {
                     // otherwise seperate by commas (handles the singleton case too)
                     fbids = [fbid componentsSeparatedByString:@","];
                 }                
