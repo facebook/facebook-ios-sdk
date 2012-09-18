@@ -614,5 +614,25 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  overridden on a per session basis.
  */
 + (NSString*)defaultAppID;
+
+
+/*!
+ @method
+ 
+ @abstract Set the default URL Scheme Suffix to use for sessions. The URL Scheme Suffix may be
+ overridden on a per session basis.
+ 
+ @param urlSchemeSuffix The default URL Scheme Suffix to use for <FBSession> methods.
+ */
++ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix;
+
+/*!
+ @method
+ 
+ @abstract Get the default URL Scheme Suffix to use for sessions. If not explicitly
+ set, the default will be read from the application's plist. The URL Scheme Suffix may be
+ overridden on a per session basis.
+ */
++ (NSString*)defaultUrlSchemeSuffix;
     
 @end
