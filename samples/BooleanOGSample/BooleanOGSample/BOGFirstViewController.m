@@ -148,18 +148,17 @@
         // if we don't have permission to post, let's first address that
         if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
             
-            [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                       behavior:FBSessionLoginBehaviorWithFallbackToWebView
-                                                defaultAudience:FBSessionDefaultAudienceFriends
-                                              completionHandler:^(FBSession *session, NSError *error) {
-                                                  if (!error) {
-                                                      // re-call assuming we now have the permission
-                                                      [self postAction:actionPath
-                                                           leftOperand:left
-                                                          rightOperand:right
-                                                                result:result];
-                                                  }
-                                              }];
+            [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                     defaultAudience:FBSessionDefaultAudienceFriends
+                                                   completionHandler:^(FBSession *session, NSError *error) {
+                                                       if (!error) {
+                                                           // re-call assuming we now have the permission
+                                                           [self postAction:actionPath
+                                                                leftOperand:left
+                                                               rightOperand:right
+                                                                     result:result];
+                                                       }
+                                                   }];
         } else {
             
             // create an object to hold our action information, the FBGraphObject class has a lightweight

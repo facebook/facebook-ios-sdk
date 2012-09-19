@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2A84F0CD16030711002CB8BD /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A84F0CC16030711002CB8BD /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		847BBEAA160B88E8004EC7CB /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847BBEA9160B88E8004EC7CB /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB522158FA1C4000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB51E158FA1C4000AF7F5 /* Icon-72.png */; };
 		85AFB523158FA1C4000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB51F158FA1C4000AF7F5 /* Icon-72@2x.png */; };
 		85AFB524158FA1C4000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB520158FA1C4000AF7F5 /* Icon.png */; };
@@ -30,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		2A84F0CC16030711002CB8BD /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		847BBEA9160B88E8004EC7CB /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		85AFB51E158FA1C4000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB51F158FA1C4000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB520158FA1C4000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -60,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				847BBEAA160B88E8004EC7CB /* Accounts.framework in Frameworks */,
 				2A84F0CD16030711002CB8BD /* AdSupport.framework in Frameworks */,
 				B98686BD151D0B3700616412 /* UIKit.framework in Frameworks */,
 				B98686BF151D0B3700616412 /* Foundation.framework in Frameworks */,
@@ -74,6 +77,7 @@
 		B98686AD151D0B3700616412 = {
 			isa = PBXGroup;
 			children = (
+				847BBEA9160B88E8004EC7CB /* Accounts.framework */,
 				B98686C2151D0B3700616412 /* ProfilePictureSample */,
 				B98686BB151D0B3700616412 /* Frameworks */,
 				B98686B9151D0B3700616412 /* Products */,

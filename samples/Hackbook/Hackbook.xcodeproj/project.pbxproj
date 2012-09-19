@@ -25,6 +25,8 @@
 		30EA739F13F5D372003DC0D2 /* MenuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 30EA739713F5D372003DC0D2 /* MenuButton.png */; };
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
+		84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84750A9F160A259400C1A13D /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		84750AA3160A259E00C1A13D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84750AA2160A259E00C1A13D /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB4E4158F9C5B000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */; };
 		85AFB4E5158F9C5B000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */; };
 		85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E2158F9C5B000AF7F5 /* Icon.png */; };
@@ -61,6 +63,8 @@
 		30EA739713F5D372003DC0D2 /* MenuButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuButton.png; sourceTree = "<group>"; };
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		84750A9F160A259400C1A13D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		84750AA2160A259E00C1A13D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4E2158F9C5B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -95,7 +99,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2A84F0C4160306F3002CB8BD /* AdSupport.framework in Frameworks */,
+				84750AA3160A259E00C1A13D /* AdSupport.framework in Frameworks */,
+				84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */,
 				30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */,
 				30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */,
 				30EA736013F5D21B003DC0D2 /* Foundation.framework in Frameworks */,
@@ -136,7 +141,8 @@
 		30EA735C13F5D21B003DC0D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2A84F0C3160306F3002CB8BD /* AdSupport.framework */,
+				84750AA2160A259E00C1A13D /* AdSupport.framework */,
+				84750A9F160A259400C1A13D /* Accounts.framework */,
 				DD37EA8E15ABA4920015966B /* FacebookSDK.framework */,
 				30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */,
 				30EA735D13F5D21B003DC0D2 /* UIKit.framework */,

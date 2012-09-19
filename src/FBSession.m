@@ -129,13 +129,29 @@ static FBSession *g_activeSession = nil;
 - (void)completeReauthorizeWithAccessToken:(NSString*)accessToken
                             expirationDate:(NSDate*)expirationDate
                                permissions:(NSArray*)permissions;
+- (void)reauthorizeWithPermissions:(NSArray*)permissions
+                            isRead:(BOOL)isRead
+                          behavior:(FBSessionLoginBehavior)behavior
+                   defaultAudience:(FBSessionDefaultAudience)audience
+                 completionHandler:(FBSessionReauthorizeResultHandler)handler;
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error;
 
 // class members
 + (BOOL)areRequiredPermissions:(NSArray*)requiredPermissions
           aSubsetOfPermissions:(NSArray*)cachedPermissions;
 + (NSString *)sessionStateDescription:(FBSessionState)sessionState;
-
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                      allowSystemAccount:(BOOL)allowSystemAccount
+                                  isRead:(BOOL)isRead
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler;
++ (void)validateRequestForPermissions:(NSArray*)permissions
+                      defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                   allowSystemAccount:(BOOL)allowSystemAccount
+                               isRead:(BOOL)isRead;
++ (BOOL)logIfFoundUnexpectedPermissions:(NSArray*)permissions
+                                 isRead:(BOOL)isRead;
 @end
 
 @implementation FBSession : NSObject
@@ -165,31 +181,31 @@ static FBSession *g_activeSession = nil;
 
 - (id)init {
     return [self initWithAppID:nil
-               readPermissions:nil
+                   permissions:nil
                urlSchemeSuffix:nil
             tokenCacheStrategy:nil];
 }
 
-- (id)initWithReadPermissions:(NSArray*)readPermissions {
+- (id)initWithPermissions:(NSArray*)permissions {
     return [self initWithAppID:nil
-               readPermissions:readPermissions
+                   permissions:permissions
                urlSchemeSuffix:nil
             tokenCacheStrategy:nil];
 }
 
 - (id)initWithAppID:(NSString*)appID
-    readPermissions:(NSArray*)readPermissions
+        permissions:(NSArray*)permissions
     urlSchemeSuffix:(NSString*)urlSchemeSuffix
  tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy {
     return [self initWithAppID:appID
-               readPermissions:readPermissions
-            defaultAudience:FBSessionDefaultAudienceNone
+                   permissions:permissions
+               defaultAudience:FBSessionDefaultAudienceNone
                urlSchemeSuffix:urlSchemeSuffix
             tokenCacheStrategy:tokenCachingStrategy];
 }
 
 - (id)initWithAppID:(NSString*)appID
-    readPermissions:(NSArray*)readPermissions
+        permissions:(NSArray*)permissions
     defaultAudience:(FBSessionDefaultAudience)defaultAudience
     urlSchemeSuffix:(NSString*)urlSchemeSuffix
  tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy {
@@ -200,8 +216,8 @@ static FBSession *g_activeSession = nil;
         if (!appID) {
             appID = [FBSession defaultAppID];    
         }
-        if (!readPermissions) {
-            readPermissions = [NSArray array];
+        if (!permissions) {
+            permissions = [NSArray array];
         }
         if (!tokenCachingStrategy) {
             tokenCachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
@@ -219,7 +235,7 @@ static FBSession *g_activeSession = nil;
 
         // assign arguments;
         self.appID = appID;
-        self.permissions = readPermissions;
+        self.permissions = permissions;
         self.urlSchemeSuffix = urlSchemeSuffix;
         self.tokenCachingStrategy = tokenCachingStrategy;
 
@@ -243,7 +259,7 @@ static FBSession *g_activeSession = nil;
                         
             // get the cached permissions, and do a subset check
             NSArray *cachedPermissions = [tokenInfo objectForKey:FBTokenInformationPermissionsKey];
-            BOOL isSubset = [FBSession areRequiredPermissions:readPermissions
+            BOOL isSubset = [FBSession areRequiredPermissions:permissions
                                          aSubsetOfPermissions:cachedPermissions];
 
             if (isSubset &&
@@ -343,33 +359,31 @@ static FBSession *g_activeSession = nil;
 
 - (void)reauthorizeWithPermissions:(NSArray*)permissions
                           behavior:(FBSessionLoginBehavior)behavior
-                   defaultAudience:(FBSessionDefaultAudience)audience
                  completionHandler:(FBSessionReauthorizeResultHandler)handler {
+    [self reauthorizeWithPermissions:permissions
+                              isRead:NO
+                            behavior:behavior
+                     defaultAudience:FBSessionDefaultAudienceNone
+                   completionHandler:handler];
+}
 
-    if (!self.isOpen) {
-        // session must be open in order to reauthorize
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: an attempt was made reauthorize permissions on an unopened session"
-                               userInfo:nil]
-         raise];
-    }
-        
-    if (self.reauthorizeHandler) {
-        // block must be cleared (meaning it has been called back) before a reauthorize can happen again
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: It is not valid to reauthorize while a previous "
-                                        @"reauthorize call has not yet completed."
-                               userInfo:nil]
-         raise];
-    }
+- (void)reauthorizeWithReadPermissions:(NSArray*)readPermissions
+                     completionHandler:(FBSessionReauthorizeResultHandler)handler {
+    [self reauthorizeWithPermissions:readPermissions
+                              isRead:YES
+                            behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                     defaultAudience:FBSessionDefaultAudienceNone
+                   completionHandler:handler];
+}
 
-    // setup handler and permissions and perform the actual reauthorize
-    self.reauthorizePermissions = permissions;
-    self.reauthorizeHandler = handler;
-    [self authorizeWithPermissions:permissions
-                          behavior:behavior
-                   defaultAudience:audience
-                     isReauthorize:YES];
+- (void)reauthorizeWithPublishPermissions:(NSArray*)writePermissions
+                        defaultAudience:(FBSessionDefaultAudience)audience
+                      completionHandler:(FBSessionReauthorizeResultHandler)handler {
+    [self reauthorizeWithPermissions:writePermissions
+                              isRead:NO
+                            behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                     defaultAudience:audience
+                   completionHandler:handler];
 }
 
 - (void)close {
@@ -455,25 +469,46 @@ static FBSession *g_activeSession = nil;
 #pragma mark Class Methods
 
 + (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    return [FBSession openActiveSessionWithReadPermissions:nil
-                                              allowLoginUI:allowLoginUI
-                                         completionHandler:nil];
-    
+    return [FBSession openActiveSessionWithPermissions:nil
+                                          allowLoginUI:allowLoginUI
+                                    allowSystemAccount:YES
+                                                isRead:YES
+                                       defaultAudience:FBSessionDefaultAudienceNone
+                                     completionHandler:nil];
+}
+
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                       completionHandler:(FBSessionStateHandler)handler {
+    return [FBSession openActiveSessionWithPermissions:permissions
+                                          allowLoginUI:allowLoginUI
+                                    allowSystemAccount:NO
+                                                isRead:NO
+                                       defaultAudience:FBSessionDefaultAudienceNone
+                                     completionHandler:handler];
 }
 
 + (BOOL)openActiveSessionWithReadPermissions:(NSArray*)readPermissions
                                 allowLoginUI:(BOOL)allowLoginUI
                            completionHandler:(FBSessionStateHandler)handler {
-    BOOL result = NO;
-    FBSession *session = [[[FBSession alloc] initWithReadPermissions:readPermissions] autorelease];
-    if (allowLoginUI || session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession setActiveSession:session];
-        // we open after the fact, in order to avoid overlapping close
-        // and open handler calls for blocks
-        [session openWithCompletionHandler:handler];
-        result = session.isOpen;
-    }
-    return result;
+    return [FBSession openActiveSessionWithPermissions:readPermissions
+                                          allowLoginUI:allowLoginUI
+                                    allowSystemAccount:YES
+                                                isRead:YES
+                                       defaultAudience:FBSessionDefaultAudienceNone
+                                     completionHandler:handler];
+}
+
++ (BOOL)openActiveSessionWithPublishPermissions:(NSArray*)publishPermissions
+                                defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                                   allowLoginUI:(BOOL)allowLoginUI
+                              completionHandler:(FBSessionStateHandler)handler {
+    return [FBSession openActiveSessionWithPermissions:publishPermissions
+                                          allowLoginUI:allowLoginUI
+                                    allowSystemAccount:YES
+                                                isRead:NO
+                                       defaultAudience:defaultAudience
+                                     completionHandler:handler];
 }
 
 + (FBSession*)activeSession {
@@ -722,14 +757,16 @@ static FBSession *g_activeSession = nil;
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
-    BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
+    BOOL tryIntegratedAuth = behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent;
+    BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
+                            (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
                             (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
     BOOL tryFallback =  (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
                         (behavior == FBSessionLoginBehaviorForcingWebView);
     
     [self authorizeWithPermissions:(NSArray*)permissions
                    defaultAudience:audience
-                    integratedAuth:tryFacebookLogin
+                    integratedAuth:tryIntegratedAuth
                          FBAppAuth:tryFacebookLogin
                         safariAuth:tryFacebookLogin
                           fallback:tryFallback
@@ -1160,6 +1197,44 @@ static FBSession *g_activeSession = nil;
     return YES;    
 }
 
+- (void)reauthorizeWithPermissions:(NSArray*)permissions
+                            isRead:(BOOL)isRead
+                          behavior:(FBSessionLoginBehavior)behavior
+                   defaultAudience:(FBSessionDefaultAudience)audience
+                 completionHandler:(FBSessionReauthorizeResultHandler)handler {
+    
+    if (!self.isOpen) {
+        // session must be open in order to reauthorize
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:@"FBSession: an attempt was made reauthorize permissions on an unopened session"
+                               userInfo:nil]
+         raise];
+    }
+    
+    if (self.reauthorizeHandler) {
+        // block must be cleared (meaning it has been called back) before a reauthorize can happen again
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:@"FBSession: It is not valid to reauthorize while a previous "
+          @"reauthorize call has not yet completed."
+                               userInfo:nil]
+         raise];
+    }
+    
+    // is everything in good order argument-wise?
+    [FBSession validateRequestForPermissions:permissions
+                             defaultAudience:audience
+                          allowSystemAccount:behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent
+                                      isRead:isRead];
+    
+    // setup handler and permissions and perform the actual reauthorize
+    self.reauthorizePermissions = permissions;
+    self.reauthorizeHandler = handler;
+    [self authorizeWithPermissions:permissions
+                          behavior:behavior
+                   defaultAudience:audience
+                     isReauthorize:YES];
+}
+
 - (void)completeReauthorizeWithAccessToken:(NSString*)accessToken
                             expirationDate:(NSDate*)expirationDate
                                permissions:(NSArray*)permissions {
@@ -1358,11 +1433,105 @@ static FBSession *g_activeSession = nil;
 #pragma mark -
 #pragma mark Internal members
 
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                      allowSystemAccount:(BOOL)allowSystemAccount
+                                  isRead:(BOOL)isRead
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler {
+    // is everything in good order?
+    [FBSession validateRequestForPermissions:permissions
+                             defaultAudience:defaultAudience
+                          allowSystemAccount:allowSystemAccount
+                                      isRead:isRead];
+    BOOL result = NO;
+    FBSession *session = [[[FBSession alloc] initWithAppID:nil
+                                               permissions:permissions
+                                           defaultAudience:defaultAudience
+                                           urlSchemeSuffix:nil
+                                        tokenCacheStrategy:nil]
+                          autorelease];
+    if (allowLoginUI || session.state == FBSessionStateCreatedTokenLoaded) {
+        [FBSession setActiveSession:session];
+        // we open after the fact, in order to avoid overlapping close
+        // and open handler calls for blocks
+        FBSessionLoginBehavior howToBehave = allowSystemAccount ?
+                                                FBSessionLoginBehaviorUseSystemAccountIfPresent :
+                                                    FBSessionLoginBehaviorWithFallbackToWebView;
+        [session openWithBehavior:howToBehave
+                completionHandler:handler];
+        result = session.isOpen;
+    }
+    return result;
+}
+
 + (FBSession*)activeSessionIfOpen {
     if (g_activeSession.isOpen) {
         return FBSession.activeSession;
     }
     return nil;
+}
+
++ (void)validateRequestForPermissions:(NSArray*)permissions
+                      defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                   allowSystemAccount:(BOOL)allowSystemAccount
+                               isRead:(BOOL)isRead {
+    // validate audience argument
+    if ([permissions count]) {
+        if (allowSystemAccount && !isRead) {
+            switch (defaultAudience) {
+                case FBSessionDefaultAudienceEveryone:
+                case FBSessionDefaultAudienceFriends:
+                case FBSessionDefaultAudienceOnlyMe:
+                    break;
+                default:
+                    [[NSException exceptionWithName:FBInvalidOperationException
+                                             reason:@"FBSession: Publish permissions were requested "
+                      @"without specifying an audience; use FBSessionDefaultAudienceJustMe, "
+                      @"FBSessionDefaultAudienceFriends, or FBSessionDefaultAudienceEveryone"
+                                           userInfo:nil]
+                     raise];
+                    break;
+            }
+        }
+        // log unexpected permissions, and throw on read w/publish permissions
+        if (allowSystemAccount &&
+            [FBSession logIfFoundUnexpectedPermissions:permissions isRead:isRead] &&
+            isRead) {
+            [[NSException exceptionWithName:FBInvalidOperationException
+                                     reason:@"FBSession: Publish or manage permissions are not permited to "
+              @"to be requested with read permissions."
+                                   userInfo:nil]
+             raise];
+        }
+    }
+}
+
++ (BOOL)logIfFoundUnexpectedPermissions:(NSArray*)permissions
+                                 isRead:(BOOL)isRead {
+    BOOL publishPermissionFound = NO;
+    BOOL readPermissionFound = NO;
+    BOOL result = NO;
+    for (NSString *p in permissions) {
+        if (!publishPermissionFound &&
+            ([p hasPrefix:@"publish"] ||
+            [p hasPrefix:@"manage"] ||
+            [p isEqualToString:@"ads_management"])) {
+            publishPermissionFound = YES;
+        } else {
+            readPermissionFound = YES;
+        }
+    }
+    if (!isRead && readPermissionFound) {
+        FBConditionalLog(NO, @"FBSession: a permission request for publish or manage permissions contains unexpected read permissions");
+        result = YES;
+    }
+    if (isRead && publishPermissionFound) {
+        FBConditionalLog(NO, @"FBSession: a permission request for read permissions contains unexpected publish or manage permissions");
+        result = YES;
+    }
+    
+    return result;
 }
 
 + (void)deleteFacebookCookies {

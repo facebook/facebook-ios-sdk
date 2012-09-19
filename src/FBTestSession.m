@@ -124,7 +124,7 @@ sessionUniqueUserTag:(NSString*)sessionUniqueUserTag
 tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 {
     if (self = [super initWithAppID:appID
-                    readPermissions:permissions
+                        permissions:permissions
                     urlSchemeSuffix:nil
                  tokenCacheStrategy:tokenCachingStrategy]) {
         self.testAppID = appID;
