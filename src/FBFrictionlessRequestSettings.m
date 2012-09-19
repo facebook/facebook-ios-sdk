@@ -146,7 +146,8 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // NSObject
 
-- (void)dealloc {    
+- (void)dealloc {
+    self.activeRequest.delegate = nil;
     self.activeRequest = nil;
     self.allowedRecipients = nil;
     [super dealloc];
