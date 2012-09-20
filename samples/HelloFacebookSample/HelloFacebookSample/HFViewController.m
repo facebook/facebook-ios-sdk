@@ -127,9 +127,7 @@
     // we defer request for permission to post to the moment of post, then we check for the permission
     if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
         // if we don't already have the permission, then we request it now
-<<<<<<< HEAD
-        [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                   behavior:FBSessionLoginBehaviorWithFallbackToWebView
+        [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
                                             defaultAudience:FBSessionDefaultAudienceFriends
                                           completionHandler:^(FBSession *session, NSError *error) {
                                               if (!error) {
@@ -137,16 +135,6 @@
                                               }
                                               //For this example, ignore errors (such as if user cancels).
                                           }];
-=======
-        [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                   defaultAudience:FBSessionDefaultAudienceFriends
-                                                 completionHandler:^(FBSession *session, NSError *error) {
-                                                     if (!error) {
-                                                         // re-call ourselves assuming we now have the necessary permission
-                                                         [self postStatusUpdateClick:sender];
-                                                     }
-                                                 }];
->>>>>>> Bucketizes the permissions developer model by read and publish
     } else {
         action();
     }
@@ -174,22 +162,7 @@
 
 // Post Photo button handler
 - (IBAction)postPhotoClick:(UIButton *)sender {
-<<<<<<< HEAD
     [self performPublishAction:^{
-=======
-    // we defer request for permission to post to the moment of post, then we check for the permission
-    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-        // if we don't already have the permission, then we request it now
-        [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                   defaultAudience:FBSessionDefaultAudienceFriends
-                                                 completionHandler:^(FBSession *session, NSError *error) {
-                                                     if (!error) {
-                                                         // re-call ourselves assuming we now have the necessary permission
-                                                         [self postPhotoClick:sender];
-                                                     }
-                                                 }];
-    } else {
->>>>>>> Bucketizes the permissions developer model by read and publish
         // Just use the icon image from the application itself.  A real app would have a more
         // useful way to get an image.
         UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
