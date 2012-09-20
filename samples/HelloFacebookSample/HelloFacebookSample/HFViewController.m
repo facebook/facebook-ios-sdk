@@ -52,6 +52,8 @@
 @synthesize loggedInUser = _loggedInUser;
 @synthesize profilePic = _profilePic;
 
+#pragma mark - UIViewController
+
 - (void)viewDidLoad {    
     [super viewDidLoad];
     
@@ -86,6 +88,8 @@
     }
 }
 
+#pragma mark - FBLoginViewDelegate
+
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
     // first get the buttons set for login mode
     self.buttonPostPhoto.enabled = YES;
@@ -116,8 +120,10 @@
     self.labelFirstName.text = nil;
 }
 
-// Post Status Update button handler
-- (IBAction)postStatusUpdateClick:(UIButton *)sender {
+#pragma mark -
+
+// Convenience method to perform some action that requires the "publish_actions" permissions.
+- (void) performPublishAction:(void (^)(void)) action {
     // we defer request for permission to post to the moment of post, then we check for the permission
     if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
         // if we don't already have the permission, then we request it now
@@ -126,14 +132,21 @@
                                             defaultAudience:FBSessionDefaultAudienceFriends
                                           completionHandler:^(FBSession *session, NSError *error) {
                                               if (!error) {
-                                                  // re-call ourselves assuming we now have the necessary permission
-                                                  [self postStatusUpdateClick:sender];
+                                                  action();
                                               }
+                                              //For this example, ignore errors (such as if user cancels).
                                           }];
     } else {
+        action();
+    }
+
+}
+
+// Post Status Update button handler
+- (IBAction)postStatusUpdateClick:(UIButton *)sender {
+    [self performPublishAction:^{
         // Post a status update to the user's feed via the Graph API, and display an alert view
         // with the results or an error.
-        
         NSString *message = [NSString stringWithFormat:@"Updating %@'s status at %@",
                              self.loggedInUser.first_name, [NSDate date]];
         
@@ -145,24 +158,12 @@
                                     }];
         
         self.buttonPostStatus.enabled = NO;
-    }
+    }];
 }
 
 // Post Photo button handler
 - (IBAction)postPhotoClick:(UIButton *)sender {
-    // we defer request for permission to post to the moment of post, then we check for the permission
-    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-        // if we don't already have the permission, then we request it now
-        [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                   behavior:FBSessionLoginBehaviorWithFallbackToWebView
-                                            defaultAudience:FBSessionDefaultAudienceFriends
-                                          completionHandler:^(FBSession *session, NSError *error) {
-                                              if (!error) {
-                                                  // re-call ourselves assuming we now have the necessary permission
-                                                  [self postPhotoClick:sender];
-                                              }
-                                          }];
-    } else {
+    [self performPublishAction:^{
         // Just use the icon image from the application itself.  A real app would have a more
         // useful way to get an image.
         UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
@@ -174,7 +175,7 @@
                                }];
         
         self.buttonPostPhoto.enabled = NO;
-    }
+    }];
 }
 
 // Pick Friends button handler
