@@ -408,11 +408,15 @@ static FBSession *g_activeSession = nil;
 
     [[FBDataDiskCache sharedCache] removeDataForSession:self];
     [self.tokenCachingStrategy clearToken];
-    [self transitionAndCallHandlerWithState:FBSessionStateClosed
-                                      error:nil
-                                      token:nil
-                             expirationDate:nil
-                                shouldCache:NO];
+
+    // If we are not already in a terminal state, go to Closed.
+    if (!FB_ISSESSIONSTATETERMINAL(self.state)) {
+        [self transitionAndCallHandlerWithState:FBSessionStateClosed
+                                          error:nil
+                                          token:nil
+                                 expirationDate:nil
+                                    shouldCache:NO];
+    }
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url {
@@ -1566,6 +1570,9 @@ static FBSession *g_activeSession = nil;
             break;
         case FBSessionStateCreatedTokenLoaded: 
             stateDescription = @"FBSessionStateCreatedTokenLoaded";
+            break;
+        case FBSessionStateCreatedOpening:
+            stateDescription = @"FBSessionStateCreatedOpening";
             break;
         case FBSessionStateOpen:
             stateDescription = @"FBSessionStateOpen";

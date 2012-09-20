@@ -24,7 +24,8 @@
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
       rightOperand:(BOOL)right
-            result:(BOOL)result;
+            result:(BOOL)result
+ tryReauthIfNeeded:(BOOL)tryReauthIfNeeded;
 - (NSString *)stringForTruthValue:(BOOL)truthValue;
 + (id<BOGGraphTruthValue>)ogObjectForTruthValue:(BOOL)value;
 
@@ -83,7 +84,8 @@
     [self postAction:@"me/fb_sample_boolean_og:and" 
          leftOperand:left
         rightOperand:right
-              result:result];
+              result:result
+   tryReauthIfNeeded:YES];
 }
 
 // FBSample logic
@@ -103,7 +105,8 @@
     [self postAction:@"me/fb_sample_boolean_og:or" 
          leftOperand:left
         rightOperand:right
-              result:result];
+              result:result
+   tryReauthIfNeeded:YES];
 }
 
 #pragma mark - UIPickerViewDelegate impl
@@ -140,14 +143,14 @@
 - (void)postAction:(NSString *)actionPath
        leftOperand:(BOOL)left
       rightOperand:(BOOL)right
-            result:(BOOL)result {
+            result:(BOOL)result
+ tryReauthIfNeeded:(BOOL)tryReauthIfNeeded {
     
     // if we have a valid session, then we post the action to the users wall, else noop
     if (FBSession.activeSession.isOpen) {
         
         // if we don't have permission to post, let's first address that
         if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-            
             [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
                                                      defaultAudience:FBSessionDefaultAudienceFriends
                                                    completionHandler:^(FBSession *session, NSError *error) {
@@ -156,7 +159,8 @@
                                                            [self postAction:actionPath
                                                                 leftOperand:left
                                                                rightOperand:right
-                                                                     result:result];
+                                                                     result:result
+                                                          tryReauthIfNeeded:NO];
                                                        }
                                                    }];
         } else {
@@ -176,10 +180,10 @@
             // post the action using one of the lightweight static start* methods on FBRequest
             [FBRequestConnection startForPostWithGraphPath:actionPath
                                                graphObject:action
-                                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                         completionHandler:^(FBRequestConnection *connection, id requestResult, NSError *error) {
                                              if (!error) {
                                                  // successful post, in the sample we do nothing with the id, however
-                                                 // a more complex applicaiton may want to store or perform addtional actions
+                                                 // a more complex application may want to store or perform addtional actions
                                                  // with the id that represents the just-posted action
                                              } else {
                                                  // get the basic error message
@@ -187,22 +191,43 @@
                                                  
                                                  // see if we can improve on it with an error message from the server
                                                  id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
+                                                 id facebookError = nil;
+                                                 NSDecimalNumber *code = nil;
                                                  if ([json isKindOfClass:[NSDictionary class]] &&
                                                      (json = [json objectForKey:@"body"]) &&
                                                      [json isKindOfClass:[NSDictionary class]] &&
-                                                     (json = [json objectForKey:@"error"]) &&
-                                                     [json isKindOfClass:[NSDictionary class]] &&
-                                                     (json = [json objectForKey:@"message"])) {
+                                                     (facebookError = [json objectForKey:@"error"]) &&
+                                                     [facebookError isKindOfClass:[NSDictionary class]] &&
+                                                     (json = [facebookError objectForKey:@"message"])) {
                                                      message = [json description];
+                                                     code = [facebookError objectForKey:@"code"];
                                                  }
                                                  
-                                                 // display the message that we have
-                                                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
-                                                                                                 message:message
-                                                                                                delegate:nil
-                                                                                       cancelButtonTitle:@"OK"
-                                                                                       otherButtonTitles:nil];
-                                                 [alert show];
+                                                 if ([code intValue] == 200 && tryReauthIfNeeded) {
+                                                     // We got an error indicating a permission is missing. This could happen if the user has gone into
+                                                     // their Facebook settings and explictly removed a permission they had previously granted. Try reauthorizing
+                                                     // again to get the permission back.
+                                                     [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                                                                behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                                                                                       completionHandler:^(FBSession *session, NSError *error) {
+                                                                                           if (!error) {
+                                                                                               // re-call assuming we now have the permission
+                                                                                               [self postAction:actionPath
+                                                                                                    leftOperand:left
+                                                                                                   rightOperand:right
+                                                                                                         result:result
+                                                                                              tryReauthIfNeeded:NO];
+                                                                                           }
+                                                                                       }];
+                                                 } else {
+                                                     // display the message that we have
+                                                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
+                                                                                                     message:message
+                                                                                                    delegate:nil
+                                                                                           cancelButtonTitle:@"OK"
+                                                                                           otherButtonTitles:nil];
+                                                     [alert show];
+                                                 }
                                              }
                                          }];
         }
@@ -221,7 +246,7 @@
     
     // NOTE! Production applications must host OG objects using a server provisioned for use by the app
     // These OG object URLs were created using the edit open graph feature of the graph tool
-    // at https://www.developers.facebook.com/apps/
+    // at https://developers.facebook.com/apps/
     NSString *trueURL = @"http://samples.ogp.me/369360019783304";
     NSString *falseURL = @"http://samples.ogp.me/369360256449947";
     

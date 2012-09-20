@@ -25,6 +25,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 
 @property (strong, nonatomic) UINavigationController *navController;
 @property (strong, nonatomic) SCViewController *mainViewController;
+@property (strong, nonatomic) SCLoginViewController* loginViewController;
 
 - (void)showLoginView;
 
@@ -35,25 +36,25 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 @synthesize window = _window;
 @synthesize mainViewController = _mainViewController;
 @synthesize navController = _navController;
+@synthesize loginViewController = _loginViewController;
 
 #pragma mark -
 #pragma mark Facebook Login Code
 
+- (void)createAndPresentLoginView {
+    if (self.loginViewController == nil) {
+        self.loginViewController = [[SCLoginViewController alloc] initWithNibName:@"SCLoginViewController"
+                                                                           bundle:nil];
+        UIViewController *topViewController = [self.navController topViewController];
+        [topViewController presentModalViewController:self.loginViewController animated:NO];
+    }
+}
+
 - (void)showLoginView {
-    UIViewController *topViewController = [self.navController topViewController];
-    UIViewController *modalViewController = [topViewController modalViewController];
-    
-    // FBSample logic
-    // If the login screen is not already displayed, display it. If the login screen is displayed, then
-    // getting back here means the login in progress did not successfully complete. In that case,
-    // notify the login view so it can update its UI appropriately.
-    if (![modalViewController isKindOfClass:[SCLoginViewController class]]) {
-        SCLoginViewController* loginViewController = [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" 
-                                                                                            bundle:nil];
-        [topViewController presentModalViewController:loginViewController animated:NO];
+    if (self.loginViewController == nil) {
+        [self performSelector:@selector(createAndPresentLoginView) withObject:nil afterDelay:0.5f];
     } else {
-        SCLoginViewController* loginViewController = (SCLoginViewController*)modalViewController;
-        [loginViewController loginFailed];
+        [self.loginViewController loginFailed];
     }
 }
 
@@ -67,11 +68,12 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     // is opened successfully, hide the login controller and show the main UI.
     switch (state) {
         case FBSessionStateOpen: {
-                UIViewController *topViewController = [self.navController topViewController];
-                if ([[topViewController modalViewController] isKindOfClass:[SCLoginViewController class]]) {
+                if (self.loginViewController != nil) {
+                    UIViewController *topViewController = [self.navController topViewController];
                     [topViewController dismissModalViewControllerAnimated:YES];
+                    self.loginViewController = nil;
                 }
-                
+
                 // FBSample logic
                 // Pre-fetch and cache the friends for the friend picker as soon as possible to improve
                 // responsiveness when the user tags their friends.
@@ -80,14 +82,21 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
             }
             break;
         case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed:
-            // FBSample logic
-            // Once the user has logged out, we want them to be looking at the root view.
-            [self.navController popToRootViewControllerAnimated:NO];
+        case FBSessionStateClosedLoginFailed: {
+                // FBSample logic
+                // Once the user has logged out, we want them to be looking at the root view.
+                UIViewController *topViewController = [self.navController topViewController];
+                UIViewController *modalViewController = [topViewController modalViewController];
+                while (modalViewController != nil) {
+                    [topViewController dismissModalViewControllerAnimated:NO];
+                    modalViewController = [topViewController modalViewController];
+                }
+                [self.navController popToRootViewControllerAnimated:NO];
             
-            [FBSession.activeSession closeAndClearTokenInformation];
+                [FBSession.activeSession closeAndClearTokenInformation];
             
-            [self showLoginView];
+                [self showLoginView];
+            }
             break;
         default:
             break;
