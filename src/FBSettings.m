@@ -19,7 +19,6 @@
 #import "FBSettings.h"
 #import "FBSettings+Internal.h"
 
-#import <AdSupport/AdSupport.h>
 #import <UIKit/UIKit.h>
 
 NSString *const FBLoggingBehaviorFBRequests = @"fb_requests";
@@ -95,15 +94,7 @@ static dispatch_once_t g_publishInstallOnceToken;
     NSDate *lastPing = [defaults objectForKey:pingKey];
     NSString *attributionID = [[UIPasteboard pasteboardWithName:FBAttributionPasteboard create:NO] string];
 
-    // On iOS 6, apple provides an os level identifier.
-    NSString *appleAdId = nil;
-    if ([ASIdentifierManager class]) {
-        ASIdentifierManager *manager = [ASIdentifierManager sharedManager];
-        BOOL isAdvertisingTrackingEnabled = (manager != nil && manager.isAdvertisingTrackingEnabled) ? YES : NO;
-        appleAdId = isAdvertisingTrackingEnabled ? [[manager advertisingIdentifier] UUIDString] : nil;
-    }
-
-    if ((appleAdId || attributionID) && !lastPing) {
+    if (attributionID && !lastPing) {
         FBRequestHandler publishCompletionBlock = ^(FBRequestConnection *connection,
                                                     id result,
                                                     NSError *error) {
@@ -127,13 +118,8 @@ static dispatch_once_t g_publishInstallOnceToken;
                     NSString *publishPath = [NSString stringWithFormat:FBPublishActivityPath, appID, nil];
                     NSMutableDictionary<FBGraphObject> *installActivity = [FBGraphObject graphObject];
                     [installActivity setObject:FBMobileInstallEvent forKey:@"event"];
-                    if (attributionID) {
-                        [installActivity setObject:attributionID forKey:@"attribution"];
-                    }
-                    if (appleAdId) {
-                        [installActivity setObject:appleAdId forKey:@"advertiser_id"];
-                    }
-                    
+                    [installActivity setObject:attributionID forKey:@"attribution"];
+
                     FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];
                     [publishRequest startWithCompletionHandler:publishCompletionBlock];
                 } else {
