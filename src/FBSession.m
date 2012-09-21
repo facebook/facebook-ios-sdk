@@ -895,13 +895,13 @@ static FBSession *g_activeSession = nil;
     
     // app may be asking for nothing, but we will always have an array here
     NSMutableArray *permissionsToUse = nil;
-    if (permissions) {
+    if (permissions != nil && permissions.count > 0) {
         permissionsToUse = [NSMutableArray arrayWithArray:permissions];
     } else {
         permissionsToUse = [NSMutableArray array];
+        // No iOS 6 auth can contain 0 permissions; email is a proxy for basic
+        [permissionsToUse addObject:@"email"];
     }
-    // all iOS6 auths include email
-    [permissionsToUse addObject:@"email"];
     
     NSString *audience;
     switch (defaultAudience) {
