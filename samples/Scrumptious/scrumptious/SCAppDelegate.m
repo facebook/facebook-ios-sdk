@@ -116,7 +116,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 }
 
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    NSArray *permissions = [NSArray arrayWithObjects:@"user_photos", nil];
+    NSArray *permissions = [NSArray arrayWithObjects:@"email", @"user_photos", nil];
     return [FBSession openActiveSessionWithReadPermissions:permissions
                                               allowLoginUI:allowLoginUI
                                          completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
