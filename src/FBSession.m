@@ -87,6 +87,8 @@ static FBSession *g_activeSession = nil;
     BOOL _isInStateTransition;
     BOOL _isFacebookLoginToken;
     BOOL _isOSIntegratedFacebookLoginToken;
+    BOOL _isPendingReauthorization;
+    BOOL _isPendingOpenUrlCallback;
     FBSessionDefaultAudience _defaultDefaultAudience;
 }
 
@@ -246,6 +248,8 @@ static FBSession *g_activeSession = nil;
         // additional setup
         _isInStateTransition = NO;
         _isFacebookLoginToken = NO;
+        _isPendingReauthorization = NO;
+        _isPendingOpenUrlCallback = NO;
         _isOSIntegratedFacebookLoginToken = NO;
         _defaultDefaultAudience = defaultAudience;
         self.attemptedRefreshDate = [NSDate distantPast];
@@ -430,7 +434,8 @@ static FBSession *g_activeSession = nil;
     if (![[url absoluteString] hasPrefix:self.appBaseUrl]) {
         return NO;
     }
-
+    _isPendingOpenUrlCallback = NO;
+    
     // version 3.2.3 of the Facebook app encodes the parameters in the query but
     // version 3.3 and above encode the parameters in the fragment; check first for
     // fragment, and if missing fall back to query
@@ -441,7 +446,7 @@ static FBSession *g_activeSession = nil;
 
     NSDictionary *params = [FBUtility dictionaryByParsingURLQueryPart:query];
     NSString *accessToken = [params objectForKey:@"access_token"];
-    
+
     switch (self.state) {
         case FBSessionStateCreatedOpening:
             return [self handleOpenURLPreOpen:params
@@ -453,6 +458,36 @@ static FBSession *g_activeSession = nil;
         default:
             FBConditionalLog(NO, @"handleOpenURL should not be called once a session has closed");
             return NO;
+    }
+}
+
+- (void)handleDidBecomeActive{
+    //Unexpected to calls to app delegate's applicationDidBecomeActive are
+    // handled by this method. If a pending fast-app-switch [re]authorization
+    // is in flight, it is cancelled. Otherwise, this method is a no-op.
+
+    const FBSessionState state = FBSession.activeSession.state;
+    
+    if (state == FBSessionStateCreated ||
+        state == FBSessionStateClosed ||
+        state == FBSessionStateClosedLoginFailed){
+        return;
+    }
+    
+    if (_isPendingOpenUrlCallback){
+        if (state == FBSessionStateCreatedOpening){
+            //if we're here, user had declined a fast app switch login.
+            [FBSession.activeSession close];
+        }
+        else if (_isPendingReauthorization){
+            //this means the user declined a 'reauthorization' so we need
+            // to clean out the in-flight request.
+            NSError *error = [FBSession errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelled
+                                                         errorCode:nil
+                                                        innerError:nil];
+            [self callReauthorizeHandlerAndClearState:error];
+        }
+        _isPendingOpenUrlCallback = NO;
     }
 }
 
@@ -854,6 +889,8 @@ static FBSession *g_activeSession = nil;
             }
             NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, FBAuthURLPath];
             NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
+            
+            _isPendingOpenUrlCallback = YES;
             didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
 
@@ -862,7 +899,12 @@ static FBSession *g_activeSession = nil;
             [params setValue:nextUrl forKey:@"redirect_uri"];
 
             NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
+            _isPendingOpenUrlCallback = YES;
             didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
+        }
+        //In case openURL failed, make sure we don't still expect a openURL callback.
+        if (!didAuthNWithSystemAccount){
+            _isPendingOpenUrlCallback = NO;
         }
     }
 
@@ -1235,6 +1277,7 @@ static FBSession *g_activeSession = nil;
     // setup handler and permissions and perform the actual reauthorize
     self.reauthorizePermissions = permissions;
     self.reauthorizeHandler = handler;
+    _isPendingReauthorization = YES;
     [self authorizeWithPermissions:permissions
                           behavior:behavior
                    defaultAudience:audience
@@ -1375,6 +1418,8 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error {
+    _isPendingReauthorization = NO;
+    
     // clear state and call handler
     FBSessionReauthorizeResultHandler reauthorizeHandler = [self.reauthorizeHandler retain];
     self.reauthorizeHandler = nil;

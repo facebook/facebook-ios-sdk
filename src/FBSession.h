@@ -394,6 +394,14 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 - (BOOL)handleOpenURL:(NSURL*)url;
 
 /*!
+ @abstract
+ A helper method that is used to provide an implementation for
+ [UIApplicationDelegate applicationDidBecomeActive:] to properly resolve session state for
+ the Facebook Login flow, specifically to support app-switch login.
+*/
+- (void)handleDidBecomeActive;
+
+/*!
  @methodgroup Class methods
  */
 
