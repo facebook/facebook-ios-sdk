@@ -327,10 +327,7 @@
 		0086C9F915434635006B5B39 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Facebook.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -349,10 +346,7 @@
 		0086C9FA15434635006B5B39 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					"$(ARCHS_STANDARD_32_BIT)",
-					armv6,
-				);
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				DSTROOT = /tmp/Facebook.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
