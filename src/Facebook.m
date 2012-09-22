@@ -616,10 +616,10 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     [self updateSessionIfTokenUpdated];
     [self extendAccessTokenIfNeeded];
 
-    FBRequest *request = [[FBRequest alloc] initWithSession:self.session
-                                                  graphPath:graphPath
-                                                 parameters:params
-                                                 HTTPMethod:httpMethod];
+    FBRequest *request = [[[FBRequest alloc] initWithSession:self.session
+                                                   graphPath:graphPath
+                                                  parameters:params
+                                                  HTTPMethod:httpMethod] autorelease];
     [request setDelegate:delegate];
     [request startWithCompletionHandler:nil];
 
