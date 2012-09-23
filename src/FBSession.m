@@ -116,12 +116,12 @@ static FBSession *g_activeSession = nil;
                        FBAppAuth:(BOOL)tryFBAppAuth
                       safariAuth:(BOOL)trySafariAuth
                         fallback:(BOOL)tryFallback
-                    isReauthorize:(BOOL)isReauthorize;
+                   isReauthorize:(BOOL)isReauthorize;
 - (void)authorizeUsingSystemAccountStore:(id)accountStore
                              accountType:(id)accountType
                              permissions:(NSArray*)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                            isReauthorize:(BOOL)isReauthorize;
+                           isReauthorize:(BOOL)isReauthorize;
 - (BOOL)handleOpenURLPreOpen:(NSDictionary*)parameters
                  accessToken:(NSString*)accessToken;
 - (BOOL)handleOpenURLReauthorize:(NSDictionary*)parameters
@@ -152,6 +152,10 @@ static FBSession *g_activeSession = nil;
                                isRead:(BOOL)isRead;
 + (BOOL)logIfFoundUnexpectedPermissions:(NSArray*)permissions
                                  isRead:(BOOL)isRead;
++ (NSArray*)addBasicInfoPermission:(NSArray*)permissions;
++ (BOOL)isPublishPermission:(NSString*)permission;
++ (BOOL)areAllPermissionsReadPermissions:(NSArray*)permissions;
+
 @end
 
 @implementation FBSession : NSObject
@@ -774,7 +778,7 @@ static FBSession *g_activeSession = nil;
                          FBAppAuth:tryFacebookLogin
                         safariAuth:tryFacebookLogin
                           fallback:tryFallback
-                      isReauthorize:isReauthorize];
+                     isReauthorize:isReauthorize];
 }
 
 - (void)authorizeWithPermissions:(NSArray*)permissions
@@ -783,7 +787,7 @@ static FBSession *g_activeSession = nil;
                        FBAppAuth:(BOOL)tryFBAppAuth
                       safariAuth:(BOOL)trySafariAuth 
                         fallback:(BOOL)tryFallback
-                    isReauthorize:(BOOL)isReauthorize {
+                   isReauthorize:(BOOL)isReauthorize {
     // setup parameters for either the safari or inline login
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
@@ -891,16 +895,14 @@ static FBSession *g_activeSession = nil;
                              accountType:(ACAccountType*)accountType
                              permissions:(NSArray*)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                            isReauthorize:(BOOL)isReauthorize {
+                           isReauthorize:(BOOL)isReauthorize {
     
     // app may be asking for nothing, but we will always have an array here
-    NSMutableArray *permissionsToUse = nil;
-    if (permissions != nil && permissions.count > 0) {
-        permissionsToUse = [NSMutableArray arrayWithArray:permissions];
-    } else {
-        permissionsToUse = [NSMutableArray array];
-        // No iOS 6 auth can contain 0 permissions; email is a proxy for basic
-        [permissionsToUse addObject:@"email"];
+    NSArray *permissionsToUse = permissions ? permissions : [NSArray array];
+    if ([FBSession areAllPermissionsReadPermissions:permissions]) {
+        // If we have only read permissions being requested, ensure that basic info
+        //  is among the permissions requested.
+        permissionsToUse = [FBSession addBasicInfoPermission:permissionsToUse];
     }
     
     NSString *audience;
@@ -984,7 +986,7 @@ static FBSession *g_activeSession = nil;
                                                                             FBAppAuth:YES
                                                                            safariAuth:YES
                                                                              fallback:YES
-                                                                         isReauthorize:NO];
+                                                                        isReauthorize:NO];
                                                    } else {
                                                        // create an error object with additional info regarding failed login
                                                        NSError *err = [FBSession errorLoginFailedWithReason:nil
@@ -1043,7 +1045,7 @@ static FBSession *g_activeSession = nil;
                                  FBAppAuth:NO
                                 safariAuth:YES
                                   fallback:NO
-                              isReauthorize:NO];
+                             isReauthorize:NO];
             return YES;
         }
         
@@ -1056,7 +1058,7 @@ static FBSession *g_activeSession = nil;
                                  FBAppAuth:NO
                                 safariAuth:NO
                                   fallback:NO
-                              isReauthorize:NO];
+                             isReauthorize:NO];
             return YES;
         }
         
@@ -1511,21 +1513,41 @@ static FBSession *g_activeSession = nil;
     }
 }
 
++ (BOOL)isPublishPermission:(NSString*)permission {
+    return [permission hasPrefix:@"publish"] ||
+        [permission hasPrefix:@"manage"] ||
+        [permission isEqualToString:@"ads_management"] ||
+        [permission isEqualToString:@"create_event"] ||
+        [permission isEqualToString:@"rsvp_event"];
+}
+
++ (BOOL)areAllPermissionsReadPermissions:(NSArray*)permissions {
+    for (NSString *permission in permissions) {
+        if ([self isPublishPermission:permission]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 + (BOOL)logIfFoundUnexpectedPermissions:(NSArray*)permissions
                                  isRead:(BOOL)isRead {
     BOOL publishPermissionFound = NO;
     BOOL readPermissionFound = NO;
     BOOL result = NO;
     for (NSString *p in permissions) {
-        if (!publishPermissionFound &&
-            ([p hasPrefix:@"publish"] ||
-            [p hasPrefix:@"manage"] ||
-            [p isEqualToString:@"ads_management"])) {
+        if ([self isPublishPermission:p]) {
             publishPermissionFound = YES;
         } else {
             readPermissionFound = YES;
         }
+
+        // If we've found one of each we can stop looking.
+        if (publishPermissionFound && readPermissionFound) {
+            break;
+        }
     }
+
     if (!isRead && readPermissionFound) {
         FBConditionalLog(NO, @"FBSession: a permission request for publish or manage permissions contains unexpected read permissions");
         result = YES;
@@ -1536,6 +1558,21 @@ static FBSession *g_activeSession = nil;
     }
     
     return result;
+}
+
++ (NSArray*)addBasicInfoPermission:(NSArray*)permissions {
+    // When specifying read permissions, be sure basic info is included; "email" is used
+    // as a proxy for basic info permission.
+    for (NSString *p in permissions) {
+        if ([p isEqualToString:@"email"]) {
+            // Already requested, don't need to add it again.
+            return permissions;
+        }
+    }
+
+    NSMutableArray *newPermissions = [[NSMutableArray alloc] initWithArray:permissions];
+    [newPermissions addObject:@"email"];
+    return newPermissions;
 }
 
 + (void)deleteFacebookCookies {
