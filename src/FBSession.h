@@ -234,7 +234,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  Following are the descriptions of the arguments along with their 
  defaults when ommitted.
  
- @param readPermissions  An array of strings representing the permissions to request during the
+ @param permissions  An array of strings representing the permissions to request during the
  authentication flow. A value of nil indicates basic permissions. The default is nil.
  @param defaultAudience  Most applications use FBSessionDefaultAudienceNone here, only specifying an audience when using reauthorize to request publish permissions.
  @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
