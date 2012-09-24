@@ -93,6 +93,10 @@
 		85954AD71558637800FABA9A /* FBGraphObjectTableSelection.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B99CF41549E02A002AEA86 /* FBGraphObjectTableSelection.m */; };
 		85954B86155B452E00FABA9A /* FBGraphObjectPagingLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */; };
 		85954B87155B452E00FABA9A /* FBGraphObjectPagingLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */; };
+		85A928901611187F008699F1 /* FBNativeDialogs.h in Headers */ = {isa = PBXBuildFile; fileRef = 85A9288E1611187F008699F1 /* FBNativeDialogs.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		85A928911611187F008699F1 /* FBNativeDialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A9288F1611187F008699F1 /* FBNativeDialogs.m */; };
+		85A928921611187F008699F1 /* FBNativeDialogs.m in Sources */ = {isa = PBXBuildFile; fileRef = 85A9288F1611187F008699F1 /* FBNativeDialogs.m */; };
+		85A928991611272D008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928981611272D008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AA4B8F1545C54800E5352E /* FBSession+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 85AA4B8E1545C54800E5352E /* FBSession+Internal.h */; };
 		85DF1127156C64140082AA04 /* FBBatchRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85DF1126156C64140082AA04 /* FBBatchRequestTests.m */; };
 		85E4AC7715B63CB600F17346 /* FBUserSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 85E4AC7515B63CB600F17346 /* FBUserSettingsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -228,6 +232,9 @@
 		858E424D1565FA2E00246151 /* FBTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = FBTests.m; path = tests/FBTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		85954B84155B452D00FABA9A /* FBGraphObjectPagingLoader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBGraphObjectPagingLoader.h; sourceTree = "<group>"; };
 		85954B85155B452E00FABA9A /* FBGraphObjectPagingLoader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBGraphObjectPagingLoader.m; sourceTree = "<group>"; };
+		85A9288E1611187F008699F1 /* FBNativeDialogs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBNativeDialogs.h; sourceTree = "<group>"; };
+		85A9288F1611187F008699F1 /* FBNativeDialogs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBNativeDialogs.m; sourceTree = "<group>"; };
+		85A928981611272D008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85AA4B8E1545C54800E5352E /* FBSession+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSession+Internal.h"; sourceTree = "<group>"; };
 		85DF1125156C64140082AA04 /* FBBatchRequestTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBBatchRequestTests.h; path = tests/FBBatchRequestTests.h; sourceTree = "<group>"; };
 		85DF1126156C64140082AA04 /* FBBatchRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBBatchRequestTests.m; path = tests/FBBatchRequestTests.m; sourceTree = "<group>"; };
@@ -302,6 +309,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A928991611272D008699F1 /* Social.framework in Frameworks */,
 				845857A216096ED000CC89E5 /* Accounts.framework in Frameworks */,
 				84B5F11C1552FD3C00A55DDC /* CoreGraphics.framework in Frameworks */,
 				84B5F11A1552F82200A55DDC /* UIKit.framework in Frameworks */,
@@ -340,6 +348,7 @@
 		0867D691FE84028FC02AAC07 /* facebook-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
+				85A928981611272D008699F1 /* Social.framework */,
 				08FB77AEFE84172EC02AAC07 /* FacebookSDK */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				B9CBC54015254CAE0036AA71 /* FacebookSDKTests */,
@@ -439,6 +448,8 @@
 				DDB7C34A15A6181100C8DCE6 /* FBSettings.h */,
 				2A68590515C1E37E001D4EDD /* FBSettings+Internal.h */,
 				DDB7C34B15A6181100C8DCE6 /* FBSettings.m */,
+				85A9288E1611187F008699F1 /* FBNativeDialogs.h */,
+				85A9288F1611187F008699F1 /* FBNativeDialogs.m */,
 				8525A5B8156F2049009F6F3F /* FBTestSession.h */,
 				85F29E9315785D72001F0531 /* FBTestSession+Internal.h */,
 				8525A5B9156F2049009F6F3F /* FBTestSession.m */,
@@ -577,6 +588,7 @@
 				2A68590615C1E37E001D4EDD /* FBSettings+Internal.h in Headers */,
 				85F99E3F15C3751100D807A5 /* FBViewController+Internal.h in Headers */,
 				8440A81615E3F2B800565452 /* FBSDKVersion.h in Headers */,
+				85A928901611187F008699F1 /* FBNativeDialogs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -723,6 +735,7 @@
 				84F9E5A515825CAE001B9CF6 /* FBFriendPickerViewController.m in Sources */,
 				DD6E197815A7A36900B96C9B /* FBSettings.m in Sources */,
 				858DC03415B8D86900797741 /* FBViewController.m in Sources */,
+				85A928921611187F008699F1 /* FBNativeDialogs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -767,6 +780,7 @@
 				DDB7C34D15A6181100C8DCE6 /* FBSettings.m in Sources */,
 				85E4AC7815B63CB600F17346 /* FBUserSettingsViewController.m in Sources */,
 				85E4AC7E15B63CC500F17346 /* FBViewController.m in Sources */,
+				85A928911611187F008699F1 /* FBNativeDialogs.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
