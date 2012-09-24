@@ -244,6 +244,10 @@
     }
 }
 
+- (void)startLocationManager {
+    [self.locationManager startUpdatingLocation];
+}
+
 - (void)centerAndShowActivityIndicator {
     CGRect frame = self.view.frame;
     CGPoint center = CGPointMake(CGRectGetMidX(frame), CGRectGetMidY(frame));
@@ -407,7 +411,6 @@
     // We don't want to be notified of small changes in location, preferring to use our
     // last cached results, if any.
     self.locationManager.distanceFilter = 50;
-    [self.locationManager startUpdatingLocation];
     
     // This avoids a gray background in the table view on iPad.
     if ([self.menuTableView respondsToSelector:@selector(backgroundView)]) {

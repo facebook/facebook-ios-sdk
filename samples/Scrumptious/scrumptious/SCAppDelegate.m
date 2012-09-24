@@ -68,6 +68,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     // is opened successfully, hide the login controller and show the main UI.
     switch (state) {
         case FBSessionStateOpen: {
+                [self.mainViewController startLocationManager];
                 if (self.loginViewController != nil) {
                     UIViewController *topViewController = [self.navController topViewController];
                     [topViewController dismissModalViewControllerAnimated:YES];

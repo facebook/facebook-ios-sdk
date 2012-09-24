@@ -25,4 +25,6 @@ typedef void(^SelectItemCallback)(id sender, id selectedItem);
 // are with and where they are, and choose a photo for attaching to an Open Graph Action.
 @interface SCViewController : UIViewController <FBUserSettingsDelegate>
 
+- (void)startLocationManager;
+
 @end
