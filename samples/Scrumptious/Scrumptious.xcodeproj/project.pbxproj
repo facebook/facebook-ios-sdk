@@ -18,6 +18,7 @@
 		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
 		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
 		8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3C15816CCC00056680 /* AddressBook.framework */; };
+		85A928E316114706008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928E216114706008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC71602B411008AD9A0 /* Default-568h@2x.png */; };
 		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
 		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
@@ -53,6 +54,7 @@
 		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
+		85A928E216114706008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85C69DC71602B411008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "scrumptious/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		85C69DC81602B411008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = scrumptious/Default.png; sourceTree = SOURCE_ROOT; };
 		85C69DC91602B411008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "scrumptious/Default@2x.png"; sourceTree = SOURCE_ROOT; };
@@ -86,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A928E316114706008699F1 /* Social.framework in Frameworks */,
 				84A5DA9615A68A3D00FE54AF /* Accounts.framework in Frameworks */,
 				B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */,
 				B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */,
@@ -102,6 +105,7 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
+				85A928E216114706008699F1 /* Social.framework */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
 				B9CD0A70150EA4DD00560A93 /* Products */,

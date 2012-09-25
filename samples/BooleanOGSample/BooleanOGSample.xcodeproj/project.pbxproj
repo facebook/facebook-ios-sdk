@@ -24,6 +24,7 @@
 		84070D421540AA2B00E39703 /* BOGSecondViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84070D401540AA2B00E39703 /* BOGSecondViewController_iPhone.xib */; };
 		84070D451540AA2B00E39703 /* BOGSecondViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84070D431540AA2B00E39703 /* BOGSecondViewController_iPad.xib */; };
 		84605AB615A77C9300197AA7 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84605AB515A77C9300197AA7 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85A928C716114684008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928C616114684008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB4CA158F9B8B000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4C6158F9B8B000AF7F5 /* Icon-72.png */; };
 		85AFB4CB158F9B8B000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4C7158F9B8B000AF7F5 /* Icon-72@2x.png */; };
 		85AFB4CC158F9B8B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4C8158F9B8B000AF7F5 /* Icon.png */; };
@@ -61,6 +62,7 @@
 		84070D441540AA2B00E39703 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/BOGSecondViewController_iPad.xib; sourceTree = "<group>"; };
 		8409694E1545D10B00479AD9 /* OGProtocols.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OGProtocols.h; sourceTree = "<group>"; };
 		84605AB515A77C9300197AA7 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		85A928C616114684008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85AFB4C6158F9B8B000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB4C7158F9B8B000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4C8158F9B8B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A928C716114684008699F1 /* Social.framework in Frameworks */,
 				84605AB615A77C9300197AA7 /* Accounts.framework in Frameworks */,
 				84070D1B1540AA2B00E39703 /* UIKit.framework in Frameworks */,
 				84070D1D1540AA2B00E39703 /* Foundation.framework in Frameworks */,
@@ -92,6 +95,7 @@
 		84070D0B1540AA2B00E39703 = {
 			isa = PBXGroup;
 			children = (
+				85A928C616114684008699F1 /* Social.framework */,
 				84070D201540AA2B00E39703 /* BooleanOGSample */,
 				84070D191540AA2B00E39703 /* Frameworks */,
 				84070D171540AA2B00E39703 /* Products */,

@@ -25,7 +25,7 @@
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
 		84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84750A9F160A259400C1A13D /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		84750AA3160A259E00C1A13D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84750AA2160A259E00C1A13D /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85A928C016114663008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928BF16114663008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB4E4158F9C5B000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */; };
 		85AFB4E5158F9C5B000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */; };
 		85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E2158F9C5B000AF7F5 /* Icon.png */; };
@@ -62,7 +62,7 @@
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		84750A9F160A259400C1A13D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
-		84750AA2160A259E00C1A13D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		85A928BF16114663008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4E2158F9C5B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -97,6 +97,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A928C016114663008699F1 /* Social.framework in Frameworks */,
 				84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */,
 				30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */,
 				30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */,
@@ -120,6 +121,7 @@
 		30EA734E13F5D21B003DC0D2 = {
 			isa = PBXGroup;
 			children = (
+				85A928BF16114663008699F1 /* Social.framework */,
 				30EA73CC13F5D50D003DC0D2 /* FBConnect */,
 				30EA736313F5D21B003DC0D2 /* Hackbook */,
 				30EA735C13F5D21B003DC0D2 /* Frameworks */,

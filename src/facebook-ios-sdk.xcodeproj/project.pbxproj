@@ -360,6 +360,7 @@
 		0867D69AFE84028FC02AAC07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A928981611272D008699F1 /* Social.framework */,
 				845857A116096ED000CC89E5 /* Accounts.framework */,
 				85A928981611272D008699F1 /* Social.framework */,
 				B9CC137215266B9000443948 /* QuartzCore.framework */,

@@ -16,7 +16,14 @@
 
 #import "FBNativeDialogs.h"
 #import "FBSession.h"
+#import "FBError.h"
 #import "Social/Social.h"
+
+@interface FBNativeDialogs ()
+
++ (NSError*)createError:(NSString*)reason;
+
+@end
 
 @implementation FBNativeDialogs
 
@@ -58,30 +65,38 @@
                               handler:(FBShareDialogHandler)handler {
 
     // Can we even call the iOS API?
-    Class composeViewControllerClass = NSClassFromString(@"SLComposeViewController");
+    Class composeViewControllerClass = [SLComposeViewController class];
     if (composeViewControllerClass == nil ||
         [composeViewControllerClass isAvailableForServiceType:SLServiceTypeFacebook] == NO) {
-        // TODO call handler with error
+        if (handler) {
+            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogNotSupported]);
+        }
         return NO;
     }
     
-    if (session != nil) {
+    if (session == nil) {
         // No session provided -- do we have an activeSession? We must either have a session that
         // was authenticated with native auth, or no session at all (in which case the app is
         // running unTOSed and we will rely on the OS to authenticate/TOS the user).
         session = [FBSession activeSession];
     }
     if (session != nil) {
-        // TODO: check that session is integrated auth and open, return NO otherwise
-        if (!session.isOpen) {
-            // TODO call handler with error
+        // If we have an open session and it's not native auth, fail. If the session is
+        // not open, attempting to put up the dialog will prompt the user to configure
+        // their account.
+        if (session.isOpen && session.loginType != FBSessionLoginTypeSystemAccount) {
+            if (handler) {
+                handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogInvalidForSession]);
+            }
             return NO;
         }
     }
     
     SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:SLServiceTypeFacebook];
     if (composeViewController == nil) {
-        // TODO call handler with error
+        if (handler) {
+            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogCantBeDisplayed]);
+        }
         return NO;
     }
     
@@ -107,6 +122,14 @@
     
     [viewController presentModalViewController:composeViewController animated:YES];
     return YES;
+}
+
++ (NSError*)createError:(NSString*)reason {
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:reason, FBErrorNativeDialogReasonKey, nil];
+    NSError *error = [NSError errorWithDomain:FacebookSDKDomain
+                                         code:FBErrorNativeDialog
+                                     userInfo:userInfo];
+    return error;
 }
 
 @end
