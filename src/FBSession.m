@@ -87,8 +87,7 @@ static FBSession *g_activeSession = nil;
     BOOL _isInStateTransition;
     BOOL _isFacebookLoginToken;
     BOOL _isOSIntegratedFacebookLoginToken;
-    BOOL _isPendingReauthorization;
-    BOOL _isPendingOpenUrlCallback;
+    FBSessionLoginType _loginTypeOfPendingOpenUrlCallback;
     FBSessionDefaultAudience _defaultDefaultAudience;
 }
 
@@ -99,6 +98,7 @@ static FBSession *g_activeSession = nil;
 @property(readwrite, copy)      NSString *accessToken;
 @property(readwrite, copy)      NSDate *expirationDate;
 @property(readwrite, copy)      NSArray *permissions;
+@property(readwrite)            FBSessionLoginType loginType;
 
 // private properties
 @property(readwrite, retain)    FBSessionTokenCachingStrategy *tokenCachingStrategy;
@@ -125,7 +125,8 @@ static FBSession *g_activeSession = nil;
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize;
 - (BOOL)handleOpenURLPreOpen:(NSDictionary*)parameters
-                 accessToken:(NSString*)accessToken;
+                 accessToken:(NSString*)accessToken
+                   loginType:(FBSessionLoginType)loginType;
 - (BOOL)handleOpenURLReauthorize:(NSDictionary*)parameters
                      accessToken:(NSString*)accessToken;
 - (void)completeReauthorizeWithAccessToken:(NSString*)accessToken
@@ -166,6 +167,7 @@ static FBSession *g_activeSession = nil;
             // public properties
             appID = _appID,
             permissions = _permissions,
+            loginType = _loginType,
 
             // following properties use manual KVO -- changes to names require
             // changes to static property name variables (e.g. FBisOpenPropertyName)
@@ -248,13 +250,13 @@ static FBSession *g_activeSession = nil;
         // additional setup
         _isInStateTransition = NO;
         _isFacebookLoginToken = NO;
-        _isPendingReauthorization = NO;
-        _isPendingOpenUrlCallback = NO;
+        _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
         _isOSIntegratedFacebookLoginToken = NO;
         _defaultDefaultAudience = defaultAudience;
         self.attemptedRefreshDate = [NSDate distantPast];
         self.refreshDate = nil;
         self.state = FBSessionStateCreated;
+        self.loginType = FBSessionLoginTypeNone;
         self.affinitizedThread = [NSThread currentThread];
         [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                               withTag:self];
@@ -281,13 +283,15 @@ static FBSession *g_activeSession = nil;
                 // if we have cached an optional refresh date or Facebook Login indicator, pick them up here
                 self.refreshDate = [tokenInfo objectForKey:FBTokenInformationRefreshDateKey];
                 _isFacebookLoginToken = [[tokenInfo objectForKey:FBTokenInformationIsFacebookLoginKey] boolValue];
-                _isOSIntegratedFacebookLoginToken = [[tokenInfo objectForKey:FBTokenInformationIsOSIntegratedFacebookLoginKey] boolValue];
+                FBSessionLoginType loginType = [[tokenInfo objectForKey:FBTokenInformationLoginTypeLoginKey] intValue];
+                _isOSIntegratedFacebookLoginToken = loginType == FBSessionLoginTypeSystemAccount;
                 
                 // set the state and token info
                 [self transitionToState:FBSessionStateCreatedTokenLoaded
                          andUpdateToken:cachedToken
                       andExpirationDate:cachedTokenExpirationDate
-                            shouldCache:NO];
+                            shouldCache:NO
+                              loginType:loginType];
             } else {
                 // else this token is expired and should be cleared from cache
                 [tokenCachingStrategy clearToken];
@@ -346,7 +350,8 @@ static FBSession *g_activeSession = nil;
         [self transitionToState:FBSessionStateCreatedOpening
                  andUpdateToken:nil
               andExpirationDate:nil
-                    shouldCache:NO];
+                    shouldCache:NO
+                      loginType:FBSessionLoginTypeNone];
 
         [self authorizeWithPermissions:self.permissions
                               behavior:behavior
@@ -361,7 +366,8 @@ static FBSession *g_activeSession = nil;
                                           error:nil
                                           token:nil
                                  expirationDate:nil
-                                    shouldCache:NO];
+                                    shouldCache:NO
+                                      loginType:FBSessionLoginTypeNone];
     }
 }
 
@@ -408,7 +414,8 @@ static FBSession *g_activeSession = nil;
                                       error:nil
                                       token:nil
                              expirationDate:nil
-                                shouldCache:NO];
+                                shouldCache:NO
+                                  loginType:FBSessionLoginTypeNone];
 }
 
 - (void)closeAndClearTokenInformation {
@@ -423,7 +430,8 @@ static FBSession *g_activeSession = nil;
                                           error:nil
                                           token:nil
                                  expirationDate:nil
-                                    shouldCache:NO];
+                                    shouldCache:NO
+                                      loginType:FBSessionLoginTypeNone];
     }
 }
 
@@ -434,7 +442,8 @@ static FBSession *g_activeSession = nil;
     if (![[url absoluteString] hasPrefix:self.appBaseUrl]) {
         return NO;
     }
-    _isPendingOpenUrlCallback = NO;
+    FBSessionLoginType loginType = _loginTypeOfPendingOpenUrlCallback;
+    _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
     
     // version 3.2.3 of the Facebook app encodes the parameters in the query but
     // version 3.3 and above encode the parameters in the fragment; check first for
@@ -450,7 +459,8 @@ static FBSession *g_activeSession = nil;
     switch (self.state) {
         case FBSessionStateCreatedOpening:
             return [self handleOpenURLPreOpen:params
-                                  accessToken:accessToken];
+                                  accessToken:accessToken
+                                    loginType:loginType];
         case FBSessionStateOpen:
         case FBSessionStateOpenTokenExtended:
             return [self handleOpenURLReauthorize:params
@@ -474,12 +484,11 @@ static FBSession *g_activeSession = nil;
         return;
     }
     
-    if (_isPendingOpenUrlCallback){
+    if (_loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeNone){
         if (state == FBSessionStateCreatedOpening){
             //if we're here, user had declined a fast app switch login.
             [FBSession.activeSession close];
-        }
-        else if (_isPendingReauthorization){
+        } else {
             //this means the user declined a 'reauthorization' so we need
             // to clean out the in-flight request.
             NSError *error = [FBSession errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelled
@@ -487,7 +496,7 @@ static FBSession *g_activeSession = nil;
                                                         innerError:nil];
             [self callReauthorizeHandlerAndClearState:error];
         }
-        _isPendingOpenUrlCallback = NO;
+        _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
     }
 }
 
@@ -625,7 +634,7 @@ static FBSession *g_activeSession = nil;
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
               shouldCache:(BOOL)shouldCache
-{
+                loginType:(FBSessionLoginType)loginType {
 
     // is this a valid transition?
     BOOL isValidTransition;
@@ -642,6 +651,11 @@ static FBSession *g_activeSession = nil;
                                  statePrior == FBSessionStateCreatedTokenLoaded ||
                                  statePrior == FBSessionStateCreatedOpening
                                  );
+            // if we are just about to transition to open, and the caller
+            // wants to specify a login type, then we set the type
+            if (isValidTransition && loginType != FBSessionLoginTypeNone) {
+                self.loginType = loginType;
+            }
             break;
         case FBSessionStateCreatedOpening:
         case FBSessionStateCreatedTokenLoaded:
@@ -755,9 +769,7 @@ static FBSession *g_activeSession = nil;
                 [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsFacebookLoginKey];
             }
             
-            if (_isOSIntegratedFacebookLoginToken) {
-                [tokenInfo setObject:[NSNumber numberWithBool:YES] forKey:FBTokenInformationIsOSIntegratedFacebookLoginKey];
-            }
+            [tokenInfo setObject:[NSNumber numberWithInt:self.loginType] forKey:FBTokenInformationLoginTypeLoginKey];
             
             if (self.permissions) {
                 [tokenInfo setObject:self.permissions forKey:FBTokenInformationPermissionsKey];
@@ -890,7 +902,7 @@ static FBSession *g_activeSession = nil;
             NSString *urlPrefix = [NSString stringWithFormat:@"%@://%@", scheme, FBAuthURLPath];
             NSString *fbAppUrl = [FBRequest serializeURL:urlPrefix params:params];
             
-            _isPendingOpenUrlCallback = YES;
+            _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeFacebookApplication;
             didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
 
@@ -899,12 +911,12 @@ static FBSession *g_activeSession = nil;
             [params setValue:nextUrl forKey:@"redirect_uri"];
 
             NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
-            _isPendingOpenUrlCallback = YES;
+            _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeFacebookViaSafari;
             didAuthNWithSystemAccount = [[UIApplication sharedApplication] openURL:[NSURL URLWithString:fbAppUrl]];
         }
         //In case openURL failed, make sure we don't still expect a openURL callback.
         if (!didAuthNWithSystemAccount){
-            _isPendingOpenUrlCallback = NO;
+            _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
         }
     }
 
@@ -928,7 +940,8 @@ static FBSession *g_activeSession = nil;
                                               error:error
                                               token:nil
                                      expirationDate:nil
-                                        shouldCache:NO];
+                                        shouldCache:NO
+                                          loginType:FBSessionLoginTypeNone];
         }
     }
 }
@@ -1018,7 +1031,8 @@ static FBSession *g_activeSession = nil;
                                                                                          token:oauthToken
                                                         // BUG: we need a means for fetching the expiration date of the token
                                                                                 expirationDate:[NSDate distantFuture]
-                                                                                   shouldCache:YES];
+                                                                                   shouldCache:YES
+                                                                                     loginType:FBSessionLoginTypeSystemAccount];
                                                    } else if (isUntosedDevice) {
                                                        // even when OS integrated auth is possible we use native-app/safari
                                                        // login if the user has not signed on to Facebook via the OS
@@ -1040,7 +1054,8 @@ static FBSession *g_activeSession = nil;
                                                                                          error:err
                                                                                          token:nil
                                                                                 expirationDate:nil
-                                                                                   shouldCache:NO];
+                                                                                   shouldCache:NO
+                                                                                     loginType:FBSessionLoginTypeNone];
                                                    }
                                                } else { // reauth case
                                                    if (oauthToken) {
@@ -1073,7 +1088,8 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)handleOpenURLPreOpen:(NSDictionary*)parameters
-                 accessToken:(NSString*)accessToken {
+                 accessToken:(NSString*)accessToken
+                   loginType:(FBSessionLoginType)loginType {
     // if the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
         NSString *errorReason = [parameters objectForKey:@"error"];
@@ -1118,7 +1134,8 @@ static FBSession *g_activeSession = nil;
                                           error:error
                                           token:nil
                                  expirationDate:nil
-                                    shouldCache:NO];
+                                    shouldCache:NO
+                                      loginType:FBSessionLoginTypeNone];
     } else {
         
         // we have an access token, so parse the expiration date.
@@ -1139,7 +1156,8 @@ static FBSession *g_activeSession = nil;
                                           error:nil
                                           token:accessToken
                                  expirationDate:expirationDate
-                                    shouldCache:YES];
+                                    shouldCache:YES
+                                      loginType:loginType];
     }
     return YES;   
 }
@@ -1277,7 +1295,6 @@ static FBSession *g_activeSession = nil;
     // setup handler and permissions and perform the actual reauthorize
     self.reauthorizePermissions = permissions;
     self.reauthorizeHandler = handler;
-    _isPendingReauthorization = YES;
     [self authorizeWithPermissions:permissions
                           behavior:behavior
                    defaultAudience:audience
@@ -1299,7 +1316,8 @@ static FBSession *g_activeSession = nil;
                                       error:nil
                                       token:accessToken
                              expirationDate:expirationDate
-                                shouldCache:YES];
+                                shouldCache:YES
+                                  loginType:FBSessionLoginTypeNone];
     
     // no error, ack a completed permission upgrade
     [self callReauthorizeHandlerAndClearState:nil];
@@ -1315,7 +1333,8 @@ static FBSession *g_activeSession = nil;
                                       error:nil
                                       token:token ? token : self.accessToken
                              expirationDate:expireDate
-                                shouldCache:YES];
+                                shouldCache:YES
+                                  loginType:FBSessionLoginTypeNone];
 }
 
 - (BOOL)shouldExtendAccessToken {
@@ -1344,7 +1363,8 @@ static FBSession *g_activeSession = nil;
                                       error:nil
                                       token:accessToken
                              expirationDate:expirationDate
-                                shouldCache:YES];
+                                shouldCache:YES
+                                  loginType:FBSessionLoginTypeWebView];
 }
 
 // core handler for inline UX flow
@@ -1366,7 +1386,8 @@ static FBSession *g_activeSession = nil;
                                       error:error
                                       token:nil
                              expirationDate:nil
-                                shouldCache:NO];
+                                shouldCache:NO
+                                  loginType:FBSessionLoginTypeNone];
 }
 
 // private helpers
@@ -1376,14 +1397,16 @@ static FBSession *g_activeSession = nil;
                                     error:(NSError*)error
                                     token:(NSString*)token
                            expirationDate:(NSDate*)date
-                              shouldCache:(BOOL)shouldCache {
+                              shouldCache:(BOOL)shouldCache
+                                loginType:(FBSessionLoginType)loginType {
 
     
     // lets get the state transition out of the way
     BOOL didTransition = [self transitionToState:status
                                   andUpdateToken:token
                                andExpirationDate:date
-                                     shouldCache:shouldCache];
+                                     shouldCache:shouldCache
+                                       loginType:loginType];
 
     // if we are given a handler, we promise to call it once per transition from open to close
 
@@ -1418,7 +1441,6 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error {
-    _isPendingReauthorization = NO;
     
     // clear state and call handler
     FBSessionReauthorizeResultHandler reauthorizeHandler = [self.reauthorizeHandler retain];

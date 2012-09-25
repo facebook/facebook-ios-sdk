@@ -115,7 +115,7 @@ extern NSString *const FBTokenInformationUserFBIDKey;
 extern NSString *const FBTokenInformationIsFacebookLoginKey;
 
 // The key to use with token information dictionaries to determine whether the token was fetched via the OS
-extern NSString *const FBTokenInformationIsOSIntegratedFacebookLoginKey;
+extern NSString *const FBTokenInformationLoginTypeLoginKey;
 
 // The key to use with token information dictionaries to get the latest known permissions
 extern NSString *const FBTokenInformationPermissionsKey;

@@ -228,7 +228,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                                error:error
                                                token:nil
                                       expirationDate:nil
-                                         shouldCache:NO];
+                                         shouldCache:NO
+                                           loginType:FBSessionLoginTypeNone];
          }
      }];
 }
@@ -239,7 +240,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                       error:nil
                                       token:token
                              expirationDate:[NSDate distantFuture]
-                                shouldCache:NO];
+                                shouldCache:NO
+                                  loginType:FBSessionLoginTypeTestUser];
 }
 
 // We raise exceptions when things go wrong here, because this is intended for use only
@@ -411,14 +413,15 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
               shouldCache:(BOOL)shouldCache
-{
+                loginType:(FBSessionLoginType)loginType {
     // in case we need these after the transition
     NSString *userID = self.testUserID;
 
     BOOL didTransition = [super transitionToState:state
                                    andUpdateToken:token
                                 andExpirationDate:date
-                                      shouldCache:shouldCache];
+                                      shouldCache:shouldCache
+                                        loginType:loginType];
 
     if (didTransition && FB_ISSESSIONSTATETERMINAL(self.state)) {
         if (self.mode == FBTestSessionModePrivate) {

@@ -348,7 +348,6 @@
 		0867D691FE84028FC02AAC07 /* facebook-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
-				85A928981611272D008699F1 /* Social.framework */,
 				08FB77AEFE84172EC02AAC07 /* FacebookSDK */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				B9CBC54015254CAE0036AA71 /* FacebookSDKTests */,
@@ -362,6 +361,7 @@
 			isa = PBXGroup;
 			children = (
 				845857A116096ED000CC89E5 /* Accounts.framework */,
+				85A928981611272D008699F1 /* Social.framework */,
 				B9CC137215266B9000443948 /* QuartzCore.framework */,
 				B9CBC53715254AC50036AA71 /* libsqlite3.dylib */,
 				B9CBC53115253F6D0036AA71 /* SenTestingKit.framework */,
@@ -422,6 +422,8 @@
 				AEA93B0711D5293B000A4545 /* FBLoginDialog.m */,
 				840F658B159B3A47005D41AA /* FBLoginView.h */,
 				840F658E159B3A64005D41AA /* FBLoginView.m */,
+				85A9288E1611187F008699F1 /* FBNativeDialogs.h */,
+				85A9288F1611187F008699F1 /* FBNativeDialogs.m */,
 				8409694B1541F41100479AD9 /* FBOpenGraphAction.h */,
 				84D0A6571581A1C000A2FA5E /* FBPlacePickerCacheDescriptor.h */,
 				84D0A6551581A1A600A2FA5E /* FBPlacePickerCacheDescriptor.m */,
@@ -448,8 +450,6 @@
 				DDB7C34A15A6181100C8DCE6 /* FBSettings.h */,
 				2A68590515C1E37E001D4EDD /* FBSettings+Internal.h */,
 				DDB7C34B15A6181100C8DCE6 /* FBSettings.m */,
-				85A9288E1611187F008699F1 /* FBNativeDialogs.h */,
-				85A9288F1611187F008699F1 /* FBNativeDialogs.m */,
 				8525A5B8156F2049009F6F3F /* FBTestSession.h */,
 				85F29E9315785D72001F0531 /* FBTestSession+Internal.h */,
 				8525A5B9156F2049009F6F3F /* FBTestSession.m */,

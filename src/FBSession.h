@@ -131,6 +131,34 @@ typedef enum {
     FBSessionDefaultAudienceEveryone            = 30,
 } FBSessionDefaultAudience;
 
+/*!
+ @typedef FBSessionLoginType enum
+ 
+ @abstract
+ Used as the type of the loginType property in order to specify what underlying technology was used to
+ login the user.
+ 
+ @discussion
+ The FBSession object is an abstraction over five distinct mechanisms. This enum allows an application
+ to test for the mechanism used by a particular instance of FBSession. Usually the mechanism used for a
+ given login does not matter, however for certain capabilities, the type of login can impact the behavior
+ of other Facebook functionality.
+ */
+typedef enum {
+    /*! A login type has not yet been established */
+    FBSessionLoginTypeNone                      = 0,
+    /*! A system integrated account was used to log the user into the application */
+    FBSessionLoginTypeSystemAccount             = 1,
+    /*! The Facebook native application was used to log the user into the application */
+    FBSessionLoginTypeFacebookApplication       = 2,
+    /*! Safari was used to log the user into the application */
+    FBSessionLoginTypeFacebookViaSafari         = 3,
+    /*! A web view was used to log the user into the application */
+    FBSessionLoginTypeWebView                   = 4,
+    /*! A test user was used to create an open session */
+    FBSessionLoginTypeTestUser                  = 5,
+} FBSessionLoginType;
+
 /*! 
  @typedef
  
@@ -275,6 +303,9 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 /*! @abstract The permissions granted to the access token during the authentication flow. */
 @property(readonly, copy) NSArray *permissions;
+
+/*! @abstract Specifies the login type used to authenticate the user. */
+@property(readonly) FBSessionLoginType loginType;
 
 /*!
  @methodgroup Instance methods
