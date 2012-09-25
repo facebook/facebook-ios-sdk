@@ -154,7 +154,7 @@
     
     // if it is available to us, we will post using the native dialog
     BOOL displayedNativeDialog = [FBNativeDialogs presentShareDialogModallyFrom:self
-                                                                    initialText:message
+                                                                    initialText:nil
                                                                           image:nil
                                                                             url:nil
                                                                         handler:nil];
