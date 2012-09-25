@@ -52,7 +52,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 
 - (void)showLoginView {
     if (self.loginViewController == nil) {
-        [self performSelector:@selector(createAndPresentLoginView) withObject:nil afterDelay:0.5f];
+        [self createAndPresentLoginView];
     } else {
         [self.loginViewController loginFailed];
     }
@@ -88,15 +88,20 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                 // Once the user has logged out, we want them to be looking at the root view.
                 UIViewController *topViewController = [self.navController topViewController];
                 UIViewController *modalViewController = [topViewController modalViewController];
-                while (modalViewController != nil) {
+                if (modalViewController != nil) {
                     [topViewController dismissModalViewControllerAnimated:NO];
-                    modalViewController = [topViewController modalViewController];
                 }
                 [self.navController popToRootViewControllerAnimated:NO];
             
                 [FBSession.activeSession closeAndClearTokenInformation];
             
-                [self showLoginView];
+                // if the token goes invalid we want to switch right back to
+                // the login view, however we do it with a slight delay in order to
+                // account for a race between this and the login view dissappearing
+                // a moment before
+                [self performSelector:@selector(showLoginView)
+                           withObject:nil
+                           afterDelay:0.5f];
             }
             break;
         default:
