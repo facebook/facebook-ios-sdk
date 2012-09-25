@@ -41,6 +41,7 @@
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 #import "FBCacheDescriptor.h"
+#import "FBNativeDialogs.h"
 
 /*!
  @header

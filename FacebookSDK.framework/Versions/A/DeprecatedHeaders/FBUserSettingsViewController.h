@@ -15,9 +15,8 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FBSession.h"
 #import "FBViewController.h"
-
-@class FBSession;
 
 /*!
  @protocol 
@@ -94,7 +93,33 @@
  @abstract
  The permissions to request if the user logs in via this view.
  */
-@property (nonatomic, retain) NSArray *permissions;
+@property (nonatomic, copy) NSArray *permissions __attribute__((deprecated));
+
+/*!
+ @abstract
+ The read permissions to request if the user logs in via this view.
+ 
+ @discussion
+ Note, that if read permissions are specified, then publish permissions should not be specified. 
+ */
+@property (nonatomic, copy) NSArray *readPermissions;
+
+/*!
+ @abstract
+ The publish permissions to request if the user logs in via this view.
+ 
+ @discussion
+ Note, that a defaultAudience value of FBSessionDefaultAudienceOnlyMe, FBSessionDefaultAudienceEveryone, or
+ FBSessionDefaultAudienceFriends should be set if publish permissions are specified. Additionally, when publish
+ permissions are specified, then read should not be specified.
+ */
+@property (nonatomic, copy) NSArray *publishPermissions;
+
+/*!
+ @abstract
+ The default audience to use, if publish permissions are requested at login time.
+ */
+@property (nonatomic, assign) FBSessionDefaultAudience defaultAudience;
 
 @end
 
