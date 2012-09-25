@@ -124,7 +124,6 @@
 		30EA734E13F5D21B003DC0D2 = {
 			isa = PBXGroup;
 			children = (
-				85A928BF16114663008699F1 /* Social.framework */,
 				30EA73CC13F5D50D003DC0D2 /* FBConnect */,
 				30EA736313F5D21B003DC0D2 /* Hackbook */,
 				30EA735C13F5D21B003DC0D2 /* Frameworks */,
@@ -143,6 +142,7 @@
 		30EA735C13F5D21B003DC0D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A928BF16114663008699F1 /* Social.framework */,
 				B9A4167F16113EC3001E7A77 /* AdSupport.framework */,
 				84750A9F160A259400C1A13D /* Accounts.framework */,
 				DD37EA8E15ABA4920015966B /* FacebookSDK.framework */,

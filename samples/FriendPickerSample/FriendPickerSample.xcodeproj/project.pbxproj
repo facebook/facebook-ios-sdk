@@ -80,7 +80,6 @@
 		E2D6B80315413A560050835F = {
 			isa = PBXGroup;
 			children = (
-				85A928B81611462C008699F1 /* Social.framework */,
 				E2D6B81815413A570050835F /* FriendPickerSample */,
 				E2D6B81115413A570050835F /* Frameworks */,
 				E2D6B80F15413A570050835F /* Products */,
@@ -98,6 +97,7 @@
 		E2D6B81115413A570050835F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A928B81611462C008699F1 /* Social.framework */,
 				B9A4167816113EAE001E7A77 /* AdSupport.framework */,
 				DD37EA8515ABA4670015966B /* FacebookSDKResources.bundle */,
 				DD37EA8715ABA46B0015966B /* FacebookSDK.framework */,

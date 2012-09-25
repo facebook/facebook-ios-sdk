@@ -101,7 +101,6 @@
 		856DB03E153393C3006F6A33 = {
 			isa = PBXGroup;
 			children = (
-				85A928F016114738008699F1 /* Social.framework */,
 				856DB053153393C3006F6A33 /* SwitchUserSample */,
 				856DB04C153393C3006F6A33 /* Frameworks */,
 				856DB04A153393C3006F6A33 /* Products */,
@@ -119,6 +118,7 @@
 		856DB04C153393C3006F6A33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A928F016114738008699F1 /* Social.framework */,
 				B9A416B016113F3E001E7A77 /* AdSupport.framework */,
 				DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */,
 				DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */,

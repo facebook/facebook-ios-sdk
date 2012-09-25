@@ -40,9 +40,6 @@
                         withDefault:(NSString *)value
                            inBundle:(NSBundle *)bundle;
 
-+ (void)logInsightsEvent:(NSString *)eventName
-                 session:(FBSession *)session;
-
 @end
  
 #define FBConditionalLog(condition, desc, ...) \

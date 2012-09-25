@@ -23,14 +23,6 @@
 
 @implementation FBUtility
 
-typedef enum {
-    AttributionIDSendNotChecked,
-    AttributionIDSendAllowed,
-    AttributionIDSendDisallowed
-} AttributionIDSendStatus;
-
-static AttributionIDSendStatus g_attributionIDSendStatus = AttributionIDSendNotChecked;
-
 // finishes the parsing job that NSURL starts
 + (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString {
     
@@ -152,99 +144,5 @@ static AttributionIDSendStatus g_attributionIDSendStatus = AttributionIDSendNotC
     }
     return result;
 }
-
-+ (void)logInsightsEvent:(NSString *)eventName
-                 session:(FBSession *)session {
-    
-    NSString *appID = [FBSession defaultAppID];
-    if (!appID) {
-        return;
-    }
-    
-    // Need to check whether attribution send is needed or allowed.
-    if (session || g_attributionIDSendStatus != AttributionIDSendNotChecked) {
-        
-        // Have the information we need, send immediately.
-        [self sendInsightsEvent:eventName session:session];
-        
-    } else {
-        
-
-        NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution", appID, nil];
-        FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
-        
-        [pingRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-            
-            @try {
-                
-                if (!error &&
-                    [result respondsToSelector:@selector(objectForKey:)] &&
-                    [[result objectForKey:@"supports_attribution"] boolValue]) {
-                    
-                    g_attributionIDSendStatus = AttributionIDSendAllowed;
-                    
-                } else {
-                    
-                    // Any error or malformed response winds up here.
-                    g_attributionIDSendStatus = AttributionIDSendDisallowed;
-                    
-                }
-                
-                [self sendInsightsEvent:eventName session:session];
-                
-            } @catch (NSException *blockException) {
-                
-                NSLog(@"Failure during logInsightsEvent ping callback: '%@'", blockException.reason);
-                
-            }
-         }
-        ];
-    }
-}
-
-+ (void)sendInsightsEvent:(NSString *)eventName
-                  session:(FBSession *)session {
-    
-    @try {
-        
-        NSString *graphPath = [NSString stringWithFormat:@"%@/activities", [FBSession defaultAppID]];
-        
-        NSString *attributionID = @"";
-        if (g_attributionIDSendStatus == AttributionIDSendAllowed) {
-            attributionID = [[UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO] string] ?: @"";
-        }
-
-        NSArray *customEvents = @[
-          @{ @"_eventName" : eventName }
-        ];
-        
-        NSError *myError = nil;
-        FBSBJSON *writer = [[FBSBJSON alloc] init];
-        NSString *customEventsJSON = [writer stringWithFragment:customEvents error:&myError];
-        FBConditionalLog(!myError, @"Shouldn't get a JSON encoding error");
-        [writer release];
-        
-        NSDictionary *postParameters =
-            @{
-               @"event" : @"CUSTOM_APP_EVENTS",
-               @"attribution": attributionID,
-               @"custom_events" : customEventsJSON,
-             };
-        
-        FBRequest *request = [[[FBRequest alloc] initWithSession:session
-                                                       graphPath:graphPath
-                                                      parameters:postParameters
-                                                      HTTPMethod:@"POST"] autorelease];
-        
-        // Fire and forget
-        [request startWithCompletionHandler:nil];
-        
-    } @catch (NSException *exception) {
-        
-        NSLog(@"Failure during sendInsightsEvent: '%@'", exception.reason);
-
-    }
-}
-
 
 @end
