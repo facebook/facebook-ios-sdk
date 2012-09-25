@@ -298,6 +298,8 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
     self.loader.tableView = self.tableView;
+    
+    [FBUtility logInsightsEvent:@"_placePickerLaunch" session:_session];
 }
 
 - (void)viewDidUnload

@@ -230,6 +230,8 @@ int const FBRefreshCacheDelaySeconds = 2;
     self.tableView.delegate = self.selectionManager;
     [self.dataSource bindTableView:self.tableView];
     self.loader.tableView = self.tableView;
+    
+    [FBUtility logInsightsEvent:@"_friendPickerLaunch" session:_session];
 }
 
 - (void)viewDidUnload {

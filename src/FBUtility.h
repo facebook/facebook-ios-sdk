@@ -17,6 +17,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class FBSession;
+
 @protocol FBGraphObject;
 
 @interface FBUtility : NSObject
@@ -37,6 +39,9 @@
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value
                            inBundle:(NSBundle *)bundle;
+
++ (void)logInsightsEvent:(NSString *)eventName
+                 session:(FBSession *)session;
 
 @end
  
