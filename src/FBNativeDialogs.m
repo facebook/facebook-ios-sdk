@@ -17,6 +17,7 @@
 #import "FBNativeDialogs.h"
 #import "FBSession.h"
 #import "FBError.h"
+#import "FBUtility.h"
 #import "Social/Social.h"
 
 @interface FBNativeDialogs ()
@@ -85,12 +86,18 @@
     }
     
     [composeViewController setCompletionHandler:^(SLComposeViewControllerResult result) {
+        BOOL cancelled = (result == SLComposeViewControllerResultCancelled);
+        NSString *eventToLog = cancelled ? @"_shareSheetCancel" : @"_shareSheetPost";
+        [FBUtility logInsightsEvent:eventToLog session:session];
         if (handler) {
-            handler((result == SLComposeViewControllerResultDone) ?FBNativeDialogResultSucceeded : FBNativeDialogResultCancelled, nil);
+            handler(cancelled ? FBNativeDialogResultCancelled : FBNativeDialogResultSucceeded, nil);
         }
     }];
     
     [viewController presentModalViewController:composeViewController animated:YES];
+    
+    [FBUtility logInsightsEvent:@"_shareSheetLaunch" session:session];
+    
     return YES;
 }
 
