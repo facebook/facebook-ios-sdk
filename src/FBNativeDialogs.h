@@ -152,4 +152,19 @@ typedef void (^FBShareDialogHandler)(FBNativeDialogResult result, NSError *error
                                  urls:(NSArray*)urls
                               handler:(FBShareDialogHandler)handler;
 
+/*!
+ @abstract
+ Determines whether a call to presentShareDialogModallyFrom: will successfully present
+ a dialog. This is useful for applications that need to modify the available UI controls
+ depending on whether the dialog is available on the current platform and for the current
+ user.
+ 
+ @param session     The <FBSession> to use to determine whether or not the user has been
+ authenticated with iOS native authentication. If nil, then [FBSession activeSession]
+ will be checked. See discussion above for the implications of nil or non-nil session.
+ 
+ @return YES if the dialog would be presented for the session, and NO if not
+ */
++ (BOOL)canPresentShareDialogWithSession:(FBSession*)session;
+
 @end

@@ -651,11 +651,6 @@ static FBSession *g_activeSession = nil;
                                  statePrior == FBSessionStateCreatedTokenLoaded ||
                                  statePrior == FBSessionStateCreatedOpening
                                  );
-            // if we are just about to transition to open, and the caller
-            // wants to specify a login type, then we set the type
-            if (isValidTransition && loginType != FBSessionLoginTypeNone) {
-                self.loginType = loginType;
-            }
             break;
         case FBSessionStateCreatedOpening:
         case FBSessionStateCreatedTokenLoaded:
@@ -677,6 +672,14 @@ static FBSession *g_activeSession = nil;
                                  statePrior == FBSessionStateCreatedTokenLoaded
                                  );
             break;
+    }
+    
+    // if we are just about to transition to open or token loaded, and the caller
+    // wants to specify a login type other than none, then we set the login type
+    if (isValidTransition &&
+        (state == FBSessionStateOpen || state == FBSessionStateCreatedTokenLoaded) &&
+        loginType != FBSessionLoginTypeNone) {
+        self.loginType = loginType;
     }
 
     // invalid transition short circuits

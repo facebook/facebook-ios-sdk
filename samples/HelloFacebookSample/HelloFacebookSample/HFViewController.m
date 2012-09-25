@@ -111,13 +111,15 @@
 }
  
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView {
-    self.buttonPostPhoto.enabled = NO;
-    self.buttonPostStatus.enabled = NO;
+    BOOL canShareAnyhow = [FBNativeDialogs canPresentShareDialogWithSession:nil];
+    self.buttonPostPhoto.enabled = canShareAnyhow;
+    self.buttonPostStatus.enabled = canShareAnyhow;
     self.buttonPickFriends.enabled = NO;
     self.buttonPickPlace.enabled = NO;
 
     self.profilePic.profileID = nil;            
     self.labelFirstName.text = nil;
+    self.loggedInUser = nil;
 }
 
 #pragma mark -
@@ -141,40 +143,62 @@
 
 }
 
-// Post Status Update button handler
+// Post Status Update button handler; will attempt to invoke the native
+// share dialog and, if that's unavailable, will post directly
 - (IBAction)postStatusUpdateClick:(UIButton *)sender {
-    [self performPublishAction:^{
-        // Post a status update to the user's feed via the Graph API, and display an alert view
-        // with the results or an error.
-        NSString *message = [NSString stringWithFormat:@"Updating %@'s status at %@",
-                             self.loggedInUser.first_name, [NSDate date]];
+    // Post a status update to the user's feed via the Graph API, and display an alert view
+    // with the results or an error.
+    NSString *name = self.loggedInUser.first_name;
+    NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@",
+                         name != nil ? name : @"me" , [NSDate date]];
+    
+    // if it is available to us, we will post using the native dialog
+    BOOL displayedNativeDialog = [FBNativeDialogs presentShareDialogModallyFrom:self
+                                                                    initialText:message
+                                                                          image:nil
+                                                                            url:nil
+                                                                        handler:nil];
+    if (!displayedNativeDialog) {
         
-        [FBRequestConnection startForPostStatusUpdate:message
-                                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                        
-                                        [self showAlert:message result:result error:error];
-                                        self.buttonPostStatus.enabled = YES;
-                                    }];
-        
-        self.buttonPostStatus.enabled = NO;
-    }];
+        [self performPublishAction:^{
+            // otherwise fall back on a request for permissions and a direct post
+            [FBRequestConnection startForPostStatusUpdate:message
+                                        completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                            
+                                            [self showAlert:message result:result error:error];
+                                            self.buttonPostStatus.enabled = YES;
+                                        }];
+            
+            self.buttonPostStatus.enabled = NO;
+        }];
+    }
 }
 
-// Post Photo button handler
+// Post Photo button handler; will attempt to invoke the native
+// share dialog and, if that's unavailable, will post directly
 - (IBAction)postPhotoClick:(UIButton *)sender {
-    [self performPublishAction:^{
-        // Just use the icon image from the application itself.  A real app would have a more
-        // useful way to get an image.
-        UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
-        
-        [FBRequestConnection startForUploadPhoto:img
-                               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                   [self showAlert:@"Photo Post" result:result error:error];
-                                   self.buttonPostPhoto.enabled = YES;
-                               }];
-        
-        self.buttonPostPhoto.enabled = NO;
-    }];
+    // Just use the icon image from the application itself.  A real app would have a more
+    // useful way to get an image.
+    UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
+    
+    // if it is available to us, we will post using the native dialog
+    BOOL displayedNativeDialog = [FBNativeDialogs presentShareDialogModallyFrom:self
+                                                                    initialText:nil
+                                                                          image:img
+                                                                            url:nil
+                                                                        handler:nil];
+    if (!displayedNativeDialog) {
+        [self performPublishAction:^{
+            
+            [FBRequestConnection startForUploadPhoto:img
+                                   completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                       [self showAlert:@"Photo Post" result:result error:error];
+                                       self.buttonPostPhoto.enabled = YES;
+                                   }];
+            
+            self.buttonPostPhoto.enabled = NO;
+        }];
+    }
 }
 
 // Pick Friends button handler
