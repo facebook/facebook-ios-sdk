@@ -123,7 +123,7 @@
  */
 - (void)apiGraphUserCheckins:(NSUInteger)index {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    FBSBJSON *jsonWriter = [[FBSBJSON new] autorelease];
 
     NSDictionary *coordinates = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"latitude"],@"latitude",
@@ -249,7 +249,14 @@
     cell.textLabel.numberOfLines = 2;
     // If extra information available then display this.
     if ([[myData objectAtIndex:indexPath.row] objectForKey:@"details"]) {
-        cell.detailTextLabel.text = [[myData objectAtIndex:indexPath.row] objectForKey:@"details"];
+        
+        id details = [[myData objectAtIndex:indexPath.row] objectForKey:@"details"];
+        if (![details isKindOfClass:[NSString class]]) {
+            // If details isn't a string, it's the return data for an image request, and we pull
+            // the url for it.
+            details = [[details objectForKey:@"data"] objectForKey:@"url"];
+        }
+        cell.detailTextLabel.text = details;
         cell.detailTextLabel.font = [UIFont fontWithName:@"Helvetica" size:12.0];
         cell.detailTextLabel.lineBreakMode = UILineBreakModeCharacterWrap;
         cell.detailTextLabel.numberOfLines = 2;

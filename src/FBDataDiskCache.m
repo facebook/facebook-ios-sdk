@@ -22,6 +22,7 @@ static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
 
 static NSString* const kDataDiskCachePath = @"DataDiskCache";
 static NSString* const kCacheInfoFile = @"CacheInfo";
+static NSString *const kAccessTokenKey = @"access_token";
 
 @interface FBDataDiskCache() <FBCacheIndexFileDelegate>
 @property (nonatomic, copy) NSString* dataCachePath;
@@ -182,6 +183,27 @@ static NSString* const kCacheInfoFile = @"CacheInfo";
         [_cacheIndex removeEntryForKey:url.absoluteString];
     } @catch (NSException* exception) {
         NSLog(@"FBDiskCache error: %@", exception.reason);
+    }
+}
+
+- (void)removeDataForSession:(FBSession*)session
+{
+    if (session == nil) {
+        return;
+    }
+    
+    // Here we are removing all cache entries that don't have session context
+    // These are things like images and the like. The thorough way would
+    // be to maintain refCounts of these entries associated with accessTokens
+    // and use that to decide which images to delete. However, this might be
+    // overkill for a cache. Maybe revisit later?
+    [_cacheIndex removeEntries:kAccessTokenKey excludingFragment:YES];
+
+    NSString* accessToken = [session accessToken];
+    if (accessToken != nil) {
+        // Here we are removing all cache entries that have this session's access
+        // token in the url.
+        [_cacheIndex removeEntries:accessToken excludingFragment:NO];
     }
 }
 

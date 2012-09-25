@@ -60,28 +60,28 @@ static NSString *loadingText = @"Loading...";
         // login is integrated with the send button -- so if open, we send
         [self sendRequests];
     } else {
-        [FBSession openActiveSessionWithPermissions:nil
-                                       allowLoginUI:YES
-                                  completionHandler:^(FBSession *session, 
-                                                      FBSessionState status, 
-                                                      NSError *error) {
-                                      // if login fails for any reason, we alert
-                                      if (error) {
-                                          UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                          message:error.localizedDescription
-                                                                                         delegate:nil
-                                                                                cancelButtonTitle:@"OK"
-                                                                                otherButtonTitles:nil];
-                                          [alert show];
-                                          // if otherwise we check to see if the session is open, an alternative to
-                                          // to the FB_ISSESSIONOPENWITHSTATE helper-macro would be to check the isOpen
-                                          // property of the session object; the macros are useful, however, for more
-                                          // detailed state checking for FBSession objects
-                                      } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
-                                          // send our requests if we successfully logged in
-                                          [self sendRequests]; 
-                                      }
-                                  }];
+        [FBSession openActiveSessionWithReadPermissions:nil
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session,
+                                                          FBSessionState status,
+                                                          NSError *error) {
+                                          // if login fails for any reason, we alert
+                                          if (error) {
+                                              UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                              message:error.localizedDescription
+                                                                                             delegate:nil
+                                                                                    cancelButtonTitle:@"OK"
+                                                                                    otherButtonTitles:nil];
+                                              [alert show];
+                                              // if otherwise we check to see if the session is open, an alternative to
+                                              // to the FB_ISSESSIONOPENWITHSTATE helper-macro would be to check the isOpen
+                                              // property of the session object; the macros are useful, however, for more
+                                              // detailed state checking for FBSession objects
+                                          } else if (FB_ISSESSIONOPENWITHSTATE(status)) {
+                                              // send our requests if we successfully logged in
+                                              [self sendRequests];
+                                          }
+                                      }];
     }
 }
 

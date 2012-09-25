@@ -23,7 +23,7 @@
 #import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import <pthread.h>
-#import "JSON.h"
+#import "FBSBJSON.h"
 #import "FBGraphUser.h"
 
 /* 
@@ -220,14 +220,16 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
              } else {
                  // we fetched something unexpected when requesting an app token
                  error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
-                                                                   errorCode:nil];
+                                                     errorCode:nil
+                                                    innerError:nil];
              }
              // state transition, and call the handler if there is one
              [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                                error:error
                                                token:nil
                                       expirationDate:nil
-                                         shouldCache:NO];
+                                         shouldCache:NO
+                                           loginType:FBSessionLoginTypeNone];
          }
      }];
 }
@@ -238,7 +240,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                       error:nil
                                       token:token
                              expirationDate:[NSDate distantFuture]
-                                shouldCache:NO];
+                                shouldCache:NO
+                                  loginType:FBSessionLoginTypeTestUser];
 }
 
 // We raise exceptions when things go wrong here, because this is intended for use only
@@ -295,7 +298,7 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                 userQuery, @"users",
                                 nil];
 
-    SBJSON *writer = [[SBJSON alloc] init];
+    FBSBJSON *writer = [[FBSBJSON alloc] init];
     NSString *jsonMultiquery = [writer stringWithObject:multiquery];
     [writer release];
 
@@ -410,14 +413,15 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
               shouldCache:(BOOL)shouldCache
-{
+                loginType:(FBSessionLoginType)loginType {
     // in case we need these after the transition
     NSString *userID = self.testUserID;
 
     BOOL didTransition = [super transitionToState:state
                                    andUpdateToken:token
                                 andExpirationDate:date
-                                      shouldCache:shouldCache];
+                                      shouldCache:shouldCache
+                                        loginType:loginType];
 
     if (didTransition && FB_ISSESSIONSTATETERMINAL(self.state)) {
         if (self.mode == FBTestSessionModePrivate) {
@@ -427,10 +431,10 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
     
     return didTransition;
 }
-
-// core authorization unit testing (no UX + test user) flow
 - (void)authorizeWithPermissions:(NSArray*)permissions
-                        behavior:(FBSessionLoginBehavior)behavior {
+                        behavior:(FBSessionLoginBehavior)behavior
+                 defaultAudience:(FBSessionDefaultAudience)audience
+                   isReauthorize:(BOOL)isReauthorize {
     
     // We ignore behavior, since we aren't going to present UI.
 

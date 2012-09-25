@@ -74,6 +74,8 @@ typedef enum FBErrorCode {
     /// endpoints that return image/jpg, etc. should be accessed using NSURLRequest
     FBErrorNonTextMimeTypeReturned,
 
+    /// An error occurred while trying to display a native dialog
+    FBErrorNativeDialog,
 } FBErrorCode;
 
 /*!
@@ -98,6 +100,15 @@ extern NSString *const FBErrorReauthorizeFailedReasonSessionClosed;
 extern NSString *const FBErrorReauthorizeFailedReasonUserCancelled;
 extern NSString *const FBErrorReauthorizeFailedReasonWrongUser;
 
+/// The key to retrieve the reason for a native dialog error
+extern NSString *const FBErrorNativeDialogReasonKey;
+
+/// indicates that a native dialog is not supported in the current OS
+extern NSString *const FBErrorNativeDialogNotSupported;
+/// indicates that a native dialog can't be displayed because it is not appropriate for the current session
+extern NSString *const FBErrorNativeDialogInvalidForSession;
+/// indicates that a native dialog can't be displayed for some other reason
+extern NSString *const FBErrorNativeDialogCantBeDisplayed;
 
 // Exception strings raised by the Facebook SDK
 

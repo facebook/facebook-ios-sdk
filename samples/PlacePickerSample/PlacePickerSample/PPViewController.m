@@ -55,20 +55,20 @@ enum SampleLocation {
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
     } else { 
         // if the session isn't open, we open it here, which may cause UX to log in the user
-        [FBSession openActiveSessionWithPermissions:nil
-                                       allowLoginUI:YES 
-                                  completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                      if (!error) {
-                                          [self refresh];
-                                      } else {
-                                          [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                      message:error.localizedDescription
-                                                                     delegate:nil
-                                                            cancelButtonTitle:@"OK" 
-                                                            otherButtonTitles:nil]
-                                           show];
-                                      }
-                                  }];
+        [FBSession openActiveSessionWithReadPermissions:nil
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                          if (!error) {
+                                              [self refresh];
+                                          } else {
+                                              [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                          message:error.localizedDescription
+                                                                         delegate:nil
+                                                                cancelButtonTitle:@"OK"
+                                                                otherButtonTitles:nil]
+                                               show];
+                                          }
+                                      }];
     }
 }
 

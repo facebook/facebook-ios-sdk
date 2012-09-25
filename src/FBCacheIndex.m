@@ -50,7 +50,13 @@ static const char* updateQuery =
     
 static const char* selectByKeyQuery = 
     "SELECT uuid, key, access_time, file_size FROM cache_index WHERE key = ?";
-    
+
+static const char* selectByKeyFragmentQuery =
+    "SELECT uuid, key, access_time, file_size FROM cache_index WHERE key LIKE ?";
+
+static const char* selectExcludingKeyFragmentQuery =
+    "SELECT uuid, key, access_time, file_size FROM cache_index WHERE key NOT LIKE ?";
+
 static const char* selectStorageSizeQuery = 
     "SELECT SUM(file_size) FROM cache_index";
     
@@ -123,6 +129,8 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 - (FBCacheEntityInfo*)_entryForKey:(NSString*)key;
 - (void)_fetchCurrentDiskUsage;
 - (FBCacheEntityInfo*)_readEntryFromDatabase:(NSString*)key;
+- (NSMutableArray*) _readEntriesFromDatabase: (NSString*)keyFragment excludingFragment:(BOOL)exclude;
+- (FBCacheEntityInfo*)_createCacheEntityInfo:(sqlite3_stmt*)selectStatement;
 - (void)_removeEntryFromDatabaseForKey:(NSString*)key;
 - (void)_trimDatabase;
 - (void)_updateEntryInDatabaseForKey:(NSString*)key
@@ -203,12 +211,16 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
         sqlite3* const db = _database;
         sqlite3_stmt* const is = _insertStatement;        
         sqlite3_stmt* const sbks = _selectByKeyStatement;
+        sqlite3_stmt* const sbkfs = _selectByKeyFragmentStatement;
+        sqlite3_stmt* const sekfs = _selectExcludingKeyFragmentStatement;
         sqlite3_stmt* const rbks = _removeByKeyStatement;
         sqlite3_stmt* const ts = _trimStatement;
         sqlite3_stmt* const us = _updateStatement;
         dispatch_async(_databaseQueue, ^{
             releaseStatement(is, nil);
             releaseStatement(sbks, nil);
+            releaseStatement(sbkfs, nil);
+            releaseStatement(sekfs, nil);
             releaseStatement(rbks, nil);
             releaseStatement(ts, nil);
             releaseStatement(us, nil);
@@ -302,6 +314,34 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
     });
 }
 
+- (void)removeEntries:(NSString*)keyFragment excludingFragment:(BOOL)exclude
+{
+    if (keyFragment == nil) {
+        return;
+    }
+    
+    __block NSMutableArray* entries;
+    
+    dispatch_sync(_databaseQueue, ^{
+        entries = [self _readEntriesFromDatabase:keyFragment excludingFragment:exclude];
+    });
+    
+    for (FBCacheEntityInfo* entry in entries) {
+        if ([_cachedEntries objectForKey:entry.key] == nil) {
+            // Adding to the cache since the call to removeEntryForKey will look for the entry and
+            // try to retrieve it from the DB which will in turn add it to the cache anyways. So
+            // pre-emptively adding it to the in memory cache saves some DB roundtrips.
+            //
+            // This is only done for NSCache entries that don't already exist since replacing the
+            // old one with the new one will trigger willEvictObject which will try and perform
+            // a DB write. Since the write is async, we might end up in a weird state.
+            [_cachedEntries setObject:entry forKey:entry.key];
+        }
+        
+        [self removeEntryForKey:entry.key];
+    }
+}
+
 #pragma mark - NSCache delegate
 
 - (void)cache:(NSCache*)cache willEvictObject:(id)obj
@@ -357,6 +397,7 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
     
     FBCacheEntityInfo* existing = [self _readEntryFromDatabase:entry.key];
     if (existing) {
+        
         // Entry already exists - update the entry
         [self _updateEntryInDatabaseForKey:existing.key
             entry:entry];
@@ -410,24 +451,68 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
         key.length,
         nil), _database);
   
-    int result = sqlite3_step(_selectByKeyStatement);
+    return [self _createCacheEntityInfo:_selectByKeyStatement];
+}
+
+- (NSMutableArray*) _readEntriesFromDatabase:(NSString*)keyFragment
+                           excludingFragment:(BOOL)exclude
+{
+    NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+    
+    sqlite3_stmt* selectStatement;
+    const char* query;
+    if (exclude) {
+        selectStatement = _selectExcludingKeyFragmentStatement;
+        query = selectExcludingKeyFragmentQuery;
+    } else {
+        selectStatement = _selectByKeyFragmentStatement;
+        query = selectByKeyFragmentQuery;
+    }
+    
+    initializeStatement(_database, &selectStatement, query);
+    NSString* wildcardKeyFragment = [NSString stringWithFormat:@"%%%@%%", keyFragment];
+    
+    CHECK_SQLITE_SUCCESS(sqlite3_bind_text(
+        selectStatement, 
+        1, 
+        wildcardKeyFragment.UTF8String, 
+        wildcardKeyFragment.length,
+        nil), _database);
+
+    NSMutableArray *entries = [[[NSMutableArray alloc] init] autorelease];
+    FBCacheEntityInfo* entry;
+
+    while ((entry = [self _createCacheEntityInfo:selectStatement]) != nil) {
+        [entries addObject:entry];
+    }
+    
+    return entries;
+}
+
+-(FBCacheEntityInfo*)_createCacheEntityInfo:(sqlite3_stmt*)selectStatement
+{
+    int result = sqlite3_step(selectStatement);
     if (result != SQLITE_ROW) {
         return nil;
     }
-  
-    const unsigned char* uuidStr = 
-        sqlite3_column_text(_selectByKeyStatement, 0);
-    CFTimeInterval accessTime = 
-        sqlite3_column_double(_selectByKeyStatement, 2);
-    NSUInteger fileSize = sqlite3_column_int(_selectByKeyStatement, 3);
 
+    const unsigned char* uuidStr =
+    sqlite3_column_text(selectStatement, 0);
+    const unsigned char* key =
+    sqlite3_column_text(selectStatement, 1);
+    CFTimeInterval accessTime = 
+    sqlite3_column_double(selectStatement, 2);
+    NSUInteger fileSize = sqlite3_column_int(selectStatement, 3);
+    
     FBCacheEntityInfo* entry = [[FBCacheEntityInfo alloc] 
-        initWithKey:key 
-        uuid:[NSString 
-            stringWithCString:(const char*)uuidStr 
-            encoding:NSUTF8StringEncoding]
-        accessTime:accessTime 
-        fileSize:fileSize];
+                                initWithKey:[NSString 
+                                             stringWithCString:(const char*)key 
+                                             encoding:NSUTF8StringEncoding] 
+                                uuid:[NSString 
+                                      stringWithCString:(const char*)uuidStr 
+                                      encoding:NSUTF8StringEncoding]
+                                accessTime:accessTime 
+                                fileSize:fileSize];
     return [entry autorelease];
 }
 
@@ -466,6 +551,7 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 - (void)_removeEntryFromDatabaseForKey:(NSString*)key
 {
     NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+
     initializeStatement(_database, &_removeByKeyStatement, deleteEntryQuery);
     CHECK_SQLITE_SUCCESS(sqlite3_bind_text(
         _removeByKeyStatement, 

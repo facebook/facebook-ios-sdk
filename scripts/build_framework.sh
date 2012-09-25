@@ -171,5 +171,5 @@ fi
 # Done
 #
 
-progress_message "Framework version:" `perl -pe "s/.*@//" < $FB_SDK_SRC/FBSDKVersion-generated.h`
+progress_message "Framework version info:" `perl -pe "s/.*@//" < $FB_SDK_SRC/FBSDKVersion.h`
 common_success

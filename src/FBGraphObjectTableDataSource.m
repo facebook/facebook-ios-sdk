@@ -4,7 +4,7 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
  
  * Unless required by applicable law or agreed to in writing, software
@@ -20,13 +20,18 @@
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 
+// Magic number - iPhone address book doesn't show scrubber for less than 5 contacts
+static const NSInteger kMinimumCountToCollate = 6;
+
 @interface FBGraphObjectTableDataSource ()
 
 @property (nonatomic, retain) NSArray *data;
 @property (nonatomic, retain) NSArray *indexKeys;
 @property (nonatomic, retain) NSDictionary *indexMap;
 @property (nonatomic, retain) NSMutableSet *pendingURLConnections;
-@property (nonatomic) BOOL expectingMoreGraphObjects;
+@property (nonatomic, assign) BOOL expectingMoreGraphObjects;
+@property (nonatomic, retain) UILocalizedIndexedCollation *collation;
+@property (nonatomic, assign) BOOL showSections;
 
 - (BOOL)filterIncludesItem:(FBGraphObject *)item;
 - (FBGraphObjectTableCell *)cellWithTableView:(UITableView *)tableView;
@@ -44,6 +49,8 @@
 @synthesize defaultPicture = _defaultPicture;
 @synthesize controllerDelegate = _controllerDelegate;
 @synthesize groupByField = _groupByField;
+@synthesize useCollation = _useCollation;
+@synthesize showSections = _showSections;
 @synthesize indexKeys = _indexKeys;
 @synthesize indexMap = _indexMap;
 @synthesize itemTitleSuffixEnabled = _itemTitleSuffixEnabled;
@@ -54,6 +61,15 @@
 @synthesize sortDescriptors = _sortDescriptors;
 @synthesize dataNeededDelegate = _dataNeededDelegate;
 @synthesize expectingMoreGraphObjects = _expectingMoreGraphObjects;
+@synthesize collation = _collation;
+
+- (void)setUseCollation:(BOOL)useCollation
+{
+    if (_useCollation != useCollation) {
+        _useCollation = useCollation;
+        self.collation = _useCollation ? [UILocalizedIndexedCollation currentCollation] : nil;
+    }
+}
 
 - (id)init
 {
@@ -74,6 +90,7 @@
     FBConditionalLog(![_pendingURLConnections count],
                      @"FBGraphObjectTableDataSource pending connection did not retain self");
 
+    [_collation release];
     [_data release];
     [_defaultPicture release];
     [_groupByField release];
@@ -81,7 +98,7 @@
     [_indexMap release];
     [_pendingURLConnections release];
     [_sortDescriptors release];
-
+    
     [super dealloc];
 }
 
@@ -91,7 +108,7 @@
 {
     // Start with custom fields.
     NSMutableSet *nameSet = [[NSMutableSet alloc] initWithSet:customFields];
-
+    
     // Iterate through varargs after the initial set, and add them
     id vaName;
     va_list vaArguments;
@@ -100,7 +117,7 @@
         [nameSet addObject:vaName];
     }
     va_end(vaArguments);
-
+    
     // Add fields needed for data source functionality.
     if (self.groupByField) {
         [nameSet addObject:self.groupByField];
@@ -111,17 +128,17 @@
     [sortedFields sortUsingSelector:@selector(caseInsensitiveCompare:)];
     
     [nameSet release];
-
+    
     // Build the comma-separated string
     NSMutableString *fields = [[[NSMutableString alloc] init] autorelease];
-
+    
     for (NSString *field in sortedFields) {
         if ([fields length]) {
             [fields appendString:@","];
         }
         [fields appendString:field];
     }
-
+    
     [sortedFields release];
     return fields;
 }
@@ -182,6 +199,7 @@
 // building a reverse-lookup map too, but this seems unnecessary.
 - (void)update
 {
+    NSInteger objectsShown = 0;
     NSMutableDictionary *indexMap = [[[NSMutableDictionary alloc] init] autorelease];
     NSMutableArray *indexKeys = [[[NSMutableArray alloc] init] autorelease];
     
@@ -203,16 +221,19 @@
             [indexMap setValue:section forKey:key];
             [indexKeys addObject:key];
         }
+        objectsShown++;
     }
     
     if (self.sortDescriptors) {
         for (NSString *key in indexKeys) {
-            [[indexMap objectForKey:key]
-             sortUsingDescriptors:self.sortDescriptors];
+            [[indexMap objectForKey:key] sortUsingDescriptors:self.sortDescriptors];
         }
     }
-    [indexKeys sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    if (!self.useCollation) {
+        [indexKeys sortUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    }
     
+    self.showSections = objectsShown >= kMinimumCountToCollate;
     self.indexKeys = indexKeys;
     self.indexMap = indexMap;
 }
@@ -225,7 +246,7 @@
           @selector(graphObjectTableDataSource:filterIncludesItem:)]) {
         return YES;
     }
-
+    
     return [self.controllerDelegate graphObjectTableDataSource:self
                                             filterIncludesItem:item];
 }
@@ -251,13 +272,13 @@
     static NSString * const cellKey = @"fbTableCell";
     FBGraphObjectTableCell *cell =
     (FBGraphObjectTableCell*)[tableView dequeueReusableCellWithIdentifier:cellKey];
-
+    
     if (!cell) {
         cell = [[FBGraphObjectTableCell alloc]
                 initWithStyle:UITableViewCellStyleSubtitle
                 reuseIdentifier:cellKey];
         [cell autorelease];
-
+        
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
     
@@ -272,23 +293,32 @@
         text = [item objectForKey:self.groupByField];
     }
     
-    if ([text length] > 1) {
-        text = [text substringToIndex:1];
+    if (self.useCollation) {
+        NSInteger collationSection = [self.collation sectionForObject:item collationStringSelector:NSSelectorFromString(self.groupByField)];
+        text = [[self.collation sectionTitles] objectAtIndex:collationSection];
+    } else {
+        
+        if ([text length] > 1) {
+            text = [text substringToIndex:1];
+        }
+        
+        text = [text uppercaseString];
     }
-    
-    text = [text uppercaseString];
-    
     return text;
 }
 
 - (FBGraphObject *)itemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section >= 0 && indexPath.section < self.indexKeys.count) {
-        id key = [self.indexKeys objectAtIndex:indexPath.section];
-        NSArray *sectionItems = [self.indexMap objectForKey:key];
-        if (indexPath.row >= 0 && indexPath.row < sectionItems.count) {
-            return [sectionItems objectAtIndex:indexPath.row];
-        }
+    id key = nil;
+    if (self.useCollation) {
+        NSString *sectionTitle = [self.collation.sectionTitles objectAtIndex:indexPath.section];
+        key = sectionTitle;
+    } else if (indexPath.section >= 0 && indexPath.section < self.indexKeys.count) {
+        key = [self.indexKeys objectAtIndex:indexPath.section];
+    }
+    NSArray *sectionItems = [self.indexMap objectForKey:key];
+    if (indexPath.row >= 0 && indexPath.row < sectionItems.count) {
+        return [sectionItems objectAtIndex:indexPath.row];
     }
     return nil;
 }
@@ -301,7 +331,12 @@
         return nil;
     }
     
-    NSInteger sectionIndex = [self.indexKeys indexOfObject:key];
+    NSInteger sectionIndex = 0;
+    if (self.useCollation) {
+        sectionIndex = [self.collation.sectionTitles indexOfObject:key];
+    } else {
+        sectionIndex = [self.indexKeys indexOfObject:key];
+    }
     if (sectionIndex == NSNotFound) {
         return nil;
     }
@@ -310,7 +345,7 @@
     if (matchingObject == nil) {
         return nil;
     }
-
+    
     NSInteger itemIndex = [sectionItems indexOfObject:matchingObject];
     if (itemIndex == NSNotFound) {
         return nil;
@@ -320,13 +355,16 @@
 }
 
 - (BOOL)isLastSection:(NSInteger)section {
-    return section == self.indexKeys.count - 1;
+    if (self.useCollation) {
+        return section == self.collation.sectionTitles.count - 1;
+    } else {
+        return section == self.indexKeys.count - 1;
+    }
 }
 
 - (BOOL)isActivityIndicatorIndexPath:(NSIndexPath *)indexPath {
     if ([self isLastSection:indexPath.section]) {
-        id key = [self.indexKeys objectAtIndex:indexPath.section];
-        NSArray *sectionItems = [self.indexMap objectForKey:key];
+        NSArray *sectionItems = [self sectionItemsForSection:indexPath.section];
         
         if (indexPath.row == sectionItems.count) {
             // Last section has one more row that items if we are expecting more objects.
@@ -336,6 +374,25 @@
     return NO;
 }
 
+
+- (NSString *)titleForSection:(NSInteger)sectionIndex
+{
+    id key;
+    if (self.useCollation) {
+        NSString *sectionTitle = [self.collation.sectionTitles objectAtIndex:sectionIndex];
+        key = sectionTitle;
+    } else {
+        key = [self.indexKeys objectAtIndex:sectionIndex];
+    }
+    return key;
+}
+
+- (NSArray *)sectionItemsForSection:(NSInteger)sectionIndex
+{
+    id key = [self titleForSection:sectionIndex];
+    NSArray *sectionItems = [self.indexMap objectForKey:key];
+    return sectionItems;
+}
 - (UIImage *)tableView:(UITableView *)tableView imageForItem:(FBGraphObject *)item
 {
     __block UIImage *image = nil;
@@ -347,27 +404,27 @@
             [self addOrRemovePendingConnection:connection];
             if (!error) {
                 image = [UIImage imageWithData:data];
-
+                
                 NSIndexPath *indexPath = [self indexPathForItem:item];
                 if (indexPath) {
                     FBGraphObjectTableCell *cell =
                     (FBGraphObjectTableCell*)[tableView cellForRowAtIndexPath:indexPath];
-
+                    
                     if (cell) {
                         cell.picture = image;
                     }
                 }
             }
         };
-
+        
         FBURLConnection *connection = [[[FBURLConnection alloc]
                                         initWithURL:[NSURL URLWithString:urlString]
                                         completionHandler:handler]
                                        autorelease];
-
+        
         [self addOrRemovePendingConnection:connection];
     }
-
+    
     // If the picture had not been fetched yet by this object, but is cached in the
     // URL cache, we can complete synchronously above.  In this case, we will not
     // find the cell in the table because we are in the process of creating it. We can
@@ -375,7 +432,7 @@
     if (image) {
         return image;
     }
-
+    
     return self.defaultPicture;
 }
 
@@ -396,14 +453,16 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [self.indexKeys count];
+    if (self.useCollation) {
+        return self.collation.sectionTitles.count;
+    } else {
+        return [self.indexKeys count];
+    }
 }
 
-- (NSInteger)tableView:(UITableView *)tableView
- numberOfRowsInSection:(NSInteger)section
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id key = [self.indexKeys objectAtIndex:section];
-    NSArray *sectionItems = [self.indexMap objectForKey:key];
+    NSArray *sectionItems = [self sectionItemsForSection:section];
     
     int count = [sectionItems count];
     // If we are expecting more objects to be loaded via paging, add 1 to the
@@ -416,9 +475,36 @@
     return count;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (!self.showSections) {
+        return nil;
+    }
+    
+    NSArray *sectionItems = [self sectionItemsForSection:section];
+    return sectionItems.count > 0 ? [self titleForSection:section] : nil;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    if (self.useCollation) {
+        return [self.collation sectionForSectionIndexTitleAtIndex:index];
+    } else {
+        return index;
+    }
+}
+
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    return [self.indexKeys count] > 1 ? self.indexKeys : nil;
+    if (!self.showSections) {
+        return nil;
+    }
+    
+    if (self.useCollation) {
+        return self.collation.sectionIndexTitles;
+    } else {
+        return [self.indexKeys count] > 1 ? self.indexKeys : nil;
+    }
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -444,11 +530,10 @@
                                                 triggeredByIndexPath:indexPath];
     } else {
         FBGraphObject *item = [self itemAtIndexPath:indexPath];
-
+        
         // This is a no-op if it doesn't have an activity indicator.
         [cell stopAnimatingActivityIndicator];
-        
-        if (item) {            
+        if (item) {
             if (self.itemPicturesEnabled) {
                 cell.picture = [self tableView:tableView imageForItem:item];
             } else {
@@ -482,7 +567,7 @@
             }
             
             if ([self.controllerDelegate respondsToSelector:@selector(graphObjectTableDataSource:customizeTableCell:)]) {
-                [self.controllerDelegate graphObjectTableDataSource:self 
+                [self.controllerDelegate graphObjectTableDataSource:self
                                                  customizeTableCell:cell];
             }
         } else {
