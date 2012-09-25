@@ -87,7 +87,7 @@
     
     [composeViewController setCompletionHandler:^(SLComposeViewControllerResult result) {
         BOOL cancelled = (result == SLComposeViewControllerResultCancelled);
-        NSString *eventToLog = cancelled ? @"_shareSheetCancel" : @"_shareSheetPost";
+        NSString *eventToLog = cancelled ? @"_shareDialogCancel" : @"_shareDialogPost";
         [FBUtility logInsightsEvent:eventToLog session:session];
         if (handler) {
             handler(cancelled ? FBNativeDialogResultCancelled : FBNativeDialogResultSucceeded, nil);
@@ -96,7 +96,7 @@
     
     [viewController presentModalViewController:composeViewController animated:YES];
     
-    [FBUtility logInsightsEvent:@"_shareSheetLaunch" session:session];
+    [FBUtility logInsightsEvent:@"_shareDialogLaunch" session:session];
     
     return YES;
 }
