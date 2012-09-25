@@ -76,7 +76,7 @@ static NSString *const kPostHTTPMethod = @"POST";
                        graphPath:nil     // but assuring a nil graphPath for the rest case
                       parameters:parameters
                       HTTPMethod:HTTPMethod];
-    if (self = [super init]) {
+    if (self) {
         self.restMethod = restMethod;
     }
     return self;
