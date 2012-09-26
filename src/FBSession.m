@@ -1642,7 +1642,7 @@ static FBSession *g_activeSession = nil;
 
     NSMutableArray *newPermissions = [[NSMutableArray alloc] initWithArray:permissions];
     [newPermissions addObject:@"email"];
-    return newPermissions;
+    return [newPermissions autorelease];
 }
 
 + (void)deleteFacebookCookies {
