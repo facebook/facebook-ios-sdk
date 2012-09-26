@@ -94,7 +94,7 @@ typedef enum {
  
  The `FBSessionLoginBehavior` enum specifies whether to allow fallback, disallow fallback, or
  force fallback login behavior. Most applications will use the default, which attempts a normal
- Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disalow
+ Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disallow
  fallback Facebook Login completely, or to force a fallback login.
  */
 typedef enum {
