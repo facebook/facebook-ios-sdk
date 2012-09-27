@@ -49,6 +49,9 @@
 @synthesize me = _me;
 @synthesize loginLogoutButton = _loginLogoutButton;
 @synthesize permissions = _permissions;
+@synthesize readPermissions = _readPermissions;
+@synthesize publishPermissions = _publishPermissions;
+@synthesize defaultAudience = _defaultAudience;
 @synthesize attemptingLogin = _attemptingLogin;
 @synthesize backgroundImageView = _backgroundImageView;
 @synthesize bundle = _bundle;
@@ -300,6 +303,7 @@
     }
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)openSession {
     if ([self.delegate respondsToSelector:@selector(loginViewControllerWillAttemptToLogUserIn:)]) {
         [(id)self.delegate loginViewControllerWillAttemptToLogUserIn:self];
@@ -307,12 +311,42 @@
 
     self.attemptingLogin = YES;
 
-    [FBSession openActiveSessionWithPermissions:self.permissions
-                                   allowLoginUI:YES
-                              completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                  [self sessionStateChanged:session state:state error:error];
-                              }];
+    // all of our open calls use the same handler
+    FBSessionStateHandler handler = ^(FBSession *session, FBSessionState state, NSError *error) {
+        [self sessionStateChanged:session state:state error:error];
+    };
+
+    // the policy here is:
+    // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
+    // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
+    // 3) if you provide any publish permissions, then we combine the read-set and publish-set and call the publish-based
+    //    method that will use integrated auth when availab le
+    // 4) if you provide any publish permissions, and don't specify a valid audience, the control will throw an exception
+    //    when the user presses login
+    if (self.permissions) {
+        [FBSession openActiveSessionWithPermissions:self.permissions
+                                       allowLoginUI:YES
+                                  completionHandler:handler];
+    } else if (![self.publishPermissions count]) {
+        [FBSession openActiveSessionWithReadPermissions:self.publishPermissions
+                                           allowLoginUI:YES
+                                      completionHandler:handler];
+    } else {
+        // combined read and publish permissions will usually fail, but if the app wants us to
+        // try it here, then we will pass the aggregate set to the server
+        NSArray *permissions = self.publishPermissions;
+        if ([self.readPermissions count]) {
+            NSMutableSet *set = [NSMutableSet setWithArray:self.publishPermissions];
+            [set addObjectsFromArray:self.readPermissions];
+            permissions = [set allObjects];
+        }
+        [FBSession openActiveSessionWithPublishPermissions:permissions
+                                           defaultAudience:self.defaultAudience
+                                              allowLoginUI:YES
+                                         completionHandler:handler];
+    }
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 #pragma mark Handlers
 

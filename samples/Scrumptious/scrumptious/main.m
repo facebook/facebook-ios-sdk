@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import <Accounts/ACAccountStore.h>
 #import <UIKit/UIKit.h>
 
 #import "SCAppDelegate.h"

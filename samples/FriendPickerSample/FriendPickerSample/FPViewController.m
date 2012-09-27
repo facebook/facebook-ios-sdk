@@ -26,8 +26,6 @@
 @property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
 @property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
 
-- (void)doneButtonWasPressed:(id)sender;
-- (void)cancelButtonWasPressed:(id)sender;
 - (void)fillTextBoxAndDismiss:(NSString *)text;
 
 @end

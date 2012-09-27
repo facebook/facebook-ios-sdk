@@ -47,6 +47,8 @@
     sqlite3_stmt* _insertStatement;
     sqlite3_stmt* _removeByKeyStatement;
     sqlite3_stmt* _selectByKeyStatement;
+    sqlite3_stmt* _selectByKeyFragmentStatement;
+    sqlite3_stmt* _selectExcludingKeyFragmentStatement;
     sqlite3_stmt* _trimStatement;
     sqlite3_stmt* _updateStatement;
   
@@ -64,6 +66,7 @@
 - (NSString*)fileNameForKey:(NSString*)key;
 - (NSString*)storeFileForKey:(NSString*)key withData:(NSData*)data;
 - (void)removeEntryForKey:(NSString*)key;
+- (void)removeEntries:(NSString*)keyFragment excludingFragment:(BOOL)exclude;
 
 @end
 

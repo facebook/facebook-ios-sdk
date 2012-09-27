@@ -24,10 +24,14 @@
 		30EA739F13F5D372003DC0D2 /* MenuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 30EA739713F5D372003DC0D2 /* MenuButton.png */; };
 		30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */; };
 		30ED588C14358F8A00A226C3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 30ED588B14358F8A00A226C3 /* Default@2x.png */; };
+		84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84750A9F160A259400C1A13D /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		85A928C016114663008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928BF16114663008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85AFB4E4158F9C5B000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */; };
 		85AFB4E5158F9C5B000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */; };
 		85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E2158F9C5B000AF7F5 /* Icon.png */; };
 		85AFB4E7158F9C5B000AF7F5 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */; };
+		85C69D561602AFD4008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D551602AFD4008AD9A0 /* Default-568h@2x.png */; };
+		B9A4168016113EC3001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A4167F16113EC3001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DD35C4BE15B9307600C0849B /* FBConnect.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD35C4BD15B9307600C0849B /* FBConnect.bundle */; };
 		DD37EA8F15ABA4920015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA8E15ABA4920015966B /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
@@ -58,10 +62,14 @@
 		30EA739713F5D372003DC0D2 /* MenuButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MenuButton.png; sourceTree = "<group>"; };
 		30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		30ED588B14358F8A00A226C3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		84750A9F160A259400C1A13D /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		85A928BF16114663008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85AFB4E0158F9C5B000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB4E1158F9C5B000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB4E2158F9C5B000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		85C69D551602AFD4008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		B9A4167F16113EC3001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DD35C4BD15B9307600C0849B /* FBConnect.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBConnect.bundle; path = Hackbook/FBConnect.bundle; sourceTree = "<group>"; };
 		DD37EA8E15ABA4920015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		DD37EA9815ABA8A90015966B /* Facebook.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Facebook.h; path = ../../build/FacebookSDK.framework/Versions/A/DeprecatedHeaders/Facebook.h; sourceTree = "<group>"; };
@@ -91,6 +99,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85A928C016114663008699F1 /* Social.framework in Frameworks */,
+				B9A4168016113EC3001E7A77 /* AdSupport.framework in Frameworks */,
+				84750AA0160A259400C1A13D /* Accounts.framework in Frameworks */,
 				30EA73FC13F5D590003DC0D2 /* CoreLocation.framework in Frameworks */,
 				30EA735E13F5D21B003DC0D2 /* UIKit.framework in Frameworks */,
 				30EA736013F5D21B003DC0D2 /* Foundation.framework in Frameworks */,
@@ -131,6 +142,9 @@
 		30EA735C13F5D21B003DC0D2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				85A928BF16114663008699F1 /* Social.framework */,
+				B9A4167F16113EC3001E7A77 /* AdSupport.framework */,
+				84750A9F160A259400C1A13D /* Accounts.framework */,
 				DD37EA8E15ABA4920015966B /* FacebookSDK.framework */,
 				30EA73FB13F5D590003DC0D2 /* CoreLocation.framework */,
 				30EA735D13F5D21B003DC0D2 /* UIKit.framework */,
@@ -169,6 +183,7 @@
 				85AFB4E3158F9C5B000AF7F5 /* Icon@2x.png */,
 				30EA739213F5D372003DC0D2 /* Default.png */,
 				30ED588B14358F8A00A226C3 /* Default@2x.png */,
+				85C69D551602AFD4008AD9A0 /* Default-568h@2x.png */,
 				30EA739713F5D372003DC0D2 /* MenuButton.png */,
 				3085CC281415D68A00456CCC /* MenuButton@2x.png */,
 				30EA736513F5D21B003DC0D2 /* Hackbook-Info.plist */,
@@ -269,6 +284,7 @@
 				85AFB4E6158F9C5B000AF7F5 /* Icon.png in Resources */,
 				85AFB4E7158F9C5B000AF7F5 /* Icon@2x.png in Resources */,
 				DD35C4BE15B9307600C0849B /* FBConnect.bundle in Resources */,
+				85C69D561602AFD4008AD9A0 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

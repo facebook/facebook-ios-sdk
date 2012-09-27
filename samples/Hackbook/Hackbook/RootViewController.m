@@ -179,7 +179,18 @@
                            initWithFrame:CGRectMake(0,0,
                                                     self.view.bounds.size.width,
                                                     self.view.bounds.size.height)];
-    [backgroundImageView setImage:[UIImage imageNamed:@"Default.png"]];
+    NSString *backgroundImageName = @"Default.png";
+    if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone){
+        if ([[UIScreen mainScreen] respondsToSelector: @selector(scale)]) {
+            CGSize result = [[UIScreen mainScreen] bounds].size;
+            CGFloat scale = [UIScreen mainScreen].scale;
+            result = CGSizeMake(result.width * scale, result.height * scale);
+            if(result.height == 1136) {
+                backgroundImageName = @"Default-568h";
+            }
+        }
+    }
+    [backgroundImageView setImage:[UIImage imageNamed:backgroundImageName]];
     //[backgroundImageView setAlpha:0.25];
     [self.view addSubview:backgroundImageView];
     

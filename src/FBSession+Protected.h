@@ -23,16 +23,21 @@
 - (BOOL)transitionToState:(FBSessionState)state
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
-              shouldCache:(BOOL)shouldCache;
+              shouldCache:(BOOL)shouldCache
+                loginType:(FBSessionLoginType)loginType;
 - (void)transitionAndCallHandlerWithState:(FBSessionState)status
                                     error:(NSError*)error
                                     token:(NSString*)token
                            expirationDate:(NSDate*)date
-                              shouldCache:(BOOL)shouldCache;
+                              shouldCache:(BOOL)shouldCache
+                                loginType:(FBSessionLoginType)loginType;
 - (void)authorizeWithPermissions:(NSArray*)permissions
-                        behavior:(FBSessionLoginBehavior)behavior;
+                        behavior:(FBSessionLoginBehavior)behavior
+                 defaultAudience:(FBSessionDefaultAudience)audience
+                   isReauthorize:(BOOL)isReauthorize;
 
 + (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
-                             errorCode:(NSString*)errorCode;
+                             errorCode:(NSString*)errorCode
+                            innerError:(NSError*)innerError;
 
 @end

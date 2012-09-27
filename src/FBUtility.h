@@ -17,6 +17,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+@class FBSession;
+
 @protocol FBGraphObject;
 
 @interface FBUtility : NSObject
