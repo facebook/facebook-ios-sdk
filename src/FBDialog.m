@@ -16,7 +16,6 @@
 
 
 #import "FBDialog.h"
-#import "FBSBJSON.h"
 #import "Facebook.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBUtility.h"
