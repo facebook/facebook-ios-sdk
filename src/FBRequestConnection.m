@@ -15,7 +15,6 @@
  */
 
 #import <UIKit/UIImage.h>
-#import "FBSBJSON.h"
 #import "FBError.h"
 #import "FBURLConnection.h"
 #import "FBRequestBody.h"
@@ -722,10 +721,10 @@ typedef enum FBRequestConnectionState {
                  toBatch:batch
              attachments:attachments];
     }
-    
-    FBSBJSON *writer = [[FBSBJSON alloc] init];
-    NSString *jsonBatch = [writer stringWithObject:batch];
-    [writer release];
+
+    NSError *jsonError = nil;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:batch options:kNilOptions error:&jsonError];
+    NSString *jsonBatch = [[[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding] autorelease];
     [batch release];
 
     [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
@@ -1067,8 +1066,7 @@ typedef enum FBRequestConnectionState {
 {
     id parsed = nil;
     if (!(*error)) {
-        FBSBJSON *parser = [[FBSBJSON alloc] init];
-        parsed = [parser objectWithString:utf8 error:error];
+        parsed = [NSJSONSerialization JSONObjectWithData:[utf8 dataUsingEncoding:NSUTF8StringEncoding] options:kNilOptions error:error];
         // if we fail parse we attemp a reparse of a modified input to support results in the form "foo=bar", "true", etc.
         if (*error) {
             // we round-trip our hand-wired response through the parser in order to remain
@@ -1077,14 +1075,15 @@ typedef enum FBRequestConnectionState {
             NSDictionary *original = [NSDictionary dictionaryWithObjectsAndKeys:
                                       utf8, FBNonJSONResponseProperty,
                                       nil];
-            NSString *jsonrep = [parser stringWithObject:original];
             NSError *reparseError = nil;
-            parsed = [parser objectWithString:jsonrep error:&reparseError];
+            NSData *jsonrep = [NSJSONSerialization dataWithJSONObject:original options:kNilOptions error:&reparseError];
+            if (!reparseError) {
+                parsed = [NSJSONSerialization JSONObjectWithData:jsonrep options:kNilOptions error:&reparseError];
+            }
             if (!reparseError) {
                 *error = nil;
             }
         }
-        [parser release];
     }
     return parsed;
 }

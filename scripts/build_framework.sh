@@ -131,10 +131,6 @@ do
     || die "Error building framework while copying deprecated SDK headers"
 done
 \cp \
-  $FB_SDK_SRC/JSON/*.h \
-  $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders \
-  || die "Error building framework while copying deprecated JSON headers"
-\cp \
   $FB_SDK_SRC/Framework/Resources/* \
   $FB_SDK_FRAMEWORK/Versions/A/Resources \
   || die "Error building framework while copying Resources"

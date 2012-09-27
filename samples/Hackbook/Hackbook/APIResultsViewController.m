@@ -123,14 +123,18 @@
  */
 - (void)apiGraphUserCheckins:(NSUInteger)index {
     HackbookAppDelegate *delegate = (HackbookAppDelegate *)[[UIApplication sharedApplication] delegate];
-    FBSBJSON *jsonWriter = [[FBSBJSON new] autorelease];
 
     NSDictionary *coordinates = [NSDictionary dictionaryWithObjectsAndKeys:
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"latitude"],@"latitude",
                                   [[[myData objectAtIndex:index] objectForKey:@"location"] objectForKey:@"longitude"],@"longitude",
                                   nil];
 
-    NSString *coordinatesStr = [jsonWriter stringWithObject:coordinates];
+    NSError *jsonError = nil;
+    NSData *coordinatesData = [NSJSONSerialization dataWithJSONObject:coordinates options:kNilOptions error:&jsonError];
+
+    if (jsonError) return;
+    
+    NSString *coordinatesStr = [[[NSString alloc] initWithData:coordinatesData encoding:NSUTF8StringEncoding] autorelease];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    [[myData objectAtIndex:index] objectForKey:@"id"], @"place",
                                    coordinatesStr, @"coordinates",
