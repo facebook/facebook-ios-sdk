@@ -949,6 +949,10 @@ static FBSession *g_activeSession = nil;
     }
 }
 
+-(BOOL)iosAtLeastVersionSix{
+	return [[[UIDevice currentDevice] systemVersion] compare:@"6.0" options:NSNumericSearch] != NSOrderedDescending;
+}
+
 - (void)authorizeUsingSystemAccountStore:(ACAccountStore*)accountStore
                              accountType:(ACAccountType*)accountType
                              permissions:(NSArray*)permissions
@@ -963,21 +967,23 @@ static FBSession *g_activeSession = nil;
         permissionsToUse = [FBSession addBasicInfoPermission:permissionsToUse];
     }
     
-    NSString *audience;
-    switch (defaultAudience) {
-        case FBSessionDefaultAudienceOnlyMe:
-            audience = ACFacebookAudienceOnlyMe;
-            break;
-        case FBSessionDefaultAudienceFriends:
-            audience = ACFacebookAudienceFriends;
-            break;
-        case FBSessionDefaultAudienceEveryone:
-            audience = ACFacebookAudienceEveryone;
-            break;
-        default:
-            audience = nil;
-    }
-    
+	NSString *audience = nil;
+	if([self iosAtLeastVersionSix]){
+		switch (defaultAudience) {
+			case FBSessionDefaultAudienceOnlyMe:
+				audience = @"me"; //ACFacebookAudienceOnlyMe
+				break;
+			case FBSessionDefaultAudienceFriends:
+				audience = @"friends"; //ACFacebookAudienceFriends
+				break;
+			case FBSessionDefaultAudienceEveryone:
+				audience = @"everyone"; //ACFacebookAudienceEveryone
+				break;
+			default:
+				audience = nil;
+		}
+	}
+	
     // no publish_* permissions are permitted with a nil audience
     if (!audience && isReauthorize) {
         for (NSString *p in permissions) {
@@ -993,12 +999,15 @@ static FBSession *g_activeSession = nil;
     }
     
     // construct access options
-    NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             self.appID, ACFacebookAppIdKey,
-                             permissionsToUse, ACFacebookPermissionsKey,
-                             audience, ACFacebookAudienceKey, // must end on this key/value due to audience possibly being nil
-                             nil];
-    
+    NSDictionary *options = nil;
+	if([self iosAtLeastVersionSix]){
+		options = [NSDictionary dictionaryWithObjectsAndKeys:
+				   self.appID, @"ACFacebookAppIdKey",
+				   permissionsToUse, @"ACFacebookPermissionsKey",
+				   audience, @"ACFacebookAudienceKey", // must end on this key/value due to audience possibly being nil
+				   nil];
+	}
+
     // we will attempt an iOS integrated facebook login
     [accountStore requestAccessToAccountsWithType:accountType
                                           options:options
