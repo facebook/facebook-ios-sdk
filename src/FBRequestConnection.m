@@ -1151,7 +1151,10 @@ typedef enum FBRequestConnectionState {
 
         if ([self isInvalidSessionError:itemError 
                             resultIndex:error == itemError ? i : 0]) {
-            [metadata.request.session closeAndClearTokenInformation];
+            [metadata.request.session closeAndClearTokenInformation:itemError];
+            if (metadata.request.session.loginType == FBSessionLoginTypeSystemAccount){
+                [FBSession renewSystemAuthorization];
+            }
         } else if ([metadata.request.session shouldExtendAccessToken]) {
             // If we have not had the opportunity to piggyback a token-extension request,
             // but we need to, do so now as a separate request.

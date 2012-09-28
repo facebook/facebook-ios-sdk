@@ -314,6 +314,7 @@
 -(void)settingsButtonWasPressed:(id)sender {
     if (self.settingsViewController == nil) {
         self.settingsViewController = [[FBUserSettingsViewController alloc] init];
+        self.settingsViewController.delegate = self;
     }
     [self.navigationController pushViewController:self.settingsViewController animated:YES];
 }
@@ -346,6 +347,19 @@
                                                             searchText:@"restaurant"
                                                           resultsLimit:50
                                                       fieldsForRequest:nil];
+}
+
+#pragma mark - FBUserSettingsDelegate methods
+
+- (void)loginViewController:(id)sender receivedError:(NSError *)error{
+    if (error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                            message:error.localizedDescription
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 #pragma mark UITableViewDataSource methods

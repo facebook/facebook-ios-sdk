@@ -20,10 +20,12 @@
 
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;
+- (void)closeAndClearTokenInformation:(NSError*) error;
 
 + (FBSession*)activeSessionIfOpen;
 
 + (void)deleteFacebookCookies;
 + (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime;
++ (void)renewSystemAuthorization;
 
 @end

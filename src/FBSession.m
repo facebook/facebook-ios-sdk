@@ -403,7 +403,10 @@ static FBSession *g_activeSession = nil;
 - (void)close {
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
-    FBSessionState state; 
+    FBSessionState state;
+    if (self.state = FBSessionStateClosed) {
+        return;
+    }
     if (self.state == FBSessionStateCreatedOpening) {
         state = FBSessionStateClosedLoginFailed;
     } else {
@@ -419,20 +422,7 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)closeAndClearTokenInformation {
-    NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
-
-    [[FBDataDiskCache sharedCache] removeDataForSession:self];
-    [self.tokenCachingStrategy clearToken];
-
-    // If we are not already in a terminal state, go to Closed.
-    if (!FB_ISSESSIONSTATETERMINAL(self.state)) {
-        [self transitionAndCallHandlerWithState:FBSessionStateClosed
-                                          error:nil
-                                          token:nil
-                                 expirationDate:nil
-                                    shouldCache:NO
-                                      loginType:FBSessionLoginTypeNone];
-    }
+    [self closeAndClearTokenInformation:nil];
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url {
@@ -622,6 +612,33 @@ static FBSession *g_activeSession = nil;
     return g_defaultAppID;
 }
 
+//calls ios6 renewCredentialsForAccount in order to update ios6's worldview of authorization state.
+// if not using ios6 system auth, this is a no-op.
++ (void)renewSystemAuthorization {
+    id accountStore = nil;
+    id accountTypeFB = nil;
+    
+    if ((accountStore = [[[ACAccountStore alloc] init] autorelease]) &&
+        (accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierFacebook] ) ){
+        
+        NSArray *fbAccounts = [accountStore accountsWithAccountType:accountTypeFB];
+        id account;
+        if (fbAccounts && [fbAccounts count] > 0 &&
+            (account = [fbAccounts objectAtIndex:0])){
+            
+            [accountStore renewCredentialsForAccount:account completion:^(ACAccountCredentialRenewResult renewResult, NSError *error) {
+                //we don't actually need to inspect renewResult or error.
+                if (error){
+                    [FBLogger singleShotLogEntry:FBLoggingBehaviorAccessTokens
+                                        logEntry:[NSString stringWithFormat:@"renewCredentialsForAccount result:%d, error: %@",
+                                                  renewResult,
+                                                  error]];
+                }
+            }];
+        }
+    }
+}
+
 #pragma mark -
 #pragma mark Private Members
 
@@ -681,7 +698,7 @@ static FBSession *g_activeSession = nil;
         loginType != FBSessionLoginTypeNone) {
         self.loginType = loginType;
     }
-
+    
     // invalid transition short circuits
     if (!isValidTransition) {
         [FBLogger singleShotLogEntry:FBLoggingBehaviorSessionStateTransitions
@@ -1664,6 +1681,23 @@ static FBSession *g_activeSession = nil;
         }
     }
     return expirationDate;
+}
+
+- (void)closeAndClearTokenInformation:(NSError*) error {
+    NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
+    
+    [[FBDataDiskCache sharedCache] removeDataForSession:self];
+    [self.tokenCachingStrategy clearToken];
+    
+    // If we are not already in a terminal state, go to Closed.
+    if (!FB_ISSESSIONSTATETERMINAL(self.state)) {
+        [self transitionAndCallHandlerWithState:FBSessionStateClosed
+                                          error:error
+                                          token:nil
+                                 expirationDate:nil
+                                    shouldCache:NO
+                                      loginType:FBSessionLoginTypeNone];
+    }
 }
 
 #pragma mark -
