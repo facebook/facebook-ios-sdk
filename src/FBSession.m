@@ -1657,7 +1657,7 @@ static FBSession *g_activeSession = nil;
         }
     }
 
-    NSMutableArray *newPermissions = [[NSMutableArray alloc] initWithArray:permissions];
+    NSMutableArray *newPermissions = [NSMutableArray arrayWithArray:permissions];
     [newPermissions addObject:@"email"];
     return newPermissions;
 }
