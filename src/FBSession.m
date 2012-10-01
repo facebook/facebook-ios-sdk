@@ -1020,6 +1020,13 @@ static FBSession *g_activeSession = nil;
     [accountStore requestAccessToAccountsWithType:accountType
                                           options:options
                                        completion:^(BOOL granted, NSError *error) {
+                                           FBConditionalLog(granted || error.code != ACErrorPermissionDenied ||
+                                                            [error.description rangeOfString:
+                                                                @"remote_app_id does not match stored id"].location == NSNotFound,
+                                                            @"System authorization failed:'%@'. This may be caused by a mismatch between"
+                                                            @" the bundle identifier and your app configuration on the server"
+                                                            @" at developers.facebook.com/apps.",
+                                                            error.localizedDescription);
                                            
                                            // this means the user has not signed-on to Facebook via the OS
                                            BOOL isUntosedDevice = (!granted && error.code == ACErrorAccountNotFound);
