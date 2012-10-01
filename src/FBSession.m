@@ -404,9 +404,6 @@ static FBSession *g_activeSession = nil;
     NSAssert(self.affinitizedThread == [NSThread currentThread], @"FBSession: should only be used from a single thread");
 
     FBSessionState state;
-    if (self.state = FBSessionStateClosed) {
-        return;
-    }
     if (self.state == FBSessionStateCreatedOpening) {
         state = FBSessionStateClosedLoginFailed;
     } else {
