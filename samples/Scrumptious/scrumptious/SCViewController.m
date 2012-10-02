@@ -154,10 +154,21 @@
                                          if ([[error userInfo][FBErrorParsedJSONResponseKey][@"body"][@"error"][@"code"] compare:@200] == NSOrderedSame) {
                                              [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
                                                                                         defaultAudience:FBSessionDefaultAudienceFriends
-                                                                                      completionHandler:^(FBSession *session, NSError *error) {
-                                                                                          if (!error) {
+                                                                                      completionHandler:^(FBSession *session, NSError *innerError) {
+                                                                                          if (!innerError) {
                                                                                               // re-call assuming we now have the permission
                                                                                               [self postOpenGraphAction];
+                                                                                          }
+                                                                                          else{
+                                                                                              //If we are here, this means the user has disallowed posting after a retry
+                                                                                              // which means iOS will have turned the app's slider to "off" in the
+                                                                                              // device settings->Facebook.
+                                                                                              [[[UIAlertView alloc] initWithTitle:@"Permission To Post Disallowed"
+                                                                                                                          message:@"Use device settings->Facebook to re-enable permission to post."
+                                                                                                                         delegate:nil
+                                                                                                                cancelButtonTitle:@"Thanks!"
+                                                                                                                otherButtonTitles:nil]
+                                                                                               show];
                                                                                           }
                                                                                       }];
                                          } else {
