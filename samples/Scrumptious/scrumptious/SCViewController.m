@@ -162,8 +162,10 @@
                                                                                       }];
                                          } else {
                                              [[[UIAlertView alloc] initWithTitle:@"Result"
-                                                                         message:[NSString stringWithFormat:@"error: domain = %@, code = %d",
-                                                                                  error.domain, error.code]
+                                                                         message:[NSString stringWithFormat:@"error: domain = %@, code = %@(%d)",
+                                                                                  error.domain,
+                                                                                  [SCAppDelegate FBErrorCodeDescription:error.code],
+                                                                                  error.code]
                                                                         delegate:nil
                                                                cancelButtonTitle:@"Thanks!"
                                                                otherButtonTitles:nil]
@@ -369,7 +371,8 @@
 
 - (void)loginViewController:(id)sender receivedError:(NSError *)error{
     if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@",
+                                                                     [SCAppDelegate FBErrorCodeDescription:error.code]]
                                                             message:error.localizedDescription
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"

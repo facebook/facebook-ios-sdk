@@ -1069,7 +1069,7 @@ static FBSession *g_activeSession = nil;
                                                                         isReauthorize:NO];
                                                    } else {
                                                        // create an error object with additional info regarding failed login
-                                                       NSError *err = [FBSession errorLoginFailedWithReason:nil
+                                                       NSError *err = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReason
                                                                                                     errorCode:nil
                                                                                                    innerError:error];
                                                        
