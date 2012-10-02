@@ -134,10 +134,14 @@
                                      [self.activityIndicator stopAnimating];
                                      [self.view setUserInteractionEnabled:YES];
                                      
-                                     NSString *alertText;
                                      if (!error) {
-                                         alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
-                                                      [result objectForKey:@"id"]];
+                                         [[[UIAlertView alloc] initWithTitle:@"Result"
+                                                                     message:[NSString stringWithFormat:@"Posted Open Graph action, id: %@",
+                                                                              [result objectForKey:@"id"]]
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"Thanks!"
+                                                           otherButtonTitles:nil]
+                                          show];
                                          
                                          // start over
                                          self.selectedMeal = nil;
@@ -145,15 +149,27 @@
                                          self.selectedFriends = nil;
                                          [self updateSelections];
                                      } else {
-                                         alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
-                                                      error.domain, error.code];
+                                         // do we lack permissions here? If so, the application's policy is to reask for the permissions, and if
+                                         // granted, we will recall this method in order to post the action
+                                         if ([[error userInfo][FBErrorParsedJSONResponseKey][@"body"][@"error"][@"code"] compare:@200] == NSOrderedSame) {
+                                             [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                                                        defaultAudience:FBSessionDefaultAudienceFriends
+                                                                                      completionHandler:^(FBSession *session, NSError *error) {
+                                                                                          if (!error) {
+                                                                                              // re-call assuming we now have the permission
+                                                                                              [self postOpenGraphAction];
+                                                                                          }
+                                                                                      }];
+                                         } else {
+                                             [[[UIAlertView alloc] initWithTitle:@"Result"
+                                                                         message:[NSString stringWithFormat:@"error: domain = %@, code = %d",
+                                                                                  error.domain, error.code]
+                                                                        delegate:nil
+                                                               cancelButtonTitle:@"Thanks!"
+                                                               otherButtonTitles:nil]
+                                              show];
+                                         }
                                      }
-                                     [[[UIAlertView alloc] initWithTitle:@"Result" 
-                                                                 message:alertText 
-                                                                delegate:nil 
-                                                       cancelButtonTitle:@"Thanks!" 
-                                                       otherButtonTitles:nil] 
-                                      show];
                                  }];
 }
 
