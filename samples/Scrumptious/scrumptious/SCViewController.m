@@ -160,9 +160,11 @@
                                                                                               [self postOpenGraphAction];
                                                                                           }
                                                                                           else{
-                                                                                              //If we are here, this means the user has disallowed posting after a retry
-                                                                                              // which means iOS will have turned the app's slider to "off" in the
+                                                                                              // If we are here, this means the user has disallowed posting after a retry
+                                                                                              // which means iOS 6.0 will have turned the app's slider to "off" in the
                                                                                               // device settings->Facebook.
+                                                                                              // You may want to customize the message for your application, since this
+                                                                                              // string is specifically for iOS 6.0.
                                                                                               [[[UIAlertView alloc] initWithTitle:@"Permission To Post Disallowed"
                                                                                                                           message:@"Use device settings->Facebook to re-enable permission to post."
                                                                                                                          delegate:nil
