@@ -28,7 +28,7 @@
  */
 
 #import "FBSBJsonBase.h"
-NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
+NSString * FBSBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
 
 
 @implementation FBSBJsonBase
@@ -61,7 +61,7 @@ NSString * SBJSONErrorDomain = @"org.brautaset.JSON.ErrorDomain";
                     nil];
     }
     
-    NSError *error = [NSError errorWithDomain:SBJSONErrorDomain code:code userInfo:userInfo];
+    NSError *error = [NSError errorWithDomain:FBSBJSONErrorDomain code:code userInfo:userInfo];
 
     [self willChangeValueForKey:@"errorTrace"];
     [errorTrace addObject:error];

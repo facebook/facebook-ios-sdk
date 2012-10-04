@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#import <FacebookSDK/FacebookSDK.h>
 #import "SCAppDelegate.h"
 #import "SCViewController.h"
 #import "SCLoginViewController.h"
@@ -82,8 +81,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                 [cacheDescriptor prefetchAndCacheForSession:session];
             }
             break;
-        case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed: {
+        case FBSessionStateClosed: {
                 // FBSample logic
                 // Once the user has logged out, we want them to be looking at the root view.
                 UIViewController *topViewController = [self.navController topViewController];
@@ -92,9 +90,15 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                     [topViewController dismissModalViewControllerAnimated:NO];
                 }
                 [self.navController popToRootViewControllerAnimated:NO];
-            
+                
                 [FBSession.activeSession closeAndClearTokenInformation];
             
+                [self performSelector:@selector(showLoginView)
+                       withObject:nil
+                       afterDelay:0.5f];
+            }
+            break;
+        case FBSessionStateClosedLoginFailed: {
                 // if the token goes invalid we want to switch right back to
                 // the login view, however we do it with a slight delay in order to
                 // account for a race between this and the login view dissappearing
@@ -112,7 +116,8 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                                                         object:session];
     
     if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@",
+                                                                     [SCAppDelegate FBErrorCodeDescription:error.code]]
                                                             message:error.localizedDescription
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
@@ -176,6 +181,36 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     }
     
     return YES;
+}
+
++ (NSString *)FBErrorCodeDescription:(FBErrorCode) code {
+    switch(code){
+        case FBErrorInvalid :{
+            return @"FBErrorInvalid";
+        }
+        case FBErrorOperationCancelled:{
+            return @"FBErrorOperationCancelled";
+        }
+        case FBErrorLoginFailedOrCancelled:{
+            return @"FBErrorLoginFailedOrCancelled";
+        }
+        case FBErrorRequestConnectionApi:{
+            return @"FBErrorRequestConnectionApi";
+        }case FBErrorProtocolMismatch:{
+            return @"FBErrorProtocolMismatch";
+        }
+        case FBErrorHTTPError:{
+            return @"FBErrorHTTPError";
+        }
+        case FBErrorNonTextMimeTypeReturned:{
+            return @"FBErrorNonTextMimeTypeReturned";
+        }
+        case FBErrorNativeDialog:{
+            return @"FBErrorNativeDialog";
+        }
+        default:
+            return @"[Unknown]";
+    }
 }
 
 @end

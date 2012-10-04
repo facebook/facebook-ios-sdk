@@ -220,7 +220,6 @@
     menuTableView.dataSource = self;
     menuTableView.delegate = self;
     menuTableView.hidden = YES;
-    //[self.view addSubview:menuTableView];
     
     // Table header
     headerView = [[UIView alloc]
