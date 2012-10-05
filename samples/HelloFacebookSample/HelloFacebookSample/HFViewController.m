@@ -254,9 +254,14 @@
          if (!donePressed) {
              return;
          }
-                
-         [[[UIAlertView alloc] initWithTitle:@"You Picked:" 
-                                     message:placePickerController.selection.name 
+         
+         NSString *placeName = placePickerController.selection.name;
+         if (!placeName) {
+             placeName = @"<No Place Selected>";
+         }
+
+         [[[UIAlertView alloc] initWithTitle:@"You Picked:"
+                                     message:placeName
                                     delegate:nil 
                            cancelButtonTitle:@"OK" 
                            otherButtonTitles:nil] 

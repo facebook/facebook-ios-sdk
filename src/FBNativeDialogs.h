@@ -30,7 +30,7 @@ typedef enum {
     FBNativeDialogResultSucceeded,
     /*! Indicates that the dialog action was cancelled (either by the user or the system). */
     FBNativeDialogResultCancelled,
-    /*! Indicates that the dialog action resulted in an error. */
+    /*! Indicates that the dialog could not be shown (because not on ios6 or ios6 auth was not used). */
     FBNativeDialogResultError
 } FBNativeDialogResult;
 

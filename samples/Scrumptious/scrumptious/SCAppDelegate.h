@@ -15,6 +15,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 extern NSString *const SCSessionStateChangedNotification;
 
@@ -35,4 +36,5 @@ extern NSString *const SCSessionStateChangedNotification;
 // FBSession, a login screen is displayed.
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
 
++ (NSString *)FBErrorCodeDescription:(FBErrorCode) code;
 @end

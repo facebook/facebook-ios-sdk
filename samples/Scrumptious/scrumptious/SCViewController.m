@@ -134,10 +134,14 @@
                                      [self.activityIndicator stopAnimating];
                                      [self.view setUserInteractionEnabled:YES];
                                      
-                                     NSString *alertText;
                                      if (!error) {
-                                         alertText = [NSString stringWithFormat:@"Posted Open Graph action, id: %@",
-                                                      [result objectForKey:@"id"]];
+                                         [[[UIAlertView alloc] initWithTitle:@"Result"
+                                                                     message:[NSString stringWithFormat:@"Posted Open Graph action, id: %@",
+                                                                              [result objectForKey:@"id"]]
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"Thanks!"
+                                                           otherButtonTitles:nil]
+                                          show];
                                          
                                          // start over
                                          self.selectedMeal = nil;
@@ -145,15 +149,42 @@
                                          self.selectedFriends = nil;
                                          [self updateSelections];
                                      } else {
-                                         alertText = [NSString stringWithFormat:@"error: domain = %@, code = %d",
-                                                      error.domain, error.code];
+                                         // do we lack permissions here? If so, the application's policy is to reask for the permissions, and if
+                                         // granted, we will recall this method in order to post the action
+                                         if ([[error userInfo][FBErrorParsedJSONResponseKey][@"body"][@"error"][@"code"] compare:@200] == NSOrderedSame) {
+                                             [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                                                                        defaultAudience:FBSessionDefaultAudienceFriends
+                                                                                      completionHandler:^(FBSession *session, NSError *innerError) {
+                                                                                          if (!innerError) {
+                                                                                              // re-call assuming we now have the permission
+                                                                                              [self postOpenGraphAction];
+                                                                                          }
+                                                                                          else{
+                                                                                              // If we are here, this means the user has disallowed posting after a retry
+                                                                                              // which means iOS 6.0 will have turned the app's slider to "off" in the
+                                                                                              // device settings->Facebook.
+                                                                                              // You may want to customize the message for your application, since this
+                                                                                              // string is specifically for iOS 6.0.
+                                                                                              [[[UIAlertView alloc] initWithTitle:@"Permission To Post Disallowed"
+                                                                                                                          message:@"Use device settings->Facebook to re-enable permission to post."
+                                                                                                                         delegate:nil
+                                                                                                                cancelButtonTitle:@"Thanks!"
+                                                                                                                otherButtonTitles:nil]
+                                                                                               show];
+                                                                                          }
+                                                                                      }];
+                                         } else {
+                                             [[[UIAlertView alloc] initWithTitle:@"Result"
+                                                                         message:[NSString stringWithFormat:@"error: domain = %@, code = %@(%d)",
+                                                                                  error.domain,
+                                                                                  [SCAppDelegate FBErrorCodeDescription:error.code],
+                                                                                  error.code]
+                                                                        delegate:nil
+                                                               cancelButtonTitle:@"Thanks!"
+                                                               otherButtonTitles:nil]
+                                              show];
+                                         }
                                      }
-                                     [[[UIAlertView alloc] initWithTitle:@"Result" 
-                                                                 message:alertText 
-                                                                delegate:nil 
-                                                       cancelButtonTitle:@"Thanks!" 
-                                                       otherButtonTitles:nil] 
-                                      show];
                                  }];
 }
 
@@ -314,6 +345,7 @@
 -(void)settingsButtonWasPressed:(id)sender {
     if (self.settingsViewController == nil) {
         self.settingsViewController = [[FBUserSettingsViewController alloc] init];
+        self.settingsViewController.delegate = self;
     }
     [self.navigationController pushViewController:self.settingsViewController animated:YES];
 }
@@ -346,6 +378,20 @@
                                                             searchText:@"restaurant"
                                                           resultsLimit:50
                                                       fieldsForRequest:nil];
+}
+
+#pragma mark - FBUserSettingsDelegate methods
+
+- (void)loginViewController:(id)sender receivedError:(NSError *)error{
+    if (error) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@",
+                                                                     [SCAppDelegate FBErrorCodeDescription:error.code]]
+                                                            message:error.localizedDescription
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 #pragma mark UITableViewDataSource methods
