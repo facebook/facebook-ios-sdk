@@ -671,7 +671,7 @@ static FBSession *g_activeSession = nil;
             isValidTransition = statePrior == FBSessionStateCreated;
             break;
         case FBSessionStateClosedLoginFailed:
-            isValidTransition = statePrior == FBSessionStateCreatedOpening;
+            isValidTransition = (statePrior == FBSessionStateCreatedOpening) || (FBSessionStateOpen == statePrior);
             break;
         case FBSessionStateOpenTokenExtended:
             isValidTransition = (
