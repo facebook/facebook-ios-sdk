@@ -106,6 +106,8 @@ typedef enum {
     FBSessionLoginBehaviorForcingWebView             = 2,
     /*! Attempt Facebook Login, prefering system account and falling back to fast app switch if necessary */
     FBSessionLoginBehaviorUseSystemAccountIfPresent  = 3,
+    /*! Attempt Facebook Login using the system account; otherwise fail without fallback */
+    FBSessionLoginBehaviorUseSystemAccountWithoutFallback  = 4,
 } FBSessionLoginBehavior;
 
 /*!

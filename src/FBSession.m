@@ -829,7 +829,8 @@ static FBSession *g_activeSession = nil;
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
-    BOOL tryIntegratedAuth = behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent;
+    BOOL tryIntegratedAuth = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
+			     (FBSessionLoginBehaviorUseSystemAccountWithoutFallback == behavior);
     BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
                             (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
                             (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
