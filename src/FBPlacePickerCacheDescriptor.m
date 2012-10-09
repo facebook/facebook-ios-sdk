@@ -52,9 +52,9 @@
     self = [super init];
     if (self) {
         self.locationCoordinate = locationCoordinate;
-        self.radiusInMeters = radiusInMeters <= 0 ? defaultRadius : radiusInMeters;
+        self.radiusInMeters = radiusInMeters <= 0 ? FBDefaultRadius : radiusInMeters;
         self.searchText = searchText;
-        self.resultsLimit = resultsLimit <= 0 ? defaultResultsLimit : resultsLimit;
+        self.resultsLimit = resultsLimit <= 0 ? FBDefaultResultsLimit : resultsLimit;
         self.fieldsForRequest = fieldsForRequest;
         self.hasCompletedFetch = NO;
     }
