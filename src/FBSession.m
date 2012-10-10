@@ -44,7 +44,7 @@ NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
 // for unit testing mode only (DO NOT store application secrets in a published application plist)
 static NSString *const FBPLISTAppSecretKey = @"FacebookAppSecret";
-static NSString *const FBPLISTUrlSchemeSuffix = @"FacebookUrlSchemeSuffix";
+static NSString *const FBPLISTUrlSchemeSuffixKey = @"FacebookUrlSchemeSuffix";
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
 static NSString *const FBRedirectURL = @"fbconnect://success";
@@ -623,7 +623,7 @@ static FBSession *g_activeSession = nil;
 + (NSString *)defaultUrlSchemeSuffix {
     if (!g_defaultUrlSchemeSuffix) {
         NSBundle* bundle = [NSBundle mainBundle];
-        g_defaultUrlSchemeSuffix = [bundle objectForInfoDictionaryKey:FBPLISTUrlSchemeSuffix];
+        g_defaultUrlSchemeSuffix = [bundle objectForInfoDictionaryKey:FBPLISTUrlSchemeSuffixKey];
     }
     return g_defaultUrlSchemeSuffix;
 }
