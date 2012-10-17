@@ -55,7 +55,7 @@ static NSString *const kAccessTokenKey = @"access_token";
             error:nil];
         
         dispatch_queue_t bgPriQueue = 
-            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
+            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
         _fileQueue = dispatch_queue_create(
             "File Cache Queue", 
             DISPATCH_QUEUE_SERIAL);
