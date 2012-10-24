@@ -671,7 +671,7 @@ static FBSession *g_activeSession = nil;
             isValidTransition = statePrior == FBSessionStateCreated;
             break;
         case FBSessionStateClosedLoginFailed:
-            isValidTransition = statePrior == FBSessionStateCreatedOpening;
+            isValidTransition = (statePrior == FBSessionStateCreatedOpening) || (FBSessionStateOpen == statePrior);
             break;
         case FBSessionStateOpenTokenExtended:
             isValidTransition = (
@@ -829,7 +829,8 @@ static FBSession *g_activeSession = nil;
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
-    BOOL tryIntegratedAuth = behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent;
+    BOOL tryIntegratedAuth = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
+			     (FBSessionLoginBehaviorUseSystemAccountWithoutFallback == behavior);
     BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
                             (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
                             (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
