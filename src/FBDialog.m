@@ -32,6 +32,9 @@ static CGFloat kTransitionDuration = 0.3;
 static CGFloat kPadding = 0;
 static CGFloat kBorderWidth = 10;
 
+static NSString* const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
+static NSString* const kApprequests = @"apprequests";
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 static BOOL FBIsDeviceIPad() {
@@ -444,7 +447,7 @@ params   = _params;
     NSURL* url = request.URL;
     
     if ([url.scheme isEqualToString:@"fbconnect"]) {
-        if ([[url.resourceSpecifier substringToIndex:8] isEqualToString:@"//cancel"]) {
+        if ([url.resourceSpecifier hasPrefix:@"//cancel"]) {
             NSString * errorCode = [self getStringFromUrl:[url absoluteString] needle:@"error_code="];
             NSString * errorStr = [self getStringFromUrl:[url absoluteString] needle:@"error_msg="];
             if (errorCode) {
@@ -460,7 +463,16 @@ params   = _params;
             if (_frictionlessSettings.enabled) {
                 [self dialogSuccessHandleFrictionlessResponses:url];
             }
-            [self dialogDidSucceed:url];
+            if ([_serverURL isEqualToString:[NSString stringWithFormat:@"%@%@", FBDialogBaseURL, kApprequests]]) {
+                NSString* requestID = [self getStringFromUrl:[url absoluteString] needle:@"request="];
+                if (requestID) {
+                    [self dialogDidSucceed:url];
+                } else {
+                    [self dialogDidCancel:url];
+                }
+            } else {
+                [self dialogDidSucceed:url];
+            }
         }
         return NO;
     } else if ([_loadingURL isEqual:url]) {
