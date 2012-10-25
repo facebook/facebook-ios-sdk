@@ -64,6 +64,6 @@ test -x "$SIMULATOR_DIR" || die 'Could not find simulator directory'
 
 write_plist "$SIMULATOR_DIR" $1 $2 $3
 
-for VERSION_DIR in "${SIMULATOR_DIR}"/[45].*; do
+for VERSION_DIR in "${SIMULATOR_DIR}"/[456].*; do
       write_plist "$VERSION_DIR" $1 $2 $3
 done

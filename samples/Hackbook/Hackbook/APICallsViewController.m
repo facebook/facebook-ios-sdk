@@ -262,11 +262,9 @@
 	NSMutableDictionary *params = [[[NSMutableDictionary alloc] init] autorelease];
 	for (NSString *pair in pairs) {
 		NSArray *kv = [pair componentsSeparatedByString:@"="];
-		NSString *val =
-        [[kv objectAtIndex:1]
-         stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
 
-		[params setObject:val forKey:[kv objectAtIndex:0]];
+		[params setObject:[[kv objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]
+                   forKey:[[kv objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 	}
     return params;
 }
@@ -355,7 +353,7 @@
  */
 - (void)apiDialogFeedUser {
     currentAPICall = kDialogFeedUser;
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    FBSBJSON *jsonWriter = [[FBSBJSON new] autorelease];
 
     // The action links to be shown with the post in the feed
     NSArray* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:
@@ -393,7 +391,7 @@
  */
 - (void)apiDialogFeedFriend:(NSString *)friendID {
     currentAPICall = kDialogFeedFriend;
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    FBSBJSON *jsonWriter = [[FBSBJSON new] autorelease];
 
     NSArray* actionLinks = [NSArray arrayWithObjects:[NSDictionary dictionaryWithObjectsAndKeys:
                                                            @"Get Started",@"name",@"http://m.facebook.com/apps/hackbookios/",@"link", nil], nil];
@@ -427,7 +425,7 @@
  */
 - (void)apiDialogRequestsSendToMany {
     currentAPICall = kDialogRequestsSendToMany;
-    SBJSON *jsonWriter = [[SBJSON new] autorelease];
+    FBSBJSON *jsonWriter = [[FBSBJSON new] autorelease];
     NSDictionary *gift = [NSDictionary dictionaryWithObjectsAndKeys:
                                  @"5", @"social_karma",
                                  @"1", @"badge_of_awesomeness",
@@ -1194,18 +1192,20 @@
         case kDialogRequestsSendToSelect:
         case kDialogRequestsSendToTarget:
         {
-            // Successful requests return one or more request_ids.
-            // Get any request IDs, will be in the URL in the form
-            // request_ids[0]=1001316103543&request_ids[1]=10100303657380180
-            NSMutableArray *requestIDs = [[[NSMutableArray alloc] init] autorelease];
+            // Successful requests return the id of the request
+            // and ids of recipients.
+            NSMutableArray *recipientIDs = [[[NSMutableArray alloc] init] autorelease];
             for (NSString *paramKey in params) {
-                if ([paramKey hasPrefix:@"request_ids"]) {
-                    [requestIDs addObject:[params objectForKey:paramKey]];
+                if ([paramKey hasPrefix:@"to["]) {
+                    [recipientIDs addObject:[params objectForKey:paramKey]];
                 }
             }
-            if ([requestIDs count] > 0) {
+            if ([params objectForKey:@"request"]){
+                NSLog(@"Request ID: %@", [params objectForKey:@"request"]);
+            }
+            if ([recipientIDs count] > 0) {
                 [self showMessage:@"Sent request successfully."];
-                NSLog(@"Request ID(s): %@", requestIDs);
+                NSLog(@"Recipient ID(s): %@", recipientIDs);
             }
             break;
         }

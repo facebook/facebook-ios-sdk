@@ -113,7 +113,7 @@ static FBCacheIndex* initTempCacheIndex(
 {
     NSString* filePath = [_dataCachePath stringByAppendingPathComponent:name];
     dispatch_async(_fileQueue, ^{
-        [[NSFileManager defaultManager] 
+        [[NSFileManager defaultManager]
             removeItemAtPath:filePath
             error:nil];
     });
@@ -237,6 +237,7 @@ static FBCacheIndex* initTempCacheIndex(
 
     // Wait for the queue to finish
     dispatch_sync(cacheIndex.databaseQueue, ^{});
+    dispatch_sync(_fileQueue, ^{});
     STAssertEquals(
         cacheIndex.currentDiskUsage, 
         fileSize*numberOfFiles, 
@@ -333,10 +334,11 @@ static FBCacheIndex* initTempCacheIndex(
     NSString *filePath = [tempFolder
         stringByAppendingPathComponent:fileName];
         
-    // Flush the write queue
+    // Flush the write queues
     dispatch_sync(cacheIndex.databaseQueue, ^{});
+    dispatch_sync(_fileQueue, ^{});
 
-    NSData *dataFromFile = [NSData 
+    NSData *dataFromFile = [NSData
         dataWithContentsOfFile:filePath
         options:NSDataReadingMappedAlways | NSDataReadingUncached 
         error:nil];
@@ -356,7 +358,7 @@ static FBCacheIndex* initTempCacheIndex(
     [cacheIndex removeEntryForKey:@"test1"];
     dispatch_sync(cacheIndex.databaseQueue, ^{});
     dispatch_sync(_fileQueue, ^{});
-    
+
     BOOL fileExists = [[NSFileManager defaultManager] 
         fileExistsAtPath:filePath];
     STAssertFalse(fileExists, @"File wasn't deleted at %@", filePath);

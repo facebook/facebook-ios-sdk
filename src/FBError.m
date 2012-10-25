@@ -29,3 +29,8 @@ NSString *const FBErrorReauthorizeFailedReasonUserCancelled = @"com.facebook.sdk
 NSString *const FBErrorReauthorizeFailedReasonWrongUser = @"com.facebook.sdk:ErrorReauthorizeFailedReasonWrongUser";
 
 NSString *const FBInvalidOperationException = @"com.facebook.sdk:InvalidOperationException";
+
+NSString *const FBErrorNativeDialogReasonKey = @"com.facebook.sdk:NativeDialogReasonKey";
+NSString *const FBErrorNativeDialogNotSupported = @"com.facebook.sdk:NativeDialogNotSupported";
+NSString *const FBErrorNativeDialogInvalidForSession = @"NativeDialogInvalidForSession";
+NSString *const FBErrorNativeDialogCantBeDisplayed = @"NativeDialogCantBeDisplayed";

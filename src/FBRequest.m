@@ -15,9 +15,9 @@
  */
 
 #import "Facebook.h"
-#import "JSON.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
+#import "FBSDKVersion.h"
 
 // constants
 NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
@@ -53,29 +53,6 @@ static NSString *const kPostHTTPMethod = @"POST";
                       HTTPMethod:nil];
 }
 
-- (id)initWithSession:(FBSession*)session
-            graphPath:(NSString *)graphPath
-           parameters:(NSDictionary *)parameters
-           HTTPMethod:(NSString *)HTTPMethod
-{
-    if (self = [super init]) {
-        // set default for nil
-        if (!HTTPMethod) {
-            HTTPMethod = kGetHTTPMethod;
-        }
-        
-        self.session = session;
-        self.graphPath = graphPath;
-        self.HTTPMethod = HTTPMethod;
-        
-        _parameters = [[NSMutableDictionary alloc] init];
-        if (parameters) {
-            [self.parameters addEntriesFromDictionary:parameters];
-        }
-    }
-    return self;
-}
-
 - (id)initForPostWithSession:(FBSession*)session
                    graphPath:(NSString *)graphPath
                  graphObject:(id<FBGraphObject>)graphObject {
@@ -94,6 +71,22 @@ static NSString *const kPostHTTPMethod = @"POST";
            parameters:(NSDictionary *)parameters
            HTTPMethod:(NSString *)HTTPMethod
 {
+    // reusing the more common initializer...
+    self = [self initWithSession:session
+                       graphPath:nil     // but assuring a nil graphPath for the rest case
+                      parameters:parameters
+                      HTTPMethod:HTTPMethod];
+    if (self) {
+        self.restMethod = restMethod;
+    }
+    return self;
+}
+
+- (id)initWithSession:(FBSession*)session
+            graphPath:(NSString *)graphPath
+           parameters:(NSDictionary *)parameters
+           HTTPMethod:(NSString *)HTTPMethod
+{
     if (self = [super init]) {
         // set default for nil
         if (!HTTPMethod) {
@@ -101,11 +94,14 @@ static NSString *const kPostHTTPMethod = @"POST";
         }
         
         self.session = session;
-        self.restMethod = restMethod;
+        self.graphPath = graphPath;
         self.HTTPMethod = HTTPMethod;
         
-        _parameters = [[NSMutableDictionary alloc] init];
+        // all request objects start life with a migration bundle set for the SDK
+        _parameters = [[NSMutableDictionary alloc]
+                       initWithObjectsAndKeys:FB_IOS_SDK_MIGRATION_BUNDLE, @"migration_bundle", nil];
         if (parameters) {
+            // but the incoming dictionary's migration bundle trumps the default one, if present
             [self.parameters addEntriesFromDictionary:parameters];
         }
     }

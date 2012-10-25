@@ -56,16 +56,44 @@ CGSize g_imageSize;
     session = _session,
     request = _request,
     user = _user,
-    permissions = _permissions;
+    permissions = _permissions,
+    readPermissions = _readPermissions,
+    publishPermissions = _publishPermissions,
+    defaultAudience = _defaultAudience;
+
 
 - (id)init {
-    return [self initWithPermissions:nil];
+    self = [super init];
+    if (self) {
+        [self initialize];
+    }
+    return self;
 }
 
 - (id)initWithPermissions:(NSArray *)permissions {
     self = [super init];
     if (self) {
         self.permissions = permissions;
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithReadPermissions:(NSArray *)readPermissions {
+    self = [super init];
+    if (self) {
+        self.readPermissions = readPermissions;
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithPublishPermissions:(NSArray *)publishPermissions
+                 defaultAudience:(FBSessionDefaultAudience)defaultAudience {
+    self = [super init];
+    if (self) {
+        self.publishPermissions = publishPermissions;
+        self.defaultAudience = defaultAudience;
         [self initialize];
     }
     return self;
@@ -130,9 +158,7 @@ CGSize g_imageSize;
     
     // if our session has a cached token ready, we open it; note that it is important
     // that we open the session before notification wiring is in place
-    [FBSession openActiveSessionWithPermissions:self.permissions
-                                   allowLoginUI:NO
-                              completionHandler:nil];
+    [FBSession openActiveSessionWithAllowLoginUI:NO];
 
     // wire-up the current session to the login view, before adding global session-change handlers
     [self wireViewForSession:FBSession.activeSession];
@@ -289,9 +315,7 @@ CGSize g_imageSize;
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession openActiveSessionWithPermissions:self.permissions
-                                       allowLoginUI:NO
-                                  completionHandler:nil];
+        [FBSession openActiveSessionWithAllowLoginUI:NO];
     }    
 }
 
@@ -335,12 +359,40 @@ CGSize g_imageSize;
     }
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
-            [FBSession openActiveSessionWithPermissions:self.permissions
-                                           allowLoginUI:YES
-                                      completionHandler:nil];
+            
+            // the policy here is:
+            // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
+            // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
+            // 3) if you provide any publish permissions, then we combine the read-set and publish-set and call the publish-based
+            //    method that will use integrated auth when availab le
+            // 4) if you provide any publish permissions, and don't specify a valid audience, the control will throw an exception
+            //    when the user presses login
+            if (self.permissions) {
+                [FBSession openActiveSessionWithPermissions:self.permissions
+                                               allowLoginUI:YES
+                                          completionHandler:nil];
+            } else if (![self.publishPermissions count]) {
+                [FBSession openActiveSessionWithReadPermissions:self.publishPermissions
+                                                   allowLoginUI:YES
+                                              completionHandler:nil];
+            } else {
+                // combined read and publish permissions will usually fail, but if the app wants us to
+                // try it here, then we will pass the aggregate set to the server
+                NSArray *permissions = self.publishPermissions;
+                if ([self.readPermissions count]) {
+                    NSMutableSet *set = [NSMutableSet setWithArray:self.publishPermissions];
+                    [set addObjectsFromArray:self.readPermissions];
+                    permissions = [set allObjects];
+                }
+                [FBSession openActiveSessionWithPublishPermissions:permissions
+                                                   defaultAudience:self.defaultAudience
+                                                      allowLoginUI:YES
+                                                 completionHandler:nil];
+            }
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;
@@ -373,5 +425,5 @@ CGSize g_imageSize;
         [self informDelegate:NO];
     }
 }
-
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 @end

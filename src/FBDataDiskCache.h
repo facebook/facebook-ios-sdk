@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FBSession.h"
 
 @class FBCacheIndex;
 
@@ -38,5 +39,6 @@
 - (NSData*)dataForURL:(NSURL*)dataURL;
 - (void)setData:(NSData*)data forURL:(NSURL*)url;
 - (void)removeDataForUrl:(NSURL*)url;
+- (void)removeDataForSession:(FBSession*)session;
 
 @end

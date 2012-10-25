@@ -84,14 +84,9 @@
      */
     
     // FBSample logic
-    // this means the user switched back to this app without completing a login in Safari/Facebook App
-    if (self.session.state == FBSessionStateCreatedOpening) {
-        // BUG: for the iOS 6 preview we comment this line out to compensate for a race-condition in our
-        // state transition handling for integrated Facebook Login; production code should close a
-        // session in the opening state on transition back to the application; this line will again be
-        // active in the next production rev
-        //[self.session close]; // so we close our session and start over
-    }
+    // We need to properly handle activation of the application with regards to SSO
+    //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
+    [FBSession.activeSession handleDidBecomeActive];
 }
 
 #pragma mark Template generated code

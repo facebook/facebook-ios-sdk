@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-#import <FacebookSDK/FacebookSDK.h>
 #import "SCAppDelegate.h"
 #import "SCViewController.h"
 #import "SCLoginViewController.h"
@@ -25,6 +24,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 
 @property (strong, nonatomic) UINavigationController *navController;
 @property (strong, nonatomic) SCViewController *mainViewController;
+@property (strong, nonatomic) SCLoginViewController* loginViewController;
 
 - (void)showLoginView;
 
@@ -35,25 +35,25 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 @synthesize window = _window;
 @synthesize mainViewController = _mainViewController;
 @synthesize navController = _navController;
+@synthesize loginViewController = _loginViewController;
 
 #pragma mark -
 #pragma mark Facebook Login Code
 
+- (void)createAndPresentLoginView {
+    if (self.loginViewController == nil) {
+        self.loginViewController = [[SCLoginViewController alloc] initWithNibName:@"SCLoginViewController"
+                                                                           bundle:nil];
+        UIViewController *topViewController = [self.navController topViewController];
+        [topViewController presentModalViewController:self.loginViewController animated:NO];
+    }
+}
+
 - (void)showLoginView {
-    UIViewController *topViewController = [self.navController topViewController];
-    UIViewController *modalViewController = [topViewController modalViewController];
-    
-    // FBSample logic
-    // If the login screen is not already displayed, display it. If the login screen is displayed, then
-    // getting back here means the login in progress did not successfully complete. In that case,
-    // notify the login view so it can update its UI appropriately.
-    if (![modalViewController isKindOfClass:[SCLoginViewController class]]) {
-        SCLoginViewController* loginViewController = [[SCLoginViewController alloc]initWithNibName:@"SCLoginViewController" 
-                                                                                            bundle:nil];
-        [topViewController presentModalViewController:loginViewController animated:NO];
+    if (self.loginViewController == nil) {
+        [self createAndPresentLoginView];
     } else {
-        SCLoginViewController* loginViewController = (SCLoginViewController*)modalViewController;
-        [loginViewController loginFailed];
+        [self.loginViewController loginFailed];
     }
 }
 
@@ -67,11 +67,13 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     // is opened successfully, hide the login controller and show the main UI.
     switch (state) {
         case FBSessionStateOpen: {
-                UIViewController *topViewController = [self.navController topViewController];
-                if ([[topViewController modalViewController] isKindOfClass:[SCLoginViewController class]]) {
+                [self.mainViewController startLocationManager];
+                if (self.loginViewController != nil) {
+                    UIViewController *topViewController = [self.navController topViewController];
                     [topViewController dismissModalViewControllerAnimated:YES];
+                    self.loginViewController = nil;
                 }
-                
+
                 // FBSample logic
                 // Pre-fetch and cache the friends for the friend picker as soon as possible to improve
                 // responsiveness when the user tags their friends.
@@ -79,15 +81,32 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                 [cacheDescriptor prefetchAndCacheForSession:session];
             }
             break;
-        case FBSessionStateClosed:
-        case FBSessionStateClosedLoginFailed:
-            // FBSample logic
-            // Once the user has logged in, we want them to be looking at the root view.
-            [self.navController popToRootViewControllerAnimated:NO];
+        case FBSessionStateClosed: {
+                // FBSample logic
+                // Once the user has logged out, we want them to be looking at the root view.
+                UIViewController *topViewController = [self.navController topViewController];
+                UIViewController *modalViewController = [topViewController modalViewController];
+                if (modalViewController != nil) {
+                    [topViewController dismissModalViewControllerAnimated:NO];
+                }
+                [self.navController popToRootViewControllerAnimated:NO];
+                
+                [FBSession.activeSession closeAndClearTokenInformation];
             
-            [FBSession.activeSession closeAndClearTokenInformation];
-            
-            [self showLoginView];
+                [self performSelector:@selector(showLoginView)
+                       withObject:nil
+                       afterDelay:0.5f];
+            }
+            break;
+        case FBSessionStateClosedLoginFailed: {
+                // if the token goes invalid we want to switch right back to
+                // the login view, however we do it with a slight delay in order to
+                // account for a race between this and the login view dissappearing
+                // a moment before
+                [self performSelector:@selector(showLoginView)
+                           withObject:nil
+                           afterDelay:0.5f];
+            }
             break;
         default:
             break;
@@ -97,7 +116,8 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
                                                         object:session];
     
     if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@",
+                                                                     [SCAppDelegate FBErrorCodeDescription:error.code]]
                                                             message:error.localizedDescription
                                                            delegate:nil
                                                   cancelButtonTitle:@"OK"
@@ -107,11 +127,10 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
 }
 
 - (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI {
-    NSArray *permissions = [NSArray arrayWithObjects:@"publish_actions", @"user_photos", nil];
-    return [FBSession openActiveSessionWithPermissions:permissions
-                                          allowLoginUI:allowLoginUI
-                                     completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
-                                         [self sessionStateChanged:session state:state error:error];
+    return [FBSession openActiveSessionWithReadPermissions:nil
+                                              allowLoginUI:allowLoginUI
+                                         completionHandler:^(FBSession *session, FBSessionState state, NSError *error) {
+                                             [self sessionStateChanged:session state:state error:error];
                                      }];    
 }
 
@@ -122,7 +141,7 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     // FBSample logic
     // We need to handle URLs by passing them to FBSession in order for SSO authentication
     // to work.
-    return [FBSession.activeSession handleOpenURL:url]; 
+    return [FBSession.activeSession handleOpenURL:url];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -133,16 +152,13 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     [FBSession.activeSession close];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application	{	
-    // this means the user switched back to this app without completing a login in Safari/Facebook App
-    if (FBSession.activeSession.state == FBSessionStateCreatedOpening) {
-        // BUG: for the iOS 6 preview we comment this line out to compensate for a race-condition in our
-        // state transition handling for integrated Facebook Login; production code should close a
-        // session in the opening state on transition back to the application; this line will again be
-        // active in the next production rev
-        //[FBSession.activeSession close]; // so we close our session and start over
-    }	
+- (void)applicationDidBecomeActive:(UIApplication *)application	{
+    // FBSample logic
+    // We need to properly handle activation of the application with regards to SSO
+    //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
+    [FBSession.activeSession handleDidBecomeActive];
 }
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // BUG WORKAROUND:
     // Nib files require the type to have been loaded before they can do the
@@ -165,6 +181,36 @@ NSString *const SCSessionStateChangedNotification = @"com.facebook.Scrumptious:S
     }
     
     return YES;
+}
+
++ (NSString *)FBErrorCodeDescription:(FBErrorCode) code {
+    switch(code){
+        case FBErrorInvalid :{
+            return @"FBErrorInvalid";
+        }
+        case FBErrorOperationCancelled:{
+            return @"FBErrorOperationCancelled";
+        }
+        case FBErrorLoginFailedOrCancelled:{
+            return @"FBErrorLoginFailedOrCancelled";
+        }
+        case FBErrorRequestConnectionApi:{
+            return @"FBErrorRequestConnectionApi";
+        }case FBErrorProtocolMismatch:{
+            return @"FBErrorProtocolMismatch";
+        }
+        case FBErrorHTTPError:{
+            return @"FBErrorHTTPError";
+        }
+        case FBErrorNonTextMimeTypeReturned:{
+            return @"FBErrorNonTextMimeTypeReturned";
+        }
+        case FBErrorNativeDialog:{
+            return @"FBErrorNativeDialog";
+        }
+        default:
+            return @"[Unknown]";
+    }
 }
 
 @end

@@ -80,7 +80,7 @@ typedef enum {
  @typedef FBSessionLoginBehavior enum
  
  @abstract 
- Passed to login to indicate whether Facebook Login should allow for fallback to be attempted.
+ Passed to open to indicate whether Facebook Login should allow for fallback to be attempted.
  
  @discussion
  Facebook Login authorizes the application to act on behalf of the user, using the user's 
@@ -94,7 +94,7 @@ typedef enum {
  
  The `FBSessionLoginBehavior` enum specifies whether to allow fallback, disallow fallback, or
  force fallback login behavior. Most applications will use the default, which attempts a normal
- Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disalow
+ Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disallow
  fallback Facebook Login completely, or to force a fallback login.
  */
 typedef enum {
@@ -104,7 +104,60 @@ typedef enum {
     FBSessionLoginBehaviorWithNoFallbackToWebView    = 1,
     /*! Only attempt WebView Login; ask user for credentials */
     FBSessionLoginBehaviorForcingWebView             = 2,
+    /*! Attempt Facebook Login, prefering system account and falling back to fast app switch if necessary */
+    FBSessionLoginBehaviorUseSystemAccountIfPresent  = 3,
 } FBSessionLoginBehavior;
+
+/*!
+ @typedef FBSessionDefaultAudience enum
+ 
+ @abstract
+ Passed to open to indicate which default audience to use for sessions that post data to Facebook.
+ 
+ @discussion
+ Certain operations such as publishing a status or publishing a photo require an audience. When the user
+ grants an application permission to perform a publish operation, a default audience is selected as the 
+ publication ceiling for the application. This enumerated value allows the application to select which
+ audience to ask the user to grant publish permission for.
+ */
+typedef enum {
+    /*! No audience needed; this value is useful for cases where data will only be read from Facebook */
+    FBSessionDefaultAudienceNone                = 0,
+    /*! Indicates that only the user is able to see posts made by the application */
+    FBSessionDefaultAudienceOnlyMe              = 10,
+    /*! Indicates that the user's friends are able to see posts made by the application */
+    FBSessionDefaultAudienceFriends             = 20,
+    /*! Indicates that all Facebook users are able to see posts made by the application */
+    FBSessionDefaultAudienceEveryone            = 30,
+} FBSessionDefaultAudience;
+
+/*!
+ @typedef FBSessionLoginType enum
+ 
+ @abstract
+ Used as the type of the loginType property in order to specify what underlying technology was used to
+ login the user.
+ 
+ @discussion
+ The FBSession object is an abstraction over five distinct mechanisms. This enum allows an application
+ to test for the mechanism used by a particular instance of FBSession. Usually the mechanism used for a
+ given login does not matter, however for certain capabilities, the type of login can impact the behavior
+ of other Facebook functionality.
+ */
+typedef enum {
+    /*! A login type has not yet been established */
+    FBSessionLoginTypeNone                      = 0,
+    /*! A system integrated account was used to log the user into the application */
+    FBSessionLoginTypeSystemAccount             = 1,
+    /*! The Facebook native application was used to log the user into the application */
+    FBSessionLoginTypeFacebookApplication       = 2,
+    /*! Safari was used to log the user into the application */
+    FBSessionLoginTypeFacebookViaSafari         = 3,
+    /*! A web view was used to log the user into the application */
+    FBSessionLoginTypeWebView                   = 4,
+    /*! A test user was used to create an open session */
+    FBSessionLoginTypeTestUser                  = 5,
+} FBSessionLoginType;
 
 /*! 
  @typedef
@@ -170,10 +223,37 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  default values for parameters to <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
  
  @param permissions  An array of strings representing the permissions to request during the
- authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ authentication flow. A value of nil indicates basic permissions. The default is nil.
+ 
+ @discussion
+ It is required that any single permission request request (including initial log in) represent read-only permissions
+ or publish permissions only; not both. The permissions passed here should reflect this requirement.
 
  */
 - (id)initWithPermissions:(NSArray*)permissions;
+
+/*!
+ @method
+ 
+ @abstract
+ Following are the descriptions of the arguments along with their
+ defaults when ommitted.
+ 
+ @param permissions  An array of strings representing the permissions to request during the
+ authentication flow. A value of nil indicates basic permissions. The default is nil.
+ @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
+ @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
+ @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
+ indicates a default value of @"FBAccessTokenInformationKey".
+ 
+ @discussion
+ It is required that any single permission request request (including initial log in) represent read-only permissions
+ or publish permissions only; not both. The permissions passed here should reflect this requirement.
+ */
+- (id)initWithAppID:(NSString*)appID
+        permissions:(NSArray*)permissions
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
 
 /*!
  @method
@@ -183,16 +263,23 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  defaults when ommitted.
  
  @param permissions  An array of strings representing the permissions to request during the
- authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ authentication flow. A value of nil indicates basic permissions. The default is nil.
+ @param defaultAudience  Most applications use FBSessionDefaultAudienceNone here, only specifying an audience when using reauthorize to request publish permissions.
  @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
  @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
  @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
  indicates a default value of @"FBAccessTokenInformationKey".
+ 
+ @discussion
+ It is required that any single permission request request (including initial log in) represent read-only permissions
+ or publish permissions only; not both. The permissions passed here should reflect this requirement. If publish permissions
+ are used, then the audience must also be specified.
  */
 - (id)initWithAppID:(NSString*)appID
-           permissions:(NSArray*)permissions
-       urlSchemeSuffix:(NSString*)urlSchemeSuffix
-    tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
+        permissions:(NSArray*)permissions
+    defaultAudience:(FBSessionDefaultAudience)defaultAudience
+    urlSchemeSuffix:(NSString*)urlSchemeSuffix
+ tokenCacheStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy;
 
 // instance readonly properties         
 
@@ -216,6 +303,9 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 /*! @abstract The permissions granted to the access token during the authentication flow. */
 @property(readonly, copy) NSArray *permissions;
+
+/*! @abstract Specifies the login type used to authenticate the user. */
+@property(readonly) FBSessionLoginType loginType;
 
 /*!
  @methodgroup Instance methods
@@ -281,16 +371,48 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*!
  @abstract
  Reauthorizes the session, with additional permissions.
-  
+ 
  @param permissions An array of strings representing the permissions to request during the
- authentication flow. A value of nil will indicates basic permissions. The default is nil.
+ authentication flow. A value of nil indicates basic permissions. The default is nil.
  @param behavior Controls whether to allow, force, or prohibit Facebook Login. The default
  is to allow Facebook Login and fall back to Inline Facebook Login if needed.
  @param handler A block to call with session state changes. The default is nil.
+ 
+ @discussion Methods and properties that specify permissions without a read or publish
+ qualification are deprecated; use of a read-qualified or publish-qualified alternative is preferred
+ (e.g. reauthorizeWithReadPermissions or reauthorizeWithPublishPermissions)
  */
 - (void)reauthorizeWithPermissions:(NSArray*)permissions
                           behavior:(FBSessionLoginBehavior)behavior
-                 completionHandler:(FBSessionReauthorizeResultHandler)handler;
+                 completionHandler:(FBSessionReauthorizeResultHandler)handler
+ __attribute__((deprecated));
+
+/*!
+ @abstract
+ Reauthorizes the session, with additional permissions.
+ 
+ @param readPermissions An array of strings representing the permissions to request during the
+ authentication flow. A value of nil indicates basic permissions.
+ 
+ @param handler A block to call with session state changes. The default is nil.
+ */
+- (void)reauthorizeWithReadPermissions:(NSArray*)readPermissions
+                     completionHandler:(FBSessionReauthorizeResultHandler)handler;
+
+/*!
+ @abstract
+ Reauthorizes the session, with additional permissions.
+  
+ @param writePermissions An array of strings representing the permissions to request during the
+ authentication flow.
+ 
+ @param defaultAudience Specifies the audience for posts.
+ 
+ @param handler A block to call with session state changes. The default is nil.
+ */
+- (void)reauthorizeWithPublishPermissions:(NSArray*)writePermissions
+                        defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                      completionHandler:(FBSessionReauthorizeResultHandler)handler;
 
 /*!
  @abstract
@@ -301,6 +423,14 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @param url The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 */
 - (BOOL)handleOpenURL:(NSURL*)url;
+
+/*!
+ @abstract
+ A helper method that is used to provide an implementation for
+ [UIApplicationDelegate applicationDidBecomeActive:] to properly resolve session state for
+ the Facebook Login flow, specifically to support app-switch login.
+*/
+- (void)handleDidBecomeActive;
 
 /*!
  @methodgroup Class methods
@@ -338,7 +468,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  used by the application. This session becomes the active session, whether open succeeds or fails.
  
  @param permissions     An array of strings representing the permissions to request during the
- authentication flow. A value of nil will indicates basic permissions. A nil value specifies 
+ authentication flow. A value of nil indicates basic permissions. A nil value specifies 
  default permissions.
   
  @param allowLoginUI    Sometimes it is useful to attempt to open a session, but only if
@@ -358,10 +488,87 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  possible that the user will login, and the session will become open asynchronously. The primary use for
  this return value is to switch-on facebook capabilities in your UX upon startup, in the case were the session
  is opened via cache.
+ 
+ It is required that initial permissions requests represent read-only permissions only. If publish
+ permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
+ well as an audience. Use of this method will result in a legacy fast-app-switch Facebook Login due to
+ the requirement to seperate read and publish permissions for newer applications. Methods and properties
+ that specify permissions without a read or publish qualification are deprecated; use of a read-qualified 
+ or publish-qualified alternative is preferred.
  */
 + (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
                             allowLoginUI:(BOOL)allowLoginUI
-                       completionHandler:(FBSessionStateHandler)handler;
+                       completionHandler:(FBSessionStateHandler)handler
+ __attribute__((deprecated));
+
+/*!
+ @abstract
+ This is a simple method for opening a session with Facebook. Using sessionOpen logs on a user,
+ and sets the static activeSession which becomes the default session object for any Facebook UI widgets
+ used by the application. This session becomes the active session, whether open succeeds or fails.
+ 
+ @param readPermissions     An array of strings representing the read permissions to request during the
+ authentication flow. A value of nil indicates basic permissions. It is not allowed to pass publish
+ permissions to this method.
+ 
+ @param allowLoginUI    Sometimes it is useful to attempt to open a session, but only if
+ no login UI will be required to accomplish the operation. For example, at application startup it may not
+ be desirable to transition to login UI for the user, and yet an open session is desired so long as a cached
+ token can be used to open the session. Passing NO to this argument, assures the method will not present UI
+ to the user in order to open the session.
+ 
+ @param handler                 Many applications will benefit from notification when a session becomes invalid
+ or undergoes other state transitions. If a block is provided, the FBSession
+ object will call the block each time the session changes state.
+ 
+ @discussion
+ Returns true if the session was opened synchronously without presenting UI to the user. This occurs
+ when there is a cached token available from a previous run of the application. If NO is returned, this indicates
+ that the session was not immediately opened, via cache. However, if YES was passed as allowLoginUI, then it is
+ possible that the user will login, and the session will become open asynchronously. The primary use for
+ this return value is to switch-on facebook capabilities in your UX upon startup, in the case were the session
+ is opened via cache.
+ 
+ */
++ (BOOL)openActiveSessionWithReadPermissions:(NSArray*)readPermissions
+                                allowLoginUI:(BOOL)allowLoginUI
+                           completionHandler:(FBSessionStateHandler)handler;
+
+/*!
+ @abstract
+ This is a simple method for opening a session with Facebook. Using sessionOpen logs on a user,
+ and sets the static activeSession which becomes the default session object for any Facebook UI widgets
+ used by the application. This session becomes the active session, whether open succeeds or fails.
+ 
+ @param publishPermissions     An array of strings representing the publish permissions to request during the
+ authentication flow.
+ 
+ @param defaultAudience     Anytime an app publishes on behalf of a user, the post must have an audience (e.g. me, my friends, etc.) 
+ The default audience is used to notify the user of the cieling that the user agrees to grant to the app for the provided permissions.
+ 
+ @param allowLoginUI    Sometimes it is useful to attempt to open a session, but only if
+ no login UI will be required to accomplish the operation. For example, at application startup it may not
+ be desirable to transition to login UI for the user, and yet an open session is desired so long as a cached
+ token can be used to open the session. Passing NO to this argument, assures the method will not present UI
+ to the user in order to open the session.
+ 
+ @param handler                 Many applications will benefit from notification when a session becomes invalid
+ or undergoes other state transitions. If a block is provided, the FBSession
+ object will call the block each time the session changes state.
+ 
+ @discussion
+ Returns true if the session was opened synchronously without presenting UI to the user. This occurs
+ when there is a cached token available from a previous run of the application. If NO is returned, this indicates
+ that the session was not immediately opened, via cache. However, if YES was passed as allowLoginUI, then it is
+ possible that the user will login, and the session will become open asynchronously. The primary use for
+ this return value is to switch-on facebook capabilities in your UX upon startup, in the case were the session
+ is opened via cache.
+ 
+ */
++ (BOOL)openActiveSessionWithPublishPermissions:(NSArray*)publishPermissions
+                                defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                                   allowLoginUI:(BOOL)allowLoginUI
+                              completionHandler:(FBSessionStateHandler)handler;
 
 /*!
  @abstract
