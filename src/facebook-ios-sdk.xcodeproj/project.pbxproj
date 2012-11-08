@@ -32,7 +32,6 @@
 		8460F3E015595BE800038963 /* FBLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F7CB41F1553ACC600C183CF /* FBLogger.m */; };
 		849CB18C1523416B00112220 /* FBLoginDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0611D5293B000A4545 /* FBLoginDialog.h */; settings = {ATTRIBUTES = (); }; };
 		849CB18D1523416B00112220 /* FBDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = AEA93B0811D5293B000A4545 /* FBDialog.h */; settings = {ATTRIBUTES = (); }; };
-		84AB66281510F21200D9EE5F /* (null) in Headers */ = {isa = PBXBuildFile; settings = {ATTRIBUTES = (Public, ); }; };
 		84AE5DA3152EA02500C4DE54 /* FBGraphObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 84AE5DA1152EA02500C4DE54 /* FBGraphObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		84AE5DA4152EA02500C4DE54 /* FBGraphObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 84AE5DA2152EA02500C4DE54 /* FBGraphObject.m */; };
 		84B2F69E1525096B00E93C17 /* FBSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 84BEDF4C151BC24F00F89C3B /* FBSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -545,7 +544,6 @@
 			files = (
 				E23E5A0B1521161900A011A8 /* FBError.h in Headers */,
 				B9DC7F40151AB56100DF1158 /* FBProfilePictureView.h in Headers */,
-				84AB66281510F21200D9EE5F /* (null) in Headers */,
 				AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */,
 				849CB18C1523416B00112220 /* FBLoginDialog.h in Headers */,
 				849CB18D1523416B00112220 /* FBDialog.h in Headers */,
