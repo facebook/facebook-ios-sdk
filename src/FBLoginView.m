@@ -117,8 +117,11 @@ CGSize g_imageSize;
 
 - (void)dealloc {
     
-    // removes all observers for self
+    // Remove self as observer for global notifications
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    // Remove self as observer for KVO notifications on self.session
+    [self unwireViewForSession];
     
     // if we have an outstanding request, cancel
     [self.request cancel];
