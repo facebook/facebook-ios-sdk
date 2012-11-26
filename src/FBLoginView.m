@@ -376,7 +376,7 @@ CGSize g_imageSize;
                                                allowLoginUI:YES
                                           completionHandler:nil];
             } else if (![self.publishPermissions count]) {
-                [FBSession openActiveSessionWithReadPermissions:self.publishPermissions
+                [FBSession openActiveSessionWithReadPermissions:self.readPermissions
                                                    allowLoginUI:YES
                                               completionHandler:nil];
             } else {
