@@ -76,6 +76,7 @@ static int const FBTokenRetryExtendSeconds = 60 * 60;           // hour
 
 // module scoped globals
 static NSString *g_defaultAppID = nil;
+static NSString *g_defaultURLSchemeSuffix = nil;
 static FBSession *g_activeSession = nil;
 
 @interface FBSession () <FBLoginDialogDelegate> {
@@ -222,10 +223,13 @@ static FBSession *g_activeSession = nil;
 
         // setup values where nil implies a default
         if (!appID) {
-            appID = [FBSession defaultAppID];    
+            appID = [self.class defaultAppID];
         }
         if (!permissions) {
             permissions = [NSArray array];
+        }
+        if (!urlSchemeSuffix) {
+            urlSchemeSuffix = [self.class defaultURLSchemeSuffix];
         }
         if (!tokenCachingStrategy) {
             tokenCachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
@@ -607,6 +611,16 @@ static FBSession *g_activeSession = nil;
         g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
     }
     return g_defaultAppID;
+}
+
++ (void)setDefaultURLSchemeSuffix:(NSString*)urlSchemeSuffix {
+    NSString *oldValue = g_defaultURLSchemeSuffix;
+    g_defaultURLSchemeSuffix = [urlSchemeSuffix copy];
+    [oldValue release];
+}
+
++ (NSString*)defaultURLSchemeSuffix {
+    return g_defaultURLSchemeSuffix;
 }
 
 //calls ios6 renewCredentialsForAccount in order to update ios6's worldview of authorization state.

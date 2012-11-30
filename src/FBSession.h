@@ -606,6 +606,9 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  */
 + (void)setDefaultAppID:(NSString*)appID;
 
++ (void)setDefaultURLSchemeSuffix:(NSString*)urlSchemeSuffix;
++ (NSString*)defaultURLSchemeSuffix;
+
 /*!
  @method
  
