@@ -1437,11 +1437,10 @@ static FBSession *g_activeSession = nil;
     // release the object's count on the handler, but copy (not retain, since it is a block)
     // a stack ref to use as our callback outside of the lock
     FBSessionStateHandler handler = [self.loginHandler retain];
+    self.loginHandler = nil;
 
     // the moment we transition to a terminal state, we release our handlers, and possibly fail-call reauthorize
     if (didTransition && FB_ISSESSIONSTATETERMINAL(self.state)) {
-        self.loginHandler = nil;
-
         NSError *error = [FBSession errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonSessionClosed
                                                      errorCode:nil
                                                     innerError:nil];
