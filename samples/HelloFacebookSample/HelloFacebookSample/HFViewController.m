@@ -166,7 +166,9 @@
                                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                                             
                                             [self showAlert:message result:result error:error];
-                                            self.buttonPostStatus.enabled = YES;
+                                            if ([FBSession.activeSession isOpen]) {
+                                                self.buttonPostStatus.enabled = YES;
+                                            }
                                         }];
             
             self.buttonPostStatus.enabled = NO;
@@ -193,7 +195,10 @@
             [FBRequestConnection startForUploadPhoto:img
                                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                                        [self showAlert:@"Photo Post" result:result error:error];
-                                       self.buttonPostPhoto.enabled = YES;
+
+                                       if ([FBSession.activeSession isOpen]) {
+                                           self.buttonPostPhoto.enabled = YES;
+                                       }
                                    }];
             
             self.buttonPostPhoto.enabled = NO;
