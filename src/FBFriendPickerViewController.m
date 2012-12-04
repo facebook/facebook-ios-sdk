@@ -454,7 +454,8 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
-                customizeTableCell:(FBGraphObjectTableCell*)cell {
+                customizeTableCell:(FBGraphObjectTableCell*)cell
+                            ofItem:(id<FBGraphObject>)graphObject {
     // We want to bold whichever part of the name we are sorting on.
     cell.boldTitle = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByFirstName) ||
         (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByLastName);
