@@ -138,11 +138,14 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  * Override NSObject : free the space
  */
 - (void)dealloc {
-
     // this is the one case where the delegate is this object
     _requestExtendingAccessToken.delegate = nil;
 
     [_session release];
+    
+    // remove KVOs for tokenCaching
+    [self.tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName context:tokenContext]
+    [self.tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName context:tokenContext]
     [_tokenCaching release];
 
     for (FBRequest* _request in _requests) {
