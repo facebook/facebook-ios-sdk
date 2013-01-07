@@ -907,6 +907,7 @@ static FBSession *g_activeSession = nil;
     // her credentials in order to authorize the application.
     UIDevice *device = [UIDevice currentDevice];
     if (!didAuthNWithSystemAccount &&
+    	!([[[NSBundle mainBundle] objectForInfoDictionaryKey:@"UIApplicationExitsOnSuspend"] boolValue]) &&
         [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported] &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
