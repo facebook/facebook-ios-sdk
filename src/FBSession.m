@@ -861,6 +861,11 @@ static FBSession *g_activeSession = nil;
                                    FBLoginUXIOS, FBLoginUXSDK,
                                    nil];
 
+    // Don't use native login below 6.x; it deadlocks in the 5.1 simulator.
+    NSString *version = [[UIDevice currentDevice] systemVersion];
+    if([version compare:@"6" options:NSNumericSearch] < 0)
+        tryIntegratedAuth = NO;
+
     NSString *loginDialogURL = [FBDialogBaseURL stringByAppendingString:FBLoginDialogMethod];
 
     if (permissions != nil) {
