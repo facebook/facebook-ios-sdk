@@ -1229,7 +1229,7 @@ static FBSession *g_activeSession = nil;
         // and this to assure we notice when we have been called three times
         __block int callsPending = 3;
         
-        void (^handleBatch)(id<FBGraphUser>,id) = [^(id<FBGraphUser> user,
+        __block void (^handleBatch)(id<FBGraphUser>,id) = [^(id<FBGraphUser> user,
                                                      id permissions) {
             
             // here we accumulate state from the various callbacks
@@ -1263,6 +1263,7 @@ static FBSession *g_activeSession = nil;
                 [fbid release];
                 [fbid2 release];
                 [permissionsRefreshed release];
+                [handleBatch release];
             }
         } copy];
                 
