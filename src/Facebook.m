@@ -143,6 +143,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     _requestExtendingAccessToken.delegate = nil;
 
     [_session release];
+    
+    [_tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName];
+    [_tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName];
     [_tokenCaching release];
 
     for (FBRequest* _request in _requests) {
