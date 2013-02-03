@@ -125,7 +125,7 @@ static NSArray* _cdnHosts;
              response:(NSURLResponse *)response 
          responseData:(NSData *)responseData 
 {
-    if (self.handler == nil) {
+    if (handler == nil) {
         return;
     }
 
