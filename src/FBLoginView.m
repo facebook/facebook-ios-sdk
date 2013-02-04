@@ -23,9 +23,9 @@
 #import "FBUtility.h"
 
 static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
-const int kButtonLabelX = 46;
+static const int kButtonLabelX = 46;
 
-CGSize g_imageSize;
+static CGSize g_imageSize;
 
 @interface FBLoginView() <UIActionSheetDelegate>
 

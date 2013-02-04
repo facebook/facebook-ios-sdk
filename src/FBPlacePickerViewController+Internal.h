@@ -23,8 +23,8 @@
 // This is the cache identity used by both the view controller and cache descriptor objects
 extern NSString *const FBPlacePickerCacheIdentity;
 
-extern const NSInteger defaultResultsLimit;
-extern const NSInteger defaultRadius; 
+extern const NSInteger FBDefaultResultsLimit;
+extern const NSInteger FBDefaultRadius; 
 
 @interface FBPlacePickerViewController (Internal)
 

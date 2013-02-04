@@ -33,21 +33,21 @@
 #import "FBSDKVersion.h"
 
 // URL construction constants
-NSString *const kGraphURL = @"https://graph." FB_BASE_URL;
-NSString *const kGraphBaseURL = @"https://graph." FB_BASE_URL @"/";
-NSString *const kRestBaseURL = @"https://api." FB_BASE_URL @"/method/";
-NSString *const kBatchKey = @"batch";
-NSString *const kBatchMethodKey = @"method";
-NSString *const kBatchRelativeURLKey = @"relative_url";
-NSString *const kBatchAttachmentKey = @"attached_files";
-NSString *const kBatchFileNamePrefix = @"file";
+static NSString *const kGraphURL = @"https://graph." FB_BASE_URL;
+static NSString *const kGraphBaseURL = @"https://graph." FB_BASE_URL @"/";
+static NSString *const kRestBaseURL = @"https://api." FB_BASE_URL @"/method/";
+static NSString *const kBatchKey = @"batch";
+static NSString *const kBatchMethodKey = @"method";
+static NSString *const kBatchRelativeURLKey = @"relative_url";
+static NSString *const kBatchAttachmentKey = @"attached_files";
+static NSString *const kBatchFileNamePrefix = @"file";
 
-NSString *const kAccessTokenKey = @"access_token";
-NSString *const kSDK = @"ios";
-NSString *const kUserAgentBase = @"FBiOSSDK";
+static NSString *const kAccessTokenKey = @"access_token";
+static NSString *const kSDK = @"ios";
+static NSString *const kUserAgentBase = @"FBiOSSDK";
 
-NSString *const kExtendTokenRestMethod = @"auth.extendSSOAccessToken";
-NSString *const kBatchRestMethodBaseURL = @"method/";
+static NSString *const kExtendTokenRestMethod = @"auth.extendSSOAccessToken";
+static NSString *const kBatchRestMethodBaseURL = @"method/";
 
 // response object property/key
 NSString *const FBNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
