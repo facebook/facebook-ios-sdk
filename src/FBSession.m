@@ -463,7 +463,7 @@ static FBSession *g_activeSession = nil;
     // handled by this method. If a pending fast-app-switch [re]authorization
     // is in flight, it is cancelled. Otherwise, this method is a no-op.
 
-    const FBSessionState state = FBSession.activeSession.state;
+    const FBSessionState state = self.state;
     
     if (state == FBSessionStateCreated ||
         state == FBSessionStateClosed ||
@@ -474,7 +474,7 @@ static FBSession *g_activeSession = nil;
     if (_loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeNone){
         if (state == FBSessionStateCreatedOpening){
             //if we're here, user had declined a fast app switch login.
-            [FBSession.activeSession close];
+            [self close];
         } else {
             //this means the user declined a 'reauthorization' so we need
             // to clean out the in-flight request.
