@@ -612,27 +612,23 @@ static FBSession *g_activeSession = nil;
 //calls ios6 renewCredentialsForAccount in order to update ios6's worldview of authorization state.
 // if not using ios6 system auth, this is a no-op.
 + (void)renewSystemAuthorization {
-    id accountStore = nil;
-    id accountTypeFB = nil;
-    
-    if ((accountStore = [[[ACAccountStore alloc] init] autorelease]) &&
-        (accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierFacebook] ) ){
-        
-        NSArray *fbAccounts = [accountStore accountsWithAccountType:accountTypeFB];
-        id account;
-        if (fbAccounts && [fbAccounts count] > 0 &&
-            (account = [fbAccounts objectAtIndex:0])){
-            
-            [accountStore renewCredentialsForAccount:account completion:^(ACAccountCredentialRenewResult renewResult, NSError *error) {
-                //we don't actually need to inspect renewResult or error.
-                if (error){
-                    [FBLogger singleShotLogEntry:FBLoggingBehaviorAccessTokens
-                                        logEntry:[NSString stringWithFormat:@"renewCredentialsForAccount result:%d, error: %@",
-                                                  renewResult,
-                                                  error]];
-                }
-            }];
-        }
+    if (&ACAccountTypeIdentifierFacebook == NULL) {
+        return; // device is iOS 5 or earlier
+    }
+    ACAccountStore *accountStore = [[[ACAccountStore alloc] init] autorelease];
+    ACAccountType *accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierFacebook];
+    NSArray *fbAccounts = [accountStore accountsWithAccountType:accountTypeFB];
+    if (fbAccounts.count > 0) {
+        ACAccount *account = [fbAccounts objectAtIndex:0];
+        [accountStore renewCredentialsForAccount:account completion:^(ACAccountCredentialRenewResult renewResult, NSError *error) {
+            //we don't actually need to inspect renewResult or error.
+            if (error){
+                [FBLogger singleShotLogEntry:FBLoggingBehaviorAccessTokens
+                                    logEntry:[NSString stringWithFormat:@"renewCredentialsForAccount result:%d, error: %@",
+                                              renewResult,
+                                              error]];
+            }
+        }];
     }
 }
 
