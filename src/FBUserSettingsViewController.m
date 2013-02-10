@@ -328,7 +328,7 @@
                                        allowLoginUI:YES
                                   completionHandler:handler];
     } else if (![self.publishPermissions count]) {
-        [FBSession openActiveSessionWithReadPermissions:self.publishPermissions
+        [FBSession openActiveSessionWithReadPermissions:self.readPermissions
                                            allowLoginUI:YES
                                       completionHandler:handler];
     } else {
