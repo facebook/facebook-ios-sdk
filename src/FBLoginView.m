@@ -315,7 +315,8 @@ CGSize g_imageSize;
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession openActiveSessionWithAllowLoginUI:NO];
+        [self.session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                     completionHandler:nil];
     }    
 }
 
