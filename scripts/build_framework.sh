@@ -164,7 +164,8 @@ if [ ${NOEXTRAS:-0} -eq  1 ];then
 else
   progress_message "Running unit tests."
   cd $FB_SDK_SRC
-  $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests build
+  $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests TEST_AFTER_BUILD=YES build \
+      || die "Error while running unit tests"
 fi
 
 # -----------------------------------------------------------------------------

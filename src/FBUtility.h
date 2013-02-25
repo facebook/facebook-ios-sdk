@@ -16,10 +16,18 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FBFetchedAppSettings.h"
 
+@class FBRequest;
 @class FBSession;
 
 @protocol FBGraphObject;
+
+typedef enum FBAdvertisingTrackingStatus {
+    AdvertisingTrackingAllowed,
+    AdvertisingTrackingDisallowed,
+    AdvertisingTrackingUnspecified
+} FBAdvertisingTrackingStatus;
 
 @interface FBUtility : NSObject
 
@@ -32,7 +40,8 @@
 + (NSTimeInterval)randomTimeInterval:(NSTimeInterval)minValue withMaxValue:(NSTimeInterval)maxValue;
 + (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
 + (NSString *)stringFBIDFromObject:(id)object;
-
++ (NSString *)stringAppBaseUrlFromAppId:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix;
++ (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime;
 + (NSBundle *)facebookSDKBundle;
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value;
@@ -40,6 +49,19 @@
                         withDefault:(NSString *)value
                            inBundle:(NSBundle *)bundle;
 
++ (BOOL)isPublishPermission:(NSString*)permission;
++ (BOOL)areAllPermissionsReadPermissions:(NSArray*)permissions;
++ (NSArray*)addBasicInfoPermission:(NSArray*)permissions;
++ (void)fetchAppSettings:(NSString *)appID
+                callback:(void (^)(FBFetchedAppSettings *, NSError *))callback;
++ (NSString *)attributionID;
++ (NSString *)advertiserID;
++ (FBAdvertisingTrackingStatus)advertisingTrackingStatus;
+
+// Encode a data structure in JSON, any errors will just be logged.
++ (NSString *)simpleJSONEncode:(id)data;
++ (id)simpleJSONDecode:(NSString *)jsonEncoding;
++ (BOOL) isRetinaDisplay;
 @end
  
 #define FBConditionalLog(condition, desc, ...) \
@@ -51,6 +73,3 @@ do { \
 } while(NO)
  
 #define FB_BASE_URL @"facebook.com"
-
-
-

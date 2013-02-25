@@ -21,4 +21,8 @@
 
 @property (strong, nonatomic) IBOutlet UITextView *activityTextView;
 
+@property (unsafe_unretained, nonatomic) IBOutlet UIButton *inviteButton;
+
+- (IBAction)clickInviteFriends:(id)sender;
+
 @end

@@ -21,8 +21,12 @@
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 test -x "$PACKAGEMAKER" || die 'Could not find packagemaker in $PATH'
 
-FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_FULL}.pkg
-FB_SDK_FRAMEWORK_TGZ=${FB_SDK_FRAMEWORK}-${FB_SDK_VERSION_FULL}.tgz
+FB_SDK_PGK_VERSION=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FBSDKVersion.h)
+# In case the hotfix value is zero, we drop the .0
+FB_SDK_NORMALIZED_PGK_VERSION=$(echo ${FB_SDK_PGK_VERSION} | sed  's/^\([0-9]*\.[0-9]*\)\.0/\1/')
+
+FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_NORMALIZED_PGK_VERSION}.pkg
+FB_SDK_FRAMEWORK_TGZ=${FB_SDK_FRAMEWORK}-${FB_SDK_NORMALIZED_PGK_VERSION}.tgz
 
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Documents/FacebookSDK
@@ -91,7 +95,7 @@ $PACKAGEMAKER \
   --target 10.5 \
   --version $FB_SDK_VERSION \
   --out $FB_SDK_PKG \
-  --title 'Facebook SDK 3.1.1 for iOS' \
+  --title 'Facebook SDK 3.2 for iOS' \
   || die "PackageMaker reported error"
 
 # -----------------------------------------------------------------------------

@@ -121,13 +121,28 @@ enum SampleLocation {
     // select name and location data from the selected place
     id<FBGraphPlace> place = placePicker.selection;
 
+    // Make sure that we don't show message when the same row is being clicked twice (to be deselected)
+    if(!place) {
+        return;
+    }
+ 
     // we'll use logging to show the simple typed property access to place and location info
-    NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@", 
-          place.name,
-          place.location.city,
-          place.location.state,
-          place.location.latitude,
-          place.location.longitude);
+    NSString *infoMessage = [NSString localizedStringWithFormat:@"place=%@\n city=%@, state=%@\n lat=%@\n long=%@\n",
+                             place.name,
+                             place.location.city,
+                             place.location.state,
+                             place.location.latitude,
+                             place.location.longitude];
+    
+    NSLog(@"%@", infoMessage);
+    
+    // Sample action for place selection completed action
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Place selected"
+                                                        message:infoMessage
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+    [alertView show];
 }
 
 - (void)viewDidLoad
@@ -135,7 +150,7 @@ enum SampleLocation {
     [super viewDidLoad];
     
     // FBSample logic
-    // We are inheriting FBPlacePickerViewController, and so in order to handle events such 
+    // We are inheriting FBPlacePickerViewController, and so in order to handle events such
     // as selection change, we set our base class' delegate property to self
     self.delegate = self;
 
@@ -184,6 +199,15 @@ enum SampleLocation {
         self.locationCoordinate = newLocation.coordinate;
         [self loadData];
     }
+}
+
+#pragma mark - UISearchBarDelegate Methods
+// Just set the search string to an empty string and inform
+// the delegate (self) to reload data
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
+{
+  self.searchText = @"";
+  [self loadData];
 }
 
 @end

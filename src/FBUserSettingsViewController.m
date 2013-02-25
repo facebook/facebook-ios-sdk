@@ -31,6 +31,8 @@
 @property (nonatomic, retain) UIButton *loginLogoutButton;
 @property (nonatomic) BOOL attemptingLogin;
 @property (nonatomic, retain) NSBundle *bundle;
+@property (copy, nonatomic) FBSessionStateHandler sessionStateHandler;
+@property (copy, nonatomic) FBRequestHandler requestHandler;
 
 - (void)loginLogoutButtonPressed:(id)sender;
 - (void)sessionStateChanged:(FBSession *)session 
@@ -55,9 +57,46 @@
 @synthesize attemptingLogin = _attemptingLogin;
 @synthesize backgroundImageView = _backgroundImageView;
 @synthesize bundle = _bundle;
+@synthesize sessionStateHandler = _sessionStateHandler;
+@synthesize requestHandler = _requestHandler;
 
 #pragma mark View controller lifecycle
 
+- (void)initializeBlocks {
+    // Set up our block handlers in a way that supports nil'ing out the weak self reference to
+    // prevent EXC_BAD_ACCESS errors if the session invokes the handler after the FBUserSettingsViewController
+    // has been deallocated. Note the handlers are declared as a `copy` property so that
+    // the block lives on the heap.
+    __block FBUserSettingsViewController *weakSelf = self;
+    self.sessionStateHandler = ^(FBSession *session, FBSessionState status, NSError *error) {
+        if (session == nil) {
+            // The nil sentinel value for session indicates both blocks should no-op thereafter.
+            weakSelf = nil;
+        } else {
+            [weakSelf sessionStateChanged:session state:status error:error];
+        }
+    };
+    self.requestHandler = ^(FBRequestConnection *connection, id result, NSError *error) {
+        if (result) {
+            weakSelf.me = result;
+            [weakSelf updateControls];
+        }
+    };
+}
+
+- (id)init {
+    if (self = [super init]) {
+        [self initializeBlocks];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]){
+        [self initializeBlocks];
+    }
+    return self;
+}
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -70,12 +109,18 @@
         if (self.bundle == nil) {
             NSLog(@"WARNING: FBUserSettingsViewController could not find FBUserSettingsViewResources.bundle");
         }
+        [self initializeBlocks];
     }
     return self;
 }
 
 - (void)dealloc {
-    [super dealloc];
+    // As noted in `initializeBlocks`, if we are being dealloc'ed, we
+    // need to let our handlers know with the sentinel value of nil
+    // to prevent EXC_BAD_ACCESS errors.
+    self.sessionStateHandler(nil, FBSessionStateClosed, nil);
+    [_sessionStateHandler release];
+    [_requestHandler release];
     
     [_profilePicture release];
     [_connectedStateLabel release];
@@ -83,7 +128,8 @@
     [_loginLogoutButton release];
     [_permissions release];
     [_backgroundImageView release];
-    [_bundle release];
+    [_bundle release];    
+    [super dealloc];
 }
 
 #pragma mark View lifecycle
@@ -215,6 +261,12 @@
     return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || UIInterfaceOrientationIsPortrait(interfaceOrientation);
 }
 
+- (BOOL)shouldAutorotate {
+    UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
+    
+    return [self shouldAutorotateToInterfaceOrientation:orientation];
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 }
@@ -248,12 +300,7 @@
                                                                     inBundle:self.bundle];
             self.profilePicture.profileID = nil;
 
-            [[FBRequest requestForMe] startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                if (result) {
-                    self.me = result;
-                    [self updateControls];
-                }
-            }];
+            [[FBRequest requestForMe] startWithCompletionHandler:self.requestHandler];
         }
     } else {
         self.me = nil;
@@ -311,11 +358,6 @@
 
     self.attemptingLogin = YES;
 
-    // all of our open calls use the same handler
-    FBSessionStateHandler handler = ^(FBSession *session, FBSessionState state, NSError *error) {
-        [self sessionStateChanged:session state:state error:error];
-    };
-
     // the policy here is:
     // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
     // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
@@ -326,11 +368,11 @@
     if (self.permissions) {
         [FBSession openActiveSessionWithPermissions:self.permissions
                                        allowLoginUI:YES
-                                  completionHandler:handler];
+                                  completionHandler:self.sessionStateHandler];
     } else if (![self.publishPermissions count]) {
-        [FBSession openActiveSessionWithReadPermissions:self.publishPermissions
+        [FBSession openActiveSessionWithReadPermissions:self.readPermissions
                                            allowLoginUI:YES
-                                      completionHandler:handler];
+                                      completionHandler:self.sessionStateHandler];
     } else {
         // combined read and publish permissions will usually fail, but if the app wants us to
         // try it here, then we will pass the aggregate set to the server
@@ -343,7 +385,7 @@
         [FBSession openActiveSessionWithPublishPermissions:permissions
                                            defaultAudience:self.defaultAudience
                                               allowLoginUI:YES
-                                         completionHandler:handler];
+                                         completionHandler:self.sessionStateHandler];
     }
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"

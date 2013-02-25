@@ -23,10 +23,10 @@
 		E2511746152BB6FE00CB342A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511745152BB6FE00CB342A /* CoreGraphics.framework */; };
 		E251174C152BB6FE00CB342A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E251174A152BB6FE00CB342A /* InfoPlist.strings */; };
 		E251174E152BB6FE00CB342A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E251174D152BB6FE00CB342A /* main.m */; };
-		E2511752152BB6FE00CB342A /* JRAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2511751152BB6FE00CB342A /* JRAppDelegate.m */; };
-		E2511755152BB6FE00CB342A /* JRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2511754152BB6FE00CB342A /* JRViewController.m */; };
-		E2511758152BB6FE00CB342A /* JRViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511756152BB6FE00CB342A /* JRViewController_iPhone.xib */; };
-		E251175B152BB6FE00CB342A /* JRViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511759152BB6FE00CB342A /* JRViewController_iPad.xib */; };
+		E2511752152BB6FE00CB342A /* GraphApiAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E2511751152BB6FE00CB342A /* GraphApiAppDelegate.m */; };
+		E2511755152BB6FE00CB342A /* GraphApiViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2511754152BB6FE00CB342A /* GraphApiViewController.m */; };
+		E2511758152BB6FE00CB342A /* GraphApiViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511756152BB6FE00CB342A /* GraphApiViewController_iPhone.xib */; };
+		E251175B152BB6FE00CB342A /* GraphApiViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = E2511759152BB6FE00CB342A /* GraphApiViewController_iPad.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,20 +41,20 @@
 		85C69D681602B06E008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		B9A4168D16113EE7001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
-		E251173D152BB6FE00CB342A /* JustRequestSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustRequestSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E251173D152BB6FE00CB342A /* GraphApiSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphApiSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2511741152BB6FE00CB342A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		E2511743152BB6FE00CB342A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E2511745152BB6FE00CB342A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		E2511749152BB6FE00CB342A /* JustRequestSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "JustRequestSample-Info.plist"; sourceTree = "<group>"; };
+		E2511749152BB6FE00CB342A /* GraphApiSample-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GraphApiSample-Info.plist"; sourceTree = "<group>"; };
 		E251174B152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E251174D152BB6FE00CB342A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E251174F152BB6FE00CB342A /* JustRequestSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JustRequestSample-Prefix.pch"; sourceTree = "<group>"; };
-		E2511750152BB6FE00CB342A /* JRAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JRAppDelegate.h; sourceTree = "<group>"; };
-		E2511751152BB6FE00CB342A /* JRAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JRAppDelegate.m; sourceTree = "<group>"; };
-		E2511753152BB6FE00CB342A /* JRViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JRViewController.h; sourceTree = "<group>"; };
-		E2511754152BB6FE00CB342A /* JRViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JRViewController.m; sourceTree = "<group>"; };
-		E2511757152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JRViewController_iPhone.xib; sourceTree = "<group>"; };
-		E251175A152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/JRViewController_iPad.xib; sourceTree = "<group>"; };
+		E251174F152BB6FE00CB342A /* GraphApiSample-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GraphApiSample-Prefix.pch"; sourceTree = "<group>"; };
+		E2511750152BB6FE00CB342A /* GraphApiAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphApiAppDelegate.h; sourceTree = "<group>"; };
+		E2511751152BB6FE00CB342A /* GraphApiAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GraphApiAppDelegate.m; sourceTree = "<group>"; };
+		E2511753152BB6FE00CB342A /* GraphApiViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GraphApiViewController.h; sourceTree = "<group>"; };
+		E2511754152BB6FE00CB342A /* GraphApiViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GraphApiViewController.m; sourceTree = "<group>"; };
+		E2511757152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GraphApiViewController_iPhone.xib; sourceTree = "<group>"; };
+		E251175A152BB6FE00CB342A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/GraphApiViewController_iPad.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +78,7 @@
 		E2511732152BB6FE00CB342A = {
 			isa = PBXGroup;
 			children = (
-				E2511747152BB6FE00CB342A /* JustRequestSample */,
+				E2511747152BB6FE00CB342A /* GraphApiSample */,
 				E2511740152BB6FE00CB342A /* Frameworks */,
 				E251173E152BB6FE00CB342A /* Products */,
 			);
@@ -87,7 +87,7 @@
 		E251173E152BB6FE00CB342A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E251173D152BB6FE00CB342A /* JustRequestSample.app */,
+				E251173D152BB6FE00CB342A /* GraphApiSample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -106,18 +106,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E2511747152BB6FE00CB342A /* JustRequestSample */ = {
+		E2511747152BB6FE00CB342A /* GraphApiSample */ = {
 			isa = PBXGroup;
 			children = (
-				E2511750152BB6FE00CB342A /* JRAppDelegate.h */,
-				E2511751152BB6FE00CB342A /* JRAppDelegate.m */,
-				E2511753152BB6FE00CB342A /* JRViewController.h */,
-				E2511754152BB6FE00CB342A /* JRViewController.m */,
-				E2511756152BB6FE00CB342A /* JRViewController_iPhone.xib */,
-				E2511759152BB6FE00CB342A /* JRViewController_iPad.xib */,
+				E2511750152BB6FE00CB342A /* GraphApiAppDelegate.h */,
+				E2511751152BB6FE00CB342A /* GraphApiAppDelegate.m */,
+				E2511753152BB6FE00CB342A /* GraphApiViewController.h */,
+				E2511754152BB6FE00CB342A /* GraphApiViewController.m */,
+				E2511756152BB6FE00CB342A /* GraphApiViewController_iPhone.xib */,
+				E2511759152BB6FE00CB342A /* GraphApiViewController_iPad.xib */,
 				E2511748152BB6FE00CB342A /* Supporting Files */,
 			);
-			path = JustRequestSample;
+			path = GraphApiSample;
 			sourceTree = "<group>";
 		};
 		E2511748152BB6FE00CB342A /* Supporting Files */ = {
@@ -130,10 +130,10 @@
 				85AFB4FC158F9D32000AF7F5 /* Icon-72@2x.png */,
 				85AFB4FD158F9D32000AF7F5 /* Icon.png */,
 				85AFB4FE158F9D32000AF7F5 /* Icon@2x.png */,
-				E2511749152BB6FE00CB342A /* JustRequestSample-Info.plist */,
+				E2511749152BB6FE00CB342A /* GraphApiSample-Info.plist */,
 				E251174A152BB6FE00CB342A /* InfoPlist.strings */,
 				E251174D152BB6FE00CB342A /* main.m */,
-				E251174F152BB6FE00CB342A /* JustRequestSample-Prefix.pch */,
+				E251174F152BB6FE00CB342A /* GraphApiSample-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -141,9 +141,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		E251173C152BB6FE00CB342A /* JustRequestSample */ = {
+		E251173C152BB6FE00CB342A /* GraphApiSample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = E251175E152BB6FE00CB342A /* Build configuration list for PBXNativeTarget "JustRequestSample" */;
+			buildConfigurationList = E251175E152BB6FE00CB342A /* Build configuration list for PBXNativeTarget "GraphApiSample" */;
 			buildPhases = (
 				E2511739152BB6FE00CB342A /* Sources */,
 				E251173A152BB6FE00CB342A /* Frameworks */,
@@ -153,9 +153,9 @@
 			);
 			dependencies = (
 			);
-			name = JustRequestSample;
-			productName = JustRequestSample;
-			productReference = E251173D152BB6FE00CB342A /* JustRequestSample.app */;
+			name = GraphApiSample;
+			productName = GraphApiSample;
+			productReference = E251173D152BB6FE00CB342A /* GraphApiSample.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -166,7 +166,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "JustRequestSample" */;
+			buildConfigurationList = E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "GraphApiSample" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -179,7 +179,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				E251173C152BB6FE00CB342A /* JustRequestSample */,
+				E251173C152BB6FE00CB342A /* GraphApiSample */,
 			);
 		};
 /* End PBXProject section */
@@ -190,8 +190,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E251174C152BB6FE00CB342A /* InfoPlist.strings in Resources */,
-				E2511758152BB6FE00CB342A /* JRViewController_iPhone.xib in Resources */,
-				E251175B152BB6FE00CB342A /* JRViewController_iPad.xib in Resources */,
+				E2511758152BB6FE00CB342A /* GraphApiViewController_iPhone.xib in Resources */,
+				E251175B152BB6FE00CB342A /* GraphApiViewController_iPad.xib in Resources */,
 				85AFB4FF158F9D32000AF7F5 /* Icon-72.png in Resources */,
 				85AFB500158F9D32000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB501158F9D32000AF7F5 /* Icon.png in Resources */,
@@ -210,8 +210,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E251174E152BB6FE00CB342A /* main.m in Sources */,
-				E2511752152BB6FE00CB342A /* JRAppDelegate.m in Sources */,
-				E2511755152BB6FE00CB342A /* JRViewController.m in Sources */,
+				E2511752152BB6FE00CB342A /* GraphApiAppDelegate.m in Sources */,
+				E2511755152BB6FE00CB342A /* GraphApiViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -226,20 +226,20 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		E2511756152BB6FE00CB342A /* JRViewController_iPhone.xib */ = {
+		E2511756152BB6FE00CB342A /* GraphApiViewController_iPhone.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				E2511757152BB6FE00CB342A /* en */,
 			);
-			name = JRViewController_iPhone.xib;
+			name = GraphApiViewController_iPhone.xib;
 			sourceTree = "<group>";
 		};
-		E2511759152BB6FE00CB342A /* JRViewController_iPad.xib */ = {
+		E2511759152BB6FE00CB342A /* GraphApiViewController_iPad.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				E251175A152BB6FE00CB342A /* en */,
 			);
-			name = JRViewController_iPad.xib;
+			name = GraphApiViewController_iPad.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -300,11 +300,14 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JustRequestSample/JustRequestSample-Prefix.pch";
-				INFOPLIST_FILE = "JustRequestSample/JustRequestSample-Info.plist";
+				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				OTHER_LDFLAGS = (
+					"-lsqlite3.0",
+					"-ObjC",
+				);
+				PRODUCT_NAME = GraphApiSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -319,11 +322,14 @@
 					"\"$(SRCROOT)/../../build\"",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "JustRequestSample/JustRequestSample-Prefix.pch";
-				INFOPLIST_FILE = "JustRequestSample/JustRequestSample-Info.plist";
+				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
+				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				OTHER_LDFLAGS = (
+					"-lsqlite3.0",
+					"-ObjC",
+				);
+				PRODUCT_NAME = GraphApiSample;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -331,7 +337,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "JustRequestSample" */ = {
+		E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "GraphApiSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E251175C152BB6FE00CB342A /* Debug */,
@@ -340,7 +346,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E251175E152BB6FE00CB342A /* Build configuration list for PBXNativeTarget "JustRequestSample" */ = {
+		E251175E152BB6FE00CB342A /* Build configuration list for PBXNativeTarget "GraphApiSample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E251175F152BB6FE00CB342A /* Debug */,

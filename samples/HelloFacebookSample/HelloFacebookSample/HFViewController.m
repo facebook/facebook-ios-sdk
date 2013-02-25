@@ -122,6 +122,12 @@
     self.loggedInUser = nil;
 }
 
+- (void)loginView:(FBLoginView *)loginView handleError:(NSError *)error {
+    // see https://developers.facebook.com/docs/reference/api/errors/ for general guidance on error handling for Facebook API
+    // our policy here is to let the login view handle errors, but to log the results
+    NSLog(@"FBLoginView encountered an error=%@", error);
+}
+
 #pragma mark -
 
 // Convenience method to perform some action that requires the "publish_actions" permissions.
@@ -129,8 +135,8 @@
     // we defer request for permission to post to the moment of post, then we check for the permission
     if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
         // if we don't already have the permission, then we request it now
-        [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                            defaultAudience:FBSessionDefaultAudienceFriends
+        [FBSession.activeSession requestNewPublishPermissions:@[@"publish_actions"]
+                                              defaultAudience:FBSessionDefaultAudienceFriends
                                           completionHandler:^(FBSession *session, NSError *error) {
                                               if (!error) {
                                                   action();
@@ -148,9 +154,6 @@
 - (IBAction)postStatusUpdateClick:(UIButton *)sender {
     // Post a status update to the user's feed via the Graph API, and display an alert view
     // with the results or an error.
-    NSString *name = self.loggedInUser.first_name;
-    NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@",
-                         name != nil ? name : @"me" , [NSDate date]];
     
     // if it is available to us, we will post using the native dialog
     BOOL displayedNativeDialog = [FBNativeDialogs presentShareDialogModallyFrom:self
@@ -162,6 +165,8 @@
         
         [self performPublishAction:^{
             // otherwise fall back on a request for permissions and a direct post
+            NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@", self.loggedInUser.first_name, [NSDate date]];
+            
             [FBRequestConnection startForPostStatusUpdate:message
                                         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
                                             
@@ -206,13 +211,15 @@
     FBFriendPickerViewController *friendPickerController = [[FBFriendPickerViewController alloc] init];
     friendPickerController.title = @"Pick Friends";
     [friendPickerController loadData];
-    
+       
     // Use the modal wrapper method to display the picker.
     [friendPickerController presentModallyFromViewController:self animated:YES handler:
      ^(FBViewController *sender, BOOL donePressed) {
+
          if (!donePressed) {
              return;
          }
+         
          NSString *message;
          
          if (friendPickerController.selection.count == 0) {
@@ -251,6 +258,7 @@
     // Use the modal wrapper method to display the picker.
     [placePickerController presentModallyFromViewController:self animated:YES handler:
      ^(FBViewController *sender, BOOL donePressed) {
+
          if (!donePressed) {
              return;
          }
@@ -277,8 +285,14 @@
     NSString *alertMsg;
     NSString *alertTitle;
     if (error) {
-        alertMsg = error.localizedDescription;
         alertTitle = @"Error";
+        if (error.fberrorShouldNotifyUser ||
+            error.fberrorCategory == FBErrorCategoryPermissions ||
+            error.fberrorCategory == FBErrorCategoryAuthenticationReopenSession) {
+            alertMsg = error.fberrorUserMessage;
+        } else {
+            alertMsg = @"Operation failed due to a connection problem, retry later.";
+        }
     } else {
         NSDictionary *resultDict = (NSDictionary *)result;
         alertMsg = [NSString stringWithFormat:@"Successfully posted '%@'.\nPost ID: %@", 

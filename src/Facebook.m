@@ -25,11 +25,6 @@
 #import "FBUtility.h"
 
 static NSString* kDialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
-static NSString* kGraphBaseURL = @"https://graph." FB_BASE_URL "/";
-static NSString* kRestserverBaseURL = @"https://api." FB_BASE_URL "/method/";
-
-static NSString* kFBAppAuthURLScheme = @"fbauth";
-static NSString* kFBAppAuthURLPath = @"authorize";
 static NSString* kRedirectURL = @"fbconnect://success";
 
 static NSString* kLogin = @"oauth";
@@ -143,6 +138,9 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     _requestExtendingAccessToken.delegate = nil;
 
     [_session release];
+    // remove KVOs for tokenCaching
+    [_tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName context:tokenContext];
+    [_tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName context:tokenContext];
     [_tokenCaching release];
 
     for (FBRequest* _request in _requests) {
@@ -248,7 +246,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
         self.hasUpdatedAccessToken = NO;
 
         // invalidate current session and create a new one with the same permissions
-        NSArray *permissions = self.session.permissions;
+        NSArray *permissions = self.session.accessTokenData.permissions;
         [self.session close];    
         self.session = [[[FBSession alloc] initWithAppID:_appId
                                              permissions:permissions
@@ -310,7 +308,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
         switch (status) {
             case FBSessionStateOpen:
                 // call the legacy session delegate
-                [self fbDialogLogin:session.accessToken expirationDate:session.expirationDate];
+                [self fbDialogLogin:session.accessTokenData.accessToken expirationDate:session.accessTokenData.expirationDate];
                 break;
             case FBSessionStateClosedLoginFailed:
                 { // prefer to keep decls near to their use

@@ -22,6 +22,7 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
 #import "FBGraphObjectTableCell.h"
+#import "FBInsights+Internal.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
@@ -370,13 +371,16 @@ int const FBRefreshCacheDelaySeconds = 2;
     FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]];
     [request setSession:session];
     
+    // Use field expansion to fetch a 100px wide picture if we're on a retina device.
+    NSString *pictureField = ([FBUtility isRetinaDisplay]) ? @"picture.width(100).height(100)" : @"picture";
+    
     NSString *allFields = [datasource fieldsForRequestIncluding:fields,
                            @"id", 
                            @"name", 
                            @"first_name", 
                            @"middle_name",
                            @"last_name", 
-                           @"picture", 
+                           pictureField,
                            nil];
     [request.parameters setObject:allFields forKey:@"fields"];
     
@@ -386,6 +390,17 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)centerAndStartSpinner {
     [FBUtility centerView:self.spinner tableView:self.tableView];
     [self.spinner startAnimating];    
+}
+
+- (void)logInsights:(BOOL)cancelled {
+    [FBInsights logImplicitEvent:FBInsightsEventNameFriendPickerUsage
+                      valueToSum:1.0
+                      parameters:@{ FBInsightsEventParameterDialogOutcome : (cancelled
+                                                                             ? FBInsightsDialogOutcomeValue_Cancelled
+                                                                             : FBInsightsDialogOutcomeValue_Completed),
+                                    @"num_friends_picked" : [NSNumber numberWithUnsignedInteger:self.selection.count]
+                                  }
+                         session:self.session];
 }
 
 #pragma mark - FBGraphObjectSelectionChangedDelegate

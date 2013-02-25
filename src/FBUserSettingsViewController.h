@@ -69,6 +69,8 @@
 
  @param sender          The view controller sending the message.
  @param error           The error encountered.
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+ for error handling best practices.
  */
 - (void)loginViewController:(id)sender receivedError:(NSError *)error;
 

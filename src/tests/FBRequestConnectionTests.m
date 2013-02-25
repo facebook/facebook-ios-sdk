@@ -21,6 +21,7 @@
 #import "FBRequestConnection+Internal.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
+#import "FBError.h"
 
 #if defined(FACEBOOKSDK_SKIP_REQUEST_CONNECTION_TESTS)
 
@@ -29,6 +30,25 @@
 #else
 
 @implementation FBRequestConnectionTests
+
+- (void)testCancelInvokesHandler {
+    FBRequest *request = [[[FBRequest alloc] initWithSession:self.defaultTestSession graphPath:@"me"] autorelease];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    __block int count = 0;
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertEqualObjects(FBErrorOperationCancelled, error.code, @"Expected FBErrorOperationCancelled code for error:%@", error);
+        STAssertEquals(++count, 1, @"Expected handler to only be called once");
+        [blocker signal];
+    }];
+    [connection start];
+    [connection cancel];
+    
+    STAssertTrue([blocker waitWithTimeout:10], @" handler was not invoked");
+    
+    [connection release];
+}
 
 - (void)testConcurrentRequests
 {

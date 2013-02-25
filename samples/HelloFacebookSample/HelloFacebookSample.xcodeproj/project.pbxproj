@@ -311,7 +311,10 @@
 				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
 				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+					"-lsqlite3.0",
+					"-ObjC",
+				);
 				PRODUCT_NAME = HelloFacebookSample;
 				WRAPPER_EXTENSION = app;
 			};
@@ -328,7 +331,10 @@
 				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
 				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+					"-lsqlite3.0",
+					"-ObjC",
+				);
 				PRODUCT_NAME = HelloFacebookSample;
 				WRAPPER_EXTENSION = app;
 			};

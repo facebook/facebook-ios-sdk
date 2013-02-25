@@ -87,7 +87,7 @@
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
-                                                              radiusInMeters:200 
+                                                              radiusInMeters:1000
                                                                 resultsLimit:5 
                                                                   searchText:nil];
     [searchRequest setSession:self.defaultTestSession];
@@ -115,7 +115,7 @@
 
 - (void)testRequestPlaceSearchWithSearchText
 {
-    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
+    CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889227, -77.049078);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:200 
                                                                 resultsLimit:5 
@@ -136,7 +136,7 @@
     NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
     
     id<FBGraphPlace> targetPlace = (id<FBGraphPlace>)[FBGraphObject graphObject];
-    targetPlace.id = @"154981434517851";
+    targetPlace.id = @"116411068417081";
     targetPlace.name = @"Lincoln Memorial";
     
     id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];

@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#import "FBViewController.h"
+
 @interface FBViewController (Internal)
 
 @property (nonatomic, readonly) UIViewController *compatiblePresentingViewController;

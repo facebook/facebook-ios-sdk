@@ -220,6 +220,8 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 {
     if (titleSuffix) {
         [self createTitleSuffixLabel];
+    }
+    if (self.titleSuffixLabel) {
         self.titleSuffixLabel.text = titleSuffix;
     }
     [self setNeedsLayout];

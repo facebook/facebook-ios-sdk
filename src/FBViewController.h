@@ -25,10 +25,6 @@
  A block that is passed to [FBViewController presentModallyInViewController:animated:handler:]
  and called when the view controller is dismissed via either Done or Cancel.
  
- @discussion
- Pass a block of this type when calling addRequest.  This will be called once
- the request completes.  The call occurs on the UI thread.
- 
  @param sender          The <FBViewController> that is being dismissed.
  
  @param donePressed     If YES, Done was pressed. If NO, Cancel was pressed.
@@ -108,8 +104,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
 /*!
  @abstract
  Provides a wrapper that presents the view controller modally and automatically dismisses it
- when either the Done or Cancel button is pressed. If Done is pressed, the block provided by the
- doneHandler parameter is called.
+ when either the Done or Cancel button is pressed. 
  
  @param viewController  The view controller that is presenting this view controller.
  @param animated        If YES, presenting and dismissing the view controller is animated.

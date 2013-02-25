@@ -15,10 +15,10 @@
  */
 
 #import <FacebookSDK/FacebookSDK.h>
-#import "JRAppDelegate.h"
-#import "JRViewController.h"
+#import "GraphApiAppDelegate.h"
+#import "GraphApiViewController.h"
 
-@implementation JRAppDelegate
+@implementation GraphApiAppDelegate
 
 @synthesize window = _window;
 @synthesize viewController = _viewController;
@@ -29,9 +29,9 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        self.viewController = [[JRViewController alloc] initWithNibName:@"JRViewController_iPhone" bundle:nil];
+        self.viewController = [[GraphApiViewController alloc] initWithNibName:@"GraphApiViewController_iPhone" bundle:nil];
     } else {
-        self.viewController = [[JRViewController alloc] initWithNibName:@"JRViewController_iPad" bundle:nil];
+        self.viewController = [[GraphApiViewController alloc] initWithNibName:@"GraphApiViewController_iPad" bundle:nil];
     }
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];

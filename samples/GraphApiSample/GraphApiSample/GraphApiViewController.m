@@ -15,12 +15,12 @@
  */
 
 #import <FacebookSDK/FacebookSDK.h>
-#import "JRAppDelegate.h"
-#import "JRViewController.h"
+#import "GraphApiAppDelegate.h"
+#import "GraphApiViewController.h"
 
 static NSString *loadingText = @"Loading...";
 
-@interface JRViewController ()
+@interface GraphApiViewController ()
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonRequest;
 @property (strong, nonatomic) IBOutlet UITextField *textObjectID;
@@ -38,7 +38,7 @@ static NSString *loadingText = @"Loading...";
 
 @end
 
-@implementation JRViewController
+@implementation GraphApiViewController
 
 @synthesize buttonRequest = _buttonRequest;
 @synthesize textObjectID = _textObjectID;
@@ -96,7 +96,17 @@ static NSString *loadingText = @"Loading...";
 - (void)sendRequests {
     // extract the id's for which we will request the profile
     NSArray *fbids = [self.textObjectID.text componentsSeparatedByString:@","];
-    
+
+    if ([self.textObjectID.text length] == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Object ID is required"
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
     self.textOutput.text = loadingText;
     if ([self.textObjectID isFirstResponder]) {
         [self.textObjectID resignFirstResponder];

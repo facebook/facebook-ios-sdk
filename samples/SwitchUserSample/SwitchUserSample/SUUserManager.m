@@ -91,7 +91,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     // create a session object, with defaults accross the board, except that we provide a custom
     // instance of FBSessionTokenCachingStrategy
     FBSession *session = [[FBSession alloc] initWithAppID:nil
-                                              permissions:nil
+                                              permissions:[NSArray arrayWithObject:@"user_birthday"]
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:tokenCachingStrategy];
     return session;

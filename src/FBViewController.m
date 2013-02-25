@@ -16,6 +16,8 @@
 
 #import "FBViewController.h"
 #import "FBViewController+Internal.h"
+#import "FBLogger.h"
+#import "FBSettings.h"
 
 @interface FBViewController ()
 
@@ -48,19 +50,38 @@
 
 #pragma mark View controller lifecycle
 
+- (void) commonInit {
+    // We do this at init-time rather than in viewDidLoad so the caller can change the buttons if
+    // they want prior to the view loading.
+    self.cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
+                                                                       target:self
+                                                                       action:@selector(cancelButtonPressed:)]
+                         autorelease];
+    self.doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                     target:self
+                                                                     action:@selector(doneButtonPressed:)]
+                       autorelease];
+
+}
+
 - (id)init {
     self = [super init];
     if (self) {
-        // We do this at init-time rather than in viewDidLoad so the caller can change the buttons if
-        // they want prior to the view loading.
-        self.cancelButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel 
-                                                                           target:self 
-                                                                           action:@selector(cancelButtonPressed:)] 
-                             autorelease];
-        self.doneButton = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone 
-                                                                         target:self 
-                                                                         action:@selector(doneButtonPressed:)] 
-                           autorelease];
+        [self commonInit];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        [self commonInit];
     }
     return self;
 }
@@ -295,6 +316,7 @@
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
         }
         
+        [self logInsights:YES];
         if (self.handler) {
             self.handler(self, NO);
         }
@@ -314,10 +336,15 @@
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
         }
         
+        [self logInsights:NO];
         if (self.handler) {
             self.handler(self, YES);
         }
     }
+}
+
+- (void)logInsights:(BOOL)cancelled {
+    // Internal subclasses that will implicitly log Insights will do so here.
 }
 
 

@@ -164,6 +164,16 @@
 - (void)loadData;
 
 /*!
+ @abstract
+ Updates the view locally without fetching data from the server or from cache.
+ 
+ @discussion
+ Use this if the filter properties change. This may affect the order or
+ display of information.
+ */
+- (void)updateView;
+
+/*!
  @method
  
  @abstract

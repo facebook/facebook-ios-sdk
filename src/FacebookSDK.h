@@ -16,17 +16,12 @@
 
 // core
 #import "FBSession.h"
+#import "FBAccessTokenData.h"
 #import "FBRequest.h"
 #import "FBError.h"
+#import "NSError+FBError.h"
 #import "FBSettings.h"
-
-// ux
-#import "FBLoginView.h"
-#import "FBProfilePictureView.h"
-#import "FBUserSettingsViewController.h"
-#import "FBPlacePickerViewController.h"
-#import "FBFriendPickerViewController.h"
-#import "FBCacheDescriptor.h"
+#import "FBInsights.h"
 
 // graph
 #import "FBGraphUser.h"
@@ -38,10 +33,12 @@
 // ux
 #import "FBLoginView.h"
 #import "FBProfilePictureView.h"
+#import "FBUserSettingsViewController.h"
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 #import "FBCacheDescriptor.h"
 #import "FBNativeDialogs.h"
+#import "FBWebDialogs.h"
 
 /*!
  @header

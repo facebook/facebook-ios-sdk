@@ -15,17 +15,27 @@
  */
 
 #import "FBSession.h"
+#import "FBSystemAccountStoreAdapter.h"
+#import "FBSessionInsightsState.h"
+
+@class FBSystemAccountStoreAdapter;
 
 @interface FBSession (Internal)
+
+@property(readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
+@property(readonly, retain) FBSessionInsightsState *insightsState;
 
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;
 - (void)closeAndClearTokenInformation:(NSError*) error;
+- (void)clearAffinitizedThread;
 
 + (FBSession*)activeSessionIfOpen;
 
 + (void)deleteFacebookCookies;
-+ (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime;
-+ (void)renewSystemAuthorization;
+
+- (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
+                             errorCode:(NSString*)errorCode
+                            innerError:(NSError*)innerError;
 
 @end

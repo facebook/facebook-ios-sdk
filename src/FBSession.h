@@ -15,10 +15,12 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <Accounts/Accounts.h>
 
 // up-front decl's
 @class FBSession;
 @class FBSessionTokenCachingStrategy;
+@class FBAccessTokenData;
 
 #define FB_SESSIONSTATETERMINALBIT (1 << 8)
 
@@ -163,23 +165,44 @@ typedef enum {
  @typedef
  
  @abstract Block type used to define blocks called by <FBSession> for state updates
- @discussion
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+  for error handling best practices.
  */
 typedef void (^FBSessionStateHandler)(FBSession *session, 
                                        FBSessionState status, 
                                        NSError *error);
 
-/*! 
+/*!
  @typedef
  
- @abstract Block type used to define blocks called by <[FBSession reauthorizeWithPermissions]>/.
+ @abstract Block type used to define blocks called by <[FBSession requestNewReadPermissions:completionHandler:]>
+ and <[FBSession requestNewPublishPermissions:defaultAudience:completionHandler:]>.
  
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+ for error handling best practices.
+ */
+typedef void (^FBSessionRequestPermissionResultHandler)(FBSession *session,
+                                                        NSError *error);
+
+/*!
+ @typedef
+ 
+ @abstract Block type used to define blocks called by <[FBSession reauthorizeWithPermissions]>.
+ 
+ @discussion You should use the preferred FBSessionRequestPermissionHandler typedef rather than 
+ this synonym, which has been deprecated.
+ */
+typedef FBSessionRequestPermissionResultHandler FBSessionReauthorizeResultHandler __attribute__((deprecated));
+
+/*!
+ @typedef
+ 
+ @abstract Block type used to define blocks called for system credential renewals.
  @discussion
  */
-typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session, 
-                                                  NSError *error);
+typedef void (^FBSessionRenewSystemCredentialsHandler)(ACAccountCredentialRenewResult result, NSError *error) ;
 
-/*! 
+/*!
  @class FBSession
 
  @abstract
@@ -295,17 +318,26 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 /*! @abstract Identifies the URL Scheme Suffix used by the session. This is used when multiple iOS apps share a single Facebook app ID. */
 @property(readonly, copy) NSString *urlSchemeSuffix;    
 
-/*! @abstract The access token for the session object. */
-@property(readonly, copy) NSString *accessToken;
+/*! @abstract The access token for the session object. 
+    @discussion Deprecated. Use the `accessTokenData` property. */
+@property(readonly, copy) NSString *accessToken
+__attribute__((deprecated));
 
-/*! @abstract The expiration date of the access token for the session object. */
-@property(readonly, copy) NSDate *expirationDate;    
+/*! @abstract The expiration date of the access token for the session object. 
+    @discussion Deprecated. Use the `accessTokenData` property. */
+@property(readonly, copy) NSDate *expirationDate
+__attribute__((deprecated));
 
 /*! @abstract The permissions granted to the access token during the authentication flow. */
 @property(readonly, copy) NSArray *permissions;
 
-/*! @abstract Specifies the login type used to authenticate the user. */
-@property(readonly) FBSessionLoginType loginType;
+/*! @abstract Specifies the login type used to authenticate the user. 
+    @discussion Deprecated. Use the `accessTokenData` property. */
+@property(readonly) FBSessionLoginType loginType
+__attribute__((deprecated));
+
+/*! @abstract Gets the FBAccessTokenData for the session */
+@property(readonly, copy) FBAccessTokenData *accessTokenData;
 
 /*!
  @methodgroup Instance methods
@@ -357,6 +389,28 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
        completionHandler:(FBSessionStateHandler)handler;
 
 /*!
+ @method
+ 
+ @abstract Imports an existing access token and opens the session with it.
+ 
+ @discussion
+ The method attempts to open the session using an existing access token. No UX will occur. If 
+ successful, the session with be in an Open state and the method will return YES; otherwise, NO.
+ 
+ The method may be called at most once and must be called after the `FBSession` is initialized (see below).
+ It must be called before the session is closed. Calling the method at an invalid time will result in
+ an exception. The open session methods may be passed a block that will be called back when the session
+ state changes. The block will be released when the session is closed.
+ 
+ The initialized session must not have already been initialized from a cache (for example, you could use
+ the `[FBSessionTokenCachingStrategy nullCacheInstance]` instance). 
+ 
+ @param accessTokenData The token data. See `FBAccessTokenData` for construction methods.
+ @param handler A block to call with session state changes. The default is nil.
+ */
+- (BOOL)openFromAccessTokenData:(FBAccessTokenData *)accessTokenData completionHandler:(FBSessionStateHandler) handler;
+
+/*!
  @abstract
  Closes the local in-memory session object, but does not clear the persisted token cache.
  */
@@ -395,9 +449,13 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  authentication flow. A value of nil indicates basic permissions.
  
  @param handler A block to call with session state changes. The default is nil.
+ 
+ @discussion This method is a deprecated alias of <[FBSession requestNewReadPermissions:completionHandler:]>. Consider
+ using <[FBSession requestNewReadPermissions:completionHandler:]>, which is preferred for readability.
  */
 - (void)reauthorizeWithReadPermissions:(NSArray*)readPermissions
-                     completionHandler:(FBSessionReauthorizeResultHandler)handler;
+                     completionHandler:(FBSessionReauthorizeResultHandler)handler
+__attribute__((deprecated));
 
 /*!
  @abstract
@@ -409,14 +467,53 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  @param defaultAudience Specifies the audience for posts.
  
  @param handler A block to call with session state changes. The default is nil.
+ 
+ @discussion This method is a deprecated alias of <[FBSession requestNewPublishPermissions:defaultAudience:completionHandler:]>.
+ Consider using <[FBSession requestNewPublishPermissions:defaultAudience:completionHandler:]>, which is preferred for readability.
  */
 - (void)reauthorizeWithPublishPermissions:(NSArray*)writePermissions
-                        defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                      completionHandler:(FBSessionReauthorizeResultHandler)handler;
+                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                        completionHandler:(FBSessionReauthorizeResultHandler)handler
+__attribute__((deprecated));
 
 /*!
  @abstract
- A helper method that is used to provide an implementation for 
+ Requests new or additional read permissions for the session.
+ 
+ @param readPermissions An array of strings representing the permissions to request during the
+ authentication flow. A value of nil indicates basic permissions.
+ 
+ @param handler A block to call with session state changes. The default is nil.
+ 
+ @discussion The handler, if non-nil, is called once the operation has completed or failed. This is in contrast to the
+ state completion handler used in <[FBSession openWithCompletionHandler:]> (and other `open*` methods) which is called 
+ for each state-change for the session.
+ */
+- (void)requestNewReadPermissions:(NSArray*)readPermissions
+                completionHandler:(FBSessionRequestPermissionResultHandler)handler;
+
+/*!
+ @abstract
+ Requests new or additional write permissions for the session.
+ 
+ @param writePermissions An array of strings representing the permissions to request during the
+ authentication flow.
+ 
+ @param defaultAudience Specifies the audience for posts.
+ 
+ @param handler A block to call with session state changes. The default is nil.
+ 
+ @discussion The handler, if non-nil, is called once the operation has completed or failed. This is in contrast to the
+ state completion handler used in <[FBSession openWithCompletionHandler:]> (and other `open*` methods) which is called 
+ for each state-change for the session.
+ */
+- (void)requestNewPublishPermissions:(NSArray*)writePermissions
+                     defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                   completionHandler:(FBSessionRequestPermissionResultHandler)handler;
+
+/*!
+ @abstract
+ A helper method that is used to provide an implementation for
  [UIApplicationDelegate application:openURL:sourceApplication:annotation:]. It should be invoked during
  the Facebook Login flow and will update the session information based on the incoming URL.
  
@@ -572,7 +669,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 /*!
  @abstract
- An appication may get or set the current active session. Certain high-level components in the SDK
+ An application may get or set the current active session. Certain high-level components in the SDK
  will use the activeSession to set default session (e.g. `FBLoginView`, `FBFriendPickerViewController`)
  
  @discussion
@@ -585,7 +682,7 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
 
 /*!
  @abstract
- An appication may get or set the current active session. Certain high-level components in the SDK
+ An application may get or set the current active session. Certain high-level components in the SDK
  will use the activeSession to set default session (e.g. `FBLoginView`, `FBFriendPickerViewController`)
  
  @param session         The FBSession object to become the active session
@@ -614,5 +711,41 @@ typedef void (^FBSessionReauthorizeResultHandler)(FBSession *session,
  overridden on a per session basis.
  */
 + (NSString*)defaultAppID;
-    
+
+/*!
+ @method
+
+ @abstract Set the default url scheme suffix to use for sessions. The url
+ scheme suffix may be overridden on a per session basis.
+
+ @param urlSchemeSuffix The default url scheme suffix to use for <FBSession> methods.
+ */
++ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix;
+
+/*!
+ @method
+
+ @abstract Get the default url scheme suffix used for sessions.  If not
+ explicitly set, the default will be read from the application's plist. The
+ url scheme suffix may be overridden on a per session basis.
+ */
++ (NSString*)defaultUrlSchemeSuffix;
+
+/*!
+ @method
+ 
+ @abstract Issues an asychronous renewCredentialsForAccount call to the device Facebook account store.
+ 
+ @param handler The completion handler to call when the renewal is completed. The handler will be
+ invoked on the main thread.
+ 
+ @discussion This can be used to explicitly renew account credentials on iOS 6 devices and is provided
+ as a convenience wrapper around `[ACAccountStore renewCredentialsForAccount:completion]`. Note the
+ method will not issue the renewal call if the the Facebook account has not been set on the device, or
+ if access had not been granted to the account (though the handler wil receive an error).
+ 
+ This is safe to call (and will surface an error to the handler) on versions of iOS before 6 or if the user
+ logged in via Safari or Facebook SSO.
+*/
++ (void)renewSystemCredentials:(FBSessionRenewSystemCredentialsHandler)handler;
 @end

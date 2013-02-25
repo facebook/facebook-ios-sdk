@@ -151,9 +151,9 @@
         
         // if we don't have permission to post, let's first address that
         if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-            [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                     defaultAudience:FBSessionDefaultAudienceFriends
-                                                   completionHandler:^(FBSession *session, NSError *error) {
+            [FBSession.activeSession requestNewPublishPermissions:@[@"publish_actions"]
+                                                  defaultAudience:FBSessionDefaultAudienceFriends
+                                                completionHandler:^(FBSession *session, NSError *error) {
                                                        if (!error) {
                                                            // re-call assuming we now have the permission
                                                            [self postAction:actionPath
@@ -186,43 +186,27 @@
                                                  // a more complex application may want to store or perform addtional actions
                                                  // with the id that represents the just-posted action
                                              } else {
-                                                 // get the basic error message
-                                                 NSString *message = error.localizedDescription;
-                                                 
-                                                 // see if we can improve on it with an error message from the server
-                                                 id json = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
-                                                 id facebookError = nil;
-                                                 NSDecimalNumber *code = nil;
-                                                 if ([json isKindOfClass:[NSDictionary class]] &&
-                                                     (json = [json objectForKey:@"body"]) &&
-                                                     [json isKindOfClass:[NSDictionary class]] &&
-                                                     (facebookError = [json objectForKey:@"error"]) &&
-                                                     [facebookError isKindOfClass:[NSDictionary class]] &&
-                                                     (json = [facebookError objectForKey:@"message"])) {
-                                                     message = [json description];
-                                                     code = [facebookError objectForKey:@"code"];
-                                                 }
-                                                 
-                                                 if ([code intValue] == 200 && tryReauthIfNeeded) {
+                                                 // See the Scrumptious sample for further error handling tips.
+                                                 // In this sample, we will simply retry permission errors.
+                                                 if (error.fberrorCategory == FBErrorCategoryPermissions && tryReauthIfNeeded) {
                                                      // We got an error indicating a permission is missing. This could happen if the user has gone into
                                                      // their Facebook settings and explictly removed a permission they had previously granted. Try reauthorizing
                                                      // again to get the permission back.
-                                                     [FBSession.activeSession reauthorizeWithPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                                                                behavior:FBSessionLoginBehaviorWithFallbackToWebView
-                                                                                       completionHandler:^(FBSession *session, NSError *error) {
-                                                                                           if (!error) {
-                                                                                               // re-call assuming we now have the permission
-                                                                                               [self postAction:actionPath
-                                                                                                    leftOperand:left
-                                                                                                   rightOperand:right
-                                                                                                         result:result
-                                                                                              tryReauthIfNeeded:NO];
-                                                                                           }
-                                                                                       }];
+                                                     [FBSession.activeSession requestNewPublishPermissions:@[@"publish_actions"]
+                                                                                           defaultAudience:FBSessionDefaultAudienceFriends
+                                                                                         completionHandler:^(FBSession *session, NSError *error) {
+                                                                                             if (!error) {
+                                                                                                 // re-call assuming we now have the permission
+                                                                                                 [self postAction:actionPath
+                                                                                                      leftOperand:left
+                                                                                                     rightOperand:right
+                                                                                                           result:result
+                                                                                                tryReauthIfNeeded:NO];
+                                                                                             }
+                                                                                         }];
                                                  } else {
-                                                     // display the message that we have
                                                      UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"OG Post Failed"
-                                                                                                     message:message
+                                                                                                     message:error.fberrorUserMessage ?: @"Unknown error"
                                                                                                     delegate:nil
                                                                                            cancelButtonTitle:@"OK"
                                                                                            otherButtonTitles:nil];

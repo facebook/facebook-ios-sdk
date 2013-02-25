@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'JustRequestSample' target in the 'JustRequestSample' project
+// Prefix header for all source files of the 'GraphApiSample' target in the 'GraphApiSample' project
 //
 
 #import <Availability.h>

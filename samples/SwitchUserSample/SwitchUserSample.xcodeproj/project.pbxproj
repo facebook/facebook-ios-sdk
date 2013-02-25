@@ -336,6 +336,7 @@
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -358,6 +359,7 @@
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;

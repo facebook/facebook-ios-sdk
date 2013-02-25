@@ -16,11 +16,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "JRAppDelegate.h"
+@interface GraphApiViewController : UIViewController
 
-int main(int argc, char *argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([JRAppDelegate class]));
-    }
-}
+@end

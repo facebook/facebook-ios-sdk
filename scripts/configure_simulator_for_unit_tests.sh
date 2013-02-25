@@ -29,41 +29,16 @@ if [ "$#" -lt 2 ]; then
       die 'Arguments do not conform to usage'
 fi
 
-function write_plist {
-      SIMULATOR_CONFIG_DIR="$1"/Documents
-      SIMULATOR_CONFIG_FILE="$SIMULATOR_CONFIG_DIR"/FacebookSDK-UnitTestConfig.plist
+function write_xcconfig {
+    echo "IOS_SDK_TEST_APP_ID = $2" > $1
+    echo "IOS_SDK_TEST_APP_SECRET = $3" >> $1
+    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $4" >> $1
 
-      if [ ! -d "$SIMULATOR_CONFIG_DIR" ]; then
-            mkdir "$SIMULATOR_CONFIG_DIR"
-      fi
-
-      # use heredoc syntax to output the plist
-      cat > "$SIMULATOR_CONFIG_FILE" \
-<<DELIMIT
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-        <key>FacebookAppID</key>
-        <string>$2</string>
-        <key>FacebookAppSecret</key>
-        <string>$3</string>
-        <key>UniqueUserTag</key>
-        <string>$4</string>
-</dict>
-</plist>
-DELIMIT
-# end heredoc
-
-      echo "wrote unit test config file at $SIMULATOR_CONFIG_FILE" 
+    echo "Wrote test app configuration to: $1"
 }
 
-SIMULATOR_DIR=$HOME/Library/Application\ Support/iPhone\ Simulator
+XCCONFIG_FILE="$FB_SDK_SRC"/tests/TestAppIdAndSecret.xcconfig
 
-test -x "$SIMULATOR_DIR" || die 'Could not find simulator directory'
+write_xcconfig "$XCCONFIG_FILE" "$1" "$2" "$3"
 
-write_plist "$SIMULATOR_DIR" $1 $2 $3
 
-for VERSION_DIR in "${SIMULATOR_DIR}"/[456].*; do
-      write_plist "$VERSION_DIR" $1 $2 $3
-done

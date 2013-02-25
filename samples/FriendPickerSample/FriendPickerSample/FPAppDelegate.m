@@ -34,11 +34,10 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // BUG:
-    // Nib files require the type to have been loaded before they can do the
-    // wireup successfully.  
+    // If you have not added the -ObjC linker flag, you may need to uncomment the following line because
+    // Nib files require the type to have been loaded before they can do the wireup successfully.
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
-    [FBFriendPickerViewController class];
+    // [FBFriendPickerViewController class];
 
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -58,6 +57,10 @@
     [self.window makeKeyAndVisible];
     
     return YES;
+}
+
+- (NSUInteger)supportedInterfaceOrientations{
+    return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 
 // FBSample logic

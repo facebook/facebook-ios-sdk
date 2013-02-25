@@ -15,17 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
+#import <FacebookSDK/FacebookSDK.h>
 
-@class FBSession;
+/*
+ The UIViewController representing the Scrumptious landing page.
+*/
+@interface SCLoginViewController : UIViewController<FBLoginViewDelegate>
 
-// FBSample logic
-// This view presents a simple UI with a Login button that will log the user in to Facebook,
-// using SSO if possible, otherwise using the web dialog UI.
-@interface SCLoginViewController : UIViewController
-
-// FBSample logic
-// This method should be called to indicate that a login which was in progress has
-// resulted in a failure.
-- (void)loginFailed;
+@property (unsafe_unretained, nonatomic) IBOutlet FBLoginView *FBLoginView;
 
 @end

@@ -305,7 +305,10 @@
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};
@@ -322,7 +325,10 @@
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};

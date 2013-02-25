@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "FBAccessTokenData.h"
 
 /*! 
  @class
@@ -37,7 +38,8 @@
  be responsible for caching behavior of your application. This approach is useful if you need to change where the 
  information is cached, for example if you prefer to use the filesystem or make a network connection to fetch and
  persist cached tokens.  Inheritors should override the cacheTokenInformation, fetchTokenInformation, and clearToken methods.
- Doing this enables your application to implement any token caching scheme, including no caching at all.
+ Doing this enables your application to implement any token caching scheme, including no caching at all (see
+ `[FBSessionTokenCachingStrategy* nullCacheInstance ]`.
  
  Direct use of `FBSessionTokenCachingStrategy`is an advanced technique. Most applications use <FBSession> objects without
  passing an `FBSessionTokenCachingStrategy`, which yields default caching to `NSUserDefaults`.
@@ -63,8 +65,18 @@
  Called by <FBSession> (and overridden by inheritors), in order to cache token information.
  
  @param tokenInformation            Dictionary containing token information to be cached by the method
+ @discussion You should favor overriding this instead of `cacheFBAccessTokenData` only if you intend
+ to cache additional data not captured by the FBAccessTokenData type.
  */
 - (void)cacheTokenInformation:(NSDictionary*)tokenInformation;
+
+/*!
+ @abstract Cache the supplied token.
+ @param accessToken The token instance.
+ @discussion This essentially wraps a call to `cacheTokenInformation` so you should
+ override this when providing a custom token caching strategy.
+*/
+- (void)cacheFBAccessTokenData:(FBAccessTokenData *)accessToken;
 
 /*!
  @abstract 
@@ -72,9 +84,22 @@
  
  @discussion
  An overriding implementation should only return a token if it
- can also return an expiration date, otherwise return nil
+ can also return an expiration date, otherwise return nil.
+ You should favor overriding this instead of `fetchFBAccessTokenData` only if you intend
+ to cache additional data not captured by the FBAccessTokenData type.
+
  */
 - (NSDictionary*)fetchTokenInformation;
+
+/*!
+ @abstract
+ Fetches the cached token instance.
+ 
+ @discussion
+ This essentially wraps a call to `fetchTokenInformation` so you should
+ override this when providing a custom token caching strategy.
+ */
+- (FBAccessTokenData *)fetchFBAccessTokenData;
 
 /*!
  @abstract 
@@ -87,6 +112,12 @@
  Helper function called by the SDK as well as apps, in order to fetch the default strategy instance.
  */
 + (FBSessionTokenCachingStrategy*)defaultInstance;
+
+/*!
+ @abstract
+ Helper function to return a FBSessionTokenCachingStrategy instance that does not perform any caching.
+ */
++ (FBSessionTokenCachingStrategy*)nullCacheInstance;
 
 /*!
  @abstract 

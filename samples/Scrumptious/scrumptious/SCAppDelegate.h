@@ -17,24 +17,24 @@
 #import <UIKit/UIKit.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-extern NSString *const SCSessionStateChangedNotification;
-
 @class SCViewController;
+@class SCLoginViewController;
 
 // Scrumptious sample application
 //
 // The purpose of the Scrumptious sample application is to demonstrate a complete real-world
 // application that includes Facebook integration, friend picker, place picker, and Open Graph
 // Action creation and posting.
-@interface SCAppDelegate : UIResponder <UIApplicationDelegate>
+@interface SCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
-// FBSample logic
-// The app delegate is responsible for maintaining the current FBSession. The application requires
-// the user to be logged in to Facebook in order to do anything interesting -- if there is no valid
-// FBSession, a login screen is displayed.
-- (BOOL)openSessionWithAllowLoginUI:(BOOL)allowLoginUI;
+@property (strong, nonatomic) UINavigationController *navigationController;
 
-+ (NSString *)FBErrorCodeDescription:(FBErrorCode) code;
+@property (strong, nonatomic) SCViewController *mainViewController;
+
+@property (strong, nonatomic) SCLoginViewController* loginViewController;
+
+@property BOOL isNavigating;
+
 @end

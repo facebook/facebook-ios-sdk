@@ -20,6 +20,12 @@
 // and not by any other classes, external or internal.
 @interface FBSession (Protected)
 
+// Permissions are technically associated with a FBAccessTokenData instance
+// but we support initializing an FBSession before acquiring a token. This property
+// tracks that initialized array so that the pass-through permissions property
+// can essentially return self.FBAccessTokenData.permissions ?: self.initializedPermissions
+@property(readonly, copy) NSArray *initializedPermissions;
+
 - (BOOL)transitionToState:(FBSessionState)state
            andUpdateToken:(NSString*)token
         andExpirationDate:(NSDate*)date
@@ -35,9 +41,7 @@
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize;
-
-+ (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
-                             errorCode:(NSString*)errorCode
-                            innerError:(NSError*)innerError;
+- (BOOL)handleReauthorize:(NSDictionary*)parameters
+              accessToken:(NSString*)accessToken;
 
 @end

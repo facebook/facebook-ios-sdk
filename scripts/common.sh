@@ -34,7 +34,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
 
   # The directory containing this script
   # We need to go there and use pwd so these are all absolute paths
-  pushd $(dirname $0) >/dev/null
+  pushd $(dirname $BASH_SOURCE[0]) >/dev/null
   FB_SDK_SCRIPT=$(pwd)
   popd >/dev/null
 

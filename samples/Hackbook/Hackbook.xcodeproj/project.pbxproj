@@ -380,7 +380,10 @@
 				GCC_PREFIX_HEADER = "Hackbook/Hackbook-Prefix.pch";
 				INFOPLIST_FILE = "Hackbook/Hackbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = Hackbook;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
@@ -400,7 +403,10 @@
 				GCC_PREFIX_HEADER = "Hackbook/Hackbook-Prefix.pch";
 				INFOPLIST_FILE = "Hackbook/Hackbook-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = Hackbook;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;

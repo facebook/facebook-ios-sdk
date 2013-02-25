@@ -98,7 +98,7 @@
     STAssertTrue(arr == obj2, @"Different object implies faulty double-wrap");
     
     // is the first object the expected object?
-    STAssertTrue([arr objectAtIndex:0] == @"one", @"Wrong array contents");
+    STAssertTrue([[arr objectAtIndex:0] isEqual:@"one"], @"Wrong array contents");
     
     // is the second index in the array wrapped?
     STAssertTrue([[arr objectAtIndex:1] class] == [FBGraphObject class], @"Wrong class for array element");
@@ -370,7 +370,8 @@
 {
     return [NSArray arrayWithObjects:@"email", 
             @"publish_actions",
-            @"create_event", 
+            @"create_event",
+            @"read_stream",
             nil];
 }
 

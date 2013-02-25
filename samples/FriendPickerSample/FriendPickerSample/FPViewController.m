@@ -115,6 +115,11 @@
     [self dismissModalViewControllerAnimated:YES];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation
+{
+    return YES;
+}
+
 #pragma mark -
 
 @end

@@ -24,8 +24,11 @@
 
 - (void)selectItem:(FBGraphObject *)item
               cell:(UITableViewCell *)cell;
-- (void)deselectItem:(FBGraphObject *)item
-                cell:(UITableViewCell *)cell;
+
+- (void)    deselectItem:(FBGraphObject *)item
+                    cell:(UITableViewCell *)cell
+   raiseSelectionChanged:(BOOL) raiseSelectionChanged;
+
 - (void)selectionChanged;
 
 @end
@@ -66,7 +69,10 @@
 }
 
 - (void)clearSelectionInTableView:(UITableView*)tableView {
-    [self deselectItems:self.selection tableView:tableView];
+    if (self.selection.count > 0) {
+        [self deselectItems:self.selection tableView:tableView];
+        [self selectionChanged];
+    }
 }
 
 - (void)selectItem:(FBGraphObject *)item
@@ -82,8 +88,9 @@
     [self selectionChanged];
 }
 
-- (void)deselectItem:(FBGraphObject *)item
-                cell:(UITableViewCell *)cell
+- (void)    deselectItem:(FBGraphObject *)item
+                    cell:(UITableViewCell *)cell
+   raiseSelectionChanged:(BOOL) raiseSelectionChanged
 {
     id<FBGraphObject> selectedItem = [FBUtility graphObjectInArray:self.selection withSameIDAs:item];
     if (selectedItem) {
@@ -93,9 +100,12 @@
         [selection release];
     }
     cell.accessoryType = UITableViewCellAccessoryNone;
-    [self selectionChanged];
+    if (raiseSelectionChanged) {
+        [self selectionChanged];
+    }
 }
 
+// Note this method does NOT automatically "raise" the selectionChanged event.
 - (void)deselectItems:(NSArray*)items tableView:(UITableView*)tableView
 {
     // Copy this so it doesn't change from under us.
@@ -109,7 +119,7 @@
             cell = [tableView cellForRowAtIndexPath:indexPath];
         }
         
-        [self deselectItem:item cell:cell];
+        [self deselectItem:item cell:cell raiseSelectionChanged:NO];
     }
 }
 
@@ -153,7 +163,7 @@
             }
             [self selectItem:item cell:cell];
         } else {
-            [self deselectItem:item cell:cell];
+            [self deselectItem:item cell:cell raiseSelectionChanged:YES];
         }
     }
 }
@@ -168,7 +178,7 @@
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
  
         FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
-        [self deselectItem:item cell:cell];
+        [self deselectItem:item cell:cell raiseSelectionChanged:NO];
     }
 }
 

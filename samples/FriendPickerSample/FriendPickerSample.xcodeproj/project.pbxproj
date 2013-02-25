@@ -307,7 +307,10 @@
 				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -324,7 +327,10 @@
 				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
 				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_LDFLAGS = "-lsqlite3.0";
+				OTHER_LDFLAGS = (
+				    "-lsqlite3.0",
+				    "-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

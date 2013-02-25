@@ -15,6 +15,7 @@
  */
 
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBAccessTokenData+Internal.h"
 
 // const strings
 static NSString *const FBAccessTokenInformationKeyName = @"FBAccessTokenInformationKey";
@@ -27,11 +28,31 @@ NSString *const FBTokenInformationIsFacebookLoginKey = @"com.facebook.sdk:TokenI
 NSString *const FBTokenInformationLoginTypeLoginKey = @"com.facebook.sdk:TokenInformationLoginTypeLoginKey";
 NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInformationPermissionsKey";
 
+#pragma mark - private FBSessionTokenCachingStrategyNoOpInstance class
+
+@interface FBSessionTokenCachingStrategyNoOpInstance : FBSessionTokenCachingStrategy
+    
+@end
+@implementation FBSessionTokenCachingStrategyNoOpInstance
+
+- (void)cacheTokenInformation:(NSDictionary*)tokenInformation {
+}
+
+- (NSDictionary*)fetchTokenInformation {
+    return [NSDictionary dictionary];
+}
+
+- (void)clearToken {
+}
+
+@end
+
+
 @implementation FBSessionTokenCachingStrategy {
     NSString *_accessTokenInformationKeyName;
 }
 
-#pragma mark Lifecycle
+#pragma mark - Lifecycle
 
 - (id)init {
     return [self initWithUserDefaultTokenInformationKeyName:nil];
@@ -77,6 +98,22 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     [defaults synchronize];
 }
 
+
+- (void)cacheFBAccessTokenData:(FBAccessTokenData *)accessToken {
+    // For backwards compatibility, we must call into existing dictionary-based APIs.
+    [self cacheTokenInformation:[accessToken dictionary]];
+}
+
+- (FBAccessTokenData *)fetchFBAccessTokenData {
+    // For backwards compatibility, we must call into existing dictionary-based APIs.
+    NSDictionary *dictionary = [self fetchTokenInformation];
+    if (![FBSessionTokenCachingStrategy isValidTokenInformation:dictionary]) {
+        return nil;
+    }
+    FBAccessTokenData *fbAccessToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
+    return fbAccessToken;
+}
+
 + (BOOL)isValidTokenInformation:(NSDictionary*)tokenInformation {
     id token = [tokenInformation objectForKey:FBTokenInformationTokenKey];
     id expirationDate = [tokenInformation objectForKey:FBTokenInformationExpirationDateKey];
@@ -97,6 +134,17 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     return sharedDefaultInstance;
 }
 
++ (FBSessionTokenCachingStrategy*)nullCacheInstance {
+    // static state to assure a single instance here
+    static FBSessionTokenCachingStrategyNoOpInstance *noOpInstance = nil;
+    static dispatch_once_t onceToken;
+    
+    // assign once to the static, if called
+    dispatch_once(&onceToken, ^{
+        noOpInstance = [[FBSessionTokenCachingStrategyNoOpInstance alloc] init];
+    });
+    return noOpInstance;
+}
 
 #pragma mark - 
 

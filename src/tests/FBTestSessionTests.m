@@ -18,6 +18,7 @@
 #import "FBTEstSession.h"
 #import "FBTestBlocker.h"
 #import "FBRequest.h"
+#import "FBAccessTokenData.h"
 #import <CommonCrypto/CommonDigest.h>
 
 #if defined(FACEBOOKSDK_SKIP_TEST_SESSION_TESTS)
@@ -39,7 +40,7 @@
     // Get the number of test users. Use an FBTestSession without a user (and thus no
     // access token), so we can specify our own access token.
     FBTestSession *fqlSession = [FBTestSession sessionWithSharedUserWithPermissions:nil];
-    STAssertNil(fqlSession.accessToken, @"non-nil access token");
+    STAssertNil(fqlSession.accessTokenData, @"non-nil access token");
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     

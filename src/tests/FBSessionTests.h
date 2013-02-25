@@ -16,6 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "FBTests.h"
+#import "FBSession+Internal.h"
 
 @interface FBSessionTests : FBTests
 

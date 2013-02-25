@@ -47,7 +47,10 @@
     
     if (FBSession.activeSession.isOpen) {
         [self loadData];
+        self.inviteButton.enabled = YES;
     } else {
+        self.inviteButton.enabled = NO;
+        
         // display the message that we have
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Social Features Disabled"
                                                         message:@"There is no open session with Facebook. Use the Facebook Settings "
@@ -62,6 +65,7 @@
 - (void)viewDidUnload {
     self.activityTextView = nil;
 
+    [self setInviteButton:nil];
     [super viewDidUnload];
 }
 
@@ -176,6 +180,14 @@
     
     // start the actual request
     [connection start];    
+}
+
+- (IBAction)clickInviteFriends:(id)sender {
+    [FBWebDialogs presentRequestsDialogModallyWithSession:nil
+                                                  message:@"Please come rock the logic with me!"
+                                                    title:@"Invite a Friend"
+                                               parameters:nil
+                                                  handler:nil];
 }
 
 @end

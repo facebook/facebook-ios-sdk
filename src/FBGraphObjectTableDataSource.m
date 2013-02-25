@@ -290,7 +290,7 @@ static const NSInteger kMinimumCountToCollate = 6;
     NSString *text = @"";
     
     if (self.groupByField) {
-        text = [item objectForKey:self.groupByField];
+        text = [item objectForKey:self.groupByField] ?: @"";
     }
     
     if (self.useCollation) {

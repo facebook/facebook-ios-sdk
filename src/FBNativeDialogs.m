@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
+#import <Social/Social.h>
+
 #import "FBNativeDialogs.h"
 #import "FBSession.h"
 #import "FBError.h"
 #import "FBUtility.h"
-#import "Social/Social.h"
+#import "FBAccessTokenData.h"
+#import "FBInsights+Internal.h"
 
 @interface FBNativeDialogs ()
 
-+ (NSError*)createError:(NSString*)reason;
++ (NSError*)createError:(NSString*)reason
+                session:(FBSession *)session;
 
 @end
 
@@ -87,11 +91,24 @@
     
     [composeViewController setCompletionHandler:^(SLComposeViewControllerResult result) {
         BOOL cancelled = (result == SLComposeViewControllerResultCancelled);
+        
+        [FBInsights logImplicitEvent:FBInsightsEventNameShareSheetDismiss
+                          valueToSum:1.0
+                          parameters:@{ @"render_type" : @"Native",
+                                        FBInsightsEventParameterDialogOutcome : (cancelled
+                                          ? FBInsightsDialogOutcomeValue_Cancelled
+                                          : FBInsightsDialogOutcomeValue_Completed) }
+                             session:session];
+        
         if (handler) {
             handler(cancelled ? FBNativeDialogResultCancelled : FBNativeDialogResultSucceeded, nil);
         }
     }];
     
+    [FBInsights logImplicitEvent:FBInsightsEventNameShareSheetLaunch
+                      valueToSum:1.0
+                      parameters:@{ @"render_type" : @"Native" }
+                         session:session];
     [viewController presentModalViewController:composeViewController animated:YES];
         
     return YES;
@@ -109,7 +126,8 @@
     if (composeViewControllerClass == nil ||
         [composeViewControllerClass isAvailableForServiceType:SLServiceTypeFacebook] == NO) {
         if (handler) {
-            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogNotSupported]);
+            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogNotSupported
+                                                         session:session]);
         }
         return nil;
     }
@@ -124,9 +142,10 @@
         // If we have an open session and it's not native auth, fail. If the session is
         // not open, attempting to put up the dialog will prompt the user to configure
         // their account.
-        if (session.isOpen && session.loginType != FBSessionLoginTypeSystemAccount) {
+        if (session.isOpen && session.accessTokenData.loginType != FBSessionLoginTypeSystemAccount) {
             if (handler) {
-                handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogInvalidForSession]);
+                handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogInvalidForSession
+                                                             session:session]);
             }
             return nil;
         }
@@ -135,15 +154,21 @@
     SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:SLServiceTypeFacebook];
     if (composeViewController == nil) {
         if (handler) {
-            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogCantBeDisplayed]);
+            handler(FBNativeDialogResultError, [self createError:FBErrorNativeDialogCantBeDisplayed
+                                                         session:session]);
         }
         return nil;
     }
     return composeViewController;
 }
 
-+ (NSError*)createError:(NSString*)reason {
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:reason, FBErrorNativeDialogReasonKey, nil];
++ (NSError *)createError:(NSString *)reason
+                 session:(FBSession *)session {
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+    userInfo[FBErrorNativeDialogReasonKey] = reason;
+    if (session) {
+        userInfo[FBErrorSessionKey] = session;
+    }
     NSError *error = [NSError errorWithDomain:FacebookSDKDomain
                                          code:FBErrorNativeDialog
                                      userInfo:userInfo];

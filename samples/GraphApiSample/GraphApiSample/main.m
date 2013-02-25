@@ -16,18 +16,11 @@
 
 #import <UIKit/UIKit.h>
 
-// Just Request sample application
-//
-// The purpose of this sample application is to provide an example of 
-// how to request data and entities from Facebook. The goal of the sample 
-// is to show how to use the FBRequest and FBSession classes for this purpose, 
-// with minimal additional sample functionality to distract from the core topic.
+#import "GraphApiAppDelegate.h"
 
-@class JRViewController;
-
-@interface JRAppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
-@property (strong, nonatomic) JRViewController *viewController;
-
-@end
+int main(int argc, char *argv[])
+{
+    @autoreleasepool {
+        return UIApplicationMain(argc, argv, nil, NSStringFromClass([GraphApiAppDelegate class]));
+    }
+}
