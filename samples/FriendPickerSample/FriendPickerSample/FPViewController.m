@@ -21,10 +21,13 @@
 // We need to handle some of the UX events related to friend selection, and so we declare
 // that we implement the FBFriendPickerDelegate here; the delegate lets us filter the view
 // as well as handle selection events
-@interface FPViewController () 
+@interface FPViewController () <UISearchBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
 @property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
+@property (assign, nonatomic) BOOL showingFriendPicker;
+@property (strong, nonatomic) UISearchBar *searchBar;
+@property (strong, nonatomic) NSString *searchText;
 
 - (void)fillTextBoxAndDismiss:(NSString *)text;
 
@@ -34,6 +37,9 @@
 
 @synthesize selectedFriendsView = _friendResultText;
 @synthesize friendPickerController = _friendPickerController;
+@synthesize searchBar = _searchBar;
+@synthesize searchText = _searchText;
+@synthesize showingFriendPicker = _showingFriendPicker;
 
 #pragma mark View lifecycle
 
@@ -72,6 +78,20 @@
     [super viewDidUnload];
 }
 
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    self.showingFriendPicker = NO;
+}
+
+- (void) viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    if (self.showingFriendPicker) {
+        [self addSearchBarToFriendPickerView];
+    }
+}
 #pragma mark UI handlers
 
 - (IBAction)pickFriendsButtonClick:(id)sender {
@@ -80,6 +100,8 @@
         self.friendPickerController = [[FBFriendPickerViewController alloc] init];
         self.friendPickerController.title = @"Pick Friends";
         self.friendPickerController.delegate = self;
+        self.showingFriendPicker = YES;
+        
     }
 
     [self.friendPickerController loadData];
@@ -87,6 +109,7 @@
     
     // iOS 5.0+ apps should use [UIViewController presentViewController:animated:completion:]
     // rather than this deprecated method, but we want our samples to run on iOS 4.x as well.
+    
     [self presentModalViewController:self.friendPickerController animated:YES];
 }
 
@@ -111,7 +134,7 @@
 
 - (void)fillTextBoxAndDismiss:(NSString *)text {
     self.selectedFriendsView.text = text;
-    
+    self.showingFriendPicker = NO;
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -120,6 +143,65 @@
     return YES;
 }
 
-#pragma mark -
+
+#pragma mark - UISearchBar
+/***
+Adding UISearchBar can be found at:
+http://developers.facebook.com/docs/howtos/add-search-to-friend-picker-using-ios-sdk/
+***/
+- (void)addSearchBarToFriendPickerView
+{
+    if (self.searchBar == nil) {
+        CGFloat searchBarHeight = 44.0;
+        self.searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, searchBarHeight)];
+        self.searchBar.autoresizingMask = self.searchBar.autoresizingMask | UIViewAutoresizingFlexibleWidth;
+        self.searchBar.delegate = self;
+        self.searchBar.showsCancelButton = YES;
+        
+        [self.friendPickerController.canvasView addSubview:self.searchBar];
+        CGRect newFrame = self.friendPickerController.view.bounds;
+        newFrame.size.height -= searchBarHeight;
+        newFrame.origin.y = searchBarHeight;
+        self.friendPickerController.tableView.frame = newFrame;
+        
+    }
+}
+
+- (void) handleSearch:(UISearchBar *)searchBar {
+    self.searchText = searchBar.text;
+    [self.friendPickerController updateView];
+}
+
+#pragma mark - UISearchBarDelegate Methods
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [self handleSearch:searchBar];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    self.searchText = nil;
+    self.searchBar.text = @"";
+    [self handleSearch:searchBar];
+    [searchBar resignFirstResponder];
+}
+
+//Instant Friend Search
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    [self handleSearch:searchBar];
+}
+
+#pragma mark - FBFriendPickerDelegate Method
+- (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker shouldIncludeUser:(id<FBGraphUser>)user {
+    if (self.searchText && ![self.searchText isEqualToString:@""]) {
+        NSRange result = [user.name rangeOfString:self.searchText options:NSCaseInsensitiveSearch];
+        if (result.location != NSNotFound) {
+            return YES;
+        } else {
+            return NO;
+        }
+    }else {
+        return YES;
+    }
+    return YES;
+}
 
 @end
