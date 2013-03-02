@@ -151,6 +151,7 @@
         return;
     }      
     
+    self.imageView.image = nil;
     if (self.profileID) {
         
         [self.connection cancel];
