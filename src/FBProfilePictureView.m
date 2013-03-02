@@ -23,6 +23,7 @@
 @interface FBProfilePictureView()
 
 @property (readonly, nonatomic) NSString *imageQueryParamString;
+@property (readonly, nonatomic) UIImage *blankImage;
 @property (retain, nonatomic) NSString *previousImageQueryParamString;
 
 @property (retain, nonatomic) FBURLConnection *connection;
@@ -92,6 +93,16 @@
 
 #pragma mark -
 
+- (UIImage *)blankImage {
+    BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
+    
+    NSString *blankImageName =
+    [NSString
+     stringWithFormat:@"FacebookSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
+     isSquare ? @"square" : @"portrait"];
+    return [UIImage imageNamed:blankImageName];
+}
+
 - (NSString *)imageQueryParamString  {
     
     static CGFloat screenScaleFactor = 0.0;
@@ -149,7 +160,10 @@
         // But we still may need to adjust the contentMode.
         [self ensureImageViewContentMode];
         return;
-    }      
+    }
+    
+    if (self.clearImageBeforeRefresh)
+        self.imageView.image = self.placeHolderImageName ? [UIImage imageNamed:self.placeHolderImageName] : self.blankImage;
     
     if (self.profileID) {
         
@@ -177,14 +191,7 @@
                                               completionHandler:handler]
                            autorelease];
     } else {
-        BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
-
-        NSString *blankImageName = 
-            [NSString 
-                stringWithFormat:@"FacebookSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
-                isSquare ? @"square" : @"portrait"];
-
-        self.imageView.image = [UIImage imageNamed:blankImageName];
+        self.imageView.image = self.blankImage;
         [self ensureImageViewContentMode];
     }
     
