@@ -61,6 +61,18 @@ typedef enum {
 
 /*!
  @abstract
+ When set to YES sets the image in view to nil or to supplied Place Holder image.
+ */
+@property (nonatomic) BOOL clearImageBeforeRefresh;
+
+/*!
+ @abstract
+ Place Holder image to be set until the profile image is fetched.
+ */
+@property (copy, nonatomic) NSString *placeHolderImageName;
+
+/*!
+ @abstract
  Initializes and returns a profile view object.
  */
 - (id)init;
