@@ -127,7 +127,7 @@
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
     
     // here we just want to seed the cache, by identifying the cache, and by choosing not to consult the cache
-    FBRequestConnection *connection = [[FBRequestConnection alloc] init];    
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     FBRequest *request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
     [request.parameters setObject:@"id,first_name" forKey:@"fields"];
     [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
@@ -144,7 +144,7 @@
     __block BOOL completedWithoutBlocking = NO;
     
     // here we expect to complete on the cache, so we will confirm that
-    connection = [[FBRequestConnection alloc] init];    
+    connection = [[FBRequestConnection alloc] init];
     request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
     [request.parameters setObject:@"id,first_name" forKey:@"fields"];
     [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -223,7 +223,7 @@
              STAssertNil(error, @"should not have an error here: Handler 2");
              STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 2");
              [fbids removeObjectAtIndex:fbids.count-1];
-             [blocker signal];             
+             [blocker signal];
          }];
     
     deleteRequest = [[FBRequest alloc] initWithSession:session
@@ -238,7 +238,7 @@
              STAssertNil(error, @"should not have an error here: Handler 3");
              STAssertTrue(0 != fbids.count, @"not enough fbids: Handler 3");
              [fbids removeObjectAtIndex:fbids.count-1];
-             [blocker signal];             
+             [blocker signal];
          }];
     
     [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -279,8 +279,8 @@
      }];
     // delete
     request = [[[FBRequest alloc] initWithSession:session
-                                        graphPath:[fbids objectAtIndex:fbids.count-1] 
-                                       parameters:nil 
+                                        graphPath:[fbids objectAtIndex:fbids.count-1]
+                                       parameters:nil
                                        HTTPMethod:@"delete"] autorelease];
     [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         STAssertNotNil(result, @"should have a result here: Handler 6");
@@ -293,6 +293,77 @@
     [blocker wait];
     
     STAssertTrue(fbids.count == 0, @"Our fbid collection should be empty here");
+}
+
+- (void)testNilCompletionHandler {
+    /*
+     Need to test that nil completion handlers don't cause crashes, and also don't prevent the request from completing.
+     We'll do this via the following steps:
+     1. Create a post on me/feed with a valid handler and get the id.
+     2. Delete the post without a handler
+     3. Try delete the post again with a valid handler and make sure we get an error since Step #2 should have deleted
+     */
+    
+    // Step 1
+    
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    
+    FBRequest *postRequest = [[[FBRequest alloc] initWithSession:session
+                                                       graphPath:@"me/feed"]
+                              autorelease];
+    
+    [postRequest.parameters setObject:@"dummy status"
+                               forKey:@"name"];
+    [postRequest.parameters setObject:@"http://www.facebook.com"
+                               forKey:@"link"];
+    [postRequest.parameters setObject:@"dummy description"
+                               forKey:@"description"];
+    [postRequest.parameters setObject:@"post"
+                               forKey:@"method"];
+    
+    NSMutableArray *fbids = [NSMutableArray array];
+    
+    [postRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertNotNil(result, @"should have a result here: Post Request handler");
+        STAssertNil(error, @"should not have an error here: Post Request handler");
+        [fbids addObject: [[result objectForKey:@"id"] description]];
+        [blocker signal];
+    }];
+    
+    [blocker wait];
+    [blocker release];
+
+    
+    // Step 2
+    
+    blocker = [[FBTestBlocker alloc] init];
+    FBRequest *deleteRequest = [[[FBRequest alloc] initWithSession:session
+                                                        graphPath:[fbids objectAtIndex:0]
+                                                       parameters:nil
+                                                       HTTPMethod:@"delete"] autorelease];
+    [deleteRequest startWithCompletionHandler:nil];
+    // Can't signal without a handler, so just wait 2 seconds.
+    [blocker waitWithTimeout:2];
+    [blocker release];
+    
+    
+    // Step 3
+    
+    blocker = [[FBTestBlocker alloc] init];
+    deleteRequest = [[[FBRequest alloc] initWithSession:session
+                                             graphPath:[fbids objectAtIndex:0]
+                                            parameters:nil
+                                            HTTPMethod:@"delete"] autorelease];
+    [deleteRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertNil(result, @"should not have a result here: Dupe-Delete Handler");
+        STAssertNotNil(error, @"should have an error here: Dupe-Delete Handler");
+        [blocker signal];
+    }];
+    
+    [blocker wait];
+    [blocker release];
 }
 
 @end

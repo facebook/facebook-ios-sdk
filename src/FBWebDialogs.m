@@ -23,25 +23,37 @@
 #import "FBDialog.h"
 #import "FBSDKVersion.h"
 #import "FBViewController+Internal.h"
+#import "FBFrictionlessDialogSupportDelegate.h"
+#import "FBFrictionlessRequestSettings.h"
+#import "FBFrictionlessRecipientCache.h"
 
 static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 
 // this is an implementation detail class which acts
 // as the delegate in or to map to a block 
-@interface FBWebDialogDelegate : NSObject <FBDialogDelegate>
+@interface FBWebDialogInternalDelegate : NSObject <FBDialogDelegate>
+
 @property (nonatomic, copy) FBWebDialogHandler handler;
 @property (nonatomic, retain) FBDialog *dialog;
+@property (nonatomic, copy) NSString *dialogMethod;
+@property (nonatomic, copy) NSDictionary *parameters;
+@property (nonatomic, retain) FBSession *session;
+@property (nonatomic, assign) id<FBWebDialogsDelegate> delegate;
 
 - (void)goRetainYourself;
 
 @end
 
-@implementation FBWebDialogDelegate {
+@implementation FBWebDialogInternalDelegate {
     BOOL _isSelfRetained;
 }
 
 @synthesize handler = _handler;
 @synthesize dialog = _dialog;
+@synthesize dialogMethod = _dialogMethod;
+@synthesize parameters = _parameters;
+@synthesize session = _session;
+@synthesize delegate = _delegate;
 
 - (id)init {
     self = [super init];
@@ -54,6 +66,10 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 - (void)dealloc {
     self.handler = nil;
     self.dialog = nil;
+    self.dialogMethod = nil;
+    self.parameters = nil;
+    self.session = nil;
+    // self.delegate is assign per the pattern
     [super dealloc];
 }
 
@@ -65,6 +81,8 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 }
 
 - (void)releaseSelfIfNeeded {
+    self.handler = nil; // insurance
+    self.delegate = nil; // insurance
     self.dialog = nil;
     if (_isSelfRetained) {
         [self autorelease];
@@ -75,6 +93,21 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 - (void)completeWithResult:(FBWebDialogResult)result
                        url:(NSURL *)url
                      error:(NSError *)error {
+    
+    // optional delegate invocation
+    if ([self.delegate respondsToSelector:@selector(webDialogsWillDismissDialog:parameters:session:result:url:error:)]) {
+        [self.delegate webDialogsWillDismissDialog:self.dialogMethod
+                                        parameters:self.parameters
+                                           session:self.session
+                                            result:&result       // may mutate
+                                               url:&url          // may mutate
+                                             error:&error];      // may mutate
+        
+        // important! we must nil the delegate before nil'ing the handler, to preserve
+        // the case where the calling app is using a block to retain the delegate
+        self.delegate = nil;
+    }
+    
     if (self.handler) {
         self.handler(result, url, error);
         self.handler = nil;
@@ -82,6 +115,18 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 }
 
 // non-terminal delegate methods
+
+- (BOOL)dialog:(FBDialog*)dialog shouldOpenURLInExternalBrowser:(NSURL *)url {
+    BOOL result = YES;
+    // optional delegate invocation
+    if ([self.delegate respondsToSelector:@selector(webDialogsDialog:parameters:session:shouldAutoHandleURL:)]) {
+        result = [self.delegate webDialogsDialog:self.dialogMethod
+                                      parameters:self.parameters
+                                         session:self.session
+                             shouldAutoHandleURL:url];
+    }
+    return result;
+}
 
 - (void)dialogCompleteWithUrl:(NSURL *)url {
     [self completeWithResult:FBWebDialogResultDialogCompleted
@@ -126,6 +171,18 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
                                  dialog:(NSString *)dialog
                              parameters:(NSDictionary *)parameters
                                 handler:(FBWebDialogHandler)handler {
+    [FBWebDialogs presentDialogModallyWithSession:session
+                                           dialog:dialog
+                                       parameters:parameters
+                                          handler:handler
+                                         delegate:nil];
+}
+
++ (void)presentDialogModallyWithSession:(FBSession *)session
+                                 dialog:(NSString *)dialog
+                             parameters:(NSDictionary *)parameters
+                                handler:(FBWebDialogHandler)handler
+                               delegate:(id<FBWebDialogsDelegate>)delegate {
     
     NSString *dialogURL = [dialogBaseURL stringByAppendingString:dialog];
     
@@ -156,18 +213,40 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
                            forKey:@"app_id"];
     }
     
-    FBWebDialogDelegate *delegate = [[[FBWebDialogDelegate alloc] init] autorelease];
-    delegate.handler = handler;
-    [delegate goRetainYourself];
+    BOOL isViewInvisible = NO;
+    FBFrictionlessRequestSettings *frictionlessSettings = nil;
+    
+    // optional delegate invocation
+    if ([delegate respondsToSelector:@selector(webDialogsWillPresentDialog:parameters:session:)]) {
+        [delegate webDialogsWillPresentDialog:dialog
+                                   parameters:parametersImpl
+                                      session:session];
+
+        // Important! Per the spec of the internal protocol, calls to FBFrictionlessDialogSupportDelegate
+        // methods must be made after the base delegate call to webDialogsWillPresentDialog
+        if ([delegate conformsToProtocol:@protocol(FBFrictionlessDialogSupportDelegate)]) {
+            id<FBFrictionlessDialogSupportDelegate> supportDelegate = (id<FBFrictionlessDialogSupportDelegate>)delegate;
+            isViewInvisible = supportDelegate.frictionlessShouldMakeViewInvisible;
+            frictionlessSettings = supportDelegate.frictionlessSettings;
+        }
+    }
+    
+    FBWebDialogInternalDelegate *innerDelegate = [[[FBWebDialogInternalDelegate alloc] init] autorelease];
+    innerDelegate.dialogMethod = dialog;
+    innerDelegate.parameters = parametersImpl;
+    innerDelegate.session = session;
+    innerDelegate.handler = handler;
+    innerDelegate.delegate = delegate;
+    [innerDelegate goRetainYourself];
     
     FBDialog *d = [[FBDialog alloc] initWithURL:dialogURL
                                          params:parametersImpl
-                                isViewInvisible:NO
-                           frictionlessSettings:nil
-                                       delegate:delegate];
+                                isViewInvisible:isViewInvisible
+                           frictionlessSettings:frictionlessSettings
+                                       delegate:innerDelegate];
     
     // this reference keeps the dialog alive as needed
-    delegate.dialog = d;
+    innerDelegate.dialog = d;
     [d show];
     [d release];
 }
@@ -177,6 +256,20 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
                                           title:(NSString *)title
                                      parameters:(NSDictionary *)parameters
                                         handler:(FBWebDialogHandler)handler {
+    [FBWebDialogs presentRequestsDialogModallyWithSession:session
+                                                  message:message
+                                                    title:title
+                                               parameters:parameters
+                                                  handler:handler
+                                              friendCache:nil];
+}
+
++ (void)presentRequestsDialogModallyWithSession:(FBSession *)session
+                                        message:(NSString *)message
+                                          title:(NSString *)title
+                                     parameters:(NSDictionary *)parameters
+                                        handler:(FBWebDialogHandler)handler
+                                    friendCache:(FBFrictionlessRecipientCache *)friendCache {
     
     NSMutableDictionary *parametersImpl = [NSMutableDictionary dictionary];
     
@@ -193,11 +286,12 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
     if (title) {
         [parametersImpl setObject:title forKey:@"title"];
     }
-    
+        
     [FBWebDialogs presentDialogModallyWithSession:session
                                            dialog:@"apprequests"
                                        parameters:parametersImpl
-                                          handler:handler];
+                                          handler:handler
+                                         delegate:friendCache];
 }
 
 + (void)presentFeedDialogModallyWithSession:(FBSession *)session
