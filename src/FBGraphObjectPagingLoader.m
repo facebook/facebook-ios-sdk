@@ -277,9 +277,9 @@
 
     if (!error && !data) {
         NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-        userInfo[FBErrorParsedJSONResponseKey] = result;
+        [userInfo setObject:result forKey:FBErrorParsedJSONResponseKey];
         if (self.session) {
-            userInfo[FBErrorSessionKey] = self.session;
+            [userInfo setObject:self.session forKey:FBErrorSessionKey];
         }
         error = [[[NSError alloc] initWithDomain:FacebookSDKDomain
                                             code:FBErrorProtocolMismatch
