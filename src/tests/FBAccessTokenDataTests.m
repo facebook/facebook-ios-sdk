@@ -192,7 +192,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
 
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:[expectedKvoValues count]] autorelease];
     KVOHelper* kvoHelper = [[KVOHelper alloc] initWithBlock:^(NSString *keyPath, id object, NSDictionary *change, id context) {
-        STAssertEqualObjects(expectedKvoValues[keyPath], change[NSKeyValueChangeNewKey], @"value did not match expected for %@",keyPath);
+        STAssertEqualObjects([expectedKvoValues objectForKey:keyPath], [change objectForKey:NSKeyValueChangeNewKey], @"value did not match expected for %@",keyPath);
         [expectedKvoValues removeObjectForKey:keyPath];
         
         [blocker signal];
@@ -263,7 +263,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
         (expectedState == 1) ? expectedKvoValuesForNewPermissions : expectedKvoValuesForClosing;
         
         // Count off the occurence, and remove it if it's done.
-        NSNumber* count = dictionaryPointer[keyPath];
+        NSNumber* count = [dictionaryPointer objectForKey:keyPath];
         if (!count || [count intValue] <= 0){
             STFail(@"unexpected KVO for of %@ (%@) in state %d", keyPath, change, expectedState);
         } else {
@@ -281,32 +281,32 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
             case 0:
                 if ([keyPath isEqualToString:@"accessToken"]){
                     if (expectedToken == nil) {
-                        expectedToken = [[NSMutableString stringWithString:change[NSKeyValueChangeNewKey]] retain];
+                        expectedToken = [[NSMutableString stringWithString:[change objectForKey:NSKeyValueChangeNewKey]] retain];
                     } else {
-                        STAssertTrue([expectedToken isEqualToString:change[NSKeyValueChangeNewKey]], @"accessToken did not match token provided from accessTokenData");
+                        STAssertTrue([expectedToken isEqualToString:[change objectForKey:NSKeyValueChangeNewKey]], @"accessToken did not match token provided from accessTokenData");
                     }
                 } else if ([keyPath isEqualToString:@"accessTokenData"]){
                     if (expectedToken == nil) {
-                        expectedToken = [[NSMutableString stringWithString:((FBAccessTokenData *) change[NSKeyValueChangeNewKey]).accessToken] retain];
+                        expectedToken = [[NSMutableString stringWithString:((FBAccessTokenData *) [change objectForKey:NSKeyValueChangeNewKey]).accessToken] retain];
                     } else {
-                        STAssertTrue([expectedToken isEqualToString:((FBAccessTokenData *)change[NSKeyValueChangeNewKey]).accessToken], @"accessTokenData %@ did not match token provided from accessToken %@", change[NSKeyValueChangeNewKey], expectedToken);
+                        STAssertTrue([expectedToken isEqualToString:((FBAccessTokenData *)[change objectForKey:NSKeyValueChangeNewKey]).accessToken], @"accessTokenData %@ did not match token provided from accessToken %@", [change objectForKey:NSKeyValueChangeNewKey], expectedToken);
                     }
                 }
                 break;
             case 1:
                 if ([keyPath isEqualToString:@"accessToken"]) {
-                    STAssertTrue([expectedToken isEqualToString:change[NSKeyValueChangeNewKey]], @"token changed after reauth");
+                    STAssertTrue([expectedToken isEqualToString:[change objectForKey:NSKeyValueChangeNewKey]], @"token changed after reauth");
                 } else if ([keyPath isEqualToString:@"state"]) {
-                    STAssertEqualObjects([NSNumber numberWithInt:FBSessionStateOpenTokenExtended], change[NSKeyValueChangeNewKey], @"unexpected state");
+                    STAssertEqualObjects([NSNumber numberWithInt:FBSessionStateOpenTokenExtended], [change objectForKey:NSKeyValueChangeNewKey], @"unexpected state");
                 }
                 break;
             case 2:
                 if ([keyPath isEqualToString:@"state"]){
-                    STAssertEqualObjects([NSNumber numberWithInt:FBSessionStateClosed], change[NSKeyValueChangeNewKey], @"expected state to be closed");
+                    STAssertEqualObjects([NSNumber numberWithInt:FBSessionStateClosed], [change objectForKey:NSKeyValueChangeNewKey], @"expected state to be closed");
                 } else if ([keyPath isEqualToString:@"isOpen"]) {
-                    STAssertEqualObjects([NSNumber numberWithBool:NO], change[NSKeyValueChangeNewKey], @"expected state to be closed");
+                    STAssertEqualObjects([NSNumber numberWithBool:NO], [change objectForKey:NSKeyValueChangeNewKey], @"expected state to be closed");
                 } else {
-                    STAssertEqualObjects([NSNull null], change[NSKeyValueChangeNewKey], @"expected null for %@", keyPath);
+                    STAssertEqualObjects([NSNull null], [change objectForKey:NSKeyValueChangeNewKey], @"expected null for %@", keyPath);
                 }
                 break;
         }
