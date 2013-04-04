@@ -92,12 +92,12 @@
 }
 
 + (FBAccessTokenData *) createTokenFromDictionary:(NSDictionary *)dictionary {
-    NSString *dictionaryToken = dictionary[FBTokenInformationTokenKey];
-    NSDate *dictionaryExpirationDate = dictionary[FBTokenInformationExpirationDateKey];
-    NSArray *dictionaryPermissions = dictionary[FBTokenInformationPermissionsKey];
-    FBSessionLoginType dictionaryLoginType = [dictionary[FBTokenInformationLoginTypeLoginKey] intValue];
-    BOOL dictionaryIsFacebookLoginType = [dictionary[FBTokenInformationIsFacebookLoginKey] boolValue];
-    NSDate *dictionaryRefreshDate = dictionary[FBTokenInformationRefreshDateKey];
+    NSString *dictionaryToken = [dictionary objectForKey:FBTokenInformationTokenKey];//dictionary[FBTokenInformationTokenKey];
+    NSDate *dictionaryExpirationDate = [dictionary objectForKey:FBTokenInformationExpirationDateKey];//dictionary[FBTokenInformationExpirationDateKey];
+    NSArray *dictionaryPermissions = [dictionary objectForKey:FBTokenInformationPermissionsKey];//dictionary[FBTokenInformationPermissionsKey];
+    FBSessionLoginType dictionaryLoginType = [[dictionary objectForKey:FBTokenInformationLoginTypeLoginKey] intValue];//[dictionary[FBTokenInformationLoginTypeLoginKey] intValue];
+    BOOL dictionaryIsFacebookLoginType = [[dictionary objectForKey:FBTokenInformationIsFacebookLoginKey] boolValue];//[dictionary[FBTokenInformationIsFacebookLoginKey] boolValue];
+    NSDate *dictionaryRefreshDate = [dictionary objectForKey:FBTokenInformationRefreshDateKey];//dictionary[FBTokenInformationRefreshDateKey];
     
     if (dictionaryIsFacebookLoginType && dictionaryLoginType == FBSessionLoginTypeNone) {
         // The internal isFacebookLogin has been removed but to support backwards compatibility,
