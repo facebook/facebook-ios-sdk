@@ -90,6 +90,11 @@
 
 #pragma mark - FBLoginViewDelegate
 
+- (void)loginViewLoginButtonPressed:(FBLoginView *)loginView
+{
+    NSLog(@"Login button pressed");
+}
+
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
     // first get the buttons set for login mode
     self.buttonPostPhoto.enabled = YES;
