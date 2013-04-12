@@ -38,7 +38,7 @@ FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Library/Developer/Shared/Documen
 # Call out to build prerequisites.
 #
 if is_outermost_build; then
-    . $FB_SDK_SCRIPT/build_framework.sh
+    . $FB_SDK_SCRIPT/build_framework.sh -t -c Release
     . $FB_SDK_SCRIPT/build_documentation.sh
 fi
 echo Building Distribution.

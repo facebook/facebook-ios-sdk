@@ -31,7 +31,7 @@ progress_message Building samples.
 # Call out to build .framework
 #
 if is_outermost_build; then
-  . $FB_SDK_SCRIPT/build_framework.sh -n
+  . $FB_SDK_SCRIPT/build_framework.sh -n -c Release
 fi
 
 # -----------------------------------------------------------------------------

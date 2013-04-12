@@ -22,8 +22,8 @@
 //
 @interface FBFrictionlessRequestSettings () <FBRequestDelegate>
 
-@property (readwrite, retain) NSArray *     allowedRecipients;
-@property (readwrite, retain) FBRequest*    activeRequest;
+@property (readwrite, retain) NSArray *allowedRecipients;
+@property (readwrite, retain) FBRequest *activeRequest;
 
 @end
 
@@ -47,7 +47,9 @@
 - (void)enableWithFacebook:(Facebook*)facebook {
     if (!_enabled) {
         _enabled = YES;
-        [self reloadRecipientCacheWithFacebook:facebook];
+        if (facebook) {
+            [self reloadRecipientCacheWithFacebook:facebook];
+        }
     }
 }
 
@@ -58,6 +60,10 @@
     if (request) {
         self.activeRequest = request;
     }    
+}
+
+- (NSArray *)recipientIDs {
+    return self.allowedRecipients;
 }
 
 - (void)updateRecipientCacheWithRecipients:(NSArray*)ids {
@@ -112,12 +118,7 @@
     return YES;
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// FBRequestDelegate
-
-- (void)request:(FBRequest *)request
-        didLoad:(id)result {
-
+- (void)updateRecipientCacheWithRequestResult:(id)result {
     // a little request bookkeeping
     self.activeRequest = nil;
 
@@ -131,6 +132,13 @@
     }
         
     self.allowedRecipients = recipients;        
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// FBRequestDelegate
+- (void)request:(FBRequest *)request
+        didLoad:(id)result {
+    [self updateRecipientCacheWithRequestResult:result];
 }
 
 - (void)request:(FBRequest *)request didFailWithError:(NSError *)error {

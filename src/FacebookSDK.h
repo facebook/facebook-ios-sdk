@@ -39,6 +39,7 @@
 #import "FBCacheDescriptor.h"
 #import "FBNativeDialogs.h"
 #import "FBWebDialogs.h"
+#import "FBFrictionlessRecipientCache.h"
 
 /*!
  @header

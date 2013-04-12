@@ -76,6 +76,9 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
      completionHandler:(FBRequestHandler)handler
         batchEntryName:(NSString *)name;
 
+- (void)invokeCompletionHandlerForConnection:(FBRequestConnection *)connection
+                                 withResults:(id)results
+                                       error:(NSError *)error;
 @end
 
 @implementation FBRequestMetadata
@@ -101,6 +104,14 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
     [_completionHandler release];
     [_batchEntryName release];
     [super dealloc];
+}
+
+- (void)invokeCompletionHandlerForConnection:(FBRequestConnection *)connection
+                                 withResults:(id)results
+                                       error:(NSError *)error {
+    if (self.completionHandler) {
+        self.completionHandler(connection, results, error);
+    }
 }
 
 - (NSString*)description {
@@ -1187,7 +1198,7 @@ typedef enum FBRequestConnectionState {
         
         // For the renewSystemAuthorization calls below, we want the renew call
         // to finish before executing any further logic. For now, the "further
-        // logic" is `metadata.completionHandler()` so every code path
+        // logic" is `[metadata invokeCompletionHandlerForConnection:withResults:error:]` so every code path
         // below should result in its invocation.
         if ((metadata.request.session.accessTokenData.loginType == FBSessionLoginTypeSystemAccount) &&
             [self isInsufficientPermissionError:error resultIndex:resultIndex]) {
@@ -1195,7 +1206,7 @@ typedef enum FBRequestConnectionState {
             // OS's understanding of current permissions
             [[FBSystemAccountStoreAdapter sharedInstance]
                  renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *error) {
-                     metadata.completionHandler(self, body, unpackedError);
+                     [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                  }];
         } else if ([self isInvalidSessionError:itemError resultIndex:resultIndex]) {
             // For invalid sessions, we also need to close the session before
@@ -1215,19 +1226,21 @@ typedef enum FBRequestConnectionState {
                                      handler:^(NSString *oauthToken, NSError *accountStoreError) {
                                          if (oauthToken) {
                                              [session refreshAccessToken:oauthToken expirationDate:[NSDate distantFuture]];
-                                             metadata.completionHandler(self, body, [FBErrorUtility fberrorForRetry:unpackedError]);
+                                             [metadata invokeCompletionHandlerForConnection:self
+                                                                                withResults:body
+                                                                                      error:[FBErrorUtility fberrorForRetry:unpackedError]];
                                          } else {
                                              // This shouldn't happen but if the request fails,
                                              // revert to the original flow of closing session
                                              // and surfacing the original error.
                                              [metadata.request.session closeAndClearTokenInformation:unpackedError];
-                                             metadata.completionHandler(self, body, unpackedError);
+                                             [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                                          }
                                      }
                                  ];
                             } else {
                                 [metadata.request.session closeAndClearTokenInformation:unpackedError];
-                                metadata.completionHandler(self, body, unpackedError);
+                                [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                             }
                         }];
                 } else if ([self isPasswordChangeError:itemError resultIndex:resultIndex]) {
@@ -1238,19 +1251,19 @@ typedef enum FBRequestConnectionState {
                     // that we want to force a blocking renew until success.
                     [FBSystemAccountStoreAdapter sharedInstance].forceBlockingRenew = YES;
                     [metadata.request.session closeAndClearTokenInformation:unpackedError];
-                    metadata.completionHandler(self, body, unpackedError);
+                    [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                 } else {
                     // For other invalid session cases, we can simply issue the renew now
                     // to update the system account's world view.
                     [[FBSystemAccountStoreAdapter sharedInstance]
                          renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *error) {
                              [metadata.request.session closeAndClearTokenInformation:unpackedError];
-                             metadata.completionHandler(self, body, unpackedError);
+                             [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                     }];
                 }
             } else {
                 [metadata.request.session closeAndClearTokenInformation:unpackedError];
-                metadata.completionHandler(self, body, unpackedError);
+                [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
             }
         } else if ([metadata.request.session shouldExtendAccessToken]) {
             // If we have not had the opportunity to piggyback a token-extension request,
@@ -1260,9 +1273,9 @@ typedef enum FBRequestConnectionState {
                                                         connection:connection];
             [connection start];
             [connection release];
-            metadata.completionHandler(self, body, unpackedError);
+            [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
         } else {
-            metadata.completionHandler(self, body, unpackedError);
+            [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
         }
     }
 }

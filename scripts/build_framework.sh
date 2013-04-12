@@ -21,8 +21,9 @@
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
 # process options, valid arguments -c [Debug|Release] -n 
-BUILDCONFIGURATION=Release
-while getopts ":nc:" OPTNAME
+BUILDCONFIGURATION=Debug
+NOEXTRAS=1
+while getopts ":ntc:" OPTNAME
 do
   case "$OPTNAME" in
     "c")
@@ -31,10 +32,14 @@ do
     "n")
       NOEXTRAS=1
       ;;
+    "t")
+      NOEXTRAS=0
+      ;;
     "?")
       echo "$0 -c [Debug|Release] -n"
-      echo "       -c sets configuration"
-      echo "       -n no test run"
+      echo "       -c sets configuration (default=Debug)"
+      echo "       -n no test run (default)"
+      echo "       -t test run"
       die
       ;;
     ":")
