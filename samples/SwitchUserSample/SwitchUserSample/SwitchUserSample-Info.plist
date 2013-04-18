@@ -53,6 +53,8 @@
 	<string>1.0</string>
 	<key>FacebookAppID</key>
 	<string>327842977278179</string>
+	<key>FacebookDisplayName</key>
+	<string>SwitchUserSample</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

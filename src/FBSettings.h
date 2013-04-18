@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,6 +50,21 @@ extern NSString *const FBLoggingBehaviorDeveloperErrors;
  @discussion
  */
 typedef void (^FBInstallResponseDataHandler)(FBGraphObject *response, NSError *error);
+
+/*!
+ @typedef
+ 
+ @abstract A list of beta features that can be enabled for the SDK. Beta features are for evaluation only,
+ and are therefore only enabled for DEBUG builds. Beta features should not be enabled
+ in release builds.
+ */
+typedef enum : NSUInteger {
+  FBBetaFeaturesNone                 = 0,
+#if defined(DEBUG) || defined(FB_BUILD_ONLY)
+  FBBetaFeaturesShareDialog          = 1 << 0,
+  FBBetaFeaturesOpenGraphShareDialog = 1 << 1,
+#endif
+} FBBetaFeatures;
 
 @interface FBSettings : NSObject
 
@@ -132,5 +147,103 @@ typedef void (^FBInstallResponseDataHandler)(FBGraphObject *response, NSError *e
  */
 + (void)setClientToken:(NSString *)clientToken;
 
+/*!
+ @method
+ 
+ @abstract Set the default Facebook Display Name to be used by the SDK. This should match
+ the Display Name that has been set for the app with the corresponding Facebook App ID, in
+ the Facebook App Dashboard
+ 
+ @param displayName The default Facebook Display Name to be used by the SDK.
+ */
++ (void)setDefaultDisplayName:(NSString *)displayName;
+
+/*!
+ @method
+ 
+ @abstract Get the default Facebook Display Name used by the SDK. If not explicitly
+ set, the default will be read from the application's plist.
+ */
++ (NSString *)defaultDisplayName;
+
+/*!
+ @method
+ 
+ @abstract Set the default Facebook App ID to use for sessions. The SDK allows the appID
+ to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ 
+ @param appID The default Facebook App ID to be used by the SDK.
+ */
++ (void)setDefaultAppID:(NSString*)appID;
+
+/*!
+ @method
+ 
+ @abstract Get the default Facebook App ID used by the SDK. If not explicitly
+ set, the default will be read from the application's plist. The SDK allows the appID
+ to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ */
++ (NSString*)defaultAppID;
+ 
+/*!
+ @method
+ 
+ @abstract Set the default url scheme suffix used by the SDK. The SDK allows the url
+ scheme suffix to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ 
+ @param urlSchemeSuffix The default url scheme suffix to be used by the SDK.
+ */
++ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix;
+
+/*!
+ @method
+ 
+ @abstract Get the default url scheme suffix used for sessions.  If not
+ explicitly set, the default will be read from the application's plist. The SDK allows the url
+ scheme suffix to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ */
++ (NSString*)defaultUrlSchemeSuffix;
+
+/*!
+ @method
+ 
+ @abstract Enables the specified beta features. Beta features are for evaluation only,
+ and are therefore only enabled for debug builds. Beta features should not be enabled
+ in release builds.
+ 
+ @param betaFeatures The beta features to enable (expects a bitwise OR of FBBetaFeatures)
+ */
++ (void)enableBetaFeatures:(NSUInteger)betaFeatures;
+
+/*!
+ @method
+ 
+ @abstract Enables a beta feature. Beta features are for evaluation only,
+ and are therefore only enabled for debug builds. Beta features should not be enabled
+ in release builds.
+ 
+ @param betaFeature The beta feature to enable.
+ */
++ (void)enableBetaFeature:(FBBetaFeatures)betaFeature;
+
+/*!
+ @method
+ 
+ @abstract Disables a beta feature.
+ 
+ @param betaFeature The beta feature to disable.
+ */
++ (void)disableBetaFeature:(FBBetaFeatures)betaFeature;
+
+/*!
+ @method
+
+ @abstract Determines whether a beta feature is enabled or not.
+ 
+ @param betaFeature The beta feature to check.
+ 
+ @return YES if the beta feature is enabled, NO if not.
+ */
++ (BOOL)isBetaFeatureEnabled:(FBBetaFeatures)betaFeature;
 
 @end

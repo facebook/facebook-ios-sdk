@@ -18,7 +18,6 @@
 #import "FBFrictionlessRequestSettings.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
-#import "FBSBJSON.h"
 #import "FBFrictionlessRecipientCache.h"
 
 @interface FBFrictionlessRecipientCache () <FBFrictionlessDialogSupportDelegate>
@@ -115,8 +114,7 @@
         id fbid = [parameters objectForKey:@"to"];
         if (fbid != nil) {
             // if value parses as a json array expression get the list that way
-            FBSBJsonParser *parser = [[[FBSBJsonParser alloc] init] autorelease];
-            id fbids = [parser objectWithString:fbid];
+            id fbids = [FBUtility simpleJSONDecode:fbid];
             if (![fbids isKindOfClass:[NSArray class]]) {
                 // otherwise seperate by commas (handles the singleton case too)
                 fbids = [fbid componentsSeparatedByString:@","];

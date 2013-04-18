@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@
 #import "FBError.h"
 
 NSString *const FacebookSDKDomain = @"com.facebook.sdk";
+NSString *const FacebookNativeApplicationDomain = @"com.facebook.Facebook.platform";
+
 NSString *const FBErrorInnerErrorKey = @"com.facebook.sdk:ErrorInnerErrorKey";
 NSString *const FBErrorParsedJSONResponseKey = @"com.facebook.sdk:ParsedJSONResponseKey";
 NSString *const FBErrorHTTPStatusCodeKey = @"com.facebook.sdk:HTTPStatusCode";
 NSString *const FBErrorSessionKey = @"com.facebook.sdk:ErrorSessionKey";
+NSString *const FBErrorUnprocessedURLKey = @"com.facebook.sdk:UnprocessedURLKey";
 
 NSString *const FBErrorLoginFailedReason = @"com.facebook.sdk:ErrorLoginFailedReason";
 NSString *const FBErrorLoginFailedOriginalErrorCode = @"com.facebook.sdk:ErrorLoginFailedOriginalErrorCode";
@@ -39,9 +42,11 @@ NSString *const FBErrorReauthorizeFailedReasonWrongUser = @"com.facebook.sdk:Err
 
 NSString *const FBInvalidOperationException = @"com.facebook.sdk:InvalidOperationException";
 
-NSString *const FBErrorNativeDialogReasonKey = @"com.facebook.sdk:NativeDialogReasonKey";
-NSString *const FBErrorNativeDialogNotSupported = @"com.facebook.sdk:NativeDialogNotSupported";
-NSString *const FBErrorNativeDialogInvalidForSession = @"NativeDialogInvalidForSession";
-NSString *const FBErrorNativeDialogCantBeDisplayed = @"NativeDialogCantBeDisplayed";
+NSString *const FBErrorDialogReasonKey = @"com.facebook.sdk:DialogReasonKey";
+NSString *const FBErrorDialogNotSupported = @"com.facebook.sdk:DialogNotSupported";
+NSString *const FBErrorDialogInvalidForSession = @"DialogInvalidForSession";
+NSString *const FBErrorDialogCantBeDisplayed = @"DialogCantBeDisplayed";
+NSString *const FBErrorDialogInvalidOpenGraphObject = @"DialogInvalidOpenGraphObject";
+NSString *const FBErrorDialogInvalidOpenGraphActionParameters = @"DialogInvalidOpenGraphActionParameters";
 
 NSString *const FBErrorInsightsReasonKey = @"com.facebook.sdk:InsightsReasonKey";

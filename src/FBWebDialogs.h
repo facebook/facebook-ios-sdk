@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ typedef void (^FBWebDialogHandler)(
  
  @param handler An optional handler that will be called when the dialog is dismissed. May be nil.
  
- @param friend cache An optional cache object used to enable frictionless sharing for a known set of friends. The
+ @param friendCache An optional cache object used to enable frictionless sharing for a known set of friends. The
  cache instance should be preserved for the life of the session and reused for multiple calls to the present method.
  As the users set of friends enabled for frictionless sharing changes, this method auto-updates the cache.
  */

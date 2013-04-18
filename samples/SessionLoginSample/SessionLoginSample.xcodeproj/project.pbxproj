@@ -25,6 +25,7 @@
 		85C69DB41602B33C008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB11602B33C008AD9A0 /* Default-568h@2x.png */; };
 		85C69DB51602B33C008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB21602B33C008AD9A0 /* Default.png */; };
 		85C69DB61602B33C008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB31602B33C008AD9A0 /* Default@2x.png */; };
+		B59359E416D564DE000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359E316D564DE000A63F0 /* Security.framework */; };
 		B9A416AA16113F2D001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A416A916113F2D001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DDA290A415ABA93700F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290A315ABA93700F533F9 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
@@ -53,6 +54,7 @@
 		85C69DB11602B33C008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69DB21602B33C008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69DB31602B33C008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		B59359E316D564DE000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B9A416A916113F2D001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DDA290A315ABA93700F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59359E416D564DE000A63F0 /* Security.framework in Frameworks */,
 				85A928EA1611471C008699F1 /* Social.framework in Frameworks */,
 				B9A416AA16113F2D001E7A77 /* AdSupport.framework in Frameworks */,
 				84A5DA9E15A68D1500FE54AF /* Accounts.framework in Frameworks */,
@@ -95,9 +98,10 @@
 		84C757BB152A38770070DD9C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DDA290A315ABA93700F533F9 /* FacebookSDK.framework */,
+				B59359E316D564DE000A63F0 /* Security.framework */,
 				85A928E91611471C008699F1 /* Social.framework */,
 				B9A416A916113F2D001E7A77 /* AdSupport.framework */,
-				DDA290A315ABA93700F533F9 /* FacebookSDK.framework */,
 				84A5DA9D15A68D1500FE54AF /* Accounts.framework */,
 				84C757BC152A38770070DD9C /* UIKit.framework */,
 				84C757BE152A38770070DD9C /* Foundation.framework */,
@@ -164,7 +168,7 @@
 		84C757AF152A38770070DD9C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 84C757B2152A38770070DD9C /* Build configuration list for PBXProject "SessionLoginSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -251,7 +255,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -265,6 +272,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				SDKROOT = iphoneos;
@@ -278,13 +286,17 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
@@ -304,10 +316,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
-				    "-lsqlite3.0",
-				    "-ObjC",
+					"-lsqlite3.0",
+					"-ObjC",
 				);
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
@@ -324,10 +336,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
-				    "-lsqlite3.0",
-				    "-ObjC",
+					"-lsqlite3.0",
+					"-ObjC",
 				);
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;

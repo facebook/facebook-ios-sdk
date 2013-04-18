@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,27 +34,19 @@
 
     // Facebook SDK * login flow *
     // Attempt to handle URLs to complete any auth (e.g., SSO) flow.
-    if ([[FBSession activeSession] handleOpenURL:url]) {
-        return YES;
-    } else {
+    return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication fallbackHandler:^(FBAppCall *call) {
         // Facebook SDK * App Linking *
         // For simplicity, this sample will ignore the link if the session is already
         // open but a more advanced app could support features like user switching.
-        // Otherwise extract the app link data from the url and open a new active session from it.
-        NSString *appID = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"FacebookAppID"];
-        FBAccessTokenData *appLinkToken = [FBAccessTokenData createTokenFromFacebookURL:url
-                                                                                  appID:appID
-                                                                        urlSchemeSuffix:nil];
-        if (appLinkToken) {
+        if (call.accessTokenData) {
             if ([FBSession activeSession].isOpen) {
                 NSLog(@"INFO: Ignoring app link because current session is open.");
-            } else {
-                [self handleAppLink:appLinkToken];
-                return YES;
+            }
+            else {
+                [self handleAppLink:call.accessTokenData];
             }
         }
-    }
-    return NO;
+    }];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -69,7 +61,7 @@
     // Facebook SDK * login flow *
     // We need to properly handle activation of the application with regards to SSO
     //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
-    [FBSession.activeSession handleDidBecomeActive];
+    [FBAppCall handleDidBecomeActive];
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

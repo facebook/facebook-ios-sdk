@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,6 +87,8 @@ extern NSString *const FBInsightsLoggingResultNotification;
  invocations for that eventName.
  + Event names and parameter names (the keys in the NSDictionary) must be between 2 and 40 characters
  + The length of each parameter value can be no more than on the order of 100 characters.
+ + When logging events, the "client token" must be set.  An exception will be thrown if it isn't.  See
+   [FBSettings setClientToken] for more information.
  
  */
 @interface FBInsights : NSObject
@@ -126,13 +128,15 @@ extern NSString *const FBInsightsLoggingResultNotification;
  @abstract
  Log a purchase of the specified amount, in the specified currency.  
  
- @param purchaseAmount    Purchase amount to be logged, as expressed in the specified currency.
+ @param purchaseAmount    Purchase amount to be logged, as expressed in the specified currency.  This value
+                          will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
  
- @param currency          Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for 
+ @param currency          Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
  specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
  
  @discussion              This event immediately triggers a flush of the `FBInsights` event queue, unless the `flushBehavior` is set 
- to `FBInsightsFlushBehaviorExplicitOnly`.
+ to `FBInsightsFlushBehaviorExplicitOnly`.  The "client token" must be set via [FBSettings setClientToken] prior to
+ calling this method.  An exception is thrown if it's not.
  
  */
 + (void)logPurchase:(double)purchaseAmount
@@ -145,7 +149,8 @@ extern NSString *const FBInsightsLoggingResultNotification;
  Log a purchase of the specified amount, in the specified currency, also providing a set of 
  additional characteristics describing the purchase.
  
- @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.
+ @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
+                        will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
  
  @param currency        Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
  specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
@@ -155,7 +160,8 @@ extern NSString *const FBInsightsLoggingResultNotification;
  parameters and name construction are given in the `FBInsights` documentation.
  
  @discussion              This event immediately triggers a flush of the `FBInsights` event queue, unless the `flushBehavior` is set
- to `FBInsightsFlushBehaviorExplicitOnly`.
+ to `FBInsightsFlushBehaviorExplicitOnly`.  The "client token" must be set via [FBSettings setClientToken] prior to
+ calling this method.  An exception is thrown if it's not.
 
  */
 + (void)logPurchase:(double)purchaseAmount
@@ -169,7 +175,8 @@ extern NSString *const FBInsightsLoggingResultNotification;
  Log a purchase of the specified amount, in the specified currency, also providing a set of
  additional characteristics describing the purchase, as well as an <FBSession> to log to.
  
- @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.
+ @param purchaseAmount  Purchase amount to be logged, as expressed in the specified currency.This value
+                        will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
  
  @param currency        Currency, is denoted as, e.g. "USD", "EUR", "GBP".  See ISO-4217 for
  specific values.  One reference for these is <http://en.wikipedia.org/wiki/ISO_4217>.
@@ -182,7 +189,8 @@ extern NSString *const FBInsightsLoggingResultNotification;
  is associated with that <FBSession>.  A value of `nil` will use `[FBSession activeSession]`.
  
  @discussion            This event immediately triggers a flush of the `FBInsights` event queue, unless the `flushBehavior` is set
- to `FBInsightsFlushBehaviorExplicitOnly`.
+ to `FBInsightsFlushBehaviorExplicitOnly`.  The "client token" must be set via [FBSettings setClientToken] prior to
+ calling this method.  An exception is thrown if it's not.
  
  */
 + (void)logPurchase:(double)purchaseAmount
@@ -204,9 +212,11 @@ extern NSString *const FBInsightsLoggingResultNotification;
  a conversion pixel.
  
  @param value         Value of what the logging of this pixel is worth to you.  The currency that this is expressed in doesn't matter, so long as it is consistent across all logging for this pixel.
+                      This value will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
 
  @discussion          This event immediately triggers a flush of the `FBInsights` event queue, unless the `flushBehavior` is set
- to `FBInsightsFlushBehaviorExplicitOnly`.
+ to `FBInsightsFlushBehaviorExplicitOnly`.  The "client token" must be set via [FBSettings setClientToken] prior to
+ calling this method.  An exception is thrown if it's not.
  */
 + (void)logConversionPixel:(NSString *)pixelID
               valueOfPixel:(double)value;
@@ -221,12 +231,14 @@ extern NSString *const FBInsightsLoggingResultNotification;
  a conversion pixel.
  
  @param value         Value of what the logging of this pixel is worth to you.  The currency that this is expressed in doesn't matter, so long as it is consistent across all logging for this pixel.
+                      This value will be rounded to the thousandths place (e.g., 12.34567 becomes 12.346).
  
  @param session       <FBSession> to direct the event logging to, and thus be logged with whatever user (if any)
  is associated with that <FBSession>.  A value of `nil` will use `[FBSession activeSession]`.
  
  @discussion          This event immediately triggers a flush of the `FBInsights` event queue, unless the `flushBehavior` is set
- to `FBInsightsFlushBehaviorExplicitOnly`.
+ to `FBInsightsFlushBehaviorExplicitOnly`.  The "client token" must be set via [FBSettings setClientToken] prior to
+ calling this method.  An exception is thrown if it's not.
  
  */
 + (void)logConversionPixel:(NSString *)pixelID

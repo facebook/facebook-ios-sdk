@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,9 @@
 @interface FBAccessTokenData()
 
 // Note these properties are re-declared here (in addition to
-// +Internal.h) to allow easy synthesis
+// +Internal.h) to allow easy synthesis. Additionally, this is required to
+// allow the SDK to call the setters of these properties from an app, since
+// the app only has access to the public (not +Internal) header.
 @property (nonatomic, readwrite, copy) NSDate *refreshDate;
 @property (nonatomic, readwrite, copy) NSArray *permissions;
 
@@ -74,19 +76,11 @@
         return nil;
     }
     
-    // version 3.2.3 of the Facebook app encodes the parameters in the query but
-    // version 3.3 and above encode the parameters in the fragment; check first for
-    // fragment, and if missing fall back to query
-    NSString *query = [url fragment];
-    if (!query) {
-        query = [url query];
-    }
-    
-    NSDictionary *queryDictionary = [FBUtility dictionaryByParsingURLQueryPart:query];
+    NSDictionary *queryDictionary = [FBUtility queryParamsDictionaryFromFBURL:url];
     
     return [self createTokenFromString:queryDictionary[@"access_token"]
                            permissions:nil
-                        expirationDate:[FBUtility expirationDateFromExpirationTimeString:queryDictionary[@"expires_in"]]
+                        expirationDate:[FBUtility expirationDateFromExpirationTimeIntervalString:queryDictionary[@"expires_in"]]
                              loginType:FBSessionLoginTypeFacebookApplication
                            refreshDate:nil];
 }

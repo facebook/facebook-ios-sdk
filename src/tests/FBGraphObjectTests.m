@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,6 @@
 #import "FBGraphLocation.h"
 #import "FBTestBlocker.h"
 #import "FBTests.h"
-
-#if defined(FACEBOOKSDK_SKIP_GRAPH_OBJECT_TESTS)
-
-#pragma message ("warning: Skipping FBGraphObjectTests")
-
-#else
 
 @protocol TestGraphProtocolTooManyArgs<FBGraphObject>
 - (int)thisMethod:(int)has too:(int)many args:(int)yikes;
@@ -69,7 +63,54 @@
 - (NSString*)title;
 @end
 
+@protocol NamedGraphObject<FBGraphObject>
+@property (nonatomic, retain) NSString *name;
+@end
+
+@protocol NamedGraphObjectWithExtras<NamedGraphObject>
+- (void)methodWithAnArg:(id)arg1 andAnotherArg:(id)arg2;
+@end
+
 @implementation FBGraphObjectTests
+
+- (void)testCreateEmptyGraphObject {
+    id<FBGraphObject> graphObject = [FBGraphObject graphObject];
+    STAssertNotNil(graphObject, @"could not create FBGraphObject");
+}
+
+- (void)testCanSetProperty {
+    id<NamedGraphObject> graphObject = (id<NamedGraphObject>)[FBGraphObject graphObject];
+    [graphObject setName:@"A name"];
+    assertThat([graphObject name], equalTo(@"A name"));
+}
+
+- (void)testRespondsToSelector {
+    id<NamedGraphObject> graphObject = (id<NamedGraphObject>)[FBGraphObject graphObject];
+    BOOL respondsToSelector = [graphObject respondsToSelector:@selector(setName:)];
+    assertThatBool(respondsToSelector, equalToBool(YES));
+}
+
+- (void)testDoesNotHandleNonGetterSetter {
+    @try {
+        id<NamedGraphObjectWithExtras> graphObject = (id<NamedGraphObjectWithExtras>)[FBGraphObject graphObject];
+        [graphObject methodWithAnArg:@"foo" andAnotherArg:@"bar"];
+        STFail(@"should have gotten exception");
+    } @catch (NSException* exception) {
+    }
+}
+
+- (void)testCanRemoveObject {
+    NSDictionary *initial = [[NSDictionary alloc] initWithObjectsAndKeys:
+                             @"value", @"key",
+                             nil];
+    NSMutableDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObjectWrappingDictionary:initial];
+    
+    STAssertNotNil([graphObject objectForKey:@"key"], @"should have 'key'");
+    
+    [graphObject removeObjectForKey:@"key"];
+
+    STAssertNil([graphObject objectForKey:@"key"], @"should not have 'key'");
+}
 
 - (void)testWrapWithGraphObject
 {
@@ -134,59 +175,22 @@
     STAssertTrue([obj conformsToProtocol:@protocol(TestGraphProtocolGoodLineage3)], @"protocol should be inferrable");
 }
 
-- (void)testGraphObjectTypedRequest
-{
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequestConnection startWithGraphPath:@"4" // Zuck
-                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
-                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
-                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
-                              [blocker signal];
-                          }];
-    
-    [blocker wait];
-    
-    blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
-                          completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
-                              STAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
-                              STAssertTrue([chicken.location.city isEqualToString:@"Woodinville"], @"city wrong");
-                              STAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
-                              [blocker signal];
-                          }];
-    
-    [blocker wait];
-}
-
-- (void)testGraphObjectTypedRequest2
-{
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequestConnection startWithGraphPath:@"4" // Zuck
-                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
-                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
-                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
-                              [blocker signal];
-                          }];
-    
-    [blocker wait];
-}
-
 - (void)testGraphObjectSameID
 {
     NSString *anID = @"1234567890";
-
+    
     id obj = [NSMutableDictionary dictionary];
     [obj setObject:anID forKey:@"id"];
     obj = [FBGraphObject graphObjectWrappingDictionary:obj];
-
+    
     id objSameID = [NSMutableDictionary dictionary];
     [objSameID setObject:anID forKey:@"id"];
     objSameID = [FBGraphObject graphObjectWrappingDictionary:objSameID];
-
+    
     id objDifferentID = [NSMutableDictionary dictionary];
     [objDifferentID setObject:@"999999" forKey:@"id"];
     objDifferentID = [FBGraphObject graphObjectWrappingDictionary:objDifferentID];
-
+    
     id objNoID = [NSMutableDictionary dictionary];
     objNoID = [FBGraphObject graphObjectWrappingDictionary:objNoID];
     id objAnotherNoID = [NSMutableDictionary dictionary];
@@ -213,7 +217,7 @@
     STAssertTrue([FBGraphObject isGraphObjectID:objNoID sameAs:objNoID], @"no ID but same object");
 }
 
-- (id)graphObjectWithUnwrappedData 
+- (id)graphObjectWithUnwrappedData
 {
     NSDictionary *rawDictionary1 = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"hello", nil];
     NSDictionary *rawDictionary2 = [NSDictionary dictionaryWithObjectsAndKeys:@"world", @"bye", nil];
@@ -221,14 +225,14 @@
     NSArray *rawArray2 = [NSArray arrayWithObjects:@"anda1", @"anda2", @"anda3", nil];
     
     NSDictionary *rawObject = [NSDictionary dictionaryWithObjectsAndKeys:
-                               rawDictionary1, @"dict1", 
-                               rawDictionary2, @"dict2", 
+                               rawDictionary1, @"dict1",
+                               rawDictionary2, @"dict2",
                                rawArray1, @"array1",
                                rawArray2, @"array2",
                                nil];
     NSDictionary<FBGraphObject> *graphObject = [FBGraphObject graphObjectWrappingDictionary:rawObject];
-
-    return graphObject;    
+    
+    return graphObject;
 }
 
 - (void)traverseGraphObject:(id)graphObject
@@ -238,42 +242,13 @@
             id value = [graphObject objectForKey:key];
             STAssertNotNil(value, @"missing value");
             [self traverseGraphObject:value];
-        }    
+        }
     } else if ([graphObject isKindOfClass:[NSArray class]]) {
         for (NSString *value in graphObject) {
             STAssertNotNil(value, @"missing value");
             [self traverseGraphObject:value];
-        }            
+        }
     }
-}
-
-- (void)testSimpleGraphGet
-{
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBSession setActiveSession:self.defaultTestSession];
-    [FBRequestConnection startWithGraphPath:@"TourEiffel"
-                          completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
-    
-    [blocker wait];
-    [blocker release];
-
-}
-
-- (void)testSimpleGraphGetWithExpectedFailure
-{
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    [FBSession setActiveSession:self.defaultTestSession];
-    [FBRequestConnection startWithGraphPath:@"-1"
-                          completionHandler:[self handlerExpectingFailureSignaling:blocker]];
-    [blocker wait];
-    [blocker release];
-    
-}
-
-- (void)testFastEnumeration
-{
-    id graphObject = [self graphObjectWithUnwrappedData];
-    [self traverseGraphObject:graphObject];
 }
 
 - (void)testEnumeration
@@ -282,100 +257,86 @@
     [self traverseGraphObject:graphObject];
 }
 
-- (id)postStatusUpdate
+- (void)testArrayObjectEnumerator
 {
-    id<FBGraphObject> status = [FBGraphObject graphObject];
-    // Posting duplicate messages will generate an error.
-    NSString *statusMessage = [NSString stringWithFormat:@"Check out my awesome new status update posted at %@.", [NSDate date]];
-    [status setObject:statusMessage forKey:@"message"];
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+
+    NSEnumerator *enumerator = [array objectEnumerator];
+    id o;
+    int count = 0;
+    while (o = [enumerator nextObject]) {
+        assertThat(o, notNilValue());
+        count++;
+    }
+    assertThatInt(count, equalToInt(3));
+}
+
+- (void)testArrayObjectReverseEnumerator
+{
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
     
-    return [self batchedPostAndGetWithSession:self.defaultTestSession
-                                    graphPath:@"me/feed" 
-                                  graphObject:status];
+    NSEnumerator *enumerator = [array reverseObjectEnumerator];
+    id o;
+    int count = 0;
+    while (o = [enumerator nextObject]) {
+        assertThat(o, notNilValue());
+        count++;
+    }
+    assertThatInt(count, equalToInt(3));
 }
 
-- (id)postComment:(id)comment toStatusID:(NSString*)statusID
-{
-    NSString *graphPath = [NSString stringWithFormat:@"%@/comments", statusID];
-    return [self batchedPostAndGetWithSession:self.defaultTestSession
-                                    graphPath:graphPath 
-                                  graphObject:comment];
-}
-
-- (void)testCommentRoundTrip
-{
-    id createdStatus = [self postStatusUpdate];
-    NSString *statusID = [createdStatus objectForKey:@"id"];
-    id<FBGraphObject> comment = [FBGraphObject graphObject];
-    NSString *commentMessage = @"It truly is a wonderful status update.";
-    [comment setObject:commentMessage forKey:@"message"];
-
-    id comment1 = [self postComment:comment toStatusID:statusID];
-    NSString *comment1ID = [[[comment1 objectForKey:@"id"] retain] autorelease];
-    NSString *comment1Message = [[[comment1 objectForKey:@"message"] retain] autorelease];
-
-    // Try posting the same comment to the same status update. We need to clear its ID first.
-    [comment1 removeObjectForKey:@"id"];
-    id comment2 = [self postComment:comment1 toStatusID:statusID];
-  
-    NSString *comment2ID = [comment2 objectForKey:@"id"];
-    NSString *comment2Message = [comment2 objectForKey:@"message"];
+- (void)testInsertObjectAtIndex {
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+    [array insertObject:@"two" atIndex:1];
     
-    STAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
-    STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
-}
-
-- (id)postEvent
-{
-    id<FBGraphObject> event = [FBGraphObject graphObject];
-   
-    // The "Events Timezone" platform migration affects what date/time formats Facebook accepts and returns.
-    // Apps created after 8/1/12 (or apps that have explicitly enabled the migration) should send/receive
-    // dates in ISO-8601 format. Pre-migration apps can send as Unix timestamps. Since the future is ISO-8601,
-    // that is what we support here. Apps that need pre-migration behavior can explicitly send these as
-    // integer timestamps rather than NSDates.
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    id startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
-    id endTime = [dateFormatter stringFromDate:[NSDate dateWithTimeInterval:3600 sinceDate:startTime]];
-    startTime = [dateFormatter stringFromDate:startTime];
+    assertThat([array objectAtIndex:1], equalTo(@"two"));
     
-    [event setObject:[NSString stringWithFormat:@"My event on %@", startTime]
-              forKey:@"name"];
-    [event setObject:@"This is a great event. You should all come."
-              forKey:@"description"];
-    [event setObject:startTime forKey:@"start_time"];
-    [event setObject:endTime forKey:@"end_time"];
-    [event setObject:@"My house" forKey:@"location"];
-
-    return [self batchedPostAndGetWithSession:self.defaultTestSession
-                                    graphPath:@"me/events"
-                                  graphObject:event];
 }
 
-- (void)testEventRoundTrip
-{
-    id postedEvent = [self postEvent];
-    STAssertNotNil(postedEvent, @"no event");
+- (void)testRemoveObjectAtIndex {
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+    [array removeObjectAtIndex:1];
     
-    [postedEvent removeObjectForKey:@"id"];
-
-    id event2 = [self batchedPostAndGetWithSession:self.defaultTestSession
-                                         graphPath:@"me/events"
-                                       graphObject:postedEvent];
-    STAssertNotNil(event2, @"no event");
+    assertThatInteger([array count], equalToInteger(2));
 }
 
-- (NSArray*)permissionsForDefaultTestSession
-{
-    return [NSArray arrayWithObjects:@"email", 
-            @"publish_actions",
-            @"create_event",
-            @"read_stream",
-            nil];
+- (void)testAddObject {
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+    [array addObject:@"four"];
+
+    assertThat([array objectAtIndex:3], equalTo(@"four"));
+}
+
+- (void)testRemoveLastObject {
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+    [array removeLastObject];
+    
+    assertThatInteger([array count], equalToInteger(2));
+}
+
+- (void)testReplaceObjectAtIndex {
+    NSMutableDictionary<FBGraphObject> *obj = [self createGraphObjectWithArray];
+    NSMutableArray *array = [obj objectForKey:@"array"];
+    [array replaceObjectAtIndex:1 withObject:@"two"];
+    
+    assertThat([array objectAtIndex:1], equalTo(@"two"));
+}
+
+- (NSMutableDictionary<FBGraphObject> *)createGraphObjectWithArray {
+    NSMutableDictionary *d = [NSMutableDictionary dictionary];
+    [d setObject:[NSArray arrayWithObjects:@"one", [NSMutableDictionary dictionary], @"three", nil]
+          forKey:@"array"];
+    [d setObject:[NSMutableDictionary dictionary] forKey:@"object"];
+    
+    NSMutableDictionary<FBGraphObject> *obj = [FBGraphObject graphObjectWrappingDictionary:d];
+
+    return obj;
 }
 
 @end
-
-#endif
-

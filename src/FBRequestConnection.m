@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 #import <UIKit/UIImage.h>
-#import "FBSBJSON.h"
 #import "FBError.h"
 #import "FBError.h"
 #import "FBURLConnection.h"
@@ -32,7 +31,7 @@
 #import "FBUtility.h"
 #import "FBDataDiskCache.h"
 #import "FBSDKVersion.h"
-#import "FBErrorUtility.h"
+#import "FBErrorUtility+Internal.h"
 #import "FBSystemAccountStoreAdapter.h"
 
 // URL construction constants
@@ -392,6 +391,13 @@ typedef enum FBRequestConnectionState {
     return [request startWithCompletionHandler:handler];        
 }
 
++ (FBRequestConnection*)startForCustomAudienceThirdPartyID:(FBSession *)session
+                                         completionHandler:(FBRequestHandler)handler {
+    
+    return [[FBRequest requestForCustomAudienceThirdPartyID:session]
+            startWithCompletionHandler:handler];
+}
+
 + (FBRequestConnection*)startWithGraphPath:(NSString*)graphPath
                          completionHandler:(FBRequestHandler)handler
 {
@@ -399,6 +405,13 @@ typedef enum FBRequestConnectionState {
                                         parameters:nil
                                         HTTPMethod:nil
                                  completionHandler:handler];
+}
+
++ (FBRequestConnection*)startForDeleteObject:(id)object
+                           completionHandler:(FBRequestHandler)handler
+{
+    FBRequest *request = [FBRequest requestForDeleteObject:object];
+    return [request startWithCompletionHandler:handler];
 }
 
 + (FBRequestConnection*)startForPostWithGraphPath:(NSString*)graphPath
@@ -420,6 +433,56 @@ typedef enum FBRequestConnectionState {
                                               parameters:parameters
                                               HTTPMethod:HTTPMethod];
     
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForPostOpenGraphObject:(id<FBOpenGraphObject>)object
+                                   completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForPostOpenGraphObject:object];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForPostOpenGraphObjectWithType:(NSString *)type
+                                                       title:(NSString *)title
+                                                       image:(id)image
+                                                         url:(id)url
+                                                 description:(NSString *)description
+                                            objectProperties:(NSDictionary *)objectProperties
+                                           completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForPostOpenGraphObjectWithType:type
+                                                                    title:title
+                                                                    image:image
+                                                                      url:url
+                                                              description:description
+                                                         objectProperties:objectProperties];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForUpdateOpenGraphObject:(id<FBOpenGraphObject>)object
+                                     completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForUpdateOpenGraphObject:object];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForUpdateOpenGraphObjectWithId:(id)objectId
+                                                       title:(NSString *)title
+                                                       image:(id)image
+                                                         url:(id)url
+                                                 description:(NSString *)description
+                                            objectProperties:(NSDictionary *)objectProperties
+                                           completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForUpdateOpenGraphObjectWithId:objectId
+                                                                    title:title
+                                                                    image:image
+                                                                      url:url
+                                                              description:description
+                                                         objectProperties:objectProperties];
+    return [request startWithCompletionHandler:handler];
+}
+
++ (FBRequestConnection *)startForUploadStagingResourceWithImage:(UIImage *)photo
+                                              completionHandler:(FBRequestHandler)handler {
+    FBRequest *request = [FBRequest requestForUploadStagingResourceWithImage:photo];
     return [request startWithCompletionHandler:handler];
 }
 
@@ -521,11 +584,7 @@ typedef enum FBRequestConnectionState {
             [deprecatedDelegate requestLoading:self.deprecatedRequest];
         }
         
-        FBURLConnection *connection = [[FBURLConnection alloc] initWithRequest:request
-                                                         skipRoundTripIfCached:NO
-                                                             completionHandler:handler];
-        self.connection = connection;
-        [connection release];
+        [self startURLConnectionWithRequest:request skipRoundTripIfCached:NO completionHandler:handler];
     } else {
         _isResultFromCache = YES;
         
@@ -535,6 +594,20 @@ typedef enum FBRequestConnectionState {
                            orError:nil];
         
     }
+}
+
+- (void)startURLConnectionWithRequest:(NSURLRequest *)request
+                skipRoundTripIfCached:(BOOL)skipRoundTripIfCached
+                    completionHandler:(FBURLConnectionHandler) handler {
+    FBURLConnection *connection = [[self createFBURLConnection] initWithRequest:request
+                                                          skipRoundTripIfCached:skipRoundTripIfCached
+                                                              completionHandler:handler];
+    self.connection = connection;
+    [connection release];    
+}
+
+- (FBURLConnection *)createFBURLConnection {
+    return [FBURLConnection alloc];
 }
 
 //
@@ -716,7 +789,7 @@ typedef enum FBRequestConnectionState {
             return metadata.request.session.appID;
         }
     }
-    return [FBSession defaultAppID];
+    return [FBSettings defaultAppID];
 }
 
 //
@@ -739,9 +812,8 @@ typedef enum FBRequestConnectionState {
              attachments:attachments];
     }
     
-    FBSBJSON *writer = [[FBSBJSON alloc] init];
-    NSString *jsonBatch = [writer stringWithObject:batch];
-    [writer release];
+    NSString *jsonBatch = [FBUtility simpleJSONEncode:batch];
+    
     [batch release];
 
     [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
@@ -855,7 +927,10 @@ typedef enum FBRequestConnectionState {
     if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
         NSDictionary<FBGraphObject> *refObject = (NSDictionary<FBGraphObject>*)value; 
 
-        if (passByValue) {
+        if (refObject.provisionedForPost) {
+            NSString *value = [FBUtility simpleJSONEncode:refObject];
+            action(key, value);
+        } else if (passByValue) {
             // We need to pass all properties of this object in key[propertyName] format.
             for (NSString *propertyName in refObject) {
                 NSString *subKey = [NSString stringWithFormat:@"%@[%@]", key, propertyName];
@@ -1084,8 +1159,7 @@ typedef enum FBRequestConnectionState {
 {
     id parsed = nil;
     if (!(*error)) {
-        FBSBJSON *parser = [[FBSBJSON alloc] init];
-        parsed = [parser objectWithString:utf8 error:error];
+        parsed = [FBUtility simpleJSONDecode:utf8 error:error];
         // if we fail parse we attemp a reparse of a modified input to support results in the form "foo=bar", "true", etc.
         if (*error) {
             // we round-trip our hand-wired response through the parser in order to remain
@@ -1094,14 +1168,13 @@ typedef enum FBRequestConnectionState {
             NSDictionary *original = [NSDictionary dictionaryWithObjectsAndKeys:
                                       utf8, FBNonJSONResponseProperty,
                                       nil];
-            NSString *jsonrep = [parser stringWithObject:original];
+            NSString *jsonrep = [FBUtility simpleJSONEncode:original];
             NSError *reparseError = nil;
-            parsed = [parser objectWithString:jsonrep error:&reparseError];
+            parsed = [FBUtility simpleJSONDecode:jsonrep error:&reparseError];
             if (!reparseError) {
                 *error = nil;
             }
         }
-        [parser release];
     }
     return parsed;
 }

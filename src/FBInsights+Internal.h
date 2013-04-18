@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,8 @@
  */
 
 #import "FBInsights.h"
+
+@class FBRequest;
 
 // Internally known event names
 
@@ -41,10 +43,28 @@ extern NSString *const FBInsightsEventNamePlacePickerUsage;
 /*! String parameter specifying the outcome of a dialog invocation */
 extern NSString *const FBInsightsEventParameterDialogOutcome;
 
+/*! Use to log the result of a call to FBDialogs canPresentShareDialogWithParams: */
+extern NSString *const FBInsightsEventNameFBDialogsCanPresentShareDialog;
+
+/*! Use to log the result of a call to FBDialogs canPresentShareDialogWithOpenGraphActionParams: */
+extern NSString *const FBInsightsEventNameFBDialogsCanPresentShareDialogOG;
+
+/*! Use to log the timestamp for the transition to the Facebook native login dialog */
+extern NSString *const FBInsightsEventNameFBDialogsNativeLoginDialogStart;
+
+/*! Use to log the e2e timestamp metrics for web login */
+extern NSString *const FBInsightsEventNameFBDialogsWebLoginCompleted;
+
 // Internally known event parameter values
 
 extern NSString *const FBInsightsDialogOutcomeValue_Completed;
 extern NSString *const FBInsightsDialogOutcomeValue_Cancelled;
+extern NSString *const FBInsightsDialogOutcomeValue_Failed;
+
+extern NSString *const FBInsightsNativeLoginDialogStartTime;
+
+extern NSString *const FBInsightsWebLoginE2E;
+extern NSString *const FBInsightsWebLoginSwitchbackTime;
 
 @interface FBInsights (Internal)
 
@@ -52,5 +72,7 @@ extern NSString *const FBInsightsDialogOutcomeValue_Cancelled;
               valueToSum:(double)valueToSum
               parameters:(NSDictionary *)parameters
                  session:(FBSession *)session;
+
++ (FBRequest *)customAudienceThirdPartyIDRequest:(FBSession *)session;
 
 @end

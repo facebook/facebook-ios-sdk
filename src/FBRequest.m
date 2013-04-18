@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,12 @@
  */
 
 #import "Facebook.h"
+#import "FBInsights+Internal.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
 #import "FBSDKVersion.h"
+#import "FBGraphObject.h"
 
 // constants
 NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
@@ -117,6 +119,10 @@ static NSString *const kPostHTTPMethod = @"POST";
     [_restMethod release];
     [_HTTPMethod release];
     [_parameters release];
+    [_url release];
+    [_connection release];
+    [_responseText release];
+    [_error release];
     [super dealloc];
 }
 
@@ -138,10 +144,14 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 - (FBRequestConnection*)startWithCompletionHandler:(FBRequestHandler)handler
 {
-    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequestConnection *connection = [self createRequestConnection];
     [connection addRequest:self completionHandler:handler];
     [connection start];
     return connection;
+}
+
+- (FBRequestConnection *)createRequestConnection {
+    return [[[FBRequestConnection alloc] init] autorelease];
 }
 
 + (FBRequest*)requestForMe {
@@ -186,6 +196,17 @@ static NSString *const kPostHTTPMethod = @"POST";
                           autorelease];
     return request;
 }
+
++ (FBRequest*)requestForDeleteObject:(id)object
+{
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:[FBUtility stringFBIDFromObject:object]
+                                                  parameters:nil
+                                                  HTTPMethod:@"DELETE"]
+                          autorelease];
+    return request;
+}
+
 
 + (FBRequest*)requestForPostWithGraphPath:(NSString*)graphPath
                               graphObject:(id<FBGraphObject>)graphObject {
@@ -263,6 +284,88 @@ static NSString *const kPostHTTPMethod = @"POST";
     [parameters release];
     
     return request;
+}
+
++ (FBRequest *)requestForCustomAudienceThirdPartyID:(FBSession *)session {
+    return [FBInsights customAudienceThirdPartyIDRequest:session];
+}
+
++ (FBRequest *)requestForPostOpenGraphObject:(id<FBOpenGraphObject>)graphObject {
+    if (graphObject) {
+        graphObject.provisionedForPost = YES;
+        NSMutableDictionary<FBGraphObject> *parameters = [FBGraphObject graphObject];
+        NSString *graphPath = [NSString stringWithFormat:@"me/objects/%@", graphObject.type];
+        [parameters setObject:graphObject forKey:@"object"];
+        FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
+                                                              graphPath:graphPath
+                                                            graphObject:parameters]
+                              autorelease];
+        return request;
+    }
+    return nil;
+}
+
++ (FBRequest *)requestForPostOpenGraphObjectWithType:(NSString *)type
+                                               title:(NSString *)title
+                                               image:(id)image
+                                                 url:(id)url
+                                         description:(NSString *)description
+                                    objectProperties:(NSDictionary *)objectProperties {
+    NSMutableDictionary<FBOpenGraphObject> *object = [FBGraphObject openGraphObjectForPostWithType:type
+                                                                                             title:title
+                                                                                             image:image
+                                                                                               url:url
+                                                                                       description:description];
+    if (objectProperties) {
+        object.data = [FBGraphObject graphObjectWrappingDictionary:objectProperties];
+    }
+    return [FBRequest requestForPostOpenGraphObject:object];
+}
+
++ (FBRequest *)requestForUpdateOpenGraphObject:(id<FBOpenGraphObject>)object {
+    return [FBRequest requestForUpdateOpenGraphObjectWithId:object.id graphObject:object];
+}
+
++ (FBRequest *)requestForUpdateOpenGraphObjectWithId:(id)objectId
+                                               title:(NSString *)title
+                                               image:(id)image
+                                                 url:(id)url
+                                         description:(NSString *)description
+                                    objectProperties:(NSDictionary *)objectProperties {
+    NSMutableDictionary<FBOpenGraphObject> *object = [FBGraphObject openGraphObjectForPostWithType:nil
+                                                                                             title:title
+                                                                                             image:image
+                                                                                               url:url
+                                                                                       description:description];
+    object.id = [FBUtility stringFBIDFromObject:objectId];
+    return [FBRequest requestForUpdateOpenGraphObject:object];
+}
+
++ (FBRequest *)requestForUploadStagingResourceWithImage:(UIImage *)photo {
+    return [FBRequest requestWithGraphPath:@"me/staging_resources"
+                                parameters:@{@"file":photo}
+                                HTTPMethod:@"POST"];
+}
+
+// ----------------------------------------------------------------------------
+// Private statics
+
++ (FBRequest*)requestForUpdateOpenGraphObjectWithId:(NSString*)objectId
+                                        graphObject:(id<FBGraphObject>)graphObject
+{
+    if (graphObject) {
+        graphObject.provisionedForPost = YES;
+        NSMutableDictionary<FBGraphObject> *parameters = [FBGraphObject graphObject];
+        NSString *graphPath = objectId;
+        [parameters setObject:graphObject forKey:@"object"];
+        FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
+                                                              graphPath:graphPath
+                                                            graphObject:parameters]
+                              autorelease];
+        return request;
+    }
+    return nil;
+    
 }
 
 @end

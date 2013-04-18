@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -699,9 +699,11 @@ __attribute__((deprecated));
  @abstract Set the default Facebook App ID to use for sessions. The app ID may be
  overridden on a per session basis.
  
+ @discussion This method has been deprecated in favor of [FBSettings setDefaultAppID].
+
  @param appID The default Facebook App ID to use for <FBSession> methods.
  */
-+ (void)setDefaultAppID:(NSString*)appID;
++ (void)setDefaultAppID:(NSString*)appID __attribute__((deprecated));
 
 /*!
  @method
@@ -709,8 +711,10 @@ __attribute__((deprecated));
  @abstract Get the default Facebook App ID to use for sessions. If not explicitly
  set, the default will be read from the application's plist. The app ID may be
  overridden on a per session basis.
- */
-+ (NSString*)defaultAppID;
+
+ @discussion This method has been deprecated in favor of [FBSettings defaultAppID].
+*/
++ (NSString*)defaultAppID __attribute__((deprecated));
 
 /*!
  @method
@@ -718,9 +722,11 @@ __attribute__((deprecated));
  @abstract Set the default url scheme suffix to use for sessions. The url
  scheme suffix may be overridden on a per session basis.
 
+ @discussion This method has been deprecated in favor of [FBSettings setDefaultUrlSchemeSuffix].
+ 
  @param urlSchemeSuffix The default url scheme suffix to use for <FBSession> methods.
  */
-+ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix;
++ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix __attribute__((deprecated));
 
 /*!
  @method
@@ -728,8 +734,10 @@ __attribute__((deprecated));
  @abstract Get the default url scheme suffix used for sessions.  If not
  explicitly set, the default will be read from the application's plist. The
  url scheme suffix may be overridden on a per session basis.
+
+ @discussion This method has been deprecated in favor of [FBSettings defaultUrlSchemeSuffix].
  */
-+ (NSString*)defaultUrlSchemeSuffix;
++ (NSString*)defaultUrlSchemeSuffix __attribute__((deprecated));
 
 /*!
  @method

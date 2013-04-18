@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,12 @@
  The NSError domain of all errors returned by the Facebook SDK.
 */
 extern NSString *const FacebookSDKDomain;
+
+/*!
+ The NSError domain of all errors surfaced by the Facebook SDK that
+ were returned by the Facebook Application
+ */
+extern NSString *const FacebookNativeApplicationDomain;
 
 /*!
  The key in the userInfo NSDictionary of NSError where you can find
@@ -80,7 +86,7 @@ typedef enum FBErrorCode {
     FBErrorNonTextMimeTypeReturned,
 
     /// An error occurred while trying to display a native dialog
-    FBErrorNativeDialog,
+    FBErrorDialog,
     
     /// An error occurred using the FBInsights class
     FBErrorInsights,
@@ -90,7 +96,57 @@ typedef enum FBErrorCode {
   
     /// An error occurred while trying to fetch publish install response data
     FBErrorPublishInstallResponse,
+    
+    /*!
+     The application had its applicationDidBecomeActive: method called while waiting
+     on a response from the native Facebook app for a pending FBAppCall.
+     */
+    FBErrorAppActivatedWhilePendingAppCall,
+    
+    /*!
+     The application had its openURL: method called from a source that was not a
+     Facebook app and with a URL that was intended for the AppBridge
+     */
+    FBErrorUntrustedURL,
+    
+    /*!
+     The URL passed to FBAppCall, was not able to be parsed
+     */
+    FBErrorMalformedURL,
 } FBErrorCode;
+
+/*!
+ @abstract Error codes returned by the Facebook SDK in NSError.
+ 
+ @discussion
+ These are valid only in the scope of FacebookNativeApplicationDomain.
+ */
+typedef enum FBNativeApplicationErrorCode {
+    // A general error in processing an FBAppCall, without a known cause. Unhandled exceptions are a good example
+    FBAppCallErrorUnknown = 1,
+    
+    // The FBAppCall cannot be processed for some reason
+    FBAppCallErrorUnsupported = 2,
+    
+    // The FBAppCall is for a method that does not exist (or is turned off)
+    FBAppCallErrorUnknownMethod = 3,
+    
+    // The FBAppCall cannot be processed at the moment, but can be retried at a later time.
+    FBAppCallErrorServiceBusy = 4,
+    
+    // Share was called in the native Facebook app with incomplete or incorrect arguments
+    FBShareErrorInvalidParam = 100,
+    
+    // A server error occurred while calling Share in the native Facebook app.
+    FBShareErrorServer = 102,
+    
+    // An unknown error occurred while calling Share in the native Facebook app.
+    FBShareErrorUnknown = 103,
+    
+    // Disallowed from calling Share in the native Facebook app.
+    FBShareErrorDenied = 104,
+    
+} FBNativeApplicationErrorCode;
 
 /*!
  @typedef FBErrorCategory enum
@@ -135,6 +191,12 @@ extern NSString *const FBErrorInnerErrorKey;
  the session associated with the error (if any).
 */
 extern NSString *const FBErrorSessionKey;
+
+/*!
+ The key in the userInfo NSDictionary of NSError that points to the URL
+ that caused an error, in its processing by FBAppCall.
+ */
+extern NSString *const FBErrorUnprocessedURLKey;
 
 /*!
  The key in the userInfo NSDictionary of NSError for unsuccessful 
@@ -229,31 +291,50 @@ extern NSString *const FBErrorReauthorizeFailedReasonWrongUser;
 
 /*!
  The key in the userInfo NSDictionary of NSError for errors
- encountered with `FBNativeDialog` operations. (error.code equals FBErrorNativeDialog).
- If present, the value will be one of the constants prefixed by FBErrorNativeDialog*.
+ encountered with `FBDialogs` operations. (error.code equals FBErrorDialog).
+ If present, the value will be one of the constants prefixed by FBErrorDialog*.
 */
-extern NSString *const FBErrorNativeDialogReasonKey;
+extern NSString *const FBErrorDialogReasonKey;
 
 /*!
  A value that may appear in the NSError userInfo dictionary under the
-`FBErrorNativeDialogReasonKey` key. Indicates that a native dialog is not supported 
+`FBErrorDialogReasonKey` key. Indicates that a native dialog is not supported 
  in the current OS.
 */
-extern NSString *const FBErrorNativeDialogNotSupported;
+extern NSString *const FBErrorDialogNotSupported;
 
 /*!
  A value that may appear in the NSError userInfo dictionary under the
- `FBErrorNativeDialogReasonKey` key. Indicates that a native dialog cannot be
+ `FBErrorDialogReasonKey` key. Indicates that a native dialog cannot be
  displayed because it is not appropriate for the current session. 
 */
-extern NSString *const FBErrorNativeDialogInvalidForSession;
+extern NSString *const FBErrorDialogInvalidForSession;
 
 /*!
  A value that may appear in the NSError userInfo dictionary under the
- `FBErrorNativeDialogReasonKey` key. Indicates that a native dialog cannot be
+ `FBErrorDialogReasonKey` key. Indicates that a native dialog cannot be
  displayed for some other reason.
  */
-extern NSString *const FBErrorNativeDialogCantBeDisplayed;
+extern NSString *const FBErrorDialogCantBeDisplayed;
+
+/*!
+ A value that may appear in the NSError userInfo ditionary under the
+ `FBErrorDialogReasonKey` key. Indicates that a native dialog cannot be
+ displayed because an Open Graph object that was passed was not configured 
+ correctly. The object must either (a) exist by having an 'id' or 'url' value; 
+ or, (b) configured for creation (by setting the 'type' value and 
+ provisionedForPost property)
+*/
+extern NSString *const FBErrorDialogInvalidOpenGraphObject;
+
+/*!
+ A value that may appear in the NSError userInfo ditionary under the
+ `FBErrorDialogReasonKey` key. Indicates that a native dialog cannot be
+ displayed because the parameters for sharing an Open Graph action were 
+ not configured. The parameters must include an 'action', 'actionType', and
+ 'previewPropertyName'.
+ */
+extern NSString *const FBErrorDialogInvalidOpenGraphActionParameters;
 
 /*!
  The key in the userInfo NSDictionary of NSError for errors

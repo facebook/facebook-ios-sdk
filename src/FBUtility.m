@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 #import "FBUtility.h"
 #import "FBGraphObject.h"
 #import "FBRequest.h"
-#import "FBSBJSON.h"
 #import "FBSession.h"
 
 #import <AdSupport/AdSupport.h>
@@ -27,6 +26,18 @@ static FBFetchedAppSettings *g_fetchedAppSettings = nil;
 static NSError *g_fetchedAppSettingsError = nil;
 
 @implementation FBUtility
+
++ (NSDictionary*)queryParamsDictionaryFromFBURL:(NSURL*)url {
+    // version 3.2.3 of the Facebook app encodes the parameters in the query but
+    // version 3.3 and above encode the parameters in the fragment; check first for
+    // fragment, and if missing fall back to query
+    NSString *query = [url fragment];
+    if (!query) {
+        query = [url query];
+    }
+    
+    return [FBUtility dictionaryByParsingURLQueryPart:query];
+}
 
 // finishes the parsing job that NSURL starts
 + (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString {
@@ -59,6 +70,24 @@ static NSError *g_fetchedAppSettingsError = nil;
     return result;
 }
 
++ (NSString *)stringBySerializingQueryParameters:(NSDictionary *)queryParameters {
+    NSMutableString *queryString = [[[NSMutableString alloc] init] autorelease];
+    BOOL hasParameters = NO;
+    if (queryParameters) {
+        for (NSString *key in queryParameters) {
+            if (hasParameters) {
+                [queryString appendString:@"&"];
+            }
+            [queryString appendFormat:@"%@=%@",
+             key,
+             [FBUtility stringByURLEncodingString:queryParameters[key]]];
+            hasParameters = YES;
+        }
+    }
+    
+    return [[queryString copy] autorelease];
+}
+
 // the reverse of url encoding
 + (NSString*)stringByURLDecodingString:(NSString*)escapedString {
     return [[escapedString stringByReplacingOccurrencesOfString:@"+" withString:@" "]
@@ -77,8 +106,8 @@ static NSError *g_fetchedAppSettingsError = nil;
 }
 
 + (unsigned long)currentTimeInMilliseconds {
-    struct timeval time; 
-    gettimeofday(&time, NULL); 
+    struct timeval time;
+    gettimeofday(&time, NULL);
     return (time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
@@ -127,7 +156,18 @@ static NSError *g_fetchedAppSettingsError = nil;
             urlSchemeSuffix ?: @""];
 }
 
-+ (NSDate*)expirationDateFromExpirationTimeString:(NSString*)expirationTime {
++ (NSDate*)expirationDateFromExpirationUnixTimeString:(NSString*)expirationTime {
+    NSDate *expirationDate = nil;
+    if (expirationTime != nil) {
+        NSTimeInterval expValue = [expirationTime doubleValue];
+        if (expValue != 0) {
+            expirationDate = [NSDate dateWithTimeIntervalSince1970:expValue];
+        }
+    }
+    return expirationDate;
+}
+
++ (NSDate*)expirationDateFromExpirationTimeIntervalString:(NSString*)expirationTime {
     NSDate *expirationDate = nil;
     if (expirationTime != nil) {
         int expValue = [expirationTime intValue];
@@ -165,6 +205,10 @@ static NSError *g_fetchedAppSettingsError = nil;
                                          table:nil];
     }
     return result;
+}
+
++ (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier {
+    return [bundleIdentifier hasPrefix:@"com.facebook."];
 }
 
 #pragma mark - permissions related
@@ -209,8 +253,8 @@ static NSError *g_fetchedAppSettingsError = nil;
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
     
     if (!g_fetchedAppSettingsError && !g_fetchedAppSettings) {
-    
-        NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution,supports_implicit_sdk_logging", appID, nil];
+        
+        NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution,supports_implicit_sdk_logging,suppress_native_ios_gdp,name", appID, nil];
         FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
         if ([pingRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             
@@ -221,17 +265,23 @@ static NSError *g_fetchedAppSettingsError = nil;
                 
                 g_fetchedAppSettings = [[[FBFetchedAppSettings alloc] init] retain];
                 if ([result respondsToSelector:@selector(objectForKey:)]) {
+                    g_fetchedAppSettings.serverAppName = [result objectForKey:@"name"];
                     g_fetchedAppSettings.supportsAttribution = [[result objectForKey:@"supports_attribution"] boolValue];
                     g_fetchedAppSettings.supportsImplicitSdkLogging = [[result objectForKey:@"supports_implicit_sdk_logging"] boolValue];
+                    g_fetchedAppSettings.suppressNativeGdp = [[result objectForKey:@"suppress_native_ios_gdp"] boolValue];
                 }
             }
             [FBUtility callTheFetchAppSettingsCallback:callback];
-          }
-         ]
-        );
+        }
+             ]
+            );
     } else {
         [FBUtility callTheFetchAppSettingsCallback:callback];
     }
+}
+
++ (FBFetchedAppSettings *)fetchedAppSettings {
+    return g_fetchedAppSettings;
 }
 
 + (void)callTheFetchAppSettingsCallback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
@@ -269,26 +319,37 @@ static NSError *g_fetchedAppSettingsError = nil;
 }
 
 + (NSString *)simpleJSONEncode:(id)data {
-    NSError *error = nil;
-    FBSBJSON *writer = [[FBSBJSON alloc] init];
-    NSString *result = [writer stringWithFragment:data error:&error];
-    FBConditionalLog(!error, @"Shouldn't get a JSON encoding error");
-    [writer release];
-    return result;
+    return [FBUtility simpleJSONEncode:data
+                                 error:nil];
+}
+
++ (NSString *)simpleJSONEncode:(id)data
+                         error:(NSError **)error {
+    if (data) {
+        NSData *json = [NSJSONSerialization dataWithJSONObject:data
+                                                       options:0
+                                                         error:error];
+        return [[[NSString alloc] initWithData:json
+                                      encoding:NSUTF8StringEncoding]
+                autorelease];
+    } else {
+        return nil;
+    }
 }
 
 + (id)simpleJSONDecode:(NSString *)jsonEncoding {
+    return [FBUtility simpleJSONDecode:jsonEncoding error:nil];
+}
+
++ (id)simpleJSONDecode:(NSString *)jsonEncoding
+                 error:(NSError **)error {
+    NSData *data = [jsonEncoding dataUsingEncoding:NSUTF8StringEncoding];
     
-    if (!jsonEncoding) {
+    if (data) {
+        return [NSJSONSerialization JSONObjectWithData:data options:0 error:error];
+    } else {
         return nil;
     }
-    
-    NSError *error = nil;
-    FBSBJSON *reader = [[FBSBJSON alloc] init];
-    id result = [reader fragmentWithString:jsonEncoding error:&error];
-    FBConditionalLog(!error, @"Shouldn't get a JSON decoding error");
-    [reader release];
-    return result;
 }
 
 + (BOOL) isRetinaDisplay {
@@ -298,4 +359,28 @@ static NSError *g_fetchedAppSettingsError = nil;
     return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
             ([UIScreen mainScreen].scale == 2.0));
 }
+
++ (NSString *)newUUIDString {
+    // Create the unique action Id
+    CFUUIDRef uuid = CFUUIDCreate(kCFAllocatorDefault);
+    
+    // We will only hold on to the string representation and not the raw bytes
+    NSString *uuidString = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, uuid);
+    
+    // release the UUID
+    CFRelease(uuid);
+    
+    return uuidString;
+}
+
++ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme {
+    static dispatch_once_t fetchBundleOnce;
+    static NSArray *urlSchemes = nil;
+    
+    dispatch_once(&fetchBundleOnce, ^{
+        urlSchemes = [[[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"] objectAtIndex:0] valueForKey:@"CFBundleURLSchemes"];
+    });
+    return [urlSchemes containsObject:urlScheme];
+}
+
 @end

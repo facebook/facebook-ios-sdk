@@ -22,6 +22,10 @@
 		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
 		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
 		9D084048169CE00B000FD49D /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D084047169CE00B000FD49D /* ReadMe.txt */; };
+		9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */; };
+		9D343BD017187E8700DBC569 /* SCPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */; };
+		9D564E06171334EA00BEEEDE /* action-photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D564E05171334EA00BEEEDE /* action-photo.png */; };
+		B59359D416D5635E000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359D316D5635E000A63F0 /* Security.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		B9A416A316113F1C001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A416A216113F1C001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
@@ -57,6 +61,11 @@
 		85C69DC81602B411008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = scrumptious/Default.png; sourceTree = SOURCE_ROOT; };
 		85C69DC91602B411008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "scrumptious/Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		9D084047169CE00B000FD49D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		9D564E02171334CB00BEEEDE /* SCPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SCPhotoViewController.h; path = scrumptious/SCPhotoViewController.h; sourceTree = SOURCE_ROOT; };
+		9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SCPhotoViewController.m; path = scrumptious/SCPhotoViewController.m; sourceTree = SOURCE_ROOT; };
+		9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SCPhotoViewController.xib; path = scrumptious/SCPhotoViewController.xib; sourceTree = SOURCE_ROOT; };
+		9D564E05171334EA00BEEEDE /* action-photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-photo.png"; path = "scrumptious/images/action-photo.png"; sourceTree = SOURCE_ROOT; };
+		B59359D316D5635E000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B9A416A216113F1C001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -85,6 +94,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59359D416D5635E000A63F0 /* Security.framework in Frameworks */,
 				85A928E316114706008699F1 /* Social.framework in Frameworks */,
 				B9A416A316113F1C001E7A77 /* AdSupport.framework in Frameworks */,
 				84A5DA9615A68A3D00FE54AF /* Accounts.framework in Frameworks */,
@@ -103,6 +113,7 @@
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
+				B59359D316D5635E000A63F0 /* Security.framework */,
 				9D084047169CE00B000FD49D /* ReadMe.txt */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
@@ -146,6 +157,9 @@
 				B9CD0A93150EBF5400560A93 /* SCLoginViewController.h */,
 				B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */,
 				B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */,
+				9D564E02171334CB00BEEEDE /* SCPhotoViewController.h */,
+				9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */,
+				9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */,
 				B9CD0A85150EA4DD00560A93 /* SCViewController.h */,
 				B9CD0A86150EA4DD00560A93 /* SCViewController.m */,
 				B9CD0A8B150EA4DE00560A93 /* SCViewController.xib */,
@@ -175,6 +189,7 @@
 				846809BD158F85A100F2DBB9 /* action-eating.png */,
 				846809BE158F85A100F2DBB9 /* action-location.png */,
 				846809BF158F85A100F2DBB9 /* action-people.png */,
+				9D564E05171334EA00BEEEDE /* action-photo.png */,
 				856DC2171577F105001FA6A6 /* Icon-72.png */,
 				856DC2181577F105001FA6A6 /* Icon.png */,
 				856DC2191577F105001FA6A6 /* Icon@2x.png */,
@@ -234,6 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D343BD017187E8700DBC569 /* SCPhotoViewController.xib in Resources */,
 				B9CD0A7E150EA4DD00560A93 /* InfoPlist.strings in Resources */,
 				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
 				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
@@ -251,6 +267,7 @@
 				85C69DCB1602B411008AD9A0 /* Default.png in Resources */,
 				85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */,
 				9D084048169CE00B000FD49D /* ReadMe.txt in Resources */,
+				9D564E06171334EA00BEEEDE /* action-photo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +278,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */,
 				B9CD0A80150EA4DD00560A93 /* main.m in Sources */,
 				B9CD0A84150EA4DD00560A93 /* SCAppDelegate.m in Sources */,
 				B9CD0A87150EA4DD00560A93 /* SCViewController.m in Sources */,
@@ -357,7 +375,7 @@
 				GCC_PREFIX_HEADER = "Scrumptious/Scrumptious-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
@@ -381,7 +399,7 @@
 				GCC_PREFIX_HEADER = "Scrumptious/Scrumptious-Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",

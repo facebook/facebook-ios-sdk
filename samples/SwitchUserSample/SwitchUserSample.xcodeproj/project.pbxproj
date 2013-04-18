@@ -34,6 +34,7 @@
 		85C69DC11602B393008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBE1602B393008AD9A0 /* Default@2x.png */; };
 		85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */; };
 		85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8E1538BF6200D88664 /* SUUserManager.m */; };
+		B59359E616D564F8000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359E516D564F8000A63F0 /* Security.framework */; };
 		B9A416B116113F3E001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A416B016113F3E001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DD37EA6515ABA33D0015966B /* FacebookSDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */; };
 		DD55EAA515AB9D1A000A64B8 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */; };
@@ -75,6 +76,7 @@
 		85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUProfileTableViewCell.m; sourceTree = "<group>"; };
 		85D0ED8D1538BF6200D88664 /* SUUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUserManager.h; sourceTree = "<group>"; };
 		85D0ED8E1538BF6200D88664 /* SUUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUserManager.m; sourceTree = "<group>"; };
+		B59359E516D564F8000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B9A416B016113F3E001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FacebookSDKResources.bundle; sourceTree = "<group>"; };
 		DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
@@ -85,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59359E616D564F8000A63F0 /* Security.framework in Frameworks */,
 				85A928F116114738008699F1 /* Social.framework in Frameworks */,
 				B9A416B116113F3E001E7A77 /* AdSupport.framework in Frameworks */,
 				84605AAD15A77AFB00197AA7 /* Accounts.framework in Frameworks */,
@@ -118,10 +121,11 @@
 		856DB04C153393C3006F6A33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */,
+				B59359E516D564F8000A63F0 /* Security.framework */,
 				85A928F016114738008699F1 /* Social.framework */,
 				B9A416B016113F3E001E7A77 /* AdSupport.framework */,
 				DD37EA6415ABA33D0015966B /* FacebookSDKResources.bundle */,
-				DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */,
 				84605AAC15A77AFB00197AA7 /* Accounts.framework */,
 				856DB04D153393C3006F6A33 /* UIKit.framework */,
 				856DB04F153393C3006F6A33 /* Foundation.framework */,
@@ -332,7 +336,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SwitchUserSample/SwitchUserSample-Prefix.pch";
 				INFOPLIST_FILE = "SwitchUserSample/SwitchUserSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",
@@ -355,7 +359,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SwitchUserSample/SwitchUserSample-Prefix.pch";
 				INFOPLIST_FILE = "SwitchUserSample/SwitchUserSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-Wall",

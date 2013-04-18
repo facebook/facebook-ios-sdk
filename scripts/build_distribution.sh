@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2012 Facebook
+# Copyright 2010-present Facebook.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@
 # https://github.com/facebook/facebook-ios-sdk/downloads/FacebookSDK.framework.zip
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
-test -x "$PACKAGEMAKER" || die 'Could not find packagemaker in $PATH'
+test -x "$PACKAGEMAKER" || die 'Could not find PackageMaker in $PATH - install to Applications from https://developer.apple.com/downloads/index.action (Auxiliary Tools for XCode)'
+test -x "$CODESIGN" || die 'Could not find codesign utility! Reinstall XCode?'
 
 FB_SDK_PGK_VERSION=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FBSDKVersion.h)
 # In case the hotfix value is zero, we drop the .0
@@ -95,8 +96,19 @@ $PACKAGEMAKER \
   --target 10.5 \
   --version $FB_SDK_VERSION \
   --out $FB_SDK_PKG \
-  --title 'Facebook SDK 3.2 for iOS' \
+  --title 'Facebook SDK 3.5 for iOS' \
   || die "PackageMaker reported error"
+
+if [ ! "$CODE_SIGN_IDENTITY" ]; then
+    echo '***************'
+    echo 'WARNING: No $CODE_SIGN_IDENTITY provided,'
+    echo 'Distribution will be unsigned and difficult for users to install on OS X 10.8+'
+    echo '***************'
+else
+    progress_message "Signing package."
+    $CODESIGN -s "$CODE_SIGN_IDENTITY" $FB_SDK_PKG || die "Failed to codesign package."
+fi
+
 
 # -----------------------------------------------------------------------------
 # Done

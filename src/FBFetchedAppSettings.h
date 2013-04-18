@@ -1,5 +1,5 @@
 /*
- * Copyright 2013 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@
 
 @interface FBFetchedAppSettings : NSObject
 
-@property (readwrite) BOOL supportsAttribution;
-@property (readwrite) BOOL supportsImplicitSdkLogging;
+@property (copy, nonatomic) NSString *serverAppName;
+@property (readwrite)       BOOL      supportsAttribution;
+@property (readwrite)       BOOL      supportsImplicitSdkLogging;
+@property (readwrite)       BOOL      suppressNativeGdp;
+
 
 @end

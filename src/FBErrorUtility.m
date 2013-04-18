@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #import "FBError.h"
-#import "FBErrorUtility.h"
+#import "FBErrorUtility+Internal.h"
 #import "FBSession.h"
 #import "FBUtility.h"
 #import "FBAccessTokenData+Internal.h"
@@ -33,6 +33,54 @@ static const int FBSDKRetryErrorSubcode = 65000;
 static const int FBSDKSystemPasswordErrorSubcode = 65001;
 
 @implementation FBErrorUtility
+
++(FBErrorCategory) errorCategoryForError:(NSError *)error {
+    int code = 0, subcode = 0;
+    
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+    
+    return [FBErrorUtility fberrorCategoryFromError:error
+                                               code:code
+                                            subcode:subcode
+                               returningUserMessage:nil
+                                andShouldNotifyUser:nil];
+}
+
++(BOOL) shouldNotifyUserForError:(NSError *)error {
+    BOOL shouldNotifyUser = NO;
+    int code = 0, subcode = 0;
+    
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+    
+    [FBErrorUtility fberrorCategoryFromError:error
+                                        code:code
+                                     subcode:subcode
+                        returningUserMessage:nil
+                         andShouldNotifyUser:&shouldNotifyUser];
+    return shouldNotifyUser;
+}
+
++(NSString *) userMessageForError:(NSError *)error {
+    NSString *message = nil;
+    int code = 0, subcode = 0;
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+    
+    [FBErrorUtility fberrorCategoryFromError:error
+                                        code:code
+                                     subcode:subcode
+                        returningUserMessage:&message
+                         andShouldNotifyUser:nil];
+    return message;
+}
 
 // This method is responsible for error categorization and response policy for
 // the SDK; for example, the rules in this method dictate when an auth error is

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@
 #import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import <pthread.h>
-#import "FBSBJSON.h"
 #import "FBGraphUser.h"
+#import "FBUtility.h"
 
 /* 
  Indicates whether the test user for an FBTestSession should be shared
@@ -39,9 +39,8 @@ typedef enum {
     FBTestSessionModeShared     = 1,
 } FBTestSessionMode;
 
-
-static NSString *const FBPLISTAppIDKey = @"IOS_SDK_TEST_APP_ID";
-static NSString *const FBPLISTAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";
+static NSString *const FBPLISTTestAppIDKey = @"IOS_SDK_TEST_APP_ID";
+static NSString *const FBPLISTTestAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";
 static NSString *const FBPLISTUniqueUserTagKey = @"IOS_SDK_MACHINE_UNIQUE_USER_KEY";
 static NSString *const FBLoginAuthTestUserURLPath = @"oauth/access_token";
 static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
@@ -298,11 +297,9 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                 testAccountQuery, @"test_accounts",
                                 userQuery, @"users",
                                 nil];
-
-    FBSBJSON *writer = [[FBSBJSON alloc] init];
-    NSString *jsonMultiquery = [writer stringWithObject:multiquery];
-    [writer release];
-
+    
+    NSString *jsonMultiquery = [FBUtility simpleJSONEncode:multiquery];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 jsonMultiquery, @"q",
                                 self.appAccessToken, @"access_token",
@@ -508,8 +505,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                       sessionUniqueUserTag:(NSString*)sessionUniqueUserTag
 {
     NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    NSString *appID = [environment objectForKey:FBPLISTAppIDKey];
-    NSString *appSecret = [environment objectForKey:FBPLISTAppSecretKey];
+    NSString *appID = [environment objectForKey:FBPLISTTestAppIDKey];
+    NSString *appSecret = [environment objectForKey:FBPLISTTestAppSecretKey];
     if (!appID || !appSecret || appID.length == 0 || appSecret.length == 0) {
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:

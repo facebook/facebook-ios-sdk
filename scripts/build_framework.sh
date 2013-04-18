@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2012 Facebook
+# Copyright 2010-present Facebook.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -136,10 +136,6 @@ do
     || die "Error building framework while copying deprecated SDK headers"
 done
 \cp \
-  $FB_SDK_SRC/JSON/*.h \
-  $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders \
-  || die "Error building framework while copying deprecated JSON headers"
-\cp \
   $FB_SDK_SRC/Framework/Resources/* \
   $FB_SDK_FRAMEWORK/Versions/A/Resources \
   || die "Error building framework while copying Resources"
@@ -169,8 +165,7 @@ if [ ${NOEXTRAS:-0} -eq  1 ];then
 else
   progress_message "Running unit tests."
   cd $FB_SDK_SRC
-  $XCODEBUILD -sdk iphonesimulator -configuration Debug -scheme facebook-ios-sdk-tests TEST_AFTER_BUILD=YES build \
-      || die "Error while running unit tests"
+  $FB_SDK_SCRIPT/run_tests.sh -c $BUILDCONFIGURATION facebook-ios-sdk-tests
 fi
 
 # -----------------------------------------------------------------------------

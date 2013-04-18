@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@
 // FBSample logic
 // The native facebook application transitions back to an authenticating application when the user 
 // chooses to either log in, or cancel. The url passed to this method contains the token in the
-// case of a successful login. By passing the url to the handleOpenURL method of a session object
-// the session object can parse the URL, and capture the token for use by the rest of the authenticating
+// case of a successful login. By passing the url to the handleOpenURL method of FBAppCall the provided
+// session object can parse the URL, and capture the token for use by the rest of the authenticating
 // application; the return value of handleOpenURL indicates whether or not the URL was handled by the
 // session object, and does not reflect whether or not the login was successful; the session object's
 // state, as well as its arguments passed to the state completion handler indicate whether the login
@@ -39,7 +39,9 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     // attempt to extract a token from the url
-    return [self.session handleOpenURL:url]; 
+    return [FBAppCall handleOpenURL:url
+                  sourceApplication:sourceApplication
+                        withSession:self.session];
 }
 
 // FBSample logic
@@ -86,7 +88,7 @@
     // FBSample logic
     // We need to properly handle activation of the application with regards to SSO
     //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).
-    [FBSession.activeSession handleDidBecomeActive];
+    [FBAppCall handleDidBecomeActiveWithSession:self.session];
 }
 
 #pragma mark Template generated code

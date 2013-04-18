@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,7 +187,6 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
         );
     
         if (!success) {
-            NSAssert(NO, @"SQL Lite open/exec error.");
             [self release];
             return nil;
         }

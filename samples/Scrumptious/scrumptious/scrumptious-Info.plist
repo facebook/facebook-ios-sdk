@@ -45,6 +45,8 @@
 	<string>${FB_BUNDLE_VERSION}</string>
 	<key>FacebookAppID</key>
 	<string>233936543368280</string>
+	<key>FacebookDisplayName</key>
+	<string>Scrumptious</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

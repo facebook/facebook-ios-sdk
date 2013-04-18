@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2012 Facebook
+# Copyright 2010-present Facebook.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,8 @@
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
+test -x "$APPLEDOC" || die 'Could not find appledoc in $PATH - run git clone git://github.com/tomaz/appledoc.git && appledoc/install-appledoc.sh'
+
 # -----------------------------------------------------------------------------
 # Build pre-requisites
 #
@@ -37,14 +39,13 @@ test -d $FB_SDK_BUILD \
 
 cd $FB_SDK_SRC
 
-APPLEDOC=appledoc
 DOCSET="$FB_SDK_BUILD"/"$FB_SDK_DOCSET_NAME"
 
 rm -rf $DOCSET
 
 hash $APPLEDOC &>/dev/null
 if [ "$?" -eq "0" ]; then
-    APPLEDOC_DOCSET_NAME="Facebook SDK 3.2 for iOS"
+    APPLEDOC_DOCSET_NAME="Facebook SDK 3.5 for iOS"
     $APPLEDOC --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
