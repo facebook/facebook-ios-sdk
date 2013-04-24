@@ -665,12 +665,18 @@ params   = _params;
 }
 
 - (void)dialogDidSucceed:(NSURL *)url {
-    // dismiss before calling into client-code, in case the client code releases us
-    [self dismissWithSuccess:YES animated:YES];
+    // retain self for the life of this method, in case we are released by a client
+    id me = [self retain];
     
-    // call into client code
-    if ([_delegate respondsToSelector:@selector(dialogCompleteWithUrl:)]) {
-        [_delegate dialogCompleteWithUrl:url];
+    @try {
+        // call into client code
+        if ([_delegate respondsToSelector:@selector(dialogCompleteWithUrl:)]) {
+            [_delegate dialogCompleteWithUrl:url];
+        }
+        
+        [self dismissWithSuccess:YES animated:YES];
+    } @finally {
+        [me release];
     }
 }
 

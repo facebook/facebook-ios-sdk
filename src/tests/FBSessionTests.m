@@ -52,7 +52,8 @@ static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
                        FBAppAuth:(BOOL)tryFBAppAuth
                       safariAuth:(BOOL)trySafariAuth
                         fallback:(BOOL)tryFallback
-                   isReauthorize:(BOOL)isReauthorize;
+                   isReauthorize:(BOOL)isReauthorize
+             canFetchAppSettings:(BOOL)canFetchAppSettings;
 - (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter;
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error;
 - (BOOL)isSystemAccountStoreAvailable;
@@ -1380,7 +1381,8 @@ static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
                                            FBAppAuth:YES
                                           safariAuth:YES
                                             fallback:YES
-                                       isReauthorize:NO];
+                                       isReauthorize:NO
+                                 canFetchAppSettings:YES];
     
     return mockSession;
 }

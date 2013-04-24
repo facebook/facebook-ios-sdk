@@ -96,7 +96,7 @@ $PACKAGEMAKER \
   --target 10.5 \
   --version $FB_SDK_VERSION \
   --out $FB_SDK_PKG \
-  --title 'Facebook SDK 3.5 for iOS' \
+  --title 'Facebook SDK 3.5.1 for iOS' \
   || die "PackageMaker reported error"
 
 if [ ! "$CODE_SIGN_IDENTITY" ]; then

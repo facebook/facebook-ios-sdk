@@ -196,7 +196,13 @@
                                                   message:@"Please come rock the logic with me!"
                                                     title:@"Invite a Friend"
                                                parameters:parameters
-                                                  handler:nil
+                                                  handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
+                                                      if (result == FBWebDialogResultDialogCompleted) {
+                                                          NSLog(@"Web dialog complete: %@", resultURL);
+                                                      } else {
+                                                          NSLog(@"Web dialog not complete, error: %@", error.description);
+                                                      }
+                                                  }
                                               friendCache:self.friendCache];
 }
 

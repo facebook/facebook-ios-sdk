@@ -826,16 +826,18 @@ static FBSession *g_activeSession = nil;
                          FBAppAuth:tryFacebookLogin
                         safariAuth:tryFacebookLogin
                           fallback:tryFallback
-                     isReauthorize:isReauthorize];
+                     isReauthorize:isReauthorize
+               canFetchAppSettings:YES];
 }
 
 - (void)authorizeWithPermissions:(NSArray*)permissions
                  defaultAudience:(FBSessionDefaultAudience)defaultAudience
                   integratedAuth:(BOOL)tryIntegratedAuth
                        FBAppAuth:(BOOL)tryFBAppAuth
-                      safariAuth:(BOOL)trySafariAuth 
+                      safariAuth:(BOOL)trySafariAuth
                         fallback:(BOOL)tryFallback
-                   isReauthorize:(BOOL)isReauthorize {
+                   isReauthorize:(BOOL)isReauthorize
+             canFetchAppSettings:(BOOL)canFetchAppSettings {
     // setup parameters for either the safari or inline login
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
@@ -894,9 +896,10 @@ static FBSession *g_activeSession = nil;
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         
         if (tryFBAppAuth) {
-            if ([FBSettings defaultDisplayName] && // Don't autoselect Native Login unless the app has been setup for it.
+            FBFetchedAppSettings *fetchedSettings = [FBUtility fetchedAppSettings];
+            if ([FBSettings defaultDisplayName] &&            // don't autoselect Native Login unless the app has been setup for it,
+                (fetchedSettings || canFetchAppSettings) &&   // and we have app-settings available to us, or could fetch if needed
                 !TEST_DISABLE_FACEBOOKNATIVELOGIN) {
-                FBFetchedAppSettings *fetchedSettings = [FBUtility fetchedAppSettings];
                 if (!fetchedSettings) {
                     // fetch the settings and call this method again
                     didRequestAuthorize = YES;
@@ -907,7 +910,8 @@ static FBSession *g_activeSession = nil;
                                              FBAppAuth:tryFBAppAuth
                                             safariAuth:trySafariAuth
                                               fallback:tryFallback
-                                         isReauthorize:isReauthorize];
+                                         isReauthorize:isReauthorize
+                                   canFetchAppSettings:NO];
                     }];
                 } else if (!fetchedSettings.suppressNativeGdp) {
                     if (![[FBSettings defaultDisplayName] isEqualToString:fetchedSettings.serverAppName]) {
@@ -1043,12 +1047,13 @@ static FBSession *g_activeSession = nil;
                     // even when OS integrated auth is possible we use native-app/safari
                     // login if the user has not signed on to Facebook via the OS
                     [self authorizeWithPermissions:permissions
-                                       defaultAudience:defaultAudience
-                                        integratedAuth:NO
-                                             FBAppAuth:YES
-                                            safariAuth:YES
-                                              fallback:YES
-                                         isReauthorize:NO];
+                                   defaultAudience:defaultAudience
+                                    integratedAuth:NO
+                                         FBAppAuth:YES
+                                        safariAuth:YES
+                                          fallback:YES
+                                     isReauthorize:NO
+                               canFetchAppSettings:YES];
                 } else {
                     
                     [self logIntegratedAuthInsights:@"Authorization cancelled"
@@ -1277,7 +1282,8 @@ static FBSession *g_activeSession = nil;
                                  FBAppAuth:NO
                                 safariAuth:YES
                                   fallback:NO
-                             isReauthorize:NO];
+                             isReauthorize:NO
+                       canFetchAppSettings:YES];
             return YES;
         }
         
@@ -1290,7 +1296,8 @@ static FBSession *g_activeSession = nil;
                                  FBAppAuth:NO
                                 safariAuth:NO
                                   fallback:NO
-                             isReauthorize:NO];
+                             isReauthorize:NO
+                       canFetchAppSettings:YES];
             return YES;
         }
         
