@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@ static NSArray* _cdnHosts;
 - (FBURLConnection *)initWithURL:(NSURL *)url
                completionHandler:(FBURLConnectionHandler)handler {
     NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+    
     return [self initWithRequest:request
            skipRoundTripIfCached:YES
                completionHandler:handler];
@@ -81,18 +82,13 @@ static NSArray* _cdnHosts;
         
         // Check if this url is cached
         NSURL* url = request.URL;
-        NSData* cachedData = skipRoundtripIfCached ? [[FBDataDiskCache sharedCache] dataForURL:url] : nil;
+        FBDataDiskCache *cache = [self getCache];
+        NSData* cachedData = skipRoundtripIfCached ? [cache dataForURL:url] : nil;
         
         if (cachedData) {
-            [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
-                            formatString:@"FBUrlConnection: <#%d>.  Cached response %d kB\n", 
-             [url absoluteString],
-             [cachedData length] / 1024];
-            
             // TODO: It seems wrong to call this within init.  There are cases
             // with UI where this is not ideal.  We should talk about this.
-            handler(self, nil, nil, cachedData);
-
+            [self logAndInvokeHandler:handler cachedData:cachedData forURL:url];
         } else {    
         
             _requestStartTime = [FBUtility currentTimeInMilliseconds];
@@ -101,11 +97,10 @@ static NSArray* _cdnHosts;
                 initWithRequest:request 
                 delegate:self];
             _data = [[NSMutableData alloc] init];
-                     
-            [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
-                            formatString:@"FBURLConnection <#%d>:\n  URL: '%@'\n\n",
-                _loggerSerialNumber,
-                [url absoluteString]];
+
+            [self logMessage:[NSString stringWithFormat:@"FBURLConnection <#%d>:\n  URL: '%@'\n\n",
+                self.loggerSerialNumber,
+                url.absoluteString]];
             
             self.handler = handler;
         }
@@ -117,44 +112,63 @@ static NSArray* _cdnHosts;
     return self;
 }
 
-- (void)invokeHandler:(FBURLConnectionHandler)handler 
-                error:(NSError *)error 
-             response:(NSURLResponse *)response 
-         responseData:(NSData *)responseData {
-    NSString *logEntry;
-    
+- (void)logAndInvokeHandler:(FBURLConnectionHandler)handler
+                      error:(NSError *)error {
     if (error) {
-        
-        logEntry = [NSString 
+        NSString *logEntry = [NSString
                     stringWithFormat:@"FBURLConnection <#%d>:\n  Error: '%@'",
-                    _loggerSerialNumber,
+                    self.loggerSerialNumber,
                     [error localizedDescription]];
         
-    } else {            
-        
-        // Basic FBURLConnection logging just prints out the URL.  FBRequest logging provides more details.                        
-        NSString *mimeType = [response MIMEType];
-        NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBURLConnection <#%d>:\n  Duration: %lu msec\nResponse Size: %d kB\n  MIME type: %@\n", 
-                                            _loggerSerialNumber,
-                                            [FBUtility currentTimeInMilliseconds] - _requestStartTime,
-                                            [responseData length] / 1024,
-                                            mimeType];
-        
-        if ([mimeType isEqualToString:@"text/javascript"]) {
-            NSString *responseUTF8 = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-            [mutableLogEntry appendFormat:@"  Response:\n%@\n\n", responseUTF8];
-            [responseUTF8 release];
-        }
-        
-        logEntry = mutableLogEntry;
+        [self logMessage:logEntry];
     }
     
-    [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections
-                        logEntry:logEntry]; 
+    [self invokeHandler:handler error:error response:nil responseData:nil];
+}
+
+- (void)logAndInvokeHandler:(FBURLConnectionHandler)handler
+                   response:(NSURLResponse *)response
+               responseData:(NSData *)responseData {
+    // Basic FBURLConnection logging just prints out the URL.  FBRequest logging provides more details.
+    NSString *mimeType = [response MIMEType];
+    NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBURLConnection <#%d>:\n  Duration: %lu msec\nResponse Size: %d kB\n  MIME type: %@\n",
+                                        self.loggerSerialNumber,
+                                        [FBUtility currentTimeInMilliseconds] - self.requestStartTime,
+                                        [responseData length] / 1024,
+                                        mimeType];
     
-    if (handler) {
+    if ([mimeType isEqualToString:@"text/javascript"]) {
+        NSString *responseUTF8 = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        [mutableLogEntry appendFormat:@"  Response:\n%@\n\n", responseUTF8];
+        [responseUTF8 release];
+    }
+    
+    [self logMessage:mutableLogEntry];
+
+    [self invokeHandler:handler error:nil response:response responseData:responseData];
+}
+
+- (void)logAndInvokeHandler:(FBURLConnectionHandler)handler
+                 cachedData:(NSData *)cachedData
+                     forURL:(NSURL *)url {
+    [self logMessage:[NSString stringWithFormat:@"FBUrlConnection: <#%d>.  Cached response %d kB\n",
+                      self.loggerSerialNumber,
+                      cachedData.length / 1024]];
+
+    [self invokeHandler:handler error:nil response:nil responseData:cachedData];
+}
+
+- (void)invokeHandler:(FBURLConnectionHandler)handler
+                error:(NSError *)error
+             response:(NSURLResponse *)response
+         responseData:(NSData *)responseData {
+    if (handler != nil) {
         handler(self, error, response, responseData);
     }
+}
+
+- (void)logMessage:(NSString *)message {
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorFBURLConnections formatString:message];
 }
 
 - (void)dealloc {
@@ -182,7 +196,7 @@ static NSArray* _cdnHosts;
     FBURLConnectionHandler handler = [self.handler retain];
     self.handler = nil;
     @try {
-        [self invokeHandler:handler error:error response:nil responseData:nil];
+        [self logAndInvokeHandler:handler error:error];
     } @finally {
         [handler release];
         [self release];
@@ -204,7 +218,7 @@ didReceiveResponse:(NSURLResponse *)response {
 - (void)connection:(NSURLConnection *)connection
   didFailWithError:(NSError *)error {
     @try {
-        [self invokeHandler:self.handler error:error response:nil responseData:nil];
+        [self logAndInvokeHandler:self.handler error:error];
     } @finally {
         self.handler = nil;
     }
@@ -214,11 +228,12 @@ didReceiveResponse:(NSURLResponse *)response {
     NSURL* dataURL = self.response.URL;
     if ([self isCDNURL:dataURL]) {
         // Cache this data
-        [[FBDataDiskCache sharedCache] setData:self.data forURL:dataURL];
+        FBDataDiskCache *cache = [self getCache];
+        [cache setData:self.data forURL:dataURL];
     }
 
     @try {
-        [self invokeHandler:self.handler error:nil response:self.response responseData:self.data];
+        [self logAndInvokeHandler:self.handler response:self.response responseData:self.data];
     } @finally {
         self.handler = nil;
     }
@@ -227,12 +242,12 @@ didReceiveResponse:(NSURLResponse *)response {
 -(NSURLRequest *)connection:(NSURLConnection *)connection
             willSendRequest:(NSURLRequest *)request
            redirectResponse:(NSURLResponse *)redirectResponse {
-    if (redirectResponse && self.skipRoundtripIfCached) {
+    if ([self shouldShortCircuitRedirectResponse:redirectResponse]) {
         NSURL* redirectURL = request.URL;
         
         // Check for cache and short-circuit
-        NSData* cachedData = 
-            [[FBDataDiskCache sharedCache] dataForURL:redirectURL];
+        FBDataDiskCache *cache = [self getCache];
+        NSData* cachedData = [cache dataForURL:redirectURL];
         if (cachedData) {
             @try {
                 // Fake a response
@@ -241,7 +256,7 @@ didReceiveResponse:(NSURLResponse *)response {
                         MIMEType:@"application/octet-stream" 
                         expectedContentLength:cachedData.length 
                         textEncodingName:@"utf8"];
-                [self invokeHandler:self.handler error:nil response:cacheResponse responseData:cachedData];
+                [self logAndInvokeHandler:self.handler response:cacheResponse responseData:cachedData];
                 [cacheResponse release];
             } @finally {
                 self.handler = nil;
@@ -254,6 +269,10 @@ didReceiveResponse:(NSURLResponse *)response {
     return request;
 }
 
+- (BOOL)shouldShortCircuitRedirectResponse:(NSURLResponse *)redirectResponse {
+    return redirectResponse && self.skipRoundtripIfCached;
+}
+
 - (BOOL)isCDNURL:(NSURL *)url {
     NSString* urlHost = url.host;
     for (NSString* host in _cdnHosts) {
@@ -263,6 +282,10 @@ didReceiveResponse:(NSURLResponse *)response {
     }
 
     return NO;
+}
+
+- (FBDataDiskCache *)getCache {
+    return [FBDataDiskCache sharedCache];
 }
 
 @end

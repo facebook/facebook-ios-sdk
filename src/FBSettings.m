@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,12 @@
 
 #import <UIKit/UIKit.h>
 
+// Keys to get App-specific info from mainBundle
+static NSString *const FBPLISTDisplayNameKey = @"FacebookDisplayName";
+static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
+static NSString *const FBPLISTUrlSchemeSuffixKey = @"FacebookUrlSchemeSuffix";
+
+// const strings
 NSString *const FBLoggingBehaviorFBRequests = @"fb_requests";
 NSString *const FBLoggingBehaviorFBURLConnections = @"fburl_connections";
 NSString *const FBLoggingBehaviorAccessTokens = @"include_access_tokens";
@@ -44,6 +50,10 @@ static NSSet *g_loggingBehavior;
 static BOOL g_autoPublishInstall = YES;
 static dispatch_once_t g_publishInstallOnceToken;
 static NSString *g_clientToken;
+static NSString *g_defaultDisplayName = nil;
+static NSString *g_defaultAppID = nil;
+static NSString *g_defaultUrlSchemeSuffix = nil;
+static NSUInteger g_betaFeatures = 0;
 
 + (NSSet *)loggingBehavior {
     if (!g_loggingBehavior) {
@@ -71,6 +81,52 @@ static NSString *g_clientToken;
     g_clientToken = clientToken;
 }
 
++ (void)setDefaultDisplayName:(NSString*)displayName {
+    NSString *oldValue = g_defaultDisplayName;
+    g_defaultDisplayName = [displayName copy];
+    [oldValue release];
+}
+
++ (NSString *)defaultDisplayName {
+    if (!g_defaultDisplayName) {
+        NSBundle* bundle = [NSBundle mainBundle];
+        g_defaultDisplayName = [bundle objectForInfoDictionaryKey:FBPLISTDisplayNameKey];
+    }
+    return g_defaultDisplayName;
+}
+
++ (void)setDefaultAppID:(NSString*)appID {
+    NSString *oldValue = g_defaultAppID;
+    g_defaultAppID = [appID copy];
+    [oldValue release];
+}
+
++ (NSString*)defaultAppID {
+    if (!g_defaultAppID) {
+        NSBundle* bundle = [NSBundle mainBundle];
+        g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
+    }
+    return g_defaultAppID;
+}
+
++ (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix {
+    NSString *oldValue = g_defaultUrlSchemeSuffix;
+    g_defaultUrlSchemeSuffix = [urlSchemeSuffix copy];
+    [oldValue release];
+}
+
++ (NSString*)defaultUrlSchemeSuffix {
+    if (!g_defaultUrlSchemeSuffix) {
+        NSBundle* bundle = [NSBundle mainBundle];
+        g_defaultUrlSchemeSuffix = [bundle objectForInfoDictionaryKey:FBPLISTUrlSchemeSuffixKey];
+    }
+    return g_defaultUrlSchemeSuffix;
+}
+
++ (NSString*)defaultURLScheme {
+    return [NSString stringWithFormat:@"fb%@%@", [self defaultAppID], [self defaultUrlSchemeSuffix] ?: @""];
+}
+
 + (BOOL)shouldAutoPublishInstall {
     return g_autoPublishInstall;
 }
@@ -89,6 +145,21 @@ static NSString *g_clientToken;
     }
 }
 
++ (void)enableBetaFeatures:(NSUInteger)betaFeatures {
+  g_betaFeatures |= betaFeatures;
+}
+
++ (void)enableBetaFeature:(FBBetaFeatures)betaFeature {
+  g_betaFeatures |= betaFeature;
+}
+
++ (void)disableBetaFeature:(FBBetaFeatures)betaFeature {
+    g_betaFeatures &= NSUIntegerMax ^ betaFeature;
+}
+
++ (BOOL)isBetaFeatureEnabled:(FBBetaFeatures)betaFeature {
+  return (g_betaFeatures & betaFeature) == betaFeature;
+}
 
 #pragma mark -
 #pragma mark proto-activity publishing code
@@ -103,7 +174,7 @@ static NSString *g_clientToken;
         handler = [[handler copy] autorelease];
 
         if (!appID) {
-            appID = [FBSession defaultAppID];
+            appID = [FBSettings defaultAppID];
         }
 
         if (!appID) {

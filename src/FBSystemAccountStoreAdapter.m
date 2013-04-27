@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 #import "FBUtility.h"
 #import "FBLogger.h"
 #import "FBSettings.h"
-#import "FBErrorUtility.h"
+#import "FBErrorUtility+Internal.h"
 #import "FBAccessTokenData.h"
 
 @interface FBSystemAccountStoreAdapter() {

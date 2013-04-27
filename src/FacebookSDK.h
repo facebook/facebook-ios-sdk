@@ -1,5 +1,5 @@
 /*
- * Copyright 2012
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,15 @@
 
 // core
 #import "FBSession.h"
-#import "FBAccessTokenData.h"
 #import "FBRequest.h"
 #import "FBError.h"
 #import "NSError+FBError.h"
 #import "FBSettings.h"
 #import "FBInsights.h"
+#import "FBAppCall.h"
+#import "FBErrorUtility.h"
+#import "FBSessionTokenCachingStrategy.h"
+#import "FBAccessTokenData.h"
 
 // graph
 #import "FBGraphUser.h"
@@ -29,6 +32,7 @@
 #import "FBGraphLocation.h"
 #import "FBGraphObject.h"           // + design summary for graph component-group
 #import "FBOpenGraphAction.h"
+#import "FBOpenGraphObject.h"
 
 // ux
 #import "FBLoginView.h"
@@ -37,7 +41,10 @@
 #import "FBPlacePickerViewController.h"
 #import "FBFriendPickerViewController.h"
 #import "FBCacheDescriptor.h"
-#import "FBNativeDialogs.h"
+#import "FBNativeDialogs.h"         // deprecated, use FBDialogs.h
+#import "FBDialogs.h"
+#import "FBShareDialogParams.h"
+#import "FBOpenGraphActionShareDialogParams.h"
 #import "FBWebDialogs.h"
 #import "FBFrictionlessRecipientCache.h"
 

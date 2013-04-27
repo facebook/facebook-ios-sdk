@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Copyright 2012 Facebook
+# Copyright 2010-present Facebook.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -121,6 +121,8 @@ if [ -z $FB_SDK_ENV ]; then
   test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
   test -n "$LIPO"         || LIPO=$(which lipo)
   test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)
+  test -n "$CODESIGN"     || CODESIGN=$(which codesign)
+  test -n "$APPLEDOC"     || APPLEDOC=$(which appledoc)
 
   # < XCode 4.3.1
   if [ ! -x "$XCODEBUILD" ]; then

@@ -20,14 +20,6 @@ If using Scrumptious as the basis for another application, please note that all 
 to be updated, and a hosted service must be provided in order to serve up Open Graph Objects. In addition, the logged-in
 user will need to be a Developer or a Tester on the application until it is approved for posting Open Graph Actions.
 
-Build Requirements
-iOS 6.0 SDK
-
-Runtime Requirements
-iPhone OS 4.3 or later
-
 Using the Sample
 Install the Facebook SDK for iOS.
 Launch the Scrumptious project using Xcode from the <Facebook SDK>/samples/Scrumptious directory.
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,15 @@
 
 @class FBSystemAccountStoreAdapter;
 
+extern NSString *const FBLoginUXClientState;
+extern NSString *const FBLoginUXClientStateIsClientState;
+extern NSString *const FBLoginUXClientStateIsOpenSession;
+extern NSString *const FBLoginUXClientStateIsActiveSession;
+
+extern NSString *const FBInnerErrorObjectKey;
+
+extern NSString *const FacebookNativeApplicationLoginDomain;
+
 @interface FBSession (Internal)
 
 @property(readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
@@ -30,6 +39,8 @@
 - (void)closeAndClearTokenInformation:(NSError*) error;
 - (void)clearAffinitizedThread;
 
++ (FBSession*)activeSessionIfExists;
+
 + (FBSession*)activeSessionIfOpen;
 
 + (void)deleteFacebookCookies;
@@ -37,5 +48,13 @@
 - (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode
                             innerError:(NSError*)innerError;
+
+- (BOOL)openFromAccessTokenData:(FBAccessTokenData *)accessTokenData
+              completionHandler:(FBSessionStateHandler) handler
+   raiseExceptionIfInvalidState:(BOOL)raiseException;
+
++ (BOOL)isOpenSessionResponseURL:(NSURL *)url;
+
++ (NSError *)sdkSurfacedErrorForNativeLoginError:(NSError *)nativeLoginError;
 
 @end

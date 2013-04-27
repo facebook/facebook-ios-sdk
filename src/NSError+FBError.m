@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,51 +21,15 @@
 @implementation NSError (FBError)
 
 - (FBErrorCategory) fberrorCategory {
-    int code = 0, subcode = 0;
-    
-    [FBErrorUtility fberrorGetCodeValueForError:self
-                                          index:0
-                                           code:&code
-                                        subcode:&subcode];
-    
-    return [FBErrorUtility fberrorCategoryFromError:self
-                                               code:code
-                                            subcode:subcode
-                               returningUserMessage:nil
-                                andShouldNotifyUser:nil];
+    return [FBErrorUtility errorCategoryForError:self];
 }
 
 - (NSString *) fberrorUserMessage {
-    NSString *message = nil;
-    int code = 0, subcode = 0;
-    [FBErrorUtility fberrorGetCodeValueForError:self
-                                          index:0
-                                           code:&code
-                                        subcode:&subcode];
-    
-    [FBErrorUtility fberrorCategoryFromError:self
-                                        code:code
-                                     subcode:subcode
-                        returningUserMessage:&message
-                         andShouldNotifyUser:nil];
-    return message;
+    return [FBErrorUtility userMessageForError:self];
 }
 
 - (BOOL) fberrorShouldNotifyUser {
-    BOOL shouldNotifyUser = NO;
-    int code = 0, subcode = 0;
-    
-    [FBErrorUtility fberrorGetCodeValueForError:self
-                                          index:0
-                                           code:&code
-                                        subcode:&subcode];
-    
-    [FBErrorUtility fberrorCategoryFromError:self
-                                        code:code
-                                     subcode:subcode
-                        returningUserMessage:nil
-                         andShouldNotifyUser:&shouldNotifyUser];
-    return shouldNotifyUser;
+    return [FBErrorUtility shouldNotifyUserForError:self];
 }
 
 @end

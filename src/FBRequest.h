@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 #import <CoreLocation/CoreLocation.h>
 #import "FBRequestConnection.h"
 #import "FBGraphObject.h"
+#import "FBOpenGraphObject.h"
+#import "FBOpenGraphAction.h"
 
 /*! The base URL used for graph requests */
 extern NSString* const FBGraphBasePath;
@@ -337,7 +339,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  Note you may change the session property after construction if a session other than
  the active session is preferred.
 */
-+ (FBRequest*)requestForMe;
++ (FBRequest *)requestForMe;
 
 /*!
  @method
@@ -355,7 +357,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  A successful Graph API call will return an array of <FBGraphUser> objects representing the
  user's friends.
 */
-+ (FBRequest*)requestForMyFriends;
++ (FBRequest *)requestForMyFriends;
 
 /*!
  @method
@@ -374,8 +376,8 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  then call the `start` method on the connection instance.
 
  @param photo            A `UIImage` for the photo to upload.
-*/
-+ (FBRequest*)requestForUploadPhoto:(UIImage *)photo;
+ */
++ (FBRequest *)requestForUploadPhoto:(UIImage *)photo;
 
 /*!
  @method
@@ -444,10 +446,41 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @param searchText       The text to use in the query to narrow the set of places
  returned.
 */
-+ (FBRequest*)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
-                                  radiusInMeters:(NSInteger)radius
-                                    resultsLimit:(NSInteger)limit
-                                      searchText:(NSString*)searchText;
++ (FBRequest *)requestForPlacesSearchAtCoordinate:(CLLocationCoordinate2D)coordinate
+                                   radiusInMeters:(NSInteger)radius
+                                     resultsLimit:(NSInteger)limit
+                                       searchText:(NSString*)searchText;
+
+/*!
+ @method
+ 
+ @abstract 
+ Creates a request representing the Graph API call to retrieve a Custom Audience "thirdy party ID" for the app's Facebook user.  
+ Callers will send this ID back to their own servers, collect up a set to create a Facebook Custom Audience with, 
+ and then use the resultant Custom Audience to target ads.
+ 
+ @param session    The FBSession to use to establish the user's identity for users logged into Facebook through this app.
+ If `nil`, then the activeSession is used.  If the session is not open, then the appID|clientToken are used to construct the access
+ token for the request.
+ 
+ @discussion  
+ This method will thrown an exception if either <[FBSettings defaultAppID]> or <[FBSettings clientToken]> are `nil`.  The appID won't be nil when the pList 
+ includes the appID, or if it's explicitly set.  The clientToken needs to be set via <[FBSettings setClientToken:]>.
+ 
+ The JSON in the request's response will include an "custom_audience_third_party_id" key/value pair, with the value being the ID retrieved.
+ This ID is an encrypted encoding of the Facebook user's ID and the invoking Facebook app ID.
+ Multiple calls with the same user will return different IDs, thus these IDs cannot be used to correlate behavior
+ across devices or applications, and are only meaningful when sent back to Facebook for creating Custom Audiences.
+ 
+ The ID retrieved represents the Facebook user identified in the following way: if the specified session (or activeSession if the specified
+ session is `nil`) is open, the ID will represent the user associated with the activeSession; otherwise the ID will represent the user logged into the
+ native Facebook app on the device.  If there is no native Facebook app, no one is logged into it, or the user has opted out
+ at the iOS level from ad tracking, then a `nil` ID will be returned.
+ 
+ This method itself returning `nil` indicates that either the user has opted-out (via iOS) from Ad Tracking, or a specific Facebook user cannot
+ be identified.
+ */
++ (FBRequest *)requestForCustomAudienceThirdPartyID:(FBSession *)session;
 
 /*!
  @method
@@ -464,7 +497,24 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
  */
-+ (FBRequest*)requestForGraphPath:(NSString*)graphPath;
++ (FBRequest *)requestForGraphPath:(NSString*)graphPath;
+
+/*!
+ @method
+ 
+ @abstract
+ Creates request representing a DELETE to a object.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param object        This can be an NSString, NSNumber or NSDictionary representing an object to delete
+ */
++ (FBRequest *)requestForDeleteObject:(id)object;
 
 /*!
  @method
@@ -476,8 +526,8 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  
  @param graphObject      An object or open graph action to post.
  */
-+ (FBRequest*)requestForPostWithGraphPath:(NSString*)graphPath
-                              graphObject:(id<FBGraphObject>)graphObject;
++ (FBRequest *)requestForPostWithGraphPath:(NSString*)graphPath
+                               graphObject:(id<FBGraphObject>)graphObject;
 
 /*!
  @method
@@ -498,7 +548,121 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  
  @param HTTPMethod       The HTTP method to use for the request. A nil value implies a GET.
  */
-+ (FBRequest*)requestWithGraphPath:(NSString*)graphPath
++ (FBRequest *)requestWithGraphPath:(NSString*)graphPath
                         parameters:(NSDictionary*)parameters
                         HTTPMethod:(NSString*)HTTPMethod;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to create a user owned 
+ Open Graph object for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param object           The Open Graph object to create. Some common expected fields include "title", "image", "url", etc.
+ */
++ (FBRequest *)requestForPostOpenGraphObject:(id<FBOpenGraphObject>)object;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to create a user owned
+ Open Graph object for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param type             The fully-specified Open Graph object type (e.g., my_app_namespace:my_object_name)
+ @param title            The title of the Open Graph object.
+ @param image            The link to an image to be associated with the Open Graph object.
+ @param url              The url to be associated with the Open Graph object.
+ @param description      The description to be associated with the object.
+ @param objectProperties Any additional properties for the Open Graph object.
+ */
++ (FBRequest *)requestForPostOpenGraphObjectWithType:(NSString *)type
+                                               title:(NSString *)title
+                                               image:(id)image
+                                                 url:(id)url
+                                         description:(NSString *)description
+                                    objectProperties:(NSDictionary *)objectProperties;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to update a user owned
+ Open Graph object for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param object      The Open Graph object to update the existing object with.
+ */
++ (FBRequest *)requestForUpdateOpenGraphObject:(id<FBOpenGraphObject>)object;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to update a user owned
+ Open Graph object for the active session.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param objectId         The id of the Open Graph object to update.
+ @param title            The updated title of the Open Graph object.
+ @param image            The updated link to an image to be associated with the Open Graph object.
+ @param url              The updated url to be associated with the Open Graph object.
+ @param description      The updated description of the Open Graph object.
+ @param objectProperties Any additional properties to update for the Open Graph object.
+ */
++ (FBRequest *)requestForUpdateOpenGraphObjectWithId:(id)objectId
+                                               title:(NSString *)title
+                                               image:(id)image
+                                                 url:(id)url
+                                         description:(NSString *)description
+                                    objectProperties:(NSDictionary *)objectProperties;
+
+/*!
+ @method
+ 
+ @abstract
+ Returns a newly initialized request object that can be used to upload an image
+ to create a staging resource. Staging resources allow you to post binary data
+ such as images, in preparation for a post of an open graph object or action
+ which references the image. The URI returned when uploading a staging resource
+ may be passed as the image property for an open graph object or action.
+ 
+ @discussion
+ This method simplifies the preparation of a Graph API call.
+ 
+ This method does not initialize an <FBRequestConnection> object. To initiate the API
+ call first instantiate an <FBRequestConnection> object, add the request to this object,
+ then call the `start` method on the connection instance.
+ 
+ @param image            A `UIImage` for the image to upload.
+ */
++ (FBRequest *)requestForUploadStagingResourceWithImage:(UIImage *)image;
+
 @end

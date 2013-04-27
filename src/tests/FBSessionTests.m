@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,199 +21,1390 @@
 #import "FBTestBlocker.h"
 #import "FBTests.h"
 #import "FBUtility.h"
-#import "FBError.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSystemAccountStoreAdapter.h"
+#import "FBAccessTokenData+Internal.h"
+#import "FBError.h"
+#import "FBUtility.h"
+#import <objc/objc-runtime.h>
 
-#if defined(FACEBOOKSDK_SKIP_SESSION_TESTS)
+static NSString *kURLSchemeSuffix = @"URLSuffix";
+static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
 
-#pragma message ("warning: Skipping FBSessionTests")
+// We test quite a few deprecated properties.
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
-#else
+// This is just to silence compiler warnings since we access internal methods in some tests.
+@interface FBSession (Testing)
 
-@implementation FBSessionTests
+@property(readwrite, copy) NSDate *refreshDate;
+@property(readwrite) FBSessionLoginType loginType;
 
-// All code under test must be linked into the Unit Test bundle
-- (void)testSessionBasic
-{
-    FBConditionalLog(NO, @"Testing conditional %@", @"log");
-    FBConditionalLog(NO, @"Testing conditional log");
-    FBConditionalLog(YES, nil, @"Testing conditional log");
-    
-    // create valid
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    
-    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
-    [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        [blocker signal];
-    }];
-    
-    [blocker wait];
-    
-    STAssertTrue(session.isOpen, @"Session should be valid, and is not");
-    
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session
-                                                   graphPath:@"me"]
-                          autorelease];
-    [request startWithCompletionHandler:
-     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         STAssertTrue(me.id.length > 0, @"user id should be non-empty");
-         [blocker signal];
-     }];
-    
-    [blocker wait];
-    
-    [session close];
-}
++ (NSString *)sessionStateDescription:(FBSessionState)sessionState;
 
-// All code under test must be linked into the Unit Test bundle
-- (void)testSessionInvalidate
-{
-    // create valid
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    
-    __block BOOL wasNotifiedOfInvalid = NO;
-    FBTestSession *session = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
-    [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        if (status == FBSessionStateClosed) {
-            wasNotifiedOfInvalid = YES;
-        }
-        [blocker signal];
-    }];
-    [blocker wait];
-    
-    STAssertTrue(session.isOpen, @"Session should be open, and is not");
-
-    __block NSString *userID = nil;
-    FBRequest *request1 = [[[FBRequest alloc] initWithSession:session
-                                                   graphPath:@"me"]
-                          autorelease];
-    [request1 startWithCompletionHandler:
-     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         userID = [me.id retain];
-         STAssertTrue(userID.length > 0, @"user id should be non-empty");
-         [blocker signal];
-     }];
-    
-    [blocker wait];
-
-    // use FBRequest to create an NSURLRequest
-    FBRequest *temp = [[FBRequest alloc] initWithSession:session
-                                               graphPath:userID
-                                              parameters:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                          @"delete", @"method",
-                                                          nil]
-                                              HTTPMethod:nil];
-    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    [connection addRequest:temp completionHandler:nil];
-    NSURLRequest *urlRequest = connection.urlRequest;
-    [userID release];
-    [connection release];
-    [temp release];
-    
-    // synchronously delete the user
-    NSURLResponse *response;
-    NSError *error = nil;
-    NSData *data;
-    data = [NSURLConnection sendSynchronousRequest:urlRequest 
-                                 returningResponse:&response
-                                             error:&error];
-    // if !data or if data == false, log
-    NSString *body = !data ? nil : [[[NSString alloc] initWithData:data
-                                                          encoding:NSUTF8StringEncoding]
-                                    autorelease];    
-    STAssertTrue([body isEqualToString:@"true"], @"body should return 'true'");
-    
-    FBRequest *request2 = [[[FBRequest alloc] initWithSession:session
-                                                   graphPath:@"me"]
-                          autorelease];
-    [request2 startWithCompletionHandler:
-     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-        STAssertTrue(error != nil, @"response should be an error due to deleted user");
-        [blocker signal];
-    }];
-    
-    STAssertFalse(wasNotifiedOfInvalid, @"should not have invalidated the token yet");
-    [blocker wait];
-    STAssertTrue(wasNotifiedOfInvalid, @"should have invalidated the token by now");
-    
-    [session close];
-}
-
-- (void)testSessionOpenFromAccessToken
-{
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    __block BOOL expectClosed = NO;
-    
-    // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
-    [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        STAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
-        [blocker signal];
-    }];
-    [blocker wait];
-    
-    // Now construct the actual session under test (target) and open with the access token.
-    // Note just hack in expiration time of 3600 for the test.
-    FBSession* target = [[FBSession alloc] initWithAppID:normalSession.appID permissions:nil
-                                         defaultAudience:FBSessionDefaultAudienceFriends
-                                         urlSchemeSuffix:nil
-                                      tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-
-    FBAccessTokenData *tokenDataCopy = [normalSession.accessTokenData copy];
-    BOOL openResult = [target openFromAccessTokenData:tokenDataCopy
-                                    completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                        STAssertTrue(status == FBSessionStateOpen || expectClosed, @"status is :%d , error:%@:", status, error);
-                                        [blocker signal];
-                                    }];
-    STAssertTrue(openResult, @"expected openResult=YES");
-    [blocker wait];
-    
-    //final check, just do a request for me with the target
-    FBRequest *request = [[[FBRequest alloc] initWithSession:target
-                                                   graphPath:@"me"]
-                          autorelease];
-    [request startWithCompletionHandler:
-     ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         STAssertTrue(me.id.length > 0, @"user id should be non-empty. error:%@", error);
-         [blocker signal];
-     }];
-    
-    [blocker wait];
-
-    expectClosed = YES;
-    [target close];
-    [normalSession close];
-    [tokenDataCopy release];
-    [target release];
-}
-
-- (void)testSessionOpenFromAccessTokenAlreadyOpen
-{
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    __block BOOL expectClosed = NO;
-    
-    // Open a test session normally for accesstoken/appid
-    FBTestSession *target = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
-    [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-        STAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
-        [blocker signal];
-    }];
-    [blocker wait];
-    
-    FBAccessTokenData *tokenDataCopy = [target.accessTokenData copy];
-    
-    //Now try to open it again
-    STAssertThrowsSpecific([target openFromAccessTokenData:tokenDataCopy
-                                         completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                             STFail(@"Completion handler was unexpectedly invoked for session: %@", session);
-                                         }],
-                           NSException,
-                           FBInvalidOperationException);
-    
-    [tokenDataCopy release];
-}
+- (void)authorizeWithPermissions:(NSArray*)permissions
+                        behavior:(FBSessionLoginBehavior)behavior
+                 defaultAudience:(FBSessionDefaultAudience)audience
+                   isReauthorize:(BOOL)isReauthorize;
+- (void)authorizeWithPermissions:(NSArray*)permissions
+                 defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                  integratedAuth:(BOOL)tryIntegratedAuth
+                       FBAppAuth:(BOOL)tryFBAppAuth
+                      safariAuth:(BOOL)trySafariAuth
+                        fallback:(BOOL)tryFallback
+                   isReauthorize:(BOOL)isReauthorize
+             canFetchAppSettings:(BOOL)canFetchAppSettings;
+- (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter;
+- (void)callReauthorizeHandlerAndClearState:(NSError*)error;
+- (BOOL)isSystemAccountStoreAvailable;
+- (BOOL)isMultitaskingSupported;
 
 @end
 
-#endif
+#pragma mark - Test suite
 
+@implementation FBSessionTests {
+    FBTestBlocker *_blocker;
+    Method _originalIsRegisteredCheck;
+    Method _swizzledIsRegisteredCheck;
+}
+
++ (BOOL)isRegisteredURLSchemeReplacement:(NSString *)url
+{
+    return YES;
+}
+
+- (void)setUp {
+    [super setUp];
+
+    // In general, tests use a mock token caching strategy, but some tests verify behavior using the
+    // default strategy and we want to ensure it is clean.
+    [[FBSessionTokenCachingStrategy defaultInstance] clearToken];
+
+    FBSession.defaultAppID = nil;
+    FBSession.defaultUrlSchemeSuffix = nil;
+    FBSession.activeSession = nil;
+
+    _blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
+    
+    _originalIsRegisteredCheck = class_getClassMethod([FBUtility class], @selector(isRegisteredURLScheme:));
+    _swizzledIsRegisteredCheck = class_getClassMethod([self class], @selector(isRegisteredURLSchemeReplacement:));
+    method_exchangeImplementations(_originalIsRegisteredCheck, _swizzledIsRegisteredCheck);
+
+}
+
+- (void)tearDown {
+    [super tearDown];
+
+    [_blocker release];
+    _blocker = nil;
+    
+    method_exchangeImplementations(_swizzledIsRegisteredCheck, _originalIsRegisteredCheck);
+    _originalIsRegisteredCheck = nil;
+    _swizzledIsRegisteredCheck = nil;
+}
+
+#pragma mark Init tests
+
+- (void)testInitWithoutDefaultAppIDThrows {
+    @try {
+        [[FBSession alloc] init];
+        STFail(@"should have gotten exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+- (void)testInitWithDefaultAppIDSetsDefaultValues {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [[FBSession alloc] init];
+
+    assertThat(session.refreshDate, nilValue());
+    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+    
+    [session release];
+}
+
+- (void)testInitWithDefaultAppIDSetsAppID {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [[FBSession alloc] init];
+    
+    assertThat(session.appID, equalTo(kTestAppId));
+    
+    [session release];
+}
+
+- (void)testInitWithDefaultAppIDSetsState {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [[FBSession alloc] init];
+    
+    assertThatBool(session.isOpen, equalToBool(NO));
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    
+    [session release];
+}
+
+- (void)testInitWithPermissionsSetsDefaultValues {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    NSArray *permissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
+    
+    assertThat(session.refreshDate, nilValue());
+    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+    
+    [session release];
+}
+
+- (void)testInitWithPermissionsSetsPermissions {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    NSArray *permissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
+    
+    assertThat(session.permissions, equalTo(permissions));
+    
+    [session release];
+}
+
+- (void)testInitWithoutUrlSchemeSuffixUsesDefault {
+    FBSession.defaultUrlSchemeSuffix = @"defaultsuffix";
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:nil];
+    
+    assertThat(session.urlSchemeSuffix, equalTo(@"defaultsuffix"));
+    
+    [session release];
+}
+
+- (void)testInitWithUrlSchemeSuffixOverridesDefault {
+    FBSession.defaultUrlSchemeSuffix = @"defaultsuffix";
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:@"asuffix"
+                                       tokenCacheStrategy:nil];
+    
+    assertThat(session.urlSchemeSuffix, equalTo(@"asuffix"));
+    
+    [session release];
+}
+
+- (void)testInitWithExpiredTokenClearsTokenCache {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithExpiredToken];
+    
+    [[(id)mockStrategy expect] clearToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                        tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    [session release];
+}
+
+- (void)testInitWithExpiredTokenSetsState {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithExpiredToken];
+    
+    [[(id)mockStrategy expect] clearToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatBool(session.isOpen, equalToBool(NO));
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenTransitionsToLoadedState {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithValidToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsDefaultValues {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithValidToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatInt([session.refreshDate timeIntervalSinceNow], closeTo(0, 5000));
+    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsState {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithValidToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatBool(session.isOpen, equalToBool(NO));
+    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsAppID {
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithValidToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.appID, equalTo(kTestAppId));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsToken {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.accessToken, equalTo(mockToken.accessToken));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsRefreshDate {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    NSDate *refreshDate = [NSDate dateWithTimeIntervalSinceNow:1200];
+    [[[(id)mockToken stub] andReturn:refreshDate] refreshDate];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.refreshDate, equalTo(refreshDate));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsLoginType {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionLoginType loginType = FBSessionLoginTypeWebView;
+    [[[(id)mockToken stub] andReturnValue:OCMOCK_VALUE(loginType)] loginType];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeWebView));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsExpirationDate {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+
+    assertThat(session.expirationDate, equalTo(mockToken.expirationDate));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenSetsPermissions {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    [[[(id)mockToken stub] andReturn:tokenPermissions] permissions];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.permissions, equalTo(tokenPermissions));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenAndSubsetOfCachedPermissionsSetsPermissions {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    [[[(id)mockToken stub] andReturn:tokenPermissions] permissions];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    NSArray *sessionPermissions = [NSArray arrayWithObject:@"permission1"];
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:sessionPermissions
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.permissions, equalTo(tokenPermissions));
+    
+    [session release];
+}
+
+- (void)testInitWithValidTokenAndNonSubsetOfCachedPermissionsDoesNotUseCachedToken {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    [[[(id)mockToken stub] andReturn:tokenPermissions] permissions];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    [[(id)mockStrategy expect] clearToken];
+
+    NSArray *sessionPermissions = [NSArray arrayWithObject:@"permission3"];
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:sessionPermissions
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [(id)mockStrategy verify];
+    
+    assertThat(session.permissions, equalTo(sessionPermissions));
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    [session release];
+}
+
+#pragma mark Opening tests
+
+// These tests test authentication mechanism-agnostic open logic; tests of specific authentication
+// mechanisms are found in subclasses of FBAuthenticationTests.
+
+- (void)testOpenTransitionsToOpening {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+    [mockSession initWithAppID:kTestAppId
+                   permissions:nil
+               defaultAudience:FBSessionDefaultAudienceNone
+               urlSchemeSuffix:nil
+            tokenCacheStrategy:nil];
+
+    __block BOOL handlerCalled = NO;
+    [mockSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        handlerCalled = YES;
+    }];
+    
+    assertThatInt(mockSession.state, equalToInt(FBSessionStateCreatedOpening));
+    assertThatBool(handlerCalled, equalToBool(NO));
+}
+
+- (void)testOpenWithValidToken {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    __block BOOL handlerCalled = NO;
+    [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        handlerCalled = YES;
+    }];
+    
+    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+    assertThatBool(handlerCalled, equalToBool(YES));
+    
+    [session release];
+}
+
+- (void)testOpenWithValidTokenWithNoHandler {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [session openWithCompletionHandler:nil];
+
+    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+
+    [session release];
+}
+
+- (void)testOpenThrowsExceptionIfNotInCreated {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [session openWithCompletionHandler:nil];
+    
+    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+    
+    @try {
+        [session openWithCompletionHandler:nil];
+        STFail(@"should have gotten an exception");
+    } @catch (NSException *exception) {
+    }
+    
+    [session release];
+    
+}
+
+#pragma mark Closing tests
+
+- (void)testCloseWhenCreatedStaysInCreated {
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:nil];
+
+    [session close];
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+}
+
+- (void)testClose {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [session close];
+    assertThatInt(session.state, equalToInt(FBSessionStateClosed));
+}
+
+- (void)testCloseWhenOpeningSetsClosedLoginFailedState {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:nil];
+    [session openWithCompletionHandler:nil];
+    
+    [session close];
+    assertThatInt(session.state, equalToInt(FBSessionStateClosedLoginFailed));
+}
+
+- (void)testCloseAndClearTokenInformation {
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    [[(id)mockStrategy expect] clearToken];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    
+    [session closeAndClearTokenInformation];
+    
+    [(id)mockStrategy verify];
+    
+    assertThatInt(session.state, equalToInt(FBSessionStateClosed));
+}
+
+
+- (void)testCloseDoesNotSendDidBecomeClosedNotificationIfOpenSessionNotActiveSession {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [self createAndOpenSessionWithMockToken];
+
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidBecomeClosedActiveSessionNotification
+                                                   object:nil];
+    
+    @try {
+        [session close];
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testCloseDoesNotSendDidBecomeClosedNotificationIfActiveSessionNotOpen {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [[FBSession alloc] init];
+    FBSession.activeSession = session;
+
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidBecomeClosedActiveSessionNotification
+                                                   object:nil];
+    @try {
+        [session close];
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testCloseSendsDidBecomeClosedNotificationIfActiveSessionOpen {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBSession *session = [self createAndOpenSessionWithMockToken];
+    FBSession.activeSession = session;
+
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidBecomeClosedActiveSessionNotification
+                                                   object:nil];
+    [[observerMock expect] notificationWithName:FBSessionDidBecomeClosedActiveSessionNotification
+                                         object:[OCMArg any]];
+        
+    @try {
+        [session close];
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+// TODO test from Opening -> close
+
+#pragma mark Reauthorization tests
+
+- (void)testReauthorizeWithReadIsSynonymForRequestNewRead {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+    
+    FBSessionReauthorizeResultHandler handler =^(FBSession *session, NSError *error) {
+    };
+    
+    NSArray *newPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+
+    [[(id)mockSession expect] requestNewReadPermissions:newPermissions completionHandler:handler];
+
+    [mockSession reauthorizeWithReadPermissions:newPermissions completionHandler:handler];
+    
+    [(id)mockSession verify];
+}
+
+- (void)testReauthorizeWithPublishIsSynonymForRequestNewPublish {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+    
+    FBSessionReauthorizeResultHandler handler =^(FBSession *session, NSError *error) {
+    };
+    
+    NSArray *newPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    
+    [[(id)mockSession expect] requestNewPublishPermissions:newPermissions
+                                           defaultAudience:FBSessionDefaultAudienceOnlyMe
+                                         completionHandler:handler];
+    
+    [mockSession reauthorizeWithPublishPermissions:newPermissions
+                                   defaultAudience:FBSessionDefaultAudienceOnlyMe
+                                 completionHandler:handler];
+    
+    [(id)mockSession verify];
+}
+
+- (void)testReauthorizeFailsIfSessionNotOpen {
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:nil];
+    
+    assertThatBool(session.isOpen, equalToBool(NO));
+    
+    @try {
+        [session reauthorizeWithPermissions:nil
+                                   behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                          completionHandler:nil];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+- (void)testReauthorizeWhileReauthorizeInProgressFails {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+    
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:mockStrategy];
+    
+    [session openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:nil];
+    assertThatBool(session.isOpen, equalToBool(YES));
+    
+    FBSessionRequestPermissionResultHandler handler = ^(FBSession *session, NSError *error) {
+    };
+    
+    // Because our session is mocked to do nothing with auth requests, it will stay in a "pending"
+    // reauth state after this call.
+    [session requestNewReadPermissions:nil completionHandler:handler];
+    
+    @try {
+        [session requestNewReadPermissions:nil completionHandler:handler];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+- (void)testReauthorizeWithPermissionCallsAuthorizeAgain {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuthThatExpectsCall:YES
+                                                                   reauthorize:YES
+                                                                      behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                                                               defaultAudience:FBSessionDefaultAudienceNone];
+    
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:mockStrategy];
+
+    [session openWithCompletionHandler:nil];
+    
+    assertThatBool(session.isOpen, equalToBool(YES));
+    
+    [session reauthorizeWithPermissions:nil
+                               behavior:FBSessionLoginBehaviorWithFallbackToWebView
+                      completionHandler:nil];
+    
+    [(id)mockSession verify];
+}
+
+/* TODO this fails if handler is nil; consider making reauthorizeWithPermission* more robust.
+
+- (void)testReauthorizeWhileReauthorizeInProgressFailsWithNilHandler {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [mockSession initWithAppID:kAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:mockStrategy];
+    
+    [session openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:nil];
+    assertThatBool(session.isOpen, equalToBool(YES));
+    
+    // Because our session is mocked to do nothing with auth requests, it will stay in a "pending"
+    // reauth state after this call.
+    [session requestNewReadPermissions:nil completionHandler:^(FBSession *session, NSError *error) {
+    }];
+    
+    @try {
+        [session requestNewReadPermissions:nil completionHandler:nil];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+*/
+
+- (void)testRequestNewReadPermissionsFailsIfPassedPublishPermissions {
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:nil];
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    @try {
+        [session requestNewReadPermissions:requestedPermissions completionHandler:nil];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+- (void)testRequestNewReadPermissionsCallsAuthorizeAgainOnSuccess {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuthThatExpectsCall:YES
+                                                                   reauthorize:YES
+                                                                      behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                                                               defaultAudience:FBSessionDefaultAudienceNone];
+    
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:mockStrategy];
+    
+    [session openWithCompletionHandler:nil];
+    
+    assertThatBool(session.isOpen, equalToBool(YES));
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+
+    [session requestNewReadPermissions:requestedPermissions
+                     completionHandler:nil];
+    
+    [(id)mockSession verify];
+}
+
+- (void)testRequestNewPublishPermissionsCallsAuthorizeAgainOnSuccess {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuthThatExpectsCall:YES
+                                                                   reauthorize:YES
+                                                                      behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                                                                       defaultAudience:FBSessionDefaultAudienceOnlyMe];
+    
+    FBAccessTokenData *mockToken = [self createValidMockToken];
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
+    
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:mockStrategy];
+    
+    [session openWithCompletionHandler:nil];
+    
+    assertThatBool(session.isOpen, equalToBool(YES));
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"publish_permission1", nil];
+    
+    [session requestNewPublishPermissions:requestedPermissions
+                          defaultAudience:FBSessionDefaultAudienceOnlyMe
+                       completionHandler:nil];
+    
+    [(id)mockSession verify];
+}
+
+#pragma mark Other instance tests
+
+
+- (void)testHandleDidBecomeActiveDoesNothingInCreatedState {
+    FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
+    FBSession *session = [mockSession initWithAppID:kTestAppId
+                                        permissions:nil
+                                    defaultAudience:FBSessionDefaultAudienceNone
+                                    urlSchemeSuffix:nil
+                                 tokenCacheStrategy:nil];
+    
+    [[(id)mockSession reject] close];
+    [[(id)mockSession reject] callReauthorizeHandlerAndClearState:[OCMArg any]];
+    
+    [session handleDidBecomeActive];
+    
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+}
+
+// TODO when running from the command line, this hangs
+/*
+- (void)testGetSystemAccountStoreAdapter {
+    [FBSession setDefaultAppID:kAppId];
+    FBSession *session = [[FBSession alloc] init];
+    
+    // Only do this if it's available (iOS 6.0+)
+    if ([self isSystemVersionAtLeast:@"6.0"]) {
+        FBSystemAccountStoreAdapter *adapter = [session getSystemAccountStoreAdapter];
+        
+        assertThat(adapter, equalTo([FBSystemAccountStoreAdapter sharedInstance]));
+    }
+    
+    [session release];
+}
+
+ - (void)testIsSystemAccountStoreAvailable {
+ BOOL shouldBeAvailable = [self isSystemVersionAtLeast:@"6.0"];
+ 
+ [FBSession setDefaultAppID:kAppId];
+ FBSession *session = [[FBSession alloc] init];
+ 
+ assertThatBool([session isSystemAccountStoreAvailable], equalToBool(shouldBeAvailable));
+ }
+ 
+*/
+
+- (void)testIsMultitaskingSupported {
+    UIDevice *device = [UIDevice currentDevice];
+    BOOL shouldBeSupported = [device respondsToSelector:@selector(isMultitaskingSupported)] &&
+        [device isMultitaskingSupported];
+
+    [FBSession setDefaultAppID:kTestAppId];
+    FBSession *session = [[FBSession alloc] init];
+
+    assertThatBool([session isMultitaskingSupported], equalToBool(shouldBeSupported));
+}
+
+/* TODO transitionToState: appears to be losing the isFacebookLogin-ness of cached tokens.
+
+- (void)testWillAttemptToExtendToken {
+    FBAccessTokenData *token = [self createValidMockToken];
+    // TODO add refresh date
+    [[[(id)token stub] andReturn:[NSDate dateWithTimeIntervalSince1970:0]] refreshDate];
+    FBSessionLoginType loginType = FBSessionLoginTypeFacebookApplication;
+    [[[(id)token stub] andReturnValue:OCMOCK_VALUE(loginType)] loginType];
+    BOOL yes = YES;
+    [[[(id)token stub] andReturnValue:OCMOCK_VALUE(yes)] isFacebookLogin];
+    
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:token];
+    
+    FBSession *session = [[FBSession alloc] initWithAppID:kAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    [session openWithCompletionHandler:nil];
+    
+    BOOL shouldExtend = [session shouldExtendAccessToken];
+    
+    assertThatBool(shouldExtend, equalToBool(YES));
+}
+*/
+
+#pragma mark Active session tests
+
+- (void)testActiveSessionDefaultsToNewCreatedSession {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    assertThat(FBSession.activeSessionIfOpen, nilValue());
+    FBSession *session = FBSession.activeSession;
+    assertThat(session, notNilValue());
+    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+}
+
+- (void)testSetActiveSession {
+    [FBSession setDefaultAppID:kTestAppId];
+
+    assertThat(FBSession.activeSessionIfOpen, nilValue());
+
+    FBSession *originalActiveSession = FBSession.activeSession;
+    assertThat(originalActiveSession, notNilValue());
+    
+    FBSession *newSession = [[FBSession alloc] init];
+    FBSession.activeSession = newSession;
+    
+    FBSession *activeSession = [FBSession activeSession];
+    assertThat(activeSession, notNilValue());
+    assertThat(activeSession, equalTo(newSession));
+}
+
+- (void)testSetActiveSessionSendsSetNotification {
+    [FBSession setDefaultAppID:kTestAppId];
+
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidSetActiveSessionNotification
+                                                   object:nil];
+    [[observerMock expect] notificationWithName:FBSessionDidSetActiveSessionNotification
+                                         object:[OCMArg any]];
+
+    @try {
+        FBSession *session = [[FBSession alloc] init];
+        FBSession.activeSession = session;
+       
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testSetActiveSessionSendsUnsetNotification {
+    [FBSession setDefaultAppID:kTestAppId];
+
+    FBSession *existingActiveSession = [[FBSession alloc] init];
+    FBSession.activeSession = existingActiveSession;
+    
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidUnsetActiveSessionNotification
+                                                   object:nil];
+    [[observerMock expect] notificationWithName:FBSessionDidUnsetActiveSessionNotification
+                                         object:[OCMArg any]];
+    
+    @try {
+        FBSession *session = [[FBSession alloc] init];
+        FBSession.activeSession = session;
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testSetActiveSessionDoesNotSendUnsetNotificationIfNoPreviousSession {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidUnsetActiveSessionNotification
+                                                   object:nil];
+    
+    @try {
+        FBSession *session = [[FBSession alloc] init];
+        FBSession.activeSession = session;
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testSetActiveSessionDoesNotSendDidBecomeOpenNotificationIfSessionNotOpen {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidBecomeOpenActiveSessionNotification
+                                                   object:nil];
+    
+    @try {
+        FBSession *session = [[FBSession alloc] init];
+        FBSession.activeSession = session;
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testSetActiveSessionSendsDidBecomeOpenNotificationIfSessionOpen {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    id observerMock = [OCMockObject observerMock];
+    [[NSNotificationCenter defaultCenter] addMockObserver:observerMock
+                                                     name:FBSessionDidBecomeOpenActiveSessionNotification
+                                                   object:nil];
+    [[observerMock expect] notificationWithName:FBSessionDidBecomeOpenActiveSessionNotification
+                                         object:[OCMArg any]];
+    
+    @try {
+        FBSession *session = [self createAndOpenSessionWithMockToken];
+        FBSession.activeSession = session;
+        
+        [observerMock verify];
+        
+        [session release];
+    } @finally {
+        // Important to remove this observer no matter what, or other tests will fail if this one does.
+        [[NSNotificationCenter defaultCenter] removeObserver:observerMock];
+    }
+}
+
+- (void)testOpenActiveSessionRequiresDefaultAppId {
+    @try {
+        [FBSession openActiveSessionWithAllowLoginUI:NO];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+}
+
+- (void)testOpenActiveSessionWithNoTokenOrUIStaysInCreated {
+    [FBSession setDefaultAppID:kTestAppId];
+
+    BOOL result = [FBSession openActiveSessionWithAllowLoginUI:NO];
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(NO));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreated));
+}
+
+- (void)testOpenActiveSessionWithValidTokenAndNoUISucceeds {
+    [FBSession setDefaultAppID:kTestAppId];
+
+    FBAccessTokenData *token = [self createValidMockToken];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+
+    BOOL result = [FBSession openActiveSessionWithAllowLoginUI:NO];
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(YES));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
+    assertThat(activeSession.accessTokenData, equalTo(token));
+}
+
+- (void)testOpenActiveSessionWithPermissionsAndValidTokenSucceeds {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    __block BOOL handlerCalled = NO;
+    BOOL result = [FBSession openActiveSessionWithPermissions:requestedPermissions
+                                                 allowLoginUI:NO
+                                            completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                                handlerCalled = YES;
+                                            }];
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(YES));
+    assertThatBool(handlerCalled, equalToBool(YES));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
+    assertThat(activeSession.accessTokenData, equalTo(token));
+    
+}
+
+- (void)testOpenActiveSessionRequestingMorePermissionsThanTokenFails {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    __block BOOL handlerCalled = NO;
+    BOOL result = [FBSession openActiveSessionWithPermissions:requestedPermissions
+                                                 allowLoginUI:NO
+                                            completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                                handlerCalled = YES;
+                                            }];
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(NO));
+    assertThatBool(handlerCalled, equalToBool(NO));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreated));
+    
+}
+
+- (void)testOpenActiveSessionWithReadPermissionSucceeds {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
+    __block BOOL handlerCalled = NO;
+    
+    BOOL result = [FBSession openActiveSessionWithReadPermissions:requestedPermissions
+                                                     allowLoginUI:NO
+                                                completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                                    handlerCalled = YES;
+                                                }];
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(YES));
+    assertThatBool(handlerCalled, equalToBool(YES));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
+    assertThat(activeSession.accessTokenData, equalTo(token));
+}
+
+- (void)testOpenActiveSessionWithReadRequestingReadAndWritePermissionFails {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    __block BOOL handlerCalled = NO;
+    
+    @try {
+        [FBSession openActiveSessionWithReadPermissions:requestedPermissions
+                                           allowLoginUI:NO
+                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                          handlerCalled = YES;
+                                      }];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(handlerCalled, equalToBool(NO));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    
+}
+
+- (void)testOpenActiveSessionWithPublishRequestingReadAndWritePermissionSucceeds {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"publish_permission2", nil];
+    __block BOOL handlerCalled = NO;
+    
+    BOOL result = [FBSession openActiveSessionWithPublishPermissions:requestedPermissions
+                                                     defaultAudience:FBSessionDefaultAudienceOnlyMe
+                                                        allowLoginUI:NO
+                                                   completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                                       handlerCalled = YES;
+                                                   }];
+
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(result, equalToBool(YES));
+    assertThatBool(handlerCalled, equalToBool(YES));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
+    assertThat(activeSession.accessTokenData, equalTo(token));
+}
+
+- (void)testOpenActiveSessionWithPublishAndNoDefaultAudienceFails {
+    [FBSession setDefaultAppID:kTestAppId];
+    
+    FBAccessTokenData *token = [self createValidMockToken];
+    NSArray *tokenPermissions = [NSArray arrayWithObjects:@"publish_permission1", nil];
+    [[[(id)token stub] andReturn:tokenPermissions] permissions];
+    [[FBSessionTokenCachingStrategy defaultInstance] cacheFBAccessTokenData:token];
+    
+    NSArray *requestedPermissions = [NSArray arrayWithObjects:@"publish_permission1", nil];
+    __block BOOL handlerCalled = NO;
+    
+    @try {
+        [FBSession openActiveSessionWithPublishPermissions:requestedPermissions
+                                           defaultAudience:FBSessionDefaultAudienceNone
+                                              allowLoginUI:NO
+                                         completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                             handlerCalled = YES;
+                                         }];
+        STFail(@"expected exception");
+    } @catch (NSException *exception) {
+    }
+    
+    FBSession *activeSession = FBSession.activeSession;
+    
+    assertThatBool(handlerCalled, equalToBool(NO));
+    assertThat(activeSession, notNilValue());
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    
+}
+
+#pragma mark Other statics tests
+
+- (void)testCanSetDefaultAppID {
+    assertThat([FBSession defaultAppID], nilValue());
+    [FBSession setDefaultAppID:kTestAppId];
+    assertThat([FBSession defaultAppID], equalTo(kTestAppId));
+}
+
+- (void)testCanSetDefaultUrlSchemeSuffix {
+    assertThat([FBSession defaultUrlSchemeSuffix], nilValue());
+    [FBSession setDefaultUrlSchemeSuffix:kURLSchemeSuffix];
+    assertThat([FBSession defaultUrlSchemeSuffix], equalTo(kURLSchemeSuffix));
+}
+
+- (void)testSessionStateDescription {
+    NSArray *expectedStrings = [NSArray arrayWithObjects:
+                                @"FBSessionStateCreated",
+                                @"FBSessionStateCreatedTokenLoaded",
+                                @"FBSessionStateCreatedOpening",
+                                @"FBSessionStateOpen",
+                                @"FBSessionStateOpenTokenExtended",
+                                @"FBSessionStateClosedLoginFailed",
+                                @"FBSessionStateClosed",
+                                @"[Unknown]",
+                                nil];
+    FBSessionState states[] = {FBSessionStateCreated,
+        FBSessionStateCreatedTokenLoaded, FBSessionStateCreatedOpening, FBSessionStateOpen,
+        FBSessionStateOpenTokenExtended, FBSessionStateClosedLoginFailed, FBSessionStateClosed, -1};
+    const int numTests = sizeof(states) / sizeof(FBSessionState);
+    
+    for (int i = 0; i < numTests; ++i) {
+        NSString *description = [FBSession sessionStateDescription:states[i]];
+        assertThat(description, equalTo([expectedStrings objectAtIndex:i]));
+    }
+}
+
+- (void)testDescription {
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:nil];
+    
+    NSString *description = [session description];
+    assertThat(description, containsString(kTestAppId));
+    assertThat(description, containsString(@"FBSessionStateCreated"));
+}
+
+- (void)testDeleteFacebookCookies {
+    [self addFacebookCookieToSharedStorage];
+    
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSURL *url = [NSURL URLWithString:FBDialogBaseURL];
+    NSArray *cookiesForFacebook = [storage cookiesForURL:url];
+    
+    assertThatInteger(cookiesForFacebook.count, greaterThan(@0));
+    
+    [FBSession deleteFacebookCookies];
+    
+    cookiesForFacebook = [storage cookiesForURL:url];
+    
+    assertThatInteger(cookiesForFacebook.count, equalToInteger(0));
+}
+
+#pragma mark Helpers
+
+- (BOOL)isSystemVersionAtLeast:(NSString *)desiredVersion {
+    return [[[UIDevice currentDevice] systemVersion] compare:desiredVersion options:NSNumericSearch] != NSOrderedAscending;
+}
+
+- (NSHTTPCookieStorage *)addFacebookCookieToSharedStorage {
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    
+    NSDictionary *cookieProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+                                      @"m." FB_BASE_URL, NSHTTPCookieDomain,
+                                      @"COOKIE!!!!", NSHTTPCookieName,
+                                      @"/", NSHTTPCookiePath,
+                                      @"hello", NSHTTPCookieValue,
+                                      @"true", NSHTTPCookieSecure,
+                                      nil];
+    NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+    
+    [storage setCookie:cookie];
+    return storage;
+}
+
+// Note: this allocs but does _not_ init the mock FBSession
+// The mock session has an authorizeWithPermissions:... that does nothing -- it simulates an
+// authorization attempt that has been started but has not yet received a success or failure result.
+- (FBSession *)allocMockSessionWithNoOpAuth {
+    FBSession *session = [FBSession alloc];
+    FBSession *mockSession = [OCMockObject partialMockForObject:session];
+
+    [[(id)mockSession stub] authorizeWithPermissions:[OCMArg any]
+                                     defaultAudience:FBSessionDefaultAudienceNone
+                                      integratedAuth:NO
+                                           FBAppAuth:YES
+                                          safariAuth:YES
+                                            fallback:YES
+                                       isReauthorize:NO
+                                 canFetchAppSettings:YES];
+    
+    return mockSession;
+}
+
+- (FBSession *)allocMockSessionWithNoOpAuthThatExpectsCall:(BOOL)expect
+                                               reauthorize:(BOOL)reauthorize
+                                                  behavior:(FBSessionLoginBehavior)behavior
+                                           defaultAudience:(FBSessionDefaultAudience)defaultAudience {
+    FBSession *session = [FBSession alloc];
+    FBSession *mockSession = [OCMockObject partialMockForObject:session];
+    
+    // Limitation of OCMock: we need to specify actual values for primitive arguments, so we need to anticipate
+    // the combinations of parameters we need to mock in our tests.
+    
+    id stub = expect ? [(id)mockSession expect] : [(id)mockSession stub];
+    [stub authorizeWithPermissions:[OCMArg any]
+                          behavior:behavior
+                   defaultAudience:defaultAudience
+                     isReauthorize:reauthorize];
+
+    return mockSession;
+}
+
+
+@end

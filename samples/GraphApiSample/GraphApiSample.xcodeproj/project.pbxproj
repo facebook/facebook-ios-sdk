@@ -16,6 +16,7 @@
 		85C69D691602B06E008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D661602B06E008AD9A0 /* Default-568h@2x.png */; };
 		85C69D6A1602B06E008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D671602B06E008AD9A0 /* Default.png */; };
 		85C69D6B1602B06E008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D681602B06E008AD9A0 /* Default@2x.png */; };
+		B59359DA16D56449000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359D916D56449000A63F0 /* Security.framework */; };
 		B9A4168E16113EE7001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A4168D16113EE7001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DDA290AD15ABA96200F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */; };
 		E2511742152BB6FE00CB342A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511741152BB6FE00CB342A /* UIKit.framework */; };
@@ -39,6 +40,7 @@
 		85C69D661602B06E008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69D671602B06E008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69D681602B06E008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		B59359D916D56449000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B9A4168D16113EE7001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		E251173D152BB6FE00CB342A /* GraphApiSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphApiSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59359DA16D56449000A63F0 /* Security.framework in Frameworks */,
 				85A928CE161146AC008699F1 /* Social.framework in Frameworks */,
 				B9A4168E16113EE7001E7A77 /* AdSupport.framework in Frameworks */,
 				84605AB015A77B8600197AA7 /* Accounts.framework in Frameworks */,
@@ -95,9 +98,10 @@
 		E2511740152BB6FE00CB342A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */,
+				B59359D916D56449000A63F0 /* Security.framework */,
 				85A928CD161146AC008699F1 /* Social.framework */,
 				B9A4168D16113EE7001E7A77 /* AdSupport.framework */,
-				DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */,
 				84605AAF15A77B8600197AA7 /* Accounts.framework */,
 				E2511741152BB6FE00CB342A /* UIKit.framework */,
 				E2511743152BB6FE00CB342A /* Foundation.framework */,
@@ -302,7 +306,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-ObjC",
@@ -324,7 +328,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
 				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
 					"-lsqlite3.0",
 					"-ObjC",

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,6 @@
 #import "FBDataDiskCache.h"
 #import "FBTests.h"
 
-@interface FBCacheTests : FBTests<FBCacheIndexFileDelegate>
-{
-    NSString* _dataCachePath;
-}
-
-@property (retain, nonatomic) NSString* dataCachePath;
+@interface FBCacheTests : FBTests // TODO<FBCacheIndexFileDelegate>
 
 @end

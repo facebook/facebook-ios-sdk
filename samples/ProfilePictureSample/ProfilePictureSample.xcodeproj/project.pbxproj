@@ -16,6 +16,7 @@
 		85C69DA91602B143008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA61602B143008AD9A0 /* Default-568h@2x.png */; };
 		85C69DAA1602B143008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA71602B143008AD9A0 /* Default.png */; };
 		85C69DAB1602B143008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA81602B143008AD9A0 /* Default@2x.png */; };
+		B59359E216D564C2000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359E116D564C2000A63F0 /* Security.framework */; };
 		B98686BD151D0B3700616412 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686BC151D0B3700616412 /* UIKit.framework */; };
 		B98686BF151D0B3700616412 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686BE151D0B3700616412 /* Foundation.framework */; };
 		B98686C1151D0B3700616412 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686C0151D0B3700616412 /* CoreGraphics.framework */; };
@@ -40,6 +41,7 @@
 		85C69DA61602B143008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69DA71602B143008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69DA81602B143008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		B59359E116D564C2000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		B98686B8151D0B3700616412 /* ProfilePictureSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ProfilePictureSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B98686BC151D0B3700616412 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		B98686BE151D0B3700616412 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -64,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B59359E216D564C2000A63F0 /* Security.framework in Frameworks */,
 				85A928DC161146E2008699F1 /* Social.framework in Frameworks */,
 				B9A4169C16113F0A001E7A77 /* AdSupport.framework in Frameworks */,
 				847BBEAA160B88E8004EC7CB /* Accounts.framework in Frameworks */,
@@ -97,6 +100,7 @@
 		B98686BB151D0B3700616412 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B59359E116D564C2000A63F0 /* Security.framework */,
 				85A928DB161146E2008699F1 /* Social.framework */,
 				847BBEA9160B88E8004EC7CB /* Accounts.framework */,
 				B9A4169B16113F0A001E7A77 /* AdSupport.framework */,
@@ -167,7 +171,7 @@
 		B98686AF151D0B3700616412 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = B98686B2151D0B3700616412 /* Build configuration list for PBXProject "ProfilePictureSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -255,7 +259,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -282,7 +289,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -308,10 +318,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ProfilePictureSample/ProfilePictureSample-Prefix.pch";
 				INFOPLIST_FILE = "ProfilePictureSample/ProfilePictureSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
-				    "-lsqlite3.0",
-				    "-ObjC",
+					"-lsqlite3.0",
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -328,10 +338,10 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ProfilePictureSample/ProfilePictureSample-Prefix.pch";
 				INFOPLIST_FILE = "ProfilePictureSample/ProfilePictureSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_LDFLAGS = (
-				    "-lsqlite3.0",
-				    "-ObjC",
+					"-lsqlite3.0",
+					"-ObjC",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

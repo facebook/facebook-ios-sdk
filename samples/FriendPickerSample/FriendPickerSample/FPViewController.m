@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,30 +39,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // FBSample logic
-    // if the session is open, then load the data for our view controller
-    if (!FBSession.activeSession.isOpen) {
-        // if the session is closed, then we open it here, and establish a handler for state changes
-        [FBSession.activeSession openWithCompletionHandler:^(FBSession *session,
-                                                         FBSessionState state,
-                                                         NSError *error) {
-            switch (state) {
-                case FBSessionStateClosedLoginFailed:
-                {
-                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                        message:error.localizedDescription
-                                                                       delegate:nil
-                                                              cancelButtonTitle:@"OK"
-                                                              otherButtonTitles:nil];
-                    [alertView show];
-                }
-                    break;
-                default:
-                    break;
-            }
-        }];
-    }
 }
 
 - (void)viewDidUnload {
@@ -75,6 +51,29 @@
 #pragma mark UI handlers
 
 - (IBAction)pickFriendsButtonClick:(id)sender {
+    // FBSample logic
+    // if the session is open, then load the data for our view controller
+    if (!FBSession.activeSession.isOpen) {
+        // if the session is closed, then we open it here, and establish a handler for state changes
+        [FBSession openActiveSessionWithReadPermissions:nil
+                                           allowLoginUI:YES
+                                      completionHandler:^(FBSession *session,
+                                                             FBSessionState state,
+                                                             NSError *error) {
+            if (error) {
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                    message:error.localizedDescription
+                                                                   delegate:nil
+                                                          cancelButtonTitle:@"OK"
+                                                          otherButtonTitles:nil];
+                [alertView show];
+            } else if (session.isOpen) {
+                [self pickFriendsButtonClick:sender];
+            }
+        }];
+        return;
+    }
+
     if (self.friendPickerController == nil) {
         // Create friend picker, and get data loaded into it.
         self.friendPickerController = [[FBFriendPickerViewController alloc] init];
@@ -84,10 +83,8 @@
 
     [self.friendPickerController loadData];
     [self.friendPickerController clearSelection];
-    
-    // iOS 5.0+ apps should use [UIViewController presentViewController:animated:completion:]
-    // rather than this deprecated method, but we want our samples to run on iOS 4.x as well.
-    [self presentModalViewController:self.friendPickerController animated:YES];
+
+    [self presentViewController:self.friendPickerController animated:YES completion:nil];
 }
 
 - (void)facebookViewControllerDoneWasPressed:(id)sender {

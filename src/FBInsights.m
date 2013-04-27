@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
-#import "FBSBJSON.h"
 #import "FBSession+Internal.h"
 #import "FBSessionInsightsState.h"
 #import "FBSessionManualTokenCachingStrategy.h"
@@ -42,7 +41,15 @@ NSString *const FBInsightsEventNameShareSheetLaunch          = @"fb_share_sheet_
 NSString *const FBInsightsEventNameShareSheetDismiss         = @"fb_share_sheet_dismiss";
 NSString *const FBInsightsEventNamePermissionsUILaunch       = @"fb_permissions_ui_launch";
 NSString *const FBInsightsEventNamePermissionsUIDismiss      = @"fb_permissions_ui_dismiss";
+NSString *const FBInsightsEventNameFBDialogsCanPresentShareDialog   = @"fb_dialogs_can_present_share";
+NSString *const FBInsightsEventNameFBDialogsCanPresentShareDialogOG = @"fb_dialogs_can_present_share_og";
 
+NSString *const FBInsightsEventNameFBDialogsNativeLoginDialogStart = @"fb_dialogs_native_login_dialog_start";
+NSString *const FBInsightsNativeLoginDialogStartTime = @"fb_native_login_dialog_start_time";
+
+NSString *const FBInsightsEventNameFBDialogsWebLoginCompleted = @"fb_dialogs_web_login_dialog_complete";
+NSString *const FBInsightsWebLoginE2E = @"fb_web_login_e2e";
+NSString *const FBInsightsWebLoginSwitchbackTime = @"fb_web_login_switchback_time";
 
 //// Known (externally or internally) event parameters.
 NSString *const FBInsightsEventParameterCurrency             = @"fb_currency";
@@ -53,6 +60,7 @@ NSString *const FBInsightsEventParameterDialogOutcome        = @"fb_dialog_outco
 //// Known (externally or internally) event parameter values
 NSString *const FBInsightsDialogOutcomeValue_Completed       = @"Completed";
 NSString *const FBInsightsDialogOutcomeValue_Cancelled       = @"Cancelled";
+NSString *const FBInsightsDialogOutcomeValue_Failed          = @"Failed";
 
 NSString *const FBInsightsLoggingResultNotification = @"com.facebook.sdk:FBInsightsLoggingResultNotification";
 
@@ -81,7 +89,6 @@ typedef enum {
 @property (readwrite, atomic)         BOOL                         haveOutstandingPersistedData;
 @property (readwrite, atomic, retain) FBSession                   *lastSessionLoggedTo;
 @property (readwrite, atomic, retain) FBSession                   *anonymousSession;
-@property (readwrite, atomic, retain) FBSession                   *appAuthSession;
 @property (readwrite, atomic, retain) NSTimer                     *flushTimer;
 @property (readwrite, atomic, retain) NSTimer                     *attributionIDRecheckTimer;
 @property (readwrite, atomic, retain) NSSet                       *eventsNotRequiringToken;
@@ -92,6 +99,10 @@ typedef enum {
 // Dictionary of dictionaries, each representing an incomplete, timed log event.
 // The key is the timed log event name.
 @property (readwrite, atomic, retain) NSMutableDictionary         *incompleteTimedEvents;
+
+// Dictionary from appIDs to ClientToken-based app-authenticated session for that appID.
+@property (readwrite, atomic, retain) NSMutableDictionary         *appAuthSessions;
+
 
 @end
 
@@ -117,7 +128,7 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
     haveOutstandingPersistedData = _haveOutstandingPersistedData,
     lastSessionLoggedTo = _lastSessionLoggedTo,
     anonymousSession = _anonymousSession,
-    appAuthSession = _appAuthSession,
+    appAuthSessions = _appAuthSessions,
     flushTimer = _flushTimer,
     attributionIDRecheckTimer = _attributionIDRecheckTimer,
     eventsNotRequiringToken = _eventsNotRequiringToken,
@@ -369,7 +380,6 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
     }
 }
 
-
 #pragma mark - Flushing & Session Management
 
 + (FBInsightsFlushBehavior)flushBehavior {
@@ -429,7 +439,7 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
         self.appSupportsAttributionStatus = AppSupportsAttributionUnknown;
 
         self.incompleteTimedEvents = [[[NSMutableDictionary alloc] init] autorelease];
-
+        self.appAuthSessions = [[[NSMutableDictionary alloc] init] autorelease];
         
         // Timer fires unconditionally on a regular interval... handler decides whether to call flush.
         self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
@@ -450,7 +460,11 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
         self.eventsNotRequiringToken = [NSSet setWithArray:@[ FBInsightsEventNameShareSheetLaunch,
                                                               FBInsightsEventNameShareSheetDismiss,
                                                               FBInsightsEventNamePermissionsUILaunch,
-                                                              FBInsightsEventNamePermissionsUIDismiss]];
+                                                              FBInsightsEventNamePermissionsUIDismiss,
+                                                              FBInsightsEventNameFBDialogsCanPresentShareDialog,
+                                                              FBInsightsEventNameFBDialogsCanPresentShareDialogOG,
+                                                              FBInsightsEventNameFBDialogsNativeLoginDialogStart,
+                                                              FBInsightsEventNameFBDialogsWebLoginCompleted]];
         
         // Register an observer to watch for app moving out of the active state, which we use
         // to signal a flush.  Since this is static, we don't unregister anywhere.
@@ -491,10 +505,8 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
     // any calls to log.  While only needed for non-user-auth'd scenarios, we don't expect apps using Insights to require auth, so we
     // check this aggressively up front to avoid errors later on.
     if (!isImplicitlyLogged && ![FBSettings clientToken]) {
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBInsights: Must set a client token with [FBSettings setClientToken] in order to log FBInsights events."
-                               userInfo:nil]
-         raise];
+        [FBInsights raiseInvalidOperationException:
+            @"FBInsights: Must set a client token with [FBSettings setClientToken] in order to log FBInsights events."];
     };
     
     // Bail out of implicitly logged events if we know we're not doing implicit logging.
@@ -526,7 +538,9 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
         return;
     }
     
-    FBSession *sessionToLogTo = [self sessionToFlushTo:session];
+    FBSession *sessionToLogTo = [self sessionToSendRequestTo:session
+                                                       appID:[FBSettings defaultAppID]
+                                                 clientToken:[FBSettings clientToken]];
     
     NSMutableDictionary *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
     
@@ -714,7 +728,7 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
         return;
     }
     
-    NSString *appid = [FBSession defaultAppID];
+    NSString *appid = [FBSettings defaultAppID];
     
     if (self.appSupportsAttributionStatus == AppSupportsAttributionUnknown) {
         
@@ -807,11 +821,8 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
 - (void)optionallyAppendAttributionAndAdvertiserIDs:(NSMutableDictionary *)postParameters
                                             session:(FBSession *)session {
 
-    // Assume that for event logging, if we're not logging either with the appAuthSession (built from the
-    // Client Token) or the anonymous session, then we have a logged in user token, and there's no point in
-    // sending attribution id or advertiser id.
-    BOOL sessionHasUserToken = session != self.appAuthSession && session != self.anonymousSession;
-    if (sessionHasUserToken) {
+    if ([self doesSessionHaveUserToken:session]) {
+        // We have a logged in user token, and there's no point in sending attribution id or advertiser id.
         return;
     }
     
@@ -840,38 +851,49 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
     }
 }
 
+- (BOOL)doesSessionHaveUserToken:(FBSession *)session {
+    // Assume that if we're not using an appAuthSession (built from the Client Token) or the anonymous session,
+    // then we have a logged in user token.
+    FBSession *appAuthSession = [self.appAuthSessions objectForKey:session.appID];
+    return session != appAuthSession && session != self.anonymousSession;
+}
 
-// Given a candidate session (which may be nil), find the real session to log to (with an access token).
+
+// Given a candidate session (which may be nil), find the real session to send the FBRequest to (with an access token).
 // Precedence: 1) provided session, 2) activeSession, 3) app authenticated session, 4) fully anonymous session
-- (FBSession *)sessionToFlushTo:(FBSession *)session {
+- (FBSession *)sessionToSendRequestTo:(FBSession *)session
+                                appID:(NSString *)appID
+                          clientToken:(NSString *)clientToken {
     
     if (!session) {
         session = [FBSession activeSession];
     }
     
     if (!session.accessTokenData.accessToken) {
-        
-        NSString *clientToken = [FBSettings clientToken];
+
         if (clientToken) {
-                        
-            if (!self.appAuthSession) {
+            
+            FBSession *appAuthSession = [self.appAuthSessions objectForKey:appID];
+            if (!appAuthSession) {
                 
                 @synchronized(self) {
                     
-                    if (!self.appAuthSession) {  // in case it snuck in
+                    appAuthSession = [self.appAuthSessions objectForKey:appID];  // in case it snuck in
+                    if (!appAuthSession) {  
                 
                         FBSessionManualTokenCachingStrategy *tokenCaching = [[FBSessionManualTokenCachingStrategy alloc] init];
-                        tokenCaching.accessToken = [NSString stringWithFormat:@"%@|%@", [FBSession defaultAppID], clientToken];
+                        tokenCaching.accessToken = [NSString stringWithFormat:@"%@|%@", appID, clientToken];
                         tokenCaching.expirationDate = [NSDate dateWithTimeIntervalSinceNow:315360000]; // 10 years from now
                         
-                        // Create session with explicit token and stash globally.
-                        self.appAuthSession = [FBInsights unaffinitizedSessionFromToken:tokenCaching];
+                        // Create session with explicit token and stash with appID.
+                        appAuthSession = [FBInsights unaffinitizedSessionFromToken:tokenCaching];
                         [tokenCaching release];
                         
+                        [self.appAuthSessions setObject:appAuthSession forKey:appID];
                     }
                 }
             }
-            session = self.appAuthSession;
+            session = appAuthSession;
             
         } else {
             
@@ -1133,5 +1155,81 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
     FBConditionalLog([NSThread isMainThread], @"*** This method expected to be called on the main thread.");
 }
 
++ (void)raiseInvalidOperationException:(NSString *)reason {
+    [[NSException exceptionWithName:FBInvalidOperationException
+                             reason:reason
+                           userInfo:nil]
+     raise];
+}
+
+
+#pragma mark - Custom Audience token stuff
+
+// This code lives here in Insights because it shares many of the runtime characteristics of the Insights logging,
+// even though the public exposure is elsewhere
+
++ (FBRequest *)customAudienceThirdPartyIDRequest:(FBSession *)session {
+    return [FBInsights.singleton instanceCustomAudienceThirdPartyIDRequest:session];
+}
+
+
+- (FBRequest *)instanceCustomAudienceThirdPartyIDRequest:(FBSession *)session {
+    
+    // Require an appID and clientToken, and throw if either aren't present.  Throw because this is almost certainly a
+    // developer time error that won't have runtime variation, and must be fixed.
+    NSString *appID = [FBSettings defaultAppID];
+    if (!appID) {
+        [FBInsights raiseInvalidOperationException:
+            @"customAudienceThirdPartyID: Must set an appID, or have one set in the app's pList in order to get a Custom Audience  Third Party ID back."];
+    }
+    
+    NSString *clientToken = [FBSettings clientToken];
+    if (!clientToken) {
+        [FBInsights raiseInvalidOperationException:
+            @"customAudienceThirdPartyID: Must have a clientToken set via [FBSettings setClientToken:] in order to get a Custom Audience Third Party ID back."];
+    }
+    
+    // Rules for how we use the attribution ID / advertiser ID for an 'custom_audience_third_party_id' Graph API request
+    // 1) if the OS tells us that the user has Limited Ad Tracking, then just don't send, and return a nil in the token.
+    // 2) if we have a user session token, then no need to send attribution ID / advertiser ID back as the udid parameter
+    // 3) otherwise, send back the udid parameter.
+    
+    if ([FBUtility advertisingTrackingStatus] == AdvertisingTrackingDisallowed) {
+        return nil;
+    }
+    
+    FBSession *sessionToSendRequestTo = [self sessionToSendRequestTo:session
+                                                               appID:appID
+                                                         clientToken:clientToken];
+    
+    NSString *udid = nil;
+    if (![self doesSessionHaveUserToken:sessionToSendRequestTo]) {
+        
+        // We don't have a logged in user, so we need some form of udid representation.  Prefer
+        // advertiser ID if available, and back off to attribution ID if not.
+        udid = [FBUtility advertiserID];
+        if (!udid) {
+            udid = [FBUtility attributionID];
+        }
+        
+        if (!udid) {
+            // No udid, and no user token.  No point in making the request.
+            return nil;
+        }
+    }
+    
+    NSDictionary *parameters = nil;
+    if (udid) {
+        parameters = @{ @"udid" : udid };
+    }
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:sessionToSendRequestTo
+                                                   graphPath:@"custom_audience_third_party_id"
+                                                  parameters:parameters
+                                                  HTTPMethod:nil]
+                          autorelease];
+       
+    return request;
+}
 
 @end
