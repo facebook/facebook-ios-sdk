@@ -139,8 +139,8 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 
     [_session release];
     // remove KVOs for tokenCaching
-    [_tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName context:tokenContext];
-    [_tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName context:tokenContext];
+    [_tokenCaching removeObserver:self forKeyPath:FBaccessTokenPropertyName];
+    [_tokenCaching removeObserver:self forKeyPath:FBexpirationDatePropertyName];
     [_tokenCaching release];
 
     for (FBRequest* _request in _requests) {
