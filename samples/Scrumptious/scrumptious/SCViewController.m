@@ -672,17 +672,28 @@
 
 #pragma mark - CLLocationManagerDelegate methods and related
 
-- (void)locationManager:(CLLocationManager *)manager 
-    didUpdateToLocation:(CLLocation *)newLocation 
-           fromLocation:(CLLocation *)oldLocation {
-    if (!oldLocation ||
-        (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
-         oldLocation.coordinate.longitude != newLocation.coordinate.longitude &&
-         newLocation.horizontalAccuracy <= 100.0)) {
-            // Fetch data at this new location, and remember the cache descriptor.
-            [self setPlaceCacheDescriptorForCoordinates:newLocation.coordinate];
-            [self.placeCacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
+/*
+  locationManager:didUpdateToLocation:fromLocation: is deprecated in iOS 6
+  http://developer.apple.com/library/ios/#documentation/CoreLocation/Reference/CLLocationManagerDelegate_Protocol/CLLocationManagerDelegate/CLLocationManagerDelegate.html
+ */
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *currentLocation = (CLLocation*)[locations lastObject];
+    if([locations count]>1)
+    {
+        //If there is more than one object, oldLocation won't be nil.
+        CLLocation *oldLocation = (CLLocation*)locations[0];
+        if (oldLocation.coordinate.latitude != currentLocation.coordinate.latitude &&
+            oldLocation.coordinate.longitude != currentLocation.coordinate.longitude &&
+            currentLocation.horizontalAccuracy <= 100.0)
+        {
+            currentLocation = oldLocation;
+        }
+        
     }
+    // Fetch data at this new location, and remember the cache descriptor.
+    [self setPlaceCacheDescriptorForCoordinates:currentLocation.coordinate];
+    [self.placeCacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
 }
 
 - (void)locationManager:(CLLocationManager *)manager 
