@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 
 @class Facebook;
+@class FBRequest;
 
 /**
  * Do not use this interface directly, instead, use methods in Facebook.h
@@ -37,6 +38,11 @@
 @property(nonatomic, readonly) BOOL enabled;
 
 /**
+ * NSArray of recipients
+ */
+@property(nonatomic, readonly) NSArray *recipientIDs;
+
+/**
  * Enable frictionless request sending by the sdk; this means:
  *   1. query and cache the current set of frictionless recipients
  *   2. flag other facets of the sdk to behave in a frictionless way
@@ -53,6 +59,11 @@
  * Update the recipient cache; called by the sdk to keep the cache fresh;
  */
 - (void)updateRecipientCacheWithRecipients:(NSArray*)ids;
+
+/**
+ * Update the recipient cache, using a request result
+ */
+- (void)updateRecipientCacheWithRequestResult:(id)result;
 
 /**
  * Given an fbID for a user, indicates whether user is enabled for

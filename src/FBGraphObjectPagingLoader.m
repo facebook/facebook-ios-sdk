@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -276,8 +276,11 @@
     }
 
     if (!error && !data) {
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:result
-                                                             forKey:FBErrorParsedJSONResponseKey];
+        NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
+        userInfo[FBErrorParsedJSONResponseKey] = result;
+        if (self.session) {
+            userInfo[FBErrorSessionKey] = self.session;
+        }
         error = [[[NSError alloc] initWithDomain:FacebookSDKDomain
                                             code:FBErrorProtocolMismatch
                                         userInfo:userInfo]

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,17 @@
 #import "SCProtocols.h"
 #import <AddressBook/AddressBook.h>
 #import "TargetConditionals.h"
+#import "SCPhotoViewController.h"
 
-@interface SCViewController() < UITableViewDataSource, 
+@interface SCViewController() < UITableViewDataSource,
+                                UIImagePickerControllerDelegate,
                                 FBFriendPickerDelegate,
                                 UINavigationControllerDelegate,
                                 FBPlacePickerDelegate,
                                 CLLocationManagerDelegate,
-                                UIActionSheetDelegate>
+                                UIActionSheetDelegate> {
+ @private int _retryCount;
+}
 
 @property (strong, nonatomic) FBUserSettingsViewController *settingsViewController;
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *userProfileImage;
@@ -43,36 +47,28 @@
 @property (strong, nonatomic) FBCacheDescriptor *placeCacheDescriptor;
 @property (strong, nonatomic) UIActivityIndicatorView *activityIndicator;
 
-- (IBAction)announce:(id)sender;
-- (void)populateUserDetails;
-- (void)updateSelections;
-- (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle;
-- (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal;
-- (void)postOpenGraphAction;
-- (void)centerAndShowActivityIndicator;
-- (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates;
+@property (strong, nonatomic) UIImagePickerController *imagePicker;
+@property (strong, nonatomic) UIActionSheet *imagePickerActionSheet;
+@property (strong, nonatomic) UIImage *selectedPhoto;
+@property (strong, nonatomic) UIPopoverController *popover;
+@property (strong, nonatomic) SCPhotoViewController *photoViewController;
+@property (nonatomic) CGRect popoverFromRect;
 
 @end
 
 @implementation SCViewController
-@synthesize userNameLabel = _userNameLabel;
-@synthesize userProfileImage = _userProfileImage;
-@synthesize selectedPlace = _selectedPlace;
-@synthesize selectedMeal = _selectedMeal;
-@synthesize selectedFriends = _selectedFriends;
-@synthesize announceButton = _announceButton;
-@synthesize menuTableView = _menuTableView;
-@synthesize locationManager = _locationManager;
-@synthesize mealPickerActionSheet = _mealPickerActionSheet;
-@synthesize activityIndicator = _activityIndicator;
-@synthesize settingsViewController = _settingsViewController;
-@synthesize mealTypes = _mealTypes;
-@synthesize placeCacheDescriptor = _placeCacheDescriptor;
 
-#pragma mark open graph
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        // Custom initialization
+        self.navigationItem.hidesBackButton = YES;
+    }
+    return self;
+}
 
+#pragma mark - Open Graph Helpers
 
-// FBSample logic
 // This is a helper function that returns an FBGraphObject representing a meal
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
     
@@ -103,9 +99,34 @@
     return result;
 }
 
-// FBSample logic
+- (void)enableUserInteraction:(BOOL) enabled {
+    if (enabled) {
+        [self.activityIndicator stopAnimating];
+    } else {
+        [self centerAndShowActivityIndicator];
+    }
+    
+    self.announceButton.enabled = enabled;
+    [self.view setUserInteractionEnabled:enabled];
+}
+
 // Creates the Open Graph Action.
 - (void)postOpenGraphAction {
+    [self enableUserInteraction:NO];
+   
+    FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
+    if (self.selectedPhoto) {
+        FBRequest *stagingRequest = [FBRequest requestForUploadStagingResourceWithImage:self.selectedPhoto];
+        [requestConnection addRequest:stagingRequest
+                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                            if (error) {
+                                                [self enableUserInteraction:YES];
+                                                [self handlePostOpenGraphActionError:error];
+                                            }
+                                        }
+                       batchEntryName:@"stagedphoto"];
+    }
+    
     // First create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
     
@@ -113,11 +134,11 @@
     id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
     action.meal = mealObject;
     if (self.selectedPlace) {
-        // FBSample logic
+        // Facebook SDK * pro-tip *
         // We don't use the action.place syntax here because, unfortunately, setPlace:
         // and a few other selectors may be flagged as reserved selectors by Apple's App Store
         // validation tools. While this doesn't necessarily block App Store approval, it
-        // could slow down the approval process. Falling back to the setObjec:forKey:
+        // could slow down the approval process. Falling back to the setObject:forKey:
         // selector is a useful technique to avoid such naming conflicts.
         [action setObject:self.selectedPlace forKey:@"place"];
     }
@@ -125,94 +146,130 @@
         [action setObject:self.selectedFriends forKey:@"tags"];
     }
 
+    if (self.selectedPhoto) {
+        action.image = @[ @{ @"url" : @"{result=stagedphoto:$.uri}", @"user_generated" : @"true" } ];
+    }
+
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
-    [FBRequestConnection startForPostWithGraphPath:@"me/fb_sample_scrumps:eat"
-                                       graphObject:action
-                                 completionHandler:^(FBRequestConnection *connection,
-                                                     id result,
-                                                     NSError *error) {
-                                     [self.activityIndicator stopAnimating];
-                                     [self.view setUserInteractionEnabled:YES];
-                                     
-                                     if (!error) {
-                                         [[[UIAlertView alloc] initWithTitle:@"Result"
-                                                                     message:[NSString stringWithFormat:@"Posted Open Graph action, id: %@",
-                                                                              [result objectForKey:@"id"]]
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"Thanks!"
-                                                           otherButtonTitles:nil]
-                                          show];
-                                         
-                                         // start over
-                                         self.selectedMeal = nil;
-                                         self.selectedPlace = nil;
-                                         self.selectedFriends = nil;
-                                         [self updateSelections];
-                                     } else {
-                                         // do we lack permissions here? If so, the application's policy is to reask for the permissions, and if
-                                         // granted, we will recall this method in order to post the action
-                                         if ([[error userInfo][FBErrorParsedJSONResponseKey][@"body"][@"error"][@"code"] compare:@200] == NSOrderedSame) {
-                                             [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                                                        defaultAudience:FBSessionDefaultAudienceFriends
-                                                                                      completionHandler:^(FBSession *session, NSError *innerError) {
-                                                                                          if (!innerError) {
-                                                                                              // re-call assuming we now have the permission
-                                                                                              [self postOpenGraphAction];
-                                                                                          }
-                                                                                          else{
-                                                                                              // If we are here, this means the user has disallowed posting after a retry
-                                                                                              // which means iOS 6.0 will have turned the app's slider to "off" in the
-                                                                                              // device settings->Facebook.
-                                                                                              // You may want to customize the message for your application, since this
-                                                                                              // string is specifically for iOS 6.0.
-                                                                                              [[[UIAlertView alloc] initWithTitle:@"Permission To Post Disallowed"
-                                                                                                                          message:@"Use device settings->Facebook to re-enable permission to post."
-                                                                                                                         delegate:nil
-                                                                                                                cancelButtonTitle:@"Thanks!"
-                                                                                                                otherButtonTitles:nil]
-                                                                                               show];
-                                                                                          }
-                                                                                      }];
-                                         } else {
-                                             [[[UIAlertView alloc] initWithTitle:@"Result"
-                                                                         message:[NSString stringWithFormat:@"error: domain = %@, code = %@(%d)",
-                                                                                  error.domain,
-                                                                                  [SCAppDelegate FBErrorCodeDescription:error.code],
-                                                                                  error.code]
-                                                                        delegate:nil
-                                                               cancelButtonTitle:@"Thanks!"
-                                                               otherButtonTitles:nil]
-                                              show];
-                                         }
-                                     }
-                                 }];
+    FBRequest *actionRequest = [FBRequest requestForPostWithGraphPath:@"me/fb_sample_scrumps:eat"
+                                                          graphObject:action];
+    [requestConnection addRequest:actionRequest
+                    completionHandler:^(FBRequestConnection *connection,
+                         id result,
+                         NSError *error) {
+
+         [self enableUserInteraction:YES];
+         if (!error) {
+             [[[UIAlertView alloc] initWithTitle:@"Result"
+                                         message:[NSString stringWithFormat:@"Posted Open Graph action, id: %@",
+                                                  [result objectForKey:@"id"]]
+                                        delegate:nil
+                               cancelButtonTitle:@"Thanks!"
+                               otherButtonTitles:nil]
+              show];
+             
+             // start over
+             self.selectedMeal = nil;
+             self.selectedPlace = nil;
+             self.selectedFriends = nil;
+             self.selectedPhoto = nil;
+             _retryCount = 0;
+             [self updateSelections];
+         } else {
+             [self handlePostOpenGraphActionError:error];
+         }
+     }];
+    [requestConnection start];
 }
 
-// FBSample logic
-// Handles the user clicking the Announce button by creating an Open Graph Action
-- (IBAction)announce:(id)sender {
-    // if we don't have permission to announce, let's first address that
-    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-        
-        [FBSession.activeSession reauthorizeWithPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                                   defaultAudience:FBSessionDefaultAudienceFriends
-                                                 completionHandler:^(FBSession *session, NSError *error) {
-                                                     if (!error) {
-                                                         // re-call assuming we now have the permission
-                                                         [self announce:sender];
-                                                     }
-                                                 }];
+- (void)handlePostOpenGraphActionError:(NSError *) error{
+    // Facebook SDK * error handling *
+    // Some Graph API errors are retriable. For this sample, we will have a simple
+    // retry policy of one additional attempt. Please refer to
+    // https://developers.facebook.com/docs/reference/api/errors/ for more information.
+    _retryCount++;
+    if (error.fberrorCategory == FBErrorCategoryRetry ||
+        error.fberrorCategory == FBErrorCategoryThrottling) {
+        // We also retry on a throttling error message. A more sophisticated app
+        // should consider a back-off period.
+        if (_retryCount < 2) {
+            NSLog(@"Retrying open graph post");
+            [self postOpenGraphAction];
+            return;
+        } else {
+            NSLog(@"Retry count exceeded.");
+        }
+    }
+    
+    // Facebook SDK * pro-tip *
+    // Users can revoke post permissions on your app externally so it
+    // can be worthwhile to request for permissions again at the point
+    // that they are needed. This sample assumes a simple policy
+    // of re-requesting permissions.
+    if (error.fberrorCategory == FBErrorCategoryPermissions) {
+        NSLog(@"Re-requesting permissions");
+        [self requestPermissionAndPost];
+        return;
+    }
+    
+    // Facebook SDK * error handling *
+    [self presentAlertForError:error];
+}
+// Helper method to request publish permissions and post.
+- (void)requestPermissionAndPost {
+    [FBSession.activeSession requestNewPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
+                                          defaultAudience:FBSessionDefaultAudienceEveryone
+                                        completionHandler:^(FBSession *session, NSError *error) {
+                                            if (!error) {
+                                                // Now have the permission
+                                                [self postOpenGraphAction];
+                                            } else {
+                                                // Facebook SDK * error handling *
+                                                // if the operation is not user cancelled
+                                                if (error.fberrorCategory != FBErrorCategoryUserCancelled) {
+                                                    [self presentAlertForError:error];
+                                                }
+                                            }
+                                        }];
+}
+
+- (void) presentAlertForError:(NSError *)error {
+    // Facebook SDK * error handling *
+    // Error handling is an important part of providing a good user experience.
+    // When fberrorShouldNotifyUser is YES, a fberrorUserMessage can be
+    // presented as a user-ready message
+    if (error.fberrorShouldNotifyUser) {
+        // The SDK has a message for the user, surface it.
+        [[[UIAlertView alloc] initWithTitle:@"Something Went Wrong"
+                                    message:error.fberrorUserMessage
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
     } else {
-        self.announceButton.enabled = false;
-        [self centerAndShowActivityIndicator];
-        [self.view setUserInteractionEnabled:NO];
-        
-        [self postOpenGraphAction];
+        NSLog(@"unexpected error:%@", error);
     }
 }
 
-- (void)startLocationManager {
-    [self.locationManager startUpdatingLocation];
+#pragma mark - UI Behavior
+
+-(void)settingsButtonWasPressed:(id)sender {
+    if (self.settingsViewController == nil) {
+        self.settingsViewController = [[FBUserSettingsViewController alloc] init];
+        self.settingsViewController.delegate = self;
+    }
+    
+    [self.navigationController pushViewController:self.settingsViewController animated:YES];
+}
+
+// Handles the user clicking the Announce button by creating an Open Graph Action
+- (IBAction)announce:(id)sender {
+    // Facebook SDK * pro-tip *
+    // Ask for publish permissions only at the time they are needed.
+    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
+        [self requestPermissionAndPost];
+    } else {
+        [self postOpenGraphAction];
+    }
 }
 
 - (void)centerAndShowActivityIndicator {
@@ -222,7 +279,46 @@
     [self.activityIndicator startAnimating];
 }
 
-#pragma mark UIActionSheetDelegate methods
+// Displays the user's name and profile picture so they are aware of the Facebook
+// identity they are logged in as.
+- (void)populateUserDetails {
+    if (FBSession.activeSession.isOpen) {
+        [[FBRequest requestForMe] startWithCompletionHandler:
+         ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
+             if (!error) {
+                 self.userNameLabel.text = user.name;
+                 self.userProfileImage.profileID = [user objectForKey:@"id"];
+             }
+         }];
+    }
+}
+
+#pragma mark UIImagePickerControllerDelegate methods
+
+- (void)imagePickerController:(UIImagePickerController *)picker
+        didFinishPickingImage:(UIImage *)image
+                  editingInfo:(NSDictionary *)editingInfo {
+    
+    if (!self.photoViewController) {
+        __block SCViewController *myself = self;
+        self.photoViewController = [[SCPhotoViewController alloc]initWithNibName:@"SCPhotoViewController" bundle:nil image:image];
+        self.photoViewController.confirmCallback = ^(id sender, bool confirm) {
+            if(confirm) {
+                myself.selectedPhoto = image;
+            }
+            [myself updateSelections];
+        };
+    }
+    [self.navigationController pushViewController:self.photoViewController animated:true];
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        [self.popover dismissPopoverAnimated:YES];
+    } else {
+        [self dismissModalViewControllerAnimated:YES];
+    }
+    self.photoViewController = nil;
+}
+
+#pragma mark - UIActionSheetDelegate methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
@@ -235,69 +331,53 @@
         self.selectedMeal = [self.mealTypes objectAtIndex:buttonIndex];
         [self updateSelections];
         
+    } else { // self.imagePickerActionSheet
+        NSAssert(actionSheet == self.imagePickerActionSheet, @"Delegate method's else-case should be for image picker");
+        
+        if (!self.imagePicker) {
+            self.imagePicker = [[UIImagePickerController alloc] init];
+            self.imagePicker.delegate = self;
+        }
+        
+        // Set the source type of the imagePicker to the users selection
+        if (buttonIndex == 0) {
+            // If its the simulator, camera is no good
+            if(TARGET_IPHONE_SIMULATOR){
+                [[[UIAlertView alloc] initWithTitle:@"Camera not supported in simulator."
+                                            message:@"(>'_')>"
+                                           delegate:nil
+                                  cancelButtonTitle:@"Ok"
+                                  otherButtonTitles:nil] show];
+                return;
+            }
+            self.imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        } else if (buttonIndex == 1) {
+            self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        }
+        
+        if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+            // Can't use presentModalViewController for image picker on iPad
+            if (!self.popover) {
+                self.popover = [[UIPopoverController alloc] initWithContentViewController:self.imagePicker];
+            }
+            [self.popover presentPopoverFromRect:self.popoverFromRect
+                                          inView:self.view
+                        permittedArrowDirections:UIPopoverArrowDirectionAny
+                                        animated:YES];
+        } else {
+            [self presentModalViewController:self.imagePicker animated:YES];
+        }
     }
 }
 
-
-#pragma mark -
-
-#pragma mark Data fetch
-
-- (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle {
-    UITableViewCell *cell = (UITableViewCell *)[self.menuTableView cellForRowAtIndexPath:
-                                                [NSIndexPath indexPathForRow:index inSection:0]];
-    cell.detailTextLabel.text = subtitle;
-}
-
-- (void)updateSelections {
-    [self updateCellIndex:0 withSubtitle:(self.selectedMeal ?
-                                          self.selectedMeal : 
-                                          @"Select one")];
-    [self updateCellIndex:1 withSubtitle:(self.selectedPlace ?
-                                          self.selectedPlace.name :
-                                          @"Select one")];
-    
-    NSString *friendsSubtitle = @"Select friends";
-    int friendCount = self.selectedFriends.count;
-    if (friendCount > 2) {
-        // Just to mix things up, don't always show the first friend.
-        id<FBGraphUser> randomFriend = [self.selectedFriends objectAtIndex:arc4random() % friendCount];
-        friendsSubtitle = [NSString stringWithFormat:@"%@ and %d others", 
-            randomFriend.name,
-            friendCount - 1];
-    } else if (friendCount == 2) {
-        id<FBGraphUser> friend1 = [self.selectedFriends objectAtIndex:0];
-        id<FBGraphUser> friend2 = [self.selectedFriends objectAtIndex:1];
-        friendsSubtitle = [NSString stringWithFormat:@"%@ and %@",
-            friend1.name,
-            friend2.name];
-    } else if (friendCount == 1) {
-        id<FBGraphUser> friend = [self.selectedFriends objectAtIndex:0];
-        friendsSubtitle = friend.name;
-    }
-    [self updateCellIndex:2 withSubtitle:friendsSubtitle];
-    
-    self.announceButton.enabled = (self.selectedMeal != nil);
-}
-
-// FBSample logic
-// Displays the user's name and profile picture so they are aware of the Facebook
-// identity they are logged in as.
-- (void)populateUserDetails {
-    if (FBSession.activeSession.isOpen) {
-        [[FBRequest requestForMe] startWithCompletionHandler:
-         ^(FBRequestConnection *connection, NSDictionary<FBGraphUser> *user, NSError *error) {
-             if (!error) {
-                 self.userNameLabel.text = user.name;
-                 self.userProfileImage.profileID = [user objectForKey:@"id"];
-             }
-         }];   
-    }
-}
+#pragma mark - Overrides
 
 - (void)dealloc {
     _locationManager.delegate = nil;
     _mealPickerActionSheet.delegate = nil;
+    _settingsViewController.delegate = nil;
+    _imagePicker.delegate = nil;
+    _imagePickerActionSheet.delegate = nil;
 }
 
 - (void)viewDidLoad {
@@ -313,6 +393,9 @@
     // last cached results, if any.
     self.locationManager.distanceFilter = 50;
     
+    FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
+    [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
+    
     // This avoids a gray background in the table view on iPad.
     if ([self.menuTableView respondsToSelector:@selector(backgroundView)]) {
         self.menuTableView.backgroundView = nil;
@@ -327,14 +410,9 @@
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.activityIndicator.hidesWhenStopped = YES;
     [self.view addSubview:self.activityIndicator];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(sessionStateChanged:) 
-                                                 name:SCSessionStateChangedNotification
-                                               object:nil];
 }
 
--(void)viewWillAppear:(BOOL)animated{
+-(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
     if (FBSession.activeSession.isOpen) {
@@ -342,12 +420,10 @@
     }
 }
 
--(void)settingsButtonWasPressed:(id)sender {
-    if (self.settingsViewController == nil) {
-        self.settingsViewController = [[FBUserSettingsViewController alloc] init];
-        self.settingsViewController.delegate = self;
+- (void) viewDidAppear:(BOOL)animated {
+    if (FBSession.activeSession.isOpen) {
+        [self.locationManager startUpdatingLocation];
     }
-    [self.navigationController pushViewController:self.settingsViewController animated:YES];
 }
 
 - (void)viewDidUnload {
@@ -359,45 +435,37 @@
     self.mealPickerActionSheet = nil;
 }
 
-- (void)sessionStateChanged:(NSNotification*)notification {
-    // A more complex app might check the state to see what the appropriate course of
-    // action is, but our needs are simple, so just make sure our idea of the session is
-    // up to date and repopulate the user's name and picture (which will fail if the session
-    // has become invalid).
-    [self populateUserDetails];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates {
-    self.placeCacheDescriptor =
-    [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:coordinates
-                                                        radiusInMeters:1000
-                                                            searchText:@"restaurant"
-                                                          resultsLimit:50
-                                                      fieldsForRequest:nil];
-}
-
 #pragma mark - FBUserSettingsDelegate methods
 
+- (void)loginViewControllerDidLogUserOut:(id)sender {
+    // Facebook SDK * login flow *
+    // There are many ways to implement the Facebook login flow.
+    // In this sample, the FBLoginView delegate (SCLoginViewController)
+    // will already handle logging out so this method is a no-op.
+}
+
 - (void)loginViewController:(id)sender receivedError:(NSError *)error{
+    // Facebook SDK * login flow *
+    // There are many ways to implement the Facebook login flow.
+    // In this sample, the FBUserSettingsViewController is only presented
+    // as a log out option after the user has been authenticated, so
+    // no real errors should occur. If the FBUserSettingsViewController
+    // had been the entry point to the app, then this error handler should
+    // be as rigorous as the FBLoginView delegate (SCLoginViewController)
+    // in order to handle login errors.
     if (error) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"Error: %@",
-                                                                     [SCAppDelegate FBErrorCodeDescription:error.code]]
-                                                            message:error.localizedDescription
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-        [alertView show];
+        NSLog(@"Unexpected error sent to the FBUserSettingsViewController delegate: %@", error);
     }
 }
 
-#pragma mark UITableViewDataSource methods
+#pragma mark - UITableViewDataSource methods and related helpers
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 3;
+    return 4;
 }
 
 - (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
@@ -441,6 +509,12 @@
             cell.imageView.image = [UIImage imageNamed:@"action-people.png"];
             break;
             
+        case 3:
+            cell.textLabel.text = @"Got a picture?";
+            cell.detailTextLabel.text = @"Take one";
+            cell.imageView.image = [UIImage imageNamed:@"action-photo.png"];
+            break;
+            
         default:
             break;
     }
@@ -457,8 +531,6 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    UIViewController *target;
-    
     switch (indexPath.row) {
         case 0: {
             // if we don't yet have an array of meal types, create one now
@@ -485,8 +557,7 @@
             }
             
             self.mealPickerActionSheet.cancelButtonIndex = [self.mealPickerActionSheet addButtonWithTitle:@"Cancel"];
-            
-            [self.mealPickerActionSheet showInView:self.view];
+            [self.mealPickerActionSheet showFromToolbar:self.navigationController.toolbar];
             return;
         }
         
@@ -523,7 +594,7 @@
             // iOS Address Book does.
             
             // Need to call ABAddressBookCreate in order for the next two calls to do anything.
-            ABAddressBookCreate();
+            ABAddressBookRef addressBook = ABAddressBookCreate();
             ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
             ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
             
@@ -539,15 +610,67 @@
                                                            [self updateSelections];
                                                        }
                                                    }];
+            CFRelease(addressBook);
             return;
         }
+            
+        case 3:
+            if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+                self.popoverFromRect = [tableView rectForRowAtIndexPath:indexPath];
+            }
+            if(!self.imagePickerActionSheet) {
+                self.imagePickerActionSheet = [[UIActionSheet alloc] initWithTitle:@""
+                                                                          delegate:self
+                                                                 cancelButtonTitle:@"Cancel"
+                                                            destructiveButtonTitle:nil
+                                                                 otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
+            }
+            
+            [self.imagePickerActionSheet showInView:self.view];
+            return;
     }
-    
-    [self.navigationController pushViewController:target animated:YES];
 }
 
-#pragma mark -
-#pragma mark CLLocationManagerDelegate methods
+- (void)updateCellIndex:(int)index withSubtitle:(NSString *)subtitle {
+    UITableViewCell *cell = (UITableViewCell *)[self.menuTableView cellForRowAtIndexPath:
+                                                [NSIndexPath indexPathForRow:index inSection:0]];
+    cell.detailTextLabel.text = subtitle;
+}
+
+- (void)updateSelections {
+    [self updateCellIndex:0 withSubtitle:(self.selectedMeal ?
+                                          self.selectedMeal :
+                                          @"Select one")];
+    [self updateCellIndex:1 withSubtitle:(self.selectedPlace ?
+                                          self.selectedPlace.name :
+                                          @"Select one")];
+    
+    NSString *friendsSubtitle = @"Select friends";
+    int friendCount = self.selectedFriends.count;
+    if (friendCount > 2) {
+        // Just to mix things up, don't always show the first friend.
+        id<FBGraphUser> randomFriend = [self.selectedFriends objectAtIndex:arc4random() % friendCount];
+        friendsSubtitle = [NSString stringWithFormat:@"%@ and %d others",
+                           randomFriend.name,
+                           friendCount - 1];
+    } else if (friendCount == 2) {
+        id<FBGraphUser> friend1 = [self.selectedFriends objectAtIndex:0];
+        id<FBGraphUser> friend2 = [self.selectedFriends objectAtIndex:1];
+        friendsSubtitle = [NSString stringWithFormat:@"%@ and %@",
+                           friend1.name,
+                           friend2.name];
+    } else if (friendCount == 1) {
+        id<FBGraphUser> friend = [self.selectedFriends objectAtIndex:0];
+        friendsSubtitle = friend.name;
+    }
+    [self updateCellIndex:2 withSubtitle:friendsSubtitle];
+    
+    [self updateCellIndex:3 withSubtitle:(self.selectedPhoto ? @"Ready" : @"Take one")];
+    
+    self.announceButton.enabled = (self.selectedMeal != nil);
+}
+
+#pragma mark - CLLocationManagerDelegate methods and related
 
 - (void)locationManager:(CLLocationManager *)manager 
     didUpdateToLocation:(CLLocation *)newLocation 
@@ -567,6 +690,78 @@
 	NSLog(@"%@", error);
 }
 
+- (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates {
+    self.placeCacheDescriptor =
+    [FBPlacePickerViewController cacheDescriptorWithLocationCoordinate:coordinates
+                                                        radiusInMeters:1000
+                                                            searchText:@"restaurant"
+                                                          resultsLimit:50
+                                                      fieldsForRequest:nil];
+}
+
 #pragma mark -
+
+- (UIImage*) normalizedImage:(UIImage*)image {
+	CGImageRef          imgRef = image.CGImage;
+	CGFloat             width = CGImageGetWidth(imgRef);
+	CGFloat             height = CGImageGetHeight(imgRef);
+	CGAffineTransform   transform = CGAffineTransformIdentity;
+	CGRect              bounds = CGRectMake(0, 0, width, height);
+    CGSize              imageSize = bounds.size;
+	CGFloat             boundHeight;
+    UIImageOrientation  orient = image.imageOrientation;
+    
+	switch (orient) {
+		case UIImageOrientationUp: //EXIF = 1
+			transform = CGAffineTransformIdentity;
+			break;
+            
+		case UIImageOrientationDown: //EXIF = 3
+			transform = CGAffineTransformMakeTranslation(imageSize.width, imageSize.height);
+			transform = CGAffineTransformRotate(transform, M_PI);
+			break;
+            
+		case UIImageOrientationLeft: //EXIF = 6
+			boundHeight = bounds.size.height;
+			bounds.size.height = bounds.size.width;
+			bounds.size.width = boundHeight;
+			transform = CGAffineTransformMakeTranslation(imageSize.height, imageSize.width);
+			transform = CGAffineTransformScale(transform, -1.0, 1.0);
+			transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+			break;
+            
+		case UIImageOrientationRight: //EXIF = 8
+			boundHeight = bounds.size.height;
+			bounds.size.height = bounds.size.width;
+			bounds.size.width = boundHeight;
+			transform = CGAffineTransformMakeTranslation(0.0, imageSize.width);
+			transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+			break;
+            
+		default:
+            // image is not auto-rotated by the photo picker, so whatever the user
+            // sees is what they expect to get. No modification necessary
+            transform = CGAffineTransformIdentity;
+            break;
+	}
+    
+	UIGraphicsBeginImageContext(bounds.size);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    if ((image.imageOrientation == UIImageOrientationDown) ||
+        (image.imageOrientation == UIImageOrientationRight) ||
+        (image.imageOrientation == UIImageOrientationUp)) {
+        // flip the coordinate space upside down
+        CGContextScaleCTM(context, 1, -1);
+        CGContextTranslateCTM(context, 0, -height);
+    }
+    
+	CGContextConcatCTM(context, transform);
+	CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);
+	UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+    
+	return imageCopy;
+}
 
 @end

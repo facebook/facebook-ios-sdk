@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@
 #import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import <pthread.h>
-#import "FBSBJSON.h"
 #import "FBGraphUser.h"
+#import "FBUtility.h"
 
 /* 
  Indicates whether the test user for an FBTestSession should be shared
@@ -39,10 +39,9 @@ typedef enum {
     FBTestSessionModeShared     = 1,
 } FBTestSessionMode;
 
-
-static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
-static NSString *const FBPLISTAppSecretKey = @"FacebookAppSecret";
-static NSString *const FBPLISTUniqueUserTagKey = @"UniqueUserTag";
+static NSString *const FBPLISTTestAppIDKey = @"IOS_SDK_TEST_APP_ID";
+static NSString *const FBPLISTTestAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";
+static NSString *const FBPLISTUniqueUserTagKey = @"IOS_SDK_MACHINE_UNIQUE_USER_KEY";
 static NSString *const FBLoginAuthTestUserURLPath = @"oauth/access_token";
 static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
 static NSString *const FBLoginTestUserClientID = @"client_id";
@@ -154,7 +153,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
 #pragma mark Private methods
 
 - (NSString*)permissionsString {
-    return [self.permissions componentsJoinedByString:@","];
+    NSArray *permissions = self.accessTokenData.permissions ?: self.initializedPermissions;
+    return [permissions componentsJoinedByString:@","];
 }
 
 - (void)createNewTestUser
@@ -219,9 +219,9 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                  NSLog(@"Error: [FBSession createNewTestUserAndRename:] failed with error: %@", error.description);
              } else {
                  // we fetched something unexpected when requesting an app token
-                 error = [FBSession errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
-                                                     errorCode:nil
-                                                    innerError:nil];
+                 error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUnitTestResponseUnrecognized
+                                                errorCode:nil
+                                               innerError:nil];
              }
              // state transition, and call the handler if there is one
              [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
@@ -297,11 +297,9 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                 testAccountQuery, @"test_accounts",
                                 userQuery, @"users",
                                 nil];
-
-    FBSBJSON *writer = [[FBSBJSON alloc] init];
-    NSString *jsonMultiquery = [writer stringWithObject:multiquery];
-    [writer release];
-
+    
+    NSString *jsonMultiquery = [FBUtility simpleJSONEncode:multiquery];
+    
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 jsonMultiquery, @"q",
                                 self.appAccessToken, @"access_token",
@@ -436,30 +434,37 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
     
-    // We ignore behavior, since we aren't going to present UI.
-
-    if (self.mode == FBTestSessionModePrivate) {
-        // If we aren't wanting a shared user, just create a user. Don't waste time renaming it since 
-        // we will be deleting it when done.
-        [self createNewTestUser];
+    if (isReauthorize) {
+        // For the test session, since we don't present UI,
+        // we'll just complete the re-auth. Note this obviously means
+        // no new permissions are requested.
+        [super handleReauthorize:nil accessToken:self.accessTokenData.accessToken];
     } else {
-        // We need to see if there are any test users that fit the bill.
-        
-        // Did we already get the test users?
-        pthread_mutex_lock(&mutex);
-        if (testUsers) {
-            pthread_mutex_unlock(&mutex);
+        // We ignore behavior, since we aren't going to present UI.
 
-            // Yes, look for one that we can use.
-            [self findOrCreateSharedUser];
+        if (self.mode == FBTestSessionModePrivate) {
+            // If we aren't wanting a shared user, just create a user. Don't waste time renaming it since 
+            // we will be deleting it when done.
+            [self createNewTestUser];
         } else {
-            // No, populate the list and then continue.
-            // We never release testUsers. We should only populate it once.
-            testUsers = [[NSMutableDictionary alloc] init];
-
-            pthread_mutex_unlock(&mutex);
+            // We need to see if there are any test users that fit the bill.
             
-            [self retrieveTestUsersForApp];
+            // Did we already get the test users?
+            pthread_mutex_lock(&mutex);
+            if (testUsers) {
+                pthread_mutex_unlock(&mutex);
+
+                // Yes, look for one that we can use.
+                [self findOrCreateSharedUser];
+            } else {
+                // No, populate the list and then continue.
+                // We never release testUsers. We should only populate it once.
+                testUsers = [[NSMutableDictionary alloc] init];
+
+                pthread_mutex_unlock(&mutex);
+                
+                [self retrieveTestUsersForApp];
+            }
         }
     }
 }
@@ -499,26 +504,24 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
                                       mode:(FBTestSessionMode)mode 
                       sessionUniqueUserTag:(NSString*)sessionUniqueUserTag
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    
-    // fetch config contents
-    NSString *configFilename = [documentsDirectory stringByAppendingPathComponent:@"FacebookSDK-UnitTestConfig.plist"];
-    NSDictionary *configSettings = [NSDictionary dictionaryWithContentsOfFile:configFilename];
-    
-    NSString *appID = [configSettings objectForKey:FBPLISTAppIDKey];
-    NSString *appSecret = [configSettings objectForKey:FBPLISTAppSecretKey];
-    if (!appID || !appSecret) {
+    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
+    NSString *appID = [environment objectForKey:FBPLISTTestAppIDKey];
+    NSString *appSecret = [environment objectForKey:FBPLISTTestAppSecretKey];
+    if (!appID || !appSecret || appID.length == 0 || appSecret.length == 0) {
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:
-          @"FBSession: Missing AppID or AppSecret; FacebookSDK-UnitTestConfig.plist is "
-          @"is missing or invalid; to create a Facebook AppID, "
-          @"visit https://developers.facebook.com/apps"
+          @"FBTestSession: Missing App ID or Secret; ensure that you have an .xcconfig file at:\n"
+          @"\t${REPO_ROOT}/src/tests/TestAppIdAndSecret.xcconfig\n"
+          @"containing your unit-testing Facebook Application's ID and Secret in this format:\n"
+          @"\tIOS_SDK_TEST_APP_ID = // your app ID, e.g.: 1234567890\n"
+          @"\tIOS_SDK_TEST_APP_SECRET = // your app secret, e.g.: 1234567890abcdef\n"
+          @"To create a Facebook AppID, visit https://developers.facebook.com/apps"
                                userInfo:nil]
          raise];
     }
 
-    NSString *machineUniqueUserTag = [configSettings objectForKey:FBPLISTUniqueUserTagKey];
+    // This is non-fatal if it's missing.
+    NSString *machineUniqueUserTag = [environment objectForKey:FBPLISTUniqueUserTagKey];
     
     FBSessionManualTokenCachingStrategy *tokenCachingStrategy = 
     [[FBSessionManualTokenCachingStrategy alloc] init];

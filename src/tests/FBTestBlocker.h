@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +33,10 @@ typedef void (^FBTestBlockerPeriodicHandler)(FBTestBlocker *blocker);
 
 - (id)init;
 - (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount;
-- (id)initWithExpectedSignalCount:(NSInteger)expectedSignalCount;
 - (void)wait;
-- (BOOL)waitWithTimeout:(NSUInteger)timeout;
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout;
 - (void)waitWithPeriodicHandler:(FBTestBlockerPeriodicHandler)handler;
-- (BOOL)waitWithTimeout:(NSUInteger)timeout periodicHandler:(FBTestBlockerPeriodicHandler)handler;
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout periodicHandler:(FBTestBlockerPeriodicHandler)handler;
 - (void)signal;
 
 @end

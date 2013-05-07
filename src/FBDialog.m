@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,7 @@
  * limitations under the License.
  */
 
-
 #import "FBDialog.h"
-#import "FBSBJSON.h"
 #import "Facebook.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBUtility.h"
@@ -45,7 +43,9 @@ static BOOL FBIsDeviceIPad() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-@implementation FBDialog
+@implementation FBDialog {
+    BOOL _everShown;
+}
 
 @synthesize delegate = _delegate,
 params   = _params;
@@ -255,21 +255,22 @@ params   = _params;
     [self removeObservers];
     [self removeFromSuperview];
     [_modalBackgroundView removeFromSuperview];
+    
+    // this method call could cause a self-cleanup, and needs to really happen "last"
+    // If the dialog has been closed, then we need to cancel the order to open it.
+    // This happens in the case of a frictionless request, see webViewDidFinishLoad for details
+    [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                             selector:@selector(showWebView)
+                                               object:nil];
 }
 
 - (void)dismiss:(BOOL)animated {
     [self dialogWillDisappear];
 
-    // If the dialog has been closed, then we need to cancel the order to open it.	
-    // This happens in the case of a frictionless request, see webViewDidFinishLoad for details	
-    [NSObject cancelPreviousPerformRequestsWithTarget:self 
-                                             selector:@selector(showWebView)
-                                               object:nil];
-
     [_loadingURL release];
     _loadingURL = nil;
     
-    if (animated) {
+    if (animated && _everShown) {
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:kTransitionDuration];
         [UIView setAnimationDelegate:self];
@@ -297,11 +298,8 @@ params   = _params;
                                               needle:@"frictionless_recipients="];
     if (recipientJson) {
         // if value parses as an array, treat as set of fbids
-        FBSBJsonParser *parser = [[[FBSBJsonParser alloc]
-                                 init]
-                                autorelease];
-        id recipients = [parser objectWithString:recipientJson];
-
+        id recipients = [FBUtility simpleJSONDecode:recipientJson];
+        
         // if we got something usable, copy the ids out and update the cache
         if ([recipients isKindOfClass:[NSArray class]]) { 
             NSMutableArray *ids = [[[NSMutableArray alloc]
@@ -326,6 +324,7 @@ params   = _params;
         _delegate = nil;
         _loadingURL = nil;
         _showingKeyboard = NO;
+        _everShown = NO;
         
         self.backgroundColor = [UIColor clearColor];
         self.autoresizesSubviews = YES;
@@ -418,8 +417,9 @@ params   = _params;
     [UIView setAnimationDidStopSelector:@selector(bounce1AnimationStopped)];	
     self.transform = CGAffineTransformScale([self transformForOrientation], 1.1, 1.1);	
     [UIView commitAnimations];	
-    
-    [self dialogWillAppear];	
+  
+    _everShown = YES;
+    [self dialogWillAppear];
     [self addObservers];	
 }	
 
@@ -665,11 +665,19 @@ params   = _params;
 }
 
 - (void)dialogDidSucceed:(NSURL *)url {
+    // retain self for the life of this method, in case we are released by a client
+    id me = [self retain];
     
-    if ([_delegate respondsToSelector:@selector(dialogCompleteWithUrl:)]) {
-        [_delegate dialogCompleteWithUrl:url];
+    @try {
+        // call into client code
+        if ([_delegate respondsToSelector:@selector(dialogCompleteWithUrl:)]) {
+            [_delegate dialogCompleteWithUrl:url];
+        }
+        
+        [self dismissWithSuccess:YES animated:YES];
+    } @finally {
+        [me release];
     }
-    [self dismissWithSuccess:YES animated:YES];
 }
 
 - (void)dialogDidCancel:(NSURL *)url {

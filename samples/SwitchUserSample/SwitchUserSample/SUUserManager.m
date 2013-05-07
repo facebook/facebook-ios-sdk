@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     // create a session object, with defaults accross the board, except that we provide a custom
     // instance of FBSessionTokenCachingStrategy
     FBSession *session = [[FBSession alloc] initWithAppID:nil
-                                              permissions:nil
+                                              permissions:[NSArray arrayWithObject:@"user_birthday"]
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:tokenCachingStrategy];
     return session;

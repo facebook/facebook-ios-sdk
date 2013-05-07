@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,24 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FBFetchedAppSettings.h"
 
+@class FBRequest;
 @class FBSession;
 
 @protocol FBGraphObject;
 
+typedef enum FBAdvertisingTrackingStatus {
+    AdvertisingTrackingAllowed,
+    AdvertisingTrackingDisallowed,
+    AdvertisingTrackingUnspecified
+} FBAdvertisingTrackingStatus;
+
 @interface FBUtility : NSObject
 
++ (NSDictionary*)queryParamsDictionaryFromFBURL:(NSURL*)url;
 + (NSDictionary*)dictionaryByParsingURLQueryPart:(NSString *)encodedString;
++ (NSString *)stringBySerializingQueryParameters:(NSDictionary *)queryParameters;
 + (NSString *)stringByURLDecodingString:(NSString*)escapedString;
 + (NSString*)stringByURLEncodingString:(NSString*)unescapedString;
 + (id<FBGraphObject>)graphObjectInArray:(NSArray*)array withSameIDAs:(id<FBGraphObject>)item;
@@ -32,13 +42,38 @@
 + (NSTimeInterval)randomTimeInterval:(NSTimeInterval)minValue withMaxValue:(NSTimeInterval)maxValue;
 + (void)centerView:(UIView*)view tableView:(UITableView*)tableView;
 + (NSString *)stringFBIDFromObject:(id)object;
-
++ (NSString *)stringAppBaseUrlFromAppId:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix;
++ (NSDate*)expirationDateFromExpirationTimeIntervalString:(NSString*)expirationTime;
++ (NSDate*)expirationDateFromExpirationUnixTimeString:(NSString*)expirationTime;
 + (NSBundle *)facebookSDKBundle;
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value;
 + (NSString *)localizedStringForKey:(NSString *)key
                         withDefault:(NSString *)value
                            inBundle:(NSBundle *)bundle;
+// Returns YES when the bundle identifier is for one of the native facebook apps
++ (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
+
++ (BOOL)isPublishPermission:(NSString*)permission;
++ (BOOL)areAllPermissionsReadPermissions:(NSArray*)permissions;
++ (NSArray*)addBasicInfoPermission:(NSArray*)permissions;
++ (void)fetchAppSettings:(NSString *)appID
+                callback:(void (^)(FBFetchedAppSettings *, NSError *))callback;
++ (FBFetchedAppSettings *)fetchedAppSettings;
++ (NSString *)attributionID;
++ (NSString *)advertiserID;
++ (FBAdvertisingTrackingStatus)advertisingTrackingStatus;
+
+// Encode a data structure in JSON, any errors will just be logged.
++ (NSString *)simpleJSONEncode:(id)data;
++ (id)simpleJSONDecode:(NSString *)jsonEncoding;
++ (NSString *)simpleJSONEncode:(id)data
+                         error:(NSError **)error;
++ (id)simpleJSONDecode:(NSString *)jsonEncoding
+                 error:(NSError **)error;
++ (BOOL) isRetinaDisplay;
++ (NSString *)newUUIDString;
++ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 @end
  
@@ -51,6 +86,3 @@ do { \
 } while(NO)
  
 #define FB_BASE_URL @"facebook.com"
-
-
-

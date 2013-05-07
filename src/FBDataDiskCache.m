@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  
 #import "FBDataDiskCache.h"
 #import "FBCacheIndex.h"
+#import "FBAccessTokenData.h"
 
 static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
@@ -199,7 +200,7 @@ static NSString *const kAccessTokenKey = @"access_token";
     // overkill for a cache. Maybe revisit later?
     [_cacheIndex removeEntries:kAccessTokenKey excludingFragment:YES];
 
-    NSString* accessToken = [session accessToken];
+    NSString* accessToken = session.accessTokenData.accessToken;
     if (accessToken != nil) {
         // Here we are removing all cache entries that have this session's access
         // token in the url.

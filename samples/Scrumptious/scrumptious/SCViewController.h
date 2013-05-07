@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@
 #import <QuartzCore/QuartzCore.h>
 #import <FacebookSDK/FacebookSDK.h>
 
-typedef void(^SelectItemCallback)(id sender, id selectedItem);
-
-// FBSample logic
-// The main UI for the application, which lets the user select a type of food, tag who they
-// are with and where they are.
+/*
+ The UIViewController representing the main UI, which
+ lets the user select a type of food, tag who they
+ are with, and where they are.
+*/
 @interface SCViewController : UIViewController <FBUserSettingsDelegate>
-
-- (void)startLocationManager;
 
 @end

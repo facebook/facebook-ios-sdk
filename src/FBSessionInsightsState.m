@@ -1,0 +1,114 @@
+/*
+ * Copyright 2010-present Facebook.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#import "FBSessionInsightsState.h"
+#import "FBUtility.h"
+
+@interface FBSessionInsightsState ()
+
+@property (readwrite, retain) NSMutableArray *accumulatedEvents;
+@property (readwrite, retain) NSMutableArray *inFlightEvents;
+
+@end
+
+@implementation FBSessionInsightsState
+
+const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
+
+@synthesize accumulatedEvents = _accumulatedEvents;
+@synthesize inFlightEvents = _inFlightEvents;
+@synthesize numSkippedEventsDueToFullBuffer;
+@synthesize numAbandonedDueToSessionChange;
+@synthesize requestInFlight;
+
+- (id)init {
+    if (self = [super init]) {
+        _accumulatedEvents = [[NSMutableArray alloc] init];
+        _inFlightEvents = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    self.accumulatedEvents = nil;
+    self.inFlightEvents = nil;
+    
+    [super dealloc];
+}
+
+- (void)addEvent:(NSDictionary *)eventDictionary
+      isImplicit:(BOOL)isImplicit {
+    
+    @synchronized (self) {
+        if (self.accumulatedEvents.count + self.inFlightEvents.count >= MAX_ACCUMULATED_LOG_EVENTS) {
+            // Skip, but record that we've done so.  This gets sent in the post when we do flush.
+            self.numSkippedEventsDueToFullBuffer++;
+        } else {
+            [self.accumulatedEvents addObject:@{@"event" : eventDictionary,
+                                                @"isImplicit" : [NSNumber numberWithBool:isImplicit],
+                                               }];
+        }
+    }
+}
+
+- (int)getAccumulatedEventCount {
+    @synchronized (self) {
+        return self.accumulatedEvents.count;
+    }
+}
+
+- (void)abandonEvents {
+    @synchronized (self) {
+        self.numAbandonedDueToSessionChange += self.accumulatedEvents.count + self.inFlightEvents.count;
+        [self.accumulatedEvents removeAllObjects];
+        [self.inFlightEvents removeAllObjects];
+    }
+}
+
+- (void)clearInFlightAndStats {
+    @synchronized (self) {
+        [self.inFlightEvents removeAllObjects];
+        self.numAbandonedDueToSessionChange = 0;
+        self.numSkippedEventsDueToFullBuffer = 0;
+    }
+}
+
+// JSON representation of the in-flight events, potentially excluding those marked as implicit.  Return
+// nil if the resultant set of events is empty.
+- (NSString *)jsonEncodeInFlightEvents:(BOOL)includeImplicitEvents {
+    
+    NSMutableArray *eventArray = [[NSMutableArray alloc] initWithCapacity:self.inFlightEvents.count];
+    
+    for (NSDictionary *eventAndImplicitFlag in self.inFlightEvents) {
+        if (!includeImplicitEvents && [[eventAndImplicitFlag objectForKey:@"isImplicit"] boolValue]) {
+            continue;
+        }
+        [eventArray addObject:[eventAndImplicitFlag objectForKey:@"event"]];
+    }
+    
+    NSString *jsonEncodedEvents = nil;
+    if (eventArray.count != 0) {
+        jsonEncodedEvents = [FBUtility simpleJSONEncode:eventArray];
+    }
+
+    [eventArray release];
+    
+    return jsonEncodedEvents;    
+}
+
+
+@end
+

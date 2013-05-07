@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,14 @@
 @protocol FBLoginViewDelegate;
 
 /*!
- @class
- @abstract
+ @class FBLoginView
+ @abstract FBLoginView is a custom UIView that renders a button to login or logout based on the
+  state of `FBSession.activeSession`
+ 
+ @discussion This view is closely associated with `FBSession.activeSession`. Upon initialization,
+  it will attempt to open an active session without UI if the current active session is not open.
+ 
+  The FBLoginView instance also monitors for changes to the active session.
  */
 @interface FBLoginView : UIView
 
@@ -155,6 +161,18 @@
  @param loginView   The login view that transitioned its view mode
  */
 - (void)loginViewShowingLoggedOutUser:(FBLoginView *)loginView;
+
+/*!
+ @abstract
+ Tells the delegate that there is a communication or authorization error.
+ 
+ @param loginView           The login view that transitioned its view mode
+ @param error               An error object containing details of the error.
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+ for error handling best practices.
+ */
+- (void)loginView:(FBLoginView *)loginView
+      handleError:(NSError *)error;
 
 @end
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,18 +49,18 @@
           periodicHandler:handler];
 }
 
-- (BOOL)waitWithTimeout:(NSUInteger)timeout {
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout {
     return [self waitWithTimeout:timeout
                  periodicHandler:nil];
 }
 
-- (BOOL)waitWithTimeout:(NSUInteger)timeout 
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout 
         periodicHandler:(FBTestBlockerPeriodicHandler)handler {
     NSDate *start = [NSDate date];
     
     // loop until the previous call completes
     while (_signalsRemaining > 0) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.1]];
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
         if (timeout > 0 &&
             [[NSDate date] timeIntervalSinceDate:start] > timeout) {
             [self reset];

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -69,6 +69,8 @@
 
  @param sender          The view controller sending the message.
  @param error           The error encountered.
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+ for error handling best practices.
  */
 - (void)loginViewController:(id)sender receivedError:(NSError *)error;
 

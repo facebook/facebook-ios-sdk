@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,8 +185,10 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
             g_startTimesWithTags = [[NSMutableDictionary alloc] init];
         }
         
-        FBConditionalLog(g_startTimesWithTags.count < 1000,
-                         @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong.");
+        if (g_startTimesWithTags.count >= 1000) {
+            [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:
+                    @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong."];
+        }
         
         unsigned long currTime = [FBUtility currentTimeInMilliseconds];
         

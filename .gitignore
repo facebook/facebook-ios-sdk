@@ -17,3 +17,6 @@ test/UnitTest/build/
 project.xcworkspace
 xcuserdata
 .arc
+.arcconfig
+.internal/
+TestAppIdAndSecret.xcconfig
