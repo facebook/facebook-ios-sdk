@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,14 @@
  
 #import "FBDataDiskCache.h"
 #import "FBCacheIndex.h"
+#import "FBAccessTokenData.h"
 
 static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
 
 static NSString* const kDataDiskCachePath = @"DataDiskCache";
 static NSString* const kCacheInfoFile = @"CacheInfo";
+static NSString *const kAccessTokenKey = @"access_token";
 
 @interface FBDataDiskCache() <FBCacheIndexFileDelegate>
 @property (nonatomic, copy) NSString* dataCachePath;
@@ -182,6 +184,27 @@ static NSString* const kCacheInfoFile = @"CacheInfo";
         [_cacheIndex removeEntryForKey:url.absoluteString];
     } @catch (NSException* exception) {
         NSLog(@"FBDiskCache error: %@", exception.reason);
+    }
+}
+
+- (void)removeDataForSession:(FBSession*)session
+{
+    if (session == nil) {
+        return;
+    }
+    
+    // Here we are removing all cache entries that don't have session context
+    // These are things like images and the like. The thorough way would
+    // be to maintain refCounts of these entries associated with accessTokens
+    // and use that to decide which images to delete. However, this might be
+    // overkill for a cache. Maybe revisit later?
+    [_cacheIndex removeEntries:kAccessTokenKey excludingFragment:YES];
+
+    NSString* accessToken = session.accessTokenData.accessToken;
+    if (accessToken != nil) {
+        // Here we are removing all cache entries that have this session's access
+        // token in the url.
+        [_cacheIndex removeEntries:accessToken excludingFragment:NO];
     }
 }
 

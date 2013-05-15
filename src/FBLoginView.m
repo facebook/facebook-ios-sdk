@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #import "FBSession.h"
 #import "FBGraphUser.h"
 #import "FBUtility.h"
+#import "FBSession+Internal.h"
 
 static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 const int kButtonLabelX = 46;
@@ -37,6 +38,7 @@ CGSize g_imageSize;
 - (void)unwireViewForSession ;
 - (void)fetchMeInfo;
 - (void)informDelegate:(BOOL)userOnly;
+- (void)informDelegateOfError:(NSError *)error;
 - (void)handleActiveSessionSetNotifications:(NSNotification *)notification;
 - (void)handleActiveSessionUnsetNotifications:(NSNotification *)notification;
 
@@ -45,6 +47,13 @@ CGSize g_imageSize;
 @property (retain, nonatomic) FBSession *session;
 @property (retain, nonatomic) FBRequestConnection *request;
 @property (retain, nonatomic) id<FBGraphUser> user;
+@property (copy, nonatomic) FBSessionStateHandler sessionStateHandler;
+@property (copy, nonatomic) FBRequestHandler requestHandler;
+// lastObservedStateWasOpen is essentially a nullable bool to track if the
+// the session state was open when the inform delegate is called. This is
+// to prevent messaging the delegate again in state transfers that are
+// not important (e.g., tokenextended, or createdopening).
+@property (copy) NSNumber *lastObservedStateWasOpen;
 
 @end
 
@@ -56,16 +65,47 @@ CGSize g_imageSize;
     session = _session,
     request = _request,
     user = _user,
-    permissions = _permissions;
+    permissions = _permissions,
+    readPermissions = _readPermissions,
+    publishPermissions = _publishPermissions,
+    defaultAudience = _defaultAudience,
+    lastObservedStateWasOpen = _lastObservedStateWasOpen,
+    sessionStateHandler = _sessionStateHandler,
+    requestHandler = _requestHandler;
+
 
 - (id)init {
-    return [self initWithPermissions:nil];
+    self = [super init];
+    if (self) {
+        [self initialize];
+    }
+    return self;
 }
 
 - (id)initWithPermissions:(NSArray *)permissions {
     self = [super init];
     if (self) {
         self.permissions = permissions;
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithReadPermissions:(NSArray *)readPermissions {
+    self = [super init];
+    if (self) {
+        self.readPermissions = readPermissions;
+        [self initialize];
+    }
+    return self;
+}
+
+- (id)initWithPublishPermissions:(NSArray *)publishPermissions
+                 defaultAudience:(FBSessionDefaultAudience)defaultAudience {
+    self = [super init];
+    if (self) {
+        self.publishPermissions = publishPermissions;
+        self.defaultAudience = defaultAudience;
         [self initialize];
     }
     return self;
@@ -88,12 +128,21 @@ CGSize g_imageSize;
 }
 
 - (void)dealloc {
+    // As noted in `initializeBlocks`, if we are being dealloc'ed, we
+    // need to let our handlers know with the sentinel value of nil
+    // to prevent EXC_BAD_ACCESS errors.
+    self.sessionStateHandler(nil, FBSessionStateClosed, nil);
+    [_sessionStateHandler release];
+    [_requestHandler release];
     
     // removes all observers for self
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     // if we have an outstanding request, cancel
     [self.request cancel];
+    
+    // unwire the session to release KVO.
+    [self unwireViewForSession];
     
     [_request release];
     [_label release];
@@ -117,6 +166,36 @@ CGSize g_imageSize;
     }
 }
 
+- (void)initializeBlocks {
+    // Set up our block handlers in a way that supports nil'ing out the weak self reference to
+    // prevent EXC_BAD_ACCESS errors if the session invokes the handler after the FBLoginView
+    // has been deallocated. Note the handlers are declared as a `copy` property so that
+    // the block lives on the heap.
+    __block FBLoginView *weakSelf = self;
+    self.sessionStateHandler = ^(FBSession *session, FBSessionState status, NSError *error) {
+        if (session == nil) {
+            // The nil sentinel value for session indicates both blocks should no-op thereafter.
+            weakSelf = nil;
+        } else if (error) {
+            [weakSelf informDelegateOfError:error];
+        }
+    };
+    self.requestHandler = ^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {
+        if (result) {
+            weakSelf.user = result;
+            [weakSelf informDelegate:YES];
+        } else {
+            weakSelf.user = nil;
+            if (weakSelf.session.isOpen) {
+                // Only inform the delegate of errors if the session remains open;
+                // since session closure errors will surface through the openActiveSession
+                // block.
+                [weakSelf informDelegateOfError:error];
+            }
+        }
+        weakSelf.request = nil;
+    };
+}
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
@@ -128,11 +207,15 @@ CGSize g_imageSize;
     self.autoresizesSubviews = YES;
     self.clipsToBounds = YES;
     
-    // if our session has a cached token ready, we open it; note that it is important
-    // that we open the session before notification wiring is in place
-    [FBSession openActiveSessionWithPermissions:self.permissions
-                                   allowLoginUI:NO
-                              completionHandler:nil];
+    [self initializeBlocks];
+    
+    if ([FBSession activeSessionIfOpen] == nil) {
+        // if our session has a cached token ready, we open it; note that it is important
+        // that we open the session before notification wiring is in place
+        [FBSession openActiveSessionWithReadPermissions:nil
+                                           allowLoginUI:NO
+                                      completionHandler:self.sessionStateHandler];
+    }
 
     // wire-up the current session to the login view, before adding global session-change handlers
     [self wireViewForSession:FBSession.activeSession];
@@ -233,15 +316,7 @@ CGSize g_imageSize;
     [request setSession:self.session];
     self.request = [[[FBRequestConnection alloc] init] autorelease];
     [self.request addRequest:request
-           completionHandler:^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {
-               if (result) {
-                   self.user = result;
-                   [self informDelegate:YES];
-               } else {
-                   self.user = nil;
-               }
-               self.request = nil;
-           }];
+           completionHandler:self.requestHandler];
     [self.request startWithCacheIdentity:FBLoginViewCacheIdentity
                    skipRoundtripIfCached:YES];
     
@@ -254,17 +329,34 @@ CGSize g_imageSize;
                                                user:self.user];
         }
     } else if (FBSession.activeSession.isOpen) {
-        if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedInUser:)]) {
-            [self.delegate loginViewShowingLoggedInUser:self];
-        }
-        // any time we inform/reinform of isOpen event, we want to be sure 
-        // to repass the user if we have it
-        if (self.user) {
-            [self informDelegate:YES];
+        if (![self.lastObservedStateWasOpen isEqualToNumber:@1]) {
+            self.lastObservedStateWasOpen = @1;
+            
+            if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedInUser:)]) {
+                [self.delegate loginViewShowingLoggedInUser:self];
+            }
+            // any time we inform/reinform of isOpen event, we want to be sure 
+            // to repass the user if we have it
+            if (self.user) {
+                [self informDelegate:YES];
+            }
         }
     } else {
-        if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedOutUser:)]) {
-            [self.delegate loginViewShowingLoggedOutUser:self];
+        if (![self.lastObservedStateWasOpen isEqualToNumber:@0]) {
+            self.lastObservedStateWasOpen = @0;
+            
+            if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedOutUser:)]) {
+                [self.delegate loginViewShowingLoggedOutUser:self];
+            }
+        }
+    }
+}
+
+- (void)informDelegateOfError:(NSError *)error {
+    if (error) {
+        if ([self.delegate respondsToSelector:@selector(loginView:handleError:)]) {
+            [self.delegate loginView:self
+                         handleError:error];
         }
     }
 }
@@ -289,10 +381,9 @@ CGSize g_imageSize;
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [FBSession openActiveSessionWithPermissions:self.permissions
-                                       allowLoginUI:NO
-                                  completionHandler:nil];
-    }    
+        [self.session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                     completionHandler:self.sessionStateHandler];
+    }
 }
 
 - (void)unwireViewForSession {
@@ -335,12 +426,40 @@ CGSize g_imageSize;
     }
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
-            [FBSession openActiveSessionWithPermissions:self.permissions
-                                           allowLoginUI:YES
-                                      completionHandler:nil];
+            
+            // the policy here is:
+            // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
+            // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
+            // 3) if you provide any publish permissions, then we combine the read-set and publish-set and call the publish-based
+            //    method that will use integrated auth when availab le
+            // 4) if you provide any publish permissions, and don't specify a valid audience, the control will throw an exception
+            //    when the user presses login
+            if (self.permissions) {
+                [FBSession openActiveSessionWithPermissions:self.permissions
+                                               allowLoginUI:YES
+                                          completionHandler:self.sessionStateHandler];
+            } else if (![self.publishPermissions count]) {
+                [FBSession openActiveSessionWithReadPermissions:self.readPermissions
+                                                   allowLoginUI:YES
+                                              completionHandler:self.sessionStateHandler];
+            } else {
+                // combined read and publish permissions will usually fail, but if the app wants us to
+                // try it here, then we will pass the aggregate set to the server
+                NSArray *permissions = self.publishPermissions;
+                if ([self.readPermissions count]) {
+                    NSMutableSet *set = [NSMutableSet setWithArray:self.publishPermissions];
+                    [set addObjectsFromArray:self.readPermissions];
+                    permissions = [set allObjects];
+                }
+                [FBSession openActiveSessionWithPublishPermissions:permissions
+                                                   defaultAudience:self.defaultAudience
+                                                      allowLoginUI:YES
+                                                 completionHandler:self.sessionStateHandler];
+            }
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;
@@ -373,5 +492,5 @@ CGSize g_imageSize;
         [self informDelegate:NO];
     }
 }
-
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 @end

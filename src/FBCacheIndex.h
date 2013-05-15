@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,8 @@
     sqlite3_stmt* _insertStatement;
     sqlite3_stmt* _removeByKeyStatement;
     sqlite3_stmt* _selectByKeyStatement;
+    sqlite3_stmt* _selectByKeyFragmentStatement;
+    sqlite3_stmt* _selectExcludingKeyFragmentStatement;
     sqlite3_stmt* _trimStatement;
     sqlite3_stmt* _updateStatement;
   
@@ -64,6 +66,7 @@
 - (NSString*)fileNameForKey:(NSString*)key;
 - (NSString*)storeFileForKey:(NSString*)key withData:(NSData*)data;
 - (void)removeEntryForKey:(NSString*)key;
+- (void)removeEntries:(NSString*)keyFragment excludingFragment:(BOOL)exclude;
 
 @end
 

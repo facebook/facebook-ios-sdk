@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 
 #import <Foundation/Foundation.h>
+
+@protocol FBOpenGraphObject;
+@protocol FBOpenGraphAction;
 
 /*!
  @protocol
@@ -162,6 +165,17 @@
  */
 - (void)setObject:(id)anObject forKey:(id)aKey;
 
+@optional
+
+/*!
+ @abstract
+ This property signifies that the current graph object is provisioned for POST (as a definition
+ for a new or updated graph object), and should be posted AS-IS in its JSON encoded form, whereas 
+ some graph objects (usually those embedded in other graph objects as references to existing objects)
+ may only have their "id" or "url" posted.
+ */
+@property (nonatomic, assign) BOOL provisionedForPost;
+
 @end
 
 /*!
@@ -181,7 +195,7 @@
 /*!
  @method
  @abstract
- Used to create a graph object for, usually for use in posting a new graph object or action
+ Used to create a graph object, usually for use in posting a new graph object or action.
  */
 + (NSMutableDictionary<FBGraphObject>*)graphObject;
 
@@ -205,6 +219,37 @@
  @param jsonDictionary              the dictionary representing the underlying object to wrap
  */
 + (NSMutableDictionary<FBGraphObject>*)graphObjectWrappingDictionary:(NSDictionary*)jsonDictionary;
+
+/*!
+ @method
+ @abstract
+ Used to create a graph object that's provisioned for POST, usually for use in posting a new Open Graph Action.
+ */
++ (NSMutableDictionary<FBOpenGraphAction>*)openGraphActionForPost;
+
+/*!
+ @method
+ @abstract
+ Used to create a graph object that's provisioned for POST, usually for use in posting a new Open Graph object.
+ */
++ (NSMutableDictionary<FBOpenGraphObject>*)openGraphObjectForPost;
+
+/*!
+ @method
+ @abstract
+ Used to create a graph object that's provisioned for POST, usually for use in posting a new Open Graph object.
+ 
+ @param type              the object type name, in the form namespace:typename
+ @param title             a title for the object
+ @param image             the image property for the object
+ @param url               the url property for the object
+ @param description       the description for the object
+ */
++ (NSMutableDictionary<FBOpenGraphObject>*)openGraphObjectForPostWithType:(NSString *)type
+                                                                    title:(NSString *)title
+                                                                    image:(id)image
+                                                                      url:(id)url
+                                                              description:(NSString *)description;
 
 /*!
  @method

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,6 @@
 
 @implementation SCPhotoViewController
 
-@synthesize confirmCallback = confirmCallback;
-@synthesize imageView = _imageView;
-@synthesize image = _image;
-
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil image:(UIImage *) anImage
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -50,6 +46,18 @@
     self.image = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    self.navigationController.navigationBarHidden = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    self.navigationController.navigationBarHidden = NO;
+    
+    [super viewWillDisappear:animated];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
@@ -57,15 +65,15 @@
 
 - (IBAction)confirm:(id)sender {
     if (self.confirmCallback) {
-        self.confirmCallback(self, true);
+        self.confirmCallback(self, YES);
     }
-    [self.navigationController popViewControllerAnimated:true];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 - (IBAction)cancel:(id)sender {
     if (self.confirmCallback) {
-        self.confirmCallback(self, false);
+        self.confirmCallback(self, NO);
     }
-    [self.navigationController popViewControllerAnimated:true];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end

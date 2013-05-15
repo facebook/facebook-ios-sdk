@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,6 @@
  @abstract
  A block that is passed to [FBViewController presentModallyInViewController:animated:handler:]
  and called when the view controller is dismissed via either Done or Cancel.
- 
- @discussion
- Pass a block of this type when calling addRequest.  This will be called once
- the request completes.  The call occurs on the UI thread.
  
  @param sender          The <FBViewController> that is being dismissed.
  
@@ -96,7 +92,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
  The delegate that will be called when Cancel or Done is pressed. Derived classes may specify
  derived types for their delegates that provide additional functionality.
  */
-@property (nonatomic, assign) id<FBViewControllerDelegate> delegate;
+@property (nonatomic, assign) IBOutlet id<FBViewControllerDelegate> delegate;
 
 /*!
  @abstract
@@ -108,8 +104,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
 /*!
  @abstract
  Provides a wrapper that presents the view controller modally and automatically dismisses it
- when either the Done or Cancel button is pressed. If Done is pressed, the block provided by the
- doneHandler parameter is called.
+ when either the Done or Cancel button is pressed. 
  
  @param viewController  The view controller that is presenting this view controller.
  @param animated        If YES, presenting and dismissing the view controller is animated.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 #import "FBProfilePictureView.h"
 #import "FBURLConnection.h"
 #import "FBRequest.h"
+#import "FBUtility.h"
+#import "FBSDKVersion.h"
 
 @interface FBProfilePictureView()
 
@@ -102,10 +104,10 @@
     int width = (int)(self.bounds.size.width * screenScaleFactor);
 
     if (self.pictureCropping == FBProfilePictureCroppingSquare) {
-        // Note: final query param is escaped form of 'migration_overrides={october_2012:true}'.  Once the 
-        // October 2012 migration has completed, this can be removed.
-        return [NSString stringWithFormat:@"width=%d&height=%d&migration_overrides=%%7boctober_2012:true%%7d",
-                width, width];
+        return [NSString stringWithFormat:@"width=%d&height=%d&migration_bundle=%@", 
+                width, 
+                width, 
+                FB_IOS_SDK_MIGRATION_BUNDLE];
     } 
     
     // For non-square images, we choose between three variants knowing that the small profile picture is 
@@ -155,7 +157,7 @@
 
         FBURLConnectionHandler handler = 
             ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *data) {
-                NSAssert(self.connection == connection, @"Inconsistent connection state");
+                FBConditionalLog(self.connection == connection, @"Inconsistent connection state");
 
                 self.connection = nil;
                 if (!error) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "FBGraphLocation.h"
+#import "FBGraphPlace.h"
 #import "FBGraphObject.h"
 
 /*!
@@ -85,6 +85,6 @@
  @property 
  @abstract Typed access to the user's current city.
  */
-@property (retain, nonatomic) id<FBGraphLocation> location;
+@property (retain, nonatomic) id<FBGraphPlace> location;
 
 @end

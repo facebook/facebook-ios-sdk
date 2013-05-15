@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -162,6 +162,16 @@
  retrieved from the server. It is legal to call this more than once.
  */
 - (void)loadData;
+
+/*!
+ @abstract
+ Updates the view locally without fetching data from the server or from cache.
+ 
+ @discussion
+ Use this if the filter properties change. This may affect the order or
+ display of information.
+ */
+- (void)updateView;
 
 /*!
  @method

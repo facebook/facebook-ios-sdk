@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -220,6 +220,8 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 {
     if (titleSuffix) {
         [self createTitleSuffixLabel];
+    }
+    if (self.titleSuffixLabel) {
         self.titleSuffixLabel.text = titleSuffix;
     }
     [self setNeedsLayout];

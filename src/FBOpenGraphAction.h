@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@
  @property
  @abstract Typed access to action's user message
  */
-@property (retain, nonatomic) NSString              *user_message;
+@property (retain, nonatomic) NSString              *message;
 
 /*!
  @property
@@ -96,9 +96,9 @@
 
 /*!
  @property
- @abstract Typed access to action's images
+ @abstract Typed access to action's image(s)
  */
-@property (retain, nonatomic) NSArray               *image;
+@property (retain, nonatomic) id                    image;
 
 /*!
  @property

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "FBTests.h"
+#import "FBSession+Internal.h"
 
 @interface FBSessionTests : FBTests
 

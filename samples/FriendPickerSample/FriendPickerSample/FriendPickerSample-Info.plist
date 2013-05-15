@@ -53,6 +53,8 @@
 	<string>1.0</string>
 	<key>FacebookAppID</key>
 	<string>370546396320150</string>
+	<key>FacebookDisplayName</key>
+	<string>FriendPickerSample</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -71,6 +73,13 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>ru</string>
+		<string>zh</string>
+		<string>ja</string>
 	</array>
 </dict>
 </plist>

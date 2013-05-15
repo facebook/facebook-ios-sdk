@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,5 +19,13 @@
 @interface FBSettings (Internal)
 
 + (void)autoPublishInstall:(NSString *)appID;
+
+/*!
+ @method
+ 
+ @abstract Get the default url scheme used for the session. This is generated based
+ on the url scheme suffix and the app id.
+ */
++ (NSString*)defaultURLScheme;
 
 @end

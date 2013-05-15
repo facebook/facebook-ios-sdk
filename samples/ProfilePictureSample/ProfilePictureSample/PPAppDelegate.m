@@ -1,5 +1,5 @@
 /*
- * Copyright 2012 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,11 +24,10 @@
 @synthesize viewController = _viewController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // BUG:
-    // Nib files require the type to have been loaded before they can do the
-    // wireup successfully.  
+    // If you have not added the -ObjC linker flag, you may need to uncomment the following line because
+    // Nib files require the type to have been loaded before they can do the wireup successfully.  
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
-    [FBProfilePictureView class];
+    // [FBProfilePictureView class];
      
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 

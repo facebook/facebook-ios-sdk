@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,8 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FBSession.h"
 #import "FBViewController.h"
-
-@class FBSession;
 
 /*!
  @protocol 
@@ -70,6 +69,8 @@
 
  @param sender          The view controller sending the message.
  @param error           The error encountered.
+ @discussion See https://developers.facebook.com/docs/technical-guides/iossdk/errors/
+ for error handling best practices.
  */
 - (void)loginViewController:(id)sender receivedError:(NSError *)error;
 
@@ -94,7 +95,33 @@
  @abstract
  The permissions to request if the user logs in via this view.
  */
-@property (nonatomic, retain) NSArray *permissions;
+@property (nonatomic, copy) NSArray *permissions __attribute__((deprecated));
+
+/*!
+ @abstract
+ The read permissions to request if the user logs in via this view.
+ 
+ @discussion
+ Note, that if read permissions are specified, then publish permissions should not be specified. 
+ */
+@property (nonatomic, copy) NSArray *readPermissions;
+
+/*!
+ @abstract
+ The publish permissions to request if the user logs in via this view.
+ 
+ @discussion
+ Note, that a defaultAudience value of FBSessionDefaultAudienceOnlyMe, FBSessionDefaultAudienceEveryone, or
+ FBSessionDefaultAudienceFriends should be set if publish permissions are specified. Additionally, when publish
+ permissions are specified, then read should not be specified.
+ */
+@property (nonatomic, copy) NSArray *publishPermissions;
+
+/*!
+ @abstract
+ The default audience to use, if publish permissions are requested at login time.
+ */
+@property (nonatomic, assign) FBSessionDefaultAudience defaultAudience;
 
 @end
 
