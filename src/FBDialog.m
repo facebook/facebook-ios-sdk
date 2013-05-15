@@ -651,11 +651,18 @@ params   = _params;
 }
 
 - (void)dismissWithError:(NSError*)error animated:(BOOL)animated {
-    if ([_delegate respondsToSelector:@selector(dialog:didFailWithError:)]) {
-        [_delegate dialog:self didFailWithError:error];
+    // retain self for the life of this method, in case we are released by frictionless
+    id me = [self retain];
+
+    @try {
+        if ([_delegate respondsToSelector:@selector(dialog:didFailWithError:)]) {
+            [_delegate dialog:self didFailWithError:error];
+        }
+        
+        [self dismiss:animated];
+    } @finally {
+        [me release];
     }
-    
-    [self dismiss:animated];
 }
 
 - (void)dialogWillAppear {
@@ -681,10 +688,17 @@ params   = _params;
 }
 
 - (void)dialogDidCancel:(NSURL *)url {
-    if ([_delegate respondsToSelector:@selector(dialogDidNotCompleteWithUrl:)]) {
-        [_delegate dialogDidNotCompleteWithUrl:url];
+    // retain self for the life of this method, in case we are released by frictionless
+    id me = [self retain];
+    
+    @try {
+        if ([_delegate respondsToSelector:@selector(dialogDidNotCompleteWithUrl:)]) {
+            [_delegate dialogDidNotCompleteWithUrl:url];
+        }
+        [self dismissWithSuccess:NO animated:YES];
+    } @finally {
+        [me release];
     }
-    [self dismissWithSuccess:NO animated:YES];
 }
 
 @end
