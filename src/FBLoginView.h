@@ -137,6 +137,14 @@
 
 /*!
  @abstract
+ Tells the delegate that the login/logout button has been pressed
+ 
+ @param loginView   The login view in which the button has been pressed
+ */
+- (void)loginViewLoginButtonPressed:(FBLoginView *)loginView;
+
+/*!
+ @abstract
  Tells the delegate that the view is now in logged in mode
  
  @param loginView   The login view that transitioned its view mode

@@ -428,6 +428,12 @@ CGSize g_imageSize;
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
+    
+    if ([self.delegate respondsToSelector:@selector(loginViewLoginButtonPressed:)]) {
+        // Inform the delegate that the login button was pressed
+        [self.delegate loginViewLoginButtonPressed:self];
+    }
+    
     if (self.session == FBSession.activeSession) {
         if (!self.session.isOpen) { // login
             
