@@ -1147,9 +1147,8 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)isMultitaskingSupported {
-    UIDevice *device = [UIDevice currentDevice];
-    return [device respondsToSelector:@selector(isMultitaskingSupported)] &&
-        [device isMultitaskingSupported];
+    return [[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] &&
+        [[UIDevice currentDevice] isMultitaskingSupported];
 }
 
 - (BOOL)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray*)permissions
