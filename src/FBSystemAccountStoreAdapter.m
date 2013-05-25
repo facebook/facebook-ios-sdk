@@ -171,6 +171,16 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
     
     //wrap the request call into a separate block to help with possibly block chaining below.
     void(^requestAccessBlock)(void) = ^{
+		// check if we have a valid account type object
+		if (!self.accountTypeFB) {
+			// we don't
+			// some weird error happened, abort
+			handler(nil, [session errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
+														  errorCode:nil
+														 innerError:nil]);
+			return;
+		}
+		
         // we will attempt an iOS integrated facebook login
         [self.accountStore
          requestAccessToAccountsWithType:self.accountTypeFB
