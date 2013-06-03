@@ -378,9 +378,20 @@ static NSError *g_fetchedAppSettingsError = nil;
     static NSArray *urlSchemes = nil;
     
     dispatch_once(&fetchBundleOnce, ^{
-        urlSchemes = [[[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"] objectAtIndex:0] valueForKey:@"CFBundleURLSchemes"];
+        urlSchemes = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
     });
-    return [urlSchemes containsObject:urlScheme];
+    
+    __block BOOL foundScheme = NO;
+    [urlSchemes enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isKindOfClass:[NSDictionary class]]) {
+            NSArray *theseURLSchemes = [(NSDictionary*)obj valueForKey:@"CFBundleURLSchemes"];
+            if ([theseURLSchemes containsObject:urlScheme]) {
+                foundScheme = YES;
+                *stop = YES;
+            }
+        }
+    }];
+    return foundScheme;
 }
 
 @end
