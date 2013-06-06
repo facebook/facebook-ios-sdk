@@ -841,14 +841,7 @@ const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
         [postParameters setObject:advertiserID forKey:@"advertiser_id"];
     }
     
-    // Only send this query param if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
-    // absence of this parameter is to be interpreted as 'unspecified'.
-    FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
-    if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
-        BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
-        [postParameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
-                           forKey:@"advertiser_tracking_enabled"];
-    }
+    [FBUtility updateParametersWithAdvertisingTrackingStatus:postParameters];
 }
 
 - (BOOL)doesSessionHaveUserToken:(FBSession *)session {

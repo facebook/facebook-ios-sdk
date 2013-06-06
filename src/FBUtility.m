@@ -318,6 +318,18 @@ static NSError *g_fetchedAppSettingsError = nil;
     return status;
 }
 
+// Only add this param if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
+// absence of this parameter is to be interpreted as 'unspecified'.
++ (void)updateParametersWithAdvertisingTrackingStatus:(NSMutableDictionary *)parameters {
+
+  FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
+  if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
+    BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
+    [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
+                       forKey:@"advertiser_tracking_enabled"];
+  }
+}
+
 + (NSString *)simpleJSONEncode:(id)data {
     return [FBUtility simpleJSONEncode:data
                                  error:nil];
@@ -375,12 +387,18 @@ static NSError *g_fetchedAppSettingsError = nil;
 
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme {
     static dispatch_once_t fetchBundleOnce;
-    static NSArray *urlSchemes = nil;
+    static NSArray *urlTypes = nil;
     
     dispatch_once(&fetchBundleOnce, ^{
-        urlSchemes = [[[[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"] objectAtIndex:0] valueForKey:@"CFBundleURLSchemes"];
+        urlTypes = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
     });
-    return [urlSchemes containsObject:urlScheme];
+    for (NSDictionary *urlType in urlTypes) {
+        NSArray *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
+        if ([urlSchemes containsObject:urlScheme]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 @end

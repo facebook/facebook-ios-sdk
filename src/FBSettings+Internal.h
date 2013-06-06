@@ -28,4 +28,22 @@
  */
 + (NSString*)defaultURLScheme;
 
+/*!
+ @method
+ 
+ @abstract Set the default JPEG Compression Quality used for UIImage uploads. If not specified
+ we use a default value of 0.9
+ 
+ @param compressionQuality The default url scheme suffix to be used by the SDK.
+ */
++ (void)setdefaultJPEGCompressionQuality:(CGFloat)compressionQuality;
+
+/*!
+ @method
+ 
+ @abstract Get the default JPEG Compression Quality used for UIImage uploads.  This value is the
+ compressionQuality value passed to UIImageJPEGRepresentation
+ */
++ (CGFloat)defaultJPEGCompressionQuality;
+
 @end

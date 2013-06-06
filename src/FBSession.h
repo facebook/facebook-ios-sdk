@@ -246,7 +246,8 @@ typedef void (^FBSessionRenewSystemCredentialsHandler)(ACAccountCredentialRenewR
  default values for parameters to <initWithAppID:permissions:urlSchemeSuffix:tokenCacheStrategy:>.
  
  @param permissions  An array of strings representing the permissions to request during the
- authentication flow. A value of nil indicates basic permissions. The default is nil.
+ authentication flow. The basic_info permission must be explicitly requested at first login, and is no 
+ longer inferred, (subject to an active migration.) The default is nil.
  
  @discussion
  It is required that any single permission request request (including initial log in) represent read-only permissions
@@ -263,7 +264,7 @@ typedef void (^FBSessionRenewSystemCredentialsHandler)(ACAccountCredentialRenewR
  defaults when ommitted.
  
  @param permissions  An array of strings representing the permissions to request during the
- authentication flow. A value of nil indicates basic permissions. The default is nil.
+ authentication flow. The basic_info permission must be explicitly requested at first login, and is no longer inferred, (subject to an active migration.) The default is nil.
  @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
  @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
  @param tokenCachingStrategy Specifies a key name to use for cached token information in NSUserDefaults, nil
@@ -286,7 +287,7 @@ typedef void (^FBSessionRenewSystemCredentialsHandler)(ACAccountCredentialRenewR
  defaults when ommitted.
  
  @param permissions  An array of strings representing the permissions to request during the
- authentication flow. A value of nil indicates basic permissions. The default is nil.
+ authentication flow. The basic_info permission must be explicitly requested at first login, and is no longer inferred, (subject to an active migration.) The default is nil.
  @param defaultAudience  Most applications use FBSessionDefaultAudienceNone here, only specifying an audience when using reauthorize to request publish permissions.
  @param appID  The Facebook App ID for the session. If nil is passed in the default App ID will be obtained from a call to <[FBSession defaultAppID]>. The default is nil.
  @param urlSchemeSuffix  The URL Scheme Suffix to be used in scenarious where multiple iOS apps use one Facebook App ID. A value of nil indicates that this information should be pulled from the plist. The default is nil.
@@ -605,8 +606,8 @@ __attribute__((deprecated));
  used by the application. This session becomes the active session, whether open succeeds or fails.
  
  @param readPermissions     An array of strings representing the read permissions to request during the
- authentication flow. A value of nil indicates basic permissions. It is not allowed to pass publish
- permissions to this method.
+ authentication flow. The basic_info permission must be explicitly requested at first login, and is no longer 
+ inferred, (subject to an active migration.) It is not allowed to pass publish permissions to this method.
  
  @param allowLoginUI    Sometimes it is useful to attempt to open a session, but only if
  no login UI will be required to accomplish the operation. For example, at application startup it may not

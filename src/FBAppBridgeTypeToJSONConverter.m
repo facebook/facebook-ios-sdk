@@ -16,7 +16,9 @@
 
 #import <UIKit/UIKit.h>
 #import "FBBase64.h"
+#import "FBError.h"
 #import "FBAppBridgeTypeToJSONConverter.h"
+#import "FBSettings+Internal.h"
 
 /*
  jsonReadyValue: A representation of the extended type that is safe for JSON serialization.
@@ -93,7 +95,7 @@ static const NSUInteger PasteboardThreshold = 5120;
                                   tag:FBAppBridgeTypesTags.data];
         } else if ([object isKindOfClass:[UIImage class]]) {
             UIImage *image = (UIImage *)object;
-            return [self jsonFromData:UIImagePNGRepresentation(image)
+            return [self jsonFromData:UIImageJPEGRepresentation(image, [FBSettings defaultJPEGCompressionQuality])
                                   tag:FBAppBridgeTypesTags.png];
         }
     }
@@ -144,23 +146,30 @@ static const NSUInteger PasteboardThreshold = 5120;
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     NSString *jsonReadyValue = nil;
     
-    // If the data is short enough, put it in the URL directly. Otherwise use UIPasteboard
-    if (data.length <= PasteboardThreshold) {
+    // If the data is large, put it in a UIPasteboard
+    if (data.length > PasteboardThreshold) {
+        NSString *uniqueSuffix = [[FBUtility newUUIDString] autorelease];
+        NSString *pasteboardName = [FacebookSDKDomain stringByAppendingString:uniqueSuffix];
+        UIPasteboard *board = [UIPasteboard pasteboardWithName:pasteboardName create:YES];
+        if (board) {
+            [board setPersistent:YES];
+            [board setData:data forPasteboardType:FBAppBridgeTypeIdentifier];
+            
+            jsonReadyValue = board.name;
+            [self.createdPasteboardNames addObject:board.name];
+            
+            json[FBAppBridgeTypesMetadata.isPasteboard] = [NSNumber numberWithBool:YES];
+        }
+    }
+    
+    // If a UIPasteboard was not (or could not be) used, put the data directly in the URL.
+    if (!jsonReadyValue) {
         jsonReadyValue = FBEncodeBase64(data);
         json[FBAppBridgeTypesMetadata.isBase64] = [NSNumber numberWithBool:YES];
-    } else {
-        UIPasteboard *board = [UIPasteboard pasteboardWithUniqueName];
-        [board setPersistent:YES];
-        [board setData:data forPasteboardType:FBAppBridgeTypeIdentifier];
-        
-        jsonReadyValue = board.name;
-        [self.createdPasteboardNames addObject:board.name];
-        
-        json[FBAppBridgeTypesMetadata.isPasteboard] = [NSNumber numberWithBool:YES];
     }
     
     json[FBAppBridgeTypesMetadata.tag] = tag ?: @"";
-    json[FBAppBridgeTypesMetadata.jsonReadyValue] = jsonReadyValue;
+    json[FBAppBridgeTypesMetadata.jsonReadyValue] = jsonReadyValue ?: @"";
     
     return json;
 }

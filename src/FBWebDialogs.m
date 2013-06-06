@@ -26,6 +26,8 @@
 #import "FBFrictionlessDialogSupportDelegate.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBFrictionlessRecipientCache.h"
+#import "FBSettings.h"
+#import "FBLogger.h"
 
 static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 
@@ -73,6 +75,11 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
     [super dealloc];
 }
 
+// The SDK 3.* and greater maintains compatibility with the 2.0 SDKs, in order to simplify migration
+// for customers moving to 3.*. Due to this, there are a few ugly bits where we have to hack to keep
+// the legacy code working, without letting its anti-patterns bleed into the newer (and hopefully
+// cleaner) 3.* API, and customer app. The self-retention madness in this class is an example of this.
+// So without further ado...
 - (void)goRetainYourself {
     if (!_isSelfRetained) {
         [self retain];
@@ -192,6 +199,7 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
     [parametersImpl setObject:@"touch" forKey:@"display"];
     [parametersImpl setObject:FB_IOS_SDK_VERSION_STRING forKey:@"sdk"];
     [parametersImpl setObject:@"fbconnect://success" forKey:@"redirect_uri"];
+    [parametersImpl setObject:[FBSettings defaultAppID] ? : @"" forKey:@"app_id"];
     
     // then roll in developer provided parameters
     if (parameters) {
@@ -207,12 +215,18 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
     // caller must pass parameters to meet the requirements of the dialog
     if (session) {
         // set access_token and app_id
-        [parametersImpl setValue:session.accessTokenData.accessToken ? : @""
+        [parametersImpl setObject:session.accessTokenData.accessToken ? : @""
                           forKey:@"access_token"];
         [parametersImpl setObject:session.appID ? : @""
                            forKey:@"app_id"];
     }
     
+    NSString *app_id = [parametersImpl objectForKey:@"app_id"];
+    if ([app_id length] == 0) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                            logEntry:@"You must specify an app_id via an FBSession, the parameters, or the plist"];
+    }
+
     BOOL isViewInvisible = NO;
     FBFrictionlessRequestSettings *frictionlessSettings = nil;
     

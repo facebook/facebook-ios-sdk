@@ -420,7 +420,7 @@ NSError *error);
  handleOpenURL: method in FBAppCall.
  
  @param action The Open Graph action to be published. May not be nil.
- 
+
  @param actionType the fully-specified Open Graph action type of the action (e.g.,
  my_app_namespace:my_action).
  
@@ -458,7 +458,7 @@ NSError *error);
  handleOpenURL: method in FBAppCall.
  
  @param action The Open Graph action to be published. May not be nil.
- 
+
  @param actionType the fully-specified Open Graph action type of the action (e.g.,
  my_app_namespace:my_action).
  

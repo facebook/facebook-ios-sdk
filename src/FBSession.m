@@ -898,6 +898,7 @@ static FBSession *g_activeSession = nil;
         if (tryFBAppAuth) {
             FBFetchedAppSettings *fetchedSettings = [FBUtility fetchedAppSettings];
             if ([FBSettings defaultDisplayName] &&            // don't autoselect Native Login unless the app has been setup for it,
+                [self.appID isEqualToString:[FBSettings defaultAppID]] && // If the appId has been overridden, then the bridge cannot be used and native login is denied
                 (fetchedSettings || canFetchAppSettings) &&   // and we have app-settings available to us, or could fetch if needed
                 !TEST_DISABLE_FACEBOOKNATIVELOGIN) {
                 if (!fetchedSettings) {
@@ -1147,9 +1148,8 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)isMultitaskingSupported {
-    UIDevice *device = [UIDevice currentDevice];
-    return [device respondsToSelector:@selector(isMultitaskingSupported)] &&
-        [device isMultitaskingSupported];
+    return [[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] &&
+        [[UIDevice currentDevice] isMultitaskingSupported];
 }
 
 - (BOOL)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray*)permissions

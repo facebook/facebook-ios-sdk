@@ -26,6 +26,7 @@
 #import "FBAccessTokenData+Internal.h"
 #import "FBError.h"
 #import "FBUtility.h"
+#import "FBSettings.h"
 #import <objc/objc-runtime.h>
 
 static NSString *kURLSchemeSuffix = @"URLSuffix";
@@ -872,6 +873,8 @@ static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
     
     [[(id)mockSession reject] close];
     [[(id)mockSession reject] callReauthorizeHandlerAndClearState:[OCMArg any]];
+    
+    [FBSettings setDefaultAppID:kTestAppId];
     
     [session handleDidBecomeActive];
     

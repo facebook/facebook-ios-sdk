@@ -337,7 +337,7 @@ static NSString *const kPostHTTPMethod = @"POST";
                                                                                              image:image
                                                                                                url:url
                                                                                        description:description];
-    object.id = [FBUtility stringFBIDFromObject:objectId];
+    object[@"id"] = [FBUtility stringFBIDFromObject:objectId];
     return [FBRequest requestForUpdateOpenGraphObject:object];
 }
 

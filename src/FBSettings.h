@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <CoreGraphics/CGBase.h>
 
 /*
  * Constants defining logging behavior.  Use with <[FBSettings setLoggingBehavior]>.

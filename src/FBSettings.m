@@ -53,6 +53,7 @@ static NSString *g_clientToken;
 static NSString *g_defaultDisplayName = nil;
 static NSString *g_defaultAppID = nil;
 static NSString *g_defaultUrlSchemeSuffix = nil;
+static CGFloat g_defaultJPEGCompressionQuality = 0.9;
 static NSUInteger g_betaFeatures = 0;
 
 + (NSSet *)loggingBehavior {
@@ -125,6 +126,14 @@ static NSUInteger g_betaFeatures = 0;
 
 + (NSString*)defaultURLScheme {
     return [NSString stringWithFormat:@"fb%@%@", [self defaultAppID], [self defaultUrlSchemeSuffix] ?: @""];
+}
+
++ (void)setdefaultJPEGCompressionQuality:(CGFloat)compressionQuality {
+    g_defaultJPEGCompressionQuality = compressionQuality;
+}
+
++ (CGFloat)defaultJPEGCompressionQuality {
+    return g_defaultJPEGCompressionQuality;
 }
 
 + (BOOL)shouldAutoPublishInstall {
@@ -204,7 +213,7 @@ static NSUInteger g_betaFeatures = 0;
       
         NSString *attributionID = [FBUtility attributionID];
         NSString *advertiserID = [FBUtility advertiserID];
-      
+
         if (lastPing) {
             // Short circuit
             if (handler) {
@@ -264,6 +273,7 @@ static NSUInteger g_betaFeatures = 0;
                         if (advertiserID) {
                             [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                         }
+                        [FBUtility updateParametersWithAdvertisingTrackingStatus:installActivity];
 
                         FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];
                         [publishRequest startWithCompletionHandler:publishCompletionBlock];

@@ -119,7 +119,14 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
     NSMutableDictionary *flattened = [[[NSMutableDictionary alloc] initWithDictionary:dict] autorelease];
     for (NSString *key in dict) {
         id value = [dict objectForKey:key];
-        [flattened setObject:[self flattenObject:value] forKey:key];
+        // Since flattenGraphObjects is only called for the OG action AND image is a special
+        // object with attributes that should NOT be flattened (e.g., "user_generated"),
+        // we should skip flattening the image dictionary.
+        if ([key isEqualToString:@"image"]) {
+          [flattened setObject:value forKey:key];
+        } else {
+          [flattened setObject:[self flattenObject:value] forKey:key];
+        }
     }
     return flattened;
 }
