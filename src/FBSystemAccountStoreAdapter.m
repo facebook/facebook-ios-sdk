@@ -152,12 +152,13 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
     if (!audience && isReauthorize) {
         for (NSString *p in permissions) {
             if ([p hasPrefix:@"publish"]) {
-                [[NSException exceptionWithName:FBInvalidOperationException
-                                         reason:@"FBSession: One or more publish permission was requested "
-                  @"without specifying an audience; use FBSessionDefaultAudienceJustMe, "
-                  @"FBSessionDefaultAudienceFriends, or FBSessionDefaultAudienceEveryone"
-                                       userInfo:nil]
-                 raise];
+                if(handler)
+                {
+                    handler(nil, [NSError errorWithDomain:FacebookSDKDomain
+                                                     code:FBErrorSystemAPI
+                                                 userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: One or more publish permission was requested without specifying an audience; use FBSessionDefaultAudienceJustMe, FBSessionDefaultAudienceFriends, or FBSessionDefaultAudienceEveryone" }]);
+                }
+                return;
             }
         }
     }
