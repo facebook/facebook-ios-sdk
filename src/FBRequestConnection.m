@@ -599,14 +599,14 @@ typedef enum FBRequestConnectionState {
 - (void)startURLConnectionWithRequest:(NSURLRequest *)request
                 skipRoundTripIfCached:(BOOL)skipRoundTripIfCached
                     completionHandler:(FBURLConnectionHandler) handler {
-    FBURLConnection *connection = [[self createFBURLConnection] initWithRequest:request
+    FBURLConnection *connection = [[self newFBURLConnection] initWithRequest:request
                                                           skipRoundTripIfCached:skipRoundTripIfCached
                                                               completionHandler:handler];
     self.connection = connection;
     [connection release];    
 }
 
-- (FBURLConnection *)createFBURLConnection {
+- (FBURLConnection *)newFBURLConnection {
     return [FBURLConnection alloc];
 }
 

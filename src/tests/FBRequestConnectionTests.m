@@ -32,7 +32,7 @@
 
 @interface FBRequestConnection (Testing)
 
-- (FBURLConnection *)createFBURLConnection;
+- (FBURLConnection *)newFBURLConnection;
 
 @end
 
@@ -51,7 +51,7 @@
     // Swizzle the connection not actually send any requests; we don't care what happens to the requests.
     FBURLConnection *mockURLConnection = [OCMockObject niceMockForClass:[FBURLConnection class]];
     FBRequestConnection *swizzledConnection = [OCMockObject partialMockForObject:connection];
-    [[[(id)swizzledConnection expect] andReturn:mockURLConnection] createFBURLConnection];
+    [[[(id)swizzledConnection expect] andReturn:mockURLConnection] newFBURLConnection];
     
     const int batchSize = 50;
     for (int i = 0; i < batchSize; ++i) {

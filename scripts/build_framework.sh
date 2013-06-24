@@ -74,6 +74,7 @@ cd $FB_SDK_SRC
 function xcode_build_target() {
   echo "Compiling for platform: ${1}."
   $XCODEBUILD \
+    RUN_CLANG_STATIC_ANALYZER=NO \
     -target "facebook-ios-sdk" \
     -sdk $1 \
     -configuration "${2}" \
