@@ -84,7 +84,7 @@
     // this button's job is to flip-flop the session from open to closed
     if (appDelegate.session.isOpen) {
         // if a user logs out explicitly, we delete any cached token information, and next
-        // time they run the applicaiton they will be presented with log in UX again; most
+        // time they run the application they will be presented with log in UX again; most
         // users will simply close the app or switch away, without logging out; this will
         // cause the implicit cached-token login to occur on next launch of the application
         [appDelegate.session closeAndClearTokenInformation];
