@@ -78,8 +78,11 @@ static NSString *const kAccessTokenKey = @"access_token";
     if (_fileQueue) {
         dispatch_release(_fileQueue);
     }
-
-    [_cacheIndex release];
+    if (_cacheIndex) {
+        _cacheIndex.delegate = nil;
+        [_cacheIndex release];
+        _cacheIndex = nil;
+    }
     [_dataCachePath release];
     [_inMemoryCache release];
     [super dealloc];

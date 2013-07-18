@@ -67,7 +67,10 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 
 - (void)dealloc {
     self.handler = nil;
-    self.dialog = nil;
+    if (self.dialog) {
+        self.dialog.delegate = nil;
+        self.dialog = nil;
+    }
     self.dialogMethod = nil;
     self.parameters = nil;
     self.session = nil;
@@ -90,7 +93,10 @@ static NSString* dialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 - (void)releaseSelfIfNeeded {
     self.handler = nil; // insurance
     self.delegate = nil; // insurance
-    self.dialog = nil;
+    if (self.dialog) {
+        self.dialog.delegate = nil;
+        self.dialog = nil;
+    }
     if (_isSelfRetained) {
         [self autorelease];
         _isSelfRetained = NO;
