@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
+#import "FacebookSDK.h"
 #import "FBError.h"
 #import "FBRequest.h"
 #import "FBSession.h"
 #import "FBSettings.h"
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
+#import "FBLogger.h"
 
 #import <UIKit/UIKit.h>
 
 // Keys to get App-specific info from mainBundle
 static NSString *const FBPLISTDisplayNameKey = @"FacebookDisplayName";
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
-static NSString *const FBPLISTUrlSchemeSuffixKey = @"FacebookUrlSchemeSuffix";
+NSString *const FBPLISTUrlSchemeSuffixKey = @"FacebookUrlSchemeSuffix";
+static NSString *const FBPLISTBundleNameKey = @"FacebookBundleName";
 
 // const strings
 NSString *const FBLoggingBehaviorFBRequests = @"fb_requests";
@@ -34,7 +37,8 @@ NSString *const FBLoggingBehaviorFBURLConnections = @"fburl_connections";
 NSString *const FBLoggingBehaviorAccessTokens = @"include_access_tokens";
 NSString *const FBLoggingBehaviorSessionStateTransitions = @"state_transitions";
 NSString *const FBLoggingBehaviorPerformanceCharacteristics = @"perf_characteristics";
-NSString *const FBLoggingBehaviorInsights = @"insights";
+NSString *const FBLoggingBehaviorAppEvents = @"app_events";
+NSString *const FBLoggingBehaviorInformational = @"informational";
 NSString *const FBLoggingBehaviorDeveloperErrors = @"developer_errors";
 
 NSString *const FBLastAttributionPing = @"com.facebook.sdk:lastAttributionPing%@";
@@ -49,12 +53,19 @@ NSTimeInterval const FBPublishDelay = 0.1;
 static NSSet *g_loggingBehavior;
 static BOOL g_autoPublishInstall = YES;
 static dispatch_once_t g_publishInstallOnceToken;
+static NSString *g_appVersion;
 static NSString *g_clientToken;
 static NSString *g_defaultDisplayName = nil;
 static NSString *g_defaultAppID = nil;
 static NSString *g_defaultUrlSchemeSuffix = nil;
+static NSString *g_defaultBundleName = nil;
+static NSString *g_defaultFacebookDomainPart = nil;
 static CGFloat g_defaultJPEGCompressionQuality = 0.9;
 static NSUInteger g_betaFeatures = 0;
+
++ (NSString *)sdkVersion {
+    return FB_IOS_SDK_VERSION_STRING;
+}
 
 + (NSSet *)loggingBehavior {
     if (!g_loggingBehavior) {
@@ -70,6 +81,16 @@ static NSUInteger g_betaFeatures = 0;
     [newValue retain];
     [g_loggingBehavior release];
     g_loggingBehavior = newValue;
+}
+
++ (NSString *)appVersion {
+    return g_appVersion;
+}
+
++ (void)setAppVersion:(NSString *)appVersion {
+    [appVersion retain];
+    [g_appVersion release];
+    g_appVersion = appVersion;
 }
 
 + (NSString *)clientToken {
@@ -110,6 +131,41 @@ static NSUInteger g_betaFeatures = 0;
     return g_defaultAppID;
 }
 
++ (void)setResourceBundleName:(NSString*)bundleName {
+    NSString *oldValue = g_defaultBundleName;
+    g_defaultBundleName = [bundleName copy];
+    [oldValue release];
+}
+
++ (NSString*)resourceBundleName {
+    if (!g_defaultBundleName) {
+        NSBundle* bundle = [NSBundle mainBundle];
+        g_defaultBundleName = [bundle objectForInfoDictionaryKey:FBPLISTBundleNameKey];
+#if TARGET_IPHONE_SIMULATOR
+        // The FacebookSDKResources.bundle is no longer used.
+        // Warn the developer if they are including it by default
+        if (![g_defaultBundleName isEqualToString:@"FacebookSDKResources"]) {
+            NSString* facebookSDKBundlePath = [bundle pathForResource:@"FacebookSDKResources" ofType:@"bundle"];
+            if (facebookSDKBundlePath) {
+                [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"The FacebookSDKResources.bundle is no longer required for your application.  It can be removed.  After fixing this, you will need to Clean the project and then reset your simulator."];
+            }
+        }
+#endif
+    }
+    return g_defaultBundleName;
+}
+
++ (void)setFacebookDomainPart:(NSString*)facebookDomainPart
+{
+    NSString *oldValue = g_defaultFacebookDomainPart;
+    g_defaultFacebookDomainPart = [facebookDomainPart copy];
+    [oldValue release];
+}
+
++ (NSString*)facebookDomainPart {
+    return g_defaultFacebookDomainPart;
+}
+
 + (void)setDefaultUrlSchemeSuffix:(NSString*)urlSchemeSuffix {
     NSString *oldValue = g_defaultUrlSchemeSuffix;
     g_defaultUrlSchemeSuffix = [urlSchemeSuffix copy];
@@ -124,8 +180,8 @@ static NSUInteger g_betaFeatures = 0;
     return g_defaultUrlSchemeSuffix;
 }
 
-+ (NSString*)defaultURLScheme {
-    return [NSString stringWithFormat:@"fb%@%@", [self defaultAppID], [self defaultUrlSchemeSuffix] ?: @""];
++ (NSString*)defaultURLSchemeWithAppID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix {
+    return [NSString stringWithFormat:@"fb%@%@", appID ?: [self defaultAppID], urlSchemeSuffix ?: [self defaultUrlSchemeSuffix] ?: @""];
 }
 
 + (void)setdefaultJPEGCompressionQuality:(CGFloat)compressionQuality {
@@ -144,15 +200,23 @@ static NSUInteger g_betaFeatures = 0;
     g_autoPublishInstall = newValue;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 + (void)autoPublishInstall:(NSString *)appID {
     if ([FBSettings shouldAutoPublishInstall]) {
         dispatch_once(&g_publishInstallOnceToken, ^{
             // dispatch_once is great, but not re-entrant.  Inside publishInstall we use FBRequest, which will
             // cause this function to get invoked a second time.  By scheduling the work, we can sidestep the problem.
-            [[FBSettings class] performSelector:@selector(publishInstall:) withObject:appID afterDelay:FBPublishDelay];
+            [[FBSettings class] performSelector:@selector(autoPublishInstallImpl:) withObject:appID afterDelay:FBPublishDelay];
         });
     }
 }
+#pragma GCC diagnostic pop
+
++ (void)autoPublishInstallImpl:(NSString *)appID {
+    [FBSettings publishInstall:appID withHandler:nil isAutoPublish:YES];
+}
+
 
 + (void)enableBetaFeatures:(NSUInteger)betaFeatures {
   g_betaFeatures |= betaFeatures;
@@ -179,6 +243,14 @@ static NSUInteger g_betaFeatures = 0;
 
 + (void)publishInstall:(NSString *)appID
            withHandler:(FBInstallResponseDataHandler)handler {
+    [FBSettings publishInstall:appID withHandler:handler isAutoPublish:NO];
+}
+
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
++ (void)publishInstall:(NSString *)appID
+           withHandler:(FBInstallResponseDataHandler)handler
+         isAutoPublish:(BOOL)isAutoPublish {
     @try {
         handler = [[handler copy] autorelease];
 
@@ -201,7 +273,9 @@ static NSUInteger g_betaFeatures = 0;
 
         // We turn off auto-publish, since this was manually called and the expectation
         // is that it's only ever necessary to call this once.
-        [FBSettings setShouldAutoPublishInstall:NO];
+        if (!isAutoPublish) {
+            [FBSettings setShouldAutoPublishInstall:NO];
+        }
 
         // look for a previous ping & grab the facebook app's current attribution id.
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -273,7 +347,9 @@ static NSUInteger g_betaFeatures = 0;
                         if (advertiserID) {
                             [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                         }
-                        [FBUtility updateParametersWithAdvertisingTrackingStatus:installActivity];
+                        [FBUtility updateParametersWithEventUsageLimits:installActivity];
+                      
+                        [installActivity setObject:[NSNumber numberWithBool:isAutoPublish].stringValue forKey:@"auto_publish"];
 
                         FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];
                         [publishRequest startWithCompletionHandler:publishCompletionBlock];
@@ -320,5 +396,6 @@ static NSUInteger g_betaFeatures = 0;
         }
     }
 }
+#pragma GCC diagnostic pop
 
 @end

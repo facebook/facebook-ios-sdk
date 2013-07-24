@@ -43,6 +43,8 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
 {
     [_previewPropertyName release];
     [_actionType release];
+    [_action release];
+    
     [super dealloc];
 }
 

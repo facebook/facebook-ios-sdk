@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <OCMock/OCMock.h>
 
 @class FBTestBlocker;
 
@@ -38,5 +39,7 @@ typedef void (^FBTestBlockerPeriodicHandler)(FBTestBlocker *blocker);
 - (void)waitWithPeriodicHandler:(FBTestBlockerPeriodicHandler)handler;
 - (BOOL)waitWithTimeout:(NSTimeInterval)timeout periodicHandler:(FBTestBlockerPeriodicHandler)handler;
 - (void)signal;
+
++ (void)waitForVerifiedMock:(OCMockObject *)inMock delay:(NSTimeInterval)inDelay;
 
 @end

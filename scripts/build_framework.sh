@@ -144,6 +144,10 @@ done
   $FB_SDK_SRC/*.bundle \
   $FB_SDK_FRAMEWORK/Versions/A/Resources \
   || die "Error building framework while copying bundle to Resources"
+\cp -r \
+  $FB_SDK_SRC/*.bundle.README \
+  $FB_SDK_FRAMEWORK/Versions/A/Resources \
+  || die "Error building framework while copying README to Resources"
 \cp \
   $FB_SDK_UNIVERSAL_BINARY \
   $FB_SDK_FRAMEWORK/Versions/A/FacebookSDK \
@@ -173,5 +177,5 @@ fi
 # Done
 #
 
-progress_message "Framework version info:" `perl -pe "s/.*@//" < $FB_SDK_SRC/FBSDKVersion.h`
+progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' $FB_SDK_SRC/FBSDKVersion.h $FB_SDK_SRC/FacebookSDK.h` 
 common_success

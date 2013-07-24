@@ -20,20 +20,22 @@
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 test -x "$PACKAGEMAKER" || die 'Could not find PackageMaker in $PATH - install to Applications from https://developer.apple.com/downloads/index.action (Auxiliary Tools for XCode)'
-test -x "$CODESIGN" || die 'Could not find codesign utility! Reinstall XCode?'
+test -x "$PRODUCTSIGN" || die 'Could not find productsign utility! Reinstall XCode?'
 
-FB_SDK_PGK_VERSION=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FBSDKVersion.h)
+FB_SDK_PGK_VERSION=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FacebookSDK.h)
 # In case the hotfix value is zero, we drop the .0
 FB_SDK_NORMALIZED_PGK_VERSION=$(echo ${FB_SDK_PGK_VERSION} | sed  's/^\([0-9]*\.[0-9]*\)\.0/\1/')
 
+FB_SDK_UNSIGNED_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_NORMALIZED_PGK_VERSION}-unsigned.pkg
 FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_NORMALIZED_PGK_VERSION}.pkg
-FB_SDK_FRAMEWORK_TGZ=${FB_SDK_FRAMEWORK}-${FB_SDK_NORMALIZED_PGK_VERSION}.tgz
 
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Documents/FacebookSDK
 FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR
 FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
 FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Library/Developer/Shared/Documentation/DocSets/$FB_SDK_DOCSET_NAME
+
+CODE_SIGN_IDENTITY='Developer ID Installer: Facebook, Inc. (V9WTTPBFK9)'
 
 # -----------------------------------------------------------------------------
 # Call out to build prerequisites.
@@ -43,17 +45,6 @@ if is_outermost_build; then
     . $FB_SDK_SCRIPT/build_documentation.sh
 fi
 echo Building Distribution.
-
-# -----------------------------------------------------------------------------
-# Compress framework for standalone distribution
-#
-progress_message "Compressing framework for standalone distribution."
-\rm -rf ${FB_SDK_FRAMEWORK_TGZ}
-
-# Current directory matters to tar.
-cd $FB_SDK_BUILD || die "Could not cd to $FB_SDK_BUILD"
-tar -c -z $FB_SDK_FRAMEWORK_NAME >  $FB_SDK_FRAMEWORK_TGZ \
-  || die "tar failed to create ${FB_SDK_FRAMEWORK_NAME}.tgz"
 
 # -----------------------------------------------------------------------------
 # Build package directory structure
@@ -89,31 +80,31 @@ done
 # Build .pkg from package directory
 #
 progress_message "Building .pkg from package directory."
-\rm -rf $FB_SDK_PKG
+\rm -rf $FB_SDK_UNSIGNED_PKG
 $PACKAGEMAKER \
   --doc $FB_SDK_SRC/Package/FacebookSDK.pmdoc \
   --domain user \
   --target 10.5 \
   --version $FB_SDK_VERSION \
-  --out $FB_SDK_PKG \
-  --title 'Facebook SDK 3.5.3 for iOS' \
+  --out $FB_SDK_UNSIGNED_PKG \
+  --title 'Facebook SDK 3.6 for iOS' \
   || die "PackageMaker reported error"
 
-if [ ! "$CODE_SIGN_IDENTITY" ]; then
-    echo '***************'
-    echo 'WARNING: No $CODE_SIGN_IDENTITY provided,'
-    echo 'Distribution will be unsigned and difficult for users to install on OS X 10.8+'
-    echo '***************'
-else
-    progress_message "Signing package."
-    $CODESIGN -s "$CODE_SIGN_IDENTITY" $FB_SDK_PKG || die "Failed to codesign package."
-fi
+progress_message "Signing package."
+\rm -rf $FB_SDK_PKG
+$PRODUCTSIGN -s "$CODE_SIGN_IDENTITY" $FB_SDK_UNSIGNED_PKG $FB_SDK_PKG \
+ || FAILED_TO_SIGN=1
 
+if [ "$FAILED_TO_SIGN" == "1" ] ; then
+  progress_message "Failed to sign the package. See https://our.intern.facebook.com/intern/wiki/index.php/Platform/Mobile/ContributingToMobileSDKs#Building_the_iOS_Distribution_with_PackageMaker"
+fi
 
 # -----------------------------------------------------------------------------
 # Done
 #
 progress_message "Successfully built SDK distribution:"
-progress_message "  $FB_SDK_FRAMEWORK_TGZ"
-progress_message "  $FB_SDK_PKG"
+if [ "$FAILED_TO_SIGN" != "1" ] ; then
+  progress_message "  Signed : $FB_SDK_PKG"
+fi
+progress_message "  Unsigned : $FB_SDK_UNSIGNED_PKG"
 common_success

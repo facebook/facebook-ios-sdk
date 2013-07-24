@@ -34,6 +34,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppEvents activateApp];
     [FBAppCall handleDidBecomeActive];
 }
 

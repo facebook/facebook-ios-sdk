@@ -316,7 +316,7 @@
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
         }
         
-        [self logInsights:YES];
+        [self logAppEvents:YES];
         if (self.handler) {
             self.handler(self, NO);
         }
@@ -336,15 +336,15 @@
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
         }
         
-        [self logInsights:NO];
+        [self logAppEvents:NO];
         if (self.handler) {
             self.handler(self, YES);
         }
     }
 }
 
-- (void)logInsights:(BOOL)cancelled {
-    // Internal subclasses that will implicitly log Insights will do so here.
+- (void)logAppEvents:(BOOL)cancelled {
+    // Internal subclasses that will implicitly log app events will do so here.
 }
 
 

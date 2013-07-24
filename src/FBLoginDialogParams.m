@@ -16,10 +16,16 @@
 
 #import "FBLoginDialogParams.h"
 #import "FBDialogsParams+Internal.h"
+#import "FBAppBridge.h"
+#import "FBSettings+Internal.h"
+#import "FBSession+Internal.h"
 
 static NSString *const SSOWritePrivacyPublic = @"EVERYONE";
 static NSString *const SSOWritePrivacyFriends = @"ALL_FRIENDS";
 static NSString *const SSOWritePrivacyOnlyMe = @"SELF";
+
+static NSString *const kFBNativeLoginMinVersion = @"20130214";
+static NSString *const kFBNativeLoginWithoutNameVersion = @"20130410";  // This is currently unused. Leaving here for doc purposes.
 
 @implementation FBLoginDialogParams
 
@@ -71,6 +77,22 @@ static NSString *const SSOWritePrivacyOnlyMe = @"SELF";
     }
     
     return args;
+}
+
+- (NSString *)appBridgeVersion
+{
+    // Select the right minimum version for the passed in combination of params.
+    NSString *version = [FBAppBridge installedFBNativeAppVersionForMethod:@"auth3"
+                                                               minVersion:kFBNativeLoginMinVersion];
+
+    if (![FBSettings defaultDisplayName] && [version isEqualToString:kFBNativeLoginMinVersion]) {
+        // We have the first version of Native Login that does not look up the app's display
+        // name from the Facebook App with a server request. So we can't proceed.
+        
+        version = nil;
+    }
+    
+    return version;
 }
 
 @end

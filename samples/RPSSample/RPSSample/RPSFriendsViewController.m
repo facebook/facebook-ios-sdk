@@ -193,7 +193,7 @@
     // if there is a selected user, seed the dialog with that user
     NSDictionary *parameters = self.fbidSelection ? @{@"to":self.fbidSelection} : nil;
     [FBWebDialogs presentRequestsDialogModallyWithSession:nil
-                                                  message:@"Please come rock the logic with me!"
+                                                  message:@"Please come play RPS with me!"
                                                     title:@"Invite a Friend"
                                                parameters:parameters
                                                   handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {

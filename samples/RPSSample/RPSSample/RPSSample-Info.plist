@@ -45,6 +45,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>fb157578437735213Free</string>
 				<string>fb157578437735213</string>
 			</array>
 		</dict>
@@ -55,6 +56,8 @@
 	<string>157578437735213</string>
 	<key>FacebookDisplayName</key>
 	<string>Rock Paper Scissors SDK Sample</string>
+	<key>FacebookUrlSchemeSuffix</key>
+	<string>Free</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

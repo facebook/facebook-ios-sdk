@@ -22,8 +22,10 @@
 #import "FBAccessTokenData+Internal.h"
 #import "FBDialogsData+Internal.h"
 #import "FBAppLinkData+Internal.h"
-#import "FBInsights.h"
-#import "FBInsights+Internal.h"
+#import "FBAppEvents.h"
+#import "FBAppEvents+Internal.h"
+#import "FBGraphObject.h"
+#import "FBRequest.h"
 #import "FBSettings.h"
 #import "FBSettings+Internal.h"
 #import "FBLogger.h"
@@ -42,30 +44,79 @@
 
 @end
 
+NSString *const FBLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
+NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
+
 @implementation FBAppCall
 
 - (id)init {
-    NSString *uuidString = [[FBUtility newUUIDString] autorelease];
-    
-    return [self initWithID:uuidString];
+    return [self initWithID:nil enforceScheme:YES appID:nil urlSchemeSuffix:nil];
 }
 
-- (id)initWithID:(NSString *)ID {
+- (id)init:(BOOL)enforceScheme {
+    return [self initWithID:nil enforceScheme:enforceScheme appID:nil urlSchemeSuffix:nil];
+}
+
+// designated initializer
+- (id)initWithID:(NSString *)ID enforceScheme:(BOOL)enforceScheme appID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix {
     self = [super init];
     if (self) {
-        self.ID = ID;
-        // If the url scheme is not registered, then the Facebook app cannot call
-        // back, and hence this is an invalid call.
-        NSString *defaultUrlScheme = [FBSettings defaultURLScheme];
-        if (![FBUtility isRegisteredURLScheme:defaultUrlScheme]) {
-            [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
-                                logEntry:[NSString stringWithFormat:@"Invalid use of FBAppCall, %@ is not registered as a URL Scheme", defaultUrlScheme]];
-            [self release];
-            return nil;
+        self.ID = ID ?: [[FBUtility newUUIDString] autorelease];
+        
+        if (enforceScheme) {
+            // If the url scheme is not registered, then the Facebook app cannot call
+            // back, and hence this is an invalid call.
+            NSString *defaultUrlScheme = [FBSettings defaultURLSchemeWithAppID:appID urlSchemeSuffix:urlSchemeSuffix];
+            if (![FBUtility isRegisteredURLScheme:defaultUrlScheme]) {
+                [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                                    logEntry:[NSString stringWithFormat:@"Invalid use of FBAppCall, %@ is not registered as a URL Scheme. Did you set '%@' in your plist?", defaultUrlScheme, FBPLISTUrlSchemeSuffixKey]];
+                [self release];
+                return nil;
+            }
         }
     }
     
     return self;
+}
+
+// internal factory for parsing app links from reengagement ads; i.e., version field = 2.
+// in general, the parameters should consist of the original url followed by the various components to help construct the instance.
++ (FBAppCall *)appCallFromApplinkArgs_v2:(NSURL *)originalURL applinkArgs:(NSDictionary *)applinkArgs createTimeUTC:(NSString *)createTimeUTC originalQueryParameters:(NSDictionary *)originalQueryParameters {
+    FBAppCall *appCall = [[[FBAppCall alloc] init:NO] autorelease];
+    
+    NSMutableDictionary *methodArgs = [NSMutableDictionary dictionaryWithDictionary:applinkArgs[@"method_args"]];
+    if (createTimeUTC) {
+        methodArgs[@"tap_time_utc"] = createTimeUTC;
+    }
+    
+    NSURL *targetURL = [NSURL URLWithString:methodArgs[@"target_url"]];
+    NSArray *refArray = [methodArgs[@"ref"] componentsSeparatedByString:@","];
+    appCall.appLinkData = [[[FBAppLinkData alloc] initWithURL:originalURL targetURL:targetURL ref:refArray originalQueryParameters:originalQueryParameters arguments:methodArgs] autorelease];
+    
+    return appCall;
+}
+
+// Public factory method.
++ (FBAppCall *) appCallFromURL:(NSURL *)url {
+    NSDictionary *queryParams = [FBUtility queryParamsDictionaryFromFBURL:url];
+    NSString *applinkArgsString = queryParams[@"fb_applink_args"];
+    NSString *createTimeUTC = queryParams[@"fb_click_time_utc"];
+    
+    if (applinkArgsString) {
+        
+        NSDictionary *applinkArgs = [FBUtility simpleJSONDecode:applinkArgsString error:nil];
+        int version = [applinkArgs[@"version"] intValue];
+        if (version){
+            if ([applinkArgs[@"bridge_args"][@"method"] isEqualToString:@"applink"]){
+                if (version == 2){
+                    return [FBAppCall appCallFromApplinkArgs_v2:url applinkArgs:applinkArgs createTimeUTC:createTimeUTC originalQueryParameters:queryParams];
+                }
+            }
+        }
+    }
+    
+    // if we get here, we were unable to parse the URL.
+    return nil;   
 }
 
 - (void)dealloc
@@ -212,6 +263,7 @@
     // Call the bridge first to see if this is a bridge response
     if ([[FBAppBridge sharedInstance] handleOpenURL:url
                                   sourceApplication:sourceApplication
+                                            session:session
                                     fallbackHandler:sessionHandler]) {
         return YES;
     }
@@ -220,11 +272,11 @@
     NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
     NSString *e2eMetrics = [params objectForKey:@"e2e"];
     if (e2eMetrics != nil)  {
-        [FBInsights logImplicitEvent:FBInsightsEventNameFBDialogsWebLoginCompleted
-                          valueToSum:1.0
+        [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsWebLoginCompleted
+                          valueToSum:nil
                           parameters:@{
-                            FBInsightsWebLoginE2E : e2eMetrics,
-                            FBInsightsWebLoginSwitchbackTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
+                            FBAppEventsWebLoginE2E : e2eMetrics,
+                            FBAppEventsWebLoginSwitchbackTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
                             @"app_id" : [FBSettings defaultAppID]
                           }
                           session:nil];
@@ -331,4 +383,71 @@
     }
 }
 
++ (void)openDeferredAppLink:(FBAppLinkFallbackHandler)fallbackHandler {
+    NSAssert([NSThread isMainThread], @"FBAppCall openDeferredAppLink: must be invoked from main thread.");
+
+    NSString *appID = [FBSettings defaultAppID];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *deferredAppLinkKey = [NSString stringWithFormat:FBLastDeferredAppLink, appID, nil];
+
+    // prevent multiple occurrences from happening.
+    if ([defaults objectForKey:deferredAppLinkKey]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+          fallbackHandler(nil);
+        });
+    }
+  
+    NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters = [FBGraphObject graphObject];
+    [deferredAppLinkParameters setObject:FBDeferredAppLinkEvent forKey:@"event"];
+  
+    NSString *attributionID = [FBUtility attributionID];
+    NSString *advertiserID = [FBUtility advertiserID];
+  
+    if (attributionID) {
+        [deferredAppLinkParameters setObject:attributionID forKey:@"attribution"];
+    }
+  
+    if (advertiserID) {
+        [deferredAppLinkParameters setObject:advertiserID forKey:@"advertiser_id"];
+    }
+  
+    [FBUtility updateParametersWithEventUsageLimits:deferredAppLinkParameters];
+  
+    FBRequest *deferredAppLinkRequest = [[[FBRequest alloc] initForPostWithSession:nil
+                                                                         graphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
+                                                                       graphObject:deferredAppLinkParameters] autorelease];
+  
+    [deferredAppLinkRequest startWithCompletionHandler:^(FBRequestConnection *connection,
+                                                        id result,
+                                                        NSError *error) {
+        if (!error) {
+            // prevent future network requests.
+            [defaults setObject:[NSDate date] forKey:deferredAppLinkKey];
+            [defaults synchronize];
+
+            NSString *appLinkString = result[@"applink_url"];
+            if (appLinkString) {
+                NSURL *applinkURL = [NSURL URLWithString:appLinkString];
+                NSString *createTimeUtc = result[@"click_time"];
+                if (createTimeUtc) {
+                    // append/translate the create_time_utc so it can be later interpreted by FBAppCall construction
+                    NSString *modifiedURLString = [[applinkURL absoluteString]
+                                                   stringByAppendingFormat:@"%@fb_click_time_utc=%@",
+                                                   ([applinkURL query]) ? @"&" : @"?" ,
+                                                   createTimeUtc ];
+                    applinkURL = [NSURL URLWithString:modifiedURLString];
+                }
+                
+                if ([[UIApplication sharedApplication] canOpenURL:applinkURL]){
+                    [[UIApplication sharedApplication] openURL:applinkURL];
+                    return;
+                }
+            }
+        }
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            fallbackHandler(error);
+        });
+    }];
+}
 @end

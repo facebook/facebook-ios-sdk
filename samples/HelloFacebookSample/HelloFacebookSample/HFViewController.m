@@ -322,9 +322,11 @@
     NSString *alertTitle;
     if (error) {
         alertTitle = @"Error";
-        if (error.fberrorShouldNotifyUser ||
-            error.fberrorCategory == FBErrorCategoryPermissions ||
-            error.fberrorCategory == FBErrorCategoryAuthenticationReopenSession) {
+        // For simplicity, we will use any error message provided by the SDK,
+        // but you may consider inspecting the fberrorShouldNotifyUser or
+        // fberrorCategory to provide better recourse to users. See the Scrumptious
+        // sample for more examples on error handling.
+        if (error.fberrorUserMessage) {
             alertMsg = error.fberrorUserMessage;
         } else {
             alertMsg = @"Operation failed due to a connection problem, retry later.";

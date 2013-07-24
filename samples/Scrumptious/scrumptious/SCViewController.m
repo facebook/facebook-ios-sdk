@@ -95,6 +95,8 @@
         result.url = @"http://samples.ogp.me/314483451980255";
     } else if ([meal isEqualToString:@"Indian"]) {
         result.url = @"http://samples.ogp.me/314483491980251";
+    } else {
+        return nil;
     }
     return result;
 }
@@ -110,12 +112,34 @@
     [self.view setUserInteractionEnabled:enabled];
 }
 
+- (id<SCOGEatMealAction>)actionFromMealInfo {
+    // Create an Open Graph eat action with the meal, our location, and the people we were with.
+    id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
+    
+    if (self.selectedPlace) {
+        // Facebook SDK * pro-tip *
+        // We don't use the action.place syntax here because, unfortunately, setPlace:
+        // and a few other selectors may be flagged as reserved selectors by Apple's App Store
+        // validation tools. While this doesn't necessarily block App Store approval, it
+        // could slow down the approval process. Falling back to the setObject:forKey:
+        // selector is a useful technique to avoid such naming conflicts.
+        [action setObject:self.selectedPlace forKey:@"place"];
+    }
+    
+    if (self.selectedFriends.count > 0) {
+        [action setObject:self.selectedFriends forKey:@"tags"];
+    }
+    
+    return action;
+}
+
 // Creates the Open Graph Action.
 - (void)postOpenGraphAction {
     [self enableUserInteraction:NO];
    
     FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
     if (self.selectedPhoto) {
+        self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
         FBRequest *stagingRequest = [FBRequest requestForUploadStagingResourceWithImage:self.selectedPhoto];
         [requestConnection addRequest:stagingRequest
                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -127,27 +151,37 @@
                        batchEntryName:@"stagedphoto"];
     }
     
-    // First create the Open Graph meal object for the meal we ate.
-    id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
-    
-    // Now create an Open Graph eat action with the meal, our location, and the people we were with.
-    id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
-    action.meal = mealObject;
-    if (self.selectedPlace) {
-        // Facebook SDK * pro-tip *
-        // We don't use the action.place syntax here because, unfortunately, setPlace:
-        // and a few other selectors may be flagged as reserved selectors by Apple's App Store
-        // validation tools. While this doesn't necessarily block App Store approval, it
-        // could slow down the approval process. Falling back to the setObject:forKey:
-        // selector is a useful technique to avoid such naming conflicts.
-        [action setObject:self.selectedPlace forKey:@"place"];
-    }
-    if (self.selectedFriends.count > 0) {
-        [action setObject:self.selectedFriends forKey:@"tags"];
-    }
+    // Create an Open Graph eat action with the meal, our location, and the people we were with.
+    id<SCOGEatMealAction> action = [self actionFromMealInfo];
 
     if (self.selectedPhoto) {
         action.image = @[ @{ @"url" : @"{result=stagedphoto:$.uri}", @"user_generated" : @"true" } ];
+    }
+    
+    // create the Open Graph meal object for the meal we ate.
+    id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
+    if (mealObject) {
+        action.meal = mealObject;
+    } else {
+        // Facebook SDK * Object API *
+        id object = [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                                            title:self.selectedMeal
+                                                            image:@"https://fbcdn-photos-a.akamaihd.net/photos-ak-snc7/v85005/200/233936543368280/app_1_233936543368280_595563194.gif"
+                                                              url:nil
+                                                      description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
+        FBRequest *createObject = [FBRequest requestForPostOpenGraphObject:object];
+    
+        // We'll add the object creaction to the batch, and set the action's meal accordingly.
+        [requestConnection addRequest:createObject
+                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                                            if (error) {
+                                                [self enableUserInteraction:YES];
+                                                [self handlePostOpenGraphActionError:error];
+                                            }
+                                        }
+                       batchEntryName:@"createobject"];
+        
+        action[@"meal"] = @"{result=createobject:$.id}";
     }
 
     // Create the request and post the action to the "me/fb_sample_scrumps:eat" path.
@@ -169,17 +203,22 @@
               show];
              
              // start over
-             self.selectedMeal = nil;
-             self.selectedPlace = nil;
-             self.selectedFriends = nil;
-             self.selectedPhoto = nil;
-             _retryCount = 0;
-             [self updateSelections];
+             [self resetMealInfo];
          } else {
              [self handlePostOpenGraphActionError:error];
          }
      }];
     [requestConnection start];
+}
+
+- (void)resetMealInfo {
+    // start over
+    self.selectedMeal = nil;
+    self.selectedPlace = nil;
+    self.selectedFriends = nil;
+    self.selectedPhoto = nil;
+    _retryCount = 0;
+    [self updateSelections];
 }
 
 - (void)handlePostOpenGraphActionError:(NSError *) error{
@@ -218,7 +257,7 @@
 // Helper method to request publish permissions and post.
 - (void)requestPermissionAndPost {
     [FBSession.activeSession requestNewPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
-                                          defaultAudience:FBSessionDefaultAudienceEveryone
+                                          defaultAudience:FBSessionDefaultAudienceFriends
                                         completionHandler:^(FBSession *session, NSError *error) {
                                             if (!error) {
                                                 // Now have the permission
@@ -253,6 +292,10 @@
 #pragma mark - UI Behavior
 
 -(void)settingsButtonWasPressed:(id)sender {
+    [self presentLoginSettings];
+}
+
+-(void)presentLoginSettings {
     if (self.settingsViewController == nil) {
         self.settingsViewController = [[FBUserSettingsViewController alloc] init];
         self.settingsViewController.delegate = self;
@@ -263,12 +306,52 @@
 
 // Handles the user clicking the Announce button by creating an Open Graph Action
 - (IBAction)announce:(id)sender {
-    // Facebook SDK * pro-tip *
-    // Ask for publish permissions only at the time they are needed.
-    if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-        [self requestPermissionAndPost];
+    if (FBSession.activeSession.isOpen) {
+        // Facebook SDK * pro-tip *
+        // Ask for publish permissions only at the time they are needed.
+        if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
+            [self requestPermissionAndPost];
+        } else {
+            [self postOpenGraphAction];
+        }
     } else {
-        [self postOpenGraphAction];
+        // Facebook SDK * pro-tip *
+        // Support sharing even if the user isn't logged in with Facebook, by using the share dialog
+        [self presentShareDialogForMealInfo];
+    }
+}
+
+- (void)presentShareDialogForMealInfo {
+    id image = @"https://fbcdn-photos-a.akamaihd.net/photos-ak-snc7/v85005/200/233936543368280/app_1_233936543368280_595563194.gif";
+    // Create an Open Graph eat action with the meal, our location, and the people we were with.
+    id<SCOGEatMealAction> action = [self actionFromMealInfo];
+    
+    if (self.selectedPhoto) {
+        self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
+        action.image = self.selectedPhoto;
+        image = @[@{@"url":self.selectedPhoto, @"user_generated":@"true"}];
+    }
+    
+    id object = [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                                        title:self.selectedMeal
+                                                        image:image
+                                                          url:nil
+                                                  description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
+    action.meal = object;
+    
+    BOOL presentable = nil != [FBDialogs presentShareDialogWithOpenGraphAction:action
+                                                                    actionType:@"fb_sample_scrumps:eat"
+                                                           previewPropertyName:@"meal"
+                                                                       handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                                           if (!error) {
+                                                                               [self resetMealInfo];
+                                                                           } else {
+                                                                               NSLog(@"%@", error);
+                                                                           }
+                                                                       }];
+    if (!presentable) { // this means that the Facebook app is not installed or up to date
+        // if the share dialog is not available, lets encourage a login so we can share directly
+        [self presentLoginSettings];
     }
 }
 
@@ -327,10 +410,17 @@
         return;
     
     // One method handles the delegate action for two action sheets
-    if (actionSheet == self.mealPickerActionSheet) { 
-        self.selectedMeal = [self.mealTypes objectAtIndex:buttonIndex];
-        [self updateSelections];
-        
+    if (actionSheet == self.mealPickerActionSheet) {
+        if (buttonIndex == 0) {
+            // They chose manual entry so prompt the user for an entry.
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:@"What are you eating?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+            alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+            [alert textFieldAtIndex:0].autocapitalizationType = UITextAutocapitalizationTypeSentences;
+            [alert show];
+        } else {
+            self.selectedMeal = [self.mealTypes objectAtIndex:buttonIndex];
+            [self updateSelections];
+        }
     } else { // self.imagePickerActionSheet
         NSAssert(actionSheet == self.imagePickerActionSheet, @"Delegate method's else-case should be for image picker");
         
@@ -417,6 +507,9 @@
     
     if (FBSession.activeSession.isOpen) {
         [self populateUserDetails];
+        self.userProfileImage.hidden = NO;
+    } else {
+        self.userProfileImage.hidden = YES;
     }
 }
 
@@ -437,6 +530,15 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+#pragma mark - UIAlertViewDelegate 
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (!alertView.cancelButtonIndex == buttonIndex) {
+        self.selectedMeal = [alertView textFieldAtIndex:0].text;
+        [self updateSelections];
+    }
 }
 
 #pragma mark - FBUserSettingsDelegate methods
@@ -536,6 +638,7 @@
             // if we don't yet have an array of meal types, create one now
             if (!self.mealTypes) {
                 self.mealTypes = [NSArray arrayWithObjects:
+                                  @"< Write Your Own >",
                                   @"Cheeseburger", 
                                   @"Pizza",
                                   @"Hotdog",
@@ -562,55 +665,65 @@
         }
         
         case 1: {
-            FBPlacePickerViewController *placePicker = [[FBPlacePickerViewController alloc] init];
-            
-            placePicker.title = @"Select a restaurant";
-
-            // SIMULATOR BUG:
-            // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
-            // at times the simulator fails to fetch a location; when that happens rather than fetch a
-            // a meal near 0,0 -- let's see if we can find something good in Paris
-            if (self.placeCacheDescriptor == nil) {
-                [self setPlaceCacheDescriptorForCoordinates:CLLocationCoordinate2DMake(48.857875, 2.294635)];
+            if (FBSession.activeSession.isOpen) {
+                FBPlacePickerViewController *placePicker = [[FBPlacePickerViewController alloc] init];
+                
+                placePicker.title = @"Select a restaurant";
+                
+                // SIMULATOR BUG:
+                // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
+                // at times the simulator fails to fetch a location; when that happens rather than fetch a
+                // a meal near 0,0 -- let's see if we can find something good in Paris
+                if (self.placeCacheDescriptor == nil) {
+                    [self setPlaceCacheDescriptorForCoordinates:CLLocationCoordinate2DMake(48.857875, 2.294635)];
+                }
+                
+                [placePicker configureUsingCachedDescriptor:self.placeCacheDescriptor];
+                [placePicker loadData];
+                [placePicker presentModallyFromViewController:self
+                                                     animated:YES
+                                                      handler:^(FBViewController *sender, BOOL donePressed) {
+                                                          if (donePressed) {
+                                                              self.selectedPlace = placePicker.selection;
+                                                              [self updateSelections];
+                                                          }
+                                                      }];
+            } else {
+                // if not logged in, give the user the option to log in
+                [self presentLoginSettings];
             }
-            
-            [placePicker configureUsingCachedDescriptor:self.placeCacheDescriptor];
-            [placePicker loadData];
-            [placePicker presentModallyFromViewController:self
-                                                 animated:YES
-                                                  handler:^(FBViewController *sender, BOOL donePressed) {
-                                                      if (donePressed) {
-                                                          self.selectedPlace = placePicker.selection;
-                                                          [self updateSelections];
-                                                      }
-                                                  }];
             return;
         }
             
         case 2: {
-            FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
-            
-            // Set up the friend picker to sort and display names the same way as the
-            // iOS Address Book does.
-            
-            // Need to call ABAddressBookCreate in order for the next two calls to do anything.
-            ABAddressBookRef addressBook = ABAddressBookCreate();
-            ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
-            ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
-            
-            friendPicker.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
-            friendPicker.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
-            
-            [friendPicker loadData];
-            [friendPicker presentModallyFromViewController:self
-                                                  animated:YES
-                                                   handler:^(FBViewController *sender, BOOL donePressed) {
-                                                       if (donePressed) {
-                                                           self.selectedFriends = friendPicker.selection;
-                                                           [self updateSelections];
-                                                       }
-                                                   }];
-            CFRelease(addressBook);
+            if (FBSession.activeSession.isOpen) {
+                FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
+                
+                // Set up the friend picker to sort and display names the same way as the
+                // iOS Address Book does.
+                
+                // Need to call ABAddressBookCreate in order for the next two calls to do anything.
+                ABAddressBookRef addressBook = ABAddressBookCreate();
+                ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
+                ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
+                
+                friendPicker.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
+                friendPicker.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
+                
+                [friendPicker loadData];
+                [friendPicker presentModallyFromViewController:self
+                                                      animated:YES
+                                                       handler:^(FBViewController *sender, BOOL donePressed) {
+                                                           if (donePressed) {
+                                                               self.selectedFriends = friendPicker.selection;
+                                                               [self updateSelections];
+                                                           }
+                                                       }];
+                CFRelease(addressBook);
+            } else {
+                // if not logged in, give the user the option to log in
+                [self presentLoginSettings];
+            }
             return;
         }
             

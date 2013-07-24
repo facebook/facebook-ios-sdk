@@ -20,7 +20,7 @@
 #import "FBError.h"
 #import "NSError+FBError.h"
 #import "FBSettings.h"
-#import "FBInsights.h"
+#import "FBAppEvents.h"
 #import "FBAppCall.h"
 #import "FBErrorUtility.h"
 #import "FBSessionTokenCachingStrategy.h"
@@ -47,6 +47,9 @@
 #import "FBOpenGraphActionShareDialogParams.h"
 #import "FBWebDialogs.h"
 #import "FBFrictionlessRecipientCache.h"
+
+// deprecated
+#import "FBInsights.h"
 
 /*!
  @header
@@ -137,3 +140,6 @@
  </pre>
  
  */
+
+#define FB_IOS_SDK_VERSION_STRING @"3.6.0"
+

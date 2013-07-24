@@ -23,6 +23,6 @@
  lets the user select a type of food, tag who they
  are with, and where they are.
 */
-@interface SCViewController : UIViewController <FBUserSettingsDelegate>
+@interface SCViewController : UIViewController <FBUserSettingsDelegate, UIAlertViewDelegate>
 
 @end

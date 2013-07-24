@@ -15,12 +15,13 @@
  */
 
 #import "Facebook.h"
-#import "FBInsights+Internal.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
 #import "FBSDKVersion.h"
 #import "FBGraphObject.h"
+#import "FBRequest+Internal.h"
 
 // constants
 NSString *const FBGraphBasePath = @"https://graph." FB_BASE_URL;
@@ -30,14 +31,13 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 // ----------------------------------------------------------------------------
 // FBRequest
+@interface FBRequest()
+
+@property (assign, nonatomic) BOOL canCloseSessionOnError;
+
+@end
 
 @implementation FBRequest
-
-@synthesize parameters = _parameters;
-@synthesize session = _session;
-@synthesize graphPath = _graphPath;
-@synthesize restMethod = _restMethod;
-@synthesize HTTPMethod = _HTTPMethod; 
 
 - (id)init
 {
@@ -99,6 +99,7 @@ static NSString *const kPostHTTPMethod = @"POST";
         self.session = session;
         self.graphPath = graphPath;
         self.HTTPMethod = HTTPMethod;
+        self.canCloseSessionOnError = YES;
         
         // all request objects start life with a migration bundle set for the SDK
         _parameters = [[NSMutableDictionary alloc]
@@ -287,7 +288,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequest *)requestForCustomAudienceThirdPartyID:(FBSession *)session {
-    return [FBInsights customAudienceThirdPartyIDRequest:session];
+    return [FBAppEvents customAudienceThirdPartyIDRequest:session];
 }
 
 + (FBRequest *)requestForPostOpenGraphObject:(id<FBOpenGraphObject>)graphObject {

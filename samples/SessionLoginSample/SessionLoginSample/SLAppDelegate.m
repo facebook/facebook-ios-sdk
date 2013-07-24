@@ -81,6 +81,8 @@
 // application may choose to notify the user that they switched away from the Facebook application without
 // completely logging in
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppEvents activateApp];
+  
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */

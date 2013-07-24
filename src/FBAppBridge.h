@@ -16,18 +16,19 @@
 
 #import <Foundation/Foundation.h>
 #import "FBAppCall.h"
-#import "FBDialogs.h"
 
 @interface FBAppBridge : NSObject
 
 + (id)sharedInstance;
 
 - (void)dispatchDialogAppCall:(FBAppCall *)appCall
-                     version:(NSString *)version
-           completionHandler:(FBDialogAppCallCompletionHandler)handler;
+                      version:(NSString *)version
+                      session:(FBSession *)session
+            completionHandler:(FBAppCallHandler)handler;
 
 - (BOOL)handleOpenURL:(NSURL*)url
     sourceApplication:(NSString*)sourceApplication
+              session:(FBSession *)session
       fallbackHandler:(FBAppCallHandler)fallbackHandler;
 
 - (void)handleDidBecomeActive;

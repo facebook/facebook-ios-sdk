@@ -36,4 +36,10 @@
 /*! @abstract Full set of query parameters for this app link */
 @property (readonly) NSDictionary *originalQueryParameters;
 
+/*! @abstract Original url from which applinkData was extracted */
+@property (readonly) NSURL *originalURL;
+
+/*! @abstract Addtional arguments supplied with the App Link data. */
+@property (readonly) NSDictionary *arguments;
+
 @end

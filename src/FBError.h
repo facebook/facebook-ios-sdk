@@ -88,8 +88,8 @@ typedef enum FBErrorCode {
     /// An error occurred while trying to display a native dialog
     FBErrorDialog,
     
-    /// An error occurred using the FBInsights class
-    FBErrorInsights,
+    /// An error occurred using the FBAppEvents class
+    FBErrorAppEvents,
     
     /// An error occurred related to an iOS API call
     FBErrorSystemAPI,
@@ -338,9 +338,9 @@ extern NSString *const FBErrorDialogInvalidOpenGraphActionParameters;
 
 /*!
  The key in the userInfo NSDictionary of NSError for errors
- encountered with `FBInsights` operations (error.code equals FBErrorInsights).
+ encountered with `FBAppEvents` operations (error.code equals FBErrorAppEvents).
 */
-extern NSString *const FBErrorInsightsReasonKey;
+extern NSString *const FBErrorAppEventsReasonKey;
 
 // Exception strings raised by the Facebook SDK
 

@@ -29,8 +29,8 @@
 #import "FBDataDiskCache.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBAccessTokenData+Internal.h"
-#import "FBInsights.h"
-#import "FBInsights+Internal.h"
+#import "FBAppEvents.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLoginDialogParams.h"
 #import "FBAppCall+Internal.h"
 #import "FBDialogs+Internal.h"
@@ -49,7 +49,6 @@
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
 static NSString *const FBRedirectURL = @"fbconnect://success";
-static NSString *const FBDialogBaseURL = @"https://m." FB_BASE_URL @"/dialog/";
 static NSString *const FBLoginDialogMethod = @"oauth";
 static NSString *const FBLoginUXClientID = @"client_id";
 static NSString *const FBLoginUXUserAgent = @"user_agent";
@@ -121,7 +120,7 @@ static FBSession *g_activeSession = nil;
 @property(readonly)             NSString *appBaseUrl;
 @property(readwrite, retain)    FBLoginDialog *loginDialog;
 @property(readwrite, retain)    NSThread *affinitizedThread;
-@property(readwrite, retain)    FBSessionInsightsState *insightsState;
+@property(readwrite, retain)    FBSessionAppEventsState *appEventsState;
 
 @end
 
@@ -146,7 +145,7 @@ static FBSession *g_activeSession = nil;
             reauthorizeHandler = _reauthorizeHandler,
             reauthorizePermissions = _reauthorizePermissions,
             lastRequestedSystemAudience = _lastRequestedSystemAudience,
-            insightsState = _insightsState;
+            appEventsState = _appEventsState;
 
 #pragma mark Lifecycle
 
@@ -217,7 +216,7 @@ static FBSession *g_activeSession = nil;
         _isInStateTransition = NO;
         _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
         _defaultDefaultAudience = defaultAudience;
-        _insightsState = [[FBSessionInsightsState alloc] init];
+        _appEventsState = [[FBSessionAppEventsState alloc] init];
 
         self.attemptedRefreshDate = [NSDate distantPast];
         self.state = FBSessionStateCreated;
@@ -273,7 +272,7 @@ static FBSession *g_activeSession = nil;
     [_initializedPermissions release];
     [_tokenCachingStrategy release];
     [_affinitizedThread release];
-    [_insightsState release];
+    [_appEventsState release];
 
     [super dealloc];
 }
@@ -470,6 +469,7 @@ static FBSession *g_activeSession = nil;
         __block BOOL completionHandlerFound = YES;
         BOOL handled = [[FBAppBridge sharedInstance] handleOpenURL:url
                                                  sourceApplication:@"com.facebook.Facebook"
+                                                           session:self
                                                    fallbackHandler:^(FBAppCall *call) {
                                                        completionHandlerFound = NO;
                                                    }];
@@ -960,7 +960,7 @@ static FBSession *g_activeSession = nil;
     }
 }
 
-- (void)logIntegratedAuthInsights:(NSString *)dialogOutcome
+- (void)logIntegratedAuthAppEvent:(NSString *)dialogOutcome
                       permissions:(NSArray *)permissions {
     
     NSString *sortedPermissions;
@@ -976,16 +976,16 @@ static FBSession *g_activeSession = nil;
     // this invocation will necessarily result in launching a dialog, and logging an event and then
     // retracting it conditionally is too problematic.
     
-    [FBInsights logImplicitEvent:FBInsightsEventNamePermissionsUILaunch
-                      valueToSum:1.0
+    [FBAppEvents logImplicitEvent:FBAppEventNamePermissionsUILaunch
+                      valueToSum:nil
                       parameters:@{ @"ui_dialog_type" : @"iOS integrated auth",
                                     @"permissions_requested" : sortedPermissions }
                          session:self];
     
-    [FBInsights logImplicitEvent:FBInsightsEventNamePermissionsUIDismiss
-                      valueToSum:1.0
+    [FBAppEvents logImplicitEvent:FBAppEventNamePermissionsUIDismiss
+                      valueToSum:nil
                       parameters:@{ @"ui_dialog_type" : @"iOS integrated auth",
-                                    FBInsightsEventParameterDialogOutcome : dialogOutcome,
+                                    FBAppEventParameterDialogOutcome : dialogOutcome,
                                     @"permissions_requested" : sortedPermissions }
                          session:self];
 }
@@ -1029,7 +1029,7 @@ static FBSession *g_activeSession = nil;
                 if (oauthToken) {
                     
                     if (dialogWasShown) {
-                        [self logIntegratedAuthInsights:@"Authorization succeeded"
+                        [self logIntegratedAuthAppEvent:@"Authorization succeeded"
                                             permissions:permissions];
                     }
                     
@@ -1043,7 +1043,7 @@ static FBSession *g_activeSession = nil;
 
                 } else if (isUntosedDevice) {
                     
-                    // Don't invoke logIntegratedAuthInsights, since this is not an 'integrated dialog' case.
+                    // Don't invoke logIntegratedAuthAppEvent, since this is not an 'integrated dialog' case.
                     
                     // even when OS integrated auth is possible we use native-app/safari
                     // login if the user has not signed on to Facebook via the OS
@@ -1057,7 +1057,7 @@ static FBSession *g_activeSession = nil;
                                canFetchAppSettings:YES];
                 } else {
                     
-                    [self logIntegratedAuthInsights:@"Authorization cancelled"
+                    [self logIntegratedAuthAppEvent:@"Authorization cancelled"
                                         permissions:permissions];
 
                     NSError *err;
@@ -1089,7 +1089,7 @@ static FBSession *g_activeSession = nil;
                 if (oauthToken) {
                     
                     if (dialogWasShown) {
-                        [self logIntegratedAuthInsights:@"Reauthorization succeeded"
+                        [self logIntegratedAuthAppEvent:@"Reauthorization succeeded"
                                             permissions:permissions];
                     }
                     
@@ -1104,7 +1104,7 @@ static FBSession *g_activeSession = nil;
                 } else {
                     
                     if (dialogWasShown) {
-                        [self logIntegratedAuthInsights:@"Reauthorization cancelled"
+                        [self logIntegratedAuthAppEvent:@"Reauthorization cancelled"
                                             permissions:permissions];
                     }
                     
@@ -1157,6 +1157,7 @@ static FBSession *g_activeSession = nil;
     FBLoginDialogParams *params = [[[FBLoginDialogParams alloc] init] autorelease];
     params.permissions = permissions;
     params.writePrivacy = defaultAudience;
+    params.session = self;
     
     FBAppCall *call = [FBDialogs presentLoginDialogWithParams:params
                                                     clientState:nil
@@ -1189,6 +1190,15 @@ static FBSession *g_activeSession = nil;
     if (call.error) {
         params[FBInnerErrorObjectKey] = [FBSession sdkSurfacedErrorForNativeLoginError:call.error];
     }
+    // log the time the control was returned to the app for profiling reasons
+    [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsNativeLoginDialogEnd
+                    valueToSum:nil
+                    parameters:@{
+                        FBAppEventsNativeLoginDialogEndTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
+                        @"action_id" : [call ID],
+                        @"app_id" : [FBSettings defaultAppID]
+                    }
+                    session:nil];
     
     FBSessionLoginType loginType = _loginTypeOfPendingOpenUrlCallback;
     _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
@@ -1236,7 +1246,7 @@ static FBSession *g_activeSession = nil;
     // add a timestamp for tracking GDP e2e time
     [self addWebLoginStartTimeToParams:params];
 
-    NSString *loginDialogURL = [FBDialogBaseURL stringByAppendingString:FBLoginDialogMethod];
+    NSString *loginDialogURL = [[FBSession dialogBaseURL] stringByAppendingString:FBLoginDialogMethod];
 
     NSString *nextUrl = self.appBaseUrl;
     [params setValue:nextUrl forKey:@"redirect_uri"];
@@ -1255,7 +1265,7 @@ static FBSession *g_activeSession = nil;
     // add a timestamp for tracking GDP e2e time
     [self addWebLoginStartTimeToParams:params];
 
-    NSString *loginDialogURL = [FBDialogBaseURL stringByAppendingString:FBLoginDialogMethod];
+    NSString *loginDialogURL = [[FBSession dialogBaseURL] stringByAppendingString:FBLoginDialogMethod];
     
     // open an inline login dialog. This will require the user to enter his or her credentials.
     self.loginDialog = [[[FBLoginDialog alloc] initWithURL:loginDialogURL
@@ -1762,6 +1772,10 @@ static FBSession *g_activeSession = nil;
     return expirationDate;
 }
 
++ (NSString *)dialogBaseURL {
+    return [FBUtility buildFacebookUrlWithPre:@"https://m." withPost:@"/dialog/"];
+}
+
 #pragma mark -
 #pragma mark Internal members
 
@@ -1928,12 +1942,10 @@ static FBSession *g_activeSession = nil;
     return result;
 }
 
-
-
 + (void)deleteFacebookCookies {
     NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSArray* facebookCookies = [cookies cookiesForURL:
-                                [NSURL URLWithString:FBDialogBaseURL]];
+                                [NSURL URLWithString:[FBSession dialogBaseURL]]];
 
     for (NSHTTPCookie* cookie in facebookCookies) {
         [cookies deleteCookie:cookie];

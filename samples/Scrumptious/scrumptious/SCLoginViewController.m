@@ -36,6 +36,22 @@
     self.navigationController.navigationBarHidden = YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    if (self.shouldSkipLogIn) {
+        [self performSelector:@selector(transitionToMainViewController) withObject:nil afterDelay:.5];
+    }
+}
+
+- (void)setShouldSkipLogIn:(BOOL)skip {
+    [[NSUserDefaults standardUserDefaults] setBool:skip forKey:@"ScrumptiousSkipLogIn"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (BOOL)shouldSkipLogIn {
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"ScrumptiousSkipLogIn"];
+}
+
 - (void)viewWillDisappear:(BOOL)animated {
     self.navigationController.navigationBarHidden = NO;
 }
@@ -49,12 +65,22 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+- (void)transitionToMainViewController {
+    // this pop is a noop in some cases, and in others makes sure we don't try
+    // to push the same controller twice
+    [self.navigationController popToRootViewControllerAnimated:NO];
+
+    // Upon login, transition to the main UI by pushing it onto the navigation stack.
+    SCAppDelegate *appDelegate = (SCAppDelegate *)[UIApplication sharedApplication].delegate;
+    [self.navigationController pushViewController:appDelegate.mainViewController animated:YES];
+}
+
 #pragma mark - FBLoginView delegate
 
 - (void)loginViewShowingLoggedInUser:(FBLoginView *)loginView {
-    // Upon login, transition to the main UI by pushing it onto the navigation stack.
-    SCAppDelegate *appDelegate = (SCAppDelegate *)[UIApplication sharedApplication].delegate;
-    [self.navigationController pushViewController:((UIViewController *)appDelegate.mainViewController) animated:YES];
+    // if you become logged in, no longer flag to skip log in
+    self.shouldSkipLogIn = NO;
+    [self transitionToMainViewController];
 }
 
 - (void)loginView:(FBLoginView *)loginView
@@ -116,6 +142,14 @@
 }
 
 - (void)logOut {
+    // on log out we reset the main view controller
+    SCAppDelegate *appDelegate = (SCAppDelegate *)[UIApplication sharedApplication].delegate;
+    [appDelegate resetMainViewController];
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (IBAction)clickSkipLogIn:(id)sender {
+    self.shouldSkipLogIn = YES;
+    [self transitionToMainViewController];
 }
 @end

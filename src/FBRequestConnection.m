@@ -24,7 +24,7 @@
 #import "FBSettings.h"
 #import "FBRequestConnection.h"
 #import "FBRequestConnection+Internal.h"
-#import "FBRequest.h"
+#import "FBRequest+Internal.h"
 #import "Facebook.h"
 #import "FBGraphObject.h"
 #import "FBLogger.h"
@@ -35,9 +35,8 @@
 #import "FBSystemAccountStoreAdapter.h"
 
 // URL construction constants
-NSString *const kGraphURL = @"https://graph." FB_BASE_URL;
-NSString *const kGraphBaseURL = @"https://graph." FB_BASE_URL @"/";
-NSString *const kRestBaseURL = @"https://api." FB_BASE_URL @"/method/";
+NSString *const kGraphURLPrefix = @"https://graph.";
+NSString *const kApiURLPrefix = @"https://api.";
 NSString *const kBatchKey = @"batch";
 NSString *const kBatchMethodKey = @"method";
 NSString *const kBatchRelativeURLKey = @"relative_url";
@@ -686,7 +685,7 @@ typedef enum FBRequestConnectionState {
         
         [attachments release];
         
-        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:kGraphURL]
+        request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[FBUtility buildFacebookUrlWithPre:kGraphURLPrefix]]
                                           cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
                                       timeoutInterval:timeout];
         [request setHTTPMethod:@"POST"];
@@ -763,13 +762,13 @@ typedef enum FBRequestConnectionState {
         if (forBatch) {
             baseURL = [kBatchRestMethodBaseURL stringByAppendingString:request.restMethod];
         } else {
-            baseURL = [kRestBaseURL stringByAppendingString:request.restMethod];
+            baseURL = [[FBUtility buildFacebookUrlWithPre:kApiURLPrefix withPost:@"/method/"] stringByAppendingString:request.restMethod];
         }
     } else {
         if (forBatch) {
             baseURL = request.graphPath;
         } else {
-            baseURL = [kGraphBaseURL stringByAppendingString:request.graphPath];
+            baseURL = [[FBUtility buildFacebookUrlWithPre:kGraphURLPrefix withPost:@"/"] stringByAppendingString:request.graphPath];
         }
     }
 
@@ -1061,9 +1060,10 @@ typedef enum FBRequestConnectionState {
         
     } else {
         
-        [_logger appendFormat:@"Response <#%d> <Error>:\n%@\n\n",
+        [_logger appendFormat:@"Response <#%d> <Error>:\n%@\n%@\n",
          [_logger loggerSerialNumber],
-         [error localizedDescription]];
+         [error localizedDescription],
+         [error userInfo]];
         
     }
     [_logger emitToNSLog];
@@ -1306,13 +1306,17 @@ typedef enum FBRequestConnectionState {
                                              // This shouldn't happen but if the request fails,
                                              // revert to the original flow of closing session
                                              // and surfacing the original error.
-                                             [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                                             if (metadata.request.canCloseSessionOnError) {
+                                                 [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                                             }
                                              [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                                          }
                                      }
                                  ];
                             } else {
-                                [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                                if (metadata.request.canCloseSessionOnError) {
+                                    [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                                }
                                 [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                             }
                         }];
@@ -1323,7 +1327,9 @@ typedef enum FBRequestConnectionState {
                     // with an old token which would immediately be closed, we tell our adapter
                     // that we want to force a blocking renew until success.
                     [FBSystemAccountStoreAdapter sharedInstance].forceBlockingRenew = YES;
-                    [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                    if (metadata.request.canCloseSessionOnError) {
+                        [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                    }
                     [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
                 } else {
                     // For other invalid session cases, we can simply issue the renew now
@@ -1335,7 +1341,9 @@ typedef enum FBRequestConnectionState {
                     }];
                 }
             } else {
-                [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                if (metadata.request.canCloseSessionOnError) {
+                    [metadata.request.session closeAndClearTokenInformation:unpackedError];
+                }
                 [metadata invokeCompletionHandlerForConnection:self withResults:body error:unpackedError];
             }
         } else if ([metadata.request.session shouldExtendAccessToken]) {

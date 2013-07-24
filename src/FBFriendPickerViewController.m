@@ -22,16 +22,16 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
 #import "FBGraphObjectTableCell.h"
-#import "FBInsights+Internal.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
+#import "FBFriendPickerViewDefaultPNG.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
-static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBFriendPickerView/images/default.png";
 
 int const FBRefreshCacheDelaySeconds = 2;
 
@@ -106,7 +106,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
+    dataSource.defaultPicture = [FBFriendPickerViewDefaultPNG image];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
     
@@ -392,12 +392,12 @@ int const FBRefreshCacheDelaySeconds = 2;
     [self.spinner startAnimating];    
 }
 
-- (void)logInsights:(BOOL)cancelled {
-    [FBInsights logImplicitEvent:FBInsightsEventNameFriendPickerUsage
-                      valueToSum:1.0
-                      parameters:@{ FBInsightsEventParameterDialogOutcome : (cancelled
-                                                                             ? FBInsightsDialogOutcomeValue_Cancelled
-                                                                             : FBInsightsDialogOutcomeValue_Completed),
+- (void)logAppEvents:(BOOL)cancelled {
+    [FBAppEvents logImplicitEvent:FBAppEventNameFriendPickerUsage
+                      valueToSum:nil
+                      parameters:@{ FBAppEventParameterDialogOutcome : (cancelled
+                                                                             ? FBAppEventsDialogOutcomeValue_Cancelled
+                                                                             : FBAppEventsDialogOutcomeValue_Completed),
                                     @"num_friends_picked" : [NSNumber numberWithUnsignedInteger:self.selection.count]
                                   }
                          session:self.session];

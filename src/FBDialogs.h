@@ -75,7 +75,10 @@ NSError *error);
  
  @abstract
  Provides methods to display native (i.e., non-Web-based) dialogs to the user.
- Currently the iOS 6 sharing dialog is supported.
+
+ @discussion
+ If you are building an app with a urlSchemeSuffix, you should also set the appropriate
+ plist entry. See `[FBSettings defaultUrlSchemeSuffix]`.
  */
 @interface FBDialogs : NSObject
 

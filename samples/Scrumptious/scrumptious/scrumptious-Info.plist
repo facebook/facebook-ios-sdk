@@ -47,6 +47,8 @@
 	<string>233936543368280</string>
 	<key>FacebookDisplayName</key>
 	<string>Scrumptious</string>
+	<key>FacebookBundleName</key>
+	<string>FacebookSDKOverrides</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

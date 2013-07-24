@@ -339,12 +339,11 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  and then use the resultant Custom Audience to target ads.
  
  @param session    The FBSession to use to establish the user's identity for users logged into Facebook through this app.
- If `nil`, then the activeSession is used.  If the session is not open, then the appID|clientToken are used to construct the access
- token for the request.
+ If `nil`, then the activeSession is used.
  
  @discussion
- This method will thrown an exception if either <[FBSettings defaultAppID]> or <[FBSettings clientToken]> are `nil`.  The appID won't be nil when the pList
- includes the appID, or if it's explicitly set.  The clientToken needs to be set via <[FBSettings setClientToken:]>.
+ This method will throw an exception if <[FBSettings defaultAppID]> is `nil`.  The appID won't be nil when the pList
+ includes the appID, or if it's explicitly set.
  
  The JSON in the request's response will include an "custom_audience_third_party_id" key/value pair, with the value being the ID retrieved.
  This ID is an encrypted encoding of the Facebook user's ID and the invoking Facebook app ID.

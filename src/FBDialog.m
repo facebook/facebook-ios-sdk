@@ -18,6 +18,7 @@
 #import "Facebook.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBUtility.h"
+#import "FBDialogClosePNG.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // global
@@ -336,7 +337,7 @@ params   = _params;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_webView];
         
-        UIImage* closeImage = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBDialog/images/close.png"];
+        UIImage* closeImage = [FBDialogClosePNG image];
         
         UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
         _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
@@ -403,11 +404,14 @@ params   = _params;
 // Display the dialog's WebView with a slick pop-up animation	
 - (void)showWebView {	
     UIWindow* window = [UIApplication sharedApplication].keyWindow;	
-    if (!window) {	
-        window = [[UIApplication sharedApplication].windows objectAtIndex:0];	
-    }	
-    _modalBackgroundView.frame = window.frame;	
-    [_modalBackgroundView addSubview:self];	
+    if (window.windowLevel != UIWindowLevelNormal) {
+        for(window in [UIApplication sharedApplication].windows) {
+            if (window.windowLevel == UIWindowLevelNormal)
+                break;
+        }
+    }
+    _modalBackgroundView.frame = window.frame;
+    [_modalBackgroundView addSubview:self];
     [window addSubview:_modalBackgroundView];	
     
     self.transform = CGAffineTransformScale([self transformForOrientation], 0.001, 0.001);	

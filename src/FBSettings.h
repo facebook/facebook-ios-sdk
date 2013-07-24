@@ -36,8 +36,11 @@ extern NSString *const FBLoggingBehaviorSessionStateTransitions;
 /*! Log performance characteristics */
 extern NSString *const FBLoggingBehaviorPerformanceCharacteristics;
 
-/*! Log Insights interactions */
-extern NSString *const FBLoggingBehaviorInsights;
+/*! Log FBAppEvents interactions */
+extern NSString *const FBLoggingBehaviorAppEvents;
+
+/*! Log Informational occurrences */
+extern NSString *const FBLoggingBehaviorInformational;
 
 /*! Log errors likely to be preventable by the developer. This is in the default set of enabled logging behaviors. */
 extern NSString *const FBLoggingBehaviorDeveloperErrors;
@@ -72,6 +75,14 @@ typedef enum : NSUInteger {
 /*!
  @method
  
+ @abstract Retrieve the current iOS SDK version.
+ 
+ */
++ (NSString *)sdkVersion;
+
+/*!
+ @method
+ 
  @abstract Retrieve the current Facebook SDK logging behavior.
  
  */
@@ -88,31 +99,17 @@ typedef enum : NSUInteger {
  */
 + (void)setLoggingBehavior:(NSSet *)loggingBehavior;
 
-/*! @abstract Retreive the current auto publish behavior.  Defaults to YES. */
-+ (BOOL)shouldAutoPublishInstall;
+/*! @abstract deprecated method */
++ (BOOL)shouldAutoPublishInstall __attribute__ ((deprecated));
 
-/*!
+/*! @abstract deprecated method */
++ (void)setShouldAutoPublishInstall:(BOOL)autoPublishInstall __attribute__ ((deprecated));
+
+/*! 
  @method
 
- @abstract Sets whether the SDK will automatically publish an install to Facebook during first FBSession init
- or on first network request to Facebook.
-
- @param autoPublishInstall      If YES, automatically publish the install; if NO, do not.
- */
-+ (void)setShouldAutoPublishInstall:(BOOL)autoPublishInstall;
-
-// For best results, call this function during app activation.
-/*!
- @method
-
- @abstract Manually publish an attributed install to the facebook graph. Calling this method will implicitly 
- turn off auto-publish.  This method acquires the current attribution id from the facebook application, queries the
- graph API to determine if the application has install attribution enabled, publishes the id, and records 
- success to avoid reporting more than once.
-
- @param appID A specific appID to publish an install for.  If nil, uses [FBSession defaultAppID].
- */
-+ (void)publishInstall:(NSString *)appID;
+ @abstract This method has been replaced by [FBAppEvents activateApp] */
++ (void)publishInstall:(NSString *)appID __attribute__ ((deprecated("use [FBAppEvents activateApp] instead")));
 
 /*!
  @method
@@ -126,7 +123,28 @@ typedef enum : NSUInteger {
  @param handler A block to call with the server's response.
  */
 + (void)publishInstall:(NSString *)appID
-           withHandler:(FBInstallResponseDataHandler)handler;
+           withHandler:(FBInstallResponseDataHandler)handler __attribute__ ((deprecated));
+
+
+/*!
+ @method
+ 
+ @abstract
+ Gets the application version to the provided string.  `FBAppEvents`, for instance, attaches the app version to
+ events that it logs, which are then available in App Insights.
+ */
++ (NSString *)appVersion;
+
+/*!
+ @method
+ 
+ @abstract
+ Sets the application version to the provided string.  `FBAppEvents`, for instance, attaches the app version to
+ events that it logs, which are then available in App Insights.
+ 
+ @param appVersion  The version identifier of the iOS app.
+ */
++ (void)setAppVersion:(NSString *)appVersion;
 
 /*!
  @method
@@ -139,8 +157,7 @@ typedef enum : NSUInteger {
  @method
  
  @abstract Sets the Client Token for the Facebook App.  This is needed for certain API calls when made anonymously,
- without a user-based Session. Calls to FBInsights logging events are examples of this, when there may 
- have been no user login established.
+ without a user-based Session.
  
  @param clientToken  The Facebook App's "client token", which, for a given appid can be found in the Security 
  section of the Advanced tab of the Facebook App settings found at <https://developers.facebook.com/apps/[your-app-id]>
@@ -189,8 +206,7 @@ typedef enum : NSUInteger {
 /*!
  @method
  
- @abstract Set the default url scheme suffix used by the SDK. The SDK allows the url
- scheme suffix to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ @abstract Set the default url scheme suffix used by the SDK.
  
  @param urlSchemeSuffix The default url scheme suffix to be used by the SDK.
  */
@@ -200,10 +216,41 @@ typedef enum : NSUInteger {
  @method
  
  @abstract Get the default url scheme suffix used for sessions.  If not
- explicitly set, the default will be read from the application's plist. The SDK allows the url
- scheme suffix to be overridden per instance in certain cases (e.g. per instance of FBSession)
+ explicitly set, the default will be read from the application's plist value for 'FacebookUrlSchemeSuffix'.
  */
 + (NSString*)defaultUrlSchemeSuffix;
+
+/*!
+ @method
+ 
+ @abstract Set the bundle name from the SDK will try and load overrides of images and text
+ 
+ @param bundleName The name of the bundle (MyFBBundle).
+ */
++ (void)setResourceBundleName:(NSString*)bundleName;
+
+/*!
+ @method
+ 
+ @abstract Get the name of the bundle to override the SDK images and text
+ */
++ (NSString*)resourceBundleName;
+
+/*!
+ @method
+ 
+ @abstract Set the subpart of the facebook domain (e.g. @"beta") so that requests will be sent to graph.beta.facebook.com
+ 
+ @param facebookDomainPart The domain part to be inserted into facebook.com
+ */
++ (void)setFacebookDomainPart:(NSString*)facebookDomainPart;
+
+/*!
+ @method
+ 
+ @abstract Get the Facebook domain part
+ */
++ (NSString*)facebookDomainPart;
 
 /*!
  @method

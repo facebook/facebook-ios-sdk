@@ -39,6 +39,14 @@
 typedef void (^FBAppCallHandler)(FBAppCall *call);
 
 /*!
+ @typedef FBAppLinkFallbackHandler
+ 
+ @abstract
+ See `+openDeferredAppLink`.
+ */
+typedef void (^FBAppLinkFallbackHandler)(NSError *error);
+
+/*!
  @class FBAppCall
  
  @abstract
@@ -69,6 +77,18 @@ typedef void (^FBAppCallHandler)(FBAppCall *call);
 
 /*! @abstract Access Token that was returned in this AppCall */
 @property (nonatomic, readonly) FBAccessTokenData *accessTokenData;
+
+/*!
+ @abstract
+ Returns an FBAppCall instance from a url, if applicable. Otherwise, returns nil.
+ 
+ @param url The url.
+ 
+ @return an FBAppCall instance if the url is valid; nil otherwise.
+ 
+ @discussion This is typically used for App Link URLs.
+ */
++ (FBAppCall *) appCallFromURL:(NSURL *)url;
 
 /*!
  @abstract
@@ -178,6 +198,32 @@ typedef void (^FBAppCallHandler)(FBAppCall *call);
  If no session is provided, then the activeSession (if present) is used.
  */
 + (void)handleDidBecomeActiveWithSession:(FBSession *)session;
+
+/*!
+ @abstract
+ Call this method from the main thread to fetch deferred applink data. This may require
+ a network round trip. If successful, [+UIApplication openURL:] is invoked  with the link
+ data. Otherwise, the fallbackHandler will be dispatched to the main thread.
+ 
+ @param fallbackHandler the handler to be invoked if applink data could not be opened.
+ 
+ @discussion the fallbackHandler may contain an NSError instance to capture any errors. In the
+ common case where there simply was no app link data, the NSError instance will be nil.
+ 
+ This method should only be called from a location that occurs after any launching URL has
+ been processed (e.g., you should call this method from your application delegate's applicationDidBecomeActive:) 
+ to avoid duplicate invocations of openURL:.
+ 
+ If you must call this from the delegate's didFinishLaunchingWithOptions: you should
+ only do so if the application is not being launched by a URL. For example,
+
+    if (launchOptions[UIApplicationLaunchOptionsURLKey] == nil) {
+     [FBAppCall openDeferredAppLink:^(NSError *error) {
+        // ....
+      }
+    }
+*/
++ (void)openDeferredAppLink:(FBAppLinkFallbackHandler)fallbackHandler;
 
 @end
 

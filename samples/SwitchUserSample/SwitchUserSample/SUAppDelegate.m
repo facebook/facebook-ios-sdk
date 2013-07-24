@@ -71,6 +71,7 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
+    [FBAppEvents activateApp];
     [FBAppCall handleDidBecomeActiveWithSession:self.userManager.currentSession];
 }
 

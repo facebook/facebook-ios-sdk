@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-#import "FBSessionInsightsState.h"
+#import "FBSessionAppEventsState.h"
 #import "FBUtility.h"
 
-@interface FBSessionInsightsState ()
+@interface FBSessionAppEventsState ()
 
 @property (readwrite, retain) NSMutableArray *accumulatedEvents;
 @property (readwrite, retain) NSMutableArray *inFlightEvents;
 
 @end
 
-@implementation FBSessionInsightsState
+@implementation FBSessionAppEventsState
 
 const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
 
 @synthesize accumulatedEvents = _accumulatedEvents;
 @synthesize inFlightEvents = _inFlightEvents;
 @synthesize numSkippedEventsDueToFullBuffer;
-@synthesize numAbandonedDueToSessionChange;
 @synthesize requestInFlight;
 
 - (id)init {
@@ -70,18 +69,9 @@ const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
     }
 }
 
-- (void)abandonEvents {
-    @synchronized (self) {
-        self.numAbandonedDueToSessionChange += self.accumulatedEvents.count + self.inFlightEvents.count;
-        [self.accumulatedEvents removeAllObjects];
-        [self.inFlightEvents removeAllObjects];
-    }
-}
-
 - (void)clearInFlightAndStats {
     @synchronized (self) {
         [self.inFlightEvents removeAllObjects];
-        self.numAbandonedDueToSessionChange = 0;
         self.numSkippedEventsDueToFullBuffer = 0;
     }
 }

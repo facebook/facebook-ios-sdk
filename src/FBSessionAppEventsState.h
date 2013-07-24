@@ -17,22 +17,20 @@
 #import <Foundation/Foundation.h>
 
 /**
- Internal class that holds all the state associated with FBInsights for a particular FBSession.  An
+ Internal class that holds all the state associated with FBAppEvents for a particular FBSession.  An
  instance of this lives on FBSession.
  */
-@interface FBSessionInsightsState : NSObject
+@interface FBSessionAppEventsState : NSObject
 
 @property (readonly, retain) NSMutableArray *accumulatedEvents;
 @property (readonly, retain) NSMutableArray *inFlightEvents;
 @property (readwrite) int numSkippedEventsDueToFullBuffer;
-@property (readwrite) int numAbandonedDueToSessionChange;
 @property (readwrite) BOOL requestInFlight;
 
 - (void)addEvent:(NSDictionary *)eventDictionary
       isImplicit:(BOOL)isImplicit;
 - (NSString *)jsonEncodeInFlightEvents:(BOOL)includeImplicitEvents;
 - (int)getAccumulatedEventCount;
-- (void)abandonEvents;
 - (void)clearInFlightAndStats;
 
 @end

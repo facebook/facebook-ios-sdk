@@ -30,4 +30,20 @@
 
 - (id)initWithID:(NSString *)ID;
 
+/*!
+ @abstract Designated initializer for FBAppCall
+
+ @param ID  the unique identifier for matching the FBAppCall. If nil, a random uid will be generated
+ @param enforceScheme a flag determining if we need to detect if the url scheme that will be used for a FAS
+  is correctly configured to allow a callback from iOS. In general, if you are creating an "outbound" FBAppCall,
+  you should use the default of YES to make sure the schemes are set correctly. If the scheme is not set correctly,
+  a developer error is logged and this will return nil.
+ @param appID the explicit app id to use. If nil, defaults to [FBSettings defaultAppID]
+ @param urlSchemeSuffix the explicit url scheme suffix to use. If nil, defaults to [FBSettings defaultUrlSchemeSuffix].
+ 
+ @discussion The app id and url scheme parameters are overrides that can be specified on an FBSession instance. In order
+  to wire up bridge call backs properly, FBAppCall must know about any such overrides.
+*/
+- (id)initWithID:(NSString *)ID enforceScheme:(BOOL)enforceScheme appID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix;
+
 @end

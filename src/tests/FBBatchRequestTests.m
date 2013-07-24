@@ -20,12 +20,13 @@
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
 #import "FBGraphUser.h"
+#import "FBSettings.h"
 
 @implementation FBBatchRequestTests
 
 - (void)testBatchWithTwoSessionlessRequestsAndNoDefaultAppID
 {
-    [FBSession setDefaultAppID:nil];
+    [FBSettings setDefaultAppID:nil];
 
     FBRequest *request1 = [[[FBRequest alloc] initWithSession:nil
                                                     graphPath:@"zuck"]

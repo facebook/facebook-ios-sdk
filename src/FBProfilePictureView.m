@@ -19,6 +19,8 @@
 #import "FBRequest.h"
 #import "FBUtility.h"
 #import "FBSDKVersion.h"
+#import "FBProfilePictureViewBlankProfilePortraitPNG.h"
+#import "FBProfilePictureViewBlankProfileSquarePNG.h"
 
 @interface FBProfilePictureView()
 
@@ -167,9 +169,9 @@
             };
                 
         NSString *template = @"%@/%@/picture?%@";     
-        NSString *urlString = [NSString stringWithFormat:template, 
-                               FBGraphBasePath,
-                               self.profileID, 
+        NSString *urlString = [NSString stringWithFormat:template,
+                               [FBUtility buildFacebookUrlWithPre:@"https://graph."],
+                               self.profileID,
                                newImageQueryParamString];
         NSURL *url = [NSURL URLWithString:urlString];
         
@@ -179,12 +181,9 @@
     } else {
         BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
 
-        NSString *blankImageName = 
-            [NSString 
-                stringWithFormat:@"FacebookSDKResources.bundle/FBProfilePictureView/images/fb_blank_profile_%@.png",
-                isSquare ? @"square" : @"portrait"];
-
-        self.imageView.image = [UIImage imageNamed:blankImageName];
+        self.imageView.image = isSquare ?
+            [FBProfilePictureViewBlankProfileSquarePNG image] :
+            [FBProfilePictureViewBlankProfilePortraitPNG image];
         [self ensureImageViewContentMode];
     }
     

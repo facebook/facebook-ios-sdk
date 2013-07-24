@@ -16,6 +16,8 @@
 
 #import "FBSettings.h"
 
+extern NSString *const FBPLISTUrlSchemeSuffixKey;
+
 @interface FBSettings (Internal)
 
 + (void)autoPublishInstall:(NSString *)appID;
@@ -25,8 +27,10 @@
  
  @abstract Get the default url scheme used for the session. This is generated based
  on the url scheme suffix and the app id.
+ @param appID If nil, defaults to [FBSettings defaultAppID]
+ @param urlSchemeSuffix If nil, defaults to [FBSettings defaultUrlSchemeSuffix]
  */
-+ (NSString*)defaultURLScheme;
++ (NSString*)defaultURLSchemeWithAppID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix;
 
 /*!
  @method

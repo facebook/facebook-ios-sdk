@@ -16,7 +16,7 @@
 
 #import "FBSession.h"
 #import "FBSystemAccountStoreAdapter.h"
-#import "FBSessionInsightsState.h"
+#import "FBSessionAppEventsState.h"
 
 @class FBSystemAccountStoreAdapter;
 
@@ -32,7 +32,7 @@ extern NSString *const FacebookNativeApplicationLoginDomain;
 @interface FBSession (Internal)
 
 @property(readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
-@property(readonly, retain) FBSessionInsightsState *insightsState;
+@property(readonly, retain) FBSessionAppEventsState *appEventsState;
 
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;

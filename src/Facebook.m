@@ -23,7 +23,6 @@
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 
-static NSString* kDialogBaseURL = @"https://m." FB_BASE_URL "/dialog/";
 static NSString* kRedirectURL = @"fbconnect://success";
 
 static NSString* kLogin = @"oauth";
@@ -658,7 +657,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     
     [_fbDialog release];
     
-    NSString *dialogURL = [kDialogBaseURL stringByAppendingString:action];
+    NSString *dialogURL = [[FBUtility buildFacebookUrlWithPre:@"https://m." withPost:@"/dialog/"] stringByAppendingString:action];
     [params setObject:@"touch" forKey:@"display"];
     [params setObject:kSDKVersion forKey:@"sdk"];
     [params setObject:kRedirectURL forKey:@"redirect_uri"];

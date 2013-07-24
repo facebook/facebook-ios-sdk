@@ -63,18 +63,23 @@ typedef enum FBAdvertisingTrackingStatus {
 + (NSString *)attributionID;
 + (NSString *)advertiserID;
 + (FBAdvertisingTrackingStatus)advertisingTrackingStatus;
-+ (void)updateParametersWithAdvertisingTrackingStatus:(NSMutableDictionary *)parameters;
++ (void)updateParametersWithEventUsageLimits:(NSMutableDictionary *)parameters;
 
 // Encode a data structure in JSON, any errors will just be logged.
 + (NSString *)simpleJSONEncode:(id)data;
 + (id)simpleJSONDecode:(NSString *)jsonEncoding;
 + (NSString *)simpleJSONEncode:(id)data
-                         error:(NSError **)error;
+                         error:(NSError **)error
+                writingOptions:(NSJSONWritingOptions)writingOptions;
 + (id)simpleJSONDecode:(NSString *)jsonEncoding
                  error:(NSError **)error;
 + (BOOL) isRetinaDisplay;
 + (NSString *)newUUIDString;
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
+
++ (NSString *) buildFacebookUrlWithPre:(NSString*)pre;
++ (NSString *) buildFacebookUrlWithPre:(NSString*)pre
+                              withPost:(NSString *)post;
 
 @end
  

@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84A5DA9E15A68D1500FE54AF /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84A5DA9D15A68D1500FE54AF /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		84C757BD152A38770070DD9C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757BC152A38770070DD9C /* UIKit.framework */; };
 		84C757BF152A38770070DD9C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757BE152A38770070DD9C /* Foundation.framework */; };
 		84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84C757C0152A38770070DD9C /* CoreGraphics.framework */; };
@@ -21,17 +20,13 @@
 		84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */; };
 		84E7AF47158FAB2F006009C7 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF43158FAB2F006009C7 /* Icon.png */; };
 		84E7AF48158FAB2F006009C7 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 84E7AF44158FAB2F006009C7 /* Icon@2x.png */; };
-		85A928EA1611471C008699F1 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85A928E91611471C008699F1 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85C69DB41602B33C008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB11602B33C008AD9A0 /* Default-568h@2x.png */; };
 		85C69DB51602B33C008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB21602B33C008AD9A0 /* Default.png */; };
 		85C69DB61602B33C008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB31602B33C008AD9A0 /* Default@2x.png */; };
-		B59359E416D564DE000A63F0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B59359E316D564DE000A63F0 /* Security.framework */; };
-		B9A416AA16113F2D001E7A77 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9A416A916113F2D001E7A77 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DDA290A415ABA93700F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290A315ABA93700F533F9 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		84A5DA9D15A68D1500FE54AF /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
 		84C757B8152A38770070DD9C /* SessionLoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SessionLoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84C757BC152A38770070DD9C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		84C757BE152A38770070DD9C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -50,12 +45,9 @@
 		84E7AF42158FAB2F006009C7 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		84E7AF43158FAB2F006009C7 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		84E7AF44158FAB2F006009C7 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
-		85A928E91611471C008699F1 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		85C69DB11602B33C008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69DB21602B33C008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69DB31602B33C008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		B59359E316D564DE000A63F0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		B9A416A916113F2D001E7A77 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		DDA290A315ABA93700F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -64,10 +56,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B59359E416D564DE000A63F0 /* Security.framework in Frameworks */,
-				85A928EA1611471C008699F1 /* Social.framework in Frameworks */,
-				B9A416AA16113F2D001E7A77 /* AdSupport.framework in Frameworks */,
-				84A5DA9E15A68D1500FE54AF /* Accounts.framework in Frameworks */,
 				84C757BD152A38770070DD9C /* UIKit.framework in Frameworks */,
 				84C757BF152A38770070DD9C /* Foundation.framework in Frameworks */,
 				84C757C1152A38770070DD9C /* CoreGraphics.framework in Frameworks */,
@@ -99,10 +87,6 @@
 			isa = PBXGroup;
 			children = (
 				DDA290A315ABA93700F533F9 /* FacebookSDK.framework */,
-				B59359E316D564DE000A63F0 /* Security.framework */,
-				85A928E91611471C008699F1 /* Social.framework */,
-				B9A416A916113F2D001E7A77 /* AdSupport.framework */,
-				84A5DA9D15A68D1500FE54AF /* Accounts.framework */,
 				84C757BC152A38770070DD9C /* UIKit.framework */,
 				84C757BE152A38770070DD9C /* Foundation.framework */,
 				84C757C0152A38770070DD9C /* CoreGraphics.framework */,
@@ -317,10 +301,7 @@
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = (
-					"-lsqlite3.0",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};
@@ -337,10 +318,7 @@
 				GCC_PREFIX_HEADER = "SessionLoginSample/SessionLoginSample-Prefix.pch";
 				INFOPLIST_FILE = "SessionLoginSample/SessionLoginSample-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = (
-					"-lsqlite3.0",
-					"-ObjC",
-				);
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = SessionLoginSample;
 				WRAPPER_EXTENSION = app;
 			};

@@ -25,6 +25,8 @@
 NSString *const kAuthenticationTestValidToken = @"AToken";
 NSString *const kAuthenticationTestAppId = @"AnAppid";
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 @interface FBSession (AuthenticationTesting)
 
 - (BOOL)isSystemAccountStoreAvailable;

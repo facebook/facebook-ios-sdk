@@ -16,6 +16,7 @@
 
 #import "FBCrypto.h"
 #import "FBBase64.h"
+#import "FBDynamicFrameworkLoader.h"
 #import <CommonCrypto/CommonCryptor.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <CommonCrypto/CommonHMAC.h>
@@ -130,7 +131,7 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
 + (NSData *)randomBytes:(NSUInteger)numOfBytes
 {
   uint8_t *buffer = malloc(numOfBytes);
-  int result = SecRandomCopyBytes(kSecRandomDefault, numOfBytes, buffer);
+  int result = fbdfl_SecRandomCopyBytes([FBDynamicFrameworkLoader loadkSecRandomDefault], numOfBytes, buffer);
   if (result != 0) {
     free(buffer);
     return nil;
@@ -186,7 +187,7 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
   memcpy(buffer + offsetIV, IV.bytes, IV.length);
 
   memcpy(buffer + offsetCipherData, plainText.bytes, plainText.length); // Copy input in
-  SecRandomCopyBytes(kSecRandomDefault, numPaddingBytes, buffer + offsetCipherData + plainText.length); // Random pad
+  fbdfl_SecRandomCopyBytes([FBDynamicFrameworkLoader loadkSecRandomDefault], numPaddingBytes, buffer + offsetCipherData + plainText.length); // Random pad
   buffer[offsetCipherData + cipherDataLength - 1] = numPaddingBytes; // Record the number of padded bytes at the end
 
   size_t numOutputBytes = 0;

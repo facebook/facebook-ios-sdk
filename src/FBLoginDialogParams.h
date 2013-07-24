@@ -36,4 +36,9 @@
  */
 @property BOOL isRefreshOnly;
 
+/*!
+ Optional session instance whose overrides (e.g., urlSchemeSuffix) will be used.
+*/
+@property (nonatomic, retain) FBSession *session;
+
 @end

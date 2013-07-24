@@ -24,22 +24,32 @@
 @property (readwrite, copy) NSArray *actionIDs;
 @property (readwrite, copy) NSArray *ref;
 @property (readwrite, copy) NSDictionary *originalQueryParameters;
-
+@property (readwrite, retain) NSURL *originalURL;
+@property (readwrite, copy) NSDictionary *arguments;
 @end
 
 @implementation FBAppLinkData
 
 - (id)initWithURL:(NSURL*)url {
-    if (self = [super init]) {
-        NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
-        
-        if (params[@"target_url"]) {
-            self.targetURL = [[[NSURL alloc] initWithString:params[@"target_url"]] autorelease];
-        }
+    NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
+    NSURL *targetURL = (params[@"target_url"]) ? [[[NSURL alloc] initWithString:params[@"target_url"]] autorelease] : nil;
+    NSArray *ref = [params[@"fb_ref"] componentsSeparatedByString:@","];
+    NSDictionary *originalQueryParameters = params;
+
+    if (self = [self initWithURL:url targetURL:targetURL ref:ref originalQueryParameters:originalQueryParameters arguments:nil]) {
         self.actionIDs = [params[@"fb_action_ids"] componentsSeparatedByString:@","];
         self.actionTypes = [params[@"fb_action_types"] componentsSeparatedByString:@","];
-        self.ref = [params[@"fb_ref"] componentsSeparatedByString:@","];
-        self.originalQueryParameters = params;
+    }
+    return self;
+}
+
+- (id) initWithURL:(NSURL*)url targetURL:(NSURL *)targetURL ref:(NSArray *)ref originalQueryParameters:(NSDictionary *)originalQueryParameters arguments:(NSDictionary *)arguments {
+    if (self = [super init]) {
+        self.originalURL = url;
+        self.targetURL = targetURL;
+        self.ref = ref;
+        self.originalQueryParameters = originalQueryParameters;
+        self.arguments = arguments;
     }
     return self;
 }
@@ -51,6 +61,7 @@
     [_actionIDs release];
     [_ref  release];
     [_originalQueryParameters  release];
+    [_originalURL release];
     [super dealloc];
 }
 

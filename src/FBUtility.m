@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
+#import "FBAppEvents.h"
 #import "FBUtility.h"
 #import "FBGraphObject.h"
-#import "FBRequest.h"
+#import "FBRequest+Internal.h"
 #import "FBSession.h"
+#import "FBDynamicFrameworkLoader.h"
+#import "FBSettings.h"
 
 #import <AdSupport/AdSupport.h>
 #include <sys/time.h>
@@ -183,7 +186,7 @@ static NSError *g_fetchedAppSettingsError = nil;
     static NSBundle *bundle = nil;
     
     dispatch_once(&fetchBundleOnce, ^{
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"FacebookSDKResources"
+        NSString *path = [[NSBundle mainBundle] pathForResource:[FBSettings resourceBundleName]
                                                          ofType:@"bundle"];
         bundle = [NSBundle bundleWithPath:path];
     });
@@ -256,6 +259,7 @@ static NSError *g_fetchedAppSettingsError = nil;
         
         NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution,supports_implicit_sdk_logging,suppress_native_ios_gdp,name", appID, nil];
         FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
+        pingRequest.canCloseSessionOnError = NO;
         if ([pingRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             
             if (error) {
@@ -263,7 +267,7 @@ static NSError *g_fetchedAppSettingsError = nil;
                 [g_fetchedAppSettingsError retain];
             } else {
                 
-                g_fetchedAppSettings = [[[FBFetchedAppSettings alloc] init] retain];
+                g_fetchedAppSettings = [[FBFetchedAppSettings alloc] init];
                 if ([result respondsToSelector:@selector(objectForKey:)]) {
                     g_fetchedAppSettings.serverAppName = [result objectForKey:@"name"];
                     g_fetchedAppSettings.supportsAttribution = [[result objectForKey:@"supports_attribution"] boolValue];
@@ -300,8 +304,9 @@ static NSError *g_fetchedAppSettingsError = nil;
 
 + (NSString *)advertiserID {
     NSString *advertiserID = nil;
-    if ([ASIdentifierManager class]) {
-        ASIdentifierManager *manager = [ASIdentifierManager sharedManager];
+    Class ASIdentifierManagerClass = [FBDynamicFrameworkLoader loadClass:@"ASIdentifierManager" withFramework:@"AdSupport"];
+    if ([ASIdentifierManagerClass class]) {
+        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
         advertiserID = [[manager advertisingIdentifier] UUIDString];
     }
     return advertiserID;
@@ -309,8 +314,9 @@ static NSError *g_fetchedAppSettingsError = nil;
 
 + (FBAdvertisingTrackingStatus)advertisingTrackingStatus {
     FBAdvertisingTrackingStatus status = AdvertisingTrackingUnspecified;
-    if ([ASIdentifierManager class]) {
-        ASIdentifierManager *manager = [ASIdentifierManager sharedManager];
+    Class ASIdentifierManagerClass = [FBDynamicFrameworkLoader loadClass:@"ASIdentifierManager" withFramework:@"AdSupport"];
+    if ([ASIdentifierManagerClass class]) {
+        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
         if (manager) {
             status = [manager isAdvertisingTrackingEnabled] ? AdvertisingTrackingAllowed : AdvertisingTrackingDisallowed;
         }
@@ -318,28 +324,31 @@ static NSError *g_fetchedAppSettingsError = nil;
     return status;
 }
 
-// Only add this param if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
-// absence of this parameter is to be interpreted as 'unspecified'.
-+ (void)updateParametersWithAdvertisingTrackingStatus:(NSMutableDictionary *)parameters {
-
++ (void)updateParametersWithEventUsageLimits:(NSMutableDictionary *)parameters {
+  // Only add the iOS global value if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
+  // absence of this parameter is to be interpreted as 'unspecified'.
   FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
   if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
     BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
     [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
                        forKey:@"advertiser_tracking_enabled"];
   }
+
+  [parameters setObject:[[NSNumber numberWithBool:!FBAppEvents.limitEventUsage] stringValue] forKey:@"application_tracking_enabled"];
 }
 
 + (NSString *)simpleJSONEncode:(id)data {
     return [FBUtility simpleJSONEncode:data
-                                 error:nil];
+                                 error:nil
+                        writingOptions:0];
 }
 
 + (NSString *)simpleJSONEncode:(id)data
-                         error:(NSError **)error {
+                         error:(NSError **)error
+                writingOptions:(NSJSONWritingOptions)writingOptions {
     if (data) {
         NSData *json = [NSJSONSerialization dataWithJSONObject:data
-                                                       options:0
+                                                       options:writingOptions
                                                          error:error];
         return [[[NSString alloc] initWithData:json
                                       encoding:NSUTF8StringEncoding]
@@ -368,8 +377,14 @@ static NSError *g_fetchedAppSettingsError = nil;
     // Check for displayLinkWithTarget:selector: since that is only available on iOS 4.0+
     // deal with edge case where scale returns 2.0 on a iPad running 3.2 with 2x
     // (which is not retina).
-    return ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
-            ([UIScreen mainScreen].scale == 2.0));
+    static dispatch_once_t onceToken;
+    static BOOL supportsRetina;
+    
+    dispatch_once(&onceToken, ^{
+        supportsRetina = ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+                          ([UIScreen mainScreen].scale == 2.0));
+    });
+    return supportsRetina;
 }
 
 + (NSString *)newUUIDString {
@@ -399,6 +414,20 @@ static NSError *g_fetchedAppSettingsError = nil;
         }
     }
     return NO;
+}
+
++ (NSString *)buildFacebookUrlWithPre:(NSString *)pre {
+    return [FBUtility buildFacebookUrlWithPre:pre withPost:nil];
+}
+
++ (NSString *)buildFacebookUrlWithPre:(NSString *)pre
+                             withPost:(NSString *)post {
+    NSString *domainPart = [FBSettings facebookDomainPart];
+    NSString *domain = FB_BASE_URL;
+    if (domainPart) {
+        domain = [NSString stringWithFormat:@"%@.%@", domainPart, FB_BASE_URL];
+    }
+    return [NSString stringWithFormat:@"%@%@%@", pre, domain, post ?: @""];
 }
 
 @end

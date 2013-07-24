@@ -22,6 +22,8 @@
 #import "FBGraphUser.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
+#import "FBLoginViewLoginButtonSmallPNG.h"
+#import "FBLoginViewLoginButtonSmallPressedPNG.h"
 
 static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
 const int kButtonLabelX = 46;
@@ -238,12 +240,12 @@ CGSize g_imageSize;
     self.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
     self.button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    UIImage *image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small.png"] 
+    UIImage *image = [[FBLoginViewLoginButtonSmallPNG image]
                       stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
     g_imageSize = image.size;
     [self.button setBackgroundImage:image forState:UIControlStateNormal];
     
-    image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small-pressed.png"]
+    image = [[FBLoginViewLoginButtonSmallPressedPNG image]
              stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
     [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
     

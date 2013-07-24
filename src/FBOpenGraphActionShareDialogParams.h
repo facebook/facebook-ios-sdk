@@ -16,10 +16,9 @@
 
 #import <Foundation/Foundation.h>
 #import "FBDialogsParams.h"
+#import "FBOpenGraphAction.h"
 
 extern NSString *const FBPostObject;
-
-@protocol FBOpenGraphAction;
 
 /*!
  @class FBOpenGraphActionShareDialogParams

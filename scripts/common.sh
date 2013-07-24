@@ -121,7 +121,7 @@ if [ -z $FB_SDK_ENV ]; then
   test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
   test -n "$LIPO"         || LIPO=$(which lipo)
   test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)
-  test -n "$CODESIGN"     || CODESIGN=$(which codesign)
+  test -n "$PRODUCTSIGN"  || PRODUCTSIGN=$(which productsign)
   test -n "$APPLEDOC"     || APPLEDOC=$(which appledoc)
 
   # < XCode 4.3.1

@@ -49,4 +49,4 @@ NSString *const FBErrorDialogCantBeDisplayed = @"DialogCantBeDisplayed";
 NSString *const FBErrorDialogInvalidOpenGraphObject = @"DialogInvalidOpenGraphObject";
 NSString *const FBErrorDialogInvalidOpenGraphActionParameters = @"DialogInvalidOpenGraphActionParameters";
 
-NSString *const FBErrorInsightsReasonKey = @"com.facebook.sdk:InsightsReasonKey";
+NSString *const FBErrorAppEventsReasonKey = @"com.facebook.sdk:AppEventsReasonKey";
