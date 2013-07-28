@@ -203,10 +203,11 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
                  NSString *oauthToken = nil;
                  if (granted) {
                      NSArray *fbAccounts = [self.accountStore accountsWithAccountType:self.accountTypeFB];
-                     id account = [fbAccounts objectAtIndex:0];
-                     id credential = [account credential];
-                     
-                     oauthToken = [credential oauthToken];
+                     if (fbAccounts && [fbAccounts count]) {
+                         id account = [fbAccounts objectAtIndex:0];
+                         id credential = [account credential];
+                         oauthToken = [credential oauthToken];
+                     }
                  }
                  
                  if (!accountStoreError && !oauthToken){
