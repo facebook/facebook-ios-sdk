@@ -145,7 +145,10 @@
     if ([viewController respondsToSelector:@selector(presentViewController:animated:completion:)]) {
         [viewController presentViewController:self animated:animated completion:nil];
     } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [viewController presentModalViewController:self animated:animated];
+#pragma clang diagnostic pop
     }
     
     // Set this here because we always revert to NO in viewDidLoad.
@@ -210,7 +213,11 @@
             label.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];
             label.backgroundColor = [UIColor clearColor];
             label.textColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_5_1
             label.textAlignment = UITextAlignmentCenter;
+#else
+			label.textAlignment = NSTextAlignmentCenter;
+#endif
             label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 
             self.titleLabel = [[[UIBarButtonItem alloc] initWithCustomView:label] autorelease];
@@ -294,7 +301,16 @@
         return [self presentingViewController];
     } else {
         UIViewController *parentViewController = [self parentViewController];
-        if (self == [parentViewController modalViewController]) {
+		UIViewController *modalController = nil;
+		if([parentViewController respondsToSelector: @selector(presentedViewController)]) {
+			modalController = [parentViewController presentedViewController];
+		} else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+			modalController = [parentViewController modalViewController];
+#pragma clang diagnostic pop
+		}
+        if (self == modalController) {
             return parentViewController;
         }
     }
@@ -313,7 +329,10 @@
         if ([presentingViewController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
             [presentingViewController dismissViewControllerAnimated:self.dismissAnimated completion:nil];
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
+#pragma clang diagnostic pop
         }
         
         [self logInsights:YES];
@@ -333,7 +352,10 @@
         if ([presentingViewController respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
             [presentingViewController dismissViewControllerAnimated:self.dismissAnimated completion:nil];
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             [presentingViewController dismissModalViewControllerAnimated:self.dismissAnimated];
+#pragma clang diagnostic push
         }
         
         [self logInsights:NO];

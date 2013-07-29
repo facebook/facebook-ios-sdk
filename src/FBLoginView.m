@@ -252,7 +252,12 @@ CGSize g_imageSize;
     // add a label that will appear over the button
     self.label = [[[UILabel alloc] init] autorelease];
     self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_5_1
     self.label.textAlignment = UITextAlignmentCenter;
+#else
+	self.label.textAlignment = NSTextAlignmentCenter;;
+#endif
+	
     self.label.backgroundColor = [UIColor clearColor];
     self.label.font = [UIFont boldSystemFontOfSize:16.0];
     self.label.textColor = [UIColor whiteColor];

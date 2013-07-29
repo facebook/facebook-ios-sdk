@@ -189,7 +189,11 @@
                                                 containerView.frame.size.width,
                                                 20);
     self.connectedStateLabel.backgroundColor = [UIColor clearColor];
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_5_1
     self.connectedStateLabel.textAlignment = UITextAlignmentCenter;
+#else
+	self.connectedStateLabel.textAlignment = NSTextAlignmentCenter;
+#endif
     self.connectedStateLabel.numberOfLines = 0;
     self.connectedStateLabel.font = [UIFont boldSystemFontOfSize:16.0];
     self.connectedStateLabel.shadowColor = [UIColor blackColor];
@@ -263,8 +267,10 @@
 
 - (BOOL)shouldAutorotate {
     UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
-    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     return [self shouldAutorotateToInterfaceOrientation:orientation];
+#pragma clang diagnostic pop
 }
 
 - (void)viewWillAppear:(BOOL)animated {
