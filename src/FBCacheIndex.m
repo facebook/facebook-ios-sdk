@@ -359,7 +359,10 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 - (void)_updateEntryInDatabaseForKey:(NSString*)key
     entry:(FBCacheEntityInfo*)entry 
 {
-    NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");    
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+#pragma clang diagnostic pop
     initializeStatement(_database, &_updateStatement, updateQuery);
 
     CHECK_SQLITE_SUCCESS(fbdfl_sqlite3_bind_text(
@@ -393,8 +396,10 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 
 - (void)_writeEntryInDatabase:(FBCacheEntityInfo*)entry 
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
-    
+#pragma clang diagnostic pop
     FBCacheEntityInfo* existing = [self _readEntryFromDatabase:entry.key];
     if (existing) {
         
@@ -441,7 +446,10 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 
 - (FBCacheEntityInfo*)_readEntryFromDatabase:(NSString*)key
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+#pragma clang diagnostic pop
     initializeStatement(_database, &_selectByKeyStatement, selectByKeyQuery);
   
     CHECK_SQLITE_SUCCESS(fbdfl_sqlite3_bind_text(
@@ -457,7 +465,10 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 - (NSMutableArray*) _readEntriesFromDatabase:(NSString*)keyFragment
                            excludingFragment:(BOOL)exclude
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+#pragma clang diagnostic pop
     
     sqlite3_stmt* selectStatement;
     const char* query;
@@ -518,7 +529,10 @@ static void releaseStatement(sqlite3_stmt* statement, sqlite3* database)
 
 - (void)_fetchCurrentDiskUsage
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     NSAssert(dispatch_get_current_queue() == _databaseQueue, @"");
+#pragma clang
     
     sqlite3_stmt* sizeStatement = nil;
     initializeStatement(_database, &sizeStatement, selectStorageSizeQuery);

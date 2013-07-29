@@ -118,7 +118,14 @@
                       valueToSum:nil
                       parameters:@{ @"render_type" : @"Native" }
                          session:session];
-    [viewController presentModalViewController:composeViewController animated:YES];
+	if([viewController respondsToSelector: @selector(presentViewController:animated:completion:)]) {
+		[viewController presentViewController: composeViewController animated: YES completion: nil];
+	}
+#if __IPHONE_OS_VERSION_MIN_REQUIRED <= __IPHONE_5_1
+	else {
+		[viewController presentModalViewController:composeViewController animated:YES];
+	}
+#endif
     
     return YES;
 }
