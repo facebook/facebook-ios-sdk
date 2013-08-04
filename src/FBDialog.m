@@ -381,6 +381,10 @@ params   = _params;
     [_params release];
     [_serverURL release];
     [_spinner release];
+    [_closeButton removeFromSuperview];
+    [_closeButton removeTarget:self
+                        action:NULL
+              forControlEvents:UIControlEventTouchUpInside];
     [_closeButton release];
     [_loadingURL release];
     [_modalBackgroundView release];
