@@ -35,6 +35,7 @@
 #import "FBAppCall+Internal.h"
 #import "FBDialogs+Internal.h"
 #import "FBAppBridge.h"
+#import "FBSessionAuthLogger.h"
 
 // the sooner we can remove these the better
 #import "Facebook.h"
@@ -110,6 +111,12 @@ static FBSession *g_activeSession = nil;
 @property(readwrite, copy)      FBAccessTokenData *accessTokenData;
 @property(readwrite, copy)      NSArray *initializedPermissions;
 @property(readwrite, assign)    FBSessionDefaultAudience lastRequestedSystemAudience;
+// A hack to the session state machine to enable repairing of sessions
+// (i.e., for sessions whose token have been invalidated such as by
+// expiration or password change was NOT un-tossed). We use this flag
+// to avoid changing the FBSessionState surface area and to re-use
+// the re-auth flow.
+@property(atomic, assign)       BOOL isRepairing;
 
 // private properties
 @property(readwrite, retain)    FBSessionTokenCachingStrategy *tokenCachingStrategy;
@@ -121,6 +128,7 @@ static FBSession *g_activeSession = nil;
 @property(readwrite, retain)    FBLoginDialog *loginDialog;
 @property(readwrite, retain)    NSThread *affinitizedThread;
 @property(readwrite, retain)    FBSessionAppEventsState *appEventsState;
+@property(readwrite, retain)    FBSessionAuthLogger *authLogger;
 
 @end
 
@@ -273,6 +281,7 @@ static FBSession *g_activeSession = nil;
     [_tokenCachingStrategy release];
     [_affinitizedThread release];
     [_appEventsState release];
+    [_authLogger release];
 
     [super dealloc];
 }
@@ -318,6 +327,17 @@ static FBSession *g_activeSession = nil;
 
     [self checkThreadAffinity];
 
+    switch (behavior) {
+        case FBSessionLoginBehaviorForcingWebView:
+        case FBSessionLoginBehaviorUseSystemAccountIfPresent:
+        case FBSessionLoginBehaviorWithFallbackToWebView:
+        case FBSessionLoginBehaviorWithNoFallbackToWebView:
+            // valid behavior; no-op.
+            break;
+        default:
+            [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors formatString:@"%d is not a valid FBSessionLoginBehavior. Ignoring open call.", behavior];
+            return;
+    }
     if (!(self.state == FBSessionStateCreated ||
           self.state == FBSessionStateCreatedTokenLoaded)) {
         // login may only be called once, and only from one of the two initial states
@@ -344,14 +364,14 @@ static FBSession *g_activeSession = nil;
               andExpirationDate:nil
                     shouldCache:NO
                       loginType:FBSessionLoginTypeNone];
-
+        
         [self authorizeWithPermissions:self.initializedPermissions
                               behavior:behavior
                        defaultAudience:_defaultDefaultAudience
                          isReauthorize:NO];
-
+        
     } else { // self.status == FBSessionStateLoadedValidToken
-
+        
         // this case implies that a valid cached token was found, and preserves the
         // "1-session-1-identity" rule, by transitioning to logged in, without a transition to login UX
         [self transitionAndCallHandlerWithState:FBSessionStateOpen
@@ -432,11 +452,21 @@ static FBSession *g_activeSession = nil;
 // the app is called back in cases of either app switch
 // or FBLoginDialog
 - (BOOL)handleAuthorizationCallbacks:(NSString *)accessToken params:(NSDictionary *)params loginType:(FBSessionLoginType)loginType {
+    // Make sure our logger is setup to finish up the authorization roundtrip
+    if (!self.authLogger) {
+        NSDictionary *clientState = [FBSession clientStateFromQueryParams:params];
+        NSString *ID = clientState[FBSessionAuthLoggerParamIDKey];
+        NSString *authMethod = clientState[FBSessionAuthLoggerParamAuthMethodKey];
+        if (ID || authMethod) {
+            self.authLogger = [[[FBSessionAuthLogger alloc] initWithSession:self ID:ID authMethod:authMethod] autorelease];
+        }
+    }
+    
     switch (self.state) {
         case FBSessionStateCreatedOpening:
             return [self handleAuthorizationOpen:params
-                                  accessToken:accessToken
-                                    loginType:loginType];
+                                     accessToken:accessToken
+                                       loginType:loginType];
         case FBSessionStateOpen:
         case FBSessionStateOpenTokenExtended:
             if (loginType == FBSessionLoginTypeNone){
@@ -536,9 +566,21 @@ static FBSession *g_activeSession = nil;
                        completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:permissions
                                           allowLoginUI:allowLoginUI
+                                       defaultAudience:FBSessionDefaultAudienceNone
+                                     completionHandler:handler];
+}
+
+// This should only be used by internal code that needs to support mixed
+// permissions backwards compability and specify an audience.
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler {
+    return [FBSession openActiveSessionWithPermissions:permissions
+                                          allowLoginUI:allowLoginUI
                                     allowSystemAccount:NO
                                                 isRead:NO
-                                       defaultAudience:FBSessionDefaultAudienceNone
+                                       defaultAudience:defaultAudience
                                      completionHandler:handler];
 }
 
@@ -815,10 +857,10 @@ static FBSession *g_activeSession = nil;
                    isReauthorize:(BOOL)isReauthorize {
     BOOL tryIntegratedAuth = behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent;
     BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
-                            (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
-                            (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
+    (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
+    (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
     BOOL tryFallback =  (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
-                        (behavior == FBSessionLoginBehaviorForcingWebView);
+    (behavior == FBSessionLoginBehaviorForcingWebView);
     
     [self authorizeWithPermissions:(NSArray*)permissions
                    defaultAudience:audience
@@ -838,6 +880,38 @@ static FBSession *g_activeSession = nil;
                         fallback:(BOOL)tryFallback
                    isReauthorize:(BOOL)isReauthorize
              canFetchAppSettings:(BOOL)canFetchAppSettings {
+    self.authLogger = [[[FBSessionAuthLogger alloc] initWithSession:self] autorelease];
+    [self.authLogger addExtrasForNextEvent:@{
+     @"tryIntegratedAuth": [NSNumber numberWithBool:tryIntegratedAuth],
+     @"tryFBAppAuth": [NSNumber numberWithBool:tryFBAppAuth],
+     @"trySafariAuth": [NSNumber numberWithBool:trySafariAuth],
+     @"tryFallback": [NSNumber numberWithBool:tryFallback],
+     @"isReauthorize": [NSNumber numberWithBool:isReauthorize]
+     }];
+    
+    [self.authLogger logStartAuth];
+    
+    [self retryableAuthorizeWithPermissions:permissions
+                            defaultAudience:defaultAudience
+                             integratedAuth:tryIntegratedAuth
+                                  FBAppAuth:tryFBAppAuth
+                                 safariAuth:trySafariAuth
+                                   fallback:tryFallback
+                              isReauthorize:isReauthorize
+                        canFetchAppSettings:canFetchAppSettings];
+}
+
+// NOTE: This method should not be used as the "first" call in the auth-stack. It makes no assumptions about being
+// the first either.
+- (void)retryableAuthorizeWithPermissions:(NSArray*)permissions
+                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                           integratedAuth:(BOOL)tryIntegratedAuth
+                                FBAppAuth:(BOOL)tryFBAppAuth
+                               safariAuth:(BOOL)trySafariAuth
+                                 fallback:(BOOL)tryFallback
+                            isReauthorize:(BOOL)isReauthorize
+                      canFetchAppSettings:(BOOL)canFetchAppSettings {
+    
     // setup parameters for either the safari or inline login
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
@@ -847,10 +921,10 @@ static FBSession *g_activeSession = nil;
                                    FBLoginUXIOS, FBLoginUXSDK,
                                    nil];
     
-    NSString *clientStateString = [FBUtility simpleJSONEncode:[self clientState]];
-    if (clientStateString) {
-        params[FBLoginUXClientState] = clientStateString;
-    }
+    NSMutableDictionary *clientState = [NSMutableDictionary dictionary];
+    // Note, in url-roundtrips, unlogged metadata in authLogger is lost. Only the ID makes it back
+    // for completion-event logging
+    clientState[FBSessionAuthLoggerParamIDKey] = self.authLogger.ID;
     
     if (permissions != nil) {
         NSString* scope = [permissions componentsJoinedByString:@","];
@@ -868,19 +942,27 @@ static FBSession *g_activeSession = nil;
     // attempt to open an account store with the type Facebook; and if successful authorize
     // using the OS
     BOOL didRequestAuthorize = NO;
+    NSString *authMethod = nil;
     
-    // do we want and have the ability to attempt integrated authn
+    // do we have the ability to attempt integrated authn
+    BOOL systemAccountStoreAvailable = [self isSystemAccountStoreAvailable];
+    [self.authLogger addExtrasForNextEvent:@{
+     @"systemAccountStoreAvailable":[NSNumber numberWithBool:systemAccountStoreAvailable]
+     }];
+    // do we want to attempt integrated authn
     if (!didRequestAuthorize &&
         tryIntegratedAuth &&
         (!isReauthorize || self.accessTokenData.loginType == FBSessionLoginTypeSystemAccount) &&
-        [self isSystemAccountStoreAvailable]) {
+        systemAccountStoreAvailable) {
                 
         // looks like we will get to attempt a login with integrated authn
         didRequestAuthorize = YES;
         
+        authMethod = FBSessionAuthLoggerAuthMethodIntegrated;
+        
         [self authorizeUsingSystemAccountStore:permissions
                                defaultAudience:defaultAudience
-                                  isReauthorize:isReauthorize];
+                                 isReauthorize:isReauthorize];
     }
     
     // if the device is running a version of iOS that supports multitasking,
@@ -890,13 +972,29 @@ static FBSession *g_activeSession = nil;
     // the fbauth:// URL scheme, fall back on Safari for obtaining the access token.
     // This minimizes the chance that the user will have to enter his or
     // her credentials in order to authorize the application.
+    BOOL isMultitaskingSupported = YES;
+    BOOL isURLSchemeRegistered = YES;
+    if (!didRequestAuthorize) {
+        isMultitaskingSupported = [self isMultitaskingSupported];
+        isURLSchemeRegistered = [self isURLSchemeRegistered];
+        
+        [self.authLogger addExtrasForNextEvent:@{
+         @"isMultitaskingSupported":[NSNumber numberWithBool:isMultitaskingSupported],
+         @"isURLSchemeRegistered":[NSNumber numberWithBool:isURLSchemeRegistered]
+         }];
+    }
+    
     if (!didRequestAuthorize &&
-        [self isMultitaskingSupported] &&
-        [self isURLSchemeRegistered] &&
+        isMultitaskingSupported &&
+        isURLSchemeRegistered &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
         
         if (tryFBAppAuth) {
             FBFetchedAppSettings *fetchedSettings = [FBUtility fetchedAppSettings];
+            [self.authLogger addExtrasForNextEvent:@{
+             @"hasFetchedAppSettings": [NSNumber numberWithBool:(fetchedSettings != nil)],
+             @"pListFacebookDisplayName": [FBSettings defaultDisplayName] ?: @"<missing>"
+             }];
             if ([FBSettings defaultDisplayName] &&            // don't autoselect Native Login unless the app has been setup for it,
                 [self.appID isEqualToString:[FBSettings defaultAppID]] && // If the appId has been overridden, then the bridge cannot be used and native login is denied
                 (fetchedSettings || canFetchAppSettings) &&   // and we have app-settings available to us, or could fetch if needed
@@ -905,58 +1003,97 @@ static FBSession *g_activeSession = nil;
                     // fetch the settings and call this method again
                     didRequestAuthorize = YES;
                     [FBUtility fetchAppSettings:[FBSettings defaultAppID] callback:^(FBFetchedAppSettings * settings, NSError * error) {
-                        [self authorizeWithPermissions:permissions
-                                       defaultAudience:defaultAudience
-                                        integratedAuth:tryIntegratedAuth
-                                             FBAppAuth:tryFBAppAuth
-                                            safariAuth:trySafariAuth
-                                              fallback:tryFallback
-                                         isReauthorize:isReauthorize
-                                   canFetchAppSettings:NO];
+                        [self retryableAuthorizeWithPermissions:permissions
+                                                defaultAudience:defaultAudience
+                                                 integratedAuth:tryIntegratedAuth
+                                                      FBAppAuth:tryFBAppAuth
+                                                     safariAuth:trySafariAuth
+                                                       fallback:tryFallback
+                                                  isReauthorize:isReauthorize
+                                            canFetchAppSettings:NO];
                     }];
-                } else if (!fetchedSettings.suppressNativeGdp) {
-                    if (![[FBSettings defaultDisplayName] isEqualToString:fetchedSettings.serverAppName]) {
-                        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
-                                            logEntry:@"PLIST entry for FacebookDisplayName does not match Facebook app name."];
-
+                } else {
+                    [self.authLogger addExtrasForNextEvent:@{
+                     @"suppressNativeGdp": [NSNumber numberWithBool:fetchedSettings.suppressNativeGdp],
+                     @"serverAppName": fetchedSettings.serverAppName ?: @"<missing>"
+                     }];
+                    if (!fetchedSettings.suppressNativeGdp) {
+                        if (![[FBSettings defaultDisplayName] isEqualToString:fetchedSettings.serverAppName]) {
+                            [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                                                logEntry:@"PLIST entry for FacebookDisplayName does not match Facebook app name."];
+                            [self.authLogger addExtrasForNextEvent:@{
+                             @"nameMismatch": [NSNumber numberWithBool:YES]
+                             }];
+                        }
+                        authMethod = FBSessionAuthLoggerAuthMethodFBApplicationNative;
+                        clientState[FBSessionAuthLoggerParamAuthMethodKey] = authMethod;
+                        FBAppCall *call = [self authorizeUsingFacebookNativeLoginWithPermissions:permissions
+                                                                                 defaultAudience:defaultAudience
+                                                                                     clientState:clientState];
+                        if (call) {
+                            [self.authLogger addExtrasForNextEvent:@{
+                             @"native_auth_appcall_id":call.ID
+                             }];
+                            
+                            didRequestAuthorize = YES;
+                        }
                     }
-                    didRequestAuthorize = [self authorizeUsingFacebookNativeLoginWithPermissions:permissions
-                                                                                 defaultAudience:defaultAudience];
                 }
             }
             
             if (!TEST_DISABLE_FACEBOOKLOGIN && !didRequestAuthorize) {
+                authMethod = FBSessionAuthLoggerAuthMethodFBApplicationWeb;
+                clientState[FBSessionAuthLoggerParamAuthMethodKey] = authMethod;
+                params[FBLoginUXClientState] = [self jsonClientStateWithDictionary:clientState];
+
                 didRequestAuthorize = [self authorizeUsingFacebookApplication:params];
             }
         }
 
         if (trySafariAuth && !didRequestAuthorize) {
+            authMethod = FBSessionAuthLoggerAuthMethodBrowser;
+            clientState[FBSessionAuthLoggerParamAuthMethodKey] = authMethod;
+            params[FBLoginUXClientState] = [self jsonClientStateWithDictionary:clientState];
+            
             didRequestAuthorize = [self authorizeUsingSafari:params];
         }
+        
         //In case openURL failed, make sure we don't still expect a openURL callback.
         if (!didRequestAuthorize){
             _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
+            authMethod = nil;
         }
     }
-
+    
     // If single sign-on failed, see if we should attempt to fallback
-    if (!didRequestAuthorize) {
-        if (tryFallback) {
-            [self authorizeUsingLoginDialog:params];
-        } else {
-            // Can't fallback and Facebook Login failed, so transition to an error state
-            NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonInlineNotCancelledValue
-                                                    errorCode:nil
-                                                   innerError:nil];
-
-            // state transition, and call the handler if there is one
-            [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
-                                              error:error
-                                              token:nil
-                                     expirationDate:nil
-                                        shouldCache:NO
-                                          loginType:FBSessionLoginTypeNone];
+    if (!didRequestAuthorize && tryFallback) {
+        authMethod = FBSessionAuthLoggerAuthMethodFallback;
+        clientState[FBSessionAuthLoggerParamAuthMethodKey] = authMethod;
+        params[FBLoginUXClientState] = [self jsonClientStateWithDictionary:clientState];
+        
+        didRequestAuthorize = YES;
+        
+        [self authorizeUsingLoginDialog:params];
+    }
+    
+    if (didRequestAuthorize) {
+        if (authMethod) { // This is a nested-if, because we might not have an authmethod yet if waiting on fetchedAppSettings
+            // Some method of authentication was kicked off
+            [self.authLogger logStartAuthMethod:authMethod];
         }
+    } else {
+        // Can't fallback and Facebook Login failed, so transition to an error state
+        NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonInlineNotCancelledValue
+                                                errorCode:nil
+                                               innerError:nil];
+        
+        // state transition, and call the handler if there is one
+        [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
+                                          error:error
+                                          token:nil
+                                 expirationDate:nil
+                                    shouldCache:NO
+                                      loginType:FBSessionLoginTypeNone];
     }
 }
 
@@ -1006,6 +1143,7 @@ static FBSession *g_activeSession = nil;
     unsigned long timePriorToShowingUI = [FBUtility currentTimeInMilliseconds];
     
     FBSystemAccountStoreAdapter *systemAccountStoreAdapter = [self getSystemAccountStoreAdapter];
+    
     [systemAccountStoreAdapter
         requestAccessToFacebookAccountStore:permissions
         defaultAudience:defaultAudience
@@ -1024,6 +1162,11 @@ static FBSession *g_activeSession = nil;
             // chosen empirically, so there may be some edge cases that are false negatives or false positives.
             BOOL dialogWasShown = millisecondsSinceUIWasPotentiallyShown > 350;
 
+            [self.authLogger addExtrasForNextEvent:@{
+             @"isUntosedDevice": [NSNumber numberWithBool:isUntosedDevice],
+             @"dialogShown": [NSNumber numberWithBool:dialogWasShown]
+             }];
+            
             // initial auth case
             if (!isReauthorize) {
                 if (oauthToken) {
@@ -1032,6 +1175,8 @@ static FBSession *g_activeSession = nil;
                         [self logIntegratedAuthAppEvent:@"Authorization succeeded"
                                             permissions:permissions];
                     }
+                    
+                    [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
                     
                     [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                                           error:nil
@@ -1045,45 +1190,59 @@ static FBSession *g_activeSession = nil;
                     
                     // Don't invoke logIntegratedAuthAppEvent, since this is not an 'integrated dialog' case.
                     
+                    [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSkipped error:nil];
+                    
                     // even when OS integrated auth is possible we use native-app/safari
                     // login if the user has not signed on to Facebook via the OS
-                    [self authorizeWithPermissions:permissions
-                                   defaultAudience:defaultAudience
-                                    integratedAuth:NO
-                                         FBAppAuth:YES
-                                        safariAuth:YES
-                                          fallback:YES
-                                     isReauthorize:NO
-                               canFetchAppSettings:YES];
+                    [self retryableAuthorizeWithPermissions:permissions
+                                            defaultAudience:defaultAudience
+                                             integratedAuth:NO
+                                                  FBAppAuth:YES
+                                                 safariAuth:YES
+                                                   fallback:YES
+                                              isReauthorize:NO
+                                        canFetchAppSettings:YES];
                 } else {
                     
                     [self logIntegratedAuthAppEvent:@"Authorization cancelled"
                                         permissions:permissions];
 
-                    NSError *err;
+                    NSError *err = nil;
+                    NSString *authLoggerResult = FBSessionAuthLoggerResultError;
                     if ([accountStoreError.domain isEqualToString:FacebookSDKDomain]){
                         // If the requestAccess call results in a Facebook error, surface it as a top-level
                         // error. This implies it is not the typical user "disallows" case.
                         err = accountStoreError;
                     } else if ([accountStoreError.domain isEqualToString:@"com.apple.accounts"] && accountStoreError.code == 7) {
-                        // code 7 is for user cancellations, see ACErrorCode
-                        err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledSystemValue
-                                                      errorCode:nil
-                                                     innerError:accountStoreError];
-                    } else {
-                        // create an error object with additional info regarding failed login
+                        // code 7 is for user cancellations, see ACErrorCode, except that iOS can also
+                        // re-use code 7 for other cases like a sandboxed app. In those other cases,
+                        // they do provide a NSLocalizedDescriptionKey entry so we'll inspect for that.
+                        if (!accountStoreError.userInfo[NSLocalizedDescriptionKey] ||
+                            [accountStoreError.userInfo[NSLocalizedDescriptionKey] rangeOfString:@"Invalid application"
+                                                                                         options:NSCaseInsensitiveSearch].location == NSNotFound) {
+                                err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledSystemValue
+                                                             errorCode:nil
+                                                            innerError:accountStoreError];
+                                authLoggerResult = FBSessionAuthLoggerResultCancelled;
+                            }
+                    }
+                    
+                    if (err == nil) {
+                        // create an error object with additional info regarding failed login as a fallback.
                         err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
                                                      errorCode:nil
                                                     innerError:accountStoreError];
                     }
                     
+                    [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
+                    
                     // state transition, and call the handler if there is one
                     [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
-                                                          error:err
-                                                          token:nil
-                                                 expirationDate:nil
-                                                    shouldCache:NO
-                                                      loginType:FBSessionLoginTypeNone];
+                                                      error:err
+                                                      token:nil
+                                             expirationDate:nil
+                                                shouldCache:NO
+                                                  loginType:FBSessionLoginTypeNone];
                 }
             } else { // reauth case
                 if (oauthToken) {
@@ -1102,13 +1261,14 @@ static FBSession *g_activeSession = nil;
                                                   expirationDate:[NSDate distantFuture]
                                                      permissions:[set allObjects]];
                 } else {
-                    
+                    self.isRepairing = NO;
                     if (dialogWasShown) {
                         [self logIntegratedAuthAppEvent:@"Reauthorization cancelled"
                                             permissions:permissions];
                     }
                     
                     NSError *err;
+                    NSString* authLoggerResult = FBSessionAuthLoggerResultSuccess;
                     if ([accountStoreError.domain isEqualToString:FacebookSDKDomain]){
                         // If the requestAccess call results in a Facebook error, surface it as a top-level
                         // error. This implies it is not the typical user "disallows" case.
@@ -1123,12 +1283,15 @@ static FBSession *g_activeSession = nil;
                         err = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelledSystem
                                                           errorCode:nil
                                                          innerError:accountStoreError];
+                        authLoggerResult = FBSessionAuthLoggerResultCancelled;
                     } else {
                         // create an error object with additional info regarding failed login
                         err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
                                                      errorCode:nil
                                                     innerError:accountStoreError];
                     }
+                    
+                    [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
 
                     // complete the operation: failed
                     [self callReauthorizeHandlerAndClearState:err];
@@ -1152,22 +1315,23 @@ static FBSession *g_activeSession = nil;
         [[UIDevice currentDevice] isMultitaskingSupported];
 }
 
-- (BOOL)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray*)permissions
-                                         defaultAudience:(FBSessionDefaultAudience)defaultAudience {
+- (FBAppCall *)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray*)permissions
+                                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                                             clientState:(NSDictionary *)clientState {
     FBLoginDialogParams *params = [[[FBLoginDialogParams alloc] init] autorelease];
     params.permissions = permissions;
     params.writePrivacy = defaultAudience;
     params.session = self;
     
     FBAppCall *call = [FBDialogs presentLoginDialogWithParams:params
-                                                    clientState:nil
-                                                        handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                                            [self handleDidCompleteNativeLoginForAppCall:call];
-                                                        }];
+                                                  clientState:clientState
+                                                      handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                          [self handleDidCompleteNativeLoginForAppCall:call];
+                                                      }];
     if (call) {
         _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeFacebookApplication;
     }
-    return (call != nil);
+    return call;
 }
 
 - (void)handleDidCompleteNativeLoginForAppCall:(FBAppCall *)call {
@@ -1277,39 +1441,11 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)handleAuthorizationOpen:(NSDictionary*)parameters
-                 accessToken:(NSString*)accessToken
-                   loginType:(FBSessionLoginType)loginType {
+                    accessToken:(NSString*)accessToken
+                      loginType:(FBSessionLoginType)loginType {
     // if the URL doesn't contain the access token, an error has occurred.
     if (!accessToken) {
         NSString *errorReason = [parameters objectForKey:@"error"];
-        
-        // if the error response indicates that we should try again using Safari, open
-        // the authorization dialog in Safari.
-        if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
-            [self authorizeWithPermissions:self.initializedPermissions
-                           defaultAudience:_defaultDefaultAudience
-                            integratedAuth:NO
-                                 FBAppAuth:NO
-                                safariAuth:YES
-                                  fallback:NO
-                             isReauthorize:NO
-                       canFetchAppSettings:YES];
-            return YES;
-        }
-        
-        // if the error response indicates that we should try the authorization flow
-        // in an inline dialog, do that.
-        if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
-            [self authorizeWithPermissions:self.initializedPermissions
-                           defaultAudience:_defaultDefaultAudience
-                            integratedAuth:NO
-                                 FBAppAuth:NO
-                                safariAuth:NO
-                                  fallback:NO
-                             isReauthorize:NO
-                       canFetchAppSettings:YES];
-            return YES;
-        }
         
         // the facebook app may return an error_code parameter in case it
         // encounters a UIWebViewDelegate error
@@ -1320,21 +1456,77 @@ static FBSession *g_activeSession = nil;
         // If an inner error or another errorReason is present, pass it along
         // as an inner error for the top level error
         NSError *innerError = parameters[FBInnerErrorObjectKey];
-        if (!innerError && errorReason) {
-            innerError = [self errorLoginFailedWithReason:errorReason errorCode:nil innerError:nil];
+        
+        NSError *errorToSurface = nil;
+        // If we either have an inner error (typically from another source like the native
+        // Facebook application), or if we have an error_message, then this is not a
+        // cancellation.
+        if (innerError) {
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
+                                                    errorCode:errorCode
+                                                   innerError:innerError];
+        } else if (parameters[@"error_message"]) {
+            // If there's no inner error, then we can check for error_message as a signal for
+            // other (non-user cancelled) login failures.
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
+                                                    errorCode:errorCode
+                                                   innerError:nil
+                                         localizedDescription:parameters[@"error_message"]];
         }
-        NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledValue
-                                                errorCode:errorCode
-                                               innerError:innerError];
+        
+        NSString *authLoggerResult = FBSessionAuthLoggerResultError;
+        if (!errorToSurface) {
+            // We must have a cancellation
+            authLoggerResult = FBSessionAuthLoggerResultCancelled;
+            if (errorReason) {
+                // Legacy auth responses have 'error' (or here, errorReason) for cancellations.
+                // Store that in an inner error so it isn't lost
+                innerError = [self errorLoginFailedWithReason:errorReason errorCode:nil innerError:nil];
+            }
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledValue
+                                                    errorCode:errorCode
+                                                   innerError:innerError];
+        }
+        
+        [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:errorToSurface];
+        
+        // if the error response indicates that we should try again using Safari, open
+        // the authorization dialog in Safari.
+        if (errorReason && [errorReason isEqualToString:@"service_disabled_use_browser"]) {
+            [self retryableAuthorizeWithPermissions:self.initializedPermissions
+                                    defaultAudience:_defaultDefaultAudience
+                                     integratedAuth:NO
+                                          FBAppAuth:NO
+                                         safariAuth:YES
+                                           fallback:NO
+                                      isReauthorize:NO
+                                canFetchAppSettings:YES];
+            return YES;
+        }
+        
+        // if the error response indicates that we should try the authorization flow
+        // in an inline dialog, do that.
+        if (errorReason && [errorReason isEqualToString:@"service_disabled"]) {
+            [self retryableAuthorizeWithPermissions:self.initializedPermissions
+                                    defaultAudience:_defaultDefaultAudience
+                                     integratedAuth:NO
+                                          FBAppAuth:NO
+                                         safariAuth:NO
+                                           fallback:NO
+                                      isReauthorize:NO
+                                canFetchAppSettings:YES];
+            return YES;
+        }
         
         // state transition, and call the handler if there is one
         [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
-                                          error:error
+                                          error:errorToSurface
                                           token:nil
                                  expirationDate:nil
                                     shouldCache:NO
                                       loginType:FBSessionLoginTypeNone];
     } else {
+        [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
         
         // we have an access token, so parse the expiration date.
         NSDate *expirationDate = [FBSession expirationDateFromResponseParams:parameters];
@@ -1356,10 +1548,40 @@ static FBSession *g_activeSession = nil;
     if (!accessToken) {
         // no token in this case implies that the user cancelled the permissions upgrade
         NSError *innerError = parameters[FBInnerErrorObjectKey];
-        NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelled
+        NSString *errorCode = parameters[@"error_code"];
+        NSString *authLoggerResult = FBSessionAuthLoggerResultError;
+
+        NSError *errorToSurface = nil;
+        // If we either have an inner error (typically from another source like the native
+        // Facebook application), or if we have an error_message, then this is not a
+        // cancellation.
+        if (innerError) {
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
+                                                    errorCode:errorCode
+                                                   innerError:innerError];
+        } else if (parameters[@"error_message"]) {
+            // If there's no inner error, then we can check for error_message as a signal for
+            // other (non-user cancelled) login failures.
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
+                                                    errorCode:errorCode
+                                                   innerError:nil
+                                         localizedDescription:parameters[@"error_message"]];
+        }
+
+        if (!errorToSurface) {
+            // We must have a cancellation
+            authLoggerResult = FBSessionAuthLoggerResultCancelled;
+            errorToSurface = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelled
                                                 errorCode:nil
                                                innerError:innerError];
-        [self callReauthorizeHandlerAndClearState:error];
+        }
+        // in the reauth failure flow, we turn off the repairing flag immediately
+        // so that the handler can process the state correctly (i.e., so that
+        // the retryManager can close the session).
+        self.isRepairing = NO;
+        [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:errorToSurface];
+        
+        [self callReauthorizeHandlerAndClearState:errorToSurface];
     } else {
         
         // we have an access token, so parse the expiration date.
@@ -1367,10 +1589,21 @@ static FBSession *g_activeSession = nil;
         
         [self validateReauthorizedAccessToken:accessToken expirationDate:expirationDate];
     }
+
     return YES;    
 }
 
 - (void)validateReauthorizedAccessToken:(NSString *)accessToken expirationDate:(NSDate *)expirationDate {
+    // If we're coming back from a repair scenario, we skip validation
+    if (self.isRepairing) {
+        self.isRepairing = NO;
+        // Assume permissions are unchanged at this point.
+        [self completeReauthorizeWithAccessToken:accessToken
+                                  expirationDate:expirationDate
+                                     permissions:self.permissions];
+        return;
+    }
+    
     // now we are going to kick-off a batch request, where we confirm that the new token
     // refers to the same fbid as the old, and if so we will succeed the reauthorize call
     FBRequest *requestSessionMe = [FBRequest requestForGraphPath:@"me"];
@@ -1415,6 +1648,7 @@ static FBSession *g_activeSession = nil;
                 if (![newPermissions isKindOfClass:[NSArray class]]) {
                     newPermissions = nil;
                 }
+
                 [self completeReauthorizeWithAccessToken:accessToken
                                           expirationDate:expirationDate
                                              permissions:newPermissions];
@@ -1423,6 +1657,9 @@ static FBSession *g_activeSession = nil;
                 NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonWrongUser
                                                         errorCode:nil
                                                        innerError:nil];
+                
+                [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultError error:error];
+                
                 [self callReauthorizeHandlerAndClearState:error];
             }
             
@@ -1490,12 +1727,53 @@ static FBSession *g_activeSession = nil;
                      isReauthorize:YES];
 }
 
+// Internal method for "repairing" a session that has an invalid access token
+// by issuing a reauthorize call. If this gets exposed or invoked from more places,
+// seriously consider more validation (such as state checking).
+// This method will no-op if we're already repairing.
+- (void)repairWithHandler:(FBSessionRequestPermissionResultHandler) handler {
+    @synchronized (self) {
+        if (!self.isRepairing) {
+            self.isRepairing = YES;
+            FBSessionLoginBehavior loginBehavior;
+            switch (self.accessTokenData.loginType) {
+                case FBSessionLoginTypeSystemAccount: loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent; break;
+                case FBSessionLoginTypeFacebookApplication:
+                case FBSessionLoginTypeFacebookViaSafari: loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView; break;
+                case FBSessionLoginTypeWebView: loginBehavior = FBSessionLoginBehaviorForcingWebView; break;
+                default: loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
+            }
+            
+            if (self.reauthorizeHandler) {
+                [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                                    logEntry:@"Warning: a session is being reconnected while there might have been an existing reauthorization in progress. The pre-existing reauthorization will be ignored."];
+            }
+            self.reauthorizeHandler = handler;
+            
+            [self authorizeWithPermissions:nil
+                                  behavior:loginBehavior
+                           defaultAudience:FBSessionDefaultAudienceNone
+                             isReauthorize:YES];
+        } else {
+            // We're already repairing so further attempts at repairs
+            // (by other FBRequestConnection instances) should simply
+            // be treated as errors (i.e., we do not support queueing
+            // until the repair is resolved).
+            if (handler) {
+                handler(self, [NSError errorWithDomain:FacebookSDKDomain code:FBErrorSessionReconnectInProgess userInfo:nil]);
+            }
+        }
+    }
+}
+
 - (void)completeReauthorizeWithAccessToken:(NSString*)accessToken
                             expirationDate:(NSDate*)expirationDate
                                permissions:(NSArray*)permissions {
     if (permissions) {
         self.accessTokenData.permissions = permissions;
     }
+    
+    [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
     
     // set token and date, state transition, and call the handler if there is one
     [self transitionAndCallHandlerWithState:FBSessionStateOpenTokenExtended
@@ -1629,6 +1907,18 @@ static FBSession *g_activeSession = nil;
                                andExpirationDate:date
                                      shouldCache:shouldCache
                                        loginType:loginType];
+    
+    NSString *authLoggerResult = FBSessionAuthLoggerResultError;
+    if (!error) {
+        authLoggerResult = ((status == FBSessionStateClosedLoginFailed) ?
+                            FBSessionAuthLoggerResultCancelled :
+                            FBSessionAuthLoggerResultSuccess);
+    } else if ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonUserCancelledValue]) {
+        authLoggerResult = FBSessionAuthLoggerResultCancelled;
+    }
+    
+    [self.authLogger logEndAuthWithResult:authLoggerResult error:error];
+    self.authLogger = nil; // Nil out the logger so there aren't any rogue events logged.
 
     // if we are given a handler, we promise to call it once per transition from open to close
 
@@ -1665,11 +1955,22 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error {
+    NSString *authLoggerResult = FBSessionAuthLoggerResultSuccess;
+    if (error) {
+        authLoggerResult = ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorReauthorizeFailedReasonUserCancelled] ?
+                            FBSessionAuthLoggerResultCancelled :
+                            FBSessionAuthLoggerResultError);
+    }
+    
+    [self.authLogger logEndAuthWithResult:authLoggerResult error:error];
+    self.authLogger = nil; // Nil out the logger so there aren't any rogue events logged.
+
     // clear state and call handler
     FBSessionRequestPermissionResultHandler reauthorizeHandler = [self.reauthorizeHandler retain];
     @try {
         self.reauthorizeHandler = nil;
         self.reauthorizePermissions = nil;
+        
         if (reauthorizeHandler) {
             reauthorizeHandler(self, error);
         }
@@ -1677,6 +1978,8 @@ static FBSession *g_activeSession = nil;
     @finally {
         [reauthorizeHandler release];
     }
+
+    self.isRepairing = NO;
 }
 
 - (NSString *)appBaseUrl {
@@ -1686,6 +1989,13 @@ static FBSession *g_activeSession = nil;
 - (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
                              errorCode:(NSString*)errorCode
                             innerError:(NSError*)innerError {
+    return [self errorLoginFailedWithReason:errorReason errorCode:errorCode innerError:innerError localizedDescription:nil];
+}
+
+- (NSError*)errorLoginFailedWithReason:(NSString*)errorReason
+                             errorCode:(NSString*)errorCode
+                            innerError:(NSError*)innerError
+                  localizedDescription:(NSString*)localizedDescription {
     // capture reason and nested code as user info
     NSMutableDictionary* userinfo = [[NSMutableDictionary alloc] init];
     if (errorReason) {
@@ -1697,23 +2007,29 @@ static FBSession *g_activeSession = nil;
     if (innerError) {
         userinfo[FBErrorInnerErrorKey] = innerError;
     }
+    if (localizedDescription) {
+        userinfo[NSLocalizedDescriptionKey] = localizedDescription;
+    }
     userinfo[FBErrorSessionKey] = self;
-   
+    
     // create error object
     NSError *err = [NSError errorWithDomain:FacebookSDKDomain
-                                      code:FBErrorLoginFailedOrCancelled
-                                  userInfo:userinfo];
+                                       code:FBErrorLoginFailedOrCancelled
+                                   userInfo:userinfo];
     [userinfo release];
     return err;
 }
 
-- (NSDictionary *)clientState {
-    NSDictionary *clientState = [NSDictionary dictionaryWithObjectsAndKeys:
+- (NSString *)jsonClientStateWithDictionary:(NSDictionary *)dictionary{
+    NSMutableDictionary *clientState = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                  [NSNumber numberWithBool:YES], FBLoginUXClientStateIsClientState,
                                  [NSNumber numberWithBool:YES], FBLoginUXClientStateIsOpenSession,
                                  [NSNumber numberWithBool:(self == g_activeSession)], FBLoginUXClientStateIsActiveSession,
                                  nil];
-    return clientState;
+    [clientState addEntriesFromDictionary:dictionary];
+    NSString *clientStateString = [FBUtility simpleJSONEncode:clientState];
+    
+    return clientStateString ?: @"{}";
 }
 
 + (NSDictionary *)queryParamsFromLoginURL:(NSURL *)url appID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix {
@@ -1732,6 +2048,14 @@ static FBSession *g_activeSession = nil;
     }
     
     return [FBUtility queryParamsDictionaryFromFBURL:url];
+}
+
++ (NSDictionary *)clientStateFromQueryParams:(NSDictionary *)params {
+    NSDictionary *clientState = [FBUtility simpleJSONDecode:params[FBLoginUXClientState]];
+    if (!clientState[FBLoginUXClientStateIsClientState]) {
+        return nil;
+    }
+    return clientState;
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
@@ -1781,8 +2105,8 @@ static FBSession *g_activeSession = nil;
 
 + (BOOL)isOpenSessionResponseURL:(NSURL *)url {
     NSDictionary *params = [FBSession queryParamsFromLoginURL:url appID:nil urlSchemeSuffix:nil];
-    NSDictionary *clientState = [FBUtility simpleJSONDecode:params[FBLoginUXClientState]];
-    if (!clientState[FBLoginUXClientStateIsClientState]) {
+    NSDictionary *clientState = [FBSession clientStateFromQueryParams:params];
+    if (!clientState) {
         return NO;
     }
     

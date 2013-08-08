@@ -87,7 +87,7 @@ $PACKAGEMAKER \
   --target 10.5 \
   --version $FB_SDK_VERSION \
   --out $FB_SDK_UNSIGNED_PKG \
-  --title 'Facebook SDK 3.6 for iOS' \
+  --title 'Facebook SDK 3.7 for iOS' \
   || die "PackageMaker reported error"
 
 progress_message "Signing package."

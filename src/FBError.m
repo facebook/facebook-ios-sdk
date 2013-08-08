@@ -32,6 +32,7 @@ NSString *const FBErrorLoginFailedReasonInlineCancelledValue = @"com.facebook.sd
 NSString *const FBErrorLoginFailedReasonInlineNotCancelledValue = @"com.facebook.sdk:ErrorLoginNotCancelled";
 NSString *const FBErrorLoginFailedReasonUserCancelledValue = @"com.facebook.sdk:UserLoginCancelled";
 NSString *const FBErrorLoginFailedReasonUserCancelledSystemValue = @"com.facebook.sdk:SystemLoginCancelled";
+NSString *const FBErrorLoginFailedReasonOtherError = @"com.facebook.sdk:UserLoginOtherError";
 NSString *const FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue = @"com.facebook.sdk:SystemLoginDisallowedWithoutError";
 NSString *const FBErrorLoginFailedReasonSystemError = @"com.facebook.sdk:SystemLoginError";
 

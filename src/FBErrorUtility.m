@@ -20,7 +20,7 @@
 #import "FBUtility.h"
 #import "FBAccessTokenData+Internal.h"
 
-static const int FBOAuthError = 190;
+const int FBOAuthError = 190;
 static const int FBAPISessionError = 102;
 static const int FBAPIServiceError = 2;
 static const int FBAPIUnknownError = 1;

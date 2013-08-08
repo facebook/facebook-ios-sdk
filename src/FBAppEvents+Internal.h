@@ -38,6 +38,12 @@ extern NSString *const FBAppEventNameFriendPickerUsage;
 /*! Use to log that the place picker dialog was launched and completed */
 extern NSString *const FBAppEventNamePlacePickerUsage;
 
+/*! Use to log that the login view was used */
+extern NSString *const FBAppEventNameLoginViewUsage;
+
+/*! Use to log that the user settings view controller was used */
+extern NSString *const FBAppEventNameUserSettingsUsage;
+
 // Internally known event parameters
 
 /*! String parameter specifying the outcome of a dialog invocation */
@@ -48,6 +54,18 @@ extern NSString *const FBAppEventNameFBDialogsCanPresentShareDialog;
 
 /*! Use to log the result of a call to FBDialogs canPresentShareDialogWithOpenGraphActionParams: */
 extern NSString *const FBAppEventNameFBDialogsCanPresentShareDialogOG;
+
+/*! Use to log the start of an auth request that cannot be fulfilled by the token cache */
+extern NSString *const FBAppEventNameFBSessionAuthStart;
+
+/*! Use to log the end of an auth request that was not fulfilled by the token cache */
+extern NSString *const FBAppEventNameFBSessionAuthEnd;
+
+/*! Use to log the start of a specific auth method as part of an auth request */
+extern NSString *const FBAppEventNameFBSessionAuthMethodStart;
+
+/*! Use to log the end of the last tried auth method as part of an auth request */
+extern NSString *const FBAppEventNameFBSessionAuthMethodEnd;
 
 /*! Use to log the timestamp for the transition to the Facebook native login dialog */
 extern NSString *const FBAppEventNameFBDialogsNativeLoginDialogStart;

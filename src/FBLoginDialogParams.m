@@ -24,8 +24,7 @@ static NSString *const SSOWritePrivacyPublic = @"EVERYONE";
 static NSString *const SSOWritePrivacyFriends = @"ALL_FRIENDS";
 static NSString *const SSOWritePrivacyOnlyMe = @"SELF";
 
-static NSString *const kFBNativeLoginMinVersion = @"20130214";
-static NSString *const kFBNativeLoginWithoutNameVersion = @"20130410";  // This is currently unused. Leaving here for doc purposes.
+static NSString *const kFBNativeLoginMinVersion = @"20130702";
 
 @implementation FBLoginDialogParams
 
@@ -72,9 +71,9 @@ static NSString *const kFBNativeLoginWithoutNameVersion = @"20130410";  // This 
         args[@"write_privacy"] = writePrivacyString;
     }
     
-    if (self.isRefreshOnly) {
-        args[@"is_refresh_only"] = @"1";
-    }
+    // to support token-import we always try the refresh flow. It will fallback to the permissions
+    // dialog if the app is not installed or does not have the necessary permissions
+    args[@"is_refresh_only"] = @"1";
     
     return args;
 }

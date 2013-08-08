@@ -438,7 +438,8 @@ tokenCachingStrategy:(FBSessionTokenCachingStrategy*)tokenCachingStrategy
         // For the test session, since we don't present UI,
         // we'll just complete the re-auth. Note this obviously means
         // no new permissions are requested.
-        [super handleReauthorize:nil accessToken:self.accessTokenData.accessToken];
+        [super handleReauthorize:nil
+                     accessToken:(self.disableReauthorize) ? nil : self.accessTokenData.accessToken];
     } else {
         // We ignore behavior, since we aren't going to present UI.
 

@@ -24,6 +24,52 @@
 @class FBSession;
 @class UIImage;
 
+
+/*!
+ @attribute beta true
+ 
+ @typedef FBRequestConnectionErrorBehavior enum
+ 
+ @abstract Describes what automatic error handling behaviors to provide (if any).
+ 
+ @discussion This is a bitflag enum that can be composed of different values.
+ 
+     See FBError.h and FBErrorUtility.h for error category and user message details.
+ */
+typedef enum {
+    /*! The default behavior of none */
+    FBRequestConnectionErrorBehaviorNone                   = 0,
+
+    /*! This will retry any requests whose error category is classified as `FBErrorCategoryRetry`.
+     If the retry fails, the normal handler is invoked. */
+    FBRequestConnectionErrorBehaviorRetry                  = 1,
+    
+    /*! This will automatically surface any SDK provided userMessage (at most one), after
+     retry attempts, but before any reconnects are tried. The alert will have one button
+     whose text can be localized with the key "FBE:AlertMessageButton". 
+     
+     You should not display your own alert views in your request handler when specifying this
+     behavior.
+     */
+    FBRequestConnectionErrorBehaviorAlertUser              = 2,
+    
+    /*! This will automatically reconnect a session if the request failed due to an invalid token
+     that would otherwise close the session (such as an expired token or password change). Note
+     this will NOT reconnect a session if the user had uninstalled the app, or if the user had
+     disabled the app's slider in their privacy settings (in cases of iOS 6 system auth).
+     If the session is reconnected, this will transition the session state to FBSessionStateTokenExtended
+     which will invoke any state change handlers. Otherwise, the session is closed as normal.
+     
+     This behavior should not be used if the FBRequestConnection contains multiple
+     session instances. Further, when this behavior is used, you must not request new permissions
+     for the session until the connection is completed.
+     
+     Lastly, you should avoid using additional FBRequestConnections with the same session because
+     that will be subject to race conditions.
+     */
+    FBRequestConnectionErrorBehaviorReconnectSession     = 4,
+} FBRequestConnectionErrorBehavior;
+
 /*!
  Normally requests return JSON data that is parsed into a set of `NSDictionary`
  and `NSArray` objects.
@@ -134,6 +180,20 @@ typedef void (^FBRequestHandler)(FBRequestConnection *connection,
  then this property will be non-nil during the FBRequestHandler callback.
 */
 @property(nonatomic, retain, readonly) NSHTTPURLResponse *urlResponse; 
+
+/*!
+ @attribute beta true
+
+ @abstract Set the automatic error handling behaviors.
+ @discussion 
+ 
+ This must be set before any requests are added.
+ 
+ When using retry behaviors, note the FBRequestConnection instance
+ passed to the FBRequestHandler may be a different instance that the
+ one the requests were originally started on.
+*/
+@property (nonatomic, assign) FBRequestConnectionErrorBehavior errorBehavior;
 
 /*!
  @methodgroup Adding requests

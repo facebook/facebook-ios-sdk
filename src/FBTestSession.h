@@ -75,6 +75,9 @@ extern NSString *kThirdTestUserTag;
 @property (readonly, copy) NSString *testAppID;
 /// The App Secret of the test app as configured in the plist.
 @property (readonly, copy) NSString *testAppSecret;
+// Defaults to NO. If set to YES, reauthorize calls will fail with a nil token
+// as if the user had cancelled it reauthorize.
+@property (assign) BOOL disableReauthorize;
 
 /*!
  @abstract

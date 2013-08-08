@@ -23,6 +23,7 @@ The following is a list of keys for string localization:
 "FBE:Unconfirmed" = "Your Facebook account is locked. Please log into www.facebook.com to continue.";
 "FBE:OAuthDevice" = "To use your Facebook account with this app, open Settings > Facebook and make sure this app is turned on.";
 "FBE:DeviceError"= "Something went wrong. Please make sure you're connected to the internet and try again.";
+"FBE:AlertMessageButton" = "OK";
 
 Images should be placed in a directory called FacebookSDKImages in the bundle.  Note that images will support @2x and -568h@2x.
 

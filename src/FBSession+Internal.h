@@ -33,6 +33,8 @@ extern NSString *const FacebookNativeApplicationLoginDomain;
 
 @property(readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
 @property(readonly, retain) FBSessionAppEventsState *appEventsState;
+@property(readonly) NSThread *affinitizedThread;
+@property(atomic, readonly) BOOL isRepairing;
 
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;
@@ -57,4 +59,10 @@ extern NSString *const FacebookNativeApplicationLoginDomain;
 
 + (NSError *)sdkSurfacedErrorForNativeLoginError:(NSError *)nativeLoginError;
 
+- (void)repairWithHandler:(FBSessionRequestPermissionResultHandler) handler;
+
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler;
 @end

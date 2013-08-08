@@ -14,14 +14,35 @@
  * limitations under the License.
  */
 
+#import "FBSettings.h"
 #import "FBFetchedAppSettings.h"
+
+@interface FBFetchedAppSettings()
+
+@property (readwrite, retain, nonatomic) NSString *appID;
+
+@end
 
 @implementation FBFetchedAppSettings
 
-@synthesize
-    serverAppName = _serverAppName,
-    supportsAttribution = _supportsAttribution,
-    supportsImplicitSdkLogging = _supportsImplicitSdkLogging,
-    suppressNativeGdp = _suppressNativeGdp;
+-(id) init {
+    return [self initWithAppID:nil];
+}
 
+-(id) initWithAppID:(NSString *)appID {
+    if (self = [super init]) {
+        if (appID == nil) {
+            appID = [FBSettings defaultAppID];
+        }
+        self.appID = appID;
+    }
+    return self;
+}
+
+-(void) dealloc {
+    self.serverAppName = nil;
+    self.appID = nil;
+    
+    [super dealloc];
+}
 @end

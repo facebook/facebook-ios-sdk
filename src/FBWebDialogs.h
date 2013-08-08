@@ -55,7 +55,7 @@ typedef void (^FBWebDialogHandler)(
 
 /*!
  @abstract
- Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/) 
+ Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/ )
  such as feed or apprequest.
  
  @param session Represents the session to use for the dialog. May be nil, which uses
@@ -75,7 +75,7 @@ typedef void (^FBWebDialogHandler)(
 
 /*!
  @abstract
- Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/)
+ Presents a Facebook web dialog (https://developers.facebook.com/docs/reference/dialogs/ )
  such as feed or apprequest.
  
  @param session Represents the session to use for the dialog. May be nil, which uses

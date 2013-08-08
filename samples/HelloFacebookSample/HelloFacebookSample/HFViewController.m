@@ -154,8 +154,14 @@
                                             completionHandler:^(FBSession *session, NSError *error) {
                                                 if (!error) {
                                                     action();
+                                                } else if (error.fberrorCategory != FBErrorCategoryUserCancelled){
+                                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Permission denied"
+                                                                                                        message:@"Unable to get permission to post"
+                                                                                                       delegate:nil
+                                                                                              cancelButtonTitle:@"OK"
+                                                                                              otherButtonTitles:nil];
+                                                    [alertView show];
                                                 }
-                                                //For this example, ignore errors (such as if user cancels).
                                             }];
     } else {
         action();
@@ -211,12 +217,19 @@
             [self performPublishAction:^{
                 NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@", self.loggedInUser.first_name, [NSDate date]];
                 
-                [FBRequestConnection startForPostStatusUpdate:message
-                                            completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                                
-                                                [self showAlert:message result:result error:error];
-                                                self.buttonPostStatus.enabled = YES;
-                                            }];
+                FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+                
+                connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+                                         | FBRequestConnectionErrorBehaviorAlertUser
+                                         | FBRequestConnectionErrorBehaviorRetry;
+                
+                [connection addRequest:[FBRequest requestForPostStatusUpdate:message]
+                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                         
+                                        [self showAlert:message result:result error:error];
+                                        self.buttonPostStatus.enabled = YES;
+                }];
+                [connection start];
                 
                 self.buttonPostStatus.enabled = NO;
             }];
@@ -231,12 +244,20 @@
     UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
     
     [self performPublishAction:^{
+        FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+        connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+                                 | FBRequestConnectionErrorBehaviorAlertUser
+                                 | FBRequestConnectionErrorBehaviorRetry;
         
-        [FBRequestConnection startForUploadPhoto:img
-                               completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                   [self showAlert:@"Photo Post" result:result error:error];
-                                   self.buttonPostPhoto.enabled = YES;
-                               }];
+        [connection addRequest:[FBRequest requestForUploadPhoto:img]
+             completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+                 
+                 [self showAlert:@"Photo Post" result:result error:error];
+                 if (FBSession.activeSession.isOpen) {
+                     self.buttonPostPhoto.enabled = YES;
+                 }
+        }];
+        [connection start];
         
         self.buttonPostPhoto.enabled = NO;
     }];
@@ -322,13 +343,14 @@
     NSString *alertTitle;
     if (error) {
         alertTitle = @"Error";
-        // For simplicity, we will use any error message provided by the SDK,
-        // but you may consider inspecting the fberrorShouldNotifyUser or
-        // fberrorCategory to provide better recourse to users. See the Scrumptious
-        // sample for more examples on error handling.
-        if (error.fberrorUserMessage) {
-            alertMsg = error.fberrorUserMessage;
+        // Since we use FBRequestConnectionErrorBehaviorAlertUser,
+        // we do not need to surface our own alert view if there is an
+        // an fberrorUserMessage unless the session is closed.
+        if (error.fberrorUserMessage && FBSession.activeSession.isOpen) {
+            alertTitle = nil;
+
         } else {
+            // Otherwise, use a general "connection problem" message.
             alertMsg = @"Operation failed due to a connection problem, retry later.";
         }
     } else {
@@ -344,12 +366,14 @@
         alertTitle = @"Success";
     }
     
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertTitle
-                                                        message:alertMsg
-                                                       delegate:nil
-                                              cancelButtonTitle:@"OK"
-                                              otherButtonTitles:nil];
-    [alertView show];
+    if (alertTitle) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:alertTitle
+                                                            message:alertMsg
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }
 }
 
 

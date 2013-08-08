@@ -18,9 +18,11 @@
 #import "FBProfilePictureView.h"
 #import "FBGraphUser.h"
 #import "FBSession.h"
+#import "FBSession+Internal.h"
 #import "FBRequest.h"
 #import "FBViewController+Internal.h"
 #import "FBUtility.h"
+#import "FBAppEvents+Internal.h"
 
 @interface FBUserSettingsViewController ()
 
@@ -269,6 +271,10 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                       valueToSum:nil
+                       parameters:@{ @"view_will_appear" : [NSNumber numberWithBool:YES] }
+                          session:FBSession.activeSessionIfExists];
 }
 #pragma mark Implementation
 
@@ -368,6 +374,7 @@
     if (self.permissions) {
         [FBSession openActiveSessionWithPermissions:self.permissions
                                        allowLoginUI:YES
+                                    defaultAudience:self.defaultAudience
                                   completionHandler:self.sessionStateHandler];
     } else if (![self.publishPermissions count]) {
         [FBSession openActiveSessionWithReadPermissions:self.readPermissions
@@ -394,6 +401,10 @@
 
 - (void)loginLogoutButtonPressed:(id)sender {
     if (FBSession.activeSession.isOpen) {
+        [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : @NO }
+                              session:FBSession.activeSessionIfExists];
         if ([self.delegate respondsToSelector:@selector(loginViewControllerWillLogUserOut:)]) {
             [(id)self.delegate loginViewControllerWillLogUserOut:self];
         }
@@ -404,6 +415,10 @@
             [(id)self.delegate loginViewControllerDidLogUserOut:self];
         }
     } else {
+        [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : @YES }
+                              session:FBSession.activeSessionIfExists];
         [self openSession];
     }
 }

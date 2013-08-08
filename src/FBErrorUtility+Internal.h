@@ -26,6 +26,8 @@ typedef enum {
     FBAuthSubcodeUnconfirmedUser = 464,
 } FBAuthSubcode;
 
+extern const int FBOAuthError;
+
 // Internal class collecting error related methods.
 
 @interface FBErrorUtility(Internal)

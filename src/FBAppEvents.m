@@ -80,6 +80,8 @@ NSString *const FBAppEventParameterValueYes                   = @"1";
 NSString *const FBAppEventNameLogConversionPixel               = @"fb_log_offsite_pixel";
 NSString *const FBAppEventNameFriendPickerUsage                = @"fb_friend_picker_usage";
 NSString *const FBAppEventNamePlacePickerUsage                 = @"fb_place_picker_usage";
+NSString *const FBAppEventNameLoginViewUsage                   = @"fb_login_view_usage";
+NSString *const FBAppEventNameUserSettingsUsage                = @"fb_user_settings_vc_usage";
 NSString *const FBAppEventNameShareSheetLaunch                 = @"fb_share_sheet_launch";
 NSString *const FBAppEventNameShareSheetDismiss                = @"fb_share_sheet_dismiss";
 NSString *const FBAppEventNamePermissionsUILaunch              = @"fb_permissions_ui_launch";
@@ -96,6 +98,11 @@ NSString *const FBAppEventsNativeLoginDialogEndTime            = @"fb_native_log
 NSString *const FBAppEventNameFBDialogsWebLoginCompleted       = @"fb_dialogs_web_login_dialog_complete";
 NSString *const FBAppEventsWebLoginE2E                         = @"fb_web_login_e2e";
 NSString *const FBAppEventsWebLoginSwitchbackTime              = @"fb_web_login_switchback_time";
+
+NSString *const FBAppEventNameFBSessionAuthStart               = @"fb_mobile_login_start";
+NSString *const FBAppEventNameFBSessionAuthEnd                 = @"fb_mobile_login_complete";
+NSString *const FBAppEventNameFBSessionAuthMethodStart         = @"fb_mobile_login_method_start";
+NSString *const FBAppEventNameFBSessionAuthMethodEnd           = @"fb_mobile_login_method_complete";
 
 // Event Parameters internal to this file
 NSString *const FBAppEventParameterConversionPixelID           = @"fb_offsite_pixel_id";
@@ -323,14 +330,14 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 + (void)activateApp {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // activateApp supercedes publishInstall in the public API, but we need to
+    // trigger an install event as before.
+    [FBSettings publishInstall:nil];
+#pragma clang diagnostic pop
+  
     [FBAppEvents logEvent:FBAppEventNameActivatedApp];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSString *appFlushKey = [NSString stringWithFormat:FBAppEventsActivateAppFlush, [FBSettings defaultAppID], nil];
-    if ([FBAppEvents flushBehavior] != FBAppEventsFlushBehaviorExplicitOnly && [defaults objectForKey:appFlushKey] == nil) {
-        [FBAppEvents.singleton instanceFlush:FBAppEventsFlushReasonEagerlyFlushingEvent];
-        [defaults setObject:[NSDate date] forKey:appFlushKey];
-        [defaults synchronize];
-    }
 }
 
 #pragma mark - Flushing & Session Management

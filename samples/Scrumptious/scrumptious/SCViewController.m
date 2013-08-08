@@ -138,6 +138,8 @@
     [self enableUserInteraction:NO];
    
     FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
+    requestConnection.errorBehavior = FBRequestConnectionErrorBehaviorRetry
+                                    | FBRequestConnectionErrorBehaviorReconnectSession;
     if (self.selectedPhoto) {
         self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
         FBRequest *stagingRequest = [FBRequest requestForUploadStagingResourceWithImage:self.selectedPhoto];
@@ -227,8 +229,7 @@
     // retry policy of one additional attempt. Please refer to
     // https://developers.facebook.com/docs/reference/api/errors/ for more information.
     _retryCount++;
-    if (error.fberrorCategory == FBErrorCategoryRetry ||
-        error.fberrorCategory == FBErrorCategoryThrottling) {
+    if (error.fberrorCategory == FBErrorCategoryThrottling) {
         // We also retry on a throttling error message. A more sophisticated app
         // should consider a back-off period.
         if (_retryCount < 2) {
@@ -259,10 +260,10 @@
     [FBSession.activeSession requestNewPublishPermissions:[NSArray arrayWithObject:@"publish_actions"]
                                           defaultAudience:FBSessionDefaultAudienceFriends
                                         completionHandler:^(FBSession *session, NSError *error) {
-                                            if (!error) {
+                                            if (!error && [FBSession.activeSession.permissions indexOfObject:@"publish_actions"] != NSNotFound) {
                                                 // Now have the permission
                                                 [self postOpenGraphAction];
-                                            } else {
+                                            } else if (error){
                                                 // Facebook SDK * error handling *
                                                 // if the operation is not user cancelled
                                                 if (error.fberrorCategory != FBErrorCategoryUserCancelled) {

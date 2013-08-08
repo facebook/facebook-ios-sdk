@@ -22,13 +22,22 @@
 #import "FBGraphUser.h"
 #import "FBUtility.h"
 #import "FBSession+Internal.h"
-#import "FBLoginViewLoginButtonSmallPNG.h"
-#import "FBLoginViewLoginButtonSmallPressedPNG.h"
+#import "FBAppEvents+Internal.h"
+#import "FBLoginViewButtonPNG.h"
+#import "FBLoginViewButtonPressedPNG.h"
 
 static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
-const int kButtonLabelX = 46;
+// The design calls for 16 pixels of space on the right edge of the button
+static const float kButtonEndCapWidth = 16.0;
+// The button has a 12 pixel buffer to the right of the f logo
+static const float kButtonPaddingWidth = 12.0;
 
-CGSize g_imageSize;
+static CGSize g_buttonSize;
+
+// Forward declare our label wrapper that provides shadow blur
+@interface FBShadowLabel : UILabel
+
+@end
 
 @interface FBLoginView() <UIActionSheetDelegate>
 
@@ -198,6 +207,7 @@ CGSize g_imageSize;
         weakSelf.request = nil;
     };
 }
+
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
@@ -240,31 +250,37 @@ CGSize g_imageSize;
     self.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
     self.button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
-    UIImage *image = [[FBLoginViewLoginButtonSmallPNG image]
-                      stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
-    g_imageSize = image.size;
+    // We want to make sure that when we stretch the image, it includes the curved edges and drop shadow
+    // We inset enough pixels to make sure that happens
+    UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
+    
+    UIImage *image = [[FBLoginViewButtonPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateNormal];
     
-    image = [[FBLoginViewLoginButtonSmallPressedPNG image]
-             stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
+    image = [[FBLoginViewButtonPressedPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
-    
+
     [self addSubview:self.button];
+
+    // Compute the text size to figure out the overall size of the button
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
+    float textSizeWidth = MAX([[self logInText] sizeWithFont:font].width, [[self logOutText] sizeWithFont:font].width);
+
+    // We make the button big enough to hold the image, the text, the padding to the right of the f and the end cap
+    g_buttonSize = CGSizeMake(image.size.width + textSizeWidth + kButtonPaddingWidth + kButtonEndCapWidth, image.size.height);
     
     // add a label that will appear over the button
-    self.label = [[[UILabel alloc] init] autorelease];
+    self.label = [[[FBShadowLabel alloc] init] autorelease];
     self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.label.textAlignment = UITextAlignmentCenter;
     self.label.backgroundColor = [UIColor clearColor];
-    self.label.font = [UIFont boldSystemFontOfSize:16.0];
+    self.label.font = font;
     self.label.textColor = [UIColor whiteColor];
-    self.label.shadowColor = [UIColor blackColor];
-    self.label.shadowOffset = CGSizeMake(0.0, -1.0);
     [self addSubview:self.label];
     
     // We force our height to be the same as the image, but we will let someone make us wider
     // than the default image.
-    CGFloat width = MAX(self.frame.size.width, g_imageSize.width);
+    CGFloat width = MAX(self.frame.size.width, g_buttonSize.width);
     CGRect frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,
                               width, image.size.height);
     self.frame = frame;
@@ -272,7 +288,8 @@ CGSize g_imageSize;
     CGRect buttonFrame = CGRectMake(0, 0, width, image.size.height);
     self.button.frame = buttonFrame;
     
-    self.label.frame = CGRectMake(kButtonLabelX, 0, width - kButtonLabelX, image.size.height);    
+    // This needs to start at an x just to the right of the f in the image, the -1 on both x and y is to account for shadow in the image
+    self.label.frame = CGRectMake(image.size.width - kButtonPaddingWidth - 1, -1, width - (image.size.width - kButtonPaddingWidth) - kButtonEndCapWidth, image.size.height);
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -285,23 +302,15 @@ CGSize g_imageSize;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    CGSize logInSize = [[self logInText] sizeWithFont:self.label.font];
-    CGSize logOutSize = [[self logOutText] sizeWithFont:self.label.font];
-    
-    // Leave at least a small margin around the label.
-    CGFloat desiredWidth = kButtonLabelX + 20 + MAX(logInSize.width, logOutSize.width);
-    // Never get smaller than the image
-    CGFloat width = MAX(desiredWidth, g_imageSize.width);
-    
-    return CGSizeMake(width, g_imageSize.height);
+    return CGSizeMake(g_buttonSize.width, g_buttonSize.height);
 }
 
 - (NSString *)logInText {
-    return [FBUtility localizedStringForKey:@"FBLV:LogInButton" withDefault:@"Log In"];
+    return [FBUtility localizedStringForKey:@"FBLV:LogInButton" withDefault:@"Log in with Facebook"];
 }
 
 - (NSString *)logOutText {
-    return [FBUtility localizedStringForKey:@"FBLV:LogOutButton" withDefault:@"Log Out"];
+    return [FBUtility localizedStringForKey:@"FBLV:LogOutButton" withDefault:@"Log out"];
 }
 
 - (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn {
@@ -431,6 +440,7 @@ CGSize g_imageSize;
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
+        BOOL loggingInLogFlag = NO;
         if (!self.session.isOpen) { // login
             
             // the policy here is:
@@ -443,6 +453,7 @@ CGSize g_imageSize;
             if (self.permissions) {
                 [FBSession openActiveSessionWithPermissions:self.permissions
                                                allowLoginUI:YES
+                                            defaultAudience:self.defaultAudience
                                           completionHandler:self.sessionStateHandler];
             } else if (![self.publishPermissions count]) {
                 [FBSession openActiveSessionWithReadPermissions:self.readPermissions
@@ -462,6 +473,7 @@ CGSize g_imageSize;
                                                       allowLoginUI:YES
                                                  completionHandler:self.sessionStateHandler];
             }
+            loggingInLogFlag = YES;
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;
@@ -476,7 +488,7 @@ CGSize g_imageSize;
             NSString *cancelTitle = [FBUtility localizedStringForKey:@"FBLV:CancelAction"
                                                          withDefault:@"Cancel"];
             NSString *logOutTitle = [FBUtility localizedStringForKey:@"FBLV:LogOutAction"
-                                                         withDefault:@"Log Out"];
+                                                         withDefault:@"Log out"];
             UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:title
                                                                 delegate:self
                                                        cancelButtonTitle:cancelTitle
@@ -486,6 +498,10 @@ CGSize g_imageSize;
             // Show the sheet
             [sheet showInView:self];
         }
+        [FBAppEvents logImplicitEvent:FBAppEventNameLoginViewUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : [NSNumber numberWithBool:loggingInLogFlag] }
+                              session:nil];
     } else { // state of view out of sync with active session
         // so resync
         [self unwireViewForSession];
@@ -495,4 +511,26 @@ CGSize g_imageSize;
     }
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
+@end
+
+@implementation FBShadowLabel
+
+- (void) drawTextInRect:(CGRect)rect {
+    CGSize myShadowOffset = CGSizeMake(0, -1);
+    float myColorValues[] = {0, 0, 0, .3};
+    
+    CGContextRef myContext = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(myContext);
+    
+    CGColorSpaceRef myColorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorRef myColor = CGColorCreate(myColorSpace, myColorValues);
+    CGContextSetShadowWithColor (myContext, myShadowOffset, 1, myColor);
+    
+    [super drawTextInRect:rect];
+    
+    CGColorRelease(myColor);
+    CGColorSpaceRelease(myColorSpace);
+    
+    CGContextRestoreGState(myContext);}
+
 @end

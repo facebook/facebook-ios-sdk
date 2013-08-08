@@ -24,6 +24,8 @@
 @property (readwrite)       BOOL      supportsAttribution;
 @property (readwrite)       BOOL      supportsImplicitSdkLogging;
 @property (readwrite)       BOOL      suppressNativeGdp;
+@property (readonly, nonatomic) NSString *appID;
 
+-(id) initWithAppID:(NSString *)appID;
 
 @end

@@ -79,7 +79,7 @@
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.loginViewController];
     self.navigationController.delegate = self;
     self.window.rootViewController = self.navigationController;
-
+    
     [self.window makeKeyAndVisible];
     
     // Facebook SDK * pro-tip *

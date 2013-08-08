@@ -20,14 +20,20 @@
 #import "FBAppEvents+Internal.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
+#import <objc/objc-runtime.h>
 
 @interface FBAppEventsIntegrationTests() {
     id _mockFBUtility;
+    Method _originalPublishInstall;
+    Method _swizzledPublishInstall;
+
+    Method _originalLogEvent;
+    Method _swizzledLogEvent;
 }
 @end
 
-
-
+static int publishInstallCount = 0;
+static NSString *loggedEvent = nil;
 
 @implementation FBAppEventsIntegrationTests
 
@@ -37,6 +43,19 @@
     // advertiserID because the `[[ advertisingIdentifier] UUIDString]` call likes to hang.
     _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
     [[[_mockFBUtility stub] andReturn:nil] advertiserID];
+}
+
+- (void)tearDown {
+  [super tearDown];
+}
+
++ (void)publishInstallCounter:(NSString *)appID {
+  publishInstallCount++;
+}
+
++ (void)logEvent:(NSString *)eventName {
+  [loggedEvent release];
+  loggedEvent = [eventName retain];
 }
 
 // Ensure session is not closed by a bogus app event log.
@@ -102,34 +121,33 @@
 }
 
 -(void) testActivateApp {
+    // swizzle out the underlying calls.
+    _originalPublishInstall = class_getClassMethod([FBSettings class], @selector(publishInstall:));
+    _swizzledPublishInstall = class_getClassMethod([self class], @selector(publishInstallCounter:));
+    method_exchangeImplementations(_originalPublishInstall, _swizzledPublishInstall);
+
+    _originalLogEvent = class_getClassMethod([FBAppEvents class], @selector(logEvent:));
+    _swizzledLogEvent = class_getClassMethod([self class], @selector(logEvent:));
+    method_exchangeImplementations(_originalLogEvent, _swizzledLogEvent);
+  
+    publishInstallCount = 0;
+    loggedEvent = nil;
+  
     [FBSettings setDefaultAppID:@"appid"];
-    NSString *appFlushKey = [NSString stringWithFormat:@"com.facebook.sdk:FBAppEventsActivateAppFlush%@", [FBSettings defaultAppID], nil];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:appFlushKey];
-  
-    id appEventsSingletonMock = [OCMockObject partialMockForObject:[FBAppEvents singleton]];
-
-    // *** COPY-PASTA README *** read this if you are copying tests for FBAppEvents!
-    // Configure OCMock of FBAppEvents to expect handleActivitiesPostCompletion: instead of instanceFlush: because
-    // 1. [OCMArg any] does not work for primitives
-    //   (especially for methods that only take a primitive argument. Even the 2.2 update with ignoringNonObjectArgs does not work).
-    // 2. We want to wait for the end of handleActivitiesPostCompletion to make sure other tests are started
-    //  before the flush finishes (otherwise, there are logs "in-flight" that may block other tests' flush).
-
-    // expect first activeApp call to cause a flush.
-    [[appEventsSingletonMock expect] handleActivitiesPostCompletion:[OCMArg any]
-                                                       loggingEntry:[OCMArg any]
-                                                            session:[OCMArg any]];
     [FBAppEvents activateApp];
-    STAssertNoThrow([FBTestBlocker waitForVerifiedMock:appEventsSingletonMock delay:5.0], @"first call to activateApp should flush");
+    STAssertTrue(publishInstallCount == 1, @"publishInstall was not triggered by activateApp");
+    STAssertTrue([@"fb_mobile_activate_app" isEqualToString:loggedEvent], @"activate app event not logged by activateApp call!");
   
-    [[appEventsSingletonMock reject] handleActivitiesPostCompletion:[OCMArg any]
-                                                       loggingEntry:[OCMArg any]
-                                                            session:[OCMArg any]];
-    [FBAppEvents activateApp];
-    STAssertNoThrow([FBTestBlocker waitForVerifiedMock:appEventsSingletonMock delay:5.0], @"second call to activateApp should not flush");
-
-    [appEventsSingletonMock stopMocking];
+    [loggedEvent release];
+    loggedEvent = nil;
+  
+    method_exchangeImplementations(_swizzledPublishInstall, _originalPublishInstall);
+    _originalPublishInstall = nil;
+    _swizzledPublishInstall = nil;
+  
+    method_exchangeImplementations(_swizzledLogEvent, _originalLogEvent);
+    _originalLogEvent = nil;
+    _swizzledLogEvent = nil;
 }
 
 @end

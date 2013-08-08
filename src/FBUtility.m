@@ -17,6 +17,7 @@
 #import "FBAppEvents.h"
 #import "FBUtility.h"
 #import "FBGraphObject.h"
+#import "FBLogger.h"
 #import "FBRequest+Internal.h"
 #import "FBSession.h"
 #import "FBDynamicFrameworkLoader.h"
@@ -25,21 +26,27 @@
 #import <AdSupport/AdSupport.h>
 #include <sys/time.h>
 
+static const double APPSETTINGS_STALE_THRESHOLD_SECONDS = 60 * 60; // one hour.
 static FBFetchedAppSettings *g_fetchedAppSettings = nil;
 static NSError *g_fetchedAppSettingsError = nil;
+static NSDate *g_fetchedAppSettingsTimestamp = nil;
 
 @implementation FBUtility
 
 + (NSDictionary*)queryParamsDictionaryFromFBURL:(NSURL*)url {
     // version 3.2.3 of the Facebook app encodes the parameters in the query but
-    // version 3.3 and above encode the parameters in the fragment; check first for
-    // fragment, and if missing fall back to query
-    NSString *query = [url fragment];
-    if (!query) {
-        query = [url query];
+    // version 3.3 and above encode the parameters in the fragment;
+    // merge them together with fragment taking priority.
+
+    NSMutableDictionary *result = [NSMutableDictionary dictionary];
+    if ([url query]) {
+        [result addEntriesFromDictionary:[FBUtility dictionaryByParsingURLQueryPart:[url query]]];
+    }
+    if ([url fragment]) {
+        [result addEntriesFromDictionary:[FBUtility dictionaryByParsingURLQueryPart:[url fragment]]];
     }
     
-    return [FBUtility dictionaryByParsingURLQueryPart:query];
+    return result;
 }
 
 // finishes the parsing job that NSURL starts
@@ -254,21 +261,35 @@ static NSError *g_fetchedAppSettingsError = nil;
 
 + (void)fetchAppSettings:(NSString *)appID
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
-    
-    if (!g_fetchedAppSettingsError && !g_fetchedAppSettings) {
+    if ([FBUtility isFetchedFBAppSettingsStale] || (!g_fetchedAppSettingsError && !g_fetchedAppSettings) ) {
         
         NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution,supports_implicit_sdk_logging,suppress_native_ios_gdp,name", appID, nil];
         FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
         pingRequest.canCloseSessionOnError = NO;
         if ([pingRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+            [g_fetchedAppSettingsError release];
+            g_fetchedAppSettingsError = nil;
             
             if (error) {
-                g_fetchedAppSettingsError = error;
-                [g_fetchedAppSettingsError retain];
+                if (g_fetchedAppSettings) {
+                    // We have older app settings but the refresh received an error.
+                    // Log and ignore the error.
+                    [FBLogger singleShotLogEntry:FBLoggingBehaviorInformational formatString:@"fetchAppSettings refresh failed with %@", error];
+                } else {
+                    // Only set the error if we don't have previously fetched app settings.
+                    // (i.e., if we have app settings and a new call gets an error, we'll
+                    // ignore the error and surface the last successfully fetched settings).
+                    g_fetchedAppSettingsError = error;
+                    [g_fetchedAppSettingsError retain];
+                }
             } else {
-                
-                g_fetchedAppSettings = [[FBFetchedAppSettings alloc] init];
                 if ([result respondsToSelector:@selector(objectForKey:)]) {
+                    [g_fetchedAppSettingsTimestamp release];
+                    [g_fetchedAppSettings release];
+                    
+                    g_fetchedAppSettings = [[FBFetchedAppSettings alloc] initWithAppID:appID];
+                    g_fetchedAppSettingsTimestamp = [[NSDate date] retain];
+                    
                     g_fetchedAppSettings.serverAppName = [result objectForKey:@"name"];
                     g_fetchedAppSettings.supportsAttribution = [[result objectForKey:@"supports_attribution"] boolValue];
                     g_fetchedAppSettings.supportsImplicitSdkLogging = [[result objectForKey:@"supports_implicit_sdk_logging"] boolValue];
@@ -285,7 +306,14 @@ static NSError *g_fetchedAppSettingsError = nil;
 }
 
 + (FBFetchedAppSettings *)fetchedAppSettings {
+    if ([FBUtility isFetchedFBAppSettingsStale]) {
+        [FBUtility fetchAppSettings:g_fetchedAppSettings.appID callback:nil];
+    }
     return g_fetchedAppSettings;
+}
+
++ (BOOL) isFetchedFBAppSettingsStale {
+    return g_fetchedAppSettingsTimestamp && ([[NSDate date] timeIntervalSinceDate:g_fetchedAppSettingsTimestamp] > APPSETTINGS_STALE_THRESHOLD_SECONDS );
 }
 
 + (void)callTheFetchAppSettingsCallback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
