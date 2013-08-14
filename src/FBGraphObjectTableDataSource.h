@@ -84,7 +84,8 @@
                 filterIncludesItem:(id<FBGraphObject>)item;
 
 - (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource*)dataSource
-                customizeTableCell:(FBGraphObjectTableCell*)cell;
+                customizeTableCell:(FBGraphObjectTableCell*)cell
+                            ofItem:(id<FBGraphObject>)graphObject;
                 
 @end
 

@@ -566,9 +566,10 @@ static const NSInteger kMinimumCountToCollate = 6;
                 cell.selected = NO;
             }
             
-            if ([self.controllerDelegate respondsToSelector:@selector(graphObjectTableDataSource:customizeTableCell:)]) {
+            if ([self.controllerDelegate respondsToSelector:@selector(graphObjectTableDataSource:customizeTableCell:ofItem:)]) {
                 [self.controllerDelegate graphObjectTableDataSource:self
-                                                 customizeTableCell:cell];
+                                                 customizeTableCell:cell
+                                                             ofItem:item];
             }
         } else {
             cell.picture = nil;
