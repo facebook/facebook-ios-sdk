@@ -395,6 +395,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         dispatch_async(dispatch_get_main_queue(), ^{
           fallbackHandler(nil);
         });
+        return;
     }
   
     NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters = [FBGraphObject graphObject];
