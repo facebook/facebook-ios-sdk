@@ -693,7 +693,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                 // if value parses as a json array expression get the list that way
                 id fbids = [FBUtility simpleJSONDecode:fbid];
                 if (![fbids isKindOfClass:[NSArray class]]) {
-                    // otherwise seperate by commas (handles the singleton case too)
+                    // otherwise separate by commas (handles the singleton case too)
                     fbids = [fbid componentsSeparatedByString:@","];
                 }                
                 invisible = [self isFrictionlessEnabledForRecipients:fbids];             

@@ -590,7 +590,7 @@ __attribute__((deprecated));
  It is required that initial permissions requests represent read-only permissions only. If publish
  permissions are needed, you may use reauthorizeWithPermissions to specify additional permissions as
  well as an audience. Use of this method will result in a legacy fast-app-switch Facebook Login due to
- the requirement to seperate read and publish permissions for newer applications. Methods and properties
+ the requirement to separate read and publish permissions for newer applications. Methods and properties
  that specify permissions without a read or publish qualification are deprecated; use of a read-qualified 
  or publish-qualified alternative is preferred.
  */
