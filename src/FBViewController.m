@@ -210,7 +210,7 @@
             label.font = [UIFont fontWithName:@"Helvetica-Bold" size:20];
             label.backgroundColor = [UIColor clearColor];
             label.textColor = [UIColor colorWithRed:255.0/255.0 green:255.0/255.0 blue:255.0/255.0 alpha:1.0];
-            label.textAlignment = UITextAlignmentCenter;
+            label.textAlignment = NSTextAlignmentCenter;
             label.shadowColor = [UIColor colorWithWhite:0.0 alpha:0.5];
 
             self.titleLabel = [[[UIBarButtonItem alloc] initWithCustomView:label] autorelease];
