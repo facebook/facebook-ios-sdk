@@ -84,8 +84,10 @@ function xcode_build_target() {
     || die "XCode build failed for platform: ${1}."
 }
 
-xcode_build_target "iphonesimulator" "$BUILDCONFIGURATION"
-xcode_build_target "iphoneos" "$BUILDCONFIGURATION"
+xcode_build_target "iphonesimulator" "${BUILDCONFIGURATION}"
+xcode_build_target "iphoneos" "${BUILDCONFIGURATION}"
+xcode_build_target "iphonesimulator" "${BUILDCONFIGURATION}64"
+xcode_build_target "iphoneos" "${BUILDCONFIGURATION}64"
 
 # -----------------------------------------------------------------------------
 # Merge lib files for different platforms into universal binary
@@ -98,6 +100,8 @@ $LIPO \
   -create \
     $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a \
     $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a \
+    $FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphonesimulator/libfacebook_ios_sdk.a \
+    $FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphoneos/libfacebook_ios_sdk.a \
   -output $FB_SDK_UNIVERSAL_BINARY \
   || die "lipo failed - could not create universal static library"
 

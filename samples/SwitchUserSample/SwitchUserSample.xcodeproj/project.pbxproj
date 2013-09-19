@@ -94,7 +94,9 @@
 				856DB04C153393C3006F6A33 /* Frameworks */,
 				856DB04A153393C3006F6A33 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		856DB04A153393C3006F6A33 /* Products */ = {
 			isa = PBXGroup;

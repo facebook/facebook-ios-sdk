@@ -71,10 +71,4 @@ typedef enum {
 // Add a request to the retry batch.
 -(void) addRequestMetadata:(FBRequestMetadata *)metadata;
 
-// A hack to deal with the async callbacks in FBRequestConnection,
-// specifically this acts as a semaphore-like counter to make sure
-// performRetries is invoked logically once and at the right time. See
-// that method's implementation for more details.
--(void) incrementExpectedPerformRetryCount;
-
 @end

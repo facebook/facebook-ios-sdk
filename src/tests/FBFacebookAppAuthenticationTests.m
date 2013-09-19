@@ -158,7 +158,7 @@
         [_blocker signal];
     }];
     
-    [_blocker waitWithTimeout:.01];
+    STAssertTrue([_blocker waitWithTimeout:1], @"blocker timed out");
     
     [(id)mockSession verify];
     

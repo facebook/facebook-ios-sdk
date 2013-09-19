@@ -122,7 +122,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
 }
 
 - (NSArray *)convertedArrayFromArray:(NSArray *)array convertingToJSON:(BOOL)convertingToJSON {
-    int length = array.count;
+    NSUInteger length = array.count;
     if (length == 0) {
         return array;
     }

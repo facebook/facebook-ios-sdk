@@ -27,16 +27,12 @@
 @property(readonly, copy) NSArray *initializedPermissions;
 
 - (BOOL)transitionToState:(FBSessionState)state
-           andUpdateToken:(NSString*)token
-        andExpirationDate:(NSDate*)date
-              shouldCache:(BOOL)shouldCache
-                loginType:(FBSessionLoginType)loginType;
+      withAccessTokenData:(FBAccessTokenData *)tokenData
+              shouldCache:(BOOL)shouldCache;
 - (void)transitionAndCallHandlerWithState:(FBSessionState)status
                                     error:(NSError*)error
-                                    token:(NSString*)token
-                           expirationDate:(NSDate*)date
-                              shouldCache:(BOOL)shouldCache
-                                loginType:(FBSessionLoginType)loginType;
+                                tokenData:(FBAccessTokenData *)tokenData
+                              shouldCache:(BOOL)shouldCache;
 - (void)authorizeWithPermissions:(NSArray*)permissions
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience

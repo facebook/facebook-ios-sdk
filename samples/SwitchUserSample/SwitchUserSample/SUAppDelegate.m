@@ -44,6 +44,7 @@
         viewController1 = [[SUUsingViewController alloc] initWithNibName:@"SUUsingViewController_iPad" bundle:nil];
         viewController2 = [[SUSettingsViewController alloc] initWithNibName:@"SUSettingsViewController_iPad" bundle:nil];
     }
+    viewController2.wantsFullScreenLayout = YES;
     self.tabBarController = [[UITabBarController alloc] init];
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
     self.window.rootViewController = self.tabBarController;

@@ -29,11 +29,9 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 
 @interface FBSession (AuthenticationTesting)
 
-- (BOOL)isSystemAccountStoreAvailable;
 - (void)authorizeUsingSystemAccountStore:(NSArray*)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize;
-- (BOOL)isMultitaskingSupported;
 - (BOOL)authorizeUsingFacebookApplication:(NSMutableDictionary *)params;
 - (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params;
 - (BOOL)authorizeUsingSafari:(NSMutableDictionary *)params;
@@ -74,6 +72,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
     _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
     FBFetchedAppSettings *dummyFBFetchedAppSettings = [[[FBFetchedAppSettings alloc] init] autorelease];
     [[[_mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettings];
+    [[[_mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID since that often hangs.
 }
 
 - (void)tearDown {
@@ -129,7 +128,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 }
 
 - (void)mockSession:(id)mockSession supportSystemAccount:(BOOL)supportSystemAccount {
-    [[[mockSession stub] andReturnValue:OCMOCK_VALUE(supportSystemAccount)] isSystemAccountStoreAvailable];
+    [[[[_mockFBUtility stub] classMethod] andReturnValue:OCMOCK_VALUE(supportSystemAccount)] isSystemAccountStoreAvailable];
 }
 
 
@@ -155,7 +154,7 @@ expectSystemAccountAuth:(BOOL)expect
 }
 
 - (void)mockSession:(id)mockSession supportMultitasking:(BOOL)supportMultitasking {
-    [[[mockSession stub] andReturnValue:OCMOCK_VALUE(supportMultitasking)] isMultitaskingSupported];
+    [[[[_mockFBUtility stub] classMethod] andReturnValue:OCMOCK_VALUE(supportMultitasking)] isMultitaskingSupported];
 }
 
 - (void)mockSession:(id)mockSession

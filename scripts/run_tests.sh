@@ -65,7 +65,6 @@ for SCHEME in $SCHEMES; do
 	-sdk iphonesimulator \
 	-configuration $BUILDCONFIGURATION \
 	-scheme $SCHEME \
-	TEST_AFTER_BUILD=YES \
-	$CLEAN build \
+	$CLEAN test \
 	|| die "Error while running unit tests"
 done

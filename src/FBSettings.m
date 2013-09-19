@@ -347,8 +347,8 @@ static NSUInteger g_betaFeatures = 0;
                         if (advertiserID) {
                             [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                         }
-                        [FBUtility updateParametersWithEventUsageLimits:installActivity];
-                      
+                        [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:installActivity];
+
                         [installActivity setObject:[NSNumber numberWithBool:isAutoPublish].stringValue forKey:@"auto_publish"];
 
                         FBRequest *publishRequest = [[[FBRequest alloc] initForPostWithSession:nil graphPath:publishPath graphObject:installActivity] autorelease];

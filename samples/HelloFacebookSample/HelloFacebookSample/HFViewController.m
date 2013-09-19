@@ -61,6 +61,15 @@
     FBLoginView *loginview = [[FBLoginView alloc] init];
     
     loginview.frame = CGRectOffset(loginview.frame, 5, 5);
+#ifdef __IPHONE_7_0
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+    if ([self respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        loginview.frame = CGRectOffset(loginview.frame, 5, 25);
+    }
+#endif
+#endif
+#endif
     loginview.delegate = self;
     
     [self.view addSubview:loginview];

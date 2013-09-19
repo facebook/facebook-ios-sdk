@@ -106,7 +106,9 @@
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
 				B9CD0A70150EA4DD00560A93 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		B9CD0A70150EA4DD00560A93 /* Products */ = {
 			isa = PBXGroup;

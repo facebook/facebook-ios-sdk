@@ -146,20 +146,26 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
  */
 - (NSData *)_macForIV:(NSData *)IV cipherData:(NSData *)cipherData additionalDataToSign:(NSData *)additionalDataToSign
 {
+  NSAssert(cipherData.length <= INT_MAX, @"");
+  int cipherDataLength = (int)cipherData.length;
+
+  NSAssert(additionalDataToSign.length <= INT_MAX, @"");
+  int additionalDataToSignLength = (int)additionalDataToSign.length;
 
   size_t macBufferLength = kCCBlockSizeAES128 + 4 + cipherData.length + 4 + additionalDataToSign.length;
   uint8_t *macBuffer = malloc(macBufferLength);
   int offsetIV = 0;
   int offsetCipherTextLength = offsetIV + kCCBlockSizeAES128;
   int offsetCipherText = offsetCipherTextLength + 4;
-  int offsetAdditionalDataLength = offsetCipherText + cipherData.length;
+
+  int offsetAdditionalDataLength = offsetCipherText + cipherDataLength;
   int offsetAdditionalData = offsetAdditionalDataLength + 4;
 
   memcpy(macBuffer + offsetIV, IV.bytes, kCCBlockSizeAES128); // [IV 16 bytes]
-  FBWriteIntBigEndian(macBuffer + offsetCipherTextLength, cipherData.length); // [length of ciphertext 4 bytes]
-  memcpy(macBuffer + offsetCipherText, cipherData.bytes, cipherData.length); // [ciphertext]
-  FBWriteIntBigEndian(macBuffer + offsetAdditionalDataLength, additionalDataToSign.length); // [length of additionalDataToSign, 4 bytes]
-  memcpy(macBuffer + offsetAdditionalData, additionalDataToSign.bytes, additionalDataToSign.length);
+  FBWriteIntBigEndian(macBuffer + offsetCipherTextLength, cipherDataLength); // [length of ciphertext 4 bytes]
+  memcpy(macBuffer + offsetCipherText, cipherData.bytes, cipherDataLength); // [ciphertext]
+  FBWriteIntBigEndian(macBuffer + offsetAdditionalDataLength, additionalDataToSignLength); // [length of additionalDataToSign, 4 bytes]
+  memcpy(macBuffer + offsetAdditionalData, additionalDataToSign.bytes, additionalDataToSignLength);
 
   uint8_t *result = malloc(CC_SHA256_DIGEST_LENGTH);
 
@@ -174,8 +180,11 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
  */
 - (NSString *)encrypt:(NSData *)plainText additionalDataToSign:(NSData *)additionalDataToSign
 {
+  NSAssert(plainText.length <= INT_MAX, @"");
+  int plainTextLength = (int)plainText.length;
+
   uint8_t numPaddingBytes = kCCBlockSizeAES128 - (plainText.length % kCCBlockSizeAES128); // Pad 1 .. 16 bytes
-  int cipherDataLength = plainText.length + numPaddingBytes;
+  int cipherDataLength = plainTextLength + numPaddingBytes;
   size_t bufferSize = 1 + CC_SHA256_DIGEST_LENGTH + kCCBlockSizeAES128 + cipherDataLength;
   int offsetMAC = 1;
   int offsetIV = offsetMAC + CC_SHA256_DIGEST_LENGTH;
@@ -186,8 +195,8 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
   NSData *IV = [[self class] randomBytes:kCCBlockSizeAES128];
   memcpy(buffer + offsetIV, IV.bytes, IV.length);
 
-  memcpy(buffer + offsetCipherData, plainText.bytes, plainText.length); // Copy input in
-  fbdfl_SecRandomCopyBytes([FBDynamicFrameworkLoader loadkSecRandomDefault], numPaddingBytes, buffer + offsetCipherData + plainText.length); // Random pad
+  memcpy(buffer + offsetCipherData, plainText.bytes, plainTextLength); // Copy input in
+  fbdfl_SecRandomCopyBytes([FBDynamicFrameworkLoader loadkSecRandomDefault], numPaddingBytes, buffer + offsetCipherData + plainTextLength); // Random pad
   buffer[offsetCipherData + cipherDataLength - 1] = numPaddingBytes; // Record the number of padded bytes at the end
 
   size_t numOutputBytes = 0;
@@ -213,10 +222,13 @@ static NSData * makeSubKey(uint8_t * key, size_t len, uint32_t idx)
 - (NSData *)decrypt:(NSString *)base64EncodedCipherText additionalSignedData:(NSData *)additionalSignedData
 {
   NSData *cipherText = FBDecodeBase64(base64EncodedCipherText);
-  if (!cipherText || cipherText.length < 1 + CC_SHA256_DIGEST_LENGTH + kCCBlockSizeAES128) {
+  NSAssert(cipherText.length <= INT_MAX, @"");
+  int cipherTextLength = (int)cipherText.length;
+
+  if (!cipherText || cipherTextLength < 1 + CC_SHA256_DIGEST_LENGTH + kCCBlockSizeAES128) {
     return nil;
   }
-  int cipherDataLength = cipherText.length  - (1 + CC_SHA256_DIGEST_LENGTH + kCCBlockSizeAES128);
+  int cipherDataLength = cipherTextLength  - (1 + CC_SHA256_DIGEST_LENGTH + kCCBlockSizeAES128);
   if (cipherDataLength % kCCBlockSizeAES128 != 0) {
     return nil;
   }

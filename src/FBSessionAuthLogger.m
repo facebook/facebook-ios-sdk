@@ -114,7 +114,7 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
             params[FBSessionAuthLoggerParamErrorMessageKey] = value;
         }
 
-        value = error.userInfo[FBErrorLoginFailedOriginalErrorCode] ?: [NSString stringWithFormat:@"%d", error.code];
+        value = error.userInfo[FBErrorLoginFailedOriginalErrorCode] ?: [NSString stringWithFormat:@"%ld", (long)error.code];
         if (value) {
             params[FBSessionAuthLoggerParamErrorCodeKey] = value;
         }
@@ -125,7 +125,7 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
             [self addExtrasForNextEvent:@{@"inner_error_message": value}];
         }
         
-        value = innerError.userInfo[FBErrorLoginFailedOriginalErrorCode] ?: [NSString stringWithFormat:@"%d", innerError.code];
+        value = innerError.userInfo[FBErrorLoginFailedOriginalErrorCode] ?: [NSString stringWithFormat:@"%ld", (long)innerError.code];
         if (value) {
             [self addExtrasForNextEvent:@{@"inner_error_code": value}];
         }

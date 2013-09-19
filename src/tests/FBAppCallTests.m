@@ -15,7 +15,7 @@
  */
 
 #import "FBAppCallTests.h"
-#import "FBAppCall.h"
+#import "FBAppCall+Internal.h"
 
 @implementation FBAppCallTests
 
@@ -63,4 +63,34 @@
     STAssertEqualObjects(@"Tiramisu", target.appLinkData.arguments[@"ref"], @"Failed to parse applinkdata arguments");
     STAssertEqualObjects(@"123", target.appLinkData.arguments[@"tap_time_utc"], @"Failed to parse applinkdata arguments (tap_time)");
 }
+
+- (void)testAppCallsWithSameIDAreEqual {
+    FBAppCall *appCall1 = [[FBAppCall alloc] initWithID:nil
+                                          enforceScheme:NO
+                                                  appID:nil
+                                        urlSchemeSuffix:nil];
+    FBAppCall *appCall2 = [[FBAppCall alloc] initWithID:appCall1.ID
+                                          enforceScheme:NO
+                                                  appID:nil
+                                        urlSchemeSuffix:nil];
+
+    assertThat(appCall1, equalTo(appCall2));
+    assertThatInteger([appCall1 hash], equalToInteger([appCall2 hash]));
+}
+
+- (void)testAppCallsAreNotEqual {
+    FBAppCall *appCall1 = [[FBAppCall alloc] initWithID:nil
+                                          enforceScheme:NO
+                                                  appID:nil
+                                        urlSchemeSuffix:nil];
+    FBAppCall *appCall2 = [[FBAppCall alloc] initWithID:nil
+                                          enforceScheme:NO
+                                                  appID:nil
+                                        urlSchemeSuffix:nil];
+
+    assertThat(appCall1, isNot(equalTo(appCall2)));
+    assertThat(appCall1, isNot(equalTo(nil)));
+    assertThat(appCall1, isNot(equalTo(@"string")));
+}
+
 @end

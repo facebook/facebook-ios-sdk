@@ -39,7 +39,7 @@ extern const int FBOAuthError;
                        andShouldNotifyUser:(BOOL *)pshouldNotifyUser;
 
 + (void)fberrorGetCodeValueForError:(NSError *)error
-                              index:(int)index
+                              index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode;
 

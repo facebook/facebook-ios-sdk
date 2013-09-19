@@ -240,7 +240,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
 }
 
 + (void)fberrorGetCodeValueForError:(NSError *)error
-                              index:(int)index
+                              index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode {
     

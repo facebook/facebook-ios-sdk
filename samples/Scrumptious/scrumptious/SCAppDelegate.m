@@ -125,6 +125,11 @@
 - (void)resetMainViewController {
     self.mainViewController = [[SCViewController alloc] initWithNibName:@"SCViewController"
                                                                  bundle:nil];
+#ifdef __IPHONE_7_0
+    if ([self.mainViewController respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.mainViewController.edgesForExtendedLayout &= ~UIRectEdgeTop;
+    }
+#endif
 }
 
 @end

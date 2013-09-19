@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -50,17 +50,26 @@
     } else {
         self.rootViewController = [[FPViewController alloc] initWithNibName:@"FPViewController_iPad" bundle:nil];
     }
+#ifdef __IPHONE_7_0
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_7_0
+    if ([self.rootViewController respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+        self.rootViewController.edgesForExtendedLayout &= ~UIRectEdgeTop;
+    }
+#endif
+#endif
+#endif
     self.rootViewController.navigationItem.title = @"Friend Picker";
-    
+
     // Set up a UINavigationController as the basis of this app, with the nib generated viewController
     // as the initial view.
-    UINavigationController *navigationController = 
-         [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
-    
+    UINavigationController *navigationController =
+        [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = navigationController;
     [self.window makeKeyAndVisible];
-    
+
     return YES;
 }
 
@@ -72,7 +81,7 @@
 // It is important to close any FBSession object that is no longer useful
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Close the session before quitting
-    // this is a good idea because things may be hanging off the session, that need 
+    // this is a good idea because things may be hanging off the session, that need
     // releasing (completion block, etc.) and other components in the app may be awaiting
     // close notification in order to do cleanup
     [FBSession.activeSession close];

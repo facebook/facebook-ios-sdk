@@ -73,7 +73,9 @@
 				E2511740152BB6FE00CB342A /* Frameworks */,
 				E251173E152BB6FE00CB342A /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		E251173E152BB6FE00CB342A /* Products */ = {
 			isa = PBXGroup;

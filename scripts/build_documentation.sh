@@ -45,7 +45,7 @@ rm -rf $DOCSET
 
 hash $APPLEDOC &>/dev/null
 if [ "$?" -eq "0" ]; then
-    APPLEDOC_DOCSET_NAME="Facebook SDK 3.7.1 for iOS"
+    APPLEDOC_DOCSET_NAME="Facebook SDK 3.8 for iOS"
     $APPLEDOC --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \

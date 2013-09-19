@@ -73,7 +73,9 @@
 				84C757BB152A38770070DD9C /* Frameworks */,
 				84C757B9152A38770070DD9C /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		84C757B9152A38770070DD9C /* Products */ = {
 			isa = PBXGroup;

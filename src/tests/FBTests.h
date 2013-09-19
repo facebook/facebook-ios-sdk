@@ -29,6 +29,9 @@ extern NSString *kTestAppId;
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker;
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker;
 
+// Used to test methods that dispatch blocks to the GCD main queue
+- (void)waitForMainQueueToFinish;
+
 // Methods related to session mocking.
 - (FBSession *)createAndOpenSessionWithMockToken;
 - (FBAccessTokenData *)createValidMockToken;

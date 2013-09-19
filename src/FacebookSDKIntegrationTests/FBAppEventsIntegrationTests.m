@@ -46,7 +46,9 @@ static NSString *loggedEvent = nil;
 }
 
 - (void)tearDown {
-  [super tearDown];
+    [super tearDown];
+    [_mockFBUtility release];
+    _mockFBUtility = nil;
 }
 
 + (void)publishInstallCounter:(NSString *)appID {
@@ -98,25 +100,25 @@ static NSString *loggedEvent = nil;
     [appEventsSingletonMock stopMocking];
 }
 
--(void) testUpdateParametersWithEventUsageLimits {
+-(void) testUpdateParametersWithEventUsageLimitsAndBundleInfo {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
   
     // default should set 1 for the app setting.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"com.facebook.sdk:FBAppEventsLimitEventUsage"];
-    [FBUtility updateParametersWithEventUsageLimits:parameters];
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should default to 1");
   
     // when limited, app tracking is 0.
     [parameters removeAllObjects];
     FBAppEvents.limitEventUsage = YES;
-    [FBUtility updateParametersWithEventUsageLimits:parameters];
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"0"], @"app tracking should be 0 when event usage is limited");
   
     // when explicitly unlimited, app tracking is 1.
     [parameters removeAllObjects];
     FBAppEvents.limitEventUsage = NO;
-    [FBUtility updateParametersWithEventUsageLimits:parameters];
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
 }
 

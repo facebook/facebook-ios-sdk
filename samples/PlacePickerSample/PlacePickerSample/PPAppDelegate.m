@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,13 +22,14 @@
 @synthesize window = _window;
 @synthesize viewController = _viewController;
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPhone" bundle:nil];
     } else {
         self.viewController = [[PPViewController alloc] initWithNibName:@"PPViewController_iPad" bundle:nil];
     }
+    self.viewController.wantsFullScreenLayout = YES;
     self.window.rootViewController = self.viewController;
     [self.window makeKeyAndVisible];
     return YES;
@@ -38,9 +39,9 @@
 // In the login workflow, the Facebook native application, or Safari will transition back to
 // this applicaiton via a url following the scheme fb[app id]://; the call to handleOpenURL
 // below captures the token, in the case of success, on behalf of the FBSession object
-- (BOOL)application:(UIApplication *)application 
+- (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication 
+  sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     return [FBAppCall handleOpenURL:url
                   sourceApplication:sourceApplication];

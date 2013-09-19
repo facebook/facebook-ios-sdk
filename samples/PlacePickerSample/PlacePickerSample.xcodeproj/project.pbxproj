@@ -76,7 +76,9 @@
 				B9AF4BA7152E43EE00E9BA6C /* Frameworks */,
 				B9AF4BA5152E43EE00E9BA6C /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		B9AF4BA5152E43EE00E9BA6C /* Products */ = {
 			isa = PBXGroup;

@@ -22,6 +22,7 @@
 #import "FBTests.h"
 #import "FBUtility.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSessionUtility.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBAccessTokenData+Internal.h"
 #import "FBError.h"
@@ -40,8 +41,6 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 @property(readwrite, copy) NSDate *refreshDate;
 @property(readwrite) FBSessionLoginType loginType;
 
-+ (NSString *)sessionStateDescription:(FBSessionState)sessionState;
-
 - (void)authorizeWithPermissions:(NSArray*)permissions
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
@@ -56,8 +55,6 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
              canFetchAppSettings:(BOOL)canFetchAppSettings;
 - (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter;
 - (void)callReauthorizeHandlerAndClearState:(NSError*)error;
-- (BOOL)isSystemAccountStoreAvailable;
-- (BOOL)isMultitaskingSupported;
 
 @end
 
@@ -759,15 +756,13 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [(id)mockSession verify];
 }
 
-/* TODO this fails if handler is nil; consider making reauthorizeWithPermission* more robust.
-
 - (void)testReauthorizeWhileReauthorizeInProgressFailsWithNilHandler {
     FBSession *mockSession = [self allocMockSessionWithNoOpAuth];
 
     FBAccessTokenData *mockToken = [self createValidMockToken];
     FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
     
-    FBSession *session = [mockSession initWithAppID:kAppId
+    FBSession *session = [mockSession initWithAppID:kTestAppId
                                         permissions:nil
                                     defaultAudience:FBSessionDefaultAudienceNone
                                     urlSchemeSuffix:nil
@@ -781,14 +776,15 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [session requestNewReadPermissions:nil completionHandler:^(FBSession *session, NSError *error) {
     }];
     
+    BOOL caughtException = NO;
     @try {
         [session requestNewReadPermissions:nil completionHandler:nil];
         STFail(@"expected exception");
     } @catch (NSException *exception) {
+        caughtException = YES;
     }
+    STAssertTrue(caughtException, @"expected exception when requesting more permissions.");
 }
-
-*/
 
 - (void)testRequestNewReadPermissionsFailsIfPassedPublishPermissions {
     FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
@@ -912,26 +908,19 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     BOOL shouldBeSupported = [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported];
 
-    [FBSession setDefaultAppID:kTestAppId];
-    FBSession *session = [[FBSession alloc] init];
-
-    assertThatBool([session isMultitaskingSupported], equalToBool(shouldBeSupported));
+    assertThatBool([FBUtility isMultitaskingSupported], equalToBool(shouldBeSupported));
 }
 
-/* TODO transitionToState: appears to be losing the isFacebookLogin-ness of cached tokens.
-
 - (void)testWillAttemptToExtendToken {
-    FBAccessTokenData *token = [self createValidMockToken];
-    // TODO add refresh date
-    [[[(id)token stub] andReturn:[NSDate dateWithTimeIntervalSince1970:0]] refreshDate];
-    FBSessionLoginType loginType = FBSessionLoginTypeFacebookApplication;
-    [[[(id)token stub] andReturnValue:OCMOCK_VALUE(loginType)] loginType];
-    BOOL yes = YES;
-    [[[(id)token stub] andReturnValue:OCMOCK_VALUE(yes)] isFacebookLogin];
+    FBAccessTokenData *token = [FBAccessTokenData createTokenFromString:@"token"
+                                                            permissions:nil
+                                                         expirationDate:[NSDate distantFuture]
+                                                              loginType:FBSessionLoginTypeFacebookApplication
+                                                            refreshDate:[NSDate dateWithTimeIntervalSince1970:0]];
     
     FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:token];
     
-    FBSession *session = [[FBSession alloc] initWithAppID:kAppId
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
                                               permissions:nil
                                           defaultAudience:FBSessionDefaultAudienceNone
                                           urlSchemeSuffix:nil
@@ -942,7 +931,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     assertThatBool(shouldExtend, equalToBool(YES));
 }
-*/
+
 
 #pragma mark Active session tests
 
@@ -1315,7 +1304,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     const int numTests = sizeof(states) / sizeof(FBSessionState);
     
     for (int i = 0; i < numTests; ++i) {
-        NSString *description = [FBSession sessionStateDescription:states[i]];
+        NSString *description = [FBSessionUtility sessionStateDescription:states[i]];
         assertThat(description, equalTo([expectedStrings objectAtIndex:i]));
     }
 }
@@ -1336,12 +1325,12 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [self addFacebookCookieToSharedStorage];
     
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
-    NSURL *url = [NSURL URLWithString:[FBUtility buildFacebookUrlWithPre:@"https://m." withPost:@"/dialog/"]];
+    NSURL *url = [NSURL URLWithString:[FBUtility dialogBaseURL]];
     NSArray *cookiesForFacebook = [storage cookiesForURL:url];
     
     assertThatInteger(cookiesForFacebook.count, greaterThan(@0));
     
-    [FBSession deleteFacebookCookies];
+    [FBUtility deleteFacebookCookies];
     
     cookiesForFacebook = [storage cookiesForURL:url];
     

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import <Foundation/NSString.h>
 #import "Facebook.h"
 #import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
@@ -269,10 +270,10 @@ static NSString *const kPostHTTPMethod = @"POST";
 {
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:@"place" forKey:@"type"];
-    [parameters setObject:[NSString stringWithFormat:@"%d", limit] forKey:@"limit"];
+    [parameters setObject:[NSString stringWithFormat:@"%ld", (long)limit] forKey:@"limit"];
     [parameters setObject:[NSString stringWithFormat:@"%lf,%lf", coordinate.latitude, coordinate.longitude]
                    forKey:@"center"];
-    [parameters setObject:[NSString stringWithFormat:@"%d", radius] forKey:@"distance"];
+    [parameters setObject:[NSString stringWithFormat:@"%ld", (long)radius] forKey:@"distance"];
     if ([searchText length]) {
         [parameters setObject:searchText forKey:@"q"];
     }
@@ -495,7 +496,7 @@ static NSString *const kPostHTTPMethod = @"POST";
                    params:(NSDictionary *)params
                httpMethod:(NSString *)httpMethod {
     
-    NSURL* parsedURL = [NSURL URLWithString:baseUrl];
+    NSURL* parsedURL = [NSURL URLWithString:[baseUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSString* queryPrefix = parsedURL.query ? @"&" : @"?";
     
     NSMutableArray* pairs = [NSMutableArray array];

@@ -73,7 +73,9 @@
 				E2D6B81115413A570050835F /* Frameworks */,
 				E2D6B80F15413A570050835F /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		E2D6B80F15413A570050835F /* Products */ = {
 			isa = PBXGroup;

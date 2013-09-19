@@ -299,6 +299,11 @@
 -(void)presentLoginSettings {
     if (self.settingsViewController == nil) {
         self.settingsViewController = [[FBUserSettingsViewController alloc] init];
+#ifdef __IPHONE_7_0
+        if ([self.settingsViewController respondsToSelector:@selector(setEdgesForExtendedLayout:)]) {
+            self.settingsViewController.edgesForExtendedLayout &= ~UIRectEdgeTop;
+        }
+#endif
         self.settingsViewController.delegate = self;
     }
     

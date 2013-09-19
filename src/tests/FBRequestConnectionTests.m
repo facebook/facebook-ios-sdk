@@ -28,6 +28,7 @@
 #import "FBTestBlocker.h"
 #import "FBURLConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBUtility.h"
 
 // This is just to silence compiler warnings since we access internal methods in some tests.
 @interface FBSession (Testing)
@@ -42,7 +43,25 @@
 
 @end
 
+@interface FBRequestConnectionTests() {
+    id _mockFBUtility;
+}
+@end
+
 @implementation FBRequestConnectionTests
+
+- (void)setUp {
+    [super setUp];
+    _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
+    [[[_mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID since that often hangs.
+}
+
+- (void)tearDown {
+    [_mockFBUtility release];
+    _mockFBUtility = nil;
+    
+    [super tearDown];
+}
 
 - (void)testWillNotPiggybackIfWouldExceedBatchSize
 {
@@ -124,14 +143,18 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
     [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        // Construct a fake error object that will be categorized for reconnecting the session
+        // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
+        // If there is a test failure, you should verify the requests.count == 1 and debug that if it's not; otherwise this error response will likely cause
+        // an unrelated error to be surfaced. For example, the session init above set the permissionsRefreshDate to [NSDate date]. If it had not,
+        // there could be piggy-backed permissions request which would then expect a batch response. So, this test doubles to verify there was no
+        // piggybacked request when the permissionRefreshDate is set.
         NSData *data =  [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
         
         requestCount++;
@@ -165,7 +188,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -223,7 +246,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -323,5 +346,115 @@
     STAssertEquals(1, requestCount, @"expected number of attempts not met");
     [OHHTTPStubs removeAllRequestHandlers];
 }
+
+// test to exercise FBRequestConnectionErrorBehaviorReconnectSession
+// with a permissions refresh piggybacked and the original request fails (and should be retried).
+- (void)testReconnectBehaviorBatchWithPermissionsRefresh
+{
+    // Create a fake session that is already open
+    // Note we rely on FBTestSession automatically succeeding reauthorize.
+    FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    [session openFromAccessTokenData:tokenData completionHandler:nil];
+    
+    __block int requestCount = 0;
+    
+    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return YES;
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        // Construct a fake batch response with 1 failure and 1 success (permissions piggyback).
+        // Note this technically means the retried /friends request gets this stubbed
+        // batch response as well which doesn't matter for this test in particular.
+        NSString *errorBodyString = [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+        NSData *data =  [[NSString stringWithFormat:@"["
+                          "{\"code\":400,\"body\":\"%@\"},"
+                          "{\"code\":200,\"body\":\"%@\"}"
+                          "]",
+                          errorBodyString,
+                          [@"{\"data\":[ { \"installed\":1, \"basic_info\":1} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]]
+                         dataUsingEncoding:NSUTF8StringEncoding];
+        requestCount++;
+        
+        return [OHHTTPStubsResponse responseWithData:data
+                                          statusCode:200
+                                        responseTime:0
+                                             headers:nil];
+    }];
+    
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *requestFriends =[[[FBRequest alloc] initWithSession:session graphPath:@"me/friends"] autorelease];
+    connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
+    
+    __block int userHandlerFriendsCount = 0;
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        userHandlerFriendsCount++;
+        [blocker signal];
+    } ];
+    
+    [connection start];
+    
+    STAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
+    STAssertEquals(2, requestCount, @"expected number of retries not met");
+    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    [OHHTTPStubs removeAllRequestHandlers];
+    NSTimeInterval timeSincePermissionsRefresh = [session.accessTokenData.permissionsRefreshDate timeIntervalSinceNow];
+    STAssertTrue(timeSincePermissionsRefresh > -3, @"permissions refresh date should be within a few seconds of now");
+}
+
+// test to exercise FBRequestConnectionErrorBehaviorReconnectSession
+// with a permissions refresh piggybacked (which fails) and the original request succeeds.
+// there should be no retry since the session should not be closed.
+- (void)testReconnectBehaviorBatchWithPermissionsRefreshFailure
+{
+    // Create a fake session that is already open
+    // Note we rely on FBTestSession automatically succeeding reauthorize.
+    FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    [session openFromAccessTokenData:tokenData completionHandler:nil];
+    STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was not initialized properly to distantPast");
+    __block int requestCount = 0;
+    
+    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return YES;
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        NSString *errorBodyString = [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+        NSData *data =  [[NSString stringWithFormat:@"["
+                          "{\"code\":200,\"body\":\"%@\"},"
+                          "{\"code\":400,\"body\":\"%@\"}"
+                          "]",
+                          [@"{\"data\":[ { \"name\":\"zuck\", \"id\":\"4\"} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""],
+                          errorBodyString]
+                         dataUsingEncoding:NSUTF8StringEncoding];
+        requestCount++;
+        
+        return [OHHTTPStubsResponse responseWithData:data
+                                          statusCode:200
+                                        responseTime:0
+                                             headers:nil];
+    }];
+    
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *requestFriends =[[[FBRequest alloc] initWithSession:session graphPath:@"me/friends"] autorelease];
+    connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
+    
+    __block int userHandlerFriendsCount = 0;
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        userHandlerFriendsCount++;
+        STAssertTrue([@"zuck" isEqualToString:(result[@"data"][0][@"name"])], @"couldn't find friend");
+        [blocker signal];
+    } ];
+    
+    [connection start];
+    
+    STAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
+    STAssertEquals(1, requestCount, @"there should have been no retry");
+    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    [OHHTTPStubs removeAllRequestHandlers];
+
+    STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was unexpectedly updated");
+}
+
 
 @end

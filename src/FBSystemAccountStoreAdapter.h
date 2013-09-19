@@ -17,6 +17,8 @@
 #import <Foundation/Foundation.h>
 #import <Accounts/Accounts.h>
 #import "FBSession+Internal.h"
+#import "FBTask.h"
+#import "FBTaskCompletionSource.h"
 
 typedef void (^FBRequestAccessToAccountsHandler)(NSString* oauthToken, NSError *accountStoreError);
 
@@ -51,7 +53,15 @@ typedef void (^FBRequestAccessToAccountsHandler)(NSString* oauthToken, NSError *
                                       appID:(NSString *)appID
                                     session:(FBSession *)session
                                     handler:(FBRequestAccessToAccountsHandler)handler;
+/*!
+ @abstract Same as `renewSystemAuthorization:` but represented as `FBTask`.
+*/
+- (FBTask *)renewSystemAuthorizationAsTask;
 
+/*!
+ @abstract Same as `requestAccessToFacebookAccountStore:handler:` but represented as `FBTask`
+*/
+- (FBTask *)requestAccessToFacebookAccountStoreAsTask:(FBSession *)session;
 /*
  @abstract Sends a message to the device account store to renew the Facebook account credentials
  

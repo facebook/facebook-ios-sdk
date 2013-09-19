@@ -278,6 +278,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  request completes with a success, error, or cancel.
 
  @param handler   The handler block to call when the request completes with a success, error, or cancel action.
+ The handler will be invoked on the main thread.
 */
 - (FBRequestConnection*)startWithCompletionHandler:(FBRequestHandler)handler;
 
@@ -476,8 +477,8 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  native Facebook app on the device.  If there is no native Facebook app, no one is logged into it, or the user has opted out
  at the iOS level from ad tracking, then a `nil` ID will be returned.
  
- This method itself returning `nil` indicates that either the user has opted-out (via iOS) from Ad Tracking, or a specific Facebook user cannot
- be identified.
+ This method returns `nil` if either the user has opted-out (via iOS) from Ad Tracking, the app itself has limited event usage
+ via the `[FBAppEvents setLimitEventUsage]` flag, or a specific Facebook user cannot be identified.
  */
 + (FBRequest *)requestForCustomAudienceThirdPartyID:(FBSession *)session;
 

@@ -18,7 +18,5 @@
 
 @interface FBViewController (Internal)
 
-@property (nonatomic, readonly) UIViewController *compatiblePresentingViewController;
-
 @end
 

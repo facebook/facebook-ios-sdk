@@ -72,10 +72,10 @@
     action.test = testObject;
     action.tags = [NSArray arrayWithObject:userObject];
     
-    NSMutableDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
+    NSDictionary *image = [NSDictionary dictionaryWithObjectsAndKeys:
                                   @"https://sphotos-b.xx.fbcdn.net/hphotos-ash4/387972_10152013102225492_1756755651_n.jpg", @"url",
                                   nil];
-    NSMutableArray *images = [NSArray arrayWithObject:image];
+    NSArray *images = [NSArray arrayWithObject:image];
     action.image = images;
 
     return action;    
@@ -130,7 +130,7 @@
                            @"false", @"user_generated", 
                            @"https://sphotos-b.xx.fbcdn.net/hphotos-ash4/387972_10152013102225492_1756755651_n.jpg", @"url",
                            nil];
-    NSMutableArray *images = [NSArray arrayWithObject:image];
+    NSArray *images = [NSArray arrayWithObject:image];
     action.image = images;
     
     id postedAction = [self batchedPostAndGetWithSession:self.defaultTestSession 

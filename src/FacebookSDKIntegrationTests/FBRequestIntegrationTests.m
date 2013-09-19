@@ -114,7 +114,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889227, -77.049078);
     FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
                                                               radiusInMeters:200 
-                                                                resultsLimit:5 
+                                                                resultsLimit:5
                                                                   searchText:@"Lincoln Memorial"];
     [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
@@ -131,12 +131,15 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
     
-    id<FBGraphPlace> targetPlace = (id<FBGraphPlace>)[FBGraphObject graphObject];
-    targetPlace.id = @"116411068417081";
-    targetPlace.name = @"Lincoln Memorial";
+    BOOL found = NO;
+    for (FBGraphObject *object in data) {
+        if ([object[@"name"] rangeOfString:@"Lincoln Memorial"].location != NSNotFound) {
+            found = YES;
+            break;
+        }
+    }
     
-    id<FBGraphObject> foundPlace = [FBUtility graphObjectInArray:data withSameIDAs:targetPlace];
-    STAssertNotNil(foundPlace, @"didn't find Lincoln Memorial");
+    STAssertTrue(found, @"didn't find Lincoln Memorial");
 }
 
 - (void)testRestRequestGetUser {

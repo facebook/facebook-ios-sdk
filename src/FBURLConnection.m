@@ -98,8 +98,8 @@ static NSArray* _cdnHosts;
                 delegate:self];
             _data = [[NSMutableData alloc] init];
 
-            [self logMessage:[NSString stringWithFormat:@"FBURLConnection <#%d>:\n  URL: '%@'\n\n",
-                self.loggerSerialNumber,
+            [self logMessage:[NSString stringWithFormat:@"FBURLConnection <#%lu>:\n  URL: '%@'\n\n",
+                (unsigned long)self.loggerSerialNumber,
                 url.absoluteString]];
             
             self.handler = handler;
@@ -116,8 +116,8 @@ static NSArray* _cdnHosts;
                       error:(NSError *)error {
     if (error) {
         NSString *logEntry = [NSString
-                    stringWithFormat:@"FBURLConnection <#%d>:\n  Error: '%@'\n%@\n",
-                    self.loggerSerialNumber,
+                    stringWithFormat:@"FBURLConnection <#%lu>:\n  Error: '%@'\n%@\n",
+                    (unsigned long)self.loggerSerialNumber,
                     [error localizedDescription],
                     [error userInfo]];
         
@@ -132,10 +132,10 @@ static NSArray* _cdnHosts;
                responseData:(NSData *)responseData {
     // Basic FBURLConnection logging just prints out the URL.  FBRequest logging provides more details.
     NSString *mimeType = [response MIMEType];
-    NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBURLConnection <#%d>:\n  Duration: %lu msec\nResponse Size: %d kB\n  MIME type: %@\n",
-                                        self.loggerSerialNumber,
+    NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBURLConnection <#%lu>:\n  Duration: %lu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
+                                        (unsigned long)self.loggerSerialNumber,
                                         [FBUtility currentTimeInMilliseconds] - self.requestStartTime,
-                                        [responseData length] / 1024,
+                                        (unsigned long)[responseData length] / 1024,
                                         mimeType];
     
     if ([mimeType isEqualToString:@"text/javascript"]) {
@@ -152,9 +152,9 @@ static NSArray* _cdnHosts;
 - (void)logAndInvokeHandler:(FBURLConnectionHandler)handler
                  cachedData:(NSData *)cachedData
                      forURL:(NSURL *)url {
-    [self logMessage:[NSString stringWithFormat:@"FBUrlConnection: <#%d>.  Cached response %d kB\n",
-                      self.loggerSerialNumber,
-                      cachedData.length / 1024]];
+    [self logMessage:[NSString stringWithFormat:@"FBUrlConnection: <#%lu>.  Cached response %lu kB\n",
+                      (unsigned long)self.loggerSerialNumber,
+                      (unsigned long)cachedData.length / 1024]];
 
     [self invokeHandler:handler error:nil response:nil responseData:cachedData];
 }

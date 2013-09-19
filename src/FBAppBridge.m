@@ -365,12 +365,13 @@ forFailedAppCall:(FBAppCall *)appCall
         @try {
             if (handler) {
                 if (!error) {
-                    call.error = [NSError errorWithDomain:FacebookSDKDomain
+                    error = [NSError errorWithDomain:FacebookSDKDomain
                                                      code:FBErrorAppActivatedWhilePendingAppCall
                                                  userInfo:@{NSLocalizedDescriptionKey : @"The user navigated away from "
                                   @"the Facebook app prior to completing this AppCall. This AppCall is now cancelled "
                                   @"and needs to be retried to get a successful completion"}];
                 }
+                call.error = error;
                 
                 // Passing nil for results, since we are effectively cancelling this action
                 handler(call);

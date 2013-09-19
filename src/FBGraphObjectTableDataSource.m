@@ -464,7 +464,7 @@ static const NSInteger kMinimumCountToCollate = 6;
 {
     NSArray *sectionItems = [self sectionItemsForSection:section];
     
-    int count = [sectionItems count];
+    NSUInteger count = [sectionItems count];
     // If we are expecting more objects to be loaded via paging, add 1 to the
     // row count for the last section.
     if (self.expectingMoreGraphObjects &&

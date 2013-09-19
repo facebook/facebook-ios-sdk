@@ -195,7 +195,7 @@
                                 handler:(FBWebDialogHandler)handler
                                delegate:(id<FBWebDialogsDelegate>)delegate {
     
-    NSString *dialogURL = [[FBUtility buildFacebookUrlWithPre:@"https://m." withPost:@"/dialog/"] stringByAppendingString:dialog];
+    NSString *dialogURL = [[FBUtility dialogBaseURL] stringByAppendingString:dialog];
     
     NSMutableDictionary *parametersImpl = [NSMutableDictionary dictionary];
 

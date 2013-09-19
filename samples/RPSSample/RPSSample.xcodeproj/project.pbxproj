@@ -114,7 +114,9 @@
 				84070D191540AA2B00E39703 /* Frameworks */,
 				84070D171540AA2B00E39703 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		84070D171540AA2B00E39703 /* Products */ = {
 			isa = PBXGroup;

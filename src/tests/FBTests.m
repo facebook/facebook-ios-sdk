@@ -101,6 +101,16 @@ NSString *kTestAppId = @"AnAppId";
     return strategy;
 }
 
+- (void)waitForMainQueueToFinish {
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    dispatch_async(dispatch_get_main_queue(), ^() {
+        [blocker signal];
+    });
+
+    [blocker wait];
+
+    [blocker release];
+}
 
 #pragma mark -
 

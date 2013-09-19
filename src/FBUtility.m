@@ -352,17 +352,51 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
     return status;
 }
 
-+ (void)updateParametersWithEventUsageLimits:(NSMutableDictionary *)parameters {
++ (void)updateParametersWithEventUsageLimitsAndBundleInfo:(NSMutableDictionary *)parameters {
   // Only add the iOS global value if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
   // absence of this parameter is to be interpreted as 'unspecified'.
   FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
   if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
-    BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
-    [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
-                       forKey:@"advertiser_tracking_enabled"];
+      BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
+      [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
+                     forKey:@"advertiser_tracking_enabled"];
   }
 
   [parameters setObject:[[NSNumber numberWithBool:!FBAppEvents.limitEventUsage] stringValue] forKey:@"application_tracking_enabled"];
+  
+  static dispatch_once_t fetchBundleOnce;
+  static NSString *bundleIdentifier;
+  static NSMutableArray *urlSchemes;
+  static NSString *longVersion;
+  static NSString *shortVersion;
+
+  dispatch_once(&fetchBundleOnce, ^{
+      NSBundle *mainBundle = [NSBundle mainBundle];
+      urlSchemes = [[NSMutableArray alloc] init];
+      for (NSDictionary *fields in [mainBundle objectForInfoDictionaryKey:@"CFBundleURLTypes"]) {
+          NSArray *schemesForType = [fields objectForKey:@"CFBundleURLSchemes"];
+          if (schemesForType) {
+              [urlSchemes addObjectsFromArray:schemesForType];
+          }
+      }
+      bundleIdentifier = mainBundle.bundleIdentifier;
+      longVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+      shortVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+  });
+
+  if (bundleIdentifier.length > 0) {
+      [parameters setObject:bundleIdentifier forKey:@"bundle_id"];
+  }
+  if (urlSchemes.count > 0) {
+      [parameters setObject:[FBUtility simpleJSONEncode:urlSchemes] forKey:@"url_schemes"];
+  }
+  if (longVersion.length > 0) {
+      [parameters setObject:longVersion forKey:@"bundle_version"];
+  }
+  if (shortVersion.length > 0) {
+      [parameters setObject:shortVersion forKey:@"bundle_short_version"];
+  }
+  
 }
 
 + (NSString *)simpleJSONEncode:(id)data {
@@ -458,4 +492,30 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
     return [NSString stringWithFormat:@"%@%@%@", pre, domain, post ?: @""];
 }
 
++ (BOOL)isMultitaskingSupported {
+    return [[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)] &&
+    [[UIDevice currentDevice] isMultitaskingSupported];
+}
+
++ (BOOL)isSystemAccountStoreAvailable {
+    id accountStore = nil;
+    id accountTypeFB = nil;
+    
+    return (accountStore = [[[NSClassFromString(@"ACAccountStore") alloc] init] autorelease]) &&
+    (accountTypeFB = [accountStore accountTypeWithAccountTypeIdentifier:@"com.apple.facebook"]);
+}
+
++ (void)deleteFacebookCookies {
+    NSHTTPCookieStorage* cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    NSArray* facebookCookies = [cookies cookiesForURL:
+                                [NSURL URLWithString:[FBUtility dialogBaseURL]]];
+    
+    for (NSHTTPCookie* cookie in facebookCookies) {
+        [cookies deleteCookie:cookie];
+    }
+}
+
++ (NSString *)dialogBaseURL {
+    return [FBUtility buildFacebookUrlWithPre:@"https://m." withPost:@"/dialog/"];
+}
 @end
