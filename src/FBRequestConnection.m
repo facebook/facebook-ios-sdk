@@ -860,8 +860,9 @@ typedef enum FBRequestConnectionState {
                 action(key, subValue);
             }
         }
-    } else if ([value isKindOfClass:[NSString class]] ||
-               [value isKindOfClass:[NSNumber class]]) {
+    } else if ([value isKindOfClass:[NSNumber class]]) {
+        action(key, [(NSNumber *)value stringValue]);
+    } else if ([value isKindOfClass:[NSString class]]) {
         // Just serialize these.
         action(key, value);
     } else if ([value isKindOfClass:[NSArray class]]) {
