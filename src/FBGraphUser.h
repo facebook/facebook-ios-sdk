@@ -37,7 +37,7 @@
  @property
  @abstract Typed access to the user's ID.
  */
-@property (retain, nonatomic) NSString *id;
+@property (retain, nonatomic) NSString *userID;
 
 /*!
  @property
