@@ -37,7 +37,7 @@
  @property
  @abstract Typed access to the place ID.
  */
-@property (retain, nonatomic) NSString *id;
+@property (retain, nonatomic) NSString *placeID;
 
 /*!
  @property

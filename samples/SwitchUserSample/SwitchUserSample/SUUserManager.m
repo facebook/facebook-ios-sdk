@@ -127,8 +127,8 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     if (user != nil ) {
-        NSLog(@"SUUserManager updating slot %d: fbid = %@, name = %@", slot, user.id, user.name);
-        [defaults setObject:user.id forKey:idKey];
+        NSLog(@"SUUserManager updating slot %d: fbid = %@, name = %@", slot, user.userID, user.name);
+        [defaults setObject:user.userID forKey:idKey];
         [defaults setObject:user.name forKey:nameKey];
     } else {
         NSLog(@"SUUserManager clearing slot %d", slot);

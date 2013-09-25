@@ -284,6 +284,10 @@ typedef enum _SelectorInferredImplType {
 }
 
 - (id)objectForKey:(id)key {
+    // we expose `userId` and `placeId` but the internal key representation is `id`
+    if ([key isEqualToString:@"userID"] || [key isEqualToString:@"placeID"]) {
+        key = @"id";
+    }
     return [self graphObjectifyAtKey:key];
 }
 
@@ -293,7 +297,11 @@ typedef enum _SelectorInferredImplType {
 }
 
 - (void)setObject:(id)object forKey:(id)key {
-    return [_jsonObject setObject:object forKey:key];    
+    // we expose `userId` and `placeId` but the internal key representation is `id`
+    if ([key isEqualToString:@"userId"] || [key isEqualToString:@"placeId"]) {
+        key = @"id";
+    }
+    return [_jsonObject setObject:object forKey:key];
 }
 
 - (void)removeObjectForKey:(id)key {
