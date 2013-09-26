@@ -460,6 +460,8 @@ params   = _params;
             } else {
                 [self dialogDidCancel:url];
             }
+        } else if ([url query] == nil || [[url query] rangeOfString:@"post_id="].location == NSNotFound) {
+            [self dialogDidCancel:url];
         } else {
             if (_frictionlessSettings.enabled) {
                 [self dialogSuccessHandleFrictionlessResponses:url];
