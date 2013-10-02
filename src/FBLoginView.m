@@ -18,8 +18,6 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBGraphUser.h"
-#import "FBLoginViewButtonPNG.h"
-#import "FBLoginViewButtonPressedPNG.h"
 #import "FBProfilePictureView.h"
 #import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
@@ -229,11 +227,12 @@ static CGSize g_buttonSize;
     // We want to make sure that when we stretch the image, it includes the curved edges and drop shadow
     // We inset enough pixels to make sure that happens
     UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
-
-    UIImage *image = [[FBLoginViewButtonPNG image] resizableImageWithCapInsets:imageInsets];
+    
+    UIImage *image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/FBLoginViewButton.png"] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateNormal];
+    
+    image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/FBLoginViewButtonPressed.png"] resizableImageWithCapInsets:imageInsets];
 
-    image = [[FBLoginViewButtonPressedPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
 
     [self addSubview:self.button];

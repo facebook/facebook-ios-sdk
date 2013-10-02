@@ -15,8 +15,6 @@
  */
 
 #import "FBDialog.h"
-
-#import "FBDialogClosePNG.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
@@ -338,9 +336,9 @@ params   = _params;
         _webView.delegate = self;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_webView];
-
-        UIImage* closeImage = [FBDialogClosePNG image];
-
+        
+        UIImage* closeImage = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBDialog/FBDialogClose.png"];
+        
         UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
         _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
         [_closeButton setImage:closeImage forState:UIControlStateNormal];

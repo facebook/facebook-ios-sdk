@@ -15,9 +15,6 @@
  */
 
 #import "FBProfilePictureView.h"
-
-#import "FBProfilePictureViewBlankProfilePortraitPNG.h"
-#import "FBProfilePictureViewBlankProfileSquarePNG.h"
 #import "FBRequest.h"
 #import "FBSDKVersion.h"
 #import "FBURLConnection.h"
@@ -182,9 +179,11 @@
     } else {
         BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
 
-        self.imageView.image = isSquare ?
-            [FBProfilePictureViewBlankProfileSquarePNG image] :
-            [FBProfilePictureViewBlankProfilePortraitPNG image];
+        NSString *blankImageName = [NSString
+         stringWithFormat:@"FacebookSDKResources.bundle/FBProfilePictureView/FBProfilePictureViewBlankProfile%@.png",
+         isSquare ? @"Square" : @"Portrait"];
+        
+        self.imageView.image = [UIImage imageNamed:blankImageName];
         [self ensureImageViewContentMode];
     }
 

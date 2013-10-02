@@ -28,13 +28,13 @@
 #import "FBPlacePickerCacheDescriptor.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
-#import "FBPlacePickerViewGenericPlacePNG.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 const NSInteger defaultResultsLimit = 100;
 const NSInteger defaultRadius = 1000; // 1km
+static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerView/FBPlacePickerViewGenericPlace.png";
 
 @interface FBPlacePickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
@@ -117,7 +117,7 @@ const NSInteger defaultRadius = 1000; // 1km
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [FBPlacePickerViewGenericPlacePNG image];
+    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
     dataSource.itemSubtitleEnabled = YES;
 
