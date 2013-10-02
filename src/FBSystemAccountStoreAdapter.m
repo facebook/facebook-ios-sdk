@@ -312,7 +312,10 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
         if (error) {
             [tcs setError:error];
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wint-conversion"
             [tcs setResult:result];
+#pragma clang diagnostic pop
         }
     }];
     return tcs.task;
