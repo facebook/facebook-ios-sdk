@@ -362,7 +362,7 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
                      forKey:@"advertiser_tracking_enabled"];
   }
 
-  [parameters setObject:[[NSNumber numberWithBool:!FBAppEvents.limitEventUsage] stringValue] forKey:@"application_tracking_enabled"];
+  [parameters setObject:[[NSNumber numberWithBool:!FBSettings.limitEventAndDataUsage] stringValue] forKey:@"application_tracking_enabled"];
   
   static dispatch_once_t fetchBundleOnce;
   static NSString *bundleIdentifier;

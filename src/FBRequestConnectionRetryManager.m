@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+#import "FBRequestConnectionRetryManager.h"
+
 #import <Foundation/NSThread.h>
 
-#import "FBRequestConnectionRetryManager.h"
-#import "FBRequestConnection+Internal.h"
 #import "FBRequest+Internal.h"
+#import "FBRequestConnection+Internal.h"
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 
@@ -58,7 +59,7 @@
 
 -(void) dealloc {
     self.callback = nil;
-    
+
     [super dealloc];
 }
 @end
@@ -98,7 +99,7 @@
                              }];
         return;
     }
-    
+
     if (self.requestMetadatas.count > 0) {
         switch (self.state) {
             case FBRequestConnectionRetryManagerStateNormal : {
@@ -125,7 +126,7 @@
                 } copy] autorelease];
 
                 [self.sessionToReconnect performSelector:@selector(repairWithHandler:) onThread:thread withObject:handler waitUntilDone:NO];
-                
+
                 break;
             }
         }
@@ -169,7 +170,7 @@
     [_alertMessage release];
     [_requestMetadatas release];
     [_alertViewHelper release];
-    
+
     [super dealloc];
 }
 @end

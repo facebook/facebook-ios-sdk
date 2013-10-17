@@ -29,10 +29,10 @@
  @abstract
  Call this method to convert a dictionary containing types that are not supported by JSON, but are
  supported by FBAppBridge to a dictionary that can be safely serialized to JSON
- 
+
  @param dictionaryWithAppBridgeTypes An NSDictionary that contains types supported by FBAppBridge, either
  as direct descendents or further nested in dictionaries and arrays.
- 
+
  @return A dictionary that is ready for JSON serialization
  */
 - (NSDictionary *)jsonDictionaryFromDictionaryWithAppBridgeTypes:(NSDictionary *)dictionaryWithAppBridgeTypes;
@@ -41,10 +41,10 @@
  @abstract
  Call this method to retrieve a copy of the original dictionary that was converted to be JSON
  serializable via a call to jsonDictionaryFromDictionaryWithAppBridgeTypes:
- 
+
  @param jsonDictionary An object that was previously processed via a call to
  jsonDictionaryFromDictionaryWithAppBridgeTypes:
- 
+
  @return An object that is in the state prior to the call to wrap:
  */
 - (NSDictionary *)dictionaryWithAppBridgeTypesFromJSONDictionary:(NSDictionary *)jsonDictionary;

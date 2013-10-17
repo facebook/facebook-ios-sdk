@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
+
 #import "FBSession.h"
 #import "FBViewController.h"
 
 /*!
- @protocol 
- 
+ @protocol
+
  @abstract
  The `FBUserSettingsDelegate` protocol defines the methods called by a <FBUserSettingsViewController>.
  */
@@ -79,7 +80,7 @@
 
 /*!
  @class FBUserSettingsViewController
- 
+
  @abstract
  The `FBUserSettingsViewController` class provides a user interface exposing a user's
  Facebook-related settings. Currently, this is limited to whether they are logged in or out
@@ -100,16 +101,16 @@
 /*!
  @abstract
  The read permissions to request if the user logs in via this view.
- 
+
  @discussion
- Note, that if read permissions are specified, then publish permissions should not be specified. 
+ Note, that if read permissions are specified, then publish permissions should not be specified.
  */
 @property (nonatomic, copy) NSArray *readPermissions;
 
 /*!
  @abstract
  The publish permissions to request if the user logs in via this view.
- 
+
  @discussion
  Note, that a defaultAudience value of FBSessionDefaultAudienceOnlyMe, FBSessionDefaultAudienceEveryone, or
  FBSessionDefaultAudienceFriends should be set if publish permissions are specified. Additionally, when publish

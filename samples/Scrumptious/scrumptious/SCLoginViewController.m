@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 
 #import "SCLoginViewController.h"
+
 #import "SCAppDelegate.h"
 #import "SCViewController.h"
 
@@ -32,7 +33,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     self.navigationController.navigationBarHidden = YES;
 }
 
@@ -86,7 +87,7 @@
 - (void)loginView:(FBLoginView *)loginView
       handleError:(NSError *)error{
     NSString *alertMessage, *alertTitle;
-    
+
     // Facebook SDK * error handling *
     // Error handling is an important part of providing a good user experience.
     // Since this sample uses the FBLoginView, this delegate will respond to
@@ -94,7 +95,7 @@
     // as a token becoming invalid). Please see the [- postOpenGraphAction:]
     // and [- requestPermissionAndPost] on `SCViewController` for further
     // error handling on other operations.
-    
+
     if (error.fberrorShouldNotifyUser) {
         // If the SDK has a message for the user, surface it. This conveniently
         // handles cases like password change or iOS6 app slider state.
@@ -116,7 +117,7 @@
         alertMessage = @"Error. Please try again later.";
         NSLog(@"Unexpected error:%@", error);
     }
-    
+
     if (alertMessage) {
         [[[UIAlertView alloc] initWithTitle:alertTitle
                                     message:alertMessage
@@ -132,7 +133,7 @@
     // externally; for example, if the current session's access token becomes
     // invalid. For this sample, we simply pop back to the landing page.
     SCAppDelegate *appDelegate = (SCAppDelegate *)[UIApplication sharedApplication].delegate;
-    if (appDelegate.isNavigating) {
+    if (appDelegate.isNavigatingAwayFromLogin) {
         // The delay is for the edge case where a session is immediately closed after
         // logging in and our navigation controller is still animating a push.
         [self performSelector:@selector(logOut) withObject:nil afterDelay:.5];

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,11 @@
  */
 
 #import "FBLoginDialogParams.h"
-#import "FBDialogsParams+Internal.h"
+
 #import "FBAppBridge.h"
-#import "FBSettings+Internal.h"
+#import "FBDialogsParams+Internal.h"
 #import "FBSession+Internal.h"
+#import "FBSettings+Internal.h"
 
 static NSString *const SSOWritePrivacyPublic = @"EVERYONE";
 static NSString *const SSOWritePrivacyFriends = @"ALL_FRIENDS";
@@ -37,14 +38,14 @@ static NSString *const kFBNativeLoginMinVersion = @"20130702";
 - (NSDictionary *)dictionaryMethodArgs
 {
     NSMutableDictionary *args = [NSMutableDictionary dictionary];
-    
+
     NSString *permStr = [self.permissions componentsJoinedByString:@","];
     if (permStr && permStr.length) {
         args[@"permissions"] = permStr;
     } else {
         args[@"permissions"] = @"basic_info";
     }
-    
+
     // This prevents the None case from being sent to the Facebook application
     // which doesn't support it.
     if (self.writePrivacy) {
@@ -53,15 +54,15 @@ static NSString *const kFBNativeLoginMinVersion = @"20130702";
             case FBSessionDefaultAudienceOnlyMe:
                 writePrivacyString = SSOWritePrivacyOnlyMe;
                 break;
-                
+
             case FBSessionDefaultAudienceFriends:
                 writePrivacyString = SSOWritePrivacyFriends;
                 break;
-                
+
             case FBSessionDefaultAudienceEveryone:
                 writePrivacyString = SSOWritePrivacyPublic;
                 break;
-                
+
             default:
                 // This will most likely result in the Facebook application
                 // denying SSO.
@@ -70,11 +71,11 @@ static NSString *const kFBNativeLoginMinVersion = @"20130702";
         }
         args[@"write_privacy"] = writePrivacyString;
     }
-    
+
     // to support token-import we always try the refresh flow. It will fallback to the permissions
     // dialog if the app is not installed or does not have the necessary permissions
     args[@"is_refresh_only"] = @"1";
-    
+
     return args;
 }
 
@@ -87,10 +88,10 @@ static NSString *const kFBNativeLoginMinVersion = @"20130702";
     if (![FBSettings defaultDisplayName] && [version isEqualToString:kFBNativeLoginMinVersion]) {
         // We have the first version of Native Login that does not look up the app's display
         // name from the Facebook App with a server request. So we can't proceed.
-        
+
         version = nil;
     }
-    
+
     return version;
 }
 

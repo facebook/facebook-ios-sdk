@@ -15,9 +15,10 @@
  */
 
 #import "FBSessionAuthLogger.h"
-#import "FBUtility.h"
+
 #import "FBAppEvents+Internal.h"
 #import "FBError.h"
+#import "FBUtility.h"
 
 // NOTE: The parameters are prefixed with a number (0-9) to allow us to determine sort order.
 // These keys are sorted on the backend before being mapped to custom columns. Determining the order
@@ -76,7 +77,7 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
     [_ID release];
     [_extras release];
     [_authMethod release];
-    
+
     [super dealloc];
 }
 
@@ -88,14 +89,14 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
     if (!self.session || !self.ID) {
         return;
     }
-    
+
     NSString *extrasJSONString = [FBUtility simpleJSONEncode:self.extras];
     if (extrasJSONString) {
         params[FBSessionAuthLoggerParamExtrasKey] = extrasJSONString;
     }
-    
+
     [self.extras removeAllObjects];
-    
+
     [FBAppEvents logImplicitEvent:eventName valueToSum:nil parameters:params session:self.session];
 }
 
@@ -103,10 +104,10 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
     NSMutableDictionary *params = [[self newEventParameters] autorelease];
 
     params[FBSessionAuthLoggerParamResultKey] = result;
-    
+
     if ([error.domain isEqualToString:FacebookSDKDomain]) {
         // tease apart the structure.
-        
+
         // first see if there is an explicit message in the error's userInfo. If not, default to the reason,
         // which is less useful.
         NSString *value = error.userInfo[@"error_message"] ?: error.userInfo[FBErrorLoginFailedReason];
@@ -118,13 +119,13 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
         if (value) {
             params[FBSessionAuthLoggerParamErrorCodeKey] = value;
         }
-        
+
         NSError *innerError = error.userInfo[FBErrorInnerErrorKey];
         value = innerError.userInfo[@"error_message"] ?: innerError.userInfo[FBErrorLoginFailedReason];
         if (value) {
             [self addExtrasForNextEvent:@{@"inner_error_message": value}];
         }
-        
+
         value = innerError.userInfo[FBErrorLoginFailedOriginalErrorCode] ?: [NSString stringWithFormat:@"%ld", (long)innerError.code];
         if (value) {
             [self addExtrasForNextEvent:@{@"inner_error_code": value}];
@@ -132,7 +133,7 @@ NSString *const FBSessionAuthLoggerParamEmptyValue = @"";
     } else if (error) {
         params[FBSessionAuthLoggerParamErrorCodeKey] = [NSNumber numberWithInteger:error.code];
     }
-    
+
     [self logEvent:eventName params:params];
 }
 

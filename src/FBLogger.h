@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
-/*! 
+/*!
  @class FBLogger
- 
+
  @abstract
- Simple logging utility for conditionally logging strings and then emitting them 
+ Simple logging utility for conditionally logging strings and then emitting them
  via NSLog().
- 
+
  @unsorted
  */
 @interface FBLogger : NSObject
@@ -33,7 +33,7 @@
 // Each FBLogger gets a unique serial number to allow the client to log these numbers and, for instance, correlation of Request/Response
 @property (nonatomic, readonly) NSUInteger loggerSerialNumber;
 
-// The logging behavior of this logger.  See the FB_LOG_BEHAVIOR* constants in FBSession.h 
+// The logging behavior of this logger.  See the FB_LOG_BEHAVIOR* constants in FBSession.h
 @property (copy, nonatomic, readonly) NSString *loggingBehavior;
 
 // Is the current logger instance active, based on its loggingBehavior?

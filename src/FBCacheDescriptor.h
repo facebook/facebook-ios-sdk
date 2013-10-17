@@ -15,14 +15,15 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBSession.h"
 
 /*!
  @class
- 
+
  @abstract
  Base class from which CacheDescriptors derive, provides a method to fetch data for later use
- 
+
  @discussion
  Cache descriptors allow your application to specify the arguments that will be
  later used with another object, such as the FBFriendPickerViewController. By using a cache descriptor
@@ -34,9 +35,9 @@
  @method
  @abstract
  Fetches and caches the data described by the cache descriptor instance, for the given session.
- 
+
  @param session     the <FBSession> to use for fetching data
  */
-- (void)prefetchAndCacheForSession:(FBSession*)session; 
+- (void)prefetchAndCacheForSession:(FBSession*)session;
 
 @end

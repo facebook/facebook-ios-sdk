@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,9 +15,11 @@
  */
 
 #import "FBDynamicFrameworkLoader.h"
+
+#import <dlfcn.h>
+
 #import "FBLogger.h"
 #import "FBSettings.h"
-#import <dlfcn.h>
 
 static dispatch_once_t g_dispatchTokenLibrary;
 static dispatch_once_t g_dispatchTokenSymbol;
@@ -27,7 +29,7 @@ static NSMutableDictionary *g_symbolMap = nil;
 static void *openLibrary(NSString *libraryPath) {
     if (!g_libraryMap) {
         dispatch_once(&g_dispatchTokenLibrary, ^{
-            g_libraryMap = [[NSMutableDictionary alloc] init];        
+            g_libraryMap = [[NSMutableDictionary alloc] init];
         });
     }
     id cachedHandle = [g_libraryMap objectForKey:libraryPath];

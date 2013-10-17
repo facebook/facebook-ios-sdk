@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "FBSessionManualTokenCachingStrategy.h"
-#import "FBFrictionlessRequestSettings.h"
 #import "FacebookSDK.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -44,7 +44,7 @@
 @interface Facebook : NSObject<FBLoginDialogDelegate>{
     id<FBSessionDelegate> _sessionDelegate;
     NSMutableSet* _requests;
-    FBSession* _session;    
+    FBSession* _session;
     FBSessionManualTokenCachingStrategy *_tokenCaching;
     FBDialog* _fbDialog;
     NSString* _appId;
@@ -55,12 +55,12 @@
     FBFrictionlessRequestSettings* _frictionlessRequestSettings;
 }
 
-@property(nonatomic, copy) NSString* accessToken;
-@property(nonatomic, copy) NSDate* expirationDate;
-@property(nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
-@property(nonatomic, copy) NSString* urlSchemeSuffix;
-@property(nonatomic, readonly) BOOL isFrictionlessRequestsEnabled;
-@property(nonatomic, readonly, retain) FBSession *session;
+@property (nonatomic, copy) NSString* accessToken;
+@property (nonatomic, copy) NSDate* expirationDate;
+@property (nonatomic, assign) id<FBSessionDelegate> sessionDelegate;
+@property (nonatomic, copy) NSString* urlSchemeSuffix;
+@property (nonatomic, readonly) BOOL isFrictionlessRequestsEnabled;
+@property (nonatomic, readonly, retain) FBSession *session;
 
 - (id)initWithAppId:(NSString *)appId
         andDelegate:(id<FBSessionDelegate>)delegate;
@@ -174,7 +174,7 @@ enum {
     kFBRequestStateError
 };
 
-// FBRequest(Deprecated) 
+// FBRequest(Deprecated)
 //
 // Summary
 // The deprecated category is used to maintain back compat and ease migration
@@ -185,17 +185,17 @@ enum {
  */
 @interface FBRequest(Deprecated)
 
-@property(nonatomic,assign) id<FBRequestDelegate> delegate;
+@property (nonatomic, assign) id<FBRequestDelegate> delegate;
 
 /**
  * The URL which will be contacted to execute the request.
  */
-@property(nonatomic,copy) NSString* url;
+@property (nonatomic, copy) NSString* url;
 
 /**
  * The API method which will be called.
  */
-@property(nonatomic,copy) NSString* httpMethod;
+@property (nonatomic, copy) NSString* httpMethod;
 
 /**
  * The dictionary of parameters to pass to the method.
@@ -203,19 +203,19 @@ enum {
  * These values in the dictionary will be converted to strings using the
  * standard Objective-C object-to-string conversion facilities.
  */
-@property(nonatomic,retain) NSMutableDictionary* params;
-@property(nonatomic,retain) NSURLConnection*  connection;
-@property(nonatomic,retain) NSMutableData* responseText;
+@property (nonatomic, retain) NSMutableDictionary* params;
+@property (nonatomic, retain) NSURLConnection*  connection;
+@property (nonatomic, retain) NSMutableData* responseText;
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-@property(nonatomic) FBRequestState state;
+@property (nonatomic) FBRequestState state;
 #pragma GCC diagnostic pop
-@property(nonatomic) BOOL sessionDidExpire;
+@property (nonatomic) BOOL sessionDidExpire;
 
 /**
  * Error returned by the server in case of request's failure (or nil otherwise).
  */
-@property(nonatomic,retain) NSError* error;
+@property (nonatomic, retain) NSError* error;
 
 - (BOOL) loading;
 

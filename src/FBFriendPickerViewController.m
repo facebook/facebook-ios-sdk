@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-#import "FBError.h"
 #import "FBFriendPickerViewController.h"
 #import "FBFriendPickerViewController+Internal.h"
+
+#import "FBAppEvents+Internal.h"
+#import "FBError.h"
 #import "FBFriendPickerCacheDescriptor.h"
+#import "FBFriendPickerViewDefaultPNG.h"
 #import "FBGraphObjectPagingLoader.h"
+#import "FBGraphObjectTableCell.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
-#import "FBGraphObjectTableCell.h"
-#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
-#import "FBUtility.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
-#import "FBFriendPickerViewDefaultPNG.h"
+#import "FBUtility.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
 
 int const FBRefreshCacheDelaySeconds = 2;
 
-@interface FBFriendPickerViewController () <FBGraphObjectSelectionChangedDelegate, 
+@interface FBFriendPickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
                                             FBGraphObjectPagingLoaderDelegate>
 
@@ -77,17 +78,17 @@ int const FBRefreshCacheDelaySeconds = 2;
     if (self) {
         [self initialize];
     }
-    
+
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
-    
+
     if (self) {
         [self initialize];
     }
-    
+
     return self;
 }
 
@@ -97,7 +98,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     if (self) {
         [self initialize];
     }
-    
+
     return self;
 }
 
@@ -109,7 +110,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     dataSource.defaultPicture = [FBFriendPickerViewDefaultPNG image];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
-    
+
     // Selection Manager
     FBGraphObjectTableSelection *selectionManager = [[[FBGraphObjectTableSelection alloc]
                                                       initWithDataSource:dataSource]
@@ -141,17 +142,17 @@ int const FBRefreshCacheDelaySeconds = 2;
     [_loader release];
 
     _dataSource.controllerDelegate = nil;
-    
+
     [_dataSource release];
     [_fieldsForRequest release];
     [_selectionManager release];
     [_spinner release];
     [_tableView release];
     [_userID release];
-    
+
     [self removeSessionObserver:_session];
     [_session release];
-    
+
     [super dealloc];
 }
 
@@ -184,14 +185,14 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)setSession:(FBSession *)session {
     if (session != _session) {
         [self removeSessionObserver:_session];
-        
+
         [_session release];
         _session = [session retain];
-        
+
         [self addSessionObserver:session];
-        
+
         self.loader.session = session;
-        
+
         self.trackActiveSession = (session == nil);
     }
 }
@@ -222,7 +223,7 @@ int const FBRefreshCacheDelaySeconds = 2;
         spinner.hidesWhenStopped = YES;
         // We want user to be able to scroll while we load.
         spinner.userInteractionEnabled = NO;
-        
+
         self.spinner = spinner;
         [self.canvasView addSubview:spinner];
     }
@@ -257,9 +258,9 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 - (void)loadData {
     // when the app calls loadData,
-    // if we don't have a session and there is 
+    // if we don't have a session and there is
     // an open active session, use that
-    if (!self.session || 
+    if (!self.session ||
         (self.trackActiveSession && ![self.session isEqual:[FBSession activeSessionIfOpen]])) {
         self.session = [FBSession activeSessionIfOpen];
         self.trackActiveSession = YES;
@@ -283,14 +284,14 @@ int const FBRefreshCacheDelaySeconds = 2;
                  context:nil];
 }
 
-- (void)removeSessionObserver:(FBSession *)session {    
+- (void)removeSessionObserver:(FBSession *)session {
     [session removeObserver:self
                  forKeyPath:@"state"];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath 
-                      ofObject:(id)object 
-                        change:(NSDictionary *)change 
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
                        context:(void *)context {
     if ([object isEqual:self.session] &&
         self.session.isOpen == NO) {
@@ -322,7 +323,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 #pragma mark - private members
 
 - (FBRequest*)requestForLoadData {
-    
+
     // Respect user settings in case they have changed.
     NSMutableArray *sortFields = [NSMutableArray array];
     NSString *groupByField = nil;
@@ -340,13 +341,13 @@ int const FBRefreshCacheDelaySeconds = 2;
     [self.dataSource setSortingByFields:sortFields ascending:YES];
     self.dataSource.groupByField = groupByField;
     self.dataSource.useCollation = YES;
-    
+
     // me or one of my friends that also uses the app
     NSString *user = self.userID;
     if (!user) {
         user = @"me";
     }
-    
+
     // create the request and start the loader
     FBRequest *request = [FBFriendPickerViewController requestWithUserID:user
                                                                   fields:self.fieldsForRequest
@@ -367,29 +368,29 @@ int const FBRefreshCacheDelaySeconds = 2;
                          fields:(NSSet*)fields
                      dataSource:(FBGraphObjectTableDataSource*)datasource
                         session:(FBSession*)session {
-    
+
     FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]];
     [request setSession:session];
-    
+
     // Use field expansion to fetch a 100px wide picture if we're on a retina device.
     NSString *pictureField = ([FBUtility isRetinaDisplay]) ? @"picture.width(100).height(100)" : @"picture";
-    
+
     NSString *allFields = [datasource fieldsForRequestIncluding:fields,
-                           @"id", 
-                           @"name", 
-                           @"first_name", 
+                           @"id",
+                           @"name",
+                           @"first_name",
                            @"middle_name",
-                           @"last_name", 
+                           @"last_name",
                            pictureField,
                            nil];
     [request.parameters setObject:allFields forKey:@"fields"];
-    
+
     return request;
 }
 
 - (void)centerAndStartSpinner {
     [FBUtility centerView:self.spinner tableView:self.tableView];
-    [self.spinner startAnimating];    
+    [self.spinner startAnimating];
 }
 
 - (void)logAppEvents:(BOOL)cancelled {
@@ -453,7 +454,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     } else {
         return graphUser.last_name;
     }
-    
+
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
@@ -474,7 +475,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     cell.boldTitle = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByFirstName) ||
         (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByLastName);
     cell.boldTitleSuffix = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByLastName) ||
-        (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByFirstName);    
+        (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByFirstName);
 }
 
 #pragma mark FBGraphObjectPagingLoaderDelegate members
@@ -484,14 +485,14 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader didLoadData:(NSDictionary*)results {
-    // This logging currently goes here because we're effectively complete with our initial view when 
+    // This logging currently goes here because we're effectively complete with our initial view when
     // the first page of results come back.  In the future, when we do caching, we will need to move
     // this to a more appropriate place (e.g., after the cache has been brought in).
     [FBLogger singleShotLogEntry:FBLoggingBehaviorPerformanceCharacteristics
                     timestampTag:self
                     formatString:@"Friend Picker: first render "];  // logger will append "%d msec"
-    
-    
+
+
     if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
         [(id)self.delegate friendPickerViewControllerDataDidChange:self];
     }
@@ -500,7 +501,7 @@ int const FBRefreshCacheDelaySeconds = 2;
 - (void)pagingLoaderDidFinishLoading:(FBGraphObjectPagingLoader *)pagingLoader {
     // finished loading, stop animating
     [self.spinner stopAnimating];
-    
+
     // Call the delegate from here as well, since this might be the first response of a query
     // that has no results.
     if ([self.delegate respondsToSelector:@selector(friendPickerViewControllerDataDidChange:)]) {
@@ -509,10 +510,10 @@ int const FBRefreshCacheDelaySeconds = 2;
 
     // if our current display is from cache, then kick-off a near-term refresh
     if (pagingLoader.isResultFromCache) {
-        [self performSelector:@selector(loadDataSkippingRoundTripIfCached:) 
+        [self performSelector:@selector(loadDataSkippingRoundTripIfCached:)
                    withObject:[NSNumber numberWithBool:NO]
                    afterDelay:FBRefreshCacheDelaySeconds];
-    }    
+    }
 }
 
 - (void)pagingLoader:(FBGraphObjectPagingLoader*)pagingLoader handleError:(NSError*)error {

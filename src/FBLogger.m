@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,12 @@
  */
 
 #import "FBLogger.h"
+
 #import "FBSession.h"
 #import "FBSettings.h"
 #import "FBUtility.h"
 
-static NSUInteger g_serialNumberCounter = 1111; 
+static NSUInteger g_serialNumberCounter = 1111;
 static NSMutableDictionary *g_stringsToReplace = nil;
 static NSMutableDictionary *g_startTimesWithTags = nil;
 
@@ -47,7 +48,7 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
             _loggerSerialNumber = [FBLogger newSerialNumber];
         }
     }
-    
+
     return self;
 }
 
@@ -83,8 +84,8 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
         va_start(vaArguments, formatString);
         NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
         va_end(vaArguments);
-        
-        [self appendString:logString];        
+
+        [self appendString:logString];
     }
 }
 
@@ -92,19 +93,19 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 - (void)appendKey:(NSString *)key value:(NSString *)value {
     if (_isActive && [value length]) {
         [_internalContents appendFormat:@"  %@:\t%@\n", key, value];
-    }    
+    }
 }
 
 - (void)emitToNSLog {
     if (_isActive) {
-        
+
         for (NSString *key in [g_stringsToReplace keyEnumerator]) {
-            [_internalContents replaceOccurrencesOfString:key 
+            [_internalContents replaceOccurrencesOfString:key
                                                withString:[g_stringsToReplace objectForKey:key]
-                                                  options:NSLiteralSearch 
+                                                  options:NSLiteralSearch
                                                     range:NSMakeRange(0, _internalContents.length)];
         }
-        
+
         // Xcode 4.4 hangs on extremely long NSLog output (http://openradar.appspot.com/11972490).  Truncate if needed.
         const int MAX_LOG_STRING_LENGTH = 10000;
         NSString *logString = _internalContents;
@@ -135,10 +136,10 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
               formatString:(NSString *)formatString, ... {
-    
+
     if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         va_list vaArguments;
-        va_start(vaArguments, formatString);                                                                                
+        va_start(vaArguments, formatString);
         NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
         va_end(vaArguments);
 
@@ -150,27 +151,27 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
               timestampTag:(NSObject *)timestampTag
               formatString:(NSString *)formatString, ... {
-    
+
     if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
         va_list vaArguments;
-        va_start(vaArguments, formatString);  
+        va_start(vaArguments, formatString);
         NSString *logString = [[[NSString alloc] initWithFormat:formatString arguments:vaArguments] autorelease];
         va_end(vaArguments);
-        
+
         // Start time of this "timestampTag" is stashed in the dictionary.
         // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
         // we send in as an object, the dictionary will try to copy it.
         NSNumber *tagAsNumber = [NSNumber numberWithUnsignedLong:(unsigned long)(void *)timestampTag];
         NSNumber *startTimeNumber = [g_startTimesWithTags objectForKey:tagAsNumber];
-        
+
         // Only log if there's been an associated start time.
         if (startTimeNumber) {
             unsigned long elapsed = [FBUtility currentTimeInMilliseconds] - startTimeNumber.unsignedLongValue;
             [g_startTimesWithTags removeObjectForKey:tagAsNumber];  // served its purpose, remove
-            
+
             // Log string is appended with "%d msec", with nothing intervening.  This gives the most control to the caller.
             logString = [NSString stringWithFormat:@"%@%lu msec", logString, elapsed];
-        
+
             [self singleShotLogEntry:loggingBehavior logEntry:logString];
         }
     }
@@ -180,18 +181,18 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
                     withTag:(NSObject *)timestampTag {
 
     if ([[FBSettings loggingBehavior] containsObject:loggingBehavior]) {
-        
+
         if (!g_startTimesWithTags) {
             g_startTimesWithTags = [[NSMutableDictionary alloc] init];
         }
-        
+
         if (g_startTimesWithTags.count >= 1000) {
             [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:
                     @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong."];
         }
-        
+
         unsigned long currTime = [FBUtility currentTimeInMilliseconds];
-        
+
         // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
         // we send in as an object, the dictionary will try to copy it.
         unsigned long tagAsNumber = (unsigned long)(void *)timestampTag;
@@ -203,15 +204,15 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
 + (void)registerStringToReplace:(NSString *)replace
                     replaceWith:(NSString *)replaceWith {
-    
+
     // Strings sent in here never get cleaned up, but that's OK, don't ever expect too many.
-    
+
     if ([[FBSettings loggingBehavior] count] > 0) {  // otherwise there's no logging.
-        
+
         if (!g_stringsToReplace) {
             g_stringsToReplace = [[NSMutableDictionary alloc] init];
         }
-        
+
         [g_stringsToReplace setValue:replaceWith forKey:replace];
     }
 }

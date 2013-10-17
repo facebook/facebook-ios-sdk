@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,18 +15,19 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBGraphObject.h"
 
 /*!
  @protocol
- 
+
  @abstract
  The `FBGraphLocation` protocol enables typed access to the `location` property
  of a Facebook place object.
 
- 
+
  @discussion
- The `FBGraphLocation` protocol represents the most commonly used properties of a 
+ The `FBGraphLocation` protocol represents the most commonly used properties of a
  location object. It may be used to access an `NSDictionary` object that has
  been wrapped with an <FBGraphObject> facade.
  */
@@ -66,7 +67,7 @@
  @property
  @abstract Typed access to a location's latitude.
  */
-@property (retain, nonatomic) NSNumber *latitude; 
+@property (retain, nonatomic) NSNumber *latitude;
 
 /*!
  @property

@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #import "FBDataDiskCache.h"
-#import "FBCacheIndex.h"
+
 #import "FBAccessTokenData.h"
+#import "FBCacheIndex.h"
 
 static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
@@ -36,32 +37,32 @@ static NSString *const kAccessTokenKey = @"access_token";
 
 #pragma mark - Lifecycle
 
-- (id)init 
+- (id)init
 {
     self = [super init];
     if (self) {
         NSArray* cacheList = NSSearchPathForDirectoriesInDomains(
-            NSCachesDirectory, 
-            NSUserDomainMask, 
+            NSCachesDirectory,
+            NSUserDomainMask,
             YES);
-        
+
         NSString* cachePath = [cacheList objectAtIndex:0];
-        _dataCachePath = 
-            [[cachePath stringByAppendingPathComponent:kDataDiskCachePath] 
+        _dataCachePath =
+            [[cachePath stringByAppendingPathComponent:kDataDiskCachePath]
                 copy];
-        [[NSFileManager defaultManager] 
-            createDirectoryAtPath:_dataCachePath 
-            withIntermediateDirectories:YES 
-            attributes:nil 
+        [[NSFileManager defaultManager]
+            createDirectoryAtPath:_dataCachePath
+            withIntermediateDirectories:YES
+            attributes:nil
             error:nil];
-        
-        dispatch_queue_t bgPriQueue = 
+
+        dispatch_queue_t bgPriQueue =
             dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0);
         _fileQueue = dispatch_queue_create(
-            "File Cache Queue", 
+            "File Cache Queue",
             DISPATCH_QUEUE_SERIAL);
         dispatch_set_target_queue(_fileQueue, bgPriQueue);
-        
+
         _cacheIndex = [[FBCacheIndex alloc] initWithCacheFolder:_dataCachePath];
         _cacheIndex.diskCapacity = kMaxDiskCacheSize;
         _cacheIndex.delegate = self;
@@ -69,11 +70,11 @@ static NSString *const kAccessTokenKey = @"access_token";
         _inMemoryCache = [[NSCache alloc] init];
         _inMemoryCache.totalCostLimit = kMaxDataInMemorySize;
     }
-  
+
     return self;
 }
 
-- (void)dealloc 
+- (void)dealloc
 {
     if (_fileQueue) {
         dispatch_release(_fileQueue);
@@ -95,7 +96,7 @@ static NSString *const kAccessTokenKey = @"access_token";
     dispatch_once(&onceToken, ^{
         _instance = [[FBDataDiskCache alloc] init];
     });
-  
+
     return _instance;
 }
 
@@ -114,7 +115,7 @@ static NSString *const kAccessTokenKey = @"access_token";
 #pragma mark - FBCacheIndexFileDelegate
 
 - (void) cacheIndex:(FBCacheIndex*)cacheIndex
-    writeFileWithName:(NSString*)name 
+    writeFileWithName:(NSString*)name
     data:(NSData*)data
 {
     NSString* filePath = [_dataCachePath stringByAppendingPathComponent:name];
@@ -128,7 +129,7 @@ static NSString *const kAccessTokenKey = @"access_token";
 {
     NSString* filePath = [_dataCachePath stringByAppendingPathComponent:name];
     dispatch_async(_fileQueue, ^{
-        [[NSFileManager defaultManager] 
+        [[NSFileManager defaultManager]
             removeItemAtPath:filePath
             error:nil];
     });
@@ -148,25 +149,25 @@ static NSString *const kAccessTokenKey = @"access_token";
     NSData* data = nil;
     @try {
         data = (NSData*)[_inMemoryCache objectForKey:dataURL];
-        NSString* fileName = 
+        NSString* fileName =
             [_cacheIndex fileNameForKey:dataURL.absoluteString];
 
         if (data == nil && fileName != nil) {
             // Not in-memory, on-disk only, read in
             if ([self _doesFileExist:fileName]) {
-                NSString* cachePath = 
+                NSString* cachePath =
                     [_dataCachePath stringByAppendingPathComponent:fileName];
 
                 data = [NSData
                     dataWithContentsOfFile:cachePath
-                    options:NSDataReadingMappedAlways | NSDataReadingUncached  
+                    options:NSDataReadingMappedAlways | NSDataReadingUncached
                     error:nil];
 
                 if (data) {
                     // It is possible that the file doesn't exist
-                    [_inMemoryCache 
-                        setObject:data 
-                        forKey:dataURL 
+                    [_inMemoryCache
+                        setObject:data
+                        forKey:dataURL
                         cost:data.length];
                 }
             }
@@ -194,7 +195,7 @@ static NSString *const kAccessTokenKey = @"access_token";
     if (session == nil) {
         return;
     }
-    
+
     // Here we are removing all cache entries that don't have session context
     // These are things like images and the like. The thorough way would
     // be to maintain refCounts of these entries associated with accessTokens
@@ -214,13 +215,13 @@ static NSString *const kAccessTokenKey = @"access_token";
 {
     // TODO: Synchronize this across threads
     @try {
-        [_cacheIndex 
-            storeFileForKey:url.absoluteString 
+        [_cacheIndex
+            storeFileForKey:url.absoluteString
             withData:data];
 
-        [_inMemoryCache 
-            setObject:data 
-            forKey:url 
+        [_inMemoryCache
+            setObject:data
+            forKey:url
             cost:data.length];
     } @catch (NSException* exception) {
         NSLog(@"FBDiskCache error: %@", exception.reason);

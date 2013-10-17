@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #import "FBSession.h"
 
 #if defined (DEBUG)
@@ -24,13 +24,13 @@
     #pragma message ("warning: using FBTestSession, which is designed for unit-testing uses only, in non-DEBUG code -- ensure this is what you really want")
 #endif
 
-/*! 
+/*!
  Consider using this tag to pass to sessionWithSharedUserWithPermissions:uniqueUserTag: when
  you need a second unique test user in a test case. Using the same tag each time reduces
  the proliferation of test users.
  */
 extern NSString *kSecondTestUserTag;
-/*! 
+/*!
  Consider using this tag to pass to sessionWithSharedUserWithPermissions:uniqueUserTag: when
  you need a third unique test user in a test case. Using the same tag each time reduces
  the proliferation of test users.
@@ -39,18 +39,18 @@ extern NSString *kThirdTestUserTag;
 
 /*!
  @class FBTestSession
- 
+
  @abstract
  Implements an FBSession subclass that knows about test users for a particular
  application. This should never be used from a real application, but may be useful
  for writing unit tests, etc.
- 
+
  @discussion
  Facebook allows developers to create test accounts for testing their applications'
  Facebook integration (see https://developers.facebook.com/docs/test_users/). This class
  simplifies use of these accounts for writing unit tests. It is not designed for use in
  production application code.
- 
+
  The main use case for this class is using sessionForUnitTestingWithPermissions:mode:
  to create a session for a test user. Two modes are supported. In "shared" mode, an attempt
  is made to find an existing test user that has the required permissions and, if it is not
@@ -58,7 +58,7 @@ extern NSString *kThirdTestUserTag;
  a new one is created with the required permissions. In "private" mode, designed for
  scenarios which require a new user in a known clean state, a new test user will always be
  created, and it will be automatically deleted when the FBTestSession is closed.
- 
+
  Note that the shared test user functionality depends on a naming convention for the test users.
  It is important that any testing of functionality which will mutate the permissions for a
  test user NOT use a shared test user, or this scheme will break down. If a shared test user
@@ -82,17 +82,17 @@ extern NSString *kThirdTestUserTag;
 /*!
  @abstract
  Constructor helper to create a session for use in unit tests
- 
+
  @discussion
  This method creates a session object which uses a shared test user with the right permissions,
  creating one if necessary on open (but not deleting it on close, so it can be re-used in later
  tests). Calling this method multiple times may return sessions with the same user. If this is not
  desired, use the variant sessionWithSharedUserWithPermissions:uniqueUserTag:.
- 
+
  This method should not be used in application code -- but is useful for creating unit tests
  that use the Facebook SDK.
- 
- @param permissions     array of strings naming permissions to authorize; nil indicates 
+
+ @param permissions     array of strings naming permissions to authorize; nil indicates
  a common default set of permissions should be used for unit testing
   */
 + (id)sessionWithSharedUserWithPermissions:(NSArray*)permissions;
@@ -100,37 +100,37 @@ extern NSString *kThirdTestUserTag;
 /*!
  @abstract
  Constructor helper to create a session for use in unit tests
- 
+
  @discussion
  This method creates a session object which uses a shared test user with the right permissions,
  creating one if necessary on open (but not deleting it on close, so it can be re-used in later
- tests). 
- 
+ tests).
+
  This method should not be used in application code -- but is useful for creating unit tests
  that use the Facebook SDK.
- 
- @param permissions     array of strings naming permissions to authorize; nil indicates 
+
+ @param permissions     array of strings naming permissions to authorize; nil indicates
  a common default set of permissions should be used for unit testing
- 
+
  @param uniqueUserTag   a string which will be used to make this user unique among other
  users with the same permissions. Useful for tests which require two or more users to interact
  with each other, and which therefore must have sessions associated with different users. For
  this case, consider using kSecondTestUserTag and kThirdTestUserTag so these users can be shared
  with other, similar, tests.
  */
-+ (id)sessionWithSharedUserWithPermissions:(NSArray*)permissions 
++ (id)sessionWithSharedUserWithPermissions:(NSArray*)permissions
                              uniqueUserTag:(NSString*)uniqueUserTag;
 
 /*!
  @abstract
  Constructor helper to create a session for use in unit tests
- 
+
  @discussion
  This method creates a session object which creates a test user on open, and destroys the user on
  close; This method should not be used in application code -- but is useful for creating unit tests
  that use the Facebook SDK.
- 
- @param permissions     array of strings naming permissions to authorize; nil indicates 
+
+ @param permissions     array of strings naming permissions to authorize; nil indicates
  a common default set of permissions should be used for unit testing
  */
 + (id)sessionWithPrivateUserWithPermissions:(NSArray*)permissions;

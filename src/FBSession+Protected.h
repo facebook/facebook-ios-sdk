@@ -24,7 +24,7 @@
 // but we support initializing an FBSession before acquiring a token. This property
 // tracks that initialized array so that the pass-through permissions property
 // can essentially return self.FBAccessTokenData.permissions ?: self.initializedPermissions
-@property(readonly, copy) NSArray *initializedPermissions;
+@property (readonly, copy) NSArray *initializedPermissions;
 
 - (BOOL)transitionToState:(FBSessionState)state
       withAccessTokenData:(FBAccessTokenData *)tokenData

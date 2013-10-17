@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
+#import "FBSessionFacebookAppWebLoginStategy.h"
+
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
-#import "FBSessionFacebookAppWebLoginStategy.h"
 #import "FBSessionLoginStrategy.h"
 #import "FBUtility.h"
 

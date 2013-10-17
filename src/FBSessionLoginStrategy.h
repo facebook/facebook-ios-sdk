@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-#import "FacebookSDK.h"
+#import "FBSession+FBSessionLoginStrategy.h"
 #import "FBSessionAuthLogger.h"
 #import "FBSessionLoginStrategyParams.h"
-#import "FBSession+FBSessionLoginStrategy.h"
+#import "FacebookSDK.h"
 
 // these are helpful macros for testing various login methods, should always checkin as NO/NO
 #define TEST_DISABLE_MULTITASKING_LOGIN NO
@@ -32,13 +32,13 @@
 
 /*!
  @method
- 
+
  @abstract Instructs the instance to attempt to perform the login.
- 
+
  @param params A collection of parameters typically used to evalute if a given strategy should be invoked.
  @param session The session instance.
  @param logger The logger instance.
- 
+
  @discussion
  A return value of 'NO' indicates
  another login strategy should be tried. A value of 'YES' means the strategy has handled the login flow

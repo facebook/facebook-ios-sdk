@@ -120,7 +120,8 @@ if [ -z $FB_SDK_ENV ]; then
 
   test -n "$XCODEBUILD"   || XCODEBUILD=$(which xcodebuild)
   test -n "$LIPO"         || LIPO=$(which lipo)
-  test -n "$PACKAGEMAKER" || PACKAGEMAKER=$(which PackageMaker)
+  test -n "$PACKAGEBUILD" || PACKAGEBUILD=$(which pkgbuild)
+  test -n "$PRODUCTBUILD" || PRODUCTBUILD=$(which productbuild)
   test -n "$PRODUCTSIGN"  || PRODUCTSIGN=$(which productsign)
   test -n "$APPLEDOC"     || APPLEDOC=$(which appledoc)
 
@@ -130,13 +131,6 @@ if [ -z $FB_SDK_ENV ]; then
     XCODEBUILD=/Applications/XCode.app/Contents/Developer/usr/bin/xcodebuild
   fi
 
-  if [ ! -x "$PACKAGEMAKER" ]; then
-    PACKAGEMAKER=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
-  fi
-
-  if [ ! -x "$PACKAGEMAKER" ]; then
-    PACKAGEMAKER=/Applications/PackageMaker.app/Contents/MacOS/PackageMaker
-  fi
 fi
 
 # Increment depth every time we . this file.  At the end of any script

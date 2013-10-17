@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-#import "FBLogger.h"
 #import "FBSessionUtility.h"
+
+#import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 
@@ -27,7 +28,7 @@
     if (!clientState) {
         return NO;
     }
-    
+
     NSNumber *isOpenSessionBit = clientState[FBLoginUXClientStateIsOpenSession];
     return [isOpenSessionBit boolValue];
 }
@@ -46,7 +47,7 @@
             return nil;
         }
     }
-    
+
     return [FBUtility queryParamsDictionaryFromFBURL:url];
 }
 
@@ -86,7 +87,7 @@
             stateDescription = @"[Unknown]";
             break;
     }
-    
+
     return stateDescription;
 }
 
@@ -106,11 +107,11 @@
         // If we have an actual timestamp, create the date from that instead.
         expirationDate = [FBUtility expirationDateFromExpirationUnixTimeString:parameters[@"expires"]];
     }
-    
+
     if (!expirationDate) {
         expirationDate = [NSDate distantFuture];
     }
-    
+
     return expirationDate;
 }
 
@@ -168,13 +169,13 @@
         } else {
             readPermissionFound = YES;
         }
-        
+
         // If we've found one of each we can stop looking.
         if (publishPermissionFound && readPermissionFound) {
             break;
         }
     }
-    
+
     if (!isRead && readPermissionFound) {
         [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"FBSession: a permission request for publish or manage permissions contains unexpected read permissions"];
         result = YES;
@@ -183,7 +184,7 @@
         [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"FBSession: a permission request for read permissions contains unexpected publish or manage permissions"];
         result = YES;
     }
-    
+
     return result;
 }
 

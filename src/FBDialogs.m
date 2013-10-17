@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
+#import "FBDialogs+Internal.h"
+#import "FBDialogsData+Internal.h"
+#import "FBDialogsParams+Internal.h"
+
 #import <Social/Social.h>
 
-#import "FBDialogs+Internal.h"
-#import "FBSession.h"
-#import "FBError.h"
-#import "FBUtility.h"
-#import "FBAppCall+Internal.h"
-#import "FBAppBridge.h"
-#import "FBAccessTokenData.h"
-#import "FBAppEvents+Internal.h"
-#import "FBDialogsParams+Internal.h"
-#import "FBLoginDialogParams.h"
-#import "FBShareDialogParams.h"
-#import "FBOpenGraphActionShareDialogParams.h"
-#import "FBDialogsData+Internal.h"
-#import "FBAppLinkData+Internal.h"
 #import "FBAccessTokenData+Internal.h"
-#import "FBSettings.h"
+#import "FBAccessTokenData.h"
+#import "FBAppBridge.h"
+#import "FBAppCall+Internal.h"
+#import "FBAppEvents+Internal.h"
+#import "FBAppLinkData+Internal.h"
 #import "FBDynamicFrameworkLoader.h"
+#import "FBError.h"
+#import "FBLoginDialogParams.h"
+#import "FBOpenGraphActionShareDialogParams.h"
+#import "FBSession.h"
+#import "FBSettings.h"
+#import "FBShareDialogParams.h"
+#import "FBUtility.h"
 
 @interface FBDialogs ()
 
@@ -50,7 +51,7 @@
                                           handler:(FBOSIntegratedShareDialogHandler)handler {
     NSArray *images = image ? [NSArray arrayWithObject:image] : nil;
     NSArray *urls = url ? [NSArray arrayWithObject:url] : nil;
-    
+
     return [self presentOSIntegratedShareDialogModallyFrom:viewController
                                                    session:nil
                                                initialText:initialText
@@ -83,7 +84,7 @@
     if (!composeViewController) {
         return NO;
     }
-    
+
     if (initialText) {
         [composeViewController setInitialText:initialText];
     }
@@ -97,10 +98,10 @@
             [composeViewController addURL:url];
         }
     }
-    
+
     [composeViewController setCompletionHandler:^(SLComposeViewControllerResult result) {
         BOOL cancelled = (result == SLComposeViewControllerResultCancelled);
-        
+
         [FBAppEvents logImplicitEvent:FBAppEventNameShareSheetDismiss
                           valueToSum:nil
                           parameters:@{ @"render_type" : @"Native",
@@ -108,18 +109,18 @@
                                          ? FBAppEventsDialogOutcomeValue_Cancelled
                                          : FBAppEventsDialogOutcomeValue_Completed) }
                              session:session];
-        
+
         if (handler) {
             handler(cancelled ?  FBOSIntegratedShareDialogResultCancelled :  FBOSIntegratedShareDialogResultSucceeded, nil);
         }
     }];
-    
+
     [FBAppEvents logImplicitEvent:FBAppEventNameShareSheetLaunch
                       valueToSum:nil
                       parameters:@{ @"render_type" : @"Native" }
                          session:session];
     [viewController presentViewController:composeViewController animated:YES completion:nil];
-    
+
     return YES;
 }
 
@@ -144,9 +145,9 @@
                                                                  arguments:[params dictionaryMethodArgs]]
                                      autorelease];
         dialogData.clientState = clientState;
-        
-        call.dialogData = dialogData;        
-        
+
+        call.dialogData = dialogData;
+
         // log the timestamp for starting the switch to the Facebook application
         [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsNativeLoginDialogStart
                           valueToSum:nil
@@ -166,7 +167,7 @@
                                           }];
         return call;
     }
-    
+
     return nil;
 }
 
@@ -184,10 +185,10 @@
                                                                  arguments:[params dictionaryMethodArgs]]
                                      autorelease];
         dialogData.clientState = clientState;
-        
+
         call = [[[FBAppCall alloc] init] autorelease];
         call.dialogData = dialogData;
-        
+
         [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                     version:version
                                                     session:nil
@@ -203,7 +204,7 @@
                                                                         FBAppEventsDialogOutcomeValue_Completed :
                                                                         FBAppEventsDialogOutcomeValue_Failed }
                           session:nil];
-    
+
     return call;
 }
 
@@ -244,7 +245,7 @@
     params.caption = caption;
     params.description = description;
     params.picture = picture;
-    
+
     return [self presentShareDialogWithParams:params
                                   clientState:clientState
                                       handler:handler];
@@ -274,7 +275,7 @@
             dialogData.clientState = clientState;
 
             call.dialogData = dialogData;
-        
+
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                         version:version
                                                         session:nil
@@ -312,12 +313,12 @@
                                          clientState:(NSDictionary *)clientState
                                              handler:(FBDialogAppCallCompletionHandler) handler {
     FBOpenGraphActionShareDialogParams *params = [[[FBOpenGraphActionShareDialogParams alloc] init] autorelease];
-    
+
     // If we have OG objects, we want to pass just their URL or id to the share dialog.
     params.action = action;
     params.actionType = actionType;
     params.previewPropertyName = previewPropertyName;
-    
+
     return [self presentShareDialogWithOpenGraphActionParams:params
                                                  clientState:clientState
                                                      handler:handler];
@@ -335,7 +336,7 @@
         }
         return nil;
     }
-    
+
     if (session == nil) {
         // No session provided -- do we have an activeSession? We must either have a session that
         // was authenticated with native auth, or no session at all (in which case the app is
@@ -354,7 +355,7 @@
             return nil;
         }
     }
-    
+
     SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:[FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"]];
     if (composeViewController == nil) {
         if (handler) {

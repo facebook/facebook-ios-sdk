@@ -14,26 +14,27 @@
  * limitations under the License.
  */
 
+#import "FBSessionSystemLoginStategy.h"
+
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
 #import "FBSessionLoginStrategy.h"
-#import "FBSessionSystemLoginStategy.h"
 #import "FBUtility.h"
 
 @implementation FBSessionSystemLoginStategy
 
 - (BOOL)tryPerformAuthorizeWithParams:(FBSessionLoginStrategyParams *)params session:(FBSession *)session logger:(FBSessionAuthLogger *)logger {
-    
+
     BOOL systemAccountStoreAvailable = [FBUtility isSystemAccountStoreAvailable];
     [logger addExtrasForNextEvent:@{
      @"systemAccountStoreAvailable":@(systemAccountStoreAvailable)
      }];
-    
+
     if (params.tryIntegratedAuth &&
         (!params.isReauthorize || session.accessTokenData.loginType == FBSessionLoginTypeSystemAccount) &&
         systemAccountStoreAvailable) {
-        
+
         [session authorizeUsingSystemAccountStore:params.permissions
                                   defaultAudience:params.defaultAudience
                                     isReauthorize:params.isReauthorize];

@@ -18,16 +18,16 @@
 
 /*!
  @category NSError(FBError)
- 
+
  @abstract
- Adds additional properties to NSError to provide more information for Facebook related errors. 
+ Adds additional properties to NSError to provide more information for Facebook related errors.
  */
 @interface NSError (FBError)
 
 /*!
  @abstract
  Categorizes the error, if it is Facebook related, to simplify application mitigation behavior
- 
+
  @discussion
  In general, in response to an error connecting to Facebook, an application should, retry the
  operation, request permissions, reconnect the application, or prompt the user to take an action.
@@ -39,11 +39,11 @@
 /*!
  @abstract
  If YES indicates that a user action is required in order to successfully continue with the facebook operation
- 
+
  @discussion
  In general if fberrorShouldNotifyUser is NO, then the application has a straightforward mitigation, such as
  retry the operation or request permissions from the user, etc. In some cases it is necessary for the user to
- take an action before the application continues to attempt a Facebook connection. For more infomation on this 
+ take an action before the application continues to attempt a Facebook connection. For more infomation on this
  see https://developers.facebook.com/docs/reference/api/errors/
  */
 @property (readonly) BOOL fberrorShouldNotifyUser;

@@ -15,9 +15,10 @@
  */
 
 #import "FBAccessTokenData+Internal.h"
+
 #import "FBError.h"
-#import "FBUtility.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBUtility.h"
 
 @interface FBAccessTokenData()
 
@@ -68,9 +69,9 @@
     if (![[url absoluteString] hasPrefix:expectedUrlPrefix]) {
         return nil;
     }
-    
+
     NSDictionary *queryDictionary = [FBUtility queryParamsDictionaryFromFBURL:url];
-    
+
     return [self createTokenFromString:queryDictionary[@"access_token"]
                            permissions:nil
                         expirationDate:[FBUtility expirationDateFromExpirationTimeIntervalString:queryDictionary[@"expires_in"]]
@@ -86,7 +87,7 @@
     BOOL dictionaryIsFacebookLoginType = [dictionary[FBTokenInformationIsFacebookLoginKey] boolValue];
     NSDate *dictionaryRefreshDate = dictionary[FBTokenInformationRefreshDateKey];
     NSDate *dictionaryPermissionsRefreshDate = dictionary[FBTokenInformationPermissionsRefreshDateKey];
-    
+
     if (dictionaryIsFacebookLoginType && dictionaryLoginType == FBSessionLoginTypeNone) {
         // The internal isFacebookLogin has been removed but to support backwards compatibility,
         // we will still check it and set the login type appropriately.
@@ -135,7 +136,7 @@
     if (permissionsRefreshDate == nil) {
         permissionsRefreshDate = [NSDate distantPast];
     }
-    
+
     FBAccessTokenData* fbAccessToken = [[FBAccessTokenData alloc] initWithToken:accessToken
                                                                     permissions:permissions
                                                                  expirationDate:expirationDate
@@ -152,21 +153,21 @@
     if (!other || ![other isKindOfClass:[self class]]) {
         return NO;
     }
-    
+
     return [self isEqualToAccessTokenData:other];
 }
 
 - (NSUInteger)hash {
     NSUInteger result = 1;
     NSUInteger prime = 31;
-    
+
     result = prime * result + [self.accessToken hash];
     result = prime * result + [self.permissions hash];
     result = prime * result + [self.expirationDate hash];
     result = prime * result + [self.refreshDate hash];
     result = prime * result + self.loginType;
     result = prime * result + [self.permissionsRefreshDate hash];
-    
+
     return result;
 }
 
@@ -185,7 +186,7 @@
     if (self == accessTokenData) {
         return YES;
     }
-    
+
     if ([self.accessToken isEqualToString:accessTokenData.accessToken]
         && [[NSSet setWithArray:self.permissions] isEqualToSet:[NSSet setWithArray:accessTokenData.permissions]]
         && [self.expirationDate isEqualToDate:accessTokenData.expirationDate]
@@ -194,7 +195,7 @@
         && [self.permissionsRefreshDate isEqualToDate:accessTokenData.permissionsRefreshDate]) {
         return YES;
     }
-    
+
     return NO;
 }
 
@@ -217,7 +218,7 @@
 }
 
 - (NSString*)description {
-	return self.accessToken;
+    return self.accessToken;
 }
 
 @end

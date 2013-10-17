@@ -15,8 +15,8 @@
  */
 
 #import "FBSession.h"
-#import "FBSystemAccountStoreAdapter.h"
 #import "FBSessionAppEventsState.h"
+#import "FBSystemAccountStoreAdapter.h"
 
 extern NSString *const FBLoginUXClientState;
 extern NSString *const FBLoginUXClientStateIsClientState;
@@ -24,15 +24,15 @@ extern NSString *const FBLoginUXClientStateIsOpenSession;
 extern NSString *const FBLoginUXClientStateIsActiveSession;
 
 extern NSString *const FBInnerErrorObjectKey;
-
+extern NSString *const FBSessionDidSetActiveSessionNotificationUserInfoIsOpening;
 extern NSString *const FacebookNativeApplicationLoginDomain;
 
 @interface FBSession (Internal)
 
-@property(readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
-@property(readonly, retain) FBSessionAppEventsState *appEventsState;
-@property(readonly) NSThread *affinitizedThread;
-@property(atomic, readonly) BOOL isRepairing;
+@property (readonly) FBSessionDefaultAudience lastRequestedSystemAudience;
+@property (readonly, retain) FBSessionAppEventsState *appEventsState;
+@property (readonly) NSThread *affinitizedThread;
+@property (atomic, readonly) BOOL isRepairing;
 
 - (void)refreshAccessToken:(NSString*)token expirationDate:(NSDate*)expireDate;
 - (BOOL)shouldExtendAccessToken;

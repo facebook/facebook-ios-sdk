@@ -21,10 +21,10 @@
 typedef enum {
     // The normal retry state where we will perform retries.
     FBRequestConnectionRetryManagerStateNormal,
-    
+
     // Indicates retries are aborted, so the user supplied handlers should be invoked.
     FBRequestConnectionRetryManagerStateAbortRetries,
-    
+
     // Indicates we are going to repair the session, which implies that retries are aborted
     // and supplied handlers are NOT invoked since they will be evaluated after the
     // repair operation is executed.

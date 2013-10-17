@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,20 +20,20 @@
 
 /*!
  @typedef FBModalCompletionHandler
- 
+
  @abstract
  A block that is passed to [FBViewController presentModallyInViewController:animated:handler:]
  and called when the view controller is dismissed via either Done or Cancel.
- 
+
  @param sender          The <FBViewController> that is being dismissed.
- 
+
  @param donePressed     If YES, Done was pressed. If NO, Cancel was pressed.
  */
 typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePressed);
 
 /*!
- @protocol 
- 
+ @protocol
+
  @abstract
  The `FBViewControllerDelegate` protocol defines the methods called when the Cancel or Done
  buttons are pressed in a <FBViewController>.
@@ -45,7 +45,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
 /*!
  @abstract
  Called when the Cancel button is pressed on a modally-presented <FBViewController>.
- 
+
  @param sender          The view controller sending the message.
  */
 - (void)facebookViewControllerCancelWasPressed:(id)sender;
@@ -63,7 +63,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
 
 /*!
  @class FBViewController
- 
+
  @abstract
  The `FBViewController` class is a base class encapsulating functionality common to several
  other view controller classes. Specifically, it provides UI when a view controller is presented
@@ -104,8 +104,8 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
 /*!
  @abstract
  Provides a wrapper that presents the view controller modally and automatically dismisses it
- when either the Done or Cancel button is pressed. 
- 
+ when either the Done or Cancel button is pressed.
+
  @param viewController  The view controller that is presenting this view controller.
  @param animated        If YES, presenting and dismissing the view controller is animated.
  @param handler         The block called when the Done or Cancel button is pressed.

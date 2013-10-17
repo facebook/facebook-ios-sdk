@@ -111,13 +111,13 @@ static NSString *loggedEvent = nil;
   
     // when limited, app tracking is 0.
     [parameters removeAllObjects];
-    FBAppEvents.limitEventUsage = YES;
+    FBSettings.limitEventAndDataUsage = YES;
     [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"0"], @"app tracking should be 0 when event usage is limited");
   
     // when explicitly unlimited, app tracking is 1.
     [parameters removeAllObjects];
-    FBAppEvents.limitEventUsage = NO;
+    FBSettings.limitEventAndDataUsage = NO;
     [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
 }

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
+#import "FBNativeDialogs.h"
+
 #import <Social/Social.h>
 
-#import "FBDialogs+Internal.h"
-#import "FBSession.h"
-#import "FBError.h"
-#import "FBUtility.h"
-#import "FBAppCall+Internal.h"
-#import "FBAppBridge.h"
-#import "FBAccessTokenData.h"
-#import "FBAppEvents+Internal.h"
-#import "FBDialogsParams+Internal.h"
-#import "FBLoginDialogParams.h"
-#import "FBShareDialogParams.h"
-#import "FBOpenGraphActionShareDialogParams.h"
-#import "FBDialogsData+Internal.h"
-#import "FBAppLinkData+Internal.h"
 #import "FBAccessTokenData+Internal.h"
-#import "FBNativeDialogs.h"
+#import "FBAccessTokenData.h"
+#import "FBAppBridge.h"
+#import "FBAppCall+Internal.h"
+#import "FBAppEvents+Internal.h"
+#import "FBAppLinkData+Internal.h"
+#import "FBDialogs+Internal.h"
+#import "FBDialogsData+Internal.h"
+#import "FBDialogsParams+Internal.h"
+#import "FBError.h"
+#import "FBLoginDialogParams.h"
+#import "FBOpenGraphActionShareDialogParams.h"
+#import "FBSession.h"
+#import "FBShareDialogParams.h"
+#import "FBUtility.h"
 
 @implementation FBNativeDialogs
 

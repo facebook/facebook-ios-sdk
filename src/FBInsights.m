@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-#import <UIKit/UIApplication.h>
 #import "FBInsights.h"
-#import "FBAppEvents.h"
+
+#import <UIKit/UIApplication.h>
+
 #import "FBAppEvents+Internal.h"
+#import "FBAppEvents.h"
 #import "FBSettings.h"
 
 // Constant needs to match FBAppEventsLoggingResultNotification.

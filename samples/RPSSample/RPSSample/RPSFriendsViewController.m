@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,9 @@
  */
 
 #import "RPSFriendsViewController.h"
-#import "RPSAppDelegate.h"
+
 #import "OGProtocols.h"
+#import "RPSAppDelegate.h"
 
 @interface RPSFriendsViewController () <FBFriendPickerDelegate, UIAlertViewDelegate>
 
@@ -50,14 +51,14 @@
 
 - (void)refreshView {
     [self loadData];
-    
+
     // we use frictionless requests, so let's get a cache and request the
     // current list of frictionless friends before enabling the invite button
     if (!self.friendCache) {
         self.friendCache = [[FBFrictionlessRecipientCache alloc] init];
         [self.friendCache prefetchAndCacheForSession:nil
                                    completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                       
+
                                        self.inviteButton.enabled = YES;
                                    }];
     } else  {
@@ -75,7 +76,7 @@
     } else {
         self.inviteButton.enabled = NO;
         self.friendCache = nil;
-        
+
         // display the message that we have
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In with Facebook"
                                                         message:@"When you Log In with Facebook, you can view "
@@ -125,23 +126,23 @@
 
 - (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
                  shouldIncludeUser:(id <FBGraphUser>)user {
-    return [[user objectForKey:@"installed"] boolValue];     
+    return [[user objectForKey:@"installed"] boolValue];
 }
 
 #pragma mark - private methods
 
 // FBSample logic
-// This is the workhorse method of this view. It updates the textView with the activity of a given user. It 
+// This is the workhorse method of this view. It updates the textView with the activity of a given user. It
 // accomplishes this by fetching the "throw" actions for the selected user.
 - (void)updateActivityForID:(NSString *)fbid {
-    
+
     // keep track of the selction
     self.fbidSelection = fbid;
 
     // create a request for the "throw" activity
     FBRequest *playActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_rps:throw", fbid]];
     [playActivity.parameters setObject:@"U" forKey:@"date_format"];
-    
+
     // this block is the one that does the real handling work for the requests
     void (^handleBlock)(id) = ^(id<RPSGraphActionList> result) {
         if (result) {
@@ -160,7 +161,7 @@
             }
             return NSOrderedSame;
         }];
-            
+
         NSMutableString *output = [NSMutableString string];
         for (id<RPSGraphPublishedThrowAction> entry in activity) {
             NSDateComponents *c = [[NSCalendar currentCalendar]
@@ -176,7 +177,7 @@
         }
         self.activityTextView.text = output;
     };
-    
+
     // this is an example of a batch request using FBRequestConnection; we accomplish this by adding
     // two request objects to the connection, and then calling start; note that each request handles its
     // own response, despite the fact that the SDK is serializing them into a single request to the server
@@ -186,7 +187,7 @@
              handleBlock(result);
          }];
     // start the actual request
-    [connection start];    
+    [connection start];
 }
 
 - (IBAction)clickInviteFriends:(id)sender {
@@ -226,7 +227,7 @@
                                                   me = nil;
                                               }
                                           }];
-            
+
             break;
         }
     }

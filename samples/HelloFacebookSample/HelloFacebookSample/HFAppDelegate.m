@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,8 +16,9 @@
 
 #import "HFAppDelegate.h"
 
-#import "HFViewController.h"
 #import <FacebookSDK/FacebookSDK.h>
+
+#import "HFViewController.h"
 
 @implementation HFAppDelegate
 
@@ -51,7 +52,7 @@
     // Nib files require the type to have been loaded before they can do the wireup successfully.
     // http://stackoverflow.com/questions/1725881/unknown-class-myclass-in-interface-builder-file-error-at-runtime
     // [FBProfilePictureView class];
-    
+
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
@@ -59,17 +60,17 @@
     } else {
         self.window.rootViewController = [[HFViewController alloc] initWithNibName:@"HFViewController_iPad" bundle:nil];
     }
-    
+
     [self.window makeKeyAndVisible];
-    
+
     return YES;
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application	{
+- (void)applicationDidBecomeActive:(UIApplication *)application {
     // FBSample logic
     // Call the 'activateApp' method to log an app event for use in analytics and advertising reporting.
     [FBAppEvents activateApp];
-  
+
     // FBSample logic
     // We need to properly handle activation of the application with regards to SSO
     //  (e.g., returning from iOS 6.0 authorization dialog or from fast app switching).

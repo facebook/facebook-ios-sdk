@@ -15,6 +15,7 @@
  */
 
 #import "FBSessionAppEventsState.h"
+
 #import "FBUtility.h"
 
 @interface FBSessionAppEventsState ()
@@ -44,13 +45,13 @@ const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
 - (void)dealloc {
     self.accumulatedEvents = nil;
     self.inFlightEvents = nil;
-    
+
     [super dealloc];
 }
 
 - (void)addEvent:(NSDictionary *)eventDictionary
       isImplicit:(BOOL)isImplicit {
-    
+
     @synchronized (self) {
         if (self.accumulatedEvents.count + self.inFlightEvents.count >= MAX_ACCUMULATED_LOG_EVENTS) {
             // Skip, but record that we've done so.  This gets sent in the post when we do flush.
@@ -79,24 +80,24 @@ const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
 // JSON representation of the in-flight events, potentially excluding those marked as implicit.  Return
 // nil if the resultant set of events is empty.
 - (NSString *)jsonEncodeInFlightEvents:(BOOL)includeImplicitEvents {
-    
+
     NSMutableArray *eventArray = [[NSMutableArray alloc] initWithCapacity:self.inFlightEvents.count];
-    
+
     for (NSDictionary *eventAndImplicitFlag in self.inFlightEvents) {
         if (!includeImplicitEvents && [[eventAndImplicitFlag objectForKey:@"isImplicit"] boolValue]) {
             continue;
         }
         [eventArray addObject:[eventAndImplicitFlag objectForKey:@"event"]];
     }
-    
+
     NSString *jsonEncodedEvents = nil;
     if (eventArray.count != 0) {
         jsonEncodedEvents = [FBUtility simpleJSONEncode:eventArray];
     }
 
     [eventArray release];
-    
-    return jsonEncodedEvents;    
+
+    return jsonEncodedEvents;
 }
 
 

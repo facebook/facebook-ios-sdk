@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,21 +15,22 @@
  */
 
 #import "FBAppCall+Internal.h"
+
+#import "FBAccessTokenData+Internal.h"
 #import "FBAppBridge.h"
-#import "FBUtility.h"
+#import "FBAppEvents+Internal.h"
+#import "FBAppEvents.h"
+#import "FBAppLinkData+Internal.h"
+#import "FBDialogsData+Internal.h"
 #import "FBError.h"
+#import "FBGraphObject.h"
+#import "FBLogger.h"
+#import "FBRequest.h"
 #import "FBSession+Internal.h"
 #import "FBSessionUtility.h"
-#import "FBAccessTokenData+Internal.h"
-#import "FBDialogsData+Internal.h"
-#import "FBAppLinkData+Internal.h"
-#import "FBAppEvents.h"
-#import "FBAppEvents+Internal.h"
-#import "FBGraphObject.h"
-#import "FBRequest.h"
-#import "FBSettings.h"
 #import "FBSettings+Internal.h"
-#import "FBLogger.h"
+#import "FBSettings.h"
+#import "FBUtility.h"
 
 @interface FBAppCall ()
 
@@ -63,7 +64,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     self = [super init];
     if (self) {
         self.ID = ID ?: [[FBUtility newUUIDString] autorelease];
-        
+
         if (enforceScheme) {
             // If the url scheme is not registered, then the Facebook app cannot call
             // back, and hence this is an invalid call.
@@ -76,7 +77,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
             }
         }
     }
-    
+
     return self;
 }
 
@@ -84,16 +85,16 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 // in general, the parameters should consist of the original url followed by the various components to help construct the instance.
 + (FBAppCall *)appCallFromApplinkArgs_v2:(NSURL *)originalURL applinkArgs:(NSDictionary *)applinkArgs createTimeUTC:(NSString *)createTimeUTC originalQueryParameters:(NSDictionary *)originalQueryParameters {
     FBAppCall *appCall = [[[FBAppCall alloc] init:NO] autorelease];
-    
+
     NSMutableDictionary *methodArgs = [NSMutableDictionary dictionaryWithDictionary:applinkArgs[@"method_args"]];
     if (createTimeUTC) {
         methodArgs[@"tap_time_utc"] = createTimeUTC;
     }
-    
+
     NSURL *targetURL = [NSURL URLWithString:methodArgs[@"target_url"]];
     NSArray *refArray = [methodArgs[@"ref"] componentsSeparatedByString:@","];
     appCall.appLinkData = [[[FBAppLinkData alloc] initWithURL:originalURL targetURL:targetURL ref:refArray originalQueryParameters:originalQueryParameters arguments:methodArgs] autorelease];
-    
+
     return appCall;
 }
 
@@ -102,9 +103,9 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     NSDictionary *queryParams = [FBUtility queryParamsDictionaryFromFBURL:url];
     NSString *applinkArgsString = queryParams[@"fb_applink_args"];
     NSString *createTimeUTC = queryParams[@"fb_click_time_utc"];
-    
+
     if (applinkArgsString) {
-        
+
         NSDictionary *applinkArgs = [FBUtility simpleJSONDecode:applinkArgsString error:nil];
         int version = [applinkArgs[@"version"] intValue];
         if (version){
@@ -115,9 +116,9 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
             }
         }
     }
-    
+
     // if we get here, we were unable to parse the URL.
-    return nil;   
+    return nil;
 }
 
 - (void)dealloc
@@ -127,7 +128,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     [_dialogData release];
     [_appLinkData release];
     [_accessTokenData release];
-    
+
     [super dealloc];
 }
 
@@ -136,7 +137,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                NSStringFromClass([self class]),
                                self,
                                self.ID];
-    
+
     if (self.accessTokenData) {
         [result appendFormat:@"\n accesstoken: %@", self.accessTokenData];
     }
@@ -146,7 +147,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (self.dialogData) {
         [result appendFormat:@"\n dialogData: %@", self.dialogData];
     }
-    
+
     [result appendString:@"\n>\n"];
     return result;
 }
@@ -155,7 +156,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (!other || ![other isKindOfClass:[self class]]) {
         return NO;
     }
-    
+
     return [self isEqualToAppCall:other];
 }
 
@@ -163,11 +164,11 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (self == appCall) {
         return YES;
     }
-    
+
     if (![self.ID isEqual:appCall.ID]) {
         return NO;
     }
-    
+
     return YES;
 }
 
@@ -217,7 +218,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
           withSession:(FBSession *)session
       fallbackHandler:(FBAppCallHandler)handler{
     FBSession *workingSession = session ?: FBSession.activeSessionIfExists;
-    
+
     // Wrap the fallback handler to intercept login flow for FBSession
     FBAppCallHandler sessionHandler = ^(FBAppCall *call) {
         if ([call.dialogData.method isEqualToString:@"auth3"]) {
@@ -235,19 +236,19 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                                                        expirationDate:expirationDate
                                                                             loginType:FBSessionLoginTypeFacebookApplication
                                                                           refreshDate:nil];
-            
+
             // In some cases, it might be fine to go ahead and open the session anyways.
             if ([FBAppCall tryOpenSession:workingSession withAccessToken:accessToken]) {
                 return;
             }
-            
+
             // TODO : Add support for receiving app links via the bridge.
             // In the meantime, any token that did not result in an open session above, will need to be
             // handed back to the fallback handler.
             if ([FBAppCall invokeHandler:handler withAccessToken:accessToken appLinkData:nil]) {
                 return;
             }
-            
+
             // So now we couldn't extract an access token from the results either. However, we know for sure
             // that this is a bridge-login response. So if we have a handler, respond with an error
             NSError *innerError = [FBSession sdkSurfacedErrorForNativeLoginError:call.error];
@@ -260,7 +261,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
             handler(call);
         }
     };
-    
+
     // Call the bridge first to see if this is a bridge response
     if ([[FBAppBridge sharedInstance] handleOpenURL:url
                                   sourceApplication:sourceApplication
@@ -268,7 +269,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                     fallbackHandler:sessionHandler]) {
         return YES;
     }
-    
+
     // If this is a web login, log the dialog load performance stats
     NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
     NSString *e2eMetrics = [params objectForKey:@"e2e"];
@@ -282,18 +283,18 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                           }
                           session:nil];
     }
-    
+
     // If we are here, it wasn't a bridge response and might be a non-native-login url response
     if ([workingSession handleOpenURL:url]) {
         return YES;
     }
-    
+
     // Last option is to see if maybe this has an access token. If yes, defer to handler to decide how to
     // proceed with the access token.
     FBAccessTokenData *accessToken = [FBAccessTokenData createTokenFromFacebookURL:url
                                                                              appID:[FBSettings defaultAppID]
                                                                    urlSchemeSuffix:[FBSettings defaultUrlSchemeSuffix]];
-    
+
     if ([FBSessionUtility isOpenSessionResponseURL:url]) {
         // If we're here, it's because the session was not specified or was not expecting a token. In some cases,
         // it might be fine to go ahead and open the session anyways.
@@ -301,12 +302,12 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
             return YES;
         }
     }
-    
+
     FBAppLinkData *appLinkData = [FBAppLinkData createFromURL:url];
     if ([FBAppCall invokeHandler:handler withAccessToken:accessToken appLinkData:appLinkData]) {
         return YES;
     }
-    
+
     // None of the above worked, so bail out.
     return NO;
 }
@@ -321,11 +322,11 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     // being a no-op.
     // TODO : Make sure that this happens when native login is supported via FBSession
     [[FBAppBridge sharedInstance] handleDidBecomeActive];
-    
+
     // If the app was shutdown with a pending login, the old session (and its state) is lost
     // and this next call will end up being a no-op.
     [session handleDidBecomeActive];
-    
+
     // If there isn't an active session, don't bother creating one to just cancel it.
     // Also, don't call handleDidBecomeActive into the same session twice in a row, since we
     // are keeping track of call order in FBSession now.
@@ -339,7 +340,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (!accessToken) {
         return NO;
     }
-    
+
     // If a session was not specified at all, then we should be free to create a new active session
     // if we need to. This allows the app developer to write simple apps without understanding the concept
     // of FBSession.
@@ -352,7 +353,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         FBSession.activeSession = [[[FBSession alloc] init] autorelease];
         workingSession = FBSession.activeSession;
     }
-    
+
     return [workingSession openFromAccessTokenData:accessToken completionHandler:nil raiseExceptionIfInvalidState:NO];
 }
 
@@ -362,15 +363,15 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (!accessToken && !appLinkData) {
         return NO;
     }
-    
+
     if (handler) {
         FBAppCall *loginCall = [[[FBAppCall alloc] init] autorelease];
         loginCall.accessTokenData = accessToken;
         loginCall.appLinkData = appLinkData;
-        
+
         handler(loginCall);
     }
-    
+
     return YES;
 }
 
@@ -379,7 +380,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (handler) {
         FBAppCall *errorAppCall = [[[FBAppCall alloc] init] autorelease];
         errorAppCall.error = error;
-        
+
         handler(errorAppCall);
     }
 }
@@ -398,27 +399,27 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         });
         return;
     }
-  
+
     NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters = [FBGraphObject graphObject];
     [deferredAppLinkParameters setObject:FBDeferredAppLinkEvent forKey:@"event"];
-  
+
     NSString *attributionID = [FBUtility attributionID];
     NSString *advertiserID = [FBUtility advertiserID];
-  
+
     if (attributionID) {
         [deferredAppLinkParameters setObject:attributionID forKey:@"attribution"];
     }
-  
+
     if (advertiserID) {
         [deferredAppLinkParameters setObject:advertiserID forKey:@"advertiser_id"];
     }
-  
+
     [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:deferredAppLinkParameters];
-  
+
     FBRequest *deferredAppLinkRequest = [[[FBRequest alloc] initForPostWithSession:nil
                                                                          graphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
                                                                        graphObject:deferredAppLinkParameters] autorelease];
-  
+
     [deferredAppLinkRequest startWithCompletionHandler:^(FBRequestConnection *connection,
                                                         id result,
                                                         NSError *error) {
@@ -439,7 +440,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                                    createTimeUtc ];
                     applinkURL = [NSURL URLWithString:modifiedURLString];
                 }
-                
+
                 if ([[UIApplication sharedApplication] canOpenURL:applinkURL]){
                     [[UIApplication sharedApplication] openURL:applinkURL];
                     return;

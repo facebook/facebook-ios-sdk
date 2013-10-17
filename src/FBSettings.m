@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-#import "FacebookSDK.h"
-#import "FBError.h"
-#import "FBRequest.h"
-#import "FBSession.h"
 #import "FBSettings.h"
 #import "FBSettings+Internal.h"
-#import "FBUtility.h"
-#import "FBLogger.h"
 
 #import <UIKit/UIKit.h>
+
+#import "FBError.h"
+#import "FBLogger.h"
+#import "FBRequest.h"
+#import "FBSession.h"
+#import "FBUtility.h"
+#import "FacebookSDK.h"
 
 // Keys to get App-specific info from mainBundle
 static NSString *const FBPLISTDisplayNameKey = @"FacebookDisplayName";
@@ -43,6 +44,8 @@ NSString *const FBLoggingBehaviorDeveloperErrors = @"developer_errors";
 
 NSString *const FBLastAttributionPing = @"com.facebook.sdk:lastAttributionPing%@";
 NSString *const FBLastInstallResponse = @"com.facebook.sdk:lastInstallResponse%@";
+NSString *const FBSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBAppEventsLimitEventUsage";  // use "FBAppEvents" in string due to previous place this lived.
+
 NSString *const FBPublishActivityPath = @"%@/activities";
 NSString *const FBMobileInstallEvent = @"MOBILE_APP_INSTALL";
 
@@ -69,7 +72,7 @@ static NSUInteger g_betaFeatures = 0;
 
 + (NSSet *)loggingBehavior {
     if (!g_loggingBehavior) {
-        
+
         // Establish set of default enabled logging behaviors.  Can completely disable logging by
         // calling setLoggingBehavior with an empty set.
         g_loggingBehavior = [[NSSet setWithObject:FBLoggingBehaviorDeveloperErrors] retain];
@@ -235,6 +238,23 @@ static NSUInteger g_betaFeatures = 0;
 }
 
 #pragma mark -
+#pragma mark - Event usage
+
++ (BOOL)limitEventAndDataUsage {
+    NSNumber *storedValue = [[NSUserDefaults standardUserDefaults] objectForKey:FBSettingsLimitEventAndDataUsage];
+    if (storedValue == nil) {
+        return NO;
+    }
+    return storedValue.boolValue;
+}
+
++ (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage {
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    [defaults setObject:[NSNumber numberWithBool:limitEventAndDataUsage] forKey:FBSettingsLimitEventAndDataUsage];
+    [defaults synchronize];
+}
+
+#pragma mark -
 #pragma mark proto-activity publishing code
 
 + (void)publishInstall:(NSString *)appID {
@@ -281,10 +301,10 @@ static NSUInteger g_betaFeatures = 0;
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         NSString *pingKey = [NSString stringWithFormat:FBLastAttributionPing, appID, nil];
         NSString *responseKey = [NSString stringWithFormat:FBLastInstallResponse, appID, nil];
-      
+
         NSDate *lastPing = [defaults objectForKey:pingKey];
         id lastResponseData = [defaults objectForKey:responseKey];
-      
+
         NSString *attributionID = [FBUtility attributionID];
         NSString *advertiserID = [FBUtility advertiserID];
 
@@ -295,7 +315,7 @@ static NSUInteger g_betaFeatures = 0;
             }
             return;
         }
-  
+
         if (!(attributionID || advertiserID)) {
           if (handler) {
               handler(
@@ -340,7 +360,7 @@ static NSUInteger g_betaFeatures = 0;
                         NSString *publishPath = [NSString stringWithFormat:FBPublishActivityPath, appID, nil];
                         NSMutableDictionary<FBGraphObject> *installActivity = [FBGraphObject graphObject];
                         [installActivity setObject:FBMobileInstallEvent forKey:@"event"];
-              
+
                         if (attributionID) {
                             [installActivity setObject:attributionID forKey:@"attribution"];
                         }

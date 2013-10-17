@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-#import "FBError.h"
 #import "FBErrorUtility+Internal.h"
+
+#import "FBAccessTokenData+Internal.h"
+#import "FBError.h"
 #import "FBSession.h"
 #import "FBUtility.h"
-#import "FBAccessTokenData+Internal.h"
 
 const int FBOAuthError = 190;
 static const int FBAPISessionError = 102;
@@ -36,12 +37,12 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
 
 +(FBErrorCategory) errorCategoryForError:(NSError *)error {
     int code = 0, subcode = 0;
-    
+
     [FBErrorUtility fberrorGetCodeValueForError:error
                                           index:0
                                            code:&code
                                         subcode:&subcode];
-    
+
     return [FBErrorUtility fberrorCategoryFromError:error
                                                code:code
                                             subcode:subcode
@@ -52,12 +53,12 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
 +(BOOL) shouldNotifyUserForError:(NSError *)error {
     BOOL shouldNotifyUser = NO;
     int code = 0, subcode = 0;
-    
+
     [FBErrorUtility fberrorGetCodeValueForError:error
                                           index:0
                                            code:&code
                                         subcode:&subcode];
-    
+
     [FBErrorUtility fberrorCategoryFromError:error
                                         code:code
                                      subcode:subcode
@@ -73,7 +74,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                                           index:0
                                            code:&code
                                         subcode:&subcode];
-    
+
     [FBErrorUtility fberrorCategoryFromError:error
                                         code:code
                                      subcode:subcode
@@ -93,15 +94,15 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                                    subcode:(int)subcode
                       returningUserMessage:(NSString **)puserMessage
                        andShouldNotifyUser:(BOOL *)pshouldNotifyUser {
-    
+
     NSString *userMessageKey = nil;
     NSString *userMessageDefault = nil;
-    
+
     BOOL shouldNotifyUser = NO;
-    
+
     // defaulting to a non-facebook category
     FBErrorCategory category = FBErrorCategoryInvalid;
-    
+
     // determine if we have a facebook error category here
     if ([[error domain] isEqualToString:FacebookSDKDomain]) {
         // now defaulting to an unknown (future) facebook category
@@ -131,7 +132,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
             }
         }
     }
-    
+
     // determine details about category, user notification, and message
     switch (category) {
         case FBErrorCategoryAuthenticationReopenSession:
@@ -179,13 +180,13 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                         userMessageKey = @"FBE:OAuthDevice";
                         userMessageDefault = @"To use your Facebook account with this app, open Settings > Facebook and make sure this app is turned on.";
                         shouldNotifyUser = YES;
-                    } 
+                    }
                     break;
             }
             break;
         case FBErrorCategoryPermissions:
             userMessageKey = @"FBE:GrantPermission";
-            userMessageDefault = @"This app doesn’t have permission to do this. To change permissions, try logging into the app again.";
+            userMessageDefault = @"This app doesn't have permission to do this. To change permissions, try logging into the app again.";
             break;
         case FBErrorCategoryRetry:
             if ([error code] == FBErrorLoginFailedOrCancelled) {
@@ -217,11 +218,11 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
             userMessageDefault = nil;
             break;
     }
-    
+
     if (pshouldNotifyUser) {
         *pshouldNotifyUser = shouldNotifyUser;
     }
-    
+
     if (puserMessage) {
         if (userMessageKey) {
             *puserMessage = [FBUtility localizedStringForKey:userMessageKey
@@ -243,7 +244,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                               index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode {
-    
+
     // does this error have a response? that is an array?
     id response = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
     if (response) {

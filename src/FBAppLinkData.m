@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 
 #import "FBAppLinkData+Internal.h"
+
 #import "FBUtility.h"
 
 @interface FBAppLinkData ()
@@ -85,23 +86,23 @@
     NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p",
                                NSStringFromClass([self class]),
                                self];
-    
+
     if (self.targetURL) {
         [result appendFormat:@", targetURL: %@", self.targetURL.absoluteString];
     }
-    
+
     if (self.ref) {
         [result appendFormat:@"\n ref: %@", self.ref];
     }
-    
+
     if (self.actionIDs) {
         [result appendFormat:@"\n actionIDs: %@", self.actionIDs];
     }
-    
+
     if (self.actionTypes) {
         [result appendFormat:@"\n actionTypes: %@", self.actionTypes];
     }
-    
+
     [result appendString:@">"];
     return result;
 }

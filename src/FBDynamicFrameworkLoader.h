@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
+#import <sqlite3.h>
+
 #import <Foundation/Foundation.h>
 #import <Security/Security.h>
-#import <sqlite3.h>
 
 /*!
  @class FBDynamicFrameworkLoader
- 
+
  @abstract
  This class provides a way to load constants and methods from Apple Frameworks in a dynamic
  fashion.  It allows the SDK to be just dragged into a project without having to specify additional
  frameworks to link against.  It is an internal class and not to be used by 3rd party developers.
- 
+
  This class is a generic class for loading Classes, NSStrings, and SecRandomRef.
  As new types are needed, they should be added and strongly typed.
  */
@@ -34,11 +35,11 @@
 /*!
  @abstract
  Loads a Class and returns the Class object.  This can then be used to create an instance of the class.
- 
+
  @param className  An NSString of the name of the class
- 
+
  @param frameworkName The framework in which the class appears
- 
+
  @return The Class object or nil if it fails to load.
  */
 + (Class)loadClass:(NSString *)className withFramework:(NSString *)frameworkName;
@@ -46,11 +47,11 @@
 /*!
  @abstract
  Loads a string constant and return the string.
- 
+
  @param constantName  An NSString of the name of the constant
- 
+
  @param frameworkName The framework in which the constant appears
- 
+
  @return The string or nil if it fails to load.
  */
 + (NSString *)loadStringConstant:(NSString *)constantName withFramework:(NSString *)frameworkName;
@@ -58,7 +59,7 @@
 /*!
  @abstract
  Load the kSecRandomDefault value from the Security Framework
- 
+
  @return The kSecRandomDefault value or nil.
  */
 + (SecRandomRef)loadkSecRandomDefault;
@@ -77,9 +78,9 @@
  @abstract
  Sets the path template of where to load Frameworks from
  This will be loaded with [NSString stringWithFormat:pathTemplate, framework, framework]
- 
+
  @param pathTemplate An NSString of the pathTemplate
- 
+
  @return void
  */
 + (void)setFrameworkPathTemplate:(NSString *)pathTemplate;
@@ -87,7 +88,7 @@
 /*!
  @abstract
  Returns the path to the Sqlite library
- 
+
  @return The path we will attempt to load the Sqlite library from
  */
 + (NSString *)sqlitePath;
@@ -95,9 +96,9 @@
 /*!
  @abstract
  Sets the path of where to load the Sqlite library from
- 
+
  @param path An NSString of the path
- 
+
  @return void
  */
 + (void)setSqlitePath:(NSString *)path;

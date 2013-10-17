@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,14 @@
  */
 
 #import "SCViewController.h"
+
+#import <AddressBook/AddressBook.h>
+
 #import "SCAppDelegate.h"
 #import "SCLoginViewController.h"
-#import "SCProtocols.h"
-#import <AddressBook/AddressBook.h>
-#import "TargetConditionals.h"
 #import "SCPhotoViewController.h"
+#import "SCProtocols.h"
+#import "TargetConditionals.h"
 
 @interface SCViewController() < UITableViewDataSource,
                                 UIImagePickerControllerDelegate,
@@ -71,11 +73,11 @@
 
 // This is a helper function that returns an FBGraphObject representing a meal
 - (id<SCOGMeal>)mealObjectForMeal:(NSString *)meal {
-    
+
     // We create an FBGraphObject object, but we can treat it as an SCOGMeal with typed
     // properties, etc. See <FacebookSDK/FBGraphObject.h> for more details.
     id<SCOGMeal> result = (id<SCOGMeal>)[FBGraphObject graphObject];
-    
+
     // Give it a URL of sample data that contains the object's name, title, description, and body.
     // These OG object URLs were created using the edit open graph feature of the graph tool
     // at https://www.developers.facebook.com/apps/
@@ -107,7 +109,7 @@
     } else {
         [self centerAndShowActivityIndicator];
     }
-    
+
     self.announceButton.enabled = enabled;
     [self.view setUserInteractionEnabled:enabled];
 }
@@ -115,7 +117,7 @@
 - (id<SCOGEatMealAction>)actionFromMealInfo {
     // Create an Open Graph eat action with the meal, our location, and the people we were with.
     id<SCOGEatMealAction> action = (id<SCOGEatMealAction>)[FBGraphObject graphObject];
-    
+
     if (self.selectedPlace) {
         // Facebook SDK * pro-tip *
         // We don't use the action.place syntax here because, unfortunately, setPlace:
@@ -125,18 +127,18 @@
         // selector is a useful technique to avoid such naming conflicts.
         [action setObject:self.selectedPlace forKey:@"place"];
     }
-    
+
     if (self.selectedFriends.count > 0) {
         [action setObject:self.selectedFriends forKey:@"tags"];
     }
-    
+
     return action;
 }
 
 // Creates the Open Graph Action.
 - (void)postOpenGraphAction {
     [self enableUserInteraction:NO];
-   
+
     FBRequestConnection *requestConnection = [[FBRequestConnection alloc] init];
     requestConnection.errorBehavior = FBRequestConnectionErrorBehaviorRetry
                                     | FBRequestConnectionErrorBehaviorReconnectSession;
@@ -152,14 +154,14 @@
                                         }
                        batchEntryName:@"stagedphoto"];
     }
-    
+
     // Create an Open Graph eat action with the meal, our location, and the people we were with.
     id<SCOGEatMealAction> action = [self actionFromMealInfo];
 
     if (self.selectedPhoto) {
         action.image = @[ @{ @"url" : @"{result=stagedphoto:$.uri}", @"user_generated" : @"true" } ];
     }
-    
+
     // create the Open Graph meal object for the meal we ate.
     id<SCOGMeal> mealObject = [self mealObjectForMeal:self.selectedMeal];
     if (mealObject) {
@@ -172,7 +174,7 @@
                                                               url:nil
                                                       description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
         FBRequest *createObject = [FBRequest requestForPostOpenGraphObject:object];
-    
+
         // We'll add the object creaction to the batch, and set the action's meal accordingly.
         [requestConnection addRequest:createObject
                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -182,7 +184,7 @@
                                             }
                                         }
                        batchEntryName:@"createobject"];
-        
+
         action[@"meal"] = @"{result=createobject:$.id}";
     }
 
@@ -203,7 +205,7 @@
                                cancelButtonTitle:@"Thanks!"
                                otherButtonTitles:nil]
               show];
-             
+
              // start over
              [self resetMealInfo];
          } else {
@@ -240,7 +242,7 @@
             NSLog(@"Retry count exceeded.");
         }
     }
-    
+
     // Facebook SDK * pro-tip *
     // Users can revoke post permissions on your app externally so it
     // can be worthwhile to request for permissions again at the point
@@ -251,7 +253,7 @@
         [self requestPermissionAndPost];
         return;
     }
-    
+
     // Facebook SDK * error handling *
     [self presentAlertForError:error];
 }
@@ -306,20 +308,16 @@
 #endif
         self.settingsViewController.delegate = self;
     }
-    
+
     [self.navigationController pushViewController:self.settingsViewController animated:YES];
 }
 
 // Handles the user clicking the Announce button by creating an Open Graph Action
 - (IBAction)announce:(id)sender {
     if (FBSession.activeSession.isOpen) {
-        // Facebook SDK * pro-tip *
-        // Ask for publish permissions only at the time they are needed.
-        if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
-            [self requestPermissionAndPost];
-        } else {
-            [self postOpenGraphAction];
-        }
+        // Attempt to post immediately - note the error handling logic will request permissions
+        // if they are needed.
+        [self postOpenGraphAction];
     } else {
         // Facebook SDK * pro-tip *
         // Support sharing even if the user isn't logged in with Facebook, by using the share dialog
@@ -331,20 +329,20 @@
     id image = @"https://fbcdn-photos-a.akamaihd.net/photos-ak-snc7/v85005/200/233936543368280/app_1_233936543368280_595563194.gif";
     // Create an Open Graph eat action with the meal, our location, and the people we were with.
     id<SCOGEatMealAction> action = [self actionFromMealInfo];
-    
+
     if (self.selectedPhoto) {
         self.selectedPhoto = [self normalizedImage:self.selectedPhoto];
         action.image = self.selectedPhoto;
         image = @[@{@"url":self.selectedPhoto, @"user_generated":@"true"}];
     }
-    
+
     id object = [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
                                                         title:self.selectedMeal
                                                         image:image
                                                           url:nil
                                                   description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
     action.meal = object;
-    
+
     BOOL presentable = nil != [FBDialogs presentShareDialogWithOpenGraphAction:action
                                                                     actionType:@"fb_sample_scrumps:eat"
                                                            previewPropertyName:@"meal"
@@ -387,7 +385,7 @@
 - (void)imagePickerController:(UIImagePickerController *)picker
         didFinishPickingImage:(UIImage *)image
                   editingInfo:(NSDictionary *)editingInfo {
-    
+
     if (!self.photoViewController) {
         __block SCViewController *myself = self;
         self.photoViewController = [[SCPhotoViewController alloc]initWithNibName:@"SCPhotoViewController" bundle:nil image:image];
@@ -410,11 +408,11 @@
 #pragma mark - UIActionSheetDelegate methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
+
     // If user presses cancel, do nothing
     if (buttonIndex == actionSheet.cancelButtonIndex)
         return;
-    
+
     // One method handles the delegate action for two action sheets
     if (actionSheet == self.mealPickerActionSheet) {
         if (buttonIndex == 0) {
@@ -429,12 +427,12 @@
         }
     } else { // self.imagePickerActionSheet
         NSAssert(actionSheet == self.imagePickerActionSheet, @"Delegate method's else-case should be for image picker");
-        
+
         if (!self.imagePicker) {
             self.imagePicker = [[UIImagePickerController alloc] init];
             self.imagePicker.delegate = self;
         }
-        
+
         // Set the source type of the imagePicker to the users selection
         if (buttonIndex == 0) {
             // If its the simulator, camera is no good
@@ -450,7 +448,7 @@
         } else if (buttonIndex == 1) {
             self.imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         }
-        
+
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
             // Can't use presentModalViewController for image picker on iPad
             if (!self.popover) {
@@ -478,7 +476,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     self.title = @"Scrumptious";
 
     // Get the CLLocationManager going.
@@ -488,19 +486,19 @@
     // We don't want to be notified of small changes in location, preferring to use our
     // last cached results, if any.
     self.locationManager.distanceFilter = 50;
-    
+
     FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
     [cacheDescriptor prefetchAndCacheForSession:FBSession.activeSession];
-    
+
     // This avoids a gray background in the table view on iPad.
     if ([self.menuTableView respondsToSelector:@selector(backgroundView)]) {
         self.menuTableView.backgroundView = nil;
     }
-    
+
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc]
-                                              initWithTitle:@"Settings" 
-                                                style:UIBarButtonItemStyleBordered 
-                                              target:self 
+                                              initWithTitle:@"Settings"
+                                                style:UIBarButtonItemStyleBordered
+                                              target:self
                                               action:@selector(settingsButtonWasPressed:)];
 
     self.activityIndicator = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -510,7 +508,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     if (FBSession.activeSession.isOpen) {
         [self populateUserDetails];
         self.userProfileImage.hidden = NO;
@@ -527,7 +525,7 @@
 
 - (void)viewDidUnload {
     [super viewDidUnload];
-    
+
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     // Release any retained subviews of the main view.
@@ -538,7 +536,7 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-#pragma mark - UIAlertViewDelegate 
+#pragma mark - UIAlertViewDelegate
 
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (!alertView.cancelButtonIndex == buttonIndex) {
@@ -576,16 +574,16 @@
     return 4;
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
+- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    
+
     UITableViewCell *cell = (UITableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
         cell.accessoryType = UITableViewCellAccessoryNone;
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
+
         cell.textLabel.font = [UIFont systemFontOfSize:16];
         cell.textLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
         cell.textLabel.lineBreakMode = UILineBreakModeTailTruncation;
@@ -597,32 +595,32 @@
         cell.detailTextLabel.lineBreakMode = UILineBreakModeTailTruncation;
         cell.detailTextLabel.clipsToBounds = YES;
     }
-    
+
     switch (indexPath.row) {
         case 0:
             cell.textLabel.text = @"What are you eating?";
             cell.detailTextLabel.text = @"Select one";
             cell.imageView.image = [UIImage imageNamed:@"action-eating.png"];
             break;
-            
+
         case 1:
             cell.textLabel.text = @"Where are you?";
             cell.detailTextLabel.text = @"Select one";
             cell.imageView.image = [UIImage imageNamed:@"action-location.png"];
             break;
-            
+
         case 2:
             cell.textLabel.text = @"With whom?";
             cell.detailTextLabel.text = @"Select friends";
             cell.imageView.image = [UIImage imageNamed:@"action-people.png"];
             break;
-            
+
         case 3:
             cell.textLabel.text = @"Got a picture?";
             cell.detailTextLabel.text = @"Take one";
             cell.imageView.image = [UIImage imageNamed:@"action-photo.png"];
             break;
-            
+
         default:
             break;
     }
@@ -645,7 +643,7 @@
             if (!self.mealTypes) {
                 self.mealTypes = [NSArray arrayWithObjects:
                                   @"< Write Your Own >",
-                                  @"Cheeseburger", 
+                                  @"Cheeseburger",
                                   @"Pizza",
                                   @"Hotdog",
                                   @"Italian",
@@ -660,22 +658,22 @@
                                                             cancelButtonTitle:nil
                                                        destructiveButtonTitle:nil
                                                             otherButtonTitles:nil];
-                                          
+
             for( NSString *meal in self.mealTypes) {
-                [self.mealPickerActionSheet addButtonWithTitle:meal]; 
+                [self.mealPickerActionSheet addButtonWithTitle:meal];
             }
-            
+
             self.mealPickerActionSheet.cancelButtonIndex = [self.mealPickerActionSheet addButtonWithTitle:@"Cancel"];
             [self.mealPickerActionSheet showFromToolbar:self.navigationController.toolbar];
             return;
         }
-        
+
         case 1: {
             if (FBSession.activeSession.isOpen) {
                 FBPlacePickerViewController *placePicker = [[FBPlacePickerViewController alloc] init];
-                
+
                 placePicker.title = @"Select a restaurant";
-                
+
                 // SIMULATOR BUG:
                 // See http://stackoverflow.com/questions/7003155/error-server-did-not-accept-client-registration-68
                 // at times the simulator fails to fetch a location; when that happens rather than fetch a
@@ -683,7 +681,7 @@
                 if (self.placeCacheDescriptor == nil) {
                     [self setPlaceCacheDescriptorForCoordinates:CLLocationCoordinate2DMake(48.857875, 2.294635)];
                 }
-                
+
                 [placePicker configureUsingCachedDescriptor:self.placeCacheDescriptor];
                 [placePicker loadData];
                 [placePicker presentModallyFromViewController:self
@@ -700,22 +698,22 @@
             }
             return;
         }
-            
+
         case 2: {
             if (FBSession.activeSession.isOpen) {
                 FBFriendPickerViewController *friendPicker = [[FBFriendPickerViewController alloc] init];
-                
+
                 // Set up the friend picker to sort and display names the same way as the
                 // iOS Address Book does.
-                
+
                 // Need to call ABAddressBookCreate in order for the next two calls to do anything.
                 ABAddressBookRef addressBook = ABAddressBookCreate();
                 ABPersonSortOrdering sortOrdering = ABPersonGetSortOrdering();
                 ABPersonCompositeNameFormat nameFormat = ABPersonGetCompositeNameFormat();
-                
+
                 friendPicker.sortOrdering = (sortOrdering == kABPersonSortByFirstName) ? FBFriendSortByFirstName : FBFriendSortByLastName;
                 friendPicker.displayOrdering = (nameFormat == kABPersonCompositeNameFormatFirstNameFirst) ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName;
-                
+
                 [friendPicker loadData];
                 [friendPicker presentModallyFromViewController:self
                                                       animated:YES
@@ -732,7 +730,7 @@
             }
             return;
         }
-            
+
         case 3:
             if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
                 self.popoverFromRect = [tableView rectForRowAtIndexPath:indexPath];
@@ -744,7 +742,7 @@
                                                             destructiveButtonTitle:nil
                                                                  otherButtonTitles:@"Take Photo", @"Choose Existing", nil];
             }
-            
+
             [self.imagePickerActionSheet showInView:self.view];
             return;
     }
@@ -763,7 +761,7 @@
     [self updateCellIndex:1 withSubtitle:(self.selectedPlace ?
                                           self.selectedPlace.name :
                                           @"Select one")];
-    
+
     NSString *friendsSubtitle = @"Select friends";
     int friendCount = self.selectedFriends.count;
     if (friendCount > 2) {
@@ -783,19 +781,19 @@
         friendsSubtitle = friend.name;
     }
     [self updateCellIndex:2 withSubtitle:friendsSubtitle];
-    
+
     [self updateCellIndex:3 withSubtitle:(self.selectedPhoto ? @"Ready" : @"Take one")];
-    
+
     self.announceButton.enabled = (self.selectedMeal != nil);
 }
 
 #pragma mark - CLLocationManagerDelegate methods and related
 
-- (void)locationManager:(CLLocationManager *)manager 
-    didUpdateToLocation:(CLLocation *)newLocation 
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     if (!oldLocation ||
-        (oldLocation.coordinate.latitude != newLocation.coordinate.latitude && 
+        (oldLocation.coordinate.latitude != newLocation.coordinate.latitude &&
          oldLocation.coordinate.longitude != newLocation.coordinate.longitude &&
          newLocation.horizontalAccuracy <= 100.0)) {
             // Fetch data at this new location, and remember the cache descriptor.
@@ -804,9 +802,9 @@
     }
 }
 
-- (void)locationManager:(CLLocationManager *)manager 
+- (void)locationManager:(CLLocationManager *)manager
        didFailWithError:(NSError *)error {
-	NSLog(@"%@", error);
+    NSLog(@"%@", error);
 }
 
 - (void)setPlaceCacheDescriptorForCoordinates:(CLLocationCoordinate2D)coordinates {
@@ -821,52 +819,52 @@
 #pragma mark -
 
 - (UIImage*) normalizedImage:(UIImage*)image {
-	CGImageRef          imgRef = image.CGImage;
-	CGFloat             width = CGImageGetWidth(imgRef);
-	CGFloat             height = CGImageGetHeight(imgRef);
-	CGAffineTransform   transform = CGAffineTransformIdentity;
-	CGRect              bounds = CGRectMake(0, 0, width, height);
+    CGImageRef          imgRef = image.CGImage;
+    CGFloat             width = CGImageGetWidth(imgRef);
+    CGFloat             height = CGImageGetHeight(imgRef);
+    CGAffineTransform   transform = CGAffineTransformIdentity;
+    CGRect              bounds = CGRectMake(0, 0, width, height);
     CGSize              imageSize = bounds.size;
-	CGFloat             boundHeight;
+    CGFloat             boundHeight;
     UIImageOrientation  orient = image.imageOrientation;
-    
-	switch (orient) {
-		case UIImageOrientationUp: //EXIF = 1
-			transform = CGAffineTransformIdentity;
-			break;
-            
-		case UIImageOrientationDown: //EXIF = 3
-			transform = CGAffineTransformMakeTranslation(imageSize.width, imageSize.height);
-			transform = CGAffineTransformRotate(transform, M_PI);
-			break;
-            
-		case UIImageOrientationLeft: //EXIF = 6
-			boundHeight = bounds.size.height;
-			bounds.size.height = bounds.size.width;
-			bounds.size.width = boundHeight;
-			transform = CGAffineTransformMakeTranslation(imageSize.height, imageSize.width);
-			transform = CGAffineTransformScale(transform, -1.0, 1.0);
-			transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
-			break;
-            
-		case UIImageOrientationRight: //EXIF = 8
-			boundHeight = bounds.size.height;
-			bounds.size.height = bounds.size.width;
-			bounds.size.width = boundHeight;
-			transform = CGAffineTransformMakeTranslation(0.0, imageSize.width);
-			transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
-			break;
-            
-		default:
+
+    switch (orient) {
+        case UIImageOrientationUp: //EXIF = 1
+            transform = CGAffineTransformIdentity;
+            break;
+
+        case UIImageOrientationDown: //EXIF = 3
+            transform = CGAffineTransformMakeTranslation(imageSize.width, imageSize.height);
+            transform = CGAffineTransformRotate(transform, M_PI);
+            break;
+
+        case UIImageOrientationLeft: //EXIF = 6
+            boundHeight = bounds.size.height;
+            bounds.size.height = bounds.size.width;
+            bounds.size.width = boundHeight;
+            transform = CGAffineTransformMakeTranslation(imageSize.height, imageSize.width);
+            transform = CGAffineTransformScale(transform, -1.0, 1.0);
+            transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+            break;
+
+        case UIImageOrientationRight: //EXIF = 8
+            boundHeight = bounds.size.height;
+            bounds.size.height = bounds.size.width;
+            bounds.size.width = boundHeight;
+            transform = CGAffineTransformMakeTranslation(0.0, imageSize.width);
+            transform = CGAffineTransformRotate(transform, 3.0 * M_PI / 2.0);
+            break;
+
+        default:
             // image is not auto-rotated by the photo picker, so whatever the user
             // sees is what they expect to get. No modification necessary
             transform = CGAffineTransformIdentity;
             break;
-	}
-    
-	UIGraphicsBeginImageContext(bounds.size);
-	CGContextRef context = UIGraphicsGetCurrentContext();
-    
+    }
+
+    UIGraphicsBeginImageContext(bounds.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+
     if ((image.imageOrientation == UIImageOrientationDown) ||
         (image.imageOrientation == UIImageOrientationRight) ||
         (image.imageOrientation == UIImageOrientationUp)) {
@@ -874,13 +872,13 @@
         CGContextScaleCTM(context, 1, -1);
         CGContextTranslateCTM(context, 0, -height);
     }
-    
-	CGContextConcatCTM(context, transform);
-	CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);
-	UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-    
-	return imageCopy;
+
+    CGContextConcatCTM(context, transform);
+    CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, width, height), imgRef);
+    UIImage *imageCopy = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
+    return imageCopy;
 }
 
 @end

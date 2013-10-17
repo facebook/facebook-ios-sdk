@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -40,7 +40,7 @@
   a developer error is logged and this will return nil.
  @param appID the explicit app id to use. If nil, defaults to [FBSettings defaultAppID]
  @param urlSchemeSuffix the explicit url scheme suffix to use. If nil, defaults to [FBSettings defaultUrlSchemeSuffix].
- 
+
  @discussion The app id and url scheme parameters are overrides that can be specified on an FBSession instance. In order
   to wire up bridge call backs properly, FBAppCall must know about any such overrides.
 */

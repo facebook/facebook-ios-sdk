@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
+#import "FBWebDialogs.h"
+
 #import <Social/Social.h>
 
-#import "FacebookSDK.h"
-#import "FBSession+Internal.h"
 #import "FBAccessTokenData.h"
-#import "FBWebDialogs.h"
-#import "FBUtility.h"
 #import "FBDialog.h"
-#import "FBViewController+Internal.h"
 #import "FBFrictionlessDialogSupportDelegate.h"
-#import "FBFrictionlessRequestSettings.h"
 #import "FBFrictionlessRecipientCache.h"
-#import "FBSettings.h"
+#import "FBFrictionlessRequestSettings.h"
 #import "FBLogger.h"
+#import "FBSession+Internal.h"
+#import "FBSettings.h"
+#import "FBUtility.h"
+#import "FBViewController+Internal.h"
+#import "FacebookSDK.h"
 
 // this is an implementation detail class which acts
-// as the delegate in or to map to a block 
+// as the delegate in or to map to a block
 @interface FBWebDialogInternalDelegate : NSObject <FBDialogDelegate>
 
 @property (nonatomic, copy) FBWebDialogHandler handler;
@@ -104,7 +105,7 @@
 - (void)completeWithResult:(FBWebDialogResult)result
                        url:(NSURL *)url
                      error:(NSError *)error {
-    
+
     // optional delegate invocation
     if ([self.delegate respondsToSelector:@selector(webDialogsWillDismissDialog:parameters:session:result:url:error:)]) {
         [self.delegate webDialogsWillDismissDialog:self.dialogMethod
@@ -113,12 +114,12 @@
                                             result:&result       // may mutate
                                                url:&url          // may mutate
                                              error:&error];      // may mutate
-        
+
         // important! we must nil the delegate before nil'ing the handler, to preserve
         // the case where the calling app is using a block to retain the delegate
         self.delegate = nil;
     }
-    
+
     if (self.handler) {
         self.handler(result, url, error);
         self.handler = nil;
@@ -194,9 +195,9 @@
                              parameters:(NSDictionary *)parameters
                                 handler:(FBWebDialogHandler)handler
                                delegate:(id<FBWebDialogsDelegate>)delegate {
-    
+
     NSString *dialogURL = [[FBUtility dialogBaseURL] stringByAppendingString:dialog];
-    
+
     NSMutableDictionary *parametersImpl = [NSMutableDictionary dictionary];
 
     // start with built-in parameters
@@ -204,17 +205,17 @@
     [parametersImpl setObject:FB_IOS_SDK_VERSION_STRING forKey:@"sdk"];
     [parametersImpl setObject:@"fbconnect://success" forKey:@"redirect_uri"];
     [parametersImpl setObject:[FBSettings defaultAppID] ? : @"" forKey:@"app_id"];
-    
+
     // then roll in developer provided parameters
     if (parameters) {
         [parametersImpl addEntriesFromDictionary:parameters];
     }
-   
+
     // if a session isn't specified, fall back to active session when available
     if (!session) {
         session = [FBSession activeSessionIfOpen];
     }
-    
+
     // if we have a session, then we set app_id and access_token, otherwise
     // caller must pass parameters to meet the requirements of the dialog
     if (session) {
@@ -224,7 +225,7 @@
         [parametersImpl setObject:session.appID ? : @""
                            forKey:@"app_id"];
     }
-    
+
     NSString *app_id = [parametersImpl objectForKey:@"app_id"];
     if ([app_id length] == 0) {
         [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
@@ -233,7 +234,7 @@
 
     BOOL isViewInvisible = NO;
     FBFrictionlessRequestSettings *frictionlessSettings = nil;
-    
+
     // optional delegate invocation
     if ([delegate respondsToSelector:@selector(webDialogsWillPresentDialog:parameters:session:)]) {
         [delegate webDialogsWillPresentDialog:dialog
@@ -248,7 +249,7 @@
             frictionlessSettings = supportDelegate.frictionlessSettings;
         }
     }
-    
+
     FBWebDialogInternalDelegate *innerDelegate = [[[FBWebDialogInternalDelegate alloc] init] autorelease];
     innerDelegate.dialogMethod = dialog;
     innerDelegate.parameters = parametersImpl;
@@ -256,13 +257,13 @@
     innerDelegate.handler = handler;
     innerDelegate.delegate = delegate;
     [innerDelegate goRetainYourself];
-    
+
     FBDialog *d = [[FBDialog alloc] initWithURL:dialogURL
                                          params:parametersImpl
                                 isViewInvisible:isViewInvisible
                            frictionlessSettings:frictionlessSettings
                                        delegate:innerDelegate];
-    
+
     // this reference keeps the dialog alive as needed
     innerDelegate.dialog = d;
     [d show];
@@ -288,23 +289,23 @@
                                      parameters:(NSDictionary *)parameters
                                         handler:(FBWebDialogHandler)handler
                                     friendCache:(FBFrictionlessRecipientCache *)friendCache {
-    
+
     NSMutableDictionary *parametersImpl = [NSMutableDictionary dictionary];
-    
+
     // start with developer provided parameters
     if (parameters) {
         [parametersImpl addEntriesFromDictionary:parameters];
     }
-    
+
     // then roll in argument parameters
     if (message) {
         [parametersImpl setObject:message forKey:@"message"];
     }
-    
+
     if (title) {
         [parametersImpl setObject:title forKey:@"title"];
     }
-        
+
     [FBWebDialogs presentDialogModallyWithSession:session
                                            dialog:@"apprequests"
                                        parameters:parametersImpl

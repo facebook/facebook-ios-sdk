@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
+#import "FBAppBridgeTypeToJSONConverter.h"
+
 #import <UIKit/UIKit.h>
+
 #import "FBBase64.h"
 #import "FBError.h"
-#import "FBAppBridgeTypeToJSONConverter.h"
 #import "FBSettings+Internal.h"
 
 /*
@@ -66,7 +68,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
 
 - (NSDictionary *)jsonDictionaryFromDictionaryWithAppBridgeTypes:(NSDictionary *)dictionaryWithAppBridgeTypes {
     self.createdPasteboardNames = [NSMutableArray array];
-  
+
     return [self convertedDictionaryFromDictionary:dictionaryWithAppBridgeTypes
                                   convertingToJSON:YES];
 }
@@ -98,7 +100,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
                                   tag:FBAppBridgeTypesTags.png];
         }
     }
-    
+
     // If we don't have special processing, return the same object
     return object;
 }
@@ -117,7 +119,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
             convertedDictionary[key] = convertedObject;
         }
     }
-    
+
     return convertedDictionary;
 }
 
@@ -126,7 +128,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
     if (length == 0) {
         return array;
     }
-    
+
     NSMutableArray *convertedArray = [NSMutableArray arrayWithCapacity:length];
     for (int i = 0; i < length; i++) {
         id convertedObject = [self convertedObjectFromObject:array[i]
@@ -137,7 +139,7 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
             convertedArray[i] = [NSNull null];
         }
     }
-    
+
     return convertedArray;
 }
 
@@ -145,10 +147,10 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
     NSString *jsonReadyValue = FBEncodeBase64(data);
     json[FBAppBridgeTypesMetadata.isBase64] = [NSNumber numberWithBool:YES];
-    
+
     json[FBAppBridgeTypesMetadata.tag] = tag ?: @"";
     json[FBAppBridgeTypesMetadata.jsonReadyValue] = jsonReadyValue ?: @"";
-    
+
     return json;
 }
 
@@ -166,11 +168,11 @@ static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBApp
             [UIPasteboard removePasteboardWithName:board.name];
         }
     }
-    
+
     if (appBridgeType && [dictionary[FBAppBridgeTypesMetadata.tag] isEqualToString:FBAppBridgeTypesTags.png]) {
         appBridgeType = [UIImage imageWithData:appBridgeType];
     }
-    
+
     return appBridgeType;
 }
 

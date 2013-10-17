@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,16 +15,17 @@
  */
 
 #import <Foundation/Foundation.h>
+
+#import "FBGraphObjectTableDataSource.h"
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
-#import "FBGraphObjectTableDataSource.h"
 #import "FBSession.h"
 
 // This is the cache identity used by both the view controller and cache descriptor objects
 extern NSString *const FBPlacePickerCacheIdentity;
 
 extern const NSInteger defaultResultsLimit;
-extern const NSInteger defaultRadius; 
+extern const NSInteger defaultRadius;
 
 @interface FBPlacePickerViewController (Internal)
 
@@ -34,5 +35,5 @@ extern const NSInteger defaultRadius;
                                       searchText:(NSString*)searchText
                                           fields:(NSSet*)fieldsForRequest
                                       datasource:(FBGraphObjectTableDataSource*)datasource
-                                         session:(FBSession*)session; 
+                                         session:(FBSession*)session;
 @end

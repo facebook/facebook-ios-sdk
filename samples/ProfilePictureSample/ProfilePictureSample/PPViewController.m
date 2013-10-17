@@ -4,16 +4,16 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 #import "PPViewController.h"
 
 // FBSample logic
@@ -47,7 +47,7 @@ const char *interestingIDs[] = {
     "MarioLopezExtra",
     "108504145837165",
     "dennishaskins",
-    // Eighties bands that have been to Moscow 
+    // Eighties bands that have been to Moscow
     "7220821999",
     "31938132882",
     "108023262558391",
@@ -84,7 +84,7 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 
 - (IBAction)showMichaelProfile:(id)sender {
     // FBSample logic
-    // This example and the one after it, in contrast to the prvious one, 
+    // This example and the one after it, in contrast to the prvious one,
     // uses a vanity name to indicate which profile picture to display
     profilePictureView.profileID = @"michael.marucheck";
 }

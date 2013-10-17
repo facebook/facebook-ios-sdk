@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
+#import "FBSessionFacebookAppNativeLoginStategy.h"
+
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
 #import "FBSessionLoginStrategy.h"
-#import "FBSessionFacebookAppNativeLoginStategy.h"
 #import "FBUtility.h"
 
 @implementation FBSessionFacebookAppNativeLoginStategy
@@ -60,10 +61,10 @@
                          @"nameMismatch": @(YES)
                          }];
                     }
-                    
+
                     NSDictionary *clientState = @{FBSessionAuthLoggerParamAuthMethodKey: self.methodName,
                                                   FBSessionAuthLoggerParamIDKey : logger.ID ?: @""};
-                    
+
                     FBAppCall *call = [session authorizeUsingFacebookNativeLoginWithPermissions:params.permissions
                                                                                 defaultAudience:params.defaultAudience
                                                                                     clientState:clientState];
@@ -71,7 +72,7 @@
                         [logger addExtrasForNextEvent:@{
                          @"native_auth_appcall_id":call.ID
                          }];
-                        
+
                         return YES;
                     }
                 }

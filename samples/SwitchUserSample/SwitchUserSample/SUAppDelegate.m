@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,9 @@
  */
 
 #import "SUAppDelegate.h"
-#import "SUUsingViewController.h"
+
 #import "SUSettingsViewController.h"
+#import "SUUsingViewController.h"
 
 @implementation SUAppDelegate
 
@@ -25,7 +26,7 @@
 @synthesize userManager = _userManager;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+
     // FBSample logic
     // Creates an instance of the SUUserManager class, used to manage multiple user logins; note that this
     // application does not attempt to maintain multiple active users at once; however it does remember
@@ -49,11 +50,11 @@
     self.tabBarController.viewControllers = [NSArray arrayWithObjects:viewController1, viewController2, nil];
     self.window.rootViewController = self.tabBarController;
     [self.window makeKeyAndVisible];
-    
+
     // FBSample logic
     // At startup time we attempt to log in the default user that has signed on using Facebook Login
     [viewController2 loginDefaultUser];
-    
+
     return YES;
 }
 
