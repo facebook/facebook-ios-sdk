@@ -1089,7 +1089,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 + (NSString *)persistenceFilePath {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
     NSString *docDirectory = [paths objectAtIndex:0];
     return [docDirectory stringByAppendingPathComponent:FBAppEventsPersistedEventsFilename];
 }
