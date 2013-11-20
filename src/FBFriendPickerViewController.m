@@ -178,7 +178,20 @@ int const FBRefreshCacheDelaySeconds = 2;
 }
 
 - (NSArray *)selection {
-    return self.selectionManager.selection;
+    // There might be bogus items set via setSelection, so we need to check against
+    // datasource and filter them out.
+    NSMutableArray* validSelection = [[[NSMutableArray alloc] init] autorelease];
+    for (FBGraphObject *item in self.selectionManager.selection) {
+        NSIndexPath* indexPath = [self.dataSource indexPathForItem:item];
+        if (indexPath != nil) {
+            [validSelection addObject:item];
+        }
+    }
+    return validSelection;
+}
+
+- (void)setSelection:(NSArray *)selection {
+    [self.selectionManager selectItem:selection tableView:self.tableView];
 }
 
 // We don't really need to store session, let the loader hold it.

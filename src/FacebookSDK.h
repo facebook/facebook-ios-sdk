@@ -135,5 +135,5 @@
 
  */
 
-#define FB_IOS_SDK_VERSION_STRING @"3.9.0"
+#define FB_IOS_SDK_VERSION_STRING @"3.10.0"
 

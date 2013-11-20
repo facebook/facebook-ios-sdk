@@ -25,7 +25,7 @@ static NSString *const SSOWritePrivacyPublic = @"EVERYONE";
 static NSString *const SSOWritePrivacyFriends = @"ALL_FRIENDS";
 static NSString *const SSOWritePrivacyOnlyMe = @"SELF";
 
-static NSString *const kFBNativeLoginMinVersion = @"20130702";
+static NSString *const kFBNativeLoginMinVersion = @"20131010";
 
 @implementation FBLoginDialogParams
 

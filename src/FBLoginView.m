@@ -183,6 +183,7 @@ static CGSize g_buttonSize;
     };
 }
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
@@ -278,7 +279,10 @@ static CGSize g_buttonSize;
     } else {
         [self configureViewForStateLoggedIn:NO];
     }
+
+    self.loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 - (CGSize)intrinsicContentSize {
     return self.bounds.size;
@@ -375,7 +379,7 @@ static CGSize g_buttonSize;
     // anytime we find that our session is created with an available token
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded && (![userInfo[FBSessionDidSetActiveSessionNotificationUserInfoIsOpening] isEqual:@YES])) {
-        [self.session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+        [self.session openWithBehavior:self.loginBehavior
                      completionHandler:self.sessionStateHandler];
     }
 }
@@ -434,13 +438,16 @@ static CGSize g_buttonSize;
             //    when the user presses login
             if (self.permissions) {
                 [FBSession openActiveSessionWithPermissions:self.permissions
-                                               allowLoginUI:YES
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:NO
                                             defaultAudience:self.defaultAudience
                                           completionHandler:self.sessionStateHandler];
             } else if (![self.publishPermissions count]) {
-                [FBSession openActiveSessionWithReadPermissions:self.readPermissions
-                                                   allowLoginUI:YES
-                                              completionHandler:self.sessionStateHandler];
+                [FBSession openActiveSessionWithPermissions:self.readPermissions
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:YES
+                                            defaultAudience:FBSessionDefaultAudienceNone
+                                          completionHandler:self.sessionStateHandler];
             } else {
                 // combined read and publish permissions will usually fail, but if the app wants us to
                 // try it here, then we will pass the aggregate set to the server
@@ -450,10 +457,11 @@ static CGSize g_buttonSize;
                     [set addObjectsFromArray:self.readPermissions];
                     permissions = [set allObjects];
                 }
-                [FBSession openActiveSessionWithPublishPermissions:permissions
-                                                   defaultAudience:self.defaultAudience
-                                                      allowLoginUI:YES
-                                                 completionHandler:self.sessionStateHandler];
+                [FBSession openActiveSessionWithPermissions:permissions
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:NO
+                                            defaultAudience:self.defaultAudience
+                                          completionHandler:self.sessionStateHandler];
             }
             loggingInLogFlag = YES;
         } else { // logout action sheet

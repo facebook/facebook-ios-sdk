@@ -114,7 +114,8 @@ static NSString *const FBAppBridgePasteboardNamesKey = @"FBAppBridgePasteboards"
 static NSString *const FBAppBridgeVersions[] = {
     @"20130214",
     @"20130410",
-    @"20130702"
+    @"20130702",
+    @"20131010"
 };
 
 static FBAppBridge *g_sharedInstance;

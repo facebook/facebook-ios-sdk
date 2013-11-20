@@ -157,7 +157,6 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 }
 
 - (void)invalidateSession {
-
     [self.session close];
     [self.tokenCaching clearToken];
 
@@ -308,7 +307,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
         switch (status) {
             case FBSessionStateOpen:
                 // call the legacy session delegate
-                [self fbDialogLogin:session.accessTokenData.accessToken expirationDate:session.accessTokenData.expirationDate];
+                [self fbDialogLogin:session.accessTokenData.accessToken expirationDate:session.accessTokenData.expirationDate params:nil];
                 break;
             case FBSessionStateClosedLoginFailed:
                 { // prefer to keep decls near to their use
@@ -665,7 +664,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     [params setObject:kRedirectURL forKey:@"redirect_uri"];
 
     if ([action isEqualToString:kLogin]) {
-        [params setObject:@"user_agent" forKey:@"type"];
+        [params setObject:FBLoginUXResponseTypeToken forKey:FBLoginUXResponseType];
         _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
     } else {
         [params setObject:_appId forKey:@"app_id"];
@@ -747,7 +746,8 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
 /**
  * Set the authToken and expirationDate after login succeed
  */
-- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate {
+- (void)fbDialogLogin:(NSString *)token expirationDate:(NSDate *)expirationDate params:(NSDictionary *)params {
+    // Note this legacy flow does not use `params`.
     [_lastAccessTokenUpdate release];
     _lastAccessTokenUpdate = [[NSDate date] retain];
     [self reloadFrictionlessRecipientCache];

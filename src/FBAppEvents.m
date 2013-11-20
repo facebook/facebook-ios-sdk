@@ -878,8 +878,15 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     }
 
     FBSessionAppEventsState *appEventsState = session.appEventsState;
+    BOOL allEventsAreImplicit = YES;
     @synchronized (appEventsState) {
         if (flushResult != FlushResultNoConnectivity) {
+            for (NSDictionary *eventAndImplicitFlag in appEventsState.inFlightEvents) {
+                if (![eventAndImplicitFlag[kFBAppEventIsImplicit] boolValue]) {
+                    allEventsAreImplicit = NO;
+                    break;
+                }
+            }
 
             // Either success or a real server error.  Either way, no more in flight events.
             [appEventsState clearInFlightAndStats];
@@ -889,7 +896,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     }
 
     if (flushResult == FlushResultServerError) {
-        [FBAppEvents logAndNotify:[error description]];
+        [FBAppEvents logAndNotify:[error description] allowLogAsDeveloperError:!allEventsAreImplicit];
     }
 
     NSString *resultString = @"<unknown>";
@@ -1005,7 +1012,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     [FBAppEvents persistAppEventsData:appEventsState];
 }
 
-+ (void)logAndNotify:(NSString *)msg {
++ (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL *)allowLogAsDeveloperError {
 
     // capture reason and nested code as user info
     NSDictionary* userinfo = [NSDictionary dictionaryWithObject:msg forKey:FBErrorAppEventsReasonKey];
@@ -1016,15 +1023,21 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
                                    userInfo:userinfo];
 
     NSString *behaviorToLog = FBLoggingBehaviorAppEvents;
-    if ([[FBSettings loggingBehavior] containsObject:FBLoggingBehaviorDeveloperErrors]) {
-        // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
-        behaviorToLog = FBLoggingBehaviorDeveloperErrors;
+    if (allowLogAsDeveloperError) {
+        if ([[FBSettings loggingBehavior] containsObject:FBLoggingBehaviorDeveloperErrors]) {
+            // Rather than log twice, prefer 'DeveloperErrors' if it's set over AppEvents.
+            behaviorToLog = FBLoggingBehaviorDeveloperErrors;
+        }
     }
 
     [FBLogger singleShotLogEntry:behaviorToLog logEntry:msg];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:FBAppEventsLoggingResultNotification
                                                         object:err];
+}
+
++ (void)logAndNotify:(NSString *)msg {
+    [FBAppEvents logAndNotify:msg allowLogAsDeveloperError:YES];
 }
 
 #pragma mark - event log persistence

@@ -125,8 +125,13 @@ typedef enum {
  @abstract
  The list of friends that are currently selected in the veiw.
  The items in the array are <FBGraphUser> objects.
+
+ @discussion
+ You can set this this array to pre-select items in the picker. The objects in the array
+ must be complete id<FBGraphUser> objects (i.e., fetched from a Graph query or from a
+ previous picker's selection, with id and appropriate name fields).
  */
-@property (nonatomic, retain, readonly) NSArray *selection;
+@property (nonatomic, copy) NSArray *selection;
 
 /*!
  @abstract

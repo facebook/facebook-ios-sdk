@@ -539,7 +539,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [session close];
-    assertThatInt(session.state, equalToInt(FBSessionStateClosed));
+    // Verify that closing a token loaded session is not valid, it's the same
+    // as closing a freshly init'd session (i.e., we also do not support going from
+    // FBSessionStateCreated to FBSessionStateClosed ).
+    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
 }
 
 - (void)testCloseWhenOpeningSetsClosedLoginFailedState {
@@ -572,7 +575,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
     
-    assertThatInt(session.state, equalToInt(FBSessionStateClosed));
+    // Verify that closing a token loaded session is not valid, it's the same
+    // as closing a freshly init'd session (i.e., we also do not support going from
+    // FBSessionStateCreated to FBSessionStateClosed ).
+    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
 }
 
 
@@ -815,7 +821,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                     urlSchemeSuffix:nil
                                  tokenCacheStrategy:mockStrategy];
     
-    [session openWithCompletionHandler:nil];
+    [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:nil];
     
     assertThatBool(session.isOpen, equalToBool(YES));
     
@@ -842,7 +848,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                     urlSchemeSuffix:nil
                                  tokenCacheStrategy:mockStrategy];
     
-    [session openWithCompletionHandler:nil];
+    [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:nil];
     
     assertThatBool(session.isOpen, equalToBool(YES));
     

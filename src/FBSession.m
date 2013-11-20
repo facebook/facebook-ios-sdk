@@ -45,19 +45,24 @@
 #import "FBUtility.h"
 #import "Facebook.h"
 
-// for unit testing mode only (DO NOT store application secrets in a published application plist)
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
 static NSString *const FBRedirectURL = @"fbconnect://success";
 static NSString *const FBLoginDialogMethod = @"oauth";
 static NSString *const FBLoginUXClientID = @"client_id";
-static NSString *const FBLoginUXUserAgent = @"user_agent";
-static NSString *const FBLoginUXType = @"type";
 static NSString *const FBLoginUXRedirectURI = @"redirect_uri";
 static NSString *const FBLoginUXTouch = @"touch";
 static NSString *const FBLoginUXDisplay = @"display";
 static NSString *const FBLoginUXIOS = @"ios";
 static NSString *const FBLoginUXSDK = @"sdk";
+static NSString *const FBLoginUXReturnScopesYES = @"true";
+static NSString *const FBLoginUXReturnScopes = @"return_scopes";
+static NSString *const FBLoginParamsExpiresIn = @"expires_in";
+static NSString *const FBLoginParamsPermissions = @"permissions";
+static NSString *const FBLoginParamsGrantedscopes = @"granted_scopes";
+NSString *const FBLoginUXResponseTypeToken = @"token";
+NSString *const FBLoginUXResponseType = @"response_type";
+
 
 // client state related strings
 NSString *const FBLoginUXClientState = @"state";
@@ -102,6 +107,7 @@ static FBSession *g_activeSession = nil;
     BOOL _isInStateTransition;
     FBSessionLoginType _loginTypeOfPendingOpenUrlCallback;
     FBSessionDefaultAudience _defaultDefaultAudience;
+    FBSessionLoginBehavior _loginBehavior;
 }
 
 // private setters
@@ -218,6 +224,7 @@ static FBSession *g_activeSession = nil;
         };
 
         [FBSettings autoPublishInstall:self.appID];
+        _loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
     }
     return self;
 }
@@ -319,6 +326,7 @@ static FBSession *g_activeSession = nil;
                                userInfo:nil]
          raise];
     }
+    _loginBehavior = behavior;
     if (handler != nil) {
         // Note blocks are not value comparable, so this can intentionally result in false positives; nonetheless, let's
         // log it for easier identification/reporting in case developers do run into this edge case unexpectedly.
@@ -380,7 +388,7 @@ static FBSession *g_activeSession = nil;
                 completionHandler:(FBSessionRequestPermissionResultHandler)handler {
     [self reauthorizeWithPermissions:readPermissions
                               isRead:YES
-                            behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                            behavior:_loginBehavior
                      defaultAudience:FBSessionDefaultAudienceNone
                    completionHandler:handler];
 }
@@ -390,7 +398,7 @@ static FBSession *g_activeSession = nil;
                    completionHandler:(FBSessionRequestPermissionResultHandler)handler {
     [self reauthorizeWithPermissions:writePermissions
                               isRead:NO
-                            behavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+                            behavior:_loginBehavior
                      defaultAudience:audience
                    completionHandler:handler];
 }
@@ -558,6 +566,19 @@ static FBSession *g_activeSession = nil;
                                      completionHandler:handler];
 }
 
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                           loginBehavior:(FBSessionLoginBehavior)loginBehavior
+                                  isRead:(BOOL)isRead
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler {
+    return [FBSession openActiveSessionWithPermissions:permissions
+                                          allowLoginUI:YES
+                                         loginBehavior:loginBehavior
+                                                isRead:isRead
+                                       defaultAudience:defaultAudience
+                                     completionHandler:handler];
+}
+
 + (BOOL)openActiveSessionWithReadPermissions:(NSArray*)readPermissions
                                 allowLoginUI:(BOOL)allowLoginUI
                            completionHandler:(FBSessionStateHandler)handler {
@@ -697,8 +718,7 @@ static FBSession *g_activeSession = nil;
         case FBSessionStateClosed:
             isValidTransition = (
                                  statePrior == FBSessionStateOpen ||
-                                 statePrior == FBSessionStateOpenTokenExtended ||
-                                 statePrior == FBSessionStateCreatedTokenLoaded
+                                 statePrior == FBSessionStateOpenTokenExtended
                                  );
             break;
     }
@@ -899,10 +919,11 @@ static FBSession *g_activeSession = nil;
     // setup parameters for either the safari or inline login
     NSMutableDictionary* params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
-                                   FBLoginUXUserAgent, FBLoginUXType,
+                                   FBLoginUXResponseTypeToken, FBLoginUXResponseType,
                                    FBRedirectURL, FBLoginUXRedirectURI,
                                    FBLoginUXTouch, FBLoginUXDisplay,
                                    FBLoginUXIOS, FBLoginUXSDK,
+                                   FBLoginUXReturnScopesYES, FBLoginUXReturnScopes,
                                    nil];
     if (permissions != nil) {
         params[@"scope"] = [permissions componentsJoinedByString:@","];
@@ -1378,9 +1399,21 @@ static FBSession *g_activeSession = nil;
         // we have an access token, so parse the expiration date.
         NSDate *expirationDate = [FBSessionUtility expirationDateFromResponseParams:parameters];
 
+        NSArray* grantedPermissions;
+        if ([parameters[FBLoginParamsPermissions] isKindOfClass:[NSArray class]]) {
+            // native gdp sends back granted permissions as an array already.
+            grantedPermissions = parameters[FBLoginParamsPermissions];
+        } else {
+            grantedPermissions = [parameters[FBLoginParamsGrantedscopes] componentsSeparatedByString:@","];
+        }
+
+        if (grantedPermissions.count == 0) {
+            grantedPermissions = self.initializedPermissions;
+        }
+
         // set token and date, state transition, and call the handler if there is one
         FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:accessToken
-                                                                    permissions:self.initializedPermissions
+                                                                    permissions:grantedPermissions
                                                                  expirationDate:expirationDate
                                                                       loginType:loginType
                                                                     refreshDate:[NSDate date]];
@@ -1752,15 +1785,18 @@ static FBSession *g_activeSession = nil;
 
 
 // core handler for inline UX flow
-- (void)fbDialogLogin:(NSString *)accessToken expirationDate:(NSDate *)expirationDate {
+- (void)fbDialogLogin:(NSString *)accessToken expirationDate:(NSDate *)expirationDate params:(NSDictionary *)params {
     // no reason to keep this object
     self.loginDialog = nil;
 
-    NSTimeInterval expirationTimeInterval = [expirationDate timeIntervalSinceNow];
-    NSDictionary* params = [[NSMutableDictionary alloc] initWithObjectsAndKeys:[[NSNumber numberWithDouble:expirationTimeInterval] stringValue], @"expires_in", nil];
-
-    [self handleAuthorizationCallbacks:accessToken params:params loginType:FBSessionLoginTypeWebView];
-    [params release];
+    if (!params[FBLoginParamsExpiresIn]) {
+        NSTimeInterval expirationTimeInterval = [expirationDate timeIntervalSinceNow];
+        NSMutableDictionary *paramsToPass = [[[NSMutableDictionary alloc] initWithDictionary:params] autorelease];
+        paramsToPass[FBLoginParamsExpiresIn] = @(expirationTimeInterval);
+        [self handleAuthorizationCallbacks:accessToken params:paramsToPass loginType:FBSessionLoginTypeWebView];
+    } else {
+        [self handleAuthorizationCallbacks:accessToken params:params loginType:FBSessionLoginTypeWebView];
+    }
 }
 
 // core handler for inline UX flow
@@ -1968,11 +2004,26 @@ static FBSession *g_activeSession = nil;
                                   isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                        completionHandler:(FBSessionStateHandler)handler {
+    return [FBSession openActiveSessionWithPermissions:permissions
+                                          allowLoginUI:allowLoginUI
+                                         loginBehavior:allowSystemAccount ? FBSessionLoginBehaviorUseSystemAccountIfPresent : FBSessionLoginBehaviorWithFallbackToWebView
+                                                isRead:isRead
+                                       defaultAudience:defaultAudience
+                                     completionHandler:handler];
+}
+
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                            allowLoginUI:(BOOL)allowLoginUI
+                           loginBehavior:(FBSessionLoginBehavior)loginBehavior
+                                  isRead:(BOOL)isRead
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler {
     // is everything in good order?
+    BOOL allowSystemAccount = FBSessionLoginBehaviorUseSystemAccountIfPresent == loginBehavior;
     [FBSessionUtility validateRequestForPermissions:permissions
-                             defaultAudience:defaultAudience
-                          allowSystemAccount:allowSystemAccount
-                                      isRead:isRead];
+                                    defaultAudience:defaultAudience
+                                 allowSystemAccount:allowSystemAccount
+                                             isRead:isRead];
     BOOL result = NO;
     FBSession *session = [[[FBSession alloc] initWithAppID:nil
                                                permissions:permissions
@@ -1984,10 +2035,7 @@ static FBSession *g_activeSession = nil;
         [FBSession setActiveSession:session userInfo:@{FBSessionDidSetActiveSessionNotificationUserInfoIsOpening: @YES}];
         // we open after the fact, in order to avoid overlapping close
         // and open handler calls for blocks
-        FBSessionLoginBehavior howToBehave = allowSystemAccount ?
-                                                FBSessionLoginBehaviorUseSystemAccountIfPresent :
-                                                    FBSessionLoginBehaviorWithFallbackToWebView;
-        [session openWithBehavior:howToBehave
+        [session openWithBehavior:loginBehavior
                 completionHandler:handler];
         result = session.isOpen;
     }

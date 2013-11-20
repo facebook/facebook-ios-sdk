@@ -63,10 +63,10 @@ typedef void (^FBInstallResponseDataHandler)(FBGraphObject *response, NSError *e
  in release builds.
  */
 typedef enum : NSUInteger {
-  FBBetaFeaturesNone                 = 0,
+    FBBetaFeaturesNone                  = 0,
 #if defined(DEBUG) || defined(FB_BUILD_ONLY)
-  FBBetaFeaturesShareDialog          = 1 << 0,
-  FBBetaFeaturesOpenGraphShareDialog = 1 << 1,
+    FBBetaFeaturesShareDialog           = 1 << 0,
+    FBBetaFeaturesOpenGraphShareDialog  = 1 << 1,
 #endif
 } FBBetaFeatures;
 
@@ -296,7 +296,7 @@ typedef enum : NSUInteger {
 
 /*!
  @method
- 
+
  @abstract
  Gets whether data such as that generated through FBAppEvents and sent to Facebook should be restricted from being used for other than analytics and conversions.  Defaults to NO.  This value is stored on the device and persists across app launches.
  */
@@ -304,10 +304,10 @@ typedef enum : NSUInteger {
 
 /*!
  @method
- 
+
  @abstract
  Sets whether data such as that generated through FBAppEvents and sent to Facebook should be restricted from being used for other than analytics and conversions.  Defaults to NO.  This value is stored on the device and persists across app launches.
- 
+
  @param limitEventAndDataUsage   The desired value.
  */
 + (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage;

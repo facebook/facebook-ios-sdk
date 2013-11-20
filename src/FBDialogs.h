@@ -201,7 +201,7 @@ NSError *error);
 
 /*!
  @abstract
- Determines whether a call to presentFBShareDialogWithTarget: will successfully
+ Determines whether a call to presentShareDialogWithTarget: will successfully
  present a dialog in the Facebook application. This is useful for applications that
  need to modify the available UI controls depending on whether the dialog is
  available on the current platform.
@@ -211,7 +211,7 @@ NSError *error);
  @return YES if the dialog would be presented, and NO if not
 
  @discussion A return value of YES here indicates that the corresponding
- presentFBShareDialogWithParams method will return a non-nil FBAppCall for the same
+ presentShareDialogWithParams method will return a non-nil FBAppCall for the same
  params. And vice versa.
  */
 + (BOOL)canPresentShareDialogWithParams:(FBShareDialogParams *)params;
@@ -244,7 +244,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresetFBShareDialogWithParams method is also returning YES for the same params.
+ canPresentShareDialogWithParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithParams:(FBShareDialogParams *)params
                                 clientState:(NSDictionary *)clientState
@@ -274,7 +274,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresetFBShareDialogWithParams method is also returning YES for the same params.
+ canPresentShareDialogWithParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithLink:(NSURL *)link
                                   handler:(FBDialogAppCallCompletionHandler)handler;
@@ -305,7 +305,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresetFBShareDialogWithParams method is also returning YES for the same params.
+ canPresentShareDialogWithParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithLink:(NSURL *)link
                                      name:(NSString *)name
@@ -347,7 +347,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresetFBShareDialogWithParams method is also returning YES for the same params.
+ canPresentShareDialogWithParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithLink:(NSURL *)link
                                      name:(NSString *)name
@@ -359,7 +359,7 @@ NSError *error);
 
 /*!
  @abstract
- Determines whether a call to presentFBShareDialogWithOpenGraphActionParams:clientState:handler:
+ Determines whether a call to presentShareDialogWithOpenGraphActionParams:clientState:handler:
  will successfully present a dialog in the Facebook application. This is useful for applications
  that need to modify the available UI controls depending on whether the dialog is
  available on the current platform.
@@ -369,7 +369,7 @@ NSError *error);
  @return YES if the dialog would be presented, and NO if not
 
  @discussion A return value of YES here indicates that the corresponding
- presentFBShareDialogWithOpenGraphActionParams method will return a non-nil FBAppCall for
+ presentShareDialogWithOpenGraphActionParams method will return a non-nil FBAppCall for
  the same params. And vice versa.
  */
 + (BOOL)canPresentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params;
@@ -402,7 +402,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
+ canPresentShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params
                                                clientState:(NSDictionary *)clientState
@@ -439,7 +439,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
+ canPresentShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action
                                           actionType:(NSString *)actionType
@@ -481,7 +481,7 @@ NSError *error);
  FBAppCallCompletionHandler.
 
  @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresentFBShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
+ canPresentShareDialogWithOpenGraphActionParams method is also returning YES for the same params.
  */
 + (FBAppCall *)presentShareDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action
                                           actionType:(NSString *)actionType

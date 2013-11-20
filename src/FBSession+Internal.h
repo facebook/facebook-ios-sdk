@@ -22,6 +22,8 @@ extern NSString *const FBLoginUXClientState;
 extern NSString *const FBLoginUXClientStateIsClientState;
 extern NSString *const FBLoginUXClientStateIsOpenSession;
 extern NSString *const FBLoginUXClientStateIsActiveSession;
+extern NSString *const FBLoginUXResponseTypeToken;
+extern NSString *const FBLoginUXResponseType;
 
 extern NSString *const FBInnerErrorObjectKey;
 extern NSString *const FBSessionDidSetActiveSessionNotificationUserInfoIsOpening;
@@ -59,6 +61,12 @@ extern NSString *const FacebookNativeApplicationLoginDomain;
 
 + (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
                             allowLoginUI:(BOOL)allowLoginUI
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                       completionHandler:(FBSessionStateHandler)handler;
+
++ (BOOL)openActiveSessionWithPermissions:(NSArray*)permissions
+                           loginBehavior:(FBSessionLoginBehavior)loginBehavior
+                                  isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                        completionHandler:(FBSessionStateHandler)handler;
 @end

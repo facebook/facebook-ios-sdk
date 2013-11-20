@@ -16,6 +16,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const kFBAppEventIsImplicit;
+
 /**
  Internal class that holds all the state associated with FBAppEvents for a particular FBSession.  An
  instance of this lives on FBSession.

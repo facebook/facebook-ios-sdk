@@ -17,6 +17,7 @@
 #import "FBLoginDialog.h"
 
 #import "FBDialog.h"
+#import "FBUtility.h"
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,8 +65,9 @@
         [self dialogDidCancel:url];
         [self dismissWithSuccess:NO animated:YES];
     } else {
-        if ([_loginDelegate respondsToSelector:@selector(fbDialogLogin:expirationDate:)]) {
-            [_loginDelegate fbDialogLogin:token expirationDate:expirationDate];
+        NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
+        if ([_loginDelegate respondsToSelector:@selector(fbDialogLogin:expirationDate:params:)]) {
+            [_loginDelegate fbDialogLogin:token expirationDate:expirationDate params:params];
         }
         [self dismissWithSuccess:YES animated:YES];
     }

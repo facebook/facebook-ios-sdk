@@ -28,7 +28,7 @@
 
 - (id)initWithDataSource:(FBGraphObjectTableDataSource *)dataSource;
 - (void)clearSelectionInTableView:(UITableView*)tableView;
-
+- (void)selectItem: (NSArray *)items tableView:(UITableView *)tableView;
 
 @end
 

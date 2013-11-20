@@ -23,8 +23,9 @@
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) NSArray *selection;
 
-- (void)selectItem:(FBGraphObject *)item
-              cell:(UITableViewCell *)cell;
+- (void)     selectItem:(FBGraphObject *)item
+                   cell:(UITableViewCell *)cell
+  raiseSelectionChanged:(BOOL) raiseSelectionChanged;
 
 - (void)    deselectItem:(FBGraphObject *)item
                     cell:(UITableViewCell *)cell
@@ -76,8 +77,9 @@
     }
 }
 
-- (void)selectItem:(FBGraphObject *)item
-              cell:(UITableViewCell *)cell
+- (void)      selectItem:(FBGraphObject *)item
+                    cell:(UITableViewCell *)cell
+   raiseSelectionChanged:(BOOL) raiseSelectionChanged
 {
     if ([FBUtility graphObjectInArray:self.selection withSameIDAs:item] == nil) {
         NSMutableArray *selection = [[NSMutableArray alloc] initWithArray:self.selection];
@@ -86,7 +88,27 @@
         [selection release];
     }
     cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    [self selectionChanged];
+    if (raiseSelectionChanged) {
+        [self selectionChanged];
+    }
+}
+
+// Note this method does NOT automatically "raise" the selectionChanged event.
+- (void)selectItem: (NSArray *)items tableView:(UITableView *)tableView
+{
+    // Copy this so it doesn't change from under us.
+    items = [NSArray arrayWithArray:items];
+
+    for (FBGraphObject *item in items) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForItem:item];
+
+        UITableViewCell *cell = nil;
+        if (indexPath != nil) {
+            cell = [tableView cellForRowAtIndexPath:indexPath];
+        }
+
+        [self selectItem:item cell:cell raiseSelectionChanged:NO];
+    }
 }
 
 - (void)    deselectItem:(FBGraphObject *)item
@@ -162,7 +184,7 @@
                 // No multi-select allowed, deselect what is already selected.
                 [self deselectItems:self.selection tableView:tableView];
             }
-            [self selectItem:item cell:cell];
+            [self selectItem:item cell:cell raiseSelectionChanged:YES];
         } else {
             [self deselectItem:item cell:cell raiseSelectionChanged:YES];
         }

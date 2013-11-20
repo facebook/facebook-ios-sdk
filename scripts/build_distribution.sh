@@ -43,7 +43,7 @@ CODE_SIGN_IDENTITY='Developer ID Installer: Facebook, Inc. (V9WTTPBFK9)'
 # Call out to build prerequisites.
 #
 if is_outermost_build; then
-    . $FB_SDK_SCRIPT/build_framework.sh -t -c Release
+    . $FB_SDK_SCRIPT/build_framework.sh -c Release
 	if [ -x "$APPLEDOC" ]; then
     	. $FB_SDK_SCRIPT/build_documentation.sh
 	fi

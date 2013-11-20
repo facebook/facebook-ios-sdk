@@ -69,6 +69,15 @@
  */
 @property (nonatomic, assign) FBSessionDefaultAudience defaultAudience;
 
+/*!
+ @abstract
+ The login behavior for the active session if the user logs in via this view
+
+ @discussion
+ The default value is FBSessionLoginBehaviorUseSystemAccountIfPresent.
+ */
+@property (nonatomic) FBSessionLoginBehavior loginBehavior;
+
 
 /*!
  @abstract

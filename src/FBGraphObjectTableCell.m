@@ -87,6 +87,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 #pragma mark -
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)layoutSubviews
 {
     [super layoutSubviews];
@@ -122,6 +123,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
     [self.detailTextLabel setHidden:!(hasSubtitle)];
     [self.titleSuffixLabel setHidden:!(hasTitleSuffix)];
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 + (CGFloat)rowHeight
 {

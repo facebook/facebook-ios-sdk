@@ -95,18 +95,18 @@
     // as a token becoming invalid). Please see the [- postOpenGraphAction:]
     // and [- requestPermissionAndPost] on `SCViewController` for further
     // error handling on other operations.
-
-    if (error.fberrorShouldNotifyUser) {
+    FBErrorCategory errorCategory = [FBErrorUtility errorCategoryForError:error];
+    if ([FBErrorUtility shouldNotifyUserForError:error]) {
         // If the SDK has a message for the user, surface it. This conveniently
         // handles cases like password change or iOS6 app slider state.
         alertTitle = @"Something Went Wrong";
-        alertMessage = error.fberrorUserMessage;
-    } else if (error.fberrorCategory == FBErrorCategoryAuthenticationReopenSession) {
+        alertMessage = [FBErrorUtility userMessageForError:error];
+    } else if (errorCategory == FBErrorCategoryAuthenticationReopenSession) {
         // It is important to handle session closures as mentioned. You can inspect
         // the error for more context but this sample generically notifies the user.
         alertTitle = @"Session Error";
         alertMessage = @"Your current session is no longer valid. Please log in again.";
-    } else if (error.fberrorCategory == FBErrorCategoryUserCancelled) {
+    } else if (errorCategory == FBErrorCategoryUserCancelled) {
         // The user has cancelled a login. You can inspect the error
         // for more context. For this sample, we will simply ignore it.
         NSLog(@"user cancelled login");

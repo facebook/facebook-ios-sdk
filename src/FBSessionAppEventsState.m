@@ -15,8 +15,9 @@
  */
 
 #import "FBSessionAppEventsState.h"
-
 #import "FBUtility.h"
+
+NSString *const kFBAppEventIsImplicit = @"isImplicit";
 
 @interface FBSessionAppEventsState ()
 
@@ -58,7 +59,7 @@ const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
             self.numSkippedEventsDueToFullBuffer++;
         } else {
             [self.accumulatedEvents addObject:@{@"event" : eventDictionary,
-                                                @"isImplicit" : [NSNumber numberWithBool:isImplicit],
+                                                kFBAppEventIsImplicit : [NSNumber numberWithBool:isImplicit],
                                                }];
         }
     }
@@ -84,7 +85,7 @@ const int MAX_ACCUMULATED_LOG_EVENTS                 = 1000;
     NSMutableArray *eventArray = [[NSMutableArray alloc] initWithCapacity:self.inFlightEvents.count];
 
     for (NSDictionary *eventAndImplicitFlag in self.inFlightEvents) {
-        if (!includeImplicitEvents && [[eventAndImplicitFlag objectForKey:@"isImplicit"] boolValue]) {
+        if (!includeImplicitEvents && [[eventAndImplicitFlag objectForKey:kFBAppEventIsImplicit] boolValue]) {
             continue;
         }
         [eventArray addObject:[eventAndImplicitFlag objectForKey:@"event"]];
