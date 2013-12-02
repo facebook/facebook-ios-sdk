@@ -312,7 +312,7 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
         if (error) {
             [tcs setError:error];
         } else {
-            [tcs setResult:result];
+            [tcs setResult:@(result)];
         }
     }];
     return tcs.task;
