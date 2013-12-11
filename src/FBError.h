@@ -157,8 +157,6 @@ typedef enum FBNativeApplicationErrorCode {
  @typedef FBErrorCategory enum
 
  @abstract Indicates the Facebook SDK classification for the error
-
- @discussion
  */
 typedef enum {
     /*! Indicates that the error category is invalid and likely represents an error that

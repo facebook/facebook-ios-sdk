@@ -28,8 +28,6 @@
  @typedef FBFriendSortOrdering enum
 
  @abstract Indicates the order in which friends should be listed in the friend picker.
-
- @discussion
  */
 typedef enum {
     /*! Sort friends by first, middle, last names. */
@@ -42,8 +40,6 @@ typedef enum {
  @typedef FBFriendDisplayOrdering enum
 
  @abstract Indicates whether friends should be displayed first-name-first or last-name-first.
-
- @discussion
  */
 typedef enum {
     /*! Display friends as First Middle Last. */
