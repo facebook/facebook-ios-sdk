@@ -33,7 +33,7 @@
                      length:(NSUInteger)length
             fromRetinaBytes:(const Byte *)retinaBytes
                retinaLength:(NSUInteger)retinaLength {
-    if ([FBUtility isRetinaDisplay]) {
+    if (retinaBytes && [FBUtility isRetinaDisplay]) {
         return [FBImageResourceLoader loadImageFromBytes:retinaBytes length:retinaLength scale:2.0];
     } else {
         return [FBImageResourceLoader loadImageFromBytes:bytes length:length scale:1.0];
