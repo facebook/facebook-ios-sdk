@@ -205,6 +205,8 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                         @"Something went wrong. Please make sure you're connected to the internet and try again.";
                     shouldNotifyUser = YES;
                     category = FBErrorCategoryServer;
+                } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorOperationDisallowedForRestrictedTreament){
+                    category = FBErrorCategoryUserCancelled;
                 }
             }
             break;

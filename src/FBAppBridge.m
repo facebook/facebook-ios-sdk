@@ -115,7 +115,8 @@ static NSString *const FBAppBridgeVersions[] = {
     @"20130214",
     @"20130410",
     @"20130702",
-    @"20131010"
+    @"20131010",
+    @"20131219",
 };
 
 static FBAppBridge *g_sharedInstance;

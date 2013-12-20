@@ -526,6 +526,9 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  @param graphPath        The Graph API endpoint to use for the request, for example "me".
 
  @param graphObject      An object or open graph action to post.
+
+ @discussion This method is typically used for posting an open graph action. If you are only
+ posting an open graph object (without an action), consider using `requestForPostOpenGraphObject:`
  */
 + (FBRequest *)requestForPostWithGraphPath:(NSString*)graphPath
                                graphObject:(id<FBGraphObject>)graphObject;

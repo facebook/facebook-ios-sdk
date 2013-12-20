@@ -83,7 +83,10 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 
 // internal factory for parsing app links from reengagement ads; i.e., version field = 2.
 // in general, the parameters should consist of the original url followed by the various components to help construct the instance.
-+ (FBAppCall *)appCallFromApplinkArgs_v2:(NSURL *)originalURL applinkArgs:(NSDictionary *)applinkArgs createTimeUTC:(NSString *)createTimeUTC originalQueryParameters:(NSDictionary *)originalQueryParameters {
++ (FBAppCall *)appCallFromApplinkArgs_v2:(NSURL *)originalURL
+                             applinkArgs:(NSDictionary *)applinkArgs
+                           createTimeUTC:(NSString *)createTimeUTC
+                 originalQueryParameters:(NSDictionary *)originalQueryParameters {
     FBAppCall *appCall = [[[FBAppCall alloc] init:NO] autorelease];
 
     NSMutableDictionary *methodArgs = [NSMutableDictionary dictionaryWithDictionary:applinkArgs[@"method_args"]];
@@ -92,20 +95,56 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     }
 
     NSURL *targetURL = [NSURL URLWithString:methodArgs[@"target_url"]];
-    NSArray *refArray = [methodArgs[@"ref"] componentsSeparatedByString:@","];
-    appCall.appLinkData = [[[FBAppLinkData alloc] initWithURL:originalURL targetURL:targetURL ref:refArray originalQueryParameters:originalQueryParameters arguments:methodArgs] autorelease];
+    appCall.appLinkData = [[[FBAppLinkData alloc] initWithURL:originalURL
+                                                    targetURL:targetURL
+                                      originalParams:originalQueryParameters
+                                                    arguments:methodArgs]
+                           autorelease];
 
     return appCall;
 }
 
+// internal factory for parsing app links data
++ (FBAppCall *)appCallFromApplinkData:(NSURL *)originalURL
+                          applinkData:(NSDictionary *)applinkData
+              originalQueryParameters:(NSDictionary *)originalQueryParameters {
+    FBAppCall *appCall = [[[FBAppCall alloc] init:NO] autorelease];
+    
+    NSURL *targetURL = [NSURL URLWithString:applinkData[@"target_url"]];
+    NSString *ref = applinkData[@"ref"];
+    NSString *userAgent = applinkData[@"user_agent"];
+    NSDictionary *refererData = applinkData[@"referer_data"];
+    appCall.appLinkData = [[[FBAppLinkData alloc] initWithURL:originalURL
+                                                    targetURL:targetURL
+                                                          ref:ref
+                                                    userAgent:userAgent
+                                                  refererData:refererData
+                                               originalParams:originalQueryParameters]
+                           autorelease];
+                            
+                            
+    
+    return appCall;
+}
+
+
 // Public factory method.
 + (FBAppCall *) appCallFromURL:(NSURL *)url {
     NSDictionary *queryParams = [FBUtility queryParamsDictionaryFromFBURL:url];
+    NSString *applinkDataString = queryParams[@"al_applink_data"];
     NSString *applinkArgsString = queryParams[@"fb_applink_args"];
-    NSString *createTimeUTC = queryParams[@"fb_click_time_utc"];
-
-    if (applinkArgsString) {
-
+    // applink data is preferred over applink args if both are present
+    if (applinkDataString) {
+        NSDictionary *applinkData = [FBUtility simpleJSONDecode:applinkDataString error:nil];
+        if (applinkData) {
+            return [FBAppCall appCallFromApplinkData:url
+                                         applinkData:applinkData
+                             originalQueryParameters:queryParams];
+                    
+        }
+    } else if (applinkArgsString) {
+        NSString *createTimeUTC = queryParams[@"fb_click_time_utc"];
+        
         NSDictionary *applinkArgs = [FBUtility simpleJSONDecode:applinkArgsString error:nil];
         int version = [applinkArgs[@"version"] intValue];
         if (version){
@@ -116,7 +155,6 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
             }
         }
     }
-
     // if we get here, we were unable to parse the URL.
     return nil;
 }

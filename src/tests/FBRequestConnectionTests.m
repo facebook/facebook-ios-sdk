@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
+#import "FBRequestConnectionTests.h"
+
 #import <OCMock/OCMock.h>
+
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBAccessTokenData.h"
-#import "FBRequestConnectionTests.h"
-#import "FBTestSession.h"
-#import "FBTestSession+Internal.h"
-#import "FBRequestConnection.h"
-#import "FBRequestConnection+Internal.h"
 #import "FBRequest.h"
+#import "FBRequestConnection+Internal.h"
+#import "FBRequestConnection.h"
 #import "FBSession.h"
-#import "FBTestBlocker.h"
-#import "FBURLConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSettings.h"
+#import "FBTestBlocker.h"
+#import "FBTestSession+Internal.h"
+#import "FBTestSession.h"
+#import "FBURLConnection.h"
 #import "FBUtility.h"
 
 // This is just to silence compiler warnings since we access internal methods in some tests.
@@ -456,5 +459,69 @@
     STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was unexpectedly updated");
 }
 
+- (void)testOpenGraphObjectPost {
+    NSMutableDictionary<FBGraphObject> *object =
+    [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                            title:@"Sample title"
+                                            image:nil
+                                              url:nil
+                                      description:@"test"];
+
+    FBRequest *request = [FBRequest requestForPostWithGraphPath:@"me/objects/fb_sample_scrumps:meal"
+                                                    graphObject:object];
+
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:nil];
+    NSMutableURLRequest *ret = [connection urlRequest];
+    STAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest");
+}
+
+- (void)testOpenGraphObjectPostBatched {
+    [FBSettings setDefaultAppID:kTestAppId];
+    NSMutableDictionary<FBGraphObject> *object =
+    [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                            title:@"Sample title"
+                                            image:nil
+                                              url:nil
+                                      description:@"test"];
+
+    FBRequest *request = [FBRequest requestForPostWithGraphPath:@"me/objects/fb_sample_scrumps:meal"
+                                                    graphObject:object];
+
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:nil];
+
+    NSMutableDictionary<FBGraphObject> *object2 =
+    [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                            title:@"Sample title"
+                                            image:nil
+                                              url:nil
+                                      description:@"test"];
+
+    FBRequest *request2 = [FBRequest requestForPostWithGraphPath:@"me/objects/fb_sample_scrumps:meal"
+                                                    graphObject:object2];
+    [connection addRequest:request2 completionHandler:nil];
+    NSMutableURLRequest *ret = [connection urlRequest];
+    STAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest with two object posts.");
+}
+
+- (void)testOpenGraphObjectPostBogus {
+    NSMutableDictionary<FBGraphObject> *object =
+    [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                            title:@"Sample title"
+                                            image:nil
+                                              url:nil
+                                      description:@"test"];
+    [object setObject:[FBSessionTokenCachingStrategy nullCacheInstance] forKey:@"bogus"];
+    FBRequest *request = [FBRequest requestForPostWithGraphPath:@"me/objects/fb_sample_scrumps:meal"
+                                                    graphObject:object];
+
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:nil];
+    STAssertThrows([connection urlRequest], @"expected failure to serialize bogus key");
+}
 
 @end

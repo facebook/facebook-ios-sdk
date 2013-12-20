@@ -70,6 +70,18 @@ typedef enum : NSUInteger {
 #endif
 } FBBetaFeatures;
 
+/*!
+ @typedef
+ @abstract Indicates if this app should be restricted
+ */
+typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
+    /*! The default treatment indicating the app is not restricted. */
+    FBRestrictedTreatmentNO = 0,
+
+    /*! Indicates the app is restricted. */
+    FBRestrictedTreatmentYES = 1
+};
+
 @interface FBSettings : NSObject
 
 /*!
