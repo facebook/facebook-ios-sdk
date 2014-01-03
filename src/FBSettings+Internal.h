@@ -50,4 +50,21 @@ extern NSString *const FBPLISTUrlSchemeSuffixKey;
  */
 + (CGFloat)defaultJPEGCompressionQuality;
 
+/*!
+ @method
+
+ @abstract Returns the current setting indicating if this app should be restricted.
+ */
++ (FBRestrictedTreatment)restrictedTreatment;
+
+/*!
+ @method Sets the current setting indicating if this app should be restricted. This
+ will close FBSession.activeSession if the session is open.
+
+ @abstract Sets the current setting indicating if this app should be restricted. This
+ will close FBSession.activeSession if the session is open.
+
+ @param treatment The desired treatment
+ */
++ (void)setrestrictedTreatment:(FBRestrictedTreatment)treatment;
 @end

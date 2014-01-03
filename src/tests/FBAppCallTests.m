@@ -22,8 +22,7 @@
 -(void) testAppCallFromURL {
 
     NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D"];
-    NSArray *expectedRef = @[@"Tiramisu"];
-
+    
     NSDictionary *expectedOriginalQueryParameters = @{@"meal": @"Chicken",
                                                       @"fb_applink_args" : @"{\"version\":2,\"bridge_args\":{\"method\":\"applink\"},\"method_args\":{\"ref\":\"Tiramisu\"}}"};
     
@@ -33,17 +32,40 @@
 
     STAssertEqualObjects(testURL, target.appLinkData.originalURL, @"Failed to match originalURL");
     STAssertNil(target.appLinkData.actionTypes, @"Failed to correctly parse fb_action_types");
-    STAssertTrue([target.appLinkData.ref isEqualToArray:expectedRef], @"Failed to correctly parse fb_ref");
     STAssertTrue([target.appLinkData.originalQueryParameters isEqualToDictionary:expectedOriginalQueryParameters], @"Incorrect originalQueryParameters");
 
     STAssertNil(target.dialogData, @"Did not expect dialogData to be set.");
-    STAssertEqualObjects(@"Tiramisu", target.appLinkData.arguments[@"ref"], @"Failed to parse applinkdata arguments");
+}
+
+-(void) testAppCallFromURLWithApplinkData {
+    
+    NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&al_applink_data=%7B%22target_url%22%3A%22htpp%3A%2F%2Fwww.targeturlurl.com%22%2C%22user_agent%22%3A%22user_agent_string%22%2C%22referer_data%22%3A%7B%22referer_defined_key%22%3A%22referee_defined_value%22%7D%2C%22ref%22%3A%22ref_string%22%7D"];
+    NSString *expectedRef = @"ref_string";
+    NSString *expectedUserAgent = @"user_agent_string";
+    NSURL *expectedURL = [NSURL URLWithString:@"htpp://www.targeturlurl.com"];
+    NSDictionary *expectedRefererData = @{@"referer_defined_key": @"referee_defined_value"};
+    NSDictionary *expectedOriginalQueryParameters = @{@"meal": @"Chicken",
+                                                      @"al_applink_data" : @"{\"target_url\":\"htpp://www.targeturlurl.com\",\"user_agent\":\"user_agent_string\",\"referer_data\":{\"referer_defined_key\":\"referee_defined_value\"},\"ref\":\"ref_string\"}"};
+    
+    
+    FBAppCall *target = [FBAppCall appCallFromURL:testURL];
+    
+    STAssertNotNil(target, @"Failed to create an FBAppCall object");
+    
+    STAssertEqualObjects(testURL, target.appLinkData.originalURL, @"Failed to match originalURL");
+    STAssertNil(target.appLinkData.actionTypes, @"Failed to correctly parse fb_action_types");
+    STAssertTrue([target.appLinkData.ref isEqualToString:expectedRef], @"Failed to correctly parse ref");
+    STAssertTrue([target.appLinkData.userAgent isEqualToString:expectedUserAgent], @"Failed to correctly parse user_agent");
+    STAssertTrue([target.appLinkData.refererData isEqualToDictionary:expectedRefererData], @"Failed to correctly parse referer_data");
+    STAssertTrue([target.appLinkData.targetURL isEqual:expectedURL], @"Failed to correctly parse target_url");
+    STAssertTrue([target.appLinkData.originalQueryParameters isEqualToDictionary:expectedOriginalQueryParameters], @"Incorrect originalQueryParameters");
+    
+    STAssertNil(target.dialogData, @"Did not expect dialogData to be set.");
 }
 
 -(void) testAppCallFromURLWithTapTime {
     
     NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D&fb_click_time_utc=123"];
-    NSArray *expectedRef = @[@"Tiramisu"];
     
     NSDictionary *expectedOriginalQueryParameters = @{@"meal": @"Chicken",
                                                       @"fb_applink_args" : @"{\"version\":2,\"bridge_args\":{\"method\":\"applink\"},\"method_args\":{\"ref\":\"Tiramisu\"}}",
@@ -56,7 +78,6 @@
     
     STAssertEqualObjects(testURL, target.appLinkData.originalURL, @"Failed to match targetURL");
     STAssertNil(target.appLinkData.actionTypes, @"Failed to correctly parse fb_action_types");
-    STAssertTrue([target.appLinkData.ref isEqualToArray:expectedRef], @"Failed to correctly parse fb_ref");
     STAssertTrue([target.appLinkData.originalQueryParameters isEqualToDictionary:expectedOriginalQueryParameters], @"Incorrect originalQueryParameters");
     
     STAssertNil(target.dialogData, @"Did not expect dialogData to be set.");

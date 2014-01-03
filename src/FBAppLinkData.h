@@ -31,7 +31,13 @@
 @property (readonly) NSArray *actionIDs;
 
 /*! @abstract Reference breadcrumb provided during creation of story */
-@property (readonly) NSArray *ref;
+@property (readonly) NSString *ref;
+
+/*! @abstract User Agent string set by the referer */
+@property (readonly) NSString *userAgent;
+
+/*! @abstract Referer data is a JSON object set by the referer with referer-specific content */
+@property (readonly) NSDictionary *refererData;
 
 /*! @abstract Full set of query parameters for this app link */
 @property (readonly) NSDictionary *originalQueryParameters;

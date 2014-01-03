@@ -79,7 +79,7 @@ static NSString *kStringBoundary = @"3i2ndDfv2rTHiSisAbouNdArYfORhtTPEefj3q2f";
 }
 
 - (void)appendWithKey:(NSString *)key
-                 imageValue:(UIImage *)image
+           imageValue:(UIImage *)image
                logger:(FBLogger *)logger
 {
     NSString *disposition =

@@ -31,7 +31,7 @@
 #import "FBLoginDialogParams.h"
 #import "FBOpenGraphActionShareDialogParams.h"
 #import "FBSession.h"
-#import "FBSettings.h"
+#import "FBSettings+Internal.h"
 #import "FBShareDialogParams.h"
 #import "FBUtility.h"
 
@@ -79,6 +79,16 @@
                                            images:(NSArray*)images
                                              urls:(NSArray*)urls
                                           handler:(FBOSIntegratedShareDialogHandler)handler {
+    if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
+        if (handler) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(FBOSIntegratedShareDialogResultCancelled, [NSError errorWithDomain:FacebookSDKDomain
+                                                                                      code:FBErrorOperationDisallowedForRestrictedTreament
+                                                                                  userInfo:nil]);
+            });
+        }
+        return NO;
+    }
     SLComposeViewController *composeViewController = [FBDialogs composeViewControllerWithSession:session
                                                                                          handler:handler];
     if (!composeViewController) {
@@ -125,19 +135,39 @@
 }
 
 + (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession*)session {
-    return [FBDialogs composeViewControllerWithSession:session
+    return [FBSettings restrictedTreatment] == FBRestrictedTreatmentNO && [FBDialogs composeViewControllerWithSession:session
                                                handler:nil] != nil;
 }
 
 + (BOOL)canPresentLoginDialogWithParams:(FBLoginDialogParams *)params {
     NSString *version = [params appBridgeVersion];
     // Ensure version support and that FBAppCall can be constructed correctly (i.e., in case of urlSchemeSuffix overrides).
-    return (version != nil && [[[FBAppCall alloc] initWithID:nil enforceScheme:YES appID:params.session.appID urlSchemeSuffix:params.session.urlSchemeSuffix] autorelease]);
+    return ([FBSettings restrictedTreatment] == FBRestrictedTreatmentNO &&
+            version != nil && [[[FBAppCall alloc] initWithID:nil enforceScheme:YES appID:params.session.appID urlSchemeSuffix:params.session.urlSchemeSuffix] autorelease]);
 }
 
+
+// A helper method to wrap common logic for any FBAppCalls. If `FBSettings restrictedTreatment` is
+// set, this method will return YES and dispatch a call to the handler with an NSError.
++ (BOOL)cancelAppCallBecauseOfRestrictedTreatment:(FBDialogAppCallCompletionHandler)handler {
+    if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
+        if (handler) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(nil, nil, [NSError errorWithDomain:FacebookSDKDomain
+                                                      code:FBErrorOperationDisallowedForRestrictedTreament
+                                                  userInfo:nil]);
+            });
+        }
+        return YES;
+    }
+    return NO;
+}
 + (FBAppCall *)presentLoginDialogWithParams:(FBLoginDialogParams *)params
                                   clientState:(NSDictionary *)clientState
                                       handler:(FBDialogAppCallCompletionHandler)handler {
+    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+        return nil;
+    }
     FBAppCall *call = [[[FBAppCall alloc] initWithID:nil enforceScheme:YES appID:params.session.appID urlSchemeSuffix:params.session.urlSchemeSuffix] autorelease];
     NSString *version = [params appBridgeVersion];
     if (version && call) {
@@ -172,12 +202,16 @@
 }
 
 + (BOOL)canPresentShareDialogWithParams:(FBShareDialogParams *)params {
-    return [params appBridgeVersion] != nil;
+    return [FBSettings restrictedTreatment] == FBRestrictedTreatmentNO &&
+        [params appBridgeVersion] != nil;
 }
 
 + (FBAppCall *)presentShareDialogWithParams:(FBShareDialogParams *)params
                                 clientState:(NSDictionary *)clientState
                                     handler:(FBDialogAppCallCompletionHandler)handler {
+    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+        return nil;
+    }
     FBAppCall *call = nil;
     NSString *version = [params appBridgeVersion];
     if (version) {
@@ -252,12 +286,16 @@
 }
 
 + (BOOL)canPresentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params {
-    return [params appBridgeVersion] != nil;
+    return [FBSettings restrictedTreatment] == FBRestrictedTreatmentNO &&
+        [params appBridgeVersion] != nil;
 }
 
 + (FBAppCall *)presentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionShareDialogParams *)params
                                                clientState:(NSDictionary *)clientState
                                                    handler:(FBDialogAppCallCompletionHandler)handler {
+    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+        return nil;
+    }
     FBAppCall *call = nil;
     NSString *version = [params appBridgeVersion];
     if (version) {

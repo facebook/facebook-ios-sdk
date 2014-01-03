@@ -31,7 +31,7 @@
 #import "FBSDKVersion.h"
 #import "FBSession+Internal.h"
 #import "FBSession.h"
-#import "FBSettings.h"
+#import "FBSettings+Internal.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
@@ -552,9 +552,9 @@ typedef enum FBRequestConnectionState {
         if (metadata.request.graphObject) {
             [FBRequestConnection processGraphObject:metadata.request.graphObject
                                             forPath:[url path]
-                                                withAction:^(NSString *key, id value) {
-                [body appendWithKey:key formValue:value logger:bodyLogger];
-            }];
+                                         withAction:^(NSString *key, id value) {
+                                             [body appendWithKey:key formValue:value logger:bodyLogger];
+                                         }];
         }
     } else {
         // Find the session with an app ID and use that as the batch_app_id. If we can't
@@ -653,6 +653,9 @@ typedef enum FBRequestConnectionState {
 {
     [request.parameters setValue:@"json" forKey:@"format"];
     [request.parameters setValue:kSDK forKey:@"sdk"];
+    if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
+        request.parameters[@"restricted_treatment"] = [@([FBSettings restrictedTreatment]) stringValue];
+    }
     NSString *token = request.session.accessTokenData.accessToken;
     if (token) {
         [request.parameters setValue:token forKey:kAccessTokenKey];
@@ -861,10 +864,11 @@ typedef enum FBRequestConnectionState {
                 action(key, subValue);
             }
         }
-    } else if ([value isKindOfClass:[NSString class]] ||
-               [value isKindOfClass:[NSNumber class]]) {
+    } else if ([value isKindOfClass:[NSString class]]) {
         // Just serialize these.
         action(key, value);
+    } else if ([value isKindOfClass:[NSNumber class]]) {
+        action(key, [value stringValue]);
     } else if ([value isKindOfClass:[NSArray class]]) {
         // Arrays are serialized as multiple elements with keys of the
         // form key[0], key[1], etc.
@@ -875,6 +879,15 @@ typedef enum FBRequestConnectionState {
             id subValue = [array objectAtIndex:i];
             [self processGraphObjectPropertyKey:subKey value:subValue action:action passByValue:passByValue];
         }
+    } else {
+        NSString *debugMessage = [NSString stringWithFormat:@"FBRequestConnection: cannot serialize %@ for graph request", value];
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:debugMessage];
+#if DEBUG
+        [[NSException exceptionWithName:FBInvalidOperationException
+                                 reason:debugMessage
+                               userInfo:nil]
+         raise];
+#endif
     }
 }
 
