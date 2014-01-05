@@ -105,7 +105,7 @@
     return result;
 }
 
-- (void)enableUserInteraction:(BOOL) enabled {
+- (void)enableUserInteraction:(BOOL)enabled {
     if (enabled) {
         [self.activityIndicator stopAnimating];
     } else {
@@ -229,7 +229,7 @@
     [self updateSelections];
 }
 
-- (void)handlePostOpenGraphActionError:(NSError *) error{
+- (void)handlePostOpenGraphActionError:(NSError *)error{
     // Facebook SDK * error handling *
     // Some Graph API errors are retriable. For this sample, we will have a simple
     // retry policy of one additional attempt. Please refer to

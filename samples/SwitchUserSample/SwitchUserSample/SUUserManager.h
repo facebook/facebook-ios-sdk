@@ -32,8 +32,8 @@ extern NSString *const SUInvalidSlotNumber;
 
 - (id)init;
 
-- (NSString*)getUserIDInSlot:(int)slot;
-- (NSString*)getUserNameInSlot:(int)slot;
+- (NSString *)getUserIDInSlot:(int)slot;
+- (NSString *)getUserNameInSlot:(int)slot;
 - (void)updateUser:(NSDictionary<FBGraphUser> *)user inSlot:(int)slot;
 
 - (BOOL)isSlotEmpty:(int)slot;
