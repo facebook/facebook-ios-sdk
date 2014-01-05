@@ -84,7 +84,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return YES;
 }
 
-- (FBSession*)createSessionForSlot:(int)slot {
+- (FBSession *)createSessionForSlot:(int)slot {
     // FBSample logic
     // Getting the right strategy instance for the right slot matters for this application
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
@@ -98,7 +98,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return session;
 }
 
-- (NSString*)getUserNameInSlot:(int)slot {
+- (NSString *)getUserNameInSlot:(int)slot {
     [self validateSlotNumber:slot];
 
     NSString *key = [NSString stringWithFormat:SUUserNameKeyFormat, slot];
@@ -109,7 +109,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return [defaults objectForKey:key];
 }
 
-- (NSString*)getUserIDInSlot:(int)slot {
+- (NSString *)getUserIDInSlot:(int)slot {
     [self validateSlotNumber:slot];
 
     NSString *key = [NSString stringWithFormat:SUUserIDKeyFormat, slot];

@@ -33,7 +33,7 @@
 
 - (int)userSlotFromIndexPath:(NSIndexPath *)indexPath;
 - (void)loginSlot:(int)slot;
-- (NSIndexPath*)indexPathFromUserSlot:(int)slot;
+- (NSIndexPath *)indexPathFromUserSlot:(int)slot;
 
 @end
 
@@ -216,7 +216,7 @@
     return indexPath.section + indexPath.row;
 }
 
-- (NSIndexPath*)indexPathFromUserSlot:(int)slot {
+- (NSIndexPath *)indexPathFromUserSlot:(int)slot {
     // See comment in userSlotFromIndexPath:
     return [NSIndexPath indexPathForRow:(slot == 0) ? 0 : (slot - 1)
                               inSection:(slot == 0) ? 0 : 1];
@@ -240,7 +240,7 @@
     }
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
 
     SUProfileTableViewCell *cell = (SUProfileTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -258,7 +258,7 @@
     return cell;
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
         case 0:
             return @"Primary User:";
@@ -293,7 +293,7 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
 
     int currentUserSlot = userManager.currentUserSlot;
@@ -310,7 +310,7 @@
     return;
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"Forget";
 }
 
