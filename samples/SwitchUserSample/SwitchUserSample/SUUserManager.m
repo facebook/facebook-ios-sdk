@@ -89,7 +89,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     // Getting the right strategy instance for the right slot matters for this application
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
 
-    // create a session object, with defaults accross the board, except that we provide a custom
+    // create a session object, with defaults across the board, except that we provide a custom
     // instance of FBSessionTokenCachingStrategy
     FBSession *session = [[FBSession alloc] initWithAppID:nil
                                               permissions:@[@"basic_info",@"user_birthday"]
