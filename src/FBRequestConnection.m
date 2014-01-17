@@ -1234,11 +1234,11 @@ typedef enum FBRequestConnectionState {
                     } queue:dispatch_get_main_queue()];
 
                     taskWork = [taskWork completionTaskWithQueue:dispatch_get_main_queue() block:^id(FBTask *task) {
-                        if (task.result == ACAccountCredentialRenewResultRenewed) {
+                        if ([@(ACAccountCredentialRenewResultRenewed) isEqual:task.result]) {
                             FBTask *requestAccessTask = [systemAccountStoreAdapter requestAccessToFacebookAccountStoreAsTask:metadata.request.session];
                             return [requestAccessTask completionTaskWithQueue:dispatch_get_main_queue() block:^id(FBTask *task) {
-                                if (task.result) { // aka success means task.result ==  (oauthToken)
-                                    [metadata.request.session refreshAccessToken:task.result expirationDate:[NSDate distantFuture]];
+                                if (task.result && [task.result isKindOfClass:[NSString class]]) { // aka success means task.result ==  (oauthToken)
+                                    [metadata.request.session refreshAccessToken:(NSString *)task.result expirationDate:[NSDate distantFuture]];
                                     [metadata invokeCompletionHandlerForConnection:self
                                                                        withResults:body
                                                                              error:[FBErrorUtility fberrorForRetry:unpackedError]];

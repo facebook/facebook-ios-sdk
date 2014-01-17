@@ -27,12 +27,63 @@
 #import "FBSession.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBSettings.h"
+#import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
 #import "FBTestSession+Internal.h"
 #import "FBTestSession.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 
+@interface MockFBSystemAccountStoreAdapter : FBSystemAccountStoreAdapter {
+    id _oauthTokenToSurface;
+}
+
+@property (assign, readwrite) BOOL forceBlockingRenew;
+@property (assign, readwrite) BOOL canRequestAccessWithoutUI;
+
+@property (nonatomic, retain) NSError *errorToSurfaceTo;
+
+@property (nonatomic, assign) ACAccountCredentialRenewResult renewResultToSurface;
+@end
+
+@implementation MockFBSystemAccountStoreAdapter
+
+@synthesize forceBlockingRenew;
+@synthesize canRequestAccessWithoutUI;
+
+- (void)requestAccessToFacebookAccountStore:(NSArray *)permissions
+                            defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                              isReauthorize:(BOOL)isReauthorize
+                                      appID:(NSString *)appID
+                                    session:(FBSession *)session
+                                    handler:(FBRequestAccessToAccountsHandler)handler {
+    handler(self.oauthTokenToSurface, self.errorToSurfaceTo);
+}
+
+- (void)renewSystemAuthorization:(void(^)(ACAccountCredentialRenewResult result, NSError *error))handler {
+    handler(self.renewResultToSurface, self.errorToSurfaceTo);
+}
+
+- (id)oauthTokenToSurface {
+    id token = [_oauthTokenToSurface autorelease];
+    // oauthTokenToSurface has this unusual impl in order to test
+    // what happens if the the caller (i.e., FBTask) doesn't retain
+    // the object.
+    _oauthTokenToSurface = nil;
+    return token;
+}
+
+- (void)setOauthTokenToSurface: (id)oauthTokenToSurface {
+    _oauthTokenToSurface = [oauthTokenToSurface retain];
+}
+
+- (void)dealloc {
+    [_errorToSurfaceTo release];
+    [_oauthTokenToSurface release];
+    [super dealloc];
+}
+
+@end
 // This is just to silence compiler warnings since we access internal methods in some tests.
 @interface FBSession (Testing)
 
@@ -522,6 +573,128 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request completionHandler:nil];
     STAssertThrows([connection urlRequest], @"expected failure to serialize bogus key");
+}
+
+// A complicated test of completeWithResults for a system auth login
+// where the response is an invalid session
+// and the token is expired
+// so then there should be a system account renewal
+// follow by a system account auth
+- (void)testCompleteWithResultsSystemAccountRenewal {
+    // Swap out the mock system account store adapter.
+    FBSystemAccountStoreAdapter *originalAdapter = [[FBSystemAccountStoreAdapter sharedInstance] retain];
+    MockFBSystemAccountStoreAdapter *mockSystemAccountStoreAdapter = [[MockFBSystemAccountStoreAdapter alloc] init];
+    [FBSystemAccountStoreAdapter setSharedInstance:mockSystemAccountStoreAdapter];
+    mockSystemAccountStoreAdapter.canRequestAccessWithoutUI = YES;
+    mockSystemAccountStoreAdapter.renewResultToSurface = ACAccountCredentialRenewResultRenewed;
+    NSString *newtoken = [[NSString alloc] initWithCString:"newtoken" encoding:NSUTF8StringEncoding];
+    mockSystemAccountStoreAdapter.oauthTokenToSurface = newtoken;
+    [newtoken release];
+
+    FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    __block BOOL tokenRefreshed = NO;
+    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateOpenTokenExtended) {
+            tokenRefreshed = YES;
+        }
+    }];
+
+    __block int requestCount = 0;
+    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return YES;
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
+        // If there is a test failure, you should verify the requests.count == 1 and debug that if it's not; otherwise this error response will likely cause
+        // an unrelated error to be surfaced. For example, the session init above set the permissionsRefreshDate to [NSDate date]. If it had not,
+        // there could be piggy-backed permissions request which would then expect a batch response. So, this test doubles to verify there was no
+        // piggybacked request when the permissionRefreshDate is set.
+        NSData *data =  [@"{\"error\": {\"message\": \"expired token\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+
+        requestCount++;
+        return [OHHTTPStubsResponse responseWithData:data
+                                          statusCode:400
+                                        responseTime:0
+                                             headers:nil];
+    }];
+
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *request =[[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+
+    __block int handlerCount = 0;
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+        [blocker signal];
+    } ];
+    [connection start];
+
+    [blocker wait];
+
+    STAssertTrue(tokenRefreshed, @"expected session to be extended");
+    STAssertEqualObjects(@"newtoken", session.accessTokenData.accessToken, @"expected newtoken");
+
+    // clean up.
+    [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
+}
+
+// A complicated test of completeWithResults for a system auth login
+// where the response is an invalid session
+// and the token is expired
+// so then there should be a system account renewal
+// follow by a system account auth
+- (void)testCompleteWithResultsSystemAccountRenewalNoToken {
+    // Swap out the mock system account store adapter.
+    FBSystemAccountStoreAdapter *originalAdapter = [[FBSystemAccountStoreAdapter sharedInstance] retain];
+    MockFBSystemAccountStoreAdapter *mockSystemAccountStoreAdapter = [[MockFBSystemAccountStoreAdapter alloc] init];
+    [FBSystemAccountStoreAdapter setSharedInstance:mockSystemAccountStoreAdapter];
+    mockSystemAccountStoreAdapter.canRequestAccessWithoutUI = YES;
+    mockSystemAccountStoreAdapter.renewResultToSurface = ACAccountCredentialRenewResultRenewed;
+    mockSystemAccountStoreAdapter.oauthTokenToSurface = nil; // set up a bogus token result, so the session should be closed.
+
+    FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    __block BOOL sessionClosed = NO;
+    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateClosed) {
+            sessionClosed = YES;
+        }
+    }];
+
+    __block int requestCount = 0;
+    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        return YES;
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
+        // If there is a test failure, you should verify the requests.count == 1 and debug that if it's not; otherwise this error response will likely cause
+        // an unrelated error to be surfaced. For example, the session init above set the permissionsRefreshDate to [NSDate date]. If it had not,
+        // there could be piggy-backed permissions request which would then expect a batch response. So, this test doubles to verify there was no
+        // piggybacked request when the permissionRefreshDate is set.
+        NSData *data =  [@"{\"error\": {\"message\": \"expired token\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+
+        requestCount++;
+        return [OHHTTPStubsResponse responseWithData:data
+                                          statusCode:400
+                                        responseTime:0
+                                             headers:nil];
+    }];
+
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *request =[[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+
+    __block int handlerCount = 0;
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+        [blocker signal];
+    } ];
+    [connection start];
+
+    [blocker wait];
+
+    STAssertTrue(sessionClosed, @"expected session to be closed");
+    // clean up.
+    [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
 }
 
 @end

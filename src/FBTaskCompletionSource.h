@@ -38,7 +38,7 @@
  Completes the task by setting the result.
  Attempting to set this for a completed task will raise an exception.
  */
-- (void)setResult:(id)result;
+- (void)setResult:(id<NSObject>)result;
 
 /*!
  Completes the task by setting the error.
@@ -62,7 +62,7 @@
  Sets the result of the task if it wasn't already completed.
  @returns whether the new value was set.
  */
-- (BOOL)trySetResult:(id)result;
+- (BOOL)trySetResult:(id<NSObject>)result;
 
 /*!
  Sets the error of the task if it wasn't already completed.

@@ -106,8 +106,13 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
 #pragma  mark - Public properties and methods
 
 - (FBTask *)requestAccessToFacebookAccountStoreAsTask:(FBSession *)session {
-    FBTaskCompletionSource* tcs = [FBTaskCompletionSource taskCompletionSource];
-    [self requestAccessToFacebookAccountStore:session handler:^(NSString *oauthToken, NSError *accountStoreError) {
+    FBTaskCompletionSource *tcs = [FBTaskCompletionSource taskCompletionSource];
+    [self requestAccessToFacebookAccountStore:nil
+                              defaultAudience:session.lastRequestedSystemAudience
+                                isReauthorize:NO
+                                        appID:session.appID
+                                      session:session
+                                      handler:^(NSString *oauthToken, NSError *accountStoreError) {
         if (accountStoreError) {
             [tcs setError:accountStoreError];
         } else {
@@ -115,17 +120,6 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
         }
     }];
     return tcs.task;
-}
-
-
-- (void)requestAccessToFacebookAccountStore:(FBSession *)session
-                                    handler:(FBRequestAccessToAccountsHandler)handler {
-    return [self requestAccessToFacebookAccountStore:session.accessTokenData.permissions
-                                     defaultAudience:session.lastRequestedSystemAudience
-                                       isReauthorize:NO
-                                               appID:session.appID
-                                             session:session
-                                             handler:handler];
 }
 
 - (void)requestAccessToFacebookAccountStore:(NSArray *)permissions
@@ -312,7 +306,7 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
         if (error) {
             [tcs setError:error];
         } else {
-            [tcs setResult:result];
+            [tcs setResult:@(result)];
         }
     }];
     return tcs.task;

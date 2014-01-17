@@ -32,13 +32,6 @@ typedef void (^FBRequestAccessToAccountsHandler)(NSString* oauthToken, NSError *
 @interface FBSystemAccountStoreAdapter : NSObject
 
 /*
- @abstract A convenience overload to default various parameters based on the provided session,
-  typically only for requesting a new token for the provided session.
-*/
-- (void)requestAccessToFacebookAccountStore:(FBSession *)session
-                                    handler:(FBRequestAccessToAccountsHandler)handler;
-
-/*
  @abstract
    Requests access to the device's Facebook account for the given parameters.
  @param permissions the permissions

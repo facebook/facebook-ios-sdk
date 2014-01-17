@@ -26,7 +26,7 @@
 /*!
  Creates a task that is already completed with the given result.
  */
-+ (FBTask *)taskWithResult:(id)result;
++ (FBTask *)taskWithResult:(id<NSObject>)result;
 
 /*!
  Creates a task that is already completed with the given error.
@@ -61,7 +61,7 @@
 /*!
  The result of a successful task.
  */
-- (id)result;
+- (id<NSObject>)result;
 
 /*!
  The error of a failed task.
