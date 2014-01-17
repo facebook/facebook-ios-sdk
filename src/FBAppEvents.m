@@ -1005,7 +1005,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     [FBAppEvents persistAppEventsData:appEventsState];
 }
 
-+ (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL *)allowLogAsDeveloperError {
++ (void)logAndNotify:(NSString *)msg allowLogAsDeveloperError:(BOOL)allowLogAsDeveloperError {
 
     // capture reason and nested code as user info
     NSDictionary* userinfo = [NSDictionary dictionaryWithObject:msg forKey:FBErrorAppEventsReasonKey];
