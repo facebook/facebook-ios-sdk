@@ -133,17 +133,6 @@ params   = _params;
     CGColorSpaceRelease(space);
 }
 
-- (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation {
-    if (orientation == _orientation) {
-        return NO;
-    } else {
-        return orientation == UIInterfaceOrientationPortrait
-        || orientation == UIInterfaceOrientationPortraitUpsideDown
-        || orientation == UIInterfaceOrientationLandscapeLeft
-        || orientation == UIInterfaceOrientationLandscapeRight;
-    }
-}
-
 - (CGAffineTransform)transformForOrientation {
     UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
     if (orientation == UIInterfaceOrientationLandscapeLeft) {
@@ -348,11 +337,7 @@ params   = _params;
                forControlEvents:UIControlEventTouchUpInside];
 
         // To be compatible with OS 2.x
-#if __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_2_2
-        _closeButton.font = [UIFont boldSystemFontOfSize:12];
-#else
         _closeButton.titleLabel.font = [UIFont boldSystemFontOfSize:12];
-#endif
 
         _closeButton.showsTouchWhenHighlighted = YES;
         _closeButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin
@@ -513,8 +498,7 @@ params   = _params;
 // UIDeviceOrientationDidChangeNotification
 
 - (void)deviceOrientationDidChange:(void*)object {
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    if ([self shouldRotateToOrientation:orientation]) {
+    if (_showingKeyboard == NO) {
         [self updateWebOrientation];
 
         CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;

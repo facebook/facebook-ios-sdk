@@ -247,11 +247,7 @@ static CGSize g_buttonSize;
     // add a label that will appear over the button
     self.label = [[[FBShadowLabel alloc] init] autorelease];
     self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-#ifdef __IPHONE_6_0
     self.label.textAlignment = NSTextAlignmentCenter;
-#else
-    self.label.textAlignment = UITextAlignmentCenter;
-#endif
     self.label.backgroundColor = [UIColor clearColor];
     self.label.font = font;
     self.label.textColor = [UIColor whiteColor];

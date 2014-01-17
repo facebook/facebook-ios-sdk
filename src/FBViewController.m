@@ -139,11 +139,6 @@
     self.handler = nil;
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
 #pragma mark Public methods
 
 - (void)presentModallyFromViewController:(UIViewController*)viewController
