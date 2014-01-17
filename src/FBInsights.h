@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBSession.h"
-
+#import "FBAppEvents.h"
 /*!
  @typedef FBInsightsFlushBehavior enum
 
@@ -49,8 +49,8 @@ __attribute__ ((deprecated("Use the FBAppEvents class instead")))
 + (void)logConversionPixel:(NSString *)pixelID valueOfPixel:(double)value __attribute__((deprecated));
 + (void)logConversionPixel:(NSString *)pixelID valueOfPixel:(double)value session:(FBSession *)session __attribute__((deprecated));
 
-+ (FBInsightsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents flushBehavior] instead")));
-+ (void)setFlushBehavior:(FBInsightsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents setFlushBehavior] instead")));
++ (FBAppEventsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents flushBehavior] instead")));
++ (void)setFlushBehavior:(FBAppEventsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents setFlushBehavior] instead")));
 
 + (void)flush __attribute__((deprecated("use [FBAppEvents flush] instead")));
 

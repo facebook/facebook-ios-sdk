@@ -321,10 +321,13 @@ static FBSession *g_activeSession = nil;
     if (!(self.state == FBSessionStateCreated ||
           self.state == FBSessionStateCreatedTokenLoaded)) {
         // login may only be called once, and only from one of the two initial states
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: an attempt was made to open an already opened or closed session"
-                               userInfo:nil]
-         raise];
+        if(handler)
+        {
+            handler(self, self.state, [NSError errorWithDomain:FacebookSDKDomain
+                                                           code:FBErrorSystemAPI
+                                                       userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: an attempt was made to open an already opened or closed session" }]);
+        }
+        return;
     }
     _loginBehavior = behavior;
     if (handler != nil) {
@@ -1593,20 +1596,25 @@ static FBSession *g_activeSession = nil;
                  completionHandler:(FBSessionRequestPermissionResultHandler)handler {
 
     if (!self.isOpen) {
-        // session must be open in order to reauthorize
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: an attempt was made reauthorize permissions on an unopened session"
-                               userInfo:nil]
-         raise];
+        if(handler)
+        {
+            // session must be open in order to reauthorize
+            handler(self, [NSError errorWithDomain:FacebookSDKDomain
+                                             code:FBErrorSystemAPI
+                                         userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: an attempt was made reauthorize permissions on an unopened session" }]);
+        }
+        return;
     }
 
     if (self.reauthorizeHandler) {
-        // block must be cleared (meaning it has been called back) before a reauthorize can happen again
-        [[NSException exceptionWithName:FBInvalidOperationException
-                                 reason:@"FBSession: It is not valid to reauthorize while a previous "
-          @"reauthorize call has not yet completed."
-                               userInfo:nil]
-         raise];
+        if(handler)
+        {
+            // block must be cleared (meaning it has been called back) before a reauthorize can happen again
+            handler(self, [NSError errorWithDomain:FacebookSDKDomain
+                                              code:FBErrorSystemAPI
+                                          userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: It is not valid to reauthorize while a previous reauthorize call has not yet completed." }]);
+        }
+        return;
     }
 
     // is everything in good order argument-wise?
@@ -1993,13 +2001,14 @@ static FBSession *g_activeSession = nil;
     // and ONLY in that case.
     if (!(self.state == FBSessionStateCreated)) {
         if (raiseException) {
-            [[NSException exceptionWithName:FBInvalidOperationException
-                                     reason:@"FBSession: cannot open a session from token data from its current state"
-                                   userInfo:nil]
-             raise];
-        } else {
-            return NO;
+            if(handler)
+            {
+                handler(self, self.state, [NSError errorWithDomain:FacebookSDKDomain
+                                                              code:FBErrorSystemAPI
+                                                          userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: cannot open a session from token data from its current state" }]);
+            }
         }
+        return NO;
     }
 
     BOOL result = NO;

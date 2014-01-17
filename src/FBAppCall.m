@@ -408,9 +408,10 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         loginCall.appLinkData = appLinkData;
 
         handler(loginCall);
+        return YES;
     }
 
-    return YES;
+    return NO;
 }
 
 + (void)invokeHandler:(FBAppCallHandler)handler

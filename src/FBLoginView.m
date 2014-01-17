@@ -18,8 +18,6 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBGraphUser.h"
-#import "FBLoginViewButtonPNG.h"
-#import "FBLoginViewButtonPressedPNG.h"
 #import "FBProfilePictureView.h"
 #import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
@@ -229,11 +227,12 @@ static CGSize g_buttonSize;
     // We want to make sure that when we stretch the image, it includes the curved edges and drop shadow
     // We inset enough pixels to make sure that happens
     UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
-
-    UIImage *image = [[FBLoginViewButtonPNG image] resizableImageWithCapInsets:imageInsets];
+    
+    UIImage *image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/FBLoginViewButton.png"] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateNormal];
+    
+    image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/FBLoginViewButtonPressed.png"] resizableImageWithCapInsets:imageInsets];
 
-    image = [[FBLoginViewButtonPressedPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
 
     [self addSubview:self.button];
@@ -248,11 +247,7 @@ static CGSize g_buttonSize;
     // add a label that will appear over the button
     self.label = [[[FBShadowLabel alloc] init] autorelease];
     self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-#ifdef __IPHONE_6_0
     self.label.textAlignment = NSTextAlignmentCenter;
-#else
-    self.label.textAlignment = UITextAlignmentCenter;
-#endif
     self.label.backgroundColor = [UIColor clearColor];
     self.label.font = font;
     self.label.textColor = [UIColor whiteColor];

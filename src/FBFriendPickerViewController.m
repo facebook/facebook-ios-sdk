@@ -20,7 +20,6 @@
 #import "FBAppEvents+Internal.h"
 #import "FBError.h"
 #import "FBFriendPickerCacheDescriptor.h"
-#import "FBFriendPickerViewDefaultPNG.h"
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableCell.h"
 #import "FBGraphObjectTableDataSource.h"
@@ -33,6 +32,7 @@
 #import "FBUtility.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";
+static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBFriendPickerView/FBFriendPickerViewDefault.png";
 
 int const FBRefreshCacheDelaySeconds = 2;
 
@@ -107,7 +107,7 @@ int const FBRefreshCacheDelaySeconds = 2;
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [FBFriendPickerViewDefaultPNG image];
+    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
     dataSource.controllerDelegate = self;
     dataSource.itemTitleSuffixEnabled = YES;
 

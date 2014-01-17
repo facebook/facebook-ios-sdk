@@ -58,11 +58,11 @@ NSString *const FBInsightsLoggingResultNotification = @"com.facebook.sdk:FBAppEv
     [FBAppEvents logConversionPixel:pixelID valueOfPixel:value session:session];
 }
 
-+ (FBInsightsFlushBehavior)flushBehavior {
++ (FBAppEventsFlushBehavior)flushBehavior {
     return [FBAppEvents flushBehavior];
 }
 
-+ (void)setFlushBehavior:(FBInsightsFlushBehavior)flushBehavior {
++ (void)setFlushBehavior:(FBAppEventsFlushBehavior)flushBehavior {
     [FBAppEvents setFlushBehavior:flushBehavior];
 }
 

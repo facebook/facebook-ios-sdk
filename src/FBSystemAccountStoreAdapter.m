@@ -167,12 +167,13 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
     if (!audience && isReauthorize) {
         for (NSString *p in permissions) {
             if ([p hasPrefix:@"publish"]) {
-                [[NSException exceptionWithName:FBInvalidOperationException
-                                         reason:@"FBSession: One or more publish permission was requested "
-                  @"without specifying an audience; use FBSessionDefaultAudienceJustMe, "
-                  @"FBSessionDefaultAudienceFriends, or FBSessionDefaultAudienceEveryone"
-                                       userInfo:nil]
-                 raise];
+                if(handler)
+                {
+                    handler(nil, [NSError errorWithDomain:FacebookSDKDomain
+                                                     code:FBErrorSystemAPI
+                                                 userInfo:@{ NSLocalizedDescriptionKey : @"FBSession: One or more publish permission was requested without specifying an audience; use FBSessionDefaultAudienceJustMe, FBSessionDefaultAudienceFriends, or FBSessionDefaultAudienceEveryone" }]);
+                }
+                return;
             }
         }
     }
@@ -312,7 +313,10 @@ static FBSystemAccountStoreAdapter* _singletonInstance = nil;
         if (error) {
             [tcs setError:error];
         } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wint-conversion"
             [tcs setResult:result];
+#pragma clang diagnostic pop
         }
     }];
     return tcs.task;

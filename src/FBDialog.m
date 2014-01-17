@@ -15,8 +15,6 @@
  */
 
 #import "FBDialog.h"
-
-#import "FBDialogClosePNG.h"
 #import "FBFrictionlessRequestSettings.h"
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
@@ -133,17 +131,6 @@ params   = _params;
     CGContextRestoreGState(context);
 
     CGColorSpaceRelease(space);
-}
-
-- (BOOL)shouldRotateToOrientation:(UIInterfaceOrientation)orientation {
-    if (orientation == _orientation) {
-        return NO;
-    } else {
-        return orientation == UIInterfaceOrientationPortrait
-        || orientation == UIInterfaceOrientationPortraitUpsideDown
-        || orientation == UIInterfaceOrientationLandscapeLeft
-        || orientation == UIInterfaceOrientationLandscapeRight;
-    }
 }
 
 - (CGAffineTransform)transformForOrientation {
@@ -338,9 +325,9 @@ params   = _params;
         _webView.delegate = self;
         _webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self addSubview:_webView];
-
-        UIImage* closeImage = [FBDialogClosePNG image];
-
+        
+        UIImage* closeImage = [UIImage imageNamed:@"FacebookSDKResources.bundle/FBDialog/FBDialogClose.png"];
+        
         UIColor* color = [UIColor colorWithRed:167.0/255 green:184.0/255 blue:216.0/255 alpha:1];
         _closeButton = [[UIButton buttonWithType:UIButtonTypeCustom] retain];
         [_closeButton setImage:closeImage forState:UIControlStateNormal];
@@ -350,11 +337,7 @@ params   = _params;
                forControlEvents:UIControlEventTouchUpInside];
 
         // To be compatible with OS 2.x
-#if __IPHONE_OS_VERSION_MAX_ALLOWED <= __IPHONE_2_2
-        _closeButton.font = [UIFont boldSystemFontOfSize:12];
-#else
         _closeButton.titleLabel.font = [UIFont boldSystemFontOfSize:12];
-#endif
 
         _closeButton.showsTouchWhenHighlighted = YES;
         _closeButton.autoresizingMask = UIViewAutoresizingFlexibleRightMargin
@@ -515,8 +498,7 @@ params   = _params;
 // UIDeviceOrientationDidChangeNotification
 
 - (void)deviceOrientationDidChange:(void*)object {
-    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-    if ([self shouldRotateToOrientation:orientation]) {
+    if (_showingKeyboard == NO) {
         [self updateWebOrientation];
 
         CGFloat duration = [UIApplication sharedApplication].statusBarOrientationAnimationDuration;
