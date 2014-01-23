@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+
 #import "FBSession.h"
 
 @class FBCacheIndex;
@@ -27,7 +28,7 @@
     NSCache* _inMemoryCache;
     FBCacheIndex* _cacheIndex;
     NSString* _dataCachePath;
-  
+
     dispatch_queue_t _fileQueue;
 }
 

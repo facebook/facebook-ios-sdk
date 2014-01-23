@@ -14,29 +14,25 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
 #import <Accounts/Accounts.h>
+#import <Foundation/Foundation.h>
+
 #import "FBSession+Internal.h"
+#import "FBTask.h"
+#import "FBTaskCompletionSource.h"
 
 typedef void (^FBRequestAccessToAccountsHandler)(NSString* oauthToken, NSError *accountStoreError);
 
 /*
  @class
- 
+
  @abstract Adapter around system account store APIs. Note this is only intended for internal
   consumption. If publicized, consider moving declarations to an internal only header.
 */
 @interface FBSystemAccountStoreAdapter : NSObject
 
 /*
- @abstract A convenience overload to default various parameters based on the provided session,
-  typically only for requesting a new token for the provided session.
-*/
-- (void)requestAccessToFacebookAccountStore:(FBSession *)session
-                                    handler:(FBRequestAccessToAccountsHandler)handler;
-
-/*
- @abstract 
+ @abstract
    Requests access to the device's Facebook account for the given parameters.
  @param permissions the permissions
  @param defaultAudience the default audience
@@ -51,10 +47,18 @@ typedef void (^FBRequestAccessToAccountsHandler)(NSString* oauthToken, NSError *
                                       appID:(NSString *)appID
                                     session:(FBSession *)session
                                     handler:(FBRequestAccessToAccountsHandler)handler;
+/*!
+ @abstract Same as `renewSystemAuthorization:` but represented as `FBTask`.
+*/
+- (FBTask *)renewSystemAuthorizationAsTask;
 
+/*!
+ @abstract Same as `requestAccessToFacebookAccountStore:handler:` but represented as `FBTask`
+*/
+- (FBTask *)requestAccessToFacebookAccountStoreAsTask:(FBSession *)session;
 /*
  @abstract Sends a message to the device account store to renew the Facebook account credentials
- 
+
  @param handler the handler that is invoked on completion (dispatched to the main thread).
 */
 - (void)renewSystemAuthorization:(void( ^ )(ACAccountCredentialRenewResult result, NSError *error)) handler;

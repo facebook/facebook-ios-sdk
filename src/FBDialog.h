@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,7 @@
     BOOL _showingKeyboard;
     BOOL _isViewInvisible;
     FBFrictionlessRequestSettings* _frictionlessSettings;
-    
+
     // Ensures that UI elements behind the dialog are disabled.
     UIView* _modalBackgroundView;
 }
@@ -46,12 +46,12 @@
 /**
  * The delegate.
  */
-@property(nonatomic,assign) id<FBDialogDelegate> delegate;
+@property (nonatomic, assign) id<FBDialogDelegate> delegate;
 
 /**
  * The parameters.
  */
-@property(nonatomic, retain) NSMutableDictionary* params;
+@property (nonatomic, retain) NSMutableDictionary* params;
 
 - (NSString *) getStringFromUrl: (NSString*) url needle:(NSString *) needle;
 

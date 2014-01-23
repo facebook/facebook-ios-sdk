@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
+#import "FBAccessTokenData.h"
 #import "FBBatchRequestIntegrationTests.h"
 #import "FBTestSession.h"
 #import "FBRequestConnection.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
 #import "FBGraphUser.h"
+#import "FBSessionTokenCachingStrategy.h"
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #if defined(FACEBOOKSDK_SKIP_BATCH_REQUEST_TESTS)
 
@@ -284,6 +288,62 @@
     
     [connection release];
     [blocker release];
+}
+
+- (void)testBatchParametersOmitResponseOnSuccess {
+    FBTestSession *session = [self defaultTestSession];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
+    // Note these ids are significant in that they are ids of other test users. Since we use FBTestSession
+    // above (which will have a platform test user access token), the ids need to be objects that are visible
+    // to the platform test user (such as other test users).
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=100006424828400,100006675870174"] autorelease];
+    [connection addRequest:parent
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNil(error, @"unexpected error in parent request :%@", error);
+             STAssertNotNil(result, @"expected parent results since we said to include response");
+             [blocker signal];
+         } batchParameters:@{@"name":@"getactions", @"omit_response_on_success":@(NO)}];
+    
+    FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids={result=getactions:$.*.id}"] autorelease];
+    [connection addRequest:child
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNil(error, @"unexpected error in child request :%@", error);
+             STAssertNotNil(result, @"expected results");
+             [blocker signal];
+         } batchEntryName:nil];
+    [connection start];
+    
+    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+}
+
+- (void)testBatchParametersDependsOn {
+    FBTestSession *session = [self defaultTestSession];
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
+
+    // Set up a parent request to an invalid graph path that will result in an error.
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"invalidpath"] autorelease];
+    [connection addRequest:parent
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNotNil(error, @"expected error in parent request but did not get one.");
+             [blocker signal];
+         } batchParameters:@{@"name":@"parent"}];
+    
+    // The child request does not have an implicit dependency on the parent, but we will test it
+    // by adding the depends_on explicitly and verifying that the child response has no data (nor error).
+    // "If the parent operation execution results in an error, then the subsequent operation is not executed"
+    // (see https://developers.facebook.com/docs/reference/api/batch/)
+    FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=4,6"] autorelease];
+    [connection addRequest:child
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNil(error, @"unexpected error in child request :%@", error);
+             STAssertNil(result, @"unexpected results in child request %@", result);
+             [blocker signal];
+         } batchParameters:@{@"depends_on":@"parent"}];
+    [connection start];
+    
+    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
 }
 
 @end

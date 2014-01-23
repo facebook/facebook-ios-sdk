@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
-#import "FBBase64.h"
 #import "FBAppBridgeTypeToJSONConverter.h"
+
+#import <UIKit/UIKit.h>
+
+#import "FBBase64.h"
+#import "FBError.h"
+#import "FBSettings+Internal.h"
 
 /*
  jsonReadyValue: A representation of the extended type that is safe for JSON serialization.
@@ -51,7 +55,6 @@ static const struct {
 };
 
 static NSString *const FBAppBridgeTypeIdentifier = @"com.facebook.Facebook.FBAppBridgeType";
-static const NSUInteger PasteboardThreshold = 5120;
 
 @implementation FBAppBridgeTypeToJSONConverter
 
@@ -65,7 +68,7 @@ static const NSUInteger PasteboardThreshold = 5120;
 
 - (NSDictionary *)jsonDictionaryFromDictionaryWithAppBridgeTypes:(NSDictionary *)dictionaryWithAppBridgeTypes {
     self.createdPasteboardNames = [NSMutableArray array];
-  
+
     return [self convertedDictionaryFromDictionary:dictionaryWithAppBridgeTypes
                                   convertingToJSON:YES];
 }
@@ -93,11 +96,11 @@ static const NSUInteger PasteboardThreshold = 5120;
                                   tag:FBAppBridgeTypesTags.data];
         } else if ([object isKindOfClass:[UIImage class]]) {
             UIImage *image = (UIImage *)object;
-            return [self jsonFromData:UIImagePNGRepresentation(image)
+            return [self jsonFromData:UIImageJPEGRepresentation(image, [FBSettings defaultJPEGCompressionQuality])
                                   tag:FBAppBridgeTypesTags.png];
         }
     }
-    
+
     // If we don't have special processing, return the same object
     return object;
 }
@@ -116,16 +119,16 @@ static const NSUInteger PasteboardThreshold = 5120;
             convertedDictionary[key] = convertedObject;
         }
     }
-    
+
     return convertedDictionary;
 }
 
 - (NSArray *)convertedArrayFromArray:(NSArray *)array convertingToJSON:(BOOL)convertingToJSON {
-    int length = array.count;
+    NSUInteger length = array.count;
     if (length == 0) {
         return array;
     }
-    
+
     NSMutableArray *convertedArray = [NSMutableArray arrayWithCapacity:length];
     for (int i = 0; i < length; i++) {
         id convertedObject = [self convertedObjectFromObject:array[i]
@@ -136,32 +139,18 @@ static const NSUInteger PasteboardThreshold = 5120;
             convertedArray[i] = [NSNull null];
         }
     }
-    
+
     return convertedArray;
 }
 
 - (NSMutableDictionary *)jsonFromData:(NSData *)data tag:(NSString *)tag {
     NSMutableDictionary *json = [NSMutableDictionary dictionary];
-    NSString *jsonReadyValue = nil;
-    
-    // If the data is short enough, put it in the URL directly. Otherwise use UIPasteboard
-    if (data.length <= PasteboardThreshold) {
-        jsonReadyValue = FBEncodeBase64(data);
-        json[FBAppBridgeTypesMetadata.isBase64] = [NSNumber numberWithBool:YES];
-    } else {
-        UIPasteboard *board = [UIPasteboard pasteboardWithUniqueName];
-        [board setPersistent:YES];
-        [board setData:data forPasteboardType:FBAppBridgeTypeIdentifier];
-        
-        jsonReadyValue = board.name;
-        [self.createdPasteboardNames addObject:board.name];
-        
-        json[FBAppBridgeTypesMetadata.isPasteboard] = [NSNumber numberWithBool:YES];
-    }
-    
+    NSString *jsonReadyValue = FBEncodeBase64(data);
+    json[FBAppBridgeTypesMetadata.isBase64] = [NSNumber numberWithBool:YES];
+
     json[FBAppBridgeTypesMetadata.tag] = tag ?: @"";
-    json[FBAppBridgeTypesMetadata.jsonReadyValue] = jsonReadyValue;
-    
+    json[FBAppBridgeTypesMetadata.jsonReadyValue] = jsonReadyValue ?: @"";
+
     return json;
 }
 
@@ -179,11 +168,11 @@ static const NSUInteger PasteboardThreshold = 5120;
             [UIPasteboard removePasteboardWithName:board.name];
         }
     }
-    
+
     if (appBridgeType && [dictionary[FBAppBridgeTypesMetadata.tag] isEqualToString:FBAppBridgeTypesTags.png]) {
         appBridgeType = [UIImage imageWithData:appBridgeType];
     }
-    
+
     return appBridgeType;
 }
 

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
+#import "FBAccessTokenData.h"
 #import "FBRequestConnectionIntegrationTests.h"
+#import "FBSession+Internal.h"
 #import "FBTestSession.h"
 #import "FBTestSession+Internal.h"
 #import "FBRequestConnection.h"
@@ -72,6 +74,8 @@
 {
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
     session.forceAccessTokenRefresh = YES;
+    // Invoke shouldRefreshPermissions which has the side affect of disabling permissions refresh piggybacking for an hour.
+    [session shouldRefreshPermissions];
     
     FBRequest *request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
     
@@ -84,9 +88,40 @@
     [blocker release];
     
     NSArray *requests = [connection performSelector:@selector(requests)];
-    STAssertTrue(requests.count == 2, @"didn't piggyback");
+
+    // Therefore, only expect the the token refresh piggyback in addition to the original request for /me
+    int count = requests.count;
+    STAssertEquals(2,count, @"unexpected number of piggybacks");
     
     [connection release];
+}
+
+- (void)testWillPiggybackPermissionsRefresh
+{
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    session.forceAccessTokenRefresh = YES;
+    // verify session's permissions refresh date is initially in the past.
+    STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"session permission refresh date does not match");
+    
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+    
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+    [connection start];
+    
+    [blocker wait];
+    [blocker release];
+    
+    NSArray *requests = [connection performSelector:@selector(requests)];
+
+    // Expect the token refresh and permission refresh to be piggybacked.
+    int count = requests.count;
+    STAssertEquals(3,count, @"unexpected number of piggybacks");
+    
+    [connection release];
+    
+    STAssertTrue([session.accessTokenData.permissionsRefreshDate timeIntervalSinceNow]> -3, @"session permission refresh date should be within a few seconds of now");
 }
 
 - (void)testCachedRequests
@@ -119,10 +154,14 @@
     [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         STAssertNotNil(result, @"Expected a successful result");
         completedWithoutBlocking = YES;
+        [blocker signal];
     }];
     [connection startWithCacheIdentity:@"FBUnitTests"
                  skipRoundtripIfCached:YES];
     
+    // Note despite the skipping of round trip, the completion handler is still dispatched async since we
+    // started using the Task framework in FBRequestConnection.
+    STAssertTrue([blocker waitWithTimeout:3], @"blocker timed out");
     // should have completed successfully by here
     STAssertTrue(completedWithoutBlocking, @"Should have called the handler, due to cache hit");
     STAssertTrue(connection.isResultFromCache, @"Should not have fetched from server");
@@ -335,6 +374,32 @@
     [blocker release];
 }
 
+- (void)testMultipleSelectionWithDependenciesBatch {
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
+    // Note these ids are significant in that they are ids of other test users. Since we use FBTestSession
+    // above (which will have a platform test user access token), the ids need to be objects that are visible
+    // to the platform test user (such as other test users).
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=100006424828400,100006675870174"] autorelease];
+    [connection addRequest:parent
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNil(error, @"unexpected error in parent request :%@", error);
+             [blocker signal];
+         } batchEntryName:@"getactions"];
+
+    FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids={result=getactions:$.*.id}"] autorelease];
+    [connection addRequest:child
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             STAssertNil(error, @"unexpected error in child request :%@", error);
+             STAssertNotNil(result, @"expected results");
+             [blocker signal];
+         } batchEntryName:nil];
+    [connection start];
+    [connection release];
+
+    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+}
 @end
 
 #endif

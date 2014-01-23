@@ -20,6 +20,8 @@
 #import "FBRequest.h"
 #import "FBSettings.h"
 #import "FBError.h"
+#import "FBUtility.h"
+#import <OCMock/OCMock.h>
 #include <pthread.h>
 
 static NSMutableDictionary *mapTestCasesToSessions;
@@ -28,7 +30,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 #pragma mark Private interface
 
-@interface FBIntegrationTests ()
+@interface FBIntegrationTests () {
+    id _mockFBUtility;
+}
 
 - (void)issueFriendRequestInSession:(FBTestSession*)session toFriend:(NSString*)userID;
 
@@ -61,6 +65,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                                forKey:[NSValue valueWithNonretainedObject:self]]; 
     
     pthread_mutex_unlock(&mutex);
+    
+    _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
+    [[[_mockFBUtility stub] andReturn:nil] advertiserID]; //stub advertiserID since that often hangs.
 }
 
 - (void)tearDown
@@ -76,6 +83,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         [session close];
     }
     [sessions release];
+    
+    [_mockFBUtility release];
+    _mockFBUtility = nil;
     
     [super tearDown];
 }
@@ -182,10 +192,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     }    
 }
 
-- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session {
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    
-    FBRequest *request = [[[FBRequest alloc] initWithSession:session 
+- (void)validateGraphObjectWithId:(NSString*)idString hasProperties:(NSArray*)propertyNames withSession:(FBSession*)session blocker:(FBTestBlocker *)blocker {
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:idString]
                           autorelease];
     
@@ -198,11 +206,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
         
         [blocker signal];
     }];
-    [blocker wait];
 }
 
 - (void)postAndValidateWithSession:(FBSession*)session graphPath:(NSString*)graphPath graphObject:(id)graphObject hasProperties:(NSArray*)propertyNames {
-    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    __block FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
     
     FBRequest *request = [[[FBRequest alloc] initForPostWithSession:session 
                                                           graphPath:graphPath 
@@ -216,12 +223,13 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
             NSString *newObjectId = [result objectForKey:@"id"];
             [self validateGraphObjectWithId:newObjectId
                               hasProperties:propertyNames
-                                withSession:session];
+                                withSession:session
+                                    blocker:blocker];
         } 
         [blocker signal];
     }];
     
-    [blocker wait];    
+    STAssertTrue([blocker waitWithTimeout:15], @"blocker timed out");
 }
 
 // Unit tests failing? Turn on some logging with this helper.

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 
 #import "SUProfileTableViewCell.h"
+
 #import <FacebookSDK/FacebookSDK.h>
 
 static const CGFloat leftMargin = 10;
@@ -48,7 +49,7 @@ static const CGFloat pictureHeight = 50;
     if (self) {
         [self initializeSubViews];
     }
-    
+
     return self;
 }
 
@@ -70,8 +71,8 @@ static const CGFloat pictureHeight = 50;
 
 #pragma mark -
 
-- (void)initializeSubViews {   
-    FBProfilePictureView *profilePic = [[FBProfilePictureView alloc] 
+- (void)initializeSubViews {
+    FBProfilePictureView *profilePic = [[FBProfilePictureView alloc]
         initWithFrame:CGRectMake(
             leftMargin,
             topMargin,
@@ -79,20 +80,20 @@ static const CGFloat pictureHeight = 50;
             pictureHeight)];
     [self addSubview:profilePic];
     self.profilePic = profilePic;
-    
+
     self.clipsToBounds = YES;
-    self.autoresizesSubviews = YES;                                                                
+    self.autoresizesSubviews = YES;
 }
 
 - (void) layoutSubviews {
     [super layoutSubviews];
 
     CGSize size = self.bounds.size;
-    
+
     self.textLabel.frame = CGRectMake(
-        leftMargin * 2 + pictureWidth, 
+        leftMargin * 2 + pictureWidth,
         topMargin,
-        size.width - leftMargin - pictureWidth - rightMargin, 
+        size.width - leftMargin - pictureWidth - rightMargin,
         size.height - topMargin);
 }
 

@@ -17,7 +17,7 @@
 #import "FBSessionManualTokenCachingStrategy.h"
 
 
-@implementation FBSessionManualTokenCachingStrategy 
+@implementation FBSessionManualTokenCachingStrategy
 
 @synthesize accessToken = _accessToken,
             expirationDate = _expirationDate;

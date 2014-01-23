@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
-#import <Foundation/Foundation.h>
+
 #import <sqlite3.h>
+
+#import <Foundation/Foundation.h>
 
 @class FBCacheIndex;
 
@@ -25,7 +26,7 @@
 // Informs the disk cache to write contents to the specified file.  The callback
 // should not block and should be executed in order.
 - (void) cacheIndex:(FBCacheIndex*)cacheIndex
-    writeFileWithName:(NSString*)name 
+    writeFileWithName:(NSString*)name
     data:(NSData*)data;
 // Informs the disk cache to delete the specified file.
 - (void) cacheIndex:(FBCacheIndex*)cacheIndex
@@ -37,12 +38,12 @@
 {
 @private
     id <FBCacheIndexFileDelegate> _delegate;
-    
+
     NSCache* _cachedEntries;
-  
+
     NSUInteger _currentDiskUsage;
     NSUInteger _diskCapacity;
-  
+
     sqlite3* _database;
     sqlite3_stmt* _insertStatement;
     sqlite3_stmt* _removeByKeyStatement;
@@ -51,7 +52,7 @@
     sqlite3_stmt* _selectExcludingKeyFragmentStatement;
     sqlite3_stmt* _trimStatement;
     sqlite3_stmt* _updateStatement;
-  
+
     dispatch_queue_t _databaseQueue;
 }
 

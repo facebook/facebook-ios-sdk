@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,10 +15,11 @@
  */
 
 #import "FBShareDialogParams.h"
-#import "FBDialogsParams+Internal.h"
+
 #import "FBAppBridge.h"
-#import "FBUtility.h"
+#import "FBDialogsParams+Internal.h"
 #import "FBLogger.h"
+#import "FBUtility.h"
 
 #ifndef FB_BUILD_ONLY
 #define FB_BUILD_ONLY
@@ -126,7 +127,7 @@ static NSString *const kFBShareDialogProdVersion = @"20130410";
     if (_picture && ![self isSupportedScheme:_picture.scheme]) {
         return nil;
     }
-    
+
     NSString *prodVersion = [FBAppBridge installedFBNativeAppVersionForMethod:@"share"
                                                                    minVersion:kFBShareDialogProdVersion];
     if (!prodVersion) {

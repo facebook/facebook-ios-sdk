@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-#import <FacebookSDK/FacebookSDK.h>
-#import "GraphApiAppDelegate.h"
 #import "GraphApiViewController.h"
+
+#import <FacebookSDK/FacebookSDK.h>
+
+#import "GraphApiAppDelegate.h"
 
 static NSString *loadingText = @"Loading...";
 
@@ -111,27 +113,27 @@ static NSString *loadingText = @"Loading...";
     if ([self.textObjectID isFirstResponder]) {
         [self.textObjectID resignFirstResponder];
     }
-    
+
     // create the connection object
     FBRequestConnection *newConnection = [[FBRequestConnection alloc] init];
-    
+
     // for each fbid in the array, we create a request object to fetch
     // the profile, along with a handler to respond to the results of the request
     for (NSString *fbid in fbids) {
-        
+
         // create a handler block to handle the results of the request for fbid's profile
         FBRequestHandler handler =
             ^(FBRequestConnection *connection, id result, NSError *error) {
                 // output the results of the request
                 [self requestCompleted:connection forFbID:fbid result:result error:error];
             };
-        
+
         // create the request object, using the fbid as the graph path
         // as an alternative the request* static methods of the FBRequest class could
         // be used to fetch common requests, such as /me and /me/friends
         FBRequest *request = [[FBRequest alloc] initWithSession:FBSession.activeSession
                                                       graphPath:fbid];
-        
+
         // add the request to the connection object, if more than one request is added
         // the connection object will compose the requests as a batch request; whether or
         // not the request is a batch or a singleton, the handler behavior is the same,
@@ -139,12 +141,12 @@ static NSString *loadingText = @"Loading...";
         // requests are occuring
         [newConnection addRequest:request completionHandler:handler];
     }
-    
+
     // if there's an outstanding connection, just cancel
-    [self.requestConnection cancel];    
-    
+    [self.requestConnection cancel];
+
     // keep track of our connection, and start it
-    self.requestConnection = newConnection;    
+    self.requestConnection = newConnection;
     [newConnection start];
 }
 
@@ -159,7 +161,7 @@ static NSString *loadingText = @"Loading...";
         connection != self.requestConnection) {
         return;
     }
-    
+
     // clean this up, for posterity
     self.requestConnection = nil;
 
@@ -177,11 +179,11 @@ static NSString *loadingText = @"Loading...";
         // we pull the name property out, if there is one, and display it
         text = (NSString *)[dictionary objectForKey:@"name"];
     }
-    
+
     self.textOutput.text = [NSString stringWithFormat:@"%@%@: %@\r\n",
-                            self.textOutput.text, 
+                            self.textOutput.text,
                             [fbID stringByTrimmingCharactersInSet:
-                             [NSCharacterSet whitespaceAndNewlineCharacterSet]], 
+                             [NSCharacterSet whitespaceAndNewlineCharacterSet]],
                             text];
 }
 

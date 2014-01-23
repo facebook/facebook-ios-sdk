@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-#import <FacebookSDK/FacebookSDK.h>
 #import "PPViewController.h"
+
+#import <FacebookSDK/FacebookSDK.h>
+
 #import "PPAppDelegate.h"
 
 enum SampleLocation {
@@ -53,7 +55,7 @@ enum SampleLocation {
     if (FBSession.activeSession.isOpen) {
         // Default to Seattle, this method calls loadData
         [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
-    } else { 
+    } else {
         // if the session isn't open, we open it here, which may cause UX to log in the user
         [FBSession openActiveSessionWithReadPermissions:nil
                                            allowLoginUI:YES
@@ -76,7 +78,7 @@ enum SampleLocation {
     switch (searchOption) {
         case SampleLocationSeattle:
             // FBSample logic
-            // After setting the coordinates for the data we wish to fetch, we call loadData to initiate 
+            // After setting the coordinates for the data we wish to fetch, we call loadData to initiate
             // the actual network round-trip with Facebook; likewise for the other two locations
             self.locationCoordinate = CLLocationCoordinate2DMake(47.6097, -122.3331);
             [self loadData];
@@ -91,14 +93,14 @@ enum SampleLocation {
             [self.locationManager startUpdatingLocation];
             break;
     }
-    
+
     // When startUpdatingLocation/loadData finish, we will reload then.
     return NO;
 }
 
 - (BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString {
     // FBSample logic
-    // When search text changes, we update the property on our base class, and then refetch data; the 
+    // When search text changes, we update the property on our base class, and then refetch data; the
     // Scrumptious sample shows a more complex implementation of this, where frequent updates are aggregated,
     // and fetching happens on a timed basis to avoid becomming to chatty with the server; this sample takes
     // a more simplistic approach
@@ -117,7 +119,7 @@ enum SampleLocation {
 - (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
 {
     // FBSample logic
-    // Here we see a use of the FBGraphPlace protocol, where our code can use dot-notation to 
+    // Here we see a use of the FBGraphPlace protocol, where our code can use dot-notation to
     // select name and location data from the selected place
     id<FBGraphPlace> place = placePicker.selection;
 
@@ -125,7 +127,7 @@ enum SampleLocation {
     if(!place) {
         return;
     }
- 
+
     // we'll use logging to show the simple typed property access to place and location info
     NSString *infoMessage = [NSString localizedStringWithFormat:@"place=%@\n city=%@, state=%@\n lat=%@\n long=%@\n",
                              place.name,
@@ -133,9 +135,9 @@ enum SampleLocation {
                              place.location.state,
                              place.location.latitude,
                              place.location.longitude];
-    
+
     NSLog(@"%@", infoMessage);
-    
+
     // Sample action for place selection completed action
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Place selected"
                                                         message:infoMessage
@@ -148,7 +150,7 @@ enum SampleLocation {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     // FBSample logic
     // We are inheriting FBPlacePickerViewController, and so in order to handle events such
     // as selection change, we set our base class' delegate property to self
@@ -162,7 +164,7 @@ enum SampleLocation {
          setSelectedScopeButtonIndex:self.viewStateSearchScopeIndex];
         [self.searchDisplayController.searchBar setText:self.viewStateSearchText];
         [self.searchDisplayController setActive:self.viewStateSearchWasActive];
-        
+
         self.viewStateSearchText = nil;
     }
 
@@ -188,14 +190,13 @@ enum SampleLocation {
 
 #pragma mark - Location Manager delegate
 
-- (void)locationManager:(CLLocationManager *)manager
-	didUpdateToLocation:(CLLocation *)newLocation
+- (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation
            fromLocation:(CLLocation *)oldLocation {
     if (newLocation.horizontalAccuracy < 100) {
         // We wait for a precision of 100m and turn the GPS off
         [self.locationManager stopUpdatingLocation];
         self.locationManager = nil;
-        
+
         self.locationCoordinate = newLocation.coordinate;
         [self loadData];
     }

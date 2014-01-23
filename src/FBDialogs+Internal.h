@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,18 +29,18 @@
 /*!
  @abstract
  Switches to the native Facebook App and shows the login dialog for the requested login params
- 
+
  @param params Params for the native Login dialog
 
  @param clientState An NSDictionary that's passed through when the completion handler
  is called. This is useful for the app to maintain state. May be nil.
- 
+
  @param handler A completion handler that may be called when the login is
  complete. May be nil. If non-nil, the handler will always be called asynchronously.
- 
+
  @return An FBAppCall object that will also be passed into the provided
  FBAppCallCompletionHandler.
- 
+
  @discussion A non-nil FBAppCall object is only returned if the corresponding
  canPresentFBLoginDialogWithParams method is also returning YES for the same params.
 */

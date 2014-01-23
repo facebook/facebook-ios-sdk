@@ -19,7 +19,7 @@
 #import "FBGraphObjectPagingLoader.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
-#import "FBInsights+Internal.h"
+#import "FBAppEvents+Internal.h"
 #import "FBLogger.h"
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
@@ -28,13 +28,13 @@
 #import "FBPlacePickerCacheDescriptor.h"
 #import "FBSession+Internal.h"
 #import "FBSettings.h"
+#import "FBPlacePickerViewGenericPlacePNG.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";
 
 static const NSInteger searchTextChangedTimerInterval = 2;
 const NSInteger defaultResultsLimit = 100;
 const NSInteger defaultRadius = 1000; // 1km
-static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerView/images/fb_generic_place.png";
 
 @interface FBPlacePickerViewController () <FBGraphObjectSelectionChangedDelegate,
                                             FBGraphObjectViewControllerDelegate,
@@ -117,7 +117,7 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     FBGraphObjectTableDataSource *dataSource = [[[FBGraphObjectTableDataSource alloc]
                                                  init]
                                                 autorelease];
-    dataSource.defaultPicture = [UIImage imageNamed:defaultImageName];
+    dataSource.defaultPicture = [FBPlacePickerViewGenericPlacePNG image];
     dataSource.controllerDelegate = self;
     dataSource.itemSubtitleEnabled = YES;
 
@@ -420,12 +420,12 @@ static NSString *defaultImageName = @"FacebookSDKResources.bundle/FBPlacePickerV
     [self.loader reset];
 }
 
-- (void)logInsights:(BOOL)cancelled {
-    [FBInsights logImplicitEvent:FBInsightsEventNamePlacePickerUsage
-                      valueToSum:1.0
-                      parameters:@{ FBInsightsEventParameterDialogOutcome : (cancelled
-                                            ? FBInsightsDialogOutcomeValue_Cancelled
-                                            : FBInsightsDialogOutcomeValue_Completed),
+- (void)logAppEvents:(BOOL)cancelled {
+    [FBAppEvents logImplicitEvent:FBAppEventNamePlacePickerUsage
+                      valueToSum:nil
+                      parameters:@{ FBAppEventParameterDialogOutcome : (cancelled
+                                            ? FBAppEventsDialogOutcomeValue_Cancelled
+                                            : FBAppEventsDialogOutcomeValue_Completed),
                                     @"num_places_picked" : [NSNumber numberWithUnsignedInteger:self.selection.count]
                                   }
                          session:self.session];

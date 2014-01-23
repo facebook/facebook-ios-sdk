@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,17 @@
  */
 
 #import "FBGraphObjectTableSelection.h"
+
 #import "FBUtility.h"
 
-@interface FBGraphObjectTableSelection() <UITableViewDelegate, FBGraphObjectSelectionQueryDelegate> 
+@interface FBGraphObjectTableSelection() <UITableViewDelegate, FBGraphObjectSelectionQueryDelegate>
 
 @property (nonatomic, retain) FBGraphObjectTableDataSource *dataSource;
 @property (nonatomic, retain) NSArray *selection;
 
-- (void)selectItem:(FBGraphObject *)item
-              cell:(UITableViewCell *)cell;
+- (void)     selectItem:(FBGraphObject *)item
+                   cell:(UITableViewCell *)cell
+  raiseSelectionChanged:(BOOL) raiseSelectionChanged;
 
 - (void)    deselectItem:(FBGraphObject *)item
                     cell:(UITableViewCell *)cell
@@ -43,25 +45,25 @@
 - (id)initWithDataSource:(FBGraphObjectTableDataSource *)dataSource
 {
     self = [super init];
-    
+
     if (self) {
         dataSource.selectionDelegate = self;
 
         self.dataSource = dataSource;
         self.allowsMultipleSelection = YES;
-        
+
         NSArray *selection = [[NSArray alloc] init];
         self.selection = selection;
         [selection release];
     }
-    
+
     return self;
 }
 
 - (void)dealloc
 {
     _dataSource.selectionDelegate = nil;
-    
+
     [_dataSource release];
     [_selection release];
 
@@ -75,8 +77,9 @@
     }
 }
 
-- (void)selectItem:(FBGraphObject *)item
-              cell:(UITableViewCell *)cell
+- (void)      selectItem:(FBGraphObject *)item
+                    cell:(UITableViewCell *)cell
+   raiseSelectionChanged:(BOOL) raiseSelectionChanged
 {
     if ([FBUtility graphObjectInArray:self.selection withSameIDAs:item] == nil) {
         NSMutableArray *selection = [[NSMutableArray alloc] initWithArray:self.selection];
@@ -85,7 +88,27 @@
         [selection release];
     }
     cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    [self selectionChanged];
+    if (raiseSelectionChanged) {
+        [self selectionChanged];
+    }
+}
+
+// Note this method does NOT automatically "raise" the selectionChanged event.
+- (void)selectItem: (NSArray *)items tableView:(UITableView *)tableView
+{
+    // Copy this so it doesn't change from under us.
+    items = [NSArray arrayWithArray:items];
+
+    for (FBGraphObject *item in items) {
+        NSIndexPath *indexPath = [self.dataSource indexPathForItem:item];
+
+        UITableViewCell *cell = nil;
+        if (indexPath != nil) {
+            cell = [tableView cellForRowAtIndexPath:indexPath];
+        }
+
+        [self selectItem:item cell:cell raiseSelectionChanged:NO];
+    }
 }
 
 - (void)    deselectItem:(FBGraphObject *)item
@@ -110,15 +133,15 @@
 {
     // Copy this so it doesn't change from under us.
     items = [NSArray arrayWithArray:items];
-    
+
     for (FBGraphObject *item in items) {
         NSIndexPath *indexPath = [self.dataSource indexPathForItem:item];
-        
+
         UITableViewCell *cell = nil;
         if (indexPath != nil) {
             cell = [tableView cellForRowAtIndexPath:indexPath];
         }
-        
+
         [self deselectItem:item cell:cell raiseSelectionChanged:NO];
     }
 }
@@ -151,7 +174,7 @@
 {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     // cell may be nil, which is okay, it will pick up the right selected state when it is created.
-   
+
     FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
     if (item != nil) {
         // We want to support multi-select on iOS <5.0, so rather than rely on the table view's notion
@@ -161,7 +184,7 @@
                 // No multi-select allowed, deselect what is already selected.
                 [self deselectItems:self.selection tableView:tableView];
             }
-            [self selectItem:item cell:cell];
+            [self selectItem:item cell:cell raiseSelectionChanged:YES];
         } else {
             [self deselectItem:item cell:cell raiseSelectionChanged:YES];
         }
@@ -173,10 +196,10 @@
     if (self.allowsMultipleSelection == NO) {
         // Only deselect if we are not allowing multi select. Otherwise, the user will manually
         // deselect this item by clicking on it again.
-        
+
         // cell may be nil, which is okay, it will pick up the right selected state when it is created.
         UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
- 
+
         FBGraphObject *item = [self.dataSource itemAtIndexPath:indexPath];
         [self deselectItem:item cell:cell raiseSelectionChanged:NO];
     }
@@ -186,11 +209,11 @@
 
 - (NSString*)description {
     NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p, allowsMultipleSelection: %@, delegate: %p, selection: [",
-                               NSStringFromClass([self class]), 
+                               NSStringFromClass([self class]),
                                self,
                                self.allowsMultipleSelection ? @"YES" : @"NO",
                                self.delegate];
-                               
+
     bool firstItem = YES;
     for (FBGraphObject *item in self.selection) {
         id objectId = [item objectForKey:@"id"];
@@ -201,9 +224,9 @@
         [result appendFormat:@"%@", (objectId != nil) ? objectId : @"<FBGraphObject>"];
     }
     [result appendFormat:@"]>"];
-    
+
     return result;
-    
+
 }
 
 

@@ -15,12 +15,21 @@
  */
 
 #import "FBRequestConnection.h"
+#import "FBRequestMetadata.h"
+
+@class FBRequestConnectionRetryManager;
 
 @interface FBRequestConnection (Internal)
 
 @property (nonatomic, readonly) BOOL isResultFromCache;
+@property (nonatomic, readonly) NSMutableArray *requests;
+@property (nonatomic, readonly) FBRequestConnectionRetryManager *retryManager;
+
+- (id)initWithMetadata:(NSArray *)metadataArray;
 
 - (void)startWithCacheIdentity:(NSString*)cacheIdentity
          skipRoundtripIfCached:(BOOL)consultCache;
+
+- (FBRequestMetadata *) getRequestMetadata:(FBRequest *)request;
 
 @end

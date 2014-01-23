@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,15 @@
  */
 
 #import "RPSGameViewController.h"
-#import "RPSAppDelegate.h"
-#import <FacebookSDK/FacebookSDK.h>
-#import <QuartzCore/QuartzCore.h>
-#import "OGProtocols.h"
-#import "RPSFriendsViewController.h"
+
 #import <AVFoundation/AVFoundation.h>
+#import <QuartzCore/QuartzCore.h>
+
+#import <FacebookSDK/FacebookSDK.h>
+
+#import "OGProtocols.h"
+#import "RPSAppDelegate.h"
+#import "RPSFriendsViewController.h"
 
 typedef enum {
     RPSCallNone = -1, RPSCallRock = 0, RPSCallPaper = 1, RPSCallScissors = 2 // enum is also used to index arrays
@@ -67,9 +70,9 @@ typedef void (^RPSBlock)(void);
     if (self) {
         self.title = NSLocalizedString(@"You Rock!", @"You Rock!");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
-               
+
         BOOL ipad = ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad);
-        
+
         NSString *rockRight     = ipad ? @"right-rock-128.png"     : @"right-rock-88.png";
         NSString *paperRight    = ipad ? @"right-paper-128.png"    : @"right-paper-88.png";
         NSString *scissorsRight = ipad ? @"right-scissors-128.png" : @"right-scissors-88.png";
@@ -77,19 +80,19 @@ typedef void (^RPSBlock)(void);
         NSString *rockLeft     = ipad ? @"left-rock-128.png"     : @"left-rock-88.png";
         NSString *paperLeft    = ipad ? @"left-paper-128.png"    : @"left-paper-88.png";
         NSString *scissorsLeft = ipad ? @"left-scissors-128.png" : @"left-scissors-88.png";
-        
+
         _rightImages[RPSCallRock] = [UIImage imageNamed:rockRight];
         _rightImages[RPSCallPaper] = [UIImage imageNamed:paperRight];
         _rightImages[RPSCallScissors] = [UIImage imageNamed:scissorsRight];
-        
+
         _leftImages[RPSCallRock] = [UIImage imageNamed:rockLeft];
         _leftImages[RPSCallPaper] = [UIImage imageNamed:paperLeft];
         _leftImages[RPSCallScissors] = [UIImage imageNamed:scissorsLeft];
-        
+
         _imagesToPublish[RPSCallRock] = [UIImage imageNamed:@"left-rock-128.png"];
         _imagesToPublish[RPSCallPaper] = [UIImage imageNamed:@"left-paper-128.png"];
         _imagesToPublish[RPSCallScissors] = [UIImage imageNamed:@"left-scissors-128.png"];
-        
+
         _lastPlayerCall = _lastComputerCall = RPSCallNone;
         _wins = _losses = _ties = 0;
         _alertOkHandler = nil;
@@ -112,36 +115,36 @@ typedef void (^RPSBlock)(void);
     [self.paperButton.layer setBorderColor:fontColor.CGColor];
     self.paperButton.clipsToBounds = YES;
     self.paperButton.tag = RPSCallPaper;
-    
+
     [self.scissorsButton.layer setCornerRadius:8.0];
     [self.scissorsButton.layer setBorderWidth:4.0];
     [self.scissorsButton.layer setBorderColor:fontColor.CGColor];
     self.scissorsButton.clipsToBounds = YES;
     self.scissorsButton.tag = RPSCallScissors;
-    
+
     [self.againButton.layer setCornerRadius:8.0];
     [self.againButton.layer setBorderWidth:4.0];
     [self.againButton.layer setBorderColor:fontColor.CGColor];
-    
+
     [self.computerHand.layer setCornerRadius:8.0];
     self.computerHand.layer.shadowColor = [UIColor blackColor].CGColor;
     self.computerHand.layer.shadowOpacity = 0.5;
     self.computerHand.layer.shadowRadius = 8;
     self.computerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);
     self.computerHand.clipsToBounds = YES;
-    
+
     [self.playerHand.layer setCornerRadius:8.0];
     self.playerHand.layer.shadowColor = [UIColor blackColor].CGColor;
     self.playerHand.layer.shadowOpacity = 0.5;
     self.playerHand.layer.shadowRadius = 8;
     self.playerHand.layer.shadowOffset = CGSizeMake(12.0f, 12.0f);
     self.playerHand.clipsToBounds = YES;
-    
+
     [self.facebookButton.layer setCornerRadius:8.0];
     [self.facebookButton.layer setBorderWidth:4.0];
     [self.facebookButton.layer setBorderColor:fontColor.CGColor];
     self.facebookButton.clipsToBounds = YES;
-        
+
     [self updateScoreLabel];
     [self resetField];
 }
@@ -202,11 +205,11 @@ typedef void (^RPSBlock)(void);
     self.computerHand.hidden =
     self.playerHand.hidden =
     self.againButton.hidden = YES;
-    
+
     self.rockButton.enabled =
     self.paperButton.enabled =
     self.scissorsButton.enabled = NO;
-    
+
     self.resultLabel.text = @"";
 }
 
@@ -215,7 +218,7 @@ typedef void (^RPSBlock)(void);
     self.rockButton.hidden =
     self.paperButton.hidden =
     self.scissorsButton.hidden = YES;
-    
+
     self.playerHand.hidden =
     self.againButton.hidden = NO;
 }
@@ -225,17 +228,17 @@ typedef void (^RPSBlock)(void);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, .5 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
         self.rockLabel.hidden = NO;
         self.rockButton.hidden = NO;
-        
+
         // paper
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
             self.paperLabel.hidden = NO;
             self.paperButton.hidden = NO;
-            
+
             // scissors
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
                 self.scissorsLabel.hidden = NO;
                 self.scissorsButton.hidden = NO;
-                
+
                 // shoot!
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC), dispatch_get_current_queue(), ^{
                     self.shootLabel.hidden =
@@ -243,7 +246,7 @@ typedef void (^RPSBlock)(void);
                     self.rockButton.enabled =
                     self.paperButton.enabled =
                     self.scissorsButton.enabled = YES;
-                    
+
                     self.computerHand.animationImages = @[ _rightImages[RPSCallRock], _rightImages[RPSCallPaper], _rightImages[RPSCallScissors]];
                     self.computerHand.animationDuration = .4;
                     self.computerHand.animationRepeatCount = 0;
@@ -274,7 +277,7 @@ typedef void (^RPSBlock)(void);
     _lastPlayerCall = playerCall;
     _lastComputerCall = [self callViaRandom];
     self.computerHand.image = _rightImages[_lastComputerCall];
-    
+
     // update UI and counts based on result
     RPSResult result = [self resultForPlayerCall:_lastPlayerCall
                               computerCall:_lastComputerCall];
@@ -483,7 +486,7 @@ typedef void (^RPSBlock)(void);
         [self publishPhotoForGesture:_lastPlayerCall];
         return;
     }
-  
+
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
     NSMutableDictionary<FBOpenGraphObject> *game = [self createGameObject];
@@ -497,7 +500,7 @@ typedef void (^RPSBlock)(void);
          }
             batchEntryName:@"objectCreate"];
 
-  
+
     NSMutableDictionary<FBGraphObject> *action = [self createPlayActionWithGame:@"{result=objectCreate:$.id}"];
     FBRequest *actionRequest = [FBRequest requestForPostWithGraphPath:@"me/fb_sample_rps:play"
                                                           graphObject:action];

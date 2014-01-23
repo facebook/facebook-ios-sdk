@@ -222,7 +222,7 @@ static FBCacheIndex* initTempCacheIndex(
         dataUsingEncoding:NSUTF8StringEncoding];
     for (NSUInteger counter = 0; counter < numberOfFiles; counter++) {
         NSString *fileName = [cacheIndex 
-            storeFileForKey:[NSString stringWithFormat:@"test%d", counter] 
+            storeFileForKey:[NSString stringWithFormat:@"test%lu", (unsigned long)counter]
             withData:dummyData];    
         STAssertNotNil(fileName, @"");
     }
@@ -249,7 +249,7 @@ static FBCacheIndex* initTempCacheIndex(
 
     // test that the data is still there 
     for (int counter = 0; counter < numberOfFiles; counter++) {
-        NSString* key = [NSString stringWithFormat:@"test%d", counter];
+        NSString* key = [NSString stringWithFormat:@"test%lu", (unsigned long)counter];
         NSString* fileName = [cacheIndex fileNameForKey:key];
         STAssertNotNil(fileName, @"Entity missing from the cache");
 
@@ -283,7 +283,7 @@ static FBCacheIndex* initTempCacheIndex(
     NSData *dummyData = [dummy dataUsingEncoding:NSUTF8StringEncoding];
     for (NSUInteger counter = 0; counter < numberOfFiles; counter++) {
         NSString *fileName = [cacheIndex 
-            storeFileForKey:[NSString stringWithFormat:@"test%d", counter] 
+            storeFileForKey:[NSString stringWithFormat:@"test%lu", (unsigned long)counter]
             withData:dummyData];    
         STAssertNotNil(fileName, @"");
     }

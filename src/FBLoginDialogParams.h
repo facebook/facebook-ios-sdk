@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBDialogsParams.h"
 #import "FBSession.h"
 
@@ -35,5 +36,10 @@
  When requesting for the access token to be renewed, set this property to YES.
  */
 @property BOOL isRefreshOnly;
+
+/*!
+ Optional session instance whose overrides (e.g., urlSchemeSuffix) will be used.
+*/
+@property (nonatomic, retain) FBSession *session;
 
 @end

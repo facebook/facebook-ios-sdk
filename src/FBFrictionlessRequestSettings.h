@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,14 @@
 
 #import <Foundation/Foundation.h>
 
-@class Facebook;
 @class FBRequest;
+@class Facebook;
 
 /**
  * Do not use this interface directly, instead, use methods in Facebook.h
  *
  * Handles frictionless interaction and recipient-caching by the SDK,
- * see https://developers.facebook.com/docs/reference/dialogs/requests/ 
+ * see https://developers.facebook.com/docs/reference/dialogs/requests/
  */
 @interface FBFrictionlessRequestSettings : NSObject {
 @private
@@ -35,12 +35,12 @@
 /**
  * BOOL indicating whether frictionless request sending has been enabled
  */
-@property(nonatomic, readonly) BOOL enabled;
+@property (nonatomic, readonly) BOOL enabled;
 
 /**
  * NSArray of recipients
  */
-@property(nonatomic, readonly) NSArray *recipientIDs;
+@property (nonatomic, readonly) NSArray *recipientIDs;
 
 /**
  * Enable frictionless request sending by the sdk; this means:

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,13 +16,13 @@
 
 #import <Foundation/Foundation.h>
 
-/*! 
+/*!
  @class FBLogger
- 
+
  @abstract
- Simple logging utility for conditionally logging strings and then emitting them 
+ Simple logging utility for conditionally logging strings and then emitting them
  via NSLog().
- 
+
  @unsorted
  */
 @interface FBLogger : NSObject
@@ -33,7 +33,7 @@
 // Each FBLogger gets a unique serial number to allow the client to log these numbers and, for instance, correlation of Request/Response
 @property (nonatomic, readonly) NSUInteger loggerSerialNumber;
 
-// The logging behavior of this logger.  See the FB_LOG_BEHAVIOR* constants in FBSession.h 
+// The logging behavior of this logger.  See the FB_LOG_BEHAVIOR* constants in FBSession.h
 @property (copy, nonatomic, readonly) NSString *loggingBehavior;
 
 // Is the current logger instance active, based on its loggingBehavior?
@@ -48,7 +48,7 @@
 
 // Append string, or key/value pair
 - (void)appendString:(NSString *)string;
-- (void)appendFormat:(NSString *)formatString, ...;
+- (void)appendFormat:(NSString *)formatString, ... NS_FORMAT_FUNCTION(1,2);
 - (void)appendKey:(NSString *)key value:(NSString *)value;
 
 // Emit log, clearing out the logger contents.
@@ -68,11 +68,11 @@
                   logEntry:(NSString *)logEntry;
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
-              formatString:(NSString *)formatString, ...;
+              formatString:(NSString *)formatString, ... NS_FORMAT_FUNCTION(2,3);
 
 + (void)singleShotLogEntry:(NSString *)loggingBehavior
               timestampTag:(NSObject *)timestampTag
-              formatString:(NSString *)formatString, ...;
+              formatString:(NSString *)formatString, ... NS_FORMAT_FUNCTION(3,4);
 
 // Register a timestamp label with the "current" time, to then be retrieved by singleShotLogEntry
 // to include a duration.

@@ -26,6 +26,8 @@ typedef enum {
     FBAuthSubcodeUnconfirmedUser = 464,
 } FBAuthSubcode;
 
+extern const int FBOAuthError;
+
 // Internal class collecting error related methods.
 
 @interface FBErrorUtility(Internal)
@@ -37,7 +39,7 @@ typedef enum {
                        andShouldNotifyUser:(BOOL *)pshouldNotifyUser;
 
 + (void)fberrorGetCodeValueForError:(NSError *)error
-                              index:(int)index
+                              index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode;
 

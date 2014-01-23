@@ -15,8 +15,9 @@
  */
 
 #import "NSError+FBError.h"
-#import "FBErrorUtility.h"
+
 #import "FBError.h"
+#import "FBErrorUtility.h"
 
 @implementation NSError (FBError)
 

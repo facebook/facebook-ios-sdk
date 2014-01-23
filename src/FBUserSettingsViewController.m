@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,15 @@
  */
 
 #import "FBUserSettingsViewController.h"
-#import "FBProfilePictureView.h"
+
+#import "FBAppEvents+Internal.h"
 #import "FBGraphUser.h"
-#import "FBSession.h"
+#import "FBProfilePictureView.h"
 #import "FBRequest.h"
-#import "FBViewController+Internal.h"
+#import "FBSession+Internal.h"
+#import "FBSession.h"
 #import "FBUtility.h"
+#import "FBViewController+Internal.h"
 
 @interface FBUserSettingsViewController ()
 
@@ -34,31 +37,9 @@
 @property (copy, nonatomic) FBSessionStateHandler sessionStateHandler;
 @property (copy, nonatomic) FBRequestHandler requestHandler;
 
-- (void)loginLogoutButtonPressed:(id)sender;
-- (void)sessionStateChanged:(FBSession *)session 
-                      state:(FBSessionState)state
-                      error:(NSError *)error;
-- (void)openSession;
-- (void)updateControls;
-- (void)updateBackgroundImage;
-
 @end
 
 @implementation FBUserSettingsViewController
-
-@synthesize profilePicture = _profilePicture;
-@synthesize connectedStateLabel = _connectedStateLabel;
-@synthesize me = _me;
-@synthesize loginLogoutButton = _loginLogoutButton;
-@synthesize permissions = _permissions;
-@synthesize readPermissions = _readPermissions;
-@synthesize publishPermissions = _publishPermissions;
-@synthesize defaultAudience = _defaultAudience;
-@synthesize attemptingLogin = _attemptingLogin;
-@synthesize backgroundImageView = _backgroundImageView;
-@synthesize bundle = _bundle;
-@synthesize sessionStateHandler = _sessionStateHandler;
-@synthesize requestHandler = _requestHandler;
 
 #pragma mark View controller lifecycle
 
@@ -115,20 +96,21 @@
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // As noted in `initializeBlocks`, if we are being dealloc'ed, we
     // need to let our handlers know with the sentinel value of nil
     // to prevent EXC_BAD_ACCESS errors.
     self.sessionStateHandler(nil, FBSessionStateClosed, nil);
     [_sessionStateHandler release];
     [_requestHandler release];
-    
+
     [_profilePicture release];
     [_connectedStateLabel release];
     [_me release];
     [_loginLogoutButton release];
     [_permissions release];
     [_backgroundImageView release];
-    [_bundle release];    
+    [_bundle release];
     [super dealloc];
 }
 
@@ -136,12 +118,12 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+
     // If we are not being presented modally, we don't need a Done button.
-    if (self.compatiblePresentingViewController == nil) {
+    if (self.presentingViewController == nil) {
         self.doneButton = nil;
     }
-    
+
     // If you remove the background images from the resource bundle in order to save space,
     //  this allows the background to still be rendered in Facebook blue.
     UIColor *facebookBlue = [UIColor colorWithRed:(59.0 / 255.0)
@@ -158,18 +140,18 @@
     self.backgroundImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [self.canvasView addSubview:self.backgroundImageView];
     [self updateBackgroundImage];
-    
-    UIImageView *logo = [[[UIImageView alloc] 
+
+    UIImageView *logo = [[[UIImageView alloc]
                          initWithImage:[UIImage imageNamed:@"FBUserSettingsViewResources.bundle/images/facebook-logo.png"]] autorelease];
     CGPoint center = CGPointMake(CGRectGetMidX(usableBounds), 68);
     logo.center = center;
     logo.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
     [self.canvasView addSubview:logo];
-    
+
     // We want the profile picture control and label to be grouped together when autoresized,
     // so we put them in a subview.
     UIView *containerView = [[[UIView alloc] init] autorelease];
-    containerView.frame = CGRectMake(0, 
+    containerView.frame = CGRectMake(0,
                                      135,
                                      usableBounds.size.width,
                                      110);
@@ -184,19 +166,23 @@
 
     // Add connected state/name control
     self.connectedStateLabel = [[[UILabel alloc] init] autorelease];
-    self.connectedStateLabel.frame = CGRectMake(0, 
+    self.connectedStateLabel.frame = CGRectMake(0,
                                                 self.profilePicture.frame.size.height + 14.0,
                                                 containerView.frame.size.width,
                                                 20);
     self.connectedStateLabel.backgroundColor = [UIColor clearColor];
+#ifdef __IPHONE_6_0
+    self.connectedStateLabel.textAlignment = NSTextAlignmentCenter;
+#else
     self.connectedStateLabel.textAlignment = UITextAlignmentCenter;
+#endif
     self.connectedStateLabel.numberOfLines = 0;
     self.connectedStateLabel.font = [UIFont boldSystemFontOfSize:16.0];
     self.connectedStateLabel.shadowColor = [UIColor blackColor];
     self.connectedStateLabel.shadowOffset = CGSizeMake(0.0, -1.0);
     [containerView addSubview:self.connectedStateLabel];
     [self.canvasView addSubview:containerView];
-    
+
     // Add the login/logout button
     self.loginLogoutButton = [UIButton buttonWithType:UIButtonTypeCustom];
     UIImage *image = [UIImage imageNamed:@"FBUserSettingsViewResources.bundle/images/silver-button-normal.png"];
@@ -225,15 +211,18 @@
     [self.loginLogoutButton setTitleShadowColor:loginShadowColor forState:UIControlStateNormal];
     self.loginLogoutButton.titleLabel.shadowOffset = CGSizeMake(0.0, 1.0);
     [self.canvasView addSubview:self.loginLogoutButton];
-    
+
+    if ([FBSession activeSessionIfOpen] == nil) {
+        [self openSession:NO];
+    }
     // We need to know when the active session changes state.
     // We use the same handler for both, because we don't actually care about distinguishing between them.
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(handleActiveSessionStateChanged:) 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleActiveSessionStateChanged:)
                                                  name:FBSessionDidBecomeOpenActiveSessionNotification
                                                object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(handleActiveSessionStateChanged:) 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleActiveSessionStateChanged:)
                                                  name:FBSessionDidBecomeClosedActiveSessionNotification
                                                object:nil];
 
@@ -257,18 +246,24 @@
     [self updateBackgroundImage];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) || UIInterfaceOrientationIsPortrait(interfaceOrientation);
+- (NSUInteger)supportedInterfaceOrientations {
+    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
+        return UIInterfaceOrientationMaskAll;
+    } else {
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 - (BOOL)shouldAutorotate {
-    UIInterfaceOrientation orientation = [[UIDevice currentDevice] orientation];
-    
-    return [self shouldAutorotateToInterfaceOrientation:orientation];
+    return YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                       valueToSum:nil
+                       parameters:@{ @"view_will_appear" : [NSNumber numberWithBool:YES] }
+                          session:FBSession.activeSessionIfExists];
 }
 #pragma mark Implementation
 
@@ -278,18 +273,18 @@
                                                          withDefault:@"Log Out"
                                                             inBundle:self.bundle];
         [self.loginLogoutButton setTitle:loginLogoutText forState:UIControlStateNormal];
-        
+
         // Label should be white with a shadow
         self.connectedStateLabel.textColor = [UIColor whiteColor];
         self.connectedStateLabel.shadowColor = [UIColor blackColor];
 
         // Move the label back below the profile view and show the profile view
-        self.connectedStateLabel.frame = CGRectMake(0, 
-                                                    self.profilePicture.frame.size.height + 16.0, 
+        self.connectedStateLabel.frame = CGRectMake(0,
+                                                    self.profilePicture.frame.size.height + 16.0,
                                                     self.connectedStateLabel.frame.size.width,
                                                     20);
         self.profilePicture.hidden = NO;
-        
+
         // Do we know the user's name? If not, request it.
         if (self.me != nil) {
             self.connectedStateLabel.text = self.me.name;
@@ -304,11 +299,11 @@
         }
     } else {
         self.me = nil;
-        
+
         // Label should be gray and centered in its superview; hide the profile view
         self.connectedStateLabel.textColor = [UIColor colorWithRed:166.0 / 255.0
                                                              green:174.0 / 255.0
-                                                              blue:215.0 / 255.0 
+                                                              blue:215.0 / 255.0
                                                              alpha:1.0];
         self.connectedStateLabel.shadowColor = nil;
 
@@ -316,7 +311,7 @@
         self.connectedStateLabel.center = CGPointMake(CGRectGetMidX(parentBounds),
                                                       CGRectGetMidY(parentBounds));
         self.profilePicture.hidden = YES;
-        
+
         self.connectedStateLabel.text = [FBUtility localizedStringForKey:@"FBUSVC:NotLoggedIn"
                                                              withDefault:@"Not logged in"
                                                                 inBundle:self.bundle];
@@ -328,7 +323,7 @@
     }
 }
 
-- (void)sessionStateChanged:(FBSession *)session 
+- (void)sessionStateChanged:(FBSession *)session
                       state:(FBSessionState)state
                       error:(NSError *)error
 {
@@ -351,7 +346,7 @@
 }
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-- (void)openSession {
+- (void)openSession:(BOOL)allowLoginUI {
     if ([self.delegate respondsToSelector:@selector(loginViewControllerWillAttemptToLogUserIn:)]) {
         [(id)self.delegate loginViewControllerWillAttemptToLogUserIn:self];
     }
@@ -367,11 +362,12 @@
     //    when the user presses login
     if (self.permissions) {
         [FBSession openActiveSessionWithPermissions:self.permissions
-                                       allowLoginUI:YES
+                                       allowLoginUI:allowLoginUI
+                                    defaultAudience:self.defaultAudience
                                   completionHandler:self.sessionStateHandler];
     } else if (![self.publishPermissions count]) {
         [FBSession openActiveSessionWithReadPermissions:self.readPermissions
-                                           allowLoginUI:YES
+                                           allowLoginUI:allowLoginUI
                                       completionHandler:self.sessionStateHandler];
     } else {
         // combined read and publish permissions will usually fail, but if the app wants us to
@@ -384,7 +380,7 @@
         }
         [FBSession openActiveSessionWithPublishPermissions:permissions
                                            defaultAudience:self.defaultAudience
-                                              allowLoginUI:YES
+                                              allowLoginUI:allowLoginUI
                                          completionHandler:self.sessionStateHandler];
     }
 }
@@ -394,6 +390,10 @@
 
 - (void)loginLogoutButtonPressed:(id)sender {
     if (FBSession.activeSession.isOpen) {
+        [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : @NO }
+                              session:FBSession.activeSessionIfExists];
         if ([self.delegate respondsToSelector:@selector(loginViewControllerWillLogUserOut:)]) {
             [(id)self.delegate loginViewControllerWillLogUserOut:self];
         }
@@ -404,7 +404,11 @@
             [(id)self.delegate loginViewControllerDidLogUserOut:self];
         }
     } else {
-        [self openSession];
+        [FBAppEvents logImplicitEvent:FBAppEventNameUserSettingsUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : @YES }
+                              session:FBSession.activeSessionIfExists];
+        [self openSession:YES];
     }
 }
 

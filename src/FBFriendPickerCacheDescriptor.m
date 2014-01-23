@@ -15,12 +15,13 @@
  */
 
 #import "FBFriendPickerCacheDescriptor.h"
+
 #import "FBFriendPickerViewController+Internal.h"
-#import "FBSession.h"
+#import "FBGraphObjectPagingLoader.h"
+#import "FBGraphObjectTableDataSource.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
-#import "FBGraphObjectTableDataSource.h"
-#import "FBGraphObjectPagingLoader.h"
+#import "FBSession.h"
 
 @interface FBFriendPickerCacheDescriptor () <FBGraphObjectPagingLoaderDelegate>
 
@@ -49,7 +50,7 @@
 }
 
 - (id)initWithUserID:(NSString*)userID {
-    return [self initWithUserID:userID 
+    return [self initWithUserID:userID
                fieldsForRequest:nil];
 }
 
@@ -85,33 +86,33 @@
     // datasource has some field ownership, so we need one here
     FBGraphObjectTableDataSource *datasource = [[[FBGraphObjectTableDataSource alloc] init] autorelease];
     datasource.groupByField = @"name";
-    
+
     // me or one of my friends that also uses the app
     NSString *user = self.userID;
     if (!user) {
         user = @"me";
     }
-    
+
     // create the request object that we will start with
     FBRequest *request = [FBFriendPickerViewController requestWithUserID:user
                                                                   fields:self.fieldsForRequest
                                                               dataSource:datasource
                                                                  session:session];
-    
+
     // this property supports unit testing
     if(self.usePageLimitOfOne) {
         [request.parameters setObject:@"1"
                                forKey:@"limit"];
     }
-    
+
     self.loader.delegate = nil;
     self.loader = [[[FBGraphObjectPagingLoader alloc] initWithDataSource:datasource
                                                               pagingMode:FBGraphObjectPagingModeImmediateViewless]
                    autorelease];
     self.loader.session = session;
-    
+
     self.loader.delegate = self;
-    
+
     // make sure we are around to handle the delegate call
     [self retain];
 
@@ -129,9 +130,9 @@
     self.loader.delegate = nil;
     self.loader = nil;
     self.hasCompletedFetch = YES;
-    
+
     // this feels like suicide!
-    [self release];    
+    [self release];
 }
 
 @end

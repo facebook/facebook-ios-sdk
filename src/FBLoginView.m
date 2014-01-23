@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,32 +15,32 @@
  */
 
 #import "FBLoginView.h"
+
+#import "FBAppEvents+Internal.h"
+#import "FBGraphUser.h"
+#import "FBLoginViewButtonPNG.h"
+#import "FBLoginViewButtonPressedPNG.h"
 #import "FBProfilePictureView.h"
 #import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
-#import "FBSession.h"
-#import "FBGraphUser.h"
-#import "FBUtility.h"
 #import "FBSession+Internal.h"
+#import "FBSession.h"
+#import "FBUtility.h"
 
 static NSString *const FBLoginViewCacheIdentity = @"FBLoginView";
-const int kButtonLabelX = 46;
+// The design calls for 16 pixels of space on the right edge of the button
+static const float kButtonEndCapWidth = 16.0;
+// The button has a 12 pixel buffer to the right of the f logo
+static const float kButtonPaddingWidth = 12.0;
 
-CGSize g_imageSize;
+static CGSize g_buttonSize;
+
+// Forward declare our label wrapper that provides shadow blur
+@interface FBShadowLabel : UILabel
+
+@end
 
 @interface FBLoginView() <UIActionSheetDelegate>
-
-- (void)initialize;
-- (void)buttonPressed:(id)sender;
-- (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn;
-- (void)wireViewForSession:(FBSession *)session;
-- (void)wireViewForSessionWithoutOpening:(FBSession *)session;
-- (void)unwireViewForSession ;
-- (void)fetchMeInfo;
-- (void)informDelegate:(BOOL)userOnly;
-- (void)informDelegateOfError:(NSError *)error;
-- (void)handleActiveSessionSetNotifications:(NSNotification *)notification;
-- (void)handleActiveSessionUnsetNotifications:(NSNotification *)notification;
 
 @property (retain, nonatomic) UILabel *label;
 @property (retain, nonatomic) UIButton *button;
@@ -58,21 +58,6 @@ CGSize g_imageSize;
 @end
 
 @implementation FBLoginView
-
-@synthesize delegate = _delegate,
-    label = _label,
-    button = _button,
-    session = _session,
-    request = _request,
-    user = _user,
-    permissions = _permissions,
-    readPermissions = _readPermissions,
-    publishPermissions = _publishPermissions,
-    defaultAudience = _defaultAudience,
-    lastObservedStateWasOpen = _lastObservedStateWasOpen,
-    sessionStateHandler = _sessionStateHandler,
-    requestHandler = _requestHandler;
-
 
 - (id)init {
     self = [super init];
@@ -128,36 +113,37 @@ CGSize g_imageSize;
 }
 
 - (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // As noted in `initializeBlocks`, if we are being dealloc'ed, we
     // need to let our handlers know with the sentinel value of nil
     // to prevent EXC_BAD_ACCESS errors.
     self.sessionStateHandler(nil, FBSessionStateClosed, nil);
     [_sessionStateHandler release];
     [_requestHandler release];
-    
+
     // removes all observers for self
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
+
     // if we have an outstanding request, cancel
     [self.request cancel];
-    
+
     // unwire the session to release KVO.
     [self unwireViewForSession];
-    
+
     [_request release];
     [_label release];
     [_button release];
     [_session release];
     [_user release];
     [_permissions release];
-    
+
     [super dealloc];
 }
 
 - (void)setDelegate:(id<FBLoginViewDelegate>)newValue {
     if (_delegate != newValue) {
         _delegate = newValue;
-        
+
         // whenever the delegate value changes, we schedule one initial call to inform the delegate
         // of our current state; we use a delay in order to avoid a callback in a setup or init method
         [self performSelector:@selector(informDelegate:)
@@ -196,19 +182,21 @@ CGSize g_imageSize;
         weakSelf.request = nil;
     };
 }
+
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)initialize {
     // the base class can cause virtual recursion, so
     // to handle this we make initialize idempotent
     if (self.button) {
         return;
     }
-    
+
     // setup view
     self.autoresizesSubviews = YES;
     self.clipsToBounds = YES;
-    
+
     [self initializeBlocks];
-    
+
     if ([FBSession activeSessionIfOpen] == nil) {
         // if our session has a cached token ready, we open it; note that it is important
         // that we open the session before notification wiring is in place
@@ -218,18 +206,18 @@ CGSize g_imageSize;
     }
 
     // wire-up the current session to the login view, before adding global session-change handlers
-    [self wireViewForSession:FBSession.activeSession];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(handleActiveSessionSetNotifications:) 
+    [self wireViewForSession:FBSession.activeSession userInfo:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleActiveSessionSetNotifications:)
                                                  name:FBSessionDidSetActiveSessionNotification
                                                object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-                                             selector:@selector(handleActiveSessionUnsetNotifications:) 
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleActiveSessionUnsetNotifications:)
                                                  name:FBSessionDidUnsetActiveSessionNotification
-                                               object:nil]; 
-    
+                                               object:nil];
+
     // setup button
     self.button = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.button addTarget:self
@@ -237,69 +225,79 @@ CGSize g_imageSize;
           forControlEvents:UIControlEventTouchUpInside];
     self.button.contentHorizontalAlignment = UIControlContentHorizontalAlignmentFill;
     self.button.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    
-    UIImage *image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small.png"] 
-                      stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
-    g_imageSize = image.size;
+
+    // We want to make sure that when we stretch the image, it includes the curved edges and drop shadow
+    // We inset enough pixels to make sure that happens
+    UIEdgeInsets imageInsets = UIEdgeInsetsMake(4.0, 40.0, 4.0, 4.0);
+
+    UIImage *image = [[FBLoginViewButtonPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateNormal];
-    
-    image = [[UIImage imageNamed:@"FacebookSDKResources.bundle/FBLoginView/images/login-button-small-pressed.png"]
-             stretchableImageWithLeftCapWidth:kButtonLabelX topCapHeight:0];
+
+    image = [[FBLoginViewButtonPressedPNG image] resizableImageWithCapInsets:imageInsets];
     [self.button setBackgroundImage:image forState:UIControlStateHighlighted];
-    
+
     [self addSubview:self.button];
-    
+
+    // Compute the text size to figure out the overall size of the button
+    UIFont *font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:14.0];
+    float textSizeWidth = MAX([[self logInText] sizeWithFont:font].width, [[self logOutText] sizeWithFont:font].width);
+
+    // We make the button big enough to hold the image, the text, the padding to the right of the f and the end cap
+    g_buttonSize = CGSizeMake(image.size.width + textSizeWidth + kButtonPaddingWidth + kButtonEndCapWidth, image.size.height);
+
     // add a label that will appear over the button
-    self.label = [[[UILabel alloc] init] autorelease];
+    self.label = [[[FBShadowLabel alloc] init] autorelease];
     self.label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+#ifdef __IPHONE_6_0
+    self.label.textAlignment = NSTextAlignmentCenter;
+#else
     self.label.textAlignment = UITextAlignmentCenter;
+#endif
     self.label.backgroundColor = [UIColor clearColor];
-    self.label.font = [UIFont boldSystemFontOfSize:16.0];
+    self.label.font = font;
     self.label.textColor = [UIColor whiteColor];
-    self.label.shadowColor = [UIColor blackColor];
-    self.label.shadowOffset = CGSizeMake(0.0, -1.0);
     [self addSubview:self.label];
-    
+
     // We force our height to be the same as the image, but we will let someone make us wider
     // than the default image.
-    CGFloat width = MAX(self.frame.size.width, g_imageSize.width);
+    CGFloat width = MAX(self.frame.size.width, g_buttonSize.width);
     CGRect frame = CGRectMake(self.frame.origin.x, self.frame.origin.y,
                               width, image.size.height);
     self.frame = frame;
-    
+
     CGRect buttonFrame = CGRectMake(0, 0, width, image.size.height);
     self.button.frame = buttonFrame;
-    
-    self.label.frame = CGRectMake(kButtonLabelX, 0, width - kButtonLabelX, image.size.height);    
-    
+
+    // This needs to start at an x just to the right of the f in the image, the -1 on both x and y is to account for shadow in the image
+    self.label.frame = CGRectMake(image.size.width - kButtonPaddingWidth - 1, -1, width - (image.size.width - kButtonPaddingWidth) - kButtonEndCapWidth, image.size.height);
+
     self.backgroundColor = [UIColor clearColor];
-    
+
     if (self.session.isOpen) {
         [self fetchMeInfo];
         [self configureViewForStateLoggedIn:YES];
     } else {
         [self configureViewForStateLoggedIn:NO];
     }
+
+    self.loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
+}
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
+
+- (CGSize)intrinsicContentSize {
+    return self.bounds.size;
 }
 
 - (CGSize)sizeThatFits:(CGSize)size {
-    CGSize logInSize = [[self logInText] sizeWithFont:self.label.font];
-    CGSize logOutSize = [[self logOutText] sizeWithFont:self.label.font];
-    
-    // Leave at least a small margin around the label.
-    CGFloat desiredWidth = kButtonLabelX + 20 + MAX(logInSize.width, logOutSize.width);
-    // Never get smaller than the image
-    CGFloat width = MAX(desiredWidth, g_imageSize.width);
-    
-    return CGSizeMake(width, g_imageSize.height);
+    return CGSizeMake(g_buttonSize.width, g_buttonSize.height);
 }
 
 - (NSString *)logInText {
-    return [FBUtility localizedStringForKey:@"FBLV:LogInButton" withDefault:@"Log In"];
+    return [FBUtility localizedStringForKey:@"FBLV:LogInButton" withDefault:@"Log in with Facebook"];
 }
 
 - (NSString *)logOutText {
-    return [FBUtility localizedStringForKey:@"FBLV:LogOutButton" withDefault:@"Log Out"];
+    return [FBUtility localizedStringForKey:@"FBLV:LogOutButton" withDefault:@"Log out"];
 }
 
 - (void)configureViewForStateLoggedIn:(BOOL)isLoggedIn {
@@ -319,7 +317,7 @@ CGSize g_imageSize;
            completionHandler:self.requestHandler];
     [self.request startWithCacheIdentity:FBLoginViewCacheIdentity
                    skipRoundtripIfCached:YES];
-    
+
 }
 
 - (void)informDelegate:(BOOL)userOnly {
@@ -331,11 +329,11 @@ CGSize g_imageSize;
     } else if (FBSession.activeSession.isOpen) {
         if (![self.lastObservedStateWasOpen isEqualToNumber:@1]) {
             self.lastObservedStateWasOpen = @1;
-            
+
             if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedInUser:)]) {
                 [self.delegate loginViewShowingLoggedInUser:self];
             }
-            // any time we inform/reinform of isOpen event, we want to be sure 
+            // any time we inform/reinform of isOpen event, we want to be sure
             // to repass the user if we have it
             if (self.user) {
                 [self informDelegate:YES];
@@ -344,7 +342,7 @@ CGSize g_imageSize;
     } else {
         if (![self.lastObservedStateWasOpen isEqualToNumber:@0]) {
             self.lastObservedStateWasOpen = @0;
-            
+
             if ([self.delegate respondsToSelector:@selector(loginViewShowingLoggedOutUser:)]) {
                 [self.delegate loginViewShowingLoggedOutUser:self];
             }
@@ -365,9 +363,9 @@ CGSize g_imageSize;
     // if there is an outstanding request for the previous session, cancel
     [self.request cancel];
     self.request = nil;
-    
+
     self.session = session;
-    
+
     // register a KVO observer
     [self.session addObserver:self
                    forKeyPath:@"state"
@@ -375,19 +373,19 @@ CGSize g_imageSize;
                       context:nil];
 }
 
-- (void)wireViewForSession:(FBSession *)session {
+- (void)wireViewForSession:(FBSession *)session userInfo:(NSDictionary *)userInfo {
     [self wireViewForSessionWithoutOpening:session];
-    
+
     // anytime we find that our session is created with an available token
     // we open it on the spot
-    if (self.session.state == FBSessionStateCreatedTokenLoaded) {
-        [self.session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+    if (self.session.state == FBSessionStateCreatedTokenLoaded && (![userInfo[FBSessionDidSetActiveSessionNotificationUserInfoIsOpening] isEqual:@YES])) {
+        [self.session openWithBehavior:self.loginBehavior
                      completionHandler:self.sessionStateHandler];
     }
 }
 
 - (void)unwireViewForSession {
-    // this line of code is the main reason we need to hold on 
+    // this line of code is the main reason we need to hold on
     // to the session object at all
     [self.session removeObserver:self
                       forKeyPath:@"state"];
@@ -402,7 +400,7 @@ CGSize g_imageSize;
         [self fetchMeInfo];
         [self configureViewForStateLoggedIn:YES];
     } else {
-        [self configureViewForStateLoggedIn:NO];        
+        [self configureViewForStateLoggedIn:NO];
     }
     [self informDelegate:NO];
 }
@@ -411,7 +409,7 @@ CGSize g_imageSize;
     // NSNotificationCenter is a global channel, so we guard against
     // unexpected uses of this notification the best we can
     if ([notification.object isKindOfClass:[FBSession class]]) {
-        [self wireViewForSession:notification.object];
+        [self wireViewForSession:notification.object userInfo:notification.userInfo];
     }
 }
 
@@ -429,8 +427,8 @@ CGSize g_imageSize;
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
+        BOOL loggingInLogFlag = NO;
         if (!self.session.isOpen) { // login
-            
             // the policy here is:
             // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
             // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
@@ -440,12 +438,16 @@ CGSize g_imageSize;
             //    when the user presses login
             if (self.permissions) {
                 [FBSession openActiveSessionWithPermissions:self.permissions
-                                               allowLoginUI:YES
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:NO
+                                            defaultAudience:self.defaultAudience
                                           completionHandler:self.sessionStateHandler];
             } else if (![self.publishPermissions count]) {
-                [FBSession openActiveSessionWithReadPermissions:self.readPermissions
-                                                   allowLoginUI:YES
-                                              completionHandler:self.sessionStateHandler];
+                [FBSession openActiveSessionWithPermissions:self.readPermissions
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:YES
+                                            defaultAudience:FBSessionDefaultAudienceNone
+                                          completionHandler:self.sessionStateHandler];
             } else {
                 // combined read and publish permissions will usually fail, but if the app wants us to
                 // try it here, then we will pass the aggregate set to the server
@@ -455,11 +457,13 @@ CGSize g_imageSize;
                     [set addObjectsFromArray:self.readPermissions];
                     permissions = [set allObjects];
                 }
-                [FBSession openActiveSessionWithPublishPermissions:permissions
-                                                   defaultAudience:self.defaultAudience
-                                                      allowLoginUI:YES
-                                                 completionHandler:self.sessionStateHandler];
+                [FBSession openActiveSessionWithPermissions:permissions
+                                              loginBehavior:self.loginBehavior
+                                                     isRead:NO
+                                            defaultAudience:self.defaultAudience
+                                          completionHandler:self.sessionStateHandler];
             }
+            loggingInLogFlag = YES;
         } else { // logout action sheet
             NSString *name = self.user.name;
             NSString *title = nil;
@@ -470,11 +474,11 @@ CGSize g_imageSize;
                 title = [FBUtility localizedStringForKey:@"FBLV:LoggedInUsingFacebook"
                                             withDefault:@"Logged in using Facebook"];
             }
-            
+
             NSString *cancelTitle = [FBUtility localizedStringForKey:@"FBLV:CancelAction"
                                                          withDefault:@"Cancel"];
             NSString *logOutTitle = [FBUtility localizedStringForKey:@"FBLV:LogOutAction"
-                                                         withDefault:@"Log Out"];
+                                                         withDefault:@"Log out"];
             UIActionSheet *sheet = [[[UIActionSheet alloc] initWithTitle:title
                                                                 delegate:self
                                                        cancelButtonTitle:cancelTitle
@@ -484,13 +488,39 @@ CGSize g_imageSize;
             // Show the sheet
             [sheet showInView:self];
         }
+        [FBAppEvents logImplicitEvent:FBAppEventNameLoginViewUsage
+                           valueToSum:nil
+                           parameters:@{ @"logging_in" : [NSNumber numberWithBool:loggingInLogFlag] }
+                              session:nil];
     } else { // state of view out of sync with active session
         // so resync
         [self unwireViewForSession];
-        [self wireViewForSession:FBSession.activeSession];
+        [self wireViewForSession:FBSession.activeSession userInfo:nil];
         [self configureViewForStateLoggedIn:self.session.isOpen];
         [self informDelegate:NO];
     }
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
+@end
+
+@implementation FBShadowLabel
+
+- (void) drawTextInRect:(CGRect)rect {
+    CGSize myShadowOffset = CGSizeMake(0, -1);
+    CGFloat myColorValues[] = {0, 0, 0, .3};
+
+    CGContextRef myContext = UIGraphicsGetCurrentContext();
+    CGContextSaveGState(myContext);
+
+    CGColorSpaceRef myColorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorRef myColor = CGColorCreate(myColorSpace, myColorValues);
+    CGContextSetShadowWithColor (myContext, myShadowOffset, 1, myColor);
+
+    [super drawTextInRect:rect];
+
+    CGColorRelease(myColor);
+    CGColorSpaceRelease(myColorSpace);
+
+    CGContextRestoreGState(myContext);}
+
 @end

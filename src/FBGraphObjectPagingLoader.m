@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,9 @@
  */
 
 #import "FBGraphObjectPagingLoader.h"
-#import "FBRequest.h"
+
 #import "FBError.h"
+#import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
 
 @interface FBGraphObjectPagingLoader ()
@@ -68,7 +69,7 @@
     [_session release];
     [_connection release];
     [_cacheIdentity release];
-    
+
     [super dealloc];
 }
 
@@ -114,7 +115,7 @@
         // Tell the data source we're done.
         [self.dataSource appendGraphObjects:nil];
         [self updateView];
-        
+
         // notify of completion
         if ([self.delegate respondsToSelector:@selector(pagingLoaderDidFinishLoading:)]) {
             [self.delegate pagingLoaderDidFinishLoading:self];
@@ -125,7 +126,7 @@
         NSString *next = (NSString *)[paging objectForKey:@"next"];
         self.nextLink = next;
     }
-    
+
     if (!self.dataSource.hasGraphObjects) {
         // If we don't have any data already, this is easy.
         [self.dataSource appendGraphObjects:data];
@@ -133,14 +134,14 @@
     } else {
         // As we fetch additional results and add them to the table, we do not
         // want the table jumping around seemingly at random, frustrating the user's
-        // attempts at scrolling, etc. Since results may be added anywhere in 
+        // attempts at scrolling, etc. Since results may be added anywhere in
         // the table, we choose to try to keep the first visible row in a fixed
         // position (from the user's perspective). We try to keep it positioned at
         // the same offset from the top of the screen so adding new items seems
         // smoother, as opposed to having it "snap" to a multiple of row height
-        // (as would happen by simply calling [UITableView 
+        // (as would happen by simply calling [UITableView
         // scrollToRowAtIndexPath:atScrollPosition:animated:].
-        
+
         // Which object is currently at the top of the table (the "anchor" object)?
         // (If possible, we choose the second row, to give context above and below and avoid
         // cases where the first row is only barely visible, thus providing little context.)
@@ -172,12 +173,12 @@
     if ([self.delegate respondsToSelector:@selector(pagingLoader:didLoadData:)]) {
         [self.delegate pagingLoader:self didLoadData:results];
     }
-    
-    // If we are supposed to keep paging, do so. But unless we are viewless, if we have lost 
+
+    // If we are supposed to keep paging, do so. But unless we are viewless, if we have lost
     // our tableView, take that as a sign to stop (probably because the view was unloaded).
     // If tableView is re-set, we will start again.
     if ((self.pagingMode == FBGraphObjectPagingModeImmediate &&
-        self.tableView) || 
+        self.tableView) ||
         self.pagingMode == FBGraphObjectPagingModeImmediateViewless) {
         [self followNextLink];
     }
@@ -188,11 +189,11 @@
         self.session) {
         [self.connection cancel];
         self.connection = nil;
-        
+
         if ([self.delegate respondsToSelector:@selector(pagingLoader:willLoadURL:)]) {
             [self.delegate pagingLoader:self willLoadURL:self.nextLink];
         }
-        
+
         FBRequest *request = [[FBRequest alloc] initWithSession:self.session
                                                       graphPath:nil];
 
@@ -203,41 +204,41 @@
              self.connection = nil;
              [self requestCompleted:connection result:result error:error];
          }];
-        
+
         // Override the URL using the one passed back in 'next'.
         NSURL *url = [NSURL URLWithString:self.nextLink];
         NSMutableURLRequest* urlRequest = [NSMutableURLRequest requestWithURL:url];
         connection.urlRequest = urlRequest;
 
         self.nextLink = nil;
-        
+
         self.connection = connection;
         [self.connection startWithCacheIdentity:self.cacheIdentity
                           skipRoundtripIfCached:self.skipRoundtripIfCached];
-        
+
         [request release];
         [connection release];
     }
 }
 
 - (void)startLoadingWithRequest:(FBRequest*)request
-                  cacheIdentity:(NSString*)cacheIdentity 
+                  cacheIdentity:(NSString*)cacheIdentity
           skipRoundtripIfCached:(BOOL)skipRoundtripIfCached {
     [self.dataSource prepareForNewRequest];
-    
+
     [self.connection cancel];
     _isResultFromCache = NO;
-    
+
     self.cacheIdentity = cacheIdentity;
     self.skipRoundtripIfCached = skipRoundtripIfCached;
-    
+
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
              _isResultFromCache = _isResultFromCache || connection.isResultFromCache;
              [self requestCompleted:connection result:result error:error];
          }];
-    
+
     self.connection = connection;
     [self.connection startWithCacheIdentity:self.cacheIdentity
                       skipRoundtripIfCached:self.skipRoundtripIfCached];
@@ -266,8 +267,8 @@
     self.connection = nil;
 
     NSDictionary *resultDictionary = (NSDictionary *)result;
-    
-    NSArray *data = nil;    
+
+    NSArray *data = nil;
     if (!error && [result isKindOfClass:[NSDictionary class]]) {
         id rawData = [resultDictionary objectForKey:@"data"];
         if ([rawData isKindOfClass:[NSArray class]]) {
@@ -285,11 +286,12 @@
                                             code:FBErrorProtocolMismatch
                                         userInfo:userInfo]
                  autorelease];
-    } 
-    
+    }
+
+    BOOL cancelled = NO;
     if (error) {
         // Cancellation is not really an error we want to bother the delegate with.
-        BOOL cancelled = [error.domain isEqualToString:FacebookSDKDomain] &&
+        cancelled = [error.domain isEqualToString:FacebookSDKDomain] &&
             error.code == FBErrorOperationCancelled;
 
         if (cancelled) {
@@ -298,9 +300,11 @@
             }
         } else if ([self.delegate respondsToSelector:@selector(pagingLoader:handleError:)]) {
             [self.delegate pagingLoader:self handleError:error];
-        }        
-    } else {
-        [self addResultsAndUpdateView:resultDictionary];        
+        }
+    }
+
+    if (!cancelled) {
+        [self addResultsAndUpdateView:resultDictionary];
     }
 }
 

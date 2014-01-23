@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -47,7 +47,7 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 
 #pragma mark - Lifecycle
 
-- (id)initWithStyle:(UITableViewCellStyle)style 
+- (id)initWithStyle:(UITableViewCellStyle)style
     reuseIdentifier:(NSString*)reuseIdentifier
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -56,24 +56,24 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
         UIImageView *pictureView = [[UIImageView alloc] init];
         pictureView.clipsToBounds = YES;
         pictureView.contentMode = UIViewContentModeScaleAspectFill;
-        
+
         self.pictureView = pictureView;
         [self.contentView addSubview:pictureView];
         [pictureView release];
-        
+
         // Subtitle
         self.detailTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.detailTextLabel.textColor = [UIColor colorWithRed:0.4 green:0.6 blue:0.8 alpha:1.0];
         self.detailTextLabel.font = [UIFont systemFontOfSize:subtitleFontHeight];
-                
+
         // Title
         self.textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         self.textLabel.font = [UIFont systemFontOfSize:titleFontHeight];
-        
+
         // Content View
         self.contentView.clipsToBounds = YES;
     }
-    
+
     return self;
 }
 
@@ -81,28 +81,29 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
 {
     [_titleSuffixLabel release];
     [_pictureView release];
-    
+
     [super dealloc];
 }
 
 #pragma mark -
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)layoutSubviews
 {
     [super layoutSubviews];
-    
+
     [self updateFonts];
-    
+
     BOOL hasPicture = (self.picture != nil);
     BOOL hasSubtitle = (self.subtitle != nil);
     BOOL hasTitleSuffix = (self.titleSuffix != nil);
-    
+
     CGFloat pictureWidth = hasPicture ? pictureEdge : 0;
     CGSize cellSize = self.contentView.bounds.size;
     CGFloat textLeft = (hasPicture ? ((2 * pictureMargin) + pictureWidth) : 0) + horizontalMargin;
     CGFloat textWidth = cellSize.width - (textLeft + horizontalMargin);
     CGFloat titleTop = hasSubtitle ? titleTopWithSubtitle : titleTopNoSubtitle;
-    
+
     self.pictureView.frame = CGRectMake(pictureMargin, pictureMargin, pictureEdge, pictureWidth);
     self.detailTextLabel.frame = CGRectMake(textLeft, subtitleTop, textWidth, subtitleHeight);
     if (!hasTitleSuffix) {
@@ -112,16 +113,17 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
         CGSize spaceSize = [@" " sizeWithFont:self.textLabel.font];
         CGFloat titleWidth = titleSize.width + spaceSize.width;
         self.textLabel.frame = CGRectMake(textLeft, titleTop, titleWidth, titleHeight);
-        
+
         CGFloat titleSuffixLeft = textLeft + titleWidth;
         CGFloat titleSuffixWidth = textWidth - titleWidth;
         self.titleSuffixLabel.frame = CGRectMake(titleSuffixLeft, titleTop, titleSuffixWidth, titleHeight);
     }
-    
+
     [self.pictureView setHidden:!(hasPicture)];
     [self.detailTextLabel setHidden:!(hasSubtitle)];
     [self.titleSuffixLabel setHidden:!(hasTitleSuffix)];
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 + (CGFloat)rowHeight
 {
@@ -135,10 +137,10 @@ static const CGFloat subtitleHeight = subtitleFontHeight * 1.25;
         activityIndicator.hidesWhenStopped = YES;
         activityIndicator.autoresizingMask =
         (UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin);
-        
+
         self.activityIndicator = activityIndicator;
         [self addSubview:activityIndicator];
-        [activityIndicator release];        
+        [activityIndicator release];
     }
 
     self.activityIndicator.center = CGPointMake(CGRectGetMidX(cellBounds), CGRectGetMidY(cellBounds));

@@ -15,6 +15,7 @@
  */
 
 #import "FBSessionTokenCachingStrategy.h"
+
 #import "FBAccessTokenData+Internal.h"
 
 // const strings
@@ -27,11 +28,12 @@ NSString *const FBTokenInformationUserFBIDKey = @"com.facebook.sdk:TokenInformat
 NSString *const FBTokenInformationIsFacebookLoginKey = @"com.facebook.sdk:TokenInformationIsFacebookLoginKey";
 NSString *const FBTokenInformationLoginTypeLoginKey = @"com.facebook.sdk:TokenInformationLoginTypeLoginKey";
 NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInformationPermissionsKey";
+NSString *const FBTokenInformationPermissionsRefreshDateKey = @"com.facebook.sdk:TokenInformationPermissionsRefreshDateKey";
 
 #pragma mark - private FBSessionTokenCachingStrategyNoOpInstance class
 
 @interface FBSessionTokenCachingStrategyNoOpInstance : FBSessionTokenCachingStrategy
-    
+
 @end
 @implementation FBSessionTokenCachingStrategyNoOpInstance
 
@@ -59,7 +61,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
 }
 
 - (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName {
-    
+
     self = [super init];
     if (self) {
         // get-em
@@ -68,7 +70,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
         // keep-em
         [_accessTokenInformationKeyName retain];
     }
-    return self;    
+    return self;
 }
 
 - (void)dealloc {
@@ -77,7 +79,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     [super dealloc];
 }
 
-#pragma mark - 
+#pragma mark -
 #pragma mark Public Members
 
 - (void)cacheTokenInformation:(NSDictionary*)tokenInformation {
@@ -92,7 +94,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     return [defaults objectForKey:_accessTokenInformationKeyName];
 }
 
-- (void)clearToken {        
+- (void)clearToken {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:_accessTokenInformationKeyName];
     [defaults synchronize];
@@ -138,7 +140,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     // static state to assure a single instance here
     static FBSessionTokenCachingStrategyNoOpInstance *noOpInstance = nil;
     static dispatch_once_t onceToken;
-    
+
     // assign once to the static, if called
     dispatch_once(&onceToken, ^{
         noOpInstance = [[FBSessionTokenCachingStrategyNoOpInstance alloc] init];
@@ -146,6 +148,6 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
     return noOpInstance;
 }
 
-#pragma mark - 
+#pragma mark -
 
 @end

@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,6 +15,7 @@
  */
 
 #import "FBAppLinkData+Internal.h"
+
 #import "FBUtility.h"
 
 @interface FBAppLinkData ()
@@ -22,24 +23,58 @@
 @property (readwrite, retain) NSURL *targetURL;
 @property (readwrite, copy) NSArray *actionTypes;
 @property (readwrite, copy) NSArray *actionIDs;
-@property (readwrite, copy) NSArray *ref;
+@property (readwrite, copy) NSString *ref;
 @property (readwrite, copy) NSDictionary *originalQueryParameters;
-
+@property (readwrite, retain) NSURL *originalURL;
+@property (readwrite, copy) NSDictionary *arguments;
+@property (readwrite, copy) NSString *userAgent;
+@property (readwrite, copy) NSDictionary *refererData;
 @end
 
 @implementation FBAppLinkData
 
 - (id)initWithURL:(NSURL*)url {
-    if (self = [super init]) {
-        NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
-        
-        if (params[@"target_url"]) {
-            self.targetURL = [[[NSURL alloc] initWithString:params[@"target_url"]] autorelease];
-        }
+    NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
+    NSURL *targetURL = (params[@"target_url"]) ? [[[NSURL alloc] initWithString:params[@"target_url"]] autorelease] : nil;
+    NSDictionary *originalQueryParameters = params;
+
+    if (self = [self initWithURL:url targetURL:targetURL originalParams:originalQueryParameters arguments:nil]) {
         self.actionIDs = [params[@"fb_action_ids"] componentsSeparatedByString:@","];
         self.actionTypes = [params[@"fb_action_types"] componentsSeparatedByString:@","];
-        self.ref = [params[@"fb_ref"] componentsSeparatedByString:@","];
-        self.originalQueryParameters = params;
+    }
+    return self;
+}
+
+- (id) initWithURL:(NSURL*)url
+         targetURL:(NSURL *)targetURL
+    originalParams:(NSDictionary *)originalQueryParameters
+         arguments:(NSDictionary *)arguments {
+    if (self = [super init]) {
+        self.originalURL = url;
+        self.targetURL = targetURL;
+        self.ref = nil;
+        self.userAgent = nil;
+        self.refererData = nil;
+        self.originalQueryParameters = originalQueryParameters;
+        self.arguments = arguments;
+    }
+    return self;
+}
+
+- (id) initWithURL:(NSURL*)url
+         targetURL:(NSURL *)targetURL
+               ref:(NSString *)ref
+         userAgent:(NSString *)userAgent
+       refererData:(NSDictionary *)refererData
+    originalParams:(NSDictionary *)originalQueryParameters {
+    if (self = [super init]) {
+        self.originalURL = url;
+        self.targetURL = targetURL;
+        self.ref = ref;
+        self.userAgent = userAgent;
+        self.refererData = refererData;
+        self.originalQueryParameters = originalQueryParameters;
+        self.arguments = nil;
     }
     return self;
 }
@@ -51,6 +86,7 @@
     [_actionIDs release];
     [_ref  release];
     [_originalQueryParameters  release];
+    [_originalURL release];
     [super dealloc];
 }
 
@@ -74,23 +110,23 @@
     NSMutableString *result = [NSMutableString stringWithFormat:@"<%@: %p",
                                NSStringFromClass([self class]),
                                self];
-    
+
     if (self.targetURL) {
         [result appendFormat:@", targetURL: %@", self.targetURL.absoluteString];
     }
-    
+
     if (self.ref) {
         [result appendFormat:@"\n ref: %@", self.ref];
     }
-    
+
     if (self.actionIDs) {
         [result appendFormat:@"\n actionIDs: %@", self.actionIDs];
     }
-    
+
     if (self.actionTypes) {
         [result appendFormat:@"\n actionTypes: %@", self.actionTypes];
     }
-    
+
     [result appendString:@">"];
     return result;
 }

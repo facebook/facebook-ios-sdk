@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,15 +15,16 @@
  */
 
 #import "FBAppBridge.h"
+
 #import "FBAppBridgeTypeToJSONConverter.h"
+#import "FBAppCall+Internal.h"
 #import "FBBase64.h"
 #import "FBCrypto.h"
-#import "FBUtility.h"
+#import "FBDialogsData+Internal.h"
 #import "FBError.h"
 #import "FBSession+Internal.h"
-#import "FBAppCall+Internal.h"
-#import "FBDialogsData+Internal.h"
 #import "FBSettings+Internal.h"
+#import "FBUtility.h"
 
 /*
  FBBridgeURLParams and FBBridgeKey define the protocol used between the native Facebook app
@@ -107,12 +108,15 @@ static NSString *const FBAppBridgePasteboardNamesKey = @"FBAppBridgePasteboards"
 /*
  Array of known versions that the native FB app can support.
  They should be ordered with each element being a more recent version than the previous.
- 
+
  Format of a version : <yyyy><mm><dd>
  */
 static NSString *const FBAppBridgeVersions[] = {
     @"20130214",
-    @"20130410"
+    @"20130410",
+    @"20130702",
+    @"20131010",
+    @"20131219",
 };
 
 static FBAppBridge *g_sharedInstance;
@@ -124,9 +128,7 @@ static FBAppBridge *g_sharedInstance;
 @property (nonatomic, retain) FBAppBridgeTypeToJSONConverter *jsonConverter;
 @property (nonatomic, copy) NSString *appID;
 @property (nonatomic, copy) NSString *bundleID;
-@property (nonatomic, copy) NSString *urlSchemeSuffix;
 @property (nonatomic, copy) NSString *appName;
-@property (nonatomic, copy) NSString *urlScheme;
 
 @end
 
@@ -153,12 +155,10 @@ static FBAppBridge *g_sharedInstance;
                                    userInfo:nil]
              raise];
         }
-        
+
         // Cache these values since they will not change
         self.bundleID = [[NSBundle mainBundle] bundleIdentifier];
-        self.urlSchemeSuffix = [FBSettings defaultUrlSchemeSuffix];
         self.appName = [FBSettings defaultDisplayName];
-        self.urlScheme = [FBSettings defaultURLScheme];
 
         self.pendingAppCalls = [NSMutableDictionary dictionary];
         self.callbacks = [NSMutableDictionary dictionary];
@@ -175,24 +175,29 @@ static FBAppBridge *g_sharedInstance;
     [_jsonConverter release];
     [_appID release];
     [_bundleID release];
-    [_urlSchemeSuffix release];
-    
+
     [super dealloc];
 }
 
 - (void)dispatchDialogAppCall:(FBAppCall *)appCall
                       version:(NSString *)version
-            completionHandler:(FBDialogAppCallCompletionHandler)handler {
+                      session:(FBSession *)session
+            completionHandler:(FBAppCallHandler)handler {
     dispatch_async(dispatch_get_main_queue(), ^() {
         [self performDialogAppCall:appCall
                            version:version
+                           session:session
                  completionHandler:handler];
     });
 }
 
 - (void)performDialogAppCall:(FBAppCall *)appCall
                      version:(NSString *)version
-           completionHandler:(FBDialogAppCallCompletionHandler)handler {
+                     session:(FBSession *)session
+           completionHandler:(FBAppCallHandler)handler {
+    if (!session) {
+        session = FBSession.activeSessionIfExists;
+    }
     if (!appCall.isValid || !appCall.dialogData || !version) {
         // NOTE : the FBConditionalLog is wrapped in an if to allow us to return and prevent exceptions
         // further down. No need to check the condition again since we know we are in an error state.
@@ -200,16 +205,16 @@ static FBAppBridge *g_sharedInstance;
         FBConditionalLog(YES, @"FBAppBridge: Must provide a valid AppCall object & version.");
         return;
     }
-    
+
     NSMutableDictionary *queryParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                         self.appID, FBBridgeURLParams.appId,
                                         [FBAppBridge symmetricKeyAndForceRefresh:NO], FBBridgeURLParams.cipherKey,
                                         nil];
     NSMutableDictionary *bridgeParams = [NSMutableDictionary dictionaryWithObject:appCall.ID
                                                                            forKey:FBBridgeKey.actionId];
-    
+
     [self addAppMetadataToDictionary:bridgeParams];
-    
+
     if (appCall.dialogData.clientState) {
         // Serialize clientState to JSON prior to converting bridgeParams to be json-ready. This will
         // prevent our code from introspecting into clientState
@@ -222,27 +227,28 @@ static FBAppBridge *g_sharedInstance;
             return;
         }
     }
-    
-    if (self.urlSchemeSuffix) {
-        queryParams[FBBridgeURLParams.schemeSuffix] = self.urlSchemeSuffix;
+
+    NSString *urlSchemeSuffix = session.urlSchemeSuffix ?: [FBSettings defaultUrlSchemeSuffix];
+    if (urlSchemeSuffix) {
+        queryParams[FBBridgeURLParams.schemeSuffix] = urlSchemeSuffix;
     }
-    
+
     NSString *jsonString = [self jsonStringFromDictionary:bridgeParams];
     if (!jsonString) {
         [self invoke:handler forFailedAppCall:appCall withMessage:kSerializeErrorMessage];
         return;
     }
     queryParams[FBBridgeURLParams.bridgeArgs] = jsonString;
-    
+
     jsonString = [self jsonStringFromDictionary:appCall.dialogData.arguments];
     if (!jsonString) {
         [self invoke:handler forFailedAppCall:appCall withMessage:kSerializeErrorMessage];
         return;
     }
     queryParams[FBBridgeURLParams.methodArgs] = jsonString;
-    
+
     NSURL *url = [FBAppBridge urlForMethod:appCall.dialogData.method queryParams:queryParams version:version];
-    
+
     // Track the callback and AppCall, now that we are just about to invoke the url
     [self trackAppCall:appCall withCompletionHandler:handler];
 
@@ -259,41 +265,49 @@ static FBAppBridge *g_sharedInstance;
     }
 }
 
-- (void)invoke:(FBDialogAppCallCompletionHandler)handler
+- (void)invoke:(FBAppCallHandler)handler
 forFailedAppCall:(FBAppCall *)appCall
    withMessage:(NSString *)message {
     if (!handler) {
         // Nothing to do here
         return;
     }
-    
+
     appCall.error = [NSError errorWithDomain:FacebookSDKDomain
                                         code:FBErrorDialog
                                     userInfo:@{@"message":message}];
-    
-    handler(appCall, nil, appCall.error);
+
+    handler(appCall);
 }
 
 - (BOOL)handleOpenURL:(NSURL *)url
     sourceApplication:(NSString *)sourceApplication
+              session:(FBSession *)session
       fallbackHandler:(FBAppCallHandler)fallbackHandler {
     NSString *urlHost = [url.host lowercaseString];
     NSString *urlScheme = [url.scheme lowercaseString];
-    if (![urlHost isEqualToString:FBAppBridgeURLHost] || ![urlScheme isEqualToString:self.urlScheme]) {
-        return NO;
+    NSString *expectedUrlScheme = [[FBSettings defaultURLSchemeWithAppID:session.appID urlSchemeSuffix:session.urlSchemeSuffix] lowercaseString];
+    if (![urlHost isEqualToString:FBAppBridgeURLHost] || ![urlScheme isEqualToString:expectedUrlScheme]) {
+        FBAppCall *appCall = [FBAppCall appCallFromURL:url];
+        if (appCall && fallbackHandler) {
+            fallbackHandler(appCall);
+            return YES;
+        } else {
+            return NO;
+        }
     }
-    
+
     // If we're here, this URL was meant for the bridge. So from here on, let's make sure to
     // always call the fallback handler so that the app knows that it doesn't need to
     // try and process the URL any further.
-    
+
     BOOL success = NO;
     NSInteger preProcessErrorCode = 0;
     if (![FBUtility isFacebookBundleIdentifier:sourceApplication]) {
         // If we're getting a response from another non-FB app, let's drop
         // our old symmetric key, since it might have been compromised.
         [FBAppBridge symmetricKeyAndForceRefresh:YES];
-        
+
         // The bridge only handles URLs from a native Facebook app.
         preProcessErrorCode = FBErrorUntrustedURL;
     } else {
@@ -301,7 +315,7 @@ forFailedAppCall:(FBAppCall *)appCall
         if ([url.path length] > 1) {
             urlPath = [[url.path lowercaseString] substringFromIndex:1];
         }
-        
+
         if (urlPath && url.query) {
             NSDictionary *queryParams = [FBUtility dictionaryByParsingURLQueryPart:url.query];
             BOOL isEncrypted = (queryParams[FBBridgeURLParams.cipher] != nil);
@@ -310,13 +324,14 @@ forFailedAppCall:(FBAppCall *)appCall
                                                    method:urlPath
                                           fallbackHandler:fallbackHandler];
             }
-            
+
             success = [self processResponse:queryParams
                                      method:urlPath
+                                    session:session
                             fallbackHandler:fallbackHandler];
         }
     }
-    
+
     if (!success && fallbackHandler) {
         NSError *preProcessError = [NSError errorWithDomain:FacebookSDKDomain
                                                        code:preProcessErrorCode ?: FBErrorMalformedURL
@@ -324,70 +339,71 @@ forFailedAppCall:(FBAppCall *)appCall
                                   FBErrorUnprocessedURLKey : url,
                                  NSLocalizedDescriptionKey : @"The URL could not be processed for an FBAppCall"
                                     }];
-        
+
         // NOTE : At this point, we don't have a way to know whether this URL was for a pending AppCall.
         // This has the potential to leave some pending AppCalls in an unterminated state until the app shuts down.
         // However, as long as the app has wired up the handleDidBecomeActive method in FBAppCall, it will
         // get invoked by iOS after the openURL: call stack. This will result in all pending AppCalls getting
         // cancelled, which is the desired approach here.
-        FBAppCall *dummyCall = [[[FBAppCall alloc] init] autorelease];
+        FBAppCall *dummyCall = [[[FBAppCall alloc] initWithID:nil enforceScheme:NO appID:session.appID urlSchemeSuffix:session.urlSchemeSuffix] autorelease];
         dummyCall.error = preProcessError;
         fallbackHandler(dummyCall);
     }
-    
+
     return YES;
 }
 
 - (void)handleDidBecomeActive {
     // See if we had any pending AppCalls. If we did, then we need to signal an error to the app since
     // the app was made active without the response URL from the native facebook app.
-    
+
     NSError *error = nil;
     NSArray *allPendingAppCalls = [self.pendingAppCalls allValues];
-    
+
     for (FBAppCall *call in allPendingAppCalls) {
         [call retain];
-        FBDialogAppCallCompletionHandler handler = [[self.callbacks[call.ID] retain] autorelease];
+        FBAppCallHandler handler = [[self.callbacks[call.ID] retain] autorelease];
         [self stopTrackingCallWithID:call.ID];
-        
+
         @try {
             if (handler) {
                 if (!error) {
-                    call.error = [NSError errorWithDomain:FacebookSDKDomain
+                    error = [NSError errorWithDomain:FacebookSDKDomain
                                                      code:FBErrorAppActivatedWhilePendingAppCall
                                                  userInfo:@{NSLocalizedDescriptionKey : @"The user navigated away from "
                                   @"the Facebook app prior to completing this AppCall. This AppCall is now cancelled "
                                   @"and needs to be retried to get a successful completion"}];
                 }
-                
+                call.error = error;
+
                 // Passing nil for results, since we are effectively cancelling this action
-                handler(call, nil, call.error);
+                handler(call);
             }
         }
         @finally {
             [call release];
         }
     }
-    
+
 }
 
 - (BOOL)processResponse:(NSDictionary *)queryParams
                  method:(NSString *)method
+                session:(FBSession *)session
         fallbackHandler:(FBAppCallHandler)fallbackHandler {
     NSDictionary *bridgeArgs = [self dictionaryFromJSONString:queryParams[FBBridgeURLParams.bridgeArgs]];
     NSString *callID = bridgeArgs[FBBridgeKey.actionId];
     NSString *version = queryParams[FBBridgeURLParams.version];
-    
+
     if (!callID || !version) {
         // If we can't get the call Id, we have no way to proceed
         // Also reject un-versioned responses
         return NO;
     }
-    
-    FBDialogAppCallCompletionHandler handler = [[self.callbacks[callID] retain] autorelease];
+
+    FBAppCallHandler handler = [[self.callbacks[callID] retain] autorelease];
     FBAppCall *call = [self.pendingAppCalls[callID] retain];
-    BOOL callFallback = NO;
-    
+
     // If we aren't tracking this AppCall, then we need to pass control over to the fallback handler
     // if one has been provided. This is the expected code path if the app was shutdown after switching
     // to the native Facebook app. We can create a duplicate FBAppCall object to pass to the
@@ -395,16 +411,16 @@ forFailedAppCall:(FBAppCall *)appCall
     if (!call && fallbackHandler) {
         NSDictionary *methodArgs = [self dictionaryFromJSONString:queryParams[FBBridgeURLParams.methodArgs]];
         NSDictionary *clientState = [FBUtility simpleJSONDecode:bridgeArgs[FBBridgeKey.clientState]];
-        
+
         FBDialogsData *dialogData = [[[FBDialogsData alloc] initWithMethod:method
                                                                              arguments:methodArgs]
                                            autorelease];
         dialogData.clientState = clientState;
-        
-        call = [[FBAppCall alloc] initWithID:callID];
+
+        call = [[FBAppCall alloc] initWithID:callID enforceScheme:NO appID:session.appID urlSchemeSuffix:session.urlSchemeSuffix];
         call.dialogData = dialogData;
-        
-        callFallback = YES;
+
+        handler = fallbackHandler;
     }
 
     [self stopTrackingCallWithID:callID];
@@ -412,18 +428,16 @@ forFailedAppCall:(FBAppCall *)appCall
     // TODO: Log if handler was not found.
     call.dialogData.results = [self dictionaryFromJSONString:queryParams[FBBridgeURLParams.methodResults]];
     call.error = [FBAppBridge errorFromDictionary:bridgeArgs[FBBridgeKey.error]];
-    
+
     @try {
         if (handler) {
-            handler(call, call.dialogData.results, call.error);
-        } else if (callFallback) {
-            fallbackHandler(call);
+            handler(call);
         }
     }
     @finally {
         [call release];
     }
-    
+
     // If we were able to find the call Id, then we handled the url.
     return YES;
 }
@@ -438,7 +452,7 @@ forFailedAppCall:(FBAppCall *)appCall
     if (!symmetricKey || !cipherText || !version) {
         return nil;
     }
-    
+
     // Build up the data needed to check the cipher's signature
     NSArray *additionalDataComponents = [NSArray arrayWithObjects:
                                          self.bundleID,
@@ -448,7 +462,7 @@ forFailedAppCall:(FBAppCall *)appCall
                                          version,
                                          nil];
     NSString *additionalData = [additionalDataComponents componentsJoinedByString:@":"];
-    
+
     // Now that we have all required info, decrypt!
     FBCrypto *crypto = [[FBCrypto alloc] initWithMasterKey:symmetricKey];
     NSData *decryptedData = [crypto decrypt:cipherText
@@ -457,7 +471,7 @@ forFailedAppCall:(FBAppCall *)appCall
     if (!decryptedData) {
         return nil;
     }
-    
+
     // Now create the decrypted query params dictionary
     NSString *queryParamsStr = [[NSString alloc] initWithData:decryptedData
                                                      encoding:NSUTF8StringEncoding];
@@ -465,7 +479,7 @@ forFailedAppCall:(FBAppCall *)appCall
                                         [FBUtility dictionaryByParsingURLQueryPart:queryParamsStr]];
     queryParams[FBBridgeURLParams.version] = version;
     [queryParamsStr release];
-    
+
     return queryParams;
 }
 
@@ -475,11 +489,11 @@ forFailedAppCall:(FBAppCall *)appCall
     if (!symmetricKey || forceRefresh) {
         // Generate keys
         symmetricKey = [FBCrypto makeMasterKey];
-        
+
         // Store the keys
         [defaults setObject:symmetricKey forKey:FBBridgeURLParams.cipherKey];
     }
-    
+
     return symmetricKey;
 }
 
@@ -487,7 +501,7 @@ forFailedAppCall:(FBAppCall *)appCall
     if (self.appName) {
         dictionary[FBBridgeKey.appName] = self.appName;
     }
-    
+
     UIImage *appIcon = [FBAppBridge appIconFromBundleInfo:[[NSBundle mainBundle] infoDictionary]];
     if (appIcon) {
         dictionary[FBBridgeKey.appIcon] = appIcon;
@@ -495,13 +509,14 @@ forFailedAppCall:(FBAppCall *)appCall
 }
 
 - (void)trackAppCall:(FBAppCall *)call
-withCompletionHandler:(FBDialogAppCallCompletionHandler)handler {
+withCompletionHandler:(FBAppCallHandler)handler {
     self.pendingAppCalls[call.ID] = call;
     if (!handler) {
         // a noop handler if nil is passed in
-        handler = ^(FBAppCall *call, NSDictionary *results, NSError *error) {};
+        handler = ^(FBAppCall *call) {};
     }
-    self.callbacks[call.ID] = Block_copy(handler);
+    // Can immediately autorelease since adding it to self.callbacks causes a retain.
+    self.callbacks[call.ID] = [Block_copy(handler) autorelease];
 }
 
 - (void)stopTrackingCallWithID:(NSString *)callID {
@@ -531,7 +546,7 @@ withCompletionHandler:(FBDialogAppCallCompletionHandler)handler {
     if (pasteboardNames.count == 0) {
         return;
     }
-  
+
     NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
     NSMutableDictionary *dictionary = [[[userDefaults objectForKey:FBAppBridgePasteboardNamesKey] mutableCopy] autorelease];
 
@@ -583,11 +598,11 @@ withCompletionHandler:(FBDialogAppCallCompletionHandler)handler {
         version = FBAppBridgeVersions[index];
         BOOL isMinVersion = [version isEqualToString:minVersion];
         NSURL *url = [FBAppBridge urlForMethod:method queryParams:nil version:version];
-        
+
         if (![[UIApplication sharedApplication] canOpenURL:url]) {
             version = nil;
         }
-        
+
         if (version || isMinVersion) {
             // Either we found an installed version, or we just hit the minimum
             // version for this method and did not find it to be installed.
@@ -595,7 +610,7 @@ withCompletionHandler:(FBDialogAppCallCompletionHandler)handler {
             break;
         }
     }
-    
+
     return version;
 }
 
@@ -623,10 +638,10 @@ withCompletionHandler:(FBDialogAppCallCompletionHandler)handler {
         NSString *domain = errorDictionary[FBBridgeErrorKey.domain];
         NSInteger code = [(NSNumber *)errorDictionary[FBBridgeErrorKey.code] integerValue];
         NSDictionary *userInfo = errorDictionary[FBBridgeErrorKey.userInfo];
-        
+
         error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
     }
-    
+
     return error;
 }
 

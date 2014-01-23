@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,7 @@
 #import <Foundation/Foundation.h>
 
 /*!
- @abstract This class contains information that represents an App Link from Facebook. 
+ @abstract This class contains information that represents an App Link from Facebook.
  */
 @interface FBAppLinkData : NSObject
 
@@ -31,9 +31,21 @@
 @property (readonly) NSArray *actionIDs;
 
 /*! @abstract Reference breadcrumb provided during creation of story */
-@property (readonly) NSArray *ref;
+@property (readonly) NSString *ref;
+
+/*! @abstract User Agent string set by the referer */
+@property (readonly) NSString *userAgent;
+
+/*! @abstract Referer data is a JSON object set by the referer with referer-specific content */
+@property (readonly) NSDictionary *refererData;
 
 /*! @abstract Full set of query parameters for this app link */
 @property (readonly) NSDictionary *originalQueryParameters;
+
+/*! @abstract Original url from which applinkData was extracted */
+@property (readonly) NSURL *originalURL;
+
+/*! @abstract Addtional arguments supplied with the App Link data. */
+@property (readonly) NSDictionary *arguments;
 
 @end

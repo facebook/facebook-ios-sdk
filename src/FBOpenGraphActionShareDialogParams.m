@@ -1,12 +1,12 @@
 /*
- * Copyright 2013 Facebook
+ * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,11 +15,12 @@
  */
 
 #import "FBOpenGraphActionShareDialogParams.h"
-#import "FBDialogsParams+Internal.h"
-#import "FBUtility.h"
+
 #import "FBAppBridge.h"
-#import "FBLogger.h"
+#import "FBDialogsParams+Internal.h"
 #import "FBError.h"
+#import "FBLogger.h"
+#import "FBUtility.h"
 
 #ifndef FB_BUILD_ONLY
 #define FB_BUILD_ONLY
@@ -43,6 +44,8 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
 {
     [_previewPropertyName release];
     [_actionType release];
+    [_action release];
+
     [super dealloc];
 }
 
@@ -119,7 +122,14 @@ NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
     NSMutableDictionary *flattened = [[[NSMutableDictionary alloc] initWithDictionary:dict] autorelease];
     for (NSString *key in dict) {
         id value = [dict objectForKey:key];
-        [flattened setObject:[self flattenObject:value] forKey:key];
+        // Since flattenGraphObjects is only called for the OG action AND image is a special
+        // object with attributes that should NOT be flattened (e.g., "user_generated"),
+        // we should skip flattening the image dictionary.
+        if ([key isEqualToString:@"image"]) {
+          [flattened setObject:value forKey:key];
+        } else {
+          [flattened setObject:[self flattenObject:value] forKey:key];
+        }
     }
     return flattened;
 }

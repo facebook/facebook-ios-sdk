@@ -6,7 +6,7 @@
  * You may obtain a copy of the License at
  *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-#import "FPAppDelegate.h"
 #import "FPViewController.h"
+
+#import "FPAppDelegate.h"
 
 // FBSample logic
 // We need to handle some of the UX events related to friend selection, and so we declare
 // that we implement the FBFriendPickerDelegate here; the delegate lets us filter the view
 // as well as handle selection events
-@interface FPViewController () 
+@interface FPViewController ()
 
 @property (strong, nonatomic) IBOutlet UITextView *selectedFriendsView;
 @property (retain, nonatomic) FBFriendPickerViewController *friendPickerController;
@@ -44,7 +45,7 @@
 - (void)viewDidUnload {
     self.selectedFriendsView = nil;
     self.friendPickerController = nil;
-    
+
     [super viewDidUnload];
 }
 
@@ -89,7 +90,7 @@
 
 - (void)facebookViewControllerDoneWasPressed:(id)sender {
     NSMutableString *text = [[NSMutableString alloc] init];
-    
+
     // we pick up the users from the selection, and create a string that we use to update the text view
     // at the bottom of the display; note that self.selection is a property inherited from our base class
     for (id<FBGraphUser> user in self.friendPickerController.selection) {
@@ -98,7 +99,7 @@
         }
         [text appendString:user.name];
     }
-    
+
     [self fillTextBoxAndDismiss:text.length > 0 ? text : @"<None>"];
 }
 
@@ -108,7 +109,7 @@
 
 - (void)fillTextBoxAndDismiss:(NSString *)text {
     self.selectedFriendsView.text = text;
-    
+
     [self dismissModalViewControllerAnimated:YES];
 }
 

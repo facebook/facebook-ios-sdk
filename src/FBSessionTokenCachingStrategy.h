@@ -15,32 +15,33 @@
  */
 
 #import <Foundation/Foundation.h>
+
 #import "FBAccessTokenData.h"
 
-/*! 
+/*!
  @class
- 
+
  @abstract
  The `FBSessionTokenCachingStrategy` class is responsible for persisting and retrieving cached data related to
- an <FBSession> object, including the user's Facebook access token. 
- 
+ an <FBSession> object, including the user's Facebook access token.
+
  @discussion
  `FBSessionTokenCachingStrategy` is designed to be instantiated directly or used as a base class. Usually default
  token caching behavior is sufficient, and you do not need to interface directly with `FBSessionTokenCachingStrategy` objects.
  However, if you need to control where or how `FBSession` information is cached, then you may take one of two approaches.
- 
+
  The first and simplest approach is to instantiate an instance of `FBSessionTokenCachingStrategy`, and then pass
  the instance to `FBSession` class' `init` method. This enables your application to control the key name used in
  `NSUserDefaults` to store session information. You may consider this approach if you plan to cache session information
  for multiple users.
- 
+
  The second and more advanced approached is to derive a custom class from `FBSessionTokenCachingStrategy`, which will
- be responsible for caching behavior of your application. This approach is useful if you need to change where the 
+ be responsible for caching behavior of your application. This approach is useful if you need to change where the
  information is cached, for example if you prefer to use the filesystem or make a network connection to fetch and
  persist cached tokens.  Inheritors should override the cacheTokenInformation, fetchTokenInformation, and clearToken methods.
  Doing this enables your application to implement any token caching scheme, including no caching at all (see
  `[FBSessionTokenCachingStrategy* nullCacheInstance ]`.
- 
+
  Direct use of `FBSessionTokenCachingStrategy`is an advanced technique. Most applications use <FBSession> objects without
  passing an `FBSessionTokenCachingStrategy`, which yields default caching to `NSUserDefaults`.
  */
@@ -52,18 +53,18 @@
 - (id)init;
 
 /*!
- @abstract 
+ @abstract
  Initializes and returns an instance
- 
+
  @param tokenInformationKeyName     Specifies a key name to use for cached token information in NSUserDefaults, nil
  indicates a default value of @"FBAccessTokenInformationKey"
  */
 - (id)initWithUserDefaultTokenInformationKeyName:(NSString*)tokenInformationKeyName;
 
 /*!
- @abstract 
+ @abstract
  Called by <FBSession> (and overridden by inheritors), in order to cache token information.
- 
+
  @param tokenInformation            Dictionary containing token information to be cached by the method
  @discussion You should favor overriding this instead of `cacheFBAccessTokenData` only if you intend
  to cache additional data not captured by the FBAccessTokenData type.
@@ -79,9 +80,9 @@
 - (void)cacheFBAccessTokenData:(FBAccessTokenData *)accessToken;
 
 /*!
- @abstract 
+ @abstract
  Called by <FBSession> (and overridden by inheritors), in order to fetch cached token information
- 
+
  @discussion
  An overriding implementation should only return a token if it
  can also return an expiration date, otherwise return nil.
@@ -94,21 +95,25 @@
 /*!
  @abstract
  Fetches the cached token instance.
- 
+
  @discussion
  This essentially wraps a call to `fetchTokenInformation` so you should
  override this when providing a custom token caching strategy.
+
+ In order for an `FBSession` instance to be able to use a cached token,
+ the token must be not be expired (see `+isValidTokenInformation:`) and
+ must also contain all permissions in the initialized session instance.
  */
 - (FBAccessTokenData *)fetchFBAccessTokenData;
 
 /*!
- @abstract 
+ @abstract
  Called by <FBSession> (and overridden by inheritors), in order delete any cached information for the current token
  */
 - (void)clearToken;
 
 /*!
- @abstract 
+ @abstract
  Helper function called by the SDK as well as apps, in order to fetch the default strategy instance.
  */
 + (FBSessionTokenCachingStrategy*)defaultInstance;
@@ -120,10 +125,10 @@
 + (FBSessionTokenCachingStrategy*)nullCacheInstance;
 
 /*!
- @abstract 
+ @abstract
  Helper function called by the SDK as well as application code, used to determine whether a given dictionary
  contains the minimum token information usable by the <FBSession>.
- 
+
  @param tokenInformation            Dictionary containing token information to be validated
  */
 + (BOOL)isValidTokenInformation:(NSDictionary*)tokenInformation;
@@ -150,3 +155,6 @@ extern NSString *const FBTokenInformationLoginTypeLoginKey;
 
 // The key to use with token information dictionaries to get the latest known permissions
 extern NSString *const FBTokenInformationPermissionsKey;
+
+// The key to use with token information dictionaries to get the date the permissions were last refreshed.
+extern NSString *const FBTokenInformationPermissionsRefreshDateKey;

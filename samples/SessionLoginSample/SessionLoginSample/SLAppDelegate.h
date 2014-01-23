@@ -4,9 +4,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *    http://www.apache.org/licenses/LICENSE-2.0
- 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,12 +15,13 @@
  */
 
 #import <UIKit/UIKit.h>
+
 #import <FacebookSDK/FacebookSDK.h>
 
 // Session Login sample application
 //
-// The purpose of this sample application is to provide an example of 
-// how to log in with Facebook. The goal of the sample is to show how 
+// The purpose of this sample application is to provide an example of
+// how to log in with Facebook. The goal of the sample is to show how
 // to use the FBSession class for this purpose, with minimal additional
 // sample functionality to distract from the core topic.
 
@@ -32,7 +33,7 @@
 @property (strong, nonatomic) SLViewController *viewController;
 
 // FBSample logic
-// In this sample the app delegate maintains a property for the current 
+// In this sample the app delegate maintains a property for the current
 // active session, and the view controllers reference the session via
 // this property, as well as play a role in keeping the session object
 // up to date; a more complicated application may choose to introduce

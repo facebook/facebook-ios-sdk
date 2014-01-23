@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-# Note: Use of this script requires GNU grep rather than BSD grep
+# Note: Use of this script requires Perl
 
 #
 # step 1 - confirm we have an app id and app secret to work with
@@ -41,15 +41,15 @@ echo curling...
 
 ROCK_IMAGE_URI=` \
   curl -s -k -X POST https://graph.facebook.com/$APPID/staging_resources -F access_token="$APPID|$APPSECRET" -F 'file=@RPSSample/left-rock-128.png;type=image/png' \
-  | grep -Po '(?<="uri":").*(?=")' `
+  | perl -ne '/"uri":"(.*)"}/ && print $1' `
 
 PAPER_IMAGE_URI=` \
   curl -s -k -X POST https://graph.facebook.com/$APPID/staging_resources -F access_token="$APPID|$APPSECRET" -F 'file=@RPSSample/left-paper-128.png;type=image/png' \
-  | grep -Po '(?<="uri":").*(?=")' `
+  | perl -ne '/"uri":"(.*)"}/ && print $1' `
 
 SCISSORS_IMAGE_URI=` \
   curl -s -k -X POST https://graph.facebook.com/$APPID/staging_resources -F access_token="$APPID|$APPSECRET" -F 'file=@RPSSample/left-scissors-128.png;type=image/png' \
-  | grep -Po '(?<="uri":").*(?=")' `
+  | perl -ne '/"uri":"(.*)"}/ && print $1' `
 
 echo "created staged resources..."
 echo "  rock=$ROCK_IMAGE_URI"
@@ -63,17 +63,17 @@ echo "  scissors=$SCISSORS_IMAGE_URI"
 # rock
 ROCK_OBJID=` \
   curl -s -X POST -F "object={\"title\":\"Rock\",\"description\":\"Breaks scissors, alas is covered by paper.\",\"image\":\"$ROCK_IMAGE_URI\"}" "https://graph.facebook.com/$APPID/objects/fb_sample_rps:gesture?access_token=$APPID|$APPSECRET" \
-  | grep -Po '(?<="id":").*(?=")'`
+  | perl -ne '/"id":"(.*)"}/ && print $1' `
 
 # paper
 PAPER_OBJID=` \
   curl -s -X POST -F "object={\"title\":\"Paper\",\"description\":\"Covers rock, sadly scissors cut it.\",\"image\":\"$PAPER_IMAGE_URI\"}" "https://graph.facebook.com/$APPID/objects/fb_sample_rps:gesture?access_token=$APPID|$APPSECRET" \
-  | grep -Po '(?<="id":").*(?=")'`
+  | perl -ne '/"id":"(.*)"}/ && print $1' `
 
 # scissors
 SCISSORS_OBJID=` \
   curl -s -X POST -F "object={\"title\":\"Scissors\",\"description\":\"Cuts paper, broken by rock -- bother.\",\"image\":\"$SCISSORS_IMAGE_URI\"}" "https://graph.facebook.com/$APPID/objects/fb_sample_rps:gesture?access_token=$APPID|$APPSECRET" \
-  | grep -Po '(?<="id":").*(?=")'`
+  | perl -ne '/"id":"(.*)"}/ && print $1' `
 
 #
 # step 4 - echo progress

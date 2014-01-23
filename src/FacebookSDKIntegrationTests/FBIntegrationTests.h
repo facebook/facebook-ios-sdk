@@ -60,7 +60,8 @@
               hasProperties:(NSArray*)propertyNames;
 - (void)validateGraphObjectWithId:(NSString*)idString 
                     hasProperties:(NSArray*)propertyNames 
-                      withSession:(FBSession*)session;
+                      withSession:(FBSession*)session
+                          blocker:(FBTestBlocker*)blocker;
 - (void)postAndValidateWithSession:(FBSession*)session
                          graphPath:(NSString*)graphPath
                        graphObject:(id)graphObject

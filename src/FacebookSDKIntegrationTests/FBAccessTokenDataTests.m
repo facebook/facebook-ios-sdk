@@ -97,7 +97,8 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
         FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
         FBTokenInformationPermissionsKey : expectedPermissions,
         FBTokenInformationLoginTypeLoginKey : [NSNumber numberWithInt:FBSessionLoginTypeFacebookViaSafari],
-        FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400]
+        FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400],
+        FBTokenInformationPermissionsRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998401],
     };
     
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
@@ -119,6 +120,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     STAssertEqualObjects(expectedPermissions, fetchedToken.permissions, @"permissions does not match");
     STAssertEquals(FBSessionLoginTypeFacebookViaSafari, fetchedToken.loginType, @"loginType does not match");
     STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1356998400], fetchedToken.refreshDate, @"refreshDate does not match");
+    STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1356998401], fetchedToken.permissionsRefreshDate, @"permissionsRefreshDate does not match");
 }
 // Verifies that session init can read everything as expected from the cache for old cache entries that use isFacebookLogin
 - (void) testCachingStrategyAndSessionInit_IsFacebookLogin {
