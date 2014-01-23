@@ -68,6 +68,10 @@
  */
 - (void)show;
 
+/*I ADD*/
+- (void)show:(UIView*)loginView;
+/*THIS*/
+
 /**
  * Displays the first page of the dialog.
  *
