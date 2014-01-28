@@ -24,8 +24,8 @@
 @end
 
 @implementation FBTestBlocker {
-    int _signalsRemaining;
-    int _expectedSignalCount;
+    NSInteger _signalsRemaining;
+    NSInteger _expectedSignalCount;
 }
 
 - (id)init {
