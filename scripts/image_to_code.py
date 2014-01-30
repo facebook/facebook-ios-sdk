@@ -108,11 +108,11 @@ def main(argv):
   try:
     opts, args = getopt.getopt(argv,"hi:c:o:")
   except getopt.GetoptError:
-    print 'image_to_code.py -i <inputFile> -c <class> -o <outputDir>'
+    print('image_to_code.py -i <inputFile> -c <class> -o <outputDir>')
     sys.exit(2)
   for opt, arg in opts:
     if opt == '-h':
-      print 'image_to_code.py -i <inputFile> -c <class> -o <outputDir>'
+      print('image_to_code.py -i <inputFile> -c <class> -o <outputDir>')
       sys.exit()
     elif opt == '-i':
       inputFile = arg

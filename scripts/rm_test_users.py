@@ -39,7 +39,7 @@ while usersPath:
     conn = httplib.HTTPSConnection(host);
     conn.request("GET", usersPath);
     users = json.loads(conn.getresponse().read());
-    print "Got", len(users["data"]), "users.";
+    print("Got", len(users["data"]), "users.")
 
     for user in users["data"]:
         print("Deleting user {0}".format(user["id"]));
