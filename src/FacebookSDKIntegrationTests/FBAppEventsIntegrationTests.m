@@ -22,7 +22,7 @@
 #import "FBUtility.h"
 #import <objc/objc-runtime.h>
 
-@interface FBAppEventsIntegrationTests() {
+@interface FBAppEventsIntegrationTests () {
     id _mockFBUtility;
     Method _originalPublishInstall;
     Method _swizzledPublishInstall;
@@ -61,7 +61,7 @@ static NSString *loggedEvent = nil;
 }
 
 // Ensure session is not closed by a bogus app event log.
--(void) testSessionNotClosed {
+- (void)testSessionNotClosed {
     // *** COPY-PASTA README *** read this if you are copying tests for FBAppEvents!
     // Configure OCMock of FBAppEvents to expect handleActivitiesPostCompletion: instead of instanceFlush: because
     // 1. [OCMArg any] does not work for primitives
@@ -100,7 +100,7 @@ static NSString *loggedEvent = nil;
     [appEventsSingletonMock stopMocking];
 }
 
--(void) testUpdateParametersWithEventUsageLimitsAndBundleInfo {
+- (void)testUpdateParametersWithEventUsageLimitsAndBundleInfo {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
   
     // default should set 1 for the app setting.
@@ -122,7 +122,7 @@ static NSString *loggedEvent = nil;
     STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
 }
 
--(void) testActivateApp {
+- (void)testActivateApp {
     // swizzle out the underlying calls.
     _originalPublishInstall = class_getClassMethod([FBSettings class], @selector(publishInstall:));
     _swizzledPublishInstall = class_getClassMethod([self class], @selector(publishInstallCounter:));

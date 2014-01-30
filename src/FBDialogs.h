@@ -67,9 +67,9 @@ typedef void (^FBOSIntegratedShareDialogHandler)(FBOSIntegratedShareDialogResult
 
  */
 typedef void (^FBDialogAppCallCompletionHandler)(
-FBAppCall *call,
-NSDictionary *results,
-NSError *error);
+                                                 FBAppCall *call,
+                                                 NSDictionary *results,
+                                                 NSError *error);
 
 /*!
  @class FBDialogs
@@ -108,10 +108,10 @@ NSError *error);
  @return YES if the dialog was presented, NO if not (in the case of a NO result, the handler
  will still be called, with an error indicating the reason the dialog was not displayed)
  */
-+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController*)viewController
-                                      initialText:(NSString*)initialText
-                                            image:(UIImage*)image
-                                              url:(NSURL*)url
++ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)viewController
+                                      initialText:(NSString *)initialText
+                                            image:(UIImage *)image
+                                              url:(NSURL *)url
                                           handler:(FBOSIntegratedShareDialogHandler)handler;
 
 /*!
@@ -140,10 +140,10 @@ NSError *error);
  @return YES if the dialog was presented, NO if not (in the case of a NO result, the handler
  will still be called, with an error indicating the reason the dialog was not displayed)
  */
-+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController*)viewController
-                                      initialText:(NSString*)initialText
-                                           images:(NSArray*)images
-                                             urls:(NSArray*)urls
++ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)viewController
+                                      initialText:(NSString *)initialText
+                                           images:(NSArray *)images
+                                             urls:(NSArray *)urls
                                           handler:(FBOSIntegratedShareDialogHandler)handler;
 
 /*!
@@ -177,11 +177,11 @@ NSError *error);
  @return YES if the dialog was presented, NO if not (in the case of a NO result, the handler
  will still be called, with an error indicating the reason the dialog was not displayed)
  */
-+ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController*)viewController
-                                          session:(FBSession*)session
-                                      initialText:(NSString*)initialText
-                                           images:(NSArray*)images
-                                             urls:(NSArray*)urls
++ (BOOL)presentOSIntegratedShareDialogModallyFrom:(UIViewController *)viewController
+                                          session:(FBSession *)session
+                                      initialText:(NSString *)initialText
+                                           images:(NSArray *)images
+                                             urls:(NSArray *)urls
                                           handler:(FBOSIntegratedShareDialogHandler)handler;
 
 /*!
@@ -197,7 +197,7 @@ NSError *error);
 
  @return YES if the dialog would be presented for the session, and NO if not
  */
-+ (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession*)session;
++ (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession *)session;
 
 /*!
  @abstract
@@ -444,7 +444,7 @@ NSError *error);
 + (FBAppCall *)presentShareDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action
                                           actionType:(NSString *)actionType
                                  previewPropertyName:(NSString *)previewPropertyName
-                                             handler:(FBDialogAppCallCompletionHandler) handler;
+                                             handler:(FBDialogAppCallCompletionHandler)handler;
 
 /*!
  @abstract
@@ -487,6 +487,6 @@ NSError *error);
                                           actionType:(NSString *)actionType
                                  previewPropertyName:(NSString *)previewPropertyName
                                          clientState:(NSDictionary *)clientState
-                                             handler:(FBDialogAppCallCompletionHandler) handler;
+                                             handler:(FBDialogAppCallCompletionHandler)handler;
 
 @end

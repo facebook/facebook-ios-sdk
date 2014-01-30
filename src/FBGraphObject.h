@@ -36,9 +36,9 @@
 
  Goals of the FBGraphObject types:
  <ul>
-   <li> Lightweight/maintainable/robust </li>
-   <li> Extensible and resilient to change, both by Facebook and third party (OG) </li>
-   <li> Simple and natural extension to Objective-C </li>
+ <li> Lightweight/maintainable/robust </li>
+ <li> Extensible and resilient to change, both by Facebook and third party (OG) </li>
+ <li> Simple and natural extension to Objective-C </li>
  </ul>
 
  The FBGraphObject at its core is a duck typed (if it walks/swims/quacks...
@@ -51,15 +51,15 @@
  <pre>
  &dash; (void)placePickerViewControllerSelectionDidChange:(FBPlacePickerViewController *)placePicker
  {
-   id&#060;FBGraphPlace&#062; place = placePicker.selection;
+ id&#060;FBGraphPlace&#062; place = placePicker.selection;
 
-   // we'll use logging to show the simple typed property access to place and location info
-   NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@",
-     place.name,
-     place.location.city,
-     place.location.state,
-     place.location.latitude,
-     place.location.longitude);
+ // we'll use logging to show the simple typed property access to place and location info
+ NSLog(@"place=%@, city=%@, state=%@, lat long=%@ %@",
+ place.name,
+ place.location.city,
+ place.location.state,
+ place.location.latitude,
+ place.location.longitude);
  }
  </pre>
 
@@ -90,15 +90,15 @@
  The following layer diagram depicts some of the concepts discussed thus far:
 
  <pre>
-                       *-------------* *------------* *-------------**--------------------------*
-            Facade --> | FBGraphUser | |FBGraphPlace| | MyGraphThing|| MyGraphPersonExtentension| ...
-                       *-------------* *------------* *-------------**--------------------------*
-                       *------------------------------------* *--------------------------------------*
-  Transparent impl --> |     FBGraphObject (instances)      | |      CustomClass&#060;FBGraphObject&#062;      |
-                       *------------------------------------* *--------------------------------------*
-                       *-------------------**------------------------* *-----------------------------*
-     Apparent impl --> |NSMutableDictionary||FBGraphObject (protocol)| |FBGraphObject (class methods)|
-                       *-------------------**------------------------* *-----------------------------*
+                        *-------------* *------------* *-------------**--------------------------*
+ Facade -->             | FBGraphUser | |FBGraphPlace| | MyGraphThing|| MyGraphPersonExtentension| ...
+                        *-------------* *------------* *-------------**--------------------------*
+                        *------------------------------------* *--------------------------------------*
+ Transparent impl -->   |     FBGraphObject (instances)      | |      CustomClass&#060;FBGraphObject&#062;      |
+                        *------------------------------------* *--------------------------------------*
+                        *-------------------**------------------------* *-----------------------------*
+ Apparent impl -->      |NSMutableDictionary||FBGraphObject (protocol)| |FBGraphObject (class methods)|
+                        *-------------------**------------------------* *-----------------------------*
  </pre>
 
  The *Facade* layer is meant for typed access to graph objects. The *Transparent impl* layer (more
@@ -197,7 +197,7 @@
  @abstract
  Used to create a graph object, usually for use in posting a new graph object or action.
  */
-+ (NSMutableDictionary<FBGraphObject>*)graphObject;
++ (NSMutableDictionary<FBGraphObject> *)graphObject;
 
 /*!
  @method
@@ -218,21 +218,21 @@
 
  @param jsonDictionary              the dictionary representing the underlying object to wrap
  */
-+ (NSMutableDictionary<FBGraphObject>*)graphObjectWrappingDictionary:(NSDictionary*)jsonDictionary;
++ (NSMutableDictionary<FBGraphObject> *)graphObjectWrappingDictionary:(NSDictionary *)jsonDictionary;
 
 /*!
  @method
  @abstract
  Used to create a graph object that's provisioned for POST, usually for use in posting a new Open Graph Action.
  */
-+ (NSMutableDictionary<FBOpenGraphAction>*)openGraphActionForPost;
++ (NSMutableDictionary<FBOpenGraphAction> *)openGraphActionForPost;
 
 /*!
  @method
  @abstract
  Used to create a graph object that's provisioned for POST, usually for use in posting a new Open Graph object.
  */
-+ (NSMutableDictionary<FBOpenGraphObject>*)openGraphObjectForPost;
++ (NSMutableDictionary<FBOpenGraphObject> *)openGraphObjectForPost;
 
 /*!
  @method
@@ -245,11 +245,11 @@
  @param url               the url property for the object
  @param description       the description for the object
  */
-+ (NSMutableDictionary<FBOpenGraphObject>*)openGraphObjectForPostWithType:(NSString *)type
-                                                                    title:(NSString *)title
-                                                                    image:(id)image
-                                                                      url:(id)url
-                                                              description:(NSString *)description;
++ (NSMutableDictionary<FBOpenGraphObject> *)openGraphObjectForPostWithType:(NSString *)type
+                                                                     title:(NSString *)title
+                                                                     image:(id)image
+                                                                       url:(id)url
+                                                               description:(NSString *)description;
 
 /*!
  @method

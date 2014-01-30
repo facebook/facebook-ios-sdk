@@ -18,13 +18,13 @@
 
 @interface SCPhotoViewController ()
 
-@property (strong, readwrite) UIImage* image;
+@property (strong, readwrite) UIImage *image;
 
 @end
 
 @implementation SCPhotoViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil image:(UIImage *) anImage
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil image:(UIImage *)anImage
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {

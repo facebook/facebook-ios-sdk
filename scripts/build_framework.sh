@@ -79,7 +79,6 @@ function xcode_build_target() {
     -sdk $1 \
     -configuration "${2}" \
     SYMROOT=$FB_SDK_BUILD \
-    CURRENT_PROJECT_VERSION=$FB_SDK_VERSION_FULL \
     clean build \
     || die "XCode build failed for platform: ${1}."
 }
@@ -127,13 +126,13 @@ mkdir $FB_SDK_FRAMEWORK/Versions/A/Resources
   $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk/*.h \
   $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders \
   || die "Error building framework while copying SDK headers to deprecated folder"
-for HEADER in FBConnect.h \
-              FBDialog.h \
-              FBFrictionlessRequestSettings.h \
-              FBLoginDialog.h \
-              Facebook.h \
+for HEADER in Legacy/FBConnect.h \
+              Legacy/FBDialog.h \
+              Legacy/FBFrictionlessRequestSettings.h \
+              Legacy/FBLoginDialog.h \
+              Legacy/Facebook.h \
               FBRequest.h \
-              FBSessionManualTokenCachingStrategy.h
+              Legacy/FBSessionManualTokenCachingStrategy.h
 do 
   \cp \
     $FB_SDK_SRC/$HEADER \
@@ -181,5 +180,5 @@ fi
 # Done
 #
 
-progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' $FB_SDK_SRC/FBSDKVersion.h $FB_SDK_SRC/FacebookSDK.h` 
+progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' $FB_SDK_SRC/Core/FBSDKVersion.h $FB_SDK_SRC/FacebookSDK.h` 
 common_success

@@ -16,17 +16,55 @@
 
 #import "RPSAppDelegate.h"
 
+#import <FacebookSDK/FacebookSDK.h>
+
+#import "RPSCommonObjects.h"
+#import "RPSDeeplyLinkedViewController.h"
 #import "RPSFriendsViewController.h"
 #import "RPSGameViewController.h"
 
 @implementation RPSAppDelegate
+
+#pragma mark - Class methods
+
++ (RPSCall)callFromAppLinkData:(FBAppLinkData *)appLinkData {
+    NSString *fbObjectID = [appLinkData originalQueryParameters][@"fb_object_id"];
+
+    if (fbObjectID == nil) {
+        return RPSCallNone;
+    }
+
+    RPSCall call = RPSCallNone;
+    NSInteger callOptionCount = sizeof(builtInOpenGraphObjects) / sizeof(builtInOpenGraphObjects[0]);
+    for (RPSCall callIndex = 0; callIndex < callOptionCount; callIndex++) {
+        if ([builtInOpenGraphObjects[callIndex] isEqualToString:fbObjectID]) {
+            call = callIndex;
+            break;
+        }
+    }
+
+    if (call == RPSCallNone) {
+        NSLog(@"Unexpected: deeplink was present, but did not contain a valid rock, paper or scissor fb_object_id");
+    }
+    return call;
+}
+
+#pragma mark - UIApplicationDelegate
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation {
     return [FBAppCall handleOpenURL:url
-                  sourceApplication:sourceApplication];
+                  sourceApplication:sourceApplication
+                    fallbackHandler:^(FBAppCall *call) {
+                        // Check for a deep link to parse out a call to show
+                        RPSCall deepCall = [RPSAppDelegate callFromAppLinkData:[call appLinkData]];
+                        if (deepCall != RPSCallNone) {
+                            RPSDeeplyLinkedViewController *vc = [[RPSDeeplyLinkedViewController alloc] initWithCall:deepCall];
+                            [self.navigationController presentViewController:vc animated:YES completion:nil];
+                        }
+                    }];
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -49,6 +87,7 @@
 #ifdef DEBUG
     [FBSettings enableBetaFeature:FBBetaFeaturesOpenGraphShareDialog | FBBetaFeaturesShareDialog];
 #endif
+
     UIViewController *viewControllerGame;
     FBUserSettingsViewController *viewControllerSettings;
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {

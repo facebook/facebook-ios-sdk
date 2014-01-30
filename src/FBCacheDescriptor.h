@@ -38,6 +38,6 @@
 
  @param session     the <FBSession> to use for fetching data
  */
-- (void)prefetchAndCacheForSession:(FBSession*)session;
+- (void)prefetchAndCacheForSession:(FBSession *)session;
 
 @end

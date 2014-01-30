@@ -45,14 +45,6 @@
 
 @implementation HFViewController
 
-@synthesize buttonPostStatus = _buttonPostStatus;
-@synthesize buttonPostPhoto = _buttonPostPhoto;
-@synthesize buttonPickFriends = _buttonPickFriends;
-@synthesize buttonPickPlace = _buttonPickPlace;
-@synthesize labelFirstName = _labelFirstName;
-@synthesize loggedInUser = _loggedInUser;
-@synthesize profilePic = _profilePic;
-
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
@@ -155,7 +147,7 @@
 #pragma mark -
 
 // Convenience method to perform some action that requires the "publish_actions" permissions.
-- (void) performPublishAction:(void (^)(void)) action {
+- (void)performPublishAction:(void(^)(void))action {
     // we defer request for permission to post to the moment of post, then we check for the permission
     if ([FBSession.activeSession.permissions indexOfObject:@"publish_actions"] == NSNotFound) {
         // if we don't already have the permission, then we request it now
@@ -164,7 +156,7 @@
                                             completionHandler:^(FBSession *session, NSError *error) {
                                                 if (!error) {
                                                     action();
-                                                } else if (error.fberrorCategory != FBErrorCategoryUserCancelled){
+                                                } else if (error.fberrorCategory != FBErrorCategoryUserCancelled) {
                                                     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Permission denied"
                                                                                                         message:@"Unable to get permission to post"
                                                                                                        delegate:nil
@@ -230,15 +222,14 @@
                 FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
                 connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
-                                         | FBRequestConnectionErrorBehaviorAlertUser
-                                         | FBRequestConnectionErrorBehaviorRetry;
+                | FBRequestConnectionErrorBehaviorAlertUser
+                | FBRequestConnectionErrorBehaviorRetry;
 
                 [connection addRequest:[FBRequest requestForPostStatusUpdate:message]
-                     completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                                        [self showAlert:message result:result error:error];
-                                        self.buttonPostStatus.enabled = YES;
-                }];
+                     completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+                         [self showAlert:message result:result error:error];
+                         self.buttonPostStatus.enabled = YES;
+                     }];
                 [connection start];
 
                 self.buttonPostStatus.enabled = NO;
@@ -256,17 +247,16 @@
     [self performPublishAction:^{
         FBRequestConnection *connection = [[FBRequestConnection alloc] init];
         connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
-                                 | FBRequestConnectionErrorBehaviorAlertUser
-                                 | FBRequestConnectionErrorBehaviorRetry;
+        | FBRequestConnectionErrorBehaviorAlertUser
+        | FBRequestConnectionErrorBehaviorRetry;
 
         [connection addRequest:[FBRequest requestForUploadPhoto:img]
-             completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                 [self showAlert:@"Photo Post" result:result error:error];
-                 if (FBSession.activeSession.isOpen) {
-                     self.buttonPostPhoto.enabled = YES;
-                 }
-        }];
+           completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             [self showAlert:@"Photo Post" result:result error:error];
+             if (FBSession.activeSession.isOpen) {
+               self.buttonPostPhoto.enabled = YES;
+             }
+           }];
         [connection start];
 
         self.buttonPostPhoto.enabled = NO;
@@ -281,8 +271,7 @@
 
     // Use the modal wrapper method to display the picker.
     [friendPickerController presentModallyFromViewController:self animated:YES handler:
-     ^(FBViewController *sender, BOOL donePressed) {
-
+     ^(FBViewController *innerSender, BOOL donePressed) {
          if (!donePressed) {
              return;
          }
@@ -324,8 +313,7 @@
 
     // Use the modal wrapper method to display the picker.
     [placePickerController presentModallyFromViewController:self animated:YES handler:
-     ^(FBViewController *sender, BOOL donePressed) {
-
+     ^(FBViewController *innerSender, BOOL donePressed) {
          if (!donePressed) {
              return;
          }

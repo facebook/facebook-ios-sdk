@@ -43,11 +43,6 @@ enum SampleLocation {
 
 @implementation PPViewController
 
-@synthesize locationManager = _locationManager;
-@synthesize viewStateSearchScopeIndex = _viewStateSearchScopeIndex;
-@synthesize viewStateSearchText = _viewStateSearchText;
-@synthesize viewStateSearchWasActive = _viewStateSearchWasActive;
-
 // FBSample logic
 // This method is responsible for keeping UX and session state in sync
 - (void)refresh {

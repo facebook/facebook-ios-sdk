@@ -22,9 +22,6 @@
 
 @implementation GraphApiAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
-
 #pragma mark Template generated code
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {

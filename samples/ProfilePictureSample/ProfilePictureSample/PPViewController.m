@@ -72,35 +72,33 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 @end
 
 @implementation PPViewController
-@synthesize profilePictureView;
-@synthesize profilePictureOuterView;
 
 - (IBAction)showJasonProfile:(id)sender {
     // FBSample logic
     // The following example uses an fbid to indicate which profile
     // picture to display, however a vanity name would work as well
-    profilePictureView.profileID = @"100002768941660";
+    _profilePictureView.profileID = @"100002768941660";
 }
 
 - (IBAction)showMichaelProfile:(id)sender {
     // FBSample logic
     // This example and the one after it, in contrast to the prvious one,
     // uses a vanity name to indicate which profile picture to display
-    profilePictureView.profileID = @"michael.marucheck";
+    _profilePictureView.profileID = @"michael.marucheck";
 }
 
 - (IBAction)showVijayeProfile:(id)sender {
-    profilePictureView.profileID = @"vijaye";
+    _profilePictureView.profileID = @"vijaye";
 }
 
 - (IBAction)showRandomProfile:(id)sender {
     int index = arc4random() % kNumInterestingIDs;
-    profilePictureView.profileID = [NSString stringWithCString:interestingIDs[index]
+    _profilePictureView.profileID = [NSString stringWithCString:interestingIDs[index]
                                                    encoding:NSASCIIStringEncoding];
 }
 
 - (IBAction)showNoProfile:(id)sender {
-    profilePictureView.profileID = nil;
+    _profilePictureView.profileID = nil;
 }
 
 // Cropping selections
@@ -108,22 +106,22 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
 // FBSample logic
 // Set the cropping for the profile picture view
 - (IBAction)makePictureOriginal:(id)sender {
-    profilePictureView.pictureCropping = FBProfilePictureCroppingOriginal;
+    _profilePictureView.pictureCropping = FBProfilePictureCroppingOriginal;
 }
 
 - (IBAction)makePictureSquare:(id)sender {
-    profilePictureView.pictureCropping = FBProfilePictureCroppingSquare;
+    _profilePictureView.pictureCropping = FBProfilePictureCroppingSquare;
 }
 
 
 // View size mods
 
 - (IBAction)makeViewSmall:(id)sender {
-    profilePictureOuterView.bounds = CGRectMake(0, 0, 100, 100);
+    _profilePictureOuterView.bounds = CGRectMake(0, 0, 100, 100);
 }
 
 - (IBAction)makeViewLarge:(id)sender {
-    profilePictureOuterView.bounds = CGRectMake(0, 0, 220, 220);
+    _profilePictureOuterView.bounds = CGRectMake(0, 0, 220, 220);
 }
 
 #pragma mark -
@@ -133,7 +131,7 @@ const int kNumInterestingIDs = sizeof(interestingIDs) / sizeof(interestingIDs[0]
     [super viewDidLoad];
 
     [self makeViewLarge:nil];
-    profilePictureView.profileID = @"45963418107"; // Hello world
+    _profilePictureView.profileID = @"45963418107"; // Hello world
 }
 
 - (void)viewDidUnload {

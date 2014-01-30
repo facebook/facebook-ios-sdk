@@ -24,8 +24,8 @@ extern NSString *const kAuthenticationTestValidToken;
 extern NSString *const kAuthenticationTestAppId;
 
 @interface FBAuthenticationTests : SenTestCase {
-    @protected
-    
+@protected
+
     FBTestBlocker *_blocker;
 }
 
@@ -42,12 +42,12 @@ supportMultitasking:(BOOL)supportMultitasking;
 - (void)mockSession:(id)mockSession
 expectFacebookAppAuth:(BOOL)expect
                 try:(BOOL)try
-            results:(NSDictionary*)results;
+results:(NSDictionary *)results;
 
 - (void)mockSession:(id)mockSession
    expectSafariAuth:(BOOL)expect
                 try:(BOOL)try
-            results:(NSDictionary*)results;
+results:(NSDictionary *)results;
 
 - (void)mockSession:(id)mockSession
 expectLoginDialogAuth:(BOOL)expect

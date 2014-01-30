@@ -116,7 +116,7 @@
                                             expectLoginDialog:NO];
 }
 
-- (void)testImplOpenDoesNotTrySystemAccountAuthWithBehavior:(FBSessionLoginBehavior) behavior
+- (void)testImplOpenDoesNotTrySystemAccountAuthWithBehavior:(FBSessionLoginBehavior)behavior
                                           expectLoginDialog:(BOOL)expectLoginDialog
 {
     FBSession *mockSession = [OCMockObject partialMockForObject:[FBSession alloc]];

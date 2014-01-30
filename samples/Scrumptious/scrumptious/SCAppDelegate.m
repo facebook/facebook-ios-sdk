@@ -16,7 +16,7 @@
 
 #import "SCAppDelegate.h"
 
-#import <FacebookSDK/FBSessionTokenCachingStrategy.h>
+#import <FacebookSDK/FacebookSDK.h>
 
 #import "SCLoginViewController.h"
 #import "SCViewController.h"

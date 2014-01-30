@@ -110,7 +110,7 @@ typedef void (^FBModalCompletionHandler)(FBViewController *sender, BOOL donePres
  @param animated        If YES, presenting and dismissing the view controller is animated.
  @param handler         The block called when the Done or Cancel button is pressed.
  */
-- (void)presentModallyFromViewController:(UIViewController*)viewController
+- (void)presentModallyFromViewController:(UIViewController *)viewController
                                 animated:(BOOL)animated
                                  handler:(FBModalCompletionHandler)handler;
 

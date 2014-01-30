@@ -14,6 +14,10 @@
 		85C69D7F1602B0AF008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7C1602B0AF008AD9A0 /* Default-568h@2x.png */; };
 		85C69D801602B0AF008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7D1602B0AF008AD9A0 /* Default.png */; };
 		85C69D811602B0AF008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7E1602B0AF008AD9A0 /* Default@2x.png */; };
+		8986C7C518909A25004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C218909A25004B90DD /* Project-Debug.xcconfig */; };
+		8986C7C618909A25004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C318909A25004B90DD /* Project.xcconfig */; };
+		8986C7C718909A25004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C418909A25004B90DD /* Project-Release.xcconfig */; };
+		8986C7C918909EB1004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C818909EB1004B90DD /* Application.xcconfig */; };
 		DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA8715ABA46B0015966B /* FacebookSDK.framework */; };
 		E2D6B81315413A570050835F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81215413A570050835F /* UIKit.framework */; };
 		E2D6B81515413A570050835F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81415413A570050835F /* Foundation.framework */; };
@@ -34,6 +38,10 @@
 		85C69D7C1602B0AF008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69D7D1602B0AF008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69D7E1602B0AF008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8986C7C218909A25004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		8986C7C318909A25004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		8986C7C418909A25004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		8986C7C818909EB1004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		DD37EA8715ABA46B0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		E2D6B80E15413A570050835F /* FriendPickerSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FriendPickerSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D6B81215413A570050835F /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -66,9 +74,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8986C7BF1890995C004B90DD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				8986C7C818909EB1004B90DD /* Application.xcconfig */,
+				8986C7C218909A25004B90DD /* Project-Debug.xcconfig */,
+				8986C7C418909A25004B90DD /* Project-Release.xcconfig */,
+				8986C7C318909A25004B90DD /* Project.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
+			sourceTree = "<group>";
+		};
 		E2D6B80315413A560050835F = {
 			isa = PBXGroup;
 			children = (
+				8986C7BF1890995C004B90DD /* Configurations */,
 				E2D6B81815413A570050835F /* FriendPickerSample */,
 				E2D6B81115413A570050835F /* Frameworks */,
 				E2D6B80F15413A570050835F /* Products */,
@@ -154,7 +175,7 @@
 		E2D6B80515413A560050835F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = E2D6B80815413A560050835F /* Build configuration list for PBXProject "FriendPickerSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -186,8 +207,12 @@
 				85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */,
 				85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */,
+				8986C7C518909A25004B90DD /* Project-Debug.xcconfig in Resources */,
 				85C69D7F1602B0AF008AD9A0 /* Default-568h@2x.png in Resources */,
+				8986C7C618909A25004B90DD /* Project.xcconfig in Resources */,
+				8986C7C918909EB1004B90DD /* Application.xcconfig in Resources */,
 				85C69D801602B0AF008AD9A0 /* Default.png in Resources */,
+				8986C7C718909A25004B90DD /* Project-Release.xcconfig in Resources */,
 				85C69D811602B0AF008AD9A0 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,82 +262,29 @@
 /* Begin XCBuildConfiguration section */
 		E2D6B82D15413A570050835F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7C218909A25004B90DD /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		E2D6B82E15413A570050835F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7C418909A25004B90DD /* Project-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 4.3;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		E2D6B83015413A570050835F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7C818909EB1004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
-				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		E2D6B83115413A570050835F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7C818909EB1004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "FriendPickerSample/FriendPickerSample-Prefix.pch";
-				INFOPLIST_FILE = "FriendPickerSample/FriendPickerSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

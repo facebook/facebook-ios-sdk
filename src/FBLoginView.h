@@ -24,12 +24,12 @@
 /*!
  @class FBLoginView
  @abstract FBLoginView is a custom UIView that renders a button to login or logout based on the
-  state of `FBSession.activeSession`
+ state of `FBSession.activeSession`
 
  @discussion This view is closely associated with `FBSession.activeSession`. Upon initialization,
-  it will attempt to open an active session without UI if the current active session is not open.
+ it will attempt to open an active session without UI if the current active session is not open.
 
-  The FBLoginView instance also monitors for changes to the active session.
+ The FBLoginView instance also monitors for changes to the active session.
  */
 @interface FBLoginView : UIView
 
@@ -78,12 +78,11 @@
  */
 @property (nonatomic) FBSessionLoginBehavior loginBehavior;
 
-
 /*!
  @abstract
  Initializes and returns an `FBLoginView` object.  The underlying session has basic permissions granted to it.
  */
-- (id)init;
+- (instancetype)init;
 
 /*!
  @method
@@ -97,7 +96,7 @@
  @discussion Methods and properties that specify permissions without a read or publish
  qualification are deprecated; use of a read-qualified or publish-qualified alternative is preferred.
  */
-- (id)initWithPermissions:(NSArray *)permissions __attribute__((deprecated));
+- (instancetype)initWithPermissions:(NSArray *)permissions __attribute__((deprecated));
 
 /*!
  @method
@@ -109,7 +108,7 @@
  authentication flow. A value of nil will indicates basic permissions.
 
  */
-- (id)initWithReadPermissions:(NSArray *)readPermissions;
+- (instancetype)initWithReadPermissions:(NSArray *)readPermissions;
 
 /*!
  @method
@@ -124,8 +123,8 @@
  for permission requests that include publish or manage permissions.
 
  */
-- (id)initWithPublishPermissions:(NSArray *)publishPermissions
-                 defaultAudience:(FBSessionDefaultAudience)defaultAudience;
+- (instancetype)initWithPublishPermissions:(NSArray *)publishPermissions
+                           defaultAudience:(FBSessionDefaultAudience)defaultAudience;
 
 /*!
  @abstract

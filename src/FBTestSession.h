@@ -17,11 +17,11 @@
 #import "FBSession.h"
 
 #if defined (DEBUG)
-    #define SAFE_TO_USE_FBTESTSESSION
+#define SAFE_TO_USE_FBTESTSESSION
 #endif
 
 #if !defined(SAFE_TO_USE_FBTESTSESSION)
-    #pragma message ("warning: using FBTestSession, which is designed for unit-testing uses only, in non-DEBUG code -- ensure this is what you really want")
+#pragma message ("warning: using FBTestSession, which is designed for unit-testing uses only, in non-DEBUG code -- ensure this is what you really want")
 #endif
 
 /*!
@@ -94,8 +94,8 @@ extern NSString *kThirdTestUserTag;
 
  @param permissions     array of strings naming permissions to authorize; nil indicates
  a common default set of permissions should be used for unit testing
-  */
-+ (id)sessionWithSharedUserWithPermissions:(NSArray*)permissions;
+ */
++ (instancetype)sessionWithSharedUserWithPermissions:(NSArray *)permissions;
 
 /*!
  @abstract
@@ -118,8 +118,8 @@ extern NSString *kThirdTestUserTag;
  this case, consider using kSecondTestUserTag and kThirdTestUserTag so these users can be shared
  with other, similar, tests.
  */
-+ (id)sessionWithSharedUserWithPermissions:(NSArray*)permissions
-                             uniqueUserTag:(NSString*)uniqueUserTag;
++ (instancetype)sessionWithSharedUserWithPermissions:(NSArray *)permissions
+                                       uniqueUserTag:(NSString *)uniqueUserTag;
 
 /*!
  @abstract
@@ -133,6 +133,6 @@ extern NSString *kThirdTestUserTag;
  @param permissions     array of strings naming permissions to authorize; nil indicates
  a common default set of permissions should be used for unit testing
  */
-+ (id)sessionWithPrivateUserWithPermissions:(NSArray*)permissions;
++ (instancetype)sessionWithPrivateUserWithPermissions:(NSArray *)permissions;
 
 @end

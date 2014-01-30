@@ -19,7 +19,7 @@
 
 @implementation FBAppCallTests
 
--(void) testAppCallFromURL {
+- (void)testAppCallFromURL {
 
     NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D"];
     
@@ -37,7 +37,7 @@
     STAssertNil(target.dialogData, @"Did not expect dialogData to be set.");
 }
 
--(void) testAppCallFromURLWithApplinkData {
+- (void)testAppCallFromURLWithApplinkData {
     
     NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&al_applink_data=%7B%22target_url%22%3A%22htpp%3A%2F%2Fwww.targeturlurl.com%22%2C%22user_agent%22%3A%22user_agent_string%22%2C%22referer_data%22%3A%7B%22referer_defined_key%22%3A%22referee_defined_value%22%7D%2C%22ref%22%3A%22ref_string%22%7D"];
     NSString *expectedRef = @"ref_string";
@@ -63,7 +63,7 @@
     STAssertNil(target.dialogData, @"Did not expect dialogData to be set.");
 }
 
--(void) testAppCallFromURLWithTapTime {
+- (void)testAppCallFromURLWithTapTime {
     
     NSURL *testURL = [[NSURL alloc] initWithString:@"scrumptious://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D&fb_click_time_utc=123"];
     

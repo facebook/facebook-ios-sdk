@@ -30,9 +30,6 @@
 
 @implementation SLViewController
 
-@synthesize textNoteOrLink = _textNoteOrLink;
-@synthesize buttonLoginLogout = _buttonLoginLogout;
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.

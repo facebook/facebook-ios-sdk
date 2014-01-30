@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0366E7E518636173006122EE /* RPSDeeplyLinkedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0366E7E318636173006122EE /* RPSDeeplyLinkedViewController.m */; };
+		0366E7E618636173006122EE /* RPSDeeplyLinkedViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0366E7E418636173006122EE /* RPSDeeplyLinkedViewController.xib */; };
 		5FDCBDF6171F2BF700FB7055 /* left-paper-128.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FDCBDF3171F2BF700FB7055 /* left-paper-128.png */; };
 		5FDCBDF7171F2BF700FB7055 /* left-rock-128.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FDCBDF4171F2BF700FB7055 /* left-rock-128.png */; };
 		5FDCBDF8171F2BF700FB7055 /* left-scissors-128.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FDCBDF5171F2BF700FB7055 /* left-scissors-128.png */; };
@@ -41,11 +43,19 @@
 		85C69D741602B098008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D711602B098008AD9A0 /* Default-568h@2x.png */; };
 		85C69D751602B098008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D721602B098008AD9A0 /* Default.png */; };
 		85C69D761602B098008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D731602B098008AD9A0 /* Default@2x.png */; };
+		8986C7F31890A571004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7EF1890A571004B90DD /* Application.xcconfig */; };
+		8986C7F41890A571004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7F01890A571004B90DD /* Project-Debug.xcconfig */; };
+		8986C7F51890A571004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7F11890A571004B90DD /* Project-Release.xcconfig */; };
+		8986C7F61890A571004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7F21890A571004B90DD /* Project.xcconfig */; };
 		DD37EA7F15ABA42D0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA7E15ABA42D0015966B /* FacebookSDK.framework */; };
 		DE1C9C2C15CC8FE400809B9E /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = DE1C9C2B15CC8FE400809B9E /* FBUserSettingsViewResources.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0366E7DC186289EB006122EE /* RPSCommonObjects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RPSCommonObjects.h; sourceTree = "<group>"; };
+		0366E7E218636173006122EE /* RPSDeeplyLinkedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RPSDeeplyLinkedViewController.h; sourceTree = "<group>"; };
+		0366E7E318636173006122EE /* RPSDeeplyLinkedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSDeeplyLinkedViewController.m; sourceTree = "<group>"; };
+		0366E7E418636173006122EE /* RPSDeeplyLinkedViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = RPSDeeplyLinkedViewController.xib; sourceTree = "<group>"; };
 		5FDCBDF3171F2BF700FB7055 /* left-paper-128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left-paper-128.png"; sourceTree = "<group>"; };
 		5FDCBDF4171F2BF700FB7055 /* left-rock-128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left-rock-128.png"; sourceTree = "<group>"; };
 		5FDCBDF5171F2BF700FB7055 /* left-scissors-128.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left-scissors-128.png"; sourceTree = "<group>"; };
@@ -87,6 +97,10 @@
 		85C69D711602B098008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69D721602B098008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69D731602B098008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8986C7EF1890A571004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
+		8986C7F01890A571004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		8986C7F11890A571004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		8986C7F21890A571004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		DD37EA7E15ABA42D0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		DE1C9C2B15CC8FE400809B9E /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,6 +124,7 @@
 		84070D0B1540AA2B00E39703 = {
 			isa = PBXGroup;
 			children = (
+				8986C7EE1890A571004B90DD /* Configurations */,
 				84070D201540AA2B00E39703 /* RPSSample */,
 				84070D191540AA2B00E39703 /* Frameworks */,
 				84070D171540AA2B00E39703 /* Products */,
@@ -142,14 +157,18 @@
 		84070D201540AA2B00E39703 /* RPSSample */ = {
 			isa = PBXGroup;
 			children = (
+				0366E7DC186289EB006122EE /* RPSCommonObjects.h */,
 				84C1E1D5171481E70037E406 /* RPSCommonObjects.m */,
 				8409694E1545D10B00479AD9 /* OGProtocols.h */,
 				84070D291540AA2B00E39703 /* RPSAppDelegate.h */,
 				84070D2A1540AA2B00E39703 /* RPSAppDelegate.m */,
+				0366E7E218636173006122EE /* RPSDeeplyLinkedViewController.h */,
+				0366E7E318636173006122EE /* RPSDeeplyLinkedViewController.m */,
 				84070D2C1540AA2B00E39703 /* RPSGameViewController.h */,
 				84070D2D1540AA2B00E39703 /* RPSGameViewController.m */,
 				84070D331540AA2B00E39703 /* RPSFriendsViewController.h */,
 				84070D341540AA2B00E39703 /* RPSFriendsViewController.m */,
+				0366E7E418636173006122EE /* RPSDeeplyLinkedViewController.xib */,
 				84070D3A1540AA2B00E39703 /* RPSGameViewController_iPhone.xib */,
 				84070D3D1540AA2B00E39703 /* RPSGameViewController_iPad.xib */,
 				84070D401540AA2B00E39703 /* RPSFriendsViewController_iPhone.xib */,
@@ -188,6 +207,18 @@
 				84070D281540AA2B00E39703 /* RPSSample-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		8986C7EE1890A571004B90DD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				8986C7EF1890A571004B90DD /* Application.xcconfig */,
+				8986C7F01890A571004B90DD /* Project-Debug.xcconfig */,
+				8986C7F11890A571004B90DD /* Project-Release.xcconfig */,
+				8986C7F21890A571004B90DD /* Project.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,7 +277,9 @@
 				84070D3F1540AA2B00E39703 /* RPSGameViewController_iPad.xib in Resources */,
 				84070D421540AA2B00E39703 /* RPSFriendsViewController_iPhone.xib in Resources */,
 				84070D451540AA2B00E39703 /* RPSFriendsViewController_iPad.xib in Resources */,
+				0366E7E618636173006122EE /* RPSDeeplyLinkedViewController.xib in Resources */,
 				85AFB4CA158F9B8B000AF7F5 /* Icon-72.png in Resources */,
+				8986C7F31890A571004B90DD /* Application.xcconfig in Resources */,
 				85AFB4CB158F9B8B000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB4CC158F9B8B000AF7F5 /* Icon.png in Resources */,
 				85AFB4CD158F9B8B000AF7F5 /* Icon@2x.png in Resources */,
@@ -259,7 +292,10 @@
 				5FDCBDF7171F2BF700FB7055 /* left-rock-128.png in Resources */,
 				5FDCBDF8171F2BF700FB7055 /* left-scissors-128.png in Resources */,
 				5FDCBDFC171F32A300FB7055 /* right-paper-128.png in Resources */,
+				8986C7F51890A571004B90DD /* Project-Release.xcconfig in Resources */,
+				8986C7F41890A571004B90DD /* Project-Debug.xcconfig in Resources */,
 				5FDCBDFD171F32A300FB7055 /* right-rock-128.png in Resources */,
+				8986C7F61890A571004B90DD /* Project.xcconfig in Resources */,
 				5FDCBDFE171F32A300FB7055 /* right-scissors-128.png in Resources */,
 				5FDCBE00171F3DA900FB7055 /* left-paper-88.png in Resources */,
 				5FDCBE02171F3DC200FB7055 /* left-rock-88.png in Resources */,
@@ -279,6 +315,7 @@
 			files = (
 				84070D271540AA2B00E39703 /* main.m in Sources */,
 				84070D2B1540AA2B00E39703 /* RPSAppDelegate.m in Sources */,
+				0366E7E518636173006122EE /* RPSDeeplyLinkedViewController.m in Sources */,
 				84070D2E1540AA2B00E39703 /* RPSGameViewController.m in Sources */,
 				84070D351540AA2B00E39703 /* RPSFriendsViewController.m in Sources */,
 				84C1E1D6171481E70037E406 /* RPSCommonObjects.m in Sources */,
@@ -333,92 +370,29 @@
 /* Begin XCBuildConfiguration section */
 		84070D461540AA2B00E39703 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7F01890A571004B90DD /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		84070D471540AA2B00E39703 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7F11890A571004B90DD /* Project-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		84070D491540AA2B00E39703 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RPSSample/RPSSample-Prefix.pch";
-				INFOPLIST_FILE = "RPSSample/RPSSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		84070D4A1540AA2B00E39703 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "RPSSample/RPSSample-Prefix.pch";
-				INFOPLIST_FILE = "RPSSample/RPSSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

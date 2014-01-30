@@ -67,10 +67,10 @@ __attribute__((deprecated));
  Please note that this method has been deprecated, please migrate your
  code to use `FBDialogs` and the related method `presentOSIntegratedShareDialogModallyFrom`.
  */
-+ (BOOL)presentShareDialogModallyFrom:(UIViewController*)viewController
-                          initialText:(NSString*)initialText
-                                image:(UIImage*)image
-                                  url:(NSURL*)url
++ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController
+                          initialText:(NSString *)initialText
+                                image:(UIImage *)image
+                                  url:(NSURL *)url
                               handler:(FBShareDialogHandler)handler
 __attribute__((deprecated));
 
@@ -79,10 +79,10 @@ __attribute__((deprecated));
  Please note that this method has been deprecated, please migrate your
  code to use `FBDialogs` and the related method `presentOSIntegratedShareDialogModallyFrom`.
  */
-+ (BOOL)presentShareDialogModallyFrom:(UIViewController*)viewController
-                          initialText:(NSString*)initialText
-                               images:(NSArray*)images
-                                 urls:(NSArray*)urls
++ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController
+                          initialText:(NSString *)initialText
+                               images:(NSArray *)images
+                                 urls:(NSArray *)urls
                               handler:(FBShareDialogHandler)handler
 __attribute__((deprecated));
 
@@ -91,11 +91,11 @@ __attribute__((deprecated));
  Please note that this method has been deprecated, please migrate your
  code to use `FBDialogs` and the related method `presentOSIntegratedShareDialogModallyFrom`.
  */
-+ (BOOL)presentShareDialogModallyFrom:(UIViewController*)viewController
-                              session:(FBSession*)session
-                          initialText:(NSString*)initialText
-                               images:(NSArray*)images
-                                 urls:(NSArray*)urls
++ (BOOL)presentShareDialogModallyFrom:(UIViewController *)viewController
+                              session:(FBSession *)session
+                          initialText:(NSString *)initialText
+                               images:(NSArray *)images
+                                 urls:(NSArray *)urls
                               handler:(FBShareDialogHandler)handler
 __attribute__((deprecated));
 
@@ -104,6 +104,6 @@ __attribute__((deprecated));
  Please note that this method has been deprecated, please migrate your
  code to use `FBDialogs` and the related method `canPresentOSIntegratedShareDialogWithSession`.
  */
-+ (BOOL)canPresentShareDialogWithSession:(FBSession*)session __attribute__((deprecated));
++ (BOOL)canPresentShareDialogWithSession:(FBSession *)session __attribute__((deprecated));
 
 @end

@@ -22,9 +22,6 @@
 
 @implementation PPAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // If you have not added the -ObjC linker flag, you may need to uncomment the following line because
     // Nib files require the type to have been loaded before they can do the wireup successfully.

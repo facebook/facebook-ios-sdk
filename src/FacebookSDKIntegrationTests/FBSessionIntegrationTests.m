@@ -39,19 +39,19 @@
     FBConditionalLog(NO, @"Testing conditional %@", @"log");
     FBConditionalLog(NO, @"Testing conditional log");
     FBConditionalLog(YES, nil, @"Testing conditional log");
-    
+
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    
+
     FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
-    
+
     [blocker wait];
-    
+
     STAssertTrue(session.isOpen, @"Session should be valid, and is not");
-    
+
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:@"me"]
                           autorelease];
@@ -60,9 +60,9 @@
          STAssertTrue(me.id.length > 0, @"user id should be non-empty");
          [blocker signal];
      }];
-    
+
     [blocker wait];
-    
+
     [session close];
 }
 
@@ -70,7 +70,7 @@
 {
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    
+
     __block BOOL wasNotifiedOfInvalid = NO;
     FBTestSession *session = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -80,20 +80,20 @@
         [blocker signal];
     }];
     [blocker wait];
-    
+
     STAssertTrue(session.isOpen, @"Session should be open, and is not");
 
     __block NSString *userID = nil;
     FBRequest *request1 = [[[FBRequest alloc] initWithSession:session
-                                                   graphPath:@"me"]
-                          autorelease];
+                                                    graphPath:@"me"]
+                           autorelease];
     [request1 startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
          userID = [me.id retain];
          STAssertTrue(userID.length > 0, @"user id should be non-empty");
          [blocker signal];
      }];
-    
+
     [blocker wait];
 
     // use FBRequest to create an NSURLRequest
@@ -109,33 +109,33 @@
     [userID release];
     [connection release];
     [temp release];
-    
+
     // synchronously delete the user
     NSURLResponse *response;
     NSError *error = nil;
     NSData *data;
-    data = [NSURLConnection sendSynchronousRequest:urlRequest 
+    data = [NSURLConnection sendSynchronousRequest:urlRequest
                                  returningResponse:&response
                                              error:&error];
     // if !data or if data == false, log
     NSString *body = !data ? nil : [[[NSString alloc] initWithData:data
                                                           encoding:NSUTF8StringEncoding]
-                                    autorelease];    
+                                    autorelease];
     STAssertTrue([body isEqualToString:@"true"], @"body should return 'true'");
-    
+
     FBRequest *request2 = [[[FBRequest alloc] initWithSession:session
-                                                   graphPath:@"me"]
-                          autorelease];
+                                                    graphPath:@"me"]
+                           autorelease];
     [request2 startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-        STAssertTrue(error != nil, @"response should be an error due to deleted user");
-        [blocker signal];
-    }];
-    
+         STAssertTrue(error != nil, @"response should be an error due to deleted user");
+         [blocker signal];
+     }];
+
     STAssertFalse(wasNotifiedOfInvalid, @"should not have invalidated the token yet");
     [blocker wait];
     STAssertTrue(wasNotifiedOfInvalid, @"should have invalidated the token by now");
-    
+
     [session close];
 }
 
@@ -143,7 +143,7 @@
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     __block BOOL expectClosed = NO;
-    
+
     // Open a test session normally for accesstoken/appid
     FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -151,14 +151,14 @@
         [blocker signal];
     }];
     [blocker wait];
-    
+
     // Now construct the actual session under test (target) and open with the access token.
     // Note just hack in expiration time of 3600 for the test.
-    FBSession* target = [[FBSession alloc] initWithAppID:normalSession.appID permissions:nil
+    FBSession *target = [[FBSession alloc] initWithAppID:normalSession.appID permissions:nil
                                          defaultAudience:FBSessionDefaultAudienceFriends
                                          urlSchemeSuffix:nil
                                       tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    
+
     FBAccessTokenData *tokenDataCopy = [normalSession.accessTokenData copy];
     BOOL openResult = [target openFromAccessTokenData:tokenDataCopy
                                     completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -167,7 +167,7 @@
                                     }];
     STAssertTrue(openResult, @"expected openResult=YES");
     [blocker wait];
-    
+
     //final check, just do a request for me with the target
     FBRequest *request = [[[FBRequest alloc] initWithSession:target
                                                    graphPath:@"me"]
@@ -177,9 +177,9 @@
          STAssertTrue(me.id.length > 0, @"user id should be non-empty. error:%@", error);
          [blocker signal];
      }];
-    
+
     [blocker wait];
-    
+
     expectClosed = YES;
     [target close];
     [normalSession close];
@@ -191,7 +191,7 @@
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     __block BOOL expectClosed = NO;
-    
+
     // Open a test session normally for accesstoken/appid
     FBTestSession *target = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
     [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -199,9 +199,9 @@
         [blocker signal];
     }];
     [blocker wait];
-    
+
     FBAccessTokenData *tokenDataCopy = [target.accessTokenData copy];
-    
+
     //Now try to open it again
     STAssertThrowsSpecific([target openFromAccessTokenData:tokenDataCopy
                                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
@@ -209,7 +209,7 @@
                                          }],
                            NSException,
                            FBInvalidOperationException);
-    
+
     [tokenDataCopy release];
 }
 
@@ -246,7 +246,7 @@
 
     // Now construct the actual session under test (target) and open with the access token.
     // Note just hack in expiration time of 3600 for the test.
-    FBSession* target = [[FBSession alloc] initWithAppID:normalSession.appID permissions:nil
+    FBSession *target = [[FBSession alloc] initWithAppID:normalSession.appID permissions:nil
                                          defaultAudience:FBSessionDefaultAudienceFriends
                                          urlSchemeSuffix:nil
                                       tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];

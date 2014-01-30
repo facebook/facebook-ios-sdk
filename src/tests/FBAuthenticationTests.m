@@ -29,7 +29,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 
 @interface FBSession (AuthenticationTesting)
 
-- (void)authorizeUsingSystemAccountStore:(NSArray*)permissions
+- (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize;
 - (BOOL)authorizeUsingFacebookApplication:(NSMutableDictionary *)params;
@@ -49,7 +49,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 
 @end
 
-@interface FBAuthenticationTests() {
+@interface FBAuthenticationTests () {
     id _mockFBUtility;
 }
 @end
@@ -60,13 +60,13 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
     [super setUp];
 
     [[FBSessionTokenCachingStrategy defaultInstance] clearToken];
-    
+
     FBSession.defaultAppID = kAuthenticationTestAppId;
     FBSession.defaultUrlSchemeSuffix = nil;
     FBSession.activeSession = nil;
 
     _blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
-    
+
     // Before every authentication test, set up a fake FBFetchedAppSettings
     // to prevent fetching app settings during FBSession authorizeWithPermissions
     _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
@@ -80,7 +80,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 
     [_blocker release];
     _blocker = nil;
-    
+
     [_mockFBUtility release];
     _mockFBUtility = nil;
 }
@@ -107,14 +107,14 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 - (id)createMockSystemAccountStoreAdapter:(BOOL)succeed defaultAudience:(FBSessionDefaultAudience)defaultAudience
 {
     id mockSystemAccountStoreAdapter = [OCMockObject mockForClass:[FBSystemAccountStoreAdapter class]];
-    
+
     SEL selectorToCall = nil;
     if (succeed) {
         selectorToCall = @selector(mockSuccessRequestAccessToFacebookAccountStore:defaultAudience:isReauthorize:appID:session:handler:);
     } else {
         selectorToCall = @selector(mockFailureRequestAccessToFacebookAccountStore:defaultAudience:isReauthorize:appID:session:handler:);
     }
-    
+
     // Now actually mock the call to run our handler.
     [[[mockSystemAccountStoreAdapter stub] andCall:selectorToCall onObject:self]
      requestAccessToFacebookAccountStore:[OCMArg any]
@@ -123,7 +123,7 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
      appID:[OCMArg any]
      session:[OCMArg any]
      handler:[OCMArg any]];
-    
+
     return mockSystemAccountStoreAdapter;
 }
 
@@ -136,14 +136,14 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 expectSystemAccountAuth:(BOOL)expect
             succeed:(BOOL)succeed {
     FBSessionDefaultAudience defaultAudience = FBSessionDefaultAudienceNone;
-    
+
     id expectOrReject = nil;
     if (expect) {
         expectOrReject = [[mockSession expect] andForwardToRealObject];
-        
+
         id mockSystemAccountStoreAdapter =[self createMockSystemAccountStoreAdapter:succeed
                                                                     defaultAudience:defaultAudience];
-        
+
         [[[mockSession stub] andReturn:mockSystemAccountStoreAdapter] getSystemAccountStoreAdapter];
     } else {
         expectOrReject = [mockSession reject];
@@ -160,31 +160,31 @@ expectSystemAccountAuth:(BOOL)expect
 - (void)mockSession:(id)mockSession
 expectFacebookAppAuth:(BOOL)expect
                 try:(BOOL)try
-            results:(NSDictionary*)results {
+            results:(NSDictionary *)results {
     if (expect) {
         // Note: we call the real implementation, but always return 'try' regardless of what it does
         id mock = [[[mockSession expect] andForwardToRealObject] andReturnValue:OCMOCK_VALUE(try)];
-        
+
         // We stub out tryOpenURL: below, and we fake a response (if we were told to)
         if (try && results) {
             mock = [mock andDo:^(NSInvocation *invocation) {
                 dispatch_after(DISPATCH_TIME_NOW, dispatch_get_current_queue(), ^{
                     NSString *baseURL = [NSString stringWithFormat:@"fb%@://authorize", kAuthenticationTestAppId];
-                    
+
                     // Cheat and use FBRequest's helper
                     NSString *urlString = [FBRequest serializeURL:baseURL params:results];
                     NSURL *url = [NSURL URLWithString:urlString];
-                    
+
                     // Assume the app developer calls [FBSession handleOpenURL] on the correct session.
                     [mockSession handleOpenURL:url];
                 });
             }];
         }
-        
+
         // We mock authorizeUsingFacebookApplication rather than tryOpenURL to avoid conflicting
         // with mockSession:expectSafariAuth:try:succeed:
         [mock authorizeUsingFacebookApplication:[OCMArg any]];
-        
+
         // Make tryOpenURL: a no-op so it doesn't actually call out.
         BOOL no = NO;
         [[[mockSession stub] andReturnValue:OCMOCK_VALUE(no)] tryOpenURL:[OCMArg any]];
@@ -194,34 +194,34 @@ expectFacebookAppAuth:(BOOL)expect
 }
 
 - (void)mockSession:(id)mockSession
- expectSafariAuth:(BOOL)expect
+   expectSafariAuth:(BOOL)expect
                 try:(BOOL)try
-            results:(NSDictionary*)results {
+            results:(NSDictionary *)results {
     // TODO succeed
     if (expect) {
         // Note: we call the real implementation, but always return 'try' regardless of what it does
         id mock = [[[mockSession expect] andForwardToRealObject] andReturnValue:OCMOCK_VALUE(try)];
-        
+
         // We stub out tryOpenURL: below, and we fake a response (if we were told to)
         if (try && results) {
             mock = [mock andDo:^(NSInvocation *invocation) {
                 dispatch_after(DISPATCH_TIME_NOW, dispatch_get_current_queue(), ^{
                     NSString *baseURL = [NSString stringWithFormat:@"fb%@://authorize", kAuthenticationTestAppId];
-                    
+
                     // Cheat and use FBRequest's helper
                     NSString *urlString = [FBRequest serializeURL:baseURL params:results];
                     NSURL *url = [NSURL URLWithString:urlString];
-                    
+
                     // Assume the app developer calls [FBSession handleOpenURL] on the correct session.
                     [mockSession handleOpenURL:url];
                 });
             }];
         }
-        
+
         // We mock authorizeUsingFacebookApplication rather than tryOpenURL to avoid conflicting
         // with mockSession:expectFacebookAppAuth:try:succeed:
         [mock authorizeUsingSafari:[OCMArg any]];
-        
+
         // Make tryOpenURL: a no-op so it doesn't actually call out.
         BOOL no = NO;
         [[[mockSession stub] andReturnValue:OCMOCK_VALUE(no)] tryOpenURL:[OCMArg any]];

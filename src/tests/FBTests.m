@@ -28,9 +28,9 @@ NSString *kTestAppId = @"AnAppId";
 
 #pragma mark Handlers
 
-- (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker*)blocker {
+- (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker *)blocker {
     FBRequestHandler handler =
-     ^(FBRequestConnection *connection, id result, NSError *error) {
+    ^(FBRequestConnection *connection, id result, NSError *error) {
         STAssertTrue(!error, @"got unexpected error");
         STAssertNotNil(result, @"didn't get expected result");
         [blocker signal];
@@ -38,8 +38,8 @@ NSString *kTestAppId = @"AnAppId";
     return [[handler copy] autorelease];
 }
 
-- (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker*)blocker {
-    FBRequestHandler handler = 
+- (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker *)blocker {
+    FBRequestHandler handler =
     ^(FBRequestConnection *connection, id result, NSError *error) {
         STAssertNotNil(error, @"didn't get expected error");
         STAssertTrue(!result, @"got unexpected result");
@@ -51,13 +51,13 @@ NSString *kTestAppId = @"AnAppId";
 #pragma mark - Session mocking
 
 - (FBAccessTokenData *)createValidMockToken {
-    
+
     FBAccessTokenData *token = [FBAccessTokenData  createTokenFromString:kTestToken
                                                              permissions:nil
                                                           expirationDate:[NSDate dateWithTimeIntervalSinceNow:3600]
                                                                loginType:FBSessionLoginTypeNone
                                                              refreshDate:nil];
-    
+
     FBAccessTokenData *mockToken = [OCMockObject partialMockForObject:token];
     return mockToken;
 }
@@ -66,17 +66,17 @@ NSString *kTestAppId = @"AnAppId";
 - (FBSession *)createAndOpenSessionWithMockToken {
     FBAccessTokenData *mockToken = [self createValidMockToken];
     FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
-    
+
     FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
                                               permissions:nil
                                           defaultAudience:FBSessionDefaultAudienceNone
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:mockStrategy];
-    
+
     [session openWithCompletionHandler:nil];
-    
+
     return session;
-    
+
 }
 
 - (FBSessionTokenCachingStrategy *)createMockTokenCachingStrategyWithExpiredToken {
@@ -95,9 +95,9 @@ NSString *kTestAppId = @"AnAppId";
 
 - (FBSessionTokenCachingStrategy *)createMockTokenCachingStrategyWithToken:(FBAccessTokenData *)token {
     FBSessionTokenCachingStrategy *strategy = [OCMockObject mockForClass:[FBSessionTokenCachingStrategy class]];
-    
+
     [[[(id)strategy stub] andReturn:token] fetchFBAccessTokenData];
-    
+
     return strategy;
 }
 

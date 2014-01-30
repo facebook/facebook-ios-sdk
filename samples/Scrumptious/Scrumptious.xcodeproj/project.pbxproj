@@ -19,6 +19,10 @@
 		85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC71602B411008AD9A0 /* Default-568h@2x.png */; };
 		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
 		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
+		8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80A1890A6BA004B90DD /* Application.xcconfig */; };
+		8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */; };
+		8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */; };
+		8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80D1890A6BA004B90DD /* Project.xcconfig */; };
 		99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */; };
 		9D084048169CE00B000FD49D /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D084047169CE00B000FD49D /* ReadMe.txt */; };
 		9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */; };
@@ -54,6 +58,10 @@
 		85C69DC71602B411008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "scrumptious/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
 		85C69DC81602B411008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = scrumptious/Default.png; sourceTree = SOURCE_ROOT; };
 		85C69DC91602B411008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "scrumptious/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		8986C80A1890A6BA004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
+		8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		8986C80D1890A6BA004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKOverrides.bundle; path = scrumptious/FacebookSDKOverrides.bundle; sourceTree = SOURCE_ROOT; };
 		9D084047169CE00B000FD49D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		9D564E02171334CB00BEEEDE /* SCPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SCPhotoViewController.h; path = scrumptious/SCPhotoViewController.h; sourceTree = SOURCE_ROOT; };
@@ -98,10 +106,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8986C8091890A6BA004B90DD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				8986C80A1890A6BA004B90DD /* Application.xcconfig */,
+				8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */,
+				8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */,
+				8986C80D1890A6BA004B90DD /* Project.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
+			sourceTree = "<group>";
+		};
 		B9CD0A64150EA4DD00560A93 = {
 			isa = PBXGroup;
 			children = (
 				9D084047169CE00B000FD49D /* ReadMe.txt */,
+				8986C8091890A6BA004B90DD /* Configurations */,
 				B9CD0A79150EA4DD00560A93 /* Scrumptious */,
 				B9CD0A72150EA4DD00560A93 /* Frameworks */,
 				B9CD0A70150EA4DD00560A93 /* Products */,
@@ -239,6 +260,7 @@
 				B9CD0A7E150EA4DD00560A93 /* InfoPlist.strings in Resources */,
 				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
 				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
+				8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */,
 				B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */,
 				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
 				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
@@ -246,12 +268,15 @@
 				846809C1158F85A100F2DBB9 /* action-eating.png in Resources */,
 				846809C2158F85A100F2DBB9 /* action-location.png in Resources */,
 				846809C3158F85A100F2DBB9 /* action-people.png in Resources */,
+				8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */,
+				8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */,
 				8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */,
 				8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */,
 				85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */,
 				85C69DCB1602B411008AD9A0 /* Default.png in Resources */,
 				85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */,
 				9D084048169CE00B000FD49D /* ReadMe.txt in Resources */,
+				8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */,
 				9D564E06171334EA00BEEEDE /* action-photo.png in Resources */,
 				99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */,
 			);
@@ -306,96 +331,29 @@
 /* Begin XCBuildConfiguration section */
 		B9CD0A8E150EA4DE00560A93 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				SDKROOT = iphoneos;
 			};
 			name = Debug;
 		};
 		B9CD0A8F150EA4DE00560A93 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		B9CD0A91150EA4DE00560A93 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C80A1890A6BA004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Scrumptious/Scrumptious-Prefix.pch";
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		B9CD0A92150EA4DE00560A93 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C80A1890A6BA004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Scrumptious/Scrumptious-Prefix.pch";
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = "Scrumptious/Scrumptious-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

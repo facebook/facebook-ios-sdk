@@ -18,8 +18,8 @@
 #import "FBUtility.h"
 
 // Given a byte array, returns an NSString containing those bytes encoded in Base64 encoding.
-extern NSString* FBEncodeBase64(NSData* data);
+extern NSString *FBEncodeBase64(NSData *data);
 
 // Given a Base64-encoded string, decodes the string and returns an
 // NSData containing the decoded bytes.
-extern NSData* FBDecodeBase64(NSString* base64);
+extern NSData *FBDecodeBase64(NSString *base64);

@@ -21,7 +21,7 @@
 
 @implementation SCLoginViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Facebook SDK * pro-tip *
@@ -85,7 +85,7 @@
 }
 
 - (void)loginView:(FBLoginView *)loginView
-      handleError:(NSError *)error{
+      handleError:(NSError *)error {
     NSString *alertMessage, *alertTitle;
 
     // Facebook SDK * error handling *

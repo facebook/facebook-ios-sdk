@@ -20,39 +20,44 @@
 
 . ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
 
-test -x "$APPLEDOC" || die 'Could not find appledoc in $PATH - run git clone git://github.com/tomaz/appledoc.git && appledoc/install-appledoc.sh'
-
 # -----------------------------------------------------------------------------
 # Build pre-requisites
 #
 if is_outermost_build; then
     . $FB_SDK_SCRIPT/build_framework.sh -n
 fi
-progress_message Building Documentation.
+
+APPLEDOC_PATH="$FB_SDK_BUILD"/appledoc
+progress_message "$APPLEDOC_PATH"
+if [ ! -f "$APPLEDOC_PATH" ]; then
+  progress_message Building appledoc
+  pushd "$FB_SDK_ROOT"/vendor/appledoc/ >/dev/null
+  ./install-appledoc.sh -b "$FB_SDK_BUILD" || die 'Could not build appledoc'
+  popd >/dev/null
+fi
 
 # -----------------------------------------------------------------------------
 # Build docs
 #
+progress_message Building Documentation.
 test -d $FB_SDK_BUILD \
   || mkdir -p $FB_SDK_BUILD \
   || die "Could not create directory $FB_SDK_BUILD"
 
 cd $FB_SDK_SRC
 
-DOCSET="$FB_SDK_BUILD"/"$FB_SDK_DOCSET_NAME"
+rm -rf $FB_SDK_FRAMEWORK_DOCS
 
-rm -rf $DOCSET
-
-hash $APPLEDOC &>/dev/null
+hash "$APPLEDOC_PATH" &>/dev/null
 if [ "$?" -eq "0" ]; then
-    APPLEDOC_DOCSET_NAME="Facebook SDK 3.11.1 for iOS"
-    $APPLEDOC --project-name "$APPLEDOC_DOCSET_NAME" \
+    APPLEDOC_DOCSET_NAME="Facebook SDK $FB_SDK_VERSION_SHORT for iOS"
+    $APPLEDOC_PATH --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
-	--output "$DOCSET" \
 	--preprocess-headerdoc \
-	--docset-bundle-name "$APPLEDOC_DOCSET_NAME" \
+	--docset-bundle-filename "$FB_SDK_DOCSET_NAME" \
 	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \
+	--docset-install-path "$FB_SDK_BUILD" \
 	--exit-threshold 2 \
 	--no-install-docset \
 	--search-undocumented-doc \

@@ -31,13 +31,11 @@
 
 @interface TestFBRequest : FBRequest
 
-@property (nonatomic, copy) FBRequestConnection* (^requestConnectionFactory)();
+@property (nonatomic, copy) FBRequestConnection * (^requestConnectionFactory)();
 
 @end
 
 @implementation TestFBRequest
-
-@synthesize requestConnectionFactory;
 
 - (FBRequestConnection *)createRequestConnection {
     if (self.requestConnectionFactory) {
@@ -47,6 +45,7 @@
 }
 
 @end
+
 #pragma mark - Test suite
 
 @implementation FBRequestTests {

@@ -20,15 +20,6 @@
 # Set up paths for a specific clone of the SDK source
 if [ -z "$FB_SDK_SCRIPT" ]; then
   # ---------------------------------------------------------------------------
-  # Versioning for the SDK
-  #
-  FB_SDK_VERSION_MAJOR=0
-  FB_SDK_VERSION_MINOR=1
-  test -n "$FB_SDK_VERSION_BUILD" || FB_SDK_VERSION_BUILD=$(date '+%Y%m%d')
-  FB_SDK_VERSION=${FB_SDK_VERSION_MAJOR}.${FB_SDK_VERSION_MINOR}
-  FB_SDK_VERSION_FULL=${FB_SDK_VERSION}.${FB_SDK_VERSION_BUILD}
-
-  # ---------------------------------------------------------------------------
   # Set up paths
   #
 
@@ -60,12 +51,22 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   # The path to the built Facebook SDK for iOS .framework
   FB_SDK_FRAMEWORK=$FB_SDK_BUILD/$FB_SDK_FRAMEWORK_NAME
 
-  # The name of the docset
-  FB_SDK_DOCSET_NAME=com.facebook.Facebook-SDK-3_0-for-iOS.docset
+  # Extract the SDK version from FacebookSDK.h
+  FB_SDK_VERSION_RAW=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FacebookSDK.h)
+  FB_SDK_VERSION_MAJOR=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $1}')
+  FB_SDK_VERSION_MINOR=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $2}')
+  FB_SDK_VERSION_REVISION=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $3}')
+  FB_SDK_VERSION_MAJOR=${FB_SDK_VERSION_MAJOR:-0}
+  FB_SDK_VERSION_MINOR=${FB_SDK_VERSION_MINOR:-0}
+  FB_SDK_VERSION_REVISION=${FB_SDK_VERSION_REVISION:-0}
+  FB_SDK_VERSION=$FB_SDK_VERSION_MAJOR.$FB_SDK_VERSION_MINOR.$FB_SDK_VERSION_REVISION
+  FB_SDK_VERSION_SHORT=$(echo $FB_SDK_VERSION | sed 's/\.0$//')
+
+  # The name of the docset (only rev the docset name on each major version)
+  FB_SDK_DOCSET_NAME=com.facebook.Facebook-SDK-${FB_SDK_VERSION_MAJOR}_0-for-iOS.docset
 
   # The path to the framework docs
   FB_SDK_FRAMEWORK_DOCS=$FB_SDK_BUILD/$FB_SDK_DOCSET_NAME
-
 fi
 
 # Set up one-time variables
@@ -123,7 +124,6 @@ if [ -z $FB_SDK_ENV ]; then
   test -n "$PACKAGEBUILD" || PACKAGEBUILD=$(which pkgbuild)
   test -n "$PRODUCTBUILD" || PRODUCTBUILD=$(which productbuild)
   test -n "$PRODUCTSIGN"  || PRODUCTSIGN=$(which productsign)
-  test -n "$APPLEDOC"     || APPLEDOC=$(which appledoc)
 
   # < XCode 4.3.1
   if [ ! -x "$XCODEBUILD" ]; then

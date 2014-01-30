@@ -21,15 +21,12 @@
 
 NSString *const SUInvalidSlotNumber = @"com.facebook.SwitchUserSample:InvalidSlotNumber";
 
-static NSString *const SUUserIDKeyFormat = @"SUUserID%d";
-static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
+static NSString *const SUUserIDKeyFormat = @"SUUserID%li";
+static NSString *const SUUserNameKeyFormat = @"SUUserName%li";
 
 @implementation SUUserManager
 
-@synthesize currentSession = _currentSession;
-@synthesize currentUserSlot = _currentUserSlot;
-
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _currentUserSlot = -1;
@@ -42,20 +39,20 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
                                                         object:nil];
 }
 
-- (void)validateSlotNumber:(int)slot {
+- (void)validateSlotNumber:(NSInteger)slot {
     if (slot < 0 || slot >= [self maximumUserSlots]) {
         [[NSException exceptionWithName:SUInvalidSlotNumber
-                                 reason:[NSString stringWithFormat:@"Invalid slot number %d specified", slot]
+                                 reason:[NSString stringWithFormat:@"Invalid slot number %li specified", (long)slot]
                                userInfo:nil]
-        raise];
+         raise];
     }
 }
 
-- (int)maximumUserSlots {
+- (NSInteger)maximumUserSlots {
     return 4;
 }
 
-- (FBSessionTokenCachingStrategy*)createCachingStrategyForSlot:(int)slot {
+- (FBSessionTokenCachingStrategy *)createCachingStrategyForSlot:(NSInteger)slot {
     // FBSample logic
     // Token caching strategies are an advanced feature of the SDK; by creating one and passing it to
     // FBSession at instantiation time, the SUUserManager class takes control of the token caching
@@ -66,17 +63,17 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     // from FBSessionTokenCachingStrategy, and implement any store for the token cache that it needs,
     // including storing and retrieving tokens on an application-specific server, filesystem, etc.
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [[FBSessionTokenCachingStrategy alloc]
-                                                           initWithUserDefaultTokenInformationKeyName:[NSString stringWithFormat:@"SUUserTokenInfo%d", slot]];
+                                                           initWithUserDefaultTokenInformationKeyName:[NSString stringWithFormat:@"SUUserTokenInfo%ld", (long)slot]];
     return tokenCachingStrategy;
 }
 
-- (BOOL)isSlotEmpty:(int)slot {
+- (BOOL)isSlotEmpty:(NSInteger)slot {
     return [self getUserIDInSlot:slot] == nil;
 }
 
 - (BOOL)areAllSlotsEmpty {
-    int numSlots = [self maximumUserSlots];
-    for (int i = 0; i < numSlots; ++i) {
+    NSInteger numSlots = [self maximumUserSlots];
+    for (NSInteger i = 0; i < numSlots; ++i) {
         if ([self isSlotEmpty:i] == NO) {
             return NO;
         }
@@ -84,7 +81,7 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return YES;
 }
 
-- (FBSession*)createSessionForSlot:(int)slot {
+- (FBSession *)createSessionForSlot:(NSInteger)slot {
     // FBSample logic
     // Getting the right strategy instance for the right slot matters for this application
     FBSessionTokenCachingStrategy *tokenCachingStrategy = [self createCachingStrategyForSlot:slot];
@@ -98,10 +95,10 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return session;
 }
 
-- (NSString*)getUserNameInSlot:(int)slot {
+- (NSString *)getUserNameInSlot:(NSInteger)slot {
     [self validateSlotNumber:slot];
 
-    NSString *key = [NSString stringWithFormat:SUUserNameKeyFormat, slot];
+    NSString *key = [NSString stringWithFormat:SUUserNameKeyFormat, (long)slot];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
@@ -109,10 +106,10 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return [defaults objectForKey:key];
 }
 
-- (NSString*)getUserIDInSlot:(int)slot {
+- (NSString *)getUserIDInSlot:(NSInteger)slot {
     [self validateSlotNumber:slot];
 
-    NSString *key = [NSString stringWithFormat:SUUserIDKeyFormat, slot];
+    NSString *key = [NSString stringWithFormat:SUUserIDKeyFormat, (long)slot];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
     // Don't assume we have a full FBGraphObject -- builds compiled with earlier versions of SDK
@@ -120,19 +117,19 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     return [defaults objectForKey:key];
 }
 
-- (void)updateUser:(NSDictionary<FBGraphUser> *)user inSlot:(int)slot {
+- (void)updateUser:(NSDictionary<FBGraphUser> *)user inSlot:(NSInteger)slot {
     [self validateSlotNumber:slot];
 
-    NSString *idKey = [NSString stringWithFormat:SUUserIDKeyFormat, slot];
-    NSString *nameKey = [NSString stringWithFormat:SUUserNameKeyFormat, slot];
+    NSString *idKey = [NSString stringWithFormat:SUUserIDKeyFormat, (long)slot];
+    NSString *nameKey = [NSString stringWithFormat:SUUserNameKeyFormat, (long)slot];
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if (user != nil ) {
-        NSLog(@"SUUserManager updating slot %d: fbid = %@, name = %@", slot, user.id, user.name);
+    if (user != nil) {
+        NSLog(@"SUUserManager updating slot %li: fbid = %@, name = %@", (long)slot, user.id, user.name);
         [defaults setObject:user.id forKey:idKey];
         [defaults setObject:user.name forKey:nameKey];
     } else {
-        NSLog(@"SUUserManager clearing slot %d", slot);
+        NSLog(@"SUUserManager clearing slot %li", (long)slot);
 
         // Can't be current user anymore
         if (slot == _currentUserSlot) {
@@ -160,9 +157,9 @@ static NSString *const SUUserNameKeyFormat = @"SUUserName%d";
     [self sendNotification];
 }
 
-- (FBSession *)switchToUserInSlot:(int)slot {
+- (FBSession *)switchToUserInSlot:(NSInteger)slot {
     [self validateSlotNumber:slot];
-    NSLog(@"SUUserManager switching to slot %d", slot);
+    NSLog(@"SUUserManager switching to slot %li", (long)slot);
 
     FBSession *session = [self createSessionForSlot:slot];
 

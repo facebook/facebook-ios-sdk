@@ -27,11 +27,13 @@
 // application that includes Facebook integration, friend picker, place picker, and Open Graph
 // Action creation and posting.
 @interface SCAppDelegate : UIResponder <UIApplicationDelegate, UINavigationControllerDelegate>
+
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) UINavigationController *navigationController;
 @property (strong, nonatomic) SCViewController *mainViewController;
-@property (strong, nonatomic) SCLoginViewController* loginViewController;
+@property (strong, nonatomic) SCLoginViewController *loginViewController;
 @property BOOL isNavigatingAwayFromLogin;
 
 - (void)resetMainViewController;
+
 @end

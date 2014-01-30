@@ -21,9 +21,9 @@
 
 @interface FBCacheIntegrationTests : FBIntegrationTests<FBCacheIndexFileDelegate>
 {
-    NSString* _dataCachePath;
+    NSString *_dataCachePath;
 }
 
-@property (retain, nonatomic) NSString* dataCachePath;
+@property (retain, nonatomic) NSString *dataCachePath;
 
 @end

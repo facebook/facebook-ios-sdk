@@ -107,7 +107,7 @@
  @abstract
  The place that is currently selected in the view.  This is nil
  if nothing is selected.
-  */
+ */
 @property (nonatomic, retain, readonly) id<FBGraphPlace> selection;
 
 /*!
@@ -120,7 +120,7 @@
  @abstract
  Initializes a place picker view controller.
  */
-- (id)init;
+- (instancetype)init;
 
 /*!
  @abstract
@@ -128,7 +128,7 @@
 
  @param aDecoder        An unarchiver object.
  */
-- (id)initWithCoder:(NSCoder *)aDecoder;
+- (instancetype)initWithCoder:(NSCoder *)aDecoder;
 
 /*!
  @abstract
@@ -137,7 +137,7 @@
  @param nibNameOrNil            The name of the nib file to associate with the view controller. The nib file name should not contain any leading path information. If you specify nil, the nibName property is set to nil.
  @param nibBundleOrNil          The bundle in which to search for the nib file. This method looks for the nib file in the bundle's language-specific project directories first, followed by the Resources directory. If nil, this method looks for the nib file in the main bundle.
  */
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil;
 
 /*!
  @abstract
@@ -150,7 +150,7 @@
 
  @param cacheDescriptor     The <FBCacheDescriptor> containing the cache query properties.
  */
-- (void)configureUsingCachedDescriptor:(FBCacheDescriptor*)cacheDescriptor;
+- (void)configureUsingCachedDescriptor:(FBCacheDescriptor *)cacheDescriptor;
 
 /*!
  @abstract
@@ -192,11 +192,11 @@
  @param resultsLimit                    The maximum number of places to fetch.
  @param fieldsForRequest                Addtional fields to fetch when making the Graph API call to get place data.
  */
-+ (FBCacheDescriptor*)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
-                                             radiusInMeters:(NSInteger)radiusInMeters
-                                                 searchText:(NSString*)searchText
-                                               resultsLimit:(NSInteger)resultsLimit
-                                           fieldsForRequest:(NSSet*)fieldsForRequest;
++ (FBCacheDescriptor *)cacheDescriptorWithLocationCoordinate:(CLLocationCoordinate2D)locationCoordinate
+                                              radiusInMeters:(NSInteger)radiusInMeters
+                                                  searchText:(NSString *)searchText
+                                                resultsLimit:(NSInteger)resultsLimit
+                                            fieldsForRequest:(NSSet *)fieldsForRequest;
 
 @end
 
@@ -243,7 +243,7 @@
  @param place               An <FBGraphPlace> object representing the place.
  */
 - (BOOL)placePickerViewController:(FBPlacePickerViewController *)placePicker
-               shouldIncludePlace:(id <FBGraphPlace>)place;
+               shouldIncludePlace:(id<FBGraphPlace>)place;
 
 /*!
  @abstract

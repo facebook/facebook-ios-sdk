@@ -19,7 +19,7 @@
 
 @implementation FBSessionLoginStrategyParams
 
--(void) dealloc {
+- (void)dealloc {
     [_permissions release];
     [_webParams release];
     [super dealloc];

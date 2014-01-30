@@ -33,9 +33,6 @@
 
 @implementation FPViewController
 
-@synthesize selectedFriendsView = _friendResultText;
-@synthesize friendPickerController = _friendPickerController;
-
 #pragma mark View lifecycle
 
 - (void)viewDidLoad {
@@ -110,7 +107,7 @@
 - (void)fillTextBoxAndDismiss:(NSString *)text {
     self.selectedFriendsView.text = text;
 
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)orientation

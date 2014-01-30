@@ -20,15 +20,15 @@
 // implementations needs access to (aka "friend" access).
 @interface FBSession (FBSessionLoginStrategy)
 
-- (void)authorizeUsingSystemAccountStore:(NSArray*)permissions
+- (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize;
-- (FBAppCall *)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray*)permissions
+- (FBAppCall *)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray *)permissions
                                                 defaultAudience:(FBSessionDefaultAudience)defaultAudience
                                                     clientState:(NSDictionary *)clientState;
 - (BOOL)isURLSchemeRegistered;
 - (NSString *)jsonClientStateWithDictionary:(NSDictionary *)dictionary;
-- (void)retryableAuthorizeWithPermissions:(NSArray*)permissions
+- (void)retryableAuthorizeWithPermissions:(NSArray *)permissions
                           defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            integratedAuth:(BOOL)tryIntegratedAuth
                                 FBAppAuth:(BOOL)tryFBAppAuth
@@ -38,7 +38,7 @@
                       canFetchAppSettings:(BOOL)canFetchAppSettings;
 - (BOOL)authorizeUsingFacebookApplication:(NSMutableDictionary *)params;
 - (BOOL)authorizeUsingSafari:(NSMutableDictionary *)params;
-- (void)setLoginTypeOfPendingOpenUrlCallback:(FBSessionLoginType) loginType;
+- (void)setLoginTypeOfPendingOpenUrlCallback:(FBSessionLoginType)loginType;
 - (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params;
 
 @end

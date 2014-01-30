@@ -33,15 +33,15 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     VoidBlock _handler;
 }
 
-- (KVOHelper *) initWithBlock:(VoidBlock) handler;
+- (KVOHelper *)initWithBlock:(VoidBlock)handler;
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context;
 
 @end
 
 @implementation KVOHelper
-- (KVOHelper *) initWithBlock:(VoidBlock) handler {
-    if (self = [super init]){
+- (KVOHelper *)initWithBlock:(VoidBlock)handler {
+    if ((self = [super init])) {
         _handler = Block_copy(handler);
     }
     return self;
@@ -51,9 +51,9 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     _handler(keyPath, object, change, context);
 }
 
-- (void) dealloc {
+- (void)dealloc {
     Block_release(_handler);
-    
+
     [super dealloc];
 }
 
@@ -62,18 +62,18 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
 @implementation FBAccessTokenDataTests
 
 // Verifies caching and fetching of FBAccessTokenData.
-- (void) testCachingStrategy {
+- (void)testCachingStrategy {
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromString:@"token"
                                                                   permissions:[NSArray arrayWithObjects:@"perm1", @"perm2", nil]
                                                                expirationDate:[NSDate date]
                                                                     loginType:FBSessionLoginTypeFacebookViaSafari
                                                                   refreshDate:nil];
-    
+
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy cacheFBAccessTokenData:randomToken];
-    
+
     FBAccessTokenData *cachedToken = [cachingStrategy fetchFBAccessTokenData];
-    
+
     STAssertEquals(randomToken.accessToken, cachedToken.accessToken, @"accessToken does not match");
     STAssertEquals(randomToken.loginType, cachedToken.loginType, @"loginType does not match");
     STAssertTrue([randomToken.permissions isEqualToArray:cachedToken.permissions], @"permissions does not match");
@@ -81,31 +81,31 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
 }
 
 // Verifies no token fetched when cache is empty.
-- (void) testCachingStrategyWhenEmpty {
+- (void)testCachingStrategyWhenEmpty {
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy clearToken];
-    
+
     FBAccessTokenData *cachedToken = [cachingStrategy fetchFBAccessTokenData];
     STAssertNil(cachedToken, @"expected nil token but found %@", cachedToken);
 }
 
 // Verifies that session init can read everything as expected from the cache.
-- (void) testCachingStrategyAndSessionInit {
-    NSArray* expectedPermissions = @[@"email", @"publish_stream"];
+- (void)testCachingStrategyAndSessionInit {
+    NSArray *expectedPermissions = @[@"email", @"publish_stream"];
     NSDictionary *dictionary = @{
-        FBTokenInformationTokenKey : @"token",
-        FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
-        FBTokenInformationPermissionsKey : expectedPermissions,
-        FBTokenInformationLoginTypeLoginKey : [NSNumber numberWithInt:FBSessionLoginTypeFacebookViaSafari],
-        FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400],
-        FBTokenInformationPermissionsRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998401],
-    };
-    
+                                 FBTokenInformationTokenKey : @"token",
+                                 FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
+                                 FBTokenInformationPermissionsKey : expectedPermissions,
+                                 FBTokenInformationLoginTypeLoginKey : [NSNumber numberWithInt:FBSessionLoginTypeFacebookViaSafari],
+                                 FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400],
+                                 FBTokenInformationPermissionsRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998401],
+                                 };
+
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy cacheFBAccessTokenData:randomToken];
-    
-    FBSession* session = [[FBSession alloc] initWithAppID:@"appid"
+
+    FBSession *session = [[FBSession alloc] initWithAppID:@"appid"
                                               permissions:@[@"email"]
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:nil];
@@ -114,7 +114,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     FBAccessTokenData *fetchedToken = session.accessTokenData;
 
     STAssertNotNil(fetchedToken, @"Expected session to have token data");
-    
+
     STAssertEqualObjects(@"token", fetchedToken.accessToken, @"accessToken does not match");
     STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1893456000], fetchedToken.expirationDate, @"expirationDate does not match");
     STAssertEqualObjects(expectedPermissions, fetchedToken.permissions, @"permissions does not match");
@@ -123,30 +123,30 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1356998401], fetchedToken.permissionsRefreshDate, @"permissionsRefreshDate does not match");
 }
 // Verifies that session init can read everything as expected from the cache for old cache entries that use isFacebookLogin
-- (void) testCachingStrategyAndSessionInit_IsFacebookLogin {
-    NSArray* expectedPermissions = @[@"email", @"publish_stream"];
+- (void)testCachingStrategyAndSessionInit_IsFacebookLogin {
+    NSArray *expectedPermissions = @[@"email", @"publish_stream"];
     NSDictionary *dictionary = @{
-    FBTokenInformationTokenKey : @"token",
-    FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
-    FBTokenInformationPermissionsKey : expectedPermissions,
-    FBTokenInformationIsFacebookLoginKey : [NSNumber numberWithBool:YES],
-    FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400]
-    };
-    
+                                 FBTokenInformationTokenKey : @"token",
+                                 FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
+                                 FBTokenInformationPermissionsKey : expectedPermissions,
+                                 FBTokenInformationIsFacebookLoginKey : [NSNumber numberWithBool:YES],
+                                 FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400]
+                                 };
+
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy cacheFBAccessTokenData:randomToken];
-    
-    FBSession* session = [[FBSession alloc] initWithAppID:@"appid"
+
+    FBSession *session = [[FBSession alloc] initWithAppID:@"appid"
                                               permissions:@[@"email"]
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:nil];
     STAssertEquals(FBSessionStateCreatedTokenLoaded, session.state, @"Expected session to have init from cache");
-    
+
     FBAccessTokenData *fetchedToken = session.accessTokenData;
-    
+
     STAssertNotNil(fetchedToken, @"Expected session to have token data");
-    
+
     STAssertEqualObjects(@"token", fetchedToken.accessToken, @"accessToken does not match");
     STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1893456000], fetchedToken.expirationDate, @"expirationDate does not match");
     STAssertEqualObjects(expectedPermissions, fetchedToken.permissions, @"permissions does not match");
@@ -154,13 +154,13 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     STAssertEqualObjects([NSDate dateWithTimeIntervalSince1970:1356998400], fetchedToken.refreshDate, @"refreshDate does not match");
 }
 // Verifies nil when not providing a token string.
-- (void) testRequiredParameters {
+- (void)testRequiredParameters {
     STAssertNil([FBAccessTokenData createTokenFromString:@""
-                                                permissions:nil
-                                             expirationDate:nil
-                                                  loginType:FBSessionLoginTypeNone
-                                                refreshDate:nil],
-                   @"expected nil token");
+                                             permissions:nil
+                                          expirationDate:nil
+                                               loginType:FBSessionLoginTypeNone
+                                             refreshDate:nil],
+                @"expected nil token");
     STAssertNil([FBAccessTokenData createTokenFromString:nil
                                              permissions:nil
                                           expirationDate:nil
@@ -170,7 +170,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
 
 }
 
-- (void) testSessionOpenFromCacheWithKVO {
+- (void)testSessionOpenFromCacheWithKVO {
     // Stuff a random token into the cache. Note it doesn't have to be real since we won't issue any real requests
     // with it.
     NSDate *date = [NSDate distantFuture];
@@ -181,11 +181,11 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
                                                                   refreshDate:nil];
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy cacheFBAccessTokenData:randomToken];
-    
+
     // Now init a new session instance and attach KVO behavior.
-    FBSession* target = [[FBSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceNone urlSchemeSuffix:nil tokenCacheStrategy:nil];
-    
-    
+    FBSession *target = [[FBSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceNone urlSchemeSuffix:nil tokenCacheStrategy:nil];
+
+
     // Build a dictionary of expected kvo values that we will remove when encountered.
     NSMutableDictionary *expectedKvoValues = [[NSMutableDictionary alloc] initWithObjectsAndKeys:
                                               [NSNumber numberWithInt:FBSessionStateOpen], @"state",
@@ -193,80 +193,80 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
                                               nil];
 
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:[expectedKvoValues count]] autorelease];
-    KVOHelper* kvoHelper = [[KVOHelper alloc] initWithBlock:^(NSString *keyPath, id object, NSDictionary *change, id context) {
+    KVOHelper *kvoHelper = [[KVOHelper alloc] initWithBlock:^(NSString *keyPath, id object, NSDictionary *change, id context) {
         STAssertEqualObjects(expectedKvoValues[keyPath], change[NSKeyValueChangeNewKey], @"value did not match expected for %@",keyPath);
         [expectedKvoValues removeObjectForKey:keyPath];
-        
+
         [blocker signal];
     }];
-    
+
     // Note we only observe isOpen and state since the other notable KVO vars were changed
     // during init (since this test case is initializing from cache).
     [target addObserver:kvoHelper forKeyPath:@"isOpen" options:NSKeyValueObservingOptionNew context:nil];
     [target addObserver:kvoHelper forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
-    
+
     // Now open the session and it should transition to open (and hit our kvo helper block for each keypath)
     [target openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         STAssertNil(error, @"Unexpected error in session state change handler: %@", error);
     }];
-    
+
     // Wait until we get the expected KVO events finish.
     STAssertTrue([blocker waitWithTimeout:60], @"blocked timed out when it should have been signalled awake. Still expecting %@", expectedKvoValues);
-    
+
     [target removeObserver:kvoHelper forKeyPath:@"state"];
     [target removeObserver:kvoHelper forKeyPath:@"isOpen"];
-    
+
     [target release];
     [kvoHelper release];
     [expectedKvoValues release];
 }
 
-- (void) testSessionOpenThenReauthThenCloseWithKVO {
+- (void)testSessionOpenThenReauthThenCloseWithKVO {
     // Create a session and attach KVO observer.
     FBTestSession *target = [[FBTestSession sessionWithPrivateUserWithPermissions:nil] retain];
-    
+
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    
+
     __block int expectedState = 0; // simple state flag, 0 = opening, 1 = request new permissions, 2 = closing.
-    
+
     // Build a dictionary of expected # of kvo occurences per path
     NSMutableDictionary *expectedKvoValuesForOpening =
-        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-         @2, @"state",
-         @1, @"isOpen",
-         @1, @"expirationDate",
-         @1, @"accessToken",
-         @1, @"accessTokenData",
-         nil];
+    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+     @2, @"state",
+     @1, @"isOpen",
+     @1, @"expirationDate",
+     @1, @"accessToken",
+     @1, @"accessTokenData",
+     nil];
     NSMutableDictionary *expectedKvoValuesForNewPermissions =
-        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-         @1, @"state",
-         @1, @"expirationDate",
-         @1, @"accessToken",
-         @1, @"accessTokenData",
-         nil];
+    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+     @1, @"state",
+     @1, @"expirationDate",
+     @1, @"accessToken",
+     @1, @"accessTokenData",
+     nil];
     NSMutableDictionary *expectedKvoValuesForClosing =
-        [[NSMutableDictionary alloc] initWithObjectsAndKeys:
-         @1, @"state",
-         @1, @"isOpen",
-         @1, @"expirationDate",
-         @1, @"accessToken",
-         @1, @"accessTokenData",
-         nil];
-    
+    [[NSMutableDictionary alloc] initWithObjectsAndKeys:
+     @1, @"state",
+     @1, @"isOpen",
+     @1, @"expirationDate",
+     @1, @"accessToken",
+     @1, @"accessTokenData",
+     nil];
+
     __block NSMutableString *expectedToken = nil;
-    
+
     // Essentially this kvoHelper will perform the expect kvo verification
     // by checking off the expected occurences from the dictionary which
     // is based upon the current state transition.
-    KVOHelper* kvoHelper = [[KVOHelper alloc] initWithBlock:^(NSString *keyPath, id object, NSDictionary *change, id context) {
+    KVOHelper *kvoHelper = [[KVOHelper alloc] initWithBlock:^(NSString *keyPath, id object, NSDictionary *change, id context) {
         // Use the appropriate dictionary.
-        NSMutableDictionary* dictionaryPointer = (expectedState == 0) ? expectedKvoValuesForOpening :
+        NSMutableDictionary *dictionaryPointer = (expectedState == 0) ? expectedKvoValuesForOpening :
         (expectedState == 1) ? expectedKvoValuesForNewPermissions : expectedKvoValuesForClosing;
-        
+
         // Count off the occurence, and remove it if it's done.
-        NSNumber* count = dictionaryPointer[keyPath];
-        if (!count || [count intValue] <= 0){
+        NSNumber *count = dictionaryPointer[keyPath];
+        if (!count || [count intValue] <= 0) {
             STFail(@"unexpected KVO for of %@ (%@) in state %d", keyPath, change, expectedState);
         } else {
             int newCount = [count intValue] - 1;
@@ -276,20 +276,20 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
                 [dictionaryPointer setObject:[NSNumber numberWithInt:newCount] forKey:keyPath];
             }
         }
-        
+
         // Now do specific inspection for certain states.
         switch (expectedState) {
-            // For unit test simplicity we only inspect the access tokens key in depth.
+                // For unit test simplicity we only inspect the access tokens key in depth.
             case 0:
-                if ([keyPath isEqualToString:@"accessToken"]){
+                if ([keyPath isEqualToString:@"accessToken"]) {
                     if (expectedToken == nil) {
                         expectedToken = [[NSMutableString stringWithString:change[NSKeyValueChangeNewKey]] retain];
                     } else {
                         STAssertTrue([expectedToken isEqualToString:change[NSKeyValueChangeNewKey]], @"accessToken did not match token provided from accessTokenData");
                     }
-                } else if ([keyPath isEqualToString:@"accessTokenData"]){
+                } else if ([keyPath isEqualToString:@"accessTokenData"]) {
                     if (expectedToken == nil) {
-                        expectedToken = [[NSMutableString stringWithString:((FBAccessTokenData *) change[NSKeyValueChangeNewKey]).accessToken] retain];
+                        expectedToken = [[NSMutableString stringWithString:((FBAccessTokenData *)change[NSKeyValueChangeNewKey]).accessToken] retain];
                     } else {
                         STAssertTrue([expectedToken isEqualToString:((FBAccessTokenData *)change[NSKeyValueChangeNewKey]).accessToken], @"accessTokenData %@ did not match token provided from accessToken %@", change[NSKeyValueChangeNewKey], expectedToken);
                     }
@@ -303,7 +303,7 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
                 }
                 break;
             case 2:
-                if ([keyPath isEqualToString:@"state"]){
+                if ([keyPath isEqualToString:@"state"]) {
                     STAssertEqualObjects([NSNumber numberWithInt:FBSessionStateClosed], change[NSKeyValueChangeNewKey], @"expected state to be closed");
                 } else if ([keyPath isEqualToString:@"isOpen"]) {
                     STAssertEqualObjects([NSNumber numberWithBool:NO], change[NSKeyValueChangeNewKey], @"expected state to be closed");
@@ -336,12 +336,12 @@ typedef void (^VoidBlock)(NSString *keyPath, id object, NSDictionary *change, id
     }];
     [blocker wait];
     STAssertTrue([expectedKvoValuesForNewPermissions count] == 0, @"There were still expected KVO events that did not occur: %@", expectedKvoValuesForNewPermissions);
-    
+
     // Now we close the session and verify the kvo again.
     expectedState = 2;
     [target close];
     STAssertTrue([expectedKvoValuesForClosing count] == 0, @"There were still expected KVO events that did not occur: %@", expectedKvoValuesForClosing);
-                              
+
     [target removeObserver:kvoHelper forKeyPath:@"state"];
     [target removeObserver:kvoHelper forKeyPath:@"isOpen"];
     [target removeObserver:kvoHelper forKeyPath:@"expirationDate"];

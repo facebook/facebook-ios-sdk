@@ -40,7 +40,7 @@ __attribute__ ((noinline)) void logOperationOnMainThread() {
 
 @implementation FBTask
 
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         _lock = [[NSObject alloc] init];
         _condition = [[NSCondition alloc] init];

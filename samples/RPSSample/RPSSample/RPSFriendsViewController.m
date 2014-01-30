@@ -30,10 +30,7 @@
 
 @implementation RPSFriendsViewController
 
-@synthesize activityTextView = _activityTextView;
-@synthesize friendCache = _friendCache;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Rock w/Friends", @"Rock w/Friends");
@@ -80,11 +77,11 @@
         // display the message that we have
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In with Facebook"
                                                         message:@"When you Log In with Facebook, you can view "
-                                                                @"friends' activity within Rock Paper Scissors, and "
-                                                                @"invite friends to play.\n\n"
-                                                                @"What would you like to do?"
+                              @"friends' activity within Rock Paper Scissors, and "
+                              @"invite friends to play.\n\n"
+                              @"What would you like to do?"
                                                        delegate:self
-                                              cancelButtonTitle:@"Do Nothing"
+                                              cancelButtonTitle:@"Cancel"
                                               otherButtonTitles:@"Log In", nil];
         [alert show];
     }
@@ -125,7 +122,7 @@
 }
 
 - (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
-                 shouldIncludeUser:(id <FBGraphUser>)user {
+                 shouldIncludeUser:(id<FBGraphUser>)user {
     return [[user objectForKey:@"installed"] boolValue];
 }
 
@@ -167,10 +164,10 @@
             NSDateComponents *c = [[NSCalendar currentCalendar]
                                    components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit
                                    fromDate:entry.publish_date];
-            [output appendFormat:@"%02d/%02d/%02d - %@ %@ %@\n",
-             c.month,
-             c.day,
-             c.year,
+            [output appendFormat:@"%02li/%02li/%02li - %@ %@ %@\n",
+             (long)c.month,
+             (long)c.day,
+             (long)c.year,
              entry.data.gesture.title,
              @"vs",
              entry.data.opposing_gesture.title];
@@ -183,7 +180,7 @@
     // own response, despite the fact that the SDK is serializing them into a single request to the server
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:playActivity
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              handleBlock(result);
          }];
     // start the actual request

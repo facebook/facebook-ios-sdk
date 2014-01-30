@@ -39,7 +39,7 @@ fi
 #
 
 # Certain subdirs of samples are not samples to be built, exclude them from the find query
-FB_SAMPLES_EXCLUDED=(FBConnect.bundle)
+FB_SAMPLES_EXCLUDED=(FBConnect.bundle Configurations)
 for excluded in "${FB_SAMPLES_EXCLUDED[@]}"; do
   if [ -n "$FB_FIND_ARGS" ]; then
     FB_FIND_ARGS="$FB_FIND_ARGS -o"
@@ -54,19 +54,19 @@ FB_FIND_SAMPLES_CMD="find $FB_SDK_SAMPLES -type d -depth 1 ! ( $FB_FIND_ARGS )"
 #
 function xcode_build_sample() {
   cd $FB_SDK_SAMPLES/$1
-  progress_message "Compiling '${1}' for platform '${2}' using configuration '${3}'."
+  progress_message "Compiling '${1}' for platform '${2}(${3})' using configuration '${4}'."
   $XCODEBUILD \
     -alltargets \
+    -configuration "${4}" \
     -sdk $2 \
-    -configuration "${3}" \
+    ARCHS=$3 \
     SYMROOT=$FB_SDK_BUILD \
-    CURRENT_PROJECT_VERSION=$FB_SDK_VERSION_FULL \
     clean build \
-    || die "XCode build failed for sample '${1}' on platform: ${2}."
+    || die "XCode build failed for sample '${1}' for platform '${2}(${3})' using configuration '${4}'."
 }
 
 for sampledir in `$FB_FIND_SAMPLES_CMD`; do
-  xcode_build_sample `basename $sampledir` "iphonesimulator" "$BUILDCONFIGURATION"
+  xcode_build_sample `basename $sampledir` "iphonesimulator" "i386" "$BUILDCONFIGURATION"
 done
 
 # -----------------------------------------------------------------------------

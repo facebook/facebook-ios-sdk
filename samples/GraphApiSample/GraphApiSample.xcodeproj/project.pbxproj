@@ -14,6 +14,10 @@
 		85C69D691602B06E008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D661602B06E008AD9A0 /* Default-568h@2x.png */; };
 		85C69D6A1602B06E008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D671602B06E008AD9A0 /* Default.png */; };
 		85C69D6B1602B06E008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D681602B06E008AD9A0 /* Default@2x.png */; };
+		8986C7CF1890A25C004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CB1890A25C004B90DD /* Application.xcconfig */; };
+		8986C7D01890A25C004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CC1890A25C004B90DD /* Project-Debug.xcconfig */; };
+		8986C7D11890A25C004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CD1890A25C004B90DD /* Project-Release.xcconfig */; };
+		8986C7D21890A25C004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CE1890A25C004B90DD /* Project.xcconfig */; };
 		DDA290AD15ABA96200F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */; };
 		E2511742152BB6FE00CB342A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511741152BB6FE00CB342A /* UIKit.framework */; };
 		E2511744152BB6FE00CB342A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511743152BB6FE00CB342A /* Foundation.framework */; };
@@ -34,6 +38,10 @@
 		85C69D661602B06E008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69D671602B06E008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69D681602B06E008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8986C7CB1890A25C004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
+		8986C7CC1890A25C004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		8986C7CD1890A25C004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		8986C7CE1890A25C004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 		E251173D152BB6FE00CB342A /* GraphApiSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GraphApiSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2511741152BB6FE00CB342A /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -66,9 +74,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8986C7CA1890A25C004B90DD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				8986C7CB1890A25C004B90DD /* Application.xcconfig */,
+				8986C7CC1890A25C004B90DD /* Project-Debug.xcconfig */,
+				8986C7CD1890A25C004B90DD /* Project-Release.xcconfig */,
+				8986C7CE1890A25C004B90DD /* Project.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
+			sourceTree = "<group>";
+		};
 		E2511732152BB6FE00CB342A = {
 			isa = PBXGroup;
 			children = (
+				8986C7CA1890A25C004B90DD /* Configurations */,
 				E2511747152BB6FE00CB342A /* GraphApiSample */,
 				E2511740152BB6FE00CB342A /* Frameworks */,
 				E251173E152BB6FE00CB342A /* Products */,
@@ -154,7 +175,7 @@
 		E2511734152BB6FE00CB342A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "GraphApiSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -179,9 +200,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8986C7D01890A25C004B90DD /* Project-Debug.xcconfig in Resources */,
 				E251174C152BB6FE00CB342A /* InfoPlist.strings in Resources */,
+				8986C7D21890A25C004B90DD /* Project.xcconfig in Resources */,
+				8986C7D11890A25C004B90DD /* Project-Release.xcconfig in Resources */,
 				E2511758152BB6FE00CB342A /* GraphApiViewController_iPhone.xib in Resources */,
 				E251175B152BB6FE00CB342A /* GraphApiViewController_iPad.xib in Resources */,
+				8986C7CF1890A25C004B90DD /* Application.xcconfig in Resources */,
 				85AFB4FF158F9D32000AF7F5 /* Icon-72.png in Resources */,
 				85AFB500158F9D32000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB501158F9D32000AF7F5 /* Icon.png in Resources */,
@@ -237,84 +262,29 @@
 /* Begin XCBuildConfiguration section */
 		E251175C152BB6FE00CB342A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7CC1890A25C004B90DD /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		E251175D152BB6FE00CB342A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7CD1890A25C004B90DD /* Project-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		E251175F152BB6FE00CB342A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7CB1890A25C004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = GraphApiSample;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		E2511760152BB6FE00CB342A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7CB1890A25C004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_OBJCPP_ARC_ABI = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "GraphApiSample/GraphApiSample-Prefix.pch";
-				INFOPLIST_FILE = "$(SRCROOT)/GraphApiSample/GraphApiSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = GraphApiSample;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

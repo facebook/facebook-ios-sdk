@@ -97,7 +97,7 @@
 
 @end
 
-@interface FBRequestConnectionTests() {
+@interface FBRequestConnectionTests () {
     id _mockFBUtility;
 }
 @end

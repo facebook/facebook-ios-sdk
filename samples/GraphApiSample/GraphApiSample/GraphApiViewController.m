@@ -42,11 +42,6 @@ static NSString *loadingText = @"Loading...";
 
 @implementation GraphApiViewController
 
-@synthesize buttonRequest = _buttonRequest;
-@synthesize textObjectID = _textObjectID;
-@synthesize textOutput = _textOutput;
-@synthesize requestConnection = _requestConnection;
-
 - (void)dealloc {
     [_requestConnection cancel];
 }

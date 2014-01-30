@@ -39,7 +39,7 @@
     return [[[FBTaskCompletionSource alloc] init] autorelease];
 }
 
-- (id)init {
+- (instancetype)init {
     if ((self = [super init])) {
         _task = [[FBTask alloc] init];
     }

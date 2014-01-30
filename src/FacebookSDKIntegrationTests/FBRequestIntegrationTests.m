@@ -88,9 +88,9 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testRequestPlaceSearchWithNoSearchText
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);
-    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
+    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate
                                                               radiusInMeters:1000
-                                                                resultsLimit:5 
+                                                                resultsLimit:5
                                                                   searchText:nil];
     [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
@@ -105,15 +105,15 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                  @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
-    NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
+    NSArray *data = (NSArray *)[firstResponse objectForKey:@"data"];
     STAssertTrue(data.count > 0, @"Did not get any responses");
 }
 
 - (void)testRequestPlaceSearchWithSearchText
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889227, -77.049078);
-    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate 
-                                                              radiusInMeters:200 
+    FBRequest *searchRequest = [FBRequest requestForPlacesSearchAtCoordinate:coordinate
+                                                              radiusInMeters:200
                                                                 resultsLimit:5
                                                                   searchText:@"Lincoln Memorial"];
     [searchRequest setSession:self.defaultTestSession];
@@ -129,8 +129,8 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                  @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
-    NSArray *data = (NSArray*)[firstResponse objectForKey:@"data"];
-    
+    NSArray *data = (NSArray *)[firstResponse objectForKey:@"data"];
+
     BOOL found = NO;
     for (FBGraphObject *object in data) {
         if ([object[@"name"] rangeOfString:@"Lincoln Memorial"].location != NSNotFound) {
@@ -138,13 +138,13 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
             break;
         }
     }
-    
+
     STAssertTrue(found, @"didn't find Lincoln Memorial");
 }
 
 - (void)testRestRequestGetUser {
     FBTestSession *session = self.defaultTestSession;
-    
+
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 session.testUserID, @"uids",
                                 @"uid,name", @"fields",
@@ -152,7 +152,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                   restMethod:@"users.getInfo"
                                                   parameters:parameters
-                                                  HTTPMethod:nil] 
+                                                  HTTPMethod:nil]
                           autorelease];
 
     NSArray *responses = [self sendRequests:request, nil];
@@ -161,7 +161,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     NSArray *firstResponse = (NSArray *)[responses objectAtIndex:0];
     NSDictionary *firstResult = (NSDictionary *)[firstResponse objectAtIndex:0];
     STAssertNotNil(firstResult, @"firstResult");
-    
+
     NSString *uid = [[firstResult objectForKey:@"uid"] stringValue];
     STAssertNotNil(uid, @"uid");
     STAssertTrue([session.testUserID isEqualToString:uid], @"don't match");
@@ -190,14 +190,14 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
     FBRequestHandler handler =
-        ^(FBRequestConnection *connection, id result, NSError *error) {
-            // Validate that we can assume in unit test that errors and results
-            // are disjoint.
-            STAssertTrue(![result isKindOfClass:[NSError class]],
-                         @"![result isKindOfClass:[NSError class]]");
-            [results addObject:(error ? error : result)];
-            [blocker signal];
-        };
+    ^(FBRequestConnection *connection, id result, NSError *error) {
+        // Validate that we can assume in unit test that errors and results
+        // are disjoint.
+        STAssertTrue(![result isKindOfClass:[NSError class]],
+                     @"![result isKindOfClass:[NSError class]]");
+        [results addObject:(error ? error : result)];
+        [blocker signal];
+    };
 
     for (FBRequest *request in requests) {
         [connection addRequest:request completionHandler:handler];
@@ -226,9 +226,9 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                               STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
                               [blocker signal];
                           }];
-    
+
     [blocker wait];
-    
+
     blocker = [[[FBTestBlocker alloc] init] autorelease];
     [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
                           completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
@@ -237,7 +237,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                               STAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
                               [blocker signal];
                           }];
-    
+
     [blocker wait];
 }
 
@@ -250,7 +250,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                               STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
                               [blocker signal];
                           }];
-    
+
     [blocker wait];
 }
 
@@ -260,10 +260,10 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [FBSession setActiveSession:self.defaultTestSession];
     [FBRequestConnection startWithGraphPath:@"TourEiffel"
                           completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
-    
+
     [blocker wait];
     [blocker release];
-    
+
 }
 
 - (void)testSimpleGraphGetWithExpectedFailure
@@ -274,7 +274,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                           completionHandler:[self handlerExpectingFailureSignaling:blocker]];
     [blocker wait];
     [blocker release];
- 
+
 }
 
 - (id)postStatusUpdate
@@ -283,13 +283,13 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     // Posting duplicate messages will generate an error.
     NSString *statusMessage = [NSString stringWithFormat:@"Check out my awesome new status update posted at %@.", [NSDate date]];
     [status setObject:statusMessage forKey:@"message"];
-    
+
     return [self batchedPostAndGetWithSession:self.defaultTestSession
                                     graphPath:@"me/feed"
                                   graphObject:status];
 }
 
-- (id)postComment:(id)comment toStatusID:(NSString*)statusID
+- (id)postComment:(id)comment toStatusID:(NSString *)statusID
 {
     NSString *graphPath = [NSString stringWithFormat:@"%@/comments", statusID];
     return [self batchedPostAndGetWithSession:self.defaultTestSession
@@ -304,18 +304,18 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     id<FBGraphObject> comment = [FBGraphObject graphObject];
     NSString *commentMessage = @"It truly is a wonderful status update.";
     [comment setObject:commentMessage forKey:@"message"];
-    
+
     id comment1 = [self postComment:comment toStatusID:statusID];
     NSString *comment1ID = [[[comment1 objectForKey:@"id"] retain] autorelease];
     NSString *comment1Message = [[[comment1 objectForKey:@"message"] retain] autorelease];
-    
+
     // Try posting the same comment to the same status update. We need to clear its ID first.
     [comment1 removeObjectForKey:@"id"];
     id comment2 = [self postComment:comment1 toStatusID:statusID];
-    
+
     NSString *comment2ID = [comment2 objectForKey:@"id"];
     NSString *comment2Message = [comment2 objectForKey:@"message"];
-    
+
     STAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
     STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
 }
@@ -323,7 +323,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (id)postEvent
 {
     id<FBGraphObject> event = [FBGraphObject graphObject];
-    
+
     // The "Events Timezone" platform migration affects what date/time formats Facebook accepts and returns.
     // Apps created after 8/1/12 (or apps that have explicitly enabled the migration) should send/receive
     // dates in ISO-8601 format. Pre-migration apps can send as Unix timestamps. Since the future is ISO-8601,
@@ -334,7 +334,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     id startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
     id endTime = [dateFormatter stringFromDate:[NSDate dateWithTimeInterval:3600 sinceDate:startTime]];
     startTime = [dateFormatter stringFromDate:startTime];
-    
+
     [event setObject:[NSString stringWithFormat:@"My event on %@", startTime]
               forKey:@"name"];
     [event setObject:@"This is a great event. You should all come."
@@ -342,7 +342,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [event setObject:startTime forKey:@"start_time"];
     [event setObject:endTime forKey:@"end_time"];
     [event setObject:@"My house" forKey:@"location"];
-    
+
     return [self batchedPostAndGetWithSession:self.defaultTestSession
                                     graphPath:@"me/events"
                                   graphObject:event];
@@ -352,9 +352,9 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 {
     id postedEvent = [self postEvent];
     STAssertNotNil(postedEvent, @"no event");
-    
+
     [postedEvent removeObjectForKey:@"id"];
-    
+
     id event2 = [self batchedPostAndGetWithSession:self.defaultTestSession
                                          graphPath:@"me/events"
                                        graphObject:postedEvent];
@@ -365,7 +365,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 {
     [createRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:createRequest, nil];
-    
+
     STAssertNotNil(response, @"create response");
     STAssertTrue([response isKindOfClass:[NSArray class]],
                  @"create: [response isKindOfClass:[NSArray class]]");
@@ -374,11 +374,11 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                  @"create: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
     STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"create: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
-    
+
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSString *objectId = [firstResponse objectForKey:@"id"];
     STAssertNotNil(objectId, @"Did not get valid id for object creation");
-    
+
     return [NSDictionary dictionaryWithObjectsAndKeys:objectId, @"id", nil];
 }
 
@@ -404,31 +404,31 @@ withExpectedResults:(NSArray *)expectedResults
 }
 
 - (NSString *)getAndCheckFBID:(NSString *)fbid
-     checkForProperties:(NSArray *)propertiesToCheck
-    withExpectedResults:(NSArray *)expectedResults
+           checkForProperties:(NSArray *)propertiesToCheck
+          withExpectedResults:(NSArray *)expectedResults
 {
     FBRequest *request = [FBRequest requestForGraphPath:fbid];
     [request setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:request, nil];
-    
+
     STAssertNotNil(response, @"get responses");
     STAssertTrue([response isKindOfClass:[NSArray class]],
                  @"get: [response isKindOfClass:[NSArray class]]");
     STAssertTrue([response count] == 1, @"get: [response count] == 1");
     STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"get: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    NSDictionary * result = [response objectAtIndex:0];
+    NSDictionary *result = [response objectAtIndex:0];
     STAssertTrue([result isKindOfClass:[NSDictionary class]],
                  @"get: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
     STAssertEqualObjects(fbid, [result valueForKey:@"id"],
-                   @"get: [[response objectAtIndex:0] valueForKey:@\"id\"] equals fbid");
+                         @"get: [[response objectAtIndex:0] valueForKey:@\"id\"] equals fbid");
 
     [self checkResult:result forProperties:propertiesToCheck withExpectedResults:expectedResults];
 
     // If this was an object, return its post_action_id so we can check that too
     NSNumber *post_action_id = [result valueForKey:@"post_action_id"];
     return [NSString stringWithFormat:@"%@", post_action_id];
-    
+
 }
 
 - (void)updateObjectWithRequest:(FBRequest *)updateRequest
@@ -437,14 +437,14 @@ withExpectedResults:(NSArray *)expectedResults
 {
     [updateRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:updateRequest, nil];
-    
+
     STAssertNotNil(response, @"update response");
     STAssertTrue([response isKindOfClass:[NSArray class]],
                  @"create: [response isKindOfClass:[NSArray class]]");
     STAssertTrue([response count] == 1, @"create: [response count] == 1");
     STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"create: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    NSDictionary * objectResult = [response objectAtIndex:0];
+    NSDictionary *objectResult = [response objectAtIndex:0];
     STAssertTrue([objectResult isKindOfClass:[NSDictionary class]],
                  @"get: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
     [self checkResult:objectResult forProperties:propertiesToCheck withExpectedResults:expectedResults];
@@ -455,7 +455,7 @@ withExpectedResults:(NSArray *)expectedResults
     FBRequest *deleteRequest = [FBRequest requestForDeleteObject:fbid];
     [deleteRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:deleteRequest, nil];
-    
+
     STAssertNotNil(response, @"delete response");
     STAssertTrue([response isKindOfClass:[NSArray class]],
                  @"delete: [response isKindOfClass:[NSArray class]]");
@@ -478,7 +478,7 @@ withExpectedResults:(NSArray *)expectedResults
     // create an object
     NSDictionary *result = [self createObjectWithCreateRequest:createRequest];
     NSString *objectId = [result objectForKey:@"id"];
-    
+
     // check that we can get the object and the action
     NSString *actionId = [self getAndCheckFBID:objectId
                             checkForProperties:objectPropertiesToCheck
@@ -486,8 +486,8 @@ withExpectedResults:(NSArray *)expectedResults
     [self getAndCheckFBID:actionId
        checkForProperties:actionPropertiesToCheck
       withExpectedResults:actionPropertiesResults];
-    
-    
+
+
     // delete the action (which will also delete the object)
     [self deleteId:actionId];
 }
@@ -561,7 +561,7 @@ withExpectedResults:(NSArray *)expectedResults
                                                                objectProperties:nil];
     NSDictionary *result = [self createObjectWithCreateRequest:createRequest];
     NSString *objectId = [result objectForKey:@"id"];
-    
+
     // check that we can get the object and the action
     [self getAndCheckFBID:objectId
        checkForProperties:@[@"title"]
@@ -576,11 +576,11 @@ withExpectedResults:(NSArray *)expectedResults
     [self updateObjectWithRequest:updateRequest
                checkForProperties:@[@"title", @"description"]
                   expectedResults:@[@"New Title", @"new description"]];
-    
+
     NSString *actionId = [self getAndCheckFBID:objectId
-       checkForProperties:@[@"title", @"description"]
-      withExpectedResults:@[@"New Title", @"new description"]];
-    
+                            checkForProperties:@[@"title", @"description"]
+                           withExpectedResults:@[@"New Title", @"new description"]];
+
     [self deleteId:actionId];
 }
 
@@ -594,7 +594,7 @@ withExpectedResults:(NSArray *)expectedResults
                                                                objectProperties:nil];
     NSDictionary *result = [self createObjectWithCreateRequest:createRequest];
     NSString *objectId = [result objectForKey:@"id"];
-    
+
     // check that we can get the object and the action
     [self getAndCheckFBID:objectId
        checkForProperties:@[@"title"]
@@ -605,19 +605,19 @@ withExpectedResults:(NSArray *)expectedResults
     [graphObject setObject:@"New Title" forKey:@"title"];
     [graphObject setObject:@"new description" forKey:@"description"];
     FBRequest *updateRequest = [FBRequest requestForUpdateOpenGraphObject:(id)graphObject];
-    
+
     [self updateObjectWithRequest:updateRequest
                checkForProperties:@[@"title", @"description"]
                   expectedResults:@[@"New Title", @"new description"]];
-    
+
     NSString *actionId = [self getAndCheckFBID:objectId
-       checkForProperties:@[@"title", @"description"]
-      withExpectedResults:@[@"New Title", @"new description"]];
-    
+                            checkForProperties:@[@"title", @"description"]
+                           withExpectedResults:@[@"New Title", @"new description"]];
+
     [self deleteId:actionId];
 }
 
-- (NSArray*)permissionsForDefaultTestSession
+- (NSArray *)permissionsForDefaultTestSession
 {
     return [NSArray arrayWithObjects:@"email",
             @"publish_actions",

@@ -36,15 +36,13 @@ static const CGFloat pictureHeight = 50;
 
 @implementation SUProfileTableViewCell
 
-@synthesize profilePic = _profilePic;
-
 #pragma mark - Lifecycle
 
 - (void)dealloc {
     [_profilePic removeFromSuperview];
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         [self initializeSubViews];
@@ -53,8 +51,8 @@ static const CGFloat pictureHeight = 50;
     return self;
 }
 
-- (id)initWithStyle:(UITableViewCellStyle)style
-    reuseIdentifier:(NSString *)reuseIdentifier {
+- (instancetype)initWithStyle:(UITableViewCellStyle)style
+              reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         [self initializeSubViews];
@@ -73,11 +71,11 @@ static const CGFloat pictureHeight = 50;
 
 - (void)initializeSubViews {
     FBProfilePictureView *profilePic = [[FBProfilePictureView alloc]
-        initWithFrame:CGRectMake(
-            leftMargin,
-            topMargin,
-            pictureWidth,
-            pictureHeight)];
+                                        initWithFrame:CGRectMake(
+                                                                 leftMargin,
+                                                                 topMargin,
+                                                                 pictureWidth,
+                                                                 pictureHeight)];
     [self addSubview:profilePic];
     self.profilePic = profilePic;
 
@@ -85,21 +83,21 @@ static const CGFloat pictureHeight = 50;
     self.autoresizesSubviews = YES;
 }
 
-- (void) layoutSubviews {
+- (void)layoutSubviews {
     [super layoutSubviews];
 
     CGSize size = self.bounds.size;
 
     self.textLabel.frame = CGRectMake(
-        leftMargin * 2 + pictureWidth,
-        topMargin,
-        size.width - leftMargin - pictureWidth - rightMargin,
-        size.height - topMargin);
+                                      leftMargin * 2 + pictureWidth,
+                                      topMargin,
+                                      size.width - leftMargin - pictureWidth - rightMargin,
+                                      size.height - topMargin);
 }
 
 #pragma mark - Properties
 
-- (NSString*)userID {
+- (NSString *)userID {
     return self.profilePic.profileID;
 }
 
@@ -110,7 +108,7 @@ static const CGFloat pictureHeight = 50;
     self.profilePic.profileID = userID;
 }
 
-- (NSString*)userName {
+- (NSString *)userName {
     return self.textLabel.text;
 }
 

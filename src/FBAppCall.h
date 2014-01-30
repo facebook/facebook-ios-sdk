@@ -89,7 +89,7 @@ typedef void (^FBAppLinkFallbackHandler)(NSError *error);
 
  @discussion This is typically used for App Link URLs.
  */
-+ (FBAppCall *) appCallFromURL:(NSURL *)url;
++ (FBAppCall *)appCallFromURL:(NSURL *)url;
 
 /*!
  @abstract
@@ -218,12 +218,12 @@ typedef void (^FBAppLinkFallbackHandler)(NSError *error);
  If you must call this from the delegate's didFinishLaunchingWithOptions: you should
  only do so if the application is not being launched by a URL. For example,
 
-    if (launchOptions[UIApplicationLaunchOptionsURLKey] == nil) {
-     [FBAppCall openDeferredAppLink:^(NSError *error) {
-        // ....
-      }
-    }
-*/
+ if (launchOptions[UIApplicationLaunchOptionsURLKey] == nil) {
+ [FBAppCall openDeferredAppLink:^(NSError *error) {
+ // ....
+ }
+ }
+ */
 + (void)openDeferredAppLink:(FBAppLinkFallbackHandler)fallbackHandler;
 
 @end

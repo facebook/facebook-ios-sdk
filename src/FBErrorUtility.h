@@ -36,7 +36,7 @@
 
  @param error the error to be categorized.
  */
-+(FBErrorCategory) errorCategoryForError:(NSError *)error;
++ (FBErrorCategory)errorCategoryForError:(NSError *)error;
 
 /*!
  @abstract
@@ -50,7 +50,7 @@
 
  @param error the error to inspect.
  */
-+(BOOL) shouldNotifyUserForError:(NSError *)error;
++ (BOOL)shouldNotifyUserForError:(NSError *)error;
 
 /*!
  @abstract
@@ -60,7 +60,7 @@
 
  @param error the error to inspect.
  */
-+(NSString *) userMessageForError:(NSError *)error;
++ (NSString *)userMessageForError:(NSError *)error;
 
 
 @end

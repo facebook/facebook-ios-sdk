@@ -21,12 +21,12 @@
 
 @implementation FBIsStringRepresentingJSONDictionary
 
-+ (id)isStringRepresentingJSONDictionary:(id<HCMatcher>)aValueMatcher
++ (instancetype)isStringRepresentingJSONDictionary:(id<HCMatcher>)aValueMatcher
 {
     return [[self alloc] initWithValue:aValueMatcher];
 }
 
-- (id)initWithValue:(id<HCMatcher>)aValueMatcher
+- (instancetype)initWithValue:(id<HCMatcher>)aValueMatcher
 {
     self = [super init];
     if (self != nil)

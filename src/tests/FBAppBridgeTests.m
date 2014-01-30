@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
+#import "FBAppBridgeTests.h"
+
 #import <OCMock/OCMock.h>
 
-#import "FBAppBridgeTests.h"
 #import "FBAppBridge.h"
-#import "FBSettings.h"
-#import "FBUtility.h"
-#import "FBTestBlocker.h"
+#import "FBAppBridgeScheme.h"
 #import "FBAppCall+Internal.h"
 #import "FBDialogsData+Internal.h"
-#import "FBIsURLHavingQueryParams.h"
-#import "FBIsStringRepresentingJSONDictionary.h"
 #import "FBError.h"
+#import "FBIsStringRepresentingJSONDictionary.h"
+#import "FBIsURLHavingQueryParams.h"
+#import "FBSettings.h"
+#import "FBTestBlocker.h"
+#import "FBUtility.h"
 
-NSString * const kTestAppID = @"123456789";
-NSString * const kTestURLScheme = @"fb123456789";
-NSString * const kTestVersion = @"1";
-NSString * const kTestAppName = @"Awesome App";
-NSString * const kTestURLSchemeSuffix = @"mysuffix";
-NSString * const kTestNonFacebookBundleIdentifier = @"com.notfacebook.hello";
-NSString * const kTestFacebookBundleIdentifier = @"com.facebook.hello";
+static NSString *const kTestAppID = @"123456789";
+static NSString *const kTestURLScheme = @"fb123456789";
+static NSString *const kTestAppName = @"Awesome App";
+static NSString *const kTestURLSchemeSuffix = @"mysuffix";
+static NSString *const kTestNonFacebookBundleIdentifier = @"com.notfacebook.hello";
+static NSString *const kTestFacebookBundleIdentifier = @"com.facebook.hello";
+static FBAppBridgeScheme *testBridgeScheme = nil;
 
 // If we create an FBDialogsData, we'll use this data.
-NSString * const kTestDialogMethod = @"some_dialog";
+static NSString *const kTestDialogMethod = @"some_dialog";
 
-NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D&fb_click_time_utc=123";
+static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_applink_args=%7B%22version%22%3A2%2C%22bridge_args%22%3A%7B%22method%22%3A%22applink%22%7D%2C%22method_args%22%3A%7B%22ref%22%3A%22Tiramisu%22%7D%7D&fb_click_time_utc=123";
 
 @interface FBAppBridge (Testing)
 
@@ -48,10 +50,9 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 + (NSString *)symmetricKeyAndForceRefresh:(BOOL)forceRefresh;
 
 - (void)performDialogAppCall:(FBAppCall *)appCall
-                     version:(NSString *)version
+                bridgeScheme:(FBAppBridgeScheme *)bridgeScheme
                      session:(FBSession *)session
            completionHandler:(FBAppCallHandler)handler;
-
 @end
 
 @implementation FBAppBridgeTests
@@ -65,6 +66,12 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
 #pragma mark Helpers
 
++ (void)setUp {
+    if (testBridgeScheme == nil) {
+        // For these unit tests, the actual scheme isn't important (since we mock/expect).
+        testBridgeScheme = [FBAppBridgeScheme bridgeSchemeForFBAppForLoginParams:nil];
+    }
+}
 - (void)setUp {
     // FBAppBridge relies on UIApplication for handling URLs; mock it and return
     // the mock from [UIApplication sharedApplication]. This little dance is necessary to avoid
@@ -171,12 +178,12 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
     };
 
     [[mockAppBridge expect] performDialogAppCall:appCall
-                                         version:kTestVersion
+                                    bridgeScheme:testBridgeScheme
                                          session:session
                                completionHandler:handler];
     
     [mockAppBridge dispatchDialogAppCall:appCall
-                                 version:kTestVersion
+                            bridgeScheme:testBridgeScheme
                                  session:session
                        completionHandler:handler];
 
@@ -192,7 +199,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppCall *appCall = [self newAppCall:NO];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:nil];
 
@@ -207,7 +214,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:nil];
     
@@ -240,7 +247,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:nil];
 
@@ -261,7 +268,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:nil];
     
@@ -281,7 +288,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:session
                   completionHandler:nil];
     
@@ -297,7 +304,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:nil];
 
@@ -314,7 +321,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:handler];
 
@@ -334,7 +341,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:handler];
 
@@ -360,7 +367,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:handler];
 
@@ -387,7 +394,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:handler];
 
@@ -610,7 +617,7 @@ NSString * const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chicken&fb_
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
     [appBridge performDialogAppCall:appCall
-                            version:kTestVersion
+                       bridgeScheme:testBridgeScheme
                             session:nil
                   completionHandler:completionHandler];
 

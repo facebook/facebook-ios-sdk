@@ -20,9 +20,6 @@
 
 @implementation FPAppDelegate
 
-@synthesize window = _window;
-@synthesize rootViewController = _rootViewController;
-
 // FBSample logic
 // In the login workflow, the Facebook native application, or Safari will transition back to
 // this applicaiton via a url following the scheme fb[app id]://; the call to handleOpenURL
@@ -65,7 +62,7 @@
     // Set up a UINavigationController as the basis of this app, with the nib generated viewController
     // as the initial view.
     UINavigationController *navigationController =
-        [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
+    [[UINavigationController alloc] initWithRootViewController:self.rootViewController];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.rootViewController = navigationController;
@@ -74,7 +71,7 @@
     return YES;
 }
 
-- (NSUInteger)supportedInterfaceOrientations{
+- (NSUInteger)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAllButUpsideDown;
 }
 

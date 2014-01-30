@@ -22,9 +22,6 @@
 
 @implementation HFAppDelegate
 
-@synthesize window = _window;
-@synthesize rootViewController = _rootViewController;
-
 // FBSample logic
 // If we have a valid session at the time of openURL call, we handle Facebook transitions
 // by passing the url argument to handleOpenURL; see the "Just Login" sample application for

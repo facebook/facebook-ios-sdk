@@ -24,6 +24,10 @@
 		85C69D8F1602B0D3008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8C1602B0D3008AD9A0 /* Default-568h@2x.png */; };
 		85C69D901602B0D3008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8D1602B0D3008AD9A0 /* Default.png */; };
 		85C69D911602B0D3008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8E1602B0D3008AD9A0 /* Default@2x.png */; };
+		8986C7D81890A2F3004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D41890A2F3004B90DD /* Application.xcconfig */; };
+		8986C7D91890A2F3004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */; };
+		8986C7DA1890A2F3004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */; };
+		8986C7DB1890A2F3004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D71890A2F3004B90DD /* Project.xcconfig */; };
 		DD37EAC015ABA8FA0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +54,10 @@
 		85C69D8C1602B0D3008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		85C69D8D1602B0D3008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		85C69D8E1602B0D3008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
+		8986C7D41890A2F3004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
+		8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
+		8986C7D71890A2F3004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +80,7 @@
 		5F6AF17E1532A37B00DDBD75 = {
 			isa = PBXGroup;
 			children = (
+				8986C7D31890A2F3004B90DD /* Configurations */,
 				5F6AF1931532A37B00DDBD75 /* HelloFacebookSample */,
 				5F6AF18C1532A37B00DDBD75 /* Frameworks */,
 				5F6AF18A1532A37B00DDBD75 /* Products */,
@@ -132,6 +141,18 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8986C7D31890A2F3004B90DD /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				8986C7D41890A2F3004B90DD /* Application.xcconfig */,
+				8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */,
+				8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */,
+				8986C7D71890A2F3004B90DD /* Project.xcconfig */,
+			);
+			name = Configurations;
+			path = ../Configurations;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -158,7 +179,7 @@
 		5F6AF1801532A37B00DDBD75 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "HelloFacebookSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -183,9 +204,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8986C7D91890A2F3004B90DD /* Project-Debug.xcconfig in Resources */,
 				5F6AF1981532A37B00DDBD75 /* InfoPlist.strings in Resources */,
+				8986C7DB1890A2F3004B90DD /* Project.xcconfig in Resources */,
+				8986C7DA1890A2F3004B90DD /* Project-Release.xcconfig in Resources */,
 				5F6AF1A41532A37B00DDBD75 /* HFViewController_iPhone.xib in Resources */,
 				5F6AF1A71532A37B00DDBD75 /* HFViewController_iPad.xib in Resources */,
+				8986C7D81890A2F3004B90DD /* Application.xcconfig in Resources */,
 				85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */,
 				85AFB50D158F9D78000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB50E158F9D78000AF7F5 /* Icon.png in Resources */,
@@ -241,82 +266,29 @@
 /* Begin XCBuildConfiguration section */
 		5F6AF1A81532A37B00DDBD75 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		5F6AF1A91532A37B00DDBD75 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
-				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		5F6AF1AB1532A37B00DDBD75 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7D41890A2F3004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
-				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = HelloFacebookSample;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
 		};
 		5F6AF1AC1532A37B00DDBD75 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8986C7D41890A2F3004B90DD /* Application.xcconfig */;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../build\"",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HelloFacebookSample/HelloFacebookSample-Prefix.pch";
-				INFOPLIST_FILE = "HelloFacebookSample/HelloFacebookSample-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = HelloFacebookSample;
-				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};

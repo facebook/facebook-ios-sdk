@@ -21,10 +21,6 @@
 
 @implementation SUAppDelegate
 
-@synthesize window = _window;
-@synthesize tabBarController = _tabBarController;
-@synthesize userManager = _userManager;
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
     // FBSample logic

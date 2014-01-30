@@ -24,9 +24,9 @@ typedef void(^ConfirmCallback)(id sender, bool confirm);
 
 @property (strong, nonatomic) IBOutlet UIImageView *imageView;
 @property (copy, nonatomic) ConfirmCallback confirmCallback;
-@property (strong, readonly) UIImage* image;
+@property (strong, readonly) UIImage *image;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil image:(UIImage *)anImage;
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil image:(UIImage *)anImage;
 - (IBAction)confirm:(id)sender;
 - (IBAction)cancel:(id)sender;
 

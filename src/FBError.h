@@ -173,7 +173,7 @@ typedef enum {
      This case may involve user action that must be taken, and so the application should also test
      the fberrorShouldNotifyUser property and if YES display fberrorUserMessage to the user before retrying.*/
     FBErrorCategoryRetry          = 1,
-    /*! Indicates that the error is authentication related and the application should reopen the session*/
+    /*! Indicates that the error is authentication related and the application should reopen the session */
     FBErrorCategoryAuthenticationReopenSession  = 2,
     /*! Indicates that the error is permission related */
     FBErrorCategoryPermissions                  = 3,
@@ -261,7 +261,7 @@ extern NSString *const FBErrorLoginFailedReasonOtherError;
 /*!
  A value that may appear in an NSError userInfo dictionary under the
  `FBErrorLoginFailedReason` key for login failures. Indicates the app's
- slider in iOS 6 (device Settings -> Privacy -> Facebook {app} ) has
+ slider in iOS 6 (device Settings -> Privacy -> Facebook {app}) has
  been disabled.
  */
 extern NSString *const FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue;
@@ -309,7 +309,7 @@ extern NSString *const FBErrorReauthorizeFailedReasonWrongUser;
 /*!
  The key in the userInfo NSDictionary of NSError for errors
  encountered with `FBDialogs` operations. (error.code equals FBErrorDialog).
- If present, the value will be one of the constants prefixed by FBErrorDialog*.
+ If present, the value will be one of the constants prefixed by FBErrorDialog *.
 */
 extern NSString *const FBErrorDialogReasonKey;
 

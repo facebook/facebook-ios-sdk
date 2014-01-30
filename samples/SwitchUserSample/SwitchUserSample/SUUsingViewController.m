@@ -35,18 +35,18 @@
 
 @implementation SUUsingViewController
 
-@synthesize nameLabel;
-@synthesize birthdayLabel;
-@synthesize picView;
-@synthesize pendingRequest = _pendingRequest;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Using", @"Using");
         self.tabBarItem.image = [UIImage imageNamed:@"first"];
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)updateControls {

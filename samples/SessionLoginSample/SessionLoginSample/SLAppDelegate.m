@@ -20,10 +20,6 @@
 
 @implementation SLAppDelegate
 
-@synthesize window = _window;
-@synthesize viewController = _viewController;
-@synthesize session = _session;
-
 // FBSample logic
 // The native facebook application transitions back to an authenticating application when the user
 // chooses to either log in, or cancel. The url passed to this method contains the token in the

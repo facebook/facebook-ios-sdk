@@ -29,21 +29,17 @@
 // the request object is cached in this property in order to have a means for canceling and identifying
 // the network request while it is in flight
 @property (strong, nonatomic) FBRequest *pendingRequest;
-@property (nonatomic) int pendingLoginForSlot;
+@property (nonatomic) NSInteger pendingLoginForSlot;
 
-- (int)userSlotFromIndexPath:(NSIndexPath *)indexPath;
-- (void)loginSlot:(int)slot;
-- (NSIndexPath*)indexPathFromUserSlot:(int)slot;
+- (NSInteger)userSlotFromIndexPath:(NSIndexPath *)indexPath;
+- (void)loginSlot:(NSInteger)slot;
+- (NSIndexPath *)indexPathFromUserSlot:(NSInteger)slot;
 
 @end
 
 @implementation SUSettingsViewController
 
-@synthesize usersTableView;
-@synthesize pendingRequest = _pendingRequest;
-@synthesize pendingLoginForSlot = _pendingLoginForSlot;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Settings", @"Settings");
@@ -80,7 +76,7 @@
 }
 
 - (void)updateCell:(SUProfileTableViewCell *)cell
-           forSlot:(int)slot {
+           forSlot:(NSInteger)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
 
@@ -103,13 +99,13 @@
     }
 }
 
-- (void)updateCellForSlot:(int)slot {
+- (void)updateCellForSlot:(NSInteger)slot {
     SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[self.usersTableView cellForRowAtIndexPath:
                                                               [self indexPathFromUserSlot:slot]];
     [self updateCell:cell forSlot:slot];
 }
 
-- (void)updateForSessionChangeForSlot:(int)slot {
+- (void)updateForSessionChangeForSlot:(NSInteger)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
 
@@ -153,7 +149,7 @@
         // expect to be valid and ready for use; if so then we open the session on the spot
         if (session.state == FBSessionStateCreatedTokenLoaded) {
             // even though we had a cached token, we need to login to make the session usable
-            [session openWithCompletionHandler:^(FBSession *session,
+            [session openWithCompletionHandler:^(FBSession *innerSession,
                                                  FBSessionState status,
                                                  NSError *error) {
                 [self updateForSessionChangeForSlot:slot];
@@ -162,7 +158,7 @@
     }
 }
 
-- (void)loginSlot:(int)slot {
+- (void)loginSlot:(NSInteger)slot {
     SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
 
@@ -170,7 +166,7 @@
         return;
     }
 
-    int currentUserSlot = userManager.currentUserSlot;
+    NSInteger currentUserSlot = userManager.currentUserSlot;
 
     // If we can't log in as new user, we don't want to still be logged in as previous user,
     // particularly if it might not be obvious to the user that the login failed.
@@ -198,7 +194,7 @@
 
     // we pass the correct behavior here to indicate the login workflow to use (Facebook Login, fallback, etc.)
     [session openWithBehavior:behavior
-            completionHandler:^(FBSession *session,
+            completionHandler:^(FBSession *innerSession,
                                 FBSessionState status,
                                 NSError *error) {
                 // this handler is called back whether the login succeeds or fails; in the
@@ -211,12 +207,12 @@
             }];
 }
 
-- (int)userSlotFromIndexPath:(NSIndexPath *)indexPath {
+- (NSInteger)userSlotFromIndexPath:(NSIndexPath *)indexPath {
     // This relies on the fact that there's only one user in the first section.
     return indexPath.section + indexPath.row;
 }
 
-- (NSIndexPath*)indexPathFromUserSlot:(int)slot {
+- (NSIndexPath *)indexPathFromUserSlot:(NSInteger)slot {
     // See comment in userSlotFromIndexPath:
     return [NSIndexPath indexPathForRow:(slot == 0) ? 0 : (slot - 1)
                               inSection:(slot == 0) ? 0 : 1];
@@ -240,25 +236,25 @@
     }
 }
 
-- (UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
 
-    SUProfileTableViewCell *cell = (SUProfileTableViewCell*)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[SUProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
 
-    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = appDelegate.userManager;
-    int slot = [self userSlotFromIndexPath:indexPath];
-    if (slot >= 0 && slot < [userManager maximumUserSlots] ) {
+    NSInteger slot = [self userSlotFromIndexPath:indexPath];
+    if (slot >= 0 && slot < [userManager maximumUserSlots]) {
         [self updateCell:cell forSlot:slot];
     }
 
     return cell;
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     switch (section) {
         case 0:
             return @"Primary User:";
@@ -268,16 +264,16 @@
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     return [userManager getUserIDInSlot:[self userSlotFromIndexPath:indexPath]] != nil;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        int slot = [self userSlotFromIndexPath:indexPath];
+        NSInteger slot = [self userSlotFromIndexPath:indexPath];
         [userManager updateUser:nil inSlot:slot];
         [self updateCellForSlot:slot];
     }
@@ -287,17 +283,17 @@
 #pragma mark UITableViewDelegate methods
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUProfileTableViewCell *cell = (SUProfileTableViewCell*)[self tableView:tableView
-                                                      cellForRowAtIndexPath:indexPath];
+    SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[self tableView:tableView
+                                                       cellForRowAtIndexPath:indexPath];
     return cell.desiredHeight;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    SUAppDelegate *appDelegate = (SUAppDelegate*)[[UIApplication sharedApplication]delegate];
+    SUAppDelegate *appDelegate = (SUAppDelegate *)[[UIApplication sharedApplication]delegate];
     SUUserManager *userManager = [appDelegate userManager];
 
-    int currentUserSlot = userManager.currentUserSlot;
-    int slot = [self userSlotFromIndexPath:indexPath];
+    NSInteger currentUserSlot = userManager.currentUserSlot;
+    NSInteger slot = [self userSlotFromIndexPath:indexPath];
 
     if (slot == currentUserSlot) {
         [userManager switchToNoActiveUser];
@@ -310,10 +306,8 @@
     return;
 }
 
-- (NSString*)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath {
     return @"Forget";
 }
-
-#pragma mark -
 
 @end
