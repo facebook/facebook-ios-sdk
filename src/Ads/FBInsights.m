@@ -59,11 +59,11 @@ NSString *const FBInsightsLoggingResultNotification = @"com.facebook.sdk:FBAppEv
 }
 
 + (FBInsightsFlushBehavior)flushBehavior {
-    return [FBAppEvents flushBehavior];
+    return (FBInsightsFlushBehavior)[FBAppEvents flushBehavior];
 }
 
 + (void)setFlushBehavior:(FBInsightsFlushBehavior)flushBehavior {
-    [FBAppEvents setFlushBehavior:flushBehavior];
+    [FBAppEvents setFlushBehavior:(FBAppEventsFlushBehavior)flushBehavior];
 }
 
 + (void)flush {
