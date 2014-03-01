@@ -39,7 +39,7 @@
  @property
  @abstract Typed access to action's id
  */
-@property (retain, nonatomic) NSString              *id;
+@property (retain, nonatomic) NSString              *ID;
 
 /*!
  @property
