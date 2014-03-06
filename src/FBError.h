@@ -46,25 +46,26 @@ extern NSString *const FBErrorParsedJSONResponseKey;
 extern NSString *const FBErrorHTTPStatusCodeKey;
 
 /*!
+ @typedef NS_ENUM (NSUInteger, FBErrorCode)
  @abstract Error codes returned by the Facebook SDK in NSError.
 
  @discussion
  These are valid only in the scope of FacebookSDKDomain.
  */
-typedef enum FBErrorCode {
+typedef NS_ENUM(NSUInteger, FBErrorCode) {
     /*!
      Like nil for FBErrorCode values, represents an error code that
      has not been initialized yet.
      */
     FBErrorInvalid = 0,
 
-    /// The operation failed because it was cancelled.
+    /*! The operation failed because it was cancelled. */
     FBErrorOperationCancelled,
 
-    /// A login attempt failed
+    /*! A login attempt failed */
     FBErrorLoginFailedOrCancelled,
 
-    /// The graph API returned an error for this operation.
+    /*! The graph API returned an error for this operation. */
     FBErrorRequestConnectionApi,
 
     /*!
@@ -78,23 +79,23 @@ typedef enum FBErrorCode {
      */
     FBErrorProtocolMismatch,
 
-    /// Non-success HTTP status code was returned from the operation.
+    /*! Non-success HTTP status code was returned from the operation. */
     FBErrorHTTPError,
 
-    /// An endpoint that returns a binary response was used with FBRequestConnection;
-    /// endpoints that return image/jpg, etc. should be accessed using NSURLRequest
+    /*! An endpoint that returns a binary response was used with FBRequestConnection.
+     Endpoints that return image/jpg, etc. should be accessed using NSURLRequest */
     FBErrorNonTextMimeTypeReturned,
 
-    /// An error occurred while trying to display a native dialog
+    /*! An error occurred while trying to display a native dialog */
     FBErrorDialog,
 
-    /// An error occurred using the FBAppEvents class
+    /*! An error occurred using the FBAppEvents class */
     FBErrorAppEvents,
 
-    /// An error occurred related to an iOS API call
+    /*! An error occurred related to an iOS API call */
     FBErrorSystemAPI,
 
-    /// An error occurred while trying to fetch publish install response data
+    /*! An error occurred while trying to fetch publish install response data */
     FBErrorPublishInstallResponse,
 
     /*!
@@ -123,49 +124,49 @@ typedef enum FBErrorCode {
      Reserved for future use.
     */
     FBErrorOperationDisallowedForRestrictedTreament,
-} FBErrorCode;
+};
 
 /*!
+ @typedef NS_ENUM (NSUInteger, FBNativeApplicationErrorCode)
  @abstract Error codes returned by the Facebook SDK in NSError.
 
  @discussion
  These are valid only in the scope of FacebookNativeApplicationDomain.
  */
-typedef enum FBNativeApplicationErrorCode {
-    // A general error in processing an FBAppCall, without a known cause. Unhandled exceptions are a good example
+typedef NS_ENUM(NSUInteger, FBNativeApplicationErrorCode) {
+    /*! A general error in processing an FBAppCall, without a known cause. Unhandled exceptions are a good example */
     FBAppCallErrorUnknown = 1,
 
-    // The FBAppCall cannot be processed for some reason
+    /*! The FBAppCall cannot be processed for some reason */
     FBAppCallErrorUnsupported = 2,
 
-    // The FBAppCall is for a method that does not exist (or is turned off)
+    /*! The FBAppCall is for a method that does not exist (or is turned off) */
     FBAppCallErrorUnknownMethod = 3,
 
-    // The FBAppCall cannot be processed at the moment, but can be retried at a later time.
+    /*! The FBAppCall cannot be processed at the moment, but can be retried at a later time. */
     FBAppCallErrorServiceBusy = 4,
 
-    // Share was called in the native Facebook app with incomplete or incorrect arguments
+    /*! Share was called in the native Facebook app with incomplete or incorrect arguments */
     FBShareErrorInvalidParam = 100,
 
-    // A server error occurred while calling Share in the native Facebook app.
+    /*! A server error occurred while calling Share in the native Facebook app. */
     FBShareErrorServer = 102,
 
-    // An unknown error occurred while calling Share in the native Facebook app.
+    /*! An unknown error occurred while calling Share in the native Facebook app. */
     FBShareErrorUnknown = 103,
 
-    // Disallowed from calling Share in the native Facebook app.
+    /*! Disallowed from calling Share in the native Facebook app. */
     FBShareErrorDenied = 104,
-
-} FBNativeApplicationErrorCode;
+};
 
 /*!
- @typedef FBErrorCategory enum
+ @typedef NS_ENUM (NSInteger, FBErrorCategory)
 
  @abstract Indicates the Facebook SDK classification for the error
 
  @discussion
  */
-typedef enum {
+typedef NS_ENUM(NSInteger, FBErrorCategory) {
     /*! Indicates that the error category is invalid and likely represents an error that
      is unrelated to Facebook or the Facebook SDK */
     FBErrorCategoryInvalid                      = 0,
@@ -188,7 +189,7 @@ typedef enum {
     FBErrorCategoryFacebookOther                = -1,
     /*! Indicates that the error is an application error resulting in a bad or malformed request to the server. */
     FBErrorCategoryBadRequest                   = -2,
-} FBErrorCategory;
+};
 
 /*!
  The key in the userInfo NSDictionary of NSError where you can find
@@ -352,6 +353,13 @@ extern NSString *const FBErrorDialogInvalidOpenGraphObject;
  'previewPropertyName'.
  */
 extern NSString *const FBErrorDialogInvalidOpenGraphActionParameters;
+
+/*!
+ A value that may appear in the NSError userInfo ditionary under the
+ `FBErrorDialogReasonKey` key. Indicates that a native dialog cannot be
+ displayed because the parameters for sharing a status update, link, or photo were
+ not configured. The parameters must not include both 'photos' and a 'link'. */
+extern NSString *const FBErrorDialogInvalidShareParameters;
 
 /*!
  The key in the userInfo NSDictionary of NSError for errors

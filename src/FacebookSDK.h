@@ -41,6 +41,7 @@
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBSettings.h"
 #import "FBShareDialogParams.h"
+#import "FBShareDialogPhotoParams.h"
 #import "FBUserSettingsViewController.h"
 #import "FBWebDialogs.h"
 #import "NSError+FBError.h"
@@ -135,5 +136,5 @@
 
  */
 
-#define FB_IOS_SDK_VERSION_STRING @"3.12.0"
+#define FB_IOS_SDK_VERSION_STRING @"3.13.0"
 

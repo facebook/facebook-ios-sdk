@@ -16,17 +16,17 @@
 
 #import "FBProfilePictureView.h"
 
+#import "FBAccessTokenData.h"
 #import "FBProfilePictureViewBlankProfilePortraitPNG.h"
 #import "FBProfilePictureViewBlankProfileSquarePNG.h"
-#import "FBRequest.h"
 #import "FBSDKVersion.h"
+#import "FBSession.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 
 @interface FBProfilePictureView ()
 
-@property (readonly, nonatomic) NSString *imageQueryParamString;
-@property (retain, nonatomic) NSString *previousImageQueryParamString;
+@property (copy, nonatomic) NSDictionary *currentImageQueryParams;
 
 @property (retain, nonatomic) FBURLConnection *connection;
 @property (retain, nonatomic) UIImageView *imageView;
@@ -45,7 +45,7 @@
     [_profileID release];
     [_imageView release];
     [_connection release];
-    [_previousImageQueryParamString release];
+    [_currentImageQueryParams release];
 
     [super dealloc];
 }
@@ -89,8 +89,7 @@
 
 #pragma mark -
 
-- (NSString *)imageQueryParamString  {
-
+- (NSDictionary *)_generateQueryParams {
     static CGFloat screenScaleFactor = 0.0;
     if (screenScaleFactor == 0.0) {
         screenScaleFactor = [[UIScreen mainScreen] scale];
@@ -101,21 +100,28 @@
     int width = (int)(self.bounds.size.width * screenScaleFactor);
 
     if (self.pictureCropping == FBProfilePictureCroppingSquare) {
-        return [NSString stringWithFormat:@"width=%d&height=%d&migration_bundle=%@",
-                width,
-                width,
-                FB_IOS_SDK_MIGRATION_BUNDLE];
+        return @{
+                 @"width": @(width),
+                 @"height": @(width),
+                 @"migration_bundle": FB_IOS_SDK_MIGRATION_BUNDLE,
+                 };
     }
 
     // For non-square images, we choose between three variants knowing that the small profile picture is
     // 50 pixels wide, normal is 100, and large is about 200.
     if (width <= 50) {
-        return @"type=small";
+        return @{ @"type": @"small" };
     } else if (width <= 100) {
-        return @"type=normal";
+        return @{ @"type": @"normal" };
     } else {
-        return @"type=large";
+        return @{ @"type": @"large" };
     }
+}
+
+- (UIImage *)_placeholderImage {
+  return (self.pictureCropping == FBProfilePictureCroppingSquare ?
+          [FBProfilePictureViewBlankProfileSquarePNG image] :
+          [FBProfilePictureViewBlankProfilePortraitPNG image]);
 }
 
 - (void)initialize {
@@ -136,20 +142,21 @@
 }
 
 - (void)refreshImage:(BOOL)forceRefresh  {
-    NSString *newImageQueryParamString = self.imageQueryParamString;
+    NSDictionary *imageQueryParams = [self _generateQueryParams];
 
     // If not forcing refresh, check to see if the previous size we used would be the same
     // as what we'd request now, as this method could be called often on control bounds animation,
     // and we only want to fetch when needed.
-    if (!forceRefresh && [self.previousImageQueryParamString isEqualToString:newImageQueryParamString]) {
-
+    if (!forceRefresh && [self.currentImageQueryParams isEqualToDictionary:imageQueryParams]) {
         // But we still may need to adjust the contentMode.
         [self ensureImageViewContentMode];
         return;
     }
 
-    if (self.profileID) {
+    // store the params without the accessToken
+    self.currentImageQueryParams = imageQueryParams;
 
+    if (self.profileID) {
         [self.connection cancel];
 
         FBURLConnectionHandler handler =
@@ -158,31 +165,31 @@
 
             self.connection = nil;
             if (!error) {
-                self.imageView.image = [UIImage imageWithData:data];
+                self.imageView.image = ([UIImage imageWithData:data] ?: [self _placeholderImage]);
                 [self ensureImageViewContentMode];
             }
         };
 
-        NSString *template = @"%@/%@/picture?%@";
-        NSString *urlString = [NSString stringWithFormat:template,
+        NSString *accessToken = [FBSession activeSession].accessTokenData.accessToken;
+        if (accessToken) {
+            NSMutableDictionary *mutableImageQueryParams = [imageQueryParams mutableCopy];
+            mutableImageQueryParams[@"access_token"] = accessToken;
+            imageQueryParams = [mutableImageQueryParams autorelease];
+        }
+
+        NSString *urlString = [NSString stringWithFormat:@"%@/%@/picture?%@",
                                [FBUtility buildFacebookUrlWithPre:@"https://graph."],
                                self.profileID,
-                               newImageQueryParamString];
+                               [FBUtility stringBySerializingQueryParameters:imageQueryParams]];
         NSURL *url = [NSURL URLWithString:urlString];
 
         self.connection = [[[FBURLConnection alloc] initWithURL:url
                                               completionHandler:handler]
                            autorelease];
     } else {
-        BOOL isSquare = (self.pictureCropping == FBProfilePictureCroppingSquare);
-
-        self.imageView.image = isSquare ?
-        [FBProfilePictureViewBlankProfileSquarePNG image] :
-        [FBProfilePictureViewBlankProfilePortraitPNG image];
+        self.imageView.image = [self _placeholderImage];
         [self ensureImageViewContentMode];
     }
-
-    self.previousImageQueryParamString = newImageQueryParamString;
 }
 
 - (void)ensureImageViewContentMode {

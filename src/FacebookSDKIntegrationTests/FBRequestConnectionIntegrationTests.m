@@ -124,6 +124,41 @@
     STAssertTrue([session.accessTokenData.permissionsRefreshDate timeIntervalSinceNow]> -3, @"session permission refresh date should be within a few seconds of now");
 }
 
+// a test to make sure the permissions refresh request will no-op
+// if the session had been closed.
+- (void)testPiggybackPermissionsRefreshNoopForClosedSession
+{
+    id session = [OCMockObject partialMockForObject:[self getSessionWithSharedUserWithPermissions:nil]];
+    [session setForceAccessTokenRefresh:YES];
+
+    //partial mock the session so we can easily fail if the refreshPermissions is called.
+    [[[session stub] andDo:^(NSInvocation *invocation) {
+        STFail(@"refreshPermissions: should not be called");
+    }] refreshPermissions:[OCMArg any]];
+
+    // verify session's permissions refresh date is initially in the past.
+    STAssertEquals([NSDate distantPast], [session accessTokenData].permissionsRefreshDate, @"session permission refresh date does not match");
+
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+
+    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        STAssertTrue(!error, @"got unexpected error");
+        STAssertNotNil(result, @"didn't get expected result");
+        [blocker signal];
+        // Close the session, which should result in the piggyback handlers doing nothing!
+        [session closeAndClearTokenInformation];
+    }];
+    [connection start];
+
+    [blocker wait];
+    [blocker release];
+    [connection release];
+
+    STAssertTrue([[session accessTokenData].permissionsRefreshDate timeIntervalSinceNow]> -3, @"session permission refresh date should be within a few seconds of now");
+}
+
 - (void)testCachedRequests
 {
     FBTestBlocker *blocker = [[FBTestBlocker alloc] init];

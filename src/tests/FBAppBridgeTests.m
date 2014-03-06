@@ -69,7 +69,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
 + (void)setUp {
     if (testBridgeScheme == nil) {
         // For these unit tests, the actual scheme isn't important (since we mock/expect).
-        testBridgeScheme = [FBAppBridgeScheme bridgeSchemeForFBAppForLoginParams:nil];
+        testBridgeScheme = [[FBAppBridgeScheme alloc] init];
     }
 }
 - (void)setUp {
@@ -210,6 +210,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
     FBAppCall *appCall = [self newAppCall:YES];
 
     id urlMatcher = hasQueryParams(hasEntry(@"app_id", kTestAppID));
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[_mockApplication expect] openURL:urlMatcher];
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
@@ -243,6 +244,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
                                             @"action_id", appCall.ID,
                                             nil
                                             ))));
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[_mockApplication expect] openURL:urlMatcher];
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
@@ -264,6 +266,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
     
     id urlMatcher = hasQueryParams(hasEntry(@"bridge_args",
         representsJSONDictionary(hasEntry(@"client_state", representsJSONDictionary(clientState)))));
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[_mockApplication expect] openURL:urlMatcher];
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
@@ -284,6 +287,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
                                         tokenCacheStrategy:nil] autorelease];
     
     id urlMatcher = hasQueryParams(hasEntry(@"scheme_suffix", kTestURLSchemeSuffix));
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[_mockApplication expect] openURL:urlMatcher];
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
@@ -300,6 +304,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
     FBAppCall *appCall = [self newAppCall:YES arguments:arguments];
 
     id urlMatcher = hasQueryParams(hasEntry(@"method_args", representsJSONDictionary(arguments)));
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[_mockApplication expect] openURL:urlMatcher];
 
     FBAppBridge *appBridge = [[[FBAppBridge alloc] init] autorelease];
@@ -313,6 +318,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
 
 - (void)testAppCallIsTrackedOnSuccessfulOpen {
     BOOL yes = YES;
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[[_mockApplication expect] andReturnValue:OCMOCK_VALUE(yes)] openURL:OCMOCK_ANY];
 
     FBAppCall *appCall = [self newAppCall:YES];
@@ -333,6 +339,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
 
 - (void)testAppCallIsNotTrackedOnFailedOpen {
     BOOL no = NO;
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[[_mockApplication expect] andReturnValue:OCMOCK_VALUE(no)] openURL:OCMOCK_ANY];
 
     FBAppCall *appCall = [self newAppCall:YES];
@@ -353,6 +360,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
 
 - (void)testHandlerCalledWithErrorOnFailedOpen {
     BOOL no = NO;
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[[_mockApplication expect] andReturnValue:OCMOCK_VALUE(no)] openURL:OCMOCK_ANY];
 
     FBAppCall *appCall = [self newAppCall:YES];
@@ -380,6 +388,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
 
 - (void)testPendingCallIsCanceledOnDidBecomeActive {
     BOOL yes = YES;
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[[_mockApplication expect] andReturnValue:OCMOCK_VALUE(yes)] openURL:OCMOCK_ANY];
 
     FBAppCall *appCall = [self newAppCall:YES];
@@ -596,6 +605,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
     NSDictionary *clientState = @{@"hello": @"world"};
 
     BOOL yes = YES;
+    [[_mockApplication expect] canOpenURL:[NSURL URLWithString:@"fbapi://"]];
     [[[_mockApplication expect] andReturnValue:OCMOCK_VALUE(yes)] openURL:OCMOCK_ANY];
 
     FBAppCall *appCall = [self newAppCall:YES arguments:methodArgs];

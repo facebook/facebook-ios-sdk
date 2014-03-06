@@ -88,9 +88,11 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
             if (hasParameters) {
                 [queryString appendString:@"&"];
             }
-            [queryString appendFormat:@"%@=%@",
-             key,
-             [FBUtility stringByURLEncodingString:queryParameters[key]]];
+            id value = queryParameters[key];
+            if ([value isKindOfClass:[NSString class]]) {
+                value = [FBUtility stringByURLEncodingString:value];
+            }
+            [queryString appendFormat:@"%@=%@", key, value];
             hasParameters = YES;
         }
     }

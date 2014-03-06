@@ -86,7 +86,6 @@ extern NSString *const FBAppEventsNativeLoginDialogStartTime;
 extern NSString *const FBAppEventsNativeLoginDialogEndTime;
 
 extern NSString *const FBAppEventsWebLoginE2E;
-extern NSString *const FBAppEventsWebLoginSwitchbackTime;
 
 typedef enum {
     FBAppEventsFlushReasonExplicit,

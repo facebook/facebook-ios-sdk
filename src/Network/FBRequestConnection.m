@@ -1519,28 +1519,30 @@ typedef enum FBRequestConnectionState {
                                                  HTTPMethod:nil];
     [connection addRequest:request
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             // extract what we care about
-             id token = [result objectForKey:@"access_token"];
-             id expireTime = [result objectForKey:@"expires_at"];
+             if (session.isOpen) {
+                 // extract what we care about
+                 id token = [result objectForKey:@"access_token"];
+                 id expireTime = [result objectForKey:@"expires_at"];
 
-             // if we have a token and it is not a string (?) punt
-             if (token && ![token isKindOfClass:[NSString class]]) {
-                 expireTime = nil;
-             }
-
-             // get a date if possible
-             NSDate *expirationDate = nil;
-             if (expireTime) {
-                 NSTimeInterval timeInterval = [expireTime doubleValue];
-                 if (timeInterval != 0) {
-                     expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                 // if we have a token and it is not a string (?) punt
+                 if (token && ![token isKindOfClass:[NSString class]]) {
+                     expireTime = nil;
                  }
-             }
 
-             // if we ended up with at least a date (and maybe a token) refresh the session token
-             if (expirationDate) {
-                 [session refreshAccessToken:token
-                              expirationDate:expirationDate];
+                 // get a date if possible
+                 NSDate *expirationDate = nil;
+                 if (expireTime) {
+                     NSTimeInterval timeInterval = [expireTime doubleValue];
+                     if (timeInterval != 0) {
+                         expirationDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+                     }
+                 }
+
+                 // if we ended up with at least a date (and maybe a token) refresh the session token
+                 if (expirationDate) {
+                     [session refreshAccessToken:token
+                                  expirationDate:expirationDate];
+                 }
              }
          }];
     [request release];
@@ -1552,7 +1554,7 @@ typedef enum FBRequestConnectionState {
 
     [connection addRequest:request
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             if (!error && [result isKindOfClass:[NSDictionary class] ]) {
+             if (session.isOpen && !error && [result isKindOfClass:[NSDictionary class] ]) {
                  NSArray *resultData = result[@"data"];
                  if (resultData.count > 0) {
                      NSDictionary *permissionsDictionary = resultData[0];

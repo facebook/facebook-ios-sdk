@@ -17,6 +17,7 @@
 #import "FBAppBridgeScheme.h"
 
 #import "FBAppBridge.h"
+#import "FBDialogsParams+Internal.h"
 #import "FBLogger.h"
 #import "FBLoginDialogParams.h"
 #import "FBOpenGraphActionShareDialogParams+Internal.h"
@@ -40,6 +41,7 @@ static NSString *const kFBHttpsScheme = @"https";
 static NSString *const kFBNativeLoginMinVersion = @"20131219";
 static NSString *const kFBShareDialogBetaVersion = @"20130214";
 static NSString *const kFBShareDialogProdVersion = @"20130410";
+static NSString *const kFBShareDialogPhotosProdVersion = @"20140116";
 static NSString *const kFBAppBridgeMinVersion = @"20130214";
 static NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
 /*
@@ -54,6 +56,8 @@ static NSString *const FBAppBridgeVersions[] = {
     @"20130702",
     @"20131010",
     @"20131219",
+    @"20140116",
+    @"20140214",
 };
 @implementation FBAppBridgeScheme
 
@@ -74,8 +78,9 @@ static NSString *const FBAppBridgeVersions[] = {
         return nil;
     }
 
+    NSString *minVersion = kFBShareDialogProdVersion;
     NSString *prodVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
-                                                                         minVersion:kFBShareDialogProdVersion];
+                                                                         minVersion:minVersion];
     if (!prodVersion) {
         if (![FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog]) {
             return nil;
@@ -88,6 +93,16 @@ static NSString *const FBAppBridgeVersions[] = {
     }
     return [[[FBAppBridgeScheme alloc] initWithVersion:prodVersion] autorelease];
 
+}
+
++ (FBAppBridgeScheme *)bridgeSchemeForFBAppForShareDialogPhotos
+{
+    NSString *prodVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
+                                                                         minVersion:kFBShareDialogPhotosProdVersion];
+    if (!prodVersion) {
+        return nil;
+    }
+    return [[[FBAppBridgeScheme alloc] initWithVersion:prodVersion] autorelease];
 }
 
 + (FBAppBridgeScheme *)bridgeSchemeForFBAppForOpenGraphActionShareDialogParams:(FBOpenGraphActionShareDialogParams *)params {
@@ -134,8 +149,13 @@ static NSString *const FBAppBridgeVersions[] = {
 
 - (NSURL *)urlForMethod:(NSString *)method
             queryParams:(NSDictionary *)queryParams {
+    NSString *schemeVersion = self.version;
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fbapi://"]]) {
+        schemeVersion = @"";
+    }
     return [[self class] urlForMethod:method
                           queryParams:queryParams
+                        schemeVersion:schemeVersion
                               version:self.version];
 }
 
@@ -143,11 +163,17 @@ static NSString *const FBAppBridgeVersions[] = {
 
 + (NSURL *)urlForMethod:(NSString *)method
             queryParams:(NSDictionary *)queryParams
+          schemeVersion:(NSString *)schemeVersion
                 version:(NSString *)version {
+    if (version) {
+        NSMutableDictionary *mutableQueryParams = [NSMutableDictionary dictionaryWithDictionary:queryParams];
+        mutableQueryParams[@"version"] = version;
+        queryParams = mutableQueryParams;
+    }
     NSString *queryParamsStr = (queryParams) ? [FBUtility stringBySerializingQueryParameters:queryParams] : @"";
     return [NSURL URLWithString:[NSString stringWithFormat:
                                  @"fbapi%@://dialog/%@?%@",
-                                 version,
+                                 schemeVersion,
                                  method,
                                  queryParamsStr]];
 }
@@ -161,6 +187,7 @@ static NSString *const FBAppBridgeVersions[] = {
         BOOL isMinVersion = [version isEqualToString:minVersion];
         NSURL *url = [FBAppBridgeScheme urlForMethod:method
                                          queryParams:nil
+                                       schemeVersion:version
                                              version:version];
         if (![[UIApplication sharedApplication] canOpenURL:url]) {
             version = nil;

@@ -59,7 +59,7 @@ static NSString *const FBLoginUXReturnScopesYES = @"true";
 static NSString *const FBLoginUXReturnScopes = @"return_scopes";
 static NSString *const FBLoginParamsExpiresIn = @"expires_in";
 static NSString *const FBLoginParamsPermissions = @"permissions";
-static NSString *const FBLoginParamsGrantedscopes = @"granted_scopes";
+static NSString *const FBLoginParamsGrantedScopes = @"granted_scopes";
 NSString *const FBLoginUXResponseTypeToken = @"token";
 NSString *const FBLoginUXResponseType = @"response_type";
 
@@ -1418,7 +1418,7 @@ static FBSession *g_activeSession = nil;
             // native gdp sends back granted permissions as an array already.
             grantedPermissions = parameters[FBLoginParamsPermissions];
         } else {
-            grantedPermissions = [parameters[FBLoginParamsGrantedscopes] componentsSeparatedByString:@","];
+            grantedPermissions = [parameters[FBLoginParamsGrantedScopes] componentsSeparatedByString:@","];
         }
 
         if (grantedPermissions.count == 0) {

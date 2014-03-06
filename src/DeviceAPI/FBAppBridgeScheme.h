@@ -21,6 +21,7 @@
 @class FBLoginDialogParams;
 @class FBOpenGraphActionShareDialogParams;
 @class FBShareDialogParams;
+@class FBShareDialogPhotoParams;
 
 @interface FBAppBridgeScheme : NSObject
 
@@ -28,6 +29,7 @@
 
 // Notably these can return nil if no valid scheme was found for the device (i.e,. related app is not installed).
 + (FBAppBridgeScheme *)bridgeSchemeForFBAppForShareDialogParams:(FBShareDialogParams *)params;
++ (FBAppBridgeScheme *)bridgeSchemeForFBAppForShareDialogPhotos;
 + (FBAppBridgeScheme *)bridgeSchemeForFBAppForOpenGraphActionShareDialogParams:(FBOpenGraphActionShareDialogParams *)params;
 + (FBAppBridgeScheme *)bridgeSchemeForFBAppForLoginParams:(FBLoginDialogParams *)params;
 

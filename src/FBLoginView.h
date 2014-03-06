@@ -30,6 +30,10 @@
  it will attempt to open an active session without UI if the current active session is not open.
 
  The FBLoginView instance also monitors for changes to the active session.
+
+ Please note: Since FBLoginView observes the active session, using multiple FBLoginView instances
+ in different parts of your app can result in each instance's delegates being notified of changes
+ for one event.
  */
 @interface FBLoginView : UIView
 
@@ -140,6 +144,11 @@
  @abstract
  The `FBLoginViewDelegate` protocol defines the methods used to receive event
  notifications from `FBLoginView` objects.
+
+ @discussion
+ Please note: Since FBLoginView observes the active session, using multiple FBLoginView instances
+ in different parts of your app can result in each instance's delegates being notified of changes
+ for one event.
  */
 @protocol FBLoginViewDelegate <NSObject>
 

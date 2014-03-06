@@ -338,12 +338,15 @@ UIActionSheetDelegate> {
         action.image = @[@{@"url":self.selectedPhoto, @"user_generated":@"true"}];
     }
 
-    id object = [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
-                                                        title:self.selectedMeal
-                                                        image:nil
-                                                          url:nil
-                                                  description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
-    action.meal = object;
+    id mealObject = [self mealObjectForMeal:self.selectedMeal];
+    if (!mealObject) {
+      mealObject = [FBGraphObject openGraphObjectForPostWithType:@"fb_sample_scrumps:meal"
+                                                           title:self.selectedMeal
+                                                           image:nil
+                                                             url:nil
+                                                     description:[@"Delicious " stringByAppendingString:self.selectedMeal]];
+    }
+    action.meal = mealObject;
 
     BOOL presentable = nil != [FBDialogs presentShareDialogWithOpenGraphAction:action
                                                                     actionType:@"fb_sample_scrumps:eat"

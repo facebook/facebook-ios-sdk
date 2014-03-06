@@ -20,7 +20,7 @@
 
 /*!
 
- @typedef FBAppEventsFlushBehavior enum
+ @typedef NS_ENUM (NSUInteger, FBAppEventsFlushBehavior)
 
  @abstract
  Control when <FBAppEvents> sends log events to the server
@@ -28,17 +28,17 @@
  @discussion
 
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBAppEventsFlushBehavior) {
 
     /*! Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation. */
-    FBAppEventsFlushBehaviorAuto,
+    FBAppEventsFlushBehaviorAuto = 0,
 
     /*! Only flush when the `flush` method is called. When an app is moved to background/terminated, the
      events are persisted and re-established at activation, but they will only be written with an
      explicit call to `flush`. */
     FBAppEventsFlushBehaviorExplicitOnly,
 
-} FBAppEventsFlushBehavior;
+};
 
 /*
  * Constant used by NSNotificationCenter for results of flushing AppEvents event logs

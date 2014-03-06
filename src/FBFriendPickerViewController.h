@@ -25,32 +25,32 @@
 @class FBFriendPickerCacheDescriptor;
 
 /*!
- @typedef FBFriendSortOrdering enum
+ @typedef NS_ENUM (NSUInteger, FBFriendSortOrdering)
 
  @abstract Indicates the order in which friends should be listed in the friend picker.
 
  @discussion
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBFriendSortOrdering) {
     /*! Sort friends by first, middle, last names. */
-    FBFriendSortByFirstName,
+    FBFriendSortByFirstName = 0,
     /*! Sort friends by last, first, middle names. */
     FBFriendSortByLastName
-} FBFriendSortOrdering;
+};
 
 /*!
- @typedef FBFriendDisplayOrdering enum
+ @typedef NS_ENUM (NSUInteger, FBFriendDisplayOrdering)
 
  @abstract Indicates whether friends should be displayed first-name-first or last-name-first.
 
  @discussion
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBFriendDisplayOrdering) {
     /*! Display friends as First Middle Last. */
-    FBFriendDisplayByFirstName,
+    FBFriendDisplayByFirstName = 0,
     /*! Display friends as Last First Middle. */
     FBFriendDisplayByLastName,
-} FBFriendDisplayOrdering;
+};
 
 
 /*!

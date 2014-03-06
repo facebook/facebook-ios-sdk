@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#import "FBError.h"
 
 /*!
  @class FBErrorUtility

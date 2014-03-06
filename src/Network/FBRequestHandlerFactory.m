@@ -20,6 +20,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBAccessTokenData.h"
+#import "FBAppEvents+Internal.h"
 #import "FBError.h"
 #import "FBErrorUtility+Internal.h"
 #import "FBRequest+Internal.h"
@@ -28,6 +29,19 @@
 #import "FBRequestMetadata.h"
 #import "FBSession+Internal.h"
 #import "FBSystemAccountStoreAdapter.h"
+
+static NSString *const FBAppEventNameRequestErrorBehaviorRetry = @"fb_request_errorbehavior_retry";
+static NSString *const FBAppEventNameRequestErrorBehaviorAlert = @"fb_request_errorbehavior_alert";
+static NSString *const FBAppEventNameRequestErrorBehaviorReconnect = @"fb_request_errorbehavior_reconnect";
+static NSString *const FBAppEventParameterRequestErrorBehaviorHandled = @"handled";
+static NSString *const FBAppEventParameterRequestErrorBehaviorReason = @"reason";
+static NSString *const FBAppEventParameterRequestErrorBehaviorRequestPath = @"request_path";
+static NSString *const FBAppEventValueRequestErrorBehaviorYES = @"1";
+static NSString *const FBAppEventValueRequestErrorBehaviorNO = @"0";
+static NSString *const FBAppEventValueRequestErrorBehaviorReasonCategory = @"category";
+static NSString *const FBAppEventValueRequestErrorBehaviorReasonSubcode = @"subcode";
+static NSString *const FBAppEventValueRequestErrorBehaviorReasonDifferentSession = @"different_session";
+static NSString *const FBAppEventValueRequestErrorBehaviorReasonIOSDisabled = @"ios_disabled";
 
 @implementation FBRequestHandlerFactory
 
@@ -52,10 +66,23 @@
             if (metadata.retryCount < FBREQUEST_DEFAULT_MAX_RETRY_LIMIT) {
                 metadata.retryCount++;
                 [connection.retryManager addRequestMetadata:metadata];
+
+                [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorRetry
+                                   valueToSum:nil
+                                   parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorYES,
+                                                 FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath }
+                                      session:metadata.request.session];
                 return;
             }
         }
 
+        if (error) {
+            [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorRetry
+                               valueToSum:nil
+                               parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorNO,
+                                             FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath }
+                                  session:metadata.request.session];
+        }
         // Otherwise, invoke the supplied handler
         if (handler) {
             handler(connection, result, error);
@@ -74,9 +101,22 @@
         if (connection.retryManager.state != FBRequestConnectionRetryManagerStateAbortRetries
             && message.length > 0) {
 
+            [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorAlert
+                               valueToSum:nil
+                               parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorYES,
+                                             FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath }
+                                  session:metadata.request.session];
+
             connection.retryManager.alertMessage = message;
         }
 
+        if (error) {
+            [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorAlert
+                               valueToSum:nil
+                               parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorNO,
+                                             FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath }
+                                  session:metadata.request.session];
+        }
         // In this case, always invoke the handler.
         if (handler) {
             handler(connection, result, error);
@@ -96,6 +136,8 @@
         metadata.originalResult = metadata.originalResult ?: result;
 
         FBErrorCategory errorCategory = error ? [FBErrorUtility errorCategoryForError:error] : FBErrorCategoryInvalid;
+        NSString *reason = FBAppEventValueRequestErrorBehaviorReasonCategory;
+
         if (connection.retryManager.state != FBRequestConnectionRetryManagerStateAbortRetries
             && error
             && errorCategory == FBErrorCategoryAuthenticationReopenSession) {
@@ -109,7 +151,10 @@
             BOOL canRepair = request.session.isOpen;
             switch (subcode) {
                 case FBAuthSubcodeAppNotInstalled :
-                case FBAuthSubcodeUnconfirmedUser : canRepair = NO; break;
+                case FBAuthSubcodeUnconfirmedUser :
+                    canRepair = NO;
+                    reason = FBAppEventValueRequestErrorBehaviorReasonSubcode;
+                    break;
             }
 
             if (canRepair) {
@@ -127,23 +172,37 @@
                 }
 
                 if (canRepair) {
-                    if (connection.retryManager.sessionToReconnect == nil) {
-                        connection.retryManager.sessionToReconnect = request.session;
-                    }
-
                     // Only support reconnecting one session instance for a give request connection.
                     if (connection.retryManager.sessionToReconnect == request.session) {
+
+                        [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorReconnect
+                                           valueToSum:nil
+                                           parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorYES,
+                                                         FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath }
+                                              session:metadata.request.session];
 
                         connection.retryManager.sessionToReconnect = request.session;
                         [connection.retryManager addRequestMetadata:metadata];
 
                         connection.retryManager.state = FBRequestConnectionRetryManagerStateRepairSession;
                         return;
+                    } else {
+                        reason = FBAppEventValueRequestErrorBehaviorReasonDifferentSession;
                     }
+                } else {
+                    reason = FBAppEventValueRequestErrorBehaviorReasonIOSDisabled;
                 }
             }
         }
 
+        if (error) {
+            [FBAppEvents logImplicitEvent:FBAppEventNameRequestErrorBehaviorReconnect
+                               valueToSum:nil
+                               parameters:@{ FBAppEventParameterRequestErrorBehaviorHandled : FBAppEventValueRequestErrorBehaviorNO,
+                                             FBAppEventParameterRequestErrorBehaviorRequestPath : request.graphPath,
+                                             FBAppEventParameterRequestErrorBehaviorReason : reason }
+                                  session:metadata.request.session];
+        }
         // Otherwise, invoke the supplied handler
         if (handler) {
             // Since FBRequestConnection typically closes invalid sessions before invoking the supplied handler,

@@ -240,27 +240,45 @@
 
 // Post Photo button handler
 - (IBAction)postPhotoClick:(UIButton *)sender {
-    // Just use the icon image from the application itself.  A real app would have a more
-    // useful way to get an image.
-    UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
+  // Just use the icon image from the application itself.  A real app would have a more
+  // useful way to get an image.
+  UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
 
+
+    BOOL canPresent = [FBDialogs canPresentShareDialogWithPhotos];
+    NSLog(@"canPresent: %d", canPresent);
+    
+  FBShareDialogPhotoParams *params = [[FBShareDialogPhotoParams alloc] init];
+  params.photos = @[img];
+
+  FBAppCall *appCall = [FBDialogs presentShareDialogWithPhotoParams:params
+                                                        clientState:nil
+                                                            handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                                if (error) {
+                                                                    NSLog(@"Error: %@", error.description);
+                                                                } else {
+                                                                    NSLog(@"Success!");
+                                                                }
+                                                            }];
+  if (!appCall) {
     [self performPublishAction:^{
-        FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-        connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
-        | FBRequestConnectionErrorBehaviorAlertUser
-        | FBRequestConnectionErrorBehaviorRetry;
+      FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+      connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+      | FBRequestConnectionErrorBehaviorAlertUser
+      | FBRequestConnectionErrorBehaviorRetry;
 
-        [connection addRequest:[FBRequest requestForUploadPhoto:img]
+      [connection addRequest:[FBRequest requestForUploadPhoto:img]
            completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              [self showAlert:@"Photo Post" result:result error:error];
              if (FBSession.activeSession.isOpen) {
                self.buttonPostPhoto.enabled = YES;
              }
            }];
-        [connection start];
+      [connection start];
 
-        self.buttonPostPhoto.enabled = NO;
+      self.buttonPostPhoto.enabled = NO;
     }];
+  }
 }
 
 // Pick Friends button handler

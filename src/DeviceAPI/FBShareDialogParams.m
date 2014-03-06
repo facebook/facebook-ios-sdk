@@ -18,6 +18,7 @@
 
 #import "FBAppBridge.h"
 #import "FBDialogsParams+Internal.h"
+#import "FBError.h"
 #import "FBLogger.h"
 #import "FBAppBridgeScheme.h"
 #import "FBUtility.h"
@@ -82,6 +83,23 @@
     [args setObject:[NSNumber numberWithBool:self.dataFailuresFatal] forKey:@"dataFailuresFatal"];
 
     return args;
+}
+
+- (NSError *)validate {
+    NSString *errorReason = nil;
+
+    if ((_link && ![FBAppBridgeScheme isSupportedScheme:_link.scheme]) ||
+        (_picture && ![FBAppBridgeScheme isSupportedScheme:_picture.scheme])) {
+        errorReason = FBErrorDialogInvalidShareParameters;
+    }
+
+    if (errorReason) {
+        NSDictionary *userInfo = @{ FBErrorDialogReasonKey: errorReason };
+        return [NSError errorWithDomain:FacebookSDKDomain
+                                   code:FBErrorDialog
+                               userInfo:userInfo];
+    }
+    return nil;
 }
 
 - (void)setLink:(NSURL *)link

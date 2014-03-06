@@ -308,15 +308,19 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         return YES;
     }
 
-    // If this is a web login, log the dialog load performance stats
+    // If this is a web login, Add "close" timestamp to e2eMetrics & log the dialog load performance stats
+    // ("e2e" is expected to be a NSString - json encoded dictionary, if it's not - there's no sense to log anything)
     NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
     NSString *e2eMetrics = [params objectForKey:@"e2e"];
-    if (e2eMetrics != nil)  {
+    NSMutableDictionary *e2eMetricsMutableDict = [[[FBUtility simpleJSONDecode:e2eMetrics] mutableCopy] autorelease];
+    if ([e2eMetricsMutableDict isKindOfClass:[NSDictionary class]]) {
+        e2eMetricsMutableDict[@"close"] = [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])];
+        e2eMetrics = [FBUtility simpleJSONEncode:e2eMetricsMutableDict];
+
         [FBAppEvents logImplicitEvent:FBAppEventNameFBDialogsWebLoginCompleted
                            valueToSum:nil
                            parameters:@{
                                         FBAppEventsWebLoginE2E : e2eMetrics,
-                                        FBAppEventsWebLoginSwitchbackTime : [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])],
                                         @"app_id" : [FBSettings defaultAppID]
                                         }
                               session:nil];
