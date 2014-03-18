@@ -136,6 +136,8 @@ static CGSize g_buttonSize;
     [_session release];
     [_user release];
     [_permissions release];
+    [_readPermissions release];
+    [_publishPermissions release];
 
     [super dealloc];
 }
