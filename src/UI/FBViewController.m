@@ -227,6 +227,7 @@
     // Make the canvas shorter to account for the navigationBar.
     frame = contentBounds;
     CGFloat navigationBarHeight = self.navigationBar.bounds.size.height;
+    frame.size.height += frame.origin.y; // re-add the status bar space, if we're going to be reverting that change
     frame.origin.y = navigationBarHeight;
     frame.size.height -= navigationBarHeight;
     self.canvasView.frame = frame;
