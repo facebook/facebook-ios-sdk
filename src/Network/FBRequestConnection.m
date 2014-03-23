@@ -58,9 +58,9 @@ NSString *const kBatchRestMethodBaseURL = @"method/";
 // response object property/key
 NSString *const FBNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
 
-static const int kRESTAPIAccessTokenErrorCode = 190;
+//static const int kRESTAPIAccessTokenErrorCode = 190;
 static const int kRESTAPIPermissionErrorCode = 200;
-static const int kAPISessionNoLongerActiveErrorCode = 2500;
+//static const int kAPISessionNoLongerActiveErrorCode = 2500;
 static const NSTimeInterval kDefaultTimeout = 180.0;
 static const int kMaximumBatchSize = 50;
 

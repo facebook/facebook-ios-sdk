@@ -23,7 +23,7 @@ static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
 
 static NSString *const kDataDiskCachePath = @"DataDiskCache";
-static NSString *const kCacheInfoFile = @"CacheInfo";
+//static NSString *const kCacheInfoFile = @"CacheInfo";
 static NSString *const kAccessTokenKey = @"access_token";
 
 @interface FBDataDiskCache () <FBCacheIndexFileDelegate>
