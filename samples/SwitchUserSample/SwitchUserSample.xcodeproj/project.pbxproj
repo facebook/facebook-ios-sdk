@@ -32,10 +32,6 @@
 		85C69DC11602B393008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBE1602B393008AD9A0 /* Default@2x.png */; };
 		85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */; };
 		85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8E1538BF6200D88664 /* SUUserManager.m */; };
-		8986C8051890A647004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C8011890A647004B90DD /* Application.xcconfig */; };
-		8986C8061890A647004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C8021890A647004B90DD /* Project-Debug.xcconfig */; };
-		8986C8071890A647004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C8031890A647004B90DD /* Project-Release.xcconfig */; };
-		8986C8081890A647004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C8041890A647004B90DD /* Project.xcconfig */; };
 		DD55EAA515AB9D1A000A64B8 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -209,7 +205,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SU;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = 856DB043153393C3006F6A33 /* Build configuration list for PBXProject "SwitchUserSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -236,19 +232,15 @@
 			files = (
 				856DB058153393C3006F6A33 /* InfoPlist.strings in Resources */,
 				856DB063153393C3006F6A33 /* first.png in Resources */,
-				8986C8051890A647004B90DD /* Application.xcconfig in Resources */,
 				856DB065153393C3006F6A33 /* first@2x.png in Resources */,
 				856DB06A153393C3006F6A33 /* second.png in Resources */,
 				856DB06C153393C3006F6A33 /* second@2x.png in Resources */,
-				8986C8061890A647004B90DD /* Project-Debug.xcconfig in Resources */,
 				856DB0851534B72B006F6A33 /* SUUsingViewController_iPhone.xib in Resources */,
 				856DB0871534B758006F6A33 /* SUUsingViewController_iPad.xib in Resources */,
-				8986C8071890A647004B90DD /* Project-Release.xcconfig in Resources */,
 				856DB08C1534B792006F6A33 /* SUSettingsViewController_iPhone.xib in Resources */,
 				856DB08E1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib in Resources */,
 				85AFB52F158FA20E000AF7F5 /* Icon-72.png in Resources */,
 				85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */,
-				8986C8081890A647004B90DD /* Project.xcconfig in Resources */,
 				85AFB531158FA20E000AF7F5 /* Icon.png in Resources */,
 				85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */,
 				85C69DBF1602B393008AD9A0 /* Default-568h@2x.png in Resources */,

@@ -19,10 +19,6 @@
 		85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC71602B411008AD9A0 /* Default-568h@2x.png */; };
 		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
 		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
-		8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80A1890A6BA004B90DD /* Application.xcconfig */; };
-		8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */; };
-		8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */; };
-		8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80D1890A6BA004B90DD /* Project.xcconfig */; };
 		99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */; };
 		9D084048169CE00B000FD49D /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D084047169CE00B000FD49D /* ReadMe.txt */; };
 		9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */; };
@@ -231,7 +227,7 @@
 		B9CD0A66150EA4DD00560A93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -260,7 +256,6 @@
 				B9CD0A7E150EA4DD00560A93 /* InfoPlist.strings in Resources */,
 				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
 				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
-				8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */,
 				B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */,
 				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
 				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
@@ -268,15 +263,12 @@
 				846809C1158F85A100F2DBB9 /* action-eating.png in Resources */,
 				846809C2158F85A100F2DBB9 /* action-location.png in Resources */,
 				846809C3158F85A100F2DBB9 /* action-people.png in Resources */,
-				8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */,
-				8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */,
 				8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */,
 				8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */,
 				85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */,
 				85C69DCB1602B411008AD9A0 /* Default.png in Resources */,
 				85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */,
 				9D084048169CE00B000FD49D /* ReadMe.txt in Resources */,
-				8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */,
 				9D564E06171334EA00BEEEDE /* action-photo.png in Resources */,
 				99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */,
 			);

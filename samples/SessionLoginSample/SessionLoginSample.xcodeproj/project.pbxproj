@@ -23,10 +23,6 @@
 		85C69DB41602B33C008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB11602B33C008AD9A0 /* Default-568h@2x.png */; };
 		85C69DB51602B33C008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB21602B33C008AD9A0 /* Default.png */; };
 		85C69DB61602B33C008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DB31602B33C008AD9A0 /* Default@2x.png */; };
-		8986C7FC1890A5F9004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7F81890A5F9004B90DD /* Application.xcconfig */; };
-		8986C7FD1890A5F9004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7F91890A5F9004B90DD /* Project-Debug.xcconfig */; };
-		8986C7FE1890A5F9004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7FA1890A5F9004B90DD /* Project-Release.xcconfig */; };
-		8986C7FF1890A5F9004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7FB1890A5F9004B90DD /* Project.xcconfig */; };
 		DDA290A415ABA93700F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290A315ABA93700F533F9 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -175,7 +171,7 @@
 		84C757AF152A38770070DD9C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = 84C757B2152A38770070DD9C /* Build configuration list for PBXProject "SessionLoginSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -200,13 +196,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8986C7FD1890A5F9004B90DD /* Project-Debug.xcconfig in Resources */,
 				84C757C7152A38770070DD9C /* InfoPlist.strings in Resources */,
-				8986C7FF1890A5F9004B90DD /* Project.xcconfig in Resources */,
-				8986C7FE1890A5F9004B90DD /* Project-Release.xcconfig in Resources */,
 				84C757D3152A38780070DD9C /* SLViewController_iPhone.xib in Resources */,
 				84C757D6152A38780070DD9C /* SLViewController_iPad.xib in Resources */,
-				8986C7FC1890A5F9004B90DD /* Application.xcconfig in Resources */,
 				84E7AF45158FAB2F006009C7 /* Icon-72.png in Resources */,
 				84E7AF46158FAB2F006009C7 /* Icon-72@2x.png in Resources */,
 				84E7AF47158FAB2F006009C7 /* Icon.png in Resources */,

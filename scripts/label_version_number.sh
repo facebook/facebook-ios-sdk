@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 if [ "$#" -lt 2 ]; then
     echo "Usage: $0 MAJOR MINOR [HOTFIX [BETA]]"

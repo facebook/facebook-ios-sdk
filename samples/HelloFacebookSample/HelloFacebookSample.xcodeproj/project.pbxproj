@@ -24,10 +24,6 @@
 		85C69D8F1602B0D3008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8C1602B0D3008AD9A0 /* Default-568h@2x.png */; };
 		85C69D901602B0D3008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8D1602B0D3008AD9A0 /* Default.png */; };
 		85C69D911602B0D3008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8E1602B0D3008AD9A0 /* Default@2x.png */; };
-		8986C7D81890A2F3004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D41890A2F3004B90DD /* Application.xcconfig */; };
-		8986C7D91890A2F3004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */; };
-		8986C7DA1890A2F3004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */; };
-		8986C7DB1890A2F3004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7D71890A2F3004B90DD /* Project.xcconfig */; };
 		DD37EAC015ABA8FA0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -179,7 +175,7 @@
 		5F6AF1801532A37B00DDBD75 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = 5F6AF1831532A37B00DDBD75 /* Build configuration list for PBXProject "HelloFacebookSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -204,13 +200,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8986C7D91890A2F3004B90DD /* Project-Debug.xcconfig in Resources */,
 				5F6AF1981532A37B00DDBD75 /* InfoPlist.strings in Resources */,
-				8986C7DB1890A2F3004B90DD /* Project.xcconfig in Resources */,
-				8986C7DA1890A2F3004B90DD /* Project-Release.xcconfig in Resources */,
 				5F6AF1A41532A37B00DDBD75 /* HFViewController_iPhone.xib in Resources */,
 				5F6AF1A71532A37B00DDBD75 /* HFViewController_iPad.xib in Resources */,
-				8986C7D81890A2F3004B90DD /* Application.xcconfig in Resources */,
 				85AFB50C158F9D78000AF7F5 /* Icon-72.png in Resources */,
 				85AFB50D158F9D78000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB50E158F9D78000AF7F5 /* Icon.png in Resources */,

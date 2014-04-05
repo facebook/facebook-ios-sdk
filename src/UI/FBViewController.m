@@ -122,13 +122,6 @@
     [self updateBar];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    // If the view goes away for any reason, nil out the handler to avoid a retain cycle.
-    self.handler = nil;
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
@@ -162,7 +155,8 @@
         if (!application.statusBarHidden) {
             if ([self respondsToSelector:@selector(edgesForExtendedLayout)]) {
                 if ((self.edgesForExtendedLayout & UIRectEdgeTop) == 0) {
-                    CGFloat offset = CGRectGetMaxY(application.statusBarFrame);
+                    BOOL landscape = UIInterfaceOrientationIsLandscape(application.statusBarOrientation);
+                    CGFloat offset = landscape ? application.statusBarFrame.size.width : application.statusBarFrame.size.height;
                     bounds.origin.y += offset;
                     bounds.size.height -= offset;
                 }
@@ -273,6 +267,7 @@
         [self logAppEvents:YES];
         if (self.handler) {
             self.handler(self, NO);
+            self.handler = nil;
         }
     }
 }
@@ -289,6 +284,7 @@
         [self logAppEvents:NO];
         if (self.handler) {
             self.handler(self, YES);
+            self.handler = nil;
         }
     }
 }

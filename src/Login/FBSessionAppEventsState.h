@@ -26,7 +26,7 @@ extern NSString *const kFBAppEventIsImplicit;
 
 @property (readonly, retain) NSMutableArray *accumulatedEvents;
 @property (readonly, retain) NSMutableArray *inFlightEvents;
-@property (readwrite) int numSkippedEventsDueToFullBuffer;
+@property (readwrite) NSUInteger numSkippedEventsDueToFullBuffer;
 @property (readwrite) BOOL requestInFlight;
 
 - (void)addEvent:(NSDictionary *)eventDictionary

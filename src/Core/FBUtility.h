@@ -18,6 +18,7 @@
 #import <UIKit/UIKit.h>
 
 #import "FBFetchedAppSettings.h"
+#import "FBLogger.h"
 
 @class FBRequest;
 @class FBSession;
@@ -90,11 +91,11 @@ typedef enum FBAdvertisingTrackingStatus {
 
 @end
 
-#define FBConditionalLog(condition, desc, ...) \
+#define FBConditionalLog(condition, loggingBehavior, desc, ...) \
 do { \
     if (!(condition)) { \
         NSString *msg = [NSString stringWithFormat:(desc), ##__VA_ARGS__]; \
-        NSLog(@"FBConditionalLog: %@", msg); \
+        [FBLogger singleShotLogEntry:loggingBehavior logEntry:msg]; \
     } \
 } while(NO)
 

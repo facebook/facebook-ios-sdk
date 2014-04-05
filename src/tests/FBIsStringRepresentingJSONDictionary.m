@@ -23,7 +23,7 @@
 
 + (instancetype)isStringRepresentingJSONDictionary:(id<HCMatcher>)aValueMatcher
 {
-    return [[self alloc] initWithValue:aValueMatcher];
+    return [[FBIsStringRepresentingJSONDictionary alloc] initWithValue:aValueMatcher];
 }
 
 - (instancetype)initWithValue:(id<HCMatcher>)aValueMatcher

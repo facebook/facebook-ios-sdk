@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 # process options, valid arguments -c [Debug|Release] -n 
 BUILDCONFIGURATION=Debug
@@ -58,7 +58,7 @@ fi
 
 test -x "$XCODEBUILD" || die 'Could not find xcodebuild in $PATH'
 
-cd $FB_SDK_SRC
+cd "$FB_SDK_SRC"
 
 for SCHEME in $SCHEMES; do
     $XCODEBUILD \

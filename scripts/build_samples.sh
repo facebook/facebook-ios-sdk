@@ -17,7 +17,7 @@
 
 # This script builds all of the samples in the samples subdirectory.
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 # valid arguments are: no-value, "Debug" and "Release" (default)
 BUILDCONFIGURATION=${1:-Release}
@@ -31,7 +31,7 @@ progress_message Building samples.
 # Call out to build .framework
 #
 if is_outermost_build; then
-  . $FB_SDK_SCRIPT/build_framework.sh -n -c Release
+  . "$FB_SDK_SCRIPT/build_framework.sh" -n -c Release
 fi
 
 # -----------------------------------------------------------------------------
@@ -41,32 +41,27 @@ fi
 # Certain subdirs of samples are not samples to be built, exclude them from the find query
 FB_SAMPLES_EXCLUDED=(FBConnect.bundle Configurations)
 for excluded in "${FB_SAMPLES_EXCLUDED[@]}"; do
-  if [ -n "$FB_FIND_ARGS" ]; then
-    FB_FIND_ARGS="$FB_FIND_ARGS -o"
-  fi
-  FB_FIND_ARGS="$FB_FIND_ARGS -name $excluded"
+  FB_FIND_ARGS="$FB_FIND_ARGS -not -name $excluded"
 done
-
-FB_FIND_SAMPLES_CMD="find $FB_SDK_SAMPLES -type d -depth 1 ! ( $FB_FIND_ARGS )"
 
 # -----------------------------------------------------------------------------
 # Build each sample
 #
 function xcode_build_sample() {
-  cd $FB_SDK_SAMPLES/$1
+  cd "$FB_SDK_SAMPLES/$1"
   progress_message "Compiling '${1}' for platform '${2}(${3})' using configuration '${4}'."
-  $XCODEBUILD \
+  "$XCODEBUILD" \
     -alltargets \
     -configuration "${4}" \
     -sdk $2 \
     ARCHS=$3 \
-    SYMROOT=$FB_SDK_BUILD \
+    SYMROOT="$FB_SDK_BUILD" \
     clean build \
     || die "XCode build failed for sample '${1}' for platform '${2}(${3})' using configuration '${4}'."
 }
 
-for sampledir in `$FB_FIND_SAMPLES_CMD`; do
-  xcode_build_sample `basename $sampledir` "iphonesimulator" "i386" "$BUILDCONFIGURATION"
+for sampledir in `find "$FB_SDK_SAMPLES" -type d -depth 1 $FB_FIND_ARGS -exec basename \{\} \;`; do
+  xcode_build_sample "$sampledir" "iphonesimulator" "i386" "$BUILDCONFIGURATION"
 done
 
 # -----------------------------------------------------------------------------

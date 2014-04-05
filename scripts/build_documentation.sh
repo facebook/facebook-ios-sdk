@@ -18,13 +18,13 @@
 # This script builds the API documentation from source-level comments.
 # This script requires appledoc be installed: https://github.com/tomaz/appledoc
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 # -----------------------------------------------------------------------------
 # Build pre-requisites
 #
 if is_outermost_build; then
-    . $FB_SDK_SCRIPT/build_framework.sh -n
+    . "$FB_SDK_SCRIPT/build_framework.sh" -n
 fi
 
 APPLEDOC_PATH="$FB_SDK_BUILD"/appledoc
@@ -40,18 +40,18 @@ fi
 # Build docs
 #
 progress_message Building Documentation.
-test -d $FB_SDK_BUILD \
-  || mkdir -p $FB_SDK_BUILD \
+test -d "$FB_SDK_BUILD" \
+  || mkdir -p "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
-cd $FB_SDK_SRC
+cd "$FB_SDK_SRC"
 
-rm -rf $FB_SDK_FRAMEWORK_DOCS
+rm -rf "$FB_SDK_FRAMEWORK_DOCS"
 
 hash "$APPLEDOC_PATH" &>/dev/null
 if [ "$?" -eq "0" ]; then
     APPLEDOC_DOCSET_NAME="Facebook SDK $FB_SDK_VERSION_SHORT for iOS"
-    $APPLEDOC_PATH --project-name "$APPLEDOC_DOCSET_NAME" \
+    "$APPLEDOC_PATH" --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
 	--preprocess-headerdoc \
@@ -64,7 +64,7 @@ if [ "$?" -eq "0" ]; then
 	--keep-undocumented-members \
 	--keep-undocumented-objects \
 	--explicit-crossref \
-	$FB_SDK_FRAMEWORK/Headers \
+	"$FB_SDK_FRAMEWORK/Headers" \
     || die 'appledoc execution failed'
 else
     die "appledoc not installed, unable to build documentation"

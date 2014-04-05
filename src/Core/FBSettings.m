@@ -27,10 +27,14 @@
 #import "FacebookSDK.h"
 
 // Keys to get App-specific info from mainBundle
-static NSString *const FBPLISTDisplayNameKey = @"FacebookDisplayName";
 static NSString *const FBPLISTAppIDKey = @"FacebookAppID";
+static NSString *const FBPLISTAppVersionKey = @"FacebookAppVersion";
+static NSString *const FBPLISTClientTokenKey = @"FacebookClientToken";
+static NSString *const FBPLISTDisplayNameKey = @"FacebookDisplayName";
+static NSString *const FBPLISTDomainPartKey = @"FacebookDomainPart";
+static NSString *const FBPLISTLoggingBehaviorKey = @"FacebookLoggingBehavior";
+static NSString *const FBPLISTResourceBundleNameKey = @"FacebookBundleName";
 NSString *const FBPLISTUrlSchemeSuffixKey = @"FacebookUrlSchemeSuffix";
-static NSString *const FBPLISTBundleNameKey = @"FacebookBundleName";
 
 // const strings
 NSString *const FBLoggingBehaviorFBRequests = @"fb_requests";
@@ -40,6 +44,7 @@ NSString *const FBLoggingBehaviorSessionStateTransitions = @"state_transitions";
 NSString *const FBLoggingBehaviorPerformanceCharacteristics = @"perf_characteristics";
 NSString *const FBLoggingBehaviorAppEvents = @"app_events";
 NSString *const FBLoggingBehaviorInformational = @"informational";
+NSString *const FBLoggingBehaviorCacheErrors = @"cache_errors";
 NSString *const FBLoggingBehaviorDeveloperErrors = @"developer_errors";
 
 NSString *const FBLastAttributionPing = @"com.facebook.sdk:lastAttributionPing%@";
@@ -57,109 +62,142 @@ static NSSet *g_loggingBehavior;
 static BOOL g_autoPublishInstall = YES;
 static dispatch_once_t g_publishInstallOnceToken;
 static NSString *g_appVersion;
+static NSUInteger g_betaFeatures = 0;
 static NSString *g_clientToken;
 static NSString *g_defaultDisplayName = nil;
 static NSString *g_defaultAppID = nil;
-static NSString *g_defaultUrlSchemeSuffix = nil;
-static NSString *g_defaultBundleName = nil;
-static NSString *g_defaultFacebookDomainPart = nil;
 static CGFloat g_defaultJPEGCompressionQuality = 0.9;
-static NSUInteger g_betaFeatures = 0;
+static NSString *g_defaultUrlSchemeSuffix = nil;
+static NSString *g_facebookDomainPart = nil;
+static NSString *g_resourceBundleName = nil;
 static FBRestrictedTreatment g_restrictedTreatment;
 
 + (NSString *)sdkVersion {
     return FB_IOS_SDK_VERSION_STRING;
 }
 
-+ (NSSet *)loggingBehavior {
-    if (!g_loggingBehavior) {
-
-        // Establish set of default enabled logging behaviors.  Can completely disable logging by
-        // calling setLoggingBehavior with an empty set.
-        g_loggingBehavior = [[NSSet setWithObject:FBLoggingBehaviorDeveloperErrors] retain];
-    }
-    return g_loggingBehavior;
-}
-
-+ (void)setLoggingBehavior:(NSSet *)newValue {
-    [newValue retain];
-    [g_loggingBehavior release];
-    g_loggingBehavior = newValue;
-}
-
 + (NSString *)appVersion {
+    if (!g_appVersion) {
+        g_appVersion = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTAppVersionKey] copy];
+    }
     return g_appVersion;
 }
 
 + (void)setAppVersion:(NSString *)appVersion {
-    [appVersion retain];
-    [g_appVersion release];
-    g_appVersion = appVersion;
+    if (![g_appVersion isEqualToString:appVersion]) {
+        [g_appVersion release];
+        g_appVersion = [appVersion copy];
+    }
 }
 
 + (NSString *)clientToken {
+    if (!g_clientToken) {
+        g_clientToken = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTClientTokenKey] copy];
+    }
     return g_clientToken;
 }
 
 + (void)setClientToken:(NSString *)clientToken {
-    [clientToken retain];
-    [g_clientToken release];
-    g_clientToken = clientToken;
-}
-
-+ (void)setDefaultDisplayName:(NSString *)displayName {
-    NSString *oldValue = g_defaultDisplayName;
-    g_defaultDisplayName = [displayName copy];
-    [oldValue release];
-}
-
-+ (NSString *)defaultDisplayName {
-    if (!g_defaultDisplayName) {
-        NSBundle *bundle = [NSBundle mainBundle];
-        g_defaultDisplayName = [bundle objectForInfoDictionaryKey:FBPLISTDisplayNameKey];
+    if (![g_clientToken isEqualToString:clientToken]) {
+        [g_clientToken release];
+        g_clientToken = [clientToken copy];
     }
-    return g_defaultDisplayName;
-}
-
-+ (void)setrestrictedTreatment:(FBRestrictedTreatment)treatment {
-    g_restrictedTreatment = treatment;
-    if (treatment == FBRestrictedTreatmentYES && [FBSession activeSessionIfOpen]) {
-        [FBSession.activeSession close];
-    }
-}
-
-+ (FBRestrictedTreatment)restrictedTreatment {
-    return g_restrictedTreatment;
-}
-
-+ (void)setDefaultAppID:(NSString *)appID {
-    NSString *oldValue = g_defaultAppID;
-    g_defaultAppID = [appID copy];
-    [oldValue release];
 }
 
 + (NSString *)defaultAppID {
     if (!g_defaultAppID) {
-        NSBundle *bundle = [NSBundle mainBundle];
-        g_defaultAppID = [bundle objectForInfoDictionaryKey:FBPLISTAppIDKey];
+        g_defaultAppID = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTAppIDKey] copy];
     }
     return g_defaultAppID;
 }
 
-+ (void)setResourceBundleName:(NSString *)bundleName {
-    NSString *oldValue = g_defaultBundleName;
-    g_defaultBundleName = [bundleName copy];
-    [oldValue release];
++ (void)setDefaultAppID:(NSString *)appID {
+    if (![g_defaultAppID isEqualToString:appID]) {
+        [g_defaultAppID release];
+        g_defaultAppID = [appID copy];
+    }
+}
+
++ (NSString *)defaultDisplayName {
+    if (!g_defaultDisplayName) {
+        g_defaultDisplayName = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTDisplayNameKey] copy];
+    }
+    return g_defaultDisplayName;
+}
+
++ (void)setDefaultDisplayName:(NSString *)displayName {
+    if (![g_defaultDisplayName isEqualToString:displayName]) {
+        [g_defaultDisplayName release];
+        g_defaultDisplayName = [displayName copy];
+    }
+}
+
++ (CGFloat)defaultJPEGCompressionQuality {
+    return g_defaultJPEGCompressionQuality;
+}
+
++ (void)setdefaultJPEGCompressionQuality:(CGFloat)compressionQuality {
+    g_defaultJPEGCompressionQuality = compressionQuality;
+}
+
++ (NSString *)defaultUrlSchemeSuffix {
+    if (!g_defaultUrlSchemeSuffix) {
+        g_defaultUrlSchemeSuffix = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTUrlSchemeSuffixKey] copy];
+    }
+    return g_defaultUrlSchemeSuffix;
+}
+
++ (void)setDefaultUrlSchemeSuffix:(NSString *)urlSchemeSuffix {
+    if (![g_defaultUrlSchemeSuffix isEqualToString:urlSchemeSuffix]) {
+        [g_defaultUrlSchemeSuffix release];
+        g_defaultUrlSchemeSuffix = [urlSchemeSuffix copy];
+    }
+}
+
++ (NSString *)facebookDomainPart {
+    if (!g_facebookDomainPart) {
+        g_facebookDomainPart = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTDomainPartKey] copy];
+    }
+    return g_facebookDomainPart;
+}
+
++ (void)setFacebookDomainPart:(NSString *)facebookDomainPart
+{
+    if (![g_facebookDomainPart isEqualToString:facebookDomainPart]) {
+        [g_facebookDomainPart release];
+        g_facebookDomainPart = [facebookDomainPart copy];
+    }
+}
+
++ (NSSet *)loggingBehavior {
+    if (!g_loggingBehavior) {
+        NSArray *bundleLoggingBehaviors = [[NSBundle mainBundle] objectForInfoDictionaryKey:FBPLISTLoggingBehaviorKey];
+        if (bundleLoggingBehaviors) {
+            g_loggingBehavior = [[NSSet alloc] initWithArray:bundleLoggingBehaviors];
+        } else {
+            // Establish set of default enabled logging behaviors.  You can completely disable logging by
+            // specifying an empty array for FacebookLoggingBehavior in your Info.plist.
+            g_loggingBehavior = [[NSSet alloc] initWithObjects:FBLoggingBehaviorDeveloperErrors, nil];
+        }
+    }
+    return g_loggingBehavior;
+}
+
++ (void)setLoggingBehavior:(NSSet *)loggingBehavior {
+    if (![g_loggingBehavior isEqualToSet:loggingBehavior]) {
+        [g_loggingBehavior release];
+        g_loggingBehavior = [loggingBehavior copy];
+    }
 }
 
 + (NSString *)resourceBundleName {
-    if (!g_defaultBundleName) {
+    if (!g_resourceBundleName) {
         NSBundle *bundle = [NSBundle mainBundle];
-        g_defaultBundleName = [bundle objectForInfoDictionaryKey:FBPLISTBundleNameKey];
+        g_resourceBundleName = [[bundle objectForInfoDictionaryKey:FBPLISTResourceBundleNameKey] copy];
 #if TARGET_IPHONE_SIMULATOR
         // The FacebookSDKResources.bundle is no longer used.
         // Warn the developer if they are including it by default
-        if (![g_defaultBundleName isEqualToString:@"FacebookSDKResources"]) {
+        if (![g_resourceBundleName isEqualToString:@"FacebookSDKResources"]) {
             NSString *facebookSDKBundlePath = [bundle pathForResource:@"FacebookSDKResources" ofType:@"bundle"];
             if (facebookSDKBundlePath) {
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"The FacebookSDKResources.bundle is no longer required for your application.  It can be removed.  After fixing this, you will need to Clean the project and then reset your simulator."];
@@ -167,44 +205,25 @@ static FBRestrictedTreatment g_restrictedTreatment;
         }
 #endif
     }
-    return g_defaultBundleName;
+    return g_resourceBundleName;
 }
 
-+ (void)setFacebookDomainPart:(NSString *)facebookDomainPart
-{
-    NSString *oldValue = g_defaultFacebookDomainPart;
-    g_defaultFacebookDomainPart = [facebookDomainPart copy];
-    [oldValue release];
-}
-
-+ (NSString *)facebookDomainPart {
-    return g_defaultFacebookDomainPart;
-}
-
-+ (void)setDefaultUrlSchemeSuffix:(NSString *)urlSchemeSuffix {
-    NSString *oldValue = g_defaultUrlSchemeSuffix;
-    g_defaultUrlSchemeSuffix = [urlSchemeSuffix copy];
-    [oldValue release];
-}
-
-+ (NSString *)defaultUrlSchemeSuffix {
-    if (!g_defaultUrlSchemeSuffix) {
-        NSBundle *bundle = [NSBundle mainBundle];
-        g_defaultUrlSchemeSuffix = [bundle objectForInfoDictionaryKey:FBPLISTUrlSchemeSuffixKey];
++ (void)setResourceBundleName:(NSString *)bundleName {
+    if (![g_resourceBundleName isEqualToString:bundleName]) {
+        [g_resourceBundleName release];
+        g_resourceBundleName = [bundleName copy];
     }
-    return g_defaultUrlSchemeSuffix;
 }
 
-+ (NSString *)defaultURLSchemeWithAppID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix {
-    return [NSString stringWithFormat:@"fb%@%@", appID ?: [self defaultAppID], urlSchemeSuffix ?: [self defaultUrlSchemeSuffix] ?: @""];
++ (FBRestrictedTreatment)restrictedTreatment {
+    return g_restrictedTreatment;
 }
 
-+ (void)setdefaultJPEGCompressionQuality:(CGFloat)compressionQuality {
-    g_defaultJPEGCompressionQuality = compressionQuality;
-}
-
-+ (CGFloat)defaultJPEGCompressionQuality {
-    return g_defaultJPEGCompressionQuality;
++ (void)setRestrictedTreatment:(FBRestrictedTreatment)treatment {
+    g_restrictedTreatment = treatment;
+    if (treatment == FBRestrictedTreatmentYES && [FBSession activeSessionIfOpen]) {
+        [FBSession.activeSession close];
+    }
 }
 
 + (BOOL)shouldAutoPublishInstall {
@@ -213,6 +232,10 @@ static FBRestrictedTreatment g_restrictedTreatment;
 
 + (void)setShouldAutoPublishInstall:(BOOL)newValue {
     g_autoPublishInstall = newValue;
+}
+
++ (NSString *)defaultURLSchemeWithAppID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix {
+    return [NSString stringWithFormat:@"fb%@%@", appID ?: [self defaultAppID], urlSchemeSuffix ?: [self defaultUrlSchemeSuffix] ?: @""];
 }
 
 #pragma GCC diagnostic push
@@ -354,7 +377,8 @@ static FBRestrictedTreatment g_restrictedTreatment;
                     g_publishInstallOnceToken = 0;
                 }
             } @catch (NSException *ex1) {
-                NSLog(@"Failure after install publish: %@", ex1.reason);
+                [FBLogger singleShotLogEntry:FBLoggingBehaviorInformational
+                                formatString:@"Failure after install publish: %@", ex1.reason];
             }
 
             // Callback regardless of exception
@@ -402,7 +426,7 @@ static FBRestrictedTreatment g_restrictedTreatment;
                                        }
                                    } @catch (NSException *ex2) {
                                        NSString *errorMessage = [NSString stringWithFormat:@"Failure during install publish: %@", ex2.reason];
-                                       NSLog(@"%@", errorMessage);
+                                       [FBLogger singleShotLogEntry:FBLoggingBehaviorInformational logEntry:errorMessage];
                                        if (handler) {
                                            handler(
                                                    nil,

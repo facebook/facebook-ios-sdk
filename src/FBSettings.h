@@ -42,6 +42,9 @@ extern NSString *const FBLoggingBehaviorAppEvents;
 /*! Log Informational occurrences */
 extern NSString *const FBLoggingBehaviorInformational;
 
+/*! Log cache errors. */
+extern NSString *const FBLoggingBehaviorCacheErrors;
+
 /*! Log errors likely to be preventable by the developer. This is in the default set of enabled logging behaviors. */
 extern NSString *const FBLoggingBehaviorDeveloperErrors;
 

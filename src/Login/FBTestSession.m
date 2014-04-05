@@ -42,12 +42,7 @@ typedef enum {
 static NSString *const FBPLISTTestAppIDKey = @"IOS_SDK_TEST_APP_ID";
 static NSString *const FBPLISTTestAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";
 static NSString *const FBPLISTUniqueUserTagKey = @"IOS_SDK_MACHINE_UNIQUE_USER_KEY";
-static NSString *const FBLoginAuthTestUserURLPath = @"oauth/access_token";
 static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
-static NSString *const FBLoginTestUserClientID = @"client_id";
-static NSString *const FBLoginTestUserClientSecret = @"client_secret";
-static NSString *const FBLoginTestUserGrantType = @"grant_type";
-static NSString *const FBLoginTestUserGrantTypeClientCredentials = @"client_credentials";
 static NSString *const FBLoginTestUserAccessToken = @"access_token";
 static NSString *const FBLoginTestUserID = @"id";
 static NSString *const FBLoginTestUserName = @"name";

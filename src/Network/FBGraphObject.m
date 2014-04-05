@@ -45,8 +45,6 @@
 // implementations for common methods such as respondsToSelector and conformsToProtocol, as
 // suggested in the previously referenced documentation
 
-static NSString *const FBIsGraphObjectKey = @"com.facebook.FBIsGraphObjectKey";
-
 // used internally by the category impl
 typedef enum _SelectorInferredImplType {
     SelectorInferredImplTypeNone  = 0,
