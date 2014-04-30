@@ -36,7 +36,7 @@
  @property
  @abstract Typed access to the object's id
  */
-@property (retain, nonatomic) NSString              *id;
+@property (retain, nonatomic) NSString              *ID;
 
 /*!
  @property

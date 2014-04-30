@@ -65,7 +65,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                  @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
 
     id<FBGraphUser> me = [results objectAtIndex:0];
-    STAssertNotNil(me.id, @"me.id");
+    STAssertNotNil(me.ID, @"me.id");
     STAssertNotNil(me.name, @"me.name");
 }
 
