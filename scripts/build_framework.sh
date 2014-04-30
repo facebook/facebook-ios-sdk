@@ -18,7 +18,7 @@
 # This script builds the FacebookSDK.framework that is distributed at
 # https://github.com/facebook/facebook-ios-sdk/downloads/FacebookSDK.framework.tgz
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 # process options, valid arguments -c [Debug|Release] -n 
 BUILDCONFIGURATION=Debug
@@ -66,21 +66,21 @@ progress_message Building Framework.
 # -----------------------------------------------------------------------------
 # Compile binaries 
 #
-test -d $FB_SDK_BUILD \
-  || mkdir -p $FB_SDK_BUILD \
+test -d "$FB_SDK_BUILD" \
+  || mkdir -p "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
-cd $FB_SDK_SRC
+cd "$FB_SDK_SRC"
 function xcode_build_target() {
   echo "Compiling for platform: ${1}."
-  $XCODEBUILD \
+  "$XCODEBUILD" \
     RUN_CLANG_STATIC_ANALYZER=NO \
     -target "facebook-ios-sdk" \
     -sdk $1 \
     -configuration "${2}" \
-    SYMROOT=$FB_SDK_BUILD \
+    SYMROOT="$FB_SDK_BUILD" \
     clean build \
-    || die "XCode build failed for platform: ${1}."
+    || die "XCode build failed for platform: ${1} (${2})."
 }
 
 xcode_build_target "iphonesimulator" "${BUILDCONFIGURATION}"
@@ -93,15 +93,15 @@ xcode_build_target "iphoneos" "${BUILDCONFIGURATION}64"
 #
 progress_message "Building $FB_SDK_BINARY_NAME library using lipo."
 
-mkdir -p $(dirname $FB_SDK_UNIVERSAL_BINARY)
+mkdir -p "$(dirname "$FB_SDK_UNIVERSAL_BINARY")"
 
 $LIPO \
   -create \
-    $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a \
-    $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a \
-    $FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphonesimulator/libfacebook_ios_sdk.a \
-    $FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphoneos/libfacebook_ios_sdk.a \
-  -output $FB_SDK_UNIVERSAL_BINARY \
+    "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a" \
+    "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a" \
+    "$FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphonesimulator/libfacebook_ios_sdk.a" \
+    "$FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphoneos/libfacebook_ios_sdk.a" \
+  -output "$FB_SDK_UNIVERSAL_BINARY" \
   || die "lipo failed - could not create universal static library"
 
 # -----------------------------------------------------------------------------
@@ -109,22 +109,22 @@ $LIPO \
 #
 progress_message "Building $FB_SDK_FRAMEWORK_NAME."
 
-\rm -rf $FB_SDK_FRAMEWORK
-mkdir $FB_SDK_FRAMEWORK \
+\rm -rf "$FB_SDK_FRAMEWORK"
+mkdir "$FB_SDK_FRAMEWORK" \
   || die "Could not create directory $FB_SDK_FRAMEWORK"
-mkdir $FB_SDK_FRAMEWORK/Versions
-mkdir $FB_SDK_FRAMEWORK/Versions/A
-mkdir $FB_SDK_FRAMEWORK/Versions/A/Headers
-mkdir $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders
-mkdir $FB_SDK_FRAMEWORK/Versions/A/Resources
+mkdir "$FB_SDK_FRAMEWORK/Versions"
+mkdir "$FB_SDK_FRAMEWORK/Versions/A"
+mkdir "$FB_SDK_FRAMEWORK/Versions/A/Headers"
+mkdir "$FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders"
+mkdir "$FB_SDK_FRAMEWORK/Versions/A/Resources"
 
 \cp \
-  $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk/*.h \
-  $FB_SDK_FRAMEWORK/Versions/A/Headers \
+  "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk"/*.h \
+  "$FB_SDK_FRAMEWORK/Versions/A/Headers" \
   || die "Error building framework while copying SDK headers"
 \cp \
-  $FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk/*.h \
-  $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders \
+  "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/facebook-ios-sdk"/*.h \
+  "$FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders" \
   || die "Error building framework while copying SDK headers to deprecated folder"
 for HEADER in Legacy/FBConnect.h \
               Legacy/FBDialog.h \
@@ -135,33 +135,33 @@ for HEADER in Legacy/FBConnect.h \
               Legacy/FBSessionManualTokenCachingStrategy.h
 do 
   \cp \
-    $FB_SDK_SRC/$HEADER \
-    $FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders \
+    "$FB_SDK_SRC/$HEADER" \
+    "$FB_SDK_FRAMEWORK/Versions/A/DeprecatedHeaders" \
     || die "Error building framework while copying deprecated SDK headers"
 done
 \cp \
-  $FB_SDK_SRC/Framework/Resources/* \
-  $FB_SDK_FRAMEWORK/Versions/A/Resources \
+  "$FB_SDK_SRC/Framework/Resources"/* \
+  "$FB_SDK_FRAMEWORK/Versions/A/Resources" \
   || die "Error building framework while copying Resources"
 \cp -r \
-  $FB_SDK_SRC/*.bundle \
-  $FB_SDK_FRAMEWORK/Versions/A/Resources \
+  "$FB_SDK_SRC"/*.bundle \
+  "$FB_SDK_FRAMEWORK/Versions/A/Resources" \
   || die "Error building framework while copying bundle to Resources"
 \cp -r \
-  $FB_SDK_SRC/*.bundle.README \
-  $FB_SDK_FRAMEWORK/Versions/A/Resources \
+  "$FB_SDK_SRC"/*.bundle.README \
+  "$FB_SDK_FRAMEWORK/Versions/A/Resources" \
   || die "Error building framework while copying README to Resources"
 \cp \
-  $FB_SDK_UNIVERSAL_BINARY \
-  $FB_SDK_FRAMEWORK/Versions/A/FacebookSDK \
+  "$FB_SDK_UNIVERSAL_BINARY" \
+  "$FB_SDK_FRAMEWORK/Versions/A/FacebookSDK" \
   || die "Error building framework while copying FacebookSDK"
 
 # Current directory matters to ln.
-cd $FB_SDK_FRAMEWORK
+cd "$FB_SDK_FRAMEWORK"
 ln -s ./Versions/A/Headers ./Headers
 ln -s ./Versions/A/Resources ./Resources
 ln -s ./Versions/A/FacebookSDK ./FacebookSDK
-cd $FB_SDK_FRAMEWORK/Versions
+cd "$FB_SDK_FRAMEWORK/Versions"
 ln -s ./A ./Current
 
 # -----------------------------------------------------------------------------
@@ -172,13 +172,13 @@ if [ ${NOEXTRAS:-0} -eq  1 ];then
   progress_message "Skipping unit tests."
 else
   progress_message "Running unit tests."
-  cd $FB_SDK_SRC
-  $FB_SDK_SCRIPT/run_tests.sh -c $BUILDCONFIGURATION facebook-ios-sdk-tests
+  cd "$FB_SDK_SRC"
+  "$FB_SDK_SCRIPT/run_tests.sh" -c $BUILDCONFIGURATION facebook-ios-sdk-tests
 fi
 
 # -----------------------------------------------------------------------------
 # Done
 #
 
-progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' $FB_SDK_SRC/Core/FBSDKVersion.h $FB_SDK_SRC/FacebookSDK.h` 
+progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' "$FB_SDK_SRC/Core/FBSDKVersion.h" "$FB_SDK_SRC/FacebookSDK.h"` 
 common_success

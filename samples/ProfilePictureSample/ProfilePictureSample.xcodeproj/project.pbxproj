@@ -14,10 +14,6 @@
 		85C69DA91602B143008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA61602B143008AD9A0 /* Default-568h@2x.png */; };
 		85C69DAA1602B143008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA71602B143008AD9A0 /* Default.png */; };
 		85C69DAB1602B143008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DA81602B143008AD9A0 /* Default@2x.png */; };
-		8986C7EA1890A519004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7E61890A519004B90DD /* Application.xcconfig */; };
-		8986C7EB1890A519004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7E71890A519004B90DD /* Project-Debug.xcconfig */; };
-		8986C7EC1890A519004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7E81890A519004B90DD /* Project-Release.xcconfig */; };
-		8986C7ED1890A519004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7E91890A519004B90DD /* Project.xcconfig */; };
 		B98686BD151D0B3700616412 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686BC151D0B3700616412 /* UIKit.framework */; };
 		B98686BF151D0B3700616412 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686BE151D0B3700616412 /* Foundation.framework */; };
 		B98686C1151D0B3700616412 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B98686C0151D0B3700616412 /* CoreGraphics.framework */; };
@@ -175,7 +171,7 @@
 		B98686AF151D0B3700616412 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = B98686B2151D0B3700616412 /* Build configuration list for PBXProject "ProfilePictureSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -200,13 +196,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8986C7EB1890A519004B90DD /* Project-Debug.xcconfig in Resources */,
 				B98686C7151D0B3700616412 /* InfoPlist.strings in Resources */,
-				8986C7ED1890A519004B90DD /* Project.xcconfig in Resources */,
-				8986C7EC1890A519004B90DD /* Project-Release.xcconfig in Resources */,
 				B98686D3151D0B3700616412 /* PPViewController_iPhone.xib in Resources */,
 				B98686D6151D0B3700616412 /* PPViewController_iPad.xib in Resources */,
-				8986C7EA1890A519004B90DD /* Application.xcconfig in Resources */,
 				85AFB522158FA1C4000AF7F5 /* Icon-72.png in Resources */,
 				85AFB523158FA1C4000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB524158FA1C4000AF7F5 /* Icon.png in Resources */,

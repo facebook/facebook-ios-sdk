@@ -18,12 +18,13 @@
 
 #import "FBAccessTokenData.h"
 #import "FBCacheIndex.h"
+#import "FBLogger.h"
+#import "FBSettings.h"
 
 static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB
 
 static NSString *const kDataDiskCachePath = @"DataDiskCache";
-static NSString *const kCacheInfoFile = @"CacheInfo";
 static NSString *const kAccessTokenKey = @"access_token";
 
 @interface FBDataDiskCache () <FBCacheIndexFileDelegate>
@@ -170,7 +171,7 @@ deleteFileWithName:(NSString *)name
             }
         }
     } @catch (NSException *exception) {
-        NSLog(@"FBDiskCache error: %@", exception.reason);
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorCacheErrors formatString:@"FBDiskCache error: %@", exception.reason];
     } @finally {
         return data;
     }
@@ -183,7 +184,7 @@ deleteFileWithName:(NSString *)name
         [_inMemoryCache removeObjectForKey:url];
         [_cacheIndex removeEntryForKey:url.absoluteString];
     } @catch (NSException *exception) {
-        NSLog(@"FBDiskCache error: %@", exception.reason);
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorCacheErrors formatString:@"FBDiskCache error: %@", exception.reason];
     }
 }
 
@@ -221,7 +222,7 @@ deleteFileWithName:(NSString *)name
          forKey:url
          cost:data.length];
     } @catch (NSException *exception) {
-        NSLog(@"FBDiskCache error: %@", exception.reason);
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorCacheErrors formatString:@"FBDiskCache error: %@", exception.reason];
     }
 }
 

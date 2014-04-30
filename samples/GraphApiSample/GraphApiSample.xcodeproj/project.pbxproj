@@ -14,10 +14,6 @@
 		85C69D691602B06E008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D661602B06E008AD9A0 /* Default-568h@2x.png */; };
 		85C69D6A1602B06E008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D671602B06E008AD9A0 /* Default.png */; };
 		85C69D6B1602B06E008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D681602B06E008AD9A0 /* Default@2x.png */; };
-		8986C7CF1890A25C004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CB1890A25C004B90DD /* Application.xcconfig */; };
-		8986C7D01890A25C004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CC1890A25C004B90DD /* Project-Debug.xcconfig */; };
-		8986C7D11890A25C004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CD1890A25C004B90DD /* Project-Release.xcconfig */; };
-		8986C7D21890A25C004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7CE1890A25C004B90DD /* Project.xcconfig */; };
 		DDA290AD15ABA96200F533F9 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDA290AC15ABA96200F533F9 /* FacebookSDK.framework */; };
 		E2511742152BB6FE00CB342A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511741152BB6FE00CB342A /* UIKit.framework */; };
 		E2511744152BB6FE00CB342A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2511743152BB6FE00CB342A /* Foundation.framework */; };
@@ -175,7 +171,7 @@
 		E2511734152BB6FE00CB342A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = E2511737152BB6FE00CB342A /* Build configuration list for PBXProject "GraphApiSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -200,13 +196,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8986C7D01890A25C004B90DD /* Project-Debug.xcconfig in Resources */,
 				E251174C152BB6FE00CB342A /* InfoPlist.strings in Resources */,
-				8986C7D21890A25C004B90DD /* Project.xcconfig in Resources */,
-				8986C7D11890A25C004B90DD /* Project-Release.xcconfig in Resources */,
 				E2511758152BB6FE00CB342A /* GraphApiViewController_iPhone.xib in Resources */,
 				E251175B152BB6FE00CB342A /* GraphApiViewController_iPad.xib in Resources */,
-				8986C7CF1890A25C004B90DD /* Application.xcconfig in Resources */,
 				85AFB4FF158F9D32000AF7F5 /* Icon-72.png in Resources */,
 				85AFB500158F9D32000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB501158F9D32000AF7F5 /* Icon.png in Resources */,

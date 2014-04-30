@@ -453,25 +453,6 @@
         return nil;
     }
 
-    if (session == nil) {
-        // No session provided -- do we have an activeSession? We must either have a session that
-        // was authenticated with native auth, or no session at all (in which case the app is
-        // running unTOSed and we will rely on the OS to authenticate/TOS the user).
-        session = [FBSession activeSession];
-    }
-    if (session != nil) {
-        // If we have an open session and it's not native auth, fail. If the session is
-        // not open, attempting to put up the dialog will prompt the user to configure
-        // their account.
-        if (session.isOpen && session.accessTokenData.loginType != FBSessionLoginTypeSystemAccount) {
-            if (handler) {
-                handler(FBOSIntegratedShareDialogResultError, [self createError:FBErrorDialogInvalidForSession
-                                                                        session:session]);
-            }
-            return nil;
-        }
-    }
-
     SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:[FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"]];
     if (composeViewController == nil) {
         if (handler) {

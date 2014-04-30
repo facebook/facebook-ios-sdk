@@ -189,7 +189,7 @@ static FBAppBridge *g_sharedInstance;
         // NOTE : the FBConditionalLog is wrapped in an if to allow us to return and prevent exceptions
         // further down. No need to check the condition again since we know we are in an error state.
         // TODO : Change this to an assert and remove the if.
-        FBConditionalLog(YES, @"FBAppBridge: Must provide a valid AppCall object & bridge scheme.");
+        FBConditionalLog(YES, FBLoggingBehaviorDeveloperErrors, @"FBAppBridge: Must provide a valid AppCall object & bridge scheme.");
         return;
     }
 

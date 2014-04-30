@@ -18,6 +18,7 @@
 
 #import "FBGraphObject.h"
 #import "FBGraphObjectTableCell.h"
+#import "FBSettings.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 
@@ -71,6 +72,7 @@ static const NSInteger kMinimumCountToCollate = 6;
 - (void)dealloc
 {
     FBConditionalLog(![_pendingURLConnections count],
+                     FBLoggingBehaviorDeveloperErrors,
                      @"FBGraphObjectTableDataSource pending connection did not retain self");
 
     [_collation release];

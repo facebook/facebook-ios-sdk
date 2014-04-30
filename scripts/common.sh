@@ -25,12 +25,12 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
 
   # The directory containing this script
   # We need to go there and use pwd so these are all absolute paths
-  pushd $(dirname $BASH_SOURCE[0]) >/dev/null
+  pushd "$(dirname $BASH_SOURCE[0])" >/dev/null
   FB_SDK_SCRIPT=$(pwd)
   popd >/dev/null
 
   # The root directory where the Facebook SDK for iOS is cloned
-  FB_SDK_ROOT=$(dirname $FB_SDK_SCRIPT)
+  FB_SDK_ROOT=$(dirname "$FB_SDK_SCRIPT")
 
   # Path to source files for Facebook SDK
   FB_SDK_SRC=$FB_SDK_ROOT/src
@@ -52,7 +52,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_FRAMEWORK=$FB_SDK_BUILD/$FB_SDK_FRAMEWORK_NAME
 
   # Extract the SDK version from FacebookSDK.h
-  FB_SDK_VERSION_RAW=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' ${FB_SDK_SRC}/FacebookSDK.h)
+  FB_SDK_VERSION_RAW=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' "${FB_SDK_SRC}"/FacebookSDK.h)
   FB_SDK_VERSION_MAJOR=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $1}')
   FB_SDK_VERSION_MINOR=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $2}')
   FB_SDK_VERSION_REVISION=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $3}')
@@ -77,7 +77,7 @@ if [ -z $FB_SDK_ENV ]; then
   # Explains where the log is if this is the outermost build or if
   # we hit a fatal error.
   function show_summary() {
-    test -r $FB_SDK_BUILD_LOG && echo "Build log is at $FB_SDK_BUILD_LOG"
+    test -r "$FB_SDK_BUILD_LOG" && echo "Build log is at $FB_SDK_BUILD_LOG"
   }
 
   # Determines whether this is out the outermost build.
@@ -95,7 +95,7 @@ if [ -z $FB_SDK_ENV ]; then
   # Deletes any previous build log if this is the outermost build.
   # Do not call outside common.sh.
   function push_common() {
-    test 0 -eq $FB_SDK_BUILD_DEPTH && \rm -f $FB_SDK_BUILD_LOG
+    test 0 -eq $FB_SDK_BUILD_DEPTH && \rm -f "$FB_SDK_BUILD_LOG"
     FB_SDK_BUILD_DEPTH=$(($FB_SDK_BUILD_DEPTH + 1))
   }
 

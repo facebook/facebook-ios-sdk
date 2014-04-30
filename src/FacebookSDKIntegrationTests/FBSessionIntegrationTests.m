@@ -19,6 +19,7 @@
 #import "FBTestSession.h"
 #import "FBRequest.h"
 #import "FBGraphUser.h"
+#import "FBSettings.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
 #import "FBError.h"
@@ -36,9 +37,9 @@
 
 - (void)testSessionBasic
 {
-    FBConditionalLog(NO, @"Testing conditional %@", @"log");
-    FBConditionalLog(NO, @"Testing conditional log");
-    FBConditionalLog(YES, nil, @"Testing conditional log");
+    FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional %@", @"log");
+    FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional log");
+    FBConditionalLog(YES, FBLoggingBehaviorInformational, nil, @"Testing conditional log");
 
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];

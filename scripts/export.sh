@@ -18,7 +18,7 @@
 # This script exports the source code to another directory that can be
 # added to a different git repo.
 
-. ${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh
+. "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
 usage() {
 cat <<EOF
@@ -58,8 +58,8 @@ if [ -f "$OUTPUT_DIR" ]; then
 fi
 
 # Create a temp directory to stage the files from the index into.
-CURRENT_SCRIPT_NAME=`basename $0`
-EXPORT_TEMP_DIR=`mktemp -d -t ${CURRENT_SCRIPT_NAME}` || die "Failed to create temp directory"
+CURRENT_SCRIPT_NAME=`basename "$0"`
+EXPORT_TEMP_DIR=`mktemp -d -t "${CURRENT_SCRIPT_NAME}"` || die "Failed to create temp directory"
 
 # Export the files from the index to the temp directory. This avoids picking
 # up build artifacts or other files that are not in the git index.

@@ -14,10 +14,6 @@
 		85C69D7F1602B0AF008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7C1602B0AF008AD9A0 /* Default-568h@2x.png */; };
 		85C69D801602B0AF008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7D1602B0AF008AD9A0 /* Default.png */; };
 		85C69D811602B0AF008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D7E1602B0AF008AD9A0 /* Default@2x.png */; };
-		8986C7C518909A25004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C218909A25004B90DD /* Project-Debug.xcconfig */; };
-		8986C7C618909A25004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C318909A25004B90DD /* Project.xcconfig */; };
-		8986C7C718909A25004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C418909A25004B90DD /* Project-Release.xcconfig */; };
-		8986C7C918909EB1004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C7C818909EB1004B90DD /* Application.xcconfig */; };
 		DD37EA8815ABA46B0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EA8715ABA46B0015966B /* FacebookSDK.framework */; };
 		E2D6B81315413A570050835F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81215413A570050835F /* UIKit.framework */; };
 		E2D6B81515413A570050835F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D6B81415413A570050835F /* Foundation.framework */; };
@@ -175,7 +171,7 @@
 		E2D6B80515413A560050835F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 			};
 			buildConfigurationList = E2D6B80815413A560050835F /* Build configuration list for PBXProject "FriendPickerSample" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -207,12 +203,8 @@
 				85AFB4D8158F9C1D000AF7F5 /* Icon-72@2x.png in Resources */,
 				85AFB4D9158F9C1D000AF7F5 /* Icon.png in Resources */,
 				85AFB4DA158F9C1D000AF7F5 /* Icon@2x.png in Resources */,
-				8986C7C518909A25004B90DD /* Project-Debug.xcconfig in Resources */,
 				85C69D7F1602B0AF008AD9A0 /* Default-568h@2x.png in Resources */,
-				8986C7C618909A25004B90DD /* Project.xcconfig in Resources */,
-				8986C7C918909EB1004B90DD /* Application.xcconfig in Resources */,
 				85C69D801602B0AF008AD9A0 /* Default.png in Resources */,
-				8986C7C718909A25004B90DD /* Project-Release.xcconfig in Resources */,
 				85C69D811602B0AF008AD9A0 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

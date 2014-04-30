@@ -50,7 +50,7 @@
  abstract Gets the methodName describing this login strategy, typically for external logging.
  @discussion This should only be invoked if a `tryPerformAuthorizeWithParams:...` call returned YES.
 */
-@property (readonly) NSString *methodName;
+@property (readonly, copy) NSString *methodName;
 
 @end
 

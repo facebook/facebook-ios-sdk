@@ -66,5 +66,5 @@ extern NSString *const FBPLISTUrlSchemeSuffixKey;
 
  @param treatment The desired treatment
  */
-+ (void)setrestrictedTreatment:(FBRestrictedTreatment)treatment;
++ (void)setRestrictedTreatment:(FBRestrictedTreatment)treatment;
 @end

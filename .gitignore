@@ -16,6 +16,7 @@ test/UnitTest/build/
 .DS_Store
 project.xcworkspace
 xcuserdata
+xcshareddata
 .arc
 .arcconfig
 .internal/

@@ -17,15 +17,17 @@
 #import "FBCacheIndex.h"
 
 #import "FBDynamicFrameworkLoader.h"
+#import "FBLogger.h"
+#import "FBSettings.h"
 
 #define CHECK_SQLITE(res, expectedResult, db) { \
 int result = (res); \
 if (result != expectedResult) { \
-NSLog(@"FBCacheIndex: Expecting result %d, actual %d", \
+[FBLogger singleShotLogEntry:FBLoggingBehaviorCacheErrors formatString:@"FBCacheIndex: Expecting result %d, actual %d", \
 expectedResult, \
-result); \
+result]; \
 if (db) { \
-NSLog(@"FBCacheIndex: SQLite error: %s", fbdfl_sqlite3_errmsg(db)); \
+[FBLogger singleShotLogEntry:FBLoggingBehaviorCacheErrors formatString:@"FBCacheIndex: SQLite error: %s", fbdfl_sqlite3_errmsg(db)]; \
 } \
 NSCAssert(NO, @""); \
 } \
