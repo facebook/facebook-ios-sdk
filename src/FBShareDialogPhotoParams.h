@@ -16,31 +16,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBDialogsParams.h"
+#import "FBPhotoParams.h"
 
 /*!
- @class FBShareDialogParams
+ @class FBShareDialogPhotoParams
 
- @abstract
- This object is used to encapsulate state for parameters to a share dialog that
- opens in the Facebook app.
- */
-@interface FBShareDialogPhotoParams : FBDialogsParams
-
-/*! @abstract An array of NSStrings or FBGraphUsers to tag in the post.
- If using NSStrings, the values must represent the IDs of the users to tag. */
-@property (nonatomic, copy) NSArray *friends;
-
-/*! @abstract An NSString or FBGraphPlace to tag in the status update. If
- NSString, the value must be the ID of the place to tag. */
-@property (nonatomic, copy) id place;
-
-/*! @abstract If YES, treats any data failures (e.g. failures when getting
- data for IDs passed through "friends" or "place") as a fatal error, and will not
- continue with the status update. */
-@property (nonatomic, assign) BOOL dataFailuresFatal;
-
-/*! @abstract An array of UIImages representing photos to be shared. */
-@property (nonatomic, copy) NSArray *photos;
+ @abstract Deprecated. Use `FBPhotoParams` instead.
+*/
+__attribute__((deprecated))
+@interface FBShareDialogPhotoParams : FBPhotoParams
 
 @end

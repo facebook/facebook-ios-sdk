@@ -15,17 +15,19 @@
  */
 
 #import "FBRequestTests.h"
-#import "FBRequest.h"
-#import "FBTestBlocker.h"
-#import "FBSDKVersion.h"
-#import "Facebook.h"
 
 #import <OHHTTPStubs/OHHTTPStubs.h>
+
+#import "FBRequest.h"
+#import "FBRequestConnection+Internal.h"
+#import "FBTestBlocker.h"
+#import "Facebook.h"
 
 // This is just to silence compiler warnings since we access internal methods in some tests.
 @interface FBRequest (Internal)
 
 - (FBRequestConnection *)createRequestConnection;
+@property (readonly) NSString *versionPart;
 
 @end
 
@@ -76,7 +78,6 @@
     
     assertThat(request, notNilValue());
     assertThat(request.HTTPMethod, equalTo(@"GET"));    
-    assertThat(request.parameters, hasEntry(@"migration_bundle", FB_IOS_SDK_MIGRATION_BUNDLE));
     assertThat(request.session, nilValue());
     assertThat(request.graphPath, nilValue());
     assertThat(request.restMethod, nilValue());
@@ -116,6 +117,32 @@
     assertThat([request description], containsString(@"value1"));
     
     [request release];
+}
+
+- (void)testCanOverrideVersion {
+    FBRequest *request = [[FBRequest alloc] initWithSession:nil
+                                                  graphPath:@"me/friends"
+                                                 parameters:nil
+                                                 HTTPMethod:nil];
+    
+    [request overrideVersionPartWith:@"v0.9"];
+    assertThat(request, notNilValue());
+    assertThat(request.versionPart, equalTo(@"v0.9"));
+    
+    [request release];
+}
+
+- (void)testSpecialDomain {
+    [FBSettings setFacebookDomainPart:@"special.sb"];
+    FBRequest *request = [[FBRequest alloc] initWithSession:nil graphPath:@"me/friends"];
+
+    FBRequestConnection *dummy = [[FBRequestConnection alloc] init];
+    NSString *actual = [dummy urlStringForSingleRequest:request forBatch:NO];
+
+
+    assert([actual hasPrefix:@"https://graph.special.sb.facebook.com/v2.0/me/friends?"]);
+    [request release];
+    [FBSettings setFacebookDomainPart:nil];
 }
 
 - (void)testCanInitWithHTTPMethod {

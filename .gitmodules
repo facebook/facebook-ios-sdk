@@ -10,3 +10,6 @@
 [submodule "vendor/appledoc"]
 	path = vendor/appledoc
 	url = git://github.com/tomaz/appledoc.git
+[submodule "Bolts-IOS"]
+	path = Bolts-IOS
+	url = git://github.com/BoltsFramework/Bolts-iOS.git

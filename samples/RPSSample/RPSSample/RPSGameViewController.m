@@ -396,7 +396,7 @@ typedef void (^RPSBlock)(void);
     action[@"gesture"] = builtInOpenGraphObjects[_lastPlayerCall]; // set action's gesture property
     action[@"opposing_gesture"] = builtInOpenGraphObjects[_lastComputerCall]; // set action's opposing_gesture property
 
-    FBOpenGraphActionShareDialogParams *params = [[FBOpenGraphActionShareDialogParams alloc] init];
+    FBOpenGraphActionParams *params = [[FBOpenGraphActionParams alloc] init];
     params.action = action;
     params.actionType = @"fb_sample_rps:throw";
     params.previewPropertyName = @"gesture";
@@ -407,7 +407,7 @@ typedef void (^RPSBlock)(void);
 }
 
 - (BOOL)shareGameLink {
-    FBShareDialogParams *params = [[FBShareDialogParams alloc] init];
+    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
     params.link = [NSURL URLWithString:@"https://developers.facebook.com/"];
     params.name = @"Rock, Papers, Scissors Sample Application";
 

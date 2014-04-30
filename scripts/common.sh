@@ -67,6 +67,12 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
 
   # The path to the framework docs
   FB_SDK_FRAMEWORK_DOCS=$FB_SDK_BUILD/$FB_SDK_DOCSET_NAME
+
+  # The path to the Bolts framework and its scripts directory
+  BOLTS_ROOT=$FB_SDK_ROOT/Bolts-iOS
+  BOLTS_SCRIPT=$BOLTS_ROOT/scripts
+  BOLTS_BINARY_NAME=Bolts
+  BOLTS_FRAMEWORK=$BOLTS_ROOT/build/ios/${BOLTS_BINARY_NAME}.framework
 fi
 
 # Set up one-time variables

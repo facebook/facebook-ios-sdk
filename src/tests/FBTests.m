@@ -15,16 +15,26 @@
  */
 
 #import "FBTests.h"
-#import "FBTestBlocker.h"
-#import "FBRequestConnection.h"
-#import "FBRequest.h"
+
+#import <OHHTTPStubs/OHHTTPStubs.h>
+
 #import "FBAccessTokenData+Internal.h"
+#import "FBRequest.h"
+#import "FBRequestConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBTestBlocker.h"
+#import "FBUtility.h"
 
 NSString *kTestToken = @"This is a token";
 NSString *kTestAppId = @"AnAppId";
 
 @implementation FBTests
+
+- (void)tearDown
+{
+    [OHHTTPStubs removeAllRequestHandlers];
+    [super tearDown];
+}
 
 #pragma mark Handlers
 
@@ -112,6 +122,58 @@ NSString *kTestAppId = @"AnAppId";
     [blocker release];
 }
 
-#pragma mark -
+#pragma mark - HTTP stubbing helpers
+
+- (void)stubAllResponsesWithResult:(id)result
+{
+    [self stubAllResponsesWithResult:result statusCode:200];
+}
+
+- (void)stubAllResponsesWithResult:(id)result
+                        statusCode:(int)statusCode
+{
+    [self stubAllResponsesWithResult:result statusCode:statusCode callback:nil];
+}
+
+- (void)stubAllResponsesWithResult:(id)result
+                        statusCode:(int)statusCode
+                          callback:(HTTPStubCallback)callback
+{
+    return [self stubMatchingRequestsWithResponses:@{@"" : result}
+                                        statusCode:statusCode
+                                          callback:callback];
+}
+
+- (void)stubMatchingRequestsWithResponses:(NSDictionary *)requestsAndResponses
+                               statusCode:(int)statusCode
+                                 callback:(HTTPStubCallback)callback
+{
+    id (^matchingKey)(NSString *) = ^id (NSString *urlString) {
+        for (NSString *substring in requestsAndResponses.allKeys) {
+            // The first @"" always matches
+            if (substring.length == 0 ||
+                [urlString rangeOfString:substring].location != NSNotFound) {
+                return substring;
+            }
+        }
+        return nil;
+    };
+
+    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+        if (callback) {
+            callback(request);
+        }
+
+        return matchingKey(request.URL.absoluteString);
+    } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+        id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
+        NSData *data = [[FBUtility simpleJSONEncode:result] dataUsingEncoding:NSUTF8StringEncoding];
+
+        return [OHHTTPStubsResponse responseWithData:data
+                                          statusCode:statusCode
+                                        responseTime:0
+                                             headers:nil];
+    }];
+}
 
 @end

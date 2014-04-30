@@ -41,6 +41,7 @@ typedef enum {
 
 static NSString *const FBPLISTTestAppIDKey = @"IOS_SDK_TEST_APP_ID";
 static NSString *const FBPLISTTestAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";
+static NSString *const FBPLISTTestAppClientToken = @"IOS_SDK_TEST_CLIENT_TOKEN";
 static NSString *const FBPLISTUniqueUserTagKey = @"IOS_SDK_MACHINE_UNIQUE_USER_KEY";
 static NSString *const FBLoginAuthTestUserCreatePathFormat = @"%@/accounts/test-users";
 static NSString *const FBLoginTestUserAccessToken = @"access_token";
@@ -68,6 +69,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 @property (readwrite, copy) NSString *appAccessToken;
 @property (readwrite, copy) NSString *testUserID;
+@property (readwrite, copy) NSString *testUserName;
 @property (readwrite, copy) NSString *testAppID;
 @property (readwrite, copy) NSString *testAppSecret;
 @property (readwrite, copy) NSString *machineUniqueUserTag;
@@ -76,22 +78,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 @property (readonly, copy) NSString *sharedTestUserIdentifier;
 @property (readwrite) FBTestSessionMode mode;
 
-- (instancetype)initWithAppID:(NSString *)appID
-                    appSecret:(NSString *)appSecret
-         machineUniqueUserTag:(NSString *)uniqueUserTag
-         sessionUniqueUserTag:(NSString *)sessionUniqueUserTag
-                         mode:(FBTestSessionMode)mode
-                  permissions:(NSArray *)permissions
-         tokenCachingStrategy:(FBSessionTokenCachingStrategy *)tokenCachingStrategy;
-- (void)createNewTestUser;
-- (void)retrieveTestUsersForApp;
-- (void)findOrCreateSharedUser;
-- (void)transitionToOpenWithToken:(NSString *)token;
-- (NSString *)validNameStringFromInteger:(NSUInteger)input;
-- (void)raiseException:(NSError *)innerError;
-
-+ (void)deleteUnitTestUser:(NSString *)userID accessToken:(NSString *)accessToken;
-+ (instancetype)sessionForUnitTestingWithPermissions:(NSArray *)permissions mode:(FBTestSessionMode)mode sessionUniqueUserTag:(NSString *)sessionUniqueUserTag;
+@property (readwrite) BOOL forceAccessTokenRefresh;
+@property (readwrite, copy) NSString *testAppClientToken;
 
 @end
 
@@ -103,6 +91,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 - (instancetype)initWithAppID:(NSString *)appID
                     appSecret:(NSString *)appSecret
+                  clientToken:(NSString *)clientToken
          machineUniqueUserTag:(NSString *)machineUniqueUserTag
          sessionUniqueUserTag:(NSString *)sessionUniqueUserTag
                          mode:(FBTestSessionMode)mode
@@ -115,6 +104,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                   tokenCacheStrategy:tokenCachingStrategy])) {
         self.testAppID = appID;
         self.testAppSecret = appSecret;
+        self.testAppClientToken = clientToken;
         self.machineUniqueUserTag = machineUniqueUserTag;
         self.sessionUniqueUserTag = sessionUniqueUserTag;
         self.appAccessToken = [NSString stringWithFormat:@"%@|%@", appID, appSecret];
@@ -184,6 +174,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
              [userID isKindOfClass:[NSString class]]) {
              // capture the id for future use
              self.testUserID = userID;
+             self.testUserName = newName;
 
              // Remember this user if it is going to be shared.
              if (self.mode == FBTestSessionModeShared) {
@@ -361,6 +352,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     if (matchingTestUser) {
         // We can use this user. IDs come back as numbers, make sure we return as a string.
         self.testUserID = [[matchingTestUser objectForKey:FBLoginTestUserID] description];
+        self.testUserName = [matchingTestUser objectForKey:FBLoginTestUserName];
 
         [self transitionToOpenWithToken:[matchingTestUser objectForKey:FBLoginTestUserAccessToken]];
     } else {
@@ -477,14 +469,16 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     NSDictionary *environment = [[NSProcessInfo processInfo] environment];
     NSString *appID = [environment objectForKey:FBPLISTTestAppIDKey];
     NSString *appSecret = [environment objectForKey:FBPLISTTestAppSecretKey];
-    if (!appID || !appSecret || appID.length == 0 || appSecret.length == 0) {
+    NSString *appClientToken = [environment objectForKey:FBPLISTTestAppClientToken];
+    if (!appID || !appSecret || !appClientToken || appID.length == 0 || appSecret.length == 0 || appClientToken.length == 0) {
         [[NSException exceptionWithName:FBInvalidOperationException
                                  reason:
-          @"FBTestSession: Missing App ID or Secret; ensure that you have an .xcconfig file at:\n"
+          @"FBTestSession: Missing App ID, Secret, or Client Token; ensure that you have an .xcconfig file at:\n"
           @"\t${REPO_ROOT}/src/tests/TestAppIdAndSecret.xcconfig\n"
           @"containing your unit-testing Facebook Application's ID and Secret in this format:\n"
           @"\tIOS_SDK_TEST_APP_ID = // your app ID, e.g.: 1234567890\n"
           @"\tIOS_SDK_TEST_APP_SECRET = // your app secret, e.g.: 1234567890abcdef\n"
+          @"\tIOS_SDK_TEST_CLIENT_TOKEN = // your app client token, e.g.: 1234567890abcdef\n"
           @"To create a Facebook AppID, visit https://developers.facebook.com/apps"
                                userInfo:nil]
          raise];
@@ -504,6 +498,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     FBTestSession *session = [[[FBTestSession alloc]
                                initWithAppID:appID
                                appSecret:appSecret
+                               clientToken:appClientToken
                                machineUniqueUserTag:machineUniqueUserTag
                                sessionUniqueUserTag:sessionUniqueUserTag
                                mode:mode

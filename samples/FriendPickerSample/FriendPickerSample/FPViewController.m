@@ -53,7 +53,7 @@
     // if the session is open, then load the data for our view controller
     if (!FBSession.activeSession.isOpen) {
         // if the session is closed, then we open it here, and establish a handler for state changes
-        [FBSession openActiveSessionWithReadPermissions:nil
+        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_friends"]
                                            allowLoginUI:YES
                                       completionHandler:^(FBSession *session,
                                                              FBSessionState state,

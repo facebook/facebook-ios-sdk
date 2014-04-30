@@ -158,6 +158,27 @@
     }
 }
 
++ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject allPermissions:(NSMutableArray *)allPermissions grantedPermissions:(NSMutableArray *)grantedPermissions {
+    NSArray *resultData = responseObject[@"data"];
+    if (resultData.count > 0) {
+        if (resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil) {
+            NSDictionary *permissionsDictionary = resultData[0];
+            NSArray *result = [permissionsDictionary allKeys];
+            [allPermissions addObjectsFromArray:result];
+            [grantedPermissions addObjectsFromArray:result];
+        } else {
+            for (NSDictionary *permissionsDictionary in resultData) {
+                NSString *permissionName = permissionsDictionary[@"permission"];
+                NSString *status = permissionsDictionary[@"status"];
+                [allPermissions addObject:permissionName];
+                if ([status isEqualToString:@"granted"]) {
+                    [grantedPermissions addObject:permissionName];
+                }
+            }
+        }
+    }
+}
+
 + (BOOL)logIfFoundUnexpectedPermissions:(NSArray *)permissions
                                  isRead:(BOOL)isRead {
     BOOL publishPermissionFound = NO;
@@ -186,6 +207,25 @@
     }
 
     return result;
+}
+
++ (FBSessionLoginBehavior)loginBehaviorForLoginType:(FBSessionLoginType)loginType {
+    FBSessionLoginBehavior loginBehavior;
+    switch (loginType) {
+        case FBSessionLoginTypeSystemAccount:
+            loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
+            break;
+        case FBSessionLoginTypeFacebookApplication:
+        case FBSessionLoginTypeFacebookViaSafari:
+            loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView;
+            break;
+        case FBSessionLoginTypeWebView:
+            loginBehavior = FBSessionLoginBehaviorForcingWebView;
+            break;
+        default:
+            loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView;
+    }
+    return loginBehavior;
 }
 
 @end

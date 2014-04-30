@@ -31,6 +31,10 @@
 
 #else
 
+@interface FBRequestConnection (Testing)
++ (void)addRequestToRefreshPermissionsSession:(FBSession *)session connection:(FBRequestConnection *)connection;
+@end
+
 #pragma mark - Test suite
 
 @implementation FBSessionIntegrationTests
@@ -227,6 +231,35 @@
     }];
     STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
     STAssertTrue([normalSession shouldRefreshPermissions], @"expected need for permissions refresh");
+
+    expectClosed = YES;
+    [normalSession close];
+}
+
+- (void)testSessionOpenThenRefreshPermissions
+{
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    __block BOOL expectClosed = NO;
+
+    // Open a test session normally for accesstoken/appid
+    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        STAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
+        [blocker signal];
+    }];
+    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+
+    // Now ask for permissions refresh, and verify that the piggyback will not be added.
+    id mockConnection = [OCMockObject niceMockForClass:[FBRequestConnection class]];
+    [[mockConnection reject] addRequestToRefreshPermissionsSession:OCMOCK_ANY connection:OCMOCK_ANY];
+
+    blocker = [[[FBTestBlocker alloc] init] autorelease];
+    [normalSession refreshPermissionsWithCompletionHandler:^(FBSession *session, NSError *error) {
+        STAssertNil(error, @"unexpected error refreshing permissions");
+        [blocker signal];
+    }];
+    STAssertTrue([blocker waitWithTimeout:20], @"blocker timed out for permissions refresh");
+    [mockConnection verify];
 
     expectClosed = YES;
     [normalSession close];

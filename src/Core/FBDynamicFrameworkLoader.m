@@ -220,3 +220,59 @@ SQLITE_API const unsigned char *fbdfl_sqlite3_column_text(sqlite3_stmt *stmt, in
     sqlite3_column_text_type f = (sqlite3_column_text_type)loadSqliteSymbol(@"sqlite3_column_text");
     return f(stmt, iCol);
 }
+
+typedef CATransform3D (*CATransform3DMakeScale_type)(CGFloat, CGFloat, CGFloat);
+typedef CATransform3D (*CATransform3DConcat_type)(CATransform3D, CATransform3D);
+const CATransform3D fbdfl_CATransform3DIdentity = {1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
+
+CATransform3D fbdfl_CATransform3DMakeScale (CGFloat sx, CGFloat sy, CGFloat sz)
+{
+    CATransform3DMakeScale_type f =
+        (CATransform3DMakeScale_type)[FBDynamicFrameworkLoader loadSymbol: @"CATransform3DMakeScale"
+                                                            withFramework: @"QuartzCore"];
+    return f(sx, sy, sz);
+}
+
+CATransform3D fbdfl_CATransform3DMakeTranslation (CGFloat tx, CGFloat ty, CGFloat tz)
+{
+    CATransform3DMakeScale_type f =
+    (CATransform3DMakeScale_type)[FBDynamicFrameworkLoader loadSymbol: @"CATransform3DMakeTranslation"
+                                                        withFramework: @"QuartzCore"];
+    return f(tx, ty, tz);
+}
+
+CATransform3D fbdfl_CATransform3DConcat (CATransform3D a, CATransform3D b)
+{
+    CATransform3DConcat_type f =
+    (CATransform3DConcat_type)[FBDynamicFrameworkLoader loadSymbol: @"CATransform3DConcat"
+                                                     withFramework: @"QuartzCore"];
+    return f(a, b);
+}
+
+
+typedef OSStatus (*AudioServicesCreateSystemSoundID_type)(CFURLRef, SystemSoundID *);
+OSStatus fbdfl_AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID *outSystemSoundID)
+{
+    AudioServicesCreateSystemSoundID_type f =
+    (AudioServicesCreateSystemSoundID_type)[FBDynamicFrameworkLoader loadSymbol:@"AudioServicesCreateSystemSoundID"
+                                                                  withFramework:@"AudioToolbox"];
+    return f(inFileURL, outSystemSoundID);
+}
+
+typedef OSStatus (*AudioServicesDisposeSystemSoundID_type)(SystemSoundID);
+OSStatus fbdfl_AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID)
+{
+    AudioServicesDisposeSystemSoundID_type f =
+    (AudioServicesDisposeSystemSoundID_type)[FBDynamicFrameworkLoader loadSymbol:@"AudioServicesDisposeSystemSoundID"
+                                                                   withFramework:@"AudioToolbox"];
+    return f(inSystemSoundID);
+}
+
+typedef void (*AudioServicesPlaySystemSound_type)(SystemSoundID);
+void fbdfl_AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID)
+{
+    AudioServicesPlaySystemSound_type f =
+    (AudioServicesPlaySystemSound_type)[FBDynamicFrameworkLoader loadSymbol:@"AudioServicesPlaySystemSound"
+                                                              withFramework:@"AudioToolbox"];
+    return f(inSystemSoundID);
+}

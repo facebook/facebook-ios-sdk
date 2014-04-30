@@ -22,4 +22,6 @@
 // connection, when this flag is reset.
 @property (readwrite) BOOL forceAccessTokenRefresh;
 
+@property (readonly, copy) NSString *testAppClientToken;
+
 @end

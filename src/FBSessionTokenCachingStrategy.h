@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBAccessTokenData.h"
+#import "FBSDKMacros.h"
 
 /*!
  @class
@@ -136,25 +137,25 @@
 @end
 
 // The key to use with token information dictionaries to get and set the token value
-extern NSString *const FBTokenInformationTokenKey;
+FBSDK_EXTERN NSString *const FBTokenInformationTokenKey;
 
 // The to use with token information dictionaries to get and set the expiration date
-extern NSString *const FBTokenInformationExpirationDateKey;
+FBSDK_EXTERN NSString *const FBTokenInformationExpirationDateKey;
 
 // The to use with token information dictionaries to get and set the refresh date
-extern NSString *const FBTokenInformationRefreshDateKey;
+FBSDK_EXTERN NSString *const FBTokenInformationRefreshDateKey;
 
 // The key to use with token information dictionaries to get the related user's fbid
-extern NSString *const FBTokenInformationUserFBIDKey;
+FBSDK_EXTERN NSString *const FBTokenInformationUserFBIDKey;
 
 // The key to use with token information dictionaries to determine whether the token was fetched via Facebook Login
-extern NSString *const FBTokenInformationIsFacebookLoginKey;
+FBSDK_EXTERN NSString *const FBTokenInformationIsFacebookLoginKey;
 
 // The key to use with token information dictionaries to determine whether the token was fetched via the OS
-extern NSString *const FBTokenInformationLoginTypeLoginKey;
+FBSDK_EXTERN NSString *const FBTokenInformationLoginTypeLoginKey;
 
 // The key to use with token information dictionaries to get the latest known permissions
-extern NSString *const FBTokenInformationPermissionsKey;
+FBSDK_EXTERN NSString *const FBTokenInformationPermissionsKey;
 
 // The key to use with token information dictionaries to get the date the permissions were last refreshed.
-extern NSString *const FBTokenInformationPermissionsRefreshDateKey;
+FBSDK_EXTERN NSString *const FBTokenInformationPermissionsRefreshDateKey;

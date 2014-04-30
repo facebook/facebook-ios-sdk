@@ -38,6 +38,9 @@ FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$FB_SDK_BUILD_PACKAGE_FRAME
 FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
 FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Library/Developer/Shared/Documentation/DocSets/$FB_SDK_DOCSET_NAME
 
+BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR=Documents
+BOLTS_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR
+
 CODE_SIGN_IDENTITY='Developer ID Installer: Facebook, Inc. (V9WTTPBFK9)'
 
 # -----------------------------------------------------------------------------
@@ -62,20 +65,22 @@ mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCS"
 
 \cp -R "$FB_SDK_FRAMEWORK" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
   || die "Could not copy $FB_SDK_FRAMEWORK"
+\cp -R "$BOLTS_FRAMEWORK" "$BOLTS_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy $BOLTS_FRAMEWORK"
 \cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
 \cp -R "$FB_SDK_FRAMEWORK_DOCS/Contents" "$FB_SDK_BUILD_PACKAGE_DOCS" \
-  || die "Could not copy $FB_SDK_FRAMEWORK_DOCS/Contents"
-\cp "$FB_SDK_ROOT/README.txt" "$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK" \
+  || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS/Contents"
+\cp "$FB_SDK_ROOT/README.txt" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
   || die "Could not copy README"
-\cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK" \
+\cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
   || die "Could not copy LICENSE"
 
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
 for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
-  sed "s|../../build|../../../../${FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g" \
+  sed "s|../../build|../../../../${FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g;s|../../Bolts-IOS/build/ios|../../../../${BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
 
@@ -85,7 +90,7 @@ done
 progress_message "Building .pkg from package directory."
 # First use pkgbuild to create component package
 \rm -rf "$COMPONENT_FB_SDK_PKG"
-$PACKAGEBUILD --root "$FB_SDK_BUILD/package" \
+$PACKAGEBUILD --root "$FB_SDK_BUILD_PACKAGE" \
  		 --identifier "com.facebook.sdk.pkg" \
  		 --version $FB_SDK_NORMALIZED_PGK_VERSION   \
  		 "$COMPONENT_FB_SDK_PKG" || die "Failed to pkgbuild component package"

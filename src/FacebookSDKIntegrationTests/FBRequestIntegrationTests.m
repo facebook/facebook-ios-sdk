@@ -22,6 +22,7 @@
 #import "FBRequest.h"
 #import "FBGraphUser.h"
 #import "FBGraphPlace.h"
+#import "FBSettings.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
 
@@ -42,6 +43,11 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 @end
 
 @implementation FBRequestIntegrationTests
+
+- (void)tearDown {
+    [FBSession setActiveSession:nil];
+    [super tearDown];
+}
 
 - (void)testRequestMe
 {
@@ -220,16 +226,9 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testGraphObjectTypedRequest
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequestConnection startWithGraphPath:@"4" // Zuck
-                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
-                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
-                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
-                              [blocker signal];
-                          }];
+    FBTestSession *session = self.defaultTestSession;
+    [FBSession setActiveSession:session];
 
-    [blocker wait];
-
-    blocker = [[[FBTestBlocker alloc] init] autorelease];
     [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
                           completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
                               STAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
@@ -244,10 +243,12 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testGraphObjectTypedRequest2
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [FBRequestConnection startWithGraphPath:@"4" // Zuck
-                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> zuck, NSError *error) {
-                              STAssertTrue([zuck.first_name isEqualToString:@"Mark"], @"zuck != zuck");
-                              STAssertTrue([zuck.last_name isEqualToString:@"Zuckerberg"], @"zuck != zuck");
+    FBTestSession *session = self.defaultTestSession;
+    [FBSession setActiveSession:session];
+
+    [FBRequestConnection startWithGraphPath:session.testUserID
+                          completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> user, NSError *error) {
+                              STAssertTrue([user.name isEqualToString:session.testUserName], @"Got unexpected user");
                               [blocker signal];
                           }];
 
@@ -318,47 +319,6 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 
     STAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
     STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
-}
-
-- (id)postEvent
-{
-    id<FBGraphObject> event = [FBGraphObject graphObject];
-
-    // The "Events Timezone" platform migration affects what date/time formats Facebook accepts and returns.
-    // Apps created after 8/1/12 (or apps that have explicitly enabled the migration) should send/receive
-    // dates in ISO-8601 format. Pre-migration apps can send as Unix timestamps. Since the future is ISO-8601,
-    // that is what we support here. Apps that need pre-migration behavior can explicitly send these as
-    // integer timestamps rather than NSDates.
-    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ssZ"];
-    id startTime = [NSDate dateWithTimeIntervalSinceNow:24 * 3600];
-    id endTime = [dateFormatter stringFromDate:[NSDate dateWithTimeInterval:3600 sinceDate:startTime]];
-    startTime = [dateFormatter stringFromDate:startTime];
-
-    [event setObject:[NSString stringWithFormat:@"My event on %@", startTime]
-              forKey:@"name"];
-    [event setObject:@"This is a great event. You should all come."
-              forKey:@"description"];
-    [event setObject:startTime forKey:@"start_time"];
-    [event setObject:endTime forKey:@"end_time"];
-    [event setObject:@"My house" forKey:@"location"];
-
-    return [self batchedPostAndGetWithSession:self.defaultTestSession
-                                    graphPath:@"me/events"
-                                  graphObject:event];
-}
-
-- (void)testEventRoundTrip
-{
-    id postedEvent = [self postEvent];
-    STAssertNotNil(postedEvent, @"no event");
-
-    [postedEvent removeObjectForKey:@"id"];
-
-    id event2 = [self batchedPostAndGetWithSession:self.defaultTestSession
-                                         graphPath:@"me/events"
-                                       graphObject:postedEvent];
-    STAssertNotNil(event2, @"no event");
 }
 
 - (NSDictionary *)createObjectWithCreateRequest:(FBRequest *)createRequest
@@ -621,11 +581,35 @@ withExpectedResults:(NSArray *)expectedResults
 {
     return [NSArray arrayWithObjects:@"email",
             @"publish_actions",
-            @"create_event",
             @"read_stream",
             nil];
 }
 
+- (void)testLegacyCompatibility
+{
+    FBTestSession *session = self.defaultTestSession;
+    [FBSettings enablePlatformCompatibility:YES];
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+    FBRequest *permissions = [FBRequest requestForGraphPath:@"me/permissions"];
+    permissions.session = session;
+    [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        NSArray *resultData = result[@"data"];
+        STAssertTrue((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
+                     @"expected v1.0 me/permission results but got %@", result);
+        [blocker signal];
+    }];
+    [blocker waitWithTimeout:10];
+    [FBSettings enablePlatformCompatibility:NO];
+
+    blocker = [[[FBTestBlocker alloc] init] autorelease];
+    [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+        NSArray *resultData = result[@"data"];
+        STAssertFalse((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
+                     @"expected not v1.0 me/permission results but got %@", result);
+        [blocker signal];
+    }];
+    [blocker waitWithTimeout:10];
+}
 @end
 
 #endif

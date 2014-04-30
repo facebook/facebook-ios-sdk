@@ -15,9 +15,10 @@
  */
 
 #import "FBRequestConnection.h"
+#import "FBSDKMacros.h"
 
 // Defines the maximum number of retries for the FBRequestConnectionErrorBehaviorRetry.
-extern const int FBREQUEST_DEFAULT_MAX_RETRY_LIMIT;
+FBSDK_EXTERN const int FBREQUEST_DEFAULT_MAX_RETRY_LIMIT;
 
 // Internal only class to facilitate FBRequest processing, specifically
 // associating FBRequest and FBRequestHandler instances and necessary

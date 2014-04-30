@@ -26,6 +26,7 @@
 #import "FBSession+Internal.h"
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
+#import "FacebookSDK.h"
 
 /*
  FBBridgeURLParams and FBBridgeKey define the protocol used between the native Facebook app
@@ -69,24 +70,26 @@ static const struct {
 
 /*
  FBBridgeKey - keys into the bridgeArgs JSON object.
- - actionId : GUID used by the bridge to identify a unique AppCall. Generated in the SDK.
+ - actionID : GUID used by the bridge to identify a unique AppCall. Generated in the SDK.
  - appName : Name of the calling app.
  - appIcon : Icon of the calling app.
  - clientState : JSON object which is opaque to the bridge and method-specific code. It is simply passed through in the
  response to allow third party apps to pass context into their completion handlers.
  */
 static const struct {
-    NSString *actionId;
+    NSString *actionID;
     NSString *appName;
     NSString *appIcon;
     NSString *clientState;
     NSString *error;
+    NSString *sdkVersion;
 } FBBridgeKey = {
-    .actionId = @"action_id",
+    .actionID = @"action_id",
     .appName = @"app_name",
     .appIcon = @"app_icon",
     .clientState = @"client_state",
     .error = @"error",
+    .sdkVersion = @"sdk_version",
 };
 
 static const struct {
@@ -97,6 +100,18 @@ static const struct {
     .code = @"code",
     .domain = @"domain",
     .userInfo = @"user_info",
+};
+
+static const struct {
+    NSString *code;
+    NSString *description;
+    NSString *error;
+    NSString *reason;
+} FBJSBridgeErrorKey = {
+    .code = @"error_code",
+    .description = @"error_description",
+    .error = @"error",
+    .reason = @"error_reason",
 };
 
 static NSString *const FBAppBridgeURLHost = @"bridge";
@@ -197,8 +212,10 @@ static FBAppBridge *g_sharedInstance;
                                         self.appID, FBBridgeURLParams.appId,
                                         [FBAppBridge symmetricKeyAndForceRefresh:NO], FBBridgeURLParams.cipherKey,
                                         nil];
-    NSMutableDictionary *bridgeParams = [NSMutableDictionary dictionaryWithObject:appCall.ID
-                                                                           forKey:FBBridgeKey.actionId];
+    NSMutableDictionary *bridgeParams = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                         appCall.ID, FBBridgeKey.actionID,
+                                         FB_IOS_SDK_VERSION_STRING, FBBridgeKey.sdkVersion,
+                                         nil];
 
     [self addAppMetadataToDictionary:bridgeParams];
 
@@ -380,7 +397,7 @@ forFailedAppCall:(FBAppCall *)appCall
                 session:(FBSession *)session
         fallbackHandler:(FBAppCallHandler)fallbackHandler {
     NSDictionary *bridgeArgs = [self dictionaryFromJSONString:queryParams[FBBridgeURLParams.bridgeArgs]];
-    NSString *callID = bridgeArgs[FBBridgeKey.actionId];
+    NSString *callID = bridgeArgs[FBBridgeKey.actionID];
     NSString *version = queryParams[FBBridgeURLParams.version];
 
     if (!callID || !version) {
@@ -583,14 +600,35 @@ withCompletionHandler:(FBAppCallHandler)handler {
     return appIcon;
 }
 
++ (id)_coerceValue:(id)value
+{
+    return ([value isKindOfClass:[NSNull class]] ? nil : value);
+}
+
++ (void)_copyValueForKey:(id<NSCopying>)key fromDictionary:(NSDictionary *)source toDictionary:(NSMutableDictionary *)destination
+{
+    id value = [self _coerceValue:source[key]];
+    if ((value != nil) && ![value isKindOfClass:[NSNull class]]) {
+        destination[key] = value;
+    }
+}
+
 + (NSError *)errorFromDictionary:(NSDictionary *)errorDictionary {
     NSError *error = nil;
     if (errorDictionary) {
-        NSString *domain = errorDictionary[FBBridgeErrorKey.domain];
-        NSInteger code = [(NSNumber *)errorDictionary[FBBridgeErrorKey.code] integerValue];
-        NSDictionary *userInfo = errorDictionary[FBBridgeErrorKey.userInfo];
+        NSString *domain = [self _coerceValue:errorDictionary[FBBridgeErrorKey.domain]];
+        NSInteger code = ([[self _coerceValue:errorDictionary[FBJSBridgeErrorKey.code]] integerValue] ?:
+                          [[self _coerceValue:errorDictionary[FBBridgeErrorKey.code]] integerValue]);
+        NSDictionary *userInfo = [self _coerceValue:errorDictionary[FBBridgeErrorKey.userInfo]];
+        if (!userInfo) {
+            NSMutableDictionary *mutableUserInfo = [[[NSMutableDictionary alloc] init] autorelease];
+            [self _copyValueForKey:FBJSBridgeErrorKey.error fromDictionary:errorDictionary toDictionary:mutableUserInfo];
+            [self _copyValueForKey:FBJSBridgeErrorKey.description fromDictionary:errorDictionary toDictionary:mutableUserInfo];
+            [self _copyValueForKey:FBJSBridgeErrorKey.reason fromDictionary:errorDictionary toDictionary:mutableUserInfo];
+            userInfo = [([mutableUserInfo count] == 0 ? nil : [mutableUserInfo copy]) autorelease];
+        }
 
-        error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+        error = [NSError errorWithDomain:domain ?: FacebookSDKDomain code:code userInfo:userInfo];
     }
 
     return error;

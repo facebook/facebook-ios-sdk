@@ -16,7 +16,7 @@
 
 #import "FBRequest.h"
 
-@interface FBRequest (Internal)
+@interface FBRequest ()
 
 /*!
  @abstract
@@ -28,5 +28,9 @@
  For simplicity, setting this flag to NO also bypasses any errorBehavior retry logic.
  */
 @property (assign, nonatomic) BOOL canCloseSessionOnError;
+
+@property (assign, nonatomic) BOOL skipClientToken;
+
+@property (readonly) NSString *versionPart;
 
 @end

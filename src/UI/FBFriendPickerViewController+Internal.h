@@ -19,10 +19,11 @@
 #import "FBFriendPickerViewController.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBRequest.h"
+#import "FBSDKMacros.h"
 #import "FBSession.h"
 
 // This is the cache identity used by both the view controller and cache descriptor objects
-extern NSString *const FBFriendPickerCacheIdentity;
+FBSDK_EXTERN NSString *const FBFriendPickerCacheIdentity;
 
 @interface FBFriendPickerViewController (Internal)
 

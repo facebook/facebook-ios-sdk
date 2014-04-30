@@ -23,8 +23,9 @@
 @property (copy, nonatomic) NSString *serverAppName;
 @property (readwrite) BOOL supportsAttribution;
 @property (readwrite) BOOL supportsImplicitSdkLogging;
-@property (readwrite) BOOL suppressNativeGdp;
+@property (readwrite) BOOL enableLoginTooltip;
 @property (readonly, nonatomic) NSString *appID;
+@property (copy, nonatomic) NSString *loginTooltipContent;
 
 - (instancetype)initWithAppID:(NSString *)appID;
 

@@ -16,8 +16,12 @@
 
 #import <sqlite3.h>
 
+#import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/Foundation.h>
+#import <QuartzCore/QuartzCore.h>
 #import <Security/Security.h>
+
+#import "FBSDKMacros.h"
 
 /*!
  @class FBDynamicFrameworkLoader
@@ -126,4 +130,16 @@ SQLITE_API double fbdfl_sqlite3_column_double(sqlite3_stmt *stmt, int iCol);
 SQLITE_API int fbdfl_sqlite3_column_int(sqlite3_stmt *stmt, int iCol);
 SQLITE_API const unsigned char *fbdfl_sqlite3_column_text(sqlite3_stmt *stmt, int iCol);
 
+// QuartzCore c-style APIs
+// These are local wrappers around the corresponding transform methods from QuartzCore.framework/CATransform3D.h
+CATransform3D fbdfl_CATransform3DMakeScale (CGFloat sx, CGFloat sy, CGFloat sz);
+CATransform3D fbdfl_CATransform3DMakeTranslation (CGFloat tx, CGFloat ty, CGFloat tz);
+CATransform3D fbdfl_CATransform3DConcat (CATransform3D a, CATransform3D b);
 
+FBSDK_EXTERN const CATransform3D fbdfl_CATransform3DIdentity;
+
+// AudioToolbox c-style APIs
+// These are local wrappers around the corresponding methods in AudioToolbox/AudioToolbox.h
+OSStatus fbdfl_AudioServicesCreateSystemSoundID(CFURLRef inFileURL, SystemSoundID *outSystemSoundID);
+OSStatus fbdfl_AudioServicesDisposeSystemSoundID(SystemSoundID inSystemSoundID);
+void fbdfl_AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID);

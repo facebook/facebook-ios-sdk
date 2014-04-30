@@ -19,13 +19,14 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
+#import "FBSDKMacros.h"
 #import "FBSession.h"
 
 // This is the cache identity used by both the view controller and cache descriptor objects
-extern NSString *const FBPlacePickerCacheIdentity;
+FBSDK_EXTERN NSString *const FBPlacePickerCacheIdentity;
 
-extern const NSInteger defaultResultsLimit;
-extern const NSInteger defaultRadius;
+FBSDK_EXTERN const NSInteger defaultResultsLimit;
+FBSDK_EXTERN const NSInteger defaultRadius;
 
 @interface FBPlacePickerViewController (Internal)
 

@@ -14,20 +14,21 @@
  * limitations under the License.
  */
 
+#import "FBSDKMacros.h"
 #import "FBSession.h"
 #import "FBSessionAppEventsState.h"
 #import "FBSystemAccountStoreAdapter.h"
 
-extern NSString *const FBLoginUXClientState;
-extern NSString *const FBLoginUXClientStateIsClientState;
-extern NSString *const FBLoginUXClientStateIsOpenSession;
-extern NSString *const FBLoginUXClientStateIsActiveSession;
-extern NSString *const FBLoginUXResponseTypeToken;
-extern NSString *const FBLoginUXResponseType;
+FBSDK_EXTERN NSString *const FBLoginUXClientState;
+FBSDK_EXTERN NSString *const FBLoginUXClientStateIsClientState;
+FBSDK_EXTERN NSString *const FBLoginUXClientStateIsOpenSession;
+FBSDK_EXTERN NSString *const FBLoginUXClientStateIsActiveSession;
+FBSDK_EXTERN NSString *const FBLoginUXResponseTypeToken;
+FBSDK_EXTERN NSString *const FBLoginUXResponseType;
 
-extern NSString *const FBInnerErrorObjectKey;
-extern NSString *const FBSessionDidSetActiveSessionNotificationUserInfoIsOpening;
-extern NSString *const FacebookNativeApplicationLoginDomain;
+FBSDK_EXTERN NSString *const FBInnerErrorObjectKey;
+FBSDK_EXTERN NSString *const FBSessionDidSetActiveSessionNotificationUserInfoIsOpening;
+FBSDK_EXTERN NSString *const FacebookNativeApplicationLoginDomain;
 
 @interface FBSession (Internal)
 
@@ -39,7 +40,7 @@ extern NSString *const FacebookNativeApplicationLoginDomain;
 - (void)refreshAccessToken:(NSString *)token expirationDate:(NSDate *)expireDate;
 - (BOOL)shouldExtendAccessToken;
 - (BOOL)shouldRefreshPermissions;
-- (void)refreshPermissions:(NSArray *)permissions;
+- (void)handleRefreshPermissions:(id)permissionsResponse;
 - (void)closeAndClearTokenInformation:(NSError *)error;
 - (void)clearAffinitizedThread;
 

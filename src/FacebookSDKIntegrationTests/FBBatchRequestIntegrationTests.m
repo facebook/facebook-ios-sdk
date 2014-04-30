@@ -106,7 +106,7 @@
                                                     graphPath:@"me"]
                            autorelease];
     FBRequest *request2 = [[[FBRequest alloc] initWithSession:nil
-                                                    graphPath:@"zuck"]
+                                                    graphPath:@"me"]
                            autorelease];
     
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
@@ -119,8 +119,8 @@
          }];
     [connection addRequest:request2
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+             STAssertTrue(error, @"nil error");
+             STAssertNotNil(!result, @"!result");
              [blocker signal];
          }];
     
@@ -134,7 +134,7 @@
 - (void)testBatchWithNoSessionAndValidSession
 {
     FBRequest *request1 = [[[FBRequest alloc] initWithSession:nil
-                                                    graphPath:@"zuck"]
+                                                    graphPath:@"me"]
                            autorelease];
     FBRequest *request2 = [[[FBRequest alloc] initWithSession:self.defaultTestSession
                                                     graphPath:@"me"]
@@ -145,8 +145,8 @@
     
     [connection addRequest:request1 
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+             STAssertTrue(error, @"nil error");
+             STAssertNotNil(!result, @"!result");
          }];
     [connection addRequest:request2
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
@@ -167,12 +167,12 @@
     // Only use this to get the unit-testing app ID.
     FBTestSession *session = self.defaultTestSession;
     [FBSession setDefaultAppID:session.testAppID];
-    
+
     FBRequest *request1 =[[[FBRequest alloc] initWithSession:nil
-                                                   graphPath:@"zuck"]
+                                                   graphPath:session.testUserID]
                           autorelease];
     FBRequest *request2 = [[[FBRequest alloc] initWithSession:nil
-                                                    graphPath:@"zuck"]
+                                                    graphPath:session.testUserID]
                            autorelease];
     
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
@@ -180,13 +180,13 @@
     
     [connection addRequest:request1 
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+             STAssertTrue(error, @"nil error");
+             STAssertNotNil(!result, @"!result");
          }];
     [connection addRequest:request2
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+             STAssertTrue(error, @"nil error");
+             STAssertNotNil(!result, @"!result");
              [blocker signal];
          }];
     
@@ -224,7 +224,7 @@
 
 - (void)testBatchUploadPhoto
 {
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:[NSArray arrayWithObject:@"user_photos"]];
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:@[@"user_photos", @"publish_actions"]];
     
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:4];
@@ -294,10 +294,9 @@
     FBTestSession *session = [self defaultTestSession];
     FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
     FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
-    // Note these ids are significant in that they are ids of other test users. Since we use FBTestSession
-    // above (which will have a platform test user access token), the ids need to be objects that are visible
-    // to the platform test user (such as other test users).
-    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=100006424828400,100006675870174"] autorelease];
+
+    NSString *graphPath = [NSString stringWithFormat:@"?ids=%@,%@&fields=id", session.testAppID, session.testUserID];
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:graphPath] autorelease];
     [connection addRequest:parent
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
              STAssertNil(error, @"unexpected error in parent request :%@", error);

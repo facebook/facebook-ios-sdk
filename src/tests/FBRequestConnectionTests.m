@@ -697,4 +697,35 @@
     [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
 }
 
+- (NSString *)generateUUID
+{
+    CFUUIDRef UUID = CFUUIDCreate(kCFAllocatorDefault);
+    NSString *UUIDString = (NSString *)CFUUIDCreateString(kCFAllocatorDefault, UUID);
+    CFRelease(UUID);
+    return [UUIDString autorelease];
+}
+
+- (void)testClientToken
+{
+    NSString *restoreAppID = [FBSettings defaultAppID];
+    NSString *restoreClientToken = [FBSettings clientToken];
+    @try {
+        FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+        FBRequest *request = [[[FBRequest alloc] init] autorelease];
+        [connection addRequest:request completionHandler:NULL];
+        NSString *appID = [self generateUUID];
+        NSString *clientToken = [self generateUUID];
+        [FBSettings setDefaultAppID:appID];
+        [FBSettings setClientToken:clientToken];
+        NSString *expected = [NSString stringWithFormat:@"%@|%@", appID, clientToken];
+        STAssertEqualObjects([connection accessTokenWithRequest:request],
+                             expected,
+                             @"access token expected to be based on app id and client token");
+    }
+    @finally {
+        [FBSettings setDefaultAppID:restoreAppID];
+        [FBSettings setClientToken:restoreClientToken];
+    }
+}
+
 @end

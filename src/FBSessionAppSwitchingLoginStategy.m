@@ -19,7 +19,6 @@
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
-#import "FBSessionFacebookAppNativeLoginStategy.h"
 #import "FBSessionFacebookAppWebLoginStategy.h"
 #import "FBSessionLoginStrategy.h"
 #import "FBSessionSafariLoginStategy.h"
@@ -67,8 +66,7 @@
         isURLSchemeRegistered &&
         !TEST_DISABLE_MULTITASKING_LOGIN) {
 
-        NSArray *loginStrategies = @[ [[[FBSessionFacebookAppNativeLoginStategy alloc] init] autorelease],
-                                      [[[FBSessionFacebookAppWebLoginStategy alloc] init] autorelease],
+        NSArray *loginStrategies = @[ [[[FBSessionFacebookAppWebLoginStategy alloc] init] autorelease],
                                       [[[FBSessionSafariLoginStategy alloc] init] autorelease] ];
 
         for (id<FBSessionLoginStrategy> loginStrategy in loginStrategies) {

@@ -21,9 +21,10 @@
 #import "FBOpenGraphAction.h"
 #import "FBOpenGraphObject.h"
 #import "FBRequestConnection.h"
+#import "FBSDKMacros.h"
 
 /*! The base URL used for graph requests */
-extern NSString *const FBGraphBasePath __attribute__((deprecated));
+FBSDK_EXTERN NSString *const FBGraphBasePath __attribute__((deprecated));
 
 // up-front decl's
 @protocol FBRequestDelegate;
@@ -74,6 +75,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 @private
     id<FBRequestDelegate> _delegate;
     NSString *            _url;
+    NSString *            _versionPart;
     NSURLConnection *     _connection;
     NSMutableData *       _responseText;
 #pragma GCC diagnostic push
@@ -267,6 +269,22 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 /*!
  @methodgroup Instance methods
  */
+
+/*!
+ @method
+ 
+ @abstract
+ Overrides the default version for a single request
+ 
+ @discussion
+ The SDK automatically prepends a version part, such as "v2.0" to API paths in order to simplify API versioning
+ for applications. Sometimes it is preferable to explicitly set the version for a request, which can be 
+ accomplished in one of two ways. The first is to call this method and set an override version part. The second
+ is approach is to include the version part in the api path, for example @"v2.0/me/friends"
+ 
+ @param version   This is a string in the form @"v2.0" which will be used for the version part of an API path
+ */
+- (void)overrideVersionPartWith:(NSString *)version;
 
 /*!
  @method

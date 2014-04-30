@@ -15,77 +15,86 @@
  */
 
 #import "FBAppEvents.h"
+#import "FBSDKMacros.h"
 
 @class FBRequest;
 
 // Internally known event names
 
 /*! Use to log that the share dialog was launched */
-extern NSString *const FBAppEventNameShareSheetLaunch;
+FBSDK_EXTERN NSString *const FBAppEventNameShareSheetLaunch;
 
 /*! Use to log that the share dialog was dismissed */
-extern NSString *const FBAppEventNameShareSheetDismiss;
+FBSDK_EXTERN NSString *const FBAppEventNameShareSheetDismiss;
 
 /*! Use to log that the permissions UI was launched */
-extern NSString *const FBAppEventNamePermissionsUILaunch;
+FBSDK_EXTERN NSString *const FBAppEventNamePermissionsUILaunch;
 
 /*! Use to log that the permissions UI was dismissed */
-extern NSString *const FBAppEventNamePermissionsUIDismiss;
+FBSDK_EXTERN NSString *const FBAppEventNamePermissionsUIDismiss;
 
 /*! Use to log that the friend picker was launched and completed */
-extern NSString *const FBAppEventNameFriendPickerUsage;
+FBSDK_EXTERN NSString *const FBAppEventNameFriendPickerUsage;
 
 /*! Use to log that the place picker dialog was launched and completed */
-extern NSString *const FBAppEventNamePlacePickerUsage;
+FBSDK_EXTERN NSString *const FBAppEventNamePlacePickerUsage;
 
 /*! Use to log that the login view was used */
-extern NSString *const FBAppEventNameLoginViewUsage;
+FBSDK_EXTERN NSString *const FBAppEventNameLoginViewUsage;
 
 /*! Use to log that the user settings view controller was used */
-extern NSString *const FBAppEventNameUserSettingsUsage;
+FBSDK_EXTERN NSString *const FBAppEventNameUserSettingsUsage;
 
 // Internally known event parameters
 
 /*! String parameter specifying the outcome of a dialog invocation */
-extern NSString *const FBAppEventParameterDialogOutcome;
+FBSDK_EXTERN NSString *const FBAppEventParameterDialogOutcome;
 
-/*! Use to log the result of a call to FBDialogs canPresentShareDialogWithParams: */
-extern NSString *const FBAppEventNameFBDialogsPresentShareDialog;
+/*! Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentShareDialog;
 
-/*! Use to log the result of a call to FBDialogs canPresentShareDialogWithOpenGraphActionParams: */
-extern NSString *const FBAppEventNameFBDialogsPresentShareDialogOG;
+/*! Use to log the result of a call to FBDialogs presentShareDialogWithOpenGraphActionParams: */
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentShareDialogOG;
+
+/*! Use to log the result of a call to FBDialogs presentLikeDialogWithLikeParams: */
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentLikeDialogOG;
+
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentShareDialogPhoto;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentMessageDialog;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentMessageDialogPhoto;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsPresentMessageDialogOG;
 
 /*! Use to log the start of an auth request that cannot be fulfilled by the token cache */
-extern NSString *const FBAppEventNameFBSessionAuthStart;
+FBSDK_EXTERN NSString *const FBAppEventNameFBSessionAuthStart;
 
 /*! Use to log the end of an auth request that was not fulfilled by the token cache */
-extern NSString *const FBAppEventNameFBSessionAuthEnd;
+FBSDK_EXTERN NSString *const FBAppEventNameFBSessionAuthEnd;
 
 /*! Use to log the start of a specific auth method as part of an auth request */
-extern NSString *const FBAppEventNameFBSessionAuthMethodStart;
+FBSDK_EXTERN NSString *const FBAppEventNameFBSessionAuthMethodStart;
 
 /*! Use to log the end of the last tried auth method as part of an auth request */
-extern NSString *const FBAppEventNameFBSessionAuthMethodEnd;
+FBSDK_EXTERN NSString *const FBAppEventNameFBSessionAuthMethodEnd;
 
 /*! Use to log the timestamp for the transition to the Facebook native login dialog */
-extern NSString *const FBAppEventNameFBDialogsNativeLoginDialogStart;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsNativeLoginDialogStart;
 
 /*! Use to log the timestamp for the transition back to the app after the Facebook native login dialog */
-extern NSString *const FBAppEventNameFBDialogsNativeLoginDialogEnd;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsNativeLoginDialogEnd;
 
 /*! Use to log the e2e timestamp metrics for web login */
-extern NSString *const FBAppEventNameFBDialogsWebLoginCompleted;
+FBSDK_EXTERN NSString *const FBAppEventNameFBDialogsWebLoginCompleted;
 
 // Internally known event parameter values
 
-extern NSString *const FBAppEventsDialogOutcomeValue_Completed;
-extern NSString *const FBAppEventsDialogOutcomeValue_Cancelled;
-extern NSString *const FBAppEventsDialogOutcomeValue_Failed;
+FBSDK_EXTERN NSString *const FBAppEventsDialogOutcomeValue_Completed;
+FBSDK_EXTERN NSString *const FBAppEventsDialogOutcomeValue_Cancelled;
+FBSDK_EXTERN NSString *const FBAppEventsDialogOutcomeValue_Failed;
 
-extern NSString *const FBAppEventsNativeLoginDialogStartTime;
-extern NSString *const FBAppEventsNativeLoginDialogEndTime;
+FBSDK_EXTERN NSString *const FBAppEventsNativeLoginDialogStartTime;
+FBSDK_EXTERN NSString *const FBAppEventsNativeLoginDialogEndTime;
 
-extern NSString *const FBAppEventsWebLoginE2E;
+FBSDK_EXTERN NSString *const FBAppEventsWebLoginE2E;
 
 typedef enum {
     FBAppEventsFlushReasonExplicit,

@@ -71,9 +71,28 @@ static NSString *g_defaultUrlSchemeSuffix = nil;
 static NSString *g_facebookDomainPart = nil;
 static NSString *g_resourceBundleName = nil;
 static FBRestrictedTreatment g_restrictedTreatment;
+static BOOL g_enableLegacyGraphAPI = NO;
 
 + (NSString *)sdkVersion {
     return FB_IOS_SDK_VERSION_STRING;
+}
+
++ (BOOL)isPlatformCompatibilityEnabled {
+    return g_enableLegacyGraphAPI;
+}
+
++ (void)enablePlatformCompatibility:(BOOL)enable {
+    if (enable != g_enableLegacyGraphAPI) {
+        g_enableLegacyGraphAPI = enable;
+    }
+}
+
++ (NSString *)platformVersion {
+    if ([[self class] isPlatformCompatibilityEnabled]) {
+        return @"v1.0";
+    } else {
+        return FB_IOS_SDK_TARGET_PLATFORM_VERSION;
+    }
 }
 
 + (NSString *)appVersion {

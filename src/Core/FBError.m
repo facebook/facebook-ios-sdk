@@ -50,5 +50,6 @@ NSString *const FBErrorDialogCantBeDisplayed = @"DialogCantBeDisplayed";
 NSString *const FBErrorDialogInvalidOpenGraphObject = @"DialogInvalidOpenGraphObject";
 NSString *const FBErrorDialogInvalidOpenGraphActionParameters = @"DialogInvalidOpenGraphActionParameters";
 NSString *const FBErrorDialogInvalidShareParameters = @"DialogInvalidShareParameters";
+NSString *const FBErrorDialogInvalidLikeObjectID = @"DialogInvalidLikeObjectID";
 
 NSString *const FBErrorAppEventsReasonKey = @"com.facebook.sdk:AppEventsReasonKey";

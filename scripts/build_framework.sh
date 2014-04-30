@@ -61,6 +61,13 @@ FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/${BUILDCONFIGURATION}-universal/$FB_SDK_BI
 
 # -----------------------------------------------------------------------------
 
+progress_message Building Bolts
+
+# -----------------------------------------------------------------------------
+$BOLTS_SCRIPT/build_framework.sh || die "Could not build Bolts."
+
+# -----------------------------------------------------------------------------
+
 progress_message Building Framework.
 
 # -----------------------------------------------------------------------------
@@ -180,5 +187,5 @@ fi
 # Done
 #
 
-progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_MIGRATION_BUNDLE @(.+)$/ || m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' "$FB_SDK_SRC/Core/FBSDKVersion.h" "$FB_SDK_SRC/FacebookSDK.h"` 
+progress_message "Framework version info:" `perl -ne 'print "$1 " if (m/FB_IOS_SDK_VERSION_STRING @(.+)$/);' "$FB_SDK_SRC/FacebookSDK.h"` 
 common_success

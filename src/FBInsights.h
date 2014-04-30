@@ -16,6 +16,7 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKMacros.h"
 #import "FBSession.h"
 
 /*!
@@ -29,7 +30,7 @@ typedef enum {
     FBInsightsFlushBehaviorExplicitOnly __attribute__ ((deprecated("use FBAppEventsFlushBehaviorExplicitOnly instead"))),
 } FBInsightsFlushBehavior;
 
-extern NSString *const FBInsightsLoggingResultNotification __attribute__((deprecated));
+FBSDK_EXTERN NSString *const FBInsightsLoggingResultNotification __attribute__((deprecated));
 
 /*!
  @class FBInsights

@@ -21,7 +21,6 @@
 #import "FBAppEvents+Internal.h"
 #import "FBGraphObject.h"
 #import "FBLogger.h"
-#import "FBSDKVersion.h"
 #import "FBSession+Internal.h"
 #import "FBUtility.h"
 #import "Facebook.h"
@@ -34,11 +33,6 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 // ----------------------------------------------------------------------------
 // FBRequest
-@interface FBRequest ()
-
-@property (assign, nonatomic) BOOL canCloseSessionOnError;
-
-@end
 
 @implementation FBRequest
 
@@ -105,8 +99,7 @@ static NSString *const kPostHTTPMethod = @"POST";
         self.canCloseSessionOnError = YES;
 
         // all request objects start life with a migration bundle set for the SDK
-        _parameters = [[NSMutableDictionary alloc]
-                       initWithObjectsAndKeys:FB_IOS_SDK_MIGRATION_BUNDLE, @"migration_bundle", nil];
+        _parameters = [[NSMutableDictionary alloc] init];
         if (parameters) {
             // but the incoming dictionary's migration bundle trumps the default one, if present
             [self.parameters addEntriesFromDictionary:parameters];
@@ -124,6 +117,7 @@ static NSString *const kPostHTTPMethod = @"POST";
     [_HTTPMethod release];
     [_parameters release];
     [_url release];
+    [_versionPart release];
     [_connection release];
     [_responseText release];
     [_error release];
@@ -154,6 +148,15 @@ static NSString *const kPostHTTPMethod = @"POST";
     return connection;
 }
 
+- (NSString *)versionPart {
+    return _versionPart;
+}
+
+- (void)overrideVersionPartWith:(NSString *)version {
+    [_versionPart release];
+    _versionPart = [version copy];
+}
+
 - (FBRequestConnection *)createRequestConnection {
     return [[[FBRequestConnection alloc] init] autorelease];
 }
@@ -165,11 +168,13 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequest *)requestForMyFriends {
+    NSDictionary *params = @{ @"fields": (([FBSettings isPlatformCompatibilityEnabled]) ?
+                                          @"id,name,username,first_name,last_name" :
+                                          @"id,name,first_name,last_name") };
+
     return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                      graphPath:@"me/friends"
-                                    parameters:[NSDictionary dictionaryWithObjectsAndKeys:
-                                                @"id,name,username,first_name,last_name", @"fields",
-                                                nil]
+                                    parameters:params
                                     HTTPMethod:nil]
             autorelease];
 }

@@ -21,10 +21,11 @@
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
-if [ "$#" -lt 2 ]; then
-      echo "Usage: $0 APP_ID APP_SECRET [MACHINE_UNIQUE_USER_KEY]"
+if [ "$#" -lt 3 ]; then
+      echo "Usage: $0 APP_ID APP_SECRET CLIENT_TOKEN [MACHINE_UNIQUE_USER_KEY]"
       echo "  APP_ID                   your unit-testing Facebook application's App ID"
       echo "  APP_SECRET               your unit-testing Facebook application's App Secret"
+      echo "  CLIENT_TOKEN             your unit-testing Facebook application's client token"
       echo "  MACHINE_UNIQUE_USER_TAG  optional text used to ensure this machine will use its own set of test users rather than sharing"
       die 'Arguments do not conform to usage'
 fi
@@ -32,13 +33,14 @@ fi
 function write_xcconfig {
     echo "IOS_SDK_TEST_APP_ID = $2" > $1
     echo "IOS_SDK_TEST_APP_SECRET = $3" >> $1
-    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $4" >> $1
+    echo "IOS_SDK_TEST_CLIENT_TOKEN = $4" >> $1
+    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $5" >> $1
 
     echo "Wrote test app configuration to: $1"
 }
 
 XCCONFIG_FILE="$FB_SDK_SRC"/tests/TestAppIdAndSecret.xcconfig
 
-write_xcconfig "$XCCONFIG_FILE" "$1" "$2" "$3"
+write_xcconfig "$XCCONFIG_FILE" "$1" "$2" "$3" "$4"
 
 

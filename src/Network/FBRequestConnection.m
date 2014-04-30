@@ -28,7 +28,6 @@
 #import "FBRequestBody.h"
 #import "FBRequestConnectionRetryManager.h"
 #import "FBRequestHandlerFactory.h"
-#import "FBSDKVersion.h"
 #import "FBSession+Internal.h"
 #import "FBSession.h"
 #import "FBSettings+Internal.h"
@@ -656,7 +655,7 @@ typedef enum FBRequestConnectionState {
     if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
         request.parameters[@"restricted_treatment"] = [@([FBSettings restrictedTreatment]) stringValue];
     }
-    NSString *token = request.session.accessTokenData.accessToken;
+    NSString *token = [self accessTokenWithRequest:request];
     if (token) {
         [request.parameters setValue:token forKey:kAccessTokenKey];
         [self registerTokenToOmitFromLog:token];
@@ -667,7 +666,7 @@ typedef enum FBRequestConnectionState {
         if (forBatch) {
             baseURL = [kBatchRestMethodBaseURL stringByAppendingString:request.restMethod];
         } else {
-            baseURL = [[FBUtility buildFacebookUrlWithPre:kApiURLPrefix withPost:@"/method/"] stringByAppendingString:request.restMethod];
+            baseURL = [[FBUtility buildFacebookUrlWithPre:kApiURLPrefix post:@"/method/" version:request.versionPart] stringByAppendingString:request.restMethod];
         }
     } else {
         if (forBatch) {
@@ -683,7 +682,7 @@ typedef enum FBRequestConnectionState {
                     prefix = kGraphVideoURLPrefix;
                 }
             }
-            baseURL = [[FBUtility buildFacebookUrlWithPre:prefix withPost:@"/"] stringByAppendingString:request.graphPath];
+            baseURL = [[FBUtility buildFacebookUrlWithPre:prefix post:@"/" version:request.versionPart] stringByAppendingString:request.graphPath];
         }
     }
 
@@ -704,6 +703,22 @@ typedef enum FBRequestConnectionState {
         }
     }
     return [FBSettings defaultAppID];
+}
+
+- (NSString *)accessTokenWithRequest:(FBRequest *)request
+{
+    NSString *token = request.session.accessTokenData.accessToken;
+    if (!token) {
+        token = request.parameters[kAccessTokenKey];
+    }
+    if (!token && !request.skipClientToken) {
+        NSString *appID = [self getBatchAppID:self.requests];
+        NSString *clientToken = [FBSettings clientToken];
+        if (appID.length && clientToken.length) {
+            token = [NSString stringWithFormat:@"%@|%@", appID, clientToken];
+        }
+    }
+    return token;
 }
 
 //
@@ -748,7 +763,7 @@ typedef enum FBRequestConnectionState {
         [requestElement addEntriesFromDictionary:metadata.batchParameters];
     }
 
-    NSString *token = metadata.request.session.accessTokenData.accessToken;
+    NSString *token = [self accessTokenWithRequest:metadata.request];
     if (token) {
         [metadata.request.parameters setObject:token forKey:kAccessTokenKey];
         [self registerTokenToOmitFromLog:token];
@@ -1054,6 +1069,10 @@ typedef enum FBRequestConnectionState {
                 NSMutableDictionary *result = [[[NSMutableDictionary alloc] init] autorelease];
                 for (NSString *key in [itemDictionary keyEnumerator]) {
                     id value = [itemDictionary objectForKey:key];
+                    if ([value isKindOfClass:[NSNull class]]) {
+                        continue;
+                    }
+
                     if ([key isEqualToString:@"body"]) {
                         id body = [self parseJSONOrOtherwise:value error:&batchResultError];
                         [result setObject:body forKey:key];
@@ -1485,6 +1504,10 @@ typedef enum FBRequestConnectionState {
     return agent;
 }
 
++ (BOOL)isPermissionsRequest:(FBRequest *)request{
+    return [request.graphPath isEqualToString:@"me/permissions"];
+}
+
 - (void)addPiggybackRequests
 {
     // Get the set of sessions used by our requests
@@ -1504,7 +1527,13 @@ typedef enum FBRequestConnectionState {
             [FBRequestConnection addRequestToExtendTokenForSession:session connection:self];
         }
         if (self.requests.count < kMaximumBatchSize && [session shouldRefreshPermissions]) {
-            [FBRequestConnection addRequestToRefreshPermissionsSession:session connection:self];
+            BOOL containsPermissionRequest = ([self.requests indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+                FBRequest *currentRequest = ((FBRequestMetadata *)obj).request;
+                return [[self class] isPermissionsRequest:currentRequest] && session == currentRequest.session;
+            }] != NSNotFound);
+            if (!containsPermissionRequest) {
+                [FBRequestConnection addRequestToRefreshPermissionsSession:session connection:self];
+            }
         }
     }
 
@@ -1554,15 +1583,8 @@ typedef enum FBRequestConnectionState {
 
     [connection addRequest:request
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             if (session.isOpen && !error && [result isKindOfClass:[NSDictionary class] ]) {
-                 NSArray *resultData = result[@"data"];
-                 if (resultData.count > 0) {
-                     NSDictionary *permissionsDictionary = resultData[0];
-                     id permissions = [permissionsDictionary allKeys];
-                     if (permissions && [permissions isKindOfClass:[NSArray class]]) {
-                         [session refreshPermissions:permissions];
-                     }
-                 }
+             if (!error) {
+                 [session handleRefreshPermissions:result];
              }
          }];
     [request release];

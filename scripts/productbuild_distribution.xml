@@ -12,7 +12,7 @@
         <pkg-ref id="com.facebook.sdk.pkg"/>
     </choice>
 
-    <title>Facebook SDK 3.13.1 for iOS</title>
+    <title>Facebook SDK 3.14 for iOS</title>
     <conclusion file="README.txt" mime-type="text/plain" />
     <readme file="README.txt" mime-type="text/plain" />
     <domains enable_currentUserHome="true" />

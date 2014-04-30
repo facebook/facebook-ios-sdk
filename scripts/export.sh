@@ -66,7 +66,7 @@ EXPORT_TEMP_DIR=`mktemp -d -t "${CURRENT_SCRIPT_NAME}"` || die "Failed to create
 git checkout-index -a --prefix="$EXPORT_TEMP_DIR"/
 
 # Sync the exported files from the temp directory into $OUTPUT_DIR
-rsync -avm --delete --exclude '.git' --exclude 'vendor/*' --exclude 'internal' "$EXPORT_TEMP_DIR"/ "$OUTPUT_DIR"/
+rsync -avm --delete --exclude '.git' --exclude 'vendor/*' --exclude 'internal' --exclude 'ads' "$EXPORT_TEMP_DIR"/ "$OUTPUT_DIR"/
 
 # Cleanup the temp folder
 rm -r "$EXPORT_TEMP_DIR"

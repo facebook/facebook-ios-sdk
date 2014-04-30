@@ -25,7 +25,6 @@
 @implementation FBSessionSystemLoginStategy
 
 - (BOOL)tryPerformAuthorizeWithParams:(FBSessionLoginStrategyParams *)params session:(FBSession *)session logger:(FBSessionAuthLogger *)logger {
-
     BOOL systemAccountStoreAvailable = [FBUtility isSystemAccountStoreAvailable];
     [logger addExtrasForNextEvent:@{
      @"systemAccountStoreAvailable":@(systemAccountStoreAvailable)

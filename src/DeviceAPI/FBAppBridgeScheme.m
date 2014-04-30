@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#import "FBAppBridgeScheme.h"
+#import "FBAppBridgeScheme+Subclass.h"
 
+#import "_FBMAppBridgeScheme.h"
 #import "FBAppBridge.h"
 #import "FBDialogsParams+Internal.h"
+#import "FBLinkShareParams.h"
 #import "FBLogger.h"
-#import "FBLoginDialogParams.h"
-#import "FBOpenGraphActionShareDialogParams+Internal.h"
-#import "FBShareDialogParams.h"
+#import "FBOpenGraphActionParams+Internal.h"
 #import "FBUtility.h"
 
 #define WRAP_ARRAY(array__) ([NSArray arrayWithObjects:(array__) count:(sizeof((array__)) / sizeof((array__)[0]))])
@@ -38,12 +38,13 @@
 
 static NSString *const kFBHttpScheme  = @"http";
 static NSString *const kFBHttpsScheme = @"https";
-static NSString *const kFBNativeLoginMinVersion = @"20131219";
 static NSString *const kFBShareDialogBetaVersion = @"20130214";
 static NSString *const kFBShareDialogProdVersion = @"20130410";
 static NSString *const kFBShareDialogPhotosProdVersion = @"20140116";
 static NSString *const kFBAppBridgeMinVersion = @"20130214";
 static NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
+static NSString *const kFBLikeButtonBetaVersion = @"20140410";
+
 /*
  Array of known versions that the native FB app can support.
  They should be ordered with each element being a more recent version than the previous.
@@ -57,7 +58,7 @@ static NSString *const FBAppBridgeVersions[] = {
     @"20131010",
     @"20131219",
     @"20140116",
-    @"20140214",
+    @"20140410",
 };
 @implementation FBAppBridgeScheme
 
@@ -70,47 +71,56 @@ static NSString *const FBAppBridgeVersions[] = {
     return self;
 }
 
-+ (FBAppBridgeScheme *)bridgeSchemeForFBAppForShareDialogParams:(FBShareDialogParams *)params {
-    if (params.link && ![FBAppBridgeScheme isSupportedScheme:params.link.scheme]) {
+- (void)dealloc
+{
+    [_version release];
+    [super dealloc];
+}
+
++ (NSString *)schemePrefix {
+    return @"fbapi";
+}
+
++ (NSArray *)bridgeVersions {
+    return WRAP_ARRAY(FBAppBridgeVersions);
+}
+
++ (instancetype)bridgeSchemeForFBAppForShareDialogParams:(FBLinkShareParams *)params {
+    if (params.link && ![self isSupportedScheme:params.link.scheme]) {
         return nil;
     }
-    if (params.picture && ![FBAppBridgeScheme isSupportedScheme:params.picture.scheme]) {
+    if (params.picture && ![self isSupportedScheme:params.picture.scheme]) {
         return nil;
     }
 
     NSString *minVersion = kFBShareDialogProdVersion;
-    NSString *prodVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
-                                                                         minVersion:minVersion];
+    NSString *prodVersion = [self installedFBNativeAppVersionForMethod:@"share" minVersion:minVersion];
     if (!prodVersion) {
         if (![FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog]) {
             return nil;
         }
-        prodVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
-                                                                   minVersion:kFBShareDialogBetaVersion];
+        prodVersion = [self installedFBNativeAppVersionForMethod:@"share" minVersion:kFBShareDialogBetaVersion];
     }
     if (!prodVersion) {
         return nil;
     }
-    return [[[FBAppBridgeScheme alloc] initWithVersion:prodVersion] autorelease];
+    return [[[self alloc] initWithVersion:prodVersion] autorelease];
 
 }
 
-+ (FBAppBridgeScheme *)bridgeSchemeForFBAppForShareDialogPhotos
++ (instancetype)bridgeSchemeForFBAppForShareDialogPhotos
 {
-    NSString *prodVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
-                                                                         minVersion:kFBShareDialogPhotosProdVersion];
+    NSString *prodVersion = [self installedFBNativeAppVersionForMethod:@"share" minVersion:kFBShareDialogPhotosProdVersion];
     if (!prodVersion) {
         return nil;
     }
-    return [[[FBAppBridgeScheme alloc] initWithVersion:prodVersion] autorelease];
+    return [[[self alloc] initWithVersion:prodVersion] autorelease];
 }
 
-+ (FBAppBridgeScheme *)bridgeSchemeForFBAppForOpenGraphActionShareDialogParams:(FBOpenGraphActionShareDialogParams *)params {
-    NSString *imgSupportVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"ogshare"
-                                                                               minVersion:kFBAppBridgeImageSupportVersion];
++ (instancetype)bridgeSchemeForFBAppForOpenGraphActionShareDialogParams:(FBOpenGraphActionParams *)params {
+    NSString *imgSupportVersion = [self installedFBNativeAppVersionForMethod:@"ogshare" minVersion:kFBAppBridgeImageSupportVersion];
     if (!imgSupportVersion) {
-        NSString *minVersion = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"ogshare"
-                                                                            minVersion:kFBAppBridgeMinVersion];
+        NSString *minVersion = [self installedFBNativeAppVersionForMethod:@"ogshare" minVersion:kFBAppBridgeMinVersion];
         if ([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog] && minVersion) {
             if ([params containsUIImages:params.action]) {
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
@@ -123,22 +133,32 @@ static NSString *const FBAppBridgeVersions[] = {
     if (!imgSupportVersion) {
         return nil;
     }
-    return [[[FBAppBridgeScheme alloc] initWithVersion:imgSupportVersion] autorelease];
+    return [[[self alloc] initWithVersion:imgSupportVersion] autorelease];
 }
 
-+ (FBAppBridgeScheme *)bridgeSchemeForFBAppForLoginParams:(FBLoginDialogParams *)params {
-    // Select the right minimum version for the passed in combination of params.
-    NSString *version = [FBAppBridgeScheme installedFBNativeAppVersionForMethod:@"auth3"
-                                                                     minVersion:kFBNativeLoginMinVersion];
-    if (![FBSettings defaultDisplayName] && [version isEqualToString:kFBNativeLoginMinVersion]) {
-        // We have the first version of Native Login that does not look up the app's display
-        // name from the Facebook App with a server request. So we can't proceed.
-        version = nil;
-    }
-    if (!version) {
-        return nil;
-    }
-    return [[[FBAppBridgeScheme alloc] initWithVersion:version] autorelease];
++ (instancetype)bridgeSchemeForFBAppForLike
+{
+    NSString *version = [self installedFBNativeAppVersionForMethod:@"like"
+                                                        minVersion:kFBLikeButtonBetaVersion];
+    return (version ? [[[self alloc] initWithVersion:version] autorelease] : nil);
+}
+
++ (instancetype)bridgeSchemeForFBMessengerForShareDialogParams:(FBLinkShareParams *)params {
+    NSString *version = [_FBMAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
+                                                                       minVersion:FBMessageDialogVersion];
+    return (version ? [[[_FBMAppBridgeScheme alloc] initWithVersion:version] autorelease] : nil);
+}
+
++ (instancetype)bridgeSchemeForFBMessengerForShareDialogPhotos; {
+    NSString *version = [_FBMAppBridgeScheme installedFBNativeAppVersionForMethod:@"share"
+                                                                       minVersion:FBMessageDialogVersion];
+    return (version ? [[[_FBMAppBridgeScheme alloc] initWithVersion:version] autorelease] : nil);
+}
+
++ (instancetype)bridgeSchemeForFBMessengerForOpenGraphActionShareDialogParams:(FBOpenGraphActionParams *)params {
+    NSString *version = [_FBMAppBridgeScheme installedFBNativeAppVersionForMethod:@"ogshare"
+                                                                       minVersion:FBMessageDialogVersion];
+    return (version ? [[[_FBMAppBridgeScheme alloc] initWithVersion:version] autorelease] : nil);
 }
 
 + (BOOL)isSupportedScheme:(NSString *)scheme
@@ -150,7 +170,8 @@ static NSString *const FBAppBridgeVersions[] = {
 - (NSURL *)urlForMethod:(NSString *)method
             queryParams:(NSDictionary *)queryParams {
     NSString *schemeVersion = self.version;
-    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fbapi://"]]) {
+    NSString *urlString = [NSString stringWithFormat:@"%@://", [[self class] schemePrefix]];
+    if ([[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:urlString]]) {
         schemeVersion = @"";
     }
     return [[self class] urlForMethod:method
@@ -172,7 +193,8 @@ static NSString *const FBAppBridgeVersions[] = {
     }
     NSString *queryParamsStr = (queryParams) ? [FBUtility stringBySerializingQueryParameters:queryParams] : @"";
     return [NSURL URLWithString:[NSString stringWithFormat:
-                                 @"fbapi%@://dialog/%@?%@",
+                                 @"%@%@://dialog/%@?%@",
+                                 [[self class] schemePrefix],
                                  schemeVersion,
                                  method,
                                  queryParamsStr]];
@@ -180,15 +202,15 @@ static NSString *const FBAppBridgeVersions[] = {
 
 + (NSString *)installedFBNativeAppVersionForMethod:(NSString *)method
                                         minVersion:(NSString *)minVersion {
-    NSArray *bridgeVersions = WRAP_ARRAY(FBAppBridgeVersions);
+    NSArray *bridgeVersions = [[self class] bridgeVersions];
     NSString *version = nil;
     for (NSInteger index = bridgeVersions.count - 1; index >= 0; index--) {
         version = bridgeVersions[index];
         BOOL isMinVersion = [version isEqualToString:minVersion];
-        NSURL *url = [FBAppBridgeScheme urlForMethod:method
-                                         queryParams:nil
-                                       schemeVersion:version
-                                             version:version];
+        NSURL *url = [self urlForMethod:method
+                            queryParams:nil
+                          schemeVersion:version
+                                version:version];
         if (![[UIApplication sharedApplication] canOpenURL:url]) {
             version = nil;
         }

@@ -16,6 +16,7 @@
 
 #import "FBError.h"
 #import "FBErrorUtility.h"
+#import "FBSDKMacros.h"
 
 typedef enum {
     FBAuthSubcodeNone = 0,
@@ -26,7 +27,7 @@ typedef enum {
     FBAuthSubcodeUnconfirmedUser = 464,
 } FBAuthSubcode;
 
-extern const int FBOAuthError;
+FBSDK_EXTERN const int FBOAuthError;
 
 // Internal class collecting error related methods.
 

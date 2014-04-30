@@ -88,8 +88,13 @@ NSString *const FBAppEventNameShareSheetLaunch                 = @"fb_share_shee
 NSString *const FBAppEventNameShareSheetDismiss                = @"fb_share_sheet_dismiss";
 NSString *const FBAppEventNamePermissionsUILaunch              = @"fb_permissions_ui_launch";
 NSString *const FBAppEventNamePermissionsUIDismiss             = @"fb_permissions_ui_dismiss";
-NSString *const FBAppEventNameFBDialogsPresentShareDialog   = @"fb_dialogs_present_share";
-NSString *const FBAppEventNameFBDialogsPresentShareDialogOG = @"fb_dialogs_present_share_og";
+NSString *const FBAppEventNameFBDialogsPresentShareDialog      = @"fb_dialogs_present_share";
+NSString *const FBAppEventNameFBDialogsPresentShareDialogPhoto = @"fb_dialogs_present_share_photo";
+NSString *const FBAppEventNameFBDialogsPresentShareDialogOG    = @"fb_dialogs_present_share_og";
+NSString *const FBAppEventNameFBDialogsPresentLikeDialogOG     = @"fb_dialogs_present_like_og";
+NSString *const FBAppEventNameFBDialogsPresentMessageDialog      = @"fb_dialogs_present_message";
+NSString *const FBAppEventNameFBDialogsPresentMessageDialogPhoto = @"fb_dialogs_present_message_photo";
+NSString *const FBAppEventNameFBDialogsPresentMessageDialogOG    = @"fb_dialogs_present_message_og";
 
 
 NSString *const FBAppEventNameFBDialogsNativeLoginDialogStart  = @"fb_dialogs_native_login_dialog_start";

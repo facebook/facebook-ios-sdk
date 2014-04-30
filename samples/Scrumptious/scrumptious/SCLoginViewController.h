@@ -18,10 +18,10 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 
-/*
- The UIViewController representing the Scrumptious landing page.
-*/
-@interface SCLoginViewController : UIViewController<FBLoginViewDelegate>
-@property (unsafe_unretained, nonatomic) IBOutlet FBLoginView *FBLoginView;
-- (IBAction)clickSkipLogIn:(id)sender;
+@interface SCLoginViewController : UIViewController <FBLoginViewDelegate>
+
+@property (nonatomic, strong) IBOutlet UIButton *continueButton;
+
+- (IBAction)showLogin:(UIStoryboardSegue *)segue;
+
 @end

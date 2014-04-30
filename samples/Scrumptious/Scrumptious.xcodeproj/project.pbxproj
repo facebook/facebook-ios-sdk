@@ -7,23 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		846809C1158F85A100F2DBB9 /* action-eating.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BD158F85A100F2DBB9 /* action-eating.png */; };
-		846809C2158F85A100F2DBB9 /* action-location.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BE158F85A100F2DBB9 /* action-location.png */; };
-		846809C3158F85A100F2DBB9 /* action-people.png in Resources */ = {isa = PBXBuildFile; fileRef = 846809BF158F85A100F2DBB9 /* action-people.png */; };
 		8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8527EC6A15C9DB3800660673 /* Scrumptious.strings */; };
 		8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */; };
-		856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2171577F105001FA6A6 /* Icon-72.png */; };
-		856DC21B1577F105001FA6A6 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2181577F105001FA6A6 /* Icon.png */; };
-		856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DC2191577F105001FA6A6 /* Icon@2x.png */; };
 		8592BE3D15816CCC00056680 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8592BE3C15816CCC00056680 /* AddressBook.framework */; };
-		85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC71602B411008AD9A0 /* Default-568h@2x.png */; };
-		85C69DCB1602B411008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC81602B411008AD9A0 /* Default.png */; };
-		85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DC91602B411008AD9A0 /* Default@2x.png */; };
+		8909D01A18AC55610045446E /* SCShareUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8909D01918AC55610045446E /* SCShareUtility.m */; };
+		890F7115189C5620004A5A27 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 890F7114189C5620004A5A27 /* Images.xcassets */; };
+		890F7117189C6137004A5A27 /* SCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890F7116189C6137004A5A27 /* SCMain.storyboard */; };
+		890F7119189C6FBC004A5A27 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 890F7118189C6FBC004A5A27 /* QuartzCore.framework */; };
+		8919B83318A1172100F626A4 /* SCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8919B83218A1172100F626A4 /* SCLoginViewController.m */; };
+		8919B83618A118B200F626A4 /* SCMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8919B83518A118B200F626A4 /* SCMainViewController.m */; };
+		891BB57B18AC2C9C002393D7 /* SCMealPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 891BB57A18AC2C9C002393D7 /* SCMealPicker.m */; };
+		891BB57E18AC31BE002393D7 /* SCImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 891BB57D18AC31BE002393D7 /* SCImagePicker.m */; };
+		893972C718AC42C40096BC90 /* SCErrorHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 893972C618AC42C40096BC90 /* SCErrorHandler.m */; };
+		893972CC18AC49400096BC90 /* SCProfilePictureButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 893972CB18AC49400096BC90 /* SCProfilePictureButton.m */; };
+		896020CD18A839D9002A9AE2 /* SCSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 896020CC18A839D9002A9AE2 /* SCSettings.m */; };
+		8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80A1890A6BA004B90DD /* Application.xcconfig */; };
+		8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */; };
+		8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */; };
+		8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80D1890A6BA004B90DD /* Project.xcconfig */; };
 		99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */; };
 		9D084048169CE00B000FD49D /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D084047169CE00B000FD49D /* ReadMe.txt */; };
-		9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */; };
-		9D343BD017187E8700DBC569 /* SCPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */; };
-		9D564E06171334EA00BEEEDE /* action-photo.png in Resources */ = {isa = PBXBuildFile; fileRef = 9D564E05171334EA00BEEEDE /* action-photo.png */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
@@ -31,39 +34,40 @@
 		B9CD0A7E150EA4DD00560A93 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A7C150EA4DD00560A93 /* InfoPlist.strings */; };
 		B9CD0A80150EA4DD00560A93 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CD0A7F150EA4DD00560A93 /* main.m */; };
 		B9CD0A84150EA4DD00560A93 /* SCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CD0A83150EA4DD00560A93 /* SCAppDelegate.m */; };
-		B9CD0A87150EA4DD00560A93 /* SCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CD0A86150EA4DD00560A93 /* SCViewController.m */; };
-		B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A8B150EA4DE00560A93 /* SCViewController.xib */; };
-		B9CD0A96150EBF5400560A93 /* SCLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */; };
-		B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */; };
-		B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */ = {isa = PBXBuildFile; fileRef = B9CD0A99150EBFFB00560A93 /* facebook.png */; };
 		DD55EAAF15AB9EDF000A64B8 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD55EAAE15AB9EDF000A64B8 /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		846809BD158F85A100F2DBB9 /* action-eating.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-eating.png"; path = "scrumptious/images/action-eating.png"; sourceTree = SOURCE_ROOT; };
-		846809BE158F85A100F2DBB9 /* action-location.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-location.png"; path = "scrumptious/images/action-location.png"; sourceTree = SOURCE_ROOT; };
-		846809BF158F85A100F2DBB9 /* action-people.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-people.png"; path = "scrumptious/images/action-people.png"; sourceTree = SOURCE_ROOT; };
 		8527EC6915C9DB3800660673 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Scrumptious.strings; sourceTree = "<group>"; };
 		8527EC6B15C9DB4A00660673 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Scrumptious.strings; sourceTree = "<group>"; };
 		8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FBUserSettingsViewResources.bundle; path = ../../build/FacebookSDK.framework/Versions/A/Resources/FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
-		856DC2171577F105001FA6A6 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon-72.png"; path = "../Icon-72.png"; sourceTree = "<group>"; };
-		856DC2181577F105001FA6A6 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Icon.png; path = ../Icon.png; sourceTree = "<group>"; };
-		856DC2191577F105001FA6A6 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "../Icon@2x.png"; sourceTree = "<group>"; };
 		8592BE3C15816CCC00056680 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		85954AE1155889A200FABA9A /* SCProtocols.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCProtocols.h; sourceTree = "<group>"; };
-		85C69DC71602B411008AD9A0 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "scrumptious/Default-568h@2x.png"; sourceTree = SOURCE_ROOT; };
-		85C69DC81602B411008AD9A0 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = scrumptious/Default.png; sourceTree = SOURCE_ROOT; };
-		85C69DC91602B411008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "scrumptious/Default@2x.png"; sourceTree = SOURCE_ROOT; };
+		8909D01818AC55610045446E /* SCShareUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCShareUtility.h; path = scrumptious/SCShareUtility.h; sourceTree = SOURCE_ROOT; };
+		8909D01918AC55610045446E /* SCShareUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCShareUtility.m; path = scrumptious/SCShareUtility.m; sourceTree = SOURCE_ROOT; };
+		890F7114189C5620004A5A27 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		890F7116189C6137004A5A27 /* SCMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SCMain.storyboard; path = scrumptious/SCMain.storyboard; sourceTree = SOURCE_ROOT; };
+		890F7118189C6FBC004A5A27 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		8919B83118A1172100F626A4 /* SCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCLoginViewController.h; path = scrumptious/SCLoginViewController.h; sourceTree = SOURCE_ROOT; };
+		8919B83218A1172100F626A4 /* SCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCLoginViewController.m; path = scrumptious/SCLoginViewController.m; sourceTree = SOURCE_ROOT; };
+		8919B83418A118B200F626A4 /* SCMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMainViewController.h; path = scrumptious/SCMainViewController.h; sourceTree = SOURCE_ROOT; };
+		8919B83518A118B200F626A4 /* SCMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMainViewController.m; path = scrumptious/SCMainViewController.m; sourceTree = SOURCE_ROOT; };
+		891BB57918AC2C9C002393D7 /* SCMealPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCMealPicker.h; path = scrumptious/SCMealPicker.h; sourceTree = SOURCE_ROOT; };
+		891BB57A18AC2C9C002393D7 /* SCMealPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCMealPicker.m; path = scrumptious/SCMealPicker.m; sourceTree = SOURCE_ROOT; };
+		891BB57C18AC31BE002393D7 /* SCImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCImagePicker.h; path = scrumptious/SCImagePicker.h; sourceTree = SOURCE_ROOT; };
+		891BB57D18AC31BE002393D7 /* SCImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCImagePicker.m; path = scrumptious/SCImagePicker.m; sourceTree = SOURCE_ROOT; };
+		893972C518AC42C40096BC90 /* SCErrorHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCErrorHandler.h; path = scrumptious/SCErrorHandler.h; sourceTree = SOURCE_ROOT; };
+		893972C618AC42C40096BC90 /* SCErrorHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCErrorHandler.m; path = scrumptious/SCErrorHandler.m; sourceTree = SOURCE_ROOT; };
+		893972CA18AC49400096BC90 /* SCProfilePictureButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCProfilePictureButton.h; path = scrumptious/SCProfilePictureButton.h; sourceTree = SOURCE_ROOT; };
+		893972CB18AC49400096BC90 /* SCProfilePictureButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCProfilePictureButton.m; path = scrumptious/SCProfilePictureButton.m; sourceTree = SOURCE_ROOT; };
+		896020CB18A839D9002A9AE2 /* SCSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCSettings.h; path = scrumptious/SCSettings.h; sourceTree = SOURCE_ROOT; };
+		896020CC18A839D9002A9AE2 /* SCSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCSettings.m; path = scrumptious/SCSettings.m; sourceTree = SOURCE_ROOT; };
 		8986C80A1890A6BA004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		8986C80B1890A6BA004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		8986C80C1890A6BA004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C80D1890A6BA004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKOverrides.bundle; path = scrumptious/FacebookSDKOverrides.bundle; sourceTree = SOURCE_ROOT; };
 		9D084047169CE00B000FD49D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
-		9D564E02171334CB00BEEEDE /* SCPhotoViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SCPhotoViewController.h; path = scrumptious/SCPhotoViewController.h; sourceTree = SOURCE_ROOT; };
-		9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SCPhotoViewController.m; path = scrumptious/SCPhotoViewController.m; sourceTree = SOURCE_ROOT; };
-		9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = SCPhotoViewController.xib; path = scrumptious/SCPhotoViewController.xib; sourceTree = SOURCE_ROOT; };
-		9D564E05171334EA00BEEEDE /* action-photo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "action-photo.png"; path = "scrumptious/images/action-photo.png"; sourceTree = SOURCE_ROOT; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -75,13 +79,6 @@
 		B9CD0A81150EA4DD00560A93 /* Scrumptious-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Scrumptious-Prefix.pch"; sourceTree = "<group>"; };
 		B9CD0A82150EA4DD00560A93 /* SCAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCAppDelegate.h; sourceTree = "<group>"; };
 		B9CD0A83150EA4DD00560A93 /* SCAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCAppDelegate.m; sourceTree = "<group>"; };
-		B9CD0A85150EA4DD00560A93 /* SCViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SCViewController.h; sourceTree = "<group>"; };
-		B9CD0A86150EA4DD00560A93 /* SCViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SCViewController.m; sourceTree = "<group>"; };
-		B9CD0A8C150EA4DE00560A93 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/SCViewController.xib; sourceTree = "<group>"; };
-		B9CD0A93150EBF5400560A93 /* SCLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SCLoginViewController.h; sourceTree = "<group>"; };
-		B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SCLoginViewController.m; sourceTree = "<group>"; };
-		B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SCLoginViewController.xib; sourceTree = "<group>"; };
-		B9CD0A99150EBFFB00560A93 /* facebook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = facebook.png; path = images/facebook.png; sourceTree = "<group>"; };
 		DD55EAAE15AB9EDF000A64B8 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				890F7119189C6FBC004A5A27 /* QuartzCore.framework in Frameworks */,
 				B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */,
 				B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */,
 				B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */,
@@ -138,6 +136,7 @@
 		B9CD0A72150EA4DD00560A93 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				890F7118189C6FBC004A5A27 /* QuartzCore.framework */,
 				8534B4DE15CC657900348ED2 /* FBUserSettingsViewResources.bundle */,
 				DD55EAAE15AB9EDF000A64B8 /* FacebookSDK.framework */,
 				8592BE3C15816CCC00056680 /* AddressBook.framework */,
@@ -153,21 +152,28 @@
 			isa = PBXGroup;
 			children = (
 				99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */,
-				B9CD0A98150EBFBD00560A93 /* images */,
-				B9CD0A7A150EA4DD00560A93 /* Supporting Files */,
+				890F7114189C5620004A5A27 /* Images.xcassets */,
 				B9CD0A82150EA4DD00560A93 /* SCAppDelegate.h */,
 				B9CD0A83150EA4DD00560A93 /* SCAppDelegate.m */,
-				B9CD0A93150EBF5400560A93 /* SCLoginViewController.h */,
-				B9CD0A94150EBF5400560A93 /* SCLoginViewController.m */,
-				B9CD0A95150EBF5400560A93 /* SCLoginViewController.xib */,
-				9D564E02171334CB00BEEEDE /* SCPhotoViewController.h */,
-				9D564E03171334CB00BEEEDE /* SCPhotoViewController.m */,
-				9D564E04171334CB00BEEEDE /* SCPhotoViewController.xib */,
-				B9CD0A85150EA4DD00560A93 /* SCViewController.h */,
-				B9CD0A86150EA4DD00560A93 /* SCViewController.m */,
-				B9CD0A8B150EA4DE00560A93 /* SCViewController.xib */,
+				893972C518AC42C40096BC90 /* SCErrorHandler.h */,
+				893972C618AC42C40096BC90 /* SCErrorHandler.m */,
+				891BB57C18AC31BE002393D7 /* SCImagePicker.h */,
+				891BB57D18AC31BE002393D7 /* SCImagePicker.m */,
+				8919B83118A1172100F626A4 /* SCLoginViewController.h */,
+				8919B83218A1172100F626A4 /* SCLoginViewController.m */,
+				890F7116189C6137004A5A27 /* SCMain.storyboard */,
+				8919B83418A118B200F626A4 /* SCMainViewController.h */,
+				8919B83518A118B200F626A4 /* SCMainViewController.m */,
+				891BB57918AC2C9C002393D7 /* SCMealPicker.h */,
+				891BB57A18AC2C9C002393D7 /* SCMealPicker.m */,
+				893972CA18AC49400096BC90 /* SCProfilePictureButton.h */,
+				893972CB18AC49400096BC90 /* SCProfilePictureButton.m */,
 				85954AE1155889A200FABA9A /* SCProtocols.h */,
-				8527EC6A15C9DB3800660673 /* Scrumptious.strings */,
+				896020CB18A839D9002A9AE2 /* SCSettings.h */,
+				896020CC18A839D9002A9AE2 /* SCSettings.m */,
+				8909D01818AC55610045446E /* SCShareUtility.h */,
+				8909D01918AC55610045446E /* SCShareUtility.m */,
+				B9CD0A7A150EA4DD00560A93 /* Supporting Files */,
 			);
 			path = Scrumptious;
 			sourceTree = "<group>";
@@ -175,30 +181,13 @@
 		B9CD0A7A150EA4DD00560A93 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				85C69DC71602B411008AD9A0 /* Default-568h@2x.png */,
-				85C69DC81602B411008AD9A0 /* Default.png */,
-				85C69DC91602B411008AD9A0 /* Default@2x.png */,
+				8527EC6A15C9DB3800660673 /* Scrumptious.strings */,
 				B9CD0A7B150EA4DD00560A93 /* Scrumptious-Info.plist */,
 				B9CD0A7C150EA4DD00560A93 /* InfoPlist.strings */,
 				B9CD0A7F150EA4DD00560A93 /* main.m */,
 				B9CD0A81150EA4DD00560A93 /* Scrumptious-Prefix.pch */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		B9CD0A98150EBFBD00560A93 /* images */ = {
-			isa = PBXGroup;
-			children = (
-				846809BD158F85A100F2DBB9 /* action-eating.png */,
-				846809BE158F85A100F2DBB9 /* action-location.png */,
-				846809BF158F85A100F2DBB9 /* action-people.png */,
-				9D564E05171334EA00BEEEDE /* action-photo.png */,
-				856DC2171577F105001FA6A6 /* Icon-72.png */,
-				856DC2181577F105001FA6A6 /* Icon.png */,
-				856DC2191577F105001FA6A6 /* Icon@2x.png */,
-				B9CD0A99150EBFFB00560A93 /* facebook.png */,
-			);
-			name = images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -252,24 +241,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D343BD017187E8700DBC569 /* SCPhotoViewController.xib in Resources */,
 				B9CD0A7E150EA4DD00560A93 /* InfoPlist.strings in Resources */,
-				B9CD0A8D150EA4DE00560A93 /* SCViewController.xib in Resources */,
-				B9CD0A97150EBF5400560A93 /* SCLoginViewController.xib in Resources */,
-				B9CD0A9A150EBFFB00560A93 /* facebook.png in Resources */,
-				856DC21A1577F105001FA6A6 /* Icon-72.png in Resources */,
-				856DC21B1577F105001FA6A6 /* Icon.png in Resources */,
-				856DC21C1577F105001FA6A6 /* Icon@2x.png in Resources */,
-				846809C1158F85A100F2DBB9 /* action-eating.png in Resources */,
-				846809C2158F85A100F2DBB9 /* action-location.png in Resources */,
-				846809C3158F85A100F2DBB9 /* action-people.png in Resources */,
+				890F7117189C6137004A5A27 /* SCMain.storyboard in Resources */,
+				8986C8101890A6BA004B90DD /* Project-Release.xcconfig in Resources */,
+				890F7115189C5620004A5A27 /* Images.xcassets in Resources */,
+				8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */,
+				8986C80E1890A6BA004B90DD /* Application.xcconfig in Resources */,
 				8527EC6815C9DB3800660673 /* Scrumptious.strings in Resources */,
 				8534B4DF15CC657900348ED2 /* FBUserSettingsViewResources.bundle in Resources */,
-				85C69DCA1602B411008AD9A0 /* Default-568h@2x.png in Resources */,
-				85C69DCB1602B411008AD9A0 /* Default.png in Resources */,
-				85C69DCC1602B411008AD9A0 /* Default@2x.png in Resources */,
 				9D084048169CE00B000FD49D /* ReadMe.txt in Resources */,
-				9D564E06171334EA00BEEEDE /* action-photo.png in Resources */,
+				8986C80F1890A6BA004B90DD /* Project-Debug.xcconfig in Resources */,
 				99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -281,11 +262,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D343BCF17187E4200DBC569 /* SCPhotoViewController.m in Sources */,
 				B9CD0A80150EA4DD00560A93 /* main.m in Sources */,
+				8919B83318A1172100F626A4 /* SCLoginViewController.m in Sources */,
+				893972CC18AC49400096BC90 /* SCProfilePictureButton.m in Sources */,
+				8919B83618A118B200F626A4 /* SCMainViewController.m in Sources */,
 				B9CD0A84150EA4DD00560A93 /* SCAppDelegate.m in Sources */,
-				B9CD0A87150EA4DD00560A93 /* SCViewController.m in Sources */,
-				B9CD0A96150EBF5400560A93 /* SCLoginViewController.m in Sources */,
+				891BB57E18AC31BE002393D7 /* SCImagePicker.m in Sources */,
+				8909D01A18AC55610045446E /* SCShareUtility.m in Sources */,
+				891BB57B18AC2C9C002393D7 /* SCMealPicker.m in Sources */,
+				893972C718AC42C40096BC90 /* SCErrorHandler.m in Sources */,
+				896020CD18A839D9002A9AE2 /* SCSettings.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,14 +296,6 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		B9CD0A8B150EA4DE00560A93 /* SCViewController.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B9CD0A8C150EA4DE00560A93 /* en */,
-			);
-			name = SCViewController.xib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -339,6 +317,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C80A1890A6BA004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 			};
 			name = Debug;
 		};
@@ -346,6 +326,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C80A1890A6BA004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 			};
 			name = Release;
 		};

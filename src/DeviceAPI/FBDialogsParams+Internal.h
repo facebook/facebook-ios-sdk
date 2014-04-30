@@ -26,4 +26,10 @@
 
 - (NSError *)validate;
 
+/*!
+ @abstract
+ This method is abstract and must be defined by all classes that derive from `FBDialogParams`
+ */
++ (NSString *)methodName;
+
 @end

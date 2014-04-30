@@ -9,8 +9,8 @@ The example utilizes several controls for the Facebook SDK including:
  FBLoginView - used on the landing page for authenticating the user.
  FBFriendPickerViewController - presented from the main UI to pick friends.
  FBPlacePickerViewController - presented from the main UI to pick a location.
- FBuserSettingsViewController - used to log the user out.
- 
+ FBUserSettingsViewController - used to log the user out.
+
 Furthermore, the sample demonstrates usage of Open Graph objects and actions. While the functionality is 
 quite constrained in order to be of reasonable size for a sample, the Facebook integration could serve
 as the basis for more full-featured applications. In particular, look for the text "Facebook SDK" to identify

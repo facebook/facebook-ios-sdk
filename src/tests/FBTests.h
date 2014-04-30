@@ -15,11 +15,16 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "FBTestSession.h"
-#import "FBRequestConnection.h"
 
-extern NSString *kTestToken;
-extern NSString *kTestAppId;
+#import "FBRequestConnection.h"
+#import "FBSDKMacros.h"
+#import "FBTestSession.h"
+
+FBSDK_EXTERN NSString *kTestToken;
+FBSDK_EXTERN NSString *kTestAppId;
+
+typedef void (^HTTPStubCallback)(NSURLRequest *request);
+
 
 @class FBTestBlocker;
 @protocol FBGraphObject;
@@ -38,5 +43,16 @@ extern NSString *kTestAppId;
 - (FBSessionTokenCachingStrategy *)createMockTokenCachingStrategyWithToken:(FBAccessTokenData *)token;
 - (FBSessionTokenCachingStrategy *)createMockTokenCachingStrategyWithValidToken;
 - (FBSessionTokenCachingStrategy *)createMockTokenCachingStrategyWithExpiredToken;
+
+// Helpers for using OHHTTPStubs in tests.
+- (void)stubAllResponsesWithResult:(id)result;
+- (void)stubAllResponsesWithResult:(id)result
+                        statusCode:(int)statusCode;
+- (void)stubAllResponsesWithResult:(id)result
+                        statusCode:(int)statusCode
+                          callback:(HTTPStubCallback)callback;
+- (void)stubMatchingRequestsWithResponses:(NSDictionary *)requestsAndResponses
+                               statusCode:(int)statusCode
+                                 callback:(HTTPStubCallback)callback;
 
 @end

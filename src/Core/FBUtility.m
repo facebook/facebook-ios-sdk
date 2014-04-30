@@ -14,11 +14,13 @@
  * limitations under the License.
  */
 
+#import "FacebookSDK.h"
 #import "FBAppEvents.h"
 #import "FBUtility.h"
 #import "FBGraphObject.h"
 #import "FBLogger.h"
 #import "FBRequest+Internal.h"
+#import "FBRequestConnection+Internal.h"
 #import "FBSession.h"
 #import "FBDynamicFrameworkLoader.h"
 #import "FBSettings+Internal.h"
@@ -30,6 +32,12 @@ static const double APPSETTINGS_STALE_THRESHOLD_SECONDS = 60 * 60; // one hour.
 static FBFetchedAppSettings *g_fetchedAppSettings = nil;
 static NSError *g_fetchedAppSettingsError = nil;
 static NSDate *g_fetchedAppSettingsTimestamp = nil;
+
+static const NSString *kAppSettingsFieldAppName = @"name";
+static const NSString *kAppSettingsFieldSupportsAttribution = @"supports_attribution";
+static const NSString *kAppSettingsFieldSupportsImplicitLogging = @"supports_implicit_sdk_logging";
+static const NSString *kAppSettingsFieldEnableLoginTooltip = @"gdpv4_nux_enabled";
+static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_content";
 
 @implementation FBUtility
 
@@ -231,6 +239,7 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
     [permission hasPrefix:@"manage"] ||
     [permission isEqualToString:@"ads_management"] ||
     [permission isEqualToString:@"create_event"] ||
+    [permission isEqualToString:@"user_games_activity"] ||
     [permission isEqualToString:@"rsvp_event"];
 }
 
@@ -243,19 +252,17 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
     return YES;
 }
 
-+ (NSArray *)addBasicInfoPermission:(NSArray *)permissions {
++ (void)addBasicInfoPermission:(NSMutableArray *)permissions {
     // When specifying read permissions, be sure basic info is included; "email" is used
     // as a proxy for basic info permission.
     for (NSString *p in permissions) {
         if ([p isEqualToString:@"email"]) {
             // Already requested, don't need to add it again.
-            return permissions;
+            return;
         }
     }
 
-    NSMutableArray *newPermissions = [NSMutableArray arrayWithArray:permissions];
-    [newPermissions addObject:@"email"];
-    return newPermissions;
+    [permissions addObject:@"email"];
 }
 
 // Make a call to the Graph API to get a variety of data for the app, and on completion, invoke the callback with
@@ -266,8 +273,13 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
     if ([FBUtility isFetchedFBAppSettingsStale] || (!g_fetchedAppSettingsError && !g_fetchedAppSettings)) {
 
-        NSString *pingPath = [NSString stringWithFormat:@"%@?fields=supports_attribution,supports_implicit_sdk_logging,suppress_native_ios_gdp,name", appID, nil];
+        NSString *pingPath = [NSString stringWithFormat:@"%@?fields=%@",
+                              appID,
+                              [@[kAppSettingsFieldAppName, kAppSettingsFieldSupportsAttribution, kAppSettingsFieldSupportsImplicitLogging,
+                                 kAppSettingsFieldEnableLoginTooltip, kAppSettingsFieldLoginTooltipContent] componentsJoinedByString:@","]
+                              ];
         FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
+        pingRequest.skipClientToken = YES;
         pingRequest.canCloseSessionOnError = NO;
         [pingRequest startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
             [g_fetchedAppSettingsError release];
@@ -293,10 +305,11 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
                     g_fetchedAppSettings = [[FBFetchedAppSettings alloc] initWithAppID:appID];
                     g_fetchedAppSettingsTimestamp = [[NSDate date] retain];
 
-                    g_fetchedAppSettings.serverAppName = [result objectForKey:@"name"];
-                    g_fetchedAppSettings.supportsAttribution = [[result objectForKey:@"supports_attribution"] boolValue];
-                    g_fetchedAppSettings.supportsImplicitSdkLogging = [[result objectForKey:@"supports_implicit_sdk_logging"] boolValue];
-                    g_fetchedAppSettings.suppressNativeGdp = [[result objectForKey:@"suppress_native_ios_gdp"] boolValue];
+                    g_fetchedAppSettings.serverAppName = result[kAppSettingsFieldAppName];
+                    g_fetchedAppSettings.supportsAttribution = [result[kAppSettingsFieldSupportsAttribution] boolValue];
+                    g_fetchedAppSettings.supportsImplicitSdkLogging = [result[kAppSettingsFieldSupportsImplicitLogging] boolValue];
+                    g_fetchedAppSettings.enableLoginTooltip = [result[kAppSettingsFieldEnableLoginTooltip] boolValue];
+                    g_fetchedAppSettings.loginTooltipContent = result[kAppSettingsFieldLoginTooltipContent];
                 }
             }
             [FBUtility callTheFetchAppSettingsCallback:callback];
@@ -483,17 +496,63 @@ static NSDate *g_fetchedAppSettingsTimestamp = nil;
 }
 
 + (NSString *)buildFacebookUrlWithPre:(NSString *)pre {
-    return [FBUtility buildFacebookUrlWithPre:pre withPost:nil];
+    return [FBUtility buildFacebookUrlWithPre:pre post:nil version:nil];
 }
 
 + (NSString *)buildFacebookUrlWithPre:(NSString *)pre
                              withPost:(NSString *)post {
+    return [FBUtility buildFacebookUrlWithPre:pre post:post version:nil];
+}
+
++ (NSString *)buildFacebookUrlWithPre:(NSString *)pre
+                                 post:(NSString *)post
+                              version:(NSString *)version {
+    // break-out domainPart, domain, version and post
     NSString *domainPart = [FBSettings facebookDomainPart];
     NSString *domain = FB_BASE_URL;
+
+    version = version ?: [FBSettings platformVersion];
+    if (version.length) {
+        version = [NSString stringWithFormat:@"/%@", version];
+    }
+
+    post = post ?: @"";
+
+    if ([post length] > 2 &&
+        // clear the auto version if there is already a version in the form v#.# in path
+        [post characterAtIndex:1] == 'v') {
+        int grammarPart = 0;
+        int index = 2;
+        BOOL clearVersion = NO;
+        while (post.length > index) {
+            unichar c = [post characterAtIndex:index];
+            if (grammarPart == 0) { // first - digit
+                if ([NSCharacterSet.decimalDigitCharacterSet characterIsMember:c]) {
+                    grammarPart++;
+                } else {
+                    break;
+                }
+            } else if (grammarPart == 1) {
+                if (c == '.') { // second - n digits or dot
+                    clearVersion = YES;
+                    grammarPart++;
+                } else if (![NSCharacterSet.decimalDigitCharacterSet characterIsMember:c]) {
+                    break;
+                }
+            } 
+            index++;
+        }
+        if (clearVersion) {
+            version = @"";
+        }
+    }
+
+    // construct url
     if (domainPart) {
         domain = [NSString stringWithFormat:@"%@.%@", domainPart, FB_BASE_URL];
     }
-    return [NSString stringWithFormat:@"%@%@%@", pre, domain, post ?: @""];
+    NSString *result = [NSString stringWithFormat:@"%@%@%@%@", pre, domain, version, post];
+    return result;
 }
 
 + (BOOL)isMultitaskingSupported {

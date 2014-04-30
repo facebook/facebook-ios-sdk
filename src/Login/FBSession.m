@@ -31,7 +31,7 @@
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBLoginDialog.h"
-#import "FBLoginDialogParams.h"
+#import "FBRequest+Internal.h"
 #import "FBSession+Protected.h"
 #import "FBSessionAppSwitchingLoginStategy.h"
 #import "FBSessionAuthLogger.h"
@@ -44,6 +44,7 @@
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBUtility.h"
 #import "Facebook.h"
+#import "FacebookSDK.h"
 
 static NSString *const FBAuthURLScheme = @"fbauth";
 static NSString *const FBAuthURLPath = @"authorize";
@@ -60,6 +61,8 @@ static NSString *const FBLoginUXReturnScopes = @"return_scopes";
 static NSString *const FBLoginParamsExpiresIn = @"expires_in";
 static NSString *const FBLoginParamsPermissions = @"permissions";
 static NSString *const FBLoginParamsGrantedScopes = @"granted_scopes";
+static NSString *const FBLoginParamsSDKVersion = @"sdk_version";
+static NSString *const FBLoginParamsLegacyOverride = @"legacy_override";
 NSString *const FBLoginUXResponseTypeToken = @"token";
 NSString *const FBLoginUXResponseType = @"response_type";
 
@@ -108,6 +111,8 @@ static FBSession *g_activeSession = nil;
     FBSessionLoginType _loginTypeOfPendingOpenUrlCallback;
     FBSessionDefaultAudience _defaultDefaultAudience;
     FBSessionLoginBehavior _loginBehavior;
+    NSMutableArray *_declinedPermissions;
+    NSArray *_requestedReauthPermissions;
 }
 
 // private setters
@@ -218,13 +223,16 @@ static FBSession *g_activeSession = nil;
 
         [FBLogger registerCurrentTime:FBLoggingBehaviorPerformanceCharacteristics
                               withTag:self];
+        // Default the login behavior, but it can be overwritten by the cached token below.
+        _loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView;
+
         FBAccessTokenData *cachedTokenData = [self.tokenCachingStrategy fetchFBAccessTokenData];
         if (cachedTokenData && ![self initializeFromCachedToken:cachedTokenData withPermissions:permissions]) {
             [self.tokenCachingStrategy clearToken];
         };
 
         [FBSettings autoPublishInstall:self.appID];
-        _loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
+        _declinedPermissions = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -239,6 +247,7 @@ static FBSession *g_activeSession = nil;
                                             aSubsetOfPermissions:cachedToken.permissions];
 
         if (isSubset && (NSOrderedDescending == [cachedToken.expirationDate compare:[NSDate date]])) {
+            _loginBehavior = [FBSessionUtility loginBehaviorForLoginType:self.accessTokenData.loginType];
             [self transitionToState:FBSessionStateCreatedTokenLoaded
                 withAccessTokenData:cachedToken
                         shouldCache:NO];
@@ -262,6 +271,8 @@ static FBSession *g_activeSession = nil;
     [_affinitizedThread release];
     [_appEventsState release];
     [_authLogger release];
+    [_declinedPermissions release];
+    [_requestedReauthPermissions release];
 
     [super dealloc];
 }
@@ -296,6 +307,10 @@ static FBSession *g_activeSession = nil;
     }
 }
 
+- (NSArray *)declinedPermissions {
+    return [[_declinedPermissions copy] autorelease];
+}
+
 #pragma mark - Public Members
 
 - (void)openWithCompletionHandler:(FBSessionStateHandler)handler {
@@ -304,7 +319,11 @@ static FBSession *g_activeSession = nil;
 
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
        completionHandler:(FBSessionStateHandler)handler {
-
+    // is everything in good order?
+    [FBSessionUtility validateRequestForPermissions:_initializedPermissions
+                                    defaultAudience:_defaultDefaultAudience
+                                 allowSystemAccount:behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent
+                                             isRead:[FBUtility areAllPermissionsReadPermissions:_initializedPermissions]];
     [self checkThreadAffinity];
 
     switch (behavior) {
@@ -312,6 +331,7 @@ static FBSession *g_activeSession = nil;
         case FBSessionLoginBehaviorUseSystemAccountIfPresent:
         case FBSessionLoginBehaviorWithFallbackToWebView:
         case FBSessionLoginBehaviorWithNoFallbackToWebView:
+        case FBSessionLoginBehaviorForcingSafari:
             // valid behavior; no-op.
             break;
         default:
@@ -411,6 +431,23 @@ static FBSession *g_activeSession = nil;
                             behavior:_loginBehavior
                      defaultAudience:audience
                    completionHandler:handler];
+}
+
+- (void)refreshPermissionsWithCompletionHandler:(FBSessionRequestPermissionResultHandler)handler {
+    FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
+    FBRequest *request = [[[FBRequest alloc] initWithSession:self graphPath:@"me/permissions"] autorelease];
+    request.canCloseSessionOnError = NO;
+
+    [connection addRequest:request
+         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+             if (!error) {
+                 [self handleRefreshPermissions:result];
+             }
+             if (handler) {
+                 handler(self, error);
+             }
+         }];
+    [connection start];
 }
 
 - (void)close {
@@ -541,13 +578,17 @@ static FBSession *g_activeSession = nil;
     }
 }
 
+- (BOOL)hasGranted:(NSString *)permission {
+    return [self.accessTokenData.permissions containsObject:permission];
+}
+
 #pragma mark -
 #pragma mark Class Methods
 
 + (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI {
     return [FBSession openActiveSessionWithPermissions:nil
                                           allowLoginUI:allowLoginUI
-                                    allowSystemAccount:YES
+                                    allowSystemAccount:NO
                                                 isRead:YES
                                        defaultAudience:FBSessionDefaultAudienceNone
                                      completionHandler:nil];
@@ -594,7 +635,7 @@ static FBSession *g_activeSession = nil;
                            completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:readPermissions
                                           allowLoginUI:allowLoginUI
-                                    allowSystemAccount:YES
+                                    allowSystemAccount:NO
                                                 isRead:YES
                                        defaultAudience:FBSessionDefaultAudienceNone
                                      completionHandler:handler];
@@ -606,7 +647,7 @@ static FBSession *g_activeSession = nil;
                               completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:publishPermissions
                                           allowLoginUI:allowLoginUI
-                                    allowSystemAccount:YES
+                                    allowSystemAccount:NO
                                                 isRead:NO
                                        defaultAudience:defaultAudience
                                      completionHandler:handler];
@@ -873,18 +914,30 @@ static FBSession *g_activeSession = nil;
                         behavior:(FBSessionLoginBehavior)behavior
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
-    BOOL tryIntegratedAuth = behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent;
-    BOOL tryFacebookLogin = (behavior == FBSessionLoginBehaviorUseSystemAccountIfPresent) ||
-    (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
-    (behavior == FBSessionLoginBehaviorWithNoFallbackToWebView);
-    BOOL tryFallback =  (behavior == FBSessionLoginBehaviorWithFallbackToWebView) ||
-    (behavior == FBSessionLoginBehaviorForcingWebView);
+    BOOL tryIntegratedAuth = NO, tryFacebookLogin = NO, tryFallback = NO, trySafari = NO;
+    switch (behavior) {
+        case FBSessionLoginBehaviorForcingWebView:
+            tryFallback  = YES;
+            break;
+        case FBSessionLoginBehaviorUseSystemAccountIfPresent:
+            tryIntegratedAuth = tryFacebookLogin = trySafari = YES;
+            break;
+        case FBSessionLoginBehaviorWithFallbackToWebView:
+            tryFallback = tryFacebookLogin = trySafari = YES;
+            break;
+        case FBSessionLoginBehaviorWithNoFallbackToWebView:
+            tryFacebookLogin = trySafari = YES;
+            break;
+        case FBSessionLoginBehaviorForcingSafari:
+            trySafari = YES;
+            break;
+    }
 
     [self authorizeWithPermissions:(NSArray *)permissions
                    defaultAudience:audience
                     integratedAuth:tryIntegratedAuth
                          FBAppAuth:tryFacebookLogin
-                        safariAuth:tryFacebookLogin
+                        safariAuth:trySafari
                           fallback:tryFallback
                      isReauthorize:isReauthorize
                canFetchAppSettings:YES];
@@ -938,12 +991,25 @@ static FBSession *g_activeSession = nil;
                                    FBLoginUXTouch, FBLoginUXDisplay,
                                    FBLoginUXIOS, FBLoginUXSDK,
                                    FBLoginUXReturnScopesYES, FBLoginUXReturnScopes,
+                                   FB_IOS_SDK_VERSION_STRING, FBLoginParamsSDKVersion,
                                    nil];
+    if (![FBSettings isPlatformCompatibilityEnabled]) {
+        params[FBLoginParamsLegacyOverride] = FB_IOS_SDK_TARGET_PLATFORM_VERSION;
+
+        // allows dialog to show permissions that have been requested before
+        if (isReauthorize) {
+            params[@"auth_type"] = @"rerequest";
+        }
+    }
+
     if (permissions != nil) {
         params[@"scope"] = [permissions componentsJoinedByString:@","];
     }
     if (_urlSchemeSuffix) {
         params[@"local_client_id"] = _urlSchemeSuffix;
+    }
+    if (isReauthorize) {
+        _requestedReauthPermissions = [permissions copy];
     }
 
     // To avoid surprises, delete any cookies we currently have.
@@ -1190,7 +1256,7 @@ static FBSession *g_activeSession = nil;
                  [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
 
                  // complete the operation: failed
-                 [self callReauthorizeHandlerAndClearState:err];
+                 [self callReauthorizeHandlerAndClearState:err updateDeclinedPermissions:YES];
 
                  // if we made it this far into the reauth case with an untosed device, then
                  // it is time to invalidate the session
@@ -1204,25 +1270,6 @@ static FBSession *g_activeSession = nil;
 
 - (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter {
     return [FBSystemAccountStoreAdapter sharedInstance];
-}
-
-- (FBAppCall *)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray *)permissions
-                                                defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                                                    clientState:(NSDictionary *)clientState {
-    FBLoginDialogParams *params = [[[FBLoginDialogParams alloc] init] autorelease];
-    params.permissions = permissions;
-    params.writePrivacy = defaultAudience;
-    params.session = self;
-
-    FBAppCall *call = [FBDialogs presentLoginDialogWithParams:params
-                                                  clientState:clientState
-                                                      handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                                          [self handleDidCompleteNativeLoginForAppCall:call];
-                                                      }];
-    if (call) {
-        _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeFacebookApplication;
-    }
-    return call;
 }
 
 - (void)handleDidCompleteNativeLoginForAppCall:(FBAppCall *)call {
@@ -1424,6 +1471,7 @@ static FBSession *g_activeSession = nil;
         if (grantedPermissions.count == 0) {
             grantedPermissions = self.initializedPermissions;
         }
+        [self updateDeclinedPermissionsForRequestedPermissions:self.initializedPermissions grantedPermissions:grantedPermissions];
 
         // set token and date, state transition, and call the handler if there is one
         FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:accessToken
@@ -1478,7 +1526,7 @@ static FBSession *g_activeSession = nil;
         self.isRepairing = NO;
         [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:errorToSurface];
 
-        [self callReauthorizeHandlerAndClearState:errorToSurface];
+        [self callReauthorizeHandlerAndClearState:errorToSurface updateDeclinedPermissions:YES];
     } else {
 
         // we have an access token, so parse the expiration date.
@@ -1522,33 +1570,32 @@ static FBSession *g_activeSession = nil;
     // we will use these to compare fbid's
     __block id fbid = nil;
     __block id fbid2 = nil;
-    __block id permissionsRefreshed = nil;
+    __block id permissionsResponseRetained = nil;
     // and this to assure we notice when we have been called three times
     __block int callsPending = 3;
 
     void (^handleBatch)(id<FBGraphUser>,id) = [[^(id<FBGraphUser> user,
-                                                  id permissions) {
+                                                  id permissionsResponse) {
 
         // here we accumulate state from the various callbacks
         if (user && !fbid) {
             fbid = [[user objectForKey:@"id"] retain];
         } else if (user && !fbid2) {
             fbid2 = [[user objectForKey:@"id"] retain];
-        } else if (permissions) {
-            permissionsRefreshed = [permissions retain];
+        } else if (permissionsResponse) {
+            permissionsResponseRetained = [permissionsResponse retain];
         }
 
         // if this was our last call, then complete the operation
         if (!--callsPending) {
             if ([fbid isEqual:fbid2]) {
-                id newPermissions = [[permissionsRefreshed objectAtIndex:0] allKeys];
-                if (![newPermissions isKindOfClass:[NSArray class]]) {
-                    newPermissions = nil;
-                }
+                NSMutableArray *allPermissions = [NSMutableArray array];
+                NSMutableArray *grantedPermissions = [NSMutableArray array];
+                [FBSessionUtility extractPermissionsFromResponse:permissionsResponseRetained allPermissions:allPermissions grantedPermissions:grantedPermissions];
 
                 [self completeReauthorizeWithAccessToken:accessToken
                                           expirationDate:expirationDate
-                                             permissions:newPermissions];
+                                             permissions:grantedPermissions];
             } else {
                 // no we don't have matching FBIDs, then we fail on these grounds
                 NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonWrongUser
@@ -1557,13 +1604,13 @@ static FBSession *g_activeSession = nil;
 
                 [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultError error:error];
 
-                [self callReauthorizeHandlerAndClearState:error];
+                [self callReauthorizeHandlerAndClearState:error updateDeclinedPermissions:NO];
             }
 
             // because these are __block, we manually handle their lifetime
             [fbid release];
             [fbid2 release];
-            [permissionsRefreshed release];
+            [permissionsResponseRetained release];
         }
     } copy] autorelease];
 
@@ -1580,7 +1627,7 @@ static FBSession *g_activeSession = nil;
 
     [connection addRequest:requestPermissions
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             handleBatch(nil, [result objectForKey:@"data"]);
+             handleBatch(nil, result);
          }];
 
     [connection start];
@@ -1631,15 +1678,7 @@ static FBSession *g_activeSession = nil;
     @synchronized (self) {
         if (!self.isRepairing) {
             self.isRepairing = YES;
-            FBSessionLoginBehavior loginBehavior;
-            switch (self.accessTokenData.loginType) {
-                case FBSessionLoginTypeSystemAccount: loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent; break;
-                case FBSessionLoginTypeFacebookApplication:
-                case FBSessionLoginTypeFacebookViaSafari: loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView; break;
-                case FBSessionLoginTypeWebView: loginBehavior = FBSessionLoginBehaviorForcingWebView; break;
-                default: loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
-            }
-
+            FBSessionLoginBehavior loginBehavior = [FBSessionUtility loginBehaviorForLoginType:self.accessTokenData.loginType];
             if (self.reauthorizeHandler) {
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
                                     logEntry:@"Warning: a session is being reconnected while there might have been an existing reauthorization in progress. The pre-existing reauthorization will be ignored."];
@@ -1667,6 +1706,8 @@ static FBSession *g_activeSession = nil;
                                permissions:(NSArray *)permissions {
     [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
 
+    [self updateDeclinedPermissionsForRequestedPermissions:_requestedReauthPermissions grantedPermissions:permissions];
+
     // set token and date, state transition, and call the handler if there is one
     NSDate *now = [NSDate date];
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:accessToken
@@ -1681,7 +1722,7 @@ static FBSession *g_activeSession = nil;
                                 shouldCache:YES];
 
     // no error, ack a completed permission upgrade
-    [self callReauthorizeHandlerAndClearState:nil];
+    [self callReauthorizeHandlerAndClearState:nil updateDeclinedPermissions:NO];
 }
 
 - (void)authorizeRequestWasImplicitlyCancelled {
@@ -1709,7 +1750,7 @@ static FBSession *g_activeSession = nil;
             NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelled
                                                     errorCode:nil
                                                    innerError:nil];
-            [self callReauthorizeHandlerAndClearState:error];
+            [self callReauthorizeHandlerAndClearState:error updateDeclinedPermissions:YES];
         }
         _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeNone;
     }
@@ -1766,19 +1807,32 @@ static FBSession *g_activeSession = nil;
     return NO;
 }
 
-- (void)refreshPermissions:(NSArray *)permissions {
-    NSDate *now = [NSDate date];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:self.accessTokenData.accessToken
-                                                                permissions:permissions
-                                                             expirationDate:self.accessTokenData.expirationDate
-                                                                  loginType:self.accessTokenData.loginType
-                                                                refreshDate:self.accessTokenData.refreshDate
-                                                     permissionsRefreshDate:now];
-    self.attemptedPermissionsRefreshDate = now;
-    // Note we intentionally do not notify KVO that `accessTokenData `is changing since
-    // the implied contract is for that to only occur during state transitions.
-    self.accessTokenData = tokenData;
-    [self.tokenCachingStrategy cacheFBAccessTokenData:self.accessTokenData];
+- (void)handleRefreshPermissions:(id)permissionsResponse {
+    if (self.isOpen && [permissionsResponse isKindOfClass:[NSDictionary class] ]) {
+        NSArray *resultData = permissionsResponse[@"data"];
+        if (resultData.count > 0) {
+            NSMutableArray *allPermissions = [NSMutableArray array];
+            NSMutableArray *grantedPermissions = [NSMutableArray array];
+            [FBSessionUtility extractPermissionsFromResponse:permissionsResponse allPermissions:allPermissions grantedPermissions:grantedPermissions];
+
+            if ([allPermissions count] > 0) {
+                NSDate *now = [NSDate date];
+                FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:self.accessTokenData.accessToken
+                                                                            permissions:grantedPermissions
+                                                                         expirationDate:self.accessTokenData.expirationDate
+                                                                              loginType:self.accessTokenData.loginType
+                                                                            refreshDate:self.accessTokenData.refreshDate
+                                                                 permissionsRefreshDate:now];
+                self.attemptedPermissionsRefreshDate = now;
+                // Note we intentionally do not notify KVO that `accessTokenData `is changing since
+                // the implied contract is for that to only occur during state transitions.
+                self.accessTokenData = tokenData;
+                [self.tokenCachingStrategy cacheFBAccessTokenData:self.accessTokenData];
+
+                [self updateDeclinedPermissionsForRequestedPermissions:allPermissions grantedPermissions:grantedPermissions];
+            }
+        }
+    }
 }
 
 // Internally accessed, so we can bind the affinitized thread later.
@@ -1868,7 +1922,7 @@ static FBSession *g_activeSession = nil;
             NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonSessionClosed
                                                     errorCode:nil
                                                    innerError:nil];
-            [self callReauthorizeHandlerAndClearState:error];
+            [self callReauthorizeHandlerAndClearState:error updateDeclinedPermissions:NO];
         }
 
         // if we have a handler, call it and release our
@@ -1888,7 +1942,10 @@ static FBSession *g_activeSession = nil;
     }
 }
 
-- (void)callReauthorizeHandlerAndClearState:(NSError *)error {
+- (void)callReauthorizeHandlerAndClearState:(NSError *)error updateDeclinedPermissions:(BOOL)updateDeclinedPermissions {
+    if (updateDeclinedPermissions) {
+        [self updateDeclinedPermissionsForRequestedPermissions:_requestedReauthPermissions grantedPermissions:self.accessTokenData.permissions];
+    }
     NSString *authLoggerResult = FBSessionAuthLoggerResultSuccess;
     if (error) {
         authLoggerResult = ([error.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorReauthorizeFailedReasonUserCancelled] ?
@@ -1965,6 +2022,17 @@ static FBSession *g_activeSession = nil;
     return clientStateString ?: @"{}";
 }
 
+- (void)updateDeclinedPermissionsForRequestedPermissions:(NSArray *)requestedPermissions grantedPermissions:(NSArray *)grantedPermissions {
+    [_declinedPermissions removeObjectsInArray:grantedPermissions];
+    for (NSString* requested in requestedPermissions) {
+        if (![grantedPermissions containsObject:requested] &&
+            ![_declinedPermissions containsObject:requested] &&
+            ![requested isEqualToString:@"basic_info"] &&
+            ![requested isEqualToString:@"public_profile"]) {
+            [_declinedPermissions addObject:requested];
+        }
+    }
+}
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {
     // these properties must manually notify for KVO
@@ -2032,12 +2100,6 @@ static FBSession *g_activeSession = nil;
                                   isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                        completionHandler:(FBSessionStateHandler)handler {
-    // is everything in good order?
-    BOOL allowSystemAccount = FBSessionLoginBehaviorUseSystemAccountIfPresent == loginBehavior;
-    [FBSessionUtility validateRequestForPermissions:permissions
-                                    defaultAudience:defaultAudience
-                                 allowSystemAccount:allowSystemAccount
-                                             isRead:isRead];
     BOOL result = NO;
     FBSession *session = [[[FBSession alloc] initWithAppID:nil
                                                permissions:permissions

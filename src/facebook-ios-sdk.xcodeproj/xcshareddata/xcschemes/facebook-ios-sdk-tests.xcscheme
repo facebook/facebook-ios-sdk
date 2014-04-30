@@ -83,6 +83,11 @@
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
+            key = "IOS_SDK_TEST_CLIENT_TOKEN"
+            value = "$(IOS_SDK_TEST_CLIENT_TOKEN)"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
             key = "IOS_SDK_MACHINE_UNIQUE_USER_KEY"
             value = "$(IOS_SDK_MACHINE_UNIQUE_USER_KEY)"
             isEnabled = "YES">

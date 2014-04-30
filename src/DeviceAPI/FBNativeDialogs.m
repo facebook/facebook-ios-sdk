@@ -28,7 +28,6 @@
 #import "FBDialogsData+Internal.h"
 #import "FBDialogsParams+Internal.h"
 #import "FBError.h"
-#import "FBLoginDialogParams.h"
 #import "FBOpenGraphActionShareDialogParams.h"
 #import "FBSession.h"
 #import "FBShareDialogParams.h"

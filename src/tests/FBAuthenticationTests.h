@@ -16,12 +16,14 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "FBSDKMacros.h"
+
 @class FBTestBlocker;
 
 // Methods in the base class will generate successful results using these strings
 
-extern NSString *const kAuthenticationTestValidToken;
-extern NSString *const kAuthenticationTestAppId;
+FBSDK_EXTERN NSString *const kAuthenticationTestValidToken;
+FBSDK_EXTERN NSString *const kAuthenticationTestAppId;
 
 @interface FBAuthenticationTests : SenTestCase {
 @protected

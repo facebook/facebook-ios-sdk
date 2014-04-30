@@ -18,8 +18,24 @@
 
 #import "FBGraphUser.h"
 #import "FBSession.h"
+#import "FBTooltipView.h"
 
 @protocol FBLoginViewDelegate;
+
+/*!
+ @typedef
+ @abstract Indicates the desired login tooltip behavior.
+ */
+typedef NS_ENUM(NSUInteger, FBLoginViewTooltipBehavior) {
+    /*! The default behavior. The tooltip will only be displayed if
+     the app is eligible (determined by server round trip) */
+    FBLoginViewTooltipBehaviorDefault = 0,
+    /*! Force display of the tooltip (typically for UI testing) */
+    FBLoginViewTooltipBehaviorForceDisplay = 1,
+    /*! Force disable. In this case you can still exert more refined
+     control by manually constructing a `FBLoginTooltipView` instance. */
+    FBLoginViewTooltipBehaviorDisable = 2
+};
 
 /*!
  @class FBLoginView
@@ -48,8 +64,7 @@
 
 /*!
  @abstract
- The read permissions to request if the user logs in via this view. The basic_info permission must be explicitly requested at
- first login, and is no longer inferred, (subject to an active migration.)
+ The read permissions to request if the user logs in via this view.
 
  @discussion
  Note, that if read permissions are specified, then publish permissions should not be specified.
@@ -78,9 +93,21 @@
  The login behavior for the active session if the user logs in via this view
 
  @discussion
- The default value is FBSessionLoginBehaviorUseSystemAccountIfPresent.
+ The default value is FBSessionLoginBehaviorWithFallbackToWebView.
  */
 @property (nonatomic) FBSessionLoginBehavior loginBehavior;
+
+/*!
+ @abstract
+ Gets or sets the desired tooltip behavior.
+ */
+@property (nonatomic, assign) FBLoginViewTooltipBehavior tooltipBehavior;
+
+/*!
+ @abstract
+ Gets or sets the desired tooltip color style.
+ */
+@property (nonatomic, assign) FBTooltipColorStyle tooltipColorStyle;
 
 /*!
  @abstract

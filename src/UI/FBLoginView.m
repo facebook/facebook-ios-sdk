@@ -18,6 +18,7 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBGraphUser.h"
+#import "FBLoginTooltipView.h"
 #import "FBLoginViewButtonPNG.h"
 #import "FBLoginViewButtonPressedPNG.h"
 #import "FBProfilePictureView.h"
@@ -54,6 +55,7 @@ static CGSize g_buttonSize;
 // to prevent messaging the delegate again in state transfers that are
 // not important (e.g., tokenextended, or createdopening).
 @property (copy) NSNumber *lastObservedStateWasOpen;
+@property (assign, nonatomic) BOOL hasShownTooltipBubble;
 
 @end
 
@@ -280,7 +282,7 @@ static CGSize g_buttonSize;
         [self configureViewForStateLoggedIn:NO];
     }
 
-    self.loginBehavior = FBSessionLoginBehaviorUseSystemAccountIfPresent;
+    self.loginBehavior = FBSessionLoginBehaviorWithFallbackToWebView;
 }
 #pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
@@ -318,6 +320,30 @@ static CGSize g_buttonSize;
     [self.request startWithCacheIdentity:FBLoginViewCacheIdentity
                    skipRoundtripIfCached:YES];
 
+}
+
+- (void)showTooltipIfNeeded {
+    if (self.session.isOpen || self.tooltipBehavior == FBLoginViewTooltipBehaviorDisable){
+        return;
+    } else {
+        FBLoginTooltipView *tooltipView = [[[FBLoginTooltipView alloc] init] autorelease];
+        tooltipView.colorStyle = self.tooltipColorStyle;
+        if (self.tooltipBehavior == FBLoginViewTooltipBehaviorForceDisplay) {
+            tooltipView.forceDisplay = YES;
+        }
+        [tooltipView presentFromView:self];
+    }
+}
+
+- (void)didMoveToWindow
+{
+    [super didMoveToWindow];
+
+    if (self.window &&
+        (self.tooltipBehavior == FBLoginViewTooltipBehaviorForceDisplay || !self.hasShownTooltipBubble)) {
+        [self showTooltipIfNeeded];
+        self.hasShownTooltipBubble = YES;
+    }
 }
 
 - (void)informDelegate:(BOOL)userOnly {

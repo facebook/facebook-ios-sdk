@@ -131,10 +131,10 @@
     id session = [OCMockObject partialMockForObject:[self getSessionWithSharedUserWithPermissions:nil]];
     [session setForceAccessTokenRefresh:YES];
 
-    //partial mock the session so we can easily fail if the refreshPermissions is called.
+    //partial mock the session so we can make sure session is closed and `handleRefreshPermissions` should do nothing.
     [[[session stub] andDo:^(NSInvocation *invocation) {
-        STFail(@"refreshPermissions: should not be called");
-    }] refreshPermissions:[OCMArg any]];
+        STAssertFalse([session isOpen], @"session should not be open at this point!");
+    }] handleRefreshPermissions:[OCMArg any]];
 
     // verify session's permissions refresh date is initially in the past.
     STAssertEquals([NSDate distantPast], [session accessTokenData].permissionsRefreshDate, @"session permission refresh date does not match");
@@ -413,10 +413,9 @@
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
-    // Note these ids are significant in that they are ids of other test users. Since we use FBTestSession
-    // above (which will have a platform test user access token), the ids need to be objects that are visible
-    // to the platform test user (such as other test users).
-    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=100006424828400,100006675870174"] autorelease];
+
+    NSString *graphPath = [NSString stringWithFormat:@"?ids=%@,%@&fields=id", session.testAppID, session.testUserID];
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:graphPath] autorelease];
     [connection addRequest:parent
          completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
              STAssertNil(error, @"unexpected error in parent request :%@", error);

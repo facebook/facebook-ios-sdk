@@ -15,37 +15,13 @@
  */
 
 #import "FBDialogs.h"
-#import "FBLoginDialogParams.h"
+#import "FBLikeDialogParams.h"
 
 @interface FBDialogs (Internal)
 
-/*!
- @abstract
- Determines whether the corresponding presentFBLoginDialogWithParams:clientState:handler:
- is supported by the installed version of the Facebook app for iOS.
- */
-+ (BOOL)canPresentLoginDialogWithParams:(FBLoginDialogParams *)params;
++ (BOOL)canPresentLikeDialog;
 
-/*!
- @abstract
- Switches to the native Facebook App and shows the login dialog for the requested login params
-
- @param params Params for the native Login dialog
-
- @param clientState An NSDictionary that's passed through when the completion handler
- is called. This is useful for the app to maintain state. May be nil.
-
- @param handler A completion handler that may be called when the login is
- complete. May be nil. If non-nil, the handler will always be called asynchronously.
-
- @return An FBAppCall object that will also be passed into the provided
- FBAppCallCompletionHandler.
-
- @discussion A non-nil FBAppCall object is only returned if the corresponding
- canPresentFBLoginDialogWithParams method is also returning YES for the same params.
-*/
-+ (FBAppCall *)presentLoginDialogWithParams:(FBLoginDialogParams *)params
-                                    clientState:(NSDictionary *)clientState
-                                        handler:(FBDialogAppCallCompletionHandler)handler;
-
++ (FBAppCall *)presentLikeDialogWithParams:(FBLikeDialogParams *)params
+                               clientState:(NSDictionary *)clientState
+                                   handler:(FBDialogAppCallCompletionHandler)handler;
 @end

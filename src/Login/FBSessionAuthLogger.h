@@ -16,24 +16,25 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKMacros.h"
 #import "FBSession+Internal.h"
 
 // Keys to be used to serialize the logger (e.g. into JSON)
-extern NSString *const FBSessionAuthLoggerParamAuthMethodKey;
-extern NSString *const FBSessionAuthLoggerParamIDKey;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerParamAuthMethodKey;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerParamIDKey;
 
 // The names of the authentication methods that are supported
-extern NSString *const FBSessionAuthLoggerAuthMethodIntegrated;
-extern NSString *const FBSessionAuthLoggerAuthMethodFBApplicationNative;
-extern NSString *const FBSessionAuthLoggerAuthMethodFBApplicationWeb;
-extern NSString *const FBSessionAuthLoggerAuthMethodBrowser;
-extern NSString *const FBSessionAuthLoggerAuthMethodFallback;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodIntegrated;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFBApplicationNative;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFBApplicationWeb;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodBrowser;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFallback;
 
 // Well-known result strings.
-extern NSString *const FBSessionAuthLoggerResultSuccess;
-extern NSString *const FBSessionAuthLoggerResultError;
-extern NSString *const FBSessionAuthLoggerResultCancelled;
-extern NSString *const FBSessionAuthLoggerResultSkipped;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerResultSuccess;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerResultError;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerResultCancelled;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerResultSkipped;
 
 /*
  * This class is used specifically for logging events during auth/reauth cycles, for internal

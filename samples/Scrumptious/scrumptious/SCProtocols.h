@@ -21,18 +21,18 @@
 // Wraps an Open Graph object (of type "scrumps:meal") that has just two properties,
 // an ID and a URL. The FBGraphObject allows us to create an FBGraphObject instance
 // and treat it as an SCOGMeal with typed property accessors.
-@protocol SCOGMeal<FBGraphObject>
+@protocol SCOGMeal <FBOpenGraphObject>
 
-@property (retain, nonatomic) NSString        *id;
-@property (retain, nonatomic) NSString        *url;
+@property (nonatomic, strong) NSString *id;
+@property (nonatomic, strong) NSString *url;
 
 @end
 
 // Wraps an Open Graph object (of type "scrumps:eat") with a relationship to a meal,
 // as well as properties inherited from FBOpenGraphAction such as "place" and "tags".
-@protocol SCOGEatMealAction<FBOpenGraphAction>
+@protocol SCOGEatMealAction <FBOpenGraphAction>
 
-@property (retain, nonatomic) id<SCOGMeal>    meal;
+@property (nonatomic, strong) NSObject<SCOGMeal> *meal;
 
 @end
 

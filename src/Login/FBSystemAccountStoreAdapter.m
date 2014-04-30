@@ -132,12 +132,16 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
     }
 
     // app may be asking for nothing, but we will always have an array here
-    NSArray *permissionsToUse = permissions ? permissions : [NSArray array];
+    NSMutableArray *permissionsToUse = permissions ? [permissions mutableCopy] : [NSMutableArray array];
     if ([FBUtility areAllPermissionsReadPermissions:permissions]) {
         // If we have only read permissions being requested, ensure that basic info
         //  is among the permissions requested.
-        permissionsToUse = [FBUtility addBasicInfoPermission:permissionsToUse];
+        [FBUtility addBasicInfoPermission:permissionsToUse];
     }
+    NSIndexSet *publicProfilesIndexes = [permissionsToUse indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        return [permissionsToUse[idx] isEqualToString:@"public_profile"];
+    }];
+    [permissionsToUse removeObjectsAtIndexes:publicProfilesIndexes];
 
     NSString *audience;
     switch (defaultAudience) {
