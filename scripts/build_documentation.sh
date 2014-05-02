@@ -75,7 +75,7 @@ function replace_string() {
     perl -pi -e "s/$1/$2/" $3
 }
 
-DOCSDIR="$DOCSET"/docset/Contents/Resources/Documents
+DOCSDIR="$DOCSET"/docset/Contents/Resources
 replace_string 'id&lt;&gt; delegate' 'id&lt;FBFriendPickerDelegate&gt; delegate' "$DOCSDIR"/Classes/FBFriendPickerViewController.html
 replace_string 'id&lt;&gt; delegate' 'id&lt;FBPlacePickerDelegate&gt; delegate' "$DOCSDIR"/Classes/FBPlacePickerViewController.html
 replace_string 'id&lt;&gt; selection' 'id&lt;FBGraphPlace&gt; selection' "$DOCSDIR"/Classes/FBPlacePickerViewController.html
