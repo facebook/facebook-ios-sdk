@@ -500,6 +500,9 @@
                                           handler:handler];
 
     } else {
+        NSString *bridgeSchemeErrorMsg = @"Could not find an appropriate bridging scheme to open the dialog" ;
+        NSError *noBridgeSchemeError = [self createError:bridgeSchemeErrorMsg session:nil];
+        handler(nil, nil, noBridgeSchemeError);
         return nil;
     }
 }
