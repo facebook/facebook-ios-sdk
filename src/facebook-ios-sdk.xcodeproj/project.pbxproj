@@ -439,6 +439,7 @@
 		9D5B916B17BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B916917BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m */; };
 		9D5B916C17BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B916917BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m */; };
 		9D5B916D17BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5B916917BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m */; };
+		9D5C7597191AD5E8004BCEA8 /* FBOpenGraphActionParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5C7595191AD5E8004BCEA8 /* FBOpenGraphActionParamsTests.m */; };
 		9D5D2996170F788A00FA5899 /* FBErrorUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D5D2995170F788A00FA5899 /* FBErrorUtility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D61F9EE18A2F67300D3CF41 /* FBLoginTooltipView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D61F9ED18A2F67300D3CF41 /* FBLoginTooltipView.m */; };
 		9D7A373D18FF119600B1EFC2 /* FBLinkShareParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D7A373C18FF119500B1EFC2 /* FBLinkShareParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -895,6 +896,7 @@
 		9D5B916317BD379C009DBABB /* FBSessionSafariLoginStategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionSafariLoginStategy.m; sourceTree = "<group>"; };
 		9D5B916817BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSessionInlineWebViewLoginStategy.h; sourceTree = "<group>"; };
 		9D5B916917BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSessionInlineWebViewLoginStategy.m; sourceTree = "<group>"; };
+		9D5C7595191AD5E8004BCEA8 /* FBOpenGraphActionParamsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBOpenGraphActionParamsTests.m; path = tests/FBOpenGraphActionParamsTests.m; sourceTree = "<group>"; };
 		9D5D2995170F788A00FA5899 /* FBErrorUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBErrorUtility.h; sourceTree = "<group>"; };
 		9D61F9ED18A2F67300D3CF41 /* FBLoginTooltipView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBLoginTooltipView.m; sourceTree = "<group>"; };
 		9D7A373C18FF119500B1EFC2 /* FBLinkShareParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLinkShareParams.h; sourceTree = "<group>"; };
@@ -1559,6 +1561,7 @@
 				7EBC39BB171CF1E400574F4E /* FBSettingsTests.h */,
 				7EBC39BC171CF1E400574F4E /* FBSettingsTests.m */,
 				85BD346E187E0EDE007D8EEE /* FBLinkShareParamsTests.m */,
+				9D5C7595191AD5E8004BCEA8 /* FBOpenGraphActionParamsTests.m */,
 				859F0B9218B7D5750011AFEF /* FBPhotoParamsTests.m */,
 				84FA4278153E1968009CEEF8 /* FBTestBlocker.h */,
 				84FA4279153E1968009CEEF8 /* FBTestBlocker.m */,
@@ -2088,6 +2091,7 @@
 				84F992A61871E60500E3369F /* FBPlacePickerViewController.m in Sources */,
 				84FA427A153E1968009CEEF8 /* FBTestBlocker.m in Sources */,
 				84F993061871E6B600E3369F /* FBSystemAccountStoreAdapter.m in Sources */,
+				9D5C7597191AD5E8004BCEA8 /* FBOpenGraphActionParamsTests.m in Sources */,
 				848C2D2718A52EC10059FAF2 /* FBInsights.m in Sources */,
 				9DAF600718E20C9E00B81A92 /* _FBMAppBridgeScheme.m in Sources */,
 				89A4410A18DB9661001AC2F9 /* FBAudioResourceLoader.m in Sources */,

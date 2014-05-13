@@ -102,9 +102,9 @@ NSString *const FBPostObject = @"fbsdk:create_object";
                     errorReason = FBErrorDialogInvalidOpenGraphObject;
                     errorFailureReason = @"The Open Graph object must either have a url or id, or be marked for creation (e.g., constructed by [FBGraphObject openGraphObjectForPost])";
                 }
-                if ([key isEqualToString:self.previewPropertyName]) {
-                    foundPreviewProperty = YES;
-                }
+            }
+            if ([key isEqualToString:self.previewPropertyName]) {
+                foundPreviewProperty = YES;
             }
         }
         if (!foundPreviewProperty){

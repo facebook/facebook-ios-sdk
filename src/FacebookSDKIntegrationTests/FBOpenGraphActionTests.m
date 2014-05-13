@@ -66,7 +66,7 @@
     id<FBOGTestObject> testObject = [self openGraphTestObject:@"testPostingComplexOpenGraphAction"];
 
     id<FBGraphUser> userObject = (id<FBGraphUser>)[FBGraphObject graphObject];
-    userObject.id = taggedUserID;
+    userObject.objectID = taggedUserID;
 
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;

@@ -48,7 +48,7 @@
     self.link = link;
     self.name = name;
     self.caption = caption;
-    self.description = description;
+    self.linkDescription = description;
     self.picture = picture;
   }
   return self;
@@ -59,7 +59,7 @@
     [_link release];
     [_name release];
     [_caption release];
-    [_description release];
+    [_linkDescription release];
     [_picture release];
     [_friends release];
     [_place release];
@@ -80,8 +80,8 @@
     if (self.caption) {
         [args setObject:self.caption forKey:@"caption"];
     }
-    if (self.description) {
-        [args setObject:self.description forKey:@"description"];
+    if (self.linkDescription) {
+        [args setObject:self.linkDescription forKey:@"description"];
     }
     if (self.picture) {
         [args setObject:[self.picture absoluteString] forKey:@"picture"];

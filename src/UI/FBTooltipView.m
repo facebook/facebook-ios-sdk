@@ -546,13 +546,14 @@ CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
 
 - (void)setMessage:(NSString *)message tagline:(NSString *)tagline
 {
+    message = message ?: @"";
     // Ensure tagline is empty string or ends with space
     tagline = tagline ?: @"";
     if ([tagline length] && ![tagline hasSuffix:@" "])
         tagline = [tagline stringByAppendingString:@" "];
 
     // Concatenate tagline & main message
-    message = [tagline stringByAppendingString: message];
+    message = [tagline stringByAppendingString:message];
 
     if ([_textLabel respondsToSelector:@selector(attributedText)]) {
         // iOS 6+

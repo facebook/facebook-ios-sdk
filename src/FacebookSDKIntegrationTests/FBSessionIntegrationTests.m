@@ -62,7 +62,7 @@
                           autorelease];
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         STAssertTrue(me.id.length > 0, @"user id should be non-empty");
+         STAssertTrue(me.objectID.length > 0, @"user id should be non-empty");
          [blocker signal];
      }];
 
@@ -94,7 +94,7 @@
                            autorelease];
     [request1 startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         userID = [me.id retain];
+         userID = [me.objectID retain];
          STAssertTrue(userID.length > 0, @"user id should be non-empty");
          [blocker signal];
      }];
@@ -179,7 +179,7 @@
                           autorelease];
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         STAssertTrue(me.id.length > 0, @"user id should be non-empty. error:%@", error);
+         STAssertTrue(me.objectID.length > 0, @"user id should be non-empty. error:%@", error);
          [blocker signal];
      }];
 
@@ -303,7 +303,7 @@
                           autorelease];
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id<FBGraphUser> me, NSError *error) {
-         STAssertTrue(me.id.length > 0, @"user id should be non-empty. error:%@", error);
+         STAssertTrue(me.objectID.length > 0, @"user id should be non-empty. error:%@", error);
          [blocker signal];
      }];
 

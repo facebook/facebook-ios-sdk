@@ -65,7 +65,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                  @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
 
     id<FBGraphUser> me = [results objectAtIndex:0];
-    STAssertNotNil(me.id, @"me.id");
+    STAssertNotNil(me.objectID, @"me.id");
     STAssertNotNil(me.name, @"me.name");
 }
 
@@ -149,6 +149,8 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 }
 
 - (void)testRestRequestGetUser {
+    BOOL originalMode = [FBSettings isPlatformCompatibilityEnabled];
+    [FBSettings enablePlatformCompatibility:YES];
     FBTestSession *session = self.defaultTestSession;
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -171,6 +173,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     NSString *uid = [[firstResult objectForKey:@"uid"] stringValue];
     STAssertNotNil(uid, @"uid");
     STAssertTrue([session.testUserID isEqualToString:uid], @"don't match");
+    [FBSettings enablePlatformCompatibility:originalMode];
 }
 
 - (NSArray *)sendRequests:(FBRequest *)firstRequest, ...

@@ -232,7 +232,7 @@
     params.link = link;
     params.name = name;
     params.caption = caption;
-    params.description = description;
+    params.linkDescription = description;
     params.picture = picture;
 
     return [self presentShareDialogWithParams:params
@@ -492,7 +492,7 @@
         FBLinkShareParams *paramsCopy = [[FBLinkShareParams alloc] initWithLink:params.link
                                                                            name:params.name
                                                                         caption:params.caption
-                                                                    description:params.description
+                                                                    description:params.linkDescription
                                                                         picture:params.picture];
         return [self presentShareDialogWithParams:paramsCopy
                                      bridgeScheme:bridgeScheme

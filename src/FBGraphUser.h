@@ -35,10 +35,18 @@
 @protocol FBGraphUser<FBGraphObject>
 
 /*!
- @property
- @abstract Typed access to the user's ID.
+ @deprecated use objectID instead
  */
-@property (retain, nonatomic) NSString *id;
+@property (retain, nonatomic) NSString *id __attribute__ ((deprecated("use objectID instead")));
+
+/*!
+ @property
+ @abstract Typed access to the user ID.
+ @discussion Note this typically refers to the "id" field of the graph object (i.e., equivalent
+ to `[self objectForKey:@"id"]`) but is differently named to avoid conflicting with Apple's
+ non-public selectors.
+ */
+@property (retain, nonatomic) NSString *objectID;
 
 /*!
  @property
