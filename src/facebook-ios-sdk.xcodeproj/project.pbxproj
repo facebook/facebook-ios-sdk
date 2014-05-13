@@ -2328,7 +2328,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/facebook_ios_sdk.dst;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
@@ -2340,13 +2341,14 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(BUILT_PRODUCTS_DIR)\"/**",
 				);
-				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				INSTALL_PATH = "../Lib/iOS/$(CONFIGURATION)";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = facebook_ios_sdk;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -2355,7 +2357,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DSTROOT = /tmp/facebook_ios_sdk.dst;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
@@ -2366,12 +2369,13 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(BUILT_PRODUCTS_DIR)\"/**",
 				);
-				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				INSTALL_PATH = "../Lib/iOS/$(CONFIGURATION)";
 				PRODUCT_NAME = facebook_ios_sdk;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -2500,7 +2504,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DSTROOT = /tmp/facebook_ios_sdk.dst;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G5;
@@ -2511,11 +2516,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(BUILT_PRODUCTS_DIR)\"/**",
 				);
-				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				INSTALL_PATH = "../Lib/iOS/$(CONFIGURATION)";
 				PRODUCT_NAME = facebook_ios_sdk;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release64;
 		};
@@ -2605,7 +2611,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
-				DSTROOT = /tmp/facebook_ios_sdk.dst;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_MODEL_TUNING = G5;
@@ -2617,11 +2624,12 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(BUILT_PRODUCTS_DIR)\"/**",
 				);
-				INSTALL_PATH = "$(BUILT_PRODUCTS_DIR)";
+				INSTALL_PATH = "../Lib/iOS/$(CONFIGURATION)";
 				PRODUCT_NAME = facebook_ios_sdk;
 				PUBLIC_HEADERS_FOLDER_PATH = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
-				SKIP_INSTALL = YES;
+				SKIP_INSTALL = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug64;
 		};
