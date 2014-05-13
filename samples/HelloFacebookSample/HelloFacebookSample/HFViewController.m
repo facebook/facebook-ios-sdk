@@ -111,7 +111,7 @@
     self.labelFirstName.text = [NSString stringWithFormat:@"Hello %@!", user.first_name];
     // setting the profileID property of the FBProfilePictureView instance
     // causes the control to fetch and display the profile picture for the user
-    self.profilePic.profileID = user.id;
+    self.profilePic.profileID = user.objectID;
     self.loggedInUser = user;
 }
 

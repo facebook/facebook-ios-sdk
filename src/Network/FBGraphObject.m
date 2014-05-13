@@ -115,6 +115,22 @@ typedef enum _SelectorInferredImplType {
     }
 }
 
+- (NSString *)objectID {
+    return _jsonObject[@"id"];
+}
+
+- (void)setObjectID:(NSString *)objectID {
+    _jsonObject[@"id"] = objectID;
+}
+
+- (id)objectDescription {
+    return _jsonObject[@"description"];
+}
+
+- (void)setObjectDescription:(id)objectDescription {
+    _jsonObject[@"description"] = objectDescription;
+}
+
 - (void)dealloc {
     [_jsonObject release];
     [super dealloc];
@@ -164,7 +180,7 @@ typedef enum _SelectorInferredImplType {
         ogo.url = url;
     }
     if (description) {
-        ogo.description = description;
+        ogo.objectDescription = description;
     }
     return ogo;
 }

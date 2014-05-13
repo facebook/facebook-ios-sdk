@@ -77,7 +77,7 @@
 
  <pre>
  &#064;protocol MyGraphThing&#060;FBGraphObject&#062;
- &#064;property (copy, nonatomic) NSString *id;
+ &#064;property (copy, nonatomic) NSString *objectID;
  &#064;property (copy, nonatomic) NSString *name;
  &#064;end
  </pre>
@@ -144,7 +144,7 @@
 /*!
  @method
  @abstract
- Returns an enumerator of the property naems on this `FBGraphObject`.
+ Returns an enumerator of the property names on this `FBGraphObject`.
  */
 - (NSEnumerator *)keyEnumerator;
 /*!

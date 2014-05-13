@@ -24,7 +24,7 @@
 @interface FBFrictionlessRequestSettings () <FBRequestDelegate>
 
 @property (readwrite, retain) NSArray *allowedRecipients;
-@property (readwrite, retain) FBRequest *activeRequest;
+@property (nonatomic, readwrite, retain) FBRequest *activeRequest;
 
 @end
 
@@ -41,6 +41,15 @@
         self.allowedRecipients = [[[NSArray alloc] init] autorelease];
     }
     return self;
+}
+
+- (void)setActiveRequest:(FBRequest *)activeRequest
+{
+    if (_activeRequest != activeRequest) {
+        _activeRequest.delegate = nil;
+        [_activeRequest release];
+        _activeRequest = [activeRequest retain];
+    }
 }
 
 - (void)enableWithFacebook:(Facebook *)facebook {

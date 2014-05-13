@@ -39,9 +39,12 @@
  non-nil. */
 @property (nonatomic, copy) NSString *caption;
 
+/*! @deprecated use linkDescription instead */
+@property (nonatomic, copy, getter = linkDescription, setter = setLinkDescription:) NSString *description __attribute__ ((deprecated("use linkDescription instead")));
+
 /*! @abstract The description associated with the link. Is only used if the
  link is non-nil. */
-@property (nonatomic, copy) NSString *description;
+@property (nonatomic, copy) NSString *linkDescription;
 
 /*! @abstract The link to a thumbnail to associate with the post. Is only used
  if the link is non-nil. Only "http" or "https" schemes are supported. Note that this
