@@ -27,12 +27,14 @@
  */
 
 @interface FBLoginDialog : FBDialog {
-    id<FBLoginDialogDelegate> _loginDelegate;
 }
 
 - (instancetype)initWithURL:(NSString *)loginURL
                 loginParams:(NSMutableDictionary *)params
-                   delegate:(id<FBLoginDialogDelegate>)delegate;
+                   delegate:(id <FBLoginDialogDelegate> )delegate;
+
+@property (nonatomic, assign) id <FBLoginDialogDelegate> loginDelegate;
+
 @end
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -44,5 +46,3 @@
 - (void)fbDialogNotLogin:(BOOL)cancelled;
 
 @end
-
-
