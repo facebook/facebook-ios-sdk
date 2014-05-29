@@ -31,14 +31,18 @@
  */
 - (instancetype)initWithURL:(NSString *)loginURL
                 loginParams:(NSMutableDictionary *)params
-                   delegate:(id<FBLoginDialogDelegate>)delegate
-{
-    if ((self = [super init])) {
-        _serverURL = [loginURL retain];
-        _params = [params retain];
-        _loginDelegate = delegate;
-    }
-    return self;
+                   delegate:(id <FBLoginDialogDelegate> )delegate {
+	if ((self = [super init])) {
+		_serverURL = [loginURL retain];
+		_params = [params retain];
+		self.loginDelegate = delegate;
+	}
+	return self;
+}
+
+- (void)dealloc {
+	self.loginDelegate = nil;
+	[super dealloc];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -48,51 +52,52 @@
  * Override FBDialog : to call when the webView Dialog did succeed
  */
 - (void)dialogDidSucceed:(NSURL *)url {
-    NSString *q = [url absoluteString];
-    NSString *token = [self getStringFromUrl:q needle:@"access_token="];
-    NSString *expTime = [self getStringFromUrl:q needle:@"expires_in="];
-    NSDate *expirationDate =nil;
+	NSString *q = [url absoluteString];
+	NSString *token = [self getStringFromUrl:q needle:@"access_token="];
+	NSString *expTime = [self getStringFromUrl:q needle:@"expires_in="];
+	NSDate *expirationDate = nil;
 
-    if (expTime != nil) {
-        int expVal = [expTime intValue];
-        if (expVal == 0) {
-            expirationDate = [NSDate distantFuture];
-        } else {
-            expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
-        }
-    }
+	if (expTime != nil) {
+		int expVal = [expTime intValue];
+		if (expVal == 0) {
+			expirationDate = [NSDate distantFuture];
+		}
+		else {
+			expirationDate = [NSDate dateWithTimeIntervalSinceNow:expVal];
+		}
+	}
 
-    if ((token == (NSString *) [NSNull null]) || (token.length == 0)) {
-        [self dialogDidCancel:url];
-        [self dismissWithSuccess:NO animated:YES];
-    } else {
-        NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
-        if ([_loginDelegate respondsToSelector:@selector(fbDialogLogin:expirationDate:params:)]) {
-            [_loginDelegate fbDialogLogin:token expirationDate:expirationDate params:params];
-        }
-        [self dismissWithSuccess:YES animated:YES];
-    }
-
+	if ((token == (NSString *)[NSNull null]) || (token.length == 0)) {
+		[self dialogDidCancel:url];
+		[self dismissWithSuccess:NO animated:YES];
+	}
+	else {
+		NSDictionary *params = [FBUtility queryParamsDictionaryFromFBURL:url];
+		if ([self.loginDelegate respondsToSelector:@selector(fbDialogLogin:expirationDate:params:)]) {
+			[self.loginDelegate fbDialogLogin:token expirationDate:expirationDate params:params];
+		}
+		[self dismissWithSuccess:YES animated:YES];
+	}
 }
 
 /**
  * Override FBDialog : to call with the login dialog get canceled
  */
 - (void)dialogDidCancel:(NSURL *)url {
-    [self dismissWithSuccess:NO animated:YES];
-    if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
-        [_loginDelegate fbDialogNotLogin:YES];
-    }
+	[self dismissWithSuccess:NO animated:YES];
+	if ([self.loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
+		[self.loginDelegate fbDialogNotLogin:YES];
+	}
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    if (!(([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) ||
-          ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
-        [super webView:webView didFailLoadWithError:error];
-        if ([_loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
-            [_loginDelegate fbDialogNotLogin:NO];
-        }
-    }
+	if (!(([error.domain isEqualToString:NSURLErrorDomain] && error.code == NSURLErrorCancelled) ||
+	      ([error.domain isEqualToString:@"WebKitErrorDomain"] && error.code == 102))) {
+		[super webView:webView didFailLoadWithError:error];
+		if ([self.loginDelegate respondsToSelector:@selector(fbDialogNotLogin:)]) {
+			[self.loginDelegate fbDialogNotLogin:NO];
+		}
+	}
 }
 
 @end
