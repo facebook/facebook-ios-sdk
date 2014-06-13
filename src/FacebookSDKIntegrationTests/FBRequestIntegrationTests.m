@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import "FBRequestIntegrationTests.h"
-#import "FBTestSession.h"
-#import "FBRequest.h"
-#import "FBGraphUser.h"
 #import "FBGraphPlace.h"
-#import "FBSettings.h"
+#import "FBGraphUser.h"
+#import "FBIntegrationTests.h"
+#import "FBInternalSettings.h"
+#import "FBRequest.h"
 #import "FBTestBlocker.h"
+#import "FBTestSession.h"
 #import "FBUtility.h"
+
+#define UNIT_TEST_OPEN_GRAPH_NAMESPACE "facebooksdktests"
 
 #if defined(FACEBOOKSDK_SKIP_COMMON_REQUEST_TESTS) || !defined(UNIT_TEST_OPEN_GRAPH_NAMESPACE)
 
@@ -35,11 +36,7 @@
 static NSString *const UNIT_TEST_IMAGE_URL = @"https://sphotos-b.xx.fbcdn.net/hphotos-ash4/387972_10152013102225492_1756755651_n.jpg";
 static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST_OPEN_GRAPH_NAMESPACE":test";
 
-@interface FBRequestIntegrationTests ()
-
-- (NSArray *)sendRequests:(FBRequest *)firstRequest, ...;
-- (NSArray *)sendRequestArray:(NSArray *)requests;
-
+@interface FBRequestIntegrationTests : FBIntegrationTests
 @end
 
 @implementation FBRequestIntegrationTests
@@ -55,18 +52,18 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [requestMe setSession:self.defaultTestSession];
     NSArray *results = [self sendRequests:requestMe, nil];
 
-    STAssertNotNil(results, @"results");
-    STAssertTrue([results isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(results, @"results");
+    XCTAssertTrue([results isKindOfClass:[NSArray class]],
                  @"[results isKindOfClass:[NSArray class]]");
-    STAssertTrue([results count] == 1, @"[results count] == 1");
-    STAssertTrue(![[results objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([results count] == 1, @"[results count] == 1");
+    XCTAssertTrue(![[results objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[results objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[results objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"![[results objectAtIndex:0] isKindOfClass:[NSError class]]");
 
     id<FBGraphUser> me = [results objectAtIndex:0];
-    STAssertNotNil(me.objectID, @"me.id");
-    STAssertNotNil(me.name, @"me.name");
+    XCTAssertNotNil(me.objectID, @"me.id");
+    XCTAssertNotNil(me.name, @"me.name");
 }
 
 - (void)testRequestUploadPhoto
@@ -75,19 +72,19 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [uploadRequest setSession:self.defaultTestSession];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
 
-    STAssertNotNil(responses, @"responses");
-    STAssertTrue([responses isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(responses, @"responses");
+    XCTAssertTrue([responses isKindOfClass:[NSArray class]],
                  @"[responses isKindOfClass:[NSArray class]]");
-    STAssertTrue([responses count] == 1, @"[responses count] == 1");
-    STAssertTrue(![[responses objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([responses count] == 1, @"[responses count] == 1");
+    XCTAssertTrue(![[responses objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"![[responses objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"[[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *replyData = (NSDictionary *)[responses objectAtIndex:0];
-    STAssertNotNil([replyData objectForKey:@"id"],
+    XCTAssertNotNil([replyData objectForKey:@"id"],
                    @"[replyData objectForKey:id]");
-    STAssertNotNil([replyData objectForKey:@"post_id"],
+    XCTAssertNotNil([replyData objectForKey:@"post_id"],
                    @"[replyData objectForKey:post_id]");
 }
 
@@ -101,18 +98,18 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
-    STAssertNotNil(response, @"response");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"response");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"[response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"[response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"[response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSArray *data = (NSArray *)[firstResponse objectForKey:@"data"];
-    STAssertTrue(data.count > 0, @"Did not get any responses");
+    XCTAssertTrue(data.count > 0, @"Did not get any responses");
 }
 
 - (void)testRequestPlaceSearchWithSearchText
@@ -125,13 +122,13 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [searchRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:searchRequest, nil];
 
-    STAssertNotNil(response, @"response");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"response");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"[response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"[response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"[response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"[[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
@@ -145,7 +142,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
         }
     }
 
-    STAssertTrue(found, @"didn't find Lincoln Memorial");
+    XCTAssertTrue(found, @"didn't find Lincoln Memorial");
 }
 
 - (void)testRestRequestGetUser {
@@ -164,15 +161,15 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                           autorelease];
 
     NSArray *responses = [self sendRequests:request, nil];
-    STAssertNotNil(responses, @"responses");
+    XCTAssertNotNil(responses, @"responses");
 
     NSArray *firstResponse = (NSArray *)[responses objectAtIndex:0];
     NSDictionary *firstResult = (NSDictionary *)[firstResponse objectAtIndex:0];
-    STAssertNotNil(firstResult, @"firstResult");
+    XCTAssertNotNil(firstResult, @"firstResult");
 
     NSString *uid = [[firstResult objectForKey:@"uid"] stringValue];
-    STAssertNotNil(uid, @"uid");
-    STAssertTrue([session.testUserID isEqualToString:uid], @"don't match");
+    XCTAssertNotNil(uid, @"uid");
+    XCTAssertTrue([session.testUserID isEqualToString:uid], @"don't match");
     [FBSettings enablePlatformCompatibility:originalMode];
 }
 
@@ -199,10 +196,10 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
     FBRequestHandler handler =
-    ^(FBRequestConnection *connection, id result, NSError *error) {
+    ^(FBRequestConnection *innerConnection, id result, NSError *error) {
         // Validate that we can assume in unit test that errors and results
         // are disjoint.
-        STAssertTrue(![result isKindOfClass:[NSError class]],
+        XCTAssertTrue(![result isKindOfClass:[NSError class]],
                      @"![result isKindOfClass:[NSError class]]");
         [results addObject:(error ? error : result)];
         [blocker signal];
@@ -220,7 +217,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     // than an SDK unit test should have a while loop to wait for the full set
     // of results.
     [blocker wait];
-    STAssertTrue([results count] == [requests count],
+    XCTAssertTrue([results count] == [requests count],
                  @"[results count] == [requests count]");
 
     return results;
@@ -234,9 +231,9 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 
     [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
                           completionHandler:^(FBRequestConnection *connection, id<FBGraphPlace> chicken, NSError *error) {
-                              STAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
-                              STAssertTrue([chicken.location.city isEqualToString:@"Woodinville"], @"city wrong");
-                              STAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
+                              XCTAssertTrue([chicken.name isEqualToString:@"Ezell's Famous Chicken"], @"name wrong");
+                              XCTAssertTrue([chicken.location.city isEqualToString:@"Woodinville"], @"city wrong");
+                              XCTAssertTrue([chicken.location.state isEqualToString:@"WA"], @"state wrong");
                               [blocker signal];
                           }];
 
@@ -251,7 +248,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 
     [FBRequestConnection startWithGraphPath:session.testUserID
                           completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> user, NSError *error) {
-                              STAssertTrue([user.name isEqualToString:session.testUserName], @"Got unexpected user");
+                              XCTAssertTrue([user.name isEqualToString:session.testUserName], @"Got unexpected user");
                               [blocker signal];
                           }];
 
@@ -320,8 +317,8 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     NSString *comment2ID = [comment2 objectForKey:@"id"];
     NSString *comment2Message = [comment2 objectForKey:@"message"];
 
-    STAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
-    STAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
+    XCTAssertFalse([comment1ID isEqualToString:comment2ID], @"ended up with the same comment");
+    XCTAssertTrue([comment1Message isEqualToString:comment2Message], @"message not round-tripped");
 }
 
 - (NSDictionary *)createObjectWithCreateRequest:(FBRequest *)createRequest
@@ -329,18 +326,18 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
     [createRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:createRequest, nil];
 
-    STAssertNotNil(response, @"create response");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"create response");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"create: [response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"create: [response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"create: [response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"create: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"create: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
 
     NSDictionary *firstResponse = (NSDictionary *)[response objectAtIndex:0];
     NSString *objectId = [firstResponse objectForKey:@"id"];
-    STAssertNotNil(objectId, @"Did not get valid id for object creation");
+    XCTAssertNotNil(objectId, @"Did not get valid id for object creation");
 
     return [NSDictionary dictionaryWithObjectsAndKeys:objectId, @"id", nil];
 }
@@ -359,9 +356,11 @@ withExpectedResults:(NSArray *)expectedResults
                 propertyKey = [propertyKey substringFromIndex:5];
                 objectToCheck = result[@"data"];
             }
-            STAssertEqualObjects(expectedResult,
-                                 [objectToCheck objectForKey:propertyKey],
-                                 [NSString stringWithFormat:@"property check: %@ equals result[%@]", expectedResult, propertyKey]);
+            XCTAssertEqualObjects(expectedResult,
+                                  [objectToCheck objectForKey:propertyKey],
+                                  @"property check: %@ equals result[%@]",
+                                  expectedResult,
+                                  propertyKey);
         }
     }
 }
@@ -374,16 +373,16 @@ withExpectedResults:(NSArray *)expectedResults
     [request setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:request, nil];
 
-    STAssertNotNil(response, @"get responses");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"get responses");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"get: [response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"get: [response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"get: [response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"get: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
     NSDictionary *result = [response objectAtIndex:0];
-    STAssertTrue([result isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([result isKindOfClass:[NSDictionary class]],
                  @"get: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
-    STAssertEqualObjects(fbid, [result valueForKey:@"id"],
+    XCTAssertEqualObjects(fbid, [result valueForKey:@"id"],
                          @"get: [[response objectAtIndex:0] valueForKey:@\"id\"] equals fbid");
 
     [self checkResult:result forProperties:propertiesToCheck withExpectedResults:expectedResults];
@@ -401,14 +400,14 @@ withExpectedResults:(NSArray *)expectedResults
     [updateRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:updateRequest, nil];
 
-    STAssertNotNil(response, @"update response");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"update response");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"create: [response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"create: [response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"create: [response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"create: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
     NSDictionary *objectResult = [response objectAtIndex:0];
-    STAssertTrue([objectResult isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([objectResult isKindOfClass:[NSDictionary class]],
                  @"get: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
     [self checkResult:objectResult forProperties:propertiesToCheck withExpectedResults:expectedResults];
 }
@@ -419,15 +418,15 @@ withExpectedResults:(NSArray *)expectedResults
     [deleteRequest setSession:self.defaultTestSession];
     NSArray *response = [self sendRequests:deleteRequest, nil];
 
-    STAssertNotNil(response, @"delete response");
-    STAssertTrue([response isKindOfClass:[NSArray class]],
+    XCTAssertNotNil(response, @"delete response");
+    XCTAssertTrue([response isKindOfClass:[NSArray class]],
                  @"delete: [response isKindOfClass:[NSArray class]]");
-    STAssertTrue([response count] == 1, @"delete: [response count] == 1");
-    STAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
+    XCTAssertTrue([response count] == 1, @"delete: [response count] == 1");
+    XCTAssertTrue(![[response objectAtIndex:0] isKindOfClass:[NSError class]],
                  @"delete: ![[response objectAtIndex:0] isKindOfClass:[NSError class]]");
-    STAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+    XCTAssertTrue([[response objectAtIndex:0] isKindOfClass:[NSDictionary class]],
                  @"delete: [[response objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
-    STAssertTrue([[[response objectAtIndex:0] objectForKey:@"FACEBOOK_NON_JSON_RESULT" ] isEqualToString:@"true"],
+    XCTAssertTrue([[[response objectAtIndex:0] objectForKey:@"FACEBOOK_NON_JSON_RESULT" ] isEqualToString:@"true"],
                  @"delete: [[response objectAtIndex:0] isEqualToString:@\"true\"]");
 
 }
@@ -597,7 +596,7 @@ withExpectedResults:(NSArray *)expectedResults
     permissions.session = session;
     [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         NSArray *resultData = result[@"data"];
-        STAssertTrue((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
+        XCTAssertTrue((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
                      @"expected v1.0 me/permission results but got %@", result);
         [blocker signal];
     }];
@@ -607,7 +606,7 @@ withExpectedResults:(NSArray *)expectedResults
     blocker = [[[FBTestBlocker alloc] init] autorelease];
     [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         NSArray *resultData = result[@"data"];
-        STAssertFalse((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
+        XCTAssertFalse((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
                      @"expected not v1.0 me/permission results but got %@", result);
         [blocker signal];
     }];

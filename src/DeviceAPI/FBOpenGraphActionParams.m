@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-#import "FBOpenGraphActionShareDialogParams.h"
 #import "FBOpenGraphActionParams+Internal.h"
 
 #import "FBAppBridge.h"
 #import "FBAppBridgeScheme.h"
 #import "FBDialogsParams+Internal.h"
 #import "FBError.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
+#import "FBOpenGraphActionShareDialogParams.h"
 #import "FBUtility.h"
-
-#ifndef FB_BUILD_ONLY
-#define FB_BUILD_ONLY
-#endif
-
-#import "FBSettings.h"
-
-#ifdef FB_BUILD_ONLY
-#undef FB_BUILD_ONLY
-#endif
 
 NSString *const FBPostObjectOfType = @"fbsdk:create_object_of_type";
 NSString *const FBPostObject = @"fbsdk:create_object";

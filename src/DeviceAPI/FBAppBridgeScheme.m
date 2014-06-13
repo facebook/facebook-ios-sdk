@@ -19,22 +19,13 @@
 #import "_FBMAppBridgeScheme.h"
 #import "FBAppBridge.h"
 #import "FBDialogsParams+Internal.h"
+#import "FBInternalSettings.h"
 #import "FBLinkShareParams.h"
 #import "FBLogger.h"
 #import "FBOpenGraphActionParams+Internal.h"
 #import "FBUtility.h"
 
 #define WRAP_ARRAY(array__) ([NSArray arrayWithObjects:(array__) count:(sizeof((array__)) / sizeof((array__)[0]))])
-
-#ifndef FB_BUILD_ONLY
-#define FB_BUILD_ONLY
-#endif
-
-#import "FBSettings.h"
-
-#ifdef FB_BUILD_ONLY
-#undef FB_BUILD_ONLY
-#endif
 
 static NSString *const kFBHttpScheme  = @"http";
 static NSString *const kFBHttpsScheme = @"https";

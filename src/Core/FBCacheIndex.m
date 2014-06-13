@@ -17,8 +17,8 @@
 #import "FBCacheIndex.h"
 
 #import "FBDynamicFrameworkLoader.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBSettings.h"
 
 #define CHECK_SQLITE(res, expectedResult, db) { \
 int result = (res); \

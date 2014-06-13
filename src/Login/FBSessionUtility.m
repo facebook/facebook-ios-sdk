@@ -158,7 +158,10 @@
     }
 }
 
-+ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject allPermissions:(NSMutableArray *)allPermissions grantedPermissions:(NSMutableArray *)grantedPermissions {
++ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+                        allPermissions:(NSMutableArray *)allPermissions
+                    grantedPermissions:(NSMutableArray *)grantedPermissions
+                   declinedPermissions:(NSMutableArray *)declinedPermissions {
     NSArray *resultData = responseObject[@"data"];
     if (resultData.count > 0) {
         if (resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil) {
@@ -173,6 +176,8 @@
                 [allPermissions addObject:permissionName];
                 if ([status isEqualToString:@"granted"]) {
                     [grantedPermissions addObject:permissionName];
+                } else if ([status isEqualToString:@"declined"]) {
+                    [declinedPermissions addObject:permissionName];
                 }
             }
         }

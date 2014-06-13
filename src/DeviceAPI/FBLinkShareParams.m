@@ -15,24 +15,15 @@
  */
 
 #import "FBLinkShareParams.h"
-#import "FBShareDialogParams.h"
 
 #import "FBAppBridge.h"
+#import "FBAppBridgeScheme.h"
 #import "FBDialogsParams+Internal.h"
 #import "FBError.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBAppBridgeScheme.h"
+#import "FBShareDialogParams.h"
 #import "FBUtility.h"
-
-#ifndef FB_BUILD_ONLY
-#define FB_BUILD_ONLY
-#endif
-
-#import "FBSettings.h"
-
-#ifdef FB_BUILD_ONLY
-#undef FB_BUILD_ONLY
-#endif
 
 @implementation FBShareDialogParams
 @end

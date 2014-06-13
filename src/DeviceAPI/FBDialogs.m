@@ -329,9 +329,9 @@
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                    bridgeScheme:bridgeScheme
                                                         session:nil
-                                              completionHandler:^(FBAppCall *call) {
+                                              completionHandler:^(FBAppCall *innerCall) {
                                                   if (handler) {
-                                                      handler(call, call.dialogData.results, call.error);
+                                                      handler(innerCall, innerCall.dialogData.results, innerCall.error);
                                                   }
                                               }];
         }
@@ -394,9 +394,9 @@
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                    bridgeScheme:bridgeScheme
                                                         session:nil
-                                              completionHandler:^(FBAppCall *call) {
+                                              completionHandler:^(FBAppCall *innerCall) {
                                                   if (handler) {
-                                                      handler(call, call.dialogData.results, call.error);
+                                                      handler(innerCall, innerCall.dialogData.results, innerCall.error);
                                                   }
                                               }];
         }

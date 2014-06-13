@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 
-# This script builds the FacebookSDK.framework, FBAudienceNetwork.framework, all samples, and the distribution package.
+# This script builds the FacebookSDK.framework, all samples, and the distribution package.
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 

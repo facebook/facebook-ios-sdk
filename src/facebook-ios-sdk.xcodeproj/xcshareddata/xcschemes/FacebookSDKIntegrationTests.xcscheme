@@ -29,7 +29,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "85A44B9E16A8CE05007BE80E"
-               BuildableName = "FacebookSDKIntegrationTests.octest"
+               BuildableName = "FacebookSDKIntegrationTests.xctest"
                BlueprintName = "FacebookSDKIntegrationTests"
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
@@ -47,8 +47,18 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "85A44B9E16A8CE05007BE80E"
-               BuildableName = "FacebookSDKIntegrationTests.octest"
+               BuildableName = "FacebookSDKIntegrationTests.xctest"
                BlueprintName = "FacebookSDKIntegrationTests"
+               ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "89263C1A1926CBA500A44711"
+               BuildableName = "FacebookSDKApplicationTests.xctest"
+               BlueprintName = "FacebookSDKApplicationTests"
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -57,7 +67,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "85A44B9E16A8CE05007BE80E"
-            BuildableName = "FacebookSDKIntegrationTests.octest"
+            BuildableName = "FacebookSDKIntegrationTests.xctest"
             BlueprintName = "FacebookSDKIntegrationTests"
             ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
          </BuildableReference>

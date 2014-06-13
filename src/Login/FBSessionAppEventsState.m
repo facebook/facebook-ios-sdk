@@ -73,6 +73,15 @@ static const int MAX_ACCUMULATED_LOG_EVENTS = 1000;
     }
 }
 
+- (BOOL)areAllEventsImplicit {
+    for (NSDictionary *eventAndImplicitFlag in self.inFlightEvents) {
+        if (![[eventAndImplicitFlag objectForKey:kFBAppEventIsImplicit] boolValue]) {
+            return NO;
+        }
+    }
+    return YES;
+}
+
 // JSON representation of the in-flight events, potentially excluding those marked as implicit.  Return
 // nil if the resultant set of events is empty.
 - (NSString *)jsonEncodeInFlightEvents:(BOOL)includeImplicitEvents {

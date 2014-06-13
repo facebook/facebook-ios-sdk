@@ -15,17 +15,13 @@
  */
 
 #import "FBTestBlocker.h"
-#import <SenTestingKit/SenTestingKit.h>
 
-@interface FBTestBlocker ()
+#import <XCTest/XCTest.h>
 
-- (void)reset;
-
-@end
-
-@implementation FBTestBlocker {
-    int _signalsRemaining;
-    int _expectedSignalCount;
+@implementation FBTestBlocker
+{
+    NSInteger _signalsRemaining;
+    NSInteger _expectedSignalCount;
 }
 
 - (instancetype)init {

@@ -239,7 +239,6 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
     [permission hasPrefix:@"manage"] ||
     [permission isEqualToString:@"ads_management"] ||
     [permission isEqualToString:@"create_event"] ||
-    [permission isEqualToString:@"user_games_activity"] ||
     [permission isEqualToString:@"rsvp_event"];
 }
 
@@ -369,14 +368,18 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
     return status;
 }
 
-+ (void)updateParametersWithEventUsageLimitsAndBundleInfo:(NSMutableDictionary *)parameters {
++ (void)updateParametersWithEventUsageLimitsAndBundleInfo:(NSMutableDictionary *)parameters
+                          accessAdvertisingTrackingStatus:(BOOL)accessAdvertisingTrackingStatus {
+    
     // Only add the iOS global value if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
     // absence of this parameter is to be interpreted as 'unspecified'.
-    FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
-    if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
-        BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
-        [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
-                       forKey:@"advertiser_tracking_enabled"];
+    if (accessAdvertisingTrackingStatus) {
+        FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
+        if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
+            BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
+            [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
+                           forKey:@"advertiser_tracking_enabled"];
+        }
     }
 
     [parameters setObject:[[NSNumber numberWithBool:!FBSettings.limitEventAndDataUsage] stringValue] forKey:@"application_tracking_enabled"];

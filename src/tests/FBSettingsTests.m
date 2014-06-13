@@ -14,35 +14,30 @@
  * limitations under the License.
  */
 
-#import "FBSettingsTests.h"
-#ifndef FB_BUILD_ONLY
-#define FB_BUILD_ONLY
-#endif
+#import "FBInternalSettings.h"
+#import "FBTests.h"
 
-#import "FBSettings.h"
-
-#ifdef FB_BUILD_ONLY
-#undef FB_BUILD_ONLY
-#endif
+@interface FBSettingsTests : FBTests
+@end
 
 @implementation FBSettingsTests
 
 - (void)testBetaMode
 {
-    STAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog not enabled");
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog not enabled");
     [FBSettings enableBetaFeature:FBBetaFeaturesOpenGraphShareDialog];
-    STAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
     [FBSettings disableBetaFeature:FBBetaFeaturesOpenGraphShareDialog];
-    STAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog disabled");
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog disabled");
     [FBSettings enableBetaFeatures:FBBetaFeaturesShareDialog | FBBetaFeaturesOpenGraphShareDialog];
-    STAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
-    STAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
     [FBSettings disableBetaFeature:FBBetaFeaturesShareDialog];
-    STAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
-    STAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog enabled");
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
     [FBSettings disableBetaFeature:FBBetaFeaturesOpenGraphShareDialog];
-    STAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog disabled");
-    STAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesOpenGraphShareDialog], @"OG share dialog disabled");
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:FBBetaFeaturesShareDialog], @"share dialog enabled");
 }
 
 @end

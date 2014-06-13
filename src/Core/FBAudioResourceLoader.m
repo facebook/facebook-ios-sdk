@@ -17,8 +17,8 @@
 #import "FBAudioResourceLoader.h"
 
 #import "FBDynamicFrameworkLoader.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBSettings.h"
 
 @implementation FBAudioResourceLoader
 {

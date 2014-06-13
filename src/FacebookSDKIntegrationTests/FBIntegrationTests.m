@@ -15,34 +15,28 @@
  */
 
 #import "FBIntegrationTests.h"
-#import "FBTestBlocker.h"
-#import "FBRequestConnection.h"
-#import "FBRequest.h"
-#import "FBSettings.h"
-#import "FBError.h"
-#import "FBUtility.h"
+
+#import <pthread.h>
+
 #import <OCMock/OCMock.h>
-#include <pthread.h>
+
+#import "FBError.h"
+#import "FBInternalSettings.h"
+#import "FBRequest.h"
+#import "FBRequestConnection.h"
+#import "FBTestBlocker.h"
+#import "FBUtility.h"
 
 static NSMutableDictionary *mapTestCasesToSessions;
 // Concurrency not an issue today, but guard our static global in any case.
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
-#pragma mark Private interface
-
-@interface FBIntegrationTests () {
-    id _mockFBUtility;
-}
-
-- (void)issueFriendRequestInSession:(FBTestSession *)session toFriend:(NSString *)userID;
-
-@end
 
 #pragma mark -
 
 @implementation FBIntegrationTests
 {
     FBTestSession *_defaultTestSession;
+    id _mockFBUtility;
 }
 
 #pragma mark Instance-level lifecycle
@@ -135,10 +129,10 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
 
-    FBSessionStateHandler handler = ^(FBSession *session,
+    FBSessionStateHandler handler = ^(FBSession *innerSession,
                                       FBSessionState status,
                                       NSError *error) {
-        STAssertTrue(!error, @"!error");
+        XCTAssertTrue(!error, @"!error");
 
         [blocker signal];
     };
@@ -146,15 +140,15 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     [session openWithCompletionHandler:handler];
 
     BOOL success = [blocker waitWithTimeout:60];
-    STAssertTrue(success, @"blocker timed out");
-    STAssertTrue(session.isOpen, @"session.isOpen");
+    XCTAssertTrue(success, @"blocker timed out");
+    XCTAssertTrue(session.isOpen, @"session.isOpen");
 
     return session;
 }
 
 - (void)issueFriendRequestInSession:(FBTestSession *)session toFriend:(NSString *)userID
 {
-    STAssertNotNil(userID, @"missing userID");
+    XCTAssertNotNil(userID, @"missing userID");
     NSString *graphPath = [NSString stringWithFormat:@"me/friends/%@", userID];
 
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
@@ -172,7 +166,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
              // If test users are already friends, we will get a 400.
              expected = [code integerValue] == 400;
          }
-         STAssertTrue(expected, @"unexpected result");
+         XCTAssertTrue(expected, @"unexpected result");
          [blocker signal];
      }];
 
@@ -188,8 +182,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 - (void)validateGraphObject:(id<FBGraphObject>)graphObject hasProperties:(NSArray *)propertyNames
 {
     for (NSString *propertyName in propertyNames) {
-        STAssertNotNil([graphObject objectForKey:propertyName],
-                       [NSString stringWithFormat:@"missing property '%@'", propertyName]);
+        XCTAssertNotNil([graphObject objectForKey:propertyName],
+                        @"missing property '%@'",
+                        propertyName);
     }
 }
 
@@ -203,8 +198,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
-         STAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
+         XCTAssertTrue(!error, @"!error");
+         XCTAssertTrue([idString isEqualToString:[result objectForKey:@"id"]], @"wrong id");
 
          [self validateGraphObject:result hasProperties:propertyNames];
 
@@ -225,7 +220,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"!error");
+         XCTAssertTrue(!error, @"!error");
          if (!error) {
              NSString *newObjectId = [result objectForKey:@"id"];
              [self validateGraphObjectWithId:newObjectId
@@ -236,7 +231,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
          [blocker signal];
      }];
 
-    STAssertTrue([blocker waitWithTimeout:15], @"blocker timed out");
+    XCTAssertTrue([blocker waitWithTimeout:15], @"blocker timed out");
 }
 
 // Unit tests failing? Turn on some logging with this helper.
@@ -260,8 +255,8 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                                                            graphObject:graphObject];
     [connection addRequest:postRequest
          completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"got unexpected error");
+     ^(FBRequestConnection *innerConnection, id result, NSError *error) {
+         XCTAssertTrue(!error, @"got unexpected error");
      }
             batchEntryName:@"postRequest"];
 
@@ -273,9 +268,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     [connection addRequest:getRequest
          completionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
-         STAssertTrue(!error, @"got unexpected error");
-         STAssertNotNil(result, @"didn't get expected result");
+     ^(FBRequestConnection *innerConnection, id result, NSError *error) {
+         XCTAssertTrue(!error, @"got unexpected error");
+         XCTAssertNotNil(result, @"didn't get expected result");
          createdObject = [result retain];
          [blocker signal];
      }];
@@ -290,7 +285,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     return [createdObject autorelease];
 }
 
-size_t getPixels(void *info, void *buffer, size_t count) {
+static size_t getPixels(void *info, void *buffer, size_t count) {
     char *c = buffer;
     for (int i = 0; i < count; ++i) {
         *c = arc4random() % 256;
@@ -340,8 +335,8 @@ size_t getPixels(void *info, void *buffer, size_t count) {
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker *)blocker {
     FBRequestHandler handler =
     ^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertTrue(!error, @"got unexpected error");
-        STAssertNotNil(result, @"didn't get expected result");
+        XCTAssertTrue(!error, @"got unexpected error");
+        XCTAssertNotNil(result, @"didn't get expected result");
         [blocker signal];
     };
     return [[handler copy] autorelease];
@@ -350,8 +345,8 @@ size_t getPixels(void *info, void *buffer, size_t count) {
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker *)blocker {
     FBRequestHandler handler =
     ^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertNotNil(error, @"didn't get expected error");
-        STAssertTrue(!result, @"got unexpected result");
+        XCTAssertNotNil(error, @"didn't get expected error");
+        XCTAssertTrue(!result, @"got unexpected result");
         [blocker signal];
     };
     return [[handler copy] autorelease];

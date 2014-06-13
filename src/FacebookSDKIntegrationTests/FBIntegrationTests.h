@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "FBTestSession.h"
+#import <XCTest/XCTest.h>
+
 #import "FBRequestConnection.h"
+#import "FBTestSession.h"
 
 // The following #defines are designed as a convenience during development
 // to disable certain categories of tests. They should never be left on
@@ -39,7 +40,7 @@
 // Base class for unit-tests that use test users; ensures that all test users
 // created by a unit-test are deleted (by invalidating their session) during
 // tear-down.
-@interface FBIntegrationTests : SenTestCase
+@interface FBIntegrationTests : XCTestCase
 
 // For many test case scenarios, we just need a single session with a set of permissions
 // that can be shared and used by each individual test. For the simple case, this is that

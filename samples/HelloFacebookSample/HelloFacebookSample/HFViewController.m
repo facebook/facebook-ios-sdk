@@ -195,45 +195,47 @@
                                                                 caption:nil
                                                             description:@"The 'Hello Facebook' sample application showcases simple Facebook integration."
                                                                 picture:nil];
-    FBAppCall *appCall = [FBDialogs presentShareDialogWithParams:params
-                                                     clientState:nil
-                                                         handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                                             if (error) {
-                                                                 NSLog(@"Error: %@", error.description);
-                                                             } else {
-                                                                 NSLog(@"Success!");
-                                                             }
-                                                         }];
 
-    if (!appCall) {
+    BOOL isSuccessful = NO;
+    if ([FBDialogs canPresentShareDialogWithParams:params]) {
+        FBAppCall *appCall = [FBDialogs presentShareDialogWithParams:params
+                                                         clientState:nil
+                                                             handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                                 if (error) {
+                                                                     NSLog(@"Error: %@", error.description);
+                                                                 } else {
+                                                                     NSLog(@"Success!");
+                                                                 }
+                                                             }];
+        isSuccessful = (appCall  != nil);
+    }
+    if (!isSuccessful && [FBDialogs canPresentOSIntegratedShareDialogWithSession:[FBSession activeSession]]){
         // Next try to post using Facebook's iOS6 integration
-        BOOL displayedNativeDialog = [FBDialogs presentOSIntegratedShareDialogModallyFrom:self
-                                                                              initialText:nil
-                                                                                    image:nil
-                                                                                      url:urlToShare
-                                                                                  handler:nil];
+        isSuccessful = [FBDialogs presentOSIntegratedShareDialogModallyFrom:self
+                                                                initialText:nil
+                                                                      image:nil
+                                                                        url:urlToShare
+                                                                    handler:nil];
+    }
+    if (!isSuccessful) {
+        [self performPublishAction:^{
+            NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@", self.loggedInUser.first_name, [NSDate date]];
 
-        if (!displayedNativeDialog) {
-            // Lastly, fall back on a request for permissions and a direct post using the Graph API
-            [self performPublishAction:^{
-                NSString *message = [NSString stringWithFormat:@"Updating status for %@ at %@", self.loggedInUser.first_name, [NSDate date]];
+            FBRequestConnection *connection = [[FBRequestConnection alloc] init];
 
-                FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+            connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+            | FBRequestConnectionErrorBehaviorAlertUser
+            | FBRequestConnectionErrorBehaviorRetry;
 
-                connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
-                | FBRequestConnectionErrorBehaviorAlertUser
-                | FBRequestConnectionErrorBehaviorRetry;
+            [connection addRequest:[FBRequest requestForPostStatusUpdate:message]
+                 completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+                     [self showAlert:message result:result error:error];
+                     self.buttonPostStatus.enabled = YES;
+                 }];
+            [connection start];
 
-                [connection addRequest:[FBRequest requestForPostStatusUpdate:message]
-                     completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
-                         [self showAlert:message result:result error:error];
-                         self.buttonPostStatus.enabled = YES;
-                     }];
-                [connection start];
-
-                self.buttonPostStatus.enabled = NO;
-            }];
-        }
+            self.buttonPostStatus.enabled = NO;
+        }];
     }
 }
 
@@ -248,16 +250,20 @@
   FBPhotoParams *params = [[FBPhotoParams alloc] init];
   params.photos = @[img];
 
-  FBAppCall *appCall = [FBDialogs presentShareDialogWithPhotoParams:params
-                                                        clientState:nil
-                                                            handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                                                if (error) {
+  BOOL isSuccessful = NO;
+  if (canPresent) {
+      FBAppCall *appCall = [FBDialogs presentShareDialogWithPhotoParams:params
+                                                            clientState:nil
+                                                                handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                            if (error) {
                                                                     NSLog(@"Error: %@", error.description);
                                                                 } else {
                                                                     NSLog(@"Success!");
                                                                 }
                                                             }];
-  if (!appCall) {
+      isSuccessful = (appCall  != nil);
+  }
+  if (!isSuccessful) {
     [self performPublishAction:^{
       FBRequestConnection *connection = [[FBRequestConnection alloc] init];
       connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession

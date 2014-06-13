@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
 #import "FBRequestConnection.h"
 #import "FBSDKMacros.h"
@@ -29,7 +29,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
 @class FBTestBlocker;
 @protocol FBGraphObject;
 
-@interface FBTests : SenTestCase
+@interface FBTests : XCTestCase
 
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker *)blocker;
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker *)blocker;

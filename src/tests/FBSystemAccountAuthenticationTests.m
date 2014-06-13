@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-#import "FBSystemAccountAuthenticationTests.h"
-#import "FBSession.h"
-#import "FBError.h"
-#import "FBUtility.h"
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#import "FBAuthenticationTests.h"
+#import "FBError.h"
+#import "FBSession.h"
+#import "FBUtility.h"
+
+@interface FBSystemAccountAuthenticationTests : FBAuthenticationTests
+@end
 
 @implementation FBSystemAccountAuthenticationTests
 {
@@ -89,7 +91,7 @@
     
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
-            completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
                 handlerError = error;
             }];
     
@@ -160,7 +162,7 @@
     
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
-            completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
                 handlerError = error;
             }];
     
@@ -168,6 +170,7 @@
     
     assertThat(handlerError, nilValue());
     assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     assertThat(session.accessToken, equalTo(kAuthenticationTestValidToken));
     
     [session release];
@@ -191,7 +194,7 @@
     
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
-            completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+            completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
                 handlerError = error;
             }];
     

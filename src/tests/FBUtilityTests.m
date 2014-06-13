@@ -14,18 +14,12 @@
  * limitations under the License.
  */
 
+#import "FBTests.h"
+#import "FBUtility.h"
 #import "FacebookSDK.h"
 
-#import "FBUtilityTests.h"
-#ifndef FB_BUILD_ONLY
-#define FB_BUILD_ONLY
-#endif
-
-#import "FBUtility.h"
-
-#ifdef FB_BUILD_ONLY
-#undef FB_BUILD_ONLY
-#endif
+@interface FBUtilityTests : FBTests
+@end
 
 @implementation FBUtilityTests
 

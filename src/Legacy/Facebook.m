@@ -18,13 +18,13 @@
 
 #import "FBError.h"
 #import "FBFrictionlessRequestSettings.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBLoginDialog.h"
 #import "FBRequest.h"
 #import "FBSession+Internal.h"
 #import "FBSessionManualTokenCachingStrategy.h"
 #import "FBSessionUtility.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 static NSString *kRedirectURL = @"fbconnect://success";

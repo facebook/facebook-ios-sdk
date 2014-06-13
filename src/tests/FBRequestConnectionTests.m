@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-#import "FBRequestConnectionTests.h"
-
 #import <OCMock/OCMock.h>
 
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBAccessTokenData.h"
+#import "FBInternalSettings.h"
 #import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
 #import "FBRequestConnection.h"
 #import "FBSession.h"
 #import "FBSessionTokenCachingStrategy.h"
-#import "FBSettings.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
 #import "FBTestSession+Internal.h"
 #import "FBTestSession.h"
+#import "FBTests.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 
@@ -84,25 +83,27 @@
 }
 
 @end
+
 // This is just to silence compiler warnings since we access internal methods in some tests.
-@interface FBSession (Testing)
+@interface FBSession (FBRequestConnectionTests)
 
 - (BOOL)shouldExtendAccessToken;
 
 @end
 
-@interface FBRequestConnection (Testing)
+@interface FBRequestConnection (FBRequestConnectionTests)
 
 - (FBURLConnection *)newFBURLConnection;
 
 @end
 
-@interface FBRequestConnectionTests () {
-    id _mockFBUtility;
-}
+@interface FBRequestConnectionTests : FBTests
 @end
 
 @implementation FBRequestConnectionTests
+{
+    id _mockFBUtility;
+}
 
 - (void)setUp {
     [super setUp];
@@ -144,14 +145,14 @@
     [swizzledConnection start];
     
     NSArray *requests = [swizzledConnection performSelector:@selector(requests)];
-    STAssertTrue(requests.count == batchSize, @"piggybacked but shouldn't have");
+    XCTAssertTrue(requests.count == batchSize, @"piggybacked but shouldn't have");
     [connection release];
 }
 
 - (void)testNoRequests
 {
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    STAssertThrows([connection start], @"should throw");
+    XCTAssertThrows([connection start], @"should throw");
     [connection release];
 }
 
@@ -179,14 +180,14 @@
     connection.errorBehavior = FBRequestConnectionErrorBehaviorRetry;
     
     __block int handlerCount = 0;
-    [connection addRequest:[FBRequest requestForMe] completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+    [connection addRequest:[FBRequest requestForMe] completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+        XCTAssertEqual(0, handlerCount++, @"user handler invoked more than once");
         [blocker signal];
     } ];
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
-    STAssertEquals(2, requestCount, @"expected number of retries not met");
+    XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
+    XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     
     [OHHTTPStubs removeAllRequestHandlers];
 }
@@ -224,14 +225,14 @@
     connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
     
     __block int handlerCount = 0;
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+    [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+        XCTAssertEqual(0, handlerCount++, @"user handler invoked more than once");
         [blocker signal];
     } ];
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
-    STAssertEquals(2, requestCount, @"expected number of retries not met");
+    XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
+    XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     [OHHTTPStubs removeAllRequestHandlers];
 }
 
@@ -275,21 +276,21 @@
     
     __block int userHandlerPermissionsCount = 0;
     __block int userHandlerFriendsCount = 0;
-    [connection addRequest:requestPermissions completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestPermissions completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerPermissionsCount++;
         [blocker signal];
     } ];
-    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerFriendsCount++;
         [blocker signal];
     } ];
 
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
-    STAssertEquals(2, requestCount, @"expected number of retries not met");
-    STAssertEquals(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
-    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
+    XCTAssertEqual(2, requestCount, @"expected number of retries not met");
+    XCTAssertEqual(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
+    XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
     [OHHTTPStubs removeAllRequestHandlers];
 }
 
@@ -335,24 +336,24 @@
     
     __block int userHandlerPermissionsCount = 0;
     __block int userHandlerFriendsCount = 0;
-    [connection addRequest:requestPermissions completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestPermissions completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerPermissionsCount++;
         // also make sure the permisisons request got the expected response from the stub above
-        STAssertNotNil(result[@"data"][0][@"installed"], @"Didn't find permissions for installed");
-        STAssertNotNil(result[@"data"][0][@"basic_info"], @"Didn't find permissions for basic_info");
+        XCTAssertNotNil(result[@"data"][0][@"installed"], @"Didn't find permissions for installed");
+        XCTAssertNotNil(result[@"data"][0][@"basic_info"], @"Didn't find permissions for basic_info");
         [blocker signal];
     } ];
-    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerFriendsCount++;
         [blocker signal];
     } ];
     
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
-    STAssertEquals(2, requestCount, @"expected number of retries not met");
-    STAssertEquals(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
-    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    XCTAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
+    XCTAssertEqual(2, requestCount, @"expected number of retries not met");
+    XCTAssertEqual(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
+    XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
     [OHHTTPStubs removeAllRequestHandlers];
 }
 
@@ -388,16 +389,16 @@
     connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
     
     __block int handlerCount = 0;
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+    [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+        XCTAssertEqual(0, handlerCount++, @"user handler invoked more than once");
         [blocker signal];
     } ];
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
+    XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
     // Unlike the tests above, there should be no retry since the user declined the relogin;
     // therefore the error behavior should have immediately invoked the user handler to the fbrequest.
-    STAssertEquals(1, requestCount, @"expected number of attempts not met");
+    XCTAssertEqual(1, requestCount, @"expected number of attempts not met");
     [OHHTTPStubs removeAllRequestHandlers];
 }
 
@@ -441,19 +442,19 @@
     connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
     
     __block int userHandlerFriendsCount = 0;
-    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerFriendsCount++;
         [blocker signal];
     } ];
     
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
-    STAssertEquals(2, requestCount, @"expected number of retries not met");
-    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    XCTAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
+    XCTAssertEqual(2, requestCount, @"expected number of retries not met");
+    XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
     [OHHTTPStubs removeAllRequestHandlers];
     NSTimeInterval timeSincePermissionsRefresh = [session.accessTokenData.permissionsRefreshDate timeIntervalSinceNow];
-    STAssertTrue(timeSincePermissionsRefresh > -3, @"permissions refresh date should be within a few seconds of now");
+    XCTAssertTrue(timeSincePermissionsRefresh > -3, @"permissions refresh date should be within a few seconds of now");
 }
 
 // test to exercise FBRequestConnectionErrorBehaviorReconnectSession
@@ -466,7 +467,7 @@
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
-    STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was not initialized properly to distantPast");
+    XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was not initialized properly to distantPast");
     __block int requestCount = 0;
     
     [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -494,20 +495,20 @@
     connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession;
     
     __block int userHandlerFriendsCount = 0;
-    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+    [connection addRequest:requestFriends completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerFriendsCount++;
-        STAssertTrue([@"zuck" isEqualToString:(result[@"data"][0][@"name"])], @"couldn't find friend");
+        XCTAssertTrue([@"zuck" isEqualToString:(result[@"data"][0][@"name"])], @"couldn't find friend");
         [blocker signal];
     } ];
     
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
-    STAssertEquals(1, requestCount, @"there should have been no retry");
-    STAssertEquals(1, userHandlerFriendsCount, @"user handler was not invoked once.");
+    XCTAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
+    XCTAssertEqual(1, requestCount, @"there should have been no retry");
+    XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
     [OHHTTPStubs removeAllRequestHandlers];
 
-    STAssertEquals([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was unexpectedly updated");
+    XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was unexpectedly updated");
 }
 
 - (void)testOpenGraphObjectPost {
@@ -525,7 +526,7 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request completionHandler:nil];
     NSMutableURLRequest *ret = [connection urlRequest];
-    STAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest");
+    XCTAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest");
 }
 
 - (void)testOpenGraphObjectPostBatched {
@@ -555,7 +556,7 @@
                                                     graphObject:object2];
     [connection addRequest:request2 completionHandler:nil];
     NSMutableURLRequest *ret = [connection urlRequest];
-    STAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest with two object posts.");
+    XCTAssertNotNil(ret, @"failed to serialize to NSMutableURLRequest with two object posts.");
 }
 
 - (void)testOpenGraphObjectPostBogus {
@@ -572,7 +573,7 @@
 
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request completionHandler:nil];
-    STAssertThrows([connection urlRequest], @"expected failure to serialize bogus key");
+    XCTAssertThrows([connection urlRequest], @"expected failure to serialize bogus key");
 }
 
 // A complicated test of completeWithResults for a system auth login
@@ -594,7 +595,7 @@
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
     __block BOOL tokenRefreshed = NO;
-    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         if (status == FBSessionStateOpenTokenExtended) {
             tokenRefreshed = YES;
         }
@@ -623,16 +624,16 @@
     FBRequest *request =[[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
 
     __block int handlerCount = 0;
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+    [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+        XCTAssertEqual(0, handlerCount++, @"user handler invoked more than once");
         [blocker signal];
     } ];
     [connection start];
 
     [blocker wait];
 
-    STAssertTrue(tokenRefreshed, @"expected session to be extended");
-    STAssertEqualObjects(@"newtoken", session.accessTokenData.accessToken, @"expected newtoken");
+    XCTAssertTrue(tokenRefreshed, @"expected session to be extended");
+    XCTAssertEqualObjects(@"newtoken", session.accessTokenData.accessToken, @"expected newtoken");
 
     // clean up.
     [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
@@ -655,7 +656,7 @@
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
     __block BOOL sessionClosed = NO;
-    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {
             sessionClosed = YES;
         }
@@ -684,15 +685,15 @@
     FBRequest *request =[[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
 
     __block int handlerCount = 0;
-    [connection addRequest:request completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertEquals(0, handlerCount++, @"user handler invoked more than once");
+    [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+        XCTAssertEqual(0, handlerCount++, @"user handler invoked more than once");
         [blocker signal];
     } ];
     [connection start];
 
     [blocker wait];
 
-    STAssertTrue(sessionClosed, @"expected session to be closed");
+    XCTAssertTrue(sessionClosed, @"expected session to be closed");
     // clean up.
     [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
 }
@@ -718,7 +719,7 @@
         [FBSettings setDefaultAppID:appID];
         [FBSettings setClientToken:clientToken];
         NSString *expected = [NSString stringWithFormat:@"%@|%@", appID, clientToken];
-        STAssertEqualObjects([connection accessTokenWithRequest:request],
+        XCTAssertEqualObjects([connection accessTokenWithRequest:request],
                              expected,
                              @"access token expected to be based on app id and client token");
     }

@@ -20,7 +20,7 @@
 
 #import "FBTaskCompletionSource.h"
 
-__attribute__ ((noinline)) void logOperationOnMainThread() {
+static __attribute__ ((noinline)) void logOperationOnMainThread() {
     NSLog(@"Warning: A long-running FBTask operation is being executed on the main thread. \n"
           " Break on logOperationOnMainThread() to debug.");
 }
@@ -92,7 +92,7 @@ __attribute__ ((noinline)) void logOperationOnMainThread() {
 
     FBTaskCompletionSource *tcs = [FBTaskCompletionSource taskCompletionSource];
     for (FBTask *task in tasks) {
-        [task dependentTaskWithBlock:^id(FBTask *task) {
+        [task dependentTaskWithBlock:^id(FBTask *innerTask) {
             if (OSAtomicDecrement32(&total) == 0) {
                 tcs.result = nil;
             }

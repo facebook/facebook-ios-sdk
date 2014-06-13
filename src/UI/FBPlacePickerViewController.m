@@ -20,6 +20,7 @@
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
 #import "FBAppEvents+Internal.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBPlacePickerViewController.h"
 #import "FBRequest.h"
@@ -27,7 +28,6 @@
 #import "FBUtility.h"
 #import "FBPlacePickerCacheDescriptor.h"
 #import "FBSession+Internal.h"
-#import "FBSettings.h"
 #import "FBPlacePickerViewGenericPlacePNG.h"
 
 NSString *const FBPlacePickerCacheIdentity = @"FBPlacePicker";

@@ -20,6 +20,9 @@
 #import <OCHamcrestIOS/HCWrapInMatcher.h>
 
 @implementation FBIsStringRepresentingJSONDictionary
+{
+    id<HCMatcher> valueMatcher;
+}
 
 + (instancetype)isStringRepresentingJSONDictionary:(id<HCMatcher>)aValueMatcher
 {

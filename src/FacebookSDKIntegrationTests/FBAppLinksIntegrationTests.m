@@ -18,7 +18,7 @@
 
 #import "FBAppLinkResolver.h"
 #import "FBIntegrationTests.h"
-#import "FBSettings.h"
+#import "FBInternalSettings.h"
 #import "FBTestSession+Internal.h"
 
 static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=https%3A%2F%2Ffb.me%2F732873156764191&h=bAQE7eGV2";

@@ -17,10 +17,10 @@
 #import "FBProfilePictureView.h"
 
 #import "FBAccessTokenData.h"
+#import "FBInternalSettings.h"
 #import "FBProfilePictureViewBlankProfilePortraitPNG.h"
 #import "FBProfilePictureViewBlankProfileSquarePNG.h"
 #import "FBSession.h"
-#import "FBSettings.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 

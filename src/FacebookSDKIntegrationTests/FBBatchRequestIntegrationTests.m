@@ -15,21 +15,24 @@
  */
 
 #import "FBAccessTokenData.h"
-#import "FBBatchRequestIntegrationTests.h"
-#import "FBTestSession.h"
-#import "FBRequestConnection.h"
-#import "FBRequest.h"
-#import "FBTestBlocker.h"
 #import "FBGraphUser.h"
+#import "FBIntegrationTests.h"
+#import "FBRequest.h"
+#import "FBRequestConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBTestBlocker.h"
+#import "FBTestSession.h"
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 
 #if defined(FACEBOOKSDK_SKIP_BATCH_REQUEST_TESTS)
 
-#pragma message ("warning: Skipping FBBatchRequestTests")
+#pragma message ("warning: Skipping FBBatchRequestIntegrationTests")
 
 #else
+
+@interface FBBatchRequestIntegrationTests : FBIntegrationTests
+@end
 
 @implementation FBBatchRequestIntegrationTests
 
@@ -77,18 +80,18 @@
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertNotNil(result, @"nil result");
              id<FBGraphUser> user = result;
-             STAssertTrue([user.id isEqualToString:self.defaultTestSession.testUserID], @"wrong user");
+             XCTAssertTrue([user.id isEqualToString:self.defaultTestSession.testUserID], @"wrong user");
          }];
     [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertNotNil(result, @"nil result");
              id<FBGraphUser> user = result;
-             STAssertTrue([user.id isEqualToString:session2.testUserID], @"wrong user");
+             XCTAssertTrue([user.id isEqualToString:session2.testUserID], @"wrong user");
              
              [blocker signal];
          }];
@@ -113,14 +116,14 @@
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertNotNil(result, @"nil result");
          }];
     [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(error, @"nil error");
-             STAssertNotNil(!result, @"!result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNotNil(error, @"nil error");
+             XCTAssertTrue(!result, @"!result");
              [blocker signal];
          }];
     
@@ -144,14 +147,14 @@
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(error, @"nil error");
-             STAssertNotNil(!result, @"!result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNotNil(error, @"nil error");
+             XCTAssertTrue(!result, @"!result");
          }];
     [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertTrue(result, @"nil result");
              [blocker signal];
          }];
     
@@ -179,14 +182,14 @@
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(error, @"nil error");
-             STAssertNotNil(!result, @"!result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNotNil(error, @"nil error");
+             XCTAssertTrue(!result, @"!result");
          }];
     [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(error, @"nil error");
-             STAssertNotNil(!result, @"!result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNotNil(error, @"nil error");
+             XCTAssertTrue(!result, @"!result");
              [blocker signal];
          }];
     
@@ -235,8 +238,8 @@
     FBRequest *uploadRequest1 = [FBRequest requestForUploadPhoto:[self createSquareTestImage:image1Size]];
     [uploadRequest1 setSession:session];
     [connection addRequest:uploadRequest1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
              [blocker signal];
          }
          batchEntryName:@"uploadRequest1"];
@@ -244,8 +247,8 @@
     FBRequest *uploadRequest2 = [FBRequest requestForUploadPhoto:[self createSquareTestImage:image2Size]];
     [uploadRequest2 setSession:session];
     [connection addRequest:uploadRequest2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
              [blocker signal];
          }
          batchEntryName:@"uploadRequest2"];
@@ -255,13 +258,13 @@
                                                      parameters:nil
                                                      HTTPMethod:nil];
     [connection addRequest:getRequest1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertNotNil(result, @"nil result");
              
              NSDecimalNumber *width = [result objectForKey:@"width"];
-             STAssertNotNil(width, @"couldn't get width");
-             STAssertTrue(image1Size == (int)[width doubleValue], @"wrong width");
+             XCTAssertNotNil(width, @"couldn't get width");
+             XCTAssertTrue(image1Size == (int)[width doubleValue], @"wrong width");
              NSLog(@"%@", width);
 
              [blocker signal];
@@ -271,13 +274,13 @@
                                                      parameters:nil
                                                      HTTPMethod:nil];
     [connection addRequest:getRequest2 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertTrue(!error, @"!error");
-             STAssertNotNil(result, @"nil result");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertTrue(!error, @"!error");
+             XCTAssertNotNil(result, @"nil result");
 
              NSDecimalNumber *width = [result objectForKey:@"width"];
-             STAssertNotNil(width, @"couldn't get width");
-             STAssertTrue(image2Size == (int)[width doubleValue], @"wrong width");
+             XCTAssertNotNil(width, @"couldn't get width");
+             XCTAssertTrue(image2Size == (int)[width doubleValue], @"wrong width");
              NSLog(@"%@", width);
              
              [blocker signal];
@@ -298,22 +301,22 @@
     NSString *graphPath = [NSString stringWithFormat:@"?ids=%@,%@&fields=id", session.testAppID, session.testUserID];
     FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:graphPath] autorelease];
     [connection addRequest:parent
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNil(error, @"unexpected error in parent request :%@", error);
-             STAssertNotNil(result, @"expected parent results since we said to include response");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNil(error, @"unexpected error in parent request :%@", error);
+             XCTAssertNotNil(result, @"expected parent results since we said to include response");
              [blocker signal];
          } batchParameters:@{@"name":@"getactions", @"omit_response_on_success":@(NO)}];
     
     FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids={result=getactions:$.*.id}"] autorelease];
     [connection addRequest:child
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNil(error, @"unexpected error in child request :%@", error);
-             STAssertNotNil(result, @"expected results");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNil(error, @"unexpected error in child request :%@", error);
+             XCTAssertNotNil(result, @"expected results");
              [blocker signal];
          } batchEntryName:nil];
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+    XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
 }
 
 - (void)testBatchParametersDependsOn {
@@ -324,8 +327,8 @@
     // Set up a parent request to an invalid graph path that will result in an error.
     FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:@"invalidpath"] autorelease];
     [connection addRequest:parent
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNotNil(error, @"expected error in parent request but did not get one.");
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNotNil(error, @"expected error in parent request but did not get one.");
              [blocker signal];
          } batchParameters:@{@"name":@"parent"}];
     
@@ -335,14 +338,14 @@
     // (see https://developers.facebook.com/docs/reference/api/batch/)
     FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids=4,6"] autorelease];
     [connection addRequest:child
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-             STAssertNil(error, @"unexpected error in child request :%@", error);
-             STAssertNil(result, @"unexpected results in child request %@", result);
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+             XCTAssertNil(error, @"unexpected error in child request :%@", error);
+             XCTAssertNil(result, @"unexpected results in child request %@", result);
              [blocker signal];
          } batchParameters:@{@"depends_on":@"parent"}];
     [connection start];
     
-    STAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+    XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
 }
 
 @end

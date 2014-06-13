@@ -36,6 +36,6 @@ FBSDK_EXTERN NSString *const FBLikeActionControllerAnimatedKey;
 @property (nonatomic, copy, readonly) NSString *socialSentence;
 
 - (void)refresh;
-- (void)toggleLikeWithSoundEnabled:(BOOL)soundEnabled;
+- (void)toggleLikeWithSoundEnabled:(BOOL)soundEnabled analyticsParameters:(NSDictionary *)analyticsParameters;
 
 @end

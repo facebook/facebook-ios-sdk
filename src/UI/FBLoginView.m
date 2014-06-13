@@ -341,7 +341,7 @@ static CGSize g_buttonSize;
 
     if (self.window &&
         (self.tooltipBehavior == FBLoginViewTooltipBehaviorForceDisplay || !self.hasShownTooltipBubble)) {
-        [self showTooltipIfNeeded];
+        [self performSelector:@selector(showTooltipIfNeeded) withObject:nil afterDelay:0];
         self.hasShownTooltipBubble = YES;
     }
 }

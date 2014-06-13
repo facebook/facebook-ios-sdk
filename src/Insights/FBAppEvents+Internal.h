@@ -96,6 +96,16 @@ FBSDK_EXTERN NSString *const FBAppEventsNativeLoginDialogEndTime;
 
 FBSDK_EXTERN NSString *const FBAppEventsWebLoginE2E;
 
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlCannotPresentDialog;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidDisable;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidLike;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidPresentDialog;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidTap;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidUnlike;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlError;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlImpression;
+FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlNetworkUnavailable;
+
 typedef enum {
     FBAppEventsFlushReasonExplicit,
     FBAppEventsFlushReasonTimer,

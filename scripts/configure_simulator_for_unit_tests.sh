@@ -39,7 +39,7 @@ function write_xcconfig {
     echo "Wrote test app configuration to: $1"
 }
 
-XCCONFIG_FILE="$FB_SDK_SRC"/tests/TestAppIdAndSecret.xcconfig
+XCCONFIG_FILE="$FB_SDK_SRC"/Configurations/TestAppIdAndSecret.xcconfig
 
 write_xcconfig "$XCCONFIG_FILE" "$1" "$2" "$3" "$4"
 

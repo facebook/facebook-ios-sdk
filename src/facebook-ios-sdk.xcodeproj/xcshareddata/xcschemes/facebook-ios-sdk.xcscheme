@@ -33,8 +33,18 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B9CBC518152537270036AA71"
-               BuildableName = "FacebookSDKTests.octest"
+               BuildableName = "FacebookSDKTests.xctest"
                BlueprintName = "FacebookSDKTests"
+               ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "89263C1A1926CBA500A44711"
+               BuildableName = "FacebookSDKApplicationTests.xctest"
+               BlueprintName = "FacebookSDKApplicationTests"
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -43,7 +53,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B9CBC518152537270036AA71"
-            BuildableName = "FacebookSDKTests.octest"
+            BuildableName = "FacebookSDKTests.xctest"
             BlueprintName = "FacebookSDKTests"
             ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
          </BuildableReference>

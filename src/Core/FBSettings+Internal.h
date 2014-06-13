@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
+#import "FBInternalSettings.h"
 #import "FBSDKMacros.h"
-#import "FBSettings.h"
 
 FBSDK_EXTERN NSString *const FBPLISTUrlSchemeSuffixKey;
 

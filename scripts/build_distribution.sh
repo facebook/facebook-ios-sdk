@@ -85,6 +85,12 @@ for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -pri
 done
 
 # -----------------------------------------------------------------------------
+# Build FBAudienceNetwork framework
+#
+test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
+  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh
+
+# -----------------------------------------------------------------------------
 # Build .pkg from package directory
 #
 progress_message "Building .pkg from package directory."

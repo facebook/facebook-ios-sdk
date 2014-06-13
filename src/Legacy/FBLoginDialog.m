@@ -31,12 +31,12 @@
  */
 - (instancetype)initWithURL:(NSString *)loginURL
                 loginParams:(NSMutableDictionary *)params
-                   delegate:(id<FBLoginDialogDelegate>)delegate
+                   delegate:(id<FBLoginDialogDelegate>)loginDelegate
 {
     if ((self = [super init])) {
         _serverURL = [loginURL retain];
         _params = [params retain];
-        _loginDelegate = delegate;
+        _loginDelegate = loginDelegate;
     }
     return self;
 }

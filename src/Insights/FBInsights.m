@@ -20,7 +20,7 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBAppEvents.h"
-#import "FBSettings.h"
+#import "FBInternalSettings.h"
 
 // Constant needs to match FBAppEventsLoggingResultNotification.
 NSString *const FBInsightsLoggingResultNotification = @"com.facebook.sdk:FBAppEventsLoggingResultNotification";
@@ -59,11 +59,11 @@ NSString *const FBInsightsLoggingResultNotification = @"com.facebook.sdk:FBAppEv
 }
 
 + (FBInsightsFlushBehavior)flushBehavior {
-    return [FBAppEvents flushBehavior];
+    return (FBInsightsFlushBehavior)[FBAppEvents flushBehavior];
 }
 
 + (void)setFlushBehavior:(FBInsightsFlushBehavior)flushBehavior {
-    [FBAppEvents setFlushBehavior:flushBehavior];
+    [FBAppEvents setFlushBehavior:(FBAppEventsFlushBehavior)flushBehavior];
 }
 
 + (void)flush {

@@ -201,8 +201,9 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                     // an underlying message is possible (e.g., when there is no connectivity,
                     // Apple will report "The Internet connection appears to be offline.")
                     userMessageKey = @"FBE:DeviceError";
-                    userMessageDefault = [[error userInfo][FBErrorInnerErrorKey] userInfo][NSLocalizedDescriptionKey] ? :
-                    @"Something went wrong. Please make sure you're connected to the internet and try again.";
+                    userMessageDefault = [[error userInfo][FBErrorInnerErrorKey] userInfo][NSLocalizedDescriptionKey] ? : ([[error userInfo][FBErrorInnerErrorKey] userInfo][NSLocalizedFailureReasonErrorKey] ? :
+                    @"Something went wrong. Please make sure you're connected to the internet and try again.");
+
                     shouldNotifyUser = YES;
                     category = FBErrorCategoryServer;
                 } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorOperationDisallowedForRestrictedTreament) {
@@ -257,18 +258,18 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
             item = response;
         }
         // spelunking a JSON array & nested objects (eg. response[index].body.error.code)
-        id  body, error, code;
+        id  body, innerError, code;
         if ((body = [item objectForKey:@"body"]) &&         // response[index].body
             [body isKindOfClass:[NSDictionary class]] &&
-            (error = [body objectForKey:@"error"]) &&       // response[index].body.error
-            [error isKindOfClass:[NSDictionary class]]) {
+            (innerError = [body objectForKey:@"error"]) &&       // response[index].body.error
+            [innerError isKindOfClass:[NSDictionary class]]) {
             if (pcode &&
-                (code = [error objectForKey:@"code"]) &&        // response[index].body.error.code
+                (code = [innerError objectForKey:@"code"]) &&        // response[index].body.error.code
                 [code isKindOfClass:[NSNumber class]]) {
                 *pcode = [code intValue];
             }
             if (psubcode &&
-                (code = [error objectForKey:@"error_subcode"]) &&        // response[index].body.error.error_subcode
+                (code = [innerError objectForKey:@"error_subcode"]) &&        // response[index].body.error.error_subcode
                 [code isKindOfClass:[NSNumber class]]) {
                 *psubcode = [code intValue];
             }
@@ -315,4 +316,69 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                                code:FBErrorHTTPError
                            userInfo:userInfoDictionary];
 }
+
++ (NSDictionary *)jsonDictionaryForError:(NSError *)error
+{
+    if (error == nil) {
+        return nil;
+    }
+
+    NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+
+    dictionary[@"code"] = @(error.code);
+
+    NSString *domain = error.domain;
+    if (domain) {
+        dictionary[@"domain"] = domain;
+    }
+
+    NSMutableDictionary *userInfo = [[NSMutableDictionary alloc] init];
+    [error.userInfo enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([NSJSONSerialization isValidJSONObject:obj]) {
+            userInfo[key] = obj;
+        }
+    }];
+
+    NSError *innerError = error.userInfo[FBErrorInnerErrorKey];
+    if (innerError) {
+        userInfo[FBErrorInnerErrorKey] = [self jsonDictionaryForError:innerError];
+    }
+
+    NSDictionary *resultUserInfo = [userInfo copy];
+    [userInfo release];
+    dictionary[@"userInfo"] = resultUserInfo;
+    [resultUserInfo release];
+
+    NSDictionary *result = [[dictionary copy] autorelease];
+    [dictionary release];
+    return result;
+}
+
++ (BOOL)errorIsNetworkError:(NSError *)error
+{
+    if (error == nil) {
+        return NO;
+    }
+
+    NSError *innerError = error.userInfo[FBErrorInnerErrorKey];
+    if ([self errorIsNetworkError:innerError]) {
+        return YES;
+    }
+
+    switch (error.code) {
+        case NSURLErrorTimedOut:
+        case NSURLErrorCannotFindHost:
+        case NSURLErrorCannotConnectToHost:
+        case NSURLErrorNetworkConnectionLost:
+        case NSURLErrorDNSLookupFailed:
+        case NSURLErrorNotConnectedToInternet:
+        case NSURLErrorInternationalRoamingOff:
+        case NSURLErrorCallIsActive:
+        case NSURLErrorDataNotAllowed:
+            return YES;
+        default:
+            return NO;
+    }
+}
+
 @end

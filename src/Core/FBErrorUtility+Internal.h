@@ -48,4 +48,8 @@ FBSDK_EXTERN const int FBOAuthError;
 
 + (NSError *)fberrorForRetry:(NSError *)innerError;
 
++ (NSDictionary *)jsonDictionaryForError:(NSError *)error;
+
++ (BOOL)errorIsNetworkError:(NSError *)error;
+
 @end

@@ -19,7 +19,6 @@
 #import "FBTests.h"
 
 @interface FBPhotoParamsTests : FBTests
-
 @end
 
 @implementation FBPhotoParamsTests

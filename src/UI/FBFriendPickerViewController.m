@@ -25,11 +25,11 @@
 #import "FBGraphObjectTableCell.h"
 #import "FBGraphObjectTableDataSource.h"
 #import "FBGraphObjectTableSelection.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBSession+Internal.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 NSString *const FBFriendPickerCacheIdentity = @"FBFriendPicker";

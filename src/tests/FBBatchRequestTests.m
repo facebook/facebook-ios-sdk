@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-#import "FBBatchRequestTests.h"
-#import "FBTestSession.h"
-#import "FBRequestConnection.h"
-#import "FBRequest.h"
-#import "FBTestBlocker.h"
 #import "FBGraphUser.h"
-#import "FBSettings.h"
+#import "FBInternalSettings.h"
+#import "FBRequest.h"
+#import "FBRequestConnection.h"
+#import "FBTestBlocker.h"
+#import "FBTestSession.h"
+#import "FBTests.h"
+
+@interface FBBatchRequestTests : FBTests
+@end
 
 @implementation FBBatchRequestTests
 
@@ -38,13 +41,13 @@
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     
     [connection addRequest:request1 
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
          }];
     [connection addRequest:request2
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
          }];
     
-    STAssertThrows([connection start], @"didn't throw");    
+    XCTAssertThrows([connection start], @"didn't throw");
     [connection release];
 }
 

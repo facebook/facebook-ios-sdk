@@ -24,12 +24,12 @@
 #import "FBDialogsData+Internal.h"
 #import "FBError.h"
 #import "FBGraphObject.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBSession+Internal.h"
 #import "FBSessionUtility.h"
 #import "FBSettings+Internal.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 @interface FBAppCall ()
@@ -456,7 +456,7 @@ NSString *const FBDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
         [deferredAppLinkParameters setObject:advertiserID forKey:@"advertiser_id"];
     }
 
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:deferredAppLinkParameters];
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:deferredAppLinkParameters accessAdvertisingTrackingStatus:YES];
 
     FBRequest *deferredAppLinkRequest = [[[FBRequest alloc] initForPostWithSession:nil
                                                                          graphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]

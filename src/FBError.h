@@ -54,7 +54,7 @@ FBSDK_EXTERN NSString *const FBErrorHTTPStatusCodeKey;
  @discussion
  These are valid only in the scope of FacebookSDKDomain.
  */
-typedef NS_ENUM(NSUInteger, FBErrorCode) {
+typedef NS_ENUM(NSInteger, FBErrorCode) {
     /*!
      Like nil for FBErrorCode values, represents an error code that
      has not been initialized yet.

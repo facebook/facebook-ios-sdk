@@ -25,20 +25,19 @@
 static NSString *const kAppLinkURLString = @"http://example.com/1234567890";
 static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 
-@interface NSURL (Foo)
+@interface NSURL (FBAppLinkResolverTests)
 
 - (id)queryParameters;
 
 @end
 
-@interface FBAppLinkResolver (Testing)
+@interface FBAppLinkResolver (FBAppLinkResolverTests)
 
 - (id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
 
 @end
 
 @interface FBAppLinkResolverTests : FBTests
-
 @end
 
 @implementation FBAppLinkResolverTests

@@ -91,6 +91,28 @@
 /*!
  @method
 
+ @abstract Designated factory method.
+ Creates an FBAccessTokenData from existing information or returns nil if required data is missing.
+
+ @param accessToken The token string. If nil or empty, this method will return nil.
+ @param permissions The permissions set. A value of nil indicates basic permissions.
+ @param declinedPermissions The declined permissions set. A value of nil indicates empty array.
+ @param expirationDate The expiration date. A value of nil defaults to `[NSDate distantFuture]`.
+ @param loginType The login source of the token.
+ @param refreshDate The date that token was last refreshed. A value of nil defaults to `[NSDate date]`.
+ @param permissionsRefreshDate The date the permissions were last refreshed. A value of nil defaults to `[NSDate distantPast]`.
+ */
++ (FBAccessTokenData *)createTokenFromString:(NSString *)accessToken
+                                 permissions:(NSArray *)permissions
+                         declinedPermissions:(NSArray *)declinedPermissions
+                              expirationDate:(NSDate *)expirationDate
+                                   loginType:(FBSessionLoginType)loginType
+                                 refreshDate:(NSDate *)refreshDate
+                      permissionsRefreshDate:(NSDate *)permissionsRefreshDate;
+
+/*!
+ @method
+
  @abstract Returns a dictionary representation of this instance.
 
  @discussion This is provided for backwards compatibility with previous
@@ -116,6 +138,11 @@
  @abstract returns the permissions associated with the access token.
  */
 @property (readonly, nonatomic, copy) NSArray *permissions;
+
+/*!
+ @abstract returns the declined permissions associated with the access token.
+ */
+@property (readonly, nonatomic, copy) NSArray *declinedPermissions;
 
 /*!
  @abstract returns the expiration date of the access token.

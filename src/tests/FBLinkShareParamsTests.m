@@ -19,7 +19,6 @@
 #import "FBTests.h"
 
 @interface FBLinkShareParamsTests : FBTests
-
 @end
 
 @implementation FBLinkShareParamsTests

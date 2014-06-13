@@ -16,8 +16,8 @@
 
 #import "FBLogger.h"
 
+#import "FBInternalSettings.h"
 #import "FBSession.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 static NSUInteger g_serialNumberCounter = 1111;

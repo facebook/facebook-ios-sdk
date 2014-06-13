@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
+#import <objc/runtime.h>
+
 #import <OCMock/OCMock.h>
-#import "FBAppEventsIntegrationTests.h"
-#import "Facebook.h"
+
 #import "FBAppEvents+Internal.h"
+#import "FBIntegrationTests.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
-#import <objc/objc-runtime.h>
+#import "Facebook.h"
 
-@interface FBAppEventsIntegrationTests () {
+static int publishInstallCount = 0;
+static NSString *loggedEvent = nil;
+
+@interface FBAppEventsIntegrationTests : FBIntegrationTests
+@end
+
+@implementation FBAppEventsIntegrationTests
+{
     id _mockFBUtility;
     Method _originalPublishInstall;
     Method _swizzledPublishInstall;
@@ -30,12 +39,6 @@
     Method _originalLogEvent;
     Method _swizzledLogEvent;
 }
-@end
-
-static int publishInstallCount = 0;
-static NSString *loggedEvent = nil;
-
-@implementation FBAppEventsIntegrationTests
 
 - (void)setUp {
     [super setUp];
@@ -90,7 +93,7 @@ static NSString *loggedEvent = nil;
                                        tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
     [session openFromAccessTokenData:accessToken completionHandler:nil];
     
-    STAssertTrue(session.isOpen, @"Unable to verify test, session should be open");
+    XCTAssertTrue(session.isOpen, @"Unable to verify test, session should be open");
     
     [FBAppEvents logEvent:@"some_event" valueToSum:nil parameters:nil session:session];
     [FBAppEvents flush];
@@ -106,20 +109,23 @@ static NSString *loggedEvent = nil;
     // default should set 1 for the app setting.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"com.facebook.sdk:FBAppEventsLimitEventUsage"];
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
-    STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should default to 1");
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+                                 accessAdvertisingTrackingStatus:YES];
+    XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should default to 1");
   
     // when limited, app tracking is 0.
     [parameters removeAllObjects];
     FBSettings.limitEventAndDataUsage = YES;
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
-    STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"0"], @"app tracking should be 0 when event usage is limited");
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+                                 accessAdvertisingTrackingStatus:YES];
+    XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"0"], @"app tracking should be 0 when event usage is limited");
   
     // when explicitly unlimited, app tracking is 1.
     [parameters removeAllObjects];
     FBSettings.limitEventAndDataUsage = NO;
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters];
-    STAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+                                 accessAdvertisingTrackingStatus:YES];
+    XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
 }
 
 - (void)testActivateApp {
@@ -137,8 +143,8 @@ static NSString *loggedEvent = nil;
   
     [FBSettings setDefaultAppID:@"appid"];
     [FBAppEvents activateApp];
-    STAssertTrue(publishInstallCount == 1, @"publishInstall was not triggered by activateApp");
-    STAssertTrue([@"fb_mobile_activate_app" isEqualToString:loggedEvent], @"activate app event not logged by activateApp call!");
+    XCTAssertTrue(publishInstallCount == 1, @"publishInstall was not triggered by activateApp");
+    XCTAssertTrue([@"fb_mobile_activate_app" isEqualToString:loggedEvent], @"activate app event not logged by activateApp call!");
   
     [loggedEvent release];
     loggedEvent = nil;

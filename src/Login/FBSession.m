@@ -29,6 +29,7 @@
 #import "FBDataDiskCache.h"
 #import "FBDialogs+Internal.h"
 #import "FBError.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBLoginDialog.h"
 #import "FBRequest+Internal.h"
@@ -40,7 +41,6 @@
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBSessionUtility.h"
 #import "FBSettings+Internal.h"
-#import "FBSettings.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBUtility.h"
 #import "Facebook.h"
@@ -61,6 +61,7 @@ static NSString *const FBLoginUXReturnScopes = @"return_scopes";
 static NSString *const FBLoginParamsExpiresIn = @"expires_in";
 static NSString *const FBLoginParamsPermissions = @"permissions";
 static NSString *const FBLoginParamsGrantedScopes = @"granted_scopes";
+static NSString *const FBLoginParamsDeniedScopes = @"denied_scopes";
 static NSString *const FBLoginParamsSDKVersion = @"sdk_version";
 static NSString *const FBLoginParamsLegacyOverride = @"legacy_override";
 NSString *const FBLoginUXResponseTypeToken = @"token";
@@ -232,7 +233,6 @@ static FBSession *g_activeSession = nil;
         };
 
         [FBSettings autoPublishInstall:self.appID];
-        _declinedPermissions = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -287,6 +287,14 @@ static FBSession *g_activeSession = nil;
     }
 }
 
+- (NSArray *)declinedPermissions {
+    if (self.accessTokenData) {
+        return self.accessTokenData.declinedPermissions;
+    }
+
+    return [NSArray array];
+}
+
 - (NSDate *)refreshDate {
     return self.accessTokenData.refreshDate;
 }
@@ -305,10 +313,6 @@ static FBSession *g_activeSession = nil;
     } else {
         return FBSessionLoginTypeNone;
     }
-}
-
-- (NSArray *)declinedPermissions {
-    return [[_declinedPermissions copy] autorelease];
 }
 
 #pragma mark - Public Members
@@ -439,7 +443,7 @@ static FBSession *g_activeSession = nil;
     request.canCloseSessionOnError = NO;
 
     [connection addRequest:request
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              if (!error) {
                  [self handleRefreshPermissions:result];
              }
@@ -856,6 +860,7 @@ static FBSession *g_activeSession = nil;
         if (tokenData.accessToken) {
             FBAccessTokenData *fbAccessToken = [FBAccessTokenData createTokenFromString:tokenData.accessToken
                                                                             permissions:tokenData.permissions
+                                                                    declinedPermissions:tokenData.declinedPermissions
                                                                          expirationDate:tokenData.expirationDate
                                                                               loginType:loginTypeUpdated
                                                                             refreshDate:tokenData.refreshDate
@@ -1221,7 +1226,8 @@ static FBSession *g_activeSession = nil;
                  // complete the operation: success
                  [self completeReauthorizeWithAccessToken:oauthToken
                                            expirationDate:[NSDate distantFuture]
-                                              permissions:[set allObjects]];
+                                              permissions:[set allObjects]
+                                      declinedPermissions:nil];
              } else {
                  self.isRepairing = NO;
                  if (dialogWasShown) {
@@ -1353,7 +1359,12 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)tryOpenURL:(NSURL *)url {
-    return [[UIApplication sharedApplication] openURL:url];
+    BOOL canOpen = [[UIApplication sharedApplication] canOpenURL:url];
+    if (canOpen) {
+        // Safari openURL calls can wrongly return NO so rely on the more honest canOpenURL call for return.
+        [[UIApplication sharedApplication] openURL:url];
+    }
+    return canOpen;
 }
 
 - (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params {
@@ -1460,25 +1471,32 @@ static FBSession *g_activeSession = nil;
         // we have an access token, so parse the expiration date.
         NSDate *expirationDate = [FBSessionUtility expirationDateFromResponseParams:parameters];
 
-        NSArray *grantedPermissions;
+        NSArray *grantedPermissions = nil;
+        NSArray *declinedPermissions = nil;
         if ([parameters[FBLoginParamsPermissions] isKindOfClass:[NSArray class]]) {
             // native gdp sends back granted permissions as an array already.
             grantedPermissions = parameters[FBLoginParamsPermissions];
         } else {
             grantedPermissions = [parameters[FBLoginParamsGrantedScopes] componentsSeparatedByString:@","];
+            declinedPermissions = [parameters[FBLoginParamsDeniedScopes] componentsSeparatedByString:@","];
         }
 
         if (grantedPermissions.count == 0) {
             grantedPermissions = self.initializedPermissions;
         }
-        [self updateDeclinedPermissionsForRequestedPermissions:self.initializedPermissions grantedPermissions:grantedPermissions];
+
+        declinedPermissions = [self declinedPermissionsForRequestedPermissions:self.initializedPermissions
+                                                            grantedPermissions:grantedPermissions
+                                                           declinedPermissions:declinedPermissions];
 
         // set token and date, state transition, and call the handler if there is one
         FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:accessToken
                                                                     permissions:grantedPermissions
+                                                            declinedPermissions:declinedPermissions
                                                                  expirationDate:expirationDate
                                                                       loginType:loginType
-                                                                    refreshDate:[NSDate date]];
+                                                                    refreshDate:[NSDate date]
+                                                         permissionsRefreshDate:nil];
         [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                           error:nil
                                       tokenData:tokenData
@@ -1545,7 +1563,8 @@ static FBSession *g_activeSession = nil;
         // Assume permissions are unchanged at this point.
         [self completeReauthorizeWithAccessToken:accessToken
                                   expirationDate:expirationDate
-                                     permissions:self.permissions];
+                                     permissions:self.permissions
+                             declinedPermissions:self.declinedPermissions];
         return;
     }
 
@@ -1591,11 +1610,16 @@ static FBSession *g_activeSession = nil;
             if ([fbid isEqual:fbid2]) {
                 NSMutableArray *allPermissions = [NSMutableArray array];
                 NSMutableArray *grantedPermissions = [NSMutableArray array];
-                [FBSessionUtility extractPermissionsFromResponse:permissionsResponseRetained allPermissions:allPermissions grantedPermissions:grantedPermissions];
+                NSMutableArray *declinedPermissions = [NSMutableArray array];
+                [FBSessionUtility extractPermissionsFromResponse:permissionsResponseRetained
+                                                  allPermissions:allPermissions
+                                              grantedPermissions:grantedPermissions
+                                             declinedPermissions:declinedPermissions];
 
                 [self completeReauthorizeWithAccessToken:accessToken
                                           expirationDate:expirationDate
-                                             permissions:grantedPermissions];
+                                             permissions:grantedPermissions
+                                     declinedPermissions:declinedPermissions];
             } else {
                 // no we don't have matching FBIDs, then we fail on these grounds
                 NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonWrongUser
@@ -1616,17 +1640,17 @@ static FBSession *g_activeSession = nil;
 
     FBRequestConnection *connection = [[[FBRequestConnection alloc] init] autorelease];
     [connection addRequest:requestSessionMe
-         completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> user, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id<FBGraphUser> user, NSError *error) {
              handleBatch(user, nil);
          }];
 
     [connection addRequest:requestNewTokenMe
-         completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> user, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id<FBGraphUser> user, NSError *error) {
              handleBatch(user, nil);
          }];
 
     [connection addRequest:requestPermissions
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              handleBatch(nil, result);
          }];
 
@@ -1703,15 +1727,20 @@ static FBSession *g_activeSession = nil;
 
 - (void)completeReauthorizeWithAccessToken:(NSString *)accessToken
                             expirationDate:(NSDate *)expirationDate
-                               permissions:(NSArray *)permissions {
+                               permissions:(NSArray *)permissions
+                       declinedPermissions:(NSArray *)declinedPermissions {
     [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
 
-    [self updateDeclinedPermissionsForRequestedPermissions:_requestedReauthPermissions grantedPermissions:permissions];
+
+    declinedPermissions = [self declinedPermissionsForRequestedPermissions:_requestedReauthPermissions
+                                                        grantedPermissions:permissions
+                                                       declinedPermissions:declinedPermissions];
 
     // set token and date, state transition, and call the handler if there is one
     NSDate *now = [NSDate date];
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:accessToken
                                                                 permissions:permissions
+                                                        declinedPermissions:declinedPermissions
                                                              expirationDate:expirationDate
                                                                   loginType:FBSessionLoginTypeNone
                                                                 refreshDate:now
@@ -1761,6 +1790,7 @@ static FBSession *g_activeSession = nil;
     // refresh token and date, state transition, and call the handler if there is one
     FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:token ?: self.accessTokenData.accessToken
                                                                 permissions:self.accessTokenData.permissions
+                                                        declinedPermissions:self.accessTokenData.declinedPermissions
                                                              expirationDate:expireDate
                                                                   loginType:FBSessionLoginTypeNone
                                                                 refreshDate:[NSDate date]
@@ -1813,12 +1843,21 @@ static FBSession *g_activeSession = nil;
         if (resultData.count > 0) {
             NSMutableArray *allPermissions = [NSMutableArray array];
             NSMutableArray *grantedPermissions = [NSMutableArray array];
-            [FBSessionUtility extractPermissionsFromResponse:permissionsResponse allPermissions:allPermissions grantedPermissions:grantedPermissions];
+            NSMutableArray *declinedPermissions = [NSMutableArray array];
+            [FBSessionUtility extractPermissionsFromResponse:permissionsResponse
+                                              allPermissions:allPermissions
+                                          grantedPermissions:grantedPermissions
+                                         declinedPermissions:declinedPermissions];
 
             if ([allPermissions count] > 0) {
                 NSDate *now = [NSDate date];
+                declinedPermissions = [self declinedPermissionsForRequestedPermissions:allPermissions
+                                                                    grantedPermissions:grantedPermissions
+                                                                   declinedPermissions:declinedPermissions];
+
                 FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:self.accessTokenData.accessToken
                                                                             permissions:grantedPermissions
+                                                                    declinedPermissions:declinedPermissions
                                                                          expirationDate:self.accessTokenData.expirationDate
                                                                               loginType:self.accessTokenData.loginType
                                                                             refreshDate:self.accessTokenData.refreshDate
@@ -1828,8 +1867,6 @@ static FBSession *g_activeSession = nil;
                 // the implied contract is for that to only occur during state transitions.
                 self.accessTokenData = tokenData;
                 [self.tokenCachingStrategy cacheFBAccessTokenData:self.accessTokenData];
-
-                [self updateDeclinedPermissionsForRequestedPermissions:allPermissions grantedPermissions:grantedPermissions];
             }
         }
     }
@@ -1919,10 +1956,10 @@ static FBSession *g_activeSession = nil;
         if (didTransition && FB_ISSESSIONSTATETERMINAL(self.state)) {
             self.loginHandler = nil;
 
-            NSError *error = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonSessionClosed
+            NSError *innerError = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonSessionClosed
                                                     errorCode:nil
                                                    innerError:nil];
-            [self callReauthorizeHandlerAndClearState:error updateDeclinedPermissions:NO];
+            [self callReauthorizeHandlerAndClearState:innerError updateDeclinedPermissions:NO];
         }
 
         // if we have a handler, call it and release our
@@ -1944,7 +1981,17 @@ static FBSession *g_activeSession = nil;
 
 - (void)callReauthorizeHandlerAndClearState:(NSError *)error updateDeclinedPermissions:(BOOL)updateDeclinedPermissions {
     if (updateDeclinedPermissions) {
-        [self updateDeclinedPermissionsForRequestedPermissions:_requestedReauthPermissions grantedPermissions:self.accessTokenData.permissions];
+        NSArray *declinedPermissions = [self declinedPermissionsForRequestedPermissions:_requestedReauthPermissions
+                                                                     grantedPermissions:self.accessTokenData.permissions
+                                                                    declinedPermissions:self.accessTokenData.declinedPermissions];
+        self.accessTokenData = [FBAccessTokenData createTokenFromString:self.accessTokenData.accessToken
+                                                            permissions:self.accessTokenData.permissions
+                                                    declinedPermissions:declinedPermissions
+                                                         expirationDate:self.accessTokenData.expirationDate
+                                                              loginType:self.accessTokenData.loginType
+                                                            refreshDate:self.accessTokenData.refreshDate
+                                                 permissionsRefreshDate:self.accessTokenData.permissionsRefreshDate];
+        [self.tokenCachingStrategy cacheFBAccessTokenData:self.accessTokenData];
     }
     NSString *authLoggerResult = FBSessionAuthLoggerResultSuccess;
     if (error) {
@@ -1990,6 +2037,7 @@ static FBSession *g_activeSession = nil;
     NSMutableDictionary *userinfo = [[NSMutableDictionary alloc] init];
     if (errorReason) {
         userinfo[FBErrorLoginFailedReason] = errorReason;
+        userinfo[NSLocalizedFailureReasonErrorKey] = errorReason;
     }
     if (errorCode) {
         userinfo[FBErrorLoginFailedOriginalErrorCode] = errorCode;
@@ -2022,16 +2070,21 @@ static FBSession *g_activeSession = nil;
     return clientStateString ?: @"{}";
 }
 
-- (void)updateDeclinedPermissionsForRequestedPermissions:(NSArray *)requestedPermissions grantedPermissions:(NSArray *)grantedPermissions {
-    [_declinedPermissions removeObjectsInArray:grantedPermissions];
+
+- (NSMutableArray *)declinedPermissionsForRequestedPermissions:(NSArray *)requestedPermissions
+                                            grantedPermissions:(NSArray *)grantedPermissions
+                                           declinedPermissions:(NSArray *)declinedPermissions {
+    NSMutableArray *result = [NSMutableArray arrayWithArray:declinedPermissions];
+    [result removeObjectsInArray:grantedPermissions];
     for (NSString* requested in requestedPermissions) {
         if (![grantedPermissions containsObject:requested] &&
-            ![_declinedPermissions containsObject:requested] &&
+            ![result containsObject:requested] &&
             ![requested isEqualToString:@"basic_info"] &&
             ![requested isEqualToString:@"public_profile"]) {
-            [_declinedPermissions addObject:requested];
+            [result addObject:requested];
         }
     }
+    return result;
 }
 
 + (BOOL)automaticallyNotifiesObserversForKey:(NSString *)key {

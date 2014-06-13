@@ -18,7 +18,7 @@
 
 #import "FBGraphObject.h"
 #import "FBGraphObjectTableCell.h"
-#import "FBSettings.h"
+#import "FBInternalSettings.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
 

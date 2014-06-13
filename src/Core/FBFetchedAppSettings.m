@@ -16,7 +16,7 @@
 
 #import "FBFetchedAppSettings.h"
 
-#import "FBSettings.h"
+#import "FBInternalSettings.h"
 
 @interface FBFetchedAppSettings ()
 

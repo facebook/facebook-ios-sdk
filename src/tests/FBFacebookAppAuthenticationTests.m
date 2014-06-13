@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-#import "FBFacebookAppAuthenticationTests.h"
-#import "FBSession.h"
-#import "FBError.h"
-#import "FBTestBlocker.h"
-#import "FBAccessTokenData+Internal.h"
-#import "FBUtility.h"
-#import <objc/objc-runtime.h>
+#import <objc/runtime.h>
 
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#import "FBAccessTokenData+Internal.h"
+#import "FBAuthenticationTests.h"
+#import "FBError.h"
+#import "FBSession.h"
+#import "FBTestBlocker.h"
+#import "FBUtility.h"
+
+@interface FBFacebookAppAuthenticationTests : FBAuthenticationTests
+@end
 
 @implementation FBFacebookAppAuthenticationTests
 {
@@ -153,17 +155,18 @@
                                  tokenCacheStrategy:nil];
     
     __block BOOL handlerCalled = NO;
-    [session openWithBehavior:behavior completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [session openWithBehavior:behavior completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         handlerCalled = YES;
         [_blocker signal];
     }];
     
-    STAssertTrue([_blocker waitWithTimeout:1], @"blocker timed out");
+    XCTAssertTrue([_blocker waitWithTimeout:1], @"blocker timed out");
     
     [(id)mockSession verify];
     
     assertThatBool(handlerCalled, equalToBool(YES));
     assertThatInt(mockSession.state, equalToInt(FBSessionStateOpen));
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     assertThat(mockSession.accessToken, equalTo(kAuthenticationTestValidToken));
     assertThatInt(mockSession.loginType, equalToInt(FBSessionLoginTypeFacebookApplication));
     // TODO assert expiration date is what we set it to (within delta)
@@ -302,7 +305,7 @@
     
     __block BOOL handlerCalled = NO;
     __block NSError *handlerError = nil;
-    [session openWithBehavior:behavior completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [session openWithBehavior:behavior completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         handlerCalled = YES;
         handlerError = [error retain];
         [_blocker signal];
@@ -446,7 +449,7 @@
     NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", nil];
     __block NSError *handlerError = nil;
     [session requestNewReadPermissions:requestedPermissions
-                     completionHandler:^(FBSession *session, NSError *error) {
+                     completionHandler:^(FBSession *innerSession, NSError *error) {
         handlerError = error;
     }];
 

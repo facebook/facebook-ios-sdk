@@ -18,8 +18,8 @@
 
 #import "FBAccessTokenData.h"
 #import "FBCacheIndex.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBSettings.h"
 
 static const NSUInteger kMaxDataInMemorySize = 1 * 1024 * 1024; // 1MB
 static const NSUInteger kMaxDiskCacheSize = 10 * 1024 * 1024; // 10MB

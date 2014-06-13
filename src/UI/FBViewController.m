@@ -17,8 +17,8 @@
 #import "FBViewController.h"
 #import "FBViewController+Internal.h"
 
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBSettings.h"
 
 @interface FBViewController ()
 

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-#import "FBAppLinkDataTests.h"
 #import "FBAppLinkData+Internal.h"
 #import "FBTests.h"
+
+@interface FBAppLinkDataTests : XCTestCase
+@end
 
 @implementation FBAppLinkDataTests
 
@@ -34,10 +36,10 @@
         
     FBAppLinkData *contentLink = [FBAppLinkData createFromURL:testURL];
     
-    STAssertNotNil(contentLink, @"Failed to create an FBAppLinkData object");
-    STAssertEqualObjects([[NSURL alloc] initWithString:@"http://target-url.com/?deeplink=1"], contentLink.targetURL, @"Failed to correctly parse target_url");
-    STAssertTrue([contentLink.actionTypes isEqualToArray:testActionType], @"Failed to correctly parse fb_action_types");
-    STAssertTrue([contentLink.originalQueryParameters isEqualToDictionary:testOriginalQueryParameters], @"Incorrect originalQueryParameters");
+    XCTAssertNotNil(contentLink, @"Failed to create an FBAppLinkData object");
+    XCTAssertEqualObjects([[NSURL alloc] initWithString:@"http://target-url.com/?deeplink=1"], contentLink.targetURL, @"Failed to correctly parse target_url");
+    XCTAssertTrue([contentLink.actionTypes isEqualToArray:testActionType], @"Failed to correctly parse fb_action_types");
+    XCTAssertTrue([contentLink.originalQueryParameters isEqualToDictionary:testOriginalQueryParameters], @"Incorrect originalQueryParameters");
 }
 
 @end

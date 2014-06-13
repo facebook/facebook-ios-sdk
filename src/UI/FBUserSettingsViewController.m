@@ -18,12 +18,12 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBGraphUser.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBProfilePictureView.h"
 #import "FBRequest.h"
 #import "FBSession+Internal.h"
 #import "FBSession.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 #import "FBViewController+Internal.h"
 

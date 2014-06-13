@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#import "FBSession.h"
+#import "FBTestSession.h"
 
 @interface FBTestSession (Internal)
 

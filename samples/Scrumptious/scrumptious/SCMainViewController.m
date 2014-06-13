@@ -41,6 +41,8 @@
 @property (nonatomic, strong) SCShareUtility *shareUtility;
 @end
 
+static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
+
 @implementation SCMainViewController
 {
     FBCacheDescriptor *_friendsCacheDescriptor;
@@ -221,6 +223,19 @@
 
 - (IBAction)share:(id)sender
 {
+    //the SDK expects user generated images to be at least 480px in height and width.
+    //photos with the user generated flag set to false can be smaller but this sample app assumes the photo to be user generated
+    if (self.selectedPhoto && ([self.selectedPhoto size].height < MIN_USER_GENERATED_PHOTO_DIMENSION || [self.selectedPhoto size].width < MIN_USER_GENERATED_PHOTO_DIMENSION)) {
+        UIAlertView *alert = [[UIAlertView alloc]
+                              initWithTitle:[NSString stringWithFormat:@"%@%d%@", @"This photo is too small. Choose a photo with dimensions larger than ", MIN_USER_GENERATED_PHOTO_DIMENSION, @"px."]
+                              message:nil
+                              delegate:self
+                              cancelButtonTitle:@"OK"
+                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+
     SCShareUtility *shareUtility = [[SCShareUtility alloc] initWithMealTitle:self.selectedMeal
                                                                        place:self.selectedPlace
                                                                      friends:self.selectedFriends

@@ -19,7 +19,6 @@
 #import "FBTests.h"
 
 @interface FBOpenGraphActionParamsTests : FBTests
-
 @end
 
 @implementation FBOpenGraphActionParamsTests

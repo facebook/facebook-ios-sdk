@@ -29,6 +29,17 @@ fi
 
 APPLEDOC_PATH="$FB_SDK_BUILD"/appledoc
 progress_message "$APPLEDOC_PATH"
+
+if [ ! -f "$APPLEDOC_PATH" ]; then
+  # appledoc is currently being refactored for v3, which will be free from GC.
+  # In the meantime, use a pre-compiled binary if it is dropped into
+  # vendor/appledoc_bin/
+  VENDOR_APPLEDOC_PATH="$FB_SDK_ROOT"/vendor/appledoc_bin/appledoc
+  if [ -f "$VENDOR_APPLEDOC_PATH" ]; then
+    cp "$VENDOR_APPLEDOC_PATH" "$APPLEDOC_PATH"
+  fi
+fi
+
 if [ ! -f "$APPLEDOC_PATH" ]; then
   progress_message Building appledoc
   pushd "$FB_SDK_ROOT"/vendor/appledoc/ >/dev/null
@@ -48,12 +59,16 @@ cd "$FB_SDK_SRC"
 
 rm -rf "$FB_SDK_FRAMEWORK_DOCS"
 
+DOCSET="$FB_SDK_BUILD"/docset.build
+rm -rf "$DOCSET"
+
 hash "$APPLEDOC_PATH" &>/dev/null
 if [ "$?" -eq "0" ]; then
     APPLEDOC_DOCSET_NAME="Facebook SDK $FB_SDK_VERSION_SHORT for iOS"
     "$APPLEDOC_PATH" --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
+        --output "$DOCSET" \
 	--preprocess-headerdoc \
 	--docset-bundle-filename "$FB_SDK_DOCSET_NAME" \
 	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \

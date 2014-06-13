@@ -18,8 +18,8 @@
 
 #import <dlfcn.h>
 
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
-#import "FBSettings.h"
 
 static dispatch_once_t g_dispatchTokenLibrary;
 static dispatch_once_t g_dispatchTokenSymbol;
@@ -132,7 +132,7 @@ int fbdfl_SecRandomCopyBytes(SecRandomRef rnd, size_t count, uint8_t *bytes) {
 }
 
 // SQLITE3 APIs
-void *loadSqliteSymbol(NSString *symbol) {
+static void *loadSqliteSymbol(NSString *symbol) {
     return loadSymbol([FBDynamicFrameworkLoader sqlitePath], symbol);
 }
 

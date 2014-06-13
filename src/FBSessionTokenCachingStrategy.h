@@ -157,5 +157,8 @@ FBSDK_EXTERN NSString *const FBTokenInformationLoginTypeLoginKey;
 // The key to use with token information dictionaries to get the latest known permissions
 FBSDK_EXTERN NSString *const FBTokenInformationPermissionsKey;
 
+// The key to use with token information dictionaries to get the latest known declined permissions
+FBSDK_EXTERN NSString *const FBTokenInformationDeclinedPermissionsKey;
+
 // The key to use with token information dictionaries to get the date the permissions were last refreshed.
 FBSDK_EXTERN NSString *const FBTokenInformationPermissionsRefreshDateKey;

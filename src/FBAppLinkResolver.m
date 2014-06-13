@@ -23,9 +23,9 @@
 #import <Bolts/BFTask.h>
 #import <Bolts/BFTaskCompletionSource.h>
 
+#import "FBInternalSettings.h"
 #import "FBRequest+Internal.h"
 #import "FBRequestConnection.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 static NSString *const kURLKey = @"url";

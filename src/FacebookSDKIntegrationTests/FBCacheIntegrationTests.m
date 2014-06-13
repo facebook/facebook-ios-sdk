@@ -14,25 +14,39 @@
  * limitations under the License.
  */
 
-#import "FBCacheIntegrationTests.h"
-#import "FBDataDiskCache.h"
-#import "FBCacheIndex.h"
-#import "FBTests.h"
-#import "FBTestBlocker.h"
 #import "FBCacheDescriptor.h"
+#import "FBCacheIndex.h"
+#import "FBDataDiskCache.h"
+#import "FBFriendPickerCacheDescriptor.h"
 #import "FBFriendPickerViewController+Internal.h"
 #import "FBFriendPickerViewController.h"
+#import "FBIntegrationTests.h"
 #import "FBRequest.h"
-#import "FBRequestConnection.h"
 #import "FBRequestConnection+Internal.h"
+#import "FBRequestConnection.h"
+#import "FBTestBlocker.h"
+#import "FBTestSession.h"
 
 #if defined(FACEBOOKSDK_SKIP_CACHE_TESTS)
 
-#pragma message ("warning: Skipping FBCacheTests")
+#pragma message ("warning: Skipping FBCacheIntegrationTests")
 
 #else
 
 @class FBCacheEntityInfo;
+
+@interface FBCacheIndex (FBCacheIntegrationTests)
+- (FBCacheEntityInfo *)_readEntryFromDatabase:(NSString *)key;
+@end
+
+@interface FBFriendPickerCacheDescriptor (FBCacheIntegrationTests)
+@property (nonatomic, readwrite, assign) BOOL hasCompletedFetch;
+- (FBRequest *)requestForLoadData;
+@end
+
+@interface FBCacheIntegrationTests : FBIntegrationTests<FBCacheIndexFileDelegate>
+@property (retain, nonatomic) NSString *dataCachePath;
+@end
 
 static NSString *nameForTestCache()
 {
@@ -69,6 +83,7 @@ static FBCacheIndex *initTempCacheIndex(
 
 @implementation FBCacheIntegrationTests
 {
+    NSString *_dataCachePath;
     dispatch_queue_t _fileQueue;
 }
 
@@ -128,7 +143,7 @@ deleteFileWithName:(NSString *)name
     [cache setData:data forURL:url];
 
     NSData *readData = [cache dataForURL:url];
-    STAssertTrue([readData isEqualToData:data], @"Data equality fail.");
+    XCTAssertTrue([readData isEqualToData:data], @"Data equality fail.");
 }
 
 - (void)testDeleteAndRetrieve
@@ -141,7 +156,7 @@ deleteFileWithName:(NSString *)name
     [cache removeDataForUrl:url];
 
     NSData *readData = [cache dataForURL:url];
-    STAssertNil(readData, @"Data should be removed.");
+    XCTAssertNil(readData, @"Data should be removed.");
 }
 
 - (void)testCacheIndex
@@ -168,8 +183,8 @@ deleteFileWithName:(NSString *)name
         info = [cacheIndex performSelector:@selector(_readEntryFromDatabase:) withObject:@"test1"];
     });
 
-    STAssertNotNil(info, @"Index not written to disk!");
-    STAssertEquals(
+    XCTAssertNotNil(info, @"Index not written to disk!");
+    XCTAssertEqual(
                    cacheIndex.currentDiskUsage,
                    dummyData.length,
                    @"Cache disk usage incorrect");
@@ -179,7 +194,7 @@ deleteFileWithName:(NSString *)name
 
     BOOL fileExists =
     [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    STAssertTrue(fileExists, @"File not written to disk");
+    XCTAssertTrue(fileExists, @"File not written to disk");
 
     // Delete the entry
     [cacheIndex removeEntryForKey:@"test1"];
@@ -189,10 +204,10 @@ deleteFileWithName:(NSString *)name
     dispatch_sync(_fileQueue, ^{});
 
     fileExists = [[NSFileManager defaultManager] fileExistsAtPath:filePath];
-    STAssertFalse(fileExists, @"File not deleted on removal");
+    XCTAssertFalse(fileExists, @"File not deleted on removal");
 
     NSString *entry = [cacheIndex fileNameForKey:@"test1"];
-    STAssertNil(entry, @"Entry not removed");
+    XCTAssertNil(entry, @"Entry not removed");
 
     [cacheIndex release];
     [[NSFileManager defaultManager] removeItemAtPath:tempFolder error:NULL];
@@ -200,7 +215,7 @@ deleteFileWithName:(NSString *)name
 
 - (void)testCacheIndexFailsInitWithBadPath {
     FBCacheIndex *cacheIndex = [[FBCacheIndex alloc] initWithCacheFolder:@"/no/such/folder"];
-    STAssertNil(cacheIndex, @"initWithCacheFolder should fail");
+    XCTAssertNil(cacheIndex, @"initWithCacheFolder should fail");
 }
 
 - (void)testDataPersistence
@@ -222,12 +237,12 @@ deleteFileWithName:(NSString *)name
         NSString *fileName = [cacheIndex
                               storeFileForKey:[NSString stringWithFormat:@"test%lu", (unsigned long)counter]
                               withData:dummyData];
-        STAssertNotNil(fileName, @"");
+        XCTAssertNotNil(fileName, @"");
     }
 
     // Wait for the queue to finish
     dispatch_sync(cacheIndex.databaseQueue, ^{});
-    STAssertEquals(
+    XCTAssertEqual(
                    cacheIndex.currentDiskUsage,
                    fileSize * numberOfFiles,
                    @"Disk usage computed incorrectly");
@@ -240,7 +255,7 @@ deleteFileWithName:(NSString *)name
     // Wait for the queue to finish
     dispatch_sync(cacheIndex.databaseQueue, ^{});
     dispatch_sync(_fileQueue, ^{});
-    STAssertEquals(
+    XCTAssertEqual(
                    cacheIndex.currentDiskUsage,
                    fileSize * numberOfFiles,
                    @"Disk usage computed incorrectly");
@@ -249,7 +264,7 @@ deleteFileWithName:(NSString *)name
     for (int counter = 0; counter < numberOfFiles; counter++) {
         NSString *key = [NSString stringWithFormat:@"test%lu", (unsigned long)counter];
         NSString *fileName = [cacheIndex fileNameForKey:key];
-        STAssertNotNil(fileName, @"Entity missing from the cache");
+        XCTAssertNotNil(fileName, @"Entity missing from the cache");
 
         NSError *error;
         NSData *readData = [NSData
@@ -257,8 +272,8 @@ deleteFileWithName:(NSString *)name
                                                     stringByAppendingPathComponent:fileName]
                             options:NSDataReadingMappedAlways | NSDataReadingUncached
                             error:&error];
-        STAssertNotNil(readData, @"Data file not found");
-        STAssertEquals(readData.length, fileSize, @"Data length incorrect");
+        XCTAssertNotNil(readData, @"Data file not found");
+        XCTAssertEqual(readData.length, fileSize, @"Data length incorrect");
     }
 
     [cacheIndex release];
@@ -283,7 +298,7 @@ deleteFileWithName:(NSString *)name
         NSString *fileName = [cacheIndex
                               storeFileForKey:[NSString stringWithFormat:@"test%lu", (unsigned long)counter]
                               withData:dummyData];
-        STAssertNotNil(fileName, @"");
+        XCTAssertNotNil(fileName, @"");
     }
 
     // Wait for the queue to flush
@@ -294,7 +309,7 @@ deleteFileWithName:(NSString *)name
     for (int i = 0; i < numberOfFiles * 0.5; i++) {
         NSString *key = [NSString stringWithFormat:@"test%d", i];
         NSString *fileName = [cacheIndex fileNameForKey:key];
-        STAssertNil(
+        XCTAssertNil(
                     fileName,
                     @"Expected info at index %d to be scavenged, still present",
                     i);
@@ -305,13 +320,13 @@ deleteFileWithName:(NSString *)name
     for (int i = numberOfFiles - 1; i > numberOfFiles * 0.6; i--) {
         NSString *key = [NSString stringWithFormat:@"test%d", i];
         NSString *fileName = [cacheIndex fileNameForKey:key];
-        STAssertNotNil(
+        XCTAssertNotNil(
                        fileName,
                        @"Expected info at index %d to be present, was scavenged",
                        i);
     }
 
-    STAssertTrue(
+    XCTAssertTrue(
                  cacheIndex.currentDiskUsage < numberOfFiles * fileSize / 2,
                  @"Current disk usage incorrect");
     [cacheIndex release];
@@ -344,7 +359,7 @@ deleteFileWithName:(NSString *)name
                             dataWithContentsOfFile:filePath
                             options:NSDataReadingMappedAlways | NSDataReadingUncached
                             error:nil];
-    STAssertEquals(
+    XCTAssertEqual(
                    dataFromFile.length,
                    dummyData.length,
                    @"Read something different from what we wrote");
@@ -352,7 +367,7 @@ deleteFileWithName:(NSString *)name
     NSString *stringFromFile = [[NSString alloc]
                                 initWithData:dataFromFile
                                 encoding:NSUTF8StringEncoding];
-    STAssertTrue(
+    XCTAssertTrue(
                  [stringFromFile isEqualToString:dummy],
                  @"Payload doesn't match!");
 
@@ -363,8 +378,8 @@ deleteFileWithName:(NSString *)name
 
     BOOL fileExists = [[NSFileManager defaultManager]
                        fileExistsAtPath:filePath];
-    STAssertFalse(fileExists, @"File wasn't deleted at %@", filePath);
-    STAssertEquals(
+    XCTAssertFalse(fileExists, @"File wasn't deleted at %@", filePath);
+    XCTAssertEqual(
                    dataFromFile.length,
                    dummyData.length,
                    @"Read something different from what wrote");
@@ -372,7 +387,7 @@ deleteFileWithName:(NSString *)name
     stringFromFile = [[NSString alloc]
                       initWithData:dataFromFile
                       encoding:NSUTF8StringEncoding];
-    STAssertTrue(
+    XCTAssertTrue(
                  [stringFromFile isEqualToString:dummy],
                  @"Payload doesn't match!");
 
@@ -402,10 +417,10 @@ deleteFileWithName:(NSString *)name
 
     FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
 
-    [blocker waitWithPeriodicHandler:^(FBTestBlocker *blocker) {
+    [blocker waitWithPeriodicHandler:^(FBTestBlocker *innerBlocker) {
         // white-box, using an internal API to determine if fetch completed
         if ([cacheDescriptor performSelector:@selector(hasCompletedFetch)]) {
-            [blocker signal];
+            [innerBlocker signal];
         }
     }];
     [blocker release];
@@ -418,9 +433,9 @@ deleteFileWithName:(NSString *)name
     FBRequest *request = [vc performSelector:@selector(requestForLoadData)];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     [connection addRequest:request
-         completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
+         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              [blocker signal];
-             STAssertTrue(connection.isResultFromCache, @"This result should have been cached");
+             XCTAssertTrue(innerConnection.isResultFromCache, @"This result should have been cached");
          }];
     
     [connection startWithCacheIdentity:FBFriendPickerCacheIdentity

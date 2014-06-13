@@ -18,10 +18,10 @@
 
 #import "FBDataDiskCache.h"
 #import "FBError.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBSession.h"
 #import "FBSettings+Internal.h"
-#import "FBSettings.h"
 #import "FBUtility.h"
 
 static NSArray *_cdnHosts;

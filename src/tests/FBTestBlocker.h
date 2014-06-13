@@ -28,7 +28,7 @@ typedef void (^FBTestBlockerPeriodicHandler)(FBTestBlocker *blocker);
 // can be extended to support delegates as needed
 // NOTE: Not safe to call outside the context of unit tests, as [FBTestBlocker wait] runs
 // the currentRunLoop, and framework code, etc., is not guaranteed to be re-entrant.
-// SenTestKit does not run tests in the context of a run loop.
+// XCTest does not run tests in the context of a run loop.
 // Also, not thread-safe, expects all signaling to happen on the same thread.
 @interface FBTestBlocker : NSObject
 

@@ -1,0 +1,38 @@
+//
+// Copyright 2010-present Facebook
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//    http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+#include "TestAppIdAndSecret.xcconfig"
+
+// Architectures
+IPHONEOS_DEPLOYMENT_TARGET = 7.0
+
+// Code Signing
+CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+
+// Linking
+OTHER_LDFLAGS = -all_load -lc++
+
+// Packaging
+INFOPLIST_FILE = $(TARGET_NAME)/$(TARGET_NAME)-Info.plist
+WRAPPER_EXTENSION = xctest
+
+// Search Paths
+FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks" "$(DEVELOPER_LIBRARY_DIR)/Frameworks" $(inherited) "$(SRCROOT)/../vendor/OCHamcrest/Source/build/Release"
+
+// Language
+GCC_PREFIX_HEADER = $(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch
+
+GCC_PREPROCESSOR_DEFINITIONS = $(inherited) SAFE_TO_USE_FBTESTSESSION=1

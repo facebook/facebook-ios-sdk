@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-#import "FBSettings.h"
 #import "FBSettings+Internal.h"
 
 #import <UIKit/UIKit.h>
 
 #import "FBError.h"
+#import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBRequest.h"
 #import "FBSession+Internal.h"
@@ -335,11 +335,13 @@ static BOOL g_enableLegacyGraphAPI = NO;
         if (!appID) {
             // if the appID is still nil, exit early.
             if (handler) {
+                NSString *failureReasonAndDescription = @"A valid App ID was not supplied or detected.  Please call with a valid App ID or configure the app correctly to include FB App ID.";
                 handler(
                         nil,
                         [NSError errorWithDomain:FacebookSDKDomain
                                             code:FBErrorPublishInstallResponse
-                                        userInfo:@{ NSLocalizedDescriptionKey : @"A valid App ID was not supplied or detected.  Please call with a valid App ID or configure the app correctly to include FB App ID."}]
+                                        userInfo:@{NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
+                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
                         );
             }
             return;
@@ -372,11 +374,13 @@ static BOOL g_enableLegacyGraphAPI = NO;
 
         if (!(attributionID || advertiserID)) {
             if (handler) {
+                NSString *failureReasonAndDescription = @"A valid attribution ID or advertiser ID was not found.  Publishing install when neither of them is present is a no-op.";
                 handler(
                         nil,
                         [NSError errorWithDomain:FacebookSDKDomain
                                             code:FBErrorPublishInstallResponse
-                                        userInfo:@{ NSLocalizedDescriptionKey : @"A valid attribution ID or advertiser ID was not found.  Publishing install when neither of them is present is a no-op."}]
+                                        userInfo:@{NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
+                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
                         );
             }
             return;
@@ -422,7 +426,7 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                            if (advertiserID) {
                                                [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                                            }
-                                           [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:installActivity];
+                                           [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:installActivity accessAdvertisingTrackingStatus:YES];
 
                                            [installActivity setObject:[NSNumber numberWithBool:isAutoPublish].stringValue forKey:@"auto_publish"];
 
@@ -435,11 +439,13 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                            [defaults synchronize];
 
                                            if (handler) {
+                                               NSString *failureReasonAndDescription = @"The application has not enabled install insights.  To turn this on, go to developers.facebook.com and enable install insights for the app.";
                                                handler(
                                                        nil,
                                                        [NSError errorWithDomain:FacebookSDKDomain
                                                                            code:FBErrorPublishInstallResponse
-                                                                       userInfo:@{ NSLocalizedDescriptionKey : @"The application has not enabled install insights.  To turn this on, go to developers.facebook.com and enable install insights for the app."}]
+                                                                       userInfo:@{ NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
+                                                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
                                                        );
                                            }
                                        }
@@ -451,7 +457,8 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                                    nil,
                                                    [NSError errorWithDomain:FacebookSDKDomain
                                                                        code:FBErrorPublishInstallResponse
-                                                                   userInfo:@{ NSLocalizedDescriptionKey : errorMessage}]
+                                                                   userInfo:@{ NSLocalizedFailureReasonErrorKey : errorMessage,
+                                                                               NSLocalizedDescriptionKey : errorMessage}]
                                                    );
                                        }
 
@@ -466,7 +473,8 @@ static BOOL g_enableLegacyGraphAPI = NO;
                     nil,
                     [NSError errorWithDomain:FacebookSDKDomain
                                         code:FBErrorPublishInstallResponse
-                                    userInfo:@{ NSLocalizedDescriptionKey : errorMessage}]
+                                    userInfo:@{ NSLocalizedFailureReasonErrorKey : errorMessage,
+                                                NSLocalizedDescriptionKey : errorMessage}]
                     );
         }
     }

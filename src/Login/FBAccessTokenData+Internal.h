@@ -28,6 +28,7 @@
 
 @property (nonatomic, readwrite, copy) NSDate *refreshDate;
 @property (nonatomic, readwrite, copy) NSArray *permissions;
+@property (nonatomic, readwrite, copy) NSArray *declinedPermissions;
 @property (nonatomic, readwrite, copy) NSDate *permissionsRefreshDate;
 
 @end

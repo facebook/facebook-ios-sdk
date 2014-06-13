@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-#import "FBRequestTests.h"
-
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBRequest.h"
 #import "FBRequestConnection+Internal.h"
 #import "FBTestBlocker.h"
+#import "FBTests.h"
 #import "Facebook.h"
 
 // This is just to silence compiler warnings since we access internal methods in some tests.
-@interface FBRequest (Internal)
+@interface FBRequest (FBRequestTests)
 
 - (FBRequestConnection *)createRequestConnection;
 @property (readonly) NSString *versionPart;
@@ -50,26 +49,10 @@
 
 #pragma mark - Test suite
 
-@implementation FBRequestTests {
-//    FBTestBlocker *_blocker;
-//    BOOL _handlerCalled;
-//    FBURLConnectionHandler _handler;
-}
+@interface FBRequestTests : FBTests
+@end
 
-- (void)setUp {
-//    _blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
-//    _handlerCalled = NO;
-//    _handler = nil;
-}
-
-- (void)tearDown {
-//    [_blocker release];
-//    _blocker = nil;
-//    [_handler release];
-//    _handler = nil;
-    
-//    [OHHTTPStubs removeAllRequestHandlers];
-}
+@implementation FBRequestTests
 
 #pragma mark Test cases
 

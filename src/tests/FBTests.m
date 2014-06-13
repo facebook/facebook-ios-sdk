@@ -41,8 +41,8 @@ NSString *kTestAppId = @"AnAppId";
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker *)blocker {
     FBRequestHandler handler =
     ^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertTrue(!error, @"got unexpected error");
-        STAssertNotNil(result, @"didn't get expected result");
+        XCTAssertTrue(!error, @"got unexpected error");
+        XCTAssertNotNil(result, @"didn't get expected result");
         [blocker signal];
     };
     return [[handler copy] autorelease];
@@ -51,8 +51,8 @@ NSString *kTestAppId = @"AnAppId";
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker *)blocker {
     FBRequestHandler handler =
     ^(FBRequestConnection *connection, id result, NSError *error) {
-        STAssertNotNil(error, @"didn't get expected error");
-        STAssertTrue(!result, @"got unexpected result");
+        XCTAssertNotNil(error, @"didn't get expected error");
+        XCTAssertTrue(!result, @"got unexpected result");
         [blocker signal];
     };
     return [[handler copy] autorelease];
@@ -164,7 +164,7 @@ NSString *kTestAppId = @"AnAppId";
             callback(request);
         }
 
-        return matchingKey(request.URL.absoluteString);
+        return matchingKey(request.URL.absoluteString) != nil;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
         NSData *data = [[FBUtility simpleJSONEncode:result] dataUsingEncoding:NSUTF8StringEncoding];

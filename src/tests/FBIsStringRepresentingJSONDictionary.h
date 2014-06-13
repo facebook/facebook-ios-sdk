@@ -17,9 +17,6 @@
 #import <OCHamcrestIOS/HCBaseMatcher.h>
 
 @interface FBIsStringRepresentingJSONDictionary : HCBaseMatcher
-{
-    id<HCMatcher> valueMatcher;
-}
 
 + (instancetype)isStringRepresentingJSONDictionary:(id<HCMatcher>)aValueMatcher;
 - (instancetype)initWithValue:(id<HCMatcher>)aValueMatcher;

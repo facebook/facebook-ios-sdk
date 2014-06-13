@@ -12,4 +12,10 @@
 	url = git://github.com/tomaz/appledoc.git
 [submodule "Bolts-IOS"]
 	path = Bolts-IOS
-	url = git://github.com/BoltsFramework/Bolts-iOS.git
+  	url = git://github.com/BoltsFramework/Bolts-iOS.git
+[submodule "vendor/ios-snapshot-test-case"]
+	path = vendor/ios-snapshot-test-case
+	url = git://github.com/facebook/ios-snapshot-test-case.git
+[submodule "vendor/xctool"]
+	path = vendor/xctool
+	url = git://github.com/facebook/xctool.git
