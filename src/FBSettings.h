@@ -56,7 +56,6 @@ FBSDK_EXTERN NSString *const FBLoggingBehaviorDeveloperErrors;
  @typedef
 
  @abstract Block type used to get install data that is returned by server when publishInstall is called
- @discussion
  */
 typedef void (^FBInstallResponseDataHandler)(FBGraphObject *response, NSError *error);
 

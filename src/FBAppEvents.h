@@ -26,8 +26,6 @@
  @abstract
  Control when <FBAppEvents> sends log events to the server
 
- @discussion
-
  */
 typedef NS_ENUM(NSUInteger, FBAppEventsFlushBehavior) {
 

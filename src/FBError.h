@@ -165,8 +165,6 @@ typedef NS_ENUM(NSUInteger, FBNativeApplicationErrorCode) {
  @typedef NS_ENUM (NSInteger, FBErrorCategory)
 
  @abstract Indicates the Facebook SDK classification for the error
-
- @discussion
  */
 typedef NS_ENUM(NSInteger, FBErrorCategory) {
     /*! Indicates that the error category is invalid and likely represents an error that

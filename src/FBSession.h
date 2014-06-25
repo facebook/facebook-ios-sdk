@@ -48,8 +48,6 @@ FBSDK_EXTERN NSString *const FBSessionDidBecomeClosedActiveSessionNotification;
  @typedef FBSessionState enum
 
  @abstract Passed to handler block each time a session state changes
-
- @discussion
  */
 typedef enum {
     /*! One of two initial states indicating that no valid cached token was found */
@@ -214,7 +212,6 @@ typedef FBSessionRequestPermissionResultHandler FBSessionReauthorizeResultHandle
  @typedef
 
  @abstract Block type used to define blocks called for system credential renewals.
- @discussion
  */
 typedef void (^FBSessionRenewSystemCredentialsHandler)(ACAccountCredentialRenewResult result, NSError *error) ;
 
