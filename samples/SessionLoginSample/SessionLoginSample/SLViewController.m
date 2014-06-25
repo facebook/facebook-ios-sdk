@@ -1,4 +1,28 @@
 /*
+
+I am having trouble with using 
+[appDelegate.session openWithCompletionHandler:^(FBSession *session, 
+                                                             FBSessionState status, 
+                                                             NSError *error) {
+            }];
+When called more than once the wrong callback is being called.
+I found in the documentation that it is only allowed to be called once, but I saw in the sample below code that it is being used multiple times.
+
+I tried to reorganized by code to only called it once, but it really is not easy. 
+I want it to do different things when it being loading from a cached session then when the user first presses log-in.  
+What am I missing?
+Is the sample code below completely wrong and misleading?
+
+*/
+
+
+
+
+
+
+
+
+/*
  * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -82,7 +106,7 @@
     // this button's job is to flip-flop the session from open to closed
     if (appDelegate.session.isOpen) {
         // if a user logs out explicitly, we delete any cached token information, and next
-        // time they run the applicaiton they will be presented with log in UX again; most
+        // time they run the application they will be presented with log in UX again; most
         // users will simply close the app or switch away, without logging out; this will
         // cause the implicit cached-token login to occur on next launch of the application
         [appDelegate.session closeAndClearTokenInformation];
