@@ -1,4 +1,23 @@
 /*
+
+I am having trouble with using 
+[appDelegate.session openWithCompletionHandler:^(FBSession *session, 
+                                                             FBSessionState status, 
+                                                             NSError *error) {
+            }];
+When called more than once the wrong callback is being called.
+I found in the documentation that it is only allowed to be called once, 
+   but I saw in the sample below code that it is being used multiple times.
+
+I tried to reorganized my code to only called it once, but it really is not easy. 
+I want it to do different things when it being loading from a cached session than when the user first presses log-in.  
+What am I missing?
+Is the sample code below completely wrong and misleading?
+
+*/
+
+
+/*
  * Copyright 2010-present Facebook.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
