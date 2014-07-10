@@ -23,7 +23,7 @@ FBSDK_EXTERN NSString *const FBLoginUXClientState;
 FBSDK_EXTERN NSString *const FBLoginUXClientStateIsClientState;
 FBSDK_EXTERN NSString *const FBLoginUXClientStateIsOpenSession;
 FBSDK_EXTERN NSString *const FBLoginUXClientStateIsActiveSession;
-FBSDK_EXTERN NSString *const FBLoginUXResponseTypeToken;
+FBSDK_EXTERN NSString *const FBLoginUXResponseTypeTokenAndSignedRequest;
 FBSDK_EXTERN NSString *const FBLoginUXResponseType;
 
 FBSDK_EXTERN NSString *const FBInnerErrorObjectKey;

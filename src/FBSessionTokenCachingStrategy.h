@@ -162,3 +162,6 @@ FBSDK_EXTERN NSString *const FBTokenInformationDeclinedPermissionsKey;
 
 // The key to use with token information dictionaries to get the date the permissions were last refreshed.
 FBSDK_EXTERN NSString *const FBTokenInformationPermissionsRefreshDateKey;
+
+// The key to use with token information dictionaries to get the id of the creator app
+FBSDK_EXTERN NSString *const FBTokenInformationAppIDKey;

@@ -77,9 +77,24 @@ typedef enum FBRequestConnectionState {
 } FBRequestConnectionState;
 
 // ----------------------------------------------------------------------------
+// Graph API error codes
+
+typedef NS_ENUM(NSInteger, FBGraphApiErrorCode) {
+    FBGraphApiErrorUnsupported = 100,
+    FBGraphApiErrorSignature = 104,
+    FBGraphApiErrorAccessToken = 190,
+    FBGraphApiErrorQueryParser = 2500,
+};
+
+typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
+    FBGraphApiErrorAccessTokenExpired = 463,
+    FBGraphApiErrorAccessTokenInvalidated = 466,
+};
+
+// ----------------------------------------------------------------------------
 // Private properties and methods
 
-@interface FBRequestConnection () {
+@interface FBRequestConnection () <FBURLConnectionDelegate, FBRequestConnectionRetryManagerDelegate> {
     BOOL _errorBehavior;
 }
 
@@ -94,6 +109,7 @@ typedef enum FBRequestConnectionState {
 @property (nonatomic) unsigned long requestStartTime;
 @property (nonatomic, readonly) BOOL isResultFromCache;
 @property (nonatomic, retain) FBRequestConnectionRetryManager *retryManager;
+@property (nonatomic, retain) NSError *connectionError;
 
 @end
 
@@ -175,6 +191,7 @@ typedef enum FBRequestConnectionState {
 
 - (void)dealloc
 {
+    _connection.delegate = nil;
     [_connection cancel];
     [_connection release];
     [_requests release];
@@ -183,6 +200,7 @@ typedef enum FBRequestConnectionState {
     [_deprecatedRequest release];
     [_logger release];
     [_retryManager release];
+    [_connectionError release];
 
     [super dealloc];
 }
@@ -488,6 +506,11 @@ typedef enum FBRequestConnectionState {
     } else {
         _isResultFromCache = YES;
 
+        id<FBRequestConnectionDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:fromCache:)]) {
+            [delegate requestConnectionWillBeginLoading:self fromCache:YES];
+        }
+
         // complete on result from cache
         [self completeWithResponse:nil
                               data:cachedData
@@ -502,8 +525,14 @@ typedef enum FBRequestConnectionState {
     FBURLConnection *connection = [[self newFBURLConnection] initWithRequest:request
                                                        skipRoundTripIfCached:skipRoundTripIfCached
                                                            completionHandler:handler];
+    connection.delegate = self;
     self.connection = connection;
     [connection release];
+
+    id<FBRequestConnectionDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:fromCache:)]) {
+        [delegate requestConnectionWillBeginLoading:self fromCache:NO];
+    }
 }
 
 - (FBURLConnection *)newFBURLConnection {
@@ -935,6 +964,8 @@ typedef enum FBRequestConnectionState {
                         data:(NSData *)data
                      orError:(NSError *)error
 {
+    self.connectionError = error;
+
     if (self.state != kStateCancelled) {
         NSAssert(self.state == kStateStarted,
                  @"Unexpected state %d in completeWithResponse",
@@ -993,20 +1024,16 @@ typedef enum FBRequestConnectionState {
     }
 
     if (!error) {
-
         [_logger appendFormat:@"Response <#%lu>\nDuration: %lu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
          (unsigned long)[_logger loggerSerialNumber],
          [FBUtility currentTimeInMilliseconds] - _requestStartTime,
          (unsigned long)[data length],
          results];
-
     } else {
-
         [_logger appendFormat:@"Response <#%lu> <Error>:\n%@\n%@\n",
          (unsigned long)[_logger loggerSerialNumber],
          [error localizedDescription],
          [error userInfo]];
-
     }
     [_logger emitToNSLog];
 
@@ -1205,6 +1232,55 @@ typedef enum FBRequestConnectionState {
     return request.canCloseSessionOnError && !request.session.isRepairing;
 }
 
+- (void)logDeveloperError:(NSError *)error
+               forRequest:(FBRequest *)request
+{
+    if(!error || !request) {
+        return;
+    }
+
+    NSDictionary *json = [[error userInfo] objectForKey:FBErrorParsedJSONResponseKey];
+    json = [json objectForKey:@"body"];
+    json = [json objectForKey:@"error"];
+    NSNumber *pcode = [json objectForKey:@"code"];
+    NSNumber *psubcode = [json objectForKey:@"error_subcode"];
+    NSInteger code = pcode ? [pcode integerValue] : 0;
+    NSInteger subcode = psubcode ? [psubcode integerValue] : 0;
+
+    NSString *errorString = nil;
+
+    switch (code) {
+        // General code returned when an access token is needed for a resource
+        case FBGraphApiErrorSignature:
+        // Request to /me or /app without token.  Used for more than access token issues though
+        case FBGraphApiErrorQueryParser:
+            errorString = @"An open FBSession must be specified for calls to this endpoint.";
+            break;
+        // Access token used is invalid
+        case FBGraphApiErrorAccessToken:
+            switch (subcode) {
+                // Access token has expired
+                case FBGraphApiErrorAccessTokenExpired:
+                    errorString = @"The access token associated with the active session has expired.";
+                // Access token was invalidated
+                case FBGraphApiErrorAccessTokenInvalidated:
+                    errorString = @"The access token associated with the active session has been invalidated.";
+                    break;
+                default:
+                    break;
+            }
+            break;
+        default:
+            break;
+    }
+
+    if(errorString) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                        formatString:@"Error for request to endpoint '%@': %@",
+                                     request.graphPath, errorString];
+    }
+}
+
 - (void)completeWithResults:(NSArray *)results
                     orError:(NSError *)error
 {
@@ -1230,6 +1306,8 @@ typedef enum FBRequestConnectionState {
         NSUInteger resultIndex = error == itemError ? i : 0;
         FBTask *taskWork = [FBTask taskWithResult:nil];
         FBSystemAccountStoreAdapter *systemAccountStoreAdapter = [FBSystemAccountStoreAdapter sharedInstance];
+
+        [self logDeveloperError:unpackedError forRequest:metadata.request];
 
         if ((metadata.request.session.accessTokenData.loginType == FBSessionLoginTypeSystemAccount) &&
             [self isInsufficientPermissionError:error resultIndex:resultIndex]) {
@@ -1601,6 +1679,51 @@ typedef enum FBRequestConnectionState {
     }
     return nil;
 }
+
+- (void)facebookURLConnection:(FBURLConnection *)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    id<FBRequestConnectionDelegate> delegate = [self delegate];
+
+    if ([delegate respondsToSelector:@selector(requestConnection:didSendBodyData:totalBytesWritten:totalBytesExpectedToWrite:)]) {
+        [delegate requestConnection:self
+                    didSendBodyData:bytesWritten
+                  totalBytesWritten:totalBytesWritten
+          totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+    }
+}
+
+- (void)retryManagerDidFinishWithNoRetries:(FBRequestConnectionRetryManager *)retryManager {
+    id<FBRequestConnectionDelegate> delegate = self.delegate;
+    NSError *connectionError = self.connectionError;
+
+    if (!connectionError && [delegate respondsToSelector:@selector(requestConnectionDidFinishLoading:fromCache:)]) {
+        [delegate requestConnectionDidFinishLoading:self fromCache:self.isResultFromCache];
+    } else if (connectionError && [delegate respondsToSelector:@selector(requestConnection:didFailWithError:)]) {
+        [delegate requestConnection:self didFailWithError:connectionError];
+    }
+}
+
+- (void)retryManagerDidFinishAbortingRetries:(FBRequestConnectionRetryManager *)retryManager {
+    if (!self.isResultFromCache) {
+        id<FBRequestConnectionDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(requestConnection:didFailWithError:)]) {
+            [delegate requestConnection:self didFailWithError:self.connectionError];
+        }
+    }
+}
+
+- (void)          retryManager:(FBRequestConnectionRetryManager *)retryManager
+willRetryWithRequestConnection:(FBRequestConnection *)retryRequestConnection {
+    if (!self.isResultFromCache) {
+        id<FBRequestConnectionDelegate> delegate = self.delegate;
+        if ([delegate respondsToSelector:@selector(requestConnection:willRetryWithRequestConnection:)]) {
+            [delegate requestConnection:self willRetryWithRequestConnection:retryRequestConnection];
+        }
+    }
+}
+
 
 #pragma mark Debugging helpers
 

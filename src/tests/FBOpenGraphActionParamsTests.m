@@ -25,55 +25,71 @@
 
 - (void)testAllowsInlineOG
 {
-    id action = [FBGraphObject openGraphActionForPost];
-    id book = [FBGraphObject openGraphObjectForPostWithType:@"books.book"
-                                                      title:@"Narrative of the Life of Frederick Douglass, an American Slave"
-                                                      image:nil
-                                                        url:nil
-                                                description:@"Worthy of a read."];
+    id<FBOpenGraphAction> action = [FBGraphObject openGraphActionForPost];
+    id<FBOpenGraphObject> book = [FBGraphObject openGraphObjectForPostWithType:@"books.book"
+                                                                         title:@"Narrative of the Life of Frederick Douglass, an American Slave"
+                                                                         image:nil
+                                                                           url:nil
+                                                                   description:@"Worthy of a read."];
     action[@"book"] = book;
     FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] initWithAction:action
                                                                            actionType:@"books.reads"
                                                                   previewPropertyName:@"book"] autorelease];
-
-    assertThat([params validate], is(nilValue()));
+    XCTAssertNil([params validate]);
 }
 
 - (void)testAllowsOGUrl
 {
-    id action = [FBGraphObject openGraphActionForPost];
+    id<FBOpenGraphAction> action = [FBGraphObject openGraphActionForPost];
     action[@"book"] = @"http://en.wikipedia.org/wiki/Narrative_of_the_Life_of_Frederick_Douglass,_an_American_Slave";
     FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] initWithAction:action
                                                                             actionType:@"books.reads"
                                                                    previewPropertyName:@"book"] autorelease];
-
-    assertThat([params validate], is(nilValue()));
+    XCTAssertNil([params validate]);
 }
 
 - (void)testDisallowsEmpty
 {
-    FBOpenGraphActionParams *params = [[FBOpenGraphActionParams alloc] init];
-
-    assertThat([params validate], isNot(nilValue()));
+    FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] init] autorelease];
+    XCTAssertNotNil([params validate]);
 }
 
 - (void)testDisallowsWrongPreview
 {
-    id action = [FBGraphObject openGraphActionForPost];
+    id<FBOpenGraphAction> action = [FBGraphObject openGraphActionForPost];
     action[@"book"] = @"http://en.wikipedia.org/wiki/Narrative_of_the_Life_of_Frederick_Douglass,_an_American_Slave";
     FBOpenGraphActionParams *params = [[FBOpenGraphActionParams alloc] initWithAction:action actionType:@"books.reads" previewPropertyName:@"wrong"];
-
-    assertThat([params validate], isNot(nilValue()));
+    XCTAssertNotNil([params validate]);
 }
 
 - (void)testDisallowsWrongBadOG
 {
-    id action = [FBGraphObject openGraphActionForPost];
+    id<FBOpenGraphAction> action = [FBGraphObject openGraphActionForPost];
     action[@"book"] = @{ @"title":@"somebook"};
+    FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] initWithAction:action actionType:@"books.reads" previewPropertyName:@"book"] autorelease];
+    XCTAssertNotNil([params validate]);
+}
 
-    FBOpenGraphActionParams *params = [[FBOpenGraphActionParams alloc] initWithAction:action actionType:@"books.reads" previewPropertyName:@"book"];
+- (void)testCopy
+{
+    NSMutableDictionary<FBOpenGraphAction> *action = [FBGraphObject openGraphActionForPost];
+    id<FBOpenGraphObject> book = [FBGraphObject openGraphObjectForPostWithType:@"books.book"
+                                                                         title:@"Narrative of the Life of Frederick Douglass, an American Slave"
+                                                                         image:nil
+                                                                           url:nil
+                                                                   description:@"Worthy of a read."];
+    action[@"book"] = book;
+    FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] initWithAction:action
+                                                                            actionType:@"books.reads"
+                                                                   previewPropertyName:@"book"] autorelease];
 
-    assertThat([params validate], isNot(nilValue()));
+    FBOpenGraphActionParams *paramsCopy = [[params copy] autorelease];
+    XCTAssertEqualObjects(params.action, action);
+    XCTAssertEqualObjects(paramsCopy.action, action);
+
+    paramsCopy.action[@"extra"] = @"This is an extra value.";
+    XCTAssertEqualObjects(params.action, action);
+    XCTAssertNotEqualObjects(paramsCopy.action, action);
 }
 
 @end

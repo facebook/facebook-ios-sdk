@@ -27,6 +27,7 @@
 		8986C8111890A6BA004B90DD /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 8986C80D1890A6BA004B90DD /* Project.xcconfig */; };
 		99FAE2271782302A009E0AAE /* FacebookSDKOverrides.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */; };
 		9D084048169CE00B000FD49D /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9D084047169CE00B000FD49D /* ReadMe.txt */; };
+		9D18215A1965EAFB0025E41B /* SCTaggableFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D1821591965EAFB0025E41B /* SCTaggableFriendsViewController.m */; };
 		B9C1C35915129F0E008FA5D1 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */; };
 		B9CD0A74150EA4DD00560A93 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A73150EA4DD00560A93 /* UIKit.framework */; };
 		B9CD0A76150EA4DD00560A93 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B9CD0A75150EA4DD00560A93 /* Foundation.framework */; };
@@ -68,6 +69,8 @@
 		8986C80D1890A6BA004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
 		99FAE2261782302A009E0AAE /* FacebookSDKOverrides.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKOverrides.bundle; path = scrumptious/FacebookSDKOverrides.bundle; sourceTree = SOURCE_ROOT; };
 		9D084047169CE00B000FD49D /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
+		9D1821581965EAFB0025E41B /* SCTaggableFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SCTaggableFriendsViewController.h; path = scrumptious/SCTaggableFriendsViewController.h; sourceTree = SOURCE_ROOT; };
+		9D1821591965EAFB0025E41B /* SCTaggableFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SCTaggableFriendsViewController.m; path = scrumptious/SCTaggableFriendsViewController.m; sourceTree = SOURCE_ROOT; };
 		B9C1C35815129F0E008FA5D1 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B9CD0A6F150EA4DD00560A93 /* Scrumptious.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scrumptious.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9CD0A73150EA4DD00560A93 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -173,6 +176,8 @@
 				896020CC18A839D9002A9AE2 /* SCSettings.m */,
 				8909D01818AC55610045446E /* SCShareUtility.h */,
 				8909D01918AC55610045446E /* SCShareUtility.m */,
+				9D1821581965EAFB0025E41B /* SCTaggableFriendsViewController.h */,
+				9D1821591965EAFB0025E41B /* SCTaggableFriendsViewController.m */,
 				B9CD0A7A150EA4DD00560A93 /* Supporting Files */,
 			);
 			path = Scrumptious;
@@ -269,6 +274,7 @@
 				B9CD0A84150EA4DD00560A93 /* SCAppDelegate.m in Sources */,
 				891BB57E18AC31BE002393D7 /* SCImagePicker.m in Sources */,
 				8909D01A18AC55610045446E /* SCShareUtility.m in Sources */,
+				9D18215A1965EAFB0025E41B /* SCTaggableFriendsViewController.m in Sources */,
 				891BB57B18AC2C9C002393D7 /* SCMealPicker.m in Sources */,
 				893972C718AC42C40096BC90 /* SCErrorHandler.m in Sources */,
 				896020CD18A839D9002A9AE2 /* SCSettings.m in Sources */,

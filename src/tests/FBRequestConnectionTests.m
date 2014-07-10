@@ -198,7 +198,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date] appID:@"appid"];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -243,7 +243,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date] appID:@"appid"];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -301,7 +301,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:[NSDate date] appID:@"appid"];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -364,7 +364,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:nil appID:@"appid"];
     session.disableReauthorize = YES;
     
     [session openFromAccessTokenData:tokenData completionHandler:nil];
@@ -409,7 +409,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:nil appID:@"appid"];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
@@ -465,7 +465,7 @@
     // Create a fake session that is already open
     // Note we rely on FBTestSession automatically succeeding reauthorize.
     FBTestSession *session = [[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeFacebookViaSafari refreshDate:nil permissionsRefreshDate:nil appID:@"appid"];
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was not initialized properly to distantPast");
     __block int requestCount = 0;
@@ -593,7 +593,7 @@
     [newtoken release];
 
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date] appID:@"appid"];
     __block BOOL tokenRefreshed = NO;
     [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         if (status == FBSessionStateOpenTokenExtended) {
@@ -654,7 +654,7 @@
     mockSystemAccountStoreAdapter.oauthTokenToSurface = nil; // set up a bogus token result, so the session should be closed.
 
     FBTestSession *session = [[[FBTestSession alloc] initWithAppID:@"appid" permissions:nil defaultAudience:FBSessionDefaultAudienceOnlyMe urlSchemeSuffix:nil tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance]] autorelease];
-    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date]];
+    FBAccessTokenData *tokenData = [FBAccessTokenData createTokenFromString:@"token" permissions:nil expirationDate:nil loginType:FBSessionLoginTypeSystemAccount refreshDate:nil permissionsRefreshDate:[NSDate date] appID:@"appid"];
     __block BOOL sessionClosed = NO;
     [session openFromAccessTokenData:tokenData completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {

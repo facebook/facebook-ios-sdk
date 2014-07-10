@@ -22,6 +22,17 @@ typedef void (^FBURLConnectionHandler)(FBURLConnection *connection,
                                        NSURLResponse *response,
                                        NSData *responseData);
 
+@protocol FBURLConnectionDelegate <NSObject>
+
+@optional
+
+- (void)facebookURLConnection:(FBURLConnection *)connection
+              didSendBodyData:(NSInteger)bytesWritten
+            totalBytesWritten:(NSInteger)totalBytesWritten
+    totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
+
+@end
+
 @interface FBURLConnection : NSObject
 
 - (FBURLConnection *)initWithURL:(NSURL *)url
@@ -30,6 +41,8 @@ typedef void (^FBURLConnectionHandler)(FBURLConnection *connection,
 - (FBURLConnection *)initWithRequest:(NSURLRequest *)request
                skipRoundTripIfCached:(BOOL)skipRoundtripIfCached
                    completionHandler:(FBURLConnectionHandler)handler;
+
+@property (nonatomic, assign) id<FBURLConnectionDelegate> delegate;
 
 - (void)cancel;
 

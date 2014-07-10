@@ -136,6 +136,10 @@ typedef enum {
 
 - (void)instanceFlush:(FBAppEventsFlushReason)flushReason;
 
++ (long)unixTimeNow;
++ (void)ensureOnMainThread;
++ (NSString *)persistenceLibraryFilePath:(NSString *)filename;
+
 // *** end ***
 
 @end

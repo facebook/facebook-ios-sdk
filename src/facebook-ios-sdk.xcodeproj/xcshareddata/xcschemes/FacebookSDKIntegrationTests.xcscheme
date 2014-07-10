@@ -52,16 +52,6 @@
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
          </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "89263C1A1926CBA500A44711"
-               BuildableName = "FacebookSDKApplicationTests.xctest"
-               BlueprintName = "FacebookSDKApplicationTests"
-               ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference

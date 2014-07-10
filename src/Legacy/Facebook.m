@@ -671,7 +671,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
     [params setObject:kRedirectURL forKey:@"redirect_uri"];
 
     if ([action isEqualToString:kLogin]) {
-        [params setObject:FBLoginUXResponseTypeToken forKey:FBLoginUXResponseType];
+        [params setObject:FBLoginUXResponseTypeTokenAndSignedRequest forKey:FBLoginUXResponseType];
         _fbDialog = [[FBLoginDialog alloc] initWithURL:dialogURL loginParams:params delegate:self];
     } else {
         [params setObject:_appId forKey:@"app_id"];

@@ -14,8 +14,18 @@
  * limitations under the License.
  */
 
+
 #import <UIKit/UIKit.h>
 
-@interface GraphApiViewController : UIViewController
+#import <FacebookSDK/FacebookSDK.h>
+
+/*
+ A view controller to fetch taggable friends from Facebook and show them
+ in a selectable table view. This is a very light weight implementation
+ and does not have paging or other features like setting the previous selection.
+ */
+@interface SCTaggableFriendsViewController : FBViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, readonly, copy) NSArray *selection;
 
 @end

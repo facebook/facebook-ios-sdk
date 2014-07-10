@@ -34,7 +34,6 @@
 + (instancetype)bridgeSchemeForFBMessengerForShareDialogPhotos;
 + (instancetype)bridgeSchemeForFBMessengerForOpenGraphActionShareDialogParams:(FBOpenGraphActionParams *)params;
 
-
 + (BOOL)isSupportedScheme:(NSString *)scheme;
 - (NSURL *)urlForMethod:(NSString *)method queryParams:(NSDictionary *)queryParams;
 

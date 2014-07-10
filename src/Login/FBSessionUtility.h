@@ -39,4 +39,6 @@
                     grantedPermissions:(NSMutableArray *)grantedPermissions
                    declinedPermissions:(NSMutableArray *)declinedPermissions;
 + (FBSessionLoginBehavior)loginBehaviorForLoginType:(FBSessionLoginType)loginType;
++ (NSString *)userIDFromSignedRequest:(NSString *)signedRequest;
++ (NSString *)audienceNameWithAudience:(FBSessionDefaultAudience)audience;
 @end

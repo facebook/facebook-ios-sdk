@@ -70,7 +70,7 @@
 
 @implementation FBRequestConnectionRetryManager
 
-- (instancetype)initWithFBRequestConnection:(FBRequestConnection *)requestConnection {
+- (instancetype)initWithFBRequestConnection:(FBRequestConnection<FBRequestConnectionRetryManagerDelegate> *)requestConnection {
     if ((self = [self init])) {
         self.requestConnection = requestConnection;
         _requestMetadatas = [[NSMutableArray alloc] init];
@@ -100,6 +100,7 @@
         switch (self.state) {
             case FBRequestConnectionRetryManagerStateNormal : {
                 FBRequestConnection *connectionToRetry = [[[FBRequestConnection alloc] initWithMetadata:self.requestMetadatas] autorelease];
+                [self notifyConnectionWillRetryWithConnection:connectionToRetry];
                 [connectionToRetry start];
                 break;
             }
@@ -107,6 +108,7 @@
                 for (FBRequestMetadata *metadata in self.requestMetadatas) {
                     [metadata invokeCompletionHandlerForConnection:self.requestConnection withResults:metadata.originalResult error:metadata.originalError];
                 }
+                [self notifyConnectionDidFinishAbortingRetries];
                 break;
             }
             case FBRequestConnectionRetryManagerStateRepairSession : {
@@ -126,6 +128,9 @@
                 break;
             }
         }
+    } else {
+        // If there is nothing to retry then the connection was successful
+        [self notifyConnectionDidFinishWithNoRetries];
     }
 }
 
@@ -144,6 +149,7 @@
                         completionHandler:metadata.originalCompletionHandler
                           batchParameters:metadata.batchParameters];
         }
+        [self notifyConnectionWillRetryWithConnection:connectionToRetry];
         [connectionToRetry start];
     }
 }
@@ -158,6 +164,7 @@
             }
             metadata.originalCompletionHandler(self.requestConnection, metadata.originalResult, metadata.originalError);
         }
+        [self notifyConnectionDidFinishAbortingRetries];
     }
 }
 
@@ -170,4 +177,24 @@
     [super dealloc];
 }
 
+// Convenience methods to notify the FBRequestConnection its of success/fail/retry so it can send the appropriate
+// message so its progress delegate.
+
+- (void)notifyConnectionDidFinishWithNoRetries {
+    if ([_requestConnection respondsToSelector:@selector(retryManagerDidFinishWithNoRetries:)]) {
+        [_requestConnection retryManagerDidFinishWithNoRetries:self];
+    }
+}
+
+- (void)notifyConnectionDidFinishAbortingRetries {
+    if ([_requestConnection respondsToSelector:@selector(retryManagerDidFinishAbortingRetries:)]) {
+        [_requestConnection retryManagerDidFinishAbortingRetries:self];
+    }
+}
+
+- (void)notifyConnectionWillRetryWithConnection:(FBRequestConnection *)retryRequestConnection {
+    if ([_requestConnection respondsToSelector:@selector(retryManager:willRetryWithRequestConnection:)]) {
+        [_requestConnection retryManager:self willRetryWithRequestConnection:retryRequestConnection];
+    }
+}
 @end

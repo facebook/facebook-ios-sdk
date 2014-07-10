@@ -25,26 +25,38 @@
 
 - (void)testAllowsLink
 {
-    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    FBLinkShareParams *params = [[[FBLinkShareParams alloc] init] autorelease];
     params.link = [NSURL URLWithString:@"http://www.facebook.com"];
-
-    assertThat([params validate], is(nilValue()));
+    XCTAssertNil([params validate]);
 }
 
 - (void)testDisallowsInvalidLinkSchema
 {
-    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    FBLinkShareParams *params = [[[FBLinkShareParams alloc] init] autorelease];
     params.link = [NSURL URLWithString:@"x-scheme://www.facebook.com"];
-
-    assertThat(params.link, is(nilValue()));
+    XCTAssertNil(params.link);
 }
 
 - (void)testDisallowsInvalidLinkPictureSchema
 {
-    FBLinkShareParams *params = [[FBLinkShareParams alloc] init];
+    FBLinkShareParams *params = [[[FBLinkShareParams alloc] init] autorelease];
     params.picture = [NSURL URLWithString:@"x-scheme://www.facebook.com"];
+    XCTAssertNil(params.picture);
+}
 
-    assertThat(params.picture, is(nilValue()));
+- (void)testCopy
+{
+    NSURL *link = [NSURL URLWithString:@"http://www.facebook.com"];
+    FBLinkShareParams *params = [[[FBLinkShareParams alloc] init] autorelease];
+    params.link = link;
+
+    FBLinkShareParams *paramsCopy = [[params copy] autorelease];
+    XCTAssertEqualObjects(params.link, link);
+    XCTAssertEqualObjects(paramsCopy.link, link);
+
+    paramsCopy.link = [NSURL URLWithString:@"http://developers.facebook.com"];
+    XCTAssertEqualObjects(params.link, link);
+    XCTAssertNotEqualObjects(paramsCopy.link, link);
 }
 
 @end

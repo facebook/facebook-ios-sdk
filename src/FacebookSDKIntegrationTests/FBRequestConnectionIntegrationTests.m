@@ -31,6 +31,72 @@
 
 #else
 
+@interface FBRequestConnectionDelegateProgressTest : NSObject <FBRequestConnectionDelegate>
+@property (nonatomic) NSUInteger beginLoadingInvocationCount;
+@property (nonatomic) NSUInteger finishLoadingInvocationCount;
+@property (nonatomic, copy, readonly) NSArray *errors;
+
+@property (nonatomic) NSUInteger progressInvocationCount;
+@property (nonatomic, getter=isComplete) BOOL complete;
+
+@property (nonatomic, getter=isCached) BOOL cached;
+@end
+
+@implementation FBRequestConnectionDelegateProgressTest {
+@private
+    FBTestBlocker *_blocker;
+    NSMutableArray *_errors;
+}
+
+- (instancetype)initWithBlocker:(FBTestBlocker *)blocker {
+    if ((self = [super init]) != nil) {
+        _blocker = [blocker retain];
+        _errors = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_blocker release];
+    [_errors release];
+    [super dealloc];
+}
+
+- (void)requestConnectionWillBeginLoading:(FBRequestConnection *)connection
+                                fromCache:(BOOL)isCached {
+    _cached = isCached;
+    _beginLoadingInvocationCount++;
+}
+
+- (void)requestConnectionDidFinishLoading:(FBRequestConnection *)connection
+                                fromCache:(BOOL)isCached {
+
+    NSAssert(self.isCached == isCached, @"The start and end cache parameters should be the same.");
+
+    _finishLoadingInvocationCount++;
+    [_blocker signal];
+}
+
+- (void)requestConnection:(FBRequestConnection *)connection
+         didFailWithError:(NSError *)error {
+    [_errors addObject:error ? : [NSNull null]];
+}
+
+- (void)     requestConnection:(FBRequestConnection *)connection
+willRetryWithRequestConnection:(FBRequestConnection *)retryConnection {
+}
+
+- (void)requestConnection:(FBRequestConnection *)connection
+          didSendBodyData:(NSInteger)bytesWritten
+        totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    _progressInvocationCount++;
+    _complete = totalBytesWritten == totalBytesExpectedToWrite;
+}
+@end
+
+#pragma mark -
+
 @interface FBRequestConnectionIntegrationTests : FBIntegrationTests
 @end
 
@@ -164,42 +230,69 @@
 
 - (void)testCachedRequests
 {
-    FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
+    FBTestBlocker *blocker1 = [[FBTestBlocker alloc] init];
+    FBTestBlocker *blocker2 = [[FBTestBlocker alloc] init];
+
     
     FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
     
     // here we just want to seed the cache, by identifying the cache, and by choosing not to consult the cache
+    FBRequestConnectionDelegateProgressTest *progress = [[FBRequestConnectionDelegateProgressTest alloc] initWithBlocker:blocker2];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];    
     FBRequest *request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+
+    connection.delegate = progress;
     [request.parameters setObject:@"id,first_name" forKey:@"fields"];
-    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
+    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker1]];
     [connection startWithCacheIdentity:@"FBUnitTests"
                  skipRoundtripIfCached:NO];
     
-    [blocker wait];
+    [blocker1 wait];
+    XCTAssertTrue([blocker2 waitWithTimeout:3], @"blocker timed out -- should have been fast... only waiting for the run loop to turn");
     
     XCTAssertFalse(connection.isResultFromCache, @"Should not have cached, and should have fetched from server");
-    
+
+    XCTAssertTrue(progress.beginLoadingInvocationCount == 1, @"delegate's begin method not called exactly once");
+    XCTAssertTrue(progress.finishLoadingInvocationCount == 1, @"delegate's finish method not called exactly once");
+    XCTAssertTrue(progress.errors.count == 0, @"unexpected error(s) in connection :%@", progress.errors);
+    XCTAssertFalse(progress.isCached, @"The first request in the cache test should not be a cached result.");
+
+    connection.delegate = nil;
+    [progress release];
     [connection release];
-    [blocker release];
+    [blocker1 release];
+    [blocker2 release];
     
     __block BOOL completedWithoutBlocking = NO;
-    
+
+    blocker1 = [[FBTestBlocker alloc] init];
+    blocker2 = [[FBTestBlocker alloc] init];
+
     // here we expect to complete on the cache, so we will confirm that
-    connection = [[FBRequestConnection alloc] init];    
+    progress = [[FBRequestConnectionDelegateProgressTest alloc] initWithBlocker:blocker2];
+    connection = [[FBRequestConnection alloc] init];
     request = [[[FBRequest alloc] initWithSession:session graphPath:@"me"] autorelease];
+
+    connection.delegate = progress;
     [request.parameters setObject:@"id,first_name" forKey:@"fields"];
     [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         XCTAssertNotNil(result, @"Expected a successful result");
         completedWithoutBlocking = YES;
-        [blocker signal];
+        [blocker1 signal];
     }];
     [connection startWithCacheIdentity:@"FBUnitTests"
                  skipRoundtripIfCached:YES];
     
     // Note despite the skipping of round trip, the completion handler is still dispatched async since we
     // started using the Task framework in FBRequestConnection.
-    XCTAssertTrue([blocker waitWithTimeout:3], @"blocker timed out");
+    XCTAssertTrue([blocker1 waitWithTimeout:3], @"blocker timed out");
+    XCTAssertTrue([blocker2 waitWithTimeout:3], @"blocker timed out -- should have been fast... only waiting for the run loop to turn");
+
+    XCTAssertTrue(progress.beginLoadingInvocationCount == 1, @"delegate's begin method not called exactly once");
+    XCTAssertTrue(progress.finishLoadingInvocationCount == 1, @"delegate's finish method not called exactly once");
+    XCTAssertTrue(progress.errors.count == 0, @"unexpected error(s) in connection :%@", progress.errors);
+    XCTAssertTrue(progress.isCached, @"The second request in the cache test should be a cached result.");
+
     // should have completed successfully by here
     XCTAssertTrue(completedWithoutBlocking, @"Should have called the handler, due to cache hit");
     XCTAssertTrue(connection.isResultFromCache, @"Should not have fetched from server");
@@ -436,6 +529,37 @@
     [connection release];
 
     XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
+}
+
+- (void)testProgressReporting {
+    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    FBTestBlocker *blocker1 = [[FBTestBlocker alloc] init];
+    FBTestBlocker *blocker2 = [[FBTestBlocker alloc] init];
+
+    FBRequestConnectionDelegateProgressTest *progress = [[FBRequestConnectionDelegateProgressTest alloc] initWithBlocker:blocker2];
+    connection.delegate = progress;
+
+    FBRequest *request = [[FBRequest alloc] initWithSession:session graphPath:@"me"];
+    [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker1]];
+    [connection start];
+
+    [blocker1 wait];
+    XCTAssertTrue([blocker2 waitWithTimeout:2], @"blocker timed out -- should have been fast... only waiting for the run loop to turn");
+
+    XCTAssertTrue(progress.beginLoadingInvocationCount == 1, @"delegate's begin method not called exactly once");
+    XCTAssertTrue(progress.finishLoadingInvocationCount == 1, @"delegate's finish method not called exactly once");
+    XCTAssertTrue(progress.errors.count == 0, @"unexpected error(s) in connection :%@", progress.errors);
+
+    XCTAssertTrue(progress.progressInvocationCount > 0, @"delegate not sent any progress callbacks");
+    XCTAssertTrue(progress.complete, @"connection completed but didn't notify delegate");
+
+    [connection setDelegate:nil];
+    [request release];
+    [progress release];
+    [blocker2 release];
+    [blocker1 release];
+    [connection release];
 }
 @end
 

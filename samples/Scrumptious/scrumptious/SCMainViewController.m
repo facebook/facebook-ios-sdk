@@ -26,8 +26,9 @@
 #import "SCMealPicker.h"
 #import "SCSettings.h"
 #import "SCShareUtility.h"
+#import "SCTaggableFriendsViewController.h"
 
-@interface SCMainViewController () <CLLocationManagerDelegate, FBFriendPickerDelegate, FBPlacePickerDelegate, SCImagePickerDelegate, SCMealPickerDelegate, SCShareUtilityDelegate>
+@interface SCMainViewController () <CLLocationManagerDelegate, FBViewControllerDelegate, FBPlacePickerDelegate, SCImagePickerDelegate, SCMealPickerDelegate, SCShareUtilityDelegate>
 @property (nonatomic, strong) UIView *activityOverlayView;
 @property (nonatomic, strong, readonly) FBCacheDescriptor *friendsCacheDescriptor;
 @property (nonatomic, strong) SCImagePicker *imagePicker;
@@ -57,14 +58,6 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         [_activityOverlayView removeFromSuperview];
         _activityOverlayView = activityOverlayView;
     }
-}
-
-- (FBCacheDescriptor *)friendsCacheDescriptor
-{
-    if (!_friendsCacheDescriptor) {
-        _friendsCacheDescriptor = [FBFriendPickerViewController cacheDescriptor];
-    }
-    return _friendsCacheDescriptor;
 }
 
 - (void)setImagePicker:(SCImagePicker *)imagePicker
@@ -261,19 +254,7 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
         [placePickerViewController loadData];
         placePickerViewController.delegate = self;
     } else if ([identifier isEqualToString:@"showFriendPicker"]) {
-        FBFriendPickerViewController *friendPickerViewController = segue.destinationViewController;
-        // Set up the friend picker to sort and display names the same way as the
-        // iOS Address Book does.
-
-        // Need to call ABAddressBookCreate in order for the next two calls to do anything.
-        ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, NULL);
-        friendPickerViewController.sortOrdering = (ABPersonGetSortOrdering() == kABPersonSortByFirstName ? FBFriendSortByFirstName : FBFriendSortByLastName);
-        friendPickerViewController.displayOrdering = (ABPersonGetCompositeNameFormat() == kABPersonCompositeNameFormatFirstNameFirst ? FBFriendDisplayByFirstName : FBFriendDisplayByLastName);
-        CFRelease(addressBook);
-
-        [friendPickerViewController configureUsingCachedDescriptor:self.friendsCacheDescriptor];
-        [friendPickerViewController loadData];
-        friendPickerViewController.selection = self.selectedFriends;
+        SCTaggableFriendsViewController *friendPickerViewController = segue.destinationViewController;
         friendPickerViewController.delegate = self;
     }
 }
@@ -319,8 +300,8 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
 {
     if ([sender isKindOfClass:[FBPlacePickerViewController class]]) {
         self.selectedPlace = ((FBPlacePickerViewController *)sender).selection;
-    } else if ([sender isKindOfClass:[FBFriendPickerViewController class]]) {
-        self.selectedFriends = ((FBFriendPickerViewController *)sender).selection;
+    } else if ([sender isKindOfClass:[SCTaggableFriendsViewController class]]) {
+        self.selectedFriends = ((SCTaggableFriendsViewController *)sender).selection;
     }
     [sender performSegueWithIdentifier:@"dismiss" sender:sender];
 }

@@ -16,7 +16,7 @@
 
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
-#import "FBRequest.h"
+#import "FBRequest+Internal.h"
 #import "FBRequestConnection+Internal.h"
 #import "FBTestBlocker.h"
 #import "FBTests.h"

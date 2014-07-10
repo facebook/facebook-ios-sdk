@@ -20,6 +20,7 @@
 
 #import "FBAppEvents+Internal.h"
 #import "FBIntegrationTests.h"
+#import "FBSettings+Internal.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
 #import "Facebook.h"
@@ -86,7 +87,9 @@ static NSString *loggedEvent = nil;
                                                                   permissions:nil
                                                                expirationDate:nil
                                                                     loginType:FBSessionLoginTypeFacebookApplication
-                                                                  refreshDate:nil];
+                                                                  refreshDate:nil
+                                                       permissionsRefreshDate:nil
+                                                                        appID:@"appid"];
     FBSession *session = [[[FBSession alloc] initWithAppID:@"appid"
                                               permissions:nil
                                           urlSchemeSuffix:nil
@@ -109,21 +112,21 @@ static NSString *loggedEvent = nil;
     // default should set 1 for the app setting.
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults removeObjectForKey:@"com.facebook.sdk:FBAppEventsLimitEventUsage"];
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+    [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:parameters
                                  accessAdvertisingTrackingStatus:YES];
     XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should default to 1");
   
     // when limited, app tracking is 0.
     [parameters removeAllObjects];
     FBSettings.limitEventAndDataUsage = YES;
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+    [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:parameters
                                  accessAdvertisingTrackingStatus:YES];
     XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"0"], @"app tracking should be 0 when event usage is limited");
   
     // when explicitly unlimited, app tracking is 1.
     [parameters removeAllObjects];
     FBSettings.limitEventAndDataUsage = NO;
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:parameters
+    [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:parameters
                                  accessAdvertisingTrackingStatus:YES];
     XCTAssertTrue([parameters[@"application_tracking_enabled"] isEqualToString:@"1"], @"app tracking should be 1 when event usage is explicitly unlimited");
 }

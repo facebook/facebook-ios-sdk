@@ -91,4 +91,17 @@
 + (NSString *)methodName {
     return @"share";
 }
+
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+    FBPhotoParams *copy = [super copyWithZone:zone];
+    copy->_dataFailuresFatal = _dataFailuresFatal;
+    copy->_friends = [_friends copyWithZone:zone];
+    copy->_photos = [_photos copyWithZone:zone];
+    copy->_place = [_place copyWithZone:zone];
+    return copy;
+}
+
 @end

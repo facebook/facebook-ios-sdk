@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-// Profile Picture sample application
-//
-// The purpose of this sample application is to provide an example of
-// how use the profile picture view to display a Facebook profile picture
+@interface FBAmbientDeviceInfo : NSObject
 
-@class PPViewController;
-
-@interface PPAppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (retain, nonatomic) UIWindow *window;
-@property (retain, nonatomic) PPViewController *viewController;
++ (void)extendDictionaryWithDeviceInfo:(NSMutableDictionary *)dictionary;
 
 @end

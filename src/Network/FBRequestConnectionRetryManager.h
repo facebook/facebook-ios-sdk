@@ -18,6 +18,8 @@
 #import "FBRequestMetadata.h"
 #import "FBSession.h"
 
+@class FBRequestConnectionRetryManager;
+
 typedef enum {
     // The normal retry state where we will perform retries.
     FBRequestConnectionRetryManagerStateNormal,
@@ -30,6 +32,19 @@ typedef enum {
     // repair operation is executed.
     FBRequestConnectionRetryManagerStateRepairSession
 } FBRequestConnectionRetryManagerState;
+
+@protocol FBRequestConnectionRetryManagerDelegate <NSObject>
+
+@optional
+
+- (void)retryManagerDidFinishWithNoRetries:(FBRequestConnectionRetryManager *)retryManager;
+
+- (void)retryManagerDidFinishAbortingRetries:(FBRequestConnectionRetryManager *)retryManager;
+
+- (void)          retryManager:(FBRequestConnectionRetryManager *)retryManager
+willRetryWithRequestConnection:(FBRequestConnection *)retryRequestConnection;
+
+@end
 
 // Internal class for tracking retries for a given FBRequestConnection
 //   Essentially this helps FBRequestConnection support a two phase approach
@@ -47,7 +62,7 @@ typedef enum {
 // This is like a delegate pattern in that this is a weak reference to the
 // "parent" FBRequestConnection since we expect the parent to have a strong
 // reference to this RetryManager instance.
-@property (nonatomic, unsafe_unretained) FBRequestConnection *requestConnection;
+@property (nonatomic, unsafe_unretained) FBRequestConnection<FBRequestConnectionRetryManagerDelegate> *requestConnection;
 
 // See above enum.
 @property (nonatomic, assign) FBRequestConnectionRetryManagerState state;
@@ -62,7 +77,7 @@ typedef enum {
 // A message that can be shown to the user before executing the retry batch.
 @property (nonatomic, copy) NSString *alertMessage;
 
-- (instancetype)initWithFBRequestConnection:(FBRequestConnection *)requestConnection;
+- (instancetype)initWithFBRequestConnection:(FBRequestConnection<FBRequestConnectionRetryManagerDelegate> *)requestConnection;
 
 // The main method to invoke the retry batch; it also checks alertMessage
 // to possibly present an alertview.

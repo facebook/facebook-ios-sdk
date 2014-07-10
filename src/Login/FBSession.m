@@ -58,13 +58,14 @@ static NSString *const FBLoginUXIOS = @"ios";
 static NSString *const FBLoginUXSDK = @"sdk";
 static NSString *const FBLoginUXReturnScopesYES = @"true";
 static NSString *const FBLoginUXReturnScopes = @"return_scopes";
+static NSString *const FBLoginUXDefaultAudience = @"default_audience";
 static NSString *const FBLoginParamsExpiresIn = @"expires_in";
 static NSString *const FBLoginParamsPermissions = @"permissions";
 static NSString *const FBLoginParamsGrantedScopes = @"granted_scopes";
 static NSString *const FBLoginParamsDeniedScopes = @"denied_scopes";
 static NSString *const FBLoginParamsSDKVersion = @"sdk_version";
 static NSString *const FBLoginParamsLegacyOverride = @"legacy_override";
-NSString *const FBLoginUXResponseTypeToken = @"token";
+NSString *const FBLoginUXResponseTypeTokenAndSignedRequest = @"token,signed_request";
 NSString *const FBLoginUXResponseType = @"response_type";
 
 
@@ -245,8 +246,9 @@ static FBSession *g_activeSession = nil;
     if (cachedToken && self.state == FBSessionStateCreated) {
         BOOL isSubset = [FBSessionUtility areRequiredPermissions:permissions
                                             aSubsetOfPermissions:cachedToken.permissions];
+        BOOL isAppID = (!cachedToken.appID || [cachedToken.appID isEqualToString:self.appID]);
 
-        if (isSubset && (NSOrderedDescending == [cachedToken.expirationDate compare:[NSDate date]])) {
+        if (isSubset && isAppID && (NSOrderedDescending == [cachedToken.expirationDate compare:[NSDate date]])) {
             _loginBehavior = [FBSessionUtility loginBehaviorForLoginType:self.accessTokenData.loginType];
             [self transitionToState:FBSessionStateCreatedTokenLoaded
                 withAccessTokenData:cachedToken
@@ -864,7 +866,9 @@ static FBSession *g_activeSession = nil;
                                                                          expirationDate:tokenData.expirationDate
                                                                               loginType:loginTypeUpdated
                                                                             refreshDate:tokenData.refreshDate
-                                                                 permissionsRefreshDate:changingIsOpen ? [NSDate distantPast] : tokenData.permissionsRefreshDate];
+                                                                 permissionsRefreshDate:changingIsOpen ? [NSDate distantPast] : tokenData.permissionsRefreshDate
+                                                                                  appID:tokenData.appID
+                                                                                 userID:tokenData.userID];
             self.accessTokenData = fbAccessToken;
         } else {
             self.accessTokenData = nil;
@@ -991,7 +995,7 @@ static FBSession *g_activeSession = nil;
     // setup parameters for either the safari or inline login
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
-                                   FBLoginUXResponseTypeToken, FBLoginUXResponseType,
+                                   FBLoginUXResponseTypeTokenAndSignedRequest, FBLoginUXResponseType,
                                    FBRedirectURL, FBLoginUXRedirectURI,
                                    FBLoginUXTouch, FBLoginUXDisplay,
                                    FBLoginUXIOS, FBLoginUXSDK,
@@ -1005,6 +1009,10 @@ static FBSession *g_activeSession = nil;
         if (isReauthorize) {
             params[@"auth_type"] = @"rerequest";
         }
+    }
+    NSString *defaultAudienceName = [FBSessionUtility audienceNameWithAudience:defaultAudience];
+    if (defaultAudienceName) {
+        params[FBLoginUXDefaultAudience] = defaultAudienceName;
     }
 
     if (permissions != nil) {
@@ -1149,7 +1157,9 @@ static FBSession *g_activeSession = nil;
                                                                              permissions:permissions
                                                                           expirationDate:[NSDate distantFuture]
                                                                                loginType:FBSessionLoginTypeSystemAccount
-                                                                             refreshDate:[NSDate date]];
+                                                                             refreshDate:[NSDate date]
+                                                                  permissionsRefreshDate:nil
+                                                                                   appID:self.appID];
                  [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                                    error:nil
                                                tokenData:tokenData
@@ -1496,7 +1506,9 @@ static FBSession *g_activeSession = nil;
                                                                  expirationDate:expirationDate
                                                                       loginType:loginType
                                                                     refreshDate:[NSDate date]
-                                                         permissionsRefreshDate:nil];
+                                                         permissionsRefreshDate:nil
+                                                                          appID:self.appID
+                                                                         userID:parameters[@"user_id"]];
         [self transitionAndCallHandlerWithState:FBSessionStateOpen
                                           error:nil
                                       tokenData:tokenData
@@ -1744,7 +1756,9 @@ static FBSession *g_activeSession = nil;
                                                              expirationDate:expirationDate
                                                                   loginType:FBSessionLoginTypeNone
                                                                 refreshDate:now
-                                                     permissionsRefreshDate:now];
+                                                     permissionsRefreshDate:now
+                                                                      appID:self.appID
+                                                                     userID:self.accessTokenData.userID];
     [self transitionAndCallHandlerWithState:FBSessionStateOpenTokenExtended
                                       error:nil
                                   tokenData:tokenData
@@ -1794,7 +1808,9 @@ static FBSession *g_activeSession = nil;
                                                              expirationDate:expireDate
                                                                   loginType:FBSessionLoginTypeNone
                                                                 refreshDate:[NSDate date]
-                                                     permissionsRefreshDate:self.accessTokenData.permissionsRefreshDate];
+                                                     permissionsRefreshDate:self.accessTokenData.permissionsRefreshDate
+                                                                      appID:self.accessTokenData.appID
+                                                                     userID:self.accessTokenData.userID];
     [self transitionAndCallHandlerWithState:FBSessionStateOpenTokenExtended
                                       error:nil
                                   tokenData:tokenData
@@ -1861,7 +1877,9 @@ static FBSession *g_activeSession = nil;
                                                                          expirationDate:self.accessTokenData.expirationDate
                                                                               loginType:self.accessTokenData.loginType
                                                                             refreshDate:self.accessTokenData.refreshDate
-                                                                 permissionsRefreshDate:now];
+                                                                 permissionsRefreshDate:now
+                                                                                  appID:self.accessTokenData.appID
+                                                                                 userID:self.accessTokenData.userID];
                 self.attemptedPermissionsRefreshDate = now;
                 // Note we intentionally do not notify KVO that `accessTokenData `is changing since
                 // the implied contract is for that to only occur during state transitions.
@@ -1990,7 +2008,9 @@ static FBSession *g_activeSession = nil;
                                                          expirationDate:self.accessTokenData.expirationDate
                                                               loginType:self.accessTokenData.loginType
                                                             refreshDate:self.accessTokenData.refreshDate
-                                                 permissionsRefreshDate:self.accessTokenData.permissionsRefreshDate];
+                                                 permissionsRefreshDate:self.accessTokenData.permissionsRefreshDate
+                                                                  appID:self.accessTokenData.appID
+                                                                 userID:self.accessTokenData.userID];
         [self.tokenCachingStrategy cacheFBAccessTokenData:self.accessTokenData];
     }
     NSString *authLoggerResult = FBSessionAuthLoggerResultSuccess;

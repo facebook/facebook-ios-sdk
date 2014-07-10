@@ -27,8 +27,8 @@
 
 #pragma mark - Class methods
 
-+ (RPSCall)callFromAppLinkData:(FBAppLinkData *)appLinkData {
-    NSString *fbObjectID = [appLinkData originalQueryParameters][@"fb_object_id"];
++ (RPSCall)callFromDeepLink:(FBAppLinkData *)deepLinkData {
+    NSString *fbObjectID = [deepLinkData originalQueryParameters][@"fb_object_id"];
 
     if (fbObjectID == nil) {
         return RPSCallNone;
@@ -59,7 +59,7 @@
                   sourceApplication:sourceApplication
                     fallbackHandler:^(FBAppCall *call) {
                         // Check for a deep link to parse out a call to show
-                        RPSCall deepCall = [RPSAppDelegate callFromAppLinkData:[call appLinkData]];
+                        RPSCall deepCall = [RPSAppDelegate callFromDeepLink:[call appLinkData]];
                         if (deepCall != RPSCallNone) {
                             RPSDeeplyLinkedViewController *vc = [[RPSDeeplyLinkedViewController alloc] initWithCall:deepCall];
                             [self.navigationController presentViewController:vc animated:YES completion:nil];
@@ -83,10 +83,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
-
-#ifdef DEBUG
-    [FBSettings enableBetaFeature:FBBetaFeaturesOpenGraphShareDialog | FBBetaFeaturesShareDialog];
-#endif
 
     UIViewController *viewControllerGame;
     FBUserSettingsViewController *viewControllerSettings;

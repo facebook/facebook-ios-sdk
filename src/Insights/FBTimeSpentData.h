@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import "SLAppDelegate.h"
+// Class to encapsulate persisting of time spent data collected by [FBAppEvents activateApp].  The activate app App Event is
+// logged when restore: is called with sufficient time since the last deactivation.
+@interface FBTimeSpentData : NSObject
 
-int main(int argc, char *argv[])
-{
-    @autoreleasepool {
-        return UIApplicationMain(argc, argv, nil, NSStringFromClass([SLAppDelegate class]));
-    }
-}
++ (void)suspend;
++ (void)restore:(BOOL)calledFromActivateApp;
+
+@end

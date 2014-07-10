@@ -52,15 +52,15 @@
     // Facebook SDK * login flow *
     // Attempt to handle URLs to complete any auth (e.g., SSO) flow.
     return [FBAppCall handleOpenURL:url sourceApplication:sourceApplication fallbackHandler:^(FBAppCall *call) {
-        // Facebook SDK * App Linking *
-        // For simplicity, this sample will ignore the link if the session is already
-        // open but a more advanced app could support features like user switching.
+        // Since Scrumptious supports Single Sign On from the Facebook App (such as bookmarks),
+        // we supply a fallback handler to parse any inbound URLs (e.g., deep links)
+        // which can contain an access token.
         if (call.accessTokenData) {
             if ([FBSession activeSession].isOpen) {
-                NSLog(@"INFO: Ignoring app link because current session is open.");
+                NSLog(@"INFO: Ignoring new access token because current session is open.");
             }
             else {
-                [self _handleAppLink:call.accessTokenData];
+                [self _handleOpenURLWithAccessToken:call.accessTokenData];
             }
         }
     }];
@@ -77,17 +77,16 @@
 
 #pragma mark - Helper Methods
 
-// Helper method to wrap logic for handling app links.
-- (void)_handleAppLink:(FBAccessTokenData *)appLinkToken {
+- (void)_handleOpenURLWithAccessToken:(FBAccessTokenData *)token {
     // Initialize a new blank session instance...
-    FBSession *appLinkSession = [[FBSession alloc] initWithAppID:nil
+    FBSession *sessionFromToken = [[FBSession alloc] initWithAppID:nil
                                                      permissions:nil
                                                  defaultAudience:FBSessionDefaultAudienceNone
                                                  urlSchemeSuffix:nil
                                               tokenCacheStrategy:[FBSessionTokenCachingStrategy nullCacheInstance] ];
-    [FBSession setActiveSession:appLinkSession];
-    // ... and open it from the App Link's Token.
-    [appLinkSession openFromAccessTokenData:appLinkToken
+    [FBSession setActiveSession:sessionFromToken];
+    // ... and open it from the supplied token.
+    [sessionFromToken openFromAccessTokenData:token
                           completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
                               // Forward any errors to the FBLoginView delegate.
                               if (error) {

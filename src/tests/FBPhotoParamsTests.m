@@ -23,11 +23,48 @@
 
 @implementation FBPhotoParamsTests
 
+- (void)testAllowsSinglePhoto
+{
+    NSArray *photos = @[
+                        [[[UIImage alloc] init] autorelease],
+                        ];
+    FBPhotoParams *params = [[[FBPhotoParams alloc] initWithPhotos:photos] autorelease];
+    XCTAssertNil([params validate]);
+}
+
+- (void)testAllowsMultiplePhotos
+{
+    NSArray *photos = @[
+                        [[[UIImage alloc] init] autorelease],
+                        [[[UIImage alloc] init] autorelease],
+                        [[[UIImage alloc] init] autorelease],
+                        ];
+    FBPhotoParams *params = [[[FBPhotoParams alloc] initWithPhotos:photos] autorelease];
+    XCTAssertNil([params validate]);
+}
+
 - (void)testRequiresPhotos
 {
-    FBPhotoParams *params = [[FBPhotoParams alloc] init];
+    FBPhotoParams *params = [[[FBPhotoParams alloc] init] autorelease];
+    XCTAssertNotNil([params validate]);
+}
 
-    assertThat([params validate], is(notNilValue()));
+- (void)testCopy
+{
+    NSArray *photos = @[
+                        [[[UIImage alloc] init] autorelease],
+                        [[[UIImage alloc] init] autorelease],
+                        [[[UIImage alloc] init] autorelease],
+                        ];
+    FBPhotoParams *params = [[[FBPhotoParams alloc] initWithPhotos:photos] autorelease];
+
+    FBPhotoParams *paramsCopy = [[params copy] autorelease];
+    XCTAssertEqualObjects(params.photos, photos);
+    XCTAssertEqualObjects(paramsCopy.photos, photos);
+
+    paramsCopy.photos = [paramsCopy.photos subarrayWithRange:NSMakeRange(0, 2)];
+    XCTAssertEqualObjects(params.photos, photos);
+    XCTAssertNotEqualObjects(paramsCopy.photos, photos);
 }
 
 @end

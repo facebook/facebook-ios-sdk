@@ -66,7 +66,9 @@ NSString *kTestAppId = @"AnAppId";
                                                              permissions:nil
                                                           expirationDate:[NSDate dateWithTimeIntervalSinceNow:3600]
                                                                loginType:FBSessionLoginTypeNone
-                                                             refreshDate:nil];
+                                                             refreshDate:nil
+                                                  permissionsRefreshDate:nil
+                                                                   appID:kTestAppId];
 
     FBAccessTokenData *mockToken = [OCMockObject partialMockForObject:token];
     return mockToken;

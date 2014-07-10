@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-@interface SLViewController : UIViewController
-
+@interface FBBoltsMeasurementEventListener : NSObject
++ (FBBoltsMeasurementEventListener *)defaultListener;
 @end

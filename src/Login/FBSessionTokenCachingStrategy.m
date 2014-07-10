@@ -30,6 +30,7 @@ NSString *const FBTokenInformationLoginTypeLoginKey = @"com.facebook.sdk:TokenIn
 NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInformationPermissionsKey";
 NSString *const FBTokenInformationDeclinedPermissionsKey = @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey";
 NSString *const FBTokenInformationPermissionsRefreshDateKey = @"com.facebook.sdk:TokenInformationPermissionsRefreshDateKey";
+NSString *const FBTokenInformationAppIDKey = @"com.facebook.sdk:TokenInformationAppIDKey";
 
 #pragma mark - private FBSessionTokenCachingStrategyNoOpInstance class
 

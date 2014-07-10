@@ -18,6 +18,7 @@
 
 #import "FBError.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSettings.h"
 #import "FBUtility.h"
 
 @interface FBAccessTokenData ()
@@ -29,6 +30,9 @@
 @property (nonatomic, readwrite, copy) NSDate *refreshDate;
 @property (nonatomic, readwrite, copy) NSArray *permissions;
 @property (nonatomic, readwrite, copy) NSArray *declinedPermissions;
+@property (nonatomic, readwrite, copy) NSString *appID;
+@property (nonatomic, readwrite, copy) NSString *userID;
+
 @property (nonatomic, readwrite, copy) NSDate *permissionsRefreshDate;
 
 @end
@@ -41,7 +45,10 @@
            expirationDate:(NSDate *)expirationDate
                 loginType:(FBSessionLoginType)loginType
               refreshDate:(NSDate *)refreshDate
-   permissionsRefreshDate:(NSDate *)permissionsRefreshDate {
+   permissionsRefreshDate:(NSDate *)permissionsRefreshDate
+                    appID:(NSString *)appID
+                   userID:(NSString *)userID
+{
     if ((self = [super init])) {
         _accessToken = [accessToken copy];
         _permissions = [permissions copy];
@@ -50,6 +57,8 @@
         _refreshDate = [refreshDate copy];
         _loginType = loginType;
         _permissionsRefreshDate = [permissionsRefreshDate copy];
+        _appID = [appID copy];
+        _userID = [userID copy];
     }
     return self;
 }
@@ -61,6 +70,8 @@
     [_expirationDate release];
     [_refreshDate release];
     [_permissionsRefreshDate release];
+    [_appID release];
+    [_userID release];
     [super dealloc];
 }
 
@@ -79,7 +90,9 @@
                            permissions:nil
                         expirationDate:[FBUtility expirationDateFromExpirationTimeIntervalString:queryDictionary[@"expires_in"]]
                              loginType:FBSessionLoginTypeFacebookApplication
-                           refreshDate:nil];
+                           refreshDate:nil
+                permissionsRefreshDate:nil
+                                 appID:appID];
 }
 
 + (FBAccessTokenData *)createTokenFromDictionary:(NSDictionary *)dictionary {
@@ -91,6 +104,8 @@
     BOOL dictionaryIsFacebookLoginType = [dictionary[FBTokenInformationIsFacebookLoginKey] boolValue];
     NSDate *dictionaryRefreshDate = dictionary[FBTokenInformationRefreshDateKey];
     NSDate *dictionaryPermissionsRefreshDate = dictionary[FBTokenInformationPermissionsRefreshDateKey];
+    NSString *dictionaryAppID = dictionary[FBTokenInformationAppIDKey];
+    NSString *dictionaryUserID = dictionary[FBTokenInformationUserFBIDKey];
 
     if (dictionaryIsFacebookLoginType && dictionaryLoginType == FBSessionLoginTypeNone) {
         // The internal isFacebookLogin has been removed but to support backwards compatibility,
@@ -104,7 +119,9 @@
                                                 expirationDate:dictionaryExpirationDate
                                                      loginType:dictionaryLoginType
                                                    refreshDate:dictionaryRefreshDate
-                                        permissionsRefreshDate:dictionaryPermissionsRefreshDate];
+                                        permissionsRefreshDate:dictionaryPermissionsRefreshDate
+                                                         appID:dictionaryAppID
+                                                        userID:dictionaryUserID];
     return tokenData;
 }
 
@@ -119,7 +136,9 @@
                         expirationDate:expirationDate
                              loginType:loginType
                            refreshDate:refreshDate
-                permissionsRefreshDate:nil];
+                permissionsRefreshDate:nil
+                                 appID:nil
+                                userID:nil];
 }
 
 + (FBAccessTokenData *)createTokenFromString:(NSString *)accessToken
@@ -134,7 +153,27 @@
                         expirationDate:expirationDate
                              loginType:loginType
                            refreshDate:refreshDate
-                permissionsRefreshDate:permissionsRefreshDate];
+                permissionsRefreshDate:permissionsRefreshDate
+                                 appID:nil
+                                userID:nil];
+}
+
++ (FBAccessTokenData *)createTokenFromString:(NSString *)accessToken
+                                 permissions:(NSArray *)permissions
+                              expirationDate:(NSDate *)expirationDate
+                                   loginType:(FBSessionLoginType)loginType
+                                 refreshDate:(NSDate *)refreshDate
+                      permissionsRefreshDate:(NSDate *)permissionsRefreshDate
+                                       appID:(NSString *)appID {
+    return [self createTokenFromString:accessToken
+                           permissions:permissions
+                   declinedPermissions:nil
+                        expirationDate:expirationDate
+                             loginType:loginType
+                           refreshDate:refreshDate
+                permissionsRefreshDate:permissionsRefreshDate
+                                 appID:appID
+                                userID:nil];
 }
 
 + (FBAccessTokenData *)createTokenFromString:(NSString *)accessToken
@@ -144,7 +183,9 @@
                                    loginType:(FBSessionLoginType)loginType
                                  refreshDate:(NSDate *)refreshDate
                       permissionsRefreshDate:(NSDate *)permissionsRefreshDate
-{
+                                       appID:(NSString *)appID
+                                      userID:(NSString *)userID
+    {
     if (accessToken == nil || [accessToken stringByTrimmingCharactersInSet:
                                [NSCharacterSet whitespaceCharacterSet]].length == 0) {
         return nil;
@@ -158,6 +199,9 @@
     if (permissionsRefreshDate == nil) {
         permissionsRefreshDate = [NSDate distantPast];
     }
+    if (appID == nil) {
+        appID = [FBSettings defaultAppID];
+    }
 
     FBAccessTokenData *fbAccessToken = [[FBAccessTokenData alloc] initWithToken:accessToken
                                                                     permissions:permissions
@@ -165,7 +209,9 @@
                                                                  expirationDate:expirationDate
                                                                       loginType:loginType
                                                                     refreshDate:refreshDate
-                                                         permissionsRefreshDate:permissionsRefreshDate];
+                                                         permissionsRefreshDate:permissionsRefreshDate
+                                                                          appID:appID
+                                                                         userID:userID];
     return [fbAccessToken autorelease];
 }
 
@@ -191,6 +237,8 @@
     result = prime * result + [self.refreshDate hash];
     result = prime * result + self.loginType;
     result = prime * result + [self.permissionsRefreshDate hash];
+    result = prime * result + [self.appID hash];
+    result = prime * result + [self.userID hash];
 
     return result;
 }
@@ -203,7 +251,9 @@
                                         expirationDate:self.expirationDate
                                              loginType:self.loginType
                                            refreshDate:self.refreshDate
-                                permissionsRefreshDate:self.permissionsRefreshDate];
+                                permissionsRefreshDate:self.permissionsRefreshDate
+                                                 appID:self.appID
+                                                userID:self.userID];
     return copy;
 }
 
@@ -218,7 +268,9 @@
         && [self.expirationDate isEqualToDate:accessTokenData.expirationDate]
         && self.loginType == accessTokenData.loginType
         && [self.refreshDate isEqualToDate:accessTokenData.refreshDate]
-        && [self.permissionsRefreshDate isEqualToDate:accessTokenData.permissionsRefreshDate]) {
+        && [self.permissionsRefreshDate isEqualToDate:accessTokenData.permissionsRefreshDate]
+        && ((!self.appID && !accessTokenData.appID) || [self.appID isEqualToString:accessTokenData.appID])
+        && ((!self.userID && !accessTokenData.userID) || [self.userID isEqualToString:accessTokenData.userID]) ) {
         return YES;
     }
 
@@ -242,6 +294,12 @@
     }
     if (self.permissionsRefreshDate) {
         dict[FBTokenInformationPermissionsRefreshDateKey] = self.permissionsRefreshDate;
+    }
+    if (self.appID) {
+        dict[FBTokenInformationAppIDKey] = self.appID;
+    }
+    if (self.userID) {
+        dict[FBTokenInformationUserFBIDKey] = self.userID;
     }
     return [dict autorelease];
 }

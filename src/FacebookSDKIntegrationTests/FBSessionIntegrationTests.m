@@ -320,6 +320,56 @@
     [normalSession close];
 }
 
+- (void)testSessionOpenFromTokenAndCheckUserID
+{
+    FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional %@", @"log");
+    FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional log");
+    FBConditionalLog(YES, FBLoggingBehaviorInformational, nil, @"Testing conditional log");
+
+    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
+
+
+    // Open a test session normally for accesstoken/appid
+    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateOpen) {
+            [blocker signal];
+        }
+    }];
+    XCTAssertTrue([blocker waitWithTimeout:10], @"blocker timed out");
+
+    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
+    FBAccessTokenData *token = [FBAccessTokenData createTokenFromString:normalSession.accessTokenData.accessToken
+                                                            permissions:nil
+                                                    declinedPermissions:nil
+                                                         expirationDate:[NSDate distantFuture]
+                                                              loginType:FBSessionLoginTypeFacebookApplication
+                                                            refreshDate:[NSDate dateWithTimeIntervalSince1970:0]
+                                                 permissionsRefreshDate:nil
+                                                                  appID:session.appID
+                                                                 userID:@"4"];
+
+    [session openFromAccessTokenData:token completionHandler:^(FBSession *session3, FBSessionState status, NSError *error) {
+        if (status == FBSessionStateOpen) {
+            assertThat(session.accessTokenData.userID, equalTo(@"4"));
+            [blocker signal];
+        }
+    }];
+
+    [blocker waitWithTimeout:10];
+
+    XCTAssertTrue(session.isOpen, @"Session should be valid, and is not");
+
+    [session requestNewPublishPermissions:@[@"publish_actions"] defaultAudience:FBSessionDefaultAudienceOnlyMe completionHandler:^(FBSession *session2, NSError *error) {
+        assertThat(session.accessTokenData.userID, equalTo(@"4"));
+        [blocker signal];
+    }];
+    [blocker waitWithTimeout:10];
+
+    assertThat(session.accessTokenData.userID, equalTo(@"4"));
+    [session close];
+}
+
 
 @end
 

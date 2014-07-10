@@ -26,6 +26,12 @@ FBSDK_EXTERN NSString *const FBPLISTUrlSchemeSuffixKey;
 /*!
  @method
 
+ @abstract This method has been replaced by [FBAppEvents activateApp] */
++ (void)publishInstall:(NSString *)appID;
+
+/*!
+ @method
+
  @abstract Get the default url scheme used for the session. This is generated based
  on the url scheme suffix and the app id.
  @param appID If nil, defaults to [FBSettings defaultAppID]

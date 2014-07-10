@@ -959,7 +959,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                                             permissions:nil
                                                          expirationDate:[NSDate distantFuture]
                                                               loginType:FBSessionLoginTypeFacebookApplication
-                                                            refreshDate:[NSDate dateWithTimeIntervalSince1970:0]];
+                                                            refreshDate:[NSDate dateWithTimeIntervalSince1970:0]
+                                                 permissionsRefreshDate:nil
+                                                                  appID:kTestAppId];
     
     FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:token];
     
@@ -1389,6 +1391,30 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     cookiesForFacebook = [storage cookiesForURL:url];
     
     assertThatInteger(cookiesForFacebook.count, equalToInteger(0));
+}
+
+- (void)testFetchUserID {
+    FBAccessTokenData *token = [FBAccessTokenData createTokenFromString:@"token"
+                                                            permissions:nil
+                                                    declinedPermissions:nil
+                                                         expirationDate:[NSDate distantFuture]
+                                                              loginType:FBSessionLoginTypeFacebookApplication
+                                                            refreshDate:[NSDate dateWithTimeIntervalSince1970:0]
+                                                 permissionsRefreshDate:nil
+                                                                  appID:kTestAppId
+                                                                 userID:@"4"];
+
+    FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:token];
+
+    FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
+                                              permissions:nil
+                                          defaultAudience:FBSessionDefaultAudienceNone
+                                          urlSchemeSuffix:nil
+                                       tokenCacheStrategy:mockStrategy];
+    [session openWithCompletionHandler:nil];
+
+    assertThat(session.accessTokenData.userID, equalTo(@"4"));
+
 }
 
 #pragma mark Helpers

@@ -139,25 +139,25 @@ CGMutablePathRef _createDownPointingBubbleWithRect(CGRect rect, CGFloat arrowMid
 
 - (void)presentFromView:(UIView *)anchorView
 {
-    UIView *superView = anchorView.window.rootViewController.view;
-    if (!superView) {
+    UIView *superview = anchorView.window.rootViewController.view;
+    if (!superview) {
         return;
     }
 
     // By default - attach to the top, pointing down
-    CGPoint position = CGPointMake(CGRectGetMidX(anchorView.frame), CGRectGetMinY(anchorView.frame));
-    CGPoint positionInSuperView = [superView convertPoint:position fromView:anchorView.superview];
+    CGPoint position = CGPointMake(CGRectGetMidX(anchorView.bounds), CGRectGetMinY(anchorView.bounds));
+    CGPoint positionInSuperview = [superview convertPoint:position fromView:anchorView];
     FBTooltipViewArrowDirection direction = FBTooltipViewArrowDirectionDown;
 
     // If not enough space to point up from top of anchor view - point up to it's bottom
     CGFloat bubbleHeight = CGRectGetHeight(_textLabel.bounds) + _verticalTextOffset + _textPadding * 2;
-    if (positionInSuperView.y - bubbleHeight - kNUXBubbleMargin < superView.bounds.origin.y ) {
+    if (positionInSuperview.y - bubbleHeight - kNUXBubbleMargin < CGRectGetMinY(superview.bounds)) {
         direction = FBTooltipViewArrowDirectionUp;
-        position = CGPointMake(CGRectGetMidX(anchorView.frame), CGRectGetMaxY(anchorView.frame));
-        positionInSuperView = [superView convertPoint:position fromView:anchorView.superview];
+        position = CGPointMake(CGRectGetMidX(anchorView.bounds), CGRectGetMaxY(anchorView.bounds));
+        positionInSuperview = [superview convertPoint:position fromView:anchorView];
     }
 
-    [self presentInView:superView withArrowPosition:position direction:direction];
+    [self presentInView:superview withArrowPosition:positionInSuperview direction:direction];
 }
 
 - (void)presentInView:(UIView *)view withArrowPosition:(CGPoint)arrowPosition direction:(FBTooltipViewArrowDirection)arrowDirection

@@ -49,7 +49,7 @@ static NSString *photoURLs[] = {
 
 typedef void (^RPSBlock)(void);
 
-@interface RPSGameViewController () <UIActionSheetDelegate, UIAlertViewDelegate>
+@interface RPSGameViewController () <UIActionSheetDelegate, UIAlertViewDelegate, FBRequestConnectionDelegate>
 @end
 
 @implementation RPSGameViewController {
@@ -62,6 +62,7 @@ typedef void (^RPSBlock)(void);
     RPSBlock _alertOkHandler;
     int _wins, _losses, _ties;
     NSDate *_lastAnimationStartTime;
+    NSMutableSet *_activeConnections;
 }
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
@@ -97,6 +98,8 @@ typedef void (^RPSBlock)(void);
         _alertOkHandler = nil;
         _needsInitialAnimation = YES;
         _interestedInImplicitShare = YES;
+
+        _activeConnections = [[NSMutableSet alloc] init];
     }
     return self;
 }
@@ -465,29 +468,33 @@ typedef void (^RPSBlock)(void);
 }
 
 - (void)publishPhotoForGesture:(RPSCall)gesture {
-    [FBRequestConnection startForUploadStagingResourceWithImage:_imagesToPublish[gesture]
-                                              completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-                                                  if (error) {
-                                                      NSLog(@"%@", error);
-                                                      if (error.fberrorCategory == FBErrorCategoryPermissions) {
-                                                          NSLog(@"Re-requesting permissions");
-                                                          _interestedInImplicitShare = NO;
-                                                          [self alertWithMessage:@"Share game activity with your friends?"
-                                                                              ok:@"Yes"
-                                                                          cancel:@"Maybe Later"
-                                                                      completion:^{
-                                                                          _interestedInImplicitShare = YES;
-                                                                          [self requestPermissionsWithCompletion:^{
-                                                                              [self publishPhotoForGesture:gesture];
-                                                                          }];
-                                                                      }];
-                                                          return;
-                                                      }
-                                                  } else {
-                                                      photoURLs[gesture] = result[@"uri"];
-                                                      [self publishResult];
-                                                  }
-                                              }];
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+    FBRequest *request = [FBRequest requestForUploadStagingResourceWithImage:_imagesToPublish[gesture]];
+
+    connection.delegate = self;
+    [connection addRequest:request completionHandler:^(FBRequestConnection *conn, id result, NSError *error) {
+                                       if (error) {
+                                           NSLog(@"%@", error);
+                                           if (error.fberrorCategory == FBErrorCategoryPermissions) {
+                                               NSLog(@"Re-requesting permissions");
+                                               _interestedInImplicitShare = NO;
+                                               [self alertWithMessage:@"Share game activity with your friends?"
+                                                                   ok:@"Yes"
+                                                               cancel:@"Maybe Later"
+                                                           completion:^{
+                                                               _interestedInImplicitShare = YES;
+                                                               [self requestPermissionsWithCompletion:^{
+                                                                   [self publishPhotoForGesture:gesture];
+                                                               }];
+                                                           }];
+                                               return;
+                                           }
+                                       } else {
+                                           photoURLs[gesture] = result[@"uri"];
+                                           [self publishResult];
+                                       }
+                                   }];
+    [connection start];
 }
 
 - (void)publishResult {
@@ -568,6 +575,50 @@ typedef void (^RPSBlock)(void);
     [FBAppEvents logEvent:@"Time Taken"
                valueToSum:timeTaken
                parameters:@{@"Time Taken" : timeTakenStr}];
+}
+
+#pragma mark - FBRequestConnectionDelegate
+
+- (void)requestConnectionWillBeginLoading:(FBRequestConnection *)connection
+                                fromCache:(BOOL)isCached {
+    if (!isCached) {
+        [_activeConnections addObject:connection];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    }
+}
+
+- (void)requestConnectionDidFinishLoading:(FBRequestConnection *)connection
+                                fromCache:(BOOL)isCached {
+    if (!isCached) {
+        [self stopActivityForConnection:connection];
+    }
+}
+
+- (void)requestConnection:(FBRequestConnection *)connection
+         didFailWithError:(NSError *)error {
+    [self stopActivityForConnection:connection];
+}
+
+- (void)     requestConnection:(FBRequestConnection *)connection
+willRetryWithRequestConnection:(FBRequestConnection *)retryConnection {
+    retryConnection.delegate = self;
+    [_activeConnections addObject:retryConnection];
+    [_activeConnections removeObject:connection];
+}
+
+- (void)requestConnection:(FBRequestConnection *)connection
+          didSendBodyData:(NSInteger)bytesWritten
+        totalBytesWritten:(NSInteger)totalBytesWritten
+totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
+    double percentComplete = (double)totalBytesWritten / (double)totalBytesExpectedToWrite * 100.0;
+    NSLog(@"Upload is %f%% complete.", percentComplete);
+}
+
+- (void)stopActivityForConnection:(FBRequestConnection *)connection {
+    [_activeConnections removeObject:connection];
+    if (_activeConnections.count == 0) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    }
 }
 
 @end

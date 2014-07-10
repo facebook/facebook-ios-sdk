@@ -22,6 +22,7 @@
 #import "FBGraphObject.h"
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
+#import "FBSettings+Internal.h"
 #import "FBUtility.h"
 #import "Facebook.h"
 

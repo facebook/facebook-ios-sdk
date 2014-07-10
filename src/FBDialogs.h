@@ -188,6 +188,15 @@ typedef void (^FBDialogAppCallCompletionHandler)(
                                           handler:(FBOSIntegratedShareDialogHandler)handler;
 
 /*!
+ @abstract Determines if the device is capable of presenting the OS integrated share dialog.
+
+ @discussion This is the most basic check for capability for this feature.
+
+ @see canPresentOSIntegratedShareDialogWithSession:
+ */
++ (BOOL)canPresentOSIntegratedShareDialog;
+
+/*!
  @abstract
  Determines whether a call to presentShareDialogModallyFrom: will successfully present
  a dialog. This is useful for applications that need to modify the available UI controls
@@ -203,6 +212,17 @@ typedef void (^FBDialogAppCallCompletionHandler)(
 + (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession *)session;
 
 #pragma mark - Native Share Dialog
+
+/*!
+ @abstract Determines if the device is capable of presenting the share dialog.
+
+ @discussion This is the most basic check for capability for this feature.
+
+ @see canPresentShareDialogWithOpenGraphActionParams:
+ @see canPresentShareDialogWithParams:
+ @see canPresentShareDialogWithPhotos:
+ */
++ (BOOL)canPresentShareDialog;
 
 /*!
  @abstract
@@ -605,6 +625,17 @@ typedef void (^FBDialogAppCallCompletionHandler)(
                                              handler:(FBDialogAppCallCompletionHandler)handler;
 
 #pragma mark - Message Dialog
+
+/*!
+ @abstract Determines if the device is capable of presenting the message dialog.
+
+ @discussion This is the most basic check for capability for this feature.
+
+ @see canPresentMessageDialogWithOpenGraphActionParams:
+ @see canPresentMessageDialogWithParams:
+ @see canPresentMessageDialogWithPhotos:
+ */
++ (BOOL)canPresentMessageDialog;
 
 /*!
  @abstract

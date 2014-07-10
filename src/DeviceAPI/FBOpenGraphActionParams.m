@@ -191,4 +191,22 @@ NSString *const FBPostObject = @"fbsdk:create_object";
     return containsUIImages;
 }
 
+#pragma mark - NSCopying
+
+- (instancetype)copyWithZone:(NSZone *)zone
+{
+    FBOpenGraphActionParams *copy = [super copyWithZone:zone];
+    if ([_action conformsToProtocol:@protocol(NSMutableCopying)]) {
+        copy->_action = [(id<NSMutableCopying>)_action mutableCopyWithZone:zone];
+    } else if ([_action conformsToProtocol:@protocol(NSCopying)]) {
+        copy->_action = [(id<NSCopying>)_action copyWithZone:zone];
+    } else {
+        copy->_action = [_action retain];
+    }
+    copy->_actionType = [_actionType copyWithZone:zone];
+    copy->_bridgeScheme = [_bridgeScheme retain];
+    copy->_previewPropertyName = [_previewPropertyName copyWithZone:zone];
+    return copy;
+}
+
 @end

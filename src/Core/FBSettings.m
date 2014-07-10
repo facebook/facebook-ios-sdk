@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FBAmbientDeviceInfo.h"
+#import "FBBoltsMeasurementEventListener.h"
 #import "FBError.h"
 #import "FBInternalSettings.h"
 #import "FBLogger.h"
@@ -72,6 +74,30 @@ static NSString *g_facebookDomainPart = nil;
 static NSString *g_resourceBundleName = nil;
 static FBRestrictedTreatment g_restrictedTreatment;
 static BOOL g_enableLegacyGraphAPI = NO;
+
+
++ (void)load {
+    // when the app becomes active by any mean,  kick off the initialization.
+    __block __weak id initializeObserver;
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    initializeObserver = [center addObserverForName:UIApplicationDidBecomeActiveNotification
+                                             object:nil
+                                              queue:nil
+                                         usingBlock:^(NSNotification *note) {
+                                             [self FBSDKInitialize];
+                                             // de-register the observer after initialization is done.
+                                             [center removeObserver:initializeObserver];
+                                         }];
+}
+
+// Initialize SDK settings.
+// Don't call this function in any place else. It has been called when the class is loaded.
++ (void)FBSDKInitialize {
+    static dispatch_once_t sdkConfigDone = 0;
+    dispatch_once(&sdkConfigDone, ^{
+        [FBBoltsMeasurementEventListener defaultListener];
+    });
+}
 
 + (NSString *)sdkVersion {
     return FB_IOS_SDK_VERSION_STRING;
@@ -257,8 +283,6 @@ static BOOL g_enableLegacyGraphAPI = NO;
     return [NSString stringWithFormat:@"fb%@%@", appID ?: [self defaultAppID], urlSchemeSuffix ?: [self defaultUrlSchemeSuffix] ?: @""];
 }
 
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 + (void)autoPublishInstall:(NSString *)appID {
     if ([FBSettings shouldAutoPublishInstall]) {
         dispatch_once(&g_publishInstallOnceToken, ^{
@@ -268,10 +292,9 @@ static BOOL g_enableLegacyGraphAPI = NO;
         });
     }
 }
-#pragma GCC diagnostic pop
 
 + (void)autoPublishInstallImpl:(NSString *)appID {
-    [FBSettings publishInstall:appID withHandler:nil isAutoPublish:YES];
+    [FBSettings publishInstall:appID isAutoPublish:YES];
 }
 
 
@@ -284,7 +307,7 @@ static BOOL g_enableLegacyGraphAPI = NO;
 }
 
 + (void)disableBetaFeature:(FBBetaFeatures)betaFeature {
-    g_betaFeatures &= NSUIntegerMax ^ betaFeature;
+    g_betaFeatures &= ~0 ^ betaFeature;
 }
 
 + (BOOL)isBetaFeatureEnabled:(FBBetaFeatures)betaFeature {
@@ -312,38 +335,18 @@ static BOOL g_enableLegacyGraphAPI = NO;
 #pragma mark proto-activity publishing code
 
 + (void)publishInstall:(NSString *)appID {
-    [FBSettings publishInstall:appID withHandler:nil];
+    [FBSettings publishInstall:appID isAutoPublish:NO];
 }
 
 + (void)publishInstall:(NSString *)appID
-           withHandler:(FBInstallResponseDataHandler)handler {
-    [FBSettings publishInstall:appID withHandler:handler isAutoPublish:NO];
-}
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-+ (void)publishInstall:(NSString *)appID
-           withHandler:(FBInstallResponseDataHandler)handler
          isAutoPublish:(BOOL)isAutoPublish {
     @try {
-        handler = [[handler copy] autorelease];
-
         if (!appID) {
             appID = [FBSettings defaultAppID];
         }
 
         if (!appID) {
             // if the appID is still nil, exit early.
-            if (handler) {
-                NSString *failureReasonAndDescription = @"A valid App ID was not supplied or detected.  Please call with a valid App ID or configure the app correctly to include FB App ID.";
-                handler(
-                        nil,
-                        [NSError errorWithDomain:FacebookSDKDomain
-                                            code:FBErrorPublishInstallResponse
-                                        userInfo:@{NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
-                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
-                        );
-            }
             return;
         }
 
@@ -359,30 +362,15 @@ static BOOL g_enableLegacyGraphAPI = NO;
         NSString *responseKey = [NSString stringWithFormat:FBLastInstallResponse, appID, nil];
 
         NSDate *lastPing = [defaults objectForKey:pingKey];
-        id lastResponseData = [defaults objectForKey:responseKey];
-
         NSString *attributionID = [FBUtility attributionID];
         NSString *advertiserID = [FBUtility advertiserID];
 
         if (lastPing) {
             // Short circuit
-            if (handler) {
-                handler(lastResponseData, nil);
-            }
             return;
         }
 
         if (!(attributionID || advertiserID)) {
-            if (handler) {
-                NSString *failureReasonAndDescription = @"A valid attribution ID or advertiser ID was not found.  Publishing install when neither of them is present is a no-op.";
-                handler(
-                        nil,
-                        [NSError errorWithDomain:FacebookSDKDomain
-                                            code:FBErrorPublishInstallResponse
-                                        userInfo:@{NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
-                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
-                        );
-            }
             return;
         }
 
@@ -403,11 +391,6 @@ static BOOL g_enableLegacyGraphAPI = NO;
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorInformational
                                 formatString:@"Failure after install publish: %@", ex1.reason];
             }
-
-            // Callback regardless of exception
-            if (handler) {
-                handler(result, error);
-            }
         };
 
         [FBUtility fetchAppSettings:appID
@@ -426,7 +409,8 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                            if (advertiserID) {
                                                [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                                            }
-                                           [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:installActivity accessAdvertisingTrackingStatus:YES];
+                                           [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:installActivity accessAdvertisingTrackingStatus:YES];
+                                           [FBAmbientDeviceInfo extendDictionaryWithDeviceInfo:installActivity];
 
                                            [installActivity setObject:[NSNumber numberWithBool:isAutoPublish].stringValue forKey:@"auto_publish"];
 
@@ -437,48 +421,17 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                            [defaults setObject:[NSDate date] forKey:pingKey];
                                            [defaults setObject:nil forKey:responseKey];
                                            [defaults synchronize];
-
-                                           if (handler) {
-                                               NSString *failureReasonAndDescription = @"The application has not enabled install insights.  To turn this on, go to developers.facebook.com and enable install insights for the app.";
-                                               handler(
-                                                       nil,
-                                                       [NSError errorWithDomain:FacebookSDKDomain
-                                                                           code:FBErrorPublishInstallResponse
-                                                                       userInfo:@{ NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
-                                                                                   NSLocalizedDescriptionKey : failureReasonAndDescription}]
-                                                       );
-                                           }
                                        }
                                    } @catch (NSException *ex2) {
                                        NSString *errorMessage = [NSString stringWithFormat:@"Failure during install publish: %@", ex2.reason];
                                        [FBLogger singleShotLogEntry:FBLoggingBehaviorInformational logEntry:errorMessage];
-                                       if (handler) {
-                                           handler(
-                                                   nil,
-                                                   [NSError errorWithDomain:FacebookSDKDomain
-                                                                       code:FBErrorPublishInstallResponse
-                                                                   userInfo:@{ NSLocalizedFailureReasonErrorKey : errorMessage,
-                                                                               NSLocalizedDescriptionKey : errorMessage}]
-                                                   );
-                                       }
-
                                    }
                                }
                            }];
     } @catch (NSException *ex3) {
         NSString *errorMessage = [NSString stringWithFormat:@"Failure before/during install ping: %@", ex3.reason];
         NSLog(@"%@", errorMessage);
-        if (handler) {
-            handler(
-                    nil,
-                    [NSError errorWithDomain:FacebookSDKDomain
-                                        code:FBErrorPublishInstallResponse
-                                    userInfo:@{ NSLocalizedFailureReasonErrorKey : errorMessage,
-                                                NSLocalizedDescriptionKey : errorMessage}]
-                    );
-        }
     }
 }
-#pragma GCC diagnostic pop
 
 @end

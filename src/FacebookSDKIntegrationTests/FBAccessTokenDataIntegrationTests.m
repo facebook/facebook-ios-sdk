@@ -104,6 +104,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
                                  FBTokenInformationLoginTypeLoginKey : [NSNumber numberWithInt:FBSessionLoginTypeFacebookViaSafari],
                                  FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400],
                                  FBTokenInformationPermissionsRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998401],
+                                 FBTokenInformationAppIDKey : @"appid"
                                  };
 
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
@@ -135,8 +136,8 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
                                  FBTokenInformationExpirationDateKey : [NSDate dateWithTimeIntervalSince1970:1893456000],
                                  FBTokenInformationPermissionsKey : expectedPermissions,
                                  FBTokenInformationIsFacebookLoginKey : [NSNumber numberWithBool:YES],
-                                 FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400]
-                                 };
+                                 FBTokenInformationRefreshDateKey : [NSDate dateWithTimeIntervalSince1970:1356998400],
+                                 FBTokenInformationAppIDKey : @"appid"};
 
     FBAccessTokenData *randomToken = [FBAccessTokenData createTokenFromDictionary:dictionary];
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
@@ -183,7 +184,9 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
                                                                   permissions:[NSArray arrayWithObjects:@"perm1", @"perm2", nil]
                                                                expirationDate:date
                                                                     loginType:FBSessionLoginTypeFacebookViaSafari
-                                                                  refreshDate:nil];
+                                                                  refreshDate:nil
+                                                       permissionsRefreshDate:nil
+                                                                        appID:@"appid"];
     FBSessionTokenCachingStrategy *cachingStrategy = [FBSessionTokenCachingStrategy defaultInstance];
     [cachingStrategy cacheFBAccessTokenData:randomToken];
 

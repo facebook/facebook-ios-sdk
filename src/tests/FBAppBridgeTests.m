@@ -93,6 +93,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
     BOOL yes = YES;
     [[[_mockFBUtility stub] andReturnValue:OCMOCK_VALUE(yes)]
         isRegisteredURLScheme:kTestURLScheme];
+    [[_mockApplication stub] keyWindow];
 }
 
 - (void)tearDown {
