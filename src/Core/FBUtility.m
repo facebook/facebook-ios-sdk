@@ -43,8 +43,8 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
 
 #pragma mark Object Helpers
 
-+ (id<FBGraphObject>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObject>)item {
-    for (id<FBGraphObject> obj in array) {
++ (id<FBGraphObjectProtocol>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObjectProtocol>)item {
+    for (id<FBGraphObjectProtocol> obj in array) {
         if ([FBGraphObject isGraphObjectID:obj sameAs:item]) {
             return obj;
         }

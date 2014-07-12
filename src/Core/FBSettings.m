@@ -400,7 +400,7 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                        if (settings.supportsAttribution) {
                                            // set up the HTTP POST to publish the attribution ID.
                                            NSString *publishPath = [NSString stringWithFormat:FBPublishActivityPath, appID, nil];
-                                           NSMutableDictionary<FBGraphObject> *installActivity = [FBGraphObject graphObject];
+                                           NSMutableDictionary<FBGraphObjectProtocol> *installActivity = [FBGraphObject graphObject];
                                            [installActivity setObject:FBMobileInstallEvent forKey:@"event"];
 
                                            if (attributionID) {

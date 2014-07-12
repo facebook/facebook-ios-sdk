@@ -614,7 +614,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  posting an open graph object (without an action), consider using `startForPostOpenGraphObject:completionHandler:`
  */
 + (FBRequestConnection *)startForPostWithGraphPath:(NSString *)graphPath
-                                       graphObject:(id<FBGraphObject>)graphObject
+                                       graphObject:(id<FBGraphObjectProtocol>)graphObject
                                  completionHandler:(FBRequestHandler)handler;
 
 /*!

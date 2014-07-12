@@ -416,7 +416,7 @@ FBGraphObjectPagingLoaderDelegate>
 #pragma mark - FBGraphObjectViewControllerDelegate
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                filterIncludesItem:(id<FBGraphObject>)item {
+                filterIncludesItem:(id<FBGraphObjectProtocol>)item {
     id<FBGraphUser> user = (id<FBGraphUser>)item;
 
     if ([self.delegate
@@ -458,7 +458,7 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                        pictureUrlOfItem:(id<FBGraphObject>)graphObject {
+                        pictureUrlOfItem:(id<FBGraphObjectProtocol>)graphObject {
     id picture = [graphObject objectForKey:@"picture"];
     // Depending on what migration the app is in, we may get back either a string, or a
     // dictionary with a "data" property that is a dictionary containing a "url" property.

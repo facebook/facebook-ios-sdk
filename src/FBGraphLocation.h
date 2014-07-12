@@ -29,9 +29,9 @@
  @discussion
  The `FBGraphLocation` protocol represents the most commonly used properties of a
  location object. It may be used to access an `NSDictionary` object that has
- been wrapped with an <FBGraphObject> facade.
+ been wrapped with an <FBGraphObjectProtocol> facade.
  */
-@protocol FBGraphLocation<FBGraphObject>
+@protocol FBGraphLocation<FBGraphObjectProtocol>
 
 /*!
  @property

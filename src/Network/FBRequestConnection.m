@@ -333,7 +333,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 }
 
 + (FBRequestConnection *)startForPostWithGraphPath:(NSString *)graphPath
-                                       graphObject:(id<FBGraphObject>)graphObject
+                                       graphObject:(id<FBGraphObjectProtocol>)graphObject
                                  completionHandler:(FBRequestHandler)handler
 {
     FBRequest *request = [FBRequest requestForPostWithGraphPath:graphPath
@@ -882,8 +882,8 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
                                 value:(id)value
                                action:(KeyValueActionHandler)action
                           passByValue:(BOOL)passByValue {
-    if ([value conformsToProtocol:@protocol(FBGraphObject)]) {
-        NSDictionary<FBGraphObject> *refObject = (NSDictionary<FBGraphObject> *)value;
+    if ([value conformsToProtocol:@protocol(FBGraphObjectProtocol)]) {
+        NSDictionary<FBGraphObjectProtocol> *refObject = (NSDictionary<FBGraphObjectProtocol> *)value;
 
         if (refObject.provisionedForPost) {
             NSString *actionValue = [FBUtility simpleJSONEncode:refObject];
@@ -935,7 +935,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     }
 }
 
-+ (void)processGraphObject:(id<FBGraphObject>)object forPath:(NSString *)path withAction:(KeyValueActionHandler)action {
++ (void)processGraphObject:(id<FBGraphObjectProtocol>)object forPath:(NSString *)path withAction:(KeyValueActionHandler)action {
     BOOL isOGAction = NO;
     if ([path hasPrefix:@"me/"] ||
         [path hasPrefix:@"/me/"]) {

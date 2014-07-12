@@ -60,14 +60,14 @@ NSString *const FBPostObject = @"fbsdk:create_object";
     return @"ogshare";
 }
 
-+ (NSString *)getPostedObjectTypeFromObject:(id<FBGraphObject>)obj {
++ (NSString *)getPostedObjectTypeFromObject:(id<FBGraphObjectProtocol>)obj {
     if ([(id)obj objectForKey:FBPostObject] &&
         [(id)obj objectForKey:@"type"]) {
         return [(id)obj objectForKey:@"type"];
     }
     return nil;
 }
-+ (NSString *)getIdOrUrlFromObject:(id<FBGraphObject>)obj {
++ (NSString *)getIdOrUrlFromObject:(id<FBGraphObjectProtocol>)obj {
     id result;
     if ((result = [(id)obj objectForKey:@"id"]) ||
         (result = [(id)obj objectForKey:@"url"])) {
@@ -87,7 +87,7 @@ NSString *const FBPostObject = @"fbsdk:create_object";
         BOOL foundPreviewProperty = NO;
         for (NSString *key in (id)self.action) {
             id obj = [(id)self.action objectForKey:key];
-            if ([obj conformsToProtocol:@protocol(FBGraphObject)]) {
+            if ([obj conformsToProtocol:@protocol(FBGraphObjectProtocol)]) {
                 if (![FBOpenGraphActionParams getPostedObjectTypeFromObject:obj] &&
                     ![FBOpenGraphActionParams getIdOrUrlFromObject:obj]) {
                     errorReason = FBErrorDialogInvalidOpenGraphObject;
@@ -114,7 +114,7 @@ NSString *const FBPostObject = @"fbsdk:create_object";
 }
 
 - (id)flattenObject:(id)obj {
-    if ([obj conformsToProtocol:@protocol(FBGraphObject)]) {
+    if ([obj conformsToProtocol:@protocol(FBGraphObjectProtocol)]) {
         // #2267154: Temporarily work around change in native protocol. This will be removed
         // before leaving beta. After that, just don't flatten objects that have FBPostObject.
         NSString *postedObjectType;

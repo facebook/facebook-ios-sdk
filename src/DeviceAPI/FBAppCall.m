@@ -485,7 +485,7 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
         return;
     }
 
-    NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters = [FBGraphObject graphObject];
+    NSMutableDictionary<FBGraphObjectProtocol> *deferredAppLinkParameters = [FBGraphObject graphObject];
     [deferredAppLinkParameters setObject:FBDeferredAppLinkEvent forKey:@"event"];
 
     NSString *attributionID = [FBUtility attributionID];

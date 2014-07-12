@@ -100,7 +100,7 @@
                     cell:(UITableViewCell *)cell
    raiseSelectionChanged:(BOOL)raiseSelectionChanged
 {
-    id<FBGraphObject> selectedItem = [FBUtility graphObjectInArray:self.selection withSameIDAs:item];
+    id<FBGraphObjectProtocol> selectedItem = [FBUtility graphObjectInArray:self.selection withSameIDAs:item];
     if (selectedItem) {
         NSMutableArray *selection = [[NSMutableArray alloc] initWithArray:self.selection];
         [selection removeObject:selectedItem];
@@ -140,7 +140,7 @@
     }
 }
 
-- (BOOL)selectionIncludesItem:(id<FBGraphObject>)item
+- (BOOL)selectionIncludesItem:(id<FBGraphObjectProtocol>)item
 {
     return [FBUtility graphObjectInArray:self.selection withSameIDAs:item] != nil;
 }
@@ -148,7 +148,7 @@
 #pragma mark - FBGraphObjectSelectionDelegate
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-             selectionIncludesItem:(id<FBGraphObject>)item
+             selectionIncludesItem:(id<FBGraphObjectProtocol>)item
 {
     return [self selectionIncludesItem:item];
 }
@@ -206,7 +206,7 @@
             [result appendFormat:@", "];
         }
         firstItem = NO;
-        [result appendFormat:@"%@", (objectId != nil) ? objectId : @"<FBGraphObject>"];
+        [result appendFormat:@"%@", (objectId != nil) ? objectId : @"<FBGraphObjectProtocol>"];
     }
     [result appendFormat:@"]>"];
 
