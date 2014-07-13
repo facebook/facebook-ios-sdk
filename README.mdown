@@ -11,6 +11,8 @@ To use this workaround, include this in your Podfile:
 pod 'Facebook-iOS-SDK', :git => 'https://github.com/pgaspar/facebook-ios-sdk.git'
 ```
 
+Don't forget to run `pod update Facebook-iOS-SDK` after that.
+
 Facebook SDK for iOS
 ====================
 
