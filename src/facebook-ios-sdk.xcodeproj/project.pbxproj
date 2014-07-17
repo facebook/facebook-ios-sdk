@@ -10,8 +10,6 @@
 		1EF0280918F4A67600EC0090 /* FBAppLinkResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EF0280718F4A67600EC0090 /* FBAppLinkResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EF0280A18F4A67600EC0090 /* FBAppLinkResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF0280818F4A67600EC0090 /* FBAppLinkResolver.m */; };
 		5F0572B916156625008B54E6 /* FBAppEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F0572B716156625008B54E6 /* FBAppEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		5F1C7B96195B9B1100397CBB /* FBAmbientDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F1C7B94195B9B1100397CBB /* FBAmbientDeviceInfo.h */; };
-		5F1C7B97195B9B1100397CBB /* FBAmbientDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F1C7B95195B9B1100397CBB /* FBAmbientDeviceInfo.m */; };
 		5FC7ABAB178C7D2500829DD1 /* FBInsights.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC7ABA1178C7A4900829DD1 /* FBInsights.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5FEA468D194FFAE4001CB319 /* FBTimeSpentData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FEA468B194FFAE4001CB319 /* FBTimeSpentData.h */; };
 		5FEA468E194FFAE4001CB319 /* FBTimeSpentData.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FEA468C194FFAE4001CB319 /* FBTimeSpentData.m */; };
@@ -675,8 +673,6 @@
 		1EF0280718F4A67600EC0090 /* FBAppLinkResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppLinkResolver.h; sourceTree = "<group>"; };
 		1EF0280818F4A67600EC0090 /* FBAppLinkResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAppLinkResolver.m; sourceTree = "<group>"; };
 		5F0572B716156625008B54E6 /* FBAppEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppEvents.h; sourceTree = "<group>"; };
-		5F1C7B94195B9B1100397CBB /* FBAmbientDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAmbientDeviceInfo.h; sourceTree = "<group>"; };
-		5F1C7B95195B9B1100397CBB /* FBAmbientDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAmbientDeviceInfo.m; sourceTree = "<group>"; };
 		5FC7ABA1178C7A4900829DD1 /* FBInsights.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBInsights.h; sourceTree = "<group>"; };
 		5FEA468B194FFAE4001CB319 /* FBTimeSpentData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBTimeSpentData.h; sourceTree = "<group>"; };
 		5FEA468C194FFAE4001CB319 /* FBTimeSpentData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTimeSpentData.m; sourceTree = "<group>"; };
@@ -1355,8 +1351,6 @@
 				848C2D0F18A28A950059FAF2 /* FBAppEvents.m */,
 				848C2D1018A28A950059FAF2 /* FBInsights.m */,
 				5FEA468B194FFAE4001CB319 /* FBTimeSpentData.h */,
-				5F1C7B94195B9B1100397CBB /* FBAmbientDeviceInfo.h */,
-				5F1C7B95195B9B1100397CBB /* FBAmbientDeviceInfo.m */,
 				5FEA468C194FFAE4001CB319 /* FBTimeSpentData.m */,
 			);
 			path = Insights;
@@ -1849,7 +1843,6 @@
 				84F992591871DC6E00E3369F /* FBGraphObjectTableCell.h in Headers */,
 				84F992F31871E6A200E3369F /* FBSession+Internal.h in Headers */,
 				89BEB3F718E476B0006C97A6 /* FBSDKMacros.h in Headers */,
-				5F1C7B96195B9B1100397CBB /* FBAmbientDeviceInfo.h in Headers */,
 				84F992A01871E5F000E3369F /* FBPlacePickerViewController+Internal.h in Headers */,
 				84C1E2001717DD010037E406 /* FBDialogs.h in Headers */,
 				84C1E2131718830F0037E406 /* FBOpenGraphObject.h in Headers */,
@@ -2516,7 +2509,6 @@
 				84F992DA1871E65400E3369F /* FBSettings.m in Sources */,
 				859F0B8518B7C65F0011AFEF /* FBPhotoParams.m in Sources */,
 				8474FE831867F73D000698FF /* FBSession.m in Sources */,
-				5F1C7B97195B9B1100397CBB /* FBAmbientDeviceInfo.m in Sources */,
 				84F992C61871E62700E3369F /* FBURLConnection.m in Sources */,
 				84F992FF1871E6A200E3369F /* FBTestSession.m in Sources */,
 				9D3B0D8317BC230B00CA3C04 /* FBSessionLoginStrategyParams.m in Sources */,

@@ -18,7 +18,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import "FBAmbientDeviceInfo.h"
 #import "FBBoltsMeasurementEventListener.h"
 #import "FBError.h"
 #import "FBInternalSettings.h"
@@ -409,8 +408,7 @@ static BOOL g_enableLegacyGraphAPI = NO;
                                            if (advertiserID) {
                                                [installActivity setObject:advertiserID forKey:@"advertiser_id"];
                                            }
-                                           [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:installActivity accessAdvertisingTrackingStatus:YES];
-                                           [FBAmbientDeviceInfo extendDictionaryWithDeviceInfo:installActivity];
+                                           [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:installActivity accessAdvertisingTrackingStatus:YES];
 
                                            [installActivity setObject:[NSNumber numberWithBool:isAutoPublish].stringValue forKey:@"auto_publish"];
 

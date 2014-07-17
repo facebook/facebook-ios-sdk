@@ -304,7 +304,7 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
     return status;
 }
 
-+ (void)extendDictionaryWithEventUsageLimitsAndUrlSchemes:(NSMutableDictionary *)parameters
++ (void)updateParametersWithEventUsageLimitsAndBundleInfo:(NSMutableDictionary *)parameters
                           accessAdvertisingTrackingStatus:(BOOL)accessAdvertisingTrackingStatus {
     
     // Only add the iOS global value if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
@@ -321,7 +321,10 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
     [parameters setObject:[[NSNumber numberWithBool:!FBSettings.limitEventAndDataUsage] stringValue] forKey:@"application_tracking_enabled"];
 
     static dispatch_once_t fetchBundleOnce;
+    static NSString *bundleIdentifier;
     static NSMutableArray *urlSchemes;
+    static NSString *longVersion;
+    static NSString *shortVersion;
 
     dispatch_once(&fetchBundleOnce, ^{
         NSBundle *mainBundle = [NSBundle mainBundle];
@@ -332,11 +335,24 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
                 [urlSchemes addObjectsFromArray:schemesForType];
             }
         }
+        bundleIdentifier = mainBundle.bundleIdentifier;
+        longVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"];
+        shortVersion = [mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     });
 
+    if (bundleIdentifier.length > 0) {
+        [parameters setObject:bundleIdentifier forKey:@"bundle_id"];
+    }
     if (urlSchemes.count > 0) {
         [parameters setObject:[FBUtility simpleJSONEncode:urlSchemes] forKey:@"url_schemes"];
     }
+    if (longVersion.length > 0) {
+        [parameters setObject:longVersion forKey:@"bundle_version"];
+    }
+    if (shortVersion.length > 0) {
+        [parameters setObject:shortVersion forKey:@"bundle_short_version"];
+    }
+
 }
 
 #pragma mark - JSON Encode / Decode

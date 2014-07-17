@@ -19,7 +19,6 @@
 
 #import <UIKit/UIApplication.h>
 
-#import "FBAmbientDeviceInfo.h"
 #import "FBError.h"
 #import "FBLogger.h"
 #import "FBRequest+Internal.h"
@@ -752,8 +751,6 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
                                     session:session
                         accessAdvertisingID:!allEventsAreImplicit];
 
-    [FBAmbientDeviceInfo extendDictionaryWithDeviceInfo:postParameters];
-
     NSString *loggingEntry = nil;
     if ([[FBSettings loggingBehavior] containsObject:FBLoggingBehaviorAppEvents]) {
 
@@ -811,7 +808,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         }
     }
 
-    [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:postParameters
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:postParameters
                                  accessAdvertisingTrackingStatus:accessAdvertisingID];
 }
 

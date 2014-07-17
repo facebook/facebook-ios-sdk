@@ -499,7 +499,7 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
         [deferredAppLinkParameters setObject:advertiserID forKey:@"advertiser_id"];
     }
 
-    [FBUtility extendDictionaryWithEventUsageLimitsAndUrlSchemes:deferredAppLinkParameters accessAdvertisingTrackingStatus:YES];
+    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:deferredAppLinkParameters accessAdvertisingTrackingStatus:YES];
 
     FBRequest *deferredAppLinkRequest = [[[FBRequest alloc] initForPostWithSession:nil
                                                                          graphPath:[NSString stringWithFormat:@"%@/activities", appID, nil]
