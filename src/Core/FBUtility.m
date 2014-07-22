@@ -43,8 +43,8 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
 
 #pragma mark Object Helpers
 
-+ (id<FBGraphObject>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObject>)item {
-    for (id<FBGraphObject> obj in array) {
++ (id<FBGraphObjectProtocol>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObjectProtocol>)item {
+    for (id<FBGraphObjectProtocol> obj in array) {
         if ([FBGraphObject isGraphObjectID:obj sameAs:item]) {
             return obj;
         }
@@ -291,14 +291,14 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
 
 + (FBAdvertisingTrackingStatus)advertisingTrackingStatus {
     if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
-        return AdvertisingTrackingDisallowed;
+        return FBAdvertisingTrackingStatusDisallowed;
     }
-    FBAdvertisingTrackingStatus status = AdvertisingTrackingUnspecified;
+    FBAdvertisingTrackingStatus status = FBAdvertisingTrackingStatusUnspecified;
     Class ASIdentifierManagerClass = [FBDynamicFrameworkLoader loadClass:@"ASIdentifierManager" withFramework:@"AdSupport"];
     if ([ASIdentifierManagerClass class]) {
         ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
         if (manager) {
-            status = [manager isAdvertisingTrackingEnabled] ? AdvertisingTrackingAllowed : AdvertisingTrackingDisallowed;
+            status = [manager isAdvertisingTrackingEnabled] ? FBAdvertisingTrackingStatusAllowed : FBAdvertisingTrackingStatusDisallowed;
         }
     }
     return status;
@@ -311,8 +311,8 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
     // absence of this parameter is to be interpreted as 'unspecified'.
     if (accessAdvertisingTrackingStatus) {
         FBAdvertisingTrackingStatus advertisingTrackingStatus = [FBUtility advertisingTrackingStatus];
-        if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
-            BOOL allowed = (advertisingTrackingStatus == AdvertisingTrackingAllowed);
+        if (advertisingTrackingStatus != FBAdvertisingTrackingStatusUnspecified) {
+            BOOL allowed = (advertisingTrackingStatus == FBAdvertisingTrackingStatusAllowed);
             [parameters setObject:[[NSNumber numberWithBool:allowed] stringValue]
                            forKey:@"advertiser_tracking_enabled"];
         }

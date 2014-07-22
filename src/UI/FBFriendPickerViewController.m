@@ -118,8 +118,8 @@ FBGraphObjectPagingLoaderDelegate>
     self.itemPicturesEnabled = YES;
     self.selectionManager = selectionManager;
     self.userID = @"me";
-    self.sortOrdering = FBFriendSortByFirstName;
-    self.displayOrdering = FBFriendDisplayByFirstName;
+    self.sortOrdering = FBFriendSortOrderingByFirstName;
+    self.displayOrdering = FBFriendDisplayOrderingByFirstName;
     self.trackActiveSession = YES;
 }
 
@@ -327,7 +327,7 @@ FBGraphObjectPagingLoaderDelegate>
     // Respect user settings in case they have changed.
     NSMutableArray *sortFields = [NSMutableArray array];
     NSString *groupByField = nil;
-    if (self.sortOrdering == FBFriendSortByFirstName) {
+    if (self.sortOrdering == FBFriendSortOrderingByFirstName) {
         [sortFields addObject:@"first_name"];
         [sortFields addObject:@"middle_name"];
         [sortFields addObject:@"last_name"];
@@ -416,7 +416,7 @@ FBGraphObjectPagingLoaderDelegate>
 #pragma mark - FBGraphObjectViewControllerDelegate
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                filterIncludesItem:(id<FBGraphObject>)item {
+                filterIncludesItem:(id<FBGraphObjectProtocol>)item {
     id<FBGraphUser> user = (id<FBGraphUser>)item;
 
     if ([self.delegate
@@ -431,7 +431,7 @@ FBGraphObjectPagingLoaderDelegate>
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                              titleOfItem:(id<FBGraphUser>)graphUser {
     // Title is either "First Middle" or "Last" depending on display order.
-    if (self.displayOrdering == FBFriendDisplayByFirstName) {
+    if (self.displayOrdering == FBFriendDisplayOrderingByFirstName) {
         if (graphUser.middle_name) {
             return [NSString stringWithFormat:@"%@ %@", graphUser.first_name, graphUser.middle_name];
         } else {
@@ -445,7 +445,7 @@ FBGraphObjectPagingLoaderDelegate>
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                        titleSuffixOfItem:(id<FBGraphUser>)graphUser {
     // Title suffix is either "Last" or "First Middle" depending on display order.
-    if (self.displayOrdering == FBFriendDisplayByLastName) {
+    if (self.displayOrdering == FBFriendDisplayOrderingByLastName) {
         if (graphUser.middle_name) {
             return [NSString stringWithFormat:@"%@ %@", graphUser.first_name, graphUser.middle_name];
         } else {
@@ -458,7 +458,7 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                        pictureUrlOfItem:(id<FBGraphObject>)graphObject {
+                        pictureUrlOfItem:(id<FBGraphObjectProtocol>)graphObject {
     id picture = [graphObject objectForKey:@"picture"];
     // Depending on what migration the app is in, we may get back either a string, or a
     // dictionary with a "data" property that is a dictionary containing a "url" property.
@@ -472,10 +472,10 @@ FBGraphObjectPagingLoaderDelegate>
 - (void)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
                 customizeTableCell:(FBGraphObjectTableCell *)cell {
     // We want to bold whichever part of the name we are sorting on.
-    cell.boldTitle = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByFirstName) ||
-    (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByLastName);
-    cell.boldTitleSuffix = (self.sortOrdering == FBFriendSortByFirstName && self.displayOrdering == FBFriendDisplayByLastName) ||
-    (self.sortOrdering == FBFriendSortByLastName && self.displayOrdering == FBFriendDisplayByFirstName);
+    cell.boldTitle = (self.sortOrdering == FBFriendSortOrderingByFirstName && self.displayOrdering == FBFriendDisplayOrderingByFirstName) ||
+    (self.sortOrdering == FBFriendSortOrderingByLastName && self.displayOrdering == FBFriendDisplayOrderingByLastName);
+    cell.boldTitleSuffix = (self.sortOrdering == FBFriendSortOrderingByFirstName && self.displayOrdering == FBFriendDisplayOrderingByLastName) ||
+    (self.sortOrdering == FBFriendSortOrderingByLastName && self.displayOrdering == FBFriendDisplayOrderingByFirstName);
 }
 
 #pragma mark FBGraphObjectPagingLoaderDelegate members

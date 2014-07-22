@@ -46,11 +46,11 @@
 // suggested in the previously referenced documentation
 
 // used internally by the category impl
-typedef enum _SelectorInferredImplType {
+typedef NS_ENUM(NSInteger, SelectorInferredImplType) {
     SelectorInferredImplTypeNone  = 0,
     SelectorInferredImplTypeGet = 1,
     SelectorInferredImplTypeSet = 2
-} SelectorInferredImplType;
+};
 
 
 // internal-only wrapper
@@ -139,11 +139,11 @@ typedef enum _SelectorInferredImplType {
 #pragma mark -
 #pragma mark Public Members
 
-+ (NSMutableDictionary<FBGraphObject> *)graphObject {
++ (NSMutableDictionary<FBGraphObjectProtocol> *)graphObject {
     return [FBGraphObject graphObjectWrappingDictionary:[NSMutableDictionary dictionary]];
 }
 
-+ (NSMutableDictionary<FBGraphObject> *)graphObjectWrappingDictionary:(NSDictionary *)jsonDictionary {
++ (NSMutableDictionary<FBGraphObjectProtocol> *)graphObjectWrappingDictionary:(NSDictionary *)jsonDictionary {
     return [FBGraphObject graphObjectWrappingObject:jsonDictionary];
 }
 
@@ -151,7 +151,7 @@ typedef enum _SelectorInferredImplType {
     return (NSMutableDictionary<FBOpenGraphAction> *)[FBGraphObject graphObject];
 }
 
-+ (NSMutableDictionary<FBGraphObject> *)openGraphObjectForPost {
++ (NSMutableDictionary<FBGraphObjectProtocol> *)openGraphObjectForPost {
     return [FBGraphObject openGraphObjectForPostWithType:nil
                                                    title:nil
                                                    image:nil
@@ -185,7 +185,7 @@ typedef enum _SelectorInferredImplType {
     return ogo;
 }
 
-+ (BOOL)isGraphObjectID:(id<FBGraphObject>)anObject sameAs:(id<FBGraphObject>)anotherObject {
++ (BOOL)isGraphObjectID:(id<FBGraphObjectProtocol>)anObject sameAs:(id<FBGraphObjectProtocol>)anotherObject {
     if (anObject != nil &&
         anObject == anotherObject) {
         return YES;
@@ -360,11 +360,11 @@ typedef enum _SelectorInferredImplType {
 
 + (BOOL)isProtocolImplementationInferable:(Protocol *)protocol checkFBGraphObjectAdoption:(BOOL)checkAdoption {
     // first handle base protocol questions
-    if (checkAdoption && !protocol_conformsToProtocol(protocol, @protocol(FBGraphObject))) {
+    if (checkAdoption && !protocol_conformsToProtocol(protocol, @protocol(FBGraphObjectProtocol))) {
         return NO;
     }
 
-    if ([protocol isEqual:@protocol(FBGraphObject)]) {
+    if ([protocol isEqual:@protocol(FBGraphObjectProtocol)]) {
         return YES; // by definition
     }
 

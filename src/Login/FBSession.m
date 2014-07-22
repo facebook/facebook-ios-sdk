@@ -364,7 +364,7 @@ static FBSession *g_activeSession = nil;
 
     if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
         NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
-                                                errorCode:[@(FBErrorOperationDisallowedForRestrictedTreament) stringValue]
+                                                errorCode:[@(FBErrorCodeOperationDisallowedForRestrictedTreament) stringValue]
                                                innerError:nil];
         [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                           error:error
@@ -1289,7 +1289,7 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)handleDidCompleteNativeLoginForAppCall:(FBAppCall *)call {
-    if (call.error.code == FBErrorAppActivatedWhilePendingAppCall) {
+    if (call.error.code == FBErrorCodeAppActivatedWhilePendingAppCall) {
         // We're here because the app was activated while a authorize request was pending
         // and without a response URL. This is the same flow as handleDidBecomeActive.
         [self authorizeRequestWasImplicitlyCancelled];
@@ -1731,7 +1731,7 @@ static FBSession *g_activeSession = nil;
             // be treated as errors (i.e., we do not support queueing
             // until the repair is resolved).
             if (handler) {
-                handler(self, [NSError errorWithDomain:FacebookSDKDomain code:FBErrorSessionReconnectInProgess userInfo:nil]);
+                handler(self, [NSError errorWithDomain:FacebookSDKDomain code:FBErrorCodeSessionReconnectInProgess userInfo:nil]);
             }
         }
     }
@@ -2072,7 +2072,7 @@ static FBSession *g_activeSession = nil;
 
     // create error object
     NSError *err = [NSError errorWithDomain:FacebookSDKDomain
-                                       code:FBErrorLoginFailedOrCancelled
+                                       code:FBErrorCodeLoginFailedOrCancelled
                                    userInfo:userinfo];
     [userinfo release];
     return err;

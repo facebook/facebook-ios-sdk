@@ -30,9 +30,9 @@
  @discussion
  The `FBGraphUser` protocol represents the most commonly used properties of a
  Facebook user object. It may be used to access an `NSDictionary` object that has
- been wrapped with an <FBGraphObject> facade.
+ been wrapped with an <FBGraphObjectProtocol> facade.
  */
-@protocol FBGraphUser<FBGraphObject>
+@protocol FBGraphUser<FBGraphObjectProtocol>
 
 /*!
  @abstract use objectID instead

@@ -30,7 +30,7 @@
  Represents an Open Graph custom object, to be used directly, or from which to
  derive custom action protocols with custom properties.
  */
-@protocol FBOpenGraphObject<FBGraphObject>
+@protocol FBOpenGraphObject<FBGraphObjectProtocol>
 
 /*!
  @abstract use objectID instead
@@ -75,7 +75,7 @@
  @abstract use objectID instead
  @deprecated use objectDescription instead
  */
-@property (retain, nonatomic) id                    description __attribute__ ((deprecated("use objectDescription instead")));
+@property (copy, atomic) id                    description __attribute__ ((deprecated("use objectDescription instead")));
 
 /*!
  @abstract Typed access to the object's description property.
@@ -89,6 +89,6 @@
  @property
  @abstract Typed access to action's data, which is a dictionary of custom properties
  */
-@property (retain, nonatomic) id<FBGraphObject>     data;
+@property (retain, nonatomic) id<FBGraphObjectProtocol>     data;
 
 @end

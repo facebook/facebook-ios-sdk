@@ -429,7 +429,7 @@ FBGraphObjectPagingLoaderDelegate>
 #pragma mark - FBGraphObjectViewControllerDelegate
 
 - (BOOL)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                filterIncludesItem:(id<FBGraphObject>)item
+                filterIncludesItem:(id<FBGraphObjectProtocol>)item
 {
     id<FBGraphPlace> place = (id<FBGraphPlace>)item;
 
@@ -443,13 +443,13 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                             titleOfItem:(id<FBGraphObject>)graphObject
+                             titleOfItem:(id<FBGraphObjectProtocol>)graphObject
 {
     return [graphObject objectForKey:@"name"];
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                          subtitleOfItem:(id<FBGraphObject>)graphObject
+                          subtitleOfItem:(id<FBGraphObjectProtocol>)graphObject
 {
     NSString *category = [graphObject objectForKey:@"category"];
     NSNumber *wereHereCount = [graphObject objectForKey:@"were_here_count"];
@@ -472,7 +472,7 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 - (NSString *)graphObjectTableDataSource:(FBGraphObjectTableDataSource *)dataSource
-                        pictureUrlOfItem:(id<FBGraphObject>)graphObject
+                        pictureUrlOfItem:(id<FBGraphObjectProtocol>)graphObject
 {
     id picture = [graphObject objectForKey:@"picture"];
     // Depending on what migration the app is in, we may get back either a string, or a

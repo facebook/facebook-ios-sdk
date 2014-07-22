@@ -332,7 +332,7 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
             NSError *innerError = [FBSession sdkSurfacedErrorForNativeLoginError:call.error];
             [FBAppCall invokeHandler:handler
                            withError:[NSError errorWithDomain:FacebookSDKDomain
-                                                         code:FBErrorLoginFailedOrCancelled
+                                                         code:FBErrorCodeLoginFailedOrCancelled
                                                      userInfo:innerError ? @{FBInnerErrorObjectKey : innerError} : nil]];
         } else if (handler) {
             // This isn't login flow, so fall back.
@@ -485,7 +485,7 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
         return;
     }
 
-    NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters = [FBGraphObject graphObject];
+    NSMutableDictionary<FBGraphObjectProtocol> *deferredAppLinkParameters = [FBGraphObject graphObject];
     [deferredAppLinkParameters setObject:FBDeferredAppLinkEvent forKey:@"event"];
 
     NSString *attributionID = [FBUtility attributionID];

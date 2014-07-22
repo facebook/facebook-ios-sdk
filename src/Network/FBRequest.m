@@ -56,7 +56,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 - (instancetype)initForPostWithSession:(FBSession *)session
                              graphPath:(NSString *)graphPath
-                           graphObject:(id<FBGraphObject>)graphObject {
+                           graphObject:(id<FBGraphObjectProtocol>)graphObject {
     self = [self initWithSession:session
                        graphPath:graphPath
                       parameters:nil
@@ -125,12 +125,12 @@ static NSString *const kPostHTTPMethod = @"POST";
     [super dealloc];
 }
 
-//@property(nonatomic,retain) id<FBGraphObject> graphObject;
-- (id<FBGraphObject>)graphObject {
+//@property(nonatomic,retain) id<FBGraphObjectProtocol> graphObject;
+- (id<FBGraphObjectProtocol>)graphObject {
     return _graphObject;
 }
 
-- (void)setGraphObject:(id<FBGraphObject>)newValue {
+- (void)setGraphObject:(id<FBGraphObjectProtocol>)newValue {
     if (_graphObject != newValue) {
         [_graphObject release];
         _graphObject = [newValue retain];
@@ -219,7 +219,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 
 
 + (FBRequest *)requestForPostWithGraphPath:(NSString *)graphPath
-                               graphObject:(id<FBGraphObject>)graphObject {
+                               graphObject:(id<FBGraphObjectProtocol>)graphObject {
     return [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
                                             graphPath:graphPath
                                           graphObject:graphObject]
@@ -303,7 +303,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 + (FBRequest *)requestForPostOpenGraphObject:(id<FBOpenGraphObject>)graphObject {
     if (graphObject) {
         graphObject.provisionedForPost = YES;
-        NSMutableDictionary<FBGraphObject> *parameters = [FBGraphObject graphObject];
+        NSMutableDictionary<FBGraphObjectProtocol> *parameters = [FBGraphObject graphObject];
         NSString *graphPath = [NSString stringWithFormat:@"me/objects/%@", graphObject.type];
         [parameters setObject:graphObject forKey:@"object"];
         FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]
@@ -361,11 +361,11 @@ static NSString *const kPostHTTPMethod = @"POST";
 // Private statics
 
 + (FBRequest *)requestForUpdateOpenGraphObjectWithId:(NSString *)objectId
-                                         graphObject:(id<FBGraphObject>)graphObject
+                                         graphObject:(id<FBGraphObjectProtocol>)graphObject
 {
     if (graphObject) {
         graphObject.provisionedForPost = YES;
-        NSMutableDictionary<FBGraphObject> *parameters = [FBGraphObject graphObject];
+        NSMutableDictionary<FBGraphObjectProtocol> *parameters = [FBGraphObject graphObject];
         NSString *graphPath = objectId;
         [parameters setObject:graphObject forKey:@"object"];
         FBRequest *request = [[[FBRequest alloc] initForPostWithSession:[FBSession activeSessionIfOpen]

@@ -84,7 +84,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
 #pragma GCC diagnostic pop
     NSError *             _error;
     BOOL                  _sessionDidExpire;
-    id<FBGraphObject>     _graphObject;
+    id<FBGraphObjectProtocol>     _graphObject;
 }
 
 /*!
@@ -160,7 +160,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  */
 - (instancetype)initForPostWithSession:(FBSession *)session
                              graphPath:(NSString *)graphPath
-                           graphObject:(id<FBGraphObject>)graphObject;
+                           graphObject:(id<FBGraphObjectProtocol>)graphObject;
 
 /*!
  @method
@@ -264,7 +264,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  the object initiliazation. Make any required modifications prior to
  sending the request.
  */
-@property (nonatomic, retain) id<FBGraphObject> graphObject;
+@property (nonatomic, retain) id<FBGraphObjectProtocol> graphObject;
 
 /*!
  @methodgroup Instance methods
@@ -549,7 +549,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  posting an open graph object (without an action), consider using `requestForPostOpenGraphObject:`
  */
 + (FBRequest *)requestForPostWithGraphPath:(NSString *)graphPath
-                               graphObject:(id<FBGraphObject>)graphObject;
+                               graphObject:(id<FBGraphObjectProtocol>)graphObject;
 
 /*!
  @method

@@ -373,7 +373,7 @@ static NSString *const kNonAppBridgeAppCallURL = @"fb123456789://link?meal=Chick
         assertThat(call, notNilValue());
         assertThat(call.error, notNilValue());
         assertThat(call.error.domain, equalTo(FacebookSDKDomain));
-        assertThatInteger(call.error.code, equalToInteger(FBErrorDialog));
+        assertThatInteger(call.error.code, equalToInteger(FBErrorCodeDialog));
         handlerCalled = YES;
     };
 

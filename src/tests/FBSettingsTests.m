@@ -21,28 +21,28 @@
 @end
 
 typedef NS_ENUM(NSUInteger, FBSettingsTestsMockBetaFlags) {
-    FBSettingsTestsMockBetaNone = 0,
-    FBSettingsTestsMockBetaOne = 1 << 0,
-    FBSettingsTestsMockBetaTwo = 1 << 1,
+    FBSettingsTestsMockBetaFlagsNone = 0,
+    FBSettingsTestsMockBetaFlagsOne = 1 << 0,
+    FBSettingsTestsMockBetaFlagsTwo = 1 << 1,
 };
 
 @implementation FBSettingsTests
 
 - (void)testBetaMode
 {
-    [FBSettings enableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaOne];
-    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaOne]);
+    [FBSettings enableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne];
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne]);
 
-    [FBSettings disableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaOne];
-    XCTAssertFalse([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaOne]);
+    [FBSettings disableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne];
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne]);
 
-    [FBSettings enableBetaFeatures:(FBBetaFeatures)(FBSettingsTestsMockBetaOne | FBSettingsTestsMockBetaTwo)];
-    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaOne]);
-    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaTwo]);
+    [FBSettings enableBetaFeatures:(FBBetaFeatures)(FBSettingsTestsMockBetaFlagsOne | FBSettingsTestsMockBetaFlagsTwo)];
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne]);
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsTwo]);
 
-    [FBSettings disableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaTwo];
-    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaOne]);
-    XCTAssertFalse([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaTwo]);
+    [FBSettings disableBetaFeature:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsTwo];
+    XCTAssertTrue([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsOne]);
+    XCTAssertFalse([FBSettings isBetaFeatureEnabled:(FBBetaFeatures)FBSettingsTestsMockBetaFlagsTwo]);
 }
 
 @end

@@ -33,7 +33,7 @@
  Represents an Open Graph custom action, to be used directly, or from which to
  derive custom action protocols with custom properties.
  */
-@protocol FBOpenGraphAction<FBGraphObject>
+@protocol FBOpenGraphAction<FBGraphObjectProtocol>
 
 /*!
  @abstract use objectID instead
@@ -126,7 +126,7 @@
  @property
  @abstract Typed access to action's application
  */
-@property (retain, nonatomic) id<FBGraphObject>     application;
+@property (retain, nonatomic) id<FBGraphObjectProtocol>     application;
 
 /*!
  @property

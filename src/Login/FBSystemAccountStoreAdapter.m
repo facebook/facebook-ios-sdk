@@ -286,7 +286,7 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
         if (self.accountTypeFB && !self.accountTypeFB.accessGranted) {
             NSString *failureReasonAndDescription = @"Access has not been granted to the Facebook account. Verify device settings.";
             error = [[NSError errorWithDomain:FacebookSDKDomain
-                                         code:FBErrorSystemAPI
+                                         code:FBErrorCodeSystemAPI
                                      userInfo:@{ NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
                                                  NSLocalizedDescriptionKey : failureReasonAndDescription}]
                      retain];
@@ -294,7 +294,7 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
         } else {
             NSString *failureReasonAndDescription = @"The Facebook account has not been configured on the device.";
             error = [[NSError errorWithDomain:FacebookSDKDomain
-                                         code:FBErrorSystemAPI
+                                         code:FBErrorCodeSystemAPI
                                      userInfo:@{ NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
                                                  NSLocalizedDescriptionKey : failureReasonAndDescription}]
                      retain];

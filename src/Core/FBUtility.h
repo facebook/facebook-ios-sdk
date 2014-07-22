@@ -23,19 +23,19 @@
 @class FBRequest;
 @class FBSession;
 
-@protocol FBGraphObject;
+@protocol FBGraphObjectProtocol;
 
-typedef enum FBAdvertisingTrackingStatus {
-    AdvertisingTrackingAllowed,
-    AdvertisingTrackingDisallowed,
-    AdvertisingTrackingUnspecified
-} FBAdvertisingTrackingStatus;
+typedef NS_ENUM(NSInteger, FBAdvertisingTrackingStatus) {
+    FBAdvertisingTrackingStatusAllowed,
+    FBAdvertisingTrackingStatusDisallowed,
+    FBAdvertisingTrackingStatusUnspecified
+};
 
 @interface FBUtility : NSObject
 
 #pragma mark Object Helpers
 
-+ (id<FBGraphObject>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObject>)item;
++ (id<FBGraphObjectProtocol>)graphObjectInArray:(NSArray *)array withSameIDAs:(id<FBGraphObjectProtocol>)item;
 + (NSString *)stringFBIDFromObject:(id)object;
 
 #pragma mark - UI Helpers

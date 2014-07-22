@@ -109,7 +109,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
     [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
-        XCTAssertEqual(FBErrorOperationCancelled, error.code, @"Expected FBErrorOperationCancelled code for error:%@", error);
+        XCTAssertEqual(FBErrorCodeOperationCancelled, error.code, @"Expected FBErrorCodeOperationCancelled code for error:%@", error);
         XCTAssertEqual(++count, 1, @"Expected handler to only be called once");
         [blocker signal];
     }];

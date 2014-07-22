@@ -38,7 +38,7 @@
 
  See FBError.h and FBErrorUtility.h for error category and user message details.
  */
-typedef enum {
+typedef NS_ENUM(NSInteger, FBRequestConnectionErrorBehavior) {
     /*! The default behavior of none */
     FBRequestConnectionErrorBehaviorNone                   = 0,
 
@@ -70,7 +70,7 @@ typedef enum {
      that will be subject to race conditions.
      */
     FBRequestConnectionErrorBehaviorReconnectSession     = 4,
-} FBRequestConnectionErrorBehavior;
+};
 
 /*!
  Normally requests return JSON data that is parsed into a set of `NSDictionary`
@@ -614,7 +614,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  posting an open graph object (without an action), consider using `startForPostOpenGraphObject:completionHandler:`
  */
 + (FBRequestConnection *)startForPostWithGraphPath:(NSString *)graphPath
-                                       graphObject:(id<FBGraphObject>)graphObject
+                                       graphObject:(id<FBGraphObjectProtocol>)graphObject
                                  completionHandler:(FBRequestHandler)handler;
 
 /*!
