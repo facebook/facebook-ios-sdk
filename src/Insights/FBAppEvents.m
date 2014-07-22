@@ -1097,7 +1097,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
     // create error object
     NSError *err = [NSError errorWithDomain:FacebookSDKDomain
-                                       code:FBErrorAppEvents
+                                       code:FBErrorCodeAppEvents
                                    userInfo:userinfo];
 
     NSString *behaviorToLog = FBLoggingBehaviorAppEvents;

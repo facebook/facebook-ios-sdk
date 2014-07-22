@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1EF0280918F4A67600EC0090 /* FBAppLinkResolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EF0280718F4A67600EC0090 /* FBAppLinkResolver.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1EF0280A18F4A67600EC0090 /* FBAppLinkResolver.m in Sources */ = {isa = PBXBuildFile; fileRef = 1EF0280818F4A67600EC0090 /* FBAppLinkResolver.m */; };
+		30099875197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.h in Headers */ = {isa = PBXBuildFile; fileRef = 30099873197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.h */; };
+		30099876197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */ = {isa = PBXBuildFile; fileRef = 30099874197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m */; };
 		5F0572B916156625008B54E6 /* FBAppEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F0572B716156625008B54E6 /* FBAppEvents.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5F1C7B96195B9B1100397CBB /* FBAmbientDeviceInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F1C7B94195B9B1100397CBB /* FBAmbientDeviceInfo.h */; };
 		5F1C7B97195B9B1100397CBB /* FBAmbientDeviceInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F1C7B95195B9B1100397CBB /* FBAmbientDeviceInfo.m */; };
@@ -674,6 +676,8 @@
 /* Begin PBXFileReference section */
 		1EF0280718F4A67600EC0090 /* FBAppLinkResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppLinkResolver.h; sourceTree = "<group>"; };
 		1EF0280818F4A67600EC0090 /* FBAppLinkResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAppLinkResolver.m; sourceTree = "<group>"; };
+		30099873197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBFriendPickerViewDefaultPNG.h; sourceTree = "<group>"; };
+		30099874197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBFriendPickerViewDefaultPNG.m; sourceTree = "<group>"; };
 		5F0572B716156625008B54E6 /* FBAppEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppEvents.h; sourceTree = "<group>"; };
 		5F1C7B94195B9B1100397CBB /* FBAmbientDeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAmbientDeviceInfo.h; sourceTree = "<group>"; };
 		5F1C7B95195B9B1100397CBB /* FBAmbientDeviceInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAmbientDeviceInfo.m; sourceTree = "<group>"; };
@@ -1118,6 +1122,8 @@
 		08FB77AEFE84172EC02AAC07 /* FacebookSDK */ = {
 			isa = PBXGroup;
 			children = (
+				30099873197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.h */,
+				30099874197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m */,
 				B2C87591194709E300D8D771 /* AppLink */,
 				8961FE0018D3C1CD0033CDCB /* AudioResources */,
 				B5B7702D16C30EAD00729340 /* Base64 */,
@@ -1761,6 +1767,7 @@
 				84F992DC1871E65400E3369F /* FBUtility.h in Headers */,
 				84F43FFE15194E4800CEECD5 /* FBRequestConnection.h in Headers */,
 				B2C875A119470B4800D8D771 /* FBBoltsMeasurementEventListener.h in Headers */,
+				30099875197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.h in Headers */,
 				8446FDAD151CDB0B000BE007 /* FBSessionTokenCachingStrategy.h in Headers */,
 				84B2F69E1525096B00E93C17 /* FBSession.h in Headers */,
 				84F992DB1871E65400E3369F /* FBSettings+Internal.h in Headers */,
@@ -2226,6 +2233,7 @@
 				84F992941871E5D400E3369F /* FBLinkShareParams.m in Sources */,
 				89A4410718DB964F001AC2F9 /* FBLikeButton.m in Sources */,
 				84F992E21871E66700E3369F /* FBSettings.m in Sources */,
+				30099878197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */,
 				84F992AA1871E60600E3369F /* FBPlacePickerCacheDescriptor.m in Sources */,
 				84F992AB1871E60600E3369F /* FBPlacePickerViewController.m in Sources */,
 				84F993091871E6B700E3369F /* FBSessionAppEventsState.m in Sources */,
@@ -2285,6 +2293,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89263C141926CBA500A44711 /* AppDelegate.m in Sources */,
+				3009987A197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */,
 				89263C101926CBA500A44711 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2297,6 +2306,7 @@
 				89E973AE192A4D5E00C479CC /* FBSnapshotTestCase.m in Sources */,
 				89E973B1192A4D5E00C479CC /* UIImage+Diff.m in Sources */,
 				89E973AF192A4D5E00C479CC /* FBSnapshotTestController.m in Sources */,
+				30099879197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */,
 				89E973B0192A4D5E00C479CC /* UIImage+Compare.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2363,6 +2373,7 @@
 				84F992781871DCA200E3369F /* FBLogger.m in Sources */,
 				84F9925F1871DC7A00E3369F /* FBGraphObject.m in Sources */,
 				8474FE901867F8B4000698FF /* FBDialogs.m in Sources */,
+				30099877197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */,
 				84F992411871CCAB00E3369F /* FBFrictionlessRequestSettings.m in Sources */,
 				84F993081871E6B600E3369F /* FBAccessTokenData.m in Sources */,
 				84F992CB1871E63A00E3369F /* FBRequestMetadata.m in Sources */,
@@ -2474,6 +2485,7 @@
 				84F992261871CADF00E3369F /* FBFetchedAppSettings.m in Sources */,
 				84F992DD1871E65400E3369F /* FBUtility.m in Sources */,
 				848C2D1318A28A950059FAF2 /* FBInsights.m in Sources */,
+				30099876197DE4ED00EDB41F /* FBFriendPickerViewDefaultPNG.m in Sources */,
 				84F992491871DC5C00E3369F /* FBFriendPickerCacheDescriptor.m in Sources */,
 				84F991F11871C81600E3369F /* FBAppLinkData.m in Sources */,
 				84F992561871DC6E00E3369F /* FBGraphObject.m in Sources */,

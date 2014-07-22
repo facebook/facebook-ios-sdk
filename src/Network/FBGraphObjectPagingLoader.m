@@ -274,7 +274,7 @@
             userInfo[FBErrorSessionKey] = self.session;
         }
         error = [[[NSError alloc] initWithDomain:FacebookSDKDomain
-                                            code:FBErrorProtocolMismatch
+                                            code:FBErrorCodeProtocolMismatch
                                         userInfo:userInfo]
                  autorelease];
     }
