@@ -283,7 +283,7 @@
     if (error) {
         // Cancellation is not really an error we want to bother the delegate with.
         cancelled = [error.domain isEqualToString:FacebookSDKDomain] &&
-        error.code == FBErrorOperationCancelled;
+        error.code == FBErrorCodeOperationCancelled;
 
         if (cancelled) {
             if ([self.delegate respondsToSelector:@selector(pagingLoaderWasCancelled:)]) {

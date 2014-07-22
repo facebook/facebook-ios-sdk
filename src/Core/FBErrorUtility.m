@@ -107,7 +107,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
     if ([[error domain] isEqualToString:FacebookSDKDomain]) {
         // now defaulting to an unknown (future) facebook category
         category = FBErrorCategoryFacebookOther;
-        if ([error code] == FBErrorLoginFailedOrCancelled) {
+        if ([error code] == FBErrorCodeLoginFailedOrCancelled) {
             NSString *errorLoginFailedReason = [error userInfo][FBErrorLoginFailedReason];
             if (errorLoginFailedReason == FBErrorLoginFailedReasonInlineCancelledValue ||
                 errorLoginFailedReason == FBErrorLoginFailedReasonUserCancelledSystemValue ||
@@ -119,7 +119,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                 // for now, we use "Retry" as a sentinal indicating any auth error
                 category = FBErrorCategoryRetry;
             }
-        } else if ([error code] == FBErrorHTTPError) {
+        } else if ([error code] == FBErrorCodeHTTPError) {
             if ((errorCode == FBOAuthError || errorCode == FBAPISessionError)) {
                 category = FBErrorCategoryAuthenticationReopenSession;
             } else if (errorCode == FBAPIServiceError || errorCode == FBAPIUnknownError) {
@@ -189,7 +189,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
             userMessageDefault = @"This app doesn't have permission to do this. To change permissions, try logging into the app again.";
             break;
         case FBErrorCategoryRetry:
-            if ([error code] == FBErrorLoginFailedOrCancelled) {
+            if ([error code] == FBErrorCodeLoginFailedOrCancelled) {
                 if ([[error userInfo][FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonSystemDisallowedWithoutErrorValue]) {
                     // This maps to the iOS 6 slider disabled case.
                     userMessageKey = @"FBE:OAuthDevice";
@@ -206,7 +206,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
 
                     shouldNotifyUser = YES;
                     category = FBErrorCategoryServer;
-                } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorOperationDisallowedForRestrictedTreament) {
+                } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorCodeOperationDisallowedForRestrictedTreament) {
                     category = FBErrorCategoryUserCancelled;
                 }
             }
@@ -293,7 +293,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
         [userInfoDictionary setObject:innerError forKey:FBErrorInnerErrorKey];
     }
     return [NSError errorWithDomain:FacebookSDKDomain
-                               code:FBErrorHTTPError
+                               code:FBErrorCodeHTTPError
                            userInfo:userInfoDictionary];
 }
 
@@ -313,7 +313,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
         [userInfoDictionary setObject:innerError forKey:FBErrorInnerErrorKey];
     }
     return [NSError errorWithDomain:FacebookSDKDomain
-                               code:FBErrorHTTPError
+                               code:FBErrorCodeHTTPError
                            userInfo:userInfoDictionary];
 }
 

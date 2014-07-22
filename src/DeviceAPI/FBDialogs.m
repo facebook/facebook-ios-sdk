@@ -647,7 +647,7 @@ return NO; \
         userInfo[FBErrorSessionKey] = session;
     }
     NSError *error = [NSError errorWithDomain:FacebookSDKDomain
-                                         code:FBErrorDialog
+                                         code:FBErrorCodeDialog
                                      userInfo:userInfo];
     return error;
 }

@@ -279,7 +279,7 @@ forFailedAppCall:(FBAppCall *)appCall
     }
 
     appCall.error = [NSError errorWithDomain:FacebookSDKDomain
-                                        code:FBErrorDialog
+                                        code:FBErrorCodeDialog
                                     userInfo:@{@"message":message}];
 
     handler(appCall);
@@ -314,7 +314,7 @@ forFailedAppCall:(FBAppCall *)appCall
         [FBAppBridge symmetricKeyAndForceRefresh:YES];
 
         // The bridge only handles URLs from a native Facebook app.
-        preProcessErrorCode = FBErrorUntrustedURL;
+        preProcessErrorCode = FBErrorCodeUntrustedURL;
     } else {
         NSString *urlPath = nil;
         if ([url.path length] > 1) {
@@ -340,7 +340,7 @@ forFailedAppCall:(FBAppCall *)appCall
     if (!success && fallbackHandler) {
         NSString *failureReasonAndDescription = @"The URL could not be processed for an FBAppCall";
         NSError *preProcessError = [NSError errorWithDomain:FacebookSDKDomain
-                                                       code:preProcessErrorCode ?: FBErrorMalformedURL
+                                                       code:preProcessErrorCode ?: FBErrorCodeMalformedURL
                                                    userInfo:@{
                                   FBErrorUnprocessedURLKey : url,
                                   NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
@@ -377,7 +377,7 @@ forFailedAppCall:(FBAppCall *)appCall
                 if (!error) {
                     NSString *failureReasonAndDescription = @"The user navigated away from the Facebook app prior to completing this AppCall. This AppCall is now cancelled and needs to be retried to get a successful completion";
                     error = [NSError errorWithDomain:FacebookSDKDomain
-                                                     code:FBErrorAppActivatedWhilePendingAppCall
+                                                     code:FBErrorCodeAppActivatedWhilePendingAppCall
                                                  userInfo:@{NSLocalizedFailureReasonErrorKey : failureReasonAndDescription,
                                                             NSLocalizedDescriptionKey : failureReasonAndDescription}];
                 }

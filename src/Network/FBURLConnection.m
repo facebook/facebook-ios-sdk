@@ -180,7 +180,7 @@ static NSArray *_cdnHosts;
     }
 
     NSError *error = [[NSError alloc] initWithDomain:FacebookSDKDomain
-                                                code:FBErrorOperationCancelled
+                                                code:FBErrorCodeOperationCancelled
                                             userInfo:nil];
 
     // We are retaining ourselves (and releasing explicitly) because unlike the

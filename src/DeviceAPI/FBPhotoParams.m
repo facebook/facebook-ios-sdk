@@ -82,7 +82,7 @@
         NSDictionary *userInfo = @{ FBErrorDialogReasonKey: errorReason,
                                     NSLocalizedFailureReasonErrorKey : errorFailureReason };
         return [NSError errorWithDomain:FacebookSDKDomain
-                                   code:FBErrorDialog
+                                   code:FBErrorCodeDialog
                                userInfo:userInfo];
     }
     return nil;

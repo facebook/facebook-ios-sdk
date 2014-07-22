@@ -322,7 +322,7 @@
 
     NSURLRequest *request = [self newRequest];
 
-    NSError *error = [NSError errorWithDomain:FacebookSDKDomain code:FBErrorOperationCancelled userInfo:nil];
+    NSError *error = [NSError errorWithDomain:FacebookSDKDomain code:FBErrorCodeOperationCancelled userInfo:nil];
     [self setHandlerExpectingError:error];
 
     TestFBURLConnection *connection = [[TestFBURLConnection alloc] initWithRequest:request

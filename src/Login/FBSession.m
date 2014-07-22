@@ -2072,7 +2072,7 @@ static FBSession *g_activeSession = nil;
 
     // create error object
     NSError *err = [NSError errorWithDomain:FacebookSDKDomain
-                                       code:FBErrorLoginFailedOrCancelled
+                                       code:FBErrorCodeLoginFailedOrCancelled
                                    userInfo:userinfo];
     [userinfo release];
     return err;

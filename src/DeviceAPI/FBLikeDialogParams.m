@@ -42,7 +42,7 @@
 {
     if (!self.objectID) {
         return [NSError errorWithDomain:FacebookSDKDomain
-                                   code:FBErrorDialog
+                                   code:FBErrorCodeDialog
                                userInfo:@{ FBErrorDialogReasonKey: FBErrorDialogInvalidLikeObjectID }];
     }
     return nil;

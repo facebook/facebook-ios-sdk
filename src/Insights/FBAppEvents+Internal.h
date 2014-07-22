@@ -106,14 +106,14 @@ FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlError;
 FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlImpression;
 FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlNetworkUnavailable;
 
-typedef enum {
+typedef NS_ENUM(NSInteger, FBAppEventsFlushReason) {
     FBAppEventsFlushReasonExplicit,
     FBAppEventsFlushReasonTimer,
     FBAppEventsFlushReasonSessionChange,
     FBAppEventsFlushReasonPersistedEvents,
     FBAppEventsFlushReasonEventThreshold,
     FBAppEventsFlushReasonEagerlyFlushingEvent
-} FBAppEventsFlushReason;
+};
 
 @interface FBAppEvents (Internal)
 

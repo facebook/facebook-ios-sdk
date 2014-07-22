@@ -144,12 +144,12 @@ NSString *const FBPLISTLoggingOverrideAppIDKey = @"FacebookLoggingOverrideAppID"
 
 #pragma mark - typedefs
 
-typedef enum {
-    AppSupportsAttributionUnknown,
-    AppSupportsAttributionQueryInFlight,
-    AppSupportsAttributionTrue,
-    AppSupportsAttributionFalse,
-} AppSupportsAttributionStatus;
+typedef NS_ENUM(NSInteger, AppSupportsAttributionStatus) {
+    AppSupportsAttributionStatusUnknown,
+    AppSupportsAttributionStatusQueryInFlight,
+    AppSupportsAttributionStatusTrue,
+    AppSupportsAttributionStatusFalse,
+};
 
 @property (readwrite) FBAppEventsFlushBehavior      flushBehavior;
 @property (readwrite, copy) NSString               *loggingOverrideAppID;
@@ -415,7 +415,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         // This will still require a session and a call to logEvent at some point to set that session up
         self.haveOutstandingPersistedData = YES;
         self.flushBehavior = FBAppEventsFlushBehaviorAuto;
-        self.appSupportsAttributionStatus = AppSupportsAttributionUnknown;
+        self.appSupportsAttributionStatus = AppSupportsAttributionStatusUnknown;
 
         _appAuthSessions = [[NSMutableDictionary alloc] init];
         _anonymousSessions = [[NSMutableDictionary alloc] init];
@@ -676,17 +676,17 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
     // If trying to flush a session already in flight, just ignore and continue to accum events
     // until we try to flush again.
-    if (appEventsState.requestInFlight || self.appSupportsAttributionStatus == AppSupportsAttributionQueryInFlight) {
+    if (appEventsState.requestInFlight || self.appSupportsAttributionStatus == AppSupportsAttributionStatusQueryInFlight) {
         return;
     }
 
     NSString *appid = [self appIDToLogEventsWith:session];
 
-    if (self.appSupportsAttributionStatus == AppSupportsAttributionUnknown) {
+    if (self.appSupportsAttributionStatus == AppSupportsAttributionStatusUnknown) {
 
         // If we haven't yet determined whether the app supports sending the attribution ID, we'll need
         // to make an initial request to determine this, and then call back in once we know.
-        self.appSupportsAttributionStatus = AppSupportsAttributionQueryInFlight;
+        self.appSupportsAttributionStatus = AppSupportsAttributionStatusQueryInFlight;
         [FBUtility fetchAppSettings:appid
                            callback:^(FBFetchedAppSettings *settings, NSError *error) {
 
@@ -694,7 +694,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
                                // Treat an error as if the app doesn't allow sending of attribution ID.
                                self.appSupportsAttributionStatus = settings.supportsAttribution && !error
-                                 ? AppSupportsAttributionTrue : AppSupportsAttributionFalse;
+                                 ? AppSupportsAttributionStatusTrue : AppSupportsAttributionStatusFalse;
 
                                self.appSupportsImplicitLogging = settings.supportsImplicitSdkLogging;
 
@@ -793,7 +793,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
                                   session:(FBSession *)session
                      accessAdvertisingID:(BOOL)accessAdvertisingID {
 
-    if (self.appSupportsAttributionStatus == AppSupportsAttributionTrue) {
+    if (self.appSupportsAttributionStatus == AppSupportsAttributionStatusTrue) {
         NSString *attributionID = [FBUtility attributionID];
         if (attributionID) {
             [postParameters setObject:attributionID forKey:@"attribution"];
@@ -1014,7 +1014,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
 - (void)attributionIDRecheckTimerFired:(id)arg {
     // Reset app attribution status so it will be re-fetched in the event there was a server change.
-    self.appSupportsAttributionStatus = AppSupportsAttributionUnknown;
+    self.appSupportsAttributionStatus = AppSupportsAttributionStatusUnknown;
 }
 
 - (void)applicationDidBecomeActive {
@@ -1219,7 +1219,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     // 3) if we have a user session token, then no need to send attribution ID / advertiser ID back as the udid parameter
     // 4) otherwise, send back the udid parameter.
 
-    if ([FBUtility advertisingTrackingStatus] == AdvertisingTrackingDisallowed || [FBSettings limitEventAndDataUsage]
+    if ([FBUtility advertisingTrackingStatus] == FBAdvertisingTrackingStatusDisallowed || [FBSettings limitEventAndDataUsage]
         || [FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
         return nil;
     }

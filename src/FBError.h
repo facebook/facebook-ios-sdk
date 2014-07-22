@@ -59,16 +59,16 @@ typedef NS_ENUM(NSInteger, FBErrorCode) {
      Like nil for FBErrorCode values, represents an error code that
      has not been initialized yet.
      */
-    FBErrorInvalid = 0,
+    FBErrorCodeInvalid = 0,
 
     /*! The operation failed because it was cancelled. */
-    FBErrorOperationCancelled,
+    FBErrorCodeOperationCancelled,
 
     /*! A login attempt failed */
-    FBErrorLoginFailedOrCancelled,
+    FBErrorCodeLoginFailedOrCancelled,
 
     /*! The graph API returned an error for this operation. */
-    FBErrorRequestConnectionApi,
+    FBErrorCodeRequestConnectionApi,
 
     /*!
      The operation failed because the server returned an unexpected
@@ -79,50 +79,50 @@ typedef NS_ENUM(NSInteger, FBErrorCode) {
      If this occurs on the current SDK with proper app migration
      settings, you may need to try changing to one request per batch.
      */
-    FBErrorProtocolMismatch,
+    FBErrorCodeProtocolMismatch,
 
     /*! Non-success HTTP status code was returned from the operation. */
-    FBErrorHTTPError,
+    FBErrorCodeHTTPError,
 
     /*! An endpoint that returns a binary response was used with FBRequestConnection.
      Endpoints that return image/jpg, etc. should be accessed using NSURLRequest */
-    FBErrorNonTextMimeTypeReturned,
+    FBErrorCodeNonTextMimeTypeReturned,
 
     /*! An error occurred while trying to display a native dialog */
-    FBErrorDialog,
+    FBErrorCodeDialog,
 
     /*! An error occurred using the FBAppEvents class */
-    FBErrorAppEvents,
+    FBErrorCodeAppEvents,
 
     /*! An error occurred related to an iOS API call */
-    FBErrorSystemAPI,
+    FBErrorCodeSystemAPI,
 
     /*!
      The application had its applicationDidBecomeActive: method called while waiting
      on a response from the native Facebook app for a pending FBAppCall.
      */
-    FBErrorAppActivatedWhilePendingAppCall,
+    FBErrorCodeAppActivatedWhilePendingAppCall,
 
     /*!
      The application had its openURL: method called from a source that was not a
      Facebook app and with a URL that was intended for the AppBridge
      */
-    FBErrorUntrustedURL,
+    FBErrorCodeUntrustedURL,
 
     /*!
      The URL passed to FBAppCall, was not able to be parsed
      */
-    FBErrorMalformedURL,
+    FBErrorCodeMalformedURL,
 
     /*!
      The operation failed because the session is currently busy reconnecting.
     */
-    FBErrorSessionReconnectInProgess,
+    FBErrorCodeSessionReconnectInProgess,
 
     /*!
      Reserved for future use.
     */
-    FBErrorOperationDisallowedForRestrictedTreament,
+    FBErrorCodeOperationDisallowedForRestrictedTreament,
 };
 
 /*!
@@ -134,28 +134,28 @@ typedef NS_ENUM(NSInteger, FBErrorCode) {
  */
 typedef NS_ENUM(NSUInteger, FBNativeApplicationErrorCode) {
     /*! A general error in processing an FBAppCall, without a known cause. Unhandled exceptions are a good example */
-    FBAppCallErrorUnknown = 1,
+    FBNativeApplicationErrorCodeCallErrorUnknown = 1,
 
     /*! The FBAppCall cannot be processed for some reason */
-    FBAppCallErrorUnsupported = 2,
+    FBNativeApplicationErrorCodeCallErrorUnsupported = 2,
 
     /*! The FBAppCall is for a method that does not exist (or is turned off) */
-    FBAppCallErrorUnknownMethod = 3,
+    FBNativeApplicationErrorCodeCallErrorUnknownMethod = 3,
 
     /*! The FBAppCall cannot be processed at the moment, but can be retried at a later time. */
-    FBAppCallErrorServiceBusy = 4,
+    FBNativeApplicationErrorCodeCallErrorServiceBusy = 4,
 
     /*! Share was called in the native Facebook app with incomplete or incorrect arguments */
-    FBShareErrorInvalidParam = 100,
+    FBNativeApplicationErrorCodeShareErrorInvalidParam = 100,
 
     /*! A server error occurred while calling Share in the native Facebook app. */
-    FBShareErrorServer = 102,
+    FBNativeApplicationErrorCodeShareErrorServer = 102,
 
     /*! An unknown error occurred while calling Share in the native Facebook app. */
-    FBShareErrorUnknown = 103,
+    FBNativeApplicationErrorCodeShareErrorUnknown = 103,
 
     /*! Disallowed from calling Share in the native Facebook app. */
-    FBShareErrorDenied = 104,
+    FBNativeApplicationErrorCodeShareErrorDenied = 104,
 };
 
 /*!
@@ -210,14 +210,14 @@ FBSDK_EXTERN NSString *const FBErrorUnprocessedURLKey;
 
 /*!
  The key in the userInfo NSDictionary of NSError for unsuccessful
- logins (error.code equals FBErrorLoginFailedOrCancelled). If present,
+ logins (error.code equals FBErrorCodeLoginFailedOrCancelled). If present,
  the value will be one of the constants prefixed by FBErrorLoginFailedReason*.
 */
 FBSDK_EXTERN NSString *const FBErrorLoginFailedReason;
 
 /*!
  The key in the userInfo NSDictionary of NSError for unsuccessful
- logins (error.code equals FBErrorLoginFailedOrCancelled). If present,
+ logins (error.code equals FBErrorCodeLoginFailedOrCancelled). If present,
  the value indicates an original login error code wrapped by this error.
  This is only used in the web dialog login flow.
  */

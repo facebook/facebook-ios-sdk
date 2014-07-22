@@ -68,27 +68,27 @@ typedef void (^KeyValueActionHandler)(NSString *key, id value);
 // ----------------------------------------------------------------------------
 // FBRequestConnectionState
 
-typedef enum FBRequestConnectionState {
-    kStateCreated,
-    kStateSerialized,
-    kStateStarted,
-    kStateCompleted,
-    kStateCancelled,
-} FBRequestConnectionState;
+typedef NS_ENUM(NSInteger, FBRequestConnectionState) {
+    FBRequestConnectionStateCreated,
+    FBRequestConnectionStateSerialized,
+    FBRequestConnectionStateStarted,
+    FBRequestConnectionStateCompleted,
+    FBRequestConnectionStateCancelled,
+};
 
 // ----------------------------------------------------------------------------
 // Graph API error codes
 
 typedef NS_ENUM(NSInteger, FBGraphApiErrorCode) {
-    FBGraphApiErrorUnsupported = 100,
-    FBGraphApiErrorSignature = 104,
-    FBGraphApiErrorAccessToken = 190,
-    FBGraphApiErrorQueryParser = 2500,
+    FBGraphApiErrorCodeUnsupported = 100,
+    FBGraphApiErrorCodeSignature = 104,
+    FBGraphApiErrorCodeAccessToken = 190,
+    FBGraphApiErrorCodeQueryParser = 2500,
 };
 
 typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
-    FBGraphApiErrorAccessTokenExpired = 463,
-    FBGraphApiErrorAccessTokenInvalidated = 466,
+    FBGraphApiErrorAccessTokenSubcodeExpired = 463,
+    FBGraphApiErrorAccessTokenSubcodeInvalidated = 466,
 };
 
 // ----------------------------------------------------------------------------
@@ -132,7 +132,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         return request;
 
     } else {
-        // CONSIDER: Could move to kStateSerialized here by caching result, but
+        // CONSIDER: Could move to FBRequestConnectionStateSerialized here by caching result, but
         // it seems bad for a get accessor to modify state in observable manner.
         return [self requestWithBatch:self.requests timeout:_timeout];
     }
@@ -140,9 +140,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
 - (void)setUrlRequest:(NSMutableURLRequest *)request
 {
-    NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
+    NSAssert((self.state == FBRequestConnectionStateCreated) || (self.state == FBRequestConnectionStateSerialized),
              @"Cannot set urlRequest after starting or cancelling.");
-    self.state = kStateSerialized;
+    self.state = FBRequestConnectionStateSerialized;
 
     self.internalUrlRequest = request;
 }
@@ -172,7 +172,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     if ((self = [super init])) {
         _requests = [[NSMutableArray alloc] init];
         _timeout = timeout;
-        _state = kStateCreated;
+        _state = FBRequestConnectionStateCreated;
         _logger = [[FBLogger alloc] initWithLoggingBehavior:FBLoggingBehaviorFBRequests];
         _isResultFromCache = NO;
     }
@@ -232,7 +232,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
    batchParameters:(NSDictionary *)batchParameters
           behavior:(FBRequestConnectionErrorBehavior)behavior
 {
-    NSAssert(self.state == kStateCreated,
+    NSAssert(self.state == FBRequestConnectionStateCreated,
              @"Requests must be added before starting or cancelling.");
 
     FBRequestMetadata *metadata = [[FBRequestMetadata alloc] initWithRequest:request
@@ -256,7 +256,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     [[self retain] autorelease];
 
     // Set the state to cancelled now prior to any handlers being invoked.
-    self.state = kStateCancelled;
+    self.state = FBRequestConnectionStateCancelled;
     [self.connection cancel];
     self.connection = nil;
 }
@@ -472,9 +472,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         request = self.urlRequest;
     }
 
-    NSAssert((self.state == kStateCreated) || (self.state == kStateSerialized),
+    NSAssert((self.state == FBRequestConnectionStateCreated) || (self.state == FBRequestConnectionStateSerialized),
              @"Cannot call start again after calling start or cancel.");
-    self.state = kStateStarted;
+    self.state = FBRequestConnectionStateStarted;
 
     _requestStartTime = [FBUtility currentTimeInMilliseconds];
 
@@ -966,11 +966,11 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 {
     self.connectionError = error;
 
-    if (self.state != kStateCancelled) {
-        NSAssert(self.state == kStateStarted,
+    if (self.state != FBRequestConnectionStateCancelled) {
+        NSAssert(self.state == FBRequestConnectionStateStarted,
                  @"Unexpected state %d in completeWithResponse",
                  self.state);
-        self.state = kStateCompleted;
+        self.state = FBRequestConnectionStateCompleted;
     }
 
     NSInteger statusCode;
@@ -982,7 +982,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         statusCode = self.urlResponse.statusCode;
 
         if (!error && [response.MIMEType hasPrefix:@"image"]) {
-            error = [self errorWithCode:FBErrorNonTextMimeTypeReturned
+            error = [self errorWithCode:FBErrorCodeNonTextMimeTypeReturned
                              statusCode:0
                      parsedJSONResponse:nil
                              innerError:nil
@@ -1015,7 +1015,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         if ([self.requests count] != [results count]) {
             [FBLogger singleShotLogEntry:FBLoggingBehaviorFBRequests formatString:@"Expected %lu results, got %lu",
              (unsigned long)[self.requests count], (unsigned long)[results count]];
-            error = [self errorWithCode:FBErrorProtocolMismatch
+            error = [self errorWithCode:FBErrorCodeProtocolMismatch
                              statusCode:statusCode
                      parsedJSONResponse:results
                              innerError:nil
@@ -1116,7 +1116,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         }
         results = mutableResults;
     } else {
-        *error = [self errorWithCode:FBErrorProtocolMismatch
+        *error = [self errorWithCode:FBErrorCodeProtocolMismatch
                           statusCode:statusCode
                   parsedJSONResponse:results
                           innerError:nil
@@ -1251,19 +1251,19 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
     switch (code) {
         // General code returned when an access token is needed for a resource
-        case FBGraphApiErrorSignature:
+        case FBGraphApiErrorCodeSignature:
         // Request to /me or /app without token.  Used for more than access token issues though
-        case FBGraphApiErrorQueryParser:
+        case FBGraphApiErrorCodeQueryParser:
             errorString = @"An open FBSession must be specified for calls to this endpoint.";
             break;
         // Access token used is invalid
-        case FBGraphApiErrorAccessToken:
+        case FBGraphApiErrorCodeAccessToken:
             switch (subcode) {
                 // Access token has expired
-                case FBGraphApiErrorAccessTokenExpired:
+                case FBGraphApiErrorAccessTokenSubcodeExpired:
                     errorString = @"The access token associated with the active session has expired.";
                 // Access token was invalidated
-                case FBGraphApiErrorAccessTokenInvalidated:
+                case FBGraphApiErrorAccessTokenSubcodeInvalidated:
                     errorString = @"The access token associated with the active session has been invalidated.";
                     break;
                 default:
@@ -1417,7 +1417,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
             NSMutableDictionary *userInfo = [[[NSMutableDictionary alloc] init] autorelease];
             [userInfo addEntriesFromDictionary:dictionary];
-            return [self errorWithCode:FBErrorRequestConnectionApi
+            return [self errorWithCode:FBErrorCodeRequestConnectionApi
                             statusCode:200
                     parsedJSONResponse:idResult
                             innerError:nil
@@ -1496,7 +1496,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     NSError *result = nil;
     if (innerError || ((statusCode < 200) || (statusCode >= 300))) {
         [FBLogger singleShotLogEntry:FBLoggingBehaviorFBRequests formatString:@"Error: HTTP status code: %lu", (unsigned long)statusCode];
-        result = [self errorWithCode:FBErrorHTTPError
+        result = [self errorWithCode:FBErrorCodeHTTPError
                           statusCode:statusCode
                   parsedJSONResponse:response
                           innerError:innerError
