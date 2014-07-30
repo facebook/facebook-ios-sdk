@@ -313,8 +313,10 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 + (FBCacheDescriptor *)cacheDescriptorWithUserID:(NSString *)userID
+                                friendPickerType:(FBFriendPickerType)friendPickerType
                                 fieldsForRequest:(NSSet *)fieldsForRequest {
     return [[[FBFriendPickerCacheDescriptor alloc] initWithUserID:userID
+                                                 friendPickerType:friendPickerType
                                                  fieldsForRequest:fieldsForRequest]
             autorelease];
 }
@@ -350,6 +352,7 @@ FBGraphObjectPagingLoaderDelegate>
 
     // create the request and start the loader
     FBRequest *request = [FBFriendPickerViewController requestWithUserID:user
+                                                       friendPickerType:self.friendPickerType
                                                                   fields:self.fieldsForRequest
                                                               dataSource:self.dataSource
                                                                  session:self.session];
@@ -365,11 +368,26 @@ FBGraphObjectPagingLoaderDelegate>
 }
 
 + (FBRequest *)requestWithUserID:(NSString *)userID
+                friendPickerType:(FBFriendPickerType)friendPickerType
                           fields:(NSSet *)fields
                       dataSource:(FBGraphObjectTableDataSource *)datasource
                          session:(FBSession *)session {
 
-    FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/friends", userID]];
+    NSString *requestPath =nil;
+    switch (friendPickerType) {
+        case FBFriendFriendPickerTypeTaggableFriends:
+            requestPath = @"/taggable_friends";
+            break;
+        case FBFriendFriendPickerTypeInvitableFriends:
+            requestPath = @"/invitable_friends";
+            break;
+        case FBFriendFriendPickerTypeFriends:
+        default:
+            requestPath = @"/friends";
+            break;
+    }
+    
+    FBRequest *request = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@%@", userID, requestPath]];
     [request setSession:session];
 
     // Use field expansion to fetch a 100px wide picture if we're on a retina device.

@@ -52,6 +52,21 @@ typedef NS_ENUM(NSUInteger, FBFriendDisplayOrdering) {
     FBFriendDisplayByLastName,
 };
 
+/*!
+ @typedef NS_ENUM (NSUInteger, FBFriendPickerType)
+ 
+ @abstract Indicates the type of friends should be listed in the friend picker.
+ 
+ @discussion
+ */
+typedef NS_ENUM(NSUInteger, FBFriendPickerType) {
+    /*! @"/friends" */
+    FBFriendFriendPickerTypeFriends = 0,
+    /*! @"/taggable_friends" */
+    FBFriendFriendPickerTypeTaggableFriends,
+    /*! @"/invitable_friends" */
+    FBFriendFriendPickerTypeInvitableFriends,
+};
 
 /*!
  @class
@@ -108,6 +123,12 @@ typedef NS_ENUM(NSUInteger, FBFriendDisplayOrdering) {
  Addtional fields to fetch when making the Graph API call to get friend data.
  */
 @property (nonatomic, copy) NSSet *fieldsForRequest;
+
+/*!
+ @abstract
+ Addtional picker type for request for friend data.
+ */
+@property (nonatomic, assign) FBFriendPickerType friendPickerType;
 
 /*!
  @abstract
@@ -226,9 +247,10 @@ typedef NS_ENUM(NSUInteger, FBFriendDisplayOrdering) {
  object.
 
  @param userID              The profile ID of the user whose friends will be displayed. A nil value implies a "me" alias.
+ @param friendPickerType    type of friends in the request for friend data.
  @param fieldsForRequest    The set of additional fields to include in the request for friend data.
  */
-+ (FBCacheDescriptor *)cacheDescriptorWithUserID:(NSString *)userID fieldsForRequest:(NSSet *)fieldsForRequest;
++ (FBCacheDescriptor *)cacheDescriptorWithUserID:(NSString *)userID friendPickerType:(FBFriendPickerType)friendPickerType fieldsForRequest:(NSSet *)fieldsForRequest;
 
 @end
 

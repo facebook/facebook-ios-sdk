@@ -32,6 +32,7 @@
 // these properties are only used by unit tests, and should not be removed or made public
 @property (nonatomic, readwrite, assign) BOOL hasCompletedFetch;
 @property (nonatomic, readwrite, assign) BOOL usePageLimitOfOne;
+@property (nonatomic, readwrite, assign) FBFriendPickerType friendPickerType;
 - (void)setUsePageLimitOfOne;
 
 @end
@@ -40,23 +41,28 @@
 
 - (instancetype)init {
     return [self initWithUserID:nil
+               friendPickerType:FBFriendFriendPickerTypeFriends
                fieldsForRequest:nil];
 }
 
 - (instancetype)initWithUserID:(NSString *)userID {
     return [self initWithUserID:userID
+               friendPickerType:FBFriendFriendPickerTypeFriends
                fieldsForRequest:nil];
 }
 
 - (instancetype)initWithFieldsForRequest:(NSSet *)fieldsForRequest {
     return [self initWithUserID:nil
+               friendPickerType:FBFriendFriendPickerTypeFriends
                fieldsForRequest:fieldsForRequest];
 }
 
-- (instancetype)initWithUserID:(NSString *)userID fieldsForRequest:(NSSet *)fieldsForRequest {
+- (instancetype)initWithUserID:(NSString *)userID
+              friendPickerType:(FBFriendPickerType)friendPickerType
+              fieldsForRequest:(NSSet *)fieldsForRequest {
     self = [super init];
     if (self) {
-        self.fieldsForRequest = fieldsForRequest ? fieldsForRequest : [NSSet set];
+        self.friendPickerType = friendPickerType;
         self.userID = userID;
         self.hasCompletedFetch = NO;
         self.usePageLimitOfOne = NO;
@@ -89,6 +95,7 @@
 
     // create the request object that we will start with
     FBRequest *request = [FBFriendPickerViewController requestWithUserID:user
+                                                       friendPickerType:self.friendPickerType
                                                                   fields:self.fieldsForRequest
                                                               dataSource:datasource
                                                                  session:session];
