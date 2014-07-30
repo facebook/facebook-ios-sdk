@@ -17,6 +17,7 @@
 #import <Foundation/Foundation.h>
 
 #import "FBCacheDescriptor.h"
+#import "FBFriendPickerViewController.h"
 
 /*
  @class
@@ -64,9 +65,12 @@
  a FBFriendPickerViewController, at some later point.
 
  @param userID              fbid of the user whose friends we wish to display; nil='me'
+ @param friendPickerType    type of friends in request for friends
  @param fieldsForRequest    set of additional fields to include in request for friends
  */
-- (instancetype)initWithUserID:(NSString *)userID fieldsForRequest:(NSSet *)fieldsForRequest;
+- (instancetype)initWithUserID:(NSString *)userID
+              friendPickerType:(FBFriendPickerType)friendPickerType
+              fieldsForRequest:(NSSet *)fieldsForRequest;
 
 /*
  @abstract

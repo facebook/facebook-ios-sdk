@@ -28,6 +28,7 @@ FBSDK_EXTERN NSString *const FBFriendPickerCacheIdentity;
 @interface FBFriendPickerViewController (Internal)
 
 + (FBRequest *)requestWithUserID:(NSString *)userID
+               friendPickerType:(FBFriendPickerType)friendPickerType
                           fields:(NSSet *)fields
                       dataSource:(FBGraphObjectTableDataSource *)datasource
                          session:(FBSession *)session;
