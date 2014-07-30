@@ -62,6 +62,7 @@
               fieldsForRequest:(NSSet *)fieldsForRequest {
     self = [super init];
     if (self) {
+        self.fieldsForRequest = fieldsForRequest ? fieldsForRequest : [NSSet set];
         self.friendPickerType = friendPickerType;
         self.userID = userID;
         self.hasCompletedFetch = NO;
