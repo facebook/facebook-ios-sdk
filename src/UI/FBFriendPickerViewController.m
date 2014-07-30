@@ -212,6 +212,18 @@ FBGraphObjectPagingLoaderDelegate>
         tableView.autoresizingMask =
         UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
+        if([[[UIDevice currentDevice] systemVersion] compare:@"7.0" options:NSNumericSearch] != NSOrderedAscending)
+            
+        {
+            
+            UIView* view = [[UIView alloc] init];
+            
+            UIColor *systemColor = (view.tintColor != nil)?view.tintColor:[UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1.0];
+            
+            [[UIView appearanceWhenContainedIn:[tableView class], nil] setTintColor:systemColor];
+            
+        }
+        
         self.tableView = tableView;
         [self.canvasView addSubview:tableView];
     }
