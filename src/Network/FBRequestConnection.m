@@ -1262,6 +1262,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
                 // Access token has expired
                 case FBGraphApiErrorAccessTokenExpired:
                     errorString = @"The access token associated with the active session has expired.";
+                    break;
                 // Access token was invalidated
                 case FBGraphApiErrorAccessTokenInvalidated:
                     errorString = @"The access token associated with the active session has been invalidated.";
