@@ -36,6 +36,7 @@ static NSString *const kIOSKey = @"ios";
 static NSString *const kIPhoneKey = @"iphone";
 static NSString *const kIPadKey = @"ipad";
 static NSString *const kShouldFallbackKey = @"should_fallback";
+static NSString *const kAppLinksKey = @"app_links";
 
 @interface FBAppLinkResolver ()
 
@@ -97,14 +98,14 @@ static NSString *const kShouldFallbackKey = @"should_fallback";
     if (idiomSpecificField) {
         [fields addObject:idiomSpecificField];
     }
-    NSString *path = [NSString stringWithFormat:@"?type=al&fields=%@&ids=%@",
+    NSString *path = [NSString stringWithFormat:@"?fields=%@.fields(%@)&ids=%@",
+                      kAppLinksKey,
                       [fields componentsJoinedByString:@","],
                       [toFindStrings componentsJoinedByString:@","]];
     FBRequest *request = [[[FBRequest alloc] initWithSession:nil
                                                    graphPath:path
                                                   parameters:nil
                                                   HTTPMethod:@"GET"] autorelease];
-    [request overrideVersionPartWith:@""];
     BFTaskCompletionSource *tcs = [BFTaskCompletionSource taskCompletionSource];
     [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
@@ -112,7 +113,7 @@ static NSString *const kShouldFallbackKey = @"should_fallback";
             return;
         }
         for (NSURL *url in toFind) {
-            id nestedObject = [result objectForKey:url.absoluteString];
+            id nestedObject = [[result objectForKey:url.absoluteString] objectForKey:kAppLinksKey];
             NSMutableArray *rawTargets = [NSMutableArray array];
             if (idiomSpecificField) {
                 [rawTargets addObjectsFromArray:[nestedObject objectForKey:idiomSpecificField]];

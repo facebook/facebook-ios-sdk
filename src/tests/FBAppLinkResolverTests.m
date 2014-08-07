@@ -24,6 +24,7 @@
 
 static NSString *const kAppLinkURLString = @"http://example.com/1234567890";
 static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
+static NSString *const kAppLinksKey = @"app_links";
 
 @interface NSURL (FBAppLinkResolverTests)
 
@@ -53,14 +54,13 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 - (void)testAsksForPhoneDataOnPhone
 {
     __block BOOL askedForPhone = NO;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         NSDictionary *queryParameters = [FBUtility queryParamsDictionaryFromFBURL:request.URL];
         askedForPhone = [queryParameters[@"fields"] rangeOfString:@"iphone"].location != NSNotFound;
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithData:nil
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
 
@@ -75,23 +75,25 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 - (void)testUsesPhoneDataOnPhone
 {
     [self stubAllResponsesWithResult:@{
-                                   kAppLinkURLString : @{
-                                           @"iphone": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"app_store_id": @"456",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
-                                           @"ios": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"app_store_id": @"123",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
-                                           @"id": kAppLinkURLString
-                                           }
+                                       kAppLinkURLString : @{
+                                               kAppLinksKey: @{
+                                                       @"iphone": @[
+                                                               @{
+                                                                   @"app_name": @"Example",
+                                                                   @"app_store_id": @"456",
+                                                                   @"url": @"example://things/1234567890"
+                                                                   }
+                                                               ],
+                                                       @"ios": @[
+                                                               @{
+                                                                   @"app_name": @"Example",
+                                                                   @"app_store_id": @"123",
+                                                                   @"url": @"example://things/1234567890"
+                                                                   }
+                                                               ],
+                                                       },
+                                               @"id": kAppLinkURLString
+                                               }
                                    }];
 
     FBAppLinkResolver *resolver = [[FBAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone];
@@ -108,14 +110,13 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 - (void)testAsksForPadDataOnPad
 {
     __block BOOL askedForPad = NO;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         NSDictionary *queryParameters = [FBUtility queryParamsDictionaryFromFBURL:request.URL];
         askedForPad = [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         return [OHHTTPStubsResponse responseWithData:nil
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
 
@@ -131,20 +132,22 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 {
     [self stubAllResponsesWithResult:@{
                                    kAppLinkURLString : @{
-                                           @"ipad": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"app_store_id": @"456",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
-                                           @"ios": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"app_store_id": @"123",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
+                                           kAppLinksKey: @{
+                                                   @"ipad": @[
+                                                           @{
+                                                               @"app_name": @"Example",
+                                                               @"app_store_id": @"456",
+                                                               @"url": @"example://things/1234567890"
+                                                               }
+                                                           ],
+                                                   @"ios": @[
+                                                           @{
+                                                               @"app_name": @"Example",
+                                                               @"app_store_id": @"123",
+                                                               @"url": @"example://things/1234567890"
+                                                               }
+                                                           ],
+                                                   },
                                            @"id": kAppLinkURLString
                                            }
                                    }];
@@ -166,20 +169,22 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
     // We are not asking for it, but just make sure we ignore any non-iOS-platform data we get, to be safe.
     [self stubAllResponsesWithResult:@{
                                    kAppLinkURLString : @{
-                                           @"android": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"package": @"com.example.app",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
-                                           @"ios": @[
-                                                   @{
-                                                       @"app_name": @"Example",
-                                                       @"app_store_id": @"123",
-                                                       @"url": @"example://things/1234567890"
-                                                       }
-                                                   ],
+                                           kAppLinksKey: @{
+                                                   @"android": @[
+                                                           @{
+                                                               @"app_name": @"Example",
+                                                               @"package": @"com.example.app",
+                                                               @"url": @"example://things/1234567890"
+                                                               }
+                                                           ],
+                                                   @"ios": @[
+                                                           @{
+                                                               @"app_name": @"Example",
+                                                               @"app_store_id": @"123",
+                                                               @"url": @"example://things/1234567890"
+                                                               }
+                                                           ],
+                                                   },
                                            @"id": kAppLinkURLString
                                            }
                                    }];
@@ -259,11 +264,13 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 {
     [self stubAllResponsesWithResult:@{
                                        kAppLinkURLString : @{
-                                               @"id": kAppLinkURLString,
-                                               @"web": @{
-                                                       @"url" : @"http://www.example.com/somethingelse",
-                                                       @"should_fallback": @"true"
-                                                       }
+                                               kAppLinksKey : @{
+                                                       @"web": @{
+                                                               @"url" : @"http://www.example.com/somethingelse",
+                                                               @"should_fallback": @"true"
+                                                               }
+                                                       },
+                                               @"id": kAppLinkURLString
                                                }
                                        }];
 
@@ -281,10 +288,12 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 {
     [self stubAllResponsesWithResult:@{
                                        kAppLinkURLString : @{
+                                               kAppLinksKey: @{
+                                                       @"web": @{
+                                                               @"should_fallback": @"true"
+                                                               }
+                                                       },
                                                @"id": kAppLinkURLString,
-                                               @"web": @{
-                                                       @"should_fallback": @"true"
-                                                       }
                                                }
                                        }];
 
@@ -302,11 +311,13 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 {
     [self stubAllResponsesWithResult:@{
                                    kAppLinkURLString : @{
-                                           @"id": kAppLinkURLString,
-                                           @"web": @{
-                                                   @"url" : @"http://www.example.com/somethingelse",
-                                                   @"should_fallback": @"false"
-                                                   }
+                                           kAppLinksKey : @{
+                                                   @"web": @{
+                                                           @"url" : @"http://www.example.com/somethingelse",
+                                                           @"should_fallback": @"false"
+                                                           }
+                                                   },
+                                           @"id": kAppLinkURLString
                                            }
                                    }];
 
@@ -346,13 +357,15 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 
     [self stubAllResponsesWithResult:@{
                                        kAppLinkURLString : @{
-                                               @"iphone": @[
-                                                       @{
-                                                           @"app_name": @"Example",
-                                                           @"app_store_id": @"456",
-                                                           @"url": @"example://things/1234567890"
-                                                           }
-                                                       ],
+                                               kAppLinksKey : @{
+                                                       @"iphone": @[
+                                                               @{
+                                                                   @"app_name": @"Example",
+                                                                   @"app_store_id": @"456",
+                                                                   @"url": @"example://things/1234567890"
+                                                                   }
+                                                               ],
+                                                       },
                                                @"id": kAppLinkURLString
                                                }
                                        }
@@ -383,25 +396,29 @@ static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
     [self stubMatchingRequestsWithResponses:@{
                                               @"1234567890" : @{
                                                       kAppLinkURLString : @{
-                                                              @"iphone": @[
-                                                                      @{
-                                                                          @"app_name": @"Example",
-                                                                          @"app_store_id": @"456",
-                                                                          @"url": @"example://things/1234567890"
-                                                                          }
-                                                                      ],
+                                                              kAppLinksKey : @{
+                                                                      @"iphone": @[
+                                                                              @{
+                                                                                  @"app_name": @"Example",
+                                                                                  @"app_store_id": @"456",
+                                                                                  @"url": @"example://things/1234567890"
+                                                                                  }
+                                                                              ],
+                                                                      },
                                                               @"id": kAppLinkURLString
                                                               }
                                                       },
                                               @"0987654321" : @{
                                                       kAppLinkURL2String : @{
-                                                              @"iphone": @[
-                                                                      @{
-                                                                          @"app_name": @"Example",
-                                                                          @"app_store_id": @"456",
-                                                                          @"url": @"example://things/1234567890"
-                                                                          }
-                                                                      ],
+                                                              kAppLinksKey : @{
+                                                                      @"iphone": @[
+                                                                              @{
+                                                                                  @"app_name": @"Example",
+                                                                                  @"app_store_id": @"456",
+                                                                                  @"url": @"example://things/1234567890"
+                                                                                  }
+                                                                              ],
+                                                                      },
                                                               @"id": kAppLinkURL2String
                                                               }
                                                       }

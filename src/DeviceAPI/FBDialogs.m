@@ -93,7 +93,7 @@ return NO; \
         if (handler) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(FBOSIntegratedShareDialogResultCancelled, [NSError errorWithDomain:FacebookSDKDomain
-                                                                                      code:FBErrorOperationDisallowedForRestrictedTreament
+                                                                                      code:FBErrorOperationDisallowedForRestrictedTreatment
                                                                                   userInfo:nil]);
             });
         }
@@ -177,7 +177,7 @@ return NO; \
         if (handler) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 handler(nil, nil, [NSError errorWithDomain:FacebookSDKDomain
-                                                      code:FBErrorOperationDisallowedForRestrictedTreament
+                                                      code:FBErrorOperationDisallowedForRestrictedTreatment
                                                   userInfo:nil]);
             });
         }

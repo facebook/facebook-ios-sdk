@@ -123,11 +123,12 @@ static void FBLikeControlTestsSwapClassMethod(Class klass, SEL selector1, SEL se
                                identifier:(NSString *)identifier
 {
     NSString *mockObjectID = [[NSUUID UUID] UUIDString];
+    NSString *likeCountString = [NSString stringWithFormat:@"%lu", (unsigned long)likeCount];
     id mockLikeActionController = [OCMockObject niceMockForClass:[FBLikeActionController class]];
     FBLikeControlTestsSetMockLikeActionController(mockObjectID, mockLikeActionController);
     [[[mockLikeActionController stub] andReturn:mockObjectID] objectID];
     [[[mockLikeActionController stub] andReturnValue:OCMOCK_VALUE(objectIsLiked)] objectIsLiked];
-    [[[mockLikeActionController stub] andReturnValue:OCMOCK_VALUE(likeCount)] likeCount];
+    [[[mockLikeActionController stub] andReturn:likeCountString] likeCountString];
     [[[mockLikeActionController stub] andReturn:socialSentence] socialSentence];
 
     FBLikeControl *likeControl = [[FBLikeControl alloc] init];

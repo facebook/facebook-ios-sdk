@@ -37,23 +37,22 @@
 {
     // Get the number of test users. Use an FBTestSession without a user (and thus no
     // access token), so we can specify our own access token.
-    FBTestSession *fqlSession = [FBTestSession sessionWithSharedUserWithPermissions:nil];
-    XCTAssertNil(fqlSession.accessTokenData, @"non-nil access token");
+    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
+    XCTAssertNil(session.accessTokenData, @"non-nil access token");
     
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
-    NSString *fqlQuery = [NSString stringWithFormat:@"SELECT id FROM test_account WHERE app_id = %@", fqlSession.testAppID];
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
-                                fqlQuery, @"q",
-                                fqlSession.appAccessToken, @"access_token", 
-                                nil];   
+                                session.appAccessToken, @"access_token",
+                                nil];
     
-    __block int count = 0;
-    FBRequest *request = [[[FBRequest alloc] initWithSession:fqlSession
-                                                   graphPath:@"fql"
+    FBRequest *request = [[[FBRequest alloc] initWithSession:session
+                                                   graphPath:[NSString stringWithFormat:@"%@/accounts/test-users", session.testAppID]
                                                   parameters:parameters
                                                   HTTPMethod:nil]
                           autorelease];
+
+    __block int count = 0;
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
         XCTAssertNotNil(result, @"nil result");
@@ -68,7 +67,7 @@
         [blocker signal];
     }];
      
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
     
     return count;

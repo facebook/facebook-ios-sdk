@@ -162,7 +162,7 @@
     __block int requestCount = 0;
     
     // Mock response to generate a retry attempt.
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized as Retry.
@@ -171,7 +171,6 @@
         requestCount++;
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:400
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -189,7 +188,7 @@
     XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
     XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 }
 
 // happy path test for FBRequestConnectionErrorBehaviorReconnectSession
@@ -202,7 +201,7 @@
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
@@ -215,7 +214,6 @@
         requestCount++;
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:400
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -233,7 +231,7 @@
     
     XCTAssertTrue([blocker waitWithTimeout:1], @"timed out waiting for request to return");
     XCTAssertEqual(2, requestCount, @"expected number of retries not met");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 }
 
 // happy path test for FBRequestConnectionErrorBehaviorReconnectSession
@@ -248,7 +246,7 @@
     
     __block int requestCount = 0;
 
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with two errors that will be categorized for reconnecting the session
@@ -264,7 +262,6 @@
         
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -291,7 +288,7 @@
     XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     XCTAssertEqual(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
     XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 }
 
 // test for FBRequestConnectionErrorBehaviorReconnectSession
@@ -305,8 +302,8 @@
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
-    
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with 1 success (permissions) and 1 failure.
@@ -317,14 +314,13 @@
                           "{\"code\":200,\"body\":\"%@\"},"
                           "{\"code\":400,\"body\":\"%@\"}"
                           "]",
-                          [@"{\"data\":[ { \"installed\":1, \"basic_info\":1} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""],
+                          [@"{\"data\":[ { \"basic_info\":1} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""],
                           errorBodyString]
                          dataUsingEncoding:NSUTF8StringEncoding];
         requestCount++;
         
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -339,7 +335,6 @@
     [connection addRequest:requestPermissions completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         userHandlerPermissionsCount++;
         // also make sure the permisisons request got the expected response from the stub above
-        XCTAssertNotNil(result[@"data"][0][@"installed"], @"Didn't find permissions for installed");
         XCTAssertNotNil(result[@"data"][0][@"basic_info"], @"Didn't find permissions for basic_info");
         [blocker signal];
     } ];
@@ -354,7 +349,7 @@
     XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     XCTAssertEqual(1, userHandlerPermissionsCount, @"user handler was not invoked once.");
     XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 }
 
 // test for FBRequestConnectionErrorBehaviorReconnectSession
@@ -370,7 +365,7 @@
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized for reconnecting the session
@@ -379,7 +374,6 @@
         requestCount++;
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:400
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -399,7 +393,7 @@
     // Unlike the tests above, there should be no retry since the user declined the relogin;
     // therefore the error behavior should have immediately invoked the user handler to the fbrequest.
     XCTAssertEqual(1, requestCount, @"expected number of attempts not met");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 }
 
 // test to exercise FBRequestConnectionErrorBehaviorReconnectSession
@@ -413,8 +407,8 @@
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     
     __block int requestCount = 0;
-    
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with 1 failure and 1 success (permissions piggyback).
@@ -426,13 +420,12 @@
                           "{\"code\":200,\"body\":\"%@\"}"
                           "]",
                           errorBodyString,
-                          [@"{\"data\":[ { \"installed\":1, \"basic_info\":1} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]]
+                          [@"{\"data\":[ { \"basic_info\":1} ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""]]
                          dataUsingEncoding:NSUTF8StringEncoding];
         requestCount++;
         
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -452,7 +445,7 @@
     XCTAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
     XCTAssertEqual(2, requestCount, @"expected number of retries not met");
     XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
     NSTimeInterval timeSincePermissionsRefresh = [session.accessTokenData.permissionsRefreshDate timeIntervalSinceNow];
     XCTAssertTrue(timeSincePermissionsRefresh > -3, @"permissions refresh date should be within a few seconds of now");
 }
@@ -469,8 +462,8 @@
     [session openFromAccessTokenData:tokenData completionHandler:nil];
     XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was not initialized properly to distantPast");
     __block int requestCount = 0;
-    
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         NSString *errorBodyString = [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
@@ -485,7 +478,6 @@
         
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:200
-                                        responseTime:0
                                              headers:nil];
     }];
     
@@ -506,7 +498,7 @@
     XCTAssertTrue([blocker waitWithTimeout:2], @"timed out waiting for request to return");
     XCTAssertEqual(1, requestCount, @"there should have been no retry");
     XCTAssertEqual(1, userHandlerFriendsCount, @"user handler was not invoked once.");
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
 
     XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"permissions refresh date was unexpectedly updated");
 }
@@ -602,7 +594,7 @@
     }];
 
     __block int requestCount = 0;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
@@ -615,7 +607,6 @@
         requestCount++;
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:400
-                                        responseTime:0
                                              headers:nil];
     }];
 
@@ -630,7 +621,7 @@
     } ];
     [connection start];
 
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     XCTAssertTrue(tokenRefreshed, @"expected session to be extended");
     XCTAssertEqualObjects(@"newtoken", session.accessTokenData.accessToken, @"expected newtoken");
@@ -663,7 +654,7 @@
     }];
 
     __block int requestCount = 0;
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
@@ -676,7 +667,6 @@
         requestCount++;
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:400
-                                        responseTime:0
                                              headers:nil];
     }];
 
@@ -691,7 +681,7 @@
     } ];
     [connection start];
 
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     XCTAssertTrue(sessionClosed, @"expected session to be closed");
     // clean up.

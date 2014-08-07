@@ -432,6 +432,21 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  @method
 
  @abstract
+ Overrides the default version for a batch request
+
+ @discussion
+ The SDK automatically prepends a version part, such as "v2.0" to API paths in order to simplify API versioning
+ for applications. If you want to override the version part while using batch requests on the connection, call
+ this method to set the version for the batch request.
+
+ @param version   This is a string in the form @"v2.0" which will be used for the version part of an API path
+ */
+- (void)overrideVersionPartWith:(NSString *)version;
+
+/*!
+ @method
+
+ @abstract
  Simple method to make a graph API request for user info (/me), creates an <FBRequest>
  then uses an <FBRequestConnection> object to start the connection with Facebook. The
  request uses the active session represented by `[FBSession activeSession]`.

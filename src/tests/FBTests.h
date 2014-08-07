@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#import <OCMock/OCMock.h>
+
 #import <XCTest/XCTest.h>
 
 #import "FBRequestConnection.h"
@@ -55,4 +57,5 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                statusCode:(int)statusCode
                                  callback:(HTTPStubCallback)callback;
 
+- (OCMockObject *)mainBundleMock;
 @end

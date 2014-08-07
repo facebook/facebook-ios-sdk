@@ -33,4 +33,12 @@
     return [FBErrorUtility shouldNotifyUserForError:self];
 }
 
+- (NSString *)fberrorUserTitle {
+    return [FBErrorUtility userTitleForError:self];
+}
+
+- (BOOL)fberrorIsTransient {
+    return [FBErrorUtility isTransientError:self];
+}
+
 @end

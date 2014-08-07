@@ -17,6 +17,7 @@
 #import "FBLoginView.h"
 
 #import "FBAppEvents+Internal.h"
+#import "FBError.h"
 #import "FBGraphUser.h"
 #import "FBLoginTooltipView.h"
 #import "FBLoginViewButtonPNG.h"
@@ -46,7 +47,7 @@ static CGSize g_buttonSize;
 @property (retain, nonatomic) UILabel *label;
 @property (retain, nonatomic) UIButton *button;
 @property (retain, nonatomic) FBSession *session;
-@property (retain, nonatomic) FBRequestConnection *request;
+@property (retain, nonatomic) FBRequestConnection *requestConnection;
 @property (retain, nonatomic) id<FBGraphUser> user;
 @property (copy, nonatomic) FBSessionStateHandler sessionStateHandler;
 @property (copy, nonatomic) FBRequestHandler requestHandler;
@@ -127,12 +128,12 @@ static CGSize g_buttonSize;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     // if we have an outstanding request, cancel
-    [self.request cancel];
+    [self.requestConnection cancel];
 
     // unwire the session to release KVO.
     [self unwireViewForSession];
 
-    [_request release];
+    [_requestConnection release];
     [_label release];
     [_button release];
     [_session release];
@@ -169,19 +170,20 @@ static CGSize g_buttonSize;
         }
     };
     self.requestHandler = ^(FBRequestConnection *connection, NSMutableDictionary<FBGraphUser> *result, NSError *error) {
+        FBLoginView *strongifiedSelf = weakSelf;
         if (result) {
-            weakSelf.user = result;
-            [weakSelf informDelegate:YES];
-        } else {
-            weakSelf.user = nil;
-            if (weakSelf.session.isOpen) {
+            strongifiedSelf.user = result;
+            [strongifiedSelf informDelegate:YES];
+        } else if (error.domain != FacebookSDKDomain || error.code != FBErrorOperationCancelled) {
+            strongifiedSelf.user = nil;
+            if (strongifiedSelf.session.isOpen) {
                 // Only inform the delegate of errors if the session remains open;
                 // since session closure errors will surface through the openActiveSession
                 // block.
-                [weakSelf informDelegateOfError:error];
+                [strongifiedSelf informDelegateOfError:error];
             }
         }
-        weakSelf.request = nil;
+        strongifiedSelf.requestConnection = nil;
     };
 }
 
@@ -314,10 +316,13 @@ static CGSize g_buttonSize;
 - (void)fetchMeInfo {
     FBRequest *request = [FBRequest requestForMe];
     [request setSession:self.session];
-    self.request = [[[FBRequestConnection alloc] init] autorelease];
-    [self.request addRequest:request
+    //cancel any existing requests.
+    [self.requestConnection cancel];
+    self.requestConnection = [[[FBRequestConnection alloc] init] autorelease];
+
+    [self.requestConnection addRequest:request
            completionHandler:self.requestHandler];
-    [self.request startWithCacheIdentity:FBLoginViewCacheIdentity
+    [self.requestConnection startWithCacheIdentity:FBLoginViewCacheIdentity
                    skipRoundtripIfCached:YES];
 
 }
@@ -387,8 +392,8 @@ static CGSize g_buttonSize;
 
 - (void)wireViewForSessionWithoutOpening:(FBSession *)session {
     // if there is an outstanding request for the previous session, cancel
-    [self.request cancel];
-    self.request = nil;
+    [self.requestConnection cancel];
+    self.requestConnection = nil;
 
     self.session = session;
 

@@ -36,8 +36,6 @@ typedef NS_ENUM(NSUInteger, FBLikeBoxCaretPosition)
 @interface FBLikeBoxView : UIView
 
 @property (nonatomic, assign) FBLikeBoxCaretPosition caretPosition;
-@property (nonatomic, assign) NSUInteger likeCount;
-
-- (void)setLikeCount:(NSUInteger)likeCount animated:(BOOL)animated;
+@property (nonatomic, copy) NSString *text;
 
 @end

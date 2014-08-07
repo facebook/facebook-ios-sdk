@@ -30,7 +30,7 @@ FBSDK_EXTERN NSString *const FBLikeActionControllerAnimatedKey;
 // this method will call beginContentAccess before returning the instance
 + (instancetype)likeActionControllerForObjectID:(NSString *)objectID;
 
-@property (nonatomic, assign, readonly) NSUInteger likeCount;
+@property (nonatomic, copy, readonly) NSString *likeCountString;
 @property (nonatomic, copy, readonly) NSString *objectID;
 @property (nonatomic, assign, readonly) BOOL objectIsLiked;
 @property (nonatomic, copy, readonly) NSString *socialSentence;

@@ -20,6 +20,20 @@
                ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "89263C041926CBA500A44711"
+               BuildableName = "FacebookSDKTestHost.app"
+               BlueprintName = "FacebookSDKTestHost"
+               ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

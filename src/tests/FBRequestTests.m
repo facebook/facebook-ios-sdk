@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-#import <OHHTTPStubs/OHHTTPStubs.h>
-
 #import "FBRequest+Internal.h"
 #import "FBRequestConnection+Internal.h"
 #import "FBTestBlocker.h"
@@ -123,7 +121,7 @@
     NSString *actual = [dummy urlStringForSingleRequest:request forBatch:NO];
 
 
-    assert([actual hasPrefix:@"https://graph.special.sb.facebook.com/v2.0/me/friends?"]);
+    assert([actual hasPrefix:@"https://graph.special.sb.facebook.com/v2.1/me/friends?"]);
     [request release];
     [FBSettings setFacebookDomainPart:nil];
 }

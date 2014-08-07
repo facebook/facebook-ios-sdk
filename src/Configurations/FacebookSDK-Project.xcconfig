@@ -16,7 +16,7 @@
 
 // Architectures
 ARCHS = $(ARCHS_STANDARD_32_BIT) armv6
-IPHONEOS_DEPLOYMENT_TARGET = 5.0
+IPHONEOS_DEPLOYMENT_TARGET = 6.0
 SDKROOT = iphoneos
 
 // Build Options

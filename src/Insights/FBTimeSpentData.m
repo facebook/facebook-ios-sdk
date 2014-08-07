@@ -21,22 +21,22 @@
 #import "FBUtility.h"
 
 // Filename and keys for session length
-NSString *const FBTimeSpentFilename                                    = @"com-facebook-sdk-AppEventsTimeSpent.json";
-NSString *const FBTimeSpentPersistKeySessionSecondsSpent               = @"secondsSpentInCurrentSession";
-NSString *const FBTimeSpentPersistKeySessionNumInterruptions           = @"numInterruptions";
-NSString *const FBTimeSpentPersistKeyLastSuspendTime                   = @"lastSuspendTime";
+static NSString *const FBTimeSpentFilename                                    = @"com-facebook-sdk-AppEventsTimeSpent.json";
+static NSString *const FBTimeSpentPersistKeySessionSecondsSpent               = @"secondsSpentInCurrentSession";
+static NSString *const FBTimeSpentPersistKeySessionNumInterruptions           = @"numInterruptions";
+static NSString *const FBTimeSpentPersistKeyLastSuspendTime                   = @"lastSuspendTime";
 
-NSString *const FBAppEventNameDeactivatedApp                           = @"fb_mobile_deactivate_app";
-NSString *const FBAppEventParameterNameSessionInterruptions            = @"fb_mobile_app_interruptions";
-NSString *const FBAppEventParameterNameTimeBetweenSessions             = @"fb_mobile_time_between_sessions";
+static NSString *const FBAppEventNameDeactivatedApp                           = @"fb_mobile_deactivate_app";
+static NSString *const FBAppEventParameterNameSessionInterruptions            = @"fb_mobile_app_interruptions";
+static NSString *const FBAppEventParameterNameTimeBetweenSessions             = @"fb_mobile_time_between_sessions";
 
-const int NUM_SECONDS_IDLE_TO_BE_NEW_SESSION = 60;
-const int SECS_PER_MIN                       = 60;
-const int SECS_PER_HOUR                      = 60 * SECS_PER_MIN;
-const int SECS_PER_DAY                       = 24 * SECS_PER_HOUR;
+static const int NUM_SECONDS_IDLE_TO_BE_NEW_SESSION = 60;
+static const int SECS_PER_MIN                       = 60;
+static const int SECS_PER_HOUR                      = 60 * SECS_PER_MIN;
+static const int SECS_PER_DAY                       = 24 * SECS_PER_HOUR;
 
 // Will be translated and displayed in App Insights.  Need to maintain same number and value of quanta on the server.
-const long INACTIVE_SECONDS_QUANTA[] = {
+static const long INACTIVE_SECONDS_QUANTA[] = {
     5 * SECS_PER_MIN,
     15 * SECS_PER_MIN,
     30 * SECS_PER_MIN,

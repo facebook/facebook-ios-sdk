@@ -79,7 +79,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
 
     FBAccessTokenData *cachedToken = [cachingStrategy fetchFBAccessTokenData];
 
-    XCTAssertEqual(randomToken.accessToken, cachedToken.accessToken, @"accessToken does not match");
+    XCTAssertEqualObjects(randomToken.accessToken, cachedToken.accessToken, @"accessToken does not match");
     XCTAssertEqual(randomToken.loginType, cachedToken.loginType, @"loginType does not match");
     XCTAssertTrue([randomToken.permissions isEqualToArray:cachedToken.permissions], @"permissions does not match");
     XCTAssertTrue([randomToken.expirationDate isEqualToDate:cachedToken.expirationDate], @"expirationDate does not match");
@@ -332,7 +332,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
     [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     XCTAssertTrue(target.isOpen, @"Session should be open, and is not");
     XCTAssertTrue([expectedKvoValuesForOpening count] == 0, @"There were still expected KVO events that did not occur: %@", expectedKvoValuesForOpening);
 
@@ -342,7 +342,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
         XCTAssertNil(error, @"unexpected error for new permissions:%@", error);
         [blocker signal];
     }];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     XCTAssertTrue([expectedKvoValuesForNewPermissions count] == 0, @"There were still expected KVO events that did not occur: %@", expectedKvoValuesForNewPermissions);
 
     // Now we close the session and verify the kvo again.

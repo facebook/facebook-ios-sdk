@@ -182,7 +182,7 @@ if [ ${NOEXTRAS:-0} -eq  1 ];then
 else
   progress_message "Running unit tests."
   cd "$FB_SDK_SRC"
-  "$FB_SDK_SCRIPT/run_tests.sh" -c $BUILDCONFIGURATION facebook-ios-sdk-tests FacebookSDKApplicationTests
+  "$FB_SDK_SCRIPT/run_tests.sh" -c $BUILDCONFIGURATION FacebookSDKTests FacebookSDKApplicationTests
 fi
 
 # -----------------------------------------------------------------------------

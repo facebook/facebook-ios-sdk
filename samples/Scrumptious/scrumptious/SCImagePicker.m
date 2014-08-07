@@ -45,6 +45,14 @@
     }
 }
 
+- (void)setActionSheet:(UIActionSheet *)actionSheet
+{
+    if (_actionSheet != actionSheet) {
+        _actionSheet.delegate = nil;
+        _actionSheet = actionSheet;
+    }
+}
+
 #pragma mark - Public API
 
 - (void)presentFromRect:(CGRect)rect inView:(UIView *)view

@@ -7,6 +7,7 @@ Open Graph Action to their Timeline which will display the the tagged friends an
 
 The example utilizes several controls for the Facebook SDK including:
  FBLoginView - used on the landing page for authenticating the user.
+ FBTaggableFriendPickerViewController - presented from the main UI to pick friends to tag.
  FBPlacePickerViewController - presented from the main UI to pick a location.
  FBUserSettingsViewController - used to log the user out.
 

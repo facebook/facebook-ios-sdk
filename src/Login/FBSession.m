@@ -364,7 +364,7 @@ static FBSession *g_activeSession = nil;
 
     if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
         NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonOtherError
-                                                errorCode:[@(FBErrorOperationDisallowedForRestrictedTreament) stringValue]
+                                                errorCode:[@(FBErrorOperationDisallowedForRestrictedTreatment) stringValue]
                                                innerError:nil];
         [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
                                           error:error

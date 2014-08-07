@@ -165,6 +165,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                                                   parameters:parameters
                                                   HTTPMethod:nil]
                           autorelease];
+    [request overrideVersionPartWith:@"v2.0"];
     [request startWithCompletionHandler:
      ^(FBRequestConnection *connection, id result, NSError *error) {
          id userToken;
@@ -273,6 +274,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
                                                                parameters:@{ @"access_token" : self.appAccessToken }
                                                                HTTPMethod:nil]
                                        autorelease];
+    [requestForAccountIds overrideVersionPartWith:@"v2.0"];
     __block id testAccounts = nil;
     [connection addRequest:requestForAccountIds completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         if (error ||

@@ -17,8 +17,9 @@
 #import <XCTest/XCTest.h>
 
 #import "FBAppCall+Internal.h"
+#import "FBTests.h"
 
-@interface FBAppCallTests : XCTestCase
+@interface FBAppCallTests : FBTests
 @end
 
 @implementation FBAppCallTests

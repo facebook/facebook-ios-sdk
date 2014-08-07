@@ -37,6 +37,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 {
     FBTestSession *_defaultTestSession;
     id _mockFBUtility;
+    id _mockNSBundle;
 }
 
 #pragma mark Instance-level lifecycle
@@ -63,6 +64,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
     _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
     [[[_mockFBUtility stub] andReturn:nil] advertiserID]; //stub advertiserID since that often hangs.
+
+    _mockNSBundle = [[OCMockObject partialMockForObject:[NSBundle mainBundle]] retain];
+    [[[_mockNSBundle stub] andReturn:[[NSUUID UUID] UUIDString]] bundleIdentifier];
 }
 
 - (void)tearDown
@@ -81,6 +85,9 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
     [_mockFBUtility release];
     _mockFBUtility = nil;
+
+    [_mockNSBundle release];
+    _mockNSBundle = nil;
 
     [super tearDown];
 }
@@ -170,7 +177,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
          [blocker signal];
      }];
 
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 }
 
 - (void)makeTestUserInSession:(FBTestSession *)session1 friendsWithTestUserInSession:(FBTestSession *)session2
@@ -276,7 +283,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
      }];
 
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     [postRequest release];
     [connection release];

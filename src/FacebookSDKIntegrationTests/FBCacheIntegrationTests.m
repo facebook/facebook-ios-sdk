@@ -441,7 +441,7 @@ deleteFileWithName:(NSString *)name
     [connection startWithCacheIdentity:FBFriendPickerCacheIdentity
                  skipRoundtripIfCached:YES];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [blocker release];
     

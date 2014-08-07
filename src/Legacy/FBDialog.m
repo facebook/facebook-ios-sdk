@@ -619,7 +619,7 @@ static BOOL FBIsDeviceIPad() {
     if ([FBSettings restrictedTreatment] == FBRestrictedTreatmentYES) {
         if ([_delegate respondsToSelector:@selector(dialog:didFailWithError:)]) {
             NSError *error = [NSError errorWithDomain:FacebookSDKDomain
-                                                 code:FBErrorOperationDisallowedForRestrictedTreament
+                                                 code:FBErrorOperationDisallowedForRestrictedTreatment
                                              userInfo:nil];
             [_delegate dialog:self didFailWithError:error];
         }

@@ -19,7 +19,7 @@
 
 # process options, valid arguments -c [Debug|Release] -n 
 BUILDCONFIGURATION=Debug
-SCHEMES="facebook-ios-sdk-tests FacebookSDKIntegrationTests FacebookSDKApplicationTests"
+SCHEMES="FacebookSDKTests FacebookSDKIntegrationTests FacebookSDKApplicationTests"
 
 while getopts ":nc:" OPTNAME
 do
@@ -32,7 +32,7 @@ do
       echo "       -c sets configuration"
       echo "       -n clean before build"
       echo "SUITE: one or more of the following (default is all):"
-      echo "       facebook-ios-sdk-tests: unit tests"
+      echo "       FacebookSDKTests: unit tests"
       echo "       FacebookSDKIntegrationTests: integration tests"
       echo "       FacebookSDKApplicationTests: application tests"
       die
@@ -72,8 +72,6 @@ for SCHEME in $SCHEMES; do
         ONLY_ACTIVE_ARCH=YES \
         SYMROOT="$FB_SDK_BUILD" \
         $CLEAN test \
-        -test-sdk iphonesimulator \
-        -simulator iphone \
         || die "Error while running unit tests"
 done
 

@@ -153,7 +153,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
     [connection start];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
     
     NSArray *requests = [connection performSelector:@selector(requests)];
@@ -179,7 +179,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     [connection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
     [connection start];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
     
     NSArray *requests = [connection performSelector:@selector(requests)];
@@ -221,7 +221,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     }];
     [connection start];
 
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
     [connection release];
 
@@ -341,7 +341,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     [connection addRequest:request completionHandler:handler];
     [connection start];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     if (fbids.count != 3) {
         XCTAssertTrue(fbids.count == 3, @"wrong number of fbids, aborting test");
@@ -392,7 +392,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     // these deletes two and adds one
     [connection start];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     if (fbids.count != 2) {
         XCTAssertTrue(fbids.count == 2, @"wrong number of fbids, aborting test");
         // Things are bad. Continuing isn't going to make them better, and might throw exceptions.
@@ -429,7 +429,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
         [blocker signal];
     }];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     XCTAssertTrue(fbids.count == 0, @"Our fbid collection should be empty here");
 }
@@ -471,7 +471,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
         [blocker signal];
     }];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
     
     
@@ -501,7 +501,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
         [blocker signal];
     }];
     
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
 }
 

@@ -39,6 +39,13 @@
 
 #pragma mark - View Management
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+
+    self.loginView.readPermissions = @[@"public_profile", @"user_friends"];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];

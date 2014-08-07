@@ -45,6 +45,7 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>rps-sample-applink-example</string>
 				<string>fb157578437735213free</string>
 				<string>fb157578437735213</string>
 			</array>

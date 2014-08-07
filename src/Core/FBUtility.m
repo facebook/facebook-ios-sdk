@@ -306,7 +306,7 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
 
 + (void)updateParametersWithEventUsageLimitsAndBundleInfo:(NSMutableDictionary *)parameters
                           accessAdvertisingTrackingStatus:(BOOL)accessAdvertisingTrackingStatus {
-    
+
     // Only add the iOS global value if we have a definitive allowed/disallowed on advertising tracking.  Otherwise,
     // absence of this parameter is to be interpreted as 'unspecified'.
     if (accessAdvertisingTrackingStatus) {

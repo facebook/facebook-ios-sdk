@@ -184,7 +184,7 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
 
         _likeButton.selected = _likeActionController.objectIsLiked;
         _socialSentenceLabel.text = _likeActionController.socialSentence;
-        _likeBoxView.likeCount = _likeActionController.likeCount;
+        _likeBoxView.text = _likeActionController.likeCountString;
 
         [self setNeedsLayout];
     }
@@ -290,7 +290,7 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
             return (_socialSentenceLabel.text.length == 0 ? nil : _socialSentenceLabel);
         }
         case FBLikeControlStyleBoxCount:{
-            return (_likeActionController.likeCount == 0 ? nil : _likeBoxView);
+            return (_likeActionController.likeCountString == nil ? nil : _likeBoxView);
         }
         case FBLikeControlStyleButton:{
             return nil;
@@ -328,7 +328,7 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
         BOOL animated = [notification.userInfo[FBLikeActionControllerAnimatedKey] boolValue];
 
         [_likeButton setSelected:likeActionController.objectIsLiked animated:animated];
-        [_likeBoxView setLikeCount:_likeActionController.likeCount animated:animated];
+        _likeBoxView.text = _likeActionController.likeCountString;
 
         if (animated) {
             void(^hideView)(UIView *) = ^(UIView *view){

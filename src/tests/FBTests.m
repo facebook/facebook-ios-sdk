@@ -28,12 +28,25 @@
 NSString *kTestToken = @"This is a token";
 NSString *kTestAppId = @"AnAppId";
 
-@implementation FBTests
+@implementation FBTests {
+    id _mockBundle;
+}
+
+- (void)setUp {
+    _mockBundle = [[OCMockObject partialMockForObject:[NSBundle mainBundle]] retain];
+    [[[_mockBundle stub] andReturn:[[NSUUID UUID] UUIDString]] bundleIdentifier];
+}
 
 - (void)tearDown
 {
-    [OHHTTPStubs removeAllRequestHandlers];
+    [OHHTTPStubs removeAllStubs];
+    [_mockBundle release];
+    _mockBundle = nil;
     [super tearDown];
+}
+
+- (OCMockObject *)mainBundleMock {
+    return _mockBundle;
 }
 
 #pragma mark Handlers
@@ -119,7 +132,7 @@ NSString *kTestAppId = @"AnAppId";
         [blocker signal];
     });
 
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     [blocker release];
 }
@@ -161,7 +174,7 @@ NSString *kTestAppId = @"AnAppId";
         return nil;
     };
 
-    [OHHTTPStubs shouldStubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
         if (callback) {
             callback(request);
         }
@@ -173,7 +186,6 @@ NSString *kTestAppId = @"AnAppId";
 
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:statusCode
-                                        responseTime:0
                                              headers:nil];
     }];
 }

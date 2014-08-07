@@ -57,7 +57,7 @@
     [connection addRequest:request2 completionHandler:[self handlerExpectingSuccessSignaling:blocker]];
          
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -97,7 +97,7 @@
          }];
     
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -128,7 +128,7 @@
          }];
     
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -159,7 +159,7 @@
          }];
     
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -194,7 +194,7 @@
          }];
     
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -219,7 +219,7 @@
     }
 
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];
@@ -287,7 +287,7 @@
          }];
 
     [connection start];
-    [blocker wait];
+    XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     
     [connection release];
     [blocker release];

@@ -17,6 +17,9 @@
 #import "FBSessionTokenCachingStrategy.h"
 
 #import "FBAccessTokenData+Internal.h"
+#import "FBDynamicFrameworkLoader.h"
+#import "FBKeychainStore.h"
+#import "FBUtility.h"
 
 // const strings
 static NSString *const FBAccessTokenInformationKeyName = @"FBAccessTokenInformationKey";
@@ -31,6 +34,7 @@ NSString *const FBTokenInformationPermissionsKey = @"com.facebook.sdk:TokenInfor
 NSString *const FBTokenInformationDeclinedPermissionsKey = @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey";
 NSString *const FBTokenInformationPermissionsRefreshDateKey = @"com.facebook.sdk:TokenInformationPermissionsRefreshDateKey";
 NSString *const FBTokenInformationAppIDKey = @"com.facebook.sdk:TokenInformationAppIDKey";
+NSString *const FBTokenInformationUUIDKey = @"com.facebook.sdk:TokenInformationUUIDKey";
 
 #pragma mark - private FBSessionTokenCachingStrategyNoOpInstance class
 
@@ -54,6 +58,7 @@ NSString *const FBTokenInformationAppIDKey = @"com.facebook.sdk:TokenInformation
 
 @implementation FBSessionTokenCachingStrategy {
     NSString *_accessTokenInformationKeyName;
+    FBKeychainStore *_keychainStore;
 }
 
 #pragma mark - Lifecycle
@@ -77,7 +82,20 @@ NSString *const FBTokenInformationAppIDKey = @"com.facebook.sdk:TokenInformation
 - (void)dealloc {
     // let-em go
     [_accessTokenInformationKeyName release];
+    [_keychainStore release];
     [super dealloc];
+}
+
+- (FBKeychainStore *)keychainStore {
+    if (!_keychainStore) {
+        _keychainStore = [[FBKeychainStore alloc] initWithService:[[NSBundle mainBundle] bundleIdentifier]];
+    }
+
+    return _keychainStore;
+}
+
+- (NSString *)userDefaultsKeyForKeychainValidation {
+   return [_accessTokenInformationKeyName stringByAppendingString:@"UUID"];
 }
 
 #pragma mark -
@@ -85,20 +103,49 @@ NSString *const FBTokenInformationAppIDKey = @"com.facebook.sdk:TokenInformation
 
 - (void)cacheTokenInformation:(NSDictionary *)tokenInformation {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults setObject:tokenInformation forKey:_accessTokenInformationKeyName];
-    [defaults synchronize];
+    NSString *uuid = [defaults objectForKey:[self userDefaultsKeyForKeychainValidation]];
+    if (!uuid) {
+        uuid = [FBUtility newUUIDString];
+        [defaults setObject:uuid forKey:[self userDefaultsKeyForKeychainValidation]];
+        [defaults synchronize];
+    }
+    NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:tokenInformation];
+    dict[FBTokenInformationUUIDKey] = uuid;
+
+    [self.keychainStore setDictionary:dict
+                               forKey:_accessTokenInformationKeyName
+                        accessibility:[FBDynamicFrameworkLoader loadkSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]];
 }
 
 - (NSDictionary *)fetchTokenInformation {
     // fetch values from defaults
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    return [defaults objectForKey:_accessTokenInformationKeyName];
+
+    // backward compatibility - check NSUserDefaults first, if token is there
+    // move it to Keychain and remove from NSUserDefaults
+    NSDictionary *token = [defaults objectForKey:_accessTokenInformationKeyName];
+    if (token) {
+        [defaults removeObjectForKey:_accessTokenInformationKeyName];
+        [defaults synchronize];
+        [self cacheTokenInformation:token];
+        return token;
+    } else {
+        NSString *uuid = [defaults objectForKey:[self userDefaultsKeyForKeychainValidation]];
+        NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[self.keychainStore dictionaryForKey:_accessTokenInformationKeyName]];
+
+        if (![dict[FBTokenInformationUUIDKey] isEqualToString:uuid]) {
+            // if the uuid doesn't match (including if there is no uuid in defaults which means uninstalled case)
+            // clear the keychain and return nil.
+            [self clearToken];
+            return nil;
+        }
+        [dict removeObjectForKey:FBTokenInformationUUIDKey];
+        return dict;
+    }
 }
 
 - (void)clearToken {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    [defaults removeObjectForKey:_accessTokenInformationKeyName];
-    [defaults synchronize];
+    [self.keychainStore setDictionary:nil forKey:_accessTokenInformationKeyName];
 }
 
 

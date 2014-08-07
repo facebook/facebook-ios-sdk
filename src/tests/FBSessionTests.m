@@ -19,6 +19,7 @@
 #import "FBAccessTokenData+Internal.h"
 #import "FBError.h"
 #import "FBGraphUser.h"
+#import "FBInMemoryFBSessionTokenCachingStrategy.h"
 #import "FBInternalSettings.h"
 #import "FBRequest.h"
 #import "FBSession+Internal.h"
@@ -68,6 +69,11 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     FBTestBlocker *_blocker;
     Method _originalIsRegisteredCheck;
     Method _swizzledIsRegisteredCheck;
+
+    Method _originalTokenCachingStrategyDefaultInstance;
+    Method _swizzledTokenCachingStrategyDefaultInstance;
+    id _mockFBSessionTokenCachingStrategy;
+    FBInMemoryFBSessionTokenCachingStrategy *_inMemoryFBSessionTokenCachingStrategy;
 }
 
 + (BOOL)isRegisteredURLSchemeReplacement:(NSString *)url
@@ -77,10 +83,13 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 
 - (void)setUp {
     [super setUp];
+    _inMemoryFBSessionTokenCachingStrategy = [[FBInMemoryFBSessionTokenCachingStrategy alloc] init];
 
-    // In general, tests use a mock token caching strategy, but some tests verify behavior using the
-    // default strategy and we want to ensure it is clean.
-    [[FBSessionTokenCachingStrategy defaultInstance] clearToken];
+    // Default token caching strategy now uses keychain which requires emulator services running
+    // and is not supported by xctool logic tests (https://github.com/facebook/xctool/issues/269)
+    // So for these tests let's swizzle out the defaultInstance with an in memory one.
+    _mockFBSessionTokenCachingStrategy = [OCMockObject mockForClass:[FBSessionTokenCachingStrategy class]];
+    [[[_mockFBSessionTokenCachingStrategy stub] andReturn:_inMemoryFBSessionTokenCachingStrategy] defaultInstance];
 
     FBSession.defaultAppID = nil;
     FBSession.defaultUrlSchemeSuffix = nil;
@@ -103,6 +112,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     method_exchangeImplementations(_swizzledIsRegisteredCheck, _originalIsRegisteredCheck);
     _originalIsRegisteredCheck = nil;
     _swizzledIsRegisteredCheck = nil;
+    [_mockFBSessionTokenCachingStrategy stopMocking];
+    [_inMemoryFBSessionTokenCachingStrategy release];
 }
 
 #pragma mark Init tests

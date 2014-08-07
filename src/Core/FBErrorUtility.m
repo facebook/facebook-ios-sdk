@@ -18,6 +18,7 @@
 
 #import "FBAccessTokenData+Internal.h"
 #import "FBError.h"
+#import "FBSafeCollections.h"
 #import "FBSession.h"
 #import "FBUtility.h"
 
@@ -206,7 +207,7 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
 
                     shouldNotifyUser = YES;
                     category = FBErrorCategoryServer;
-                } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorOperationDisallowedForRestrictedTreament) {
+                } else if ([[error userInfo][FBErrorLoginFailedOriginalErrorCode] integerValue] == FBErrorOperationDisallowedForRestrictedTreatment) {
                     category = FBErrorCategoryUserCancelled;
                 }
             }
@@ -220,6 +221,14 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
             userMessageKey = nil;
             userMessageDefault = nil;
             break;
+    }
+
+    // If error_user_msg error message is available - always show it to the user
+    NSString *apiUserMessage = [self apiUserMessageForError:error];
+    if ([apiUserMessage length]) {
+        userMessageDefault = apiUserMessage;
+        userMessageKey = apiUserMessage;
+        shouldNotifyUser = YES;
     }
 
     if (pshouldNotifyUser) {
@@ -247,32 +256,27 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                               index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode {
+    NSDictionary *userInfo = error.userInfo;
+    NSArray *responseAsArray = [FBSafeCollections arrayForKey:FBErrorParsedJSONResponseKey fromDictionary:userInfo];
+    NSDictionary *item = [FBSafeCollections dictionaryAtIndex:index fromArray:responseAsArray];
+    if (!item) {
+        item = [FBSafeCollections dictionaryForKey:FBErrorParsedJSONResponseKey fromDictionary:userInfo];
+    }
 
-    // does this error have a response? that is an array?
-    id response = [error.userInfo objectForKey:FBErrorParsedJSONResponseKey];
-    if (response) {
-        id item = nil;
-        if ([response isKindOfClass:[NSArray class]]) {
-            item = [(NSArray *)response objectAtIndex:index];
-        } else {
-            item = response;
+    // spelunking a JSON array & nested objects (eg. response[index].body.error.code)
+    NSNumber *code = nil;
+    NSNumber *subCode = nil;
+    NSDictionary *body = [FBSafeCollections dictionaryForKey:@"body" fromDictionary:item];
+    NSDictionary *innerError = [FBSafeCollections dictionaryForKey:@"error" fromDictionary:body];
+    if (innerError) {
+        // response[index].body.error.code
+        if (pcode && (code = [FBSafeCollections numberForKey:@"code" fromDictionary:innerError])) {
+            *pcode = [code intValue];
         }
-        // spelunking a JSON array & nested objects (eg. response[index].body.error.code)
-        id  body, innerError, code;
-        if ((body = [item objectForKey:@"body"]) &&         // response[index].body
-            [body isKindOfClass:[NSDictionary class]] &&
-            (innerError = [body objectForKey:@"error"]) &&       // response[index].body.error
-            [innerError isKindOfClass:[NSDictionary class]]) {
-            if (pcode &&
-                (code = [innerError objectForKey:@"code"]) &&        // response[index].body.error.code
-                [code isKindOfClass:[NSNumber class]]) {
-                *pcode = [code intValue];
-            }
-            if (psubcode &&
-                (code = [innerError objectForKey:@"error_subcode"]) &&        // response[index].body.error.error_subcode
-                [code isKindOfClass:[NSNumber class]]) {
-                *psubcode = [code intValue];
-            }
+
+        // response[index].body.error.error_subcode
+        if (psubcode && (subCode = [FBSafeCollections numberForKey:@"error_subcode" fromDictionary:innerError])) {
+            *psubcode = [subCode intValue];
         }
     }
 }
@@ -379,6 +383,29 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
         default:
             return NO;
     }
+}
+
++ (NSDictionary *)innerErrorInfoFromError:(NSError *)error
+{
+    NSDictionary *jsonResponse = [FBSafeCollections dictionaryForKey:FBErrorParsedJSONResponseKey fromDictionary:error.userInfo];
+    NSDictionary *body = [FBSafeCollections dictionaryForKey:@"body" fromDictionary:jsonResponse];
+    return [FBSafeCollections dictionaryForKey:@"error" fromDictionary:body];
+}
+
++ (NSString *)userTitleForError:(NSError *)error
+{
+    return [FBSafeCollections stringForKey:@"error_user_title" fromDictionary:[self innerErrorInfoFromError:error]];
+}
+
++ (NSString *)apiUserMessageForError:(NSError *)error
+{
+    return [FBSafeCollections stringForKey:@"error_user_msg" fromDictionary:[self innerErrorInfoFromError:error]];
+}
+
++ (BOOL)isTransientError:(NSError *)error
+{
+    NSDictionary *innerError = [self innerErrorInfoFromError:error];
+    return [[FBSafeCollections numberForKey:@"is_transient" fromDictionary:innerError] boolValue];
 }
 
 @end

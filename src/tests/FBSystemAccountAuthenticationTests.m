@@ -92,7 +92,7 @@
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
             completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
-                handlerError = error;
+                handlerError = [error retain];
             }];
     
     [(id)mockSession verify];
@@ -100,6 +100,7 @@
     assertThat(handlerError, notNilValue());
     assertThat(handlerError.userInfo[FBErrorLoginFailedReason], equalTo(FBErrorLoginFailedReasonInlineNotCancelledValue));
     
+    [handlerError release];
     [session release];
 }
 
@@ -163,7 +164,7 @@
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
             completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
-                handlerError = error;
+                handlerError = [error retain];
             }];
     
     [(id)mockSession verify];
@@ -173,6 +174,7 @@
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     assertThat(session.accessToken, equalTo(kAuthenticationTestValidToken));
     
+    [handlerError release];
     [session release];
 }
 
@@ -195,7 +197,7 @@
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
             completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
-                handlerError = error;
+                handlerError = [error retain];
             }];
     
     [(id)mockSession verify];
@@ -204,6 +206,7 @@
     assertThat(handlerError.userInfo[FBErrorLoginFailedReason], equalTo(FBErrorLoginFailedReasonSystemError));
     assertThatInt(session.state, equalToInt(FBSessionStateClosedLoginFailed));
     
+    [handlerError release];
     [session release];
 }
 
