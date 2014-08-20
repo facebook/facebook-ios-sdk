@@ -1,7 +1,7 @@
 Facebook SDK for iOS
 ====================
 
-This open-source library allows you to integrate Facebook into your iOS app.
+This open source library allows you to integrate Facebook into your iOS app.
 
 Learn more about about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/ios
 
