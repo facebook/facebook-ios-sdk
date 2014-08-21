@@ -34,13 +34,13 @@
  (created only if necessary, not deleted automatically) or private (created specifically
  for this session, deleted automatically upon close).
  */
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBTestSessionMode) {
     // Create and delete a new test user for this session.
     FBTestSessionModePrivate    = 0,
     // Use an existing available test user with the right permissions, or create
     // a new one if none are available. Not automatically deleted.
     FBTestSessionModeShared     = 1,
-} FBTestSessionMode;
+};
 
 static NSString *const FBPLISTTestAppIDKey = @"IOS_SDK_TEST_APP_ID";
 static NSString *const FBPLISTTestAppSecretKey = @"IOS_SDK_TEST_APP_SECRET";

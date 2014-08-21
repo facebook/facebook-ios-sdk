@@ -27,6 +27,7 @@
 
 static int publishInstallCount = 0;
 static NSString *loggedEvent = nil;
+static NSDictionary *loggedParameter = nil;
 
 @interface FBAppEventsIntegrationTests : FBIntegrationTests
 @end
@@ -59,9 +60,11 @@ static NSString *loggedEvent = nil;
   publishInstallCount++;
 }
 
-+ (void)logEvent:(NSString *)eventName {
-  [loggedEvent release];
-  loggedEvent = [eventName retain];
++ (void)logEvent:(NSString *)eventName parameters:(NSDictionary *)parameters {
+    [loggedEvent release];
+    loggedEvent = [eventName retain];
+    [loggedParameter release];
+    loggedParameter = [[NSDictionary alloc] initWithDictionary:parameters copyItems:YES];
 }
 
 // Ensure session is not closed by a bogus app event log.
@@ -137,8 +140,8 @@ static NSString *loggedEvent = nil;
     _swizzledPublishInstall = class_getClassMethod([self class], @selector(publishInstallCounter:));
     method_exchangeImplementations(_originalPublishInstall, _swizzledPublishInstall);
 
-    _originalLogEvent = class_getClassMethod([FBAppEvents class], @selector(logEvent:));
-    _swizzledLogEvent = class_getClassMethod([self class], @selector(logEvent:));
+    _originalLogEvent = class_getClassMethod([FBAppEvents class], @selector(logEvent:parameters:));
+    _swizzledLogEvent = class_getClassMethod([self class], @selector(logEvent:parameters:));
     method_exchangeImplementations(_originalLogEvent, _swizzledLogEvent);
   
     publishInstallCount = 0;
@@ -148,9 +151,11 @@ static NSString *loggedEvent = nil;
     [FBAppEvents activateApp];
     XCTAssertTrue(publishInstallCount == 1, @"publishInstall was not triggered by activateApp");
     XCTAssertTrue([@"fb_mobile_activate_app" isEqualToString:loggedEvent], @"activate app event not logged by activateApp call!");
-  
+    XCTAssertNotNil(loggedParameter[@"fb_mobile_launch_source"], @"activate app event not logged with source");
     [loggedEvent release];
     loggedEvent = nil;
+    [loggedParameter release];
+    loggedParameter = nil;
   
     method_exchangeImplementations(_swizzledPublishInstall, _originalPublishInstall);
     _originalPublishInstall = nil;

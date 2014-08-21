@@ -20,7 +20,7 @@
 
 @class FBRequestConnectionRetryManager;
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBRequestConnectionRetryManagerState) {
     // The normal retry state where we will perform retries.
     FBRequestConnectionRetryManagerStateNormal,
 
@@ -31,7 +31,7 @@ typedef enum {
     // and supplied handlers are NOT invoked since they will be evaluated after the
     // repair operation is executed.
     FBRequestConnectionRetryManagerStateRepairSession
-} FBRequestConnectionRetryManagerState;
+};
 
 @protocol FBRequestConnectionRetryManagerDelegate <NSObject>
 

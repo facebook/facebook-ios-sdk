@@ -25,11 +25,11 @@
 
 @protocol FBGraphObject;
 
-typedef enum FBAdvertisingTrackingStatus {
+typedef NS_ENUM(NSUInteger, FBAdvertisingTrackingStatus) {
     AdvertisingTrackingAllowed,
     AdvertisingTrackingDisallowed,
     AdvertisingTrackingUnspecified
-} FBAdvertisingTrackingStatus;
+};
 
 @interface FBUtility : NSObject
 

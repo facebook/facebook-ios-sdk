@@ -22,14 +22,14 @@
 @class FBSession;
 @protocol FBGraphObjectPagingLoaderDelegate;
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, FBGraphObjectPagingMode) {
     // Paging links will be followed as soon as one set of results is loaded
     FBGraphObjectPagingModeImmediate,
     // Paging links will be followed as soon as one set of results is loaded, even without a view
     FBGraphObjectPagingModeImmediateViewless,
     // Paging links will be followed only when the user scrolls to the bottom of the table
     FBGraphObjectPagingModeAsNeeded
-} FBGraphObjectPagingMode;
+};
 
 @interface FBGraphObjectPagingLoader : NSObject<FBGraphObjectDataSourceDataNeededDelegate>
 

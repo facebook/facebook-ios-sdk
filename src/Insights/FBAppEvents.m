@@ -40,6 +40,7 @@ NSString *const FBAppEventNameViewedContent           = @"fb_mobile_content_view
 NSString *const FBAppEventNameSearched                = @"fb_mobile_search";
 NSString *const FBAppEventNameRated                   = @"fb_mobile_rate";
 NSString *const FBAppEventNameCompletedTutorial       = @"fb_mobile_tutorial_completion";
+NSString *const FBAppEventParameterLaunchSource       = @"fb_mobile_launch_source";
 
 // Ecommerce related
 NSString *const FBAppEventNameAddedToCart             = @"fb_mobile_add_to_cart";
@@ -143,12 +144,12 @@ NSString *const FBPLISTLoggingOverrideAppIDKey = @"FacebookLoggingOverrideAppID"
 
 #pragma mark - typedefs
 
-typedef enum {
+typedef NS_ENUM(NSUInteger, AppSupportsAttributionStatus) {
     AppSupportsAttributionUnknown,
     AppSupportsAttributionQueryInFlight,
     AppSupportsAttributionTrue,
     AppSupportsAttributionFalse,
-} AppSupportsAttributionStatus;
+};
 
 @property (readwrite) FBAppEventsFlushBehavior      flushBehavior;
 @property (readwrite, copy) NSString               *loggingOverrideAppID;
@@ -175,6 +176,9 @@ NSString *const FBAppEventsPersistedEventsFilename   = @"com-facebook-sdk-AppEve
 NSString *const FBAppEventsPersistKeyNumSkipped      = @"numSkipped";
 NSString *const FBAppEventsPersistKeyEvents          = @"events";
 
+#pragma static vars
+static NSString *_sourceApplication;
+static BOOL _isOpenedByAppLink;
 
 #pragma mark - Constants
 
@@ -935,11 +939,11 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
                           loggingEntry:(NSString *)loggingEntry
                                session:(FBSession *)session {
 
-    typedef enum {
+    typedef NS_ENUM(NSUInteger, FlushResult) {
         FlushResultSuccess,
         FlushResultServerError,
         FlushResultNoConnectivity
-    } FlushResult;
+    };
 
     [FBAppEvents ensureOnMainThread];
 
@@ -1284,6 +1288,38 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     }
 
     return result;
+}
+
++ (void)setSourceApplication:(NSString *)sourceApplication isAppLink:(BOOL)isAppLink {
+    _sourceApplication = sourceApplication.copy;
+    _isOpenedByAppLink = isAppLink;
+}
+
++ (void)setSourceApplication:(NSString *)sourceApplication openURL:(NSURL *)url {
+    [self setSourceApplication:sourceApplication
+                     isAppLink:[FBUtility queryParamsDictionaryFromFBURL:url][@"al_applink_data"] != nil];
+}
+
++ (NSString *)getSourceApplication {
+    NSString *openType = @"Unclassified";
+    if (_isOpenedByAppLink) {
+        openType = @"AppLink";
+    }
+    if (_sourceApplication) {
+        return [NSString stringWithFormat:@"%@(%@)", openType, _sourceApplication];
+    } else {
+        return openType;
+    }
+}
+
++ (void)registerAutoResetSourceApplication {
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidEnterBackgroundNotification
+                                                      object:nil
+                                                       queue:nil
+                                                  usingBlock:^(NSNotification *note) {
+                                                      _sourceApplication = nil;
+                                                      _isOpenedByAppLink = NO;
+                                                  }];
 }
 
 @end
