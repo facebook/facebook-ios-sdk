@@ -217,6 +217,9 @@
                            forKey:@"access_token"];
         [parametersImpl setObject:session.appID ? : @""
                            forKey:@"app_id"];
+    } else if ([dialog isEqualToString:@"apprequests"] && [parameters objectForKey:@"filters"]) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                            logEntry:@"You must specify an FBSession or the active FBSession must be open when presenting Requests dialog and the parameter \"filters\" is provided. The dialog will not work properly."];
     }
 
     NSString *app_id = [parametersImpl objectForKey:@"app_id"];

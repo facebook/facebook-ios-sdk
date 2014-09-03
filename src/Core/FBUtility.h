@@ -31,6 +31,16 @@ typedef NS_ENUM(NSUInteger, FBAdvertisingTrackingStatus) {
     AdvertisingTrackingUnspecified
 };
 
+typedef NS_ENUM(NSInteger, FBIOSVersion) {
+  FBIOSVersion_6_0,
+  FBIOSVersion_6_1,
+  FBIOSVersion_7_0,
+  FBIOSVersion_7_1,
+  FBIOSVersion_8_0,
+
+  FBIOSVersionCount
+};
+
 @interface FBUtility : NSObject
 
 #pragma mark Object Helpers
@@ -121,6 +131,8 @@ typedef NS_ENUM(NSUInteger, FBAdvertisingTrackingStatus) {
 + (BOOL)isRetinaDisplay;
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 + (BOOL)isMultitaskingSupported;
++ (BOOL)isUIKitLinkedOnOrAfter:(FBIOSVersion)version;
++ (BOOL)isRunningOnOrAfter:(FBIOSVersion)version;
 + (BOOL)isSystemAccountStoreAvailable;
 
 #pragma mark - Cookies

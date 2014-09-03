@@ -561,6 +561,7 @@
 		6B31CF7B196C93780033E17A /* FBPeoplePickerViewController+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBPeoplePickerViewController+Internal.h"; sourceTree = "<group>"; };
 		6B31CF86196C9C330033E17A /* FBTaggableFriendPickerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBTaggableFriendPickerViewController.h; sourceTree = "<group>"; };
 		6B31CF87196C9CF30033E17A /* FBTaggableFriendPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBTaggableFriendPickerViewController.m; sourceTree = "<group>"; };
+		6B339F02199A875F006382F2 /* FBUtility+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBUtility+Private.h"; sourceTree = "<group>"; };
 		6B5D5A30196C89D6004B2B1C /* FBGraphPerson.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBGraphPerson.h; sourceTree = "<group>"; };
 		6B5D5A3C196C8C2B004B2B1C /* FBPeoplePickerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBPeoplePickerViewController.h; sourceTree = "<group>"; };
 		6B5D5A3E196C920A004B2B1C /* FBPeoplePickerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBPeoplePickerViewController.m; sourceTree = "<group>"; };
@@ -1249,6 +1250,7 @@
 				84F992D51871E65400E3369F /* FBSettings+Internal.h */,
 				84F992D41871E65400E3369F /* FBSettings.m */,
 				84F992D61871E65400E3369F /* FBUtility.h */,
+				6B339F02199A875F006382F2 /* FBUtility+Private.h */,
 				84F992D71871E65400E3369F /* FBUtility.m */,
 				84F992D81871E65400E3369F /* NSError+FBError.m */,
 				6D00AAE31979FACB00CD9EE5 /* FBSafeCollections.h */,
