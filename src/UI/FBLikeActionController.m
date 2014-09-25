@@ -165,9 +165,7 @@ static BOOL _fbLikeActionControllerDisabled = NO;
 
 + (BOOL)isDisabled
 {
-    return (_fbLikeActionControllerDisabled ||
-            [FBSettings isPlatformCompatibilityEnabled] ||
-            ![FBSettings isBetaFeatureEnabled:FBBetaFeaturesLikeButton]);
+    return (_fbLikeActionControllerDisabled || ![FBSettings isBetaFeatureEnabled:FBBetaFeaturesLikeButton]);
 }
 
 + (instancetype)likeActionControllerForObjectID:(NSString *)objectID

@@ -29,8 +29,8 @@
 
 #pragma mark - Class methods
 
-+ (RPSCall)callFromAppLinkURL:(NSURL *)url {
-    BFURL *appLinkURL = [BFURL URLWithURL:url];
++ (RPSCall)callFromAppLinkURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
+    BFURL *appLinkURL = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
     NSURL *appLinkTargetURL = [appLinkURL targetURL];
     if (!appLinkTargetURL) {
         return RPSCallNone;
@@ -64,7 +64,7 @@
                   sourceApplication:sourceApplication
                     fallbackHandler:^(FBAppCall *call) {
                         // Check for an app link to parse out a call to show
-                        RPSCall appLinkCall = [RPSAppDelegate callFromAppLinkURL:url];
+                        RPSCall appLinkCall = [RPSAppDelegate callFromAppLinkURL:url sourceApplication:sourceApplication];
                         if (appLinkCall != RPSCallNone) {
                             RPSDeeplyLinkedViewController *vc = [[RPSDeeplyLinkedViewController alloc] initWithCall:appLinkCall];
                             [self.navigationController presentViewController:vc animated:YES completion:nil];
