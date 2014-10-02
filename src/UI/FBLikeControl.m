@@ -83,13 +83,6 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
     UILabel *_socialSentenceLabel;
 }
 
-#pragma mark - Class Methods
-
-+ (BOOL)dialogIsAvailable
-{
-    return [FBDialogs canPresentLikeDialog];
-}
-
 #pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame

@@ -149,13 +149,13 @@ return NO; \
     FB_DIALOGS_CHECK_RESTRICTED_TREATMENT();
 
     // Can we even call the iOS API?
-    Class composeViewControllerClass = [[FBDynamicFrameworkLoader loadClass:@"SLComposeViewController" withFramework:@"Social"] class];
+    Class composeViewControllerClass = [fbdfl_SLComposeViewControllerClass() class];
     if (composeViewControllerClass == nil) {
         return NO;
     }
 
     // Is the Facebook account available
-    NSString *facebookServiceType = [FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"];
+    NSString *facebookServiceType = fbdfl_SLServiceTypeFacebook();
     if (![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
         return NO;
     }
@@ -578,12 +578,6 @@ return NO; \
     return [[self class] presentMessageDialogWithLink:link name:nil caption:nil description:nil picture:nil clientState:nil handler:handler];
 }
 
-+ (BOOL)canPresentLikeDialog
-{
-    FB_DIALOGS_CHECK_RESTRICTED_TREATMENT();
-    return ([FBAppBridgeScheme bridgeSchemeForFBAppForLike] != nil);
-}
-
 + (FBAppCall *)presentLikeDialogWithParams:(FBLikeDialogParams *)params
                                clientState:(NSDictionary *)clientState
                                    handler:(FBDialogAppCallCompletionHandler)handler
@@ -627,8 +621,8 @@ return NO; \
         return nil;
     }
 
-    Class composeViewControllerClass = [[FBDynamicFrameworkLoader loadClass:@"SLComposeViewController" withFramework:@"Social"] class];
-    SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:[FBDynamicFrameworkLoader loadStringConstant:@"SLServiceTypeFacebook" withFramework:@"Social"]];
+    Class composeViewControllerClass = [fbdfl_SLComposeViewControllerClass() class];
+    SLComposeViewController *composeViewController = [composeViewControllerClass composeViewControllerForServiceType:fbdfl_SLServiceTypeFacebook()];
     if (composeViewController == nil) {
         if (handler) {
             handler(FBOSIntegratedShareDialogResultError, [self createError:FBErrorDialogCantBeDisplayed

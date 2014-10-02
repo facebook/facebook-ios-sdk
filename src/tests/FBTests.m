@@ -22,6 +22,7 @@
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
 
@@ -35,6 +36,15 @@ NSString *kTestAppId = @"AnAppId";
 - (void)setUp {
     _mockBundle = [[OCMockObject partialMockForObject:[NSBundle mainBundle]] retain];
     [[[_mockBundle stub] andReturn:[[NSUUID UUID] UUIDString]] bundleIdentifier];
+    id mockAdapter = [OCMockObject mockForClass:[FBSystemAccountStoreAdapter class]];
+    [FBSystemAccountStoreAdapter setSharedInstance:mockAdapter];
+
+    // Mock out various parts of FBUtility that would otherwise fail/hang in commandline runs.
+    self.mockFBUtility = [OCMockObject mockForClass:[FBUtility class]];
+    FBFetchedAppSettings *dummyFBFetchedAppSettings = [[[FBFetchedAppSettings alloc] init] autorelease];
+    [[[self.mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettings]; // prevent fetching app settings during FBSession authorizeWithPermissions
+    [[[self.mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID since that often hangs.
+    [[[self.mockFBUtility stub] andReturnValue:OCMOCK_VALUE(NO)] isSystemAccountStoreAvailable]; // don't try to access ac account store.
 }
 
 - (void)tearDown
@@ -42,11 +52,21 @@ NSString *kTestAppId = @"AnAppId";
     [OHHTTPStubs removeAllStubs];
     [_mockBundle release];
     _mockBundle = nil;
+    [FBSystemAccountStoreAdapter setSharedInstance:nil];
+    self.mockFBUtility = nil;
     [super tearDown];
 }
 
 - (OCMockObject *)mainBundleMock {
     return _mockBundle;
+}
+
+- (void)setMockFBUtility:(id)mockFBUtility {
+    if (mockFBUtility != _mockFBUtility) {
+        [_mockFBUtility stopMocking];
+        [_mockFBUtility release];
+        _mockFBUtility = [mockFBUtility retain];
+    }
 }
 
 #pragma mark Handlers

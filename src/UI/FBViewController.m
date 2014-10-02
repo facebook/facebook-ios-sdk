@@ -118,8 +118,11 @@
     self.doneButton.action = @selector(doneButtonPressed:);
     self.cancelButton.target = self;
     self.cancelButton.action = @selector(cancelButtonPressed:);
+}
 
+- (void)viewWillAppear:(BOOL)animated {
     [self updateBar];
+    [super viewWillAppear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation

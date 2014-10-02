@@ -99,7 +99,6 @@ FBSDK_EXTERN NSString *const FBAppEventsNativeLoginDialogEndTime;
 
 FBSDK_EXTERN NSString *const FBAppEventsWebLoginE2E;
 
-FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlCannotPresentDialog;
 FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidDisable;
 FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidLike;
 FBSDK_EXTERN NSString *const FBAppEventNameFBLikeControlDidPresentDialog;

@@ -63,6 +63,7 @@ static NSString *const BoltsMeasurementEventPrefix = @"bf_";
                        valueToSum:nil
                        parameters:logData
                           session:nil];
+    [logData release];
 }
 
 - (void)dealloc {

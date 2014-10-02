@@ -92,8 +92,6 @@ static void FBLikeControlTestsSwapClassMethod(Class klass, SEL selector1, SEL se
 {
     [super setUp];
 
-    [FBSettings enableBetaFeature:FBBetaFeaturesLikeButton];
-
     FBLikeControlTestsSwapClassMethod([FBViewImpressionTracker class],
                                       @selector(impressionTrackerWithEventName:),
                                       @selector(mockImpressionTrackerWithEventName:));

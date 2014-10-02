@@ -50,6 +50,8 @@
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+
     self.playButton.layer.cornerRadius = 8.0;
     self.playButton.layer.borderWidth = 4.0;
     self.playButton.layer.borderColor = self.playButton.titleLabel.textColor.CGColor;

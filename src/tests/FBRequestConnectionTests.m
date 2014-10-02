@@ -32,6 +32,7 @@
 #import "FBTests.h"
 #import "FBURLConnection.h"
 #import "FBUtility.h"
+#import "FacebookSDK.h"
 
 @interface MockFBSystemAccountStoreAdapter : FBSystemAccountStoreAdapter {
     id _oauthTokenToSurface;
@@ -101,20 +102,12 @@
 @end
 
 @implementation FBRequestConnectionTests
-{
-    id _mockFBUtility;
-}
 
 - (void)setUp {
     [super setUp];
-    _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
-    [[[_mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID since that often hangs.
 }
 
 - (void)tearDown {
-    [_mockFBUtility release];
-    _mockFBUtility = nil;
-    
     [super tearDown];
 }
 
@@ -163,7 +156,7 @@
     
     // Mock response to generate a retry attempt.
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        return ([request.URL.path rangeOfString:@"/me"].location != NSNotFound);
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized as Retry.
         NSData *data =  [@"{\"error\": {\"message\": \"Retry this\",\"code\": 190,\"error_subcode\": 65000}}" dataUsingEncoding:NSUTF8StringEncoding];
@@ -202,7 +195,7 @@
     
     __block int requestCount = 0;
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        return ([request.URL.path rangeOfString:@"/me"].location != NSNotFound);
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake error object that will be categorized for reconnecting the session. Note this error is only for non-batched requests.
         // If there is a test failure, you should verify the requests.count == 1 and debug that if it's not; otherwise this error response will likely cause
@@ -247,7 +240,8 @@
     __block int requestCount = 0;
 
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        // only stub for the expected batch request
+        return [request.URL.lastPathComponent isEqualToString:FB_IOS_SDK_TARGET_PLATFORM_VERSION];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with two errors that will be categorized for reconnecting the session
         NSString *errorBodyString = [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
@@ -304,7 +298,9 @@
     __block int requestCount = 0;
 
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        // only stub for the expected batch request or the partial retried request
+        return ([request.URL.lastPathComponent isEqualToString:FB_IOS_SDK_TARGET_PLATFORM_VERSION] ||
+        [request.URL.path rangeOfString:@"/me"].location != NSNotFound );
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with 1 success (permissions) and 1 failure.
         // Note this technically means the retried /friends request gets this stubbed
@@ -409,7 +405,8 @@
     __block int requestCount = 0;
 
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        return ([request.URL.lastPathComponent isEqualToString:FB_IOS_SDK_TARGET_PLATFORM_VERSION] ||
+                [request.URL.path rangeOfString:@"/me"].location != NSNotFound);
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         // Construct a fake batch response with 1 failure and 1 success (permissions piggyback).
         // Note this technically means the retried /friends request gets this stubbed
@@ -464,7 +461,8 @@
     __block int requestCount = 0;
 
     [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-        return YES;
+        // only stub for the expected batch request
+        return [request.URL.lastPathComponent isEqualToString:FB_IOS_SDK_TARGET_PLATFORM_VERSION];
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
         NSString *errorBodyString = [@"{\"error\": {\"message\": \"Reconnect this\",\"code\": 190,\"error_subcode\": 463}}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
         NSData *data =  [[NSString stringWithFormat:@"["
@@ -574,8 +572,6 @@
 // so then there should be a system account renewal
 // follow by a system account auth
 - (void)testCompleteWithResultsSystemAccountRenewal {
-    // Swap out the mock system account store adapter.
-    FBSystemAccountStoreAdapter *originalAdapter = [[FBSystemAccountStoreAdapter sharedInstance] retain];
     MockFBSystemAccountStoreAdapter *mockSystemAccountStoreAdapter = [[MockFBSystemAccountStoreAdapter alloc] init];
     [FBSystemAccountStoreAdapter setSharedInstance:mockSystemAccountStoreAdapter];
     mockSystemAccountStoreAdapter.canRequestAccessWithoutUI = YES;
@@ -627,7 +623,7 @@
     XCTAssertEqualObjects(@"newtoken", session.accessTokenData.accessToken, @"expected newtoken");
 
     // clean up.
-    [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
+    [FBSystemAccountStoreAdapter setSharedInstance:nil];
 }
 
 // A complicated test of completeWithResults for a system auth login
@@ -636,8 +632,6 @@
 // so then there should be a system account renewal
 // follow by a system account auth
 - (void)testCompleteWithResultsSystemAccountRenewalNoToken {
-    // Swap out the mock system account store adapter.
-    FBSystemAccountStoreAdapter *originalAdapter = [[FBSystemAccountStoreAdapter sharedInstance] retain];
     MockFBSystemAccountStoreAdapter *mockSystemAccountStoreAdapter = [[MockFBSystemAccountStoreAdapter alloc] init];
     [FBSystemAccountStoreAdapter setSharedInstance:mockSystemAccountStoreAdapter];
     mockSystemAccountStoreAdapter.canRequestAccessWithoutUI = YES;
@@ -685,7 +679,7 @@
 
     XCTAssertTrue(sessionClosed, @"expected session to be closed");
     // clean up.
-    [FBSystemAccountStoreAdapter setSharedInstance:originalAdapter];
+    [FBSystemAccountStoreAdapter setSharedInstance:nil];
 }
 
 - (NSString *)generateUUID

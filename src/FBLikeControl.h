@@ -91,14 +91,6 @@ FBSDK_EXTERN NSString *NSStringFromFBLikeControlStyle(FBLikeControlStyle style);
 @interface FBLikeControl : UIControl
 
 /*!
- @abstract If YES, FBLikeControl is available for use with through the Like Dialog.
-
- @discussion If NO, the control requires publish_action permissions on the active session for in-place liking.  It is
- the responsibility of the consumer to ensure that the control is not presented without this permission.
- */
-+ (BOOL)dialogIsAvailable;
-
-/*!
  @abstract The foreground color to use for the content of the receiver.
  */
 @property (nonatomic, strong) UIColor *foregroundColor;

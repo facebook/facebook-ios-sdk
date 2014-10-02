@@ -36,14 +36,15 @@
 static NSString *const FBForceBlockingRenewKey = @"com.facebook.sdk:ForceBlockingRenewKey";
 static FBSystemAccountStoreAdapter *_singletonInstance = nil;
 
-@implementation FBSystemAccountStoreAdapter
+@implementation FBSystemAccountStoreAdapter {
+    ACAccountStore *_accountStore;
+    ACAccountType *_accountTypeFB;
+}
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _forceBlockingRenew = [[NSUserDefaults standardUserDefaults] boolForKey:FBForceBlockingRenewKey];
-        _accountStore = [[[FBDynamicFrameworkLoader loadClass:@"ACAccountStore" withFramework:@"Accounts"] alloc] init];
-        _accountTypeFB = [[_accountStore accountTypeWithAccountTypeIdentifier:@"com.apple.facebook"] retain];
     }
     return self;
 }
@@ -55,6 +56,21 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
 }
 
 #pragma mark - Properties
+
+- (ACAccountStore *)accountStore {
+    if (_accountStore == nil) {
+        _accountStore = [[fbdfl_ACAccountStoreClass() alloc] init];
+    }
+    return _accountStore;
+}
+
+- (ACAccountType *)accountTypeFB {
+    if (_accountTypeFB == nil) {
+        _accountTypeFB = [[self.accountStore accountTypeWithAccountTypeIdentifier:@"com.apple.facebook"] retain];
+    }
+    return _accountTypeFB;
+}
+
 - (BOOL)forceBlockingRenew {
     return _forceBlockingRenew;
 }
@@ -146,13 +162,13 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
     NSString *audience;
     switch (defaultAudience) {
         case FBSessionDefaultAudienceOnlyMe:
-            audience = [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookAudienceOnlyMe" withFramework:@"Accounts"];
+            audience = fbdfl_ACFacebookAudienceOnlyMe();
             break;
         case FBSessionDefaultAudienceFriends:
-            audience = [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookAudienceFriends" withFramework:@"Accounts"];
+            audience = fbdfl_ACFacebookAudienceFriends();
             break;
         case FBSessionDefaultAudienceEveryone:
-            audience = [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookAudienceEveryone" withFramework:@"Accounts"];
+            audience = fbdfl_ACFacebookAudienceEveryone();
             break;
         default:
             audience = nil;
@@ -174,9 +190,9 @@ static FBSystemAccountStoreAdapter *_singletonInstance = nil;
 
     // construct access options
     NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
-                             appID, [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookAppIdKey" withFramework:@"Accounts"],
-                             permissionsToUse, [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookPermissionsKey" withFramework:@"Accounts"],
-                             audience, [FBDynamicFrameworkLoader loadStringConstant:@"ACFacebookAudienceKey" withFramework:@"Accounts"], // must end on this key/value due to audience possibly being nil
+                             appID, fbdfl_ACFacebookAppIdKey(),
+                             permissionsToUse, fbdfl_ACFacebookPermissionsKey(),
+                             audience, fbdfl_ACFacebookAudienceKey(), // must end on this key/value due to audience possibly being nil
                              nil];
 
     //wrap the request call into a separate block to help with possibly block chaining below.

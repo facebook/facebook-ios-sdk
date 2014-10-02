@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0510"
+   LastUpgradeVersion = "0600"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -104,6 +104,15 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "D2AAC07D0554694100DB518D"
+            BuildableName = "libfacebook_ios_sdk.a"
+            BlueprintName = "facebook-ios-sdk"
+            ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -113,6 +122,15 @@
       useCustomWorkingDirectory = "NO"
       buildConfiguration = "Release"
       debugDocumentVersioning = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "D2AAC07D0554694100DB518D"
+            BuildableName = "libfacebook_ios_sdk.a"
+            BlueprintName = "facebook-ios-sdk"
+            ReferencedContainer = "container:facebook-ios-sdk.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

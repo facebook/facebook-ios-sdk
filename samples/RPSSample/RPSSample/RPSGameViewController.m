@@ -105,6 +105,8 @@ typedef void (^RPSBlock)(void);
 }
 
 - (void)viewDidLoad {
+    [super viewDidLoad];
+
     UIColor *fontColor = self.rockLabel.textColor;
     [self.rockButton.layer setCornerRadius:8.0];
     [self.rockButton.layer setBorderWidth:4.0];

@@ -175,7 +175,7 @@ FBSDK_EXTERN NSString *const FBAppEventParameterValueNo;
  + Events are not sent immediately when logged.  They're cached and flushed out to the Facebook servers
    in a number of situations:
    - when an event count threshold is passed (currently 100 logged events).
-   - when a time threshold is passed (currently 60 seconds).
+   - when a time threshold is passed (currently 15 seconds).
    - when an app has gone to background and is then brought back to the foreground.
 
  + Events will be accumulated when the app is in a disconnected state, and sent when the connection is

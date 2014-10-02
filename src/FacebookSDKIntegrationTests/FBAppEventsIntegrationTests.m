@@ -34,7 +34,6 @@ static NSDictionary *loggedParameter = nil;
 
 @implementation FBAppEventsIntegrationTests
 {
-    id _mockFBUtility;
     Method _originalPublishInstall;
     Method _swizzledPublishInstall;
 
@@ -46,14 +45,10 @@ static NSDictionary *loggedParameter = nil;
     [super setUp];
     // Before every test, mock the FBUtility class to return a nil
     // advertiserID because the `[[ advertisingIdentifier] UUIDString]` call likes to hang.
-    _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
-    [[[_mockFBUtility stub] andReturn:nil] advertiserID];
 }
 
 - (void)tearDown {
     [super tearDown];
-    [_mockFBUtility release];
-    _mockFBUtility = nil;
 }
 
 + (void)publishInstallCounter:(NSString *)appID {

@@ -13,21 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #import <Foundation/Foundation.h>
 
-// Internal class holding server side Facebook app settings we fetch once from the
-// server per process lifetime.
+#import "FBAppBridgeScheme.h"
 
-@interface FBFetchedAppSettings : NSObject
+@interface FBWebAppBridgeScheme : FBAppBridgeScheme
 
-@property (copy, nonatomic) NSString *serverAppName;
-@property (readwrite) BOOL supportsAttribution;
-@property (readwrite) BOOL supportsImplicitSdkLogging;
-@property (readwrite) BOOL enableLoginTooltip;
-@property (readonly, nonatomic) NSString *appID;
-@property (copy, nonatomic) NSString *loginTooltipContent;
-@property (copy, nonatomic) NSDictionary *dialogConfigs;
-
-- (instancetype)initWithAppID:(NSString *)appID;
+- (instancetype)initWithURL:(NSURL *)URL method:(NSString *)method;
 
 @end

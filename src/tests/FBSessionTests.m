@@ -100,7 +100,6 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     _originalIsRegisteredCheck = class_getClassMethod([FBUtility class], @selector(isRegisteredURLScheme:));
     _swizzledIsRegisteredCheck = class_getClassMethod([self class], @selector(isRegisteredURLSchemeReplacement:));
     method_exchangeImplementations(_originalIsRegisteredCheck, _swizzledIsRegisteredCheck);
-
 }
 
 - (void)tearDown {
@@ -929,33 +928,6 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     assertThatInt(session.state, equalToInt(FBSessionStateCreated));
 }
-
-// TODO when running from the command line, this hangs
-/*
-- (void)testGetSystemAccountStoreAdapter {
-    [FBSession setDefaultAppID:kAppId];
-    FBSession *session = [[FBSession alloc] init];
-    
-    // Only do this if it's available (iOS 6.0+)
-    if ([self isSystemVersionAtLeast:@"6.0"]) {
-        FBSystemAccountStoreAdapter *adapter = [session getSystemAccountStoreAdapter];
-        
-        assertThat(adapter, equalTo([FBSystemAccountStoreAdapter sharedInstance]));
-    }
-    
-    [session release];
-}
-
- - (void)testIsSystemAccountStoreAvailable {
- BOOL shouldBeAvailable = [self isSystemVersionAtLeast:@"6.0"];
- 
- [FBSession setDefaultAppID:kAppId];
- FBSession *session = [[FBSession alloc] init];
- 
- assertThatBool([session isSystemAccountStoreAvailable], equalToBool(shouldBeAvailable));
- }
- 
-*/
 
 - (void)testIsMultitaskingSupported {
     UIDevice *device = [UIDevice currentDevice];

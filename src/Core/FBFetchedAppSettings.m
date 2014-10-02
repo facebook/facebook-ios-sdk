@@ -44,6 +44,7 @@
     [_serverAppName release];
     [_appID release];
     [_loginTooltipContent release];
+    [_dialogConfigs release];
 
     [super dealloc];
 }

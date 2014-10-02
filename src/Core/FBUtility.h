@@ -72,6 +72,7 @@ typedef NS_ENUM(NSInteger, FBIOSVersion) {
 + (NSBundle *)facebookSDKBundle;
 // Returns YES when the bundle identifier is for one of the native facebook apps
 + (BOOL)isFacebookBundleIdentifier:(NSString *)bundleIdentifier;
++ (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier;
 
 #pragma mark - Permissions
 

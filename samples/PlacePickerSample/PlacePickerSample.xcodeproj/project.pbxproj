@@ -175,7 +175,7 @@
 		B9AF4B9B152E43EE00E9BA6C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = B9AF4B9E152E43EE00E9BA6C /* Build configuration list for PBXProject "PlacePickerSample" */;
 			compatibilityVersion = "Xcode 3.2";

@@ -165,7 +165,7 @@ static BOOL _fbLikeActionControllerDisabled = NO;
 
 + (BOOL)isDisabled
 {
-    return (_fbLikeActionControllerDisabled || ![FBSettings isBetaFeatureEnabled:FBBetaFeaturesLikeButton]);
+    return _fbLikeActionControllerDisabled;
 }
 
 + (instancetype)likeActionControllerForObjectID:(NSString *)objectID
@@ -705,13 +705,6 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
     FBLikeDialogParams *params = [[[FBLikeDialogParams alloc] init] autorelease];
     params.objectID = _objectID;
 
-    if (![FBDialogs canPresentLikeDialog]) {
-        [FBAppEvents logImplicitEvent:FBAppEventNameFBLikeControlCannotPresentDialog
-                           valueToSum:nil
-                           parameters:analyticsParameters
-                              session:_session];
-        return;
-    }
     [FBAppEvents logImplicitEvent:FBAppEventNameFBLikeControlDidPresentDialog
                        valueToSum:nil
                        parameters:analyticsParameters

@@ -73,7 +73,7 @@
 {
     if (self.selected != selected) {
         if (animated) {
-            Class CATransactionClass = [FBDynamicFrameworkLoader loadClass:@"CATransaction" withFramework:@"QuartzCore"];
+            Class CATransactionClass = fbdfl_CATransactionClass();
             CFTimeInterval duration = ([CATransactionClass animationDuration] ?: kFBLikeButtonAnimationDuration);
             UIViewAnimationOptions options = UIViewAnimationOptionBeginFromCurrentState;
             [UIView animateWithDuration:duration delay:0.0 options:options animations:^{

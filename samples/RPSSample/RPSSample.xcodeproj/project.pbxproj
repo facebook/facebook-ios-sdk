@@ -243,7 +243,7 @@
 		84070D0D1540AA2B00E39703 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 84070D101540AA2B00E39703 /* Build configuration list for PBXProject "RPSSample" */;
 			compatibilityVersion = "Xcode 3.2";

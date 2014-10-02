@@ -251,7 +251,7 @@ static FBAppBridge *g_sharedInstance;
     }
     queryParams[FBBridgeURLParams.methodArgs] = jsonString;
 
-    NSURL *url = [bridgeScheme urlForMethod:appCall.dialogData.method
+    NSURL *url = [bridgeScheme URLForMethod:appCall.dialogData.method
                                 queryParams:queryParams];
 
     // Track the callback and AppCall, now that we are just about to invoke the url
@@ -308,14 +308,8 @@ forFailedAppCall:(FBAppCall *)appCall
 
     BOOL success = NO;
     NSInteger preProcessErrorCode = 0;
-    if (![FBUtility isFacebookBundleIdentifier:sourceApplication]) {
-        // If we're getting a response from another non-FB app, let's drop
-        // our old symmetric key, since it might have been compromised.
-        [FBAppBridge symmetricKeyAndForceRefresh:YES];
-
-        // The bridge only handles URLs from a native Facebook app.
-        preProcessErrorCode = FBErrorUntrustedURL;
-    } else {
+    if ([FBUtility isFacebookBundleIdentifier:sourceApplication] ||
+        [FBUtility isSafariBundleIdentifier:sourceApplication]) {
         NSString *urlPath = nil;
         if ([url.path length] > 1) {
             urlPath = [[url.path lowercaseString] substringFromIndex:1];
@@ -335,6 +329,13 @@ forFailedAppCall:(FBAppCall *)appCall
                                     session:session
                             fallbackHandler:fallbackHandler];
         }
+    } else {
+        // If we're getting a response from another non-FB app, let's drop
+        // our old symmetric key, since it might have been compromised.
+        [FBAppBridge symmetricKeyAndForceRefresh:YES];
+
+        // The bridge only handles URLs from a native Facebook app.
+        preProcessErrorCode = FBErrorUntrustedURL;
     }
 
     if (!success && fallbackHandler) {

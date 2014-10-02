@@ -113,7 +113,6 @@ NSString *const FBAppEventNameFBSessionAuthEnd                 = @"fb_mobile_log
 NSString *const FBAppEventNameFBSessionAuthMethodStart         = @"fb_mobile_login_method_start";
 NSString *const FBAppEventNameFBSessionAuthMethodEnd           = @"fb_mobile_login_method_complete";
 
-NSString *const FBAppEventNameFBLikeControlCannotPresentDialog = @"fb_like_control_cannot_present_dialog";
 NSString *const FBAppEventNameFBLikeControlDidDisable          = @"fb_like_control_did_disable";
 NSString *const FBAppEventNameFBLikeControlDidLike             = @"fb_like_control_did_like";
 NSString *const FBAppEventNameFBLikeControlDidPresentDialog    = @"fb_like_control_did_present_dialog";
@@ -166,7 +165,6 @@ typedef NS_ENUM(NSUInteger, AppSupportsAttributionStatus) {
 @property (readonly, retain) NSMutableDictionary   *appAuthSessions;  // Dictionary from appIDs to ClientToken-based app-authenticated session for that appID.
 @property (readonly, retain) NSMutableDictionary   *anonymousSessions;
 
-
 @end
 
 @implementation FBAppEvents
@@ -183,7 +181,7 @@ static BOOL _isOpenedByAppLink;
 #pragma mark - Constants
 
 const int NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER       = 100;
-const int FLUSH_PERIOD_IN_SECONDS                    = 60;
+const int FLUSH_PERIOD_IN_SECONDS                    = 15;
 const int APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD = 60 * 60 * 24;
 const int MAX_IDENTIFIER_LENGTH                      = 40;
 
@@ -462,7 +460,21 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     return self;
 }
 
-// Note: not implementing dealloc() here, as this is used as a singleton and is never expected to be released.
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+    [_anonymousSessions release];
+    [_appAuthSessions release];
+    [_attributionIDRecheckTimer release];
+    [_eventNameRegex release];
+    [_flushTimer release];
+    [_lastSessionLoggedTo release];
+    [_loggingOverrideAppID release];
+    [_validatedIdentifiers release];
+
+    [super dealloc];
+}
 
 - (BOOL)validateIdentifier:(NSString *)identifier {
 

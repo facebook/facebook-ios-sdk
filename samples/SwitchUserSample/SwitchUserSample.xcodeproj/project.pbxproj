@@ -205,7 +205,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SU;
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 856DB043153393C3006F6A33 /* Build configuration list for PBXProject "SwitchUserSample" */;
 			compatibilityVersion = "Xcode 3.2";

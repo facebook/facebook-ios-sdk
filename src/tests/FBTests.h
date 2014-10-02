@@ -58,4 +58,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                  callback:(HTTPStubCallback)callback;
 
 - (OCMockObject *)mainBundleMock;
+
+@property (nonatomic, retain) id mockFBUtility;
+
 @end
