@@ -65,6 +65,7 @@ typedef NS_ENUM(NSUInteger, FBBetaFeatures) {
 
 /*!
  @typedef
+ 
  @abstract Indicates if this app should be restricted
  */
 typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
@@ -293,14 +294,18 @@ typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
 
 /*!
  @method
+
  @abstract Returns YES if the legacy Graph API mode is enabled
 */
 + (BOOL)isPlatformCompatibilityEnabled;
 
 /*!
  @method
+
  @abstract Configures the SDK to use the legacy platform.
+
  @param enable indicates whether to use the legacy mode
+
  @discussion Setting this flag has several effects:
    - FBRequests will target v1.0 of the Graph API.
    - Login will use the prior behavior without abilities to decline permission.
