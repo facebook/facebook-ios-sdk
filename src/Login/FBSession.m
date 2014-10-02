@@ -260,6 +260,7 @@ static FBSession *g_activeSession = nil;
 }
 
 - (void)dealloc {
+    _loginDialog.delegate = nil;
     [_loginDialog release];
     [_attemptedRefreshDate release];
     [_attemptedPermissionsRefreshDate release];
