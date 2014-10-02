@@ -464,7 +464,7 @@ static CGSize g_buttonSize;
             // 1) if you provide unspecified permissions, then we fall back on legacy fast-app-switch
             // 2) if you provide only read permissions, then we call a read-based open method that will use integrated auth
             // 3) if you provide any publish permissions, then we combine the read-set and publish-set and call the publish-based
-            //    method that will use integrated auth when availab le
+            //    method that will use integrated auth when available
             // 4) if you provide any publish permissions, and don't specify a valid audience, the control will throw an exception
             //    when the user presses login
             if (self.permissions) {
