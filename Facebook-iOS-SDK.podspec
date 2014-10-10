@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
 
   s.resource  = "src/FBUserSettingsViewResources.bundle"
 
-  s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox", "AdSupport"
+  s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
 
   s.requires_arc = false
 
