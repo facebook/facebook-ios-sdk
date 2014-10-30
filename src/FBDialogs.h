@@ -220,7 +220,7 @@ typedef void (^FBDialogAppCallCompletionHandler)(
 
  @see canPresentShareDialogWithOpenGraphActionParams:
  @see canPresentShareDialogWithParams:
- @see canPresentShareDialogWithPhotos:
+ @see canPresentShareDialogWithPhotos
  */
 + (BOOL)canPresentShareDialog;
 
@@ -633,7 +633,7 @@ typedef void (^FBDialogAppCallCompletionHandler)(
 
  @see canPresentMessageDialogWithOpenGraphActionParams:
  @see canPresentMessageDialogWithParams:
- @see canPresentMessageDialogWithPhotos:
+ @see canPresentMessageDialogWithPhotos
  */
 + (BOOL)canPresentMessageDialog;
 

@@ -63,7 +63,7 @@ static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_unlock(&mutex);
 
     _mockFBUtility = [[OCMockObject mockForClass:[FBUtility class]] retain];
-    [[[_mockFBUtility stub] andReturn:nil] advertiserID]; //stub advertiserID since that often hangs.
+    [[[_mockFBUtility stub] andReturn:nil] advertiserOrAnonymousID:YES]; //stub advertiserID since that often hangs.
 
     _mockNSBundle = [[OCMockObject partialMockForObject:[NSBundle mainBundle]] retain];
     [[[_mockNSBundle stub] andReturn:[[NSUUID UUID] UUIDString]] bundleIdentifier];

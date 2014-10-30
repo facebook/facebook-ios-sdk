@@ -313,6 +313,10 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  */
 @property (nonatomic, assign) FBRequestConnectionErrorBehavior errorBehavior;
 
+/*!
+ @abstract
+ The delegate object that receives updates.
+ */
 @property (nonatomic, assign) id<FBRequestConnectionDelegate> delegate;
 
 /*!

@@ -159,8 +159,8 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     NSArray *requests = [connection performSelector:@selector(requests)];
 
     // Therefore, only expect the the token refresh piggyback in addition to the original request for /me
-    int count = requests.count;
-    XCTAssertEqual(2,count, @"unexpected number of piggybacks");
+    NSUInteger count = requests.count;
+    XCTAssertEqual(2u, count, @"unexpected number of piggybacks");
     
     [connection release];
 }
@@ -185,8 +185,8 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     NSArray *requests = [connection performSelector:@selector(requests)];
 
     // Expect the token refresh and permission refresh to be piggybacked.
-    int count = requests.count;
-    XCTAssertEqual(3,count, @"unexpected number of piggybacks");
+    NSUInteger count = requests.count;
+    XCTAssertEqual(3u, count, @"unexpected number of piggybacks");
     
     [connection release];
     

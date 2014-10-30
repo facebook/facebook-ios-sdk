@@ -47,6 +47,9 @@ FBSDK_EXTERN NSString *const FBLoggingBehaviorInformational;
 /*! Log cache errors. */
 FBSDK_EXTERN NSString *const FBLoggingBehaviorCacheErrors;
 
+/*! Log errors from SDK UI controls */
+FBSDK_EXTERN NSString *const FBLoggingBehaviorUIControlErrors;
+
 /*! Log errors likely to be preventable by the developer. This is in the default set of enabled logging behaviors. */
 FBSDK_EXTERN NSString *const FBLoggingBehaviorDeveloperErrors;
 
@@ -58,13 +61,13 @@ FBSDK_EXTERN NSString *const FBLoggingBehaviorDeveloperErrors;
  in release builds.
  */
 typedef NS_ENUM(NSUInteger, FBBetaFeatures) {
+    /*! Default value indicating no beta features */
     FBBetaFeaturesNone                  = 0,
-#if defined(DEBUG) || defined(FB_BUILD_ONLY)
-#endif
 };
 
 /*!
  @typedef
+
  @abstract Indicates if this app should be restricted
  */
 typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
@@ -122,6 +125,7 @@ typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
 
  @abstract
  This method is deprecated -- App Events favors using bundle identifiers to this.
+ @param appVersion deprecated
  */
 + (void)setAppVersion:(NSString *)appVersion __attribute__ ((deprecated("App Events favors use of bundle identifiers for version identification.")));
 
@@ -293,14 +297,18 @@ typedef NS_ENUM(NSUInteger, FBRestrictedTreatment) {
 
 /*!
  @method
+
  @abstract Returns YES if the legacy Graph API mode is enabled
 */
 + (BOOL)isPlatformCompatibilityEnabled;
 
 /*!
  @method
+
  @abstract Configures the SDK to use the legacy platform.
+
  @param enable indicates whether to use the legacy mode
+
  @discussion Setting this flag has several effects:
    - FBRequests will target v1.0 of the Graph API.
    - Login will use the prior behavior without abilities to decline permission.

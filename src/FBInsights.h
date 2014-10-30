@@ -26,8 +26,10 @@
  */
 __attribute__ ((deprecated("use FBAppEventsFlushBehavior instead")))
 typedef NS_ENUM(NSUInteger, FBInsightsFlushBehavior) {
-    FBInsightsFlushBehaviorAuto __attribute__ ((deprecated("use FBAppEventsFlushBehaviorAuto instead"))),
-    FBInsightsFlushBehaviorExplicitOnly __attribute__ ((deprecated("use FBAppEventsFlushBehaviorExplicitOnly instead"))),
+    /*! @deprecated use FBAppEventsFlushBehaviorAuto instead */
+    FBInsightsFlushBehaviorAuto = 0,
+    /*! @deprecated use FBAppEventsFlushBehaviorExplicitOnly instead */
+    FBInsightsFlushBehaviorExplicitOnly
 };
 
 FBSDK_EXTERN NSString *const FBInsightsLoggingResultNotification __attribute__((deprecated));
@@ -40,19 +42,62 @@ FBSDK_EXTERN NSString *const FBInsightsLoggingResultNotification __attribute__((
 __attribute__ ((deprecated("Use the FBAppEvents class instead")))
 @interface FBInsights : NSObject
 
+/*!
+ @abstract deprecated
+*/
 + (NSString *)appVersion __attribute__((deprecated));
+/*!
+ @abstract deprecated
+ @param appVersion deprecated
+*/
 + (void)setAppVersion:(NSString *)appVersion __attribute__((deprecated("use [FBSettings setAppVersion] instead")));
 
+/*!
+ @abstract deprecated
+ @param purchaseAmount deprecated
+ @param currency deprecated
+ */
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency __attribute__((deprecated("use [FBAppEvents logPurchase] instead")));
+/*!
+ @abstract deprecated
+ @param purchaseAmount deprecated
+ @param currency deprecated
+ @param parameters deprecated
+ */
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary *)parameters __attribute__((deprecated("use [FBAppEvents logPurchase] instead")));
+/*!
+ @abstract deprecated
+ @param purchaseAmount deprecated
+ @param currency deprecated
+ @param parameters deprecated
+ @param session deprecated
+ */
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary *)parameters session:(FBSession *)session __attribute__((deprecated("use [FBAppEvents logPurchase] instead")));
-
+/*!
+ @abstract deprecated
+ @param pixelID deprecated
+ @param value deprecated
+ */
 + (void)logConversionPixel:(NSString *)pixelID valueOfPixel:(double)value __attribute__((deprecated));
+/*!
+ @abstract deprecated
+ @param pixelID deprecated
+ @param value deprecated
+ @param session deprecated
+ */
 + (void)logConversionPixel:(NSString *)pixelID valueOfPixel:(double)value session:(FBSession *)session __attribute__((deprecated));
-
+/*!
+ @abstract deprecated
+ */
 + (FBInsightsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents flushBehavior] instead")));
+/*!
+ @abstract deprecated
+ @param flushBehavior deprecated
+ */
 + (void)setFlushBehavior:(FBInsightsFlushBehavior)flushBehavior __attribute__((deprecated("use [FBAppEvents setFlushBehavior] instead")));
-
+/*!
+ @abstract deprecated
+ */
 + (void)flush __attribute__((deprecated("use [FBAppEvents flush] instead")));
 
 @end

@@ -35,7 +35,7 @@ static NSString *const kFBShareDialogVersion = @"20130410";
 static NSString *const kFBShareDialogPhotosVersion = @"20140116";
 static NSString *const kFBAppBridgeMinVersion = @"20130214";
 static NSString *const kFBAppBridgeImageSupportVersion = @"20130410";
-static NSString *const kFBLikeButtonBetaVersion = @"20140410";
+static NSString *const kFBLikeButtonVersion = @"20140410";
 
 /*
  Array of known versions that the native FB app can support.
@@ -60,6 +60,14 @@ static NSString *const FBDialogConfigsKey = @"com.facebook.sdk:dialogConfigs%@";
 + (void)initialize
 {
     if (self == [FBAppBridgeScheme class]) {
+        [self updateDialogConfigs];
+    }
+}
+
++ (void)updateDialogConfigs
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
         void(^block)() = ^{
             // while this map is stored globally in FBFetchedAppSettings, we need to serialize it to disk so that it is
             // persistent, so we will be storing it in another global here, and then replacing it once
@@ -91,7 +99,7 @@ static NSString *const FBDialogConfigsKey = @"com.facebook.sdk:dialogConfigs%@";
         } else {
             dispatch_async(dispatch_get_main_queue(), block);
         }
-    }
+    });
 }
 
 // private init.
@@ -155,7 +163,7 @@ static NSString *const FBDialogConfigsKey = @"com.facebook.sdk:dialogConfigs%@";
 
 + (instancetype)bridgeSchemeForFBAppForLike
 {
-    return [self _validAppBridgeSchemeForMethod:@"like" minVersion:kFBLikeButtonBetaVersion];
+    return [self _validAppBridgeSchemeForMethod:@"like" minVersion:kFBLikeButtonVersion];
 }
 
 + (instancetype)bridgeSchemeForFBMessengerForShareDialogParams:(FBLinkShareParams *)params

@@ -91,21 +91,8 @@ if [ -d "$OUTPUT_DIR"/.git ]; then
     # make sure they are all up to date
     git submodule update --init --recursive
   )
-  # take another pass and sync the appropriate rev from the source repo
-  (
-    git config -f .gitmodules --get-regexp '^submodule\..*\.path$' |
-    while read SUBMODULE_PATH_KEY SUBMODULE_PATH
-    do
-      (
-        cd "$SUBMODULE_PATH"
-        SUBMODULE_REV=$(git log -1 --pretty=format:%H)
-        cd "$OUTPUT_DIR/$SUBMODULE_PATH"
-        git checkout $SUBMODULE_REV
-        git submodule update --init --recursive
-      )
-    done
-  )
 
+  progress_message "Ensuring submodules in export are updated."
   # Checkout the correct revision in each of the submodules. We need to read the
   # current revision from the local repo and then checkout that revision in the
   # output directory
@@ -114,12 +101,14 @@ if [ -d "$OUTPUT_DIR"/.git ]; then
   do
     (
       cd "$OUTPUT_DIR"
-      SUBMODULE_REVISION=$SUBMODULE_REVISION
+      #remove leading minus (affects git 1.9.2)
+      SUBMODULE_REVISION=${SUBMODULE_REVISION#"-"}
       SUBMODULE_KEY=$SUBMODULE_KEY
       SUBMODULE_PATH=`git config -f .gitmodules --get "submodule.${SUBMODULE_KEY}.path"`
       cd "$SUBMODULE_PATH"
       git checkout -q $SUBMODULE_REVISION
-    )
+      git submodule update --init --recursive
+    ) || die "*** FATAL *** Failed to update submodules"
   done
 fi
 

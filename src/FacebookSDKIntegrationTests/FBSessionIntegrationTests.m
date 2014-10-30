@@ -172,7 +172,10 @@
     FBAccessTokenData *tokenDataCopy = [normalSession.accessTokenData copy];
     BOOL openResult = [target openFromAccessTokenData:tokenDataCopy
                                     completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                        XCTAssertTrue(status == FBSessionStateOpen || expectClosed, @"status is :%d , error:%@:", status, error);
+                                        XCTAssertTrue(status == FBSessionStateOpen || expectClosed,
+                                                      @"status is :%lu , error:%@:",
+                                                      (unsigned long)status,
+                                                      error);
                                         [blocker signal];
                                     }];
     XCTAssertTrue(openResult, @"expected openResult=YES");
@@ -293,7 +296,10 @@
     FBAccessTokenData *tokenDataCopy = [normalSession.accessTokenData copy];
     BOOL openResult = [target openFromAccessTokenData:tokenDataCopy
                                     completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                        XCTAssertTrue(status == FBSessionStateOpen || expectClosed, @"status is :%d , error:%@:", status, error);
+                                        XCTAssertTrue(status == FBSessionStateOpen || expectClosed,
+                                                      @"status is :%lu, error:%@:",
+                                                      (unsigned long)status,
+                                                      error);
                                         [blocker signal];
                                     }];
     XCTAssertTrue(openResult, @"expected openResult=YES");

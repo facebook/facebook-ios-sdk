@@ -58,12 +58,20 @@ test -x "$LIPO" || die 'Could not find lipo in $PATH'
 
 FB_SDK_UNIVERSAL_BINARY=$FB_SDK_BUILD/${BUILDCONFIGURATION}-universal/$FB_SDK_BINARY_NAME
 
+
+# -----------------------------------------------------------------------------
+
+progress_message Updating Submodules
+
+# -----------------------------------------------------------------------------
+(cd "$FB_SDK_ROOT"; git submodule foreach 'git fetch --tags'; git submodule update --init --recursive)
+
 # -----------------------------------------------------------------------------
 
 progress_message Building Bolts
 
 # -----------------------------------------------------------------------------
-$BOLTS_SCRIPT/build_framework.sh || die "Could not build Bolts."
+"$BOLTS_SCRIPT"/build_framework.sh || die "Could not build Bolts."
 
 # -----------------------------------------------------------------------------
 
@@ -84,7 +92,6 @@ function xcode_build_target() {
     -scheme facebook-ios-sdk \
     -sdk $1 \
     -configuration "${2}" \
-    VALID_ARCHS="${3}" \
     ONLY_ACTIVE_ARCH=NO \
     RUN_CLANG_STATIC_ANALYZER=NO \
     SYMROOT="$FB_SDK_BUILD" \
@@ -92,10 +99,8 @@ function xcode_build_target() {
     || die "XCode build failed for platform: ${1} (${2}, ${3})."
 }
 
-xcode_build_target iphonesimulator "${BUILDCONFIGURATION}" i386
-xcode_build_target iphoneos "${BUILDCONFIGURATION}" "armv7 armv7s"
-xcode_build_target iphonesimulator "${BUILDCONFIGURATION}64" x86_64
-xcode_build_target iphoneos "${BUILDCONFIGURATION}64" arm64
+xcode_build_target iphonesimulator "${BUILDCONFIGURATION}"
+xcode_build_target iphoneos "${BUILDCONFIGURATION}"
 
 # -----------------------------------------------------------------------------
 # Merge lib files for different platforms into universal binary
@@ -108,8 +113,6 @@ $LIPO \
   -create \
     "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphonesimulator/libfacebook_ios_sdk.a" \
     "$FB_SDK_BUILD/${BUILDCONFIGURATION}-iphoneos/libfacebook_ios_sdk.a" \
-    "$FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphonesimulator/libfacebook_ios_sdk.a" \
-    "$FB_SDK_BUILD/${BUILDCONFIGURATION}64-iphoneos/libfacebook_ios_sdk.a" \
   -output "$FB_SDK_UNIVERSAL_BINARY" \
   || die "lipo failed - could not create universal static library"
 

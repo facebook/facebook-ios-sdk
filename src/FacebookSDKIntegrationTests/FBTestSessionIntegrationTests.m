@@ -33,43 +33,42 @@
 
 @implementation FBTestSessionIntegrationTests
 
-- (int)countTestUsers 
+- (NSUInteger)countTestUsers
 {
     // Get the number of test users. Use an FBTestSession without a user (and thus no
     // access token), so we can specify our own access token.
     FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     XCTAssertNil(session.accessTokenData, @"non-nil access token");
-    
+
     __block FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
-    
+
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 session.appAccessToken, @"access_token",
                                 nil];
-    
+
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:[NSString stringWithFormat:@"%@/accounts/test-users", session.testAppID]
                                                   parameters:parameters
                                                   HTTPMethod:nil]
                           autorelease];
 
-    __block int count = 0;
-    [request startWithCompletionHandler:
-     ^(FBRequestConnection *connection, id result, NSError *error) {
+    __block NSUInteger count = 0;
+    [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         XCTAssertNotNil(result, @"nil result");
         XCTAssertNil(error, @"non-nil error");
         XCTAssertTrue([result isKindOfClass:[NSDictionary class]], @"not dictionary");
-        
+
         id data = [result objectForKey:@"data"];
         XCTAssertTrue([data isKindOfClass:[NSArray class]], @"not array");
-        
+
         count = [data count];
-        
+
         [blocker signal];
     }];
-     
+
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     [blocker release];
-    
+
     return count;
 }
 
@@ -79,15 +78,15 @@
     FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     [self loginSession:session];
     [session close];
-    
-    int startingUserCount = [self countTestUsers];
-    
+
+    NSUInteger startingUserCount = [self countTestUsers];
+
     // Try getting another shared user.
     session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     [self loginSession:session];
-    
-    int endingUserCount = [self countTestUsers];
-    
+
+    NSUInteger endingUserCount = [self countTestUsers];
+
     XCTAssertEqual(startingUserCount, endingUserCount, @"differing counts");
     [session close];
 }

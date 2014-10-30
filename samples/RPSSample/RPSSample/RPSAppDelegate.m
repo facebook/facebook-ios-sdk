@@ -90,16 +90,12 @@
     // Override point for customization after application launch.
 
     UIViewController *viewControllerGame;
-    FBUserSettingsViewController *viewControllerSettings;
+
     if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
         viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPhone" bundle:nil];
     } else {
         viewControllerGame = [[RPSGameViewController alloc] initWithNibName:@"RPSGameViewController_iPad" bundle:nil];
     }
-    viewControllerSettings = [[FBUserSettingsViewController alloc] init];
-    viewControllerSettings.title = @"Facebook Settings";
-    viewControllerSettings.tabBarItem.image = [UIImage imageNamed:@"second"];
-
     self.navigationController = [[UINavigationController alloc] initWithRootViewController:viewControllerGame];
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];

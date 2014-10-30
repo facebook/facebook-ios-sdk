@@ -117,6 +117,14 @@ long _lastRestoreTime;
 
     long now = [FBAppEvents unixTimeNow];
     long timeSinceRestore = now - _lastRestoreTime;
+
+    // Can happen if the clock on the device is changed
+    if (timeSinceRestore < 0) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorAppEvents
+                        formatString:@"Clock skew detected"];
+        timeSinceRestore = 0;
+    }
+
     _secondsSpentInCurrentSession += timeSinceRestore;
 
     NSDictionary *timeSpentData =
