@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "3.19.0"
+  s.version      = "3.20.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "6.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-3.19.0" ,
+                     :tag => "sdk-version-3.20.0" ,
                      :submodules => true }
 
   s.source_files  =  "src/**/*.{h,m}"
@@ -33,8 +33,6 @@ Pod::Spec.new do |s|
   s.public_header_files = "src/*.h"
 
   s.header_dir = "FacebookSDK"
-
-  s.resource  = "src/FBUserSettingsViewResources.bundle"
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
 

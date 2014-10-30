@@ -123,6 +123,7 @@
  @param refreshDate The date that token was last refreshed. A value of nil defaults to `[NSDate date]`.
  @param permissionsRefreshDate The date the permissions were last refreshed. A value of nil defaults to `[NSDate distantPast]`.
  @param appID The ID string of the calling app. A value of nil defaults to `[FBSettings defaultAppID]`.
+ @param userID The user ID associated with the token.
  */
 + (FBAccessTokenData *)createTokenFromString:(NSString *)accessToken
                                  permissions:(NSArray *)permissions

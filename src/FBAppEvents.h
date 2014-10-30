@@ -401,7 +401,9 @@ FBSDK_EXTERN NSString *const FBAppEventParameterValueNo;
 /*!
  @method
  
- @abstract This method has been replaced by [FBSettings setLimitEventUsage] */
+ @abstract This method has been replaced by [FBSettings setLimitEventUsage]
+ @param limitEventUsage deprecated
+*/
 + (void)setLimitEventUsage:(BOOL)limitEventUsage __attribute__ ((deprecated("use [FBSettings setLimitEventAndDataUsage] instead")));
 
 /*!
@@ -475,7 +477,7 @@ FBSDK_EXTERN NSString *const FBAppEventParameterValueNo;
  Get the 'override' App ID for App Event logging.
 
  @discussion
- @see `setLoggingOverrideAppID:`
+ @see setLoggingOverrideAppID:
 
  */
 + (NSString *)loggingOverrideAppID;

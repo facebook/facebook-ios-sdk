@@ -64,14 +64,26 @@ test -d "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
 for SCHEME in $SCHEMES; do
-    "$XCTOOL" \
-        -project facebook-ios-sdk.xcodeproj \
-        -scheme $SCHEME \
-        -sdk iphonesimulator \
-        -configuration "$BUILDCONFIGURATION" \
-        ONLY_ACTIVE_ARCH=YES \
-        SYMROOT="$FB_SDK_BUILD" \
-        $CLEAN test \
-        || die "Error while running unit tests"
+    APPLICATION_TEST_EXTRAS=""
+    if [ "$SCHEME" == "FacebookSDKApplicationTests" ]; then
+      # ios snapshot has issues with ios 8. As a workaround, specify ios7.1 specifically (make sure it's install first)
+      CAN_HAZ_SIM=$(xcodebuild -showsdks | grep "iphonesimulator7.1")
+      if [ -z "$CAN_HAZ_SIM" ]; then
+        progress_message "*** WARNING *** iOS simulator 7.1 is required for FacebookSDKApplicationTests. Skipping..."
+        continue
+      fi
+      APPLICATION_TEST_EXTRAS="-test-sdk iphonesimulator7.1 -destination 'platform=iOS Simulator,name=iPhone 4s,OS=7.1'"
+    fi
+
+    COMMAND="$XCTOOL
+     -project facebook-ios-sdk.xcodeproj \
+     -scheme $SCHEME \
+     -sdk iphonesimulator \
+     -configuration "$BUILDCONFIGURATION" \
+     ONLY_ACTIVE_ARCH=YES \
+     SYMROOT="$FB_SDK_BUILD" \
+     $CLEAN test \
+     $APPLICATION_TEST_EXTRAS"
+    eval $COMMAND || die "Error while running tests ($COMMAND)"
 done
 

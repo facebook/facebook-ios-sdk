@@ -159,6 +159,7 @@ typedef NS_ENUM(NSUInteger, AppSupportsAttributionStatus) {
 @property (readwrite, retain) NSTimer              *attributionIDRecheckTimer;
 @property (readwrite) AppSupportsAttributionStatus  appSupportsAttributionStatus;
 @property (readwrite) BOOL                          appSupportsImplicitLogging;
+@property (readwrite) BOOL                          shouldAccessAdvertisingID;
 @property (readwrite) BOOL                          haveFetchedAppSettings;
 @property (readwrite, copy) NSRegularExpression    *eventNameRegex;
 @property (readwrite, retain) NSMutableSet         *validatedIdentifiers;
@@ -592,14 +593,6 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     [eventDictionary setObject:currentViewControllerName forKey:@"_ui"];
 
     @synchronized (self) {
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-        if ([FBSettings appVersion]) {
-            [eventDictionary setObject:[FBSettings appVersion] forKey:@"_appVersion"];
-        }
-#pragma GCC diagnostic pop
-
         // If this is a different session than the most recent we logged to, set up that earlier session for flushing, and update
         // the most recent.
         if (!self.lastSessionLoggedTo) {
@@ -712,6 +705,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
                                  ? AppSupportsAttributionTrue : AppSupportsAttributionFalse;
 
                                self.appSupportsImplicitLogging = settings.supportsImplicitSdkLogging;
+                               self.shouldAccessAdvertisingID = settings.shouldAccessAdvertisingID;
 
                                self.haveFetchedAppSettings = YES;
 
@@ -752,20 +746,17 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         return;
     }
 
-    NSMutableDictionary *postParameters =
-        [NSMutableDictionary dictionaryWithDictionary:
-            @{ @"event" : @"CUSTOM_APP_EVENTS",
-               @"custom_events_file" : utf8EncodedEvents,
-            }
-         ];
+    BOOL includeAttributionID = self.appSupportsAttributionStatus == AppSupportsAttributionTrue;
+    NSMutableDictionary<FBGraphObject> *postParameters =
+        [FBUtility activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
+                                   includeAttributionID:includeAttributionID
+                                     implicitEventsOnly:allEventsAreImplicit
+                              shouldAccessAdvertisingID:self.shouldAccessAdvertisingID];
 
+    postParameters[@"custom_events_file"] = utf8EncodedEvents;
     if (numSkipped > 0) {
         postParameters[@"num_skipped_events"] = [NSString stringWithFormat:@"%lu", (unsigned long)numSkipped];
     }
-
-    [self appendAttributionAndAdvertiserIDs:postParameters
-                                    session:session
-                        accessAdvertisingID:!allEventsAreImplicit];
 
     NSString *loggingEntry = nil;
     if ([[FBSettings loggingBehavior] containsObject:FBLoggingBehaviorAppEvents]) {
@@ -800,32 +791,6 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     }];
 
     appEventsState.requestInFlight = YES;
-}
-
-- (void)appendAttributionAndAdvertiserIDs:(NSMutableDictionary *)postParameters
-                                  session:(FBSession *)session
-                     accessAdvertisingID:(BOOL)accessAdvertisingID {
-
-    if (self.appSupportsAttributionStatus == AppSupportsAttributionTrue) {
-        NSString *attributionID = [FBUtility attributionID];
-        if (attributionID) {
-            [postParameters setObject:attributionID forKey:@"attribution"];
-        }
-    }
-
-    // Send advertiserID if available, and send along whether tracking is enabled too.  That's because
-    // we can use the advertiser_id for non-tracking purposes (aggregated Insights/demographics) that doesn't
-    // result in advertising targeting that user.  Note that we do not send it when the events only include
-    // implicit events.
-    if (accessAdvertisingID) {
-        NSString *advertiserID = [FBUtility advertiserID];
-        if (advertiserID) {
-            [postParameters setObject:advertiserID forKey:@"advertiser_id"];
-        }
-    }
-
-    [FBUtility updateParametersWithEventUsageLimitsAndBundleInfo:postParameters
-                                 accessAdvertisingTrackingStatus:accessAdvertisingID];
 }
 
 - (BOOL)doesSessionHaveUserToken:(FBSession *)session {
@@ -1242,8 +1207,10 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     if (![self doesSessionHaveUserToken:sessionToSendRequestTo]) {
 
         // We don't have a logged in user, so we need some form of udid representation.  Prefer
-        // advertiser ID if available, and back off to attribution ID if not.
-        udid = [FBUtility advertiserID];
+        // advertiser ID if available, and back off to attribution ID if not.  We can explicitly
+        // call with YES because this function is one that only makes sense to be called in the
+        // context of advertising, and thus accessing the IDFA is supported.
+        udid = [FBUtility advertiserOrAnonymousID:YES];
         if (!udid) {
             udid = [FBUtility attributionID];
         }

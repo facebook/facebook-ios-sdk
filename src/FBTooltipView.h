@@ -64,7 +64,7 @@ typedef NS_ENUM(NSUInteger, FBTooltipColorStyle) {
 
 /*!
  @abstract Gets or sets the color style after initialization.
- 
+
  @discussion Defaults to value passed to -initWithTagline:message:colorStyle:.
  */
 @property (nonatomic, assign) FBTooltipColorStyle colorStyle;

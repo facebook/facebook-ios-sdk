@@ -16,6 +16,7 @@
 
 #import "FBLikeControl.h"
 
+#import "FBAppBridgeScheme.h"
 #import "FBAppEvents+Internal.h"
 #import "FBDialogs+Internal.h"
 #import "FBLikeActionController.h"
@@ -52,6 +53,19 @@ NSString *NSStringFromFBLikeControlHorizontalAlignment(FBLikeControlHorizontalAl
     return nil;
 }
 
+NSString *NSStringFromFBLikeControlObjectType(FBLikeControlObjectType objectType)
+{
+    switch (objectType) {
+        case FBLikeControlObjectTypeUnknown:
+            return @"unknown";
+        case FBLikeControlObjectTypeOpenGraphObject:
+            return @"open_graph";
+        case FBLikeControlObjectTypePage:
+            return @"page";
+    }
+    return nil;
+}
+
 NSString *NSStringFromFBLikeControlStyle(FBLikeControlStyle style)
 {
     switch (style) {
@@ -83,6 +97,14 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
     UILabel *_socialSentenceLabel;
 }
 
+#pragma mark - Class Methods
+
++ (void)initialize
+{
+    // ensure that we have updated the dialog configs if we haven't already
+    [FBAppBridgeScheme updateDialogConfigs];
+}
+
 #pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -105,7 +127,9 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [_likeButton removeTarget:self action:@selector(_handleLikeButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    [_likeButton removeTarget:self
+                       action:@selector(_handleLikeButtonTap:)
+             forControlEvents:UIControlEventTouchUpInside];
     [_likeActionController endContentAccess];
 
     [_likeActionController release];
@@ -174,11 +198,15 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
         [_objectID release];
         _objectID = [objectID copy];
         [self _resetLikeActionController];
+        [self setNeedsLayout];
+    }
+}
 
-        _likeButton.selected = _likeActionController.objectIsLiked;
-        _socialSentenceLabel.text = _likeActionController.socialSentence;
-        _likeBoxView.text = _likeActionController.likeCountString;
-
+- (void)setObjectType:(FBLikeControlObjectType)objectType
+{
+    if (_objectType != objectType) {
+        _objectType = objectType;
+        [self _resetLikeActionController];
         [self setNeedsLayout];
     }
 }
@@ -196,7 +224,8 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
     [super drawRect:rect];
 
     NSDictionary *analyticsParameters = [self _analyticsParameters];
-    FBViewImpressionTracker *impressionTracker = [FBViewImpressionTracker impressionTrackerWithEventName:FBAppEventNameFBLikeControlImpression];
+    FBViewImpressionTracker *impressionTracker =
+    [FBViewImpressionTracker impressionTrackerWithEventName:FBAppEventNameFBLikeControlImpression];
     [impressionTracker logImpressionWithView:self
                                   identifier:self.objectID
                                   parameters:analyticsParameters];
@@ -229,10 +258,13 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
         return;
     }
 
+    [self _ensureLikeActionController];
+
     CGRect bounds = self.bounds;
-    FBLikeControlLayout layout = [self _layoutWithBounds:bounds subviewSizingBlock:^CGSize(UIView *subview, CGSize constrainedSize) {
+    CGSize(^sizingBlock)(UIView *, CGSize) = ^CGSize(UIView *subview, CGSize constrainedSize) {
         return [subview sizeThatFits:constrainedSize];
-    }];
+    };
+    FBLikeControlLayout layout = [self _layoutWithBounds:bounds subviewSizingBlock:sizingBlock];
 
     UIView *auxiliaryView = [self _auxiliaryView];
     _likeBoxView.hidden = (_likeBoxView != auxiliaryView);
@@ -268,16 +300,17 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
 - (NSDictionary *)_analyticsParameters
 {
     return @{
-      @"auxiliary_position": NSStringFromFBLikeControlAuxiliaryPosition(self.likeControlAuxiliaryPosition),
-      @"horizontal_alignment": NSStringFromFBLikeControlHorizontalAlignment(self.likeControlHorizontalAlignment),
-      @"object_id": (self.objectID ?: [NSNull null]),
-      @"sound_enabled": @(self.soundEnabled),
-      @"style": NSStringFromFBLikeControlStyle(self.likeControlStyle),
-      };
+             @"auxiliary_position": NSStringFromFBLikeControlAuxiliaryPosition(self.likeControlAuxiliaryPosition),
+             @"horizontal_alignment": NSStringFromFBLikeControlHorizontalAlignment(self.likeControlHorizontalAlignment),
+             @"object_id": (self.objectID ?: [NSNull null]),
+             @"sound_enabled": @(self.soundEnabled),
+             @"style": NSStringFromFBLikeControlStyle(self.likeControlStyle),
+             };
 }
 
 - (UIView *)_auxiliaryView
 {
+    [self _ensureLikeActionController];
     switch (_likeControlStyle) {
         case FBLikeControlStyleStandard:{
             return (_socialSentenceLabel.text.length == 0 ? nil : _socialSentenceLabel);
@@ -308,6 +341,17 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
     return 0.0;
 }
 
+- (void)_ensureLikeActionController
+{
+    if (!_likeActionController) {
+        _likeActionController = [[FBLikeActionController likeActionControllerForObjectID:_objectID
+                                                                              objectType:_objectType] retain];
+        _likeButton.selected = _likeActionController.objectIsLiked;
+        _socialSentenceLabel.text = _likeActionController.socialSentence;
+        _likeBoxView.text = _likeActionController.likeCountString;
+    }
+}
+
 - (void)_handleLikeActionControllerDidDisableNotification:(NSNotification *)notification
 {
     [self setNeedsLayout];
@@ -315,6 +359,7 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
 
 - (void)_handleLikeActionControllerDidUpdateNotification:(NSNotification *)notification
 {
+    [self _ensureLikeActionController];
     FBLikeActionController *likeActionController = (FBLikeActionController *)notification.object;
     NSString *objectID = likeActionController.objectID;
     if ([self.objectID isEqualToString:objectID]) {
@@ -360,8 +405,9 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
 - (void)_handleLikeButtonTap:(FBLikeButton *)likeButton
 {
     [self _handleLikeButtonTouchUp:likeButton];
-    FBLikeActionController *actionController = [FBLikeActionController likeActionControllerForObjectID:_objectID];
-    [actionController toggleLikeWithSoundEnabled:self.isSoundEnabled analyticsParameters:[self _analyticsParameters]];
+    [self _ensureLikeActionController];
+    [_likeActionController toggleLikeWithSoundEnabled:self.isSoundEnabled
+                                  analyticsParameters:[self _analyticsParameters]];
     [self sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
 
@@ -427,7 +473,9 @@ typedef CGSize (^fb_like_control_sizing_block_t)(UIView *subview, CGSize constra
                                                object:nil];
 }
 
-static void FBLikeControlApplyHorizontalAlignment(CGRect *frameRef, CGRect bounds, FBLikeControlHorizontalAlignment alignment)
+static void FBLikeControlApplyHorizontalAlignment(CGRect *frameRef,
+                                                  CGRect bounds,
+                                                  FBLikeControlHorizontalAlignment alignment)
 {
     if (frameRef == NULL) {
         return;
@@ -463,7 +511,8 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
 
 }
 
-- (FBLikeControlLayout)_layoutWithBounds:(CGRect)bounds subviewSizingBlock:(fb_like_control_sizing_block_t)subviewSizingBlock
+- (FBLikeControlLayout)_layoutWithBounds:(CGRect)bounds
+                      subviewSizingBlock:(fb_like_control_sizing_block_t)subviewSizingBlock
 {
     FBLikeControlLayout layout;
 
@@ -480,18 +529,23 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
     switch (self.likeControlAuxiliaryPosition) {
         case FBLikeControlAuxiliaryPositionInline:{
             if (auxiliaryView) {
-                auxiliaryViewSize = CGSizeMake(CGRectGetWidth(bounds) - auxiliaryViewPadding - CGRectGetWidth(layout.likeButtonFrame),
+                auxiliaryViewSize = CGSizeMake((CGRectGetWidth(bounds) -
+                                                auxiliaryViewPadding -
+                                                CGRectGetWidth(layout.likeButtonFrame)),
                                                CGRectGetHeight(bounds));
                 auxiliaryViewSize = subviewSizingBlock(auxiliaryView, auxiliaryViewSize);
 
                 layout.auxiliaryViewFrame = CGRectMake(CGRectGetMinX(bounds),
                                                        CGRectGetMinY(bounds),
                                                        auxiliaryViewSize.width,
-                                                       MAX(auxiliaryViewSize.height, CGRectGetHeight(layout.likeButtonFrame)));
+                                                       MAX(auxiliaryViewSize.height,
+                                                           CGRectGetHeight(layout.likeButtonFrame)));
             }
 
             // align the views next to each other for sizing
-            FBLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, FBLikeControlHorizontalAlignmentLeft);
+            FBLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame,
+                                                  bounds,
+                                                  FBLikeControlHorizontalAlignmentLeft);
             if (auxiliaryView) {
                 layout.auxiliaryViewFrame.origin.x = CGRectGetMaxX(layout.likeButtonFrame) + auxiliaryViewPadding;
             }
@@ -508,14 +562,17 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
                 case FBLikeControlHorizontalAlignmentCenter:{
                     layout.likeButtonFrame.origin.x = floorf((CGRectGetWidth(bounds) - layout.contentSize.width) / 2);
                     if (auxiliaryView) {
-                        layout.auxiliaryViewFrame.origin.x = CGRectGetMaxX(layout.likeButtonFrame) + auxiliaryViewPadding;
+                        layout.auxiliaryViewFrame.origin.x = (CGRectGetMaxX(layout.likeButtonFrame) +
+                                                              auxiliaryViewPadding);
                     }
                     break;
                 }
                 case FBLikeControlHorizontalAlignmentRight:{
                     layout.likeButtonFrame.origin.x = CGRectGetMaxX(bounds) - CGRectGetWidth(layout.likeButtonFrame);
                     if (auxiliaryView) {
-                        layout.auxiliaryViewFrame.origin.x = CGRectGetMinX(layout.likeButtonFrame) - auxiliaryViewPadding - CGRectGetWidth(layout.auxiliaryViewFrame);
+                        layout.auxiliaryViewFrame.origin.x = (CGRectGetMinX(layout.likeButtonFrame) -
+                                                              auxiliaryViewPadding -
+                                                              CGRectGetWidth(layout.auxiliaryViewFrame));
                     }
                     break;
                 }
@@ -526,32 +583,42 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
         case FBLikeControlAuxiliaryPositionTop:{
             if (auxiliaryView) {
                 auxiliaryViewSize = CGSizeMake(CGRectGetWidth(bounds),
-                                               CGRectGetHeight(bounds) - auxiliaryViewPadding - CGRectGetHeight(layout.likeButtonFrame));
+                                               (CGRectGetHeight(bounds) -
+                                                auxiliaryViewPadding -
+                                                CGRectGetHeight(layout.likeButtonFrame)));
                 auxiliaryViewSize = subviewSizingBlock(auxiliaryView, auxiliaryViewSize);
 
                 layout.auxiliaryViewFrame = CGRectMake(CGRectGetMinX(bounds),
                                                        CGRectGetMinY(bounds),
-                                                       MAX(auxiliaryViewSize.width, CGRectGetWidth(layout.likeButtonFrame)),
+                                                       MAX(auxiliaryViewSize.width,
+                                                           CGRectGetWidth(layout.likeButtonFrame)),
                                                        auxiliaryViewSize.height);
             }
-            layout.likeButtonFrame.origin.y = FBLikeControlPaddedDistance(CGRectGetMaxY(layout.auxiliaryViewFrame), auxiliaryViewPadding, YES);
+            layout.likeButtonFrame.origin.y = FBLikeControlPaddedDistance(CGRectGetMaxY(layout.auxiliaryViewFrame),
+                                                                          auxiliaryViewPadding,
+                                                                          YES);
 
             // calculate the size before offsetting the horizontal alignment, using the total calculated width
             layout.contentSize = FBLikeControlCalculateContentSize(layout);
 
             FBLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment);
-            FBLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame, bounds, self.likeControlHorizontalAlignment);
+            FBLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame,
+                                                  bounds,
+                                                  self.likeControlHorizontalAlignment);
             break;
         }
         case FBLikeControlAuxiliaryPositionBottom:{
             if (auxiliaryView) {
                 auxiliaryViewSize = CGSizeMake(CGRectGetWidth(bounds),
-                                               CGRectGetHeight(bounds) - auxiliaryViewPadding - CGRectGetHeight(layout.likeButtonFrame));
+                                               (CGRectGetHeight(bounds) -
+                                                auxiliaryViewPadding -
+                                                CGRectGetHeight(layout.likeButtonFrame)));
                 auxiliaryViewSize = subviewSizingBlock(auxiliaryView, auxiliaryViewSize);
 
                 layout.auxiliaryViewFrame = CGRectMake(CGRectGetMinX(bounds),
                                                        CGRectGetMaxY(layout.likeButtonFrame) + auxiliaryViewPadding,
-                                                       MAX(auxiliaryViewSize.width, CGRectGetWidth(layout.likeButtonFrame)),
+                                                       MAX(auxiliaryViewSize.width,
+                                                           CGRectGetWidth(layout.likeButtonFrame)),
                                                        auxiliaryViewSize.height);
             }
 
@@ -559,7 +626,9 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
             layout.contentSize = FBLikeControlCalculateContentSize(layout);
 
             FBLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment);
-            FBLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame, bounds, self.likeControlHorizontalAlignment);
+            FBLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame,
+                                                  bounds,
+                                                  self.likeControlHorizontalAlignment);
             break;
         }
     }
@@ -570,13 +639,14 @@ static CGSize FBLikeControlCalculateContentSize(FBLikeControlLayout layout)
 - (void)_likeActionControllerDidResetNotification:(NSNotification *)notification
 {
     [self _resetLikeActionController];
+    [self _ensureLikeActionController];
 }
 
 - (void)_resetLikeActionController
 {
     [_likeActionController endContentAccess];
     [_likeActionController release];
-    _likeActionController = [[FBLikeActionController likeActionControllerForObjectID:_objectID] retain];
+    _likeActionController = nil;
 }
 
 - (void)_updateLikeBoxCaretPosition

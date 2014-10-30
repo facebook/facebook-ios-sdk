@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="LSQ-aO-92E">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="pG4-wK-m9O">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="LSQ-aO-92E" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" barStyle="black" translucent="NO" id="wnP-oE-BS5">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="rQl-PL-IFJ" kind="relationship" relationship="rootViewController" id="iCU-6p-ljE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wms-Cp-d9n" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-253" y="-365"/>
+        </scene>
+        <!--Main View Controller - Share It!-->
+        <scene sceneID="rV5-Y2-ghB">
+            <objects>
+                <viewController id="rQl-PL-IFJ" customClass="SIMainViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bfD-tQ-IfD"/>
+                        <viewControllerLayoutGuide type="bottom" id="c4s-Xn-x5B"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="l9E-07-oys" customClass="SIMainView">
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Q9U-xN-iQ4">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="240"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="240" id="ljn-wR-Z68"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="rQl-PL-IFJ" id="Hdt-e3-W6l"/>
+                                </connections>
+                            </scrollView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="ElR-8m-h3V">
+                                <rect key="frame" x="20" y="284" width="280" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="VuT-bp-Gil"/>
+                                </constraints>
+                                <connections>
+                                    <action selector="changePage:" destination="rQl-PL-IFJ" eventType="valueChanged" id="5KY-fp-dwY"/>
+                                </connections>
+                            </pageControl>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a3D-mv-4Gr">
+                                <rect key="frame" x="8" y="248" width="304" height="28"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="d6C-8a-bjv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Share It! App" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zUQ-sv-D6m">
+                                <rect key="frame" x="20" y="423" width="280" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="CTN-3Z-gjB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ROa-p3-MUJ" customClass="FBLikeControl">
+                                <rect key="frame" x="20" y="452" width="280" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="Bpt-kQ-pZW"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X3X-16-Bag" customClass="FBLoginView">
+                                <rect key="frame" x="20" y="371" width="280" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" placeholder="YES" id="pf4-ON-ZOg"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Q9U-xN-iQ4" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" id="1SM-On-YxF"/>
+                            <constraint firstItem="ROa-p3-MUJ" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" constant="20" symbolic="YES" id="1tf-Iy-AiQ"/>
+                            <constraint firstItem="X3X-16-Bag" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" constant="20" symbolic="YES" id="AO9-kz-BFm"/>
+                            <constraint firstAttribute="trailing" secondItem="ElR-8m-h3V" secondAttribute="trailing" constant="20" symbolic="YES" id="Byb-ib-hQW"/>
+                            <constraint firstItem="zUQ-sv-D6m" firstAttribute="top" secondItem="X3X-16-Bag" secondAttribute="bottom" constant="8" symbolic="YES" id="Cv8-25-ddn"/>
+                            <constraint firstAttribute="trailing" secondItem="ROa-p3-MUJ" secondAttribute="trailing" constant="20" symbolic="YES" id="DFx-OZ-Ibp"/>
+                            <constraint firstAttribute="trailing" secondItem="zUQ-sv-D6m" secondAttribute="trailing" constant="20" symbolic="YES" id="Hhn-er-4H6"/>
+                            <constraint firstItem="zUQ-sv-D6m" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" constant="20" symbolic="YES" id="Jgd-G4-o6Q"/>
+                            <constraint firstItem="ROa-p3-MUJ" firstAttribute="top" secondItem="zUQ-sv-D6m" secondAttribute="bottom" constant="8" symbolic="YES" id="O4u-i4-0lb"/>
+                            <constraint firstItem="ElR-8m-h3V" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" constant="20" symbolic="YES" id="PkX-re-I5L"/>
+                            <constraint firstItem="ElR-8m-h3V" firstAttribute="top" secondItem="a3D-mv-4Gr" secondAttribute="bottom" constant="8" symbolic="YES" id="U87-lN-QmC"/>
+                            <constraint firstItem="c4s-Xn-x5B" firstAttribute="top" secondItem="ROa-p3-MUJ" secondAttribute="bottom" constant="20" symbolic="YES" id="UA5-Ma-3S1"/>
+                            <constraint firstAttribute="trailing" secondItem="X3X-16-Bag" secondAttribute="trailing" constant="20" symbolic="YES" id="Xdz-Iu-UwG"/>
+                            <constraint firstAttribute="trailing" secondItem="Q9U-xN-iQ4" secondAttribute="trailing" id="Ye5-AX-Tx3"/>
+                            <constraint firstItem="a3D-mv-4Gr" firstAttribute="top" secondItem="Q9U-xN-iQ4" secondAttribute="bottom" constant="8" symbolic="YES" id="bbv-E2-dRb"/>
+                            <constraint firstItem="a3D-mv-4Gr" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" constant="8" id="gTC-jc-biL"/>
+                            <constraint firstAttribute="trailing" secondItem="a3D-mv-4Gr" secondAttribute="trailing" constant="8" id="qbn-rI-tI8"/>
+                            <constraint firstItem="Q9U-xN-iQ4" firstAttribute="top" secondItem="bfD-tQ-IfD" secondAttribute="bottom" id="s33-Y4-tKs"/>
+                        </constraints>
+                        <connections>
+                            <outlet property="scrollView" destination="Q9U-xN-iQ4" id="P9Y-Pd-QwM"/>
+                            <outlet property="titleLabel" destination="a3D-mv-4Gr" id="wON-64-oiK"/>
+                        </connections>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <navigationItem key="navigationItem" title="Share It!" id="M4E-sx-4EE">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="WiB-pe-Ba1">
+                            <connections>
+                                <action selector="share:" destination="rQl-PL-IFJ" id="75p-MJ-fxL"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="loginView" destination="X3X-16-Bag" id="9yx-kb-Z7x"/>
+                        <outlet property="pageControl" destination="ElR-8m-h3V" id="cnI-pe-nMX"/>
+                        <outlet property="pageLikeControl" destination="ROa-p3-MUJ" id="I0V-FB-OTF"/>
+                        <outlet property="scrollView" destination="Q9U-xN-iQ4" id="0jx-fk-8vV"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="h4L-l5-tyG" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="254" y="-365"/>
+        </scene>
+    </scenes>
+    <color key="tintColor" red="0.25882354378700256" green="0.36078432202339172" blue="0.68627452850341797" alpha="1" colorSpace="deviceRGB"/>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>
