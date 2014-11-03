@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   s.requires_arc = false
 
   # Note the prepare_command is not run against pods installed with the :path option (i.e., a local pod)
-  s.prepare_command = "find src -name \\*.png | grep -v @ | grep -v '/tests/' | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).png|scripts/image_to_code.py -i \\1/\\2.png -c \\2 -o src|' | sh && find src -name \\*.wav | grep -v @ | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).wav|scripts/audio_to_code.py -i \\1/\\2.wav -c \\2 -o src|' | sh"
+  s.prepare_command = "find src -name \\*.png | grep -v @ | grep -v '/tests/' | grep -v 'Tests/' | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).png|scripts/image_to_code.py -i \\1/\\2.png -c \\2 -o src|' | sh && find src -name \\*.wav | grep -v @ | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).wav|scripts/audio_to_code.py -i \\1/\\2.wav -c \\2 -o src|' | sh"
 
   s.dependency 'Bolts', '~> 1.0'
 
