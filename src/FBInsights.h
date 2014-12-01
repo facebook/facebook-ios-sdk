@@ -26,9 +26,9 @@
  */
 __attribute__ ((deprecated("use FBAppEventsFlushBehavior instead")))
 typedef NS_ENUM(NSUInteger, FBInsightsFlushBehavior) {
-    /*! @deprecated use FBAppEventsFlushBehaviorAuto instead */
+    /*! Deprecated; use FBAppEventsFlushBehaviorAuto instead */
     FBInsightsFlushBehaviorAuto = 0,
-    /*! @deprecated use FBAppEventsFlushBehaviorExplicitOnly instead */
+    /*! Deprecated; use FBAppEventsFlushBehaviorExplicitOnly instead */
     FBInsightsFlushBehaviorExplicitOnly
 };
 

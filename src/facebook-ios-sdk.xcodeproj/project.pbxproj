@@ -267,6 +267,8 @@
 		89E973B3192A4DC600C479CC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84B5F11B1552FD3C00A55DDC /* CoreGraphics.framework */; };
 		89EA36E31948EEAC00AF84E4 /* FBPhotoParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 859F0B9218B7D5750011AFEF /* FBPhotoParamsTests.m */; };
 		9D08E7A5197DB622005ADD5E /* FBKeychainTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E125010E195B3F66009DCF48 /* FBKeychainTests.m */; };
+		9D0F21AD1A1BC96C008BC067 /* FBKeychainStoreDeprecated.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0F21AB1A1BC96C008BC067 /* FBKeychainStoreDeprecated.h */; };
+		9D0F21AE1A1BC96C008BC067 /* FBKeychainStoreDeprecated.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D0F21AC1A1BC96C008BC067 /* FBKeychainStoreDeprecated.m */; };
 		9D332F421782343A001715AE /* FBAppCallTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D332F411782343A001715AE /* FBAppCallTests.m */; };
 		9D366B2B178F230D007B4CEC /* FacebookSDKResources.bundle.README in Resources */ = {isa = PBXBuildFile; fileRef = 9D366B2A178F230A007B4CEC /* FacebookSDKResources.bundle.README */; };
 		9D366B2C178F230D007B4CEC /* FacebookSDKResources.bundle.README in Resources */ = {isa = PBXBuildFile; fileRef = 9D366B2A178F230A007B4CEC /* FacebookSDKResources.bundle.README */; };
@@ -828,6 +830,8 @@
 		89BEB40518E47FB7006C97A6 /* FBColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBColor.m; sourceTree = "<group>"; };
 		89BEB40918E48003006C97A6 /* FBLoginView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBLoginView.h; sourceTree = "<group>"; };
 		89BEB40A18E48003006C97A6 /* NSError+FBError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+FBError.h"; sourceTree = "<group>"; };
+		9D0F21AB1A1BC96C008BC067 /* FBKeychainStoreDeprecated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBKeychainStoreDeprecated.h; sourceTree = "<group>"; };
+		9D0F21AC1A1BC96C008BC067 /* FBKeychainStoreDeprecated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBKeychainStoreDeprecated.m; sourceTree = "<group>"; };
 		9D332F411782343A001715AE /* FBAppCallTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBAppCallTests.m; path = tests/FBAppCallTests.m; sourceTree = "<group>"; };
 		9D366B2A178F230A007B4CEC /* FacebookSDKResources.bundle.README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FacebookSDKResources.bundle.README; sourceTree = "<group>"; };
 		9D3703C9187DF80C006DD1BD /* FBAppBridgeScheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBAppBridgeScheme.h; sourceTree = "<group>"; };
@@ -1236,6 +1240,8 @@
 			children = (
 				E1B68B28195A558700EB8126 /* FBKeychainStore.h */,
 				E1B68B29195A558700EB8126 /* FBKeychainStore.m */,
+				9D0F21AB1A1BC96C008BC067 /* FBKeychainStoreDeprecated.h */,
+				9D0F21AC1A1BC96C008BC067 /* FBKeychainStoreDeprecated.m */,
 				84F991EC1871C81600E3369F /* FBAppLinkData+Internal.h */,
 				84F991EB1871C81600E3369F /* FBAppLinkData.m */,
 				8961FE1018D7440E0033CDCB /* FBAudioResourceLoader.h */,
@@ -1688,6 +1694,7 @@
 				6B5D5A3B196C89EC004B2B1C /* FBGraphPerson.h in Headers */,
 				AEA93B0B11D5293B000A4545 /* FBRequest.h in Headers */,
 				AA747D9F0F9514B9006C5449 /* facebook_ios_sdk_Prefix.pch in Headers */,
+				9D0F21AD1A1BC96C008BC067 /* FBKeychainStoreDeprecated.h in Headers */,
 				84F992DC1871E65400E3369F /* FBUtility.h in Headers */,
 				84F43FFE15194E4800CEECD5 /* FBRequestConnection.h in Headers */,
 				B2C875A119470B4800D8D771 /* FBBoltsMeasurementEventListener.h in Headers */,
@@ -2263,6 +2270,7 @@
 				84F991F61871C81600E3369F /* FBDataDiskCache.m in Sources */,
 				8991E21618E9F31A00D1AAB7 /* FBTask.m in Sources */,
 				8981CE6819C77B2F0095C541 /* FBWebAppBridgeScheme.m in Sources */,
+				9D0F21AE1A1BC96C008BC067 /* FBKeychainStoreDeprecated.m in Sources */,
 				8961FDC018D3BC9F0033CDCB /* FBLikeButton.m in Sources */,
 				84F9925A1871DC6E00E3369F /* FBGraphObjectTableCell.m in Sources */,
 				84F992321871CB0300E3369F /* FBFrictionlessRecipientCache.m in Sources */,

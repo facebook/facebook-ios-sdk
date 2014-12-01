@@ -93,9 +93,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 // ----------------------------------------------------------------------------
 // Private properties and methods
 
-@interface FBRequestConnection () <FBURLConnectionDelegate, FBRequestConnectionRetryManagerDelegate> {
-    BOOL _errorBehavior;
-}
+@interface FBRequestConnection () <FBURLConnectionDelegate, FBRequestConnectionRetryManagerDelegate>
 
 @property (nonatomic, retain) FBURLConnection *connection;
 @property (nonatomic, retain) NSMutableArray *requests;
@@ -149,14 +147,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     self.internalUrlRequest = request;
 }
 
-- (FBRequestConnectionErrorBehavior)errorBehavior
-{
-    return _errorBehavior;
-}
-
 - (void)setErrorBehavior:(FBRequestConnectionErrorBehavior)errorBehavior
 {
-    NSAssert(self.requests.count == 0, @"Cannot set errorBehavior after requests have been added");
+    [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"errorBehavior should be set before requests were added. Prior requests will not use the supplied behavior."];
     _errorBehavior = errorBehavior;
 }
 

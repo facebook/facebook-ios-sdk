@@ -22,8 +22,6 @@
  @typedef NS_ENUM (NSUInteger, FBFriendSortOrdering)
 
  @abstract Indicates the order in which friends should be listed in the friend picker.
-
- @discussion
  */
 typedef NS_ENUM(NSUInteger, FBFriendSortOrdering) {
     /*! Sort friends by first, middle, last names. */
@@ -36,8 +34,6 @@ typedef NS_ENUM(NSUInteger, FBFriendSortOrdering) {
  @typedef NS_ENUM (NSUInteger, FBFriendDisplayOrdering)
 
  @abstract Indicates whether friends should be displayed first-name-first or last-name-first.
-
- @discussion
  */
 typedef NS_ENUM(NSUInteger, FBFriendDisplayOrdering) {
     /*! Display friends as First Middle Last. */

@@ -18,6 +18,9 @@
 
 @interface FBKeychainStore : NSObject
 
+@property (nonatomic, readonly, copy) NSString *service;
+@property (nonatomic, readonly, copy) NSString *accessGroup;
+
 - (instancetype)initWithService:(NSString *)service;
 - (instancetype)initWithService:(NSString *)service accessGroup:(NSString *)accessGroup;
 
@@ -32,5 +35,8 @@
 - (BOOL)setData:(NSData *)value forKey:(NSString *)key;
 - (BOOL)setData:(NSData *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility;
 - (NSData *)dataForKey:(NSString *)key;
+
+// hook for subclasses to override keychain query construction.
+- (NSMutableDictionary *)queryForKey:(NSString *)key;
 
 @end

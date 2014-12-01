@@ -44,6 +44,26 @@ static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_conten
 static const NSString *kAppSettingsFieldDialogConfigs = @"ios_dialog_configs";
 static const NSString *kAppSettingsFieldAppEventsFeatureBitmask = @"app_events_feature_bitmask";
 
+FBTriStateBOOL FBTriStateBOOLFromBOOL(BOOL value) {
+    return value ? FBTriStateBOOLValueYES : FBTriStateBOOLValueNO;
+}
+
+BOOL BOOLFromFBTriStateBOOL(FBTriStateBOOL value, BOOL defaultValue) {
+    switch (value) {
+        case FBTriStateBOOLValueYES:
+            return YES;
+        case FBTriStateBOOLValueNO:
+            return NO;
+        case FBTriStateBOOLValueUnknown:
+            return defaultValue;
+    }
+}
+
+BOOL FBCheckObjectIsEqual(NSObject *a, NSObject *b)
+{
+    return (a == b ? YES : [a isEqual:b]);
+}
+
 @implementation FBUtility
 
 NSString *const FBPersistedAnonymousIDFilename   = @"com-facebook-sdk-PersistedAnonymousID.json";
@@ -285,7 +305,7 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 }
 
 + (BOOL)isFetchedFBAppSettingsStale {
-    return g_fetchedAppSettingsTimestamp && ([[NSDate date] timeIntervalSinceDate:g_fetchedAppSettingsTimestamp] > APPSETTINGS_STALE_THRESHOLD_SECONDS);
+    return !g_fetchedAppSettingsTimestamp || ([[NSDate date] timeIntervalSinceDate:g_fetchedAppSettingsTimestamp] > APPSETTINGS_STALE_THRESHOLD_SECONDS);
 }
 
 + (void)callTheFetchAppSettingsCallback:(void (^)(FBFetchedAppSettings *, NSError *))callback {

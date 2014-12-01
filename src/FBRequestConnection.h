@@ -303,9 +303,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  @attribute beta true
 
  @abstract Set the automatic error handling behaviors.
- @discussion
-
- This must be set before any requests are added.
+ @discussion This must be set before any requests are added.
 
  When using retry behaviors, note the FBRequestConnection instance
  passed to the FBRequestHandler may be a different instance that the

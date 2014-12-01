@@ -19,6 +19,7 @@
 #import "FBAccessTokenData+Internal.h"
 #import "FBDynamicFrameworkLoader.h"
 #import "FBKeychainStore.h"
+#import "FBKeychainStoreDeprecated.h"
 #import "FBUtility.h"
 
 // const strings
@@ -88,10 +89,19 @@ NSString *const FBTokenInformationUUIDKey = @"com.facebook.sdk:TokenInformationU
 
 - (FBKeychainStore *)keychainStore {
     if (!_keychainStore) {
-        _keychainStore = [[FBKeychainStore alloc] initWithService:[[NSBundle mainBundle] bundleIdentifier]];
+        NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [[NSBundle mainBundle] bundleIdentifier]];
+        _keychainStore = [[FBKeychainStore alloc] initWithService:keyChainServiceIdentifier];
     }
 
     return _keychainStore;
+}
+
+/* This is only used for injections in tests. DO NOT USE. */
+- (void)overrideKeyChainStoreForTests:(FBKeychainStore *)keychainStore {
+    if (_keychainStore != keychainStore) {
+        [_keychainStore release];
+        _keychainStore = [keychainStore retain];
+    };
 }
 
 - (NSString *)userDefaultsKeyForKeychainValidation {
@@ -132,6 +142,19 @@ NSString *const FBTokenInformationUUIDKey = @"com.facebook.sdk:TokenInformationU
     } else {
         NSString *uuid = [defaults objectForKey:[self userDefaultsKeyForKeychainValidation]];
         NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:[self.keychainStore dictionaryForKey:_accessTokenInformationKeyName]];
+
+        // backwards compatibilty with old keychain that used bundle id as service id.
+        // this will manifest as a uuid in defaults, but empty dict
+        if (uuid.length > 0 && dict.count == 0) {
+            FBKeychainStoreDeprecated *oldKeychainStore = [[FBKeychainStoreDeprecated alloc] init];
+            dict = [NSMutableDictionary dictionaryWithDictionary:[oldKeychainStore dictionaryForKey:_accessTokenInformationKeyName]];
+
+            if (dict) {
+                [oldKeychainStore setDictionary:nil forKey:_accessTokenInformationKeyName];
+                [self cacheTokenInformation:dict];
+            }
+            [oldKeychainStore release];
+        }
 
         if (![dict[FBTokenInformationUUIDKey] isEqualToString:uuid]) {
             // if the uuid doesn't match (including if there is no uuid in defaults which means uninstalled case)

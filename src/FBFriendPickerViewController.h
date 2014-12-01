@@ -51,7 +51,7 @@
 
 /*!
  @abstract
- The list of friends that are currently selected in the veiw.
+ The list of friends that are currently selected in the view.
  The items in the array are <FBGraphUser> objects.
 
  @discussion

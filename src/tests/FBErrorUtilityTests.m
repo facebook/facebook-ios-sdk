@@ -26,6 +26,37 @@
 
 @implementation FBErrorUtilityTests
 
+- (void) testErrorCodeForError {
+    NSDictionary *errorUserInfo = @{
+                                    FBErrorParsedJSONResponseKey : @{
+                                            @"body" : @{
+                                                    @"error" : @{
+                                                            // no error code or subcode present
+                                                            }
+                                                    }
+                                            }
+                                    };
+    NSError *error = [NSError errorWithDomain:@"foo" code:3 userInfo:errorUserInfo];
+
+    XCTAssertEqual(NSNotFound, [FBErrorUtility errorCodeForError:error]);
+    XCTAssertEqual(NSNotFound, [FBErrorUtility errorSubcodeForError:error]);
+
+    errorUserInfo = @{
+                      FBErrorParsedJSONResponseKey : @{
+                              @"body" : @{
+                                      @"error" : @{
+                                              @"code": @(451),
+                                              @"error_subcode" : @(452)
+                                              }
+                                      }
+                              }
+                      };
+    error = [NSError errorWithDomain:@"foo" code:3 userInfo:errorUserInfo];
+
+    XCTAssertEqual((NSUInteger)451, [FBErrorUtility errorCodeForError:error]);
+    XCTAssertEqual((NSUInteger)452, [FBErrorUtility errorSubcodeForError:error]);
+}
+
 - (void)testFberrorGetCodeValueForError {
     int code = 1;
     int subCode = 2;

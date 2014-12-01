@@ -244,11 +244,9 @@ static FBSession *g_activeSession = nil;
 - (BOOL)initializeFromCachedToken:(FBAccessTokenData *)cachedToken withPermissions:(NSArray *)permissions
 {
     if (cachedToken && self.state == FBSessionStateCreated) {
-        BOOL isSubset = [FBSessionUtility areRequiredPermissions:permissions
-                                            aSubsetOfPermissions:cachedToken.permissions];
         BOOL isAppID = (!cachedToken.appID || [cachedToken.appID isEqualToString:self.appID]);
 
-        if (isSubset && isAppID && (NSOrderedDescending == [cachedToken.expirationDate compare:[NSDate date]])) {
+        if (isAppID && (NSOrderedDescending == [cachedToken.expirationDate compare:[NSDate date]])) {
             _loginBehavior = [FBSessionUtility loginBehaviorForLoginType:self.accessTokenData.loginType];
             [self transitionToState:FBSessionStateCreatedTokenLoaded
                 withAccessTokenData:cachedToken
