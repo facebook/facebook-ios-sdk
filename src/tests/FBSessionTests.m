@@ -423,13 +423,12 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [session release];
 }
 
-- (void)testInitWithValidTokenAndNonSubsetOfCachedPermissionsDoesNotUseCachedToken {
+- (void)testInitWithValidTokenAndNonSubsetOfCachedPermissionsDoesUseCachedToken {
     FBAccessTokenData *mockToken = [self createValidMockToken];
     NSArray *tokenPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
     [[[(id)mockToken stub] andReturn:tokenPermissions] permissions];
     
     FBSessionTokenCachingStrategy *mockStrategy = [self createMockTokenCachingStrategyWithToken:mockToken];
-    [[(id)mockStrategy expect] clearToken];
 
     NSArray *sessionPermissions = [NSArray arrayWithObject:@"permission3"];
     FBSession *session = [[FBSession alloc] initWithAppID:kTestAppId
@@ -438,10 +437,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:mockStrategy];
     
-    [(id)mockStrategy verify];
-    
-    assertThat(session.permissions, equalTo(sessionPermissions));
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    assertThat(session.permissions, equalTo(tokenPermissions));
+    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
     [session release];
 }
 
@@ -1164,7 +1161,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
 }
 
-- (void)testOpenActiveSessionRequestingMorePermissionsThanTokenFails {
+- (void)testOpenActiveSessionRequestingMorePermissionsThanTokenPasses {
     [FBSession setDefaultAppID:kTestAppId];
     
     FBAccessTokenData *token = [self createValidMockToken];
@@ -1182,10 +1179,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(NO));
-    assertThatBool(handlerCalled, equalToBool(NO));
+    assertThatBool(result, equalToBool(YES));
+    assertThatBool(handlerCalled, equalToBool(YES));
     assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreated));
+    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
     
 }
 

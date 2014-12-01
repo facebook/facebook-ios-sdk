@@ -11,12 +11,7 @@ lib/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
-*~
-*#
-.DS_Store
 project.xcworkspace
 xcuserdata
-.arc
-.arcconfig
-.internal/
+.arcbuildbootstrap
 TestAppIdAndSecret.xcconfig

@@ -66,7 +66,7 @@ typedef NSUInteger FBRequestState __attribute__((deprecated));
  An `FBRequest` object may be reused to issue multiple connections to Facebook.
  However each <FBRequestConnection> instance will manage one connection.
 
- Class and instance methods prefixed with **start* ** can be used to perform the
+ Class and instance methods prefixed with **start** can be used to perform the
  request setup and initiate the connection in a single call.
 
  */

@@ -42,10 +42,7 @@
 
 #import "FBDynamicFrameworkLoader.h"
 
-@implementation FBKeychainStore {
-    NSString *_service;
-    NSString *_accessGroup;
-}
+@implementation FBKeychainStore
 
 - (instancetype)initWithService:(NSString *)service {
     return [self initWithService:service accessGroup:nil];
@@ -117,7 +114,7 @@
         return NO;
     }
 
-    NSMutableDictionary *query = [self _queryForKey:key];
+    NSMutableDictionary *query = [self queryForKey:key];
 
     OSStatus status;
     if (value) {
@@ -150,7 +147,7 @@
         return nil;
     }
 
-    NSMutableDictionary *query = [self _queryForKey:key];
+    NSMutableDictionary *query = [self queryForKey:key];
     [query setObject:(id)kCFBooleanTrue forKey:[FBDynamicFrameworkLoader loadkSecReturnData]];
     [query setObject:[FBDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBDynamicFrameworkLoader loadkSecMatchLimit]];
 
@@ -170,11 +167,11 @@
     return ret;
 }
 
-- (NSMutableDictionary*) _queryForKey:(NSString *)key {
+- (NSMutableDictionary *)queryForKey:(NSString *)key {
     NSMutableDictionary *query = [NSMutableDictionary dictionary];
     [query setObject:[FBDynamicFrameworkLoader loadkSecClassGenericPassword] forKey:[FBDynamicFrameworkLoader loadkSecClass]];
     [query setObject:_service forKey:[FBDynamicFrameworkLoader loadkSecAttrService]];
-    [query setObject:key forKey:[FBDynamicFrameworkLoader loadkSecAttrGeneric]];
+    [query setObject:key forKey:[FBDynamicFrameworkLoader loadkSecAttrAccount]];
 #if !TARGET_IPHONE_SIMULATOR
     if (_accessGroup) {
         [query setObject:_accessGroup forKey:[FBDynamicFrameworkLoader loadkSecAttrAccessGroup]];

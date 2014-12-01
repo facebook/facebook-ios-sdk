@@ -353,20 +353,18 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     
     connection = [[[FBRequestConnection alloc] init] autorelease];
     FBRequest *deleteRequest = [[FBRequest alloc] initWithSession:session
-                                                        graphPath:[fbids objectAtIndex:fbids.count-1]
+                                                        graphPath:fbids[2]
                                                        parameters:nil
                                                        HTTPMethod:@"delete"];
     [connection addRequest:deleteRequest
          completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              XCTAssertNotNil(result, @"should have a result here: Handler 2");
              XCTAssertNil(error, @"should not have an error here: Handler 2");
-             XCTAssertTrue(0 != fbids.count, @"not enough fbids: Handler 2");
-             [fbids removeObjectAtIndex:fbids.count-1];
              [blocker signal];             
          }];
     
     deleteRequest = [[FBRequest alloc] initWithSession:session
-                                             graphPath:[fbids objectAtIndex:fbids.count-1]
+                                             graphPath:fbids[1]
                                             parameters:[NSDictionary dictionaryWithObjectsAndKeys:
                                                         @"delete", @"method",
                                                         nil]
@@ -375,16 +373,15 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
          completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              XCTAssertNotNil(result, @"should have a result here: Handler 3");
              XCTAssertNil(error, @"should not have an error here: Handler 3");
-             XCTAssertTrue(0 != fbids.count, @"not enough fbids: Handler 3");
-             [fbids removeObjectAtIndex:fbids.count-1];
              [blocker signal];             
          }];
     
+    __block NSString *newfbid = nil;
     [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         XCTAssertNotNil(result, @"should have a result here: Handler 4");
         XCTAssertNil(error, @"should not have an error here: Handler 4");
         if (result) {
-            [fbids addObject: [[result objectForKey:@"id"] description]];
+            newfbid = [(NSString *)[result objectForKey:@"id"] retain];
         }
         [blocker signal];
     }];
@@ -393,6 +390,11 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     [connection start];
     
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
+    // update the fbids array from the batch (deleting the 2 and adding the one).
+    [fbids removeObjectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)]];
+    [fbids addObject:newfbid];
+    [newfbid release];
+
     if (fbids.count != 2) {
         XCTAssertTrue(fbids.count == 2, @"wrong number of fbids, aborting test");
         // Things are bad. Continuing isn't going to make them better, and might throw exceptions.
@@ -403,7 +405,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     
     // delete
     request = [[[FBRequest alloc] initWithSession:session
-                                        graphPath:[fbids objectAtIndex:fbids.count-1]
+                                        graphPath:fbids[0]
                                        parameters:[NSDictionary dictionaryWithObjectsAndKeys:
                                                    @"delete", @"method",
                                                    nil]
@@ -412,26 +414,20 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
      ^(FBRequestConnection *innerConnection, id result, NSError *error) {
          XCTAssertNotNil(result, @"should have a result here: Handler 5");
          XCTAssertNil(error, @"should not have an error here: Handler 5");
-         XCTAssertTrue(0 != fbids.count, @"not enough fbids: Handler 5");
-         [fbids removeObjectAtIndex:fbids.count-1];
          [blocker signal];
      }];
     // delete
     request = [[[FBRequest alloc] initWithSession:session
-                                        graphPath:[fbids objectAtIndex:fbids.count-1] 
+                                        graphPath:fbids[1]
                                        parameters:nil 
                                        HTTPMethod:@"delete"] autorelease];
     [request startWithCompletionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         XCTAssertNotNil(result, @"should have a result here: Handler 6");
         XCTAssertNil(error, @"should not have an error here: Handler 6");
-        XCTAssertTrue(0 != fbids.count, @"not enough fbids: Handler 6");
-        [fbids removeObjectAtIndex:fbids.count-1];
         [blocker signal];
     }];
     
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
-    
-    XCTAssertTrue(fbids.count == 0, @"Our fbid collection should be empty here");
 }
 
 - (void)testNilCompletionHandler {

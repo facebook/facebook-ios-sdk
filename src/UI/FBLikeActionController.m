@@ -56,7 +56,7 @@ typedef NS_ENUM(NSUInteger, FBLikeActionControllerRefreshState) {
     FBLikeActionControllerRefreshStateComplete,
 };
 
-typedef void(^fb_like_action_block)(BOOL objectIsLiked,
+typedef void(^fb_like_action_block)(FBTriStateBOOL objectIsLiked,
                                     NSString *likeCountStringWithLike,
                                     NSString *likeCountStringWithoutLike,
                                     NSString *socialSentenceWithLike,
@@ -333,7 +333,7 @@ static const NSUInteger kFBLikeActionControllerCodingVersion = 3;
     BOOL useOGLike = [self _useOGLike];
     BOOL deferred = !useOGLike;
 
-    fb_like_action_block updateBlock = ^(BOOL objectIsLiked,
+    fb_like_action_block updateBlock = ^(FBTriStateBOOL objectIsLiked,
                                          NSString *likeCountStringWithLike,
                                          NSString *likeCountStringWithoutLike,
                                          NSString *socialSentenceWithLike,
@@ -356,7 +356,7 @@ static const NSUInteger kFBLikeActionControllerCodingVersion = 3;
 
     // optimistically update if using og.like (FAS will defer the update)
     if (useOGLike) {
-        updateBlock(objectIsLiked,
+        updateBlock(FBTriStateBOOLFromBOOL(objectIsLiked),
                     self.likeCountStringWithLike,
                     self.likeCountStringWithoutLike,
                     self.socialSentenceWithLike,
@@ -522,7 +522,7 @@ static void FBLikeActionControllerAddGetPageObjectIDRequest(FBSession *session,
 }
 
 typedef void(^fb_like_action_controller_get_og_object_like_completion_block)(BOOL success,
-                                                                             BOOL objectIsLiked,
+                                                                             FBTriStateBOOL objectIsLiked,
                                                                              NSString *unlikeToken);
 static void FBLikeActionControllerAddGetOGObjectLikeRequest(FBSession *session,
                                                             FBRequestConnection *connection,
@@ -539,7 +539,7 @@ static void FBLikeActionControllerAddGetOGObjectLikeRequest(FBSession *session,
                                                  HTTPMethod:@"GET"];
     [connection addRequest:request completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
         BOOL success = NO;
-        BOOL objectIsLiked = NO;
+        FBTriStateBOOL objectIsLiked = FBTriStateBOOLValueUnknown;
         NSString *unlikeToken = nil;
         if (error) {
             [FBLogger singleShotLogEntry:FBLoggingBehaviorUIControlErrors
@@ -549,7 +549,7 @@ static void FBLikeActionControllerAddGetOGObjectLikeRequest(FBSession *session,
             success = YES;
             NSArray *dataSet = result[@"data"];
             for (NSDictionary *data in dataSet) {
-                objectIsLiked = YES;
+                objectIsLiked = FBTriStateBOOLValueYES;
                 NSString *applicationID = [data valueForKeyPath:@"application.id"];
                 if ([session.appID isEqualToString:applicationID]) {
                     unlikeToken = data[@"id"];
@@ -626,7 +626,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
                                                      FBLikeControlObjectType objectType,
                                                      fb_like_action_block completionHandler)
 {
-    __block BOOL objectIsLiked = NO;
+    __block FBTriStateBOOL objectIsLiked = FBTriStateBOOLValueUnknown;
     __block NSString *likeCountStringWithLike = nil;
     __block NSString *likeCountStringWithoutLike = nil;
     __block NSString *socialSentenceWithLike = nil;
@@ -652,23 +652,29 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
         [unlikeToken release];
     };
 
-    FBLikeActionControllerAddGetOGObjectLikeRequest(session, connection, objectID, objectType, ^(BOOL success,
-                                                                                                 BOOL innerObjectIsLiked,
-                                                                                                 NSString *innerUnlikeToken) {
+    fb_like_action_controller_get_og_object_like_completion_block getLikeStateCompletionBlock = ^(BOOL success,
+                                                                                                  FBTriStateBOOL innerObjectIsLiked,
+                                                                                                  NSString *innerUnlikeToken) {
         if (success) {
-            objectIsLiked = objectIsLiked || innerObjectIsLiked;
+            objectIsLiked = innerObjectIsLiked;
             if (innerUnlikeToken) {
                 unlikeToken = [innerUnlikeToken copy];
             }
         }
-    });
+    };
+    FBLikeActionControllerAddGetOGObjectLikeRequest(session,
+                                                    connection,
+                                                    objectID,
+                                                    objectType,
+                                                    getLikeStateCompletionBlock);
 
-    FBLikeActionControllerAddGetEngagementRequest(session, connection, objectID, objectType, ^(BOOL success,
-                                                                                               NSString *innerLikeCountStringWithLike,
-                                                                                               NSString *innerLikeCountStringWithoutLike,
-                                                                                               NSString *innerSocialSentenceWithLike,
-                                                                                               NSString *innerSocialSentenceWithoutLike) {
+    fb_like_action_controller_get_engagement_completion_block engagementCompletionBlock = ^(BOOL success,
+                                                                                            NSString *innerLikeCountStringWithLike,
+                                                                                            NSString *innerLikeCountStringWithoutLike,
+                                                                                            NSString *innerSocialSentenceWithLike,
+                                                                                            NSString *innerSocialSentenceWithoutLike) {
         if (success) {
+            // Don't lose cached state if certain properties were not included
             likeCountStringWithLike = [innerLikeCountStringWithLike copy];
             likeCountStringWithoutLike = [innerLikeCountStringWithoutLike copy];
             socialSentenceWithLike = [innerSocialSentenceWithLike copy];
@@ -676,7 +682,12 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
 
             handleResults();
         }
-    });
+    };
+    FBLikeActionControllerAddGetEngagementRequest(session,
+                                                  connection,
+                                                  objectID,
+                                                  objectType,
+                                                  engagementCompletionBlock);
 }
 
 
@@ -763,8 +774,8 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
         } else {
             NSNumber *objectIsLikedNumber = results[@"object_is_liked"];
             NSString *likeCountString = results[@"like_count_string"];
-            NSString *socialSentence = results[@"social_sentence"] ?: self.socialSentence;
-            NSString *unlikeToken = results[@"unlike_token"] ?: self.unlikeToken;
+            NSString *socialSentence = results[@"social_sentence"];
+            NSString *unlikeToken = results[@"unlike_token"];
             BOOL likeStateChanged = ![results[@"completionGesture"] isEqualToString:@"cancel"];
 
             if (([objectIsLikedNumber isKindOfClass:[NSNumber class]]) &&
@@ -772,9 +783,11 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
                 (!socialSentence || [socialSentence isKindOfClass:[NSString class]]) &&
                 (!unlikeToken || [unlikeToken isKindOfClass:[NSString class]])) {
                 if (updateBlock != NULL) {
+                    FBTriStateBOOL objectIsLiked = (objectIsLikedNumber
+                                                    ? FBTriStateBOOLFromBOOL([objectIsLikedNumber boolValue])
+                                                    : FBTriStateBOOLValueUnknown);
                     // we do not need to specify values for with/without like, since we will fast-app-switch to change
                     // the value
-                    BOOL objectIsLiked = (objectIsLikedNumber ? [objectIsLikedNumber boolValue] : self.objectIsLiked);
                     updateBlock(objectIsLiked,
                                 likeCountString,
                                 likeCountString,
@@ -823,7 +836,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
                 self.objectIsLikedOnServer = YES;
                 self.unlikeToken = unlikeToken;
                 if (updateBlock != NULL) {
-                    updateBlock(self.objectIsLiked,
+                    updateBlock(FBTriStateBOOLFromBOOL(self.objectIsLiked),
                                 self.likeCountStringWithLike,
                                 self.likeCountStringWithoutLike,
                                 self.socialSentenceWithLike,
@@ -860,7 +873,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
             self.objectIsLikedOnServer = NO;
             self.unlikeToken = nil;
             if (updateBlock != NULL) {
-                updateBlock(self.objectIsLiked,
+                updateBlock(FBTriStateBOOLFromBOOL(self.objectIsLiked),
                             self.likeCountStringWithLike,
                             self.likeCountStringWithoutLike,
                             self.socialSentenceWithLike,
@@ -913,7 +926,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
                                                  connection,
                                                  verifiedObjectID,
                                                  _objectType,
-                                                 ^(BOOL objectIsLiked,
+                                                 ^(FBTriStateBOOL objectIsLiked,
                                                    NSString *likeCountStringWithLike,
                                                    NSString *likeCountStringWithoutLike,
                                                    NSString *socialSentenceWithLike,
@@ -967,7 +980,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
     }
 }
 
-- (void)_updateWithObjectIsLiked:(BOOL)objectIsLiked
+- (void)_updateWithObjectIsLiked:(FBTriStateBOOL)objectIsLikedTriState
          likeCountStringWithLike:(NSString *)likeCountStringWithLike
       likeCountStringWithoutLike:(NSString *)likeCountStringWithoutLike
           socialSentenceWithLike:(NSString *)socialSentenceWithLike
@@ -977,39 +990,45 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
                         animated:(BOOL)animated
                         deferred:(BOOL)deferred
 {
-    BOOL(^contentChanged)(void) = ^{
-        return (BOOL)!((self.objectIsLiked == objectIsLiked) &&
-                       ((self.likeCountStringWithLike == likeCountStringWithLike) ||
-                        [self.likeCountStringWithLike isEqualToString:likeCountStringWithLike]) &&
-                       ((self.likeCountStringWithoutLike == likeCountStringWithoutLike) ||
-                        [self.likeCountStringWithoutLike isEqualToString:likeCountStringWithoutLike]) &&
-                       ((self.socialSentenceWithLike == socialSentenceWithLike) ||
-                        [self.socialSentenceWithLike isEqualToString:socialSentenceWithLike]) &&
-                       ((self.socialSentenceWithoutLike == socialSentenceWithoutLike) ||
-                        [self.socialSentenceWithoutLike isEqualToString:socialSentenceWithoutLike]) &&
-                       ((self.unlikeToken == unlikeToken) || [self.unlikeToken isEqualToString:unlikeToken]));
-    };
+    // This value will not be useable if objectIsLikedTriState is FBTriStateBOOLValueUnknown
+    BOOL objectIsLiked = BOOLFromFBTriStateBOOL(objectIsLikedTriState, NO);
 
-    // check if the like state changed and only animate if it did
-    if (!contentChanged()) {
+    // So always check objectIsLikedChanged before using objectIsLiked.
+    // If the new like state is unknown, we don't consider the state to have changed.
+    BOOL objectIsLikedChanged = (objectIsLikedTriState != FBTriStateBOOLValueUnknown) && (self.objectIsLiked != objectIsLiked);
+
+    if (!objectIsLikedChanged &&
+        FBCheckObjectIsEqual(self.likeCountStringWithLike, likeCountStringWithLike) &&
+        FBCheckObjectIsEqual(self.likeCountStringWithoutLike, likeCountStringWithoutLike) &&
+        FBCheckObjectIsEqual(self.socialSentenceWithLike, socialSentenceWithLike) &&
+        FBCheckObjectIsEqual(self.socialSentenceWithoutLike, socialSentenceWithoutLike) &&
+        FBCheckObjectIsEqual(self.unlikeToken, unlikeToken)) {
+        // check if the like state changed and only animate if it did
         return;
     }
 
     void(^updateBlock)(void) = ^{
-        if (!contentChanged()) {
-            return;
+        if (objectIsLikedChanged) {
+            self.objectIsLiked = objectIsLiked;
         }
 
-        // if only meta data changed, don't animate
-        BOOL objectIsLikedChanged = (self.objectIsLiked != objectIsLiked);
+        if (likeCountStringWithLike) {
+            self.likeCountStringWithLike = likeCountStringWithLike;
+        }
+        if (likeCountStringWithoutLike) {
+            self.likeCountStringWithoutLike = likeCountStringWithoutLike;
+        }
+        if (socialSentenceWithLike) {
+            self.socialSentenceWithLike = socialSentenceWithLike;
+        }
+        if (socialSentenceWithoutLike) {
+            self.socialSentenceWithoutLike = socialSentenceWithoutLike;
+        }
+        if (unlikeToken) {
+            self.unlikeToken = unlikeToken;
+        }
 
-        self.objectIsLiked = objectIsLiked;
-        self.likeCountStringWithLike = likeCountStringWithLike;
-        self.likeCountStringWithoutLike = likeCountStringWithoutLike;
-        self.socialSentenceWithLike = socialSentenceWithLike;
-        self.socialSentenceWithoutLike = socialSentenceWithoutLike;
-        self.unlikeToken = unlikeToken;
-
+        // if only meta data changed, don't play the sound
         FBLikeButtonPopWAV *likeSound = (objectIsLikedChanged && objectIsLiked && soundEnabled ? [FBLikeButtonPopWAV sharedLoader] : nil);
 
         void(^notificationBlock)(void) = ^{
@@ -1030,7 +1049,7 @@ static void FBLikeActionControllerAddRefreshRequests(FBSession *session,
     };
 
     // if only meta data changed, don't defer
-    if (deferred && (self.objectIsLiked != objectIsLiked)) {
+    if (deferred && objectIsLikedChanged) {
         double delayInSeconds = kFBLikeActionControllerAnimationDelay;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
         dispatch_after(popTime, dispatch_get_main_queue(), updateBlock);

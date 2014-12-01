@@ -163,7 +163,7 @@ typedef NS_ENUM(NSUInteger, FBNativeApplicationErrorCode) {
 
  @abstract Indicates the Facebook SDK classification for the error
 
- @discussion
+ @discussion See `[FBErrorUtility errorCategoryForError:]`.
  */
 typedef NS_ENUM(NSInteger, FBErrorCategory) {
     /*! Indicates that the error category is invalid and likely represents an error that
@@ -189,12 +189,6 @@ typedef NS_ENUM(NSInteger, FBErrorCategory) {
     /*! Indicates that the error is an application error resulting in a bad or malformed request to the server. */
     FBErrorCategoryBadRequest                   = -2,
 };
-
-/*!
- The key in the userInfo NSDictionary of NSError where you can find
- the inner NSError (if any).
- */
-FBSDK_EXTERN NSString *const FBErrorInnerErrorKey;
 
 /*!
  The key in the userInfo NSDictionary of NSError where you can find

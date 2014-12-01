@@ -41,6 +41,24 @@
 
 /*!
  @abstract
+ Retrieves the underlying error code from an FBError that is wrapped within an NSError.
+ Returns NSNotFound if no error code was found.
+
+ @param error The error whose error code should be retrieved.
+ */
++ (NSUInteger)errorCodeForError:(NSError *)error;
+
+/*!
+ @abstract
+ Retrieves the underlying error subcode from an FBError that is wrapped within an NSError.
+ Returns NSNotFound if no error subcode was found.
+
+ @param error The error whose error subcode should be retrieved.
+ */
++ (NSUInteger)errorSubcodeForError:(NSError *)error;
+
+/*!
+ @abstract
  If YES indicates that a user action is required in order to successfully continue with the facebook operation
 
  @discussion

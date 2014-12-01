@@ -252,6 +252,24 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
     || [((NSError *)error.userInfo[FBErrorInnerErrorKey]).domain isEqualToString:@"com.apple.accounts"];
 }
 
++ (NSUInteger)errorCodeForError:(NSError *)error {
+    int code = -1, subcode = -1;
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+    return (code == -1) ? NSNotFound : (NSUInteger) code;
+}
+
++ (NSUInteger)errorSubcodeForError:(NSError *)error {
+    int code = -1, subcode = -1;
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+    return (subcode == -1) ? NSNotFound : (NSUInteger) subcode;
+}
+
 + (void)fberrorGetCodeValueForError:(NSError *)error
                               index:(NSUInteger)index
                                code:(int *)pcode

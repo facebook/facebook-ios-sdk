@@ -80,7 +80,7 @@ FBSDK_EXTERN NSString *kThirdTestUserTag;
 /// The App Secret of the test app as configured in the plist.
 @property (readonly, copy) NSString *testAppSecret;
 /*!
- @abstract
+ @abstract Flag to disable reuathorize calls.
  @discussion
  Defaults to NO. If set to YES, reauthorize calls will fail with a nil token
  as if the user had cancelled it reauthorize.
