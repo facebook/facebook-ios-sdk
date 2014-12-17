@@ -20,7 +20,7 @@ headerTemplate = """/*
  */
 
 /*
- * This is is a generated file during the SDK build process.
+ * This file is generated during the SDK build process.
  * Please do not hand edit this file.
  * It can be rebuilt by running 
  *
