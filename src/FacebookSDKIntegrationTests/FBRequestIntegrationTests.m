@@ -22,7 +22,7 @@
 #import "FBInternalSettings.h"
 #import "FBRequest.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
+#import "FBTestUserSession.h"
 #import "FBUtility.h"
 
 #define UNIT_TEST_OPEN_GRAPH_NAMESPACE "facebooksdktests"
@@ -198,7 +198,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testGraphObjectTypedRequest
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    FBTestSession *session = self.defaultTestSession;
+    FBSession *session = self.defaultTestSession;
     [FBSession setActiveSession:session];
 
     [FBRequestConnection startWithGraphPath:@"100902843288017" // great fried chicken
@@ -215,12 +215,14 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testGraphObjectTypedRequest2
 {
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    FBTestSession *session = self.defaultTestSession;
+    FBSession *session = self.defaultTestSession;
     [FBSession setActiveSession:session];
 
-    [FBRequestConnection startWithGraphPath:session.testUserID
+    XCTAssertTrue(session.accessTokenData.userID > 0);
+    [FBRequestConnection startWithGraphPath:session.accessTokenData.userID
                           completionHandler:^(FBRequestConnection *connection, id<FBGraphUser> user, NSError *error) {
-                              XCTAssertTrue([user.name isEqualToString:session.testUserName], @"Got unexpected user");
+                              XCTAssertNotNil(user);
+                              XCTAssertNil(error);
                               [blocker signal];
                           }];
 
@@ -562,7 +564,7 @@ withExpectedResults:(NSArray *)expectedResults
 
 - (void)testLegacyCompatibility
 {
-    FBTestSession *session = self.defaultTestSession;
+    FBSession *session = self.defaultTestSession;
     [FBSettings enablePlatformCompatibility:YES];
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
     FBRequest *permissions = [FBRequest requestForGraphPath:@"me/permissions"];

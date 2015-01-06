@@ -21,8 +21,6 @@ FBSDK_EXTERN NSString *const FBPLISTUrlSchemeSuffixKey;
 
 @interface FBSettings (Internal)
 
-+ (void)autoPublishInstall:(NSString *)appID;
-
 /*!
  @method
 

@@ -104,10 +104,10 @@ FBSDK_EXTERN BOOL FBCheckObjectIsEqual(NSObject *a, NSObject *b);
 
 + (NSString *)newUUIDString;
 + (NSString *)attributionID;
-+ (NSString *)advertiserOrAnonymousID:(BOOL)accessAdvertisingID;
++ (NSString *)advertiserID;
++ (NSString *)anonymousID;
 + (FBAdvertisingTrackingStatus)advertisingTrackingStatus;
 + (NSMutableDictionary<FBGraphObject> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                        includeAttributionID:(BOOL)includeAttributionID
                                                           implicitEventsOnly:(BOOL)implicitEventsOnly
                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID;
 

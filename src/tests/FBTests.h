@@ -20,7 +20,7 @@
 
 #import "FBRequestConnection.h"
 #import "FBSDKMacros.h"
-#import "FBTestSession.h"
+#import "FBSession.h"
 
 FBSDK_EXTERN NSString *kTestToken;
 FBSDK_EXTERN NSString *kTestAppId;

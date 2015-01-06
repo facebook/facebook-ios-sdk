@@ -149,7 +149,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
 - (void)setErrorBehavior:(FBRequestConnectionErrorBehavior)errorBehavior
 {
-    [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"errorBehavior should be set before requests were added. Prior requests will not use the supplied behavior."];
+    if (self.requests.count > 0) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"errorBehavior should be set before requests were added. Prior requests will not use the supplied behavior."];
+    }
     _errorBehavior = errorBehavior;
 }
 

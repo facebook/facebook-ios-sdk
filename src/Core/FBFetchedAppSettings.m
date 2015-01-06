@@ -56,4 +56,8 @@
     return (self.appEventsFeatureOptions & FBAppEventsFeatureOptionsShouldAccessAdvertisingID) == FBAppEventsFeatureOptionsShouldAccessAdvertisingID;
 }
 
+- (BOOL)doesAppLogImplicitPurchaseEvents {
+    return (self.appEventsFeatureOptions & FBAppEventsFeatureOptionsLogImplicitPurchaseEvents) == FBAppEventsFeatureOptionsLogImplicitPurchaseEvents;
+}
+
 @end

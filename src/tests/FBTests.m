@@ -43,7 +43,7 @@ NSString *kTestAppId = @"AnAppId";
     self.mockFBUtility = [OCMockObject mockForClass:[FBUtility class]];
     FBFetchedAppSettings *dummyFBFetchedAppSettings = [[[FBFetchedAppSettings alloc] init] autorelease];
     [[[self.mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettings]; // prevent fetching app settings during FBSession authorizeWithPermissions
-    [[[self.mockFBUtility stub] andReturn:nil] advertiserOrAnonymousID:YES];  //also stub advertiserOrAnonymousID when it's going to access IDFA since that often hangs.
+    [[[self.mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID when it's going to access IDFA since that often hangs.
     [[[self.mockFBUtility stub] andReturnValue:OCMOCK_VALUE(NO)] isSystemAccountStoreAvailable]; // don't try to access ac account store.
 }
 

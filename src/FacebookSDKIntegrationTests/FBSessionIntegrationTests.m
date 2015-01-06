@@ -22,7 +22,7 @@
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBInternalSettings.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
+#import "FBTestUserSession.h"
 #import "FBUtility.h"
 
 #if defined(FACEBOOKSDK_SKIP_SESSION_TESTS)
@@ -51,7 +51,7 @@
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
 
-    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
+    FBTestUserSession *session = [self getTestSessionWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         [blocker signal];
     }];
@@ -80,7 +80,8 @@
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
 
     __block BOOL wasNotifiedOfInvalid = NO;
-    FBTestSession *session = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    // specify a permission to make sure we don't get the special open graph test user.
+    FBTestUserSession *session = [self getTestSessionWithPermissions:@[@"user_likes"]];
     [session openWithCompletionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         if (status == FBSessionStateClosed) {
             wasNotifiedOfInvalid = YES;
@@ -155,7 +156,7 @@
     __block BOOL expectClosed = NO;
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *normalSession = [self getTestSessionWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
@@ -206,7 +207,7 @@
     __block BOOL expectClosed = NO;
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *target = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *target = [self getTestSessionWithPermissions:nil];
     [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
@@ -232,7 +233,7 @@
     __block BOOL expectClosed = NO;
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *normalSession = [self getTestSessionWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
@@ -250,7 +251,7 @@
     __block BOOL expectClosed = NO;
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *normalSession = [self getTestSessionWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
@@ -279,7 +280,7 @@
     __block BOOL expectClosed = NO;
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *normalSession = [self getTestSessionWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
@@ -338,7 +339,7 @@
 
 
     // Open a test session normally for accesstoken/appid
-    FBTestSession *normalSession = [FBTestSession sessionWithPrivateUserWithPermissions:nil];
+    FBTestUserSession *normalSession = [self getTestSessionWithPermissions:nil];
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         if (status == FBSessionStateOpen) {
             [blocker signal];
@@ -346,7 +347,6 @@
     }];
     XCTAssertTrue([blocker waitWithTimeout:10], @"blocker timed out");
 
-    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
     FBAccessTokenData *token = [FBAccessTokenData createTokenFromString:normalSession.accessTokenData.accessToken
                                                             permissions:nil
                                                     declinedPermissions:nil
@@ -354,8 +354,9 @@
                                                               loginType:FBSessionLoginTypeFacebookApplication
                                                             refreshDate:[NSDate dateWithTimeIntervalSince1970:0]
                                                  permissionsRefreshDate:nil
-                                                                  appID:session.appID
+                                                                  appID:[self testAppId]
                                                                  userID:@"4"];
+    FBTestUserSession *session = [FBTestUserSession sessionWithAccessTokenData:token];
 
     [session openFromAccessTokenData:token completionHandler:^(FBSession *session3, FBSessionState status, NSError *error) {
         if (status == FBSessionStateOpen) {

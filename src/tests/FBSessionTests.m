@@ -27,7 +27,6 @@
 #import "FBSessionUtility.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
 #import "FBTests.h"
 #import "FBUtility.h"
 

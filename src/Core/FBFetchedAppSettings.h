@@ -17,7 +17,8 @@
 
 typedef NS_OPTIONS(NSUInteger, FBAppEventsFeatureOptions) {
     FBAppEventsFeatureOptionsNone                      = 0,
-    FBAppEventsFeatureOptionsShouldAccessAdvertisingID = 1 << 0
+    FBAppEventsFeatureOptionsShouldAccessAdvertisingID = 1 << 0,
+    FBAppEventsFeatureOptionsLogImplicitPurchaseEvents = 1 << 1,
 };
 
 // Internal class holding server side Facebook app settings we fetch once from the
@@ -26,7 +27,6 @@ typedef NS_OPTIONS(NSUInteger, FBAppEventsFeatureOptions) {
 @interface FBFetchedAppSettings : NSObject
 
 @property (copy, nonatomic) NSString *serverAppName;
-@property (readwrite) BOOL supportsAttribution;
 @property (readwrite) BOOL supportsImplicitSdkLogging;
 @property (readwrite) BOOL enableLoginTooltip;
 @property (readonly, nonatomic) NSString *appID;
@@ -37,5 +37,6 @@ typedef NS_OPTIONS(NSUInteger, FBAppEventsFeatureOptions) {
       appEventsFeatureOptions:(FBAppEventsFeatureOptions)appEventsFeatureOptions;
 
 - (BOOL)shouldAccessAdvertisingID;
+- (BOOL)doesAppLogImplicitPurchaseEvents;
 
 @end

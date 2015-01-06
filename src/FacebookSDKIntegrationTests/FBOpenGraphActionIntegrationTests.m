@@ -21,7 +21,7 @@
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
+#import "FBTestUserSession.h"
 
 @protocol FBOGTestObject<FBGraphObject>
 
@@ -72,7 +72,9 @@
     id<FBOGRunTestAction> action = (id<FBOGRunTestAction>)[FBGraphObject graphObject];
     action.test = testObject;
 
-    [self postAndValidateWithSession:self.defaultTestSession
+    FBTestUserSession *session = [self getTestSessionWithPermissions:@[@"publish_actions"]];
+    [self loginSession:session];
+    [self postAndValidateWithSession:session
                            graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run"
                          graphObject:action
                        hasProperties:[NSArray arrayWithObjects:
@@ -100,12 +102,12 @@
 }
 
 - (void)testPostingComplexOpenGraphAction {
-    FBTestSession *session1 = self.defaultTestSession;
-    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
-                                                              uniqueUserTag:kSecondTestUserTag];
+    NSArray *sessions = [self getTestSessionsWithPermissions:@[@"publish_actions"] count:2];
+    FBSession *session1 = [self loginSession:sessions[0]];
+    FBSession *session2 = [self loginSession:sessions[1]];
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
 
-    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.testUserID];
+    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.accessTokenData.userID];
 
     [self postAndValidateWithSession:session1
                            graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run"
@@ -117,12 +119,13 @@
 }
 
 - (void)testPostingComplexOpenGraphActionInBatch {
-    FBTestSession *session1 = self.defaultTestSession;
-    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
-                                                              uniqueUserTag:kSecondTestUserTag];
+    NSArray *sessions = [self getTestSessionsWithPermissions:@[@"publish_actions"] count:2];
+    FBSession *session1 = [self loginSession:sessions[0]];
+    FBSession *session2 = [self loginSession:sessions[1]];
+
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
 
-    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.testUserID];
+    id<FBOGRunTestAction> action = [self createComplexOpenGraphAction:session2.accessTokenData.userID];
 
     id postedAction = [self batchedPostAndGetWithSession:session1 graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run" graphObject:action];
     XCTAssertNotNil(postedAction, @"nil postedAction");
@@ -151,7 +154,8 @@
     NSArray *images = [NSArray arrayWithObject:image];
     action.image = images;
 
-    id postedAction = [self batchedPostAndGetWithSession:self.defaultTestSession
+    FBSession *session = [self loginSession:[self getTestSessionWithPermissions:@[@"publish_actions"]]];
+    id postedAction = [self batchedPostAndGetWithSession:session
                                                graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run"
                                              graphObject:action];
     XCTAssertNotNil(postedAction, @"nil postedAction");

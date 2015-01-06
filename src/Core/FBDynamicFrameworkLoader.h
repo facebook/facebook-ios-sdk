@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Security/Security.h>
+#import <StoreKit/StoreKit.h>
 
 #import "FBSDKMacros.h"
 
@@ -216,3 +217,8 @@ NSString *fbdfl_ACFacebookPermissionsKey(void);
 #pragma mark Accounts Classes
 
 Class fbdfl_ACAccountStoreClass(void);
+
+#pragma mark StoreKit classes
+
+Class fbdfl_SKPaymentQueueClass(void);
+Class fbdfl_SKProductsRequestClass(void);

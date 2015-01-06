@@ -19,7 +19,6 @@
 #import "FBAppLinkResolver.h"
 #import "FBIntegrationTests.h"
 #import "FBInternalSettings.h"
-#import "FBTestSession+Internal.h"
 
 static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=https%3A%2F%2Ffb.me%2F732873156764191&h=bAQE7eGV2";
 
@@ -33,10 +32,8 @@ static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=ht
 {
     [super setUp];
 
-    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
-
-    [FBSettings setDefaultAppID:session.testAppID];
-    [FBSettings setClientToken:session.testAppClientToken];
+    [FBSettings setDefaultAppID:[self testAppId]];
+    [FBSettings setClientToken:[self testAppClientToken]];
 }
 
 - (void)tearDown
@@ -77,8 +74,7 @@ static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=ht
     assertThat(task.error, is(notNilValue()));
 
     // restore the client token for later tests.
-    FBTestSession *session = [FBTestSession sessionWithSharedUserWithPermissions:nil];
-    [FBSettings setDefaultAppID:session.testAppID];
-    [FBSettings setClientToken:session.testAppClientToken];
+    [FBSettings setDefaultAppID:[self testAppId]];
+    [FBSettings setClientToken:[self testAppClientToken]];
 }
 @end
