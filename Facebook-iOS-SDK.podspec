@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
   s.source_files  =  "src/**/*.{h,m}"
   s.exclude_files = "src/**/*Tests.{h,m}", "src/tests/*.{h,m}", "src/*Test*/*.{h,m}"
 
-  s.public_header_files = "src/*.h"
+  s.public_header_files = `./scripts/find_public_headers.rb`.split("\n")
 
   s.header_dir = "FacebookSDK"
 
