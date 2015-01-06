@@ -19,7 +19,6 @@
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
 #import "FBTests.h"
 
 @interface FBBatchRequestTests : FBTests

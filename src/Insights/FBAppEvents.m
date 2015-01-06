@@ -21,6 +21,7 @@
 
 #import "FBError.h"
 #import "FBLogger.h"
+#import "FBPaymentObserver.h"
 #import "FBRequest+Internal.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAppEventsState.h"
@@ -126,6 +127,7 @@ NSString *const FBAppEventNameFBLikeControlNetworkUnavailable  = @"fb_like_contr
 NSString *const FBAppEventParameterConversionPixelID           = @"fb_offsite_pixel_id";
 NSString *const FBAppEventParameterConversionPixelValue        = @"fb_offsite_pixel_value";
 NSString *const FBAppEventParameterDialogOutcome               = @"fb_dialog_outcome";
+NSString *const FBAppEventParameterImplicitlyLoggedPurchase    = @"_implicitlyLoggedPurchaseEvent";
 
 // Event parameter values internal to this file
 NSString *const FBAppEventsDialogOutcomeValue_Completed = @"Completed";
@@ -143,12 +145,13 @@ NSString *const FBPLISTLoggingOverrideAppIDKey = @"FacebookLoggingOverrideAppID"
 
 #pragma mark - typedefs
 
-typedef NS_ENUM(NSUInteger, AppSupportsAttributionStatus) {
-    AppSupportsAttributionUnknown,
-    AppSupportsAttributionQueryInFlight,
-    AppSupportsAttributionTrue,
-    AppSupportsAttributionFalse,
+typedef NS_ENUM(NSUInteger, AppSettingsFetchState) {
+    AppSettingsFetchStateUnknown,
+    AppSettingsFetchStateInProgress,
+    AppSettingsFetchStateSucceeded,
 };
+
+typedef void (^FetchAppSettingsCallback)(void);
 
 @property (readwrite) FBAppEventsFlushBehavior      flushBehavior;
 @property (readwrite, copy) NSString               *loggingOverrideAppID;
@@ -157,9 +160,10 @@ typedef NS_ENUM(NSUInteger, AppSupportsAttributionStatus) {
 @property (readwrite, retain) FBSession            *lastSessionLoggedTo;
 @property (readwrite, retain) NSTimer              *flushTimer;
 @property (readwrite, retain) NSTimer              *attributionIDRecheckTimer;
-@property (readwrite) AppSupportsAttributionStatus  appSupportsAttributionStatus;
+@property (readwrite) AppSettingsFetchState         appSettingsFetchState;
 @property (readwrite) BOOL                          appSupportsImplicitLogging;
 @property (readwrite) BOOL                          shouldAccessAdvertisingID;
+@property (readwrite) BOOL                          doesAppLogImplicitPurchaseEvents;
 @property (readwrite) BOOL                          haveFetchedAppSettings;
 @property (readwrite, copy) NSRegularExpression    *eventNameRegex;
 @property (readwrite, retain) NSMutableSet         *validatedIdentifiers;
@@ -245,6 +249,25 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 #pragma mark - logPurchase variants
+
++ (void)logImplicitPurchaseEvent:(NSString *)eventName
+                      valueToSum:(NSNumber *)valueToSum
+                      parameters:(NSDictionary *)parameters
+                         session:(FBSession *)session {
+    NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    [eventParameters setObject:@"1" forKey:FBAppEventParameterImplicitlyLoggedPurchase];
+    [FBAppEvents.singleton instanceLogEvent:eventName
+                                 valueToSum:valueToSum
+                                 parameters:parameters
+                         isImplicitlyLogged:YES
+                                    session:session];
+
+    // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
+    // are relatively rare and relatively high value and worth getting across on wire right away.
+    if ([FBAppEvents flushBehavior] != FBAppEventsFlushBehaviorExplicitOnly) {
+        [FBAppEvents.singleton instanceFlush:FBAppEventsFlushReasonEagerlyFlushingEvent];
+    }
+}
 
 + (void)logPurchase:(double)purchaseAmount
            currency:(NSString *)currency {
@@ -336,9 +359,16 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 + (void)activateApp {
+    [FBAppEvents ensureOnMainThread];
+
     // activateApp publishes an install on the first launch, and then logs an
     // activate app event.
     [FBSettings publishInstall:nil];
+
+    // Fetch app settings and register for transaction notifications only if app supports implicit purchase
+    // events
+    FBAppEvents *instance = [FBAppEvents singleton];
+    [instance fetchAppSettings:nil];
 
     // Restore time spent data, indicating that we're being called from "activateApp", which will,
     // when appropriate, result in logging an "activated app" and "deactivated app" (for the
@@ -417,7 +447,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         // This will still require a session and a call to logEvent at some point to set that session up
         self.haveOutstandingPersistedData = YES;
         self.flushBehavior = FBAppEventsFlushBehaviorAuto;
-        self.appSupportsAttributionStatus = AppSupportsAttributionUnknown;
+        self.appSettingsFetchState = AppSettingsFetchStateUnknown;
 
         _appAuthSessions = [[NSMutableDictionary alloc] init];
         _anonymousSessions = [[NSMutableDictionary alloc] init];
@@ -431,7 +461,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
         self.attributionIDRecheckTimer = [NSTimer scheduledTimerWithTimeInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
                                                                           target:self
-                                                                        selector:@selector(attributionIDRecheckTimerFired:)
+                                                                        selector:@selector(appSettingsFetchStateResetTimerFired:)
                                                                         userInfo:nil
                                                                          repeats:YES];
 
@@ -475,6 +505,48 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     [_validatedIdentifiers release];
 
     [super dealloc];
+}
+
+- (void)fetchAppSettings:(FetchAppSettingsCallback)fetchAppSettingsCallback {
+    NSString *appid = [[[FBSettings defaultAppID] copy] autorelease];
+
+    [FBAppEvents ensureOnMainThread];
+
+    if (self.appSettingsFetchState == AppSettingsFetchStateInProgress) {
+        return;
+    } else if (self.appSettingsFetchState == AppSettingsFetchStateSucceeded) {
+        if (fetchAppSettingsCallback) {
+            fetchAppSettingsCallback();
+        }
+        return;
+    }
+
+    self.appSettingsFetchState = AppSettingsFetchStateInProgress;
+    [FBUtility fetchAppSettings:appid
+                       callback:^(FBFetchedAppSettings *settings, NSError *error) {
+
+                           [FBAppEvents ensureOnMainThread];
+
+                           self.appSupportsImplicitLogging = settings.supportsImplicitSdkLogging;
+                           self.shouldAccessAdvertisingID = settings.shouldAccessAdvertisingID;
+                           self.doesAppLogImplicitPurchaseEvents = settings.doesAppLogImplicitPurchaseEvents;
+                           if (!error) {
+                               self.appSettingsFetchState = AppSettingsFetchStateSucceeded;
+                           } else {
+                               self.appSettingsFetchState = AppSettingsFetchStateUnknown;
+                           }
+                           // Start or stop observing transactions depending on whether the app logs implicit purchase events
+                           // This is a NOP if we're already observing transactions/not observing transactions
+                           if (self.doesAppLogImplicitPurchaseEvents) {
+                               [FBPaymentObserver startObservingTransactions];
+                           } else {
+                               [FBPaymentObserver stopObservingTransactions];
+                           }
+                           if (fetchAppSettingsCallback) {
+                               fetchAppSettingsCallback();
+                           }
+                       }
+     ];
 }
 
 - (BOOL)validateIdentifier:(NSString *)identifier {
@@ -678,45 +750,31 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
  */
 - (void)flushOnMainQueue:(FBAppEventsFlushReason)flushReason
                  session:(FBSession *)session {
-
     [FBAppEvents ensureOnMainThread];
     FBSessionAppEventsState *appEventsState = session.appEventsState;
 
     // If trying to flush a session already in flight, just ignore and continue to accum events
     // until we try to flush again.
-    if (appEventsState.requestInFlight || self.appSupportsAttributionStatus == AppSupportsAttributionQueryInFlight) {
+    if (appEventsState.requestInFlight) {
         return;
     }
+
+   // Execute the actual flush after we fetch app settings. fetchAppSettings determines if an actual
+    // fetch is needed or not.
+    [self fetchAppSettings:^(void) {
+            // Kick off the original flush, now that we have the info we need.
+            [self flushEventsToServer:flushReason session:session];
+        }
+    ];
+
+}
+
+- (void)flushEventsToServer:(FBAppEventsFlushReason)flushReason
+                    session:(FBSession *)session {
+    [FBAppEvents ensureOnMainThread];
+    FBSessionAppEventsState *appEventsState = session.appEventsState;
 
     NSString *appid = [self appIDToLogEventsWith:session];
-
-    if (self.appSupportsAttributionStatus == AppSupportsAttributionUnknown) {
-
-        // If we haven't yet determined whether the app supports sending the attribution ID, we'll need
-        // to make an initial request to determine this, and then call back in once we know.
-        self.appSupportsAttributionStatus = AppSupportsAttributionQueryInFlight;
-        [FBUtility fetchAppSettings:appid
-                           callback:^(FBFetchedAppSettings *settings, NSError *error) {
-
-                               [FBAppEvents ensureOnMainThread];
-
-                               // Treat an error as if the app doesn't allow sending of attribution ID.
-                               self.appSupportsAttributionStatus = settings.supportsAttribution && !error
-                                 ? AppSupportsAttributionTrue : AppSupportsAttributionFalse;
-
-                               self.appSupportsImplicitLogging = settings.supportsImplicitSdkLogging;
-                               self.shouldAccessAdvertisingID = settings.shouldAccessAdvertisingID;
-
-                               self.haveFetchedAppSettings = YES;
-
-                               // Kick off the original flush, now that we have the info we need.
-                               [self flushOnMainQueue:flushReason session:session];
-                           }
-        ];
-
-        return;
-
-    }
 
     NSString *jsonEncodedEvents;
     NSUInteger eventCount, numSkipped;
@@ -746,13 +804,10 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         return;
     }
 
-    BOOL includeAttributionID = self.appSupportsAttributionStatus == AppSupportsAttributionTrue;
     NSMutableDictionary<FBGraphObject> *postParameters =
         [FBUtility activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
-                                   includeAttributionID:includeAttributionID
                                      implicitEventsOnly:allEventsAreImplicit
                               shouldAccessAdvertisingID:self.shouldAccessAdvertisingID];
-
     postParameters[@"custom_events_file"] = utf8EncodedEvents;
     if (numSkipped > 0) {
         postParameters[@"num_skipped_events"] = [NSString stringWithFormat:@"%lu", (unsigned long)numSkipped];
@@ -771,11 +826,11 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         [paramsForPrinting removeObjectForKey:@"custom_events_file"];
 
         loggingEntry = [NSString stringWithFormat:@"FBAppEvents: Flushed @ %ld, %lu events due to '%@' - %@\nEvents: %@",
-                         [FBAppEvents unixTimeNow],
-                         (unsigned long)eventCount,
-                         [FBAppEvents flushReasonToString:flushReason],
-                         paramsForPrinting,
-                         prettyPrintedJsonEvents];
+                        [FBAppEvents unixTimeNow],
+                        (unsigned long)eventCount,
+                        [FBAppEvents flushReasonToString:flushReason],
+                        paramsForPrinting,
+                        prettyPrintedJsonEvents];
     }
 
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
@@ -990,9 +1045,13 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     }
 }
 
-- (void)attributionIDRecheckTimerFired:(id)arg {
-    // Reset app attribution status so it will be re-fetched in the event there was a server change.
-    self.appSupportsAttributionStatus = AppSupportsAttributionUnknown;
+- (void)appSettingsFetchStateResetTimerFired:(id)arg {
+    [FBAppEvents ensureOnMainThread];
+
+    if (self.appSettingsFetchState != AppSettingsFetchStateInProgress) {
+        // Reset app settings fetch state so it will be re-fetched in the event there was a server change.
+        self.appSettingsFetchState = AppSettingsFetchStateUnknown;
+    }
 }
 
 - (void)applicationDidBecomeActive {
@@ -1206,11 +1265,10 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     NSString *udid = nil;
     if (![self doesSessionHaveUserToken:sessionToSendRequestTo]) {
 
-        // We don't have a logged in user, so we need some form of udid representation.  Prefer
-        // advertiser ID if available, and back off to attribution ID if not.  We can explicitly
-        // call with YES because this function is one that only makes sense to be called in the
-        // context of advertising, and thus accessing the IDFA is supported.
-        udid = [FBUtility advertiserOrAnonymousID:YES];
+        // We don't have a logged in user, so we need some form of udid representation.  Prefer advertiser ID if
+        // available, and back off to attribution ID if not.  Note that this function only makes sense to be
+        // called in the context of advertising.
+        udid = [FBUtility advertiserID];
         if (!udid) {
             udid = [FBUtility attributionID];
         }

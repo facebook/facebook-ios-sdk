@@ -39,5 +39,5 @@
                    isReauthorize:(BOOL)isReauthorize;
 - (BOOL)handleReauthorize:(NSDictionary *)parameters
               accessToken:(NSString *)accessToken;
-
+- (BOOL)shouldExtendAccessToken;
 @end

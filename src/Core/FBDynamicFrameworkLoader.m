@@ -429,3 +429,20 @@ Class fbdfl_ACAccountStoreClass(void) {
     _fbdfl_Accounts_get_c(ACAccountStore);
     return c;
 }
+
+#pragma mark StoreKit Classes
+
+_fbdfl_load_framework_once_impl_(StoreKit)
+_fbdfl_handle_get_impl_(StoreKit)
+
+#define _fbdfl_StoreKit_get_c(SYMBOL) _fbdfl_symbol_get_c(StoreKit, SYMBOL);
+
+Class fbdfl_SKPaymentQueueClass(void) {
+    _fbdfl_StoreKit_get_c(SKPaymentQueue);
+    return c;
+}
+
+Class fbdfl_SKProductsRequestClass(void) {
+    _fbdfl_StoreKit_get_c(SKProductsRequest);
+    return c;
+}

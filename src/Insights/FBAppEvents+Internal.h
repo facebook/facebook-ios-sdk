@@ -124,6 +124,11 @@ typedef NS_ENUM(NSUInteger, FBAppEventsFlushReason) {
               parameters:(NSDictionary *)parameters
                  session:(FBSession *)session;
 
++ (void)logImplicitPurchaseEvent:(NSString *)eventName
+                      valueToSum:(NSNumber *)valueToSum
+                      parameters:(NSDictionary *)parameters
+                         session:(FBSession *)session;
+
 + (FBRequest *)customAudienceThirdPartyIDRequest:(FBSession *)session;
 
 // *** Expose internally for testing/mocking only ***

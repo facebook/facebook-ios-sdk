@@ -22,8 +22,7 @@
 #import "FBRequestConnection.h"
 #import "FBSession+Internal.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession+Internal.h"
-#import "FBTestSession.h"
+#import "FBTestUserSession.h"
 
 #if defined(FACEBOOKSDK_SKIP_REQUEST_CONNECTION_TESTS)
 
@@ -141,8 +140,8 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 
 - (void)testWillPiggybackTokenExtensionIfNeeded
 {
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
-    session.forceAccessTokenRefresh = YES;
+    FBTestUserSession *session = [self defaultTestSession];
+    session.forceAccessTokenExtension = YES;
     // Invoke shouldRefreshPermissions which has the side affect of disabling permissions refresh piggybacking for an hour.
     [session shouldRefreshPermissions];
     
@@ -167,8 +166,8 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 
 - (void)testWillPiggybackPermissionsRefresh
 {
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
-    session.forceAccessTokenRefresh = YES;
+    FBTestUserSession *session = [self defaultTestSession];
+    session.forceAccessTokenExtension = YES;
     // verify session's permissions refresh date is initially in the past.
     XCTAssertEqual([NSDate distantPast], session.accessTokenData.permissionsRefreshDate, @"session permission refresh date does not match");
     
@@ -197,8 +196,8 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 // if the session had been closed.
 - (void)testPiggybackPermissionsRefreshNoopForClosedSession
 {
-    id session = [OCMockObject partialMockForObject:[self getSessionWithSharedUserWithPermissions:nil]];
-    [session setForceAccessTokenRefresh:YES];
+    id session = [OCMockObject partialMockForObject:[self defaultTestSession]];
+    [session setTreatReauthorizeAsCancellation:YES];
 
     //partial mock the session so we can make sure session is closed and `handleRefreshPermissions` should do nothing.
     [[[session stub] andDo:^(NSInvocation *invocation) {
@@ -234,7 +233,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     FBTestBlocker *blocker2 = [[FBTestBlocker alloc] init];
 
     
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBSession *session = [self defaultTestSession];
     
     // here we just want to seed the cache, by identifying the cache, and by choosing not to consult the cache
     FBRequestConnectionDelegateProgressTest *progress = [[FBRequestConnectionDelegateProgressTest alloc] initWithBlocker:blocker2];
@@ -308,7 +307,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     // 4) another object is deleted
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:3] autorelease];
     
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBSession *session = [self loginSession:[self getTestSessionWithPermissions:@[@"publish_actions"]]];
     
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:@"me/feed"]
@@ -443,7 +442,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     
     FBTestBlocker *blocker = [[FBTestBlocker alloc] init];
     
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBSession *session = [self loginSession:[self getTestSessionWithPermissions:@[@"publish_actions"]]];
     
     FBRequest *postRequest = [[[FBRequest alloc] initWithSession:session
                                                        graphPath:@"me/feed"]
@@ -502,19 +501,24 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 }
 
 - (void)testMultipleSelectionWithDependenciesBatch {
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    NSArray *sessions = [self getTestSessionsWithPermissions:@[] count:2];
+    FBSession *session1 = [self loginSession:sessions[0]];
+    FBSession *session2 = [self loginSession:sessions[1]];
+
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     FBTestBlocker *blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:2];
 
-    NSString *graphPath = [NSString stringWithFormat:@"?ids=%@,%@&fields=id", session.testAppID, session.testUserID];
-    FBRequest *parent = [[[FBRequest alloc] initWithSession:session graphPath:graphPath] autorelease];
+    NSString *graphPath = [NSString stringWithFormat:@"?ids=%@,%@&fields=id",
+                           session1.accessTokenData.userID,
+                           session2.accessTokenData.userID];
+    FBRequest *parent = [[[FBRequest alloc] initWithSession:session1 graphPath:graphPath] autorelease];
     [connection addRequest:parent
          completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              XCTAssertNil(error, @"unexpected error in parent request :%@", error);
              [blocker signal];
          } batchEntryName:@"getactions"];
 
-    FBRequest *child = [[[FBRequest alloc] initWithSession:session graphPath:@"?ids={result=getactions:$.*.id}"] autorelease];
+    FBRequest *child = [[[FBRequest alloc] initWithSession:session1 graphPath:@"?ids={result=getactions:$.*.id}"] autorelease];
     [connection addRequest:child
          completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
              XCTAssertNil(error, @"unexpected error in child request :%@", error);
@@ -528,7 +532,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
 }
 
 - (void)testProgressReporting {
-    FBTestSession *session = [self getSessionWithSharedUserWithPermissions:nil];
+    FBTestUserSession *session = [self defaultTestSession];
     FBRequestConnection *connection = [[FBRequestConnection alloc] init];
     FBTestBlocker *blocker1 = [[FBTestBlocker alloc] init];
     FBTestBlocker *blocker2 = [[FBTestBlocker alloc] init];

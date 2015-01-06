@@ -491,7 +491,6 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
     // before we make this call.
     NSMutableDictionary<FBGraphObject> *deferredAppLinkParameters =
         [FBUtility activityParametersDictionaryForEvent:FBDeferredAppLinkEvent
-                                   includeAttributionID:YES
                                      implicitEventsOnly:NO
                               shouldAccessAdvertisingID:YES];
 

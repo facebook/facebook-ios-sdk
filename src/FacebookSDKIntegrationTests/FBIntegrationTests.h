@@ -17,7 +17,6 @@
 #import <XCTest/XCTest.h>
 
 #import "FBRequestConnection.h"
-#import "FBTestSession.h"
 
 // The following #defines are designed as a convenience during development
 // to disable certain categories of tests. They should never be left on
@@ -35,27 +34,35 @@
 //#define FACEBOOKSDK_SKIP_FBACCESSTOKEN_TESTS
 
 @class FBTestBlocker;
+@class FBTestUserSession;
 @protocol FBGraphObject;
 
-// Base class for unit-tests that use test users; ensures that all test users
-// created by a unit-test are deleted (by invalidating their session) during
-// tear-down.
+// Base class for integration tests and provides helpers for fetching
+// test user session instances.
 @interface FBIntegrationTests : XCTestCase
 
 // For many test case scenarios, we just need a single session with a set of permissions
 // that can be shared and used by each individual test. For the simple case, this is that
-// session.
-@property (readonly, retain) FBTestSession *defaultTestSession;
+// session. This session will be opened for you.
+@property (readonly, retain) FBTestUserSession *defaultTestSession;
+
+@property (readonly, copy) NSString *testAppId;
+@property (readonly, copy) NSString *testAppClientToken;
+@property (readonly, copy) NSString *testAppSecret;
 
 - (FBRequestHandler)handlerExpectingSuccessSignaling:(FBTestBlocker *)blocker;
 - (FBRequestHandler)handlerExpectingFailureSignaling:(FBTestBlocker *)blocker;
 
-- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray *)permissions;
-- (FBTestSession *)getSessionWithSharedUserWithPermissions:(NSArray *)permissions
-                                             uniqueUserTag:(NSString *)uniqueUserTag;
+// helper method to get single test user with desired permissions. This session is not opened for you.
+- (FBTestUserSession *)getTestSessionWithPermissions:(NSArray *)permissions;
 
-- (FBTestSession *)loginSession:(FBTestSession *)session;
-- (void)makeTestUserInSession:(FBTestSession *)session1 friendsWithTestUserInSession:(FBTestSession *)session2;
+// helper method to get `count` test users each with `permissions`. This session is not opened for you.
+- (NSArray *)getTestSessionsWithPermissions:(NSArray *)permissions count:(NSUInteger)count;
+
+// helper method to open session (blocking call).
+- (FBSession *)loginSession:(FBSession *)session;
+
+- (void)makeTestUserInSession:(FBSession *)session1 friendsWithTestUserInSession:(FBSession *)session2;
 
 - (void)validateGraphObject:(id<FBGraphObject>)graphObject
               hasProperties:(NSArray *)propertyNames;

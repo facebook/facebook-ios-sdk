@@ -232,8 +232,6 @@ static FBSession *g_activeSession = nil;
         if (cachedTokenData && ![self initializeFromCachedToken:cachedTokenData withPermissions:permissions]) {
             [self.tokenCachingStrategy clearToken];
         };
-
-        [FBSettings autoPublishInstall:self.appID];
     }
     return self;
 }
@@ -1515,10 +1513,25 @@ static FBSession *g_activeSession = nil;
     return YES;
 }
 
+- (BOOL)areSomeReauthPermissionsGranted:(NSDictionary *)parameters{
+    if (_requestedReauthPermissions.count == 0) {
+        return YES;
+    }
+
+    NSArray *currentPermissions = [parameters[@"granted_scopes"] componentsSeparatedByString:@","];
+    for (NSString *permission in _requestedReauthPermissions) {
+        if ([currentPermissions containsObject:permission]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
 - (BOOL)handleReauthorize:(NSDictionary *)parameters
               accessToken:(NSString *)accessToken {
     // if the URL doesn't contain the access token, an error has occurred.
-    if (!accessToken) {
+    BOOL additionalPermissionsGranted = [self areSomeReauthPermissionsGranted:parameters];
+    if (!accessToken || !additionalPermissionsGranted) {
         // no token in this case implies that the user cancelled the permissions upgrade
         NSError *innerError = parameters[FBInnerErrorObjectKey];
         NSString *errorCode = parameters[@"error_code"];

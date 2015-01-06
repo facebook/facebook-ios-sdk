@@ -21,6 +21,7 @@
 #import "FBTestBlocker.h"
 #import "FBKeychainStore.h"
 #import "FBKeychainStoreDeprecated.h"
+#import "FBTestUserSession.h"
 
 #if defined(FACEBOOKSDK_SKIP_FBACCESSTOKEN_TESTS)
 
@@ -238,7 +239,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
 
 - (void)testSessionOpenThenReauthThenCloseWithKVO {
     // Create a session and attach KVO observer.
-    FBTestSession *target = [[FBTestSession sessionWithPrivateUserWithPermissions:nil] retain];
+    FBTestUserSession *target = [[self getTestSessionWithPermissions:@[]] retain];
 
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
 

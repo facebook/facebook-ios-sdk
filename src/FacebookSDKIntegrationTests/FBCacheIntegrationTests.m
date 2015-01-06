@@ -25,7 +25,7 @@
 #import "FBRequestConnection+Internal.h"
 #import "FBRequestConnection.h"
 #import "FBTestBlocker.h"
-#import "FBTestSession.h"
+#import "FBTestUserSession.h"
 
 #if defined(FACEBOOKSDK_SKIP_CACHE_TESTS)
 
@@ -396,15 +396,12 @@ deleteFileWithName:(NSString *)name
 }
 
 - (void)testBasicFriendPickerCache {
-
+    NSArray *sessions = [self getTestSessionsWithPermissions:@[@"user_friends"] count:3];
+    FBSession *session1 = [self loginSession:sessions[0]];
+    FBSession *session2 = [self loginSession:sessions[1]];
+    FBSession *session3 = [self loginSession:sessions[2]];
     // let's get a user going with some friends
-    FBTestSession *session1 = self.defaultTestSession;
-    FBTestSession *session2 = [self getSessionWithSharedUserWithPermissions:nil
-                                                              uniqueUserTag:kSecondTestUserTag];
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session2];
-
-    FBTestSession *session3 = [self getSessionWithSharedUserWithPermissions:nil
-                                                              uniqueUserTag:kThirdTestUserTag];
     [self makeTestUserInSession:session1 friendsWithTestUserInSession:session3];
 
     FBCacheDescriptor *cacheDescriptor = [FBFriendPickerViewController cacheDescriptor];

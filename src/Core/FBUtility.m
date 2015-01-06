@@ -37,7 +37,6 @@ static NSError *g_fetchedAppSettingsError = nil;
 static NSDate *g_fetchedAppSettingsTimestamp = nil;
 
 static const NSString *kAppSettingsFieldAppName = @"name";
-static const NSString *kAppSettingsFieldSupportsAttribution = @"supports_attribution";
 static const NSString *kAppSettingsFieldSupportsImplicitLogging = @"supports_implicit_sdk_logging";
 static const NSString *kAppSettingsFieldEnableLoginTooltip = @"gdpv4_nux_enabled";
 static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_content";
@@ -230,7 +229,6 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
         NSString *pingPath = [NSString stringWithFormat:@"%@?fields=%@",
                               appID,
                               [@[kAppSettingsFieldAppName,
-                                 kAppSettingsFieldSupportsAttribution,
                                  kAppSettingsFieldSupportsImplicitLogging,
                                  kAppSettingsFieldEnableLoginTooltip,
                                  kAppSettingsFieldLoginTooltipContent,
@@ -266,7 +264,6 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
                     g_fetchedAppSettingsTimestamp = [[NSDate date] retain];
 
                     g_fetchedAppSettings.serverAppName = result[kAppSettingsFieldAppName];
-                    g_fetchedAppSettings.supportsAttribution = [result[kAppSettingsFieldSupportsAttribution] boolValue];
                     g_fetchedAppSettings.supportsImplicitSdkLogging = [result[kAppSettingsFieldSupportsImplicitLogging] boolValue];
                     g_fetchedAppSettings.enableLoginTooltip = [result[kAppSettingsFieldEnableLoginTooltip] boolValue];
                     g_fetchedAppSettings.loginTooltipContent = result[kAppSettingsFieldLoginTooltipContent];
@@ -337,42 +334,42 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
     return [[UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO] string];
 }
 
-+ (NSString *)advertiserOrAnonymousID:(BOOL)accessAdvertisingID {
++ (NSString *)advertiserID {
     
     NSString *result = nil;
     
-    // Only access the IDFA (advertisingIdentifier) if the app advertises.
-    if (accessAdvertisingID) {
-        Class ASIdentifierManagerClass = fbdfl_ASIdentifierManagerClass();
-        if ([ASIdentifierManagerClass class]) {
-            ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-            result = [[manager advertisingIdentifier] UUIDString];
-        }
-    }
-    
-    if (!result) {
-        
-        // Grab previously written anonymous ID and, if none have been generted, create and
-        // persist a new one which will remain associated with this app.
-        result = [self retrievePersistedAnonymousID];
-        if (!result) {
-            
-            // Generate a new anonymous ID.  Create as a UUID, but then prepend the fairly
-            // arbitrary 'XZ' to the front so it's easily distinguishable from IDFA's which
-            // will only contain hex.
-            CFUUIDRef uuid = CFUUIDCreate(NULL);
-            NSString *uuidString = (NSString *) CFUUIDCreateString(NULL, uuid);
-            
-            result = [NSString stringWithFormat:@"XZ%@", uuidString];
-            
-            [self persistAnonymousID:result];
-            CFRelease(uuid);
-            [uuidString release];
-        }
+    Class ASIdentifierManagerClass = fbdfl_ASIdentifierManagerClass();
+    if ([ASIdentifierManagerClass class]) {
+        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
+        result = [[manager advertisingIdentifier] UUIDString];
     }
     
     return result;
 }
+
++ (NSString *)anonymousID {
+    
+    // Grab previously written anonymous ID and, if none have been generated, create and
+    // persist a new one which will remain associated with this app.
+    NSString *result = [self retrievePersistedAnonymousID];
+    if (!result) {
+        
+        // Generate a new anonymous ID.  Create as a UUID, but then prepend the fairly
+        // arbitrary 'XZ' to the front so it's easily distinguishable from IDFA's which
+        // will only contain hex.
+        CFUUIDRef uuid = CFUUIDCreate(NULL);
+        NSString *uuidString = (NSString *) CFUUIDCreateString(NULL, uuid);
+        
+        result = [NSString stringWithFormat:@"XZ%@", uuidString];
+        
+        [self persistAnonymousID:result];
+        CFRelease(uuid);
+        [uuidString release];
+    }
+    
+    return result;
+}
+
 
 + (void)persistAnonymousID:(NSString *)anonymousID {
     
@@ -421,35 +418,25 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 }
 
 + (NSMutableDictionary<FBGraphObject> *)activityParametersDictionaryForEvent:(NSString *)eventCategory
-                                                        includeAttributionID:(BOOL)includeAttributionID
                                                           implicitEventsOnly:(BOOL)implicitEventsOnly
                                                    shouldAccessAdvertisingID:(BOOL)shouldAccessAdvertisingID {
 
     NSMutableDictionary<FBGraphObject> *parameters = [FBGraphObject graphObject];
     [parameters setObject:eventCategory forKey:@"event"];
 
-    NSString *attributionID = nil;
-    if (includeAttributionID) {
-        attributionID = [FBUtility attributionID];  // Only present on iOS 6 and below.
-        if (attributionID) {
-            [parameters setObject:attributionID forKey:@"attribution"];
+    NSString *attributionID = [FBUtility attributionID];  // Only present on iOS 6 and below.
+    if (attributionID) {
+        [parameters setObject:attributionID forKey:@"attribution"];
+    }
+
+    if (!implicitEventsOnly && shouldAccessAdvertisingID) {
+        NSString *advertiserID = [FBUtility advertiserID];
+        if (advertiserID) {
+            [parameters setObject:advertiserID forKey:@"advertiser_id"];
         }
     }
-    
-    BOOL canGetAdvertisingID = !implicitEventsOnly && shouldAccessAdvertisingID;
-    if (!(attributionID && !canGetAdvertisingID)) {
-        NSString *advertiserOrAnonymousID = [FBUtility advertiserOrAnonymousID:canGetAdvertisingID];
-        if (advertiserOrAnonymousID) {
-            [parameters setObject:advertiserOrAnonymousID forKey:@"advertiser_id"];
-        }
-    }
-    
-    if (canGetAdvertisingID) {
-        NSString *oldAnonymousID = [self retrievePersistedAnonymousID];
-        if (oldAnonymousID) {
-            [parameters setObject:oldAnonymousID forKey:@"old_anon_id"];
-        }
-    }
+
+    [parameters setObject:[self anonymousID] forKey:@"anon_id"];
     
     FBAdvertisingTrackingStatus advertisingTrackingStatus = [self advertisingTrackingStatus];
     if (advertisingTrackingStatus != AdvertisingTrackingUnspecified) {
@@ -575,9 +562,10 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
             value = [part substringFromIndex:index.location + index.length];
         }
 
+        key = [self stringByURLDecodingString:key];
+        value = [self stringByURLDecodingString:value];
         if (key && value) {
-            [result setObject:[self stringByURLDecodingString:value]
-                       forKey:[self stringByURLDecodingString:key]];
+            result[key] = value;
         }
     }
     return result;
