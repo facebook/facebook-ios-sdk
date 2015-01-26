@@ -88,7 +88,10 @@ static NSArray *_cdnHosts;
             _loggerSerialNumber = [FBLogger newSerialNumber];
             _connection = [[NSURLConnection alloc]
                            initWithRequest:request
-                           delegate:self];
+                           delegate:self startImmediately:NO];
+            [_connection scheduleInRunLoop: [NSRunLoop mainRunLoop]
+                                   forMode: NSRunLoopCommonModes];
+            [_connection start];
             _data = [[NSMutableData alloc] init];
 
             [self logMessage:[NSString stringWithFormat:@"FBURLConnection <#%lu>:\n  URL: '%@'\n\n",
