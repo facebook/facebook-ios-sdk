@@ -89,7 +89,7 @@ static NSArray *_cdnHosts;
             _connection = [[NSURLConnection alloc]
                            initWithRequest:request
                            delegate:self startImmediately:NO];
-            [_connection scheduleInRunLoop: [NSRunLoop mainRunLoop]
+            [_connection scheduleInRunLoop: [NSRunLoop currentRunLoop]
                                    forMode: NSRunLoopCommonModes];
             [_connection start];
             _data = [[NSMutableData alloc] init];
