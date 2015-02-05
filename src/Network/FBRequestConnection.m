@@ -19,6 +19,7 @@
 
 #import <UIKit/UIImage.h>
 
+#import "FBAppEvents+Internal.h"
 #import "FBDataDiskCache.h"
 #import "FBError.h"
 #import "FBErrorUtility+Internal.h"
@@ -456,7 +457,9 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
         // an already-formed request object, since we don't know its structure.
         BOOL safeForPiggyback = YES;
         for (FBRequestMetadata *requestMetadata in self.requests) {
-            if (requestMetadata.request.restMethod || requestMetadata.request.versionPart != nil) {
+            if (requestMetadata.request.restMethod ||
+                requestMetadata.request.versionPart != nil ||
+                requestMetadata.request.hasAttachments) {
                 safeForPiggyback = NO;
                 break;
             }
@@ -633,6 +636,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
     [request setValue:[FBRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
     [request setValue:[FBRequestBody mimeContentType] forHTTPHeaderField:@"Content-Type"];
+    [request setHTTPShouldHandleCookies:NO];
 
     [self logRequest:request bodyLength:bodyLength bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
@@ -812,7 +816,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
     for (id key in [metadata.request.parameters keyEnumerator]) {
         NSObject *value = [metadata.request.parameters objectForKey:key];
-        if ([self isAttachment:value]) {
+        if ([FBRequest isAttachment:value]) {
             NSString *name = [NSString stringWithFormat:@"%@%lu",
                               kBatchFileNamePrefix,
                               (unsigned long)[attachments count]];
@@ -848,13 +852,6 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     }
 
     [batch addObject:requestElement];
-}
-
-- (BOOL)isAttachment:(id)item
-{
-    return
-    [item isKindOfClass:[UIImage class]] ||
-    [item isKindOfClass:[NSData class]];
 }
 
 - (void)appendAttachments:(NSDictionary *)attachments
@@ -1075,6 +1072,24 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     NSString *responseUTF8 = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     NSArray *results = nil;
     id response = [self parseJSONOrOtherwise:responseUTF8 error:error];
+
+    if (responseUTF8 == nil) {
+        NSString *base64Data = [data length] != 0 ? [data base64EncodedStringWithOptions:0] : @"";
+        if (base64Data != nil) {
+            [FBAppEvents logImplicitEvent:FBAppEventNameInvalidUTF8Response
+                               valueToSum:nil
+                               parameters:@{ FBAppEventNameFBResponseData : base64Data }
+                                  session:[self sessionForReporting]];
+        }
+    }
+
+    if (response == nil && *error == nil) {
+        *error = [self errorWithCode:FBErrorUnexpectedResponse
+                          statusCode:statusCode
+                  parsedJSONResponse:nil
+                          innerError:nil
+                             message:@"The server returned an unexpected response."];
+    }
 
     if (*error) {
         // no-op
@@ -1412,6 +1427,21 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
     [tasks release];
 }
 
+- (FBSession *)sessionForReporting {
+    FBSession *session = nil;
+    for (FBRequestMetadata *requestMetadata in self.requests) {
+        if (requestMetadata.request.session) {
+            if (!session) {
+                session = requestMetadata.request.session;
+            } else if (session != requestMetadata.request.session) {
+                session = nil; // two sessions in a batch, no clear reporting policy here
+                break;
+            }
+        }
+    }
+    return session;
+}
+
 - (NSError *)errorFromResult:(id)idResult
 {
     if ([idResult isKindOfClass:[NSDictionary class]]) {
@@ -1466,17 +1496,7 @@ typedef NS_ENUM(NSInteger, FBGraphApiErrorAccessTokenSubcode) {
 
     // if we only have one session (possibly more than once) in this batch, stuff it in the error,
     // otherwise it is a more advanced batch and the app is responsible for handling error state
-    FBSession *session = nil;
-    for (FBRequestMetadata *requestMetadata in self.requests) {
-        if (requestMetadata.request.session) {
-            if (!session) {
-                session = requestMetadata.request.session;
-            } else if (session != requestMetadata.request.session) {
-                session = nil; // two sessions in a batch, no clear reporting policy here
-                break;
-            }
-        }
-    }
+    FBSession *session = [self sessionForReporting];
 
     if (session) {
         userInfo[FBErrorSessionKey] = session;

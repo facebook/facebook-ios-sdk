@@ -41,4 +41,8 @@ FBSDK_EXTERN NSString *const kApiURLPrefix;
 
 - (NSString *)accessTokenWithRequest:(FBRequest *)request;
 
+- (NSArray *)parseJSONResponse:(NSData *)data
+                         error:(NSError **)error
+                    statusCode:(NSInteger)statusCode;
+
 @end

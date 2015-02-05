@@ -96,9 +96,8 @@ FBSDK_EXTERN BOOL FBCheckObjectIsEqual(NSObject *a, NSObject *b);
 
 + (void)fetchAppSettings:(NSString *)appID
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback;
-// Only returns nil if no settings have been fetched; otherwise it returns the last fetched settings.
-// If the settings are stale, an async request will be issued to fetch them.
-+ (FBFetchedAppSettings *)fetchedAppSettings;
+// Returns fetched settings if they have been fetched and are not stale; otherwise returns nil.
++ (FBFetchedAppSettings *)fetchedAppSettingsIfCurrent;
 
 #pragma mark - IDs / Attribution
 

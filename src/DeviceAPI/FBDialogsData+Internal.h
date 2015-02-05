@@ -22,6 +22,7 @@
 
 @property (nonatomic, readwrite, copy) NSDictionary *clientState;
 @property (nonatomic, readwrite, copy) NSDictionary *results;
+@property (nonatomic, readwrite, copy) NSDictionary *rawResultData;
 
 - (instancetype)initWithMethod:(NSString *)method arguments:(NSDictionary *)arguments;
 

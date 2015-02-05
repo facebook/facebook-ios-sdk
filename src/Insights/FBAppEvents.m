@@ -87,6 +87,7 @@ NSString *const FBAppEventNameFriendPickerUsage                = @"fb_friend_pic
 NSString *const FBAppEventNamePlacePickerUsage                 = @"fb_place_picker_usage";
 NSString *const FBAppEventNameLoginViewUsage                   = @"fb_login_view_usage";
 NSString *const FBAppEventNameUserSettingsUsage                = @"fb_user_settings_vc_usage";
+NSString *const FBAppEventNameInvalidUTF8Response              = @"fb_response_invalid_utf8";
 NSString *const FBAppEventNameShareSheetLaunch                 = @"fb_share_sheet_launch";
 NSString *const FBAppEventNameShareSheetDismiss                = @"fb_share_sheet_dismiss";
 NSString *const FBAppEventNamePermissionsUILaunch              = @"fb_permissions_ui_launch";
@@ -108,6 +109,8 @@ NSString *const FBAppEventsNativeLoginDialogEndTime            = @"fb_native_log
 
 NSString *const FBAppEventNameFBDialogsWebLoginCompleted       = @"fb_dialogs_web_login_dialog_complete";
 NSString *const FBAppEventsWebLoginE2E                         = @"fb_web_login_e2e";
+
+NSString *const FBAppEventNameFBResponseData                   = @"fb_response_invalid_utf8_bytes";
 
 NSString *const FBAppEventNameFBSessionAuthStart               = @"fb_mobile_login_start";
 NSString *const FBAppEventNameFBSessionAuthEnd                 = @"fb_mobile_login_complete";

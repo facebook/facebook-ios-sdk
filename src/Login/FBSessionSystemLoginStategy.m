@@ -30,13 +30,17 @@
      @"systemAccountStoreAvailable":@(systemAccountStoreAvailable)
      }];
 
+    // Note that we still need to check [FBFetchedAppSettings supportsSystemAuth] but since that may
+    //  need to fetch app settinsg asynchronously, we check it in authorizeUsingSystemAccountStore:
+    //  rather than here.
     if (params.tryIntegratedAuth &&
         (!params.isReauthorize || session.accessTokenData.loginType == FBSessionLoginTypeSystemAccount) &&
         systemAccountStoreAvailable) {
 
         [session authorizeUsingSystemAccountStore:params.permissions
                                   defaultAudience:params.defaultAudience
-                                    isReauthorize:params.isReauthorize];
+                                    isReauthorize:params.isReauthorize
+                              canFetchAppSettings:params.canFetchAppSettings];
         return YES;
     }
     return NO;

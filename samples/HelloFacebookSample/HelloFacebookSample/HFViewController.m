@@ -17,11 +17,12 @@
 #import "HFViewController.h"
 
 #import <CoreLocation/CoreLocation.h>
+#import <MobileCoreServices/MobileCoreServices.h>
 
 #import "HFAppDelegate.h"
 
 
-@interface HFViewController () <FBLoginViewDelegate>
+@interface HFViewController () <FBLoginViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet FBProfilePictureView *profilePic;
 @property (strong, nonatomic) IBOutlet UIButton *buttonPostStatus;
@@ -32,7 +33,7 @@
 @property (strong, nonatomic) id<FBGraphUser> loggedInUser;
 
 - (IBAction)postStatusUpdateClick:(UIButton *)sender;
-- (IBAction)postPhotoClick:(UIButton *)sender;
+- (IBAction)postPhotoOrVideoClick:(UIButton *)sender;
 - (IBAction)pickFriendsClick:(UIButton *)sender;
 - (IBAction)pickPlaceClick:(UIButton *)sender;
 
@@ -239,49 +240,96 @@
     }
 }
 
-// Post Photo button handler
-- (IBAction)postPhotoClick:(UIButton *)sender {
-  // Just use the icon image from the application itself.  A real app would have a more
-  // useful way to get an image.
-  UIImage *img = [UIImage imageNamed:@"Icon-72@2x.png"];
-  BOOL canPresent = [FBDialogs canPresentShareDialogWithPhotos];
-  NSLog(@"canPresent: %d", canPresent);
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *) info{
+    NSString *mediaType = [info objectForKey:UIImagePickerControllerMediaType];
+    if ([mediaType isEqualToString:(NSString *)kUTTypeMovie]) {
+        NSString *videoPath = [info objectForKey:UIImagePickerControllerMediaURL];
+        [self publishVideo:videoPath];
+    } else {
+        UIImage *img = [info objectForKey:UIImagePickerControllerOriginalImage];
+        [self publishPhoto:img];
+    }
+
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)publishPhoto:(UIImage *)image
+{
+    BOOL canPresent = [FBDialogs canPresentShareDialogWithPhotos];
+    NSLog(@"canPresent: %d", canPresent);
+
+    FBPhotoParams *params = [[FBPhotoParams alloc] init];
+    params.photos = @[image];
     
-  FBPhotoParams *params = [[FBPhotoParams alloc] init];
-  params.photos = @[img];
+    BOOL isSuccessful = NO;
+    if (canPresent) {
+        FBAppCall *appCall = [FBDialogs presentShareDialogWithPhotoParams:params
+                                                              clientState:nil
+                                                                  handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
+                                                                      if (error) {
+                                                                          NSLog(@"Error: %@", error.description);
+                                                                      } else {
+                                                                          NSLog(@"Success!");
+                                                                      }
+                                                                  }];
+        isSuccessful = (appCall  != nil);
+    }
 
-  BOOL isSuccessful = NO;
-  if (canPresent) {
-      FBAppCall *appCall = [FBDialogs presentShareDialogWithPhotoParams:params
-                                                            clientState:nil
-                                                                handler:^(FBAppCall *call, NSDictionary *results, NSError *error) {
-                                                            if (error) {
-                                                                    NSLog(@"Error: %@", error.description);
-                                                                } else {
-                                                                    NSLog(@"Success!");
-                                                                }
-                                                            }];
-      isSuccessful = (appCall  != nil);
-  }
-  if (!isSuccessful) {
+    if (!isSuccessful) {
+        [self performPublishAction:^{
+            FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+            connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+            | FBRequestConnectionErrorBehaviorAlertUser
+            | FBRequestConnectionErrorBehaviorRetry;
+
+            [connection addRequest:[FBRequest requestForUploadPhoto:image]
+                 completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+                     [self showAlert:@"Photo Post" result:result error:error];
+                     if (FBSession.activeSession.isOpen) {
+                         self.buttonPostPhoto.enabled = YES;
+                     }
+                 }];
+            [connection start];
+
+            self.buttonPostPhoto.enabled = NO;
+        }];
+    }
+}
+
+- (void)publishVideo:(NSString *)filePath
+{
     [self performPublishAction:^{
-      FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-      connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
-      | FBRequestConnectionErrorBehaviorAlertUser
-      | FBRequestConnectionErrorBehaviorRetry;
+        FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+        connection.errorBehavior = FBRequestConnectionErrorBehaviorReconnectSession
+        | FBRequestConnectionErrorBehaviorAlertUser
+        | FBRequestConnectionErrorBehaviorRetry;
 
-      [connection addRequest:[FBRequest requestForUploadPhoto:img]
-           completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
-             [self showAlert:@"Photo Post" result:result error:error];
-             if (FBSession.activeSession.isOpen) {
-               self.buttonPostPhoto.enabled = YES;
-             }
-           }];
-      [connection start];
+        [connection addRequest:[FBRequest requestForUploadVideo:filePath]
+             completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
+                 [self showAlert:@"Video Post" result:result error:error];
+                 if (FBSession.activeSession.isOpen) {
+                     self.buttonPostPhoto.enabled = YES;
+                 }
+             }];
+        [connection start];
 
-      self.buttonPostPhoto.enabled = NO;
+        self.buttonPostPhoto.enabled = NO;
     }];
-  }
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:YES completion:NULL];
+}
+
+// Post photo or video button handler
+- (IBAction)postPhotoOrVideoClick:(UIButton *)sender {
+    // Open the media picker and have the user choose an item from photos
+    UIImagePickerController *ipc = [[UIImagePickerController alloc] init];
+    ipc.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    ipc.mediaTypes = @[ (NSString *) kUTTypeImage, (NSString *) kUTTypeMovie];
+    ipc.delegate = self;
+
+    [self presentViewController:ipc animated:YES completion:NULL];
 }
 
 // Pick Friends button handler

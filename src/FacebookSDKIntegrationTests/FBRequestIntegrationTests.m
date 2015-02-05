@@ -88,6 +88,28 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
                    @"[replyData objectForKey:post_id]");
 }
 
+- (void)testRequestUploadVideo
+{
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TestAssets" ofType:@"bundle"];
+    NSString *videoName = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"DarkScreen" ofType:@"mov"];
+    FBRequest *uploadRequest = [FBRequest requestForUploadVideo:videoName];
+    [uploadRequest setSession:self.defaultTestSession];
+    NSArray *responses = [self sendRequests:uploadRequest, nil];
+
+    XCTAssertNotNil(responses, @"responses");
+    XCTAssertTrue([responses isKindOfClass:[NSArray class]],
+                  @"[responses isKindOfClass:[NSArray class]]");
+    XCTAssertTrue([responses count] == 1, @"[responses count] == 1");
+    XCTAssertTrue(![[responses objectAtIndex:0] isKindOfClass:[NSError class]],
+                  @"![[responses objectAtIndex:0] isKindOfClass:[NSError class]]");
+    XCTAssertTrue([[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]],
+                  @"[[responses objectAtIndex:0] isKindOfClass:[NSDictionary class]]");
+
+    NSDictionary *replyData = (NSDictionary *)[responses objectAtIndex:0];
+    XCTAssertNotNil([replyData objectForKey:@"id"],
+                    @"[replyData objectForKey:id]");
+}
+
 - (void)testRequestPlaceSearchWithNoSearchText
 {
     CLLocationCoordinate2D coordinate = CLLocationCoordinate2DMake(38.889468, -77.03524);

@@ -19,6 +19,8 @@
 #import "FBAppCall+Internal.h"
 #import "FBError.h"
 #import "FBErrorUtility+Internal.h"
+#import "FBSession+Internal.h"
+#import "FBSessionAuthLogger.h"
 #import "FBTests.h"
 
 @interface FBErrorUtilityTests : FBTests
@@ -249,6 +251,100 @@
                                         subcode:&subCode];
     XCTAssertEqual(1, code, @"");
     XCTAssertEqual(2, subCode, @"");
+}
+
+/*
+  If there is a checkpoint on the account that prevents the person from logging in, Accounts.framework will return the following NSError:
+
+  Error
+  Domain=com.apple.accounts
+  Code=7
+  "The Facebook server could not fulfill this access request: Error validating access token: You cannot access the app till you log in to www.facebook.com and follow the instructions given. (459)"
+  UserInfo={
+    NSLocalizedDescription=The Facebook server could not fulfill this access request: Error validating access token: You cannot access the app till you log in to www.facebook.com and follow the instructions given. (459)
+  }
+*/
+- (void)testSystemLoginCheckpointError {
+    [self runSystemLoginTestWithServerErrorDescription:@"The Facebook server could not fulfill this access request: Error validating access token: You cannot access the app till you log in to www.facebook.com and follow the instructions given. (459)"
+                                      expectedCategory:FBErrorCategoryRetry
+                                       expectedSubcode:FBAuthSubcodeUserCheckpointed
+                                   expectedUserMessage:@"Your Facebook account is locked. Please log into www.facebook.com to continue."];
+}
+
+/*
+  If the session in the OAuth token doesn't match what the server expects and the OAuth implementation suspects the password has changed, Accounts.framework will return the following NSError:
+
+  Error
+  Domain=com.apple.accounts
+  Code=7
+  "The Facebook server could not fulfill this access request: Error validating access token: Session does not match current stored session. This may be because the user changed the password since the time the session was created or Facebook has changed the session for security reasons."
+  UserInfo={
+    NSLocalizedDescription=The Facebook server could not fulfill this access request: Error validating access token: Session does not match current stored session. This may be because the user changed the password since the time the session was created or Facebook has changed the session for security reasons.
+  }
+*/
+- (void)testSystemLoginSessionError {
+    [self runSystemLoginTestWithServerErrorDescription:@"The Facebook server could not fulfill this access request: Error validating access token: Session does not match current stored session. This may be because the user changed the password since the time the session was created or Facebook has changed the session for security reasons. (452)"
+                                      expectedCategory:FBErrorCategoryAuthenticationReopenSession
+                                       expectedSubcode:FBAuthSubcodePasswordChanged
+                                   expectedUserMessage:@"Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name."];
+
+    [self runSystemLoginTestWithServerErrorDescription:@"The Facebook server could not fulfill this access request: Error validating access token: Session does not match current stored session. This may be because the user changed the password since the time the session was created or Facebook has changed the session for security reasons. (460)"
+                                      expectedCategory:FBErrorCategoryAuthenticationReopenSession
+                                       expectedSubcode:FBAuthSubcodePasswordChanged
+                                   expectedUserMessage:@"Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name."];
+}
+
+/*
+  If a person's account is unconfirmed, Accounts.framework will return the following NSError:
+
+  Error
+    Domain=com.apple.accounts
+    Code=7
+    "The Facebook server could not fulfill this access request: Error validating access token: Sessions for the user  are not allowed because the user is not a confirmed user. (464)"
+    UserInfo={
+      NSLocalizedDescription=The Facebook server could not fulfill this access request: Error validating access token: Sessions for the user  are not allowed because the user is not a confirmed user. (464)
+    }
+*/
+- (void)testSystemLoginUnconfirmedError {
+    [self runSystemLoginTestWithServerErrorDescription:@"The Facebook server could not fulfill this access request: Error validating access token: Sessions for the user  are not allowed because the user is not a confirmed user. (464)"
+                                      expectedCategory:FBErrorCategoryAuthenticationReopenSession
+                                       expectedSubcode:FBAuthSubcodeUnconfirmedUser
+                                   expectedUserMessage:@"Your Facebook account is locked. Please log into www.facebook.com to continue."];
+}
+
+- (void)runSystemLoginTestWithServerErrorDescription:(NSString *)errorDescription
+                                    expectedCategory:(FBErrorCategory)expectedCategory
+                                     expectedSubcode:(int)expectedSubcode
+                                 expectedUserMessage:(NSString *)expectedUserMessage {
+
+    NSError *systemError = [NSError errorWithDomain:@"com.apple.accounts" code:7 userInfo:@{
+        NSLocalizedDescriptionKey : errorDescription
+    }];
+
+    NSError *error = [FBSession errorWithSystemAccountStoreDeniedError:systemError isReauthorize:NO forSession:nil];
+
+    int code = 0;
+    int subcode = 0;
+    FBErrorCategory category = FBErrorCategoryInvalid;
+    NSString *userMessage = nil;
+    BOOL shouldNotifyUser = NO;
+
+    [FBErrorUtility fberrorGetCodeValueForError:error
+                                          index:0
+                                           code:&code
+                                        subcode:&subcode];
+
+    category = [FBErrorUtility fberrorCategoryFromError:error
+                                                   code:code
+                                                subcode:subcode
+                                   returningUserMessage:&userMessage
+                                    andShouldNotifyUser:&shouldNotifyUser];
+
+    XCTAssertEqual(code, FBOAuthError, @"");
+    XCTAssertEqual(subcode, expectedSubcode, @"");
+    XCTAssertEqual(category, expectedCategory, @"");
+    XCTAssertEqualObjects(userMessage, expectedUserMessage, @"");
+    XCTAssertTrue(shouldNotifyUser, @"");
 }
 
 @end

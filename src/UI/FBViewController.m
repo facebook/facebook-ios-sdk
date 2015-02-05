@@ -173,10 +173,10 @@
 }
 
 - (void)updateBar {
-    if (self.presentingViewController != nil) {
-        [self updateBarForPresentedMode];
-    } else if (self.navigationController != nil) {
+    if (self.navigationController != nil) {
         [self updateBarForNavigationMode];
+    } else if (self.presentingViewController != nil) {
+        [self updateBarForPresentedMode];
     }
 }
 

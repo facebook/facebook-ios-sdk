@@ -29,6 +29,8 @@ typedef NS_ENUM(NSUInteger, FBAuthSubcode) {
 
 FBSDK_EXTERN const int FBOAuthError;
 
+@class FBSession;
+
 // Internal class collecting error related methods.
 
 @interface FBErrorUtility (Internal)
@@ -47,6 +49,8 @@ FBSDK_EXTERN const int FBOAuthError;
 + (NSError *)fberrorForSystemPasswordChange:(NSError *)innerError;
 
 + (NSError *)fberrorForRetry:(NSError *)innerError;
+
++ (NSError *)fberrorForSystemAccountOAuthError:(NSError *)innerError withSubcode:(FBAuthSubcode)subcode session:(FBSession *)session;
 
 + (NSDictionary *)jsonDictionaryForError:(NSError *)error;
 

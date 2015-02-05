@@ -27,6 +27,7 @@ static NSString *const FBAppEventNamePurchaseFailed = @"fb_mobile_purchase_faile
 static NSString *const FBAppEventParameterNameProductTitle = @"fb_content_title";
 static NSString *const FBAppEventParameterNameTransactionID = @"fb_transaction_id";
 static int const FBMaxParameterValueLength = 100;
+static NSMutableArray *g_pendingRequestors;
 
 @interface FBPaymentProductRequestor : NSObject<SKProductsRequestDelegate>
 
@@ -121,6 +122,11 @@ static int const FBMaxParameterValueLength = 100;
 
 @implementation FBPaymentProductRequestor
 
++ (void)initialize {
+    if ([self class] == [FBPaymentProductRequestor class]) {
+        g_pendingRequestors = [[NSMutableArray alloc] init];
+    }
+}
 - (instancetype)initWithTransaction:(SKPaymentTransaction*)transaction {
     self = [super init];
     if (self) {
@@ -150,7 +156,9 @@ static int const FBMaxParameterValueLength = 100;
     NSSet *productIdentifiers = [NSSet setWithObjects:productId, nil];
     self.productRequest = [[[fbdfl_SKProductsRequestClass() alloc] initWithProductIdentifiers:productIdentifiers] autorelease];
     self.productRequest.delegate = self;
-    [self retain];
+    @synchronized(g_pendingRequestors) {
+       [g_pendingRequestors addObject:self];
+    }
     [self.productRequest start];
 }
 
@@ -230,12 +238,17 @@ static int const FBMaxParameterValueLength = 100;
 }
 
 - (void)requestDidFinish:(SKRequest *)request {
-    [self autorelease];
+    [self cleanUp];
 }
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
     [self logTransactionEvent:nil];
-    [self autorelease];
+    [self cleanUp];
 }
 
+- (void)cleanUp {
+    @synchronized(g_pendingRequestors) {
+        [g_pendingRequestors removeObject:self];
+    }
+}
 @end

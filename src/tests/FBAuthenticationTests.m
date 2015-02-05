@@ -61,10 +61,15 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
     FBSession.activeSession = nil;
 
     _blocker = [[FBTestBlocker alloc] initWithExpectedSignalCount:1];
+
+    FBFetchedAppSettings *dummyFBFetchedAppSettings = [[[FBFetchedAppSettings alloc] init] autorelease];
+    dummyFBFetchedAppSettings.supportsSystemAuth = YES;
+
     // need to recreate the mockFBUtility for this specific test suite
     // since we do have tests that check behavior is isSystemAccountStoreAvailable
     // and you can't change an existing mock's stub.
     self.mockFBUtility = [OCMockObject mockForClass:[FBUtility class]];
+    [[[self.mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettingsIfCurrent]; // prevent fetching app settings during FBSession authorizeWithPermissions
 }
 
 - (void)tearDown {
@@ -114,6 +119,10 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
      handler:[OCMArg any]];
 
     return mockSystemAccountStoreAdapter;
+}
+
+- (void)setFetchedSupportSystemAccount:(BOOL)supportSystemAccount {
+    [[FBUtility fetchedAppSettingsIfCurrent] setSupportsSystemAuth:supportSystemAccount];
 }
 
 - (void)mockSession:(id)mockSession supportSystemAccount:(BOOL)supportSystemAccount {

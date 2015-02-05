@@ -40,4 +40,7 @@
                      restMethod:(NSString *)restMethod
                      parameters:(NSDictionary *)parameters
                      HTTPMethod:(NSString *)HTTPMethod;
+- (BOOL)hasAttachments;
++ (BOOL)isAttachment:(id)item;
+
 @end

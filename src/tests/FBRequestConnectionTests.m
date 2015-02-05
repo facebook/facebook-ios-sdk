@@ -142,6 +142,44 @@
     [connection release];
 }
 
+- (void)testWillNotPiggybackIfFileAttached
+{
+    // Get a swizzled session that will always want to extend its access token.
+    FBSession *session = [[self createAndOpenSessionWithMockToken] autorelease];
+    FBSession *swizzledSession = [OCMockObject partialMockForObject:session];
+    BOOL yes = YES;
+    [[[(id)swizzledSession stub] andReturnValue:OCMOCK_VALUE(yes)] shouldExtendAccessToken];
+
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+
+    // Swizzle the connection not actually send any requests; we don't care what happens to the requests.
+    FBURLConnection *mockURLConnection = [OCMockObject niceMockForClass:[FBURLConnection class]];
+    FBRequestConnection *swizzledConnection = [OCMockObject partialMockForObject:connection];
+    [[[(id)swizzledConnection expect] andReturn:mockURLConnection] newFBURLConnection];
+
+
+    void *data = malloc(100);
+    SecRandomCopyBytes(kSecRandomDefault, 100, data);
+
+    NSData *someAttachment = [NSData dataWithBytes:data length:100];
+    NSDictionary *params = @{
+                             @"movie.mov" : someAttachment,
+                             @"title" : @"Video Test Title",
+                             @"description" :@"Video Test Description" };
+
+    FBRequest *request = [[[FBRequest alloc] initWithSession:swizzledSession graphPath:@"me/videos" parameters:params HTTPMethod:@"POST"] autorelease];
+
+    [swizzledConnection addRequest:request completionHandler:[self handlerExpectingSuccessSignaling:nil]];
+
+    [swizzledConnection start];
+
+    NSArray *requests = [swizzledConnection performSelector:@selector(requests)];
+    XCTAssertEqual(1, requests.count, @"piggybacked but shouldn't have");
+    [connection release];
+}
+
+
+
 - (void)testWillNotPiggybackIfVersionOverride
 {
     // Get a swizzled session that will always want to extend its access token.

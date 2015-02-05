@@ -307,7 +307,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     // 4) another object is deleted
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] initWithExpectedSignalCount:3] autorelease];
     
-    FBSession *session = [self loginSession:[self getTestSessionWithPermissions:@[@"publish_actions"]]];
+    FBSession *session = [self loginSession:[self getTestSessionWithPermissions:@[@"read_stream",@"publish_actions"]]];
     
     FBRequest *request = [[[FBRequest alloc] initWithSession:session
                                                    graphPath:@"me/feed"]
@@ -561,6 +561,36 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
     [blocker1 release];
     [connection release];
 }
+
+- (void)testInvalidUTF8Response {
+    // there is nothing in this byte sequence that is valid UTF-8
+    const unsigned char invalidCharacters[] = {
+        0xF0, 0x82, 0x82, 0xAC, // overlong Euro character
+        0xC0, 0xF5,             // invalid bytes
+        0x00,                   // NUL
+        0xE8, 0x40, 0x41        // three byte sequence without continuation bytes
+    };
+    [self verifyInvalidUTF8ResponseFails:invalidCharacters length:sizeof(invalidCharacters)];
+
+    // mostly valid JSON, but \350 (i.e. 0xE8) begins a 3-byte sequence but has no continuation characters
+    const char *invalidJSON = "{ body: \"\350test\" }";
+    [self verifyInvalidUTF8ResponseFails:invalidJSON length:strlen(invalidJSON)];
+}
+
+- (void)verifyInvalidUTF8ResponseFails:(const void *)bytes length:(NSUInteger)length {
+    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
+
+    NSData *data = [NSData dataWithBytes:bytes length:length];
+
+    NSError *error = nil;
+    NSArray *response = [connection parseJSONResponse:data error:&error statusCode:200];
+
+    XCTAssertEqual([error code], FBErrorUnexpectedResponse, "The byte sequence above should be unexpected.");
+    XCTAssertNil(response, @"The data passed was not valid JSON.");
+
+    [connection release];
+}
+
 @end
 
 #endif

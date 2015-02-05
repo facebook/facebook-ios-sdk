@@ -29,6 +29,7 @@
 #import "FBDataDiskCache.h"
 #import "FBDialogs+Internal.h"
 #import "FBError.h"
+#import "FBErrorUtility+Internal.h"
 #import "FBInternalSettings.h"
 #import "FBLogger.h"
 #import "FBLoginDialog.h"
@@ -1107,6 +1108,39 @@ static FBSession *g_activeSession = nil;
 
 - (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                           isReauthorize:(BOOL)isReauthorize
+                     canFetchAppSettings:(BOOL)canFetchAppSettings {
+    void (^handler)(BOOL) = ^(BOOL supportsSystemAuth) {
+        if (supportsSystemAuth) {
+            [self authorizeUsingSystemAccountStore:permissions
+                                   defaultAudience:defaultAudience
+                                     isReauthorize:isReauthorize];
+        } else {
+            [self fallbackFromSystemAuth:permissions
+                         defaultAudience:defaultAudience];
+        }
+    };
+
+    FBFetchedAppSettings *appSettings = [FBUtility fetchedAppSettingsIfCurrent];
+
+    if (appSettings.supportsSystemAuth) {
+        handler(YES);
+    } else if (appSettings || // implies !appSettings.supportsSystemAuth, fail now
+               !canFetchAppSettings) { // implies !appSettings, can't retrieve them
+        handler(NO);
+    } else { // implies !appSettings && canFetchAppSettings
+        [FBUtility fetchAppSettings:[FBSettings defaultAppID] callback:^(FBFetchedAppSettings *settings, NSError *error) {
+            if (settings.supportsSystemAuth && !error) {
+                handler(YES);
+            } else {
+                handler(NO);
+            }
+        }];
+    }
+}
+
+- (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
+                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize {
     self.lastRequestedSystemAudience = defaultAudience;
 
@@ -1169,47 +1203,17 @@ static FBSession *g_activeSession = nil;
 
                  // even when OS integrated auth is possible we use native-app/safari
                  // login if the user has not signed on to Facebook via the OS
-                 [self retryableAuthorizeWithPermissions:permissions
-                                         defaultAudience:defaultAudience
-                                          integratedAuth:NO
-                                               FBAppAuth:YES
-                                              safariAuth:YES
-                                                fallback:YES
-                                           isReauthorize:NO
-                                     canFetchAppSettings:YES];
+                 [self fallbackFromSystemAuth:permissions
+                              defaultAudience:defaultAudience];
              } else {
 
-                 [self logIntegratedAuthAppEvent:@"Authorization cancelled"
-                                     permissions:permissions];
+                 NSError *err = [self logAndReturnErrorForSystemAccountStoreError:accountStoreError
+                                                                    isReauthorize:NO];
 
-                 NSError *err = nil;
-                 NSString *authLoggerResult = FBSessionAuthLoggerResultError;
-                 if ([accountStoreError.domain isEqualToString:FacebookSDKDomain]) {
-                     // If the requestAccess call results in a Facebook error, surface it as a top-level
-                     // error. This implies it is not the typical user "disallows" case.
-                     err = accountStoreError;
-                 } else if ([accountStoreError.domain isEqualToString:@"com.apple.accounts"] && accountStoreError.code == 7) {
-                     // code 7 is for user cancellations, see ACErrorCode, except that iOS can also
-                     // re-use code 7 for other cases like a sandboxed app. In those other cases,
-                     // they do provide a NSLocalizedDescriptionKey entry so we'll inspect for that.
-                     if (!accountStoreError.userInfo[NSLocalizedDescriptionKey] ||
-                         [accountStoreError.userInfo[NSLocalizedDescriptionKey] rangeOfString:@"Invalid application"
-                                                                                      options:NSCaseInsensitiveSearch].location == NSNotFound) {
-                             err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledSystemValue
-                                                          errorCode:nil
-                                                         innerError:accountStoreError];
-                             authLoggerResult = FBSessionAuthLoggerResultCancelled;
-                         }
+                 if ([FBErrorUtility errorCategoryForError:err] == FBErrorCategoryUserCancelled) {
+                     [self logIntegratedAuthAppEvent:@"Authorization cancelled"
+                                         permissions:permissions];
                  }
-
-                 if (err == nil) {
-                     // create an error object with additional info regarding failed login as a fallback.
-                     err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
-                                                  errorCode:nil
-                                                 innerError:accountStoreError];
-                 }
-
-                 [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
 
                  // state transition, and call the handler if there is one
                  [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
@@ -1229,6 +1233,8 @@ static FBSession *g_activeSession = nil;
                  NSMutableSet *set = [NSMutableSet setWithArray:self.accessTokenData.permissions];
                  [set addObjectsFromArray:permissions];
 
+                 [self.authLogger logEndAuthMethodWithResult:FBSessionAuthLoggerResultSuccess error:nil];
+
                  // complete the operation: success
                  [self completeReauthorizeWithAccessToken:oauthToken
                                            expirationDate:[NSDate distantFuture]
@@ -1241,31 +1247,8 @@ static FBSession *g_activeSession = nil;
                                          permissions:permissions];
                  }
 
-                 NSError *err;
-                 NSString *authLoggerResult = FBSessionAuthLoggerResultSuccess;
-                 if ([accountStoreError.domain isEqualToString:FacebookSDKDomain]) {
-                     // If the requestAccess call results in a Facebook error, surface it as a top-level
-                     // error. This implies it is not the typical user "disallows" case.
-                     err = accountStoreError;
-                 } else if ([accountStoreError.domain isEqualToString:@"com.apple.accounts"]
-                            && accountStoreError.code == 7
-                            && ![accountStoreError userInfo][NSLocalizedDescriptionKey]) {
-                     // code 7 is for user cancellations, see ACErrorCode
-                     // for re-auth, there is a specical case where device will return a code 7 if the app
-                     // has been untossed. In those cases, there is a localized message so we want to ignore
-                     // those for purposes of classifying user cancellations.
-                     err = [self errorLoginFailedWithReason:FBErrorReauthorizeFailedReasonUserCancelledSystem
-                                                  errorCode:nil
-                                                 innerError:accountStoreError];
-                     authLoggerResult = FBSessionAuthLoggerResultCancelled;
-                 } else {
-                     // create an error object with additional info regarding failed login
-                     err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
-                                                  errorCode:nil
-                                                 innerError:accountStoreError];
-                 }
-
-                 [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
+                NSError *err = [self logAndReturnErrorForSystemAccountStoreError:accountStoreError
+                                                                   isReauthorize:YES];
 
                  // complete the operation: failed
                  [self callReauthorizeHandlerAndClearState:err updateDeclinedPermissions:YES];
@@ -1278,6 +1261,98 @@ static FBSession *g_activeSession = nil;
              }
          }
      }];
+}
+
+- (NSError *)logAndReturnErrorForSystemAccountStoreError:(NSError *)accountStoreError
+                                           isReauthorize:(BOOL)isReauthorize {
+    NSError *err = nil;
+
+    if ([accountStoreError.domain isEqualToString:FacebookSDKDomain]) {
+        // If the requestAccess call results in a Facebook error, surface it as a top-level
+        // error. This implies it is not the typical user "disallows" case.
+        err = accountStoreError;
+    } else if ([accountStoreError.domain isEqualToString:@"com.apple.accounts"] && accountStoreError.code == 7) {
+        err = [[self class] errorWithSystemAccountStoreDeniedError:accountStoreError
+                                                    isReauthorize:isReauthorize
+                                                       forSession:self];
+    }
+
+    if (err == nil) {
+        // create an error object with additional info regarding failed login
+        err = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonSystemError
+                                     errorCode:nil
+                                    innerError:accountStoreError];
+    }
+
+    NSString *authLoggerResult = ([FBErrorUtility errorCategoryForError:err] == FBErrorCategoryUserCancelled)
+        ? FBSessionAuthLoggerResultCancelled
+        : FBSessionAuthLoggerResultError;
+    [self.authLogger logEndAuthMethodWithResult:authLoggerResult error:err];
+
+    return err;
+}
+
++ (NSError *)errorWithSystemAccountStoreDeniedError:(NSError *)accountStoreError
+                                      isReauthorize:(BOOL)isReauthorize
+                                         forSession:(FBSession *)session {
+    // The Accounts framework returns an ACErrorPermissionDenied error for both user denied erros,
+    // Facebook denied errors, and other things. Unfortunately examining the contents of the
+    // description is the only means available to determine the reason for the error.
+    NSString *description = accountStoreError.userInfo[NSLocalizedDescriptionKey];
+    NSError *err = nil;
+
+    if ([description rangeOfString:@"Error validating access token:"].location != NSNotFound) {
+        // The OAuth endpoint returns 'Error validating access token:' when it login fails because
+        // the access token has been invalidated for some reason. Without the presence of an
+        // attempted validation, we'll assume the permission denied error originated with the user.
+
+        int subcode = FBAuthSubcodeNone;
+        if ([description hasSuffix:@"(459)"]) {
+            // The Facebook server could not fulfill this access request: Error validating access token:
+            // You cannot access the app till you log in to www.facebook.com and follow the instructions given. (459)
+
+            // The OAuth endpoint directs people to www.facebook.com when an account has been
+            // checkpointed. If the web address is present, assume it's due to a checkpoint.
+            subcode = FBAuthSubcodeUserCheckpointed;
+        } else if ([description hasSuffix:@"(452)"] ||
+                   [description hasSuffix:@"(460)"]) {
+            // The Facebook server could not fulfill this access request: Error validating access token:
+            // Session does not match current stored session. This may be because the user changed the password since
+            // the time the session was created or Facebook has changed the session for security reasons. (452)or(460)
+
+            // If the login failed due to the session changing, maybe it's due to the password
+            // changing. Direct the user to update the password in the Settings > Facebook.
+            subcode = FBAuthSubcodePasswordChanged;
+        } else if ([description hasSuffix:@"(464)"]) {
+            // The Facebook server could not fulfill this access request: Error validating access token:
+            // Sessions for the user  are not allowed because the user is not a confirmed user. (464)
+            subcode = FBAuthSubcodeUnconfirmedUser;
+        }
+
+        err = [FBErrorUtility fberrorForSystemAccountOAuthError:accountStoreError withSubcode:subcode session:session];
+    } else if (!description) {
+        // If there is no description, assume this is a user cancellation.
+        NSString *reason = isReauthorize
+            ? FBErrorReauthorizeFailedReasonUserCancelledSystem
+            : FBErrorLoginFailedReasonUserCancelledSystemValue;
+        err = [session errorLoginFailedWithReason:reason
+                                        errorCode:nil
+                                       innerError:accountStoreError];
+    }
+
+    return err;
+}
+
+- (void)fallbackFromSystemAuth:(NSArray *)permissions
+               defaultAudience:(FBSessionDefaultAudience)defaultAudience {
+    [self retryableAuthorizeWithPermissions:permissions
+                            defaultAudience:defaultAudience
+                             integratedAuth:NO
+                                  FBAppAuth:YES
+                                 safariAuth:YES
+                                   fallback:NO
+                              isReauthorize:NO
+                        canFetchAppSettings:YES];
 }
 
 - (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter {
