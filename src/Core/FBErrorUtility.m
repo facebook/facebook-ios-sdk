@@ -34,6 +34,8 @@ static const int FBAPIPermissionsEndError = 299;
 static const int FBSDKRetryErrorSubcode = 65000;
 static const int FBSDKSystemPasswordErrorSubcode = 65001;
 
+static NSString *const FBErrorSystemOAuthSubcodeKey = @"com.facebook.sdk:ErrorSystemOAuthSubcodeKey";
+
 @implementation FBErrorUtility
 
 + (FBErrorCategory)errorCategoryForError:(NSError *)error {
@@ -274,6 +276,10 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
                               index:(NSUInteger)index
                                code:(int *)pcode
                             subcode:(int *)psubcode {
+
+    int code = (pcode ? *pcode : -1);
+    int subcode = (psubcode ? *psubcode : -1);
+
     NSDictionary *userInfo = error.userInfo;
     NSArray *responseAsArray = [FBSafeCollections arrayForKey:FBErrorParsedJSONResponseKey fromDictionary:userInfo];
     NSDictionary *item = [FBSafeCollections dictionaryAtIndex:index fromArray:responseAsArray];
@@ -282,20 +288,36 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
     }
 
     // spelunking a JSON array & nested objects (eg. response[index].body.error.code)
-    NSNumber *code = nil;
-    NSNumber *subCode = nil;
+    NSNumber *codeValue = nil;
+    NSNumber *subCodeValue = nil;
     NSDictionary *body = [FBSafeCollections dictionaryForKey:@"body" fromDictionary:item];
     NSDictionary *innerError = [FBSafeCollections dictionaryForKey:@"error" fromDictionary:body];
     if (innerError) {
         // response[index].body.error.code
-        if (pcode && (code = [FBSafeCollections numberForKey:@"code" fromDictionary:innerError])) {
-            *pcode = [code intValue];
+        if ((codeValue = [FBSafeCollections numberForKey:@"code" fromDictionary:innerError])) {
+            code = [codeValue intValue];
         }
 
         // response[index].body.error.error_subcode
-        if (psubcode && (subCode = [FBSafeCollections numberForKey:@"error_subcode" fromDictionary:innerError])) {
-            *psubcode = [subCode intValue];
+        if ((subCodeValue = [FBSafeCollections numberForKey:@"error_subcode" fromDictionary:innerError])) {
+            subcode = [subCodeValue intValue];
         }
+    }
+
+    // if we don't have a JSON error response, check for the key that identifies a System Account OAUth error
+    if (!item) {
+        NSNumber *systemOAuthSubcode = [FBSafeCollections numberForKey:FBErrorSystemOAuthSubcodeKey fromDictionary:userInfo];
+        if (systemOAuthSubcode) {
+            code = FBOAuthError;
+            subcode = [systemOAuthSubcode intValue];
+        }
+    }
+
+    if (pcode) {
+        *pcode = code;
+    }
+    if (psubcode) {
+        *psubcode = subcode;
     }
 }
 
@@ -317,6 +339,26 @@ static const int FBSDKSystemPasswordErrorSubcode = 65001;
     return [NSError errorWithDomain:FacebookSDKDomain
                                code:FBErrorHTTPError
                            userInfo:userInfoDictionary];
+}
+
++ (NSError *)fberrorForSystemAccountOAuthError:(NSError *)innerError withSubcode:(FBAuthSubcode)subcode session:(FBSession *)session {
+    NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+        FBErrorLoginFailedReasonUserCancelledSystemValue, NSLocalizedFailureReasonErrorKey,
+        FBErrorLoginFailedReasonUserCancelledSystemValue, FBErrorLoginFailedReason,
+        @(subcode), FBErrorSystemOAuthSubcodeKey,
+        nil];
+
+    if (innerError) {
+        userInfo[FBErrorInnerErrorKey] = innerError;
+    }
+
+    if (session) {
+        userInfo[FBErrorSessionKey] = session;
+    }
+
+    return [NSError errorWithDomain:FacebookSDKDomain
+                               code:FBErrorHTTPError
+                           userInfo:userInfo];
 }
 
 + (NSError *)fberrorForSystemPasswordChange:(NSError *)innerError {

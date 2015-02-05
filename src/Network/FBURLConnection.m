@@ -60,7 +60,8 @@ static NSArray *_cdnHosts;
 
 - (FBURLConnection *)initWithURL:(NSURL *)url
                completionHandler:(FBURLConnectionHandler)handler {
-    NSURLRequest *request = [[[NSURLRequest alloc] initWithURL:url] autorelease];
+    NSMutableURLRequest *request = [[[NSMutableURLRequest alloc] initWithURL:url] autorelease];
+    [request setHTTPShouldHandleCookies:NO];
 
     return [self initWithRequest:request
            skipRoundTripIfCached:YES

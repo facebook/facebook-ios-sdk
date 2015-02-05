@@ -125,6 +125,24 @@ static NSString *const kPostHTTPMethod = @"POST";
     [super dealloc];
 }
 
+- (BOOL)hasAttachments {
+    __block BOOL hasAttachments = NO;
+    [self.parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        if ([FBRequest isAttachment:obj]) {
+            hasAttachments = YES;
+            *stop = YES;
+        }
+    }];
+    return hasAttachments;
+}
+
++ (BOOL)isAttachment:(id)item
+{
+    return
+    [item isKindOfClass:[UIImage class]] ||
+    [item isKindOfClass:[NSData class]];
+}
+
 //@property(nonatomic,retain) id<FBGraphObject> graphObject;
 - (id<FBGraphObject>)graphObject {
     return _graphObject;
@@ -185,6 +203,24 @@ static NSString *const kPostHTTPMethod = @"POST";
     NSString *graphPath = @"me/photos";
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     [parameters setObject:photo forKey:@"picture"];
+
+    FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
+                                                   graphPath:graphPath
+                                                  parameters:parameters
+                                                  HTTPMethod:@"POST"]
+                          autorelease];
+
+    [parameters release];
+
+    return request;
+}
+
++ (FBRequest *)requestForUploadVideo:(NSString *)filePath
+{
+    NSString *graphPath = @"me/videos";
+    NSData *videoData = [NSData dataWithContentsOfFile:filePath];
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    [parameters setObject:videoData forKey:filePath.lastPathComponent];
 
     FBRequest *request = [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                                    graphPath:graphPath
@@ -516,6 +552,13 @@ static NSString *const kPostHTTPMethod = @"POST";
                 [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors logEntry:@"can not use GET to upload a file"];
             }
             continue;
+        }
+        else if ([value isKindOfClass:[NSString class]]) {
+            value = value;
+        } else if ([value isKindOfClass:[NSNumber class]]) {
+            value = [value stringValue];
+        } else {
+            [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors formatString:@"Unsupported FBRequest parameter type:%@", [value class]];
         }
 
         NSString *escaped_value = [FBUtility stringByURLEncodingString:value];

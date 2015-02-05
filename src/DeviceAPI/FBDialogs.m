@@ -633,8 +633,7 @@ return NO; \
     return composeViewController;
 }
 
-+ (NSError *)createError:(NSString *)reason
-                 session:(FBSession *)session {
++ (NSError *)createError:(NSString *)reason session:(FBSession *)session {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     userInfo[FBErrorDialogReasonKey] = reason;
     if (session) {

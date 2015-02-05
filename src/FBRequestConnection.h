@@ -38,7 +38,7 @@
 
  See FBError.h and FBErrorUtility.h for error category and user message details.
  */
-typedef NS_ENUM(NSUInteger, FBRequestConnectionErrorBehavior) {
+typedef NS_OPTIONS(NSUInteger, FBRequestConnectionErrorBehavior) {
     /*! The default behavior of none */
     FBRequestConnectionErrorBehaviorNone                   = 0,
 

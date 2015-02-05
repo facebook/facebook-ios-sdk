@@ -32,6 +32,8 @@ FBSDK_EXTERN NSString *const kAuthenticationTestAppId;
     FBTestBlocker *_blocker;
 }
 
+- (void)setFetchedSupportSystemAccount:(BOOL)supportSystemAccount;
+
 - (void)mockSession:(id)mockSession
 supportSystemAccount:(BOOL)supportSystemAccount;
 

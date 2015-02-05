@@ -163,13 +163,19 @@
         [self.delegate pagingLoader:self didLoadData:results];
     }
 
-    // If we are supposed to keep paging, do so. But unless we are viewless, if we have lost
-    // our tableView, take that as a sign to stop (probably because the view was unloaded).
-    // If tableView is re-set, we will start again.
-    if ((self.pagingMode == FBGraphObjectPagingModeImmediate &&
-         self.tableView) ||
-        self.pagingMode == FBGraphObjectPagingModeImmediateViewless) {
-        [self followNextLink];
+    if (self.nextLink != nil) {
+        // If we are supposed to keep paging, do so. But unless we are viewless, if we have lost
+        // our tableView, take that as a sign to stop (probably because the view was unloaded).
+        // If tableView is re-set, we will start again.
+        if ((self.pagingMode == FBGraphObjectPagingModeImmediate &&
+             self.tableView) ||
+            self.pagingMode == FBGraphObjectPagingModeImmediateViewless) {
+            [self followNextLink];
+        }
+    } else {
+        if ([self.delegate respondsToSelector:@selector(pagingLoaderDidFinishLoading:)]) {
+            [self.delegate pagingLoaderDidFinishLoading:self];
+        }
     }
 }
 
@@ -199,6 +205,7 @@
         // Override the URL using the one passed back in 'next'.
         NSURL *url = [NSURL URLWithString:self.nextLink];
         NSMutableURLRequest *urlRequest = [NSMutableURLRequest requestWithURL:url];
+        [urlRequest setHTTPShouldHandleCookies:NO];
         connection.urlRequest = urlRequest;
 
         self.nextLink = nil;

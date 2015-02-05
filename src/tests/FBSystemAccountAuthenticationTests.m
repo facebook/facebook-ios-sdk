@@ -73,10 +73,20 @@
     [session release];
 }
 
-- (void)testOpenDoesNotTrySystemAccountAuthIfUnavailable {
+- (void)testOpenDoesNotTrySystemAccountAuthIfUnavailableOnDevice {
+    [self testOpenDoesNotTrySystemAccountAuthIfUnavailableServer:YES device:NO];
+}
+
+- (void)testOpenDoesNotTrySystemAccountAuthIfUnavailableOnServer {
+    [self testOpenDoesNotTrySystemAccountAuthIfUnavailableServer:NO device:YES];
+}
+
+- (void)testOpenDoesNotTrySystemAccountAuthIfUnavailableServer:(BOOL)serverSupports
+                                                        device:(BOOL)deviceSupports {
     FBSession *mockSession = [OCMockObject partialMockForObject:[FBSession alloc]];
-    
-    [self mockSession:mockSession supportSystemAccount:NO];
+
+    [self setFetchedSupportSystemAccount:serverSupports];
+    [self mockSession:mockSession supportSystemAccount:deviceSupports];
     [self mockSession:mockSession expectSystemAccountAuth:NO succeed:NO];
     [self mockSession:mockSession supportMultitasking:NO];
     [self mockSession:mockSession expectFacebookAppAuth:NO try:NO results:nil];
@@ -213,10 +223,20 @@
 // TODO test untosed device continues auth process
 // TODO test reauth case
 
-- (void)testSystemAccountNotAvailableTriesNextAuthMethod {
+- (void)testSystemAccountNotAvailableOnServerTriesNextAuthMethod {
+    [self testSystemAccountNotAvailableTriesNextAuthMethodServer:NO device:YES];
+}
+
+- (void)testSystemAccountNotAvailableOnDeviceTriesNextAuthMethod {
+    [self testSystemAccountNotAvailableTriesNextAuthMethodServer:YES device:NO];
+}
+
+- (void)testSystemAccountNotAvailableTriesNextAuthMethodServer:(BOOL)serverSupports
+                                                        device:(BOOL)deviceSupports {
     FBSession *mockSession = [OCMockObject partialMockForObject:[FBSession alloc]];
     
-    [self mockSession:mockSession supportSystemAccount:NO];
+    [self setFetchedSupportSystemAccount:serverSupports];
+    [self mockSession:mockSession supportSystemAccount:deviceSupports];
     [self mockSession:mockSession expectSystemAccountAuth:NO succeed:NO];
     [self mockSession:mockSession supportMultitasking:YES];
     [self mockSession:mockSession expectFacebookAppAuth:YES try:YES results:nil];

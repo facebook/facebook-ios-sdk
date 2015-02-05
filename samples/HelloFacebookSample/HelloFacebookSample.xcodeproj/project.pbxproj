@@ -24,6 +24,7 @@
 		85C69D8F1602B0D3008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8C1602B0D3008AD9A0 /* Default-568h@2x.png */; };
 		85C69D901602B0D3008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8D1602B0D3008AD9A0 /* Default.png */; };
 		85C69D911602B0D3008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D8E1602B0D3008AD9A0 /* Default@2x.png */; };
+		DBEA1F4E1A7703E4005242A8 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBEA1F4D1A7703E4005242A8 /* MobileCoreServices.framework */; };
 		DD37EAC015ABA8FA0015966B /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		8986C7D51890A2F3004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		8986C7D61890A2F3004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C7D71890A2F3004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
+		DBEA1F4D1A7703E4005242A8 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,6 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DBEA1F4E1A7703E4005242A8 /* MobileCoreServices.framework in Frameworks */,
 				5F6AF18E1532A37B00DDBD75 /* UIKit.framework in Frameworks */,
 				5F6AF1901532A37B00DDBD75 /* Foundation.framework in Frameworks */,
 				5F6AF1921532A37B00DDBD75 /* CoreGraphics.framework in Frameworks */,
@@ -96,6 +99,7 @@
 		5F6AF18C1532A37B00DDBD75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DBEA1F4D1A7703E4005242A8 /* MobileCoreServices.framework */,
 				5FC4959715C21151007EE54E /* CoreLocation.framework */,
 				DD37EABF15ABA8FA0015966B /* FacebookSDK.framework */,
 				5F6AF18D1532A37B00DDBD75 /* UIKit.framework */,

@@ -36,4 +36,6 @@
 
 - (void)handleDidBecomeActive;
 
+- (void)trackAppCall:(FBAppCall *)call withCompletionHandler:(FBAppCallHandler)handler;
+
 @end

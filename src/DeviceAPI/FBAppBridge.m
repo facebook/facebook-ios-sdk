@@ -306,6 +306,7 @@ forFailedAppCall:(FBAppCall *)appCall
     // always call the fallback handler so that the app knows that it doesn't need to
     // try and process the URL any further.
 
+    NSDictionary *queryParams = [FBUtility dictionaryByParsingURLQueryPart:url.query];
     BOOL success = NO;
     NSInteger preProcessErrorCode = 0;
     if ([FBUtility isFacebookBundleIdentifier:sourceApplication] ||
@@ -316,7 +317,6 @@ forFailedAppCall:(FBAppCall *)appCall
         }
 
         if (urlPath && url.query) {
-            NSDictionary *queryParams = [FBUtility dictionaryByParsingURLQueryPart:url.query];
             BOOL isEncrypted = (queryParams[FBBridgeURLParams.cipher] != nil);
             if (isEncrypted) {
                 queryParams = [self decryptUrlQueryParams:queryParams
@@ -435,6 +435,7 @@ forFailedAppCall:(FBAppCall *)appCall
 
     // TODO: Log if handler was not found.
     call.dialogData.results = [self dictionaryFromJSONString:queryParams[FBBridgeURLParams.methodResults]];
+    call.dialogData.rawResultData = queryParams;
     call.error = [FBAppBridge errorFromDictionary:bridgeArgs[FBBridgeKey.error]];
 
     @try {
@@ -516,8 +517,7 @@ forFailedAppCall:(FBAppCall *)appCall
     }
 }
 
-- (void)trackAppCall:(FBAppCall *)call
-withCompletionHandler:(FBAppCallHandler)handler {
+- (void)trackAppCall:(FBAppCall *)call withCompletionHandler:(FBAppCallHandler)handler {
     self.pendingAppCalls[call.ID] = call;
     if (!handler) {
         // a noop handler if nil is passed in

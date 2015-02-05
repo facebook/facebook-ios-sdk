@@ -322,6 +322,21 @@
     assertThat(url, isNot(containsString(@"somedata")));
 }
 
+- (void)testSerializeUrl{
+    NSDictionary *parameters = @{
+                             @"key0": @100,
+                             @"key1": @"200",
+                             @"key2": @300.5};
+    NSString *url = [FBRequest serializeURL:@"http://www.example.com" params:parameters];
+    assertThat(url, containsString(@"http://www.example.com"));
+    assertThat(url, containsString(@"key0"));
+    assertThat(url, containsString(@"100"));
+    assertThat(url, containsString(@"key1"));
+    assertThat(url, containsString(@"200"));
+    assertThat(url, containsString(@"key2"));
+    assertThat(url, containsString(@"300.5"));
+}
+
 - (void)testRequestForMe {
     FBRequest *request = [FBRequest requestForMe];
     

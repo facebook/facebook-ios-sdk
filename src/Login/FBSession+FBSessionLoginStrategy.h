@@ -22,7 +22,8 @@
 
 - (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                           isReauthorize:(BOOL)isReauthorize;
+                           isReauthorize:(BOOL)isReauthorize
+                     canFetchAppSettings:(BOOL)canFetchAppSettings;
 - (FBAppCall *)authorizeUsingFacebookNativeLoginWithPermissions:(NSArray *)permissions
                                                 defaultAudience:(FBSessionDefaultAudience)defaultAudience
                                                     clientState:(NSDictionary *)clientState;

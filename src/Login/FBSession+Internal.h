@@ -58,6 +58,18 @@ FBSDK_EXTERN NSString *const FacebookNativeApplicationLoginDomain;
 
 + (NSError *)sdkSurfacedErrorForNativeLoginError:(NSError *)nativeLoginError;
 
+/*!
+ * @abstract Attempts to build a detailed SDK error from an ACErrorDomain/ACErrorPermissionDenied error
+ *
+ * @param accountStoreError The error object from the Accounts framework to analyze
+ * @param isReauthorize \c YES if the error code should reflect the reauthorize scenario, otherwise
+ *                      \c NO to reflect the log in scenario
+ * @param session The session to associate with the SDK error object, if any
+ */
++ (NSError *)errorWithSystemAccountStoreDeniedError:(NSError *)accountStoreError
+                                      isReauthorize:(BOOL)isReauthorize
+                                         forSession:(FBSession *)session;
+
 - (void)repairWithHandler:(FBSessionRequestPermissionResultHandler)handler;
 
 + (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions

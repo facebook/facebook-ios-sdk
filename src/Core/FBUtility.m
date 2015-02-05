@@ -42,6 +42,7 @@ static const NSString *kAppSettingsFieldEnableLoginTooltip = @"gdpv4_nux_enabled
 static const NSString *kAppSettingsFieldLoginTooltipContent = @"gdpv4_nux_content";
 static const NSString *kAppSettingsFieldDialogConfigs = @"ios_dialog_configs";
 static const NSString *kAppSettingsFieldAppEventsFeatureBitmask = @"app_events_feature_bitmask";
+static const NSString *kAppSettingsFieldSupportsSystemAuth = @"ios_supports_system_auth";
 
 FBTriStateBOOL FBTriStateBOOLFromBOOL(BOOL value) {
     return value ? FBTriStateBOOLValueYES : FBTriStateBOOLValueNO;
@@ -233,6 +234,7 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
                                  kAppSettingsFieldEnableLoginTooltip,
                                  kAppSettingsFieldLoginTooltipContent,
                                  kAppSettingsFieldDialogConfigs,
+                                 kAppSettingsFieldSupportsSystemAuth,
                                  kAppSettingsFieldAppEventsFeatureBitmask] componentsJoinedByString:@","]
                               ];
         FBRequest *pingRequest = [[[FBRequest alloc] initWithSession:nil graphPath:pingPath] autorelease];
@@ -268,6 +270,7 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
                     g_fetchedAppSettings.enableLoginTooltip = [result[kAppSettingsFieldEnableLoginTooltip] boolValue];
                     g_fetchedAppSettings.loginTooltipContent = result[kAppSettingsFieldLoginTooltipContent];
                     g_fetchedAppSettings.dialogConfigs = [self _parseDialogConfigs:result[kAppSettingsFieldDialogConfigs]];
+                    g_fetchedAppSettings.supportsSystemAuth = [result[kAppSettingsFieldSupportsSystemAuth] boolValue];
                 }
             }
             [self callTheFetchAppSettingsCallback:callback];
@@ -294,9 +297,9 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
     return dialogConfigs;
 }
 
-+ (FBFetchedAppSettings *)fetchedAppSettings {
++ (FBFetchedAppSettings *)fetchedAppSettingsIfCurrent {
     if ([self isFetchedFBAppSettingsStale]) {
-        [self fetchAppSettings:g_fetchedAppSettings.appID callback:nil];
+        return nil;
     }
     return g_fetchedAppSettings;
 }

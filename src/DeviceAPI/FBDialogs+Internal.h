@@ -22,4 +22,7 @@
 + (FBAppCall *)presentLikeDialogWithParams:(FBLikeDialogParams *)params
                                clientState:(NSDictionary *)clientState
                                    handler:(FBDialogAppCallCompletionHandler)handler;
+
++ (NSError *)createError:(NSString *)reason session:(FBSession *)session;
+
 @end
