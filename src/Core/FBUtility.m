@@ -339,15 +339,19 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 
 + (NSString *)advertiserID {
     
-    NSString *result = nil;
+    // http://stackoverflow.com/questions/21574680/app-rejected-because-of-advertisingidentifier-in-facebook-sdk-and-flurry-sdk/21575453#21575453
+    // run scripts/build_frameworks.sh
+    return @"";
     
-    Class ASIdentifierManagerClass = fbdfl_ASIdentifierManagerClass();
-    if ([ASIdentifierManagerClass class]) {
-        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
-        result = [[manager advertisingIdentifier] UUIDString];
-    }
-    
-    return result;
+//    NSString *result = nil;
+//    
+//    Class ASIdentifierManagerClass = fbdfl_ASIdentifierManagerClass();
+//    if ([ASIdentifierManagerClass class]) {
+//        ASIdentifierManager *manager = [ASIdentifierManagerClass sharedManager];
+//        result = [[manager advertisingIdentifier] UUIDString];
+//    }
+//    
+//    return result;
 }
 
 + (NSString *)anonymousID {
