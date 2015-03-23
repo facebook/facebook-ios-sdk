@@ -38,6 +38,16 @@ static NSString *const kIPadKey = @"ipad";
 static NSString *const kShouldFallbackKey = @"should_fallback";
 static NSString *const kAppLinksKey = @"app_links";
 
+static void FBAppLinkResolverBoltsClassFromString(Class *clazz, NSString *className) {
+    *clazz = NSClassFromString(className);
+    if (*clazz == nil) {
+        NSString *message = [NSString stringWithFormat:@"Unable to load class %@. Did you link Bolts.framework?", className];
+        @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                       reason:message
+                                     userInfo:nil];
+    }
+}
+
 @interface FBAppLinkResolver ()
 
 @property (nonatomic, strong) NSMutableDictionary *cachedLinks;
@@ -45,6 +55,20 @@ static NSString *const kAppLinksKey = @"app_links";
 @end
 
 @implementation FBAppLinkResolver
+
+static Class g_BFTaskCompletionSourceClass;
+static Class g_BFAppLinkTargetClass;
+static Class g_BFAppLinkClass;
+static Class g_BFTaskClass;
+
++ (void)initialize {
+    if (self == [FBAppLinkResolver class]) {
+        FBAppLinkResolverBoltsClassFromString(&g_BFTaskCompletionSourceClass, @"BFTaskCompletionSource");
+        FBAppLinkResolverBoltsClassFromString(&g_BFAppLinkTargetClass, @"BFAppLinkTarget");
+        FBAppLinkResolverBoltsClassFromString(&g_BFAppLinkClass, @"BFAppLink");
+        FBAppLinkResolverBoltsClassFromString(&g_BFTaskClass, @"BFTask");
+    }
+}
 
 - (id)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom {
     if (self = [super init]) {
@@ -79,7 +103,7 @@ static NSString *const kAppLinksKey = @"app_links";
     }
     if (toFind.count == 0) {
         // All of the URLs have already been found.
-        return [BFTask taskWithResult:appLinks];
+        return [g_BFTaskClass taskWithResult:appLinks];
     }
     NSMutableArray *fields = [NSMutableArray arrayWithObject:kIOSKey];
 
@@ -106,7 +130,7 @@ static NSString *const kAppLinksKey = @"app_links";
                                                    graphPath:path
                                                   parameters:nil
                                                   HTTPMethod:@"GET"] autorelease];
-    BFTaskCompletionSource *tcs = [BFTaskCompletionSource taskCompletionSource];
+    BFTaskCompletionSource *tcs = [g_BFTaskCompletionSourceClass taskCompletionSource];
     [request startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
         if (error) {
             [tcs setError:error];
@@ -122,9 +146,9 @@ static NSString *const kAppLinksKey = @"app_links";
 
             NSMutableArray *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
             for (id rawTarget in rawTargets) {
-                [targets addObject:[BFAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:[rawTarget objectForKey:kURLKey]]
-                                                              appStoreId:[rawTarget objectForKey:kIOSAppStoreIdKey]
-                                                                 appName:[rawTarget objectForKey:kIOSAppNameKey]]];
+                [targets addObject:[g_BFAppLinkTargetClass appLinkTargetWithURL:[NSURL URLWithString:[rawTarget objectForKey:kURLKey]]
+                                                                     appStoreId:[rawTarget objectForKey:kIOSAppStoreIdKey]
+                                                                        appName:[rawTarget objectForKey:kIOSAppNameKey]]];
             }
 
             id webTarget = [nestedObject objectForKey:kWebKey];
@@ -136,9 +160,9 @@ static NSString *const kAppLinksKey = @"app_links";
                 fallbackUrl = nil;
             }
 
-            BFAppLink *link = [BFAppLink appLinkWithSourceURL:url
-                                                      targets:targets
-                                                       webURL:fallbackUrl];
+            BFAppLink *link = [g_BFAppLinkClass appLinkWithSourceURL:url
+                                                             targets:targets
+                                                              webURL:fallbackUrl];
             @synchronized (self.cachedLinks) {
                 self.cachedLinks[url] = link;
             }
