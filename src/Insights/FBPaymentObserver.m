@@ -101,8 +101,7 @@ static NSMutableArray *g_pendingRequestors;
             case SKPaymentTransactionStateFailed:
                 [self handleTransaction:transaction];
                 break;
-            case SKPaymentTransactionStateDeferred:
-            case SKPaymentTransactionStateRestored:
+            default:
                 break;
         }
     }
@@ -187,8 +186,7 @@ static NSMutableArray *g_pendingRequestors;
         case SKPaymentTransactionStateFailed:
             eventName = FBAppEventNamePurchaseFailed;
             break;
-        case SKPaymentTransactionStateDeferred:
-        case SKPaymentTransactionStateRestored:
+        default:
             return;
     }
     if (!eventName) {
