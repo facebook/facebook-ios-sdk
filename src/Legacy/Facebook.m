@@ -390,8 +390,8 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  */
 - (BOOL)shouldExtendAccessToken {
     if ([self isSessionValid]) {
-        NSCalendar *calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar] autorelease];
-        NSDateComponents *components = [calendar components:NSHourCalendarUnit
+        NSCalendar *calendar = [[[NSCalendar alloc] initWithCalendarIdentifier:NSCalendarIdentifierGregorian] autorelease];
+        NSDateComponents *components = [calendar components:NSCalendarUnitHour
                                                    fromDate:_lastAccessTokenUpdate
                                                      toDate:[NSDate date]
                                                     options:0];
