@@ -489,9 +489,26 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
          selector:@selector(applicationDidBecomeActive)
          name:UIApplicationDidBecomeActiveNotification
          object:NULL];
+
+        // Subscribe to notifications for when the active session is unset
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(handleActiveSessionUnset:)
+         name:FBSessionDidUnsetActiveSessionNotification
+         object:NULL];
     }
 
     return self;
+}
+
+- (void)handleActiveSessionUnset:(NSNotification *)notification
+{
+    // The active session is be being over released somewhere in the SDK which results in a
+    // dangling pointer. To solve the problem we can set _lastSessionLoggedTo = nil here.
+    FBSession *sessionUnset = [notification object];
+    if (_lastSessionLoggedTo == sessionUnset) {
+        _lastSessionLoggedTo = nil;
+    }
 }
 
 - (void)dealloc
