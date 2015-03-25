@@ -1,25 +1,28 @@
 #!/bin/sh
 #
-# Copyright 2010-present Facebook.
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#    http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
 #
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
-# process options, valid arguments -c [Debug|Release] -n 
+# process options, valid arguments -c [Debug|Release] -n
 BUILDCONFIGURATION=Debug
-SCHEMES="FacebookSDKTests FacebookSDKIntegrationTests FacebookSDKApplicationTests"
+SCHEMES="BuildAllKits FBSDKIntegrationTests"
 
 while getopts ":nc:" OPTNAME
 do
@@ -32,9 +35,8 @@ do
       echo "       -c sets configuration"
       echo "       -n clean before build"
       echo "SUITE: one or more of the following (default is all):"
-      echo "       FacebookSDKTests: unit tests"
-      echo "       FacebookSDKIntegrationTests: integration tests"
-      echo "       FacebookSDKApplicationTests: application tests"
+      echo "       BuildAllKits: unit tests"
+      echo "       FBSDKIntegrationTests: integration tests"
       die
       ;;
     "n")
@@ -56,34 +58,24 @@ shift $(( $OPTIND -1 ))
 if [ -n "$*" ]; then
     SCHEMES="$*"
 fi
+# re-map v3 schemes
+SCHEMES=${SCHEMES/FacebookSDKTests/BuildAllKits}
+SCHEMES=${SCHEMES/FacebookSDKIntegrationTests/}
+SCHEMES=${SCHEMES/FacebookSDKApplicationTests/}
 
-cd "$FB_SDK_SRC"
-
-test -d "$FB_SDK_BUILD" \
-  || mkdir -p "$FB_SDK_BUILD" \
-  || die "Could not create directory $FB_SDK_BUILD"
+cd "$FB_SDK_ROOT"
 
 for SCHEME in $SCHEMES; do
-    APPLICATION_TEST_EXTRAS=""
-    if [ "$SCHEME" == "FacebookSDKApplicationTests" ]; then
-      # ios snapshot has issues with ios 8. As a workaround, specify ios7.1 specifically (make sure it's install first)
-      CAN_HAZ_SIM=$(xcodebuild -showsdks | grep "iphonesimulator7.1")
-      if [ -z "$CAN_HAZ_SIM" ]; then
-        progress_message "*** WARNING *** iOS simulator 7.1 is required for FacebookSDKApplicationTests. Skipping..."
-        continue
-      fi
-      APPLICATION_TEST_EXTRAS="-test-sdk iphonesimulator7.1 -destination 'platform=iOS Simulator,name=iPhone 4s,OS=7.1'"
-    fi
-
-    COMMAND="$XCTOOL
-     -project facebook-ios-sdk.xcodeproj \
-     -scheme $SCHEME \
-     -sdk iphonesimulator \
-     -configuration "$BUILDCONFIGURATION" \
-     ONLY_ACTIVE_ARCH=YES \
-     SYMROOT="$FB_SDK_BUILD" \
-     $CLEAN test \
-     $APPLICATION_TEST_EXTRAS"
+  BUILD_TEST=""
+  if [[ $SCHEME == "FBSDKIntegrationTests" ]]; then
+    BUILD_TEST="build-tests"
+  fi
+  COMMAND="$XCTOOL
+    -workspace FacebookSDK.xcworkspace \
+    -scheme $SCHEME \
+    -configuration "$BUILDCONFIGURATION" \
+    -sdk iphonesimulator \
+    $BUILD_TEST run-tests"
     eval $COMMAND || die "Error while running tests ($COMMAND)"
 done
 

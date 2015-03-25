@@ -4,9 +4,6 @@
 [submodule "vendor/OCMock"]
 	path = vendor/OCMock
 	url = git://github.com/erikdoe/ocmock
-[submodule "vendor/OCHamcrest"]
-	path = vendor/OCHamcrest
-	url = git://github.com/hamcrest/OCHamcrest
 [submodule "vendor/appledoc"]
 	path = vendor/appledoc
 	url = git://github.com/tomaz/appledoc.git

@@ -3,16 +3,16 @@ Facebook SDK for iOS
 
 This open-source library allows you to integrate Facebook into your iOS app.
 
-Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/ios
+Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/docs/ios
 
 NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK
 
 TRY IT OUT
 ----------
-1. Download the SDK at https://developers.facebook.com/ios or via Cocoapods by adding the 'Facebook-iOS-SDK' pod.
-2. Test your install: build and run the project at ~/Documents/FacebookSDK/Samples/HelloFacebookSample/HelloFacebookSample.xcodeproj
-3. Check-out the tutorials available online at: https://developers.facebook.com/docs/getting-started/getting-started-with-the-ios-sdk
-4. Start coding! Visit https://developers.facebook.com/ios for tutorials and reference documentation.
+1. Download the SDK at https://developers.facebook.com/docs/ios or via Cocoapods by adding the 'Facebook-iOS-SDK' pod.
+2. Test your install: build and run the project at ~/Documents/FacebookSDK/Samples/Scrumptious/Scrumptious.xcodeproj
+3. Check-out the tutorials available online at: https://developers.facebook.com/docs/ios/getting-started
+4. Start coding! Visit https://developers.facebook.com/docs/ios for tutorials and reference documentation.
 
 FEATURES
 --------
@@ -29,7 +29,7 @@ You can also join the Facebook Developers Group on Facebook (https://www.faceboo
 
 LICENSE
 -------
-Except as otherwise noted, the Facebook SDK for iOS is licensed under the Apache License, Version 2.0 (http://www.apache.org/licenses/LICENSE-2.0.html).
+See the LICENSE file.
 
 DEVELOPER TERMS
 ---------------

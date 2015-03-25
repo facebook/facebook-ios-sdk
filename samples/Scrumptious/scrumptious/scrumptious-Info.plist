@@ -21,7 +21,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>4.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -34,11 +34,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>${FB_BUNDLE_VERSION}</string>
+	<string>4.0</string>
 	<key>FacebookAppID</key>
 	<string>233936543368280</string>
-	<key>FacebookBundleName</key>
-	<string>FacebookSDKOverrides</string>
 	<key>FacebookDisplayName</key>
 	<string>Scrumptious</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -49,11 +47,11 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleBlackTranslucent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleBlackTranslucent</string>
 </dict>
 </plist>
