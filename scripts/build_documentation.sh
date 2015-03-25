@@ -1,30 +1,46 @@
 #!/bin/sh
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
-# Copyright 2010-present Facebook.
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#    http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
 #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 
 # This script builds the API documentation from source-level comments.
 # This script requires appledoc be installed: https://github.com/tomaz/appledoc
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
+# option s to skip build
+SKIPBUILD=""
+while getopts "s:" OPTNAME
+do
+  case "$OPTNAME" in
+    s)
+      SKIPBUILD="YES"
+      ;;
+  esac
+done
+
 # -----------------------------------------------------------------------------
 # Build pre-requisites
 #
 if is_outermost_build; then
+  if [ -z SKIPBUILD ]; then
     . "$FB_SDK_SCRIPT/build_framework.sh" -n
+  fi
 fi
 
 APPLEDOC_PATH="$FB_SDK_BUILD"/appledoc
@@ -55,7 +71,7 @@ test -d "$FB_SDK_BUILD" \
   || mkdir -p "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
-cd "$FB_SDK_SRC"
+cd "$FB_SDK_ROOT"
 
 rm -rf "$FB_SDK_FRAMEWORK_DOCS"
 
@@ -68,7 +84,7 @@ if [ "$?" -eq "0" ]; then
     "$APPLEDOC_PATH" --project-name "$APPLEDOC_DOCSET_NAME" \
 	--project-company "Facebook" \
 	--company-id "com.facebook" \
-        --output "$DOCSET" \
+  --output "$DOCSET" \
 	--preprocess-headerdoc \
 	--docset-bundle-filename "$FB_SDK_DOCSET_NAME" \
 	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \
@@ -79,7 +95,9 @@ if [ "$?" -eq "0" ]; then
 	--keep-undocumented-members \
 	--keep-undocumented-objects \
 	--explicit-crossref \
-	"$FB_SDK_FRAMEWORK/Headers" \
+	"$FB_SDK_BUILD/FBSDKCoreKit.framework/Headers" \
+  "$FB_SDK_BUILD/FBSDKLoginKit.framework/Headers" \
+  "$FB_SDK_BUILD/FBSDKShareKit.framework/Headers" \
     || die 'appledoc execution failed'
 else
     die "appledoc not installed, unable to build documentation"

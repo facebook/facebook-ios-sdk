@@ -1,233 +1,293 @@
-/*
- * Copyright 2010-present Facebook.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "RPSFriendsViewController.h"
 
-#import "OGProtocols.h"
-#import "RPSAppDelegate.h"
+#import <Foundation/Foundation.h>
 
-@interface RPSFriendsViewController () <FBFriendPickerDelegate, UIAlertViewDelegate>
+#import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-@property (readwrite, nonatomic, copy) NSString *fbidSelection;
-@property (readwrite, nonatomic, retain) FBFrictionlessRecipientCache *friendCache;
+#import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-- (void)updateActivityForID:(NSString *)fbid;
+#import <FBSDKShareKit/FBSDKShareKit.h>
 
+@interface RPSFriendsViewController () <UIAlertViewDelegate, UITableViewDelegate, UITableViewDataSource>
 @end
 
-@implementation RPSFriendsViewController
+
+@implementation RPSFriendsViewController {
+    NSMutableArray *_tableData;
+}
 
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Rock w/Friends", @"Rock w/Friends");
-        self.fieldsForRequest = [NSSet setWithObject:@"installed"];
-        self.allowsMultipleSelection = NO;
-        self.delegate = self;
     }
+
     return self;
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.doneButton = nil;
-}
-
-- (void)refreshView {
-    [self loadData];
-
-    // we use frictionless requests, so let's get a cache and request the
-    // current list of frictionless friends before enabling the invite button
-    if (!self.friendCache) {
-        self.friendCache = [[FBFrictionlessRecipientCache alloc] init];
-        [self.friendCache prefetchAndCacheForSession:nil
-                                   completionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-
-                                       self.inviteButton.enabled = YES;
-                                   }];
-    } else  {
-        // if we already have a primed cache, let's just run with it
-        self.inviteButton.enabled = YES;
-    }
 }
 
 #pragma mark - View lifecycle
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (FBSession.activeSession.isOpen) {
-        [self refreshView];
-    } else {
-        self.inviteButton.enabled = NO;
-        self.friendCache = nil;
 
-        // display the message that we have
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Log In with Facebook"
-                                                        message:@"When you Log In with Facebook, you can view "
-                              @"friends' activity within Rock Paper Scissors, and "
-                              @"invite friends to play.\n\n"
-                              @"What would you like to do?"
-                                                       delegate:self
-                                              cancelButtonTitle:@"Cancel"
-                                              otherButtonTitles:@"Log In", nil];
-        [alert show];
+    // Login with read permssions
+    FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+    if (![accessToken.permissions containsObject:@"user_friends"]) {
+        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+        [loginManager logInWithReadPermissions:@[@"user_friends"]
+                                       handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+                                           if (error) {
+                                               NSLog(@"Failed to login:%@", error);
+                                               return;
+                                           }
+
+                                           FBSDKAccessToken *newToken = [FBSDKAccessToken currentAccessToken];
+                                           if (![newToken.permissions containsObject:@"user_friends"]) {
+                                               // Show alert
+                                               UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
+                                                                                                   message:@"You must login and grant access to your firends list to use this feature"
+                                                                                                  delegate:self
+                                                                                         cancelButtonTitle:@"OK"
+                                                                                         otherButtonTitles:nil];
+                                               [alertView show];
+                                               [self.navigationController popToRootViewControllerAnimated:YES];
+                                               return;
+                                           }
+
+                                           [self updateFriendsTable];
+                                       }];
+
+    } else {
+        [self updateFriendsTable];
     }
 }
 
-- (void)viewDidUnload {
-    self.activityTextView = nil;
+#pragma makr - InvitFriends Button
 
-    [self setInviteButton:nil];
-    [super viewDidUnload];
+- (IBAction)tapChallengeFriends:(id)sender {
+    FBSDKGameRequestDialog *gameRequestDialog = [[FBSDKGameRequestDialog alloc] init];
+    FBSDKGameRequestContent *content = [[FBSDKGameRequestContent alloc] init];
+    content.title = @"Challenge a Friend";
+    content.message = @"Please come play RPS with me!";
+    gameRequestDialog.content = content;
+    [gameRequestDialog show];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    // Return YES for supported orientations
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-    } else {
-        return YES;
+#pragma mark - UITableViewDataSource
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_tableData count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *const simpleTableIdentifier = @"SimpleTableItem";
+
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:simpleTableIdentifier];
+
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:simpleTableIdentifier];
     }
+
+    // Don't have the cell highlighted since we use the checkmark instead
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+    NSDictionary *data = [_tableData objectAtIndex:indexPath.row];
+    cell.textLabel.text = data[@"name"];
+    return cell;
 }
 
-#pragma mark - FBFriendPickerDelegate implementation
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.accessoryType = UITableViewCellAccessoryCheckmark;
 
-// FBSample logic
-// The following two methods implement the FBFriendPickerDelegate protocol. This shows an example of two
-// interesting SDK features: 1) filtering support in the friend picker, 2) the "installed" field field when
-// fetching me/friends. Filtering lets you choose whether or not to display each friend, based on application
-// determined criteria; the installed field is present (and true) if the friend is also a user of the calling
-// application.
-
-- (void)friendPickerViewControllerSelectionDidChange:(FBFriendPickerViewController *)friendPicker {
-    self.activityTextView.text = @"";
-    if (friendPicker.selection.count) {
-        [self updateActivityForID:[[friendPicker.selection objectAtIndex:0] id]];
-    } else {
-        self.fbidSelection = nil;
-    }
+    self.activityTextView.text = @"Loading...";
+    NSDictionary *user = [_tableData objectAtIndex:[indexPath row]];
+    [self updateActivityForID:user[@"id"]];
 }
 
-- (BOOL)friendPickerViewController:(FBFriendPickerViewController *)friendPicker
-                 shouldIncludeUser:(id<FBGraphUser>)user {
-    return [[user objectForKey:@"installed"] boolValue];
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [tableView cellForRowAtIndexPath:indexPath].accessoryType = UITableViewCellAccessoryNone;
 }
+
+
 
 #pragma mark - private methods
 
-// FBSample logic
-// This is the workhorse method of this view. It updates the textView with the activity of a given user. It
-// accomplishes this by fetching the "throw" actions for the selected user.
-- (void)updateActivityForID:(NSString *)fbid {
+- (void)updateFriendsTable {
+    // We limit the friends list to only 50 results for this sample. In production you should
+    // use paging to dynamically grab more users.
+    NSDictionary *parameters = @{
+                                 @"fields": @"name",
+                                 @"limit" : @"50"
+                                 };
+    // This will only return the list of friends who have this app installed
+    FBSDKGraphRequest *friendsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/friends"
+                                                                          parameters:parameters];
+    FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+    [connection addRequest:friendsRequest
+         completionHandler:^(FBSDKGraphRequestConnection *innerConnection, NSDictionary *result, NSError *error) {
+             if (error) {
+                 NSLog(@"%@", error);
+                 return;
+             }
 
-    // keep track of the selction
-    self.fbidSelection = fbid;
-
-    // create a request for the "throw" activity
-    FBRequest *playActivity = [FBRequest requestForGraphPath:[NSString stringWithFormat:@"%@/fb_sample_rps:throw", fbid]];
-    [playActivity.parameters setObject:@"U" forKey:@"date_format"];
-
-    // this block is the one that does the real handling work for the requests
-    void (^handleBlock)(id) = ^(id<RPSGraphActionList> result) {
-        if (result) {
-            for (id<RPSGraphPublishedThrowAction> entry in result.data) {
-                // we  translate the date into something useful for sorting and displaying
-                entry.publish_date = [NSDate dateWithTimeIntervalSince1970:entry.publish_time.intValue];
-            }
-        }
-
-        // sort the array by date
-        NSMutableArray *activity = [NSMutableArray arrayWithArray:result.data];
-        [activity sortUsingComparator:^NSComparisonResult(id<RPSGraphPublishedThrowAction> obj1,
-                                                          id<RPSGraphPublishedThrowAction> obj2) {
-            if (obj1.publish_date && obj2.publish_date) {
-                return [obj2.publish_date compare:obj1.publish_date];
-            }
-            return NSOrderedSame;
-        }];
-
-        NSMutableString *output = [NSMutableString string];
-        for (id<RPSGraphPublishedThrowAction> entry in activity) {
-            NSDateComponents *c = [[NSCalendar currentCalendar]
-                                   components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit
-                                   fromDate:entry.publish_date];
-            [output appendFormat:@"%02li/%02li/%02li - %@ %@ %@\n",
-             (long)c.month,
-             (long)c.day,
-             (long)c.year,
-             entry.data.gesture.title,
-             @"vs",
-             entry.data.opposing_gesture.title];
-        }
-        self.activityTextView.text = output;
-    };
-
-    // this is an example of a batch request using FBRequestConnection; we accomplish this by adding
-    // two request objects to the connection, and then calling start; note that each request handles its
-    // own response, despite the fact that the SDK is serializing them into a single request to the server
-    FBRequestConnection *connection = [[FBRequestConnection alloc] init];
-    [connection addRequest:playActivity
-         completionHandler:^(FBRequestConnection *innerConnection, id result, NSError *error) {
-             handleBlock(result);
+             if (result) {
+                 NSArray *data = result[@"data"];
+                 _tableData = [data copy];
+                 [_tableView reloadData];
+             }
          }];
     // start the actual request
     [connection start];
 }
 
-- (IBAction)clickInviteFriends:(id)sender {
-    // if there is a selected user, seed the dialog with that user
-    NSDictionary *parameters = self.fbidSelection ? @{@"to":self.fbidSelection} : nil;
-    [FBWebDialogs presentRequestsDialogModallyWithSession:nil
-                                                  message:@"Please come play RPS with me!"
-                                                    title:@"Invite a Friend"
-                                               parameters:parameters
-                                                  handler:^(FBWebDialogResult result, NSURL *resultURL, NSError *error) {
-                                                      if (result == FBWebDialogResultDialogCompleted) {
-                                                          NSLog(@"Web dialog complete: %@", resultURL);
-                                                      } else {
-                                                          NSLog(@"Web dialog not complete, error: %@", error.description);
-                                                      }
-                                                  }
-                                              friendCache:self.friendCache];
+// This is the workhorse method of this view. It updates the textView with the activity of a given user. It
+// accomplishes this by fetching the "throw" actions for the selected user.
+- (void)getActivityForID:(NSString *)fbid callback:(void (^)(NSMutableArray *))callback{
+    NSInteger __block pendingRequestCount = 0;
+    NSMutableArray *selectedUserActiviy = [NSMutableArray array];
+    FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+
+    // Get the results for plays posted to Facebook explicitly.
+    FBSDKGraphRequest *playActivityRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/fb_sample_rps:throw", fbid]
+                                                                               parameters:@{
+                                                                                            @"fields" : @"data,publish_time",
+                                                                                            @"limit" : @"10",
+                                                                                            @"date_format" : @"U"
+                                                                                            }];
+    ++pendingRequestCount;
+    [connection addRequest:playActivityRequest
+         completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id playActivity, NSError *error) {
+             if (error) {
+                 NSLog(@"Failed get fb_sample_rps:throw activities for user '%@': %@",fbid, error);
+             } else if (playActivity) {
+                 for (id entry in playActivity[@"data"]) {
+                     NSString *gesture = entry[@"data"][@"gesture"][@"title"];
+                     NSString *opposing_gesture = entry[@"data"][@"opposing_gesture"][@"title"];
+                     [selectedUserActiviy addObject:@{
+                                                      @"publish_date" : [self getDateFromEpochTime:entry[@"publish_time"]],
+                                                      @"player_gesture" : gesture,
+                                                      @"opponent_gesture" : opposing_gesture
+                                                      }];
+                 }
+             }
+             if (--pendingRequestCount == 0) {
+                 callback(selectedUserActiviy);
+             }
+         }];
+
+    FBSDKGraphRequest *gameActivityRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/fb_sample_rps:play", fbid]
+                                                                               parameters:@{
+                                                                                            @"fields" : @"data,publish_time",
+                                                                                            @"limit" : @"10",
+                                                                                            @"date_format" : @"U",
+                                                                                            }];
+    ++pendingRequestCount;
+    [connection addRequest:gameActivityRequest
+         completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+             if (error) {
+                 NSLog(@"Failed to get game activity %@:", error);
+             }
+             if (--pendingRequestCount == 0) {
+                 callback(selectedUserActiviy);
+             }
+         }
+            batchEntryName:@"games-post"];
+    // A batch request that id dependent on the previous result
+    FBSDKGraphRequest *gameData = [[FBSDKGraphRequest alloc] initWithGraphPath:@"?ids={result=games-post:$.data.*.data.game.id}"
+                                                                    parameters:@{
+                                                                                 @"fields" : @"data,created_time",
+                                                                                 @"date_format" : @"U",
+                                                                                 }];
+    ++pendingRequestCount;
+    [connection addRequest:gameData completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id games, NSError *innerError) {
+        if (innerError) {
+            // ignore code 2500 errors since that indicates the parent games-post error was empty.
+            if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue] != 2500) {
+                NSLog(@"Failed to get detailed game data for 'play' objects: %@", innerError);
+            }
+        } else if (games) {
+            for (id gameKey in games) {
+                NSDictionary *game = games[gameKey];
+                NSString *player_gesture = game[@"data"][@"player_gesture"][@"title"];
+                NSString *opponent_gesture = game[@"data"][@"opponent_gesture"][@"title"];
+                [selectedUserActiviy addObject:@{
+                                                 @"publish_date" : [self getDateFromEpochTime:game[@"created_time"]],
+                                                 @"player_gesture" : player_gesture,
+                                                 @"opponent_gesture" : opponent_gesture
+                                                 }];
+            }
+        }
+        if (--pendingRequestCount == 0) {
+            callback(selectedUserActiviy);
+        }
+    }];
+
+
+    [connection start];
 }
 
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0: // do nothing
-            [self.navigationController popToRootViewControllerAnimated:YES];
-            break;
-        case 1: { // log in
-            // we will update the view *once* upon successful login
-            __block RPSFriendsViewController *me = self;
-            [FBSession openActiveSessionWithReadPermissions:nil
-                                               allowLoginUI:YES
-                                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                              if (me) {
-                                                  if (session.isOpen) {
-                                                      [me refreshView];
-                                                  } else {
-                                                      [me.navigationController popToRootViewControllerAnimated:YES];
-                                                  }
-                                                  me = nil;
-                                              }
-                                          }];
+- (NSDate*)getDateFromEpochTime:(NSString *)time {
+    NSInteger publishTime = [time integerValue];
+    return [NSDate dateWithTimeIntervalSince1970:publishTime];
+}
 
-            break;
-        }
+- (void)updateActivityForID:(NSString *)fbid {
+    if (!fbid) {
+        self.activityTextView.text = @"No User Selected";
+        return;
     }
+
+    // keep track of the selction
+    [self getActivityForID:fbid callback:^(NSMutableArray *activity) {
+        // sort the array by date
+        [activity sortUsingComparator:^NSComparisonResult(id obj1,
+                                                          id obj2) {
+            NSDate *obj1Date = obj1[@"publish_date"];
+            NSDate *obj2Date = obj2[@"publish_date"];
+            if (obj1Date && obj2Date) {
+                return [obj2Date compare:obj1Date];
+            }
+            return NSOrderedSame;
+        }];
+
+        NSMutableString *output = [NSMutableString string];
+        for (id entry in activity) {
+            NSDateComponents *c = [[NSCalendar currentCalendar]
+                                   components:NSDayCalendarUnit | NSMonthCalendarUnit | NSYearCalendarUnit
+                                   fromDate:entry[@"publish_date"]];
+            NSString *gesture = entry[@"player_gesture"];
+            NSString *opposing_gesture = entry[@"opponent_gesture"];
+            [output appendFormat:@"%02li/%02li/%02li - %@ %@ %@\n",
+             (long)c.month,
+             (long)c.day,
+             (long)c.year,
+             gesture,
+             @"vs",
+             opposing_gesture];
+        }
+        self.activityTextView.text = output;
+    }];
 }
 
 @end

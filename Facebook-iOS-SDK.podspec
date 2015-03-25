@@ -1,12 +1,9 @@
 # If you've made changes to the SDK (such as file paths), consider using `pod lib lint` to lint locally and then using the :path option in your Podfile
 
-# If you're not making code changes but simply want to override aspects of this podspec (such as not including Bolts or the FBuserSettingsViewResources.bundle)
-#  copy the file and use the :podspec option in your Podfile to point to the modified podspec.
-
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "3.23.2"
+  s.version      = "4.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -17,30 +14,41 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
+  s.license      = { :file => "LICENSE" }
+  s.author       = 'Facebook'
 
-  s.author             = 'Facebook'
-
-  s.platform     = :ios, "6.0"
+  s.platform     = :ios, "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-3.23.2"
+                     :tag => "sdk-version-4.0"
                     }
-
-  s.source_files  =  "src/**/*.{h,m}"
-  s.exclude_files = "src/**/*Tests.{h,m}", "src/tests/*.{h,m}", "src/*Test*/*.{h,m}"
-
-  s.public_header_files = "src/*.h"
-
-  s.header_dir = "FacebookSDK"
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
 
-  s.requires_arc = false
-
-  # Note the prepare_command is not run against pods installed with the :path option (i.e., a local pod)
-  s.prepare_command = "find src -name \\*.png | grep -v @ | grep -v '/tests/' | grep -v 'Tests/' | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).png|scripts/image_to_code.py -i \\1/\\2.png -c \\2 -o src/ImageResources|' | sh && find src -name \\*.wav | grep -v @ | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).wav|scripts/audio_to_code.py -i \\1/\\2.wav -c \\2 -o src/AudioResources|' | sh"
+  s.requires_arc = true
 
   s.dependency 'Bolts', '~> 1.0'
 
+  s.subspec 'CoreKit' do |spec|
+    spec.source_files   = "FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}"
+    spec.exclude_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.{h,m}"
+    spec.public_header_files = "FBSDKCoreKit/FBSDKCoreKit/*.{h}"
+    spec.header_dir = "FBSDKCoreKit"
+    spec.subspec 'no-arc' do |sp|
+      sp.source_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.{h,m}"
+      sp.compiler_flags = '-fno-objc-arc'
+    end
+  end
+  s.subspec 'LoginKit' do |spec|
+    spec.source_files   = "FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}"
+    spec.public_header_files = "FBSDKLoginKit/FBSDKLoginKit/*.{h}"
+    spec.header_dir = "FBSDKLoginKit"
+    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+  end
+  s.subspec 'ShareKit' do |spec|
+    spec.source_files   = "FBSDKShareKit/FBSDKShareKit/**/*.{h,m}"
+    spec.public_header_files = "FBSDKShareKit/FBSDKShareKit/*.{h}"
+    spec.header_dir = "FBSDKShareKit"
+    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+  end
 end

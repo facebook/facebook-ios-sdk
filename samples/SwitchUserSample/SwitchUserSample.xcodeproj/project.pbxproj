@@ -17,12 +17,6 @@
 		856DB065153393C3006F6A33 /* first@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DB064153393C3006F6A33 /* first@2x.png */; };
 		856DB06A153393C3006F6A33 /* second.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DB069153393C3006F6A33 /* second.png */; };
 		856DB06C153393C3006F6A33 /* second@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 856DB06B153393C3006F6A33 /* second@2x.png */; };
-		856DB0841534B72B006F6A33 /* SUUsingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 856DB0821534B72B006F6A33 /* SUUsingViewController.m */; };
-		856DB0851534B72B006F6A33 /* SUUsingViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB0831534B72B006F6A33 /* SUUsingViewController_iPhone.xib */; };
-		856DB0871534B758006F6A33 /* SUUsingViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB0861534B758006F6A33 /* SUUsingViewController_iPad.xib */; };
-		856DB08B1534B792006F6A33 /* SUSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 856DB0891534B792006F6A33 /* SUSettingsViewController.m */; };
-		856DB08C1534B792006F6A33 /* SUSettingsViewController_iPhone.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB08A1534B792006F6A33 /* SUSettingsViewController_iPhone.xib */; };
-		856DB08E1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib in Resources */ = {isa = PBXBuildFile; fileRef = 856DB08D1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib */; };
 		85AFB52F158FA20E000AF7F5 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52B158FA20E000AF7F5 /* Icon-72.png */; };
 		85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */; };
 		85AFB531158FA20E000AF7F5 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 85AFB52D158FA20E000AF7F5 /* Icon.png */; };
@@ -31,8 +25,16 @@
 		85C69DC01602B393008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBD1602B393008AD9A0 /* Default.png */; };
 		85C69DC11602B393008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69DBE1602B393008AD9A0 /* Default@2x.png */; };
 		85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */; };
-		85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D0ED8E1538BF6200D88664 /* SUUserManager.m */; };
-		DD55EAA515AB9D1A000A64B8 /* FacebookSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */; };
+		9D70EF201ABBE3D200318B5F /* SUMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9D70EF1F1ABBE3D200318B5F /* SUMain.storyboard */; };
+		9D70EF231ABBE69A00318B5F /* SUActiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D70EF221ABBE69A00318B5F /* SUActiveViewController.m */; };
+		9D70EF261ABBE6A700318B5F /* SUAccountsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D70EF251ABBE6A700318B5F /* SUAccountsViewController.m */; };
+		9D70EF291ABBEA9100318B5F /* SUTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D70EF281ABBEA9100318B5F /* SUTabBarController.m */; };
+		9D9136851ABBFBCC00A51523 /* SUCacheItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D9136841ABBFBCC00A51523 /* SUCacheItem.m */; };
+		DB32052C1A9D3DAB004A7B16 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB3205291A9D3DAB004A7B16 /* FBSDKCoreKit.framework */; };
+		DB32052D1A9D3DAB004A7B16 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB32052A1A9D3DAB004A7B16 /* FBSDKLoginKit.framework */; };
+		DB32052E1A9D3DAB004A7B16 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB32052B1A9D3DAB004A7B16 /* FBSDKShareKit.framework */; };
+		DB3205331A9D553C004A7B16 /* SUCache.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3205321A9D553C004A7B16 /* SUCache.m */; };
+		DB3205421A9FB532004A7B16 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DB3205411A9FB532004A7B16 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -50,14 +52,6 @@
 		856DB064153393C3006F6A33 /* first@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "first@2x.png"; sourceTree = "<group>"; };
 		856DB069153393C3006F6A33 /* second.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = second.png; sourceTree = "<group>"; };
 		856DB06B153393C3006F6A33 /* second@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "second@2x.png"; sourceTree = "<group>"; };
-		856DB0811534B72B006F6A33 /* SUUsingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUsingViewController.h; sourceTree = "<group>"; };
-		856DB0821534B72B006F6A33 /* SUUsingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUsingViewController.m; sourceTree = "<group>"; };
-		856DB0831534B72B006F6A33 /* SUUsingViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUUsingViewController_iPhone.xib; sourceTree = "<group>"; };
-		856DB0861534B758006F6A33 /* SUUsingViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUUsingViewController_iPad.xib; sourceTree = "<group>"; };
-		856DB0881534B792006F6A33 /* SUSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUSettingsViewController.h; sourceTree = "<group>"; };
-		856DB0891534B792006F6A33 /* SUSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUSettingsViewController.m; sourceTree = "<group>"; };
-		856DB08A1534B792006F6A33 /* SUSettingsViewController_iPhone.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUSettingsViewController_iPhone.xib; sourceTree = "<group>"; };
-		856DB08D1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SUSettingsViewController_iPad.xib; sourceTree = "<group>"; };
 		85AFB52B158FA20E000AF7F5 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
 		85AFB52C158FA20E000AF7F5 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
 		85AFB52D158FA20E000AF7F5 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
@@ -67,13 +61,25 @@
 		85C69DBE1602B393008AD9A0 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		85D0ED8A1538A9F400D88664 /* SUProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUProfileTableViewCell.h; sourceTree = "<group>"; };
 		85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUProfileTableViewCell.m; sourceTree = "<group>"; };
-		85D0ED8D1538BF6200D88664 /* SUUserManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUUserManager.h; sourceTree = "<group>"; };
-		85D0ED8E1538BF6200D88664 /* SUUserManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUUserManager.m; sourceTree = "<group>"; };
 		8986C8011890A647004B90DD /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Application.xcconfig; sourceTree = "<group>"; };
 		8986C8021890A647004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		8986C8031890A647004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C8041890A647004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
-		DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FacebookSDK.framework; path = ../../build/FacebookSDK.framework; sourceTree = "<group>"; };
+		9D70EF1F1ABBE3D200318B5F /* SUMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = SUMain.storyboard; sourceTree = "<group>"; };
+		9D70EF211ABBE69A00318B5F /* SUActiveViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUActiveViewController.h; sourceTree = "<group>"; };
+		9D70EF221ABBE69A00318B5F /* SUActiveViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUActiveViewController.m; sourceTree = "<group>"; };
+		9D70EF241ABBE6A700318B5F /* SUAccountsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUAccountsViewController.h; sourceTree = "<group>"; };
+		9D70EF251ABBE6A700318B5F /* SUAccountsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUAccountsViewController.m; sourceTree = "<group>"; };
+		9D70EF271ABBEA9100318B5F /* SUTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUTabBarController.h; sourceTree = "<group>"; };
+		9D70EF281ABBEA9100318B5F /* SUTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUTabBarController.m; sourceTree = "<group>"; };
+		9D9136831ABBFBCC00A51523 /* SUCacheItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUCacheItem.h; sourceTree = "<group>"; };
+		9D9136841ABBFBCC00A51523 /* SUCacheItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUCacheItem.m; sourceTree = "<group>"; };
+		DB3205291A9D3DAB004A7B16 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		DB32052A1A9D3DAB004A7B16 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		DB32052B1A9D3DAB004A7B16 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../build/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		DB3205321A9D553C004A7B16 /* SUCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUCache.m; sourceTree = "<group>"; };
+		DB3205341A9D554D004A7B16 /* SUCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SUCache.h; sourceTree = "<group>"; };
+		DB3205411A9FB532004A7B16 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,10 +87,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB3205421A9FB532004A7B16 /* Security.framework in Frameworks */,
 				856DB04E153393C3006F6A33 /* UIKit.framework in Frameworks */,
+				DB32052C1A9D3DAB004A7B16 /* FBSDKCoreKit.framework in Frameworks */,
+				DB32052E1A9D3DAB004A7B16 /* FBSDKShareKit.framework in Frameworks */,
+				DB32052D1A9D3DAB004A7B16 /* FBSDKLoginKit.framework in Frameworks */,
 				856DB050153393C3006F6A33 /* Foundation.framework in Frameworks */,
 				856DB052153393C3006F6A33 /* CoreGraphics.framework in Frameworks */,
-				DD55EAA515AB9D1A000A64B8 /* FacebookSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -114,7 +123,10 @@
 		856DB04C153393C3006F6A33 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DD55EAA415AB9D1A000A64B8 /* FacebookSDK.framework */,
+				DB3205411A9FB532004A7B16 /* Security.framework */,
+				DB3205291A9D3DAB004A7B16 /* FBSDKCoreKit.framework */,
+				DB32052A1A9D3DAB004A7B16 /* FBSDKLoginKit.framework */,
+				DB32052B1A9D3DAB004A7B16 /* FBSDKShareKit.framework */,
 				856DB04D153393C3006F6A33 /* UIKit.framework */,
 				856DB04F153393C3006F6A33 /* Foundation.framework */,
 				856DB051153393C3006F6A33 /* CoreGraphics.framework */,
@@ -125,25 +137,26 @@
 		856DB053153393C3006F6A33 /* SwitchUserSample */ = {
 			isa = PBXGroup;
 			children = (
-				856DB05C153393C3006F6A33 /* SUAppDelegate.h */,
-				856DB05D153393C3006F6A33 /* SUAppDelegate.m */,
-				85D0ED8A1538A9F400D88664 /* SUProfileTableViewCell.h */,
-				85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */,
-				856DB0881534B792006F6A33 /* SUSettingsViewController.h */,
-				856DB0891534B792006F6A33 /* SUSettingsViewController.m */,
-				85D0ED8D1538BF6200D88664 /* SUUserManager.h */,
-				85D0ED8E1538BF6200D88664 /* SUUserManager.m */,
-				856DB0811534B72B006F6A33 /* SUUsingViewController.h */,
-				856DB0821534B72B006F6A33 /* SUUsingViewController.m */,
 				856DB062153393C3006F6A33 /* first.png */,
 				856DB064153393C3006F6A33 /* first@2x.png */,
 				856DB069153393C3006F6A33 /* second.png */,
 				856DB06B153393C3006F6A33 /* second@2x.png */,
-				856DB08A1534B792006F6A33 /* SUSettingsViewController_iPhone.xib */,
-				856DB08D1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib */,
-				856DB0831534B72B006F6A33 /* SUUsingViewController_iPhone.xib */,
-				856DB0861534B758006F6A33 /* SUUsingViewController_iPad.xib */,
+				9D70EF241ABBE6A700318B5F /* SUAccountsViewController.h */,
+				9D70EF251ABBE6A700318B5F /* SUAccountsViewController.m */,
+				9D70EF211ABBE69A00318B5F /* SUActiveViewController.h */,
+				9D70EF221ABBE69A00318B5F /* SUActiveViewController.m */,
+				856DB05C153393C3006F6A33 /* SUAppDelegate.h */,
+				856DB05D153393C3006F6A33 /* SUAppDelegate.m */,
+				DB3205341A9D554D004A7B16 /* SUCache.h */,
+				DB3205321A9D553C004A7B16 /* SUCache.m */,
+				9D9136831ABBFBCC00A51523 /* SUCacheItem.h */,
+				9D9136841ABBFBCC00A51523 /* SUCacheItem.m */,
+				9D70EF1F1ABBE3D200318B5F /* SUMain.storyboard */,
 				856DB054153393C3006F6A33 /* Supporting Files */,
+				85D0ED8A1538A9F400D88664 /* SUProfileTableViewCell.h */,
+				85D0ED8B1538A9F400D88664 /* SUProfileTableViewCell.m */,
+				9D70EF271ABBEA9100318B5F /* SUTabBarController.h */,
+				9D70EF281ABBEA9100318B5F /* SUTabBarController.m */,
 			);
 			path = SwitchUserSample;
 			sourceTree = "<group>";
@@ -235,12 +248,9 @@
 				856DB065153393C3006F6A33 /* first@2x.png in Resources */,
 				856DB06A153393C3006F6A33 /* second.png in Resources */,
 				856DB06C153393C3006F6A33 /* second@2x.png in Resources */,
-				856DB0851534B72B006F6A33 /* SUUsingViewController_iPhone.xib in Resources */,
-				856DB0871534B758006F6A33 /* SUUsingViewController_iPad.xib in Resources */,
-				856DB08C1534B792006F6A33 /* SUSettingsViewController_iPhone.xib in Resources */,
-				856DB08E1534B7A0006F6A33 /* SUSettingsViewController_iPad.xib in Resources */,
 				85AFB52F158FA20E000AF7F5 /* Icon-72.png in Resources */,
 				85AFB530158FA20E000AF7F5 /* Icon-72@2x.png in Resources */,
+				9D70EF201ABBE3D200318B5F /* SUMain.storyboard in Resources */,
 				85AFB531158FA20E000AF7F5 /* Icon.png in Resources */,
 				85AFB532158FA20E000AF7F5 /* Icon@2x.png in Resources */,
 				85C69DBF1602B393008AD9A0 /* Default-568h@2x.png in Resources */,
@@ -256,12 +266,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9D70EF261ABBE6A700318B5F /* SUAccountsViewController.m in Sources */,
+				DB3205331A9D553C004A7B16 /* SUCache.m in Sources */,
+				9D70EF291ABBEA9100318B5F /* SUTabBarController.m in Sources */,
 				856DB05A153393C3006F6A33 /* main.m in Sources */,
 				856DB05E153393C3006F6A33 /* SUAppDelegate.m in Sources */,
-				856DB0841534B72B006F6A33 /* SUUsingViewController.m in Sources */,
-				856DB08B1534B792006F6A33 /* SUSettingsViewController.m in Sources */,
 				85D0ED8C1538A9F400D88664 /* SUProfileTableViewCell.m in Sources */,
-				85D0ED8F1538BF6200D88664 /* SUUserManager.m in Sources */,
+				9D70EF231ABBE69A00318B5F /* SUActiveViewController.m in Sources */,
+				9D9136851ABBFBCC00A51523 /* SUCacheItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
