@@ -21,9 +21,9 @@
 
 @interface FBSDKSettings(Internal)
 
-+ (FBSDKAccessTokenCache *)accessTokenCache;
++ (id<FBSDKAccessTokenCaching>)accessTokenCache;
 
-- (void)setAccessTokenCache;
++ (void)setAccessTokenCache:(id<FBSDKAccessTokenCaching>)cache;
 
 + (NSString *)graphAPIDebugParamValue;
 

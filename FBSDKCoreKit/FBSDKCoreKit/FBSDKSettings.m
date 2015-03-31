@@ -44,7 +44,7 @@ NSString *const FBSDKLoggingBehaviorGraphAPIDebugWarning = @"graph_api_debug_war
 NSString *const FBSDKLoggingBehaviorGraphAPIDebugInfo = @"graph_api_debug_info";
 NSString *const FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 
-static FBSDKAccessTokenCache *g_tokenCache;
+static id<FBSDKAccessTokenCaching> g_tokenCache;
 static NSMutableSet *g_loggingBehavior;
 static NSString *g_legacyUserDefaultTokenInformationKeyName = @"FBAccessTokenInformationKey";
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
@@ -172,12 +172,12 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompression
 
 #pragma mark - Internal
 
-+ (FBSDKAccessTokenCache *)accessTokenCache
++ (id<FBSDKAccessTokenCaching>)accessTokenCache
 {
   return g_tokenCache;
 }
 
-- (void)setAccessTokenCache:(FBSDKAccessTokenCache *)cache
++ (void)setAccessTokenCache:(id<FBSDKAccessTokenCaching>)cache
 {
   if (g_tokenCache != cache) {
     g_tokenCache = cache;
