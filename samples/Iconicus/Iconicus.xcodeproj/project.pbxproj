@@ -1,0 +1,328 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8946D9001ABB20D6007FC6E8 /* GameController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946D8FF1ABB20D6007FC6E8 /* GameController.m */; };
+		8946D9031ABB2DB9007FC6E8 /* NSIndexPath+Game.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946D9021ABB2DB9007FC6E8 /* NSIndexPath+Game.m */; };
+		894A8F3B1ABA826400EF6C0C /* TileContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 894A8F3A1ABA826400EF6C0C /* TileContainerView.m */; };
+		894A8F3E1ABA870200EF6C0C /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 894A8F3D1ABA870200EF6C0C /* Utilities.m */; };
+		894A8F411ABAF9CA00EF6C0C /* BoardView.m in Sources */ = {isa = PBXBuildFile; fileRef = 894A8F401ABAF9CA00EF6C0C /* BoardView.m */; };
+		899C1F541AC2183B003E68A9 /* ToastView.m in Sources */ = {isa = PBXBuildFile; fileRef = 899C1F531AC2183B003E68A9 /* ToastView.m */; };
+		89D558281AB8908900000502 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D558271AB8908900000502 /* main.m */; };
+		89D5582B1AB8908900000502 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D5582A1AB8908900000502 /* AppDelegate.m */; };
+		89D5582E1AB8908900000502 /* GameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D5582D1AB8908900000502 /* GameViewController.m */; };
+		89D558311AB8908900000502 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89D5582F1AB8908900000502 /* Main.storyboard */; };
+		89D558331AB8908900000502 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89D558321AB8908900000502 /* Images.xcassets */; };
+		89D558361AB8908900000502 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89D558341AB8908900000502 /* LaunchScreen.xib */; };
+		89D558541AB8A1CC00000502 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558501AB8A1CC00000502 /* Bolts.framework */; };
+		89D558551AB8A1CC00000502 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */; };
+		89D558571AB8A1CC00000502 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */; };
+		89D558631AB8A2B600000502 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558621AB8A2B600000502 /* UIKit.framework */; };
+		89D558651AB8A2BC00000502 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558641AB8A2BC00000502 /* Foundation.framework */; };
+		89D558671AB8A2C200000502 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558661AB8A2C200000502 /* CoreGraphics.framework */; };
+		89D5586A1AB8AE8100000502 /* TileView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D558691AB8AE8100000502 /* TileView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8946D8FE1ABB20D6007FC6E8 /* GameController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameController.h; sourceTree = "<group>"; };
+		8946D8FF1ABB20D6007FC6E8 /* GameController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GameController.m; sourceTree = "<group>"; };
+		8946D9011ABB2DB9007FC6E8 /* NSIndexPath+Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSIndexPath+Game.h"; sourceTree = "<group>"; };
+		8946D9021ABB2DB9007FC6E8 /* NSIndexPath+Game.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSIndexPath+Game.m"; sourceTree = "<group>"; };
+		894A8F391ABA826400EF6C0C /* TileContainerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileContainerView.h; sourceTree = "<group>"; };
+		894A8F3A1ABA826400EF6C0C /* TileContainerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TileContainerView.m; sourceTree = "<group>"; };
+		894A8F3C1ABA870200EF6C0C /* Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utilities.h; sourceTree = "<group>"; };
+		894A8F3D1ABA870200EF6C0C /* Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		894A8F3F1ABAF9CA00EF6C0C /* BoardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardView.h; sourceTree = "<group>"; };
+		894A8F401ABAF9CA00EF6C0C /* BoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoardView.m; sourceTree = "<group>"; };
+		899C1F521AC2183B003E68A9 /* ToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastView.h; sourceTree = "<group>"; };
+		899C1F531AC2183B003E68A9 /* ToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastView.m; sourceTree = "<group>"; };
+		89D558221AB8908900000502 /* Iconicus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iconicus.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89D558261AB8908900000502 /* Iconicus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Iconicus-Info.plist"; sourceTree = "<group>"; };
+		89D558271AB8908900000502 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		89D558291AB8908900000502 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		89D5582A1AB8908900000502 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		89D5582C1AB8908900000502 /* GameViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameViewController.h; sourceTree = "<group>"; };
+		89D5582D1AB8908900000502 /* GameViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GameViewController.m; sourceTree = "<group>"; };
+		89D558301AB8908900000502 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		89D558321AB8908900000502 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		89D558351AB8908900000502 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		89D558501AB8A1CC00000502 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../build/Bolts.framework; sourceTree = SOURCE_ROOT; };
+		89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = SOURCE_ROOT; };
+		89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../build/FBSDKShareKit.framework; sourceTree = SOURCE_ROOT; };
+		89D558591AB8A22200000502 /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Application.xcconfig; path = ../Configurations/Application.xcconfig; sourceTree = "<group>"; };
+		89D5585A1AB8A22200000502 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Debug.xcconfig"; path = "../Configurations/Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		89D5585B1AB8A22200000502 /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Release.xcconfig"; path = "../Configurations/Project-Release.xcconfig"; sourceTree = "<group>"; };
+		89D5585C1AB8A22200000502 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = ../Configurations/Project.xcconfig; sourceTree = "<group>"; };
+		89D558611AB8A29400000502 /* Iconicus-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Iconicus-Prefix.pch"; sourceTree = "<group>"; };
+		89D558621AB8A2B600000502 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		89D558641AB8A2BC00000502 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		89D558661AB8A2C200000502 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		89D558681AB8AE8100000502 /* TileView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileView.h; sourceTree = "<group>"; };
+		89D558691AB8AE8100000502 /* TileView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TileView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		89D5581F1AB8908900000502 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89D558671AB8A2C200000502 /* CoreGraphics.framework in Frameworks */,
+				89D558651AB8A2BC00000502 /* Foundation.framework in Frameworks */,
+				89D558631AB8A2B600000502 /* UIKit.framework in Frameworks */,
+				89D558541AB8A1CC00000502 /* Bolts.framework in Frameworks */,
+				89D558551AB8A1CC00000502 /* FBSDKCoreKit.framework in Frameworks */,
+				89D558571AB8A1CC00000502 /* FBSDKShareKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		89D558191AB8908900000502 = {
+			isa = PBXGroup;
+			children = (
+				89D558581AB8A20D00000502 /* Configurations */,
+				89D5584F1AB8A1B100000502 /* Frameworks */,
+				89D558241AB8908900000502 /* Iconicus */,
+				89D558231AB8908900000502 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		89D558231AB8908900000502 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				89D558221AB8908900000502 /* Iconicus.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		89D558241AB8908900000502 /* Iconicus */ = {
+			isa = PBXGroup;
+			children = (
+				89D558291AB8908900000502 /* AppDelegate.h */,
+				89D5582A1AB8908900000502 /* AppDelegate.m */,
+				894A8F3F1ABAF9CA00EF6C0C /* BoardView.h */,
+				894A8F401ABAF9CA00EF6C0C /* BoardView.m */,
+				8946D8FE1ABB20D6007FC6E8 /* GameController.h */,
+				8946D8FF1ABB20D6007FC6E8 /* GameController.m */,
+				89D5582C1AB8908900000502 /* GameViewController.h */,
+				89D5582D1AB8908900000502 /* GameViewController.m */,
+				89D558321AB8908900000502 /* Images.xcassets */,
+				89D558341AB8908900000502 /* LaunchScreen.xib */,
+				89D5582F1AB8908900000502 /* Main.storyboard */,
+				8946D9011ABB2DB9007FC6E8 /* NSIndexPath+Game.h */,
+				8946D9021ABB2DB9007FC6E8 /* NSIndexPath+Game.m */,
+				89D558251AB8908900000502 /* Supporting Files */,
+				894A8F391ABA826400EF6C0C /* TileContainerView.h */,
+				894A8F3A1ABA826400EF6C0C /* TileContainerView.m */,
+				89D558681AB8AE8100000502 /* TileView.h */,
+				89D558691AB8AE8100000502 /* TileView.m */,
+				899C1F521AC2183B003E68A9 /* ToastView.h */,
+				899C1F531AC2183B003E68A9 /* ToastView.m */,
+				894A8F3C1ABA870200EF6C0C /* Utilities.h */,
+				894A8F3D1ABA870200EF6C0C /* Utilities.m */,
+			);
+			path = Iconicus;
+			sourceTree = "<group>";
+		};
+		89D558251AB8908900000502 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				89D558261AB8908900000502 /* Iconicus-Info.plist */,
+				89D558611AB8A29400000502 /* Iconicus-Prefix.pch */,
+				89D558271AB8908900000502 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		89D5584F1AB8A1B100000502 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				89D558501AB8A1CC00000502 /* Bolts.framework */,
+				89D558661AB8A2C200000502 /* CoreGraphics.framework */,
+				89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */,
+				89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */,
+				89D558641AB8A2BC00000502 /* Foundation.framework */,
+				89D558621AB8A2B600000502 /* UIKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		89D558581AB8A20D00000502 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				89D558591AB8A22200000502 /* Application.xcconfig */,
+				89D5585A1AB8A22200000502 /* Project-Debug.xcconfig */,
+				89D5585B1AB8A22200000502 /* Project-Release.xcconfig */,
+				89D5585C1AB8A22200000502 /* Project.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		89D558211AB8908900000502 /* Iconicus */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89D558451AB8908900000502 /* Build configuration list for PBXNativeTarget "Iconicus" */;
+			buildPhases = (
+				89D5581E1AB8908900000502 /* Sources */,
+				89D5581F1AB8908900000502 /* Frameworks */,
+				89D558201AB8908900000502 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Iconicus;
+			productName = Iconicus;
+			productReference = 89D558221AB8908900000502 /* Iconicus.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		89D5581A1AB8908900000502 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0620;
+				ORGANIZATIONNAME = "Facebook, Inc";
+				TargetAttributes = {
+					89D558211AB8908900000502 = {
+						CreatedOnToolsVersion = 6.2;
+					};
+				};
+			};
+			buildConfigurationList = 89D5581D1AB8908900000502 /* Build configuration list for PBXProject "Iconicus" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 89D558191AB8908900000502;
+			productRefGroup = 89D558231AB8908900000502 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				89D558211AB8908900000502 /* Iconicus */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		89D558201AB8908900000502 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89D558311AB8908900000502 /* Main.storyboard in Resources */,
+				89D558361AB8908900000502 /* LaunchScreen.xib in Resources */,
+				89D558331AB8908900000502 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		89D5581E1AB8908900000502 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8946D9031ABB2DB9007FC6E8 /* NSIndexPath+Game.m in Sources */,
+				894A8F3E1ABA870200EF6C0C /* Utilities.m in Sources */,
+				8946D9001ABB20D6007FC6E8 /* GameController.m in Sources */,
+				89D5582E1AB8908900000502 /* GameViewController.m in Sources */,
+				899C1F541AC2183B003E68A9 /* ToastView.m in Sources */,
+				89D5582B1AB8908900000502 /* AppDelegate.m in Sources */,
+				894A8F3B1ABA826400EF6C0C /* TileContainerView.m in Sources */,
+				89D558281AB8908900000502 /* main.m in Sources */,
+				89D5586A1AB8AE8100000502 /* TileView.m in Sources */,
+				894A8F411ABAF9CA00EF6C0C /* BoardView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		89D5582F1AB8908900000502 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89D558301AB8908900000502 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		89D558341AB8908900000502 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89D558351AB8908900000502 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		89D558431AB8908900000502 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89D5585A1AB8A22200000502 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		89D558441AB8908900000502 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89D5585B1AB8A22200000502 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		89D558461AB8908900000502 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89D558591AB8A22200000502 /* Application.xcconfig */;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		89D558471AB8908900000502 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 89D558591AB8A22200000502 /* Application.xcconfig */;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		89D5581D1AB8908900000502 /* Build configuration list for PBXProject "Iconicus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89D558431AB8908900000502 /* Debug */,
+				89D558441AB8908900000502 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		89D558451AB8908900000502 /* Build configuration list for PBXNativeTarget "Iconicus" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89D558461AB8908900000502 /* Debug */,
+				89D558471AB8908900000502 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 89D5581A1AB8908900000502 /* Project object */;
+}
