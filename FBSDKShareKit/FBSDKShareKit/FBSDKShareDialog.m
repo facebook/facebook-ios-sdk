@@ -194,7 +194,13 @@
     return;
   }
   [self _cleanUpWebDialog];
-  [self _handleWebResponseParameters:results error:nil];
+  NSInteger errorCode = [results[@"error_code"] integerValue];
+  if (errorCode == 4201) {
+    [self _invokeDelegateDidCancel];
+  } else {
+    // not all web dialogs report cancellation, so assume that the share has completed with no additional information
+    [self _handleWebResponseParameters:results error:nil];
+  }
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -230,11 +236,15 @@
     return NO;
   }
 
+  id<FBSDKSharingContent> shareContent = self.shareContent;
+  if (!shareContent) {
+    return YES;
+  }
+
   // if there is shareContent on the receiver already, we can check the minimum app version, otherwise we can only check
   // for an app that can handle the native share dialog
   NSString *methodName = nil;
   NSString *methodVersion = nil;
-  id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
     methodName = FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME;
     BOOL containsMedia = NO;
@@ -288,20 +298,46 @@
   _webDialog = nil;
 }
 
+- (NSArray *)_contentImages
+{
+  id<FBSDKSharingContent> shareContent = self.shareContent;
+  return ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] ?
+          [((FBSDKSharePhotoContent *)shareContent).photos valueForKeyPath:@"@distinctUnionOfObjects.image"] :
+          nil);
+}
+
+- (NSArray *)_contentURLs
+{
+  NSArray *URLs = nil;
+  id<FBSDKSharingContent> shareContent = self.shareContent;
+  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
+    FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)shareContent;
+    URLs = (linkContent.contentURL ? @[linkContent.contentURL] : nil);
+  } else if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+    FBSDKSharePhotoContent *photoContent = (FBSDKSharePhotoContent *)shareContent;
+    URLs = (photoContent.contentURL ? @[photoContent.contentURL] : nil);
+  }
+  return URLs;
+}
+
 - (void)_handleWebResponseParameters:(NSDictionary *)webResponseParameters error:(NSError *)error
 {
   if (error) {
     [self _invokeDelegateDidFailWithError:error];
     return;
   } else {
-    // web results do not give any difference between cancel and success, so if we come into this method we assume
-    // success when reporting back to the app
-    NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
-    // the web response comes back with a different payload, so we need to translate it
-    [FBSDKInternalUtility dictionary:results
-                           setObject:webResponseParameters[FBSDK_SHARE_WEB_PARAM_POST_ID_KEY]
-                              forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
-    [self _invokeDelegateDidCompleteWithResults:results];
+    NSString *completionGesture = webResponseParameters[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
+    if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]) {
+      [self _invokeDelegateDidCancel];
+    } else {
+      // not all web dialogs report cancellation, so assume that the share has completed with no additional information
+      NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
+      // the web response comes back with a different payload, so we need to translate it
+      [FBSDKInternalUtility dictionary:results
+                             setObject:webResponseParameters[FBSDK_SHARE_WEB_PARAM_POST_ID_KEY]
+                                forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
+      [self _invokeDelegateDidCompleteWithResults:results];
+    }
   }
 }
 
@@ -430,24 +466,8 @@
     }
     return NO;
   }
-  id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSArray *images;
-  NSArray *URLs;
-  if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
-    FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)shareContent;
-    URLs = (linkContent.contentURL ? @[linkContent.contentURL] : nil);
-  } else if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
-    FBSDKSharePhotoContent *photoContent = (FBSDKSharePhotoContent *)shareContent;
-    images = [photoContent.photos valueForKeyPath:@"@unionOfObjects.image"];
-    images = [images filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"SELF NOT NULL"]];
-    URLs = (photoContent.contentURL ? @[photoContent.contentURL] : nil);
-  } else {
-    // this should never hit, because the validation pass should catch this already
-    if (validationErrorRef != NULL) {
-      *validationErrorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent" value:shareContent message:nil];
-    }
-    return NO;
-  }
+  NSArray *images = [self _contentImages];
+  NSArray *URLs = [self _contentURLs];
 
   Class composeViewControllerClass = [fbsdkdfl_SLComposeViewControllerClass() class];
   NSString *facebookServiceType = fbsdkdfl_SLServiceTypeFacebook();
@@ -561,8 +581,17 @@
 - (BOOL)_validateShareContentForShareSheet:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  if (![shareContent isKindOfClass:[FBSDKShareLinkContent class]] &&
-      ![shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+  if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
+    if ([self _contentImages] != 0) {
+      return YES;
+    } else {
+      if ((errorRef != NULL) && !*errorRef) {
+        NSString *message = @"Share photo content must have UIImage photos in order to share with the share sheet";
+        *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent" value:shareContent message:message];
+      }
+      return NO;
+    }
+  } else if (![shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     if ((errorRef != NULL) && !*errorRef) {
       NSString *message = @"Share content must be FBSDKShareLinkContent or FBSDKSharePhotoContent in order to share "
       @"with the share sheet.";

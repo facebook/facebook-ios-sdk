@@ -40,7 +40,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSArray *)allOpenGraphObjectKeys
 {
-  return [[self _openGraphProperties] allKeys];
+  return [[self _openGraphProperties:YES] allKeys];
 }
 
 + (NSURL *)contentURL
@@ -86,13 +86,22 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:[self openGraphActionType]
                                                                          object:[self openGraphObject]
                                                                             key:[self previewPropertyName]];
-  [action parseProperties:[self _openGraphProperties]];
+  [action parseProperties:[self _openGraphProperties:YES]];
   return action;
 }
 
 + (NSString *)openGraphActionType
 {
   return @"myActionType";
+}
+
++ (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID
+{
+  FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc] init];
+  action.actionType = [self openGraphActionType];
+  [action setString:[self openGraphObjectID] forKey:[self previewPropertyName]];
+  [action parseProperties:[self _openGraphProperties:NO]];
+  return action;
 }
 
 + (BOOL)openGraphBoolValue
@@ -104,6 +113,18 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 {
   FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
   content.action = [self openGraphAction];
+  content.contentURL = [self contentURL];
+  content.peopleIDs = [self peopleIDs];
+  content.placeID = [self placeID];
+  content.previewPropertyName = [self previewPropertyName];
+  content.ref = [self ref];
+  return content;
+}
+
++ (FBSDKShareOpenGraphContent *)openGraphContentWithObjectID
+{
+  FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
+  content.action = [self openGraphActionWithObjectID];
   content.contentURL = [self contentURL];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
@@ -134,7 +155,12 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (FBSDKShareOpenGraphObject *)openGraphObject
 {
-  return [FBSDKShareOpenGraphObject objectWithProperties:[self _openGraphProperties]];
+  return [FBSDKShareOpenGraphObject objectWithProperties:[self _openGraphProperties:YES]];
+}
+
++ (NSString *)openGraphObjectID
+{
+  return @"9876543210";
 }
 
 + (NSArray *)openGraphStringArray
@@ -163,26 +189,24 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   return content;
 }
 
++ (FBSDKSharePhotoContent *)photoContentWithImages
+{
+  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  content.contentURL = [self contentURL];
+  content.peopleIDs = [self peopleIDs];
+  content.photos = [self photosWithImages];
+  content.placeID = [self placeID];
+  content.ref = [self ref];
+  return content;
+}
+
 + (UIImage *)photoImage
 {
   // equality checks are pointer equality for UIImage, so just return the same instance each time
   static UIImage *_photoImage = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    UIGraphicsBeginImageContext(CGSizeMake(10.0, 10.0));
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    [[UIColor redColor] setFill];
-    CGContextFillRect(context, CGRectMake(0.0, 0.0, 5.0, 5.0));
-    [[UIColor greenColor] setFill];
-    CGContextFillRect(context, CGRectMake(5.0, 0.0, 5.0, 5.0));
-    [[UIColor blueColor] setFill];
-    CGContextFillRect(context, CGRectMake(5.0, 5.0, 5.0, 5.0));
-    [[UIColor yellowColor] setFill];
-    CGContextFillRect(context, CGRectMake(0.0, 5.0, 5.0, 5.0));
-    CGImageRef imageRef = CGBitmapContextCreateImage(context);
-    UIGraphicsEndImageContext();
-    _photoImage = [[UIImage alloc] initWithCGImage:imageRef];
-    CGImageRelease(imageRef);
+    _photoImage = [self _generateImage];
   });
   return _photoImage;
 }
@@ -217,6 +241,21 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
            [FBSDKSharePhoto photoWithImageURL:[NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xaf1/t39.2178-6/10173500_1398474223767412_616498772_n.png"]
                                 userGenerated:YES],
            ];
+}
+
++ (NSArray *)photosWithImages
+{
+   // equality checks are pointer equality for UIImage, so just return the same instance each time
+  static NSArray *_photos = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _photos = @[
+                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+                [FBSDKSharePhoto photoWithImage:[self _generateImage] userGenerated:YES],
+                ];
+  });
+  return _photos;
 }
 
 + (NSString *)placeID
@@ -264,23 +303,47 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSURL *)videoURL
 {
-  return [[NSBundle bundleForClass:[self class]] URLForResource:@"video" withExtension:@"mp4"];
+  return [NSURL URLWithString:@"assets-library://asset/asset.mp4?id=86C6970B-1266-42D0-91E8-4E68127D3864&ext=mp4"];
 }
 
 #pragma mark - Helper Methods
 
-+ (NSDictionary *)_openGraphProperties
++ (UIImage *)_generateImage
 {
-  return @{
-           kFBSDKShareModelTestUtilityOpenGraphBoolValueKey: @([self openGraphBoolValue]),
-           kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey: @([self openGraphDoubleValue]),
-           kFBSDKShareModelTestUtilityOpenGraphFloatValueKey: @([self openGraphFloatValue]),
-           kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey: @([self openGraphIntegerValue]),
-           kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey: [self openGraphNumberArray],
-           kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey: [self photos],
-           kFBSDKShareModelTestUtilityOpenGraphStringArrayKey: [self openGraphStringArray],
-           kFBSDKShareModelTestUtilityOpenGraphStringKey: [self openGraphString],
-           };
+  UIGraphicsBeginImageContext(CGSizeMake(10.0, 10.0));
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  [[UIColor redColor] setFill];
+  CGContextFillRect(context, CGRectMake(0.0, 0.0, 5.0, 5.0));
+  [[UIColor greenColor] setFill];
+  CGContextFillRect(context, CGRectMake(5.0, 0.0, 5.0, 5.0));
+  [[UIColor blueColor] setFill];
+  CGContextFillRect(context, CGRectMake(5.0, 5.0, 5.0, 5.0));
+  [[UIColor yellowColor] setFill];
+  CGContextFillRect(context, CGRectMake(0.0, 5.0, 5.0, 5.0));
+  CGImageRef imageRef = CGBitmapContextCreateImage(context);
+  UIGraphicsEndImageContext();
+  UIImage *image = [[UIImage alloc] initWithCGImage:imageRef];
+  CGImageRelease(imageRef);
+  return image;
+}
+
++ (NSDictionary *)_openGraphProperties:(BOOL)includePhoto
+{
+  NSDictionary *properties = @{
+                               kFBSDKShareModelTestUtilityOpenGraphBoolValueKey: @([self openGraphBoolValue]),
+                               kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey: @([self openGraphDoubleValue]),
+                               kFBSDKShareModelTestUtilityOpenGraphFloatValueKey: @([self openGraphFloatValue]),
+                               kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey: @([self openGraphIntegerValue]),
+                               kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey: [self openGraphNumberArray],
+                               kFBSDKShareModelTestUtilityOpenGraphStringArrayKey: [self openGraphStringArray],
+                               kFBSDKShareModelTestUtilityOpenGraphStringKey: [self openGraphString],
+                               };
+  if (includePhoto) {
+    NSMutableDictionary *mutableProperties = [properties mutableCopy];
+    mutableProperties[kFBSDKShareModelTestUtilityOpenGraphPhotoArrayKey] = [self photos];
+    properties = [mutableProperties copy];
+  }
+  return properties;
 }
 
 @end

@@ -447,11 +447,11 @@ typedef void (^RPSBlock)(void);
 
 - (void) displayInstallAppWithAppName:(NSString *)appName {
     NSString *message = [NSString stringWithFormat:
-                         @"Upgrade the %@ application on your device and "
+                         @"Install or upgrade the %@ application on your device and "
                          @"get cool new sharing features for this application. "
                          @"What do you want to do?" , appName];
     [self alertWithMessage:message
-                        ok:@"Upgrade Now"
+                        ok:@"Install or Upgrade Now"
                     cancel:@"Decide Later"
                 completion:^{
                     [[UIApplication sharedApplication]

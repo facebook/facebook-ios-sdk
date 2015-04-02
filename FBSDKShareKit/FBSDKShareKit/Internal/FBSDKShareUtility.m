@@ -375,8 +375,7 @@
   return ([self _validateRequiredValue:videoContent name:@"videoContent" error:errorRef] &&
           [self _validateRequiredValue:video name:@"video" error:errorRef] &&
           [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef] &&
-          ([self _validateAssetLibraryURL:videoURL name:@"videoURL" error:errorRef] ||
-           [self _validateFileURL:videoURL name:@"videoURL" error:errorRef]));
+          [self _validateAssetLibraryURL:videoURL name:@"videoURL" error:errorRef]);
 }
 
 #pragma mark - Object Lifecycle

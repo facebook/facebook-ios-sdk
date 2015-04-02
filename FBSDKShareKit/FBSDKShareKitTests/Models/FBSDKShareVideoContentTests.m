@@ -115,8 +115,7 @@
 
 - (void)testValidationWithInvalidFileVideoURL
 {
-  NSURL *videoURL = [FBSDKShareModelTestUtility videoURL];
-  videoURL = [[videoURL URLByDeletingPathExtension] URLByAppendingPathExtension:@"foo"];
+  NSURL *videoURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
   XCTAssertNotNil(video);
   FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
@@ -127,7 +126,6 @@
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL");
-  XCTAssertNotNil(error.userInfo[NSUnderlyingErrorKey]);
 }
 
 @end
