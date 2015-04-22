@@ -29,7 +29,6 @@ Pod::Spec.new do |s|
 
   s.source_files   = "FBSDKShareKit/FBSDKShareKit/**/*.{h,m}"
   s.public_header_files = "FBSDKShareKit/FBSDKShareKit/*.{h}"
-  s.private_header_files = "FBSDKShareKit/FBSDKShareKit/**/*Internal.h","FBSDKShareKit/FBSDKShareKit/Internal/**/*.h"
   s.header_dir = "FBSDKShareKit"
   s.dependency 'FBSDKCoreKit'
 

@@ -35,7 +35,6 @@ Pod::Spec.new do |s|
   # The following subspecs are only to disable ARC on certain files. They should not be used as dependencies in your Podfile.
   s.subspec 'arc' do |sp|
     sp.public_header_files = "FBSDKCoreKit/FBSDKCoreKit/*.h"
-    sp.private_header_files = "FBSDKCoreKit/FBSDKCoreKit/**/*Internal.h","FBSDKCoreKit/FBSDKCoreKit/Internal/**/*.h"
     sp.source_files   = "FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}"
     sp.exclude_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.m"
     sp.requires_arc = true
