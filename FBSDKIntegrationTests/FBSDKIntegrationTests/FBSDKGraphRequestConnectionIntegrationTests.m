@@ -17,6 +17,8 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKTestUsersManager.h>
+
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import <XCTest/XCTest.h>
@@ -24,7 +26,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKIntegrationTestCase.h"
 #import "FBSDKTestBlocker.h"
-#import "FBSDKTestUsersManager.h"
 
 @interface FBSDKGraphRequestConnectionIntegrationTests : FBSDKIntegrationTestCase
 

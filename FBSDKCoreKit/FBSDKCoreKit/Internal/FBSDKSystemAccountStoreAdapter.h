@@ -48,7 +48,7 @@ typedef void (^FBSDKGraphRequestAccessToAccountsHandler)(NSString *oauthToken, N
 /*
  @abstract Sends a message to the device account store to renew the Facebook account credentials
 
- @param handler the handler that is invoked on completion (dispatched to the main thread).
+ @param handler the handler that is invoked on completion
  */
 - (void)renewSystemAuthorization:(void(^)(ACAccountCredentialRenewResult result, NSError *error))handler;
 

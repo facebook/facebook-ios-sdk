@@ -23,6 +23,7 @@
 #import "FBSDKCrypto.h"
 #import "FBSDKError.h"
 #import "FBSDKInternalUtility.h"
+#import "FBSDKMacros.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
@@ -110,6 +111,7 @@ static NSString *g_cipherKey = nil;
 
 - (instancetype)init
 {
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 

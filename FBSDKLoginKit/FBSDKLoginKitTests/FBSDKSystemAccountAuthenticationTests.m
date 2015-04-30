@@ -16,6 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <objc/runtime.h>
+
 #import <Accounts/Accounts.h>
 
 #import <OCMock/OCMock.h>
@@ -34,6 +36,17 @@
 @implementation FBSDKSystemAccountAuthenticationTests
 {
   id _mockNSBundle;
+  Method _originalIsRegisteredCheck;
+  Method _swizzledIsRegisteredCheck;
+}
+
++ (id)internalUtilityMock
+{
+  // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
+  // and our keychain code is coded against mainBundle.
+  id mockUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[mockUtility stub] andReturnValue:OCMOCK_VALUE(YES)] isRegisteredURLScheme:[OCMArg any]];
+  return mockUtility;
 }
 
 - (void)setUp
@@ -64,6 +77,8 @@
 
 - (void)testImplOpenDoesNotTrySystemAccountAuthWithBehavior:(FBSDKLoginBehavior)behavior
 {
+  id mockUtility = [FBSDKSystemAccountAuthenticationTests internalUtilityMock];
+
   id target = [OCMockObject partialMockForObject:[[FBSDKLoginManager alloc] init]];
 
   id shortCircuitAuthBlock = ^ (NSInvocation *invocation) {
@@ -85,6 +100,7 @@
 
   [target setLoginBehavior:behavior];
   [target logInWithReadPermissions:@[@"public_profile"] handler:nil];
+  [mockUtility stopMocking];
 }
 
 - (void)testSystemAccountSuccess
@@ -148,6 +164,8 @@
 - (void)testSystemAccountNotAvailableTriesNextAuthMethodServer:(BOOL)serverSupports
                                                         device:(BOOL)deviceSupports
 {
+  id mockUtility = [FBSDKSystemAccountAuthenticationTests internalUtilityMock];
+
   id target = [OCMockObject partialMockForObject:[[FBSDKLoginManager alloc] init]];
   [target setLoginBehavior:FBSDKLoginBehaviorSystemAccount];
 
@@ -212,6 +230,8 @@
     XCTAssertNil(timeoutError);
   }];
   XCTAssertEqual(invocationCount, (!serverSupports ? 1 : 2));
+
+  [mockUtility stopMocking];
 }
 
 @end

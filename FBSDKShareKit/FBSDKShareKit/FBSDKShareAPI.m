@@ -61,19 +61,21 @@
 
 - (BOOL)canShare
 {
-  FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
-  return [accessToken.permissions containsObject:@"publish_actions"];
+  return YES;
 }
 
 - (BOOL)createOpenGraphObject:(FBSDKShareOpenGraphObject *)openGraphObject
 {
   NSError *error;
   if (![self canShare]) {
-    NSString *message = @"Share API is not available. [FBSDKAccessToken currentAccessToken] must have publish_actions "
-    @"permission.";
+    NSString *message = @"Share API is not available; verify 'canShare' returns YES";
     error = [FBSDKShareError errorWithCode:FBSDKShareDialogNotAvailableErrorCode message:message];
     [_delegate sharer:self didFailWithError:error];
     return NO;
+  }
+  if (![self _hasPublishActions]) {
+    NSString *message = @"Warning: [FBSDKAccessToken currentAccessToken] is missing publish_actions permissions";
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
   }
   if (!openGraphObject) {
     error = [FBSDKShareError requiredArgumentErrorWithName:@"openGraphObject" message:nil];
@@ -99,11 +101,14 @@
 {
   NSError *error;
   if (![self canShare]) {
-    NSString *message = @"Share API is not available. [FBSDKAccessToken currentAccessToken] must have publish_actions "
-    @"permission.";
+    NSString *message = @"Share API is not available; verify 'canShare' returns YES";
     error = [FBSDKShareError errorWithCode:FBSDKShareDialogNotAvailableErrorCode message:message];
     [_delegate sharer:self didFailWithError:error];
     return NO;
+  }
+  if (![self _hasPublishActions]) {
+    NSString *message = @"Warning: [FBSDKAccessToken currentAccessToken] is missing publish_actions permissions";
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
   }
   if (![self validateWithError:&error]) {
     [_delegate sharer:self didFailWithError:error];
@@ -138,6 +143,20 @@
 
 #pragma mark - Helper Methods
 
+- (void)_addCommonParameters:(NSMutableDictionary *)parameters content:(id<FBSDKSharingContent>)content
+{
+  NSString *tags = [content.peopleIDs componentsJoinedByString:@","];
+  [FBSDKInternalUtility dictionary:parameters setObject:tags forKey:@"tags"];
+  [FBSDKInternalUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
+  [FBSDKInternalUtility dictionary:parameters setObject:content.ref forKey:@"ref"];
+}
+
+- (BOOL)_hasPublishActions
+{
+  FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+  return [accessToken.permissions containsObject:@"publish_actions"];
+}
+
 - (BOOL)_shareLinkContent:(FBSDKShareLinkContent *)linkContent
 {
   FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -157,13 +176,12 @@
     }
   };
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  [self _addCommonParameters:parameters content:linkContent];
+  [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.peopleIDs forKey:@"tags"];
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.placeID forKey:@"place"];
 
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/feed"
                                      parameters:parameters
@@ -181,9 +199,8 @@
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   void(^stagingHandler)(NSDictionary *) = ^(NSDictionary *stagedContainer) {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:stagedContainer];
-    NSString *tags = [openGraphContent.peopleIDs componentsJoinedByString:@","];
-    [FBSDKInternalUtility dictionary:parameters setObject:tags forKey:@"tags"];
-    [FBSDKInternalUtility dictionary:parameters setObject:openGraphContent.placeID forKey:@"place"];
+    [self _addCommonParameters:parameters content:openGraphContent];
+    [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
 
     FBSDKGraphRequestHandler requestHandler = ^(FBSDKGraphRequestConnection *requestConnection,
                                                 id result,
@@ -229,7 +246,11 @@
     }
     if (image) {
       NSString *graphPath = @"/me/photos";
-      NSDictionary *parameters = @{ @"picture": image };
+      NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+      [self _addCommonParameters:parameters content:photoContent];
+      NSString *caption = photo.caption ?: self.message;
+      [FBSDKInternalUtility dictionary:parameters setObject:caption forKey:@"caption"];
+      parameters[@"picture"] = image;
       [requests addObject:[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                             parameters:parameters
                                                             HTTPMethod:@"POST"]];
@@ -287,6 +308,8 @@
     }
   };
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+  [self _addCommonParameters:parameters content:videoContent];
+  [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"description"];
   if ([[FBSDKAccessToken currentAccessToken].permissions containsObject:@"ads_management"]) {
     FBSDKSharePhoto *photo = videoContent.previewPhoto;
     UIImage *image = photo.image;
@@ -450,7 +473,9 @@
   }
   void(^containerHandler)(NSDictionary *) = ^(NSDictionary *stagedContainer) {
     NSError *JSONError;
-    NSString *objectString = [FBSDKInternalUtility JSONStringForObject:stagedContainer error:&JSONError];
+    NSString *objectString = [FBSDKInternalUtility JSONStringForObject:stagedContainer
+                                                                 error:&JSONError
+                                                  invalidObjectHandler:NULL];
     if (!objectString) {
       [_delegate sharer:self didFailWithError:JSONError];
       return;
@@ -565,10 +590,11 @@
      stagingHandler:(void(^)(id stagedPhoto))stagingHandler
 {
   if (photo.imageURL) {
-    NSDictionary *stagedPhoto = @{
-                                  @"url": photo.imageURL.absoluteString,
-                                  @"user_generated": @(photo.userGenerated),
-                                  };
+    NSMutableDictionary *stagedPhoto = [[NSMutableDictionary alloc]initWithDictionary: @{
+                                                                                         @"url": photo.imageURL.absoluteString,
+                                                                                         @"user_generated": @(photo.userGenerated),
+                                                                                         }];
+    [FBSDKInternalUtility dictionary:stagedPhoto setObject:photo.caption forKey:@"caption"];
     if (stagingHandler) {
       stagingHandler(stagedPhoto);
     }
@@ -589,10 +615,11 @@
                                         underlyingError:requestError];
         [_delegate sharer:self didFailWithError:error];
       } else if (stagingHandler) {
-        NSDictionary *stagedPhoto = @{
-                                      @"url": stagedPhotoURLString,
-                                      @"user_generated": @(photo.userGenerated),
-                                      };
+        NSMutableDictionary *stagedPhoto = [[NSMutableDictionary alloc] initWithDictionary: @{
+                                                                                              @"url": stagedPhotoURLString,
+                                                                                              @"user_generated": @(photo.userGenerated),
+                                                                                              }];
+        [FBSDKInternalUtility dictionary:stagedPhoto setObject:photo.caption forKey:@"caption"];
         stagingHandler(stagedPhoto);
       }
     };

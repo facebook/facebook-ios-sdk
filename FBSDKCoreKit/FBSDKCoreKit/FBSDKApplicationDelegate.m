@@ -36,6 +36,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
+  BOOL _expectingResign;
 }
 
 #pragma mark - Class Methods
@@ -156,19 +157,25 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 - (void)applicationWillResignActive:(NSNotification *)notification
 {
   _active = NO;
+  _expectingResign = NO;
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-  _active = YES;
-  [_pendingURLOpen applicationDidBecomeActive:[notification object]];
-  _pendingURLOpen = nil;
+  //  _expectingResign can be YES if the caller started doing work (like login)
+  // within the app delegate's lifecycle like openURL, in which case there
+  // might have been a "didBecomeActive" event pending that we want to ignore.
+  if (!_expectingResign) {
+    _active = YES;
+    [_pendingURLOpen applicationDidBecomeActive:[notification object]];
+    _pendingURLOpen = nil;
 
-  if (_pendingRequest && _pendingRequestCompletionBlock) {
-    _pendingRequestCompletionBlock([FBSDKBridgeAPIResponse bridgeAPIResponseCancelledWithRequest:_pendingRequest]);
+    if (_pendingRequest && _pendingRequestCompletionBlock) {
+      _pendingRequestCompletionBlock([FBSDKBridgeAPIResponse bridgeAPIResponseCancelledWithRequest:_pendingRequest]);
+    }
+    _pendingRequest = nil;
+    _pendingRequestCompletionBlock = NULL;
   }
-  _pendingRequest = nil;
-  _pendingRequestCompletionBlock = NULL;
 }
 
 #pragma mark - Internal Methods
@@ -188,13 +195,23 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
   _pendingRequest = request;
   _pendingRequestCompletionBlock = [completionBlock copy];
-  [[UIApplication sharedApplication] openURL:requestURL];
+  [self openURL:requestURL sender:nil];
 }
 
 - (BOOL)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender
 {
-  _pendingURLOpen = sender;
-  return [[UIApplication sharedApplication] openURL:url];
+  if ([[UIApplication sharedApplication] canOpenURL:url]) {
+    _expectingResign = YES;
+    _pendingURLOpen = sender;
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+      // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
+      [[UIApplication sharedApplication] openURL:url];
+    });
+    // Safari openURL calls can wrongly return NO so rely on the more honest canOpenURL call for return.
+    return YES;
+  }
+  return NO;
 }
 
 #pragma mark - Helper Methods

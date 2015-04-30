@@ -23,6 +23,7 @@
 #define FBSDK_SHARE_PHOTO_IMAGE_KEY @"image"
 #define FBSDK_SHARE_PHOTO_IMAGE_URL_KEY @"imageURL"
 #define FBSDK_SHARE_PHOTO_USER_GENERATED_KEY @"userGenerated"
+#define FBSDK_SHARE_PHOTO_CAPTION_KEY @"caption"
 
 @implementation FBSDKSharePhoto
 
@@ -51,6 +52,7 @@
   NSUInteger subhashes[] = {
     [_image hash],
     [_imageURL hash],
+    [_caption hash],
     (_userGenerated ? 1u : 0u)
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
@@ -72,7 +74,8 @@
   return (photo &&
           (_userGenerated == photo.userGenerated) &&
           [FBSDKInternalUtility object:_image isEqualToObject:photo.image] &&
-          [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL]);
+          [FBSDKInternalUtility object:_imageURL isEqualToObject:photo.imageURL] &&
+          [FBSDKInternalUtility object:_caption isEqualToObject:photo.caption]);
 }
 
 #pragma mark - NSCoding
@@ -88,6 +91,7 @@
     _image = [decoder decodeObjectOfClass:[UIImage class] forKey:FBSDK_SHARE_PHOTO_IMAGE_KEY];
     _imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_PHOTO_IMAGE_URL_KEY];
     _userGenerated = [decoder decodeBoolForKey:FBSDK_SHARE_PHOTO_USER_GENERATED_KEY];
+    _caption = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CAPTION_KEY];
   }
   return self;
 }
@@ -97,6 +101,7 @@
   [encoder encodeObject:_image forKey:FBSDK_SHARE_PHOTO_IMAGE_KEY];
   [encoder encodeObject:_imageURL forKey:FBSDK_SHARE_PHOTO_IMAGE_URL_KEY];
   [encoder encodeBool:_userGenerated forKey:FBSDK_SHARE_PHOTO_USER_GENERATED_KEY];
+  [encoder encodeObject:_caption forKey:FBSDK_SHARE_PHOTO_CAPTION_KEY];
 }
 
 #pragma mark - NSCopying
@@ -107,6 +112,7 @@
   copy->_image = [_image copy];
   copy->_imageURL = [_imageURL copy];
   copy->_userGenerated = _userGenerated;
+  copy->_caption = [_caption copy];
   return copy;
 }
 

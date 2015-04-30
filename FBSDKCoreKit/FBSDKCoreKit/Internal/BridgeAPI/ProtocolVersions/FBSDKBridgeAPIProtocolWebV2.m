@@ -59,7 +59,8 @@
   if (actionID) {
     NSDictionary *bridgeArgs = @{ FBSDKBridgeAPIProtocolNativeV1BridgeParameterInputKeys.actionID: actionID };
     NSString *bridgeArgsString = [FBSDKInternalUtility JSONStringForObject:bridgeArgs
-                                                                     error:NULL];
+                                                                     error:NULL
+                                                      invalidObjectHandler:NULL];
     queryParameters = @{ FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs: bridgeArgsString };
   }
   return [FBSDKInternalUtility appURLWithHost:@"bridge" path:methodName queryParameters:queryParameters error:errorRef];

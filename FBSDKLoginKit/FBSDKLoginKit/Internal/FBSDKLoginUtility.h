@@ -30,8 +30,4 @@
 
 + (NSString *)userIDFromSignedRequest:(NSString *)signedRequest;
 
-+ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
-                    grantedPermissions:(NSMutableSet *)grantedPermissions
-                   declinedPermissions:(NSMutableSet *)declinedPermissions;
-
 @end

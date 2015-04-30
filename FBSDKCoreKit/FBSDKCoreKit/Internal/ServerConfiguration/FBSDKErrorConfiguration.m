@@ -33,7 +33,7 @@ static NSString *const kErrorCategoryLogin = @"login";
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER;
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithDictionary:);
   return [self initWithDictionary:nil];
 }
 

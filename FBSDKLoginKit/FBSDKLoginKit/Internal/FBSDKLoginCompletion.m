@@ -66,9 +66,9 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     NSMutableSet *grantedPermissions = [NSMutableSet set];
     NSMutableSet *declinedPermissions = [NSMutableSet set];
 
-    [FBSDKLoginUtility extractPermissionsFromResponse:result
-                                   grantedPermissions:grantedPermissions
-                                  declinedPermissions:declinedPermissions];
+    [FBSDKInternalUtility extractPermissionsFromResponse:result
+                                      grantedPermissions:grantedPermissions
+                                     declinedPermissions:declinedPermissions];
 
     parameters.permissions = [grantedPermissions copy];
     parameters.declinedPermissions = [declinedPermissions copy];
@@ -182,7 +182,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
   NSString *expirationDateString = parameters[@"expires"] ?: parameters[@"expires_at"];
   NSDate *expirationDate = [NSDate distantFuture];
-  if (expirationDateString) {
+  if (expirationDateString && [expirationDateString doubleValue] > 0) {
     expirationDate = [NSDate dateWithTimeIntervalSince1970:[expirationDateString doubleValue]];
   } else if (parameters[@"expires_in"]) {
     expirationDate = [NSDate dateWithTimeIntervalSinceNow:[parameters[@"expires_in"] integerValue]];

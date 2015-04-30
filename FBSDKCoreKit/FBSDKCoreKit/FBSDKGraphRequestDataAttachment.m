@@ -34,7 +34,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER;
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithData:filename:contentType:);
   return [self initWithData:nil filename:nil contentType:nil];
 }
 

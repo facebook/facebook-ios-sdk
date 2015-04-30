@@ -243,4 +243,10 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginErrorSubcode)
   return err;
 }
 
+- (instancetype)init
+{
+  FBSDK_NO_DESIGNATED_INITIALIZER();
+  return nil;
+}
+
 @end

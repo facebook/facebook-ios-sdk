@@ -189,6 +189,7 @@ _fbsdkdfl_handle_get_impl_(Security)
 
 - (instancetype)init
 {
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 

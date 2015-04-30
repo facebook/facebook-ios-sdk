@@ -19,6 +19,7 @@
 #import "FBSDKUtility.h"
 
 #import "FBSDKInternalUtility.h"
+#import "FBSDKMacros.h"
 
 @implementation FBSDKUtility
 
@@ -72,6 +73,12 @@
                                                                                NULL, // characters to leave unescaped
                                                                                CFSTR(":!*();@/&?+$,='"),
                                                                                kCFStringEncodingUTF8);
+}
+
+- (instancetype)init
+{
+  FBSDK_NO_DESIGNATED_INITIALIZER();
+  return nil;
 }
 
 @end

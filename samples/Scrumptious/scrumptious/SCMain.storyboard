@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F1066" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zyU-nX-A9V">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="13F1077" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="zyU-nX-A9V">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -230,13 +230,6 @@
                                     <constraint firstAttribute="width" constant="134" placeholder="YES" id="eRs-6a-Z52"/>
                                 </constraints>
                             </view>
-                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1vk-Wb-Fqi">
-                                <rect key="frame" x="16" y="320" width="138" height="138"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="1vk-Wb-Fqi" secondAttribute="height" multiplier="1:1" id="ukW-GR-OmH"/>
-                                </constraints>
-                            </imageView>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZtL-Pe-0hr" customClass="FBSDKShareButton">
                                 <rect key="frame" x="162" y="320" width="134" height="50"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -255,12 +248,13 @@
                                     <action selector="share:" destination="RM5-2f-UEx" eventType="touchUpInside" id="tsP-KS-Jyr"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Pick Photo Above" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ylp-b3-pWC">
-                                <rect key="frame" x="23" y="398" width="124" height="60"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView opaque="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="1vk-Wb-Fqi">
+                                <rect key="frame" x="16" y="320" width="120" height="120"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="1vk-Wb-Fqi" secondAttribute="height" multiplier="1:1" id="ukW-GR-OmH"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -317,7 +311,6 @@
                         <outlet property="mealLabel" destination="VDz-h7-lfa" id="Vdw-Bo-0C9"/>
                         <outlet property="photoButton" destination="P43-md-5IC" id="sA8-Xx-PLz"/>
                         <outlet property="photoView" destination="1vk-Wb-Fqi" id="I38-Lm-dQi"/>
-                        <outlet property="photoViewPlaceholderLabel" destination="Ylp-b3-pWC" id="ZUU-DC-zif"/>
                         <outlet property="profilePictureButton" destination="d1G-Py-yVR" id="VAg-pG-aaV"/>
                         <outlet property="shareButton" destination="OOl-1U-AQf" id="nAh-fz-0ll"/>
                     </connections>
@@ -387,6 +380,7 @@
         <image name="pick-location" width="40" height="40"/>
         <image name="pick-meal" width="40" height="40"/>
         <image name="pick-photo" width="40" height="40"/>
+        <image name="placeholder" width="380" height="380"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -394,8 +388,8 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="ca7-qc-U7N"/>
         <segue reference="l6G-Fb-IF0"/>
+        <segue reference="ca7-qc-U7N"/>
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="1" green="0.435959345" blue="0.18629145259999999" alpha="1" colorSpace="calibratedRGB"/>
 </document>

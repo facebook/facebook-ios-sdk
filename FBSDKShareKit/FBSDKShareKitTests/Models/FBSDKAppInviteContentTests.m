@@ -75,7 +75,7 @@
 
 - (void)testValidationWithNilAppLinkURL
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:nil];
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
   content.previewImageURL = [[self class] _previewImageURL];
   NSError *error;
   XCTAssertNotNil(content);
@@ -88,7 +88,8 @@
 
 - (void)testValidationWithNilPreviewImageURL
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:[[self class] _appLinkURL]];
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
@@ -100,7 +101,8 @@
 
 + (FBSDKAppInviteContent *)_content
 {
-  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:[self _appLinkURL]];
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [self _appLinkURL];
   content.previewImageURL = [self _previewImageURL];
   return content;
 }

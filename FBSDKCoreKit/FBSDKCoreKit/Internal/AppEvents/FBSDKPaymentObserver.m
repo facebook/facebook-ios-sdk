@@ -225,7 +225,7 @@ static NSMutableArray *g_pendingRequestors;
   }
 
   [self logImplicitPurchaseEvent:eventName
-                      valueToSum:@(totalAmount)
+                      valueToSum:totalAmount
                       parameters:eventParameters];
 }
 
@@ -263,14 +263,13 @@ static NSMutableArray *g_pendingRequestors;
 }
 
 - (void)logImplicitPurchaseEvent:(NSString *)eventName
-                      valueToSum:(NSNumber *)valueToSum
+                      valueToSum:(double)valueToSum
                       parameters:(NSDictionary *)parameters {
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
   [eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:parameters
-                       accessToken:nil];
+  [FBSDKAppEvents logEvent:eventName
+                valueToSum:valueToSum
+                parameters:parameters];
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.

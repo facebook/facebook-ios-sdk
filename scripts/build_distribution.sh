@@ -107,8 +107,8 @@ done
 # -----------------------------------------------------------------------------
 # Build FBAudienceNetwork framework
 #
-test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
-  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh
+(test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
+  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh) || die "Failed to build FBAudienceNetwork"
 
 # -----------------------------------------------------------------------------
 # Build Messenger Kit

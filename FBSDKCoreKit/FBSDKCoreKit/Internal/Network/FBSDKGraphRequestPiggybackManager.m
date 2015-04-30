@@ -37,13 +37,71 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
       }
     }
     if (safeForPiggyback) {
-      [[self class] addRefreshPiggyback:connection];
+      [[self class] addRefreshPiggybackIfStale:connection];
       [[self class] addServerConfigurationPiggyback:connection];
     }
   }
 }
 
-+ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection
++ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestHandler)permissionHandler
+{
+  FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
+  __block NSMutableSet *permissions = nil;
+  __block NSMutableSet *declinedPermissions = nil;
+  __block NSString *tokenString = nil;
+  __block NSNumber *expirationDateNumber = nil;
+  __block int expectingCallbacksCount = 2;
+  void (^expectingCallbackComplete)() = ^() {
+    if (--expectingCallbacksCount == 0) {
+      FBSDKAccessToken *currentToken = [FBSDKAccessToken currentAccessToken];
+      NSDate *expirationDate = currentToken.expirationDate;
+      if (expirationDateNumber) {
+        expirationDate = ([expirationDateNumber doubleValue] > 0 ?
+                          [NSDate dateWithTimeIntervalSince1970:[expirationDateNumber doubleValue]] :
+                          [NSDate distantFuture]);
+      }
+      FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString ?: currentToken.tokenString
+                                                                           permissions:[(permissions ?: currentToken.permissions) allObjects]
+                                                                   declinedPermissions:[(declinedPermissions ?: currentToken.declinedPermissions) allObjects]
+                                                                                 appID:currentToken.appID
+                                                                                userID:currentToken.userID
+                                                                        expirationDate:expirationDate
+                                                                           refreshDate:[NSDate date]];
+      if (expectedToken == currentToken) {
+        [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
+      }
+    }
+  };
+  FBSDKGraphRequest *extendRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"oauth/access_token"
+                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token"}
+                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+
+  [connection addRequest:extendRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+    tokenString = result[@"access_token"];
+    expirationDateNumber = result[@"expires_at"];
+    expectingCallbackComplete();
+  }];
+  FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
+                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token"}
+                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+
+  [connection addRequest:permissionsRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
+    if (!error) {
+      permissions = [NSMutableSet set];
+      declinedPermissions = [NSMutableSet set];
+
+      [FBSDKInternalUtility extractPermissionsFromResponse:result
+                                        grantedPermissions:permissions
+                                       declinedPermissions:declinedPermissions];
+    }
+    expectingCallbackComplete();
+    if (permissionHandler) {
+      permissionHandler(innerConnection, result, error);
+    }
+  }];
+}
+
++ (void)addRefreshPiggybackIfStale:(FBSDKGraphRequestConnection *)connection
 {
   // don't piggy back more than once an hour as a cheap way of
   // retrying in cases of errors and preventing duplicate refreshes.
@@ -59,30 +117,8 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
   if (tokenRefreshDate &&
       [now timeIntervalSinceDate:lastRefreshTry] > FBSDKTokenRefreshRetrySeconds &&
       [now timeIntervalSinceDate:tokenRefreshDate] > FBSDKTokenRefreshThresholdSeconds) {
-    FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"oauth/access_token"
-                                                                   parameters:@{@"grant_type" : @"fb_extend_sso_token"}
-                                                                        flags:FBSDKGraphRequestFlagDisableErrorRecovery];
+    [self addRefreshPiggyback:connection permissionHandler:NULL];
     lastRefreshTry = [NSDate date];
-    FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
-    [connection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
-      NSString *tokenString = result[@"access_token"];
-      NSString *expirationString = result[@"expires_at"];
-      FBSDKAccessToken *currentToken = [FBSDKAccessToken currentAccessToken];
-      if (tokenString && expirationString) {
-        NSDate *expirationDate = [NSDate dateWithTimeIntervalSince1970:[expirationString doubleValue]];
-        FBSDKAccessToken *refreshedToken = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
-                                                                             permissions:[currentToken.permissions allObjects]
-                                                                     declinedPermissions:[currentToken.declinedPermissions allObjects]
-                                                                                   appID:currentToken.appID
-                                                                                  userID:currentToken.userID
-                                                                          expirationDate:expirationDate
-                                                                             refreshDate:[NSDate date]];
-        if (expectedToken == currentToken) {
-          [FBSDKAccessToken setCurrentAccessToken:refreshedToken];
-        }
-      }
-
-    }];
   }
 }
 

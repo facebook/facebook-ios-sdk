@@ -28,6 +28,23 @@
 
 @implementation FBSDKInternalUtilityTests
 
+- (void)testJSONString
+{
+  NSString *URLString = @"https://www.facebook.com";
+  NSURL *URL = [NSURL URLWithString:URLString];
+  NSDictionary *dictionary = @{
+                               @"url": URL,
+                               };
+  NSError *error;
+  NSString *JSONString = [FBSDKInternalUtility JSONStringForObject:dictionary error:&error invalidObjectHandler:NULL];
+  XCTAssertNil(error);
+  XCTAssertEqualObjects(JSONString, @"{\"url\":\"https:\\/\\/www.facebook.com\"}");
+  NSDictionary *decoded = [FBSDKInternalUtility objectForJSONString:JSONString error:&error];
+  XCTAssertNil(error);
+  XCTAssertEqualObjects([decoded allKeys], @[@"url"]);
+  XCTAssertEqualObjects(decoded[@"url"], URLString);
+}
+
 - (void)testURLEncode
 {
   NSString *value = @"test this \"string\u2019s\" encoded value";

@@ -42,7 +42,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithService:accessGroup:);
   return [self initWithService:nil accessGroup:nil];
 }
 

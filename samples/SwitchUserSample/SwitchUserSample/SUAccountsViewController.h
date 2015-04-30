@@ -21,6 +21,4 @@
 // A child view controller with a table view of different user accounts.
 @interface SUAccountsViewController : UITableViewController
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-
 @end

@@ -126,6 +126,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
   _webDialog.parameters = parameters;
   [_webDialog show];
+  [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
 
@@ -149,6 +150,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   NSError *error = [FBSDKShareError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
                                           message:[FBSDKTypeUtility stringValue:results[@"error_message"]]];
   [self _handleCompletionWithDialogResults:results error:error];
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -158,6 +160,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   }
   [self _cleanUp];
   [self _handleCompletionWithDialogResults:nil error:error];
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
@@ -167,6 +170,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   }
   [self _cleanUp];
   [_delegate gameRequestDialogDidCancel:self];
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 #pragma mark - Helper Methods

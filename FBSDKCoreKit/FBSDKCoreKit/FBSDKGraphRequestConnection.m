@@ -268,6 +268,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
                    logger:(FBSDKLogger *)logger
 {
   [attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
+    value = [FBSDKInternalUtility convertRequestValue:value];
     if ([value isKindOfClass:[NSString class]]) {
       if (addFormData) {
         [body appendWithKey:key formValue:(NSString *)value logger:logger];
@@ -312,7 +313,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
           batchToken:[batchToken isEqualToString:individualToken] ? nil : individualToken];
   }
 
-  NSString *jsonBatch = [FBSDKInternalUtility JSONStringForObject:batch error:NULL];
+  NSString *jsonBatch = [FBSDKInternalUtility JSONStringForObject:batch error:NULL invalidObjectHandler:NULL];
 
   [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
   if (batchToken) {
@@ -617,7 +618,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
       // consistent with the rest of the output of this function (note, if perf turns out
       // to be a problem -- unlikely -- we can return the following dictionary outright)
       NSDictionary *original = @{ FBSDKNonJSONResponseProperty : utf8 };
-      NSString *jsonrep = [FBSDKInternalUtility JSONStringForObject:original error:NULL];
+      NSString *jsonrep = [FBSDKInternalUtility JSONStringForObject:original error:NULL invalidObjectHandler:NULL];
       NSError *reparseError = nil;
       parsed = [FBSDKInternalUtility objectForJSONString:jsonrep error:&reparseError];
       if (!reparseError) {
@@ -683,7 +684,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
     }
     [metadata invokeCompletionHandlerForConnection:self withResults:body error:error];
 
-    if (--_expectingResults) {
+    if (--_expectingResults == 0) {
       if ([_delegate respondsToSelector:@selector(requestConnectionDidFinishLoading:)]) {
         [_delegate requestConnectionDidFinishLoading:self];
       }

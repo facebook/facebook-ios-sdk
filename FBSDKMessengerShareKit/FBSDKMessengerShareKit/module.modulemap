@@ -1,0 +1,6 @@
+framework module FBSDKMessengerShareKit {
+  umbrella header "FBSDKMessengerShareKit.h"
+
+  export *
+  module * { export * }
+}

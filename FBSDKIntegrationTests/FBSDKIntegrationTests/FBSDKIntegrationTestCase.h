@@ -19,9 +19,8 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKTestUsersManager.h"
-
 @class FBSDKAccessToken;
+@class FBSDKTestUsersManager;
 
 @interface NSString(FBSDKAppEventsIntegrationTests)
 - (NSUInteger)countOfSubstring:(NSString *)substring;
@@ -45,7 +44,7 @@
   @protected id _mockNSBundle;
 }
 
-@property (readonly, copy) NSString *testAppId;
+@property (readonly, copy) NSString *testAppID;
 @property (readonly, copy) NSString *testAppClientToken;
 @property (readonly, copy) NSString *testAppSecret;
 @property (readonly, copy) NSString *testAppToken;
