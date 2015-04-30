@@ -27,6 +27,7 @@
 #import "FBSDKError.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKMacros.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
 
@@ -84,7 +85,8 @@
     [parameters setObject:bundleIdentifier forKey:@"bundle_id"];
   }
   if (urlSchemes.count > 0) {
-    [parameters setObject:[FBSDKInternalUtility JSONStringForObject:urlSchemes error:NULL] forKey:@"url_schemes"];
+    [parameters setObject:[FBSDKInternalUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL]
+                   forKey:@"url_schemes"];
   }
   if (longVersion.length > 0) {
     [parameters setObject:longVersion forKey:@"bundle_version"];
@@ -249,7 +251,7 @@
 {
   [[self class] ensureOnMainThread];
   NSDictionary *data = @{ FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY : anonymousID };
-  NSString *content = [FBSDKInternalUtility JSONStringForObject:data error:NULL];
+  NSString *content = [FBSDKInternalUtility JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
 
   [content writeToFile:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
             atomically:YES
@@ -302,6 +304,12 @@
 + (long)unixTimeNow
 {
   return (long)round([[NSDate date] timeIntervalSince1970]);
+}
+
+- (instancetype)init
+{
+  FBSDK_NO_DESIGNATED_INITIALIZER();
+  return nil;
 }
 
 @end

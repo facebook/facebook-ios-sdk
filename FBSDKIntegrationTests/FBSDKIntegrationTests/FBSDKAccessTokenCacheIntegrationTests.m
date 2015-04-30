@@ -61,7 +61,7 @@
                                     @"com.facebook.sdk:TokenInformationExpirationDateKey": [[NSDate date] dateByAddingTimeInterval:-1],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppId],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -81,7 +81,7 @@
                                     @"com.facebook.sdk:TokenInformationPermissionsKey": @[ @"email"],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppId],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -98,7 +98,7 @@
   XCTAssertEqualObjects(retrievedToken.tokenString, @"tokenString");
   XCTAssertEqualObjects(retrievedToken.permissions, [NSSet setWithObject:@"email"]);
   XCTAssertEqualObjects(retrievedToken.declinedPermissions, [NSSet setWithObject:@"read_stream"]);
-  XCTAssertEqualObjects(retrievedToken.appID, [self testAppId]);
+  XCTAssertEqualObjects(retrievedToken.appID, [self testAppID]);
   XCTAssertEqualObjects(retrievedToken.userID, @"userid");
 
   [cache clearCache];
@@ -111,7 +111,7 @@
                                     @"com.facebook.sdk:TokenInformationExpirationDateKey": [[NSDate date] dateByAddingTimeInterval:200],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid2",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppId],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -129,7 +129,7 @@
   XCTAssertEqualObjects(retrievedToken.tokenString, @"tokenString");
   XCTAssertEqualObjects(retrievedToken.permissions, [NSSet setWithObject:@"email"]);
   XCTAssertEqualObjects(retrievedToken.declinedPermissions, [NSSet setWithObject:@"read_stream"]);
-  XCTAssertEqualObjects(retrievedToken.appID, [self testAppId]);
+  XCTAssertEqualObjects(retrievedToken.appID, [self testAppID]);
   XCTAssertEqualObjects(retrievedToken.userID, @"userid2");
 
   [cache clearCache];

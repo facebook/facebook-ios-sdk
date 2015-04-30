@@ -376,7 +376,8 @@ typedef void (^RPSBlock)(void);
         }
         case 2: { // Invite Friends"
             // app link corresponds to rps-sample-applink-example://
-            FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] initWithAppLinkURL:[NSURL URLWithString:@"https://fb.me/319673994858989"]];
+            FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+            content.appLinkURL = [NSURL URLWithString:@"https://fb.me/319673994858989"];
             [FBSDKAppInviteDialog showWithContent:content
                                          delegate:self];
             break;

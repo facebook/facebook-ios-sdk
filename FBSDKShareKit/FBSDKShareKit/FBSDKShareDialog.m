@@ -142,6 +142,7 @@
     [self _invokeDelegateDidFailWithError:error];
   } else {
     [self _logDialogShow];
+    [FBSDKInternalUtility registerTransientObject:self];
   }
   return didShow;
 }
@@ -201,6 +202,7 @@
     // not all web dialogs report cancellation, so assume that the share has completed with no additional information
     [self _handleWebResponseParameters:results error:nil];
   }
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
@@ -210,6 +212,7 @@
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidFailWithError:error];
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
@@ -219,6 +222,7 @@
   }
   [self _cleanUpWebDialog];
   [self _invokeDelegateDidCancel];
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 #pragma mark - Helper Methods
@@ -357,6 +361,7 @@
   }
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error];
+    [FBSDKInternalUtility unregisterTransientObject:self];
   };
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -378,6 +383,7 @@
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error];
+    [FBSDKInternalUtility unregisterTransientObject:self];
   };
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
@@ -442,6 +448,7 @@
                                 forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
       [self _invokeDelegateDidCompleteWithResults:results];
     }
+    [FBSDKInternalUtility unregisterTransientObject:self];
   };
   [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
   return YES;
@@ -498,6 +505,7 @@
         break;
       }
     }
+    [FBSDKInternalUtility unregisterTransientObject:self];
   };
   [fromViewController presentViewController:composeViewController animated:YES completion:nil];
   return YES;

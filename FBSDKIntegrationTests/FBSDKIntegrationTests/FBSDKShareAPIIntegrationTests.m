@@ -20,6 +20,7 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <FBSDKCoreKit/FBSDKTestUsersManager.h>
 
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
@@ -27,7 +28,6 @@
 
 #import "FBSDKIntegrationTestCase.h"
 #import "FBSDKTestBlocker.h"
-#import "FBSDKTestUsersManager.h"
 
 @interface FBSDKShareAPIIntegrationTests : FBSDKIntegrationTestCase <FBSDKSharingDelegate>
 

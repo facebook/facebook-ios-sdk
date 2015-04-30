@@ -25,20 +25,6 @@
 
 @implementation FBSDKAppInviteContent
 
-- (instancetype)init
-{
-  FBSDK_NOT_DESIGNATED_INITIALIZER;
-  return [self initWithAppLinkURL:nil];
-}
-
-- (instancetype)initWithAppLinkURL:(NSURL *)appLinkURL
-{
-  if ((self = [super init])) {
-    _appLinkURL = [appLinkURL copy];
-  }
-  return self;
-}
-
 #pragma mark - Equality
 
 - (NSUInteger)hash
@@ -77,8 +63,8 @@
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
-  NSURL *appLinkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
-  if ((self = [self initWithAppLinkURL:appLinkURL])) {
+  if ((self = [self init])) {
+    _appLinkURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_APP_LINK_URL_KEY];
     _previewImageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_APP_INVITE_CONTENT_PREVIEW_IMAGE_KEY];
   }
   return self;
@@ -94,7 +80,8 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKAppInviteContent *copy = [[FBSDKAppInviteContent alloc] initWithAppLinkURL:_appLinkURL];
+  FBSDKAppInviteContent *copy = [[FBSDKAppInviteContent alloc] init];
+  copy->_appLinkURL = [_appLinkURL copy];
   copy->_previewImageURL = [_previewImageURL copy];
   return copy;
 }

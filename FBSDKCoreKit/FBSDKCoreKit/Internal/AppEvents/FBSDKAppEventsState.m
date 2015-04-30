@@ -38,7 +38,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithToken:appID:);
   return [self initWithToken:nil appID:nil];
 }
 
@@ -156,6 +156,6 @@
     [events addObject:eventAndImplicitFlag[@"event"]];
   }
 
-  return [FBSDKInternalUtility JSONStringForObject:events error:NULL];
+  return [FBSDKInternalUtility JSONStringForObject:events error:NULL invalidObjectHandler:NULL];
 }
 @end

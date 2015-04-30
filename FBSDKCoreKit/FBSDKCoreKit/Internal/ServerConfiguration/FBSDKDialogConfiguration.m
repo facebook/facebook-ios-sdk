@@ -40,7 +40,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithName:URL:appVersions:);
   return [self initWithName:nil URL:nil appVersions:nil];
 }
 

@@ -27,7 +27,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER;
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithRecoveryDescription:optionDescriptions:category:recoveryActionName:);
   return [self initWithRecoveryDescription:nil
                         optionDescriptions:nil
                                   category:0

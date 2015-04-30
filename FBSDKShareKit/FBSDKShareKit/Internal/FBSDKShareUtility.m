@@ -109,7 +109,9 @@
     FBSDKShareOpenGraphContent *openGraphContent = (FBSDKShareOpenGraphContent *)content;
     FBSDKShareOpenGraphAction *action = openGraphContent.action;
     NSDictionary *properties = [self _convertOpenGraphValueContainer:action requireNamespace:NO];
-    NSString *propertiesJSON = [FBSDKInternalUtility JSONStringForObject:properties error:errorRef];
+    NSString *propertiesJSON = [FBSDKInternalUtility JSONStringForObject:properties
+                                                                   error:errorRef
+                                                    invalidObjectHandler:NULL];
     parameters = @{
                    @"action_type": action.actionType,
                    @"action_properties": propertiesJSON,
@@ -144,8 +146,10 @@
     } else {
       NSURL *imageURL = [FBSDKTypeUtility URLValue:properties[@"url"]];
       if (imageURL) {
-        return [FBSDKSharePhoto photoWithImageURL:imageURL
-                                    userGenerated:[FBSDKTypeUtility boolValue:properties[@"user_generated"]]];
+        FBSDKSharePhoto *sharePhoto = [FBSDKSharePhoto photoWithImageURL:imageURL
+                                                           userGenerated:[FBSDKTypeUtility boolValue:properties[@"user_generated"]]];
+        sharePhoto.caption = [FBSDKTypeUtility stringValue:properties[@"caption"]];
+        return sharePhoto;
       } else {
         return nil;
       }
@@ -382,6 +386,7 @@
 
 - (instancetype)init
 {
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 
@@ -488,6 +493,14 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
 }
 
 + (NSString *)getOpenGraphNameAndNamespaceFromFullName:(NSString *)fullName namespace:(NSString **)namespace {
+  if (namespace) {
+    *namespace = nil;
+  }
+
+  if ([fullName isEqualToString:@"fb:explicitly_shared"]) {
+    return fullName;
+  }
+
   NSUInteger index = [fullName rangeOfString:@":"].location;
   if ((index != NSNotFound) && (fullName.length > index + 1)) {
     if (namespace) {
@@ -497,9 +510,6 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
     return [fullName substringFromIndex:index + 1];
   }
 
-  if (namespace) {
-    *namespace = nil;
-  }
   return fullName;
 }
 
@@ -510,6 +520,8 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
   }
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   dictionary[@"user_generated"] = @(photo.userGenerated);
+  [FBSDKInternalUtility dictionary:dictionary setObject:photo.caption forKey:@"caption"];
+
   [FBSDKInternalUtility dictionary:dictionary setObject:photo.image ?: photo.imageURL.absoluteString forKey:@"url"];
   return dictionary;
 }

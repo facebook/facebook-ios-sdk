@@ -18,6 +18,7 @@
 
 #import "FBSDKAccessToken.h"
 
+#import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKMath.h"
 #import "FBSDKSettings+Internal.h"
@@ -85,6 +86,13 @@ static FBSDKAccessToken *g_currentAccessToken;
                                                         object:[self class]
                                                       userInfo:userInfo];
   }
+}
+
++ (void)refreshCurrentAccessToken:(FBSDKGraphRequestHandler)completionHandler
+{
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completionHandler];
+  [connection start];
 }
 
 #pragma mark - Equality

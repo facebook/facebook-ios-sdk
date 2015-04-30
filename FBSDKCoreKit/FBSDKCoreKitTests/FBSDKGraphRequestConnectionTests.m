@@ -29,13 +29,17 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
 
-@interface FBSDKGraphRequestConnectionTests : XCTestCase
+@interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
+@property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
+@property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
 @end
 
 static id g_mockAccountStoreAdapter;
 static id g_mockNSBundle;
 
 @implementation FBSDKGraphRequestConnectionTests
+
+#pragma mark - XCTestCase
 
 - (void)tearDown
 {
@@ -58,6 +62,8 @@ static id g_mockNSBundle;
 
 }
 
+#pragma mark - Helpers
+
 //to prevent piggybacking of server config fetching
 + (id)mockCachedServerConfiguration
 {
@@ -65,6 +71,35 @@ static id g_mockNSBundle;
   [[mockPiggybackManager stub] addServerConfigurationPiggyback:OCMOCK_ANY];
   return mockPiggybackManager;
 }
+
+#pragma mark - FBSDKGraphRequestConnectionDelegate
+
+
+- (void)requestConnection:(FBSDKGraphRequestConnection *)connection didFailWithError:(NSError *)error
+{
+  if (self.requestConnectionCallback) {
+    self.requestConnectionCallback(connection, error);
+    self.requestConnectionCallback = nil;
+  }
+}
+
+- (void)requestConnectionDidFinishLoading:(FBSDKGraphRequestConnection *)connection
+{
+  if (self.requestConnectionCallback) {
+    self.requestConnectionCallback(connection, nil);
+    self.requestConnectionCallback = nil;
+  }
+}
+
+- (void)requestConnectionWillBeginLoading:(FBSDKGraphRequestConnection *)connection
+{
+  if (self.requestConnectionStartingCallback) {
+    self.requestConnectionStartingCallback(connection);
+    self.requestConnectionStartingCallback = nil;
+  }
+}
+
+#pragma mark - Tests
 
 - (void)testClientToken
 {
@@ -116,6 +151,48 @@ static id g_mockNSBundle;
   [FBSDKSettings setClientToken:nil];
 }
 
+- (void)testConnectionDelegate
+{
+  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
+  // stub out a batch response that returns /me.id twice
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    return YES;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, meResponse];
+    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+    return [OHHTTPStubsResponse responseWithData:data
+                                      statusCode:200
+                                         headers:nil];
+  }];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  __block int actualCallbacksCount = 0;
+  XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive delegate completion"];
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+       completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
+         XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
+       }];
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+       completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
+         XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
+       }];
+  self.requestConnectionStartingCallback = ^(FBSDKGraphRequestConnection *conn) {
+    NSCAssert(0 == actualCallbacksCount++, @"this should have been the first callback");
+  };
+  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+    NSCAssert(error == nil, @"unexpected error:%@", error);
+    NSCAssert(3 == actualCallbacksCount++, @"this should have been the fourth callback");
+    [expectation fulfill];
+  };
+  connection.delegate = self;
+  [connection start];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+
+  [mockPiggybackManager stopMocking];
+}
+
 // test to verify piggyback refresh token behavior.
 - (void)testTokenPiggyback
 {
@@ -127,7 +204,13 @@ static id g_mockNSBundle;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
     NSString *meResponse = [@"{ \"id\":\"userid\"}" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     NSString *refreshResponse = [[NSString stringWithFormat:@"{ \"access_token\":\"123\", \"expires_at\":%.0f }", [[NSDate dateWithTimeIntervalSinceNow:60] timeIntervalSince1970]] stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" }, {\"code\":200,\"body\": \"%@\" } ]", meResponse, refreshResponse];
+    NSString *permissionsResponse = [@"{ \"data\": [ { \"permission\" : \"public_profile\", \"status\" : \"granted\" },  { \"permission\" : \"email\", \"status\" : \"granted\" },  { \"permission\" : \"user_friends\", \"status\" : \"declined\" } ] }" stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": \"%@\" },"
+                                @"{\"code\":200,\"body\": \"%@\" },"
+                                @"{\"code\":200,\"body\": \"%@\" } ]",
+                                meResponse,
+                                refreshResponse,
+                                permissionsResponse];
     NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
     return [OHHTTPStubsResponse responseWithData:data
                                       statusCode:200
@@ -154,6 +237,8 @@ static id g_mockNSBundle;
   XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].expirationDate timeIntervalSinceNow], 0);
   XCTAssertGreaterThan([[FBSDKAccessToken currentAccessToken].refreshDate timeIntervalSinceNow], -60);
   XCTAssertNotEqualObjects(tokenThatNeedsRefresh, [FBSDKAccessToken currentAccessToken]);
+  XCTAssertTrue([[FBSDKAccessToken currentAccessToken].permissions containsObject:@"email"]);
+  XCTAssertTrue([[FBSDKAccessToken currentAccessToken].declinedPermissions containsObject:@"user_friends"]);
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [mockPiggybackManager stopMocking];
 }

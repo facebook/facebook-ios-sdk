@@ -87,6 +87,16 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   }
 }
 
++ (id)convertRequestValue:(id)value
+{
+  if ([value isKindOfClass:[NSNumber class]]) {
+    value = [(NSNumber *)value stringValue];
+  } else if ([value isKindOfClass:[NSURL class]]) {
+    value = [(NSURL *)value absoluteString];
+  }
+  return value;
+}
+
 + (unsigned long)currentTimeInMilliseconds
 {
   struct timeval time;
@@ -102,7 +112,7 @@ setJSONStringForObject:(id)object
   if (!object || !key) {
     return YES;
   }
-  NSString *JSONString = [self JSONStringForObject:object error:errorRef];
+  NSString *JSONString = [self JSONStringForObject:object error:errorRef invalidObjectHandler:NULL];
   if (!JSONString) {
     return NO;
   }
@@ -114,6 +124,25 @@ setJSONStringForObject:(id)object
 {
   if (object && key) {
     [dictionary setObject:object forKey:key];
+  }
+}
+
++ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+                    grantedPermissions:(NSMutableSet *)grantedPermissions
+                   declinedPermissions:(NSMutableSet *)declinedPermissions
+{
+  NSArray *resultData = responseObject[@"data"];
+  if (resultData.count > 0) {
+    for (NSDictionary *permissionsDictionary in resultData) {
+      NSString *permissionName = permissionsDictionary[@"permission"];
+      NSString *status = permissionsDictionary[@"status"];
+
+      if ([status isEqualToString:@"granted"]) {
+        [grantedPermissions addObject:permissionName];
+      } else if ([status isEqualToString:@"declined"]) {
+        [declinedPermissions addObject:permissionName];
+      }
+    }
   }
 }
 
@@ -244,31 +273,26 @@ setJSONStringForObject:(id)object
   return (version <= runTimeMajorVersion);
 }
 
-+ (NSString *)JSONStringForObject:(id)object error:(NSError *__autoreleasing *)errorRef
++ (NSString *)JSONStringForObject:(id)object
+                            error:(NSError *__autoreleasing *)errorRef
+             invalidObjectHandler:(id(^)(id object, BOOL *stop))invalidObjectHandler
 {
-  if (![NSJSONSerialization isValidJSONObject:object]) {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKError invalidArgumentErrorWithName:@"object"
-                                                     value:object
-                                                   message:@"Invalid object for JSON serialization."];
+  if (invalidObjectHandler || ![NSJSONSerialization isValidJSONObject:object]) {
+    object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
+    if (![NSJSONSerialization isValidJSONObject:object]) {
+      if (errorRef != NULL) {
+        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"object"
+                                                       value:object
+                                                     message:@"Invalid object for JSON serialization."];
+      }
+      return nil;
     }
-    return nil;
   }
   NSData *data = [NSJSONSerialization dataWithJSONObject:object options:0 error:errorRef];
   if (!data) {
     return nil;
   }
   return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-}
-
-+ (NSString *)JSONStringForObject:(id)object
-                            error:(NSError *__autoreleasing *)errorRef
-             invalidObjectHandler:(id(^)(id object, BOOL *stop))invalidObjectHandler
-{
-  if (invalidObjectHandler) {
-    object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
-  }
-  return [self JSONStringForObject:object error:errorRef];
 }
 
 + (BOOL)object:(id)object isEqualToObject:(id)other;
@@ -310,16 +334,11 @@ setJSONStringForObject:(id)object
     [keys sortUsingSelector:@selector(compare:)];
     BOOL stop = NO;
     for (NSString *key in keys) {
-      id value = dictionary[key];
-      if ([value isKindOfClass:[NSURL class]]) {
-        value = [(NSURL *)value absoluteString];
-      }
+      id value = [self convertRequestValue:dictionary[key]];
       if ([value isKindOfClass:[NSString class]]) {
         value = [FBSDKUtility URLEncode:value];
       }
-      if (invalidObjectHandler &&
-          ![value isKindOfClass:[NSString class]] &&
-          ![value isKindOfClass:[NSNumber class]]) {
+      if (invalidObjectHandler && ![value isKindOfClass:[NSString class]]) {
         value = invalidObjectHandler(value, &stop);
         if (stop) {
           break;
@@ -401,11 +420,34 @@ setJSONStringForObject:(id)object
   }
 }
 
+static NSMapTable *_transientObjects;
+
++ (void)registerTransientObject:(id)object
+{
+  NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
+  if (!_transientObjects) {
+    _transientObjects = [[NSMapTable alloc] init];
+  }
+  NSUInteger count = [(NSNumber *)[_transientObjects objectForKey:object] unsignedIntegerValue];
+  [_transientObjects setObject:@(count + 1) forKey:object];
+}
+
++ (void)unregisterTransientObject:(id)object
+{
+  NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
+  NSUInteger count = [(NSNumber *)[_transientObjects objectForKey:object] unsignedIntegerValue];
+  if (count == 1) {
+    [_transientObjects removeObjectForKey:object];
+  } else if (count != 0) {
+    [_transientObjects setObject:@(count - 1) forKey:object];
+  }
+}
+
 #pragma mark - Object Lifecycle
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 
@@ -438,12 +480,14 @@ setJSONStringForObject:(id)object
   __block BOOL stop = NO;
   if ([object isKindOfClass:[NSString class]] || [object isKindOfClass:[NSNumber class]]) {
     // good to go, keep the object
+  } else if ([object isKindOfClass:[NSURL class]]) {
+    object = [(NSURL *)object absoluteString];
   } else if ([object isKindOfClass:[NSDictionary class]]) {
     NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
     [(NSDictionary *)object enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *dictionaryStop) {
-      [FBSDKInternalUtility dictionary:dictionary
-                     setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
-                        forKey:[FBSDKTypeUtility stringValue:key]];
+      [self dictionary:dictionary
+             setObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]
+                forKey:[FBSDKTypeUtility stringValue:key]];
       if (stop) {
         *dictionaryStop = YES;
       }
@@ -452,8 +496,8 @@ setJSONStringForObject:(id)object
   } else if ([object isKindOfClass:[NSArray class]]) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (id obj in (NSArray *)object) {
-      [FBSDKInternalUtility array:array
-                addObject:[self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop]];
+      id convertedObj = [self _convertObjectToJSONObject:obj invalidObjectHandler:invalidObjectHandler stop:&stop];
+      [self array:array addObject:convertedObj];
       if (stop) {
         break;
       }
@@ -466,6 +510,42 @@ setJSONStringForObject:(id)object
     *stopRef = stop;
   }
   return object;
+}
+
++ (void)validateAppID
+{
+  if (![FBSDKSettings appID]) {
+    NSString *reason = @"App ID not found. Add a string value with your app ID for the key "
+                       @"FacebookAppID to the Info.plist or call [FBSDKSettings setAppID:].";
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+}
+
++ (void)validateURLSchemes
+{
+  [self validateAppID];
+  NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", [FBSDKSettings appID], [FBSDKSettings appURLSchemeSuffix] ?: @""];
+  if (![self isRegisteredURLScheme:defaultUrlScheme]) {
+    NSString *reason = [NSString stringWithFormat:@"%@ is not registered as a URL scheme. Please add it in your Info.plist", defaultUrlScheme];
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+  }
+}
+
+
++ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme {
+  static dispatch_once_t fetchBundleOnce;
+  static NSArray *urlTypes = nil;
+
+  dispatch_once(&fetchBundleOnce, ^{
+    urlTypes = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
+  });
+  for (NSDictionary *urlType in urlTypes) {
+    NSArray *urlSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
+    if ([urlSchemes containsObject:urlScheme]) {
+      return YES;
+    }
+  }
+  return NO;
 }
 
 @end

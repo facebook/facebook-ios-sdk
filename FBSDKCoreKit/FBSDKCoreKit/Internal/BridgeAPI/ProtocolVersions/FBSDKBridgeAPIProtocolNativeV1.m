@@ -126,7 +126,7 @@ static const struct
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithAppScheme:);
   return [self initWithAppScheme:nil];
 }
 

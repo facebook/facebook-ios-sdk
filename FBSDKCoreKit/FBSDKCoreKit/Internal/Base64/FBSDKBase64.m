@@ -18,6 +18,8 @@
 
 #import "FBSDKBase64.h"
 
+#import "FBSDKMacros.h"
+
 @implementation FBSDKBase64
 {
   BOOL _optionsEnabled;
@@ -63,6 +65,7 @@ static FBSDKBase64 *_encoder;
 
 - (instancetype)init
 {
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithOptionsEnabled:);
   return nil;
 }
 

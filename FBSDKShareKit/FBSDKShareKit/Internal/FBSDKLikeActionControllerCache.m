@@ -47,7 +47,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithAccessTokenString:);
   return [self initWithAccessTokenString:nil];
 }
 

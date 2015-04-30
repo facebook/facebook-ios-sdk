@@ -25,6 +25,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "FBSDKMacros.h"
+
 @implementation FBSDKMath
 
 #pragma mark - Class Methods
@@ -150,6 +152,7 @@
 
 - (instancetype)init
 {
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 

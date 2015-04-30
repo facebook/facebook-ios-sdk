@@ -113,7 +113,7 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithProtocol:protocolType:scheme:methodName:methodVersion:parameters:userInfo:);
   return [self initWithProtocol:nil
                    protocolType:FBSDKBridgeAPIProtocolTypeWeb
                          scheme:nil
@@ -136,6 +136,9 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   if (!requestURL) {
     return nil;
   }
+
+  [FBSDKInternalUtility validateURLSchemes];
+
   NSDictionary *requestQueryParameters = [FBSDKUtility dictionaryWithQueryString:requestURL.query];
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
   [FBSDKBridgeAPICrypto addCipherKeyToQueryParameters:queryParameters];

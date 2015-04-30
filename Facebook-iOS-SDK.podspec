@@ -3,10 +3,11 @@
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "4.0.1"
+  s.version      = "4.1.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
+                  (DEPRECATED: Use FBSDKCoreKit,FBSDKLoginKit, and FBSDKShareKit podspecs instead)
                    The Facebook SDK for iOS enables you to use Facebook's Platform such as:
                    * Facebook Login to easily sign in users.
                    * Sharing features like the Share or Message Dialog to grow your app.
@@ -20,14 +21,14 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.0.1"
+                     :tag => "sdk-version-4.1.0"
                     }
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
 
   s.requires_arc = true
 
-  s.dependency 'Bolts', '~> 1.0'
+  s.dependency 'Bolts', '~> 1.1'
 
   s.subspec 'CoreKit' do |spec|
     spec.source_files   = "FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}"
@@ -51,4 +52,7 @@ Pod::Spec.new do |s|
     spec.header_dir = "FBSDKShareKit"
     spec.dependency 'Facebook-iOS-SDK/CoreKit'
   end
+
+  s.deprecated = true
+  s.deprecated_in_favor_of = 'FBSDKCoreKit'
 end

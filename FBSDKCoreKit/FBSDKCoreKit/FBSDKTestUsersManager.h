@@ -52,10 +52,10 @@ typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError *error) ;
 
 /*!
  @abstract construct or return the shared instance
- @param appId the Facebook app id
+ @param appID the Facebook app id
  @param appSecret the Facebook app secret
  */
-+ (instancetype)sharedInstanceForAppId:(NSString *)appId appSecret:(NSString *)appSecret;
++ (instancetype)sharedInstanceForAppID:(NSString *)appID appSecret:(NSString *)appSecret;
 
 /*!
  @abstract retrieve FBSDKAccessToken instances for test accounts with the specific permissions.
@@ -78,17 +78,24 @@ typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError *error) ;
 
 /*!
  @abstract add a test account with the specified permissions
+ @param permissions the set of permissions, e.g., [NSSet setWithObjects:@"email", @"user_friends"]
+ @param handler the callback handler
  */
 - (void)addTestAccountWithPermissions:(NSSet *)permissions
                     completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)handler;
 
 /*!
  @abstract remove a test account for the given user id
+ @param userId the user id
+ @param handler the callback handler
  */
 - (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler)handler;
 
 /*!
  @abstract Make two test users friends with each other.
+ @param first the token of the first user
+ @param second the token of the second user
+ @param callback the callback handler
  */
 - (void)makeFriendsWithFirst:(FBSDKAccessToken *)first second:(FBSDKAccessToken *)second callback:(void (^)(NSError *))callback;
 

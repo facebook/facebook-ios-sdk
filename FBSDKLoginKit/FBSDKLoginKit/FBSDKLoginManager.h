@@ -171,7 +171,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 
  @abstract Issues an asychronous renewCredentialsForAccount call to the device's Facebook account store.
 
- @param handler The completion handler to call when the renewal is completed.
+ @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
 
  @discussion This can be used to explicitly renew account credentials and is provided as a convenience wrapper around
  `[ACAccountStore renewCredentialsForAccount:completion]`. Note the method will not issue the renewal call if the the

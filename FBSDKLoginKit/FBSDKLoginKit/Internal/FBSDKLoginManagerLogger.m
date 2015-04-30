@@ -167,8 +167,10 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 {
   NSMutableDictionary *params = [loginParams mutableCopy];
 
-  NSNumber *timeValue = [NSNumber numberWithDouble:round(1000 * [[NSDate date] timeIntervalSince1970])];
-  NSString *e2eTimestampString = [FBSDKInternalUtility JSONStringForObject:@{ @"init" : timeValue } error:NULL];
+  NSNumber *timeValue = @(round(1000 * [[NSDate date] timeIntervalSince1970]));
+  NSString *e2eTimestampString = [FBSDKInternalUtility JSONStringForObject:@{ @"init" : timeValue }
+                                                                     error:NULL
+                                                      invalidObjectHandler:NULL];
   params[@"e2e"] = e2eTimestampString;
 
   params[FBSDKLoginManagerLoggingClientStateKey] = [self clientStateForBehavior:loginBehavior];
@@ -179,16 +181,7 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 - (void)willAttemptAppSwitchingBehavior
 {
   NSString *defaultUrlScheme = [NSString stringWithFormat:@"fb%@%@", [FBSDKSettings appID], [FBSDKSettings appURLSchemeSuffix] ?: @""];
-  BOOL isURLSchemeRegistered = NO;
-
-  NSArray *supportedURLTypes = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"CFBundleURLTypes"];
-  for (NSDictionary *urlType in supportedURLTypes) {
-    NSArray *supportedURLSchemes = [urlType valueForKey:@"CFBundleURLSchemes"];
-    if ([supportedURLSchemes containsObject:defaultUrlScheme]) {
-      isURLSchemeRegistered = YES;
-      break;
-    }
-  }
+  BOOL isURLSchemeRegistered = [FBSDKInternalUtility isRegisteredURLScheme:defaultUrlScheme];
 
   [_extras addEntriesFromDictionary:@{
     @"isMultitaskingSupported" : @([UIDevice currentDevice].isMultitaskingSupported),
@@ -209,13 +202,12 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 - (NSString *)clientStateForBehavior:(FBSDKLoginBehavior)loginBehavior
 {
   NSDictionary *clientState = @{
-    FBSDKLoginManagerLoggerParamLoginBehaviorKey : @(loginBehavior),
-    FBSDKLoginManagerLoggerParamIdentifierKey : _identifier,
-
-    FBSDKLoginManagerLoggingClientStateIsClientState : @YES,
+    FBSDKLoginManagerLoggerParamLoginBehaviorKey: @(loginBehavior),
+    FBSDKLoginManagerLoggerParamIdentifierKey: _identifier,
+    FBSDKLoginManagerLoggingClientStateIsClientState: @YES,
   };
 
-  return [FBSDKInternalUtility JSONStringForObject:clientState error:NULL];
+  return [FBSDKInternalUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }
 
 - (NSString *)identifierForBehavior:(FBSDKLoginBehavior)loginBehavior
@@ -257,7 +249,9 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 - (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
 {
   if (_identifier) {
-    NSString *extrasJSONString = [FBSDKInternalUtility JSONStringForObject:_extras error:NULL];
+    NSString *extrasJSONString = [FBSDKInternalUtility JSONStringForObject:_extras
+                                                                     error:NULL
+                                                      invalidObjectHandler:NULL];
     if (extrasJSONString) {
         params[FBSDKLoginManagerLoggerParamExtrasKey] = extrasJSONString;
     }

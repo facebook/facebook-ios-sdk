@@ -121,7 +121,7 @@ NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithRequest:responseParameters:cancelled:error:);
   return [self initWithRequest:nil responseParameters:nil cancelled:NO error:nil];
 }
 

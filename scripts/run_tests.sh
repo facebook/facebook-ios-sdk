@@ -22,7 +22,7 @@
 
 # process options, valid arguments -c [Debug|Release] -n
 BUILDCONFIGURATION=Debug
-SCHEMES="BuildAllKits FBSDKIntegrationTests"
+SCHEMES="BuildAllKits FBSDKIntegrationTests samples"
 
 while getopts ":nc:" OPTNAME
 do
@@ -37,6 +37,7 @@ do
       echo "SUITE: one or more of the following (default is all):"
       echo "       BuildAllKits: unit tests"
       echo "       FBSDKIntegrationTests: integration tests"
+      echo "       samples: build sample apps"
       die
       ;;
     "n")
@@ -60,22 +61,40 @@ if [ -n "$*" ]; then
 fi
 # re-map v3 schemes
 SCHEMES=${SCHEMES/FacebookSDKTests/BuildAllKits}
-SCHEMES=${SCHEMES/FacebookSDKIntegrationTests/}
-SCHEMES=${SCHEMES/FacebookSDKApplicationTests/}
+SCHEMES=${SCHEMES/FacebookSDKIntegrationTests/FBSDKIntegrationTests}
+SCHEMES=${SCHEMES/FacebookSDKApplicationTests/samples}
 
 cd "$FB_SDK_ROOT"
 
 for SCHEME in $SCHEMES; do
-  BUILD_TEST=""
-  if [[ $SCHEME == "FBSDKIntegrationTests" ]]; then
-    BUILD_TEST="build-tests"
+  if [[ $SCHEME == "samples" ]]; then
+    FAILED_SAMPLES=""
+    for SAMPLE in Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
+      (
+        cd "$FB_SDK_ROOT/samples/$SAMPLE"
+        $XCTOOL -project "$SAMPLE.xcodeproj" -scheme "$SAMPLE" -sdk iphonesimulator build
+      )
+      if [[ $? -ne 0 ]]; then
+        FAILED_SAMPLES="$FAILED_SAMPLES $SAMPLE"
+      fi
+    done
+    if [[ -n $FAILED_SAMPLES ]]; then
+        die "Failed to build $FAILED_SAMPLES"
+    fi
+    if [[ -a "internal/scripts/run_internal_tests.sh" ]]; then
+      source "internal/scripts/run_internal_tests.sh"
+    fi
+  else
+    BUILD_TEST=""
+    if [[ $SCHEME == "FBSDKIntegrationTests" ]]; then
+      BUILD_TEST="build-tests"
+    fi
+    COMMAND="$XCTOOL
+      -workspace FacebookSDK.xcworkspace \
+      -scheme $SCHEME \
+      -configuration "$BUILDCONFIGURATION" \
+      -sdk iphonesimulator \
+      $BUILD_TEST run-tests"
+      eval $COMMAND || die "Error while running tests ($COMMAND)"
   fi
-  COMMAND="$XCTOOL
-    -workspace FacebookSDK.xcworkspace \
-    -scheme $SCHEME \
-    -configuration "$BUILDCONFIGURATION" \
-    -sdk iphonesimulator \
-    $BUILD_TEST run-tests"
-    eval $COMMAND || die "Error while running tests ($COMMAND)"
 done
-

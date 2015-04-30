@@ -167,6 +167,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompression
 
 - (instancetype)init
 {
+  FBSDK_NO_DESIGNATED_INITIALIZER();
   return nil;
 }
 

@@ -62,6 +62,13 @@ typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
 + (void)array:(NSMutableArray *)array addObject:(id)object;
 
 /*!
+ @abstract Converts simple value types to the string equivelant for serializing to a request query or body.
+ @param value The value to be converted.
+ @return The value that may have been converted if able (otherwise the input param).
+ */
++ (id)convertRequestValue:(id)value;
+
+/*!
  @abstract Gets the milliseconds since the Unix Epoch.
  @discussion Changes in the system clock will affect this value.
  @return The number of milliseconds since the Unix Epoch.
@@ -163,14 +170,6 @@ setJSONStringForObject:(id)object
  @abstract Converts an object into a JSON string.
  @param object The object to convert to JSON.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return A JSON string or nil if the object cannot be converted to JSON.
- */
-+ (NSString *)JSONStringForObject:(id)object error:(NSError *__autoreleasing *)errorRef;
-
-/*!
- @abstract Converts an object into a JSON string.
- @param object The object to convert to JSON.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
  @param invalidObjectHandler Handles objects that are invalid, returning a replacement value or nil to ignore.
  @return A JSON string or nil if the object cannot be converted to JSON.
  */
@@ -238,6 +237,43 @@ setJSONStringForObject:(id)object
  * @abstract Deletes all the cookies in the NSHTTPCookieStorage for Facebook web dialogs
  */
 + (void)deleteFacebookCookies;
+
+/*!
+ @abstract Extracts permissions from a response fetched from me/permissions
+ @param responseObject the response
+ @param grantedPermissions the set to add granted permissions to
+ @param declinedPermissions the set to add decliend permissions to.
+ */
++ (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
+                    grantedPermissions:(NSMutableSet *)grantedPermissions
+                   declinedPermissions:(NSMutableSet *)declinedPermissions;
+
+/*!
+ @abstract Registers a transient object so that it will not be deallocated until unregistered
+ @param object The transient object
+ */
++ (void)registerTransientObject:(id)object;
+
+/*!
+ @abstract Unregisters a transient object that was previously registered with registerTransientObject:
+ @param object The transient object
+ */
++ (void)unregisterTransientObject:(id)object;
+
+/*!
+ @abstract validates that the app ID is non-nil, throws an NSException if nil.
+ */
++ (void)validateAppID;
+
+/*!
+ @abstract validates that the right URL schemes are registered, throws an NSException if not.
+ */
++ (void)validateURLSchemes;
+
+/*!
+ @abstract returns true if the url scheme is registered in the CFBundleURLTypes
+ */
++ (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 #define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
 { \

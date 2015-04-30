@@ -22,7 +22,9 @@
 
 + (void)addPiggybackRequests:(FBSDKGraphRequestConnection *)connection;
 
-+ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection;
++ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestHandler)permissionHandler;
+
++ (void)addRefreshPiggybackIfStale:(FBSDKGraphRequestConnection *)connection;
 
 + (void)addServerConfigurationPiggyback:(FBSDKGraphRequestConnection *)connection;
 @end

@@ -56,7 +56,7 @@
 
 - (instancetype)init
 {
-  FBSDK_NOT_DESIGNATED_INITIALIZER
+  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithRequest:completionHandler:);
   return [self initWithRequest:nil completionHandler:NULL];
 }
 

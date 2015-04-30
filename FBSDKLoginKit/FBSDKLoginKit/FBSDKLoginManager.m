@@ -34,13 +34,6 @@
 {
   FBSDKLoginManagerRequestTokenHandler _handler;
   NSSet *_requestedPermissions;
-  // The FBSDKLoginManager's interface indicates it can be used as a transient object.
-  // When a log in operation escapes the scope of the caller during an asynchronous
-  // operation, the last strong reference may be released and the login manager may be
-  // deallocated. We prevent the potential deallocation of an instance by creating a
-  // strong reference cycle to itself while the asynchronous operations are running. Use
-  // great care when setting this variable!
-  FBSDKLoginManager *_cycle;
   FBSDKLoginManagerLogger *_logger;
   // YES if we're calling out to the Facebook app or Safari to perform a log in
   BOOL _performingLogIn;
@@ -233,6 +226,8 @@
 
 - (NSDictionary *)logInParametersWithPermissions:(NSSet *)permissions
 {
+  [FBSDKInternalUtility validateURLSchemes];
+
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
   loginParams[@"client_id"] = [FBSDKSettings appID];
   loginParams[@"response_type"] = @"token,signed_request";
@@ -362,7 +357,9 @@
   loginParams = [_logger parametersWithTimeStampAndClientState:loginParams forLoginBehavior:FBSDKLoginBehaviorNative];
 
   NSString *scheme = ([FBSDKSettings appURLSchemeSuffix] ? @"fbauth2" : @"fbauth");
-  NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:loginParams error:error];
+  NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:loginParams];
+  mutableParams[@"legacy_override"] = FBSDK_TARGET_PLATFORM_VERSION;
+  NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:mutableParams error:error];
 
   // if native log in is possible, a strong reference will be maintained by FBSDKApplicationDelegate during the the asynchronous operation
   return !*error && [self tryOpenURL:authURL];
@@ -392,15 +389,12 @@
 
 - (BOOL)tryOpenURL:(NSURL *)url
 {
-  BOOL canOpen = [[UIApplication sharedApplication] canOpenURL:url];
-  if (canOpen) {
-    // FBSDKApplicationDelegate will maintain a strong reference and call -application:openURL:sourceApplication:annotation: below
-    [[FBSDKApplicationDelegate sharedInstance] openURL:url sender:self];
-
-    // Safari openURL calls can wrongly return NO so rely on the more honest canOpenURL call for return.
+  // FBSDKApplicationDelegate will maintain a strong reference and call -application:openURL:sourceApplication:annotation: below
+  if ([[FBSDKApplicationDelegate sharedInstance] openURL:url sender:self]) {
     _performingLogIn = YES;
+    return YES;
   }
-  return canOpen;
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
@@ -466,10 +460,18 @@
                                                                      HTTPMethod:nil
                                                                           flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [meRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      // After the me request is made, we can continue on to -performSystemLogIn.
-      // -[FBSDKGraphRequestConnection processResultBody:error:metadata:] will automatically
-      // renew the system credentials if necessary, so there's no work left to do.
-      [self performSystemLogIn];
+      if (!error) {
+        // If there was no error, make an explicit renewal call anyway to cover cases where user has revoked some read permission like email.
+        // Otherwise, iOS system account may continue to think email was granted and never prompt UI again.
+        [[FBSDKSystemAccountStoreAdapter sharedInstance] renewSystemAuthorization:^(ACAccountCredentialRenewResult renewResult, NSError *renewError) {
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self performSystemLogIn];
+          });
+        }];
+      } else {
+        // If there was an error, FBSDKGraphRequestConnection would have already done work already (like renewal calls)
+        [self performSystemLogIn];
+      }
     }];
   } else {
     [self performSystemLogIn];
@@ -622,8 +624,7 @@
 
 - (BOOL)performWebLogInWithParameters:(NSDictionary *)loginParams
 {
-  _cycle = self; // guarantee the instance will survive until called back through FBSDKWebDialogDelegate
-
+  [FBSDKInternalUtility registerTransientObject:self];
   [FBSDKInternalUtility deleteFacebookCookies];
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:loginParams];
   parameters[@"title"] = NSLocalizedStringWithDefaultValue(@"LoginWeb.LogInTitle",
@@ -631,9 +632,7 @@
                                                            [NSBundle mainBundle],
                                                            @"Log In",
                                                            @"Title of the web dialog that prompts the user to log in to Facebook.");
-  [FBSDKWebDialog showWithName:@"oauth"
-                    parameters:loginParams
-                      delegate:self];
+  [FBSDKWebDialog showWithName:@"oauth" parameters:loginParams delegate:self];
 
   return YES;
 }
@@ -650,24 +649,21 @@
       [self completeAuthentication:parameters];
     }];
   }
-
-  _cycle = nil; // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
 {
   FBSDKLoginCompletionParameters *parameters = [[FBSDKLoginCompletionParameters alloc] initWithError:error];
   [self completeAuthentication:parameters];
-
-  _cycle = nil; // a strong reference is no longer necessary; the asynchronous operation is complete
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
 {
   FBSDKLoginCompletionParameters *parameters = [[FBSDKLoginCompletionParameters alloc] init];
   [self completeAuthentication:parameters];
-
-  _cycle = nil; // a strong reference is no longer necessary; the asynchronous operation is complete
+  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 @end

@@ -84,10 +84,12 @@
                                                            userInfo:nil];
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
+    [FBSDKInternalUtility unregisterTransientObject:self];
   };
   [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
 
   [self _logDialogShow];
+  [FBSDKInternalUtility registerTransientObject:self];
   return YES;
 }
 
