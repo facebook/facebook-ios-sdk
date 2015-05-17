@@ -1,36 +1,42 @@
 #!/bin/sh
+# Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
-# Copyright 2010-present Facebook.
+# You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+# copy, modify, and distribute this software in source code or binary form for use
+# in connection with the web services and APIs provided by Facebook.
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-# 
-#    http://www.apache.org/licenses/LICENSE-2.0
-# 
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# As with any software that integrates with the Facebook platform, your use of
+# this software is subject to the Facebook Developer Principles and Policies
+# [http://developers.facebook.com/policy/]. This copyright notice shall be
+# included in all copies or substantial portions of the software.
 #
-
-# This script builds the FacebookSDK.framework that is distributed at
-# https://github.com/facebook/facebook-ios-sdk/downloads/FacebookSDK.framework.zip
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+# FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+# IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 . "${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh"
+
+# option s to skip build
+SKIPBUILD=""
+while getopts "s:" OPTNAME
+do
+  case "$OPTNAME" in
+    s)
+      SKIPBUILD="YES"
+      ;;
+  esac
+done
 
 test -x "$PACKAGEBUILD" || die 'Could not find pkgbuild utility! Reinstall XCode?'
 test -x "$PRODUCTBUILD" || die 'Could not find productbuild utility! Reinstall XCode?'
 test -x "$PRODUCTSIGN" || die 'Could not find productsign utility! Reinstall XCode?'
 
-FB_SDK_PGK_VERSION=$(sed -n 's/.*FB_IOS_SDK_VERSION_STRING @\"\(.*\)\"/\1/p' "${FB_SDK_SRC}/FacebookSDK.h")
-# In case the hotfix value is zero, we drop the .0
-FB_SDK_NORMALIZED_PGK_VERSION=$(echo ${FB_SDK_PGK_VERSION} | sed  's/^\([0-9]*\.[0-9]*\)\.0/\1/')
-
 COMPONENT_FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK.pkg
-FB_SDK_UNSIGNED_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_NORMALIZED_PGK_VERSION}-unsigned.pkg
-FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_NORMALIZED_PGK_VERSION}.pkg
+FB_SDK_UNSIGNED_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_SHORT}-unsigned.pkg
+FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_SHORT}.pkg
 
 FB_SDK_BUILD_ROOT_DIR=Documents/FacebookSDK
 
@@ -50,12 +56,14 @@ CODE_SIGN_IDENTITY='Developer ID Installer: Facebook, Inc. (V9WTTPBFK9)'
 # Call out to build prerequisites.
 #
 if is_outermost_build; then
+  if [ -z $SKIPBUILD ]; then
     . "$FB_SDK_SCRIPT/build_framework.sh" -c Release
     . "$FB_SDK_SCRIPT/build_documentation.sh"
+  fi
 fi
 echo Building Distribution.
 
-# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------gi
 # Build package directory structure
 #
 progress_message "Building package directory structure."
@@ -67,10 +75,16 @@ mkdir -p "$FB_SDK_BUILD_PACKAGE_SAMPLES"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SCRIPTS"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCS"
 
-\cp -R "$FB_SDK_FRAMEWORK" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
-  || die "Could not copy $FB_SDK_FRAMEWORK"
-\cp -R "$BOLTS_FRAMEWORK" "$BOLTS_BUILD_PACKAGE_FRAMEWORK" \
-  || die "Could not copy $BOLTS_FRAMEWORK"
+\cp -R "$FB_SDK_BUILD"/FBSDKCoreKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FBSDKCoreKit.framework"
+\cp -R "$FB_SDK_BUILD"/FBSDKLoginKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FBSDKLoginKit.framework"
+\cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FBSDKShareKit.framework"
+\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy Bolts.framework"
+\cp $"$FB_SDK_ROOT"/FacebookSDK.strings "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FacebookSDK.strings"
 \cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
 \cp -R "$FB_SDK_SCRIPT/package/preinstall" "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \
@@ -93,8 +107,15 @@ done
 # -----------------------------------------------------------------------------
 # Build FBAudienceNetwork framework
 #
-test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
-  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh
+(test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
+  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh) || die "Failed to build FBAudienceNetwork"
+
+# -----------------------------------------------------------------------------
+# Build Messenger Kit
+#
+("$XCTOOL" -project "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit.xcodeproj -scheme "FBSDKMessengerShareKit-universal" -configuration Release clean build) || die "Failed to build messenger kit"
+\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FBSDKMessengerShareKit.framework"
 
 # -----------------------------------------------------------------------------
 # Build .pkg from package directory
@@ -103,17 +124,17 @@ progress_message "Building .pkg from package directory."
 # First use pkgbuild to create component package
 \rm -rf "$COMPONENT_FB_SDK_PKG"
 $PACKAGEBUILD --root "$FB_SDK_BUILD_PACKAGE" \
- 		 --identifier "com.facebook.sdk.pkg" \
- 		 --scripts "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \
- 		 --version $FB_SDK_NORMALIZED_PGK_VERSION   \
- 		 "$COMPONENT_FB_SDK_PKG" || die "Failed to pkgbuild component package"
+    --identifier "com.facebook.sdk.pkg" \
+    --scripts "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \
+    --version $FB_SDK_VERSION_SHORT   \
+    "$COMPONENT_FB_SDK_PKG" || die "Failed to pkgbuild component package"
 
 # Build product archive (note --resources should point to the folder containing the README)
 \rm -rf "$FB_SDK_UNSIGNED_PKG"
 $PRODUCTBUILD --distribution "$FB_SDK_SCRIPT/package/productbuild_distribution.xml" \
- 			 --package-path $FB_SDK_BUILD \
-			 --resources "$FB_SDK_BUILD/package/Documents/FacebookSDK/" \
-			 "$FB_SDK_UNSIGNED_PKG" || die "Failed to productbuild the product archive"
+    --package-path $FB_SDK_BUILD \
+    --resources "$FB_SDK_BUILD/package/Documents/FacebookSDK/" \
+    "$FB_SDK_UNSIGNED_PKG" || die "Failed to productbuild the product archive"
 
 progress_message "Signing package."
 \rm -rf "$FB_SDK_PKG"
