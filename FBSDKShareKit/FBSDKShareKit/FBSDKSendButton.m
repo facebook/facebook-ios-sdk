@@ -65,7 +65,7 @@
 - (void)configureButton
 {
   NSString *title =
-  NSLocalizedStringWithDefaultValue(@"SendButton.Send", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"SendButton.Send", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Send",
                                     @"The label for FBSDKSendButton");
 

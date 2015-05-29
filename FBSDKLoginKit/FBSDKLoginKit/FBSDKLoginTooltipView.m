@@ -28,7 +28,7 @@
 - (instancetype)init
 {
   NSString *tooltipMessage =
-  NSLocalizedStringWithDefaultValue(@"LoginTooltip.Message", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"LoginTooltip.Message", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"New! You're in control - choose what info you want to share with apps.",
                                     @"The message of the FBSDKLoginTooltipView");
   return [super initWithTagline:nil message:tooltipMessage colorStyle:FBSDKTooltipColorStyleFriendlyBlue];

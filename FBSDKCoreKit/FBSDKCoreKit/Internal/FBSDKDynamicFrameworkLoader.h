@@ -226,3 +226,7 @@ FBSDK_EXTERN Class fbsdkdfl_SKProductsRequestClass(void);
 #pragma mark - AssetsLibrary Classes
 
 FBSDK_EXTERN Class fbsdkdfl_ALAssetsLibraryClass(void);
+
+#pragma mark - CoreTelephony Classes
+
+FBSDK_EXTERN Class fbsdkdfl_CTTelephonyNetworkInfoClass(void);

@@ -51,7 +51,8 @@
 
 - (BOOL)loadGameFromAppLinkURL:(BFURL *)appLinkURL
 {
-  if (![self loadGameFromStringRepresentation:appLinkURL.targetQueryParameters[@"data"]]) {
+  if (![self loadGameFromStringRepresentationWithData:appLinkURL.targetQueryParameters[@"data"]
+                                               locked:appLinkURL.targetQueryParameters[@"locked"]]) {
     return NO;
   }
 
@@ -70,9 +71,9 @@
   return YES;
 }
 
-- (BOOL)loadGameFromStringRepresentation:(NSString *)stringRepresentation
+- (BOOL)loadGameFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked
 {
-  GameController *gameController = [GameController gameControllerFromStringRepresentation:stringRepresentation];
+  GameController *gameController = [GameController gameControllerFromStringRepresentationWithData:data locked:locked];
   if (!gameController) {
     return NO;
   }

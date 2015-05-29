@@ -241,7 +241,7 @@
   return ([self _validateRequiredValue:appInviteContent name:@"content" error:errorRef] &&
           [self _validateRequiredValue:appInviteContent.appLinkURL name:@"appLinkURL" error:errorRef] &&
           [self _validateNetworkURL:appInviteContent.appLinkURL name:@"appLinkURL" error:errorRef] &&
-          [self _validateNetworkURL:appInviteContent.previewImageURL name:@"previewImageURL" error:errorRef]);
+          [self _validateNetworkURL:appInviteContent.appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]);
 }
 
 + (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef
@@ -260,20 +260,20 @@
     }
     return NO;
   }
-  BOOL hasTo = [gameRequestContent.to count] > 0;
+  BOOL hasTo = [gameRequestContent.recipients count] > 0;
   BOOL hasFilters = gameRequestContent.filters != FBSDKGameRequestFilterNone;
-  BOOL hasSuggestions = [gameRequestContent.suggestions count] > 0;
+  BOOL hasSuggestions = [gameRequestContent.recipientSuggestions count] > 0;
   if (hasTo && hasFilters) {
     if (errorRef != NULL) {
       NSString *message = @"Cannot specify to and filters at the same time.";
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"to" value:gameRequestContent.to message:message];
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"recipients" value:gameRequestContent.recipients message:message];
     }
     return NO;
   }
   if (hasTo && hasSuggestions) {
     if (errorRef != NULL) {
       NSString *message = @"Cannot specify to and suggestions at the same time.";
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"to" value:gameRequestContent.to message:message];
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"recipients" value:gameRequestContent.recipients message:message];
     }
     return NO;
   }
@@ -281,7 +281,7 @@
   if (hasFilters && hasSuggestions) {
     if (errorRef != NULL) {
       NSString *message = @"Cannot specify filters and suggestions at the same time.";
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"suggestions" value:gameRequestContent.suggestions message:message];
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"recipientSuggestions" value:gameRequestContent.recipientSuggestions message:message];
     }
     return NO;
   }

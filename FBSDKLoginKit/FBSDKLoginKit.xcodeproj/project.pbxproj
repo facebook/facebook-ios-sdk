@@ -87,6 +87,8 @@
 		6BADA8CF1A9544BC00A5ADC1 /* FBSDKLoginKit+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginKit+Internal.h"; sourceTree = "<group>"; };
 		6BAFD01F1A9531EA0096E4B5 /* FBSDKLoginCompletion+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginCompletion+Internal.h"; sourceTree = "<group>"; };
 		6BCDC82F1A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSystemAccountAuthenticationTests.m; sourceTree = "<group>"; };
+		8918E3E71AFA67EF003F7B88 /* FacebookSDK-Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-Application.xcconfig"; path = "../Configurations/FacebookSDK-Application.xcconfig"; sourceTree = "<group>"; };
+		8918E3E81AFA67EF003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-ApplicationTests.xcconfig"; path = "../Configurations/FacebookSDK-ApplicationTests.xcconfig"; sourceTree = "<group>"; };
 		893774A91A3B80FD00BE2807 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		893774AB1A3B810100BE2807 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		893774B11A3B818300BE2807 /* FacebookSDK-Library.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-Library.xcconfig"; path = "../Configurations/FacebookSDK-Library.xcconfig"; sourceTree = "<group>"; };
@@ -258,6 +260,8 @@
 		9D9DB8F71A1156B30086167B /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				8918E3E71AFA67EF003F7B88 /* FacebookSDK-Application.xcconfig */,
+				8918E3E81AFA67EF003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */,
 				893774B11A3B818300BE2807 /* FacebookSDK-Library.xcconfig */,
 				893774B21A3B818300BE2807 /* FacebookSDK-LogicTests.xcconfig */,
 				893774B31A3B818300BE2807 /* FacebookSDK-Project-Debug.xcconfig */,
@@ -333,7 +337,7 @@
 		9D9DB8D01A114E500086167B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D9DB8D81A114E500086167B = {

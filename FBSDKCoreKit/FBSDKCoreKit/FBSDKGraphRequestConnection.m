@@ -644,7 +644,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
   [self.requests enumerateObjectsUsingBlock:^(FBSDKGraphRequestMetadata *metadata, NSUInteger i, BOOL *stop) {
     id result = networkError ? nil : [results objectAtIndex:i];
-    NSError *resultError = networkError ?: [self errorFromResult:result];
+    NSError *resultError = networkError ?: [self errorFromResult:result request:metadata.request];
 
     id body = nil;
     if (!resultError && [result isKindOfClass:[NSDictionary class]]) {
@@ -763,7 +763,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
 }
 
-- (NSError *)errorFromResult:(id)result
+- (NSError *)errorFromResult:(id)result request:(FBSDKGraphRequest *)request
 {
   if ([result isKindOfClass:[NSDictionary class]]) {
     NSDictionary *errorDictionary = result[@"body"][@"error"];
@@ -784,7 +784,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
       FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [g_errorConfiguration
                                                                 recoveryConfigurationForCode:[userInfo[FBSDKGraphRequestErrorGraphErrorCode] stringValue]
-                                                                subcode:[userInfo[FBSDKGraphRequestErrorGraphErrorSubcode] stringValue]];
+                                                                subcode:[userInfo[FBSDKGraphRequestErrorGraphErrorSubcode] stringValue]
+                                                                request:request];
       if ([errorDictionary[@"is_transient"] boolValue]) {
         userInfo[FBSDKGraphRequestErrorCategoryKey] = @(FBSDKGraphRequestErrorCategoryTransient);
       } else {

@@ -92,7 +92,7 @@ fi
 progress_message "Generating strings"
 (
   cd "$FB_SDK_ROOT"
-  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ -name "*.m" | xargs genstrings
+  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ -name "*.m" | xargs genstrings -o FacebookSDKStrings.bundle/Resources/en.lproj/
 )
 
 # -----------------------------------------------------------------------------

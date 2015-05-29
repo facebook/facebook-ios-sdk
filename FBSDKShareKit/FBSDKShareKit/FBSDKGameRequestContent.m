@@ -34,20 +34,40 @@
 
 #pragma mark - Properties
 
-- (void)setTo:(NSArray *)to
+-(void)setRecipients:(NSArray *)recipients
 {
-  [FBSDKShareUtility assertCollection:to ofClass:[NSString class] name:@"to"];
-  if (![_to isEqual:to]) {
-    _to = [to copy];
+  [FBSDKShareUtility assertCollection:recipients ofClass:[NSString class] name:@"recipients"];
+  if (![_recipients isEqual:recipients]) {
+    _recipients = [recipients copy];
   }
+}
+
+- (void)setRecipientSuggestions:(NSArray *)recipientSuggestions
+{
+  [FBSDKShareUtility assertCollection:recipientSuggestions ofClass:[NSString class] name:@"recipientSuggestions"];
+  if (![_recipientSuggestions isEqual:recipientSuggestions]) {
+    _recipientSuggestions = [recipientSuggestions copy];
+  }
+}
+
+- (NSArray *)suggestions
+{
+  return self.recipientSuggestions;
 }
 
 - (void)setSuggestions:(NSArray *)suggestions
 {
-  [FBSDKShareUtility assertCollection:suggestions ofClass:[NSString class] name:@"suggestions"];
-  if (![_suggestions isEqual:suggestions]) {
-    _suggestions = [suggestions copy];
-  }
+  self.recipientSuggestions = suggestions;
+}
+
+- (NSArray *)to
+{
+  return self.recipients;
+}
+
+- (void)setTo:(NSArray *)to
+{
+  self.recipients = to;
 }
 
 #pragma mark - Equality
@@ -60,9 +80,9 @@
     [FBSDKMath hashWithInteger:_filters],
     [_message hash],
     [_objectID hash],
-    [_suggestions hash],
+    [_recipientSuggestions hash],
     [_title hash],
-    [_to hash],
+    [_recipients hash],
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -86,9 +106,9 @@
           [FBSDKInternalUtility object:_data isEqualToObject:content.data] &&
           [FBSDKInternalUtility object:_message isEqualToObject:content.message] &&
           [FBSDKInternalUtility object:_objectID isEqualToObject:content.objectID] &&
-          [FBSDKInternalUtility object:_suggestions isEqualToObject:content.suggestions] &&
+          [FBSDKInternalUtility object:_recipientSuggestions isEqualToObject:content.recipientSuggestions] &&
           [FBSDKInternalUtility object:_title isEqualToObject:content.title] &&
-          [FBSDKInternalUtility object:_to isEqualToObject:content.to]);
+          [FBSDKInternalUtility object:_recipients isEqualToObject:content.recipients]);
 }
 
 #pragma mark - NSCoding
@@ -106,9 +126,9 @@
     _filters = [decoder decodeIntegerForKey:FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY];
     _message = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
     _objectID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
-    _suggestions = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
+    _recipientSuggestions = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
     _title = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
-    _to = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
+    _recipients = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
   }
   return self;
 }
@@ -120,9 +140,9 @@
   [encoder encodeInteger:_filters forKey:FBSDK_APP_REQUEST_CONTENT_FILTERS_KEY];
   [encoder encodeObject:_message forKey:FBSDK_APP_REQUEST_CONTENT_MESSAGE_KEY];
   [encoder encodeObject:_objectID forKey:FBSDK_APP_REQUEST_CONTENT_OBJECT_ID_KEY];
-  [encoder encodeObject:_suggestions forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
+  [encoder encodeObject:_recipientSuggestions forKey:FBSDK_APP_REQUEST_CONTENT_SUGGESTIONS_KEY];
   [encoder encodeObject:_title forKey:FBSDK_APP_REQUEST_CONTENT_TITLE_KEY];
-  [encoder encodeObject:_to forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
+  [encoder encodeObject:_recipients forKey:FBSDK_APP_REQUEST_CONTENT_TO_KEY];
 }
 
 #pragma mark - NSCopying
@@ -135,9 +155,9 @@
   copy->_filters = _filters;
   copy->_message = [_message copy];
   copy->_objectID = [_objectID copy];
-  copy->_suggestions = [_suggestions copy];
+  copy->_recipientSuggestions = [_recipientSuggestions copy];
   copy->_title = [_title copy];
-  copy->_to = [_to copy];
+  copy->_recipients = [_recipients copy];
   return copy;
 }
 

@@ -479,6 +479,7 @@ typedef void (^RPSBlock)(void);
     [object setString:builtInOpenGraphObjects[_lastPlayerCall] forKey:@"fb_sample_rps:player_gesture"];
     [object setString:builtInOpenGraphObjects[_lastComputerCall] forKey:@"fb_sample_rps:opponent_gesture"];
     [object setString:resultName forKey:@"fb_sample_rps:result"];
+    [object setString:photoURLs[_lastPlayerCall] forKey:@"og:image"];
     return object;
 }
 

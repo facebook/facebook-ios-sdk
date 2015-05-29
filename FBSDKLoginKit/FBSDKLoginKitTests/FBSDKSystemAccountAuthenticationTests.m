@@ -127,7 +127,7 @@
   parameters.appID = [FBSDKSettings appID];
   parameters.userID = @"37175274";
 
-  [target completeAuthentication:parameters];
+  [target completeAuthentication:parameters expectChallenge:NO];
 }
 
 - (void)testSystemAccountCancellationGeneratesError

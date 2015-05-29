@@ -18,6 +18,8 @@
 
 #import "FBSDKErrorRecoveryConfiguration.h"
 
+@class FBSDKGraphRequest;
+
 // maps codes and subcodes pairs to FBSDKErrorRecoveryConfiguration instances.
 @interface FBSDKErrorConfiguration : NSObject <NSSecureCoding, NSCopying>
 
@@ -27,7 +29,8 @@
 // parses the array (supplied from app settings endpoint)
 - (void)parseArray:(NSArray *)array;
 
-// NSString instances support "*" wildcard semantics (nil is treated as "*" also)
-- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode;
+// NSString "code" instances support "*" wildcard semantics (nil is treated as "*" also)
+// 'request' is optional, typically for identifying special graph request semantics (e.g., no recovery for client token)
+- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode request:(FBSDKGraphRequest *)request;
 
 @end

@@ -173,7 +173,7 @@
 
 - (void)testBatchPhotoUpload
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObjects:@"user_photos", @"publish_actions", nil]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObjects:@"publish_actions", nil]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:4];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];

@@ -35,12 +35,6 @@
 + (instancetype)shareWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate;
 
 /*!
- @abstract If YES, the objects created through the receiver will be created for app scope with the client token.
- @default NO
- */
-@property (nonatomic, assign) BOOL createObjectsWithClientToken;
-
-/*!
  @abstract The message the person has provided through the custom dialog that will accompany the share content.
  */
 @property (nonatomic, copy) NSString *message;
@@ -56,11 +50,14 @@
 - (BOOL)canShare;
 
 /*!
- @abstract Creates an Open Graph object without an action.
+ @abstract Creates an User Owned Open Graph object without an action.
  @param openGraphObject The open graph object to create.
  @discussion Use this method to create an object alone, when an action is not going to be posted with the object.  If
  the object will be used within an action, just put the object in the action and share that as the shareContent and the
  object will be created in the process.  The delegate will be messaged with the results.
+
+ Also see https://developers.facebook.com/docs/sharing/opengraph/object-api#objectapi-creatinguser
+
  @result YES if the receiver was able to send the request to create the object, otherwise NO.
  */
 - (BOOL)createOpenGraphObject:(FBSDKShareOpenGraphObject *)openGraphObject;

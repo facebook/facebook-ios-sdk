@@ -480,15 +480,8 @@
       [_delegate sharer:self didFailWithError:JSONError];
       return;
     }
-    NSString *target;
-    NSString *tokenString;
-    if (self.createObjectsWithClientToken) {
-      target = [FBSDKSettings appID];
-      tokenString = [FBSDKSettings clientToken];
-    } else {
-      target = @"me";
-      tokenString = [FBSDKAccessToken currentAccessToken].tokenString;
-    }
+    NSString *target = @"me";
+    NSString *tokenString = [FBSDKAccessToken currentAccessToken].tokenString;
     NSString *graphPath = [[NSString alloc] initWithFormat:@"/%@/objects/%@", target, type];
     NSDictionary *parameters = @{ @"object": objectString };
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath

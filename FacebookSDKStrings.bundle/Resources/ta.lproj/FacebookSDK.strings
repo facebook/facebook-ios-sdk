@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "சரி";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "ரத்துசெய்";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "உங்கள் Facebook கணக்கில் மீண்டும் இணைய, இந்தப் பயன்பாட்டில் மீண்டும் உள்நுழையவும்.";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "சரி";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "சேவையகம் தற்காலிகமாக பிஸியாக உள்ளது, மீண்டும் முயற்சிக்கவும்.";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "விருப்பம்";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "விரும்பப்பட்டது";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "ரத்துசெய்";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "வெளியேறு";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "Facebook மூலம் உள்நுழையப்பட்டுள்ளது";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "%@ இல் உள்நுழைந்துள்ளீர்கள்";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "உள்நுழைவு";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "Facebook மூலம் உள்நுழையவும்";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "வெளியேறு";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "Facebook கணக்கிற்கு அணுகல் வழங்கப்படவில்லை. சாதன அமைப்புகளைச் சரிபார்க்கவும்.";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "Facebook இல் இணைய முடியவில்லை. இணைய இணைப்பைச் சரிபார்த்து, மீண்டும் முயற்சிக்கவும்.";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "Facebook கடவுச்சொல் மாற்றப்பட்டது. கடவுச்சொல்லை உறுதிசெய்ய, அமைப்புகள் &gt; Facebook க்கு சென்று உங்கள் பெயரைத் தட்டவும்.";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "சாதனத்தில் Facebook கணக்கு உள்ளமைக்கப்படவில்லை.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "உங்கள் கணக்கு உறுதிசெய்யப்படவில்லை. www.facebook.com இல் உள்நுழைந்து, வழங்கப்பட்டுள்ள வழிமுறைகளைப் பின்பற்றவும்.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "இப்போது பயன்பாடுகளில் உள்நுழைய முடியாது. www.facebook.com இல் உள்நுழைந்து, வழங்கப்பட்டுள்ள வழிமுறைகளைப் பின்பற்றவும்.";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "புதிது! உங்கள் கட்டுப்பாட்டில் இருப்பதால், பயன்பாடுகளுடன் பகிர வேண்டிய தகவலைத் தேர்வுசெய்யவும்.";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "உள்நுழைவு";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "அனுப்பு";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "பகிர்";

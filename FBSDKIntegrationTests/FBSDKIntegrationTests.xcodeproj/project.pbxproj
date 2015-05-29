@@ -48,6 +48,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FacebookSDK-ApplicationTests.xcconfig"; sourceTree = "<group>"; };
 		9D18A8F81A9596B600A41042 /* FBSDKAppEventsIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsIntegrationTests.m; sourceTree = "<group>"; };
 		9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOHHTTPStubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D1999B31A7AF44B00CAD112 /* FBSDKIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FBSDKIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -177,6 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				9D1999BE1A7AF46300CAD112 /* FacebookSDK-Application.xcconfig */,
+				8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */,
 				9D1999BF1A7AF46300CAD112 /* FacebookSDK-Library.xcconfig */,
 				9D1999C01A7AF46300CAD112 /* FacebookSDK-LogicTests.xcconfig */,
 				9D1999C11A7AF46300CAD112 /* FacebookSDK-Project-Debug.xcconfig */,
@@ -274,7 +276,7 @@
 		9D1999A91A7AF41B00CAD112 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 				TargetAttributes = {
 					9D1999B21A7AF44B00CAD112 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -399,17 +401,15 @@
 		};
 		9D1999BA1A7AF44B00CAD112 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D1999C01A7AF46300CAD112 /* FacebookSDK-LogicTests.xcconfig */;
+			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Debug;
 		};
 		9D1999BB1A7AF44B00CAD112 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9D1999C01A7AF46300CAD112 /* FacebookSDK-LogicTests.xcconfig */;
+			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Release;
 		};

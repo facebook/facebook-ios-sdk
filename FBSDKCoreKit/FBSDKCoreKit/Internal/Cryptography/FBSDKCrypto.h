@@ -26,6 +26,12 @@
  */
 + (NSData *)randomBytes:(NSUInteger)numOfBytes;
 
+/**
+ * Generate numOfBytes random data, base64-encoded.
+ * This calls the system-provided function SecRandomCopyBytes, based on /dev/random.
+ */
++ (NSString *)randomString:(NSUInteger)numOfBytes;
+
 /*!
  @abstract Generate a fresh master key using SecRandomCopyBytes, the result is encoded in base64/.
  */

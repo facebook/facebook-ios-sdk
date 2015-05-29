@@ -62,6 +62,13 @@ typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
 + (void)array:(NSMutableArray *)array addObject:(id)object;
 
 /*!
+ @abstract Returns bundle for returning localized strings
+ @discussion We assume a convention of a bundle named FBSDKStrings.bundle, otherwise we
+  return the main bundle.
+*/
++ (NSBundle *)bundleForStrings;
+
+/*!
  @abstract Converts simple value types to the string equivelant for serializing to a request query or body.
  @param value The value to be converted.
  @return The value that may have been converted if able (otherwise the input param).

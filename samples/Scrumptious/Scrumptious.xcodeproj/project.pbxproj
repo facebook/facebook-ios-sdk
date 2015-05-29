@@ -211,7 +211,7 @@
 		B9CD0A66150EA4DD00560A93 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 			};
 			buildConfigurationList = B9CD0A69150EA4DD00560A93 /* Build configuration list for PBXProject "Scrumptious" */;
 			compatibilityVersion = "Xcode 3.2";

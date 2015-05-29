@@ -40,9 +40,7 @@
 }
 @end
 
-@interface FBSDKIntegrationTestCase : XCTestCase {
-  @protected id _mockNSBundle;
-}
+@interface FBSDKIntegrationTestCase : XCTestCase
 
 @property (readonly, copy) NSString *testAppID;
 @property (readonly, copy) NSString *testAppClientToken;

@@ -188,6 +188,11 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     expirationDate = [NSDate dateWithTimeIntervalSinceNow:[parameters[@"expires_in"] integerValue]];
   }
   _parameters.expirationDate = expirationDate;
+
+  NSError *error = nil;
+  NSDictionary *state = [FBSDKInternalUtility objectForJSONString:parameters[@"state"] error:&error];
+  NSString *challenge = state[@"challenge"];
+  _parameters.challenge = challenge;
 }
 
 - (void)setErrorWithDictionary:(NSDictionary *)parameters

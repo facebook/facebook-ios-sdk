@@ -22,6 +22,7 @@
 
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsDeviceInfo.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
@@ -51,7 +52,7 @@
     [FBSDKInternalUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
   }
 
-  parameters[@"anon_id"] = [self anonymousID];
+  parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [self anonymousID];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [[self class] advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
@@ -61,11 +62,10 @@
 
   parameters[@"application_tracking_enabled"] = [@(!FBSDKSettings.limitEventAndDataUsage) stringValue];
 
+  [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
+
   static dispatch_once_t fetchBundleOnce;
-  static NSString *bundleIdentifier;
   static NSMutableArray *urlSchemes;
-  static NSString *longVersion;
-  static NSString *shortVersion;
 
   dispatch_once(&fetchBundleOnce, ^{
     NSBundle *mainBundle = [NSBundle mainBundle];
@@ -76,23 +76,11 @@
         [urlSchemes addObjectsFromArray:schemesForType];
       }
     }
-    bundleIdentifier = [mainBundle.bundleIdentifier copy];
-    longVersion = [[mainBundle objectForInfoDictionaryKey:@"CFBundleVersion"] copy];
-    shortVersion = [[mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"] copy];
   });
 
-  if (bundleIdentifier.length > 0) {
-    [parameters setObject:bundleIdentifier forKey:@"bundle_id"];
-  }
   if (urlSchemes.count > 0) {
     [parameters setObject:[FBSDKInternalUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL]
                    forKey:@"url_schemes"];
-  }
-  if (longVersion.length > 0) {
-    [parameters setObject:longVersion forKey:@"bundle_version"];
-  }
-  if (shortVersion.length > 0) {
-    [parameters setObject:shortVersion forKey:@"bundle_short_version"];
   }
 
   return parameters;

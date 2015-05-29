@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "ઠીક";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "રદ કરો";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "તમારા ફેસબુક ખાતાને ફરીથી કનેક્ટ કરવા માટે કૃપા કરીને આ એપ્લિકેશનમાં ફરી લૉગ ઇન કરો.";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "ઠીક";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "સર્વર અસ્થાયીરૂપે વ્યસ્ત છે, કૃપા કરીને ફરી પ્રયાસ કરો.";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "પસંદ કરો";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "પસંદ કર્યું";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "રદ કરો";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "લૉગ આઉટ કરો";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "ફેસબુકનો ઉપયોગ કરીને લૉગ ઇન કરો";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "%@ તરીકે લૉગ ઇન થયાં";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "લૉગ ઇન કરો";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "ફેસબુક સાથે લૉગ ઇન કરો";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "લૉગ આઉટ કરો";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "ફેસબુક ખાતા પર ઍક્સેસ આપવામાં આવી નથી. ઉપકરણ સેટિંગ્સ ચકાસો";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "ફેસબુકથી કનેક્ટ કરવામાં અસમર્થ. તમારું નેટવર્ક કનેક્શન તપાસો અને ફરી પ્રયાસ કરો.";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "તમારો ફેસબુક પાસવર્ડ બદલાઈ ગયો છે. તમારા પાસવર્ડની પુષ્ટિ કરવા માટે, સેટિંગ્સ &gt; ફેસબુક ખોલો અને તમારા નામ પર ટૅપ કરો.";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "ઉપકરણ પર ફેસબુક ખાતું કન્ફિગર કરવામાં આવ્યું નથી.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "તમારા ખાતાની પુષ્ટિ કરવામાં આવી નથી. કૃપા કરીને www.facebook.com પર લૉગ ઇન કરો અને આપેલા સૂચનોને અનુસરો.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "તમે આ સમયે એપ્લિકેશન્સમાં લૉગ ઇન કરી શકતાં નથી. કૃપા કરીને www.facebook.com પર લૉગ ઇન કરો અને આપેલા સૂચનોને અનુસરો.";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "નવું! તમે નિયંત્રણ કરો છો - તમે એપ્લિકેશન્સ સાથે કઈ માહિતી શેર કરવા માંગો છો તે પસંદ કરો.";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "લૉગ ઇન કરો";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "મોકલો";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "શેર કરો";
