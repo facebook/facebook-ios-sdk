@@ -45,13 +45,13 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
 /*!
  @abstract A button to simplify login.
  @discussion `FBSDKLoginButton` works with `[FBSDKAccessToken currentAccessToken]` to
-  determine what to display. The delegate is only notified when a login flow is initiated
-  by a tapping the button and your app delegate is connected to `FBSDKApplicationDelegate`
-  (in the same way when using `FBSDKLoginManager`).
-
+ determine what to display. The delegate is only notified when a login flow is initiated
+ by a tapping the button and your app delegate is connected to `FBSDKApplicationDelegate`
+ (in the same way when using `FBSDKLoginManager`).
+ 
  `FBSDKLoginButton` has a fixed height, but you may change the width. `initWithFrame:CGRectZero`
  will size the button to its minimum frame.
-*/
+ */
 @interface FBSDKLoginButton : FBSDKButton
 
 /*!
@@ -68,7 +68,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
 @property (assign, nonatomic) FBSDKLoginBehavior loginBehavior;
 /*!
  @abstract The publish permissions to request.
-
+ 
  @discussion Use `defaultAudience` to specify the default audience to publish to.
  Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
@@ -76,7 +76,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
 @property (copy, nonatomic) NSArray *publishPermissions;
 /*!
  @abstract The read permissions to request.
-
+ 
  @discussion Note, that if read permissions are specified, then publish permissions should not be specified. This is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  */
@@ -98,6 +98,20 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
  */
 @protocol FBSDKLoginButtonDelegate <NSObject>
 
+@optional
+
+/*!
+ @abstract Sent to the delegate when the button initiates logging in. Implement to override logging in.
+ @param loginButton the sender
+ */
+- (void)loginButtonInitiatedLoggingIn:(FBSDKLoginButton *)loginButton;
+
+/*!
+ @abstract Sent to the delegate when the button initiates logging out. Implement to override logging out.
+ @param loginButton the sender
+ */
+- (void)loginButtonInitiatedLoggingOut:(FBSDKLoginButton *)loginButton;
+
 /*!
  @abstract Sent to the delegate when the button was used to login.
  @param loginButton the sender
@@ -111,7 +125,7 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
 /*!
  @abstract Sent to the delegate when the button was used to logout.
  @param loginButton The button that was clicked.
-*/
+ */
 - (void)loginButtonDidLogOut:(FBSDKLoginButton *)loginButton;
 
 @end

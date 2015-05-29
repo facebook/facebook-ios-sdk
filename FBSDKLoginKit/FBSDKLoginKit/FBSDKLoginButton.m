@@ -66,7 +66,7 @@
 - (void)didMoveToWindow
 {
   [super didMoveToWindow];
-
+  
   if (self.window &&
       ((self.tooltipBehavior == FBSDKLoginButtonTooltipBehaviorForceDisplay) || !_hasShownTooltipBubble)) {
     [self performSelector:@selector(_showTooltipIfNeeded) withObject:nil afterDelay:0];
@@ -86,7 +86,7 @@
   if (![title isEqualToString:[self titleForState:UIControlStateNormal]]) {
     [self setTitle:title forState:UIControlStateNormal];
   }
-
+  
   [super layoutSubviews];
 }
 
@@ -136,10 +136,10 @@
 - (void)configureButton
 {
   _loginManager = [[FBSDKLoginManager alloc] init];
-
+  
   NSString *logInTitle = [self _shortLogInTitle];
   NSString *logOutTitle = [self _logOutTitle];
-
+  
   [self configureWithIcon:nil
                     title:logInTitle
           backgroundColor:nil
@@ -149,30 +149,40 @@
             selectedColor:nil
  selectedHighlightedColor:nil];
   self.titleLabel.textAlignment = NSTextAlignmentCenter;
-
+  
   [self _updateContent];
-
+  
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_acessTokenDidChangeNotification:)
+                                           selector:@selector(_accessTokenDidChangeNotification:)
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
 }
 
 #pragma mark - Helper Methods
 
-- (void)_acessTokenDidChangeNotification:(NSNotification *)notification
+- (void)_initiateLogin
 {
-  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
-    [self _updateContent];
+  if (![FBSDKAccessToken currentAccessToken]) {
+    FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+      if ([self.delegate respondsToSelector:@selector(loginButton:didCompleteWithResult:error:)]) {
+        [self.delegate loginButton:self didCompleteWithResult:result error:error];
+      }
+    };
+    
+    if (self.publishPermissions.count > 0) {
+      [_loginManager logInWithPublishPermissions:self.publishPermissions handler:handler];
+    } else {
+      [_loginManager logInWithReadPermissions:self.readPermissions handler:handler];
+    }
   }
 }
 
-- (void)_buttonPressed:(id)sender
+- (void)_initiateLogout
 {
   if ([FBSDKAccessToken currentAccessToken]) {
     NSString *title = nil;
-
+    
     if (_userName) {
       NSString *localizedFormatString =
       NSLocalizedStringWithDefaultValue(@"LoginButton.LoggedInAs", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
@@ -200,17 +210,32 @@
                                          destructiveButtonTitle:logOutTitle
                                               otherButtonTitles:nil];
     [sheet showInView:self];
-  } else {
-    FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-      if ([self.delegate respondsToSelector:@selector(loginButton:didCompleteWithResult:error:)]) {
-        [self.delegate loginButton:self didCompleteWithResult:result error:error];
-      }
-    };
+  }
+}
 
-    if (self.publishPermissions.count > 0) {
-      [_loginManager logInWithPublishPermissions:self.publishPermissions handler:handler];
-    } else {
-      [_loginManager logInWithReadPermissions:self.readPermissions handler:handler];
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification
+{
+  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
+    [self _updateContent];
+  }
+}
+
+- (void)_buttonPressed:(id)sender
+{
+  if ([FBSDKAccessToken currentAccessToken]) {
+    if ([self.delegate respondsToSelector:@selector(loginButtonInitiatedLoggingOut:)]) {
+      [self.delegate loginButtonInitiatedLoggingOut:self];
+    }
+    else {
+      [self _initiateLogout];
+    }
+  } else {
+    
+    if ([self.delegate respondsToSelector:@selector(loginButtonInitiatedLoggingIn:)]) {
+      [self.delegate loginButtonInitiatedLoggingIn:self];
+    }
+    else {
+      [self _initiateLogin];
     }
   }
 }
