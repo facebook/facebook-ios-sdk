@@ -137,11 +137,11 @@
   self.soundEnabled = YES;
 
   NSString *title =
-  NSLocalizedStringWithDefaultValue(@"LikeButton.Like", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"LikeButton.Like", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Like",
                                     @"The label for the FBSDKLikeButton when the object is not currently liked.");
   NSString *selectedTitle =
-  NSLocalizedStringWithDefaultValue(@"LikeButton.Liked", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"LikeButton.Liked", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Liked",
                                     @"The label for the FBSDKLikeButton when the object is currently liked.");
 

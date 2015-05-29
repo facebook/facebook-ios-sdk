@@ -16,3 +16,6 @@
 [submodule "vendor/xctool"]
 	path = vendor/xctool
 	url = git://github.com/facebook/xctool.git
+[submodule "internal/voltron/vendor/MoPub-SDK"]
+	path = internal/voltron/vendor/MoPub-SDK
+	url = https://github.com/mopub/mopub-ios-sdk.git

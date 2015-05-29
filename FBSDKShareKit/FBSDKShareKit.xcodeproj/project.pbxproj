@@ -160,6 +160,8 @@
 		891687E11AB35E8400F55364 /* FBSDKCheckmarkIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCheckmarkIcon.m; sourceTree = "<group>"; };
 		891687E41AB35F2D00F55364 /* FBSDKMessengerIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMessengerIcon.h; sourceTree = "<group>"; };
 		891687E51AB35F2D00F55364 /* FBSDKMessengerIcon.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerIcon.m; sourceTree = "<group>"; };
+		8918E3EA1AFA6818003F7B88 /* FacebookSDK-Application.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-Application.xcconfig"; path = "../Configurations/FacebookSDK-Application.xcconfig"; sourceTree = "<group>"; };
+		8918E3EB1AFA6818003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-ApplicationTests.xcconfig"; path = "../Configurations/FacebookSDK-ApplicationTests.xcconfig"; sourceTree = "<group>"; };
 		891C544C1A3B888000DF05AF /* FBSDKShareOpenGraphObjectTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareOpenGraphObjectTests.m; sourceTree = "<group>"; };
 		891C54561A3BB23F00DF05AF /* FBSDKShareUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKShareUtility.h; sourceTree = "<group>"; };
 		891C54571A3BB23F00DF05AF /* FBSDKShareUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareUtility.m; sourceTree = "<group>"; };
@@ -305,6 +307,8 @@
 		892EBBEA1A3A477500721B03 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				8918E3EA1AFA6818003F7B88 /* FacebookSDK-Application.xcconfig */,
+				8918E3EB1AFA6818003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */,
 				8937749E1A3B7F6C00BE2807 /* FacebookSDK-Library.xcconfig */,
 				8937749F1A3B7F6C00BE2807 /* FacebookSDK-LogicTests.xcconfig */,
 				893774A01A3B7F6C00BE2807 /* FacebookSDK-Project-Debug.xcconfig */,
@@ -608,7 +612,7 @@
 		9D46C5E71A11E5D800A0DDB6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D46C5EF1A11E5D800A0DDB6 = {

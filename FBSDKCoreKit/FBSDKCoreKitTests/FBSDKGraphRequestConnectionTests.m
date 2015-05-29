@@ -111,13 +111,15 @@ static id g_mockNSBundle;
     XCTAssertFalse([body rangeOfString:@"access_token"].location == NSNotFound);
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463}}" dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data =  [@"{\"error\": {\"message\": \"Token is broke\",\"code\": 190,\"error_subcode\": 463, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
 
     return [OHHTTPStubsResponse responseWithData:data
                                       statusCode:400
                                          headers:nil];
   }];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    // make sure there is no recovery info for client token failures.
+    XCTAssertNil(error.localizedRecoverySuggestion);
     [exp fulfill];
   }];
   [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {

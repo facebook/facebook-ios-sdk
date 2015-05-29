@@ -41,6 +41,7 @@
 		894A8F401ABAF9CA00EF6C0C /* BoardView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BoardView.m; sourceTree = "<group>"; };
 		899C1F521AC2183B003E68A9 /* ToastView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ToastView.h; sourceTree = "<group>"; };
 		899C1F531AC2183B003E68A9 /* ToastView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ToastView.m; sourceTree = "<group>"; };
+		89CD50F01AFA706D009E7523 /* Iconicus.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Iconicus.xcconfig; path = Configurations/Iconicus.xcconfig; sourceTree = "<group>"; };
 		89D558221AB8908900000502 /* Iconicus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iconicus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89D558261AB8908900000502 /* Iconicus-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Iconicus-Info.plist"; sourceTree = "<group>"; };
 		89D558271AB8908900000502 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -157,6 +158,7 @@
 			isa = PBXGroup;
 			children = (
 				89D558591AB8A22200000502 /* Application.xcconfig */,
+				89CD50F01AFA706D009E7523 /* Iconicus.xcconfig */,
 				89D5585A1AB8A22200000502 /* Project-Debug.xcconfig */,
 				89D5585B1AB8A22200000502 /* Project-Release.xcconfig */,
 				89D5585C1AB8A22200000502 /* Project.xcconfig */,
@@ -190,7 +192,7 @@
 		89D5581A1AB8908900000502 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Facebook, Inc";
 				TargetAttributes = {
 					89D558211AB8908900000502 = {
@@ -285,19 +287,15 @@
 		};
 		89D558461AB8908900000502 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89D558591AB8A22200000502 /* Application.xcconfig */;
+			baseConfigurationReference = 89CD50F01AFA706D009E7523 /* Iconicus.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		89D558471AB8908900000502 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89D558591AB8A22200000502 /* Application.xcconfig */;
+			baseConfigurationReference = 89CD50F01AFA706D009E7523 /* Iconicus.xcconfig */;
 			buildSettings = {
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

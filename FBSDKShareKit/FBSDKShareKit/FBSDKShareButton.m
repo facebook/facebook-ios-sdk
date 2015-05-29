@@ -61,7 +61,7 @@
 - (void)configureButton
 {
   NSString *title =
-  NSLocalizedStringWithDefaultValue(@"ShareButton.Share", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"ShareButton.Share", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Share",
                                     @"The label for FBSDKShareButton");
 

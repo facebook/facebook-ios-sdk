@@ -30,15 +30,15 @@
 {
   FBSDKErrorConfiguration *configuration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
 
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:nil].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:@"12312"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"2" subcode:@"*"].errorCategory);
-  XCTAssertNil([configuration recoveryConfigurationForCode:nil subcode:nil]);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"459"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"300"].errorCategory);
-  XCTAssertEqualObjects(@"login", [configuration recoveryConfigurationForCode:@"190" subcode:@"458"].recoveryActionName);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"102" subcode:@"*"].errorCategory);
-  XCTAssertNil([configuration recoveryConfigurationForCode:@"104" subcode:nil]);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:nil request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:@"12312" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"2" subcode:@"*" request:nil].errorCategory);
+  XCTAssertNil([configuration recoveryConfigurationForCode:nil subcode:nil request:nil]);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"459" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"300" request:nil].errorCategory);
+  XCTAssertEqualObjects(@"login", [configuration recoveryConfigurationForCode:@"190" subcode:@"458" request:nil].recoveryActionName);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"102" subcode:@"*" request:nil].errorCategory);
+  XCTAssertNil([configuration recoveryConfigurationForCode:@"104" subcode:nil request:nil]);
 }
 
 - (void)testErrorConfigurationAdditonalArray
@@ -59,14 +59,14 @@
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:intermediaryConfiguration];
   FBSDKErrorConfiguration *configuration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
 
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:nil].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"1" subcode:@"12312"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"2" subcode:@"*"].errorCategory);
-  XCTAssertNil([configuration recoveryConfigurationForCode:nil subcode:nil]);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryOther, [configuration recoveryConfigurationForCode:@"190" subcode:@"459"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"300"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"102" subcode:@"*"].errorCategory);
-  XCTAssertEqual(FBSDKGraphRequestErrorCategoryOther, [configuration recoveryConfigurationForCode:@"104" subcode:@"800"].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"1" subcode:nil request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"1" subcode:@"12312" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryTransient, [configuration recoveryConfigurationForCode:@"2" subcode:@"*" request:nil].errorCategory);
+  XCTAssertNil([configuration recoveryConfigurationForCode:nil subcode:nil request:nil]);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryOther, [configuration recoveryConfigurationForCode:@"190" subcode:@"459" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"190" subcode:@"300" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, [configuration recoveryConfigurationForCode:@"102" subcode:@"*" request:nil].errorCategory);
+  XCTAssertEqual(FBSDKGraphRequestErrorCategoryOther, [configuration recoveryConfigurationForCode:@"104" subcode:@"800" request:nil].errorCategory);
 }
 
 @end

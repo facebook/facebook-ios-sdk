@@ -171,7 +171,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SI;
-				LastUpgradeCheck = 0600;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = Example;
 			};
 			buildConfigurationList = 89344A5C1909A28B0072DAC4 /* Build configuration list for PBXProject "ShareIt" */;

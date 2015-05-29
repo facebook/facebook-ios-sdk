@@ -34,7 +34,7 @@
 @property (nonatomic, strong) IBOutlet TileContainerView *tileContainerView;
 
 - (BOOL)loadGameFromAppLinkURL:(BFURL *)appLinkURL;
-- (BOOL)loadGameFromStringRepresentation:(NSString *)stringRepresentation;
+- (BOOL)loadGameFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked;
 
 - (IBAction)copyGameURL:(id)sender;
 - (IBAction)reset:(id)sender;

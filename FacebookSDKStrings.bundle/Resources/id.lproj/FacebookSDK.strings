@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "OK";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "Batal";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "Harap masuk ke aplikasi ini lagi untuk menghubungkan kembali akun Facebook Anda.";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "OK";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "Server untuk sementara sedang sibuk, harap coba lagi.";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "Suka";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "Disukai";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "Batal";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "Keluar";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "Masuk menggunakan Facebook";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "Masuk sebagai %@";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "Masuk";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "Masuk menggunakan Facebook";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "Keluar";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "Akses belum diberikan ke akun Facebook. Verifikasi pengaturan perangkat.";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "Tidak dapat terhubung ke Facebook. Periksa koneksi jaringan dan coba lagi.";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "Kata sandi Facebook Anda telah diubah. Untuk mengonfirmasi kata sandi Anda, buka Pengaturan &gt; Facebook, lalu ketuk nama Anda.";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "Akun Facebook belum dikonfigurasikan di perangkat.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "Akun Anda tidak dikonfirmasi. Masuk ke www.facebook.com dan ikuti petunjuknya.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "Saat ini Anda tidak dapat masuk ke aplikasi. Masuk ke www.facebook.com dan ikuti petunjuknya.";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "Baru! Anda memegang kendali - pilih info yang ingin Anda bagikan dengan aplikasi.";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "Masuk";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "Kirim";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "Berbagi";

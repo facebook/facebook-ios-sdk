@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "ตกลง";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "ยกเลิก";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "โปรดลงชื่อเข้าใช้แอพนี้อีกครั้งเพื่อเชื่อมต่อบัญชีผู้ใช้ Facebook ของคุณใหม่";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "ตกลง";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "เซิร์ฟเวอร์ไม่พร้อมให้บริการชั่วคราว โปรดลองใหม่อีกครั้ง";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "ถูกใจ";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "ถูกใจแล้ว";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "ยกเลิก";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "ออกจากระบบ";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "เข้าสู่ระบบโดยใช้ Facebook";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "เข้าสู่ระบบในชื่อ %@";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "เข้าสู่ระบบ";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "เข้าสู่ระบบด้วย Facebook";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "ออกจากระบบ";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "บัญชีผู้ใช้ Facebook ไม่ได้รับอนุญาตให้เข้าถึง ตรวจสอบการตั้งค่าของอุปกรณ์";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "ไม่สามารถเชื่อมต่อกับ Facebook ตรวจสอบการเชื่อมต่อเครือข่ายและลองอีกครั้ง";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "เปลี่ยนรหัสผ่าน Facebook ของคุณแล้ว เพื่อยืนยันรหัสผ่านของคุณ ให้เปิด การตั้งค่า &gt; Facebook แล้วแตะชื่อของคุณ";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "บัญชีผู้ใช้ Facebook ไม่ได้รับการกำหนดค่าบนอุปกรณ์เครื่องนี้";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "บัญชีผู้ใช้ของคุณไม่ได้รับการยืนยัน โปรดเข้าสู่ระบบที่ www.facebook.com และทำตามคำแนะนำที่ปรากฏ";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "คุณไม่สามารถเข้าสู่ระบบของแอพได้ในตอนนี้ โปรดเข้าสู่ระบบที่ www.facebook.com และทำตามคำแนะนำที่ปรากฏ";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "ใหม่! คุณเป็นฝ่ายควบคุม โปรดเลือกสิ่งที่คุณต้องการแชร์ด้วยแอพ";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "เข้าสู่ระบบ";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "ส่ง";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "แชร์";

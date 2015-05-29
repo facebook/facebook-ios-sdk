@@ -86,9 +86,9 @@ static Class g_BFTaskClass;
 
 - (BFTask *)appLinksFromURLsInBackground:(NSArray *)urls
 {
-  if (![FBSDKSettings clientToken]) {
+  if (![FBSDKSettings clientToken] && ![FBSDKAccessToken currentAccessToken]) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"clientToken is missing for FBAppLinkResolver"];
+                           logEntry:@"A user access token or clientToken is required to use FBAppLinkResolver"];
   }
   NSMutableDictionary *appLinks = [NSMutableDictionary dictionary];
   NSMutableArray *toFind = [NSMutableArray array];

@@ -20,6 +20,7 @@ FEATURES
 * Sharing - https://developers.facebook.com/docs/sharing
 * App Links - https://developers.facebook.com/docs/applinks
 * Graph API - https://developers.facebook.com/docs/ios/graph
+* Analytics for Apps - https://developers.facebook.com/docs/analytics
 
 GIVE FEEDBACK
 -------------
@@ -36,7 +37,7 @@ DEVELOPER TERMS
 
 - By enabling Facebook integrations, including through this SDK, you can share information with Facebook, including information about people’s use of your app. Facebook will use information received in accordance with our Data Use Policy [https://www.facebook.com/about/privacy/], including to provide you with insights about the effectiveness of your ads and the use of your app.  These integrations also enable us and our partners to serve ads on and off Facebook.
 
-- You may limit your sharing of information with us by updating the Insights control in the developer tool [https://developers.facebook.com/apps/{app_id}/advanced].
+- You may limit your sharing of information with us by updating the Insights control in the developer tool [https://developers.facebook.com/apps/{app_id}/settings/advanced].
 
 - If you use a Facebook integration, including to share information with us, you agree and confirm that you have provided appropriate and sufficiently prominent notice to and obtained the appropriate consent from your users regarding such collection, use, and disclosure (including, at a minimum, through your privacy policy). You further agree that you will not share information with us about children under the age of 13.
 

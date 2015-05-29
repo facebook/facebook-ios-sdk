@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "OK";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "Avbryt";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "Logga in på den här appen igen om du vill ansluta ditt Facebook-konto på nytt.";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "OK";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "Servern är upptagen för tillfället. Försök igen.";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "Gilla";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "Gillade";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "Avbryt";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "Logga ut";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "Inloggad med Facebook";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "Inloggad som %@";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "Logga in";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "Logga in med Facebook";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "Logga ut";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "Du har inte fått tillgång till Facebook-kontot. Verifiera enhetsinställningar.";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "Det går inte att ansluta till Facebook. Kontrollera nätverksanslutningen och försök igen.";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "Ditt Facebook-lösenord har ändrats. Bekräfta lösenordet genom att öppna Inställningar &gt; Facebook och skriva in ditt namn.";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "Facebook-konto har inte konfigurerats på enheten.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "Ditt konto har inte bekräftats. Logga in på www.facebook.com och följ instruktionerna.";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "Du kan inte logga in på appar för närvarande. Logga in på www.facebook.com och följ instruktionerna.";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "Nyhet! Du bestämmer – välj vilken info du vill dela med appar.";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "Logga in";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "Skicka";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "Dela";

@@ -97,6 +97,14 @@ FBSDK_STATIC_INLINE NSData *FBSDKCryptoMakeSubKey(uint8_t *key, size_t len, uint
   return [NSData dataWithBytesNoCopy:buffer length:numOfBytes];
 }
 
++ (NSString *)randomString:(NSUInteger)numOfBytes
+{
+  NSData *randomStringData = [FBSDKCrypto randomBytes:numOfBytes];
+  NSString *randomString = [FBSDKBase64 encodeData:randomStringData];
+  FBSDKCryptoBlankData(randomStringData);
+  return randomString;
+}
+
 #pragma mark - Object Lifecycle
 
 - (instancetype)initWithMasterKey:(NSString *)masterKey

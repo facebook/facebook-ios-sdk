@@ -22,7 +22,7 @@
 
 @interface GameController : NSObject <NSSecureCoding>
 
-+ (instancetype)gameControllerFromStringRepresentation:(NSString *)stringRepresentation;
++ (instancetype)gameControllerFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked;
 + (instancetype)generate;
 
 - (void)lockValueAtPosition:(NSUInteger)position;

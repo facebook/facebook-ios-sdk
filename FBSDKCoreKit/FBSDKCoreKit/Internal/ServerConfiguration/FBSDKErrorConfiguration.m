@@ -18,6 +18,8 @@
 
 #import "FBSDKErrorConfiguration.h"
 
+#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
+
 #import "FBSDKErrorRecoveryConfiguration.h"
 
 static NSString *const kErrorCategoryOther = @"other";
@@ -45,19 +47,19 @@ static NSString *const kErrorCategoryLogin = @"login";
     } else {
       _configurationDictionary = [NSMutableDictionary dictionary];
       NSString *localizedOK =
-      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.OK", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"OK",
                                         @"The title of the label to start attempting error recovery");
       NSString *localizedCancel =
-      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Cancel", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Cancel", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Cancel",
                                         @"The title of the label to decline attempting error recovery");
       NSString *localizedTransientSuggestion =
-      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Transient.Suggestion", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Transient.Suggestion", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"The server is temporarily busy, please try again.",
                                         @"The fallback message to display to retry transient errors");
       NSString *localizedLoginRecoverableSuggestion =
-      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Login.Suggestion", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Login.Suggestion", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Please log into this app again to reconnect your Facebook account.",
                                         @"The fallback message to display to recover invalidated tokens");
       NSArray *fallbackArray = @[
@@ -84,14 +86,21 @@ static NSString *const kErrorCategoryLogin = @"login";
   return self;
 }
 
-- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode
+- (FBSDKErrorRecoveryConfiguration *)recoveryConfigurationForCode:(NSString *)code subcode:(NSString *)subcode request:(FBSDKGraphRequest *)request
 {
   code = code ?: @"*";
   subcode = subcode ?: @"*";
-  return (_configurationDictionary[code][subcode] ?:
-          _configurationDictionary[code][@"*"] ?:
-          _configurationDictionary[@"*"][subcode] ?:
-          _configurationDictionary[@"*"][@"*"]);
+  FBSDKErrorRecoveryConfiguration *configuration = (_configurationDictionary[code][subcode] ?:
+                                                    _configurationDictionary[code][@"*"] ?:
+                                                    _configurationDictionary[@"*"][subcode] ?:
+                                                    _configurationDictionary[@"*"][@"*"]);
+  if (configuration.errorCategory == FBSDKGraphRequestErrorCategoryRecoverable &&
+      [FBSDKSettings clientToken] &&
+      [request.parameters[@"access_token"] hasSuffix:[FBSDKSettings clientToken]]) {
+    // do not attempt to recovery client tokens.
+    return nil;
+  }
+  return configuration;
 }
 
 - (void)parseArray:(NSArray *)array

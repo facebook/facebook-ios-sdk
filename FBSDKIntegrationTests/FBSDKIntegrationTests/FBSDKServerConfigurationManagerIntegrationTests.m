@@ -37,7 +37,7 @@
     XCTAssertNil(error, @"unexpected error: %@", error);
     NSData *data = [NSKeyedArchiver archivedDataWithRootObject:serverConfiguration];
     FBSDKServerConfiguration *restoredConfiguration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [restoredConfiguration.errorConfiguration recoveryConfigurationForCode:@"190" subcode:@"459"];
+    FBSDKErrorRecoveryConfiguration *recoveryConfiguration = [restoredConfiguration.errorConfiguration recoveryConfigurationForCode:@"190" subcode:@"459" request:nil];
     XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, recoveryConfiguration.errorCategory);
     [expectation fulfill];
   };

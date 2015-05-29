@@ -110,7 +110,7 @@
         if (message) {
           dispatch_async(dispatch_get_main_queue(), ^{
             NSString *localizedOK =
-            NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [NSBundle mainBundle],
+            NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                               @"OK",
                                               @"The title of the label to dismiss the alert when presenting user facing error messages");
             [[[UIAlertView alloc] initWithTitle:title

@@ -173,7 +173,8 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
                                                       invalidObjectHandler:NULL];
   params[@"e2e"] = e2eTimestampString;
 
-  params[FBSDKLoginManagerLoggingClientStateKey] = [self clientStateForBehavior:loginBehavior];
+  NSDictionary *existingState = [FBSDKInternalUtility objectForJSONString:params[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
+  params[FBSDKLoginManagerLoggingClientStateKey] = [self clientStateForBehavior:loginBehavior andExistingState:existingState];
 
   return params;
 }
@@ -199,13 +200,19 @@ NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 
 #pragma mark - Private
 
-- (NSString *)clientStateForBehavior:(FBSDKLoginBehavior)loginBehavior
+- (NSString *)clientStateForBehavior:(FBSDKLoginBehavior)loginBehavior andExistingState:(NSDictionary *)existingState
 {
   NSDictionary *clientState = @{
     FBSDKLoginManagerLoggerParamLoginBehaviorKey: @(loginBehavior),
     FBSDKLoginManagerLoggerParamIdentifierKey: _identifier,
     FBSDKLoginManagerLoggingClientStateIsClientState: @YES,
   };
+
+  if (existingState) {
+    NSMutableDictionary *mutableState = [clientState mutableCopy];
+    [mutableState addEntriesFromDictionary:existingState];
+    clientState = mutableState;
+  }
 
   return [FBSDKInternalUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }

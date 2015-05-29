@@ -17,6 +17,12 @@
       location = "group:Configurations"
       name = "Configurations">
       <FileRef
+         location = "group:FacebookSDK-Application.xcconfig">
+      </FileRef>
+      <FileRef
+         location = "group:FacebookSDK-ApplicationTests.xcconfig">
+      </FileRef>
+      <FileRef
          location = "group:FacebookSDK-Library.xcconfig">
       </FileRef>
       <FileRef
@@ -30,6 +36,9 @@
       </FileRef>
       <FileRef
          location = "group:FacebookSDK-Project.xcconfig">
+      </FileRef>
+      <FileRef
+         location = "group:TestAppIdAndSecret.xcconfig">
       </FileRef>
    </Group>
 </Workspace>

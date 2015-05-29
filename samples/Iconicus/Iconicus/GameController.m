@@ -28,18 +28,24 @@
 
 #pragma mark - Class Methods
 
-+ (instancetype)gameControllerFromStringRepresentation:(NSString *)stringRepresentation
++ (instancetype)gameControllerFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked
 {
   NSUInteger valueCount = NumberOfTiles * NumberOfTiles;
-  NSUInteger stringRepresentationLength = [stringRepresentation length];
-  if (stringRepresentationLength != valueCount) {
+  NSUInteger dataLength = [data length];
+  NSUInteger lockedLength = [locked length];
+
+  if (dataLength != valueCount) {
     return nil;
+  }
+  if (lockedLength != dataLength) {
+    locked = data;
   }
   GameController *gameController = [[self alloc] init];
   for (NSUInteger position = 0; position < valueCount; ++position) {
-    NSUInteger value = [[stringRepresentation substringWithRange:NSMakeRange(position, 1)] integerValue];
+    NSUInteger value = [[data substringWithRange:NSMakeRange(position, 1)] integerValue];
     [gameController setValue:value forPosition:position];
-    if (value != 0) {
+    NSUInteger lockedValue = [[locked substringWithRange:NSMakeRange(position, 1)] integerValue];
+    if (value != 0 && lockedValue != 0) {
       [gameController lockValueAtPosition:position];
     }
   }

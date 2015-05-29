@@ -32,12 +32,12 @@
 - (void)testProperties
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithAllProperties];
-  XCTAssertEqualObjects(content.to, [[self class] _to]);
+  XCTAssertEqualObjects(content.recipients, [[self class] _recipients]);
   XCTAssertEqualObjects(content.message, [[self class] _message]);
   XCTAssertEqual(content.actionType, [[self class] _actionType]);
   XCTAssertEqualObjects(content.objectID, [[self class] _objectID]);
   XCTAssertEqual(content.filters, [[self class] _filters]);
-  XCTAssertEqualObjects(content.suggestions, [[self class] _suggestions]);
+  XCTAssertEqualObjects(content.recipientSuggestions, [[self class] _recipientSuggestions]);
   XCTAssertEqualObjects(content.data, [[self class] _data]);
   XCTAssertEqualObjects(content.title, [[self class] _title]);
 }
@@ -78,7 +78,7 @@
 - (void)testValidationWithTo
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.to = [[self class] _to];
+  content.recipients = [[self class] _recipients];
   [self _testValidationWithContent:content];
 }
 
@@ -144,34 +144,34 @@
 - (void)testValidationWithToAndFilters
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.to = [[self class] _to];
+  content.recipients = [[self class] _recipients];
   content.filters = [[self class] _filters];
-  [self _testValidationWithContent:content errorArgumentName:@"to"];
+  [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithToAndSuggestions
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.to = [[self class] _to];
-  content.suggestions = [[self class] _suggestions];
-  [self _testValidationWithContent:content errorArgumentName:@"to"];
+  content.recipients = [[self class] _recipients];
+  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithFiltersAndSuggestions
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
   content.filters = [[self class] _filters];
-  content.suggestions = [[self class] _suggestions];
-  [self _testValidationWithContent:content errorArgumentName:@"suggestions"];
+  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  [self _testValidationWithContent:content errorArgumentName:@"recipientSuggestions"];
 }
 
 - (void)testValidationWithToAndFiltersAndSuggestions
 {
   FBSDKGameRequestContent *content = [[self class] _contentWithMinimalProperties];
-  content.to = [[self class] _to];
+  content.recipients = [[self class] _recipients];
   content.filters = [[self class] _filters];
-  content.suggestions = [[self class] _suggestions];
-  [self _testValidationWithContent:content errorArgumentName:@"to"];
+  content.recipientSuggestions = [[self class] _recipientSuggestions];
+  [self _testValidationWithContent:content errorArgumentName:@"recipients"];
 }
 
 - (void)testValidationWithLongData
@@ -217,9 +217,9 @@
   content.filters = [self _filters];
   content.message = [self _message];
   content.objectID = [self _objectID];
-  content.suggestions = [self _suggestions];
+  content.recipientSuggestions = [self _recipientSuggestions];
   content.title = [self _title];
-  content.to = [self _to];
+  content.recipients = [self _recipients];
   return content;
 }
 
@@ -232,7 +232,7 @@
   return content;
 }
 
-+ (NSArray *)_to
++ (NSArray *)_recipients
 {
   return @[@"recipient-id-1", @"recipient-id-2"];
 }
@@ -257,7 +257,7 @@
   return FBSDKGameRequestFilterAppUsers;
 }
 
-+ (NSArray *)_suggestions
++ (NSArray *)_recipientSuggestions
 {
   return @[@"suggested-recipient-id-1", @"suggested-recipient-id-2"];
 }

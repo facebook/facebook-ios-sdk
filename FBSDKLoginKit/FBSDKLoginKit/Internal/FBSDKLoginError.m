@@ -53,31 +53,31 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginErrorSubcode)
     case FBSDKNetworkErrorCode:
       errorDomain = FBSDKErrorDomain;
       localizedDescription =
-      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Network", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Network", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Unable to connect to Facebook. Check your network connection and try again.",
                                         @"The user facing error message when the Accounts framework encounters a network error.");
       break;
     case FBSDKLoginUserCheckpointedErrorCode:
       localizedDescription =
-      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.UserCheckpointed", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.UserCheckpointed", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"You cannot log in to apps at this time. Please log in to www.facebook.com and follow the instructions given.",
                                         @"The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed.");
       break;
     case FBSDKLoginUnconfirmedUserErrorCode:
       localizedDescription =
-      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.UnconfirmedUser", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.UnconfirmedUser", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Your account is not confirmed. Please log in to www.facebook.com and follow the instructions given.",
                                         @"The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed.");
       break;
     case FBSDKLoginSystemAccountAppDisabledErrorCode:
       localizedDescription =
-      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Disabled", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Disabled", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"Access has not been granted to the Facebook account. Verify device settings.",
                                         @"The user facing error message when the app slider has been disabled and login fails.");
       break;
     case FBSDKLoginSystemAccountUnavailableErrorCode:
       localizedDescription =
-      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Unavailable", @"FacebookSDK", [NSBundle mainBundle],
+      NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.Unavailable", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                         @"The Facebook account has not been configured on the device.",
                                         @"The user facing error message when the device Facebook account is unavailable and login fails.");
       break;
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginErrorSubcode)
 + (NSError *)errorForSystemPasswordChange:(NSError *)innerError
 {
   NSString *failureReasonAndDescription =
-  NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.PasswordChange", @"FacebookSDK", [NSBundle mainBundle],
+  NSLocalizedStringWithDefaultValue(@"LoginError.SystemAccount.PasswordChange", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name.",
                                     @"The user facing error message when the device Facebook account password is incorrect and login fails.");
   NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:

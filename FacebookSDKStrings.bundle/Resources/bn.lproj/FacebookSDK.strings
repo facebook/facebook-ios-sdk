@@ -1,0 +1,71 @@
+/* The title of the label to dismiss the alert when presenting user facing error messages */
+"ErrorRecovery.Alert.OK" = "ঠিক আছে";
+
+/* The title of the label to decline attempting error recovery */
+"ErrorRecovery.Cancel" = "বাতিল করুন";
+
+/* The fallback message to display to recover invalidated tokens */
+"ErrorRecovery.Login.Suggestion" = "আপনার Facebook অ্যাকাউন্টটিতে পুনরায় সংযোগ করার জন্য অনুগ্রহ করে এই অ্যাপটিতে লগ ইন করুন৷";
+
+/* The title of the label to start attempting error recovery */
+"ErrorRecovery.OK" = "ঠিক আছে";
+
+/* The fallback message to display to retry transient errors */
+"ErrorRecovery.Transient.Suggestion" = "এই সার্ভারটি সাময়িকভাবে ব্যস্ত আছে, অনুগ্রহ করে পুনরায় চেষ্টা করুন৷";
+
+/* The label for the FBSDKLikeButton when the object is not currently liked. */
+"LikeButton.Like" = "পছন্দ করুন";
+
+/* The label for the FBSDKLikeButton when the object is currently liked. */
+"LikeButton.Liked" = "পছন্দ করা হয়েছে";
+
+/* The label for the FBSDKLoginButton action sheet to cancel logging out */
+"LoginButton.CancelLogout" = "বাতিল করুন";
+
+/* The label for the FBSDKLoginButton action sheet to confirm logging out */
+"LoginButton.ConfirmLogOut" = "লগ আউট করুন";
+
+/* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
+"LoginButton.LoggedIn" = "Facebook ব্যবহার করে লগ ইন করা হয়েছে";
+
+/* The format string for the FBSDKLoginButton label when the user is logged in */
+"LoginButton.LoggedInAs" = "%@ হিসাবে লগ ইন করা হয়েছে";
+
+/* The short label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogIn" = "লগ ইন করুন";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInLong" = "Facebook -এর সাথে লগ ইন করুন";
+
+/* The label for the FBSDKLoginButton when the user is currently logged in */
+"LoginButton.LogOut" = "লগ আউট করুন";
+
+/* The user facing error message when the app slider has been disabled and login fails. */
+"LoginError.SystemAccount.Disabled" = "Facebook অ্যাকাউন্টটিতে অ্যাক্সেস করার অনুমতি নেই৷ ডিভাইস সেটিংস যাচাই করুন৷";
+
+/* The user facing error message when the Accounts framework encounters a network error. */
+"LoginError.SystemAccount.Network" = "Facebook-এ সংযোগ করা যাচ্ছে না৷ আপনার নেটওয়ার্ক সংযোগটি পরীক্ষা করুন এবং পুনরায় চেষ্টা করুন৷";
+
+/* The user facing error message when the device Facebook account password is incorrect and login fails. */
+"LoginError.SystemAccount.PasswordChange" = "আপনার Facebook পাসওয়ার্ডটি পরিবর্তিত হয়েছে৷ আপনার পাসওয়ার্ডটি নিশ্চিত করতে,  সেটিংস &gt; Facebook খুলুন এবং আপনার নামটি ট্যাপ করুন৷";
+
+/* The user facing error message when the device Facebook account is unavailable and login fails. */
+"LoginError.SystemAccount.Unavailable" = "Facebook অ্যাকাউন্টটি এই ডিভাইসে কনফিগার করা যাযনি৷";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
+"LoginError.SystemAccount.UnconfirmedUser" = "আপনার অ্যাকাউন্টটি নিশ্চিত করা যায়নি৷ অনুগ্রহ করে www.facebook.com-এ লগ ইন করুন এবং উল্লিখিত নির্দেশাবলী অনুসরণ করুন৷";
+
+/* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
+"LoginError.SystemAccount.UserCheckpointed" = "এই সময়ে আপনি অ্যাপসে লগ ইন করতে পারবেন না৷ অনুগ্রহ করে www.facebook.com-এ লগ ইন করুন এবং উল্লিখিত নির্দেশাবলী অনুসরণ করুন৷";
+
+/* The message of the FBSDKLoginTooltipView */
+"LoginTooltip.Message" = "নতুন! আপনি নিয়ন্ত্রণে আছেন-অ্যাপসের সাথে আপনি কোন তথ্য ভাগ করতে চাইছেন তা চয়ন করুন৷";
+
+/* Title of the web dialog that prompts the user to log in to Facebook. */
+"LoginWeb.LogInTitle" = "লগ ইন করুন";
+
+/* The label for FBSDKSendButton */
+"SendButton.Send" = "পাঠান";
+
+/* The label for FBSDKShareButton */
+"ShareButton.Share" = "ভাগ করুন";

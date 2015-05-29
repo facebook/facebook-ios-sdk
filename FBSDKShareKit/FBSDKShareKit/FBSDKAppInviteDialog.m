@@ -72,7 +72,7 @@
 
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [FBSDKInternalUtility dictionary:parameters setObject:self.content.appLinkURL forKey:@"app_link_url"];
-  [FBSDKInternalUtility dictionary:parameters setObject:self.content.previewImageURL forKey:@"preview_image_url"];
+  [FBSDKInternalUtility dictionary:parameters setObject:self.content.appInvitePreviewImageURL forKey:@"preview_image_url"];
   FBSDKBridgeAPIRequest *request;
   if ([self _canShowNative]) {
     request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative

@@ -24,4 +24,5 @@ CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
 // Packaging
 WRAPPER_EXTENSION = xctest
 
+// Linking
 OTHER_LDFLAGS = -all_load -lc++

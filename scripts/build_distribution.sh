@@ -83,8 +83,8 @@ mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCS"
   || die "Could not copy FBSDKShareKit.framework"
 \cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
   || die "Could not copy Bolts.framework"
-\cp $"$FB_SDK_ROOT"/FacebookSDK.strings "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
-  || die "Could not copy FacebookSDK.strings"
+\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+  || die "Could not copy FacebookSDKStrings.bundle"
 \cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
 \cp -R "$FB_SDK_SCRIPT/package/preinstall" "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \

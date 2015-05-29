@@ -32,6 +32,7 @@ static NSString *g_AppID;
 static NSString *g_AppSecret;
 static NSString *g_AppClientToken;
 static FBSDKTestUsersManager *g_testUsersManager;
+static id g_mockNSBundle;
 
 @implementation FBSDKIntegrationTestCase
 
@@ -60,22 +61,20 @@ static FBSDKTestUsersManager *g_testUsersManager;
     [FBSDKSettings setAppID:g_AppID];
     g_testUsersManager = [FBSDKTestUsersManager sharedInstanceForAppID:g_AppID appSecret:g_AppSecret];
   });
+
+  if (self == [FBSDKIntegrationTestCase class]) {
+    // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
+    // and our keychain code is coded against mainBundle.
+    g_mockNSBundle = [OCMockObject niceMockForClass:[NSBundle class]];
+    NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
+    [[[[g_mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
+  }
 }
 
-- (void)setUp
++ (void)tearDown
 {
-  [super setUp];
-
-  // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
-  // and our keychain code is coded against mainBundle.
-  _mockNSBundle = [OCMockObject niceMockForClass:[NSBundle class]];
-  NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
-  [[[[_mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
-}
-
-- (void)tearDown
-{
-  [super tearDown];
+  [g_mockNSBundle stopMocking];
+  g_mockNSBundle = nil;
 }
 
 #pragma mark - Properties

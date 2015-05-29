@@ -122,7 +122,7 @@ static NSMutableDictionary *gInstancesDictionary;
     }
   };
   if (_accounts.count == 0) {
-    [self fetchExistingTestAccounts:helper];
+    [self fetchExistingTestAccountsWithAfterCursor:nil handler:helper];
   } else {
     helper(NULL);
   }
@@ -244,14 +244,17 @@ static NSMutableDictionary *gInstancesDictionary;
   return [NSString stringWithFormat:@"%@|%@", _appID, _appSecret];
 }
 
-- (void)fetchExistingTestAccounts:(void(^)(NSError *error))handler {
+- (void)fetchExistingTestAccountsWithAfterCursor:(NSString *)after handler:(void(^)(NSError *error))handler {
   FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *requestForAccountIds = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:kFBGraphAPITestUsersPathFormat, _appID]
-                                                                              parameters:nil
+                                                                              parameters:@{@"limit" : @"50",
+                                                                                           @"after" : after ?: @""
+                                                                                           }
                                                                              tokenString:self.appAccessToken
                                                                                  version:nil
                                                                               HTTPMethod:nil];
   __block BOOL noTestAccounts = YES;
+  __block NSString *afterCursor = nil;
   [connection addRequest:requestForAccountIds completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
     if (error) {
       if (handler) {
@@ -264,6 +267,7 @@ static NSMutableDictionary *gInstancesDictionary;
         _accounts[userId][kAccountsDictionaryTokenKey] = account[@"access_token"];
         noTestAccounts = NO;
       }
+      afterCursor = result[@"paging"][@"cursors"][@"after"];
     }
   } batchParameters:@{@"name":@"test-accounts", @"omit_response_on_success":@(NO)}];
 
@@ -293,7 +297,9 @@ static NSMutableDictionary *gInstancesDictionary;
         _accounts[userId][kAccountsDictionaryPermissionsKey] = grantedPermissions;
       }
     }
-    if (handler) {
+    if (afterCursor) {
+      [self fetchExistingTestAccountsWithAfterCursor:afterCursor handler:handler];
+    } else if (handler) {
       handler(nil);
     }
   }];
