@@ -50,12 +50,11 @@ static NSString *const kMessengerPlatformReplyParamName = @"reply";
   [aCoder encodeObject:_userIDs ?: [NSSet set] forKey:kUserIDsKey];
 }
 
-- (NSString *)queryString
+- (NSDictionary *)queryComponents
 {
-  NSString *existingQueryString = [super queryString] ?: @"";
-
-  NSString *replyParam = [NSString stringWithFormat:@"&%@=1", kMessengerPlatformReplyParamName];
-  return [existingQueryString stringByAppendingString:replyParam];
+  NSMutableDictionary *existingQueryComponents = [[super queryComponents] mutableCopy];
+  [existingQueryComponents setObject:@"1" forKey:kMessengerPlatformReplyParamName];
+  return existingQueryComponents;
 }
 
 @end

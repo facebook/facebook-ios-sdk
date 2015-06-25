@@ -29,6 +29,8 @@
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
 
+NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
+
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 @implementation FBSDKApplicationDelegate
@@ -175,6 +177,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     }
     _pendingRequest = nil;
     _pendingRequestCompletionBlock = NULL;
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
   }
 }
 

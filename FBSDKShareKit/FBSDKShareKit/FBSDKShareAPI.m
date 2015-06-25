@@ -38,6 +38,10 @@
 #import "FBSDKShareVideo.h"
 #import "FBSDKShareVideoContent.h"
 
+static NSString *const FBSDKShareAPIDefaultGraphNode = @"me";
+static NSString *const FBSDKShareAPIPhotosEdge = @"photos";
+static NSString *const FBSDKShareAPIVideosEdge = @"videos";
+
 @implementation FBSDKShareAPI
 
 #pragma mark - Class Methods
@@ -56,6 +60,15 @@
 @synthesize delegate = _delegate;
 @synthesize shareContent = _shareContent;
 @synthesize shouldFailOnDataError = _shouldFailOnDataError;
+
+#pragma mark - Object Lifecycle
+- (instancetype)init
+{
+  if ((self = [super init])) {
+    _graphNode = FBSDKShareAPIDefaultGraphNode;
+  }
+  return self;
+}
 
 #pragma mark - Public Methods
 
@@ -143,6 +156,18 @@
 
 #pragma mark - Helper Methods
 
+- (NSString *)_graphPathWithSuffix:(NSString *)suffix, ... NS_REQUIRES_NIL_TERMINATION
+{
+  NSMutableString *graphPath = [[NSMutableString alloc] initWithString:self.graphNode];
+  va_list args;
+  va_start(args, suffix);
+  for (NSString *arg = suffix; arg != nil; arg = va_arg(args, NSString *)) {
+    [graphPath appendFormat:@"/%@", arg];
+  }
+  va_end(args);
+  return graphPath;
+}
+
 - (void)_addCommonParameters:(NSMutableDictionary *)parameters content:(id<FBSDKSharingContent>)content
 {
   NSString *tags = [content.peopleIDs componentsJoinedByString:@","];
@@ -183,7 +208,7 @@
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
 
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/feed"
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:[self _graphPathWithSuffix:@"feed", nil]
                                      parameters:parameters
                                      HTTPMethod:@"POST"] startWithCompletionHandler:completionHandler];
   return YES;
@@ -222,7 +247,7 @@
         [_delegate sharer:self didCompleteWithResults:shareResults];
       }
     };
-    NSString *graphPath = [@"/me/" stringByAppendingString:[FBSDKUtility URLEncode:action.actionType]];
+    NSString *graphPath = [self _graphPathWithSuffix:[FBSDKUtility URLEncode:action.actionType], nil];
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                    parameters:parameters
                                                                    HTTPMethod:@"POST"];
@@ -245,7 +270,7 @@
       image = [UIImage imageWithContentsOfFile:[photo.imageURL path]];
     }
     if (image) {
-      NSString *graphPath = @"/me/photos";
+      NSString *graphPath = [self _graphPathWithSuffix:FBSDKShareAPIPhotosEdge, nil];
       NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
       [self _addCommonParameters:parameters content:photoContent];
       NSString *caption = photo.caption ?: self.message;
@@ -307,6 +332,7 @@
       [_delegate sharer:self didCompleteWithResults:shareResults];
     }
   };
+  NSString *graphPath = [self _graphPathWithSuffix:FBSDKShareAPIVideosEdge, nil];
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [self _addCommonParameters:parameters content:videoContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"description"];
@@ -325,7 +351,7 @@
                                                                                                    filename:filename
                                                                                                 contentType:nil];
     [FBSDKInternalUtility dictionary:parameters setObject:dataAttachment forKey:filename];
-    [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/videos"
+    [[[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                        parameters:parameters
                                        HTTPMethod:@"POST"] startWithCompletionHandler:completionHandler];
   };
@@ -480,9 +506,8 @@
       [_delegate sharer:self didFailWithError:JSONError];
       return;
     }
-    NSString *target = @"me";
     NSString *tokenString = [FBSDKAccessToken currentAccessToken].tokenString;
-    NSString *graphPath = [[NSString alloc] initWithFormat:@"/%@/objects/%@", target, type];
+    NSString *graphPath = [self _graphPathWithSuffix:@"objects", type, nil];
     NSDictionary *parameters = @{ @"object": objectString };
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
                                                                    parameters:parameters

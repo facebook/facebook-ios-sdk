@@ -33,3 +33,5 @@ extern CGRect FBSDKMessengerRectMakeWithSizeCenteredInRect(CGSize size, CGRect r
 extern CGPoint FBSDKMessengerRectGetMid(CGRect rect);
 
 extern CGRect FBSDKMessengerRectMakeWithOrigin(CGPoint origin, CGSize size);
+
+extern NSString *FBSDKMessengerEncodingQueryURL(NSString *urlStr);

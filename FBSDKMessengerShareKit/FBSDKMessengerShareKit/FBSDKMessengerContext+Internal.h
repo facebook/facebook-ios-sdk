@@ -20,7 +20,7 @@
 
 @interface FBSDKMessengerContext ()
 
-// Class-specific queryString that is appended to the url in a share
-- (NSString *)queryString;
+// Class-specific query components that are appended to the url in a share
+- (NSDictionary *)queryComponents;
 
 @end
