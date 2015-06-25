@@ -50,10 +50,52 @@
 		23FD6DAA1A8992A300128339 /* FBSDKMessengerURLHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FD6DA81A8992A300128339 /* FBSDKMessengerURLHandler.m */; };
 		23FD9DD31A9594CF00855304 /* FBSDKMessengerButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 23FD9DD11A9594CF00855304 /* FBSDKMessengerButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		23FD9DD41A9594CF00855304 /* FBSDKMessengerButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 23FD9DD21A9594CF00855304 /* FBSDKMessengerButton.m */; };
+		9CAE10171B15353900163BDA /* FBSDKMessengerShareKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CAE10161B15353900163BDA /* FBSDKMessengerShareKitTests.m */; };
+		9CAE10181B15353900163BDA /* FBSDKMessengerShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0558A31A797E7B009B7108 /* FBSDKMessengerShareKit.framework */; };
+		9CAE102F1B15384800163BDA /* libOCMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAE102C1B15380100163BDA /* libOCMock.a */; };
+		9CAE10301B15384E00163BDA /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 233884331A798D2C00BCCF5A /* UIKit.framework */; };
+		9CAE10321B15385400163BDA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAE10311B15385400163BDA /* Foundation.framework */; };
+		9CAE10331B15388900163BDA /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC45E131A7980650080B409 /* XCTest.framework */; };
+		9CAE10351B1538B300163BDA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAE10341B1538B300163BDA /* CoreGraphics.framework */; };
 		9D0558A91A797E7B009B7108 /* FBSDKMessengerShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0558A81A797E7B009B7108 /* FBSDKMessengerShareKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9CAE10191B15353900163BDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D05589A1A797E7B009B7108 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 9D0558A21A797E7B009B7108;
+			remoteInfo = FBSDKMessengerShareKit;
+		};
+		9CAE10271B15380100163BDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9CAE10201B15380100163BDA /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 030EF0A814632FD000B04273;
+			remoteInfo = OCMock;
+		};
+		9CAE10291B15380100163BDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9CAE10201B15380100163BDA /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03565A3118F0566E003AE91E;
+			remoteInfo = OCMockTests;
+		};
+		9CAE102B1B15380100163BDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9CAE10201B15380100163BDA /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 030EF0DC14632FF700B04273;
+			remoteInfo = OCMockLib;
+		};
+		9CAE102D1B15380100163BDA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9CAE10201B15380100163BDA /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D31108AD1828DB8700737925;
+			remoteInfo = OCMockLibTests;
+		};
 		9DC45E0D1A797F970080B409 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9D05589A1A797E7B009B7108 /* Project object */;
@@ -96,6 +138,14 @@
 		23FD6DA81A8992A300128339 /* FBSDKMessengerURLHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerURLHandler.m; sourceTree = "<group>"; };
 		23FD9DD11A9594CF00855304 /* FBSDKMessengerButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMessengerButton.h; sourceTree = "<group>"; };
 		23FD9DD21A9594CF00855304 /* FBSDKMessengerButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerButton.m; sourceTree = "<group>"; };
+		9CAE10121B15353900163BDA /* FBSDKMessengerShareKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FBSDKMessengerShareKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9CAE10151B15353900163BDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9CAE10161B15353900163BDA /* FBSDKMessengerShareKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerShareKitTests.m; sourceTree = "<group>"; };
+		9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-LogicTests.xcconfig"; path = "../../Configurations/FacebookSDK-LogicTests.xcconfig"; sourceTree = "<group>"; };
+		9CAE10201B15380100163BDA /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../vendor/OCMock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
+		9CAE10311B15385400163BDA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9CAE10341B1538B300163BDA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		9CAE10361B153B2700163BDA /* FBSDKMessengerSharer+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKMessengerSharer+Internal.h"; sourceTree = "<group>"; };
 		9D0558A31A797E7B009B7108 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKMessengerShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D0558A71A797E7B009B7108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D0558A81A797E7B009B7108 /* FBSDKMessengerShareKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMessengerShareKit.h; sourceTree = "<group>"; };
@@ -104,6 +154,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9CAE100F1B15353900163BDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CAE10351B1538B300163BDA /* CoreGraphics.framework in Frameworks */,
+				9CAE10331B15388900163BDA /* XCTest.framework in Frameworks */,
+				9CAE10321B15385400163BDA /* Foundation.framework in Frameworks */,
+				9CAE10301B15384E00163BDA /* UIKit.framework in Frameworks */,
+				9CAE102F1B15384800163BDA /* libOCMock.a in Frameworks */,
+				9CAE10181B15353900163BDA /* FBSDKMessengerShareKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9D05589F1A797E7B009B7108 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -117,6 +180,7 @@
 		23AF54461A8AB66C001D9871 /* Configurations */ = {
 			isa = PBXGroup;
 			children = (
+				9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */,
 				23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */,
 				23AF544A1A8AB66C001D9871 /* FacebookSDK-Project-Debug.xcconfig */,
 				23AF544B1A8AB66C001D9871 /* FacebookSDK-Project-Release.xcconfig */,
@@ -145,13 +209,53 @@
 			name = Contexts;
 			sourceTree = "<group>";
 		};
+		9CAE10131B15353900163BDA /* FBSDKMessengerShareKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				9CAE10161B15353900163BDA /* FBSDKMessengerShareKitTests.m */,
+				9CAE10141B15353900163BDA /* Supporting Files */,
+			);
+			path = FBSDKMessengerShareKitTests;
+			sourceTree = "<group>";
+		};
+		9CAE10141B15353900163BDA /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9CAE10151B15353900163BDA /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9CAE101F1B1537E900163BDA /* Submodules */ = {
+			isa = PBXGroup;
+			children = (
+				9CAE10201B15380100163BDA /* OCMock.xcodeproj */,
+			);
+			name = Submodules;
+			sourceTree = "<group>";
+		};
+		9CAE10211B15380100163BDA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9CAE10281B15380100163BDA /* OCMock.framework */,
+				9CAE102A1B15380100163BDA /* OCMockTests.xctest */,
+				9CAE102C1B15380100163BDA /* libOCMock.a */,
+				9CAE102E1B15380100163BDA /* OCMockLibTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		9D0558991A797E7B009B7108 = {
 			isa = PBXGroup;
 			children = (
+				9CAE10341B1538B300163BDA /* CoreGraphics.framework */,
+				9CAE10311B15385400163BDA /* Foundation.framework */,
+				9CAE101F1B1537E900163BDA /* Submodules */,
 				233884331A798D2C00BCCF5A /* UIKit.framework */,
 				23AF54461A8AB66C001D9871 /* Configurations */,
 				9DC45E131A7980650080B409 /* XCTest.framework */,
 				9D0558A51A797E7B009B7108 /* FBSDKMessengerShareKit */,
+				9CAE10131B15353900163BDA /* FBSDKMessengerShareKitTests */,
 				9D0558A41A797E7B009B7108 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -160,6 +264,7 @@
 			isa = PBXGroup;
 			children = (
 				9D0558A31A797E7B009B7108 /* FBSDKMessengerShareKit.framework */,
+				9CAE10121B15353900163BDA /* FBSDKMessengerShareKitTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -173,6 +278,7 @@
 				9D0558A81A797E7B009B7108 /* FBSDKMessengerShareKit.h */,
 				2338842E1A798C4600BCCF5A /* FBSDKMessengerSharer.h */,
 				2338842F1A798C4600BCCF5A /* FBSDKMessengerSharer.m */,
+				9CAE10361B153B2700163BDA /* FBSDKMessengerSharer+Internal.h */,
 				23FD6DA71A8992A300128339 /* FBSDKMessengerURLHandler.h */,
 				23FD6DA81A8992A300128339 /* FBSDKMessengerURLHandler.m */,
 				23B6FB5E1A89D317008D49B6 /* FBSDKMessengerUtils.h */,
@@ -227,6 +333,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		9CAE10111B15353900163BDA /* FBSDKMessengerShareKitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9CAE101D1B15353900163BDA /* Build configuration list for PBXNativeTarget "FBSDKMessengerShareKitTests" */;
+			buildPhases = (
+				9CAE100E1B15353900163BDA /* Sources */,
+				9CAE100F1B15353900163BDA /* Frameworks */,
+				9CAE10101B15353900163BDA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9CAE101A1B15353900163BDA /* PBXTargetDependency */,
+			);
+			name = FBSDKMessengerShareKitTests;
+			productName = FBSDKMessengerShareKitTests;
+			productReference = 9CAE10121B15353900163BDA /* FBSDKMessengerShareKitTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		9D0558A21A797E7B009B7108 /* FBSDKMessengerShareKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9D0558B91A797E7B009B7108 /* Build configuration list for PBXNativeTarget "FBSDKMessengerShareKit" */;
@@ -254,6 +378,9 @@
 				LastUpgradeCheck = 0610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
+					9CAE10111B15353900163BDA = {
+						CreatedOnToolsVersion = 6.2;
+					};
 					9D0558A21A797E7B009B7108 = {
 						CreatedOnToolsVersion = 6.1.1;
 					};
@@ -272,15 +399,60 @@
 			mainGroup = 9D0558991A797E7B009B7108;
 			productRefGroup = 9D0558A41A797E7B009B7108 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 9CAE10211B15380100163BDA /* Products */;
+					ProjectRef = 9CAE10201B15380100163BDA /* OCMock.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				9D0558A21A797E7B009B7108 /* FBSDKMessengerShareKit */,
 				9D0558CE1A797EFD009B7108 /* FBSDKMessengerShareKit-universal */,
+				9CAE10111B15353900163BDA /* FBSDKMessengerShareKitTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		9CAE10281B15380100163BDA /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 9CAE10271B15380100163BDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9CAE102A1B15380100163BDA /* OCMockTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCMockTests.xctest;
+			remoteRef = 9CAE10291B15380100163BDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9CAE102C1B15380100163BDA /* libOCMock.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libOCMock.a;
+			remoteRef = 9CAE102B1B15380100163BDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9CAE102E1B15380100163BDA /* OCMockLibTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = OCMockLibTests.xctest;
+			remoteRef = 9CAE102D1B15380100163BDA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
+		9CAE10101B15353900163BDA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9D0558A11A797E7B009B7108 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -307,6 +479,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9CAE100E1B15353900163BDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9CAE10171B15353900163BDA /* FBSDKMessengerShareKitTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9D05589E1A797E7B009B7108 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -329,6 +509,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9CAE101A1B15353900163BDA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 9D0558A21A797E7B009B7108 /* FBSDKMessengerShareKit */;
+			targetProxy = 9CAE10191B15353900163BDA /* PBXContainerItemProxy */;
+		};
 		9DC45E0E1A797F970080B409 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 9D0558A21A797E7B009B7108 /* FBSDKMessengerShareKit */;
@@ -337,6 +522,20 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		9CAE101B1B15353900163BDA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		9CAE101C1B15353900163BDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
 		9D0558B71A797E7B009B7108 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF544A1A8AB66C001D9871 /* FacebookSDK-Project-Debug.xcconfig */;
@@ -382,6 +581,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9CAE101D1B15353900163BDA /* Build configuration list for PBXNativeTarget "FBSDKMessengerShareKitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9CAE101B1B15353900163BDA /* Debug */,
+				9CAE101C1B15353900163BDA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		9D05589D1A797E7B009B7108 /* Build configuration list for PBXProject "FBSDKMessengerShareKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

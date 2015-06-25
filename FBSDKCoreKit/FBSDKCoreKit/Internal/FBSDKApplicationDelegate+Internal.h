@@ -19,10 +19,13 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+#import <FBSDKCoreKit/FBSDKMacros.h>
 
 #import "BridgeAPI/FBSDKBridgeAPIRequest.h"
 #import "BridgeAPI/FBSDKBridgeAPIResponse.h"
 #import "BridgeAPI/FBSDKURLOpening.h"
+
+FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
 
 @class FBSDKApplicationCall;
 

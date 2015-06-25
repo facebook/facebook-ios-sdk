@@ -24,6 +24,9 @@
 /*!
  @abstract A utility class for sharing through the graph API.  Using this class requires an access token in
  [FBSDKAccessToken currentAccessToken] that has been granted the "publish_actions" permission.
+ @discussion FBSDKShareAPI network requests are scheduled on the current run loop in the default run loop mode
+ (like NSURLConnection). If you want to use FBSDKShareAPI in a background thread, you must manage the run loop
+ yourself.
  */
 @interface FBSDKShareAPI : NSObject <FBSDKSharing>
 
@@ -38,6 +41,11 @@
  @abstract The message the person has provided through the custom dialog that will accompany the share content.
  */
 @property (nonatomic, copy) NSString *message;
+
+/*!
+ @abstract The graph node to which content should be shared.
+ */
+@property (nonatomic, copy) NSString *graphNode;
 
 /*!
  @abstract A Boolean value that indicates whether the receiver can send the share.

@@ -28,6 +28,7 @@
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestPiggybackManager.h"
+#import "FBSDKSettings+Internal.h"
 
 @interface FBSDKGraphRequestConnectionTests : XCTestCase <FBSDKGraphRequestConnectionDelegate>
 @property (nonatomic, copy) void (^requestConnectionStartingCallback)(FBSDKGraphRequestConnection *connection);
@@ -415,6 +416,43 @@ static id g_mockNSBundle;
   }];
   XCTAssertNotNil([FBSDKAccessToken currentAccessToken]);
   [mockPiggybackManager stopMocking];
+}
+
+- (void)testUserAgentSuffix
+{
+  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
+  XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
+  __block int requestCount = 0;
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setUserAgentSuffix:@"UnitTest.1.0.0"];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
+    if (++requestCount == 1) {
+      XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+    } else if (requestCount == 2){
+      XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+    }
+    return YES;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    NSData *data =  [@"{\"error\": {\"message\": \"Missing oktne\",\"code\": 190, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
+
+    return [OHHTTPStubsResponse responseWithData:data
+                                      statusCode:400
+                                         headers:nil];
+  }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [exp fulfill];
+  }];
+
+  [FBSDKSettings setUserAgentSuffix:nil];
+  // issue a second request o verify clearing out of user agent suffix
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [exp2 fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
 }
 
 #pragma mark - Error recovery.

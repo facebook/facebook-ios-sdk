@@ -49,6 +49,7 @@ static NSMutableSet *g_loggingBehavior;
 static NSString *g_legacyUserDefaultTokenInformationKeyName = @"FBAccessTokenInformationKey";
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
 static BOOL g_disableErrorRecovery;
+static NSString *g_userAgentSuffix;
 
 @implementation FBSDKSettings
 
@@ -182,6 +183,18 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookJpegCompression
 {
   if (g_tokenCache != cache) {
     g_tokenCache = cache;
+  }
+}
+
++ (NSString *)userAgentSuffix
+{
+  return g_userAgentSuffix;
+}
+
++ (void)setUserAgentSuffix:(NSString *)suffix
+{
+  if (![g_userAgentSuffix isEqualToString:suffix]) {
+    g_userAgentSuffix = suffix;
   }
 }
 

@@ -53,3 +53,7 @@ CGPoint FBSDKMessengerRectGetMid(CGRect rect) {
 CGRect FBSDKMessengerRectMakeWithOrigin(CGPoint origin, CGSize size) {
   return CGRectMake(origin.x, origin.y, size.width, size.height);
 }
+
+NSString *FBSDKMessengerEncodingQueryURL(NSString *urlStr) {
+  return [urlStr stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet alphanumericCharacterSet]];
+}

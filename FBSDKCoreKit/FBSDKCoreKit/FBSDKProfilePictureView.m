@@ -182,6 +182,11 @@
 
 - (void)setNeedsImageUpdate
 {
+  if (!_imageView || CGRectIsEmpty(self.bounds)) {
+    // we can't do anything with an empty view, so just bail out until we have a size
+    return;
+  }
+
   // ensure that we have an image.  do this here so we can draw the placeholder image synchronously if we don't have one
   if (!_placeholderImageIsValid && !_hasProfileImage) {
     [self _setPlaceholderImage];
@@ -257,6 +262,8 @@
                                            selector:@selector(_accessTokenDidChangeNotification:)
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
+
+  [self setNeedsImageUpdate];
 }
 
 - (BOOL)_imageShouldFit

@@ -53,12 +53,11 @@ static NSString *const kUserIDsKey = @"USER_IDS";
   [aCoder encodeObject:_metadata ?: @"" forKey:kMetadataKey];
 }
 
-- (NSString *)queryString
+- (NSDictionary *)queryComponents
 {
-  NSString *existingQueryString = [super queryString] ?: @"";
-
-  NSString *replyParam = [NSString stringWithFormat:@"&%@=1", kMessengerPlatformComposerReplyParamName];
-  return [existingQueryString stringByAppendingString:replyParam];
+  NSMutableDictionary *existingQueryComponents = [[super queryComponents] mutableCopy];
+  [existingQueryComponents setObject:@"1" forKey:kMessengerPlatformComposerReplyParamName];
+  return existingQueryComponents;
 }
 
 @end

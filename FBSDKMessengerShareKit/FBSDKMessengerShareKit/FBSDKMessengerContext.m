@@ -31,9 +31,9 @@
 {
 }
 
-- (NSString *)queryString
+- (NSDictionary *)queryComponents
 {
-  return @"";
+  return [NSDictionary dictionary];
 }
 
 #pragma mark - NSSecureCoding

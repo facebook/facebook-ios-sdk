@@ -255,7 +255,7 @@ setJSONStringForObject:(id)object
       }
     }
   });
-  return ([self _compareOperatingSystemVersion:operatingSystemVersion toVersion:version] != NSOrderedDescending);
+  return ([self _compareOperatingSystemVersion:operatingSystemVersion toVersion:version] != NSOrderedAscending);
 }
 
 + (BOOL)isSafariBundleIdentifier:(NSString *)bundleIdentifier
@@ -472,13 +472,13 @@ static NSMapTable *_transientObjects;
     return NSOrderedAscending;
   } else if (version1.majorVersion > version2.majorVersion) {
     return NSOrderedDescending;
-  } else if (version1.minorVersion > version2.minorVersion) {
-    return NSOrderedAscending;
   } else if (version1.minorVersion < version2.minorVersion) {
-    return NSOrderedDescending;
-  } else if (version1.patchVersion > version2.patchVersion) {
     return NSOrderedAscending;
+  } else if (version1.minorVersion > version2.minorVersion) {
+    return NSOrderedDescending;
   } else if (version1.patchVersion < version2.patchVersion) {
+    return NSOrderedAscending;
+  } else if (version1.patchVersion > version2.patchVersion) {
     return NSOrderedDescending;
   } else {
     return NSOrderedSame;

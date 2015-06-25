@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit/FBSDKMacros.h>
 
+#import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKBase64.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKConstants.h"
@@ -336,8 +337,8 @@ static const struct
       [pasteboard setData:nil forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     }
   };
-  [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification
-                                                    object:[UIApplication sharedApplication]
+  [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
+                                                    object:[FBSDKApplicationDelegate sharedInstance]
                                                      queue:nil
                                                 usingBlock:notificationBlock];
 }

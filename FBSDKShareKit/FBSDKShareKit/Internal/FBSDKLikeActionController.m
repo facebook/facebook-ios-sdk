@@ -116,17 +116,19 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     if (accessTokenString) {
       NSURL *fileURL = [self _cacheFileURL];
       NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
-      NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-      unarchiver.requiresSecureCoding = YES;
-      @try {
-        _cache = [unarchiver decodeObjectOfClass:[FBSDKLikeActionControllerCache class]
-                                          forKey:NSKeyedArchiveRootObjectKey];
-      }
-      @catch (NSException *ex) {
-        // ignore decoding exceptions from previous versions of the archive, etc
-      }
-      if (![_cache.accessTokenString isEqualToString:accessTokenString]) {
-        _cache = nil;
+      if (data) {
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        unarchiver.requiresSecureCoding = YES;
+        @try {
+          _cache = [unarchiver decodeObjectOfClass:[FBSDKLikeActionControllerCache class]
+                                            forKey:NSKeyedArchiveRootObjectKey];
+        }
+        @catch (NSException *ex) {
+          // ignore decoding exceptions from previous versions of the archive, etc
+        }
+        if (![_cache.accessTokenString isEqualToString:accessTokenString]) {
+          _cache = nil;
+        }
       }
     }
     if (!_cache) {

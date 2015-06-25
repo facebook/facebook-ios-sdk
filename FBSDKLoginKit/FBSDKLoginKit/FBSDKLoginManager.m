@@ -548,11 +548,16 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
     return;
   }
 
+  BOOL isReauthorize = [FBSDKAccessToken currentAccessToken] != nil;
+
   // app may be asking for nothing, but we will always have a set here
   NSMutableSet *permissionsToUse = _requestedPermissions ? [_requestedPermissions mutableCopy] : [NSMutableSet set];
-  // Ensure that basic info is among the permissions requested so that the app will install if necessary.
-  // "email" is used as a proxy for basic_info permission.
-  [permissionsToUse addObject:@"email"];
+  // Only add basic info if this is not reauthorize case, if it is the app should already have basic info ToSed
+  if (!isReauthorize) {
+    // Ensure that basic info is among the permissions requested so that the app will install if necessary.
+    // "email" is used as a proxy for basic_info permission.
+    [permissionsToUse addObject:@"email"];
+  }
 
   [permissionsToUse removeObject:@"public_profile"];
   [permissionsToUse removeObject:@"user_friends"];
@@ -573,7 +578,6 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
   }
 
   unsigned long timePriorToSystemAuthUI = [FBSDKInternalUtility currentTimeInMilliseconds];
-  BOOL isReauthorize = [FBSDKAccessToken currentAccessToken] != nil;
 
   // the FBSDKSystemAccountStoreAdapter completion handler maintains the strong reference during the the asynchronous operation
   [[FBSDKSystemAccountStoreAdapter sharedInstance]

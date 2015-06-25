@@ -96,40 +96,58 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)_launchUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options
 {
-  NSURLComponents *components = [[NSURLComponents alloc] init];
-  components.scheme = URLSchemeForVersion([FBSDKMessengerSharer currentlyInstalledMessengerVersion]);
-  components.host = kMessengerActionBroadcast;
+  NSURL *url = [FBSDKMessengerSharer _generateUrl:pasteboardType withOptions:options];
+  [[UIApplication sharedApplication] openURL:url];
+  [FBSDKMessengerApplicationStateManager sharedInstance].currentContext = nil;
+}
 
-  NSString *queryString = [NSString stringWithFormat:kMessengerPlatformQueryString,
-                           pasteboardType,
-                           FBSDKMessengerDefaultAppID(),
-                           kFBSDKMessengerShareKitSendVersion];
++ (NSDictionary *)_parseQueryComponentsFromOptions:(FBSDKMessengerShareOptions *)options
+{
+  NSMutableDictionary *queryComponents = [NSMutableDictionary dictionary];
 
+  // metadata
   if (options.metadata.length > 0) {
-    NSString *metadataParam = [NSString stringWithFormat:@"&%@=%@", kMessengerPlatformMetadataParamName, options.metadata];
-    queryString = [queryString stringByAppendingString:metadataParam];
+    [queryComponents setObject:options.metadata forKey:kMessengerPlatformMetadataParamName];
   }
 
+  // sourceURL
+  if (options.sourceURL.absoluteString.length > 0) {
+    [queryComponents setObject:options.sourceURL.absoluteString forKey:kMessengerPlatformSourceURLParamName];
+  }
+
+  // context query string
   FBSDKMessengerContext *context;
   if (options.contextOverride) {
     context = options.contextOverride;
   } else {
     context = [FBSDKMessengerApplicationStateManager sharedInstance].currentContext;
   }
-
-  if (context.queryString.length > 0) {
-    queryString = [queryString stringByAppendingString:context.queryString];
+  if (context.queryComponents) {
+    [queryComponents addEntriesFromDictionary:context.queryComponents];
   }
+  return queryComponents;
+}
 
-  if (options.sourceURL.absoluteString.length > 0) {
-    NSString *sourceURLParam = [NSString stringWithFormat:@"&%@=%@", kMessengerPlatformSourceURLParamName, options.sourceURL.absoluteString];
-    queryString = [queryString stringByAppendingString:sourceURLParam];
-  }
++ (NSURL *)_generateUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options
+{
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = URLSchemeForVersion([FBSDKMessengerSharer currentlyInstalledMessengerVersion]);
+  components.host = kMessengerActionBroadcast;
 
-  components.query = queryString;
+  __block NSString *queryString = [NSString stringWithFormat:kMessengerPlatformQueryString,
+                                   pasteboardType,
+                                   FBSDKMessengerDefaultAppID(),
+                                   kFBSDKMessengerShareKitSendVersion];
 
-  [[UIApplication sharedApplication] openURL:components.URL];
-  [FBSDKMessengerApplicationStateManager sharedInstance].currentContext = nil;
+  NSDictionary *queryComponents = [FBSDKMessengerSharer _parseQueryComponentsFromOptions:options];
+
+  [queryComponents enumerateKeysAndObjectsUsingBlock:^(NSString *paramKey, NSString *paramVal, BOOL *stop) {
+    NSString *component = [NSString stringWithFormat:@"&%@=%@", paramKey, FBSDKMessengerEncodingQueryURL(paramVal)];
+    queryString = [queryString stringByAppendingString:component];
+  }];
+
+  components.percentEncodedQuery = queryString;
+  return components.URL;
 }
 
 #pragma mark - Public

@@ -31,7 +31,7 @@
 #import "FBSDKGraphRequestPiggybackManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKSettings.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKURLConnection.h"
 
 NSString *const FBSDKNonJSONResponseProperty = @"FACEBOOK_NON_JSON_RESULT";
@@ -888,6 +888,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
   if (!agent) {
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBSDK_VERSION_STRING];
+  }
+  if ([FBSDKSettings userAgentSuffix]) {
+    return [NSString stringWithFormat:@"%@/%@", agent, [FBSDKSettings userAgentSuffix]];
   }
   return agent;
 }
