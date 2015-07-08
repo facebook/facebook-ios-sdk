@@ -39,6 +39,7 @@
   if (block != NULL) {
     id applicationMock = [OCMockObject mockForClass:[UIApplication class]];
     [[[applicationMock stub] andReturnValue:@(canOpen)] canOpenURL:URL];
+    [[[applicationMock stub] andReturn:nil] keyWindow];
     id applicationClassMock = [OCMockObject mockForClass:[UIApplication class]];
     [[[[applicationClassMock stub] classMethod] andReturn:applicationMock] sharedApplication];
     block();
@@ -76,23 +77,16 @@
   }];
 }
 
-- (void)testValidateNative
+- (void)testShowNativeDoesValidate
 {
   FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeNative;
-  NSError *error;
-  dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
+  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  content.photos = @[ [FBSDKSharePhoto photoWithImageURL:[FBSDKShareModelTestUtility photoImageURL] userGenerated:NO] ];
+  dialog.shareContent = content;
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    XCTAssertFalse([dialog show]);
+  }];
 }
 
 - (void)testValidateShareSheet

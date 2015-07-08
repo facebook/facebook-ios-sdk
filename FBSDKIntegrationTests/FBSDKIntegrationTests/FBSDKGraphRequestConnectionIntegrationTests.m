@@ -196,14 +196,14 @@
  } batchParameters:@{ @"name" : @"uploadRequest2",
                       @"omit_response_on_success" : @(NO)}];
 
-  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=uploadRequest1:$.id}" parameters:nil]
+  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=uploadRequest1:$.id}" parameters:@{ @"fields" : @"id,width" }]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error);
    XCTAssertEqualObjects(@(120), result[@"width"]);
    [blocker signal];
  }];
 
-  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=uploadRequest2:$.id}" parameters:nil]
+  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=uploadRequest2:$.id}" parameters:@{ @"fields" : @"id,width" }]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error);
    XCTAssertEqualObjects(@(150), result[@"width"]);
