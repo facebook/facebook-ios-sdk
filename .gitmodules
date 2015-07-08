@@ -16,9 +16,3 @@
 [submodule "vendor/xctool"]
 	path = vendor/xctool
 	url = git://github.com/facebook/xctool.git
-[submodule "internal/ssp/vendor/MoPub-SDK"]
-	path = internal/ssp/vendor/MoPub-SDK
-	url = https://github.com/mopub/mopub-ios-sdk.git
-[submodule "internal/ssp/vendor/AdColony-iOS-SDK"]
-	path = internal/ssp/vendor/AdColony-iOS-SDK
-	url = https://github.com/AdColony/AdColony-iOS-SDK.git
