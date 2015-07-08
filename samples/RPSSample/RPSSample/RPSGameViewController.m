@@ -105,6 +105,7 @@ typedef void (^RPSBlock)(void);
         _interestedInImplicitShare = YES;
 
         _activeConnections = [[NSMutableSet alloc] init];
+
     }
     return self;
 }
@@ -295,6 +296,7 @@ typedef void (^RPSBlock)(void);
     // update UI and counts based on result
     RPSResult result = [self resultForPlayerCall:_lastPlayerCall
                                     computerCall:_lastComputerCall];
+
     switch (result) {
         case RPSResultWin:
             _wins++;
@@ -317,6 +319,7 @@ typedef void (^RPSBlock)(void);
     if (_interestedInImplicitShare) {
         [self publishResult];
     }
+
 }
 
 - (void)updateScoreLabel {
@@ -443,6 +446,7 @@ typedef void (^RPSBlock)(void);
 
 - (BOOL)shareWith:(id<FBSDKSharingDialog>)dialog content:(id<FBSDKSharingContent>)content{
     dialog.shareContent = content;
+    dialog.delegate = self;
     return [dialog show];
 }
 
@@ -632,10 +636,10 @@ typedef void (^RPSBlock)(void);
 
 - (void)logPlayerCall:(RPSCall)playerCall result:(RPSResult)result timeTaken:(NSTimeInterval)timeTaken {
     // log the user's choice and the respective result
-    NSString *playerChoice = [NSString stringWithFormat:@"Throw %@", callType[playerCall + 1]];
-    [FBSDKAppEvents logEvent:playerChoice
+    NSString *playerChoice = callType[playerCall + 1];
+    [FBSDKAppEvents logEvent:@"Round End"
                   valueToSum:timeTaken
-                  parameters:@{@"Result": kResults[result]}];
+                  parameters:@{@"roundResult": kResults[result], @"playerChoice" : playerChoice}];
 }
 
 - (void)logTimeTaken:(NSTimeInterval)timeTaken {
