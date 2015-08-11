@@ -28,13 +28,14 @@
  */
 typedef NS_OPTIONS(NSUInteger, FBSDKMessengerPlatformCapability)
 {
-  FBSDKMessengerPlatformCapabilityNone         = 0,
-  FBSDKMessengerPlatformCapabilityOpen         = 1 << 0,
-  FBSDKMessengerPlatformCapabilityImage        = 1 << 1,
-  FBSDKMessengerPlatformCapabilityAnimatedGIF  = 1 << 2,
-  FBSDKMessengerPlatformCapabilityAnimatedWebP = 1 << 3,
-  FBSDKMessengerPlatformCapabilityVideo        = 1 << 4,
-  FBSDKMessengerPlatformCapabilityAudio        = 1 << 5,
+  FBSDKMessengerPlatformCapabilityNone            = 0,
+  FBSDKMessengerPlatformCapabilityOpen            = 1 << 0,
+  FBSDKMessengerPlatformCapabilityImage           = 1 << 1,
+  FBSDKMessengerPlatformCapabilityAnimatedGIF     = 1 << 2,
+  FBSDKMessengerPlatformCapabilityAnimatedWebP    = 1 << 3,
+  FBSDKMessengerPlatformCapabilityVideo           = 1 << 4,
+  FBSDKMessengerPlatformCapabilityAudio           = 1 << 5,
+  FBSDKMessengerPlatformCapabilityRenderAsSticker = 1 << 6,
 };
 
 /*!
@@ -64,9 +65,12 @@ typedef NS_OPTIONS(NSUInteger, FBSDKMessengerPlatformCapability)
  @discussion
  Before sharing any media, first use this bitmask to check to see if it can be shared to Messenger
 
+ @deprecated
+ This method is deprecated as of iOS 9
+
  @return bitmask of the Messenger capabilities
  */
-+ (FBSDKMessengerPlatformCapability)messengerPlatformCapabilities;
++ (FBSDKMessengerPlatformCapability)messengerPlatformCapabilities __attribute__ ((deprecated("This is deprecated as of iOS 9. If you use this, you must configure your plist as described in https://developers.facebook.com/docs/ios/ios9")));
 
 /*!
  @abstract

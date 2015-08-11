@@ -18,6 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
+#define FBSDK_CANOPENURL_FACEBOOK @"fbauth2"
+#define FBSDK_CANOPENURL_MESSENGER @"fb-messenger-api"
+
 typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
 {
   FBSDKUIKitVersion_6_0 = 0x0944,
@@ -281,6 +284,12 @@ setJSONStringForObject:(id)object
  @abstract returns true if the url scheme is registered in the CFBundleURLTypes
  */
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
+
+#pragma mark - FB Apps Installed
+
++ (BOOL)isFacebookAppInstalled;
++ (BOOL)isMessengerAppInstalled;
++ (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
 #define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
 { \

@@ -44,13 +44,6 @@
   return self;
 }
 
-#pragma mark - Properties
-
-- (BOOL)isEnabled
-{
-  return YES;
-}
-
 #pragma mark - FBSDKBridgeAPIProtocol
 
 - (NSURL *)_redirectURLWithActionID:(NSString *)actionID methodName:(NSString *)methodName error:(NSError **)errorRef

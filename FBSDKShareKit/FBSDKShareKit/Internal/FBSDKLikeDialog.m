@@ -25,7 +25,6 @@
 
 @implementation FBSDKLikeDialog
 
-#define FBSDK_LIKE_DIALOG_APP_SCHEME @"fbapi"
 #define FBSDK_LIKE_METHOD_MIN_VERSION @"20140410"
 #define FBSDK_LIKE_METHOD_NAME @"like"
 #define FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_LIKE @"like"
@@ -71,26 +70,34 @@
   [FBSDKInternalUtility dictionary:parameters
                          setObject:NSStringFromFBSDKLikeObjectType(self.objectType)
                             forKey:@"object_type"];
-  FBSDKBridgeAPIRequest *request;
-  if ([self _canLikeNative]) {
-    request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                               scheme:FBSDK_LIKE_DIALOG_APP_SCHEME
-                                                           methodName:FBSDK_LIKE_METHOD_NAME
-                                                        methodVersion:FBSDK_LIKE_METHOD_MIN_VERSION
-                                                           parameters:parameters
-                                                             userInfo:nil];
-  } else {
-    request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                               scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
-                                                           methodName:FBSDK_LIKE_METHOD_NAME
-                                                        methodVersion:nil
-                                                           parameters:parameters
-                                                             userInfo:nil];
-  }
+  FBSDKBridgeAPIRequest * webRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
+                                                                                        scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
+                                                                                    methodName:FBSDK_LIKE_METHOD_NAME
+                                                                                 methodVersion:nil
+                                                                                    parameters:parameters
+                                                                                      userInfo:nil];
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
+
+  if ([self _canLikeNative]) {
+    FBSDKBridgeAPIRequest *nativeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
+                                                                                            scheme:FBSDK_CANOPENURL_FACEBOOK
+                                                                                        methodName:FBSDK_LIKE_METHOD_NAME
+                                                                                     methodVersion:FBSDK_LIKE_METHOD_MIN_VERSION
+                                                                                        parameters:parameters
+                                                                                          userInfo:nil];
+    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:nativeRequest completionBlock:^(FBSDKBridgeAPIResponse *response) {
+      if (response.error.code == FBSDKAppVersionUnsupportedErrorCode) {
+        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest completionBlock:completionBlock];
+      } else {
+        completionBlock(response);
+      }
+    }];
+  } else {
+    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest completionBlock:completionBlock];
+  }
+
   return YES;
 }
 
@@ -112,15 +119,7 @@
 
 - (BOOL)_canLikeNative
 {
-  NSString *scheme = FBSDK_LIKE_DIALOG_APP_SCHEME;
-  if (![FBSDKBridgeAPIRequest checkProtocolForType:FBSDKBridgeAPIProtocolTypeNative scheme:scheme]) {
-    return NO;
-  }
-
-  NSURL *URL = [[NSURL alloc] initWithScheme:[scheme stringByAppendingString:FBSDK_LIKE_METHOD_MIN_VERSION]
-                                        host:nil
-                                        path:@"/"];
-  return [[UIApplication sharedApplication] canOpenURL:URL];
+  return [FBSDKInternalUtility isFacebookAppInstalled];
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error

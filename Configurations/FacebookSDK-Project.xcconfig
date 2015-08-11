@@ -53,6 +53,13 @@ GCC_PRECOMPILE_PREFIX_HEADER = YES
 CLANG_CXX_LANGUAGE_STANDARD = c++11
 CLANG_CXX_LIBRARY = libc++
 
+// Bitcode Support
+ENABLE_BITCODE = YES
+FB_BITCODE_FLAG = $()
+FB_BITCODE_FLAG[sdk=iphoneos9.0] = -fembed-bitcode-marker
+FB_BITCODE_FLAG[sdk=iphonesimulator9.0] = -fembed-bitcode-marker
+OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
+
 // Warnings
 CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
 CLANG_WARN_BOOL_CONVERSION = YES

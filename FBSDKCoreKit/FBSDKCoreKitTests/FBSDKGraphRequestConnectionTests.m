@@ -196,6 +196,32 @@ static id g_mockNSBundle;
   [mockPiggybackManager stopMocking];
 }
 
+- (void)testConnectionDelegateWithNetworkError
+{
+  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    return YES;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    // stub a response indicating a disconnected network
+    return [OHHTTPStubsResponse responseWithError:[NSError errorWithDomain:@"NSURLErrorDomain" code:-1009 userInfo:nil]];
+  }];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  XCTestExpectation *expectation = [self expectationWithDescription:@"expected to receive network error"];
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil]
+       completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {}];
+  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+    NSCAssert(error != nil, @"didFinishLoading shouldn't have been called");
+    [expectation fulfill];
+  };
+  connection.delegate = self;
+  [connection start];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+
+  [mockPiggybackManager stopMocking];
+}
+
 // test to verify piggyback refresh token behavior.
 - (void)testTokenPiggyback
 {

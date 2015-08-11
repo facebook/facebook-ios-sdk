@@ -118,7 +118,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];

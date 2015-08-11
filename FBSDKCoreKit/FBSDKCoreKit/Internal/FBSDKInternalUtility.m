@@ -455,6 +455,33 @@ static NSMapTable *_transientObjects;
   }
 }
 
+#pragma mark - FB Apps Installed
+
++ (BOOL)isFacebookAppInstalled
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+  });
+  return [[UIApplication sharedApplication]
+          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_FACEBOOK
+                                              host:nil
+                                              path:@"/"]];
+}
+
++ (BOOL)isMessengerAppInstalled
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+  });
+  return [[UIApplication sharedApplication]
+          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_MESSENGER
+                                              host:nil
+                                              path:@"/"]];
+
+}
+
 #pragma mark - Object Lifecycle
 
 - (instancetype)init
@@ -558,6 +585,34 @@ static NSMapTable *_transientObjects;
     }
   }
   return NO;
+}
+
++ (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme
+{
+  static dispatch_once_t fetchBundleOnce;
+  static NSArray *schemes = nil;
+  static NSMutableSet *checkedSchemes = nil;
+
+  dispatch_once(&fetchBundleOnce, ^{
+    schemes = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"LSApplicationQueriesSchemes"];
+    checkedSchemes = [NSMutableSet set];
+  });
+
+  @synchronized(self) {
+    if ([checkedSchemes containsObject:urlScheme]) {
+      return;
+    } else {
+      [checkedSchemes addObject:urlScheme];
+    }
+  }
+  if (![schemes containsObject:urlScheme]){
+    NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required for iOS 9.0", urlScheme];
+#ifdef __IPHONE_9_0
+    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
+#else
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
+#endif
+  }
 }
 
 @end

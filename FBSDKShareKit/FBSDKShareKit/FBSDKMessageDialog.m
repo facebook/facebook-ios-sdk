@@ -33,6 +33,11 @@
 
 #pragma mark - Class Methods
 
++ (void)initialize
+{
+  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+}
+
 + (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
 {
   FBSDKMessageDialog *dialog = [[self alloc] init];
@@ -109,15 +114,7 @@
 
 - (BOOL)_canShowNative
 {
-  NSString *scheme = FBSDK_MESSAGE_DIALOG_APP_SCHEME;
-  if (![FBSDKBridgeAPIRequest checkProtocolForType:FBSDKBridgeAPIProtocolTypeNative scheme:scheme]) {
-    return NO;
-  }
-
-  NSURL *URL = [[NSURL alloc] initWithScheme:[scheme stringByAppendingString:FBSDK_MESSAGE_METHOD_MIN_VERSION]
-                                        host:nil
-                                        path:@"/"];
-  return [[UIApplication sharedApplication] canOpenURL:URL];
+  return [FBSDKInternalUtility isMessengerAppInstalled];
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response

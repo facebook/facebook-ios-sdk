@@ -92,7 +92,7 @@ static NSDictionary *parseUrlHelper(NSString *urlStr)
   FBSDKMessengerShareOptions *options = [[FBSDKMessengerShareOptions alloc] init];
   options.sourceURL = sourceURL;
   options.metadata = metadata;
-  NSURL *url = [FBSDKMessengerSharer _generateUrl:@"com.messenger.image" withOptions:options];
+  NSURL *url = [FBSDKMessengerSharer _generateUrl:@"com.messenger.image" withOptions:options messengerVersion:@"20150714"];
   NSDictionary *dict = parseUrlHelper(url.query);
   XCTAssertNotNil([dict objectForKey:@"metadata"]);
   XCTAssertTrue([(NSString *)[dict objectForKey:@"metadata"] isEqualToString:metadata]);

@@ -16,28 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKMessengerInvalidOptionsAlertPresenter.h"
 
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
+@implementation FBSDKMessengerInvalidOptionsAlertPresenter
 
-#import "BridgeAPI/FBSDKBridgeAPIRequest.h"
-#import "BridgeAPI/FBSDKBridgeAPIResponse.h"
-#import "BridgeAPI/FBSDKURLOpening.h"
++ (instancetype)sharedInstance
+{
+  static FBSDKMessengerInvalidOptionsAlertPresenter *sharedInstance = nil;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    sharedInstance = [[self alloc] init];
+  });
+  return sharedInstance;
+}
 
-FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
+#pragma mark - Public
 
-@class FBSDKApplicationCall;
+- (void)presentInvalidOptionsAlert
+{
+  UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Invalid Options", @"Alert title telling the developers that they provided invalid options.")
+                                                   message:NSLocalizedString(@"You need to provide valid options", @"Message when invalid options are provided.")
+                                                  delegate:self
+                                         cancelButtonTitle:NSLocalizedString(@"OK", @"Button label when the developers have acknowledged the error.")
+                                         otherButtonTitles:nil, nil];
+  [alert show];
 
-typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
-
-@interface FBSDKApplicationDelegate ()
-
-- (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
-             completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock;
-
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
-
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+}
 
 @end

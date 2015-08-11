@@ -23,6 +23,8 @@
 #import "FBSDKBoltsMeasurementEventListener.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKConstants.h"
+#import "FBSDKError.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKProfile+Internal.h"
 #import "FBSDKSettings+Internal.h"
@@ -199,23 +201,47 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
   _pendingRequest = request;
   _pendingRequestCompletionBlock = [completionBlock copy];
-  [self openURL:requestURL sender:nil];
+  [self openURL:requestURL sender:nil handler:^(BOOL openedURL) {
+    if (!openedURL) {
+      _pendingRequest = nil;
+      _pendingRequestCompletionBlock = nil;
+      NSError *openedURLError;
+      if ([request.scheme hasPrefix:@"http"]) {
+        openedURLError = [FBSDKError errorWithCode:FBSDKBrowswerUnavailableErrorCode
+                                           message:@"the app switch failed because the browser is unavailable"];
+      } else {
+        openedURLError = [FBSDKError errorWithCode:FBSDKAppVersionUnsupportedErrorCode
+                                           message:@"the app switch failed because the destination app is out of date"];
+      }
+      FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
+                                                                                        error:openedURLError];
+      completionBlock(response);
+      return;
+    }
+  }];
 }
 
-- (BOOL)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender
+- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler
 {
-  if ([[UIApplication sharedApplication] canOpenURL:url]) {
     _expectingResign = YES;
     _pendingURLOpen = sender;
 
     dispatch_async(dispatch_get_main_queue(), ^{
       // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
-      [[UIApplication sharedApplication] openURL:url];
+      BOOL opened = [[UIApplication sharedApplication] openURL:url];
+
+      if ([url.scheme hasPrefix:@"http"] && !opened) {
+        NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+        if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
+          // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
+          // Otherwise we would rather trust in the actual result of openURL
+          opened = YES;
+        }
+      }
+      if (handler) {
+        handler(opened);
+      }
     });
-    // Safari openURL calls can wrongly return NO so rely on the more honest canOpenURL call for return.
-    return YES;
-  }
-  return NO;
 }
 
 #pragma mark - Helper Methods

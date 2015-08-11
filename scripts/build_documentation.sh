@@ -23,25 +23,9 @@
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
-# option s to skip build
-SKIPBUILD=""
-while getopts "s:" OPTNAME
-do
-  case "$OPTNAME" in
-    s)
-      SKIPBUILD="YES"
-      ;;
-  esac
-done
-
 # -----------------------------------------------------------------------------
 # Build pre-requisites
 #
-if is_outermost_build; then
-  if [ -z SKIPBUILD ]; then
-    . "$FB_SDK_SCRIPT/build_framework.sh" -n
-  fi
-fi
 
 APPLEDOC_PATH="$FB_SDK_BUILD"/appledoc
 progress_message "$APPLEDOC_PATH"
@@ -71,37 +55,53 @@ test -d "$FB_SDK_BUILD" \
   || mkdir -p "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
-cd "$FB_SDK_ROOT"
+(
+  HEADERS=("$FB_SDK_BUILD/FBSDKCoreKit.framework/Headers $FB_SDK_BUILD/FBSDKLoginKit.framework/Headers $FB_SDK_BUILD/FBSDKShareKit.framework/Headers"
+           "$FB_SDK_BUILD/package/FBAudienceNetwork.framework/Headers"
+           "$FB_SDK_BUILD/package/FBSDKMessengerShareKit.framework/Headers")
+  PROJECT_NAMES=("Facebook SDK $FB_SDK_VERSION_SHORT for iOS"
+                 "Facebook Audience Network SDK $FB_SDK_VERSION_SHORT for iOS"
+                 "Facebook Messenger Share Kit SDK $MN_SDK_VERSION_SHORT for iOS")
+  BUNDLE_NAMES=("FacebookSDK-${FB_SDK_VERSION_MAJOR}_${FB_SDK_VERSION_MINOR}-for-iOS.docset"
+                "FacebookAudienceNetworkSDK-${FB_SDK_VERSION_MAJOR}_${FB_SDK_VERSION_MINOR}-for-iOS.docset"
+                "FacebookMessengerShareKitSDK-${MN_SDK_VERSION_MAJOR}_${MN_SDK_VERSION_MINOR}-for-iOS.docset")
+  CNT=${#HEADERS[@]}
 
-rm -rf "$FB_SDK_FRAMEWORK_DOCS"
+  cd "$FB_SDK_ROOT"
 
-DOCSET="$FB_SDK_BUILD"/docset.build
-rm -rf "$DOCSET"
+  for (( i = 0; i < CNT; i++ ))
+  do
+    progress_message "Building docs for ${PROJECT_NAMES[$i]}"
+    DOCSET_OUTPUT="$FB_SDK_BUILD"/docset.build
+    rm -rf "$DOCSET_OUTPUT"
+    APPLEDOC_PROJECT_NAME=${PROJECT_NAMES[$i]}
+    DOCSET_BUNDLE_FILENAME=${BUNDLE_NAMES[$i]}
+    hash "$APPLEDOC_PATH" &>/dev/null
 
-hash "$APPLEDOC_PATH" &>/dev/null
-if [ "$?" -eq "0" ]; then
-    APPLEDOC_DOCSET_NAME="Facebook SDK $FB_SDK_VERSION_SHORT for iOS"
-    "$APPLEDOC_PATH" --project-name "$APPLEDOC_DOCSET_NAME" \
-	--project-company "Facebook" \
-	--company-id "com.facebook" \
-  --output "$DOCSET" \
-	--preprocess-headerdoc \
-	--docset-bundle-filename "$FB_SDK_DOCSET_NAME" \
-	--docset-feed-name "$APPLEDOC_DOCSET_NAME" \
-	--docset-install-path "$FB_SDK_BUILD" \
-	--exit-threshold 2 \
-	--no-install-docset \
-	--search-undocumented-doc \
-	--keep-undocumented-members \
-	--keep-undocumented-objects \
-	--explicit-crossref \
-	"$FB_SDK_BUILD/FBSDKCoreKit.framework/Headers" \
-  "$FB_SDK_BUILD/FBSDKLoginKit.framework/Headers" \
-  "$FB_SDK_BUILD/FBSDKShareKit.framework/Headers" \
-    || die 'appledoc execution failed'
-else
-    die "appledoc not installed, unable to build documentation"
-fi
+    if [ "$?" -eq "0" ]; then
+        "$APPLEDOC_PATH" --project-name "$APPLEDOC_PROJECT_NAME" \
+          --project-company "Facebook" \
+          --company-id "com.facebook" \
+          --output "$DOCSET_OUTPUT" \
+          --preprocess-headerdoc \
+          --docset-bundle-filename "$DOCSET_BUNDLE_FILENAME" \
+          --docset-feed-name "$APPLEDOC_PROJECT_NAME" \
+          --docset-install-path "$FB_SDK_BUILD" \
+          --exit-threshold 2 \
+          --no-install-docset \
+          --search-undocumented-doc \
+          --keep-undocumented-members \
+          --keep-undocumented-objects \
+          --explicit-crossref \
+          --logformat xcode \
+          --no-repeat-first-par \
+          ${HEADERS[$i]} \
+            || die 'appledoc execution failed'
+    else
+        die "appledoc not installed, unable to build documentation"
+    fi
+  done
+) || die "failed to build docs"
 
 # -----------------------------------------------------------------------------
 # Done
