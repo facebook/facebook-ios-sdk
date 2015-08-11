@@ -20,7 +20,7 @@
 
 @interface FBSDKMessengerSharer (Test)
 
-+ (NSURL *)_generateUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options;
++ (NSURL *)_generateUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options messengerVersion:(NSString *)messengerVersion;
 
 + (NSString *)currentlyInstalledMessengerVersion;
 

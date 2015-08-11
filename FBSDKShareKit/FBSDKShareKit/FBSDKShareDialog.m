@@ -53,6 +53,11 @@
 
 #pragma mark - Class Methods
 
++ (void)initialize
+{
+  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+}
+
 + (instancetype)showFromViewController:(UIViewController *)viewController
                            withContent:(id<FBSDKSharingContent>)content
                               delegate:(id<FBSDKSharingDelegate>)delegate
@@ -91,7 +96,7 @@
       return YES;
     }
     case FBSDKShareDialogModeNative:{
-      return [self _canShowNativeWithMethodName:NULL methodVersion:NULL];
+      return [FBSDKInternalUtility isFacebookAppInstalled];
     }
     case FBSDKShareDialogModeShareSheet:{
       return [self _canShowShareSheet];
@@ -107,13 +112,7 @@
   if ([self validateWithError:&error]) {
     switch (self.mode) {
       case FBSDKShareDialogModeAutomatic:{
-        // use the first validation error that fails, ignore canShow errors
-        didShow = ([self _showNativeWithCanShowError:NULL validationError:&error] ||
-                   [self _showShareSheetWithCanShowError:NULL validationError:&error] ||
-                   [self _showFeedBrowser:&error] ||
-                   [self _showFeedWeb:&error] ||
-                   [self _showBrowser:&error] ||
-                   [self _showWeb:&error]);
+        didShow = [self _showAutomatic:&error];
         break;
       }
       case FBSDKShareDialogModeBrowser:{
@@ -169,7 +168,7 @@
   switch (self.mode) {
     case FBSDKShareDialogModeAutomatic:{
       return (
-              ([self _canShowNativeWithMethodName:NULL methodVersion:NULL] && [self _validateShareContentForNative:errorRef]) ||
+              ([FBSDKInternalUtility isFacebookAppInstalled] && [self _validateShareContentForNative:errorRef]) ||
               ([self _canShowShareSheet] && [self _validateShareContentForShareSheet:errorRef]) ||
               [self _validateShareContentForFeed:errorRef] ||
               [self _validateShareContentForBrowser:errorRef]);
@@ -231,7 +230,32 @@
 
 #pragma mark - Helper Methods
 
-- (BOOL)_canShowNativeWithMethodName:(NSString **)methodNameRef methodVersion:(NSString **)methodVersionRef
+-(BOOL)_isDefaultToShareSheet
+{
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
+}
+
+-(BOOL)_showAutomatic:(NSError *__autoreleasing *)errorRef
+{
+  if ([self _isDefaultToShareSheet]) {
+    return ([self _showShareSheetWithCanShowError:NULL validationError:errorRef] ||
+            [self _showNativeWithCanShowError:NULL validationError:errorRef] ||
+            [self _showFeedBrowser:errorRef] ||
+            [self _showFeedWeb:errorRef] ||
+            [self _showBrowser:errorRef] ||
+            [self _showWeb:errorRef]);
+  } else {
+    return ([self _showNativeWithCanShowError:NULL validationError:errorRef] ||
+            [self _showShareSheetWithCanShowError:NULL validationError:errorRef] ||
+            [self _showFeedBrowser:errorRef] ||
+            [self _showFeedWeb:errorRef] ||
+            [self _showBrowser:errorRef] ||
+            [self _showWeb:errorRef]);
+  }
+}
+
+- (void)_loadNativeMethodName:(NSString **)methodNameRef methodVersion:(NSString **)methodVersionRef
 {
   if (methodNameRef != NULL) {
     *methodNameRef = nil;
@@ -239,14 +263,10 @@
   if (methodVersionRef != NULL) {
     *methodVersionRef = nil;
   }
-  NSString *scheme = FBSDK_SHARE_DIALOG_APP_SCHEME;
-  if (![FBSDKBridgeAPIRequest checkProtocolForType:FBSDKBridgeAPIProtocolTypeNative scheme:scheme]) {
-    return NO;
-  }
 
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if (!shareContent) {
-    return YES;
+    return;
   }
 
   // if there is shareContent on the receiver already, we can check the minimum app version, otherwise we can only check
@@ -272,19 +292,12 @@
       methodVersion = FBSDK_SHARE_METHOD_MIN_VERSION;
     }
   }
-  NSURL *URL = [[NSURL alloc] initWithScheme:[scheme stringByAppendingString:methodVersion]
-                                        host:nil
-                                        path:@"/"];
-  if (![[UIApplication sharedApplication] canOpenURL:URL]) {
-    return NO;
-  }
   if (methodNameRef != NULL) {
     *methodNameRef = methodName;
   }
   if (methodVersionRef != NULL) {
     *methodVersionRef = methodVersion;
   }
-  return YES;
 }
 
 - (BOOL)_canShowShareSheet
@@ -427,9 +440,7 @@
 
 - (BOOL)_showNativeWithCanShowError:(NSError **)canShowErrorRef validationError:(NSError **)validationErrorRef
 {
-  NSString *methodName;
-  NSString *methodVersion;
-  if (![self _canShowNativeWithMethodName:&methodName methodVersion:&methodVersion]) {
+  if (![FBSDKInternalUtility isFacebookAppInstalled]) {
     if (canShowErrorRef != NULL) {
       *canShowErrorRef = [FBSDKShareError errorWithCode:FBSDKShareDialogNotAvailableErrorCode
                                                 message:@"Native share dialog is not available."];
@@ -440,16 +451,26 @@
     return NO;
   }
 
+  NSString *methodName;
+  NSString *methodVersion;
+  [self _loadNativeMethodName:&methodName methodVersion:&methodVersion];
   NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:self.shareContent
                                                     shouldFailOnDataError:self.shouldFailOnDataError];
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                             scheme:FBSDK_SHARE_DIALOG_APP_SCHEME
+                                                             scheme:FBSDK_CANOPENURL_FACEBOOK
                                                          methodName:methodName
                                                       methodVersion:methodVersion
                                                          parameters:parameters
                                                            userInfo:nil];
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+    if (response.error.code == FBSDKAppVersionUnsupportedErrorCode) {
+      NSError *fallbackError;
+      if ([self _showShareSheetWithCanShowError:NULL validationError:&fallbackError] ||
+          [self _showFeedBrowser:&fallbackError]) {
+        return;
+      }
+    }
     NSDictionary *responseParameters = response.responseParameters;
     NSString *completionGesture = responseParameters[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
     if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL] ||

@@ -102,7 +102,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -139,7 +139,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -185,7 +185,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -237,7 +237,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -290,7 +290,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -336,7 +336,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -364,7 +364,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -397,7 +397,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -429,7 +429,7 @@
     // to intercept and verify request to fufill the expectation.
     return NO;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -438,7 +438,8 @@
   // 202 events will trigger two automatic flushes
   for (int i = 0; i < 202; i++) {
     dispatch_async(queue, ^{
-      [FBSDKAppEvents logEvent:@"event-to-test-threshold-from-queue"];
+      NSString *eventName = [NSString stringWithFormat:@"event-to-test-threshold-from-queue-%d", i];
+      [FBSDKAppEvents logEvent:eventName];
     });
   }
   XCTAssertTrue([blocker waitWithTimeout:10], @"did not get automatic flushes");

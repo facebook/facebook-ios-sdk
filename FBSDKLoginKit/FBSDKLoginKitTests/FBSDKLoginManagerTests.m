@@ -232,7 +232,14 @@ static NSString *const kFakeChallenge = @"abcdef";
   }] validateReauthentication:[OCMArg any] withResult:[OCMArg any]];
 
   [target setRequestedPermissions:[NSSet setWithObjects:@"public_profile", @"read_stream", nil]];
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wnonnull"
+
   XCTAssertTrue([target application:nil openURL:url sourceApplication:nil annotation:nil]);
+
+#pragma clang diagnostic pop
+
   [target verify];
 }
 

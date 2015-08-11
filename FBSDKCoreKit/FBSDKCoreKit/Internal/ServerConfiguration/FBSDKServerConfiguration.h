@@ -29,6 +29,7 @@
                       appName:(NSString *)appName
           loginTooltipEnabled:(BOOL)loginTooltipEnabled
              loginTooltipText:(NSString *)loginTooltipText
+             defaultShareMode:(NSString *)defaultShareMode
          advertisingIDEnabled:(BOOL)advertisingIDEnabled
        implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
@@ -45,6 +46,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, assign, readonly, getter=isImplicitPurchaseLoggingSupported) BOOL implicitPurchaseLoggingEnabled;
 @property (nonatomic, assign, readonly, getter=isLoginTooltipEnabled) BOOL loginTooltipEnabled;
 @property (nonatomic, copy, readonly) NSString *loginTooltipText;
+@property (nonatomic, copy, readonly) NSString *defaultShareMode;
 @property (nonatomic, assign, readonly, getter=isSystemAuthenticationEnabled) BOOL systemAuthenticationEnabled;
 @property (nonatomic, copy, readonly) NSDate *timestamp;
 @property (nonatomic, strong, readonly) FBSDKErrorConfiguration *errorConfiguration;

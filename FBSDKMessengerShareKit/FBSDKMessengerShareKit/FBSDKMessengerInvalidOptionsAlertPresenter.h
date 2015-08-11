@@ -16,28 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
+/*!
+ @class FBSDKMessengerInvalidOptionsAlertPresenter
 
-#import "BridgeAPI/FBSDKBridgeAPIRequest.h"
-#import "BridgeAPI/FBSDKBridgeAPIResponse.h"
-#import "BridgeAPI/FBSDKURLOpening.h"
+ @abstract
+ Presents an alert telling the developer that they didn't provide valid options
+ */
+@interface FBSDKMessengerInvalidOptionsAlertPresenter : NSObject
 
-FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
++ (instancetype)sharedInstance;
 
-@class FBSDKApplicationCall;
-
-typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
-
-@interface FBSDKApplicationDelegate ()
-
-- (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
-             completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock;
-
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
-
-@property (nonatomic, readonly, getter=isActive) BOOL active;
+- (void)presentInvalidOptionsAlert;
 
 @end

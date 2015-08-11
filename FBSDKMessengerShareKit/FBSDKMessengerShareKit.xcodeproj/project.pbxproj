@@ -57,6 +57,8 @@
 		9CAE10321B15385400163BDA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAE10311B15385400163BDA /* Foundation.framework */; };
 		9CAE10331B15388900163BDA /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC45E131A7980650080B409 /* XCTest.framework */; };
 		9CAE10351B1538B300163BDA /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CAE10341B1538B300163BDA /* CoreGraphics.framework */; };
+		9CF0921C1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF0921A1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.h */; };
+		9CF0921D1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF0921B1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.m */; };
 		9D0558A91A797E7B009B7108 /* FBSDKMessengerShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0558A81A797E7B009B7108 /* FBSDKMessengerShareKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -146,6 +148,8 @@
 		9CAE10311B15385400163BDA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9CAE10341B1538B300163BDA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9CAE10361B153B2700163BDA /* FBSDKMessengerSharer+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKMessengerSharer+Internal.h"; sourceTree = "<group>"; };
+		9CF0921A1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKMessengerInvalidOptionsAlertPresenter.h; sourceTree = "<group>"; };
+		9CF0921B1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerInvalidOptionsAlertPresenter.m; sourceTree = "<group>"; };
 		9D0558A31A797E7B009B7108 /* FBSDKMessengerShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKMessengerShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D0558A71A797E7B009B7108 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D0558A81A797E7B009B7108 /* FBSDKMessengerShareKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKMessengerShareKit.h; sourceTree = "<group>"; };
@@ -290,6 +294,8 @@
 				2385C9A51AB10690000E3F2F /* FBSDKMessengerShareOptions.m */,
 				2344901C1AB8D290005B678F /* FBSDKMessengerApplicationStateManager.h */,
 				2344901D1AB8D290005B678F /* FBSDKMessengerApplicationStateManager.m */,
+				9CF0921A1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.h */,
+				9CF0921B1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.m */,
 			);
 			path = FBSDKMessengerShareKit;
 			sourceTree = "<group>";
@@ -320,6 +326,7 @@
 				23F7B8B71A8EBFDC0073A5D5 /* FBSDKMessengerContext.m in Headers */,
 				2350FCD61A8D9C8B00986DF7 /* FBSDKMessengerURLHandlerReplyContext+Internal.h in Headers */,
 				233884301A798C4600BCCF5A /* FBSDKMessengerSharer.h in Headers */,
+				9CF0921C1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.h in Headers */,
 				9D0558A91A797E7B009B7108 /* FBSDKMessengerShareKit.h in Headers */,
 				2344901E1AB8D290005B678F /* FBSDKMessengerApplicationStateManager.h in Headers */,
 				23B6FB5F1A89D317008D49B6 /* FBSDKMessengerUtils.h in Headers */,
@@ -495,6 +502,7 @@
 				23FD9DD41A9594CF00855304 /* FBSDKMessengerButton.m in Sources */,
 				23E0307B1A9803D6004F5657 /* FBSDKMessengerURLHandlerOpenFromComposerContext.m in Sources */,
 				238AD67B1A93CD0300C2F923 /* FBSDKMessengerContext.m in Sources */,
+				9CF0921D1B5750560026D052 /* FBSDKMessengerInvalidOptionsAlertPresenter.m in Sources */,
 				2344901F1AB8D290005B678F /* FBSDKMessengerApplicationStateManager.m in Sources */,
 				2385C9A71AB10690000E3F2F /* FBSDKMessengerShareOptions.m in Sources */,
 				234490271AB8DDC9005B678F /* FBSDKMessengerBroadcastContext.m in Sources */,

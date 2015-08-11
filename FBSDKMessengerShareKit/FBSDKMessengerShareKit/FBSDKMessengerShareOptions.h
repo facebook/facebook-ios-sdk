@@ -39,9 +39,18 @@
 
 @discussion Setting this property improves performance by allowing Messenger to download
  the content directly rather than uploading the content from your app.
- This option is only used for animated GIFs and WebPs
-*/
+ This option is only used for animated GIFs and WebPs.
+ */
 @property (nonatomic, readwrite, copy) NSURL *sourceURL;
+
+/*!
+ @abstract Optional property describing whether the content should be rendered like a sticker
+
+ @discussion Setting this property informs Messenger that the media content should be rendered
+ as a sticker.
+ This option is only used for static images.
+ */
+@property (nonatomic, readwrite, assign) BOOL renderAsSticker;
 
 /*!
  @abstract Optional property that overrides the default way the content will be shared to messenger

@@ -51,11 +51,12 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_VERSION=$FB_SDK_VERSION_MAJOR.$FB_SDK_VERSION_MINOR.$FB_SDK_VERSION_REVISION
   FB_SDK_VERSION_SHORT=$(echo $FB_SDK_VERSION | sed 's/\.0$//')
 
-  # The name of the docset
-  FB_SDK_DOCSET_NAME=com.facebook.Facebook-SDK-${FB_SDK_VERSION_MAJOR}_${FB_SDK_VERSION_MINOR}-for-iOS.docset
-
-  # The path to the framework docs
-  FB_SDK_FRAMEWORK_DOCS=$FB_SDK_BUILD/$FB_SDK_DOCSET_NAME
+  MN_SDK_VERSION_RAW=$(sed -n 's/.*FBSDK_MESSENGER_SHARE_KIT_VERSION @\"\(.*\)\"/\1/p' "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit/FBSDKMessengerShareKit.h)
+  MN_SDK_VERSION_MAJOR=$(echo $MN_SDK_VERSION_RAW | awk -F'.' '{print $1}')
+  MN_SDK_VERSION_MINOR=$(echo $MN_SDK_VERSION_RAW | awk -F'.' '{print $2}')
+  MN_SDK_VERSION_MAJOR=${MN_SDK_VERSION_MAJOR:-0}
+  MN_SDK_VERSION_MINOR=${MN_SDK_VERSION_MINOR:-0}
+  MN_SDK_VERSION_SHORT=$(echo $MN_SDK_VERSION_RAW | sed 's/\.0$//')
 
   # The path to AudienceNetwork scripts directory
   FB_ADS_FRAMEWORK_SCRIPT=$FB_SDK_ROOT/ads/scripts

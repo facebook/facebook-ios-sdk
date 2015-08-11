@@ -63,6 +63,7 @@
 }
 
 - (void)testOpenGraph {
+  [FBSDKSettings setFacebookDomainPart:@"prod"];
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block FBSDKAccessToken *one = nil, *two = nil;
   FBSDKTestUsersManager *userManager = [self testUsersManager];
@@ -129,7 +130,9 @@
 
   //now fetch and verify the share.
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:postID parameters:nil] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:postID
+                                     parameters:@{ @"fields" : @"id,tags.limit(1){name},place.limit(1){id}" } ]
+   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error);
     XCTAssertEqualObjects(postID, result[@"id"]);
     XCTAssertEqualObjects(taggedName, result[@"tags"][0][@"name"]);

@@ -37,6 +37,11 @@ static NSString *const kGetHTTPMethod = @"GET";
 
 @implementation FBSDKGraphRequest
 
+- (instancetype)init NS_UNAVAILABLE
+{
+  assert(0);
+}
+
 - (instancetype)initWithGraphPath:(NSString *)graphPath
                        parameters:(NSDictionary *)parameters {
   return [self initWithGraphPath:graphPath

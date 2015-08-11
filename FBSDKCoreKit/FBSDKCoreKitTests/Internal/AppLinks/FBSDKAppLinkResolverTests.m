@@ -145,7 +145,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
     askedForPhone = [queryParameters[@"fields"] rangeOfString:@"iphone"].location != NSNotFound;
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];
@@ -202,7 +202,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
     askedForPad = [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-    return [OHHTTPStubsResponse responseWithData:nil
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
                                       statusCode:200
                                          headers:nil];
   }];

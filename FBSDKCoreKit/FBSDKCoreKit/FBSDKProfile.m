@@ -39,6 +39,11 @@ static FBSDKProfile *g_currentProfile;
 
 @implementation FBSDKProfile
 
+- (instancetype)init NS_UNAVAILABLE
+{
+  assert(0);
+}
+
 - (instancetype)initWithUserID:(NSString *)userID
                      firstName:(NSString *)firstName
                     middleName:(NSString *)middleName

@@ -21,7 +21,7 @@
 
 # option s to skip build
 SKIPBUILD=""
-while getopts "s:" OPTNAME
+while getopts "s" OPTNAME
 do
   case "$OPTNAME" in
     s)
@@ -30,38 +30,13 @@ do
   esac
 done
 
-test -x "$PACKAGEBUILD" || die 'Could not find pkgbuild utility! Reinstall XCode?'
-test -x "$PRODUCTBUILD" || die 'Could not find productbuild utility! Reinstall XCode?'
-test -x "$PRODUCTSIGN" || die 'Could not find productsign utility! Reinstall XCode?'
+FB_SDK_ZIP=$FB_SDK_BUILD/FacebookSDKs-${FB_SDK_VERSION_SHORT}.zip
 
-COMPONENT_FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK.pkg
-FB_SDK_UNSIGNED_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_SHORT}-unsigned.pkg
-FB_SDK_PKG=$FB_SDK_BUILD/FacebookSDK-${FB_SDK_VERSION_SHORT}.pkg
-
-FB_SDK_BUILD_ROOT_DIR=Documents/FacebookSDK
 
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
-FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR=$FB_SDK_BUILD_ROOT_DIR
-FB_SDK_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR
-FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Documents/FacebookSDK/Samples
+FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples
 FB_SDK_BUILD_PACKAGE_SCRIPTS=$FB_SDK_BUILD/Scripts
-FB_SDK_BUILD_PACKAGE_DOCS=$FB_SDK_BUILD_PACKAGE/Library/Developer/Shared/Documentation/DocSets/$FB_SDK_DOCSET_NAME
-
-BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR=$FB_SDK_BUILD_ROOT_DIR
-BOLTS_BUILD_PACKAGE_FRAMEWORK=$FB_SDK_BUILD_PACKAGE/$BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR
-
-CODE_SIGN_IDENTITY='Developer ID Installer: Facebook, Inc. (V9WTTPBFK9)'
-
-# -----------------------------------------------------------------------------
-# Call out to build prerequisites.
-#
-if is_outermost_build; then
-  if [ -z $SKIPBUILD ]; then
-    . "$FB_SDK_SCRIPT/build_framework.sh" -c Release
-    . "$FB_SDK_SCRIPT/build_documentation.sh"
-  fi
-fi
-echo Building Distribution.
+FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER=$FB_SDK_BUILD_PACKAGE/DocSets/
 
 # -----------------------------------------------------------------------------gi
 # Build package directory structure
@@ -70,87 +45,106 @@ progress_message "Building package directory structure."
 \rm -rf "$FB_SDK_BUILD_PACKAGE" "$FB_SDK_BUILD_PACKAGE_SCRIPTS"
 mkdir "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not create directory $FB_SDK_BUILD_PACKAGE"
-mkdir -p "$FB_SDK_BUILD_PACKAGE_FRAMEWORK"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SAMPLES"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SCRIPTS"
-mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCS"
+mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER"
 
-\cp -R "$FB_SDK_BUILD"/FBSDKCoreKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+# -----------------------------------------------------------------------------
+# Call out to build prerequisites.
+#
+if is_outermost_build; then
+  if [ -z $SKIPBUILD ]; then
+    . "$FB_SDK_SCRIPT/build_framework.sh" -c Release
+  fi
+fi
+echo Building Distribution.
+
+# -----------------------------------------------------------------------------
+# Copy over stuff
+#
+\cp -R "$FB_SDK_BUILD"/FBSDKCoreKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKCoreKit.framework"
-\cp -R "$FB_SDK_BUILD"/FBSDKLoginKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp -R "$FB_SDK_BUILD"/FBSDKLoginKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKLoginKit.framework"
-\cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKShareKit.framework"
-\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy Bolts.framework"
-\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
 \cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
   || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
-\cp -R "$FB_SDK_SCRIPT/package/preinstall" "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \
-  || die "Could not copy $FB_SDK_SCRIPT/package/preflight"
-\cp -R "$FB_SDK_FRAMEWORK_DOCS/Contents" "$FB_SDK_BUILD_PACKAGE_DOCS" \
-  || die "Could not copy $$FB_SDK_FRAMEWORK_DOCS/Contents"
-\cp "$FB_SDK_ROOT/README.txt" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp "$FB_SDK_ROOT/README.txt" "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy README"
-\cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+\cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE"/LICENSE.txt \
   || die "Could not copy LICENSE"
+
 
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
 for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
-  sed "s|../../build|../../../../${FB_SDK_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g;s|../../Bolts-IOS/build/ios|../../../../${BOLTS_BUILD_PACKAGE_FRAMEWORK_SUBDIR}|g" \
+  sed "s|../../build|../../..|g;s|../../Bolts-IOS/build/ios|../../..|g" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
 
 # -----------------------------------------------------------------------------
 # Build FBAudienceNetwork framework
 #
-(test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
-  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh) || die "Failed to build FBAudienceNetwork"
+(
+  if [ -z $SKIPBUILD ]; then
+    . "$FB_SDK_ROOT/internal/scripts/build_workspace.sh" -c Release "$FB_SDK_ROOT/ads/src/FBAudienceNetwork.xcworkspace"
+  fi
+) || die "Failed to build FBAudienceNetwork"
+FBAN_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork
+\cp -R "$FB_SDK_ROOT"/ads/build/FBAudienceNetwork.framework "$FB_SDK_BUILD_PACKAGE" \
+  || die "Could not copy FBAudienceNetwork.framework"
+\mkdir -p "$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork"
+\cp -R "$FB_SDK_ROOT"/ads/samples/ $FBAN_SAMPLES \
+  || die "Could not copy FBAudienceNetwork samples"
+# Fix up samples
+for fname in $(find "$FBAN_SAMPLES" -name "project.pbxproj" -print); do \
+  sed "s|../../build|../../../|g;" \
+    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
+
+# Fix up samples
+for fname in $(find "$FBADSDK_SAMPLES" -name "project.pbxproj" -print); do \
+  sed "s|../../build|../../../|g;s|../../../../ads/build|../../../|g;" \
+    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
 
 # -----------------------------------------------------------------------------
 # Build Messenger Kit
 #
-("$XCTOOL" -project "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit.xcodeproj -scheme "FBSDKMessengerShareKit-universal" -configuration Release clean build) || die "Failed to build messenger kit"
-\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE_FRAMEWORK" \
+if [ -z $SKIPBUILD ]; then
+  ("$XCTOOL" -project "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit.xcodeproj -scheme "FBSDKMessengerShareKit-universal" -configuration Release clean build) || die "Failed to build messenger kit"
+fi
+\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKMessengerShareKit.framework"
 
 # -----------------------------------------------------------------------------
-# Build .pkg from package directory
+# Build docs
 #
-progress_message "Building .pkg from package directory."
-# First use pkgbuild to create component package
-\rm -rf "$COMPONENT_FB_SDK_PKG"
-$PACKAGEBUILD --root "$FB_SDK_BUILD_PACKAGE" \
-    --identifier "com.facebook.sdk.pkg" \
-    --scripts "$FB_SDK_BUILD_PACKAGE_SCRIPTS" \
-    --version $FB_SDK_VERSION_SHORT   \
-    "$COMPONENT_FB_SDK_PKG" || die "Failed to pkgbuild component package"
-
-# Build product archive (note --resources should point to the folder containing the README)
-\rm -rf "$FB_SDK_UNSIGNED_PKG"
-$PRODUCTBUILD --distribution "$FB_SDK_SCRIPT/package/productbuild_distribution.xml" \
-    --package-path $FB_SDK_BUILD \
-    --resources "$FB_SDK_BUILD/package/Documents/FacebookSDK/" \
-    "$FB_SDK_UNSIGNED_PKG" || die "Failed to productbuild the product archive"
-
-progress_message "Signing package."
-\rm -rf "$FB_SDK_PKG"
-"$PRODUCTSIGN" -s "$CODE_SIGN_IDENTITY" "$FB_SDK_UNSIGNED_PKG" "$FB_SDK_PKG" \
- || FAILED_TO_SIGN=1
-
-if [ "$FAILED_TO_SIGN" == "1" ] ; then
-  progress_message "Failed to sign the package. See https://our.intern.facebook.com/intern/wiki/index.php/Platform/Mobile/ContributingToMobileSDKs#Building_the_iOS_Distribution_with_PackageMaker"
+if [ -z $SKIPBUILD ]; then
+  . "$FB_SDK_SCRIPT/build_documentation.sh"
 fi
+\ls -d "$FB_SDK_BUILD"/*.docset | xargs -I {} cp -R {} $FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER \
+  || die "Could not copy docsets"
+\cp "$FB_SDK_SCRIPT/install_docsets.sh" $FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER \
+  || die "Could not copy install_docset"
+
+# -----------------------------------------------------------------------------
+# Build .zip from package directory
+#
+progress_message "Building .zip from package directory."
+(
+  cd $FB_SDK_BUILD
+  ditto -ck --sequesterRsrc $FB_SDK_BUILD_PACKAGE $FB_SDK_ZIP
+)
 
 # -----------------------------------------------------------------------------
 # Done
 #
-progress_message "Successfully built SDK distribution:"
-if [ "$FAILED_TO_SIGN" != "1" ] ; then
-  progress_message "  Signed : $FB_SDK_PKG"
-fi
-progress_message "  Unsigned : $FB_SDK_UNSIGNED_PKG"
+progress_message "Successfully built SDK zip: $FB_SDK_ZIP"
 common_success

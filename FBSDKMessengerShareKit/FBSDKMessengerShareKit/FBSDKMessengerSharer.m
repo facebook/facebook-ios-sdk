@@ -21,12 +21,13 @@
 #import "FBSDKMessengerApplicationStateManager.h"
 #import "FBSDKMessengerContext+Internal.h"
 #import "FBSDKMessengerInstallMessengerAlertPresenter.h"
+#import "FBSDKMessengerInvalidOptionsAlertPresenter.h"
 #import "FBSDKMessengerShareOptions.h"
 #import "FBSDKMessengerURLHandlerReplyContext.h"
 #import "FBSDKMessengerUtils.h"
 
 // This SDK version, which is synchronized with Messenger. This is incremented with every SDK release
-static NSString *const kFBSDKMessengerShareKitSendVersion = @"20150218";
+static NSString *const kFBSDKMessengerShareKitSendVersion = @"20150714";
 // URLs to talk to messenger
 static NSString *const kMessengerPlatformPrefix = @"fb-messenger-platform";
 
@@ -40,6 +41,8 @@ static NSString *const kMessengerPasteboardTypeAudio = @"com.messenger.audio";
 
 static NSString *const kMessengerPlatformMetadataParamName = @"metadata";
 static NSString *const kMessengerPlatformSourceURLParamName = @"sourceURL";
+static NSString *const kMessengerPlatformRenderAsStickerParamName = @"render_as_sticker";
+static NSString *const kMessengerPlatformRenderAsStickerParamValue = @"1";
 
 static NSString *const kMessengerPlatformQueryString = @"pasteboard_type=%@&app_id=%@&version=%@";
 
@@ -85,7 +88,10 @@ static NSString *URLSchemeForVersion(NSString *version)
 
     FBSDKMessengerPlatformCapability v2015_03_05 = (v2015_02_18 | FBSDKMessengerPlatformCapabilityAnimatedWebP);
 
+    FBSDKMessengerPlatformCapability v2015_07_14 = (v2015_03_05 | FBSDKMessengerPlatformCapabilityRenderAsSticker);
+
     messengerShareKitVersionCapabilities = @{
+                                             @"20150714": @(v2015_07_14),
                                              @"20150305": @(v2015_03_05),
                                              @"20150218": @(v2015_02_18),
                                              @"20150128": @(v2015_01_28)
@@ -94,11 +100,38 @@ static NSString *URLSchemeForVersion(NSString *version)
   return messengerShareKitVersionCapabilities;
 }
 
-+ (void)_launchUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options
+// Get the sorted release versions in descending order.
++ (NSArray *)sortedReleaseVersions
 {
-  NSURL *url = [FBSDKMessengerSharer _generateUrl:pasteboardType withOptions:options];
-  [[UIApplication sharedApplication] openURL:url];
-  [FBSDKMessengerApplicationStateManager sharedInstance].currentContext = nil;
+  static NSArray *sortedReleaseVersions = nil;
+  static dispatch_once_t once;
+  dispatch_once(&once, ^{
+    NSDictionary *messengerShareKitVersionCapabilities = [FBSDKMessengerSharer messengerVersionCapabilities];
+    NSSortDescriptor* sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:nil ascending:NO selector:@selector(localizedCompare:)];
+    sortedReleaseVersions = [[messengerShareKitVersionCapabilities allKeys] sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+  });
+  return sortedReleaseVersions;
+}
+
++ (void)_launchUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options minimumRequiredVersion:(NSString *)minimumVersion
+{
+  NSArray* sortedReleases = [FBSDKMessengerSharer sortedReleaseVersions];
+
+  BOOL openURLDidSucceed = NO;
+  for (NSString *messengerVersion in sortedReleases) {
+    NSURL *url = [FBSDKMessengerSharer _generateUrl:pasteboardType withOptions:options messengerVersion:messengerVersion];
+    if ([[UIApplication sharedApplication] openURL:url]) {
+      [FBSDKMessengerApplicationStateManager sharedInstance].currentContext = nil;
+      openURLDidSucceed = YES;
+      break;
+    } else if ([messengerVersion isEqualToString:minimumVersion]) {
+      // Stop iterating when minimum required version of Messenger is unable to open.
+      break;
+    }
+  }
+  if (!openURLDidSucceed) {
+    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
+  }
 }
 
 + (NSDictionary *)_parseQueryComponentsFromOptions:(FBSDKMessengerShareOptions *)options
@@ -125,13 +158,19 @@ static NSString *URLSchemeForVersion(NSString *version)
   if (context.queryComponents) {
     [queryComponents addEntriesFromDictionary:context.queryComponents];
   }
+
+  // render as sticker flag
+  if (options.renderAsSticker) {
+    [queryComponents setObject:kMessengerPlatformRenderAsStickerParamValue forKey:kMessengerPlatformRenderAsStickerParamName];
+  }
+
   return queryComponents;
 }
 
-+ (NSURL *)_generateUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options
++ (NSURL *)_generateUrl:(NSString *)pasteboardType withOptions:(FBSDKMessengerShareOptions *)options messengerVersion:(NSString *)messengerVersion
 {
   NSURLComponents *components = [[NSURLComponents alloc] init];
-  components.scheme = URLSchemeForVersion([FBSDKMessengerSharer currentlyInstalledMessengerVersion]);
+  components.scheme = URLSchemeForVersion(messengerVersion);
   components.host = kMessengerActionBroadcast;
 
   __block NSString *queryString = [NSString stringWithFormat:kMessengerPlatformQueryString,
@@ -150,6 +189,22 @@ static NSString *URLSchemeForVersion(NSString *version)
   return components.URL;
 }
 
++ (NSString *)_minimumVersionToSupportCapability:(FBSDKMessengerPlatformCapability)capability withOptions:(FBSDKMessengerShareOptions *)options
+{
+  NSDictionary *allVersionCapabilites = [FBSDKMessengerSharer messengerVersionCapabilities];
+  NSArray* sortedReleases = [FBSDKMessengerSharer sortedReleaseVersions];
+
+  // Traversing from the oldest version to find the one that has enough capability to share the target content.
+  for (NSString *version in [sortedReleases reverseObjectEnumerator]) {
+    FBSDKMessengerPlatformCapability versionCapability = [allVersionCapabilites[version] unsignedIntegerValue];
+    BOOL hasCapability = versionCapability & capability;
+    if (options.renderAsSticker ? (versionCapability & FBSDKMessengerPlatformCapabilityRenderAsSticker) && hasCapability : hasCapability) {
+      return version;
+    }
+  }
+  return nil;
+}
+
 #pragma mark - Public
 
 + (FBSDKMessengerPlatformCapability)messengerPlatformCapabilities
@@ -161,13 +216,17 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)openMessenger
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityOpen)) {
-    return;
+  NSDictionary *allVersionCapabilites = [FBSDKMessengerSharer messengerVersionCapabilities];
+  NSArray* sortedReleases = [FBSDKMessengerSharer sortedReleaseVersions];
+  for (NSString *version in sortedReleases) {
+    if ([allVersionCapabilites[version] unsignedIntegerValue] & FBSDKMessengerPlatformCapabilityOpen) {
+      NSURLComponents *components = [[NSURLComponents alloc] init];
+      components.scheme = URLSchemeForVersion(version);
+      if ([[UIApplication sharedApplication] openURL:components.URL]) {
+        return;
+      }
+    }
   }
-
-  NSURLComponents *components = [[NSURLComponents alloc] init];
-  components.scheme = URLSchemeForVersion([FBSDKMessengerSharer currentlyInstalledMessengerVersion]);
-  [[UIApplication sharedApplication] openURL:components.URL];
 }
 
 #pragma mark - Image
@@ -184,11 +243,6 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)shareImage:(UIImage *)image withOptions:(FBSDKMessengerShareOptions *)options
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityImage)) {
-    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
-    return;
-  }
-
   if (image == nil) {
     return;
   }
@@ -197,7 +251,12 @@ static NSString *URLSchemeForVersion(NSString *version)
   [[UIPasteboard generalPasteboard] setData:data
                           forPasteboardType:kMessengerPasteboardTypeImage];
 
-  [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage withOptions:options];
+  NSString *requiredVersion = [FBSDKMessengerSharer _minimumVersionToSupportCapability:FBSDKMessengerPlatformCapabilityImage withOptions:options];
+  if (requiredVersion) {
+    [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage
+                         withOptions:options
+              minimumRequiredVersion:requiredVersion];
+  }
 }
 
 #pragma mark - Animated GIF
@@ -214,11 +273,6 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)shareAnimatedGIF:(NSData *)animatedGIFData withOptions:(FBSDKMessengerShareOptions *)options
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityAnimatedGIF)) {
-    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
-    return;
-  }
-
   if (animatedGIFData == nil) {
     return;
   }
@@ -226,7 +280,12 @@ static NSString *URLSchemeForVersion(NSString *version)
   [[UIPasteboard generalPasteboard] setData:animatedGIFData
                           forPasteboardType:kMessengerPasteboardTypeImage];
 
-  [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage withOptions:options];
+  NSString *requiredVersion = [FBSDKMessengerSharer _minimumVersionToSupportCapability:FBSDKMessengerPlatformCapabilityAnimatedGIF withOptions:options];
+  if (requiredVersion) {
+    [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage
+                         withOptions:options
+              minimumRequiredVersion:requiredVersion];
+  }
 }
 
 #pragma mark - Animated WebP
@@ -243,11 +302,6 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)shareAnimatedWebP:(NSData *)animatedWebPData withOptions:(FBSDKMessengerShareOptions *)options
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityAnimatedWebP)) {
-    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
-    return;
-  }
-
   if (animatedWebPData == nil) {
     return;
   }
@@ -255,7 +309,12 @@ static NSString *URLSchemeForVersion(NSString *version)
   [[UIPasteboard generalPasteboard] setData:animatedWebPData
                           forPasteboardType:kMessengerPasteboardTypeImage];
 
-  [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage withOptions:options];
+  NSString *requiredVersion = [FBSDKMessengerSharer _minimumVersionToSupportCapability:FBSDKMessengerPlatformCapabilityAnimatedWebP withOptions:options];
+  if (requiredVersion) {
+    [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeImage
+                         withOptions:options
+              minimumRequiredVersion:requiredVersion];
+  }
 }
 
 #pragma mark - Video
@@ -272,19 +331,24 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)shareVideo:(NSData *)videoData withOptions:(FBSDKMessengerShareOptions *)options
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityVideo)) {
-    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
+  if (videoData == nil) {
     return;
   }
 
-  if (videoData == nil) {
+  if (options.renderAsSticker) {
+    [[FBSDKMessengerInvalidOptionsAlertPresenter sharedInstance] presentInvalidOptionsAlert];
     return;
   }
 
   [[UIPasteboard generalPasteboard] setData:videoData
                           forPasteboardType:kMessengerPasteboardTypeVideo];
 
-  [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeVideo withOptions:options];
+  NSString *requiredVersion = [FBSDKMessengerSharer _minimumVersionToSupportCapability:FBSDKMessengerPlatformCapabilityVideo withOptions:options];
+  if (requiredVersion) {
+    [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeVideo
+                         withOptions:options
+              minimumRequiredVersion:requiredVersion];
+  }
 }
 
 #pragma mark - Audio
@@ -301,19 +365,24 @@ static NSString *URLSchemeForVersion(NSString *version)
 
 + (void)shareAudio:(NSData *)audioData withOptions:(FBSDKMessengerShareOptions *)options
 {
-  if (!([FBSDKMessengerSharer messengerPlatformCapabilities] & FBSDKMessengerPlatformCapabilityAudio)) {
-    [[FBSDKMessengerInstallMessengerAlertPresenter sharedInstance] presentInstallMessengerAlert];
+  if (audioData == nil) {
     return;
   }
 
-  if (audioData == nil) {
+  if (options.renderAsSticker) {
+    [[FBSDKMessengerInvalidOptionsAlertPresenter sharedInstance] presentInvalidOptionsAlert];
     return;
   }
 
   [[UIPasteboard generalPasteboard] setData:audioData
                           forPasteboardType:kMessengerPasteboardTypeAudio];
 
-  [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeAudio withOptions:options];
+  NSString *requiredVersion = [FBSDKMessengerSharer _minimumVersionToSupportCapability:FBSDKMessengerPlatformCapabilityAudio withOptions:options];
+  if (requiredVersion) {
+    [FBSDKMessengerSharer _launchUrl:kMessengerPasteboardTypeAudio
+                         withOptions:options
+              minimumRequiredVersion:requiredVersion];
+  }
 }
 
 @end

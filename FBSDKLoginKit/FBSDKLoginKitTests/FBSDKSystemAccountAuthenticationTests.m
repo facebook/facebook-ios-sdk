@@ -46,6 +46,7 @@
   // and our keychain code is coded against mainBundle.
   id mockUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
   [[[mockUtility stub] andReturnValue:OCMOCK_VALUE(YES)] isRegisteredURLScheme:[OCMArg any]];
+  [[mockUtility stub] checkRegisteredCanOpenURLScheme:[OCMArg any]];
   return mockUtility;
 }
 
@@ -82,13 +83,14 @@
   id target = [OCMockObject partialMockForObject:[[FBSDKLoginManager alloc] init]];
 
   id shortCircuitAuthBlock = ^ (NSInvocation *invocation) {
-    BOOL returnValue = YES;
-    [invocation setReturnValue:&returnValue];
+    void(^handler)(BOOL, NSError*);
+    [invocation getArgument:&handler atIndex:3];
+    handler(YES, nil);
   };
 
-  [[[target stub] andDo:shortCircuitAuthBlock] performNativeLogInWithParameters:[OCMArg any] error:[OCMArg anyObjectRef]];
-  [[[target stub] andDo:shortCircuitAuthBlock] performBrowserLogInWithParameters:[OCMArg any] error:[OCMArg anyObjectRef]];
-  [[[target stub] andDo:shortCircuitAuthBlock] performWebLogInWithParameters:[OCMArg any]];
+  [[[target stub] andDo:shortCircuitAuthBlock] performNativeLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
+  [[[target stub] andDo:shortCircuitAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
+  [[[target stub] andDo:shortCircuitAuthBlock] performWebLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
 
   // the test fails if system auth is performed
   [[[target stub] andDo:^(NSInvocation *invocation) {
@@ -178,13 +180,14 @@
   id attemptedAuthBlock = ^ (NSInvocation *invocation) {
     invocationCount++;
 
-    BOOL returnValue = YES;
-    [invocation setReturnValue:&returnValue];
+    void(^handler)(BOOL, NSError*);
+    [invocation getArgument:&handler atIndex:3];
+    handler(YES, nil);
     [expectation fulfill];
   };
 
-  [[[target stub] andDo:attemptedAuthBlock] performNativeLogInWithParameters:[OCMArg any] error:[OCMArg anyObjectRef]];
-  [[[target stub] andDo:attemptedAuthBlock] performBrowserLogInWithParameters:[OCMArg any] error:[OCMArg anyObjectRef]];
+  [[[target stub] andDo:attemptedAuthBlock] performNativeLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
+  [[[target stub] andDo:attemptedAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
 
   [[[target stub] andDo:^ (NSInvocation *invocation) {
     invocationCount++;
@@ -194,19 +197,12 @@
     }
   }] beginSystemLogIn];
 
-  // this shouldn't actually be invoked
-  [[[target stub] andDo:^(NSInvocation *invocation) {
-    invocationCount++;
-
-    BOOL returnValue = YES;
-    [invocation setReturnValue:&returnValue];
-  }] performWebLogInWithParameters:[OCMArg any]];
-
   FBSDKServerConfiguration *configuration =
     [[FBSDKServerConfiguration alloc] initWithAppID:[FBSDKSettings appID]
                                             appName:@"Unit Tests"
                                 loginTooltipEnabled:NO
                                    loginTooltipText:nil
+                                   defaultShareMode:nil
                                advertisingIDEnabled:NO
                              implicitLoggingEnabled:NO
                      implicitPurchaseLoggingEnabled:NO

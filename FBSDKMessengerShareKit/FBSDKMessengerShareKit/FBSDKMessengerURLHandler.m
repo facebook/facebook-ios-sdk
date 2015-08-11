@@ -24,8 +24,8 @@
 #import "FBSDKMessengerUtils.h"
 
 static NSString *const kMessengerBundleProd = @"com.facebook.Messenger";
-static NSString *const kMessengerBundleInHouse = @".com.facebook.Orca";
-static NSString *const kMessengerBundleDevelopment = @"com.facebook.OrcaDevelopment";
+static NSString *const kMessengerBundleDevelopment = @"com.facebook.MessengerDev";
+static NSString *const kMessengerBundleInHouse = @"com.facebook.OrcaDevelopment";
 
 // Hosts
 static NSString *const kMessengerHostReply = @"messenger-share-reply";
