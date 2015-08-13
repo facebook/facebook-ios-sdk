@@ -346,7 +346,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
     if ([request.HTTPMethod.uppercaseString isEqualToString:@"GET"] &&
         [self _shouldWarnOnMissingFieldsParam:request] &&
         !request.parameters[@"fields"] &&
-        ![request.graphPath containsString:@"fields="]) {
+        [request.graphPath rangeOfString:@"fields="].location == NSNotFound) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                          formatString:@"starting with Graph API v2.4, GET requests for /%@ should contain an explicit \"fields\" parameter", request.graphPath];
     }
