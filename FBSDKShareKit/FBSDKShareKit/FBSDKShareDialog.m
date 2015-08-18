@@ -35,6 +35,7 @@
 #import "FBSDKShareVideoContent.h"
 
 #define FBSDK_SHARE_DIALOG_APP_SCHEME @"fbapi"
+#define FBSDK_SHARE_EXTENSION_APP_SCHEME @"fbshareextension"
 #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
 #define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
 #define FBSDK_SHARE_METHOD_OG_MIN_VERSION @"20130214"
@@ -55,7 +56,10 @@
 
 + (void)initialize
 {
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+  if ([FBSDKShareDialog class] == self) {
+    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
+    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  }
 }
 
 + (instancetype)showFromViewController:(UIViewController *)viewController
@@ -96,7 +100,7 @@
       return YES;
     }
     case FBSDKShareDialogModeNative:{
-      return [FBSDKInternalUtility isFacebookAppInstalled];
+      return [self _canShowNative];
     }
     case FBSDKShareDialogModeShareSheet:{
       return [self _canShowShareSheet];
@@ -168,7 +172,7 @@
   switch (self.mode) {
     case FBSDKShareDialogModeAutomatic:{
       return (
-              ([FBSDKInternalUtility isFacebookAppInstalled] && [self _validateShareContentForNative:errorRef]) ||
+              ([self _canShowNative] && [self _validateShareContentForNative:errorRef]) ||
               ([self _canShowShareSheet] && [self _validateShareContentForShareSheet:errorRef]) ||
               [self _validateShareContentForFeed:errorRef] ||
               [self _validateShareContentForBrowser:errorRef]);
@@ -238,21 +242,16 @@
 
 -(BOOL)_showAutomatic:(NSError *__autoreleasing *)errorRef
 {
-  if ([self _isDefaultToShareSheet]) {
-    return ([self _showShareSheetWithCanShowError:NULL validationError:errorRef] ||
-            [self _showNativeWithCanShowError:NULL validationError:errorRef] ||
-            [self _showFeedBrowser:errorRef] ||
-            [self _showFeedWeb:errorRef] ||
-            [self _showBrowser:errorRef] ||
-            [self _showWeb:errorRef]);
-  } else {
-    return ([self _showNativeWithCanShowError:NULL validationError:errorRef] ||
-            [self _showShareSheetWithCanShowError:NULL validationError:errorRef] ||
-            [self _showFeedBrowser:errorRef] ||
-            [self _showFeedWeb:errorRef] ||
-            [self _showBrowser:errorRef] ||
-            [self _showWeb:errorRef]);
-  }
+  BOOL isDefaultToShareSheet = [self _isDefaultToShareSheet];
+  BOOL useNativeDialog = [self _useNativeDialog];
+  return ((isDefaultToShareSheet && [self _showShareSheetWithCanShowError:NULL validationError:errorRef]) ||
+          (useNativeDialog && [self _showNativeWithCanShowError:NULL validationError:errorRef]) ||
+          (!isDefaultToShareSheet && [self _showShareSheetWithCanShowError:NULL validationError:errorRef]) ||
+          [self _showFeedBrowser:errorRef] ||
+          [self _showFeedWeb:errorRef] ||
+          [self _showBrowser:errorRef] ||
+          [self _showWeb:errorRef] ||
+          (!useNativeDialog && [self _showNativeWithCanShowError:NULL validationError:errorRef]));
 }
 
 - (void)_loadNativeMethodName:(NSString **)methodNameRef methodVersion:(NSString **)methodVersionRef
@@ -300,6 +299,11 @@
   }
 }
 
+- (BOOL)_canShowNative
+{
+  return [FBSDKInternalUtility isFacebookAppInstalled];
+}
+
 - (BOOL)_canShowShareSheet
 {
   Class composeViewControllerClass = [fbsdkdfl_SLComposeViewControllerClass() class];
@@ -322,6 +326,17 @@
   NSString *scheme = FBSDK_SHARE_DIALOG_APP_SCHEME;
   NSString *minimumVersion = FBSDK_SHARE_METHOD_ATTRIBUTED_SHARE_SHEET_MIN_VERSION;
   NSURL *URL = [[NSURL alloc] initWithScheme:[scheme stringByAppendingString:minimumVersion] host:nil path:@"/"];
+  return ([[UIApplication sharedApplication] canOpenURL:URL] ||
+          [self _canUseFBShareSheet]);
+}
+
+- (BOOL)_canUseFBShareSheet
+{
+  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
+    return NO;
+  }
+  NSURL *URL = [[NSURL alloc] initWithScheme:FBSDK_SHARE_EXTENSION_APP_SCHEME host:nil path:@"/"];
   return [[UIApplication sharedApplication] canOpenURL:URL];
 }
 
@@ -399,7 +414,9 @@
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
+  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+                                          useSafariViewController:[self _useSafariViewController]
+                                                  completionBlock:completionBlock];
   return YES;
 }
 
@@ -421,7 +438,9 @@
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
+  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+                                          useSafariViewController:[self _useSafariViewController]
+                                                  completionBlock:completionBlock];
   return YES;
 }
 
@@ -440,7 +459,7 @@
 
 - (BOOL)_showNativeWithCanShowError:(NSError **)canShowErrorRef validationError:(NSError **)validationErrorRef
 {
-  if (![FBSDKInternalUtility isFacebookAppInstalled]) {
+  if (![self _canShowNative]) {
     if (canShowErrorRef != NULL) {
       *canShowErrorRef = [FBSDKShareError errorWithCode:FBSDKShareDialogNotAvailableErrorCode
                                                 message:@"Native share dialog is not available."];
@@ -487,7 +506,9 @@
     }
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
+  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+                                          useSafariViewController:[self _useSafariViewController]
+                                                  completionBlock:completionBlock];
   return YES;
 }
 
@@ -570,6 +591,18 @@
                                  parameters:parameters
                                    delegate:self];
   return YES;
+}
+
+- (BOOL)_useNativeDialog
+{
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  return [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
+}
+
+- (BOOL)_useSafariViewController
+{
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_validateShareContentForBrowser:(NSError **)errorRef

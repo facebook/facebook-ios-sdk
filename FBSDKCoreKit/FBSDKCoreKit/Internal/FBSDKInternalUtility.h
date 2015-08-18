@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #define FBSDK_CANOPENURL_FACEBOOK @"fbauth2"
 #define FBSDK_CANOPENURL_MESSENGER @"fb-messenger-api"
@@ -206,6 +207,11 @@ setJSONStringForObject:(id)object
 + (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef;
 
 /*!
+ @abstract The version of the operating system on which the process is executing.
+ */
++ (NSOperatingSystemVersion)operatingSystemVersion;
+
+/*!
  @abstract Constructs a query string from a dictionary.
  @param dictionary The dictionary with key/value pairs for the query string.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
@@ -285,11 +291,17 @@ setJSONStringForObject:(id)object
  */
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
+/*!
+ @abstract returns currently displayed top view controller.
+ */
++ (UIViewController *)topMostViewController;
+
 #pragma mark - FB Apps Installed
 
 + (BOOL)isFacebookAppInstalled;
 + (BOOL)isMessengerAppInstalled;
 + (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
++ (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 
 #define FBSDKConditionalLog(condition, loggingBehavior, desc, ...) \
 { \

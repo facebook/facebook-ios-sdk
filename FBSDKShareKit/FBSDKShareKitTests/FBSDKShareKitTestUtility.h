@@ -16,16 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "TestAppIdAndSecret.xcconfig"
+#import <Foundation/Foundation.h>
 
-// Code Signing
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+@interface FBSDKShareKitTestUtility : NSObject
 
-// Packaging
-WRAPPER_EXTENSION = xctest
+/*!
+ * @abstract Mocks the main NSBundle to return the bundle containing this class, instead
+ * of the XCTest program bundle.
+ */
++ (id)mainBundleMock;
 
-// Linking
-OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
-
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
+@end

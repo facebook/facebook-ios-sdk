@@ -18,6 +18,8 @@
 
 @protocol FBSDKURLOpening <NSObject>
 
+// Implementations should make sure they can handle nil parameters
+// which is possible in SafariViewController.
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication

@@ -43,6 +43,7 @@
 		891687EE1AB38C7C00F55364 /* FBSDKButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 891687EC1AB38C7C00F55364 /* FBSDKButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		891687EF1AB38C7C00F55364 /* FBSDKButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 891687ED1AB38C7C00F55364 /* FBSDKButton.m */; };
 		891687FE1AB38D2300F55364 /* FBSDKButton+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = 891687FC1AB38D2300F55364 /* FBSDKButton+Subclass.h */; };
+		8917C4AD1B7A46C800B0B96B /* FBSDKServerConfiguration+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8917C4AB1B7A46C800B0B96B /* FBSDKServerConfiguration+Internal.h */; };
 		893F448B1A642F11001DB0B6 /* FBSDKInternalUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 893F44891A642F11001DB0B6 /* FBSDKInternalUtility.h */; };
 		893F448C1A642F11001DB0B6 /* FBSDKInternalUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 893F448A1A642F11001DB0B6 /* FBSDKInternalUtility.m */; };
 		893F44991A6444DF001DB0B6 /* FBSDKLogo.h in Headers */ = {isa = PBXBuildFile; fileRef = 893F44931A6444DF001DB0B6 /* FBSDKLogo.h */; };
@@ -107,6 +108,7 @@
 		89FB8C421A8425C4003CAE60 /* FBSDKWebDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FB8C401A8425C4003CAE60 /* FBSDKWebDialog.m */; };
 		89FB8C4A1A842A8A003CAE60 /* FBSDKWebDialogView.h in Headers */ = {isa = PBXBuildFile; fileRef = 89FB8C481A842A8A003CAE60 /* FBSDKWebDialogView.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		89FB8C4B1A842A8A003CAE60 /* FBSDKWebDialogView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FB8C491A842A8A003CAE60 /* FBSDKWebDialogView.m */; };
+		9894BFFB1B73D8B300FBA6DB /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9D0043321AA91B9A008DEB62 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D0043301AA91B96008DEB62 /* Bolts.framework */; };
 		9D0BC14F1A8D236200BE8BA4 /* FBSDKPaymentObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */; };
 		9D0BC1501A8D236200BE8BA4 /* FBSDKPaymentObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */; };
@@ -206,6 +208,13 @@
 			remoteGlobalIDString = 8E9C3CE817DE9DE000427E62;
 			remoteInfo = Bolts;
 		};
+		892CCDA81B7BDB5700E3D351 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 725CD99B1A9EB65100F84C8B;
+			remoteInfo = "OHHTTPStubs iOS Framework";
+		};
 		9D0043251AA91B18008DEB62 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7E5557191A8D3D7400344F86 /* Bolts.xcodeproj */;
@@ -297,6 +306,20 @@
 			remoteGlobalIDString = 095981D219806A7900807DBE;
 			remoteInfo = "OHHTTPStubs Mac Tests";
 		};
+		9DAD79FA1B7B27DE00DFEF8F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 09110A4019805F4800D175E4;
+			remoteInfo = "OHHTTPStubs iOS StaticLib";
+		};
+		9DAD7A091B7B27DE00DFEF8F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 725CD99B1A9EB65100F84C8B;
+			remoteInfo = "OHHTTPStubs iOS Framework";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -322,6 +345,7 @@
 		891687EC1AB38C7C00F55364 /* FBSDKButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKButton.h; sourceTree = "<group>"; };
 		891687ED1AB38C7C00F55364 /* FBSDKButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKButton.m; sourceTree = "<group>"; };
 		891687FC1AB38D2300F55364 /* FBSDKButton+Subclass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKButton+Subclass.h"; sourceTree = "<group>"; };
+		8917C4AB1B7A46C800B0B96B /* FBSDKServerConfiguration+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKServerConfiguration+Internal.h"; sourceTree = "<group>"; };
 		8918E3ED1AFA6834003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FacebookSDK-ApplicationTests.xcconfig"; sourceTree = "<group>"; };
 		893F44891A642F11001DB0B6 /* FBSDKInternalUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKInternalUtility.h; sourceTree = "<group>"; };
 		893F448A1A642F11001DB0B6 /* FBSDKInternalUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKInternalUtility.m; sourceTree = "<group>"; };
@@ -388,6 +412,7 @@
 		89FB8C401A8425C4003CAE60 /* FBSDKWebDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKWebDialog.m; sourceTree = "<group>"; };
 		89FB8C481A842A8A003CAE60 /* FBSDKWebDialogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKWebDialogView.h; sourceTree = "<group>"; };
 		89FB8C491A842A8A003CAE60 /* FBSDKWebDialogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKWebDialogView.m; sourceTree = "<group>"; };
+		9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		9D0043301AA91B96008DEB62 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../build/Bolts.framework; sourceTree = "<group>"; };
 		9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKPaymentObserver.h; sourceTree = "<group>"; };
 		9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentObserver.m; sourceTree = "<group>"; };
@@ -491,6 +516,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9894BFFB1B73D8B300FBA6DB /* SafariServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,7 +563,7 @@
 			children = (
 				7E55574C1A8E89A800344F86 /* libOHHTTPStubs.a */,
 				9D99472F1A9531B5003375EC /* OHHTTPStubs iOS Tests.xctest */,
-				9D9947311A9531B5003375EC /* OHHTTPStubs.framework */,
+				892CCDA91B7BDB5700E3D351 /* OHHTTPStubs.framework */,
 				9D9947331A9531B5003375EC /* OHHTTPStubs Mac Tests.xctest */,
 			);
 			name = Products;
@@ -595,6 +621,7 @@
 		893F44A31A644536001DB0B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */,
 				9DAD87751A8AA75700FFA324 /* libOCMock.a */,
 				9DEE5C891A67189800D750E1 /* XCTest.framework */,
 				9DEE5C841A67171D00D750E1 /* Foundation.framework */,
@@ -704,9 +731,10 @@
 				9D3AF45F1A9EC24800EEF724 /* FBSDKErrorRecoveryConfiguration.m */,
 				89830F2D1A7805E100226ABB /* FBSDKServerConfiguration.h */,
 				89830F2E1A7805E100226ABB /* FBSDKServerConfiguration.m */,
+				8917C4AB1B7A46C800B0B96B /* FBSDKServerConfiguration+Internal.h */,
 				89830F291A7805D100226ABB /* FBSDKServerConfigurationManager.h */,
-				6BE0966D1AAE687F00CCD61A /* FBSDKServerConfigurationManager+Internal.h */,
 				89830F2A1A7805D100226ABB /* FBSDKServerConfigurationManager.m */,
+				6BE0966D1AAE687F00CCD61A /* FBSDKServerConfigurationManager+Internal.h */,
 			);
 			path = ServerConfiguration;
 			sourceTree = "<group>";
@@ -992,6 +1020,7 @@
 				894C0AD11A6F15F7009137EF /* FBSDKBridgeAPIRequest.h in Headers */,
 				894C0B701A717D60009137EF /* FBSDKTypeUtility.h in Headers */,
 				89FB8C4A1A842A8A003CAE60 /* FBSDKWebDialogView.h in Headers */,
+				8917C4AD1B7A46C800B0B96B /* FBSDKServerConfiguration+Internal.h in Headers */,
 				89D05A951AA0E89B00609300 /* FBSDKTriStateBOOL.h in Headers */,
 				89D652841A855A6000BB651C /* FBSDKCloseIcon.h in Headers */,
 				9DF18BB91A9F1A05000F6748 /* _FBSDKTemporaryErrorRecoveryAttempter.h in Headers */,
@@ -1079,6 +1108,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9DAD79FB1B7B27DE00DFEF8F /* PBXTargetDependency */,
 			);
 			name = FBSDKCoreKitTests;
 			productName = FBSDKCoreKitTests;
@@ -1144,6 +1174,13 @@
 			fileType = archive.ar;
 			path = libOHHTTPStubs.a;
 			remoteRef = 7E55574B1A8E89A800344F86 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		892CCDA91B7BDB5700E3D351 /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = 892CCDA81B7BDB5700E3D351 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		9D0043261AA91B18008DEB62 /* Bolts.framework */ = {
@@ -1214,13 +1251,6 @@
 			fileType = wrapper.cfbundle;
 			path = "OHHTTPStubs iOS Tests.xctest";
 			remoteRef = 9D99472E1A9531B5003375EC /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9D9947311A9531B5003375EC /* OHHTTPStubs.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = OHHTTPStubs.framework;
-			remoteRef = 9D9947301A9531B5003375EC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		9D9947331A9531B5003375EC /* OHHTTPStubs Mac Tests.xctest */ = {
@@ -1381,6 +1411,11 @@
 			isa = PBXTargetDependency;
 			target = 9D2697461A5DF40700143BFC /* FBSDKCoreKit */;
 			targetProxy = 9D2697771A5DF6D600143BFC /* PBXContainerItemProxy */;
+		};
+		9DAD79FB1B7B27DE00DFEF8F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "OHHTTPStubs iOS StaticLib";
+			targetProxy = 9DAD79FA1B7B27DE00DFEF8F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

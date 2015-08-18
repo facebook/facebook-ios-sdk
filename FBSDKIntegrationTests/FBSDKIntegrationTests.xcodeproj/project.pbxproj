@@ -93,6 +93,7 @@
 		9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsStateManagerIntegrationTests.m; sourceTree = "<group>"; };
 		9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareAPIIntegrationTests.m; sourceTree = "<group>"; };
 		9DA81B061AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileIntegrationTests.m; sourceTree = "<group>"; };
+		9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libOHHTTPStubs.a; path = libOHHTTPStubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,8 +101,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9D9ACC3C1ABCB9F90050BF2E /* FBSDKShareKit.framework in Frameworks */,
+				9D1999D21A7AF63600CAD112 /* libOCMock.a in Frameworks */,
 				9D18A8FB1A95981F00A41042 /* libOHHTTPStubs.a in Frameworks */,
+				9D9ACC3C1ABCB9F90050BF2E /* FBSDKShareKit.framework in Frameworks */,
 				9D1999EA1A7AF7F100CAD112 /* UIKit.framework in Frameworks */,
 				9D1999E81A7AF7E900CAD112 /* XCTest.framework in Frameworks */,
 				9D1999E61A7AF7C900CAD112 /* Foundation.framework in Frameworks */,
@@ -109,7 +111,6 @@
 				9D1999E21A7AF7B800CAD112 /* QuartzCore.framework in Frameworks */,
 				9D1999CF1A7AF63600CAD112 /* FBSDKCoreKit.framework in Frameworks */,
 				9D1999D01A7AF63600CAD112 /* FBSDKLoginKit.framework in Frameworks */,
-				9D1999D21A7AF63600CAD112 /* libOCMock.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -193,6 +194,7 @@
 		9D1999EB1A7AF7FB00CAD112 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */,
 				9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */,
 				9D1999E91A7AF7F100CAD112 /* UIKit.framework */,
 				9D1999E71A7AF7E900CAD112 /* XCTest.framework */,

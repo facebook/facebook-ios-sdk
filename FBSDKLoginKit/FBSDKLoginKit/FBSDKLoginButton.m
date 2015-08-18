@@ -142,11 +142,11 @@
 
   [self configureWithIcon:nil
                     title:logInTitle
-          backgroundColor:nil
+          backgroundColor:[super defaultBackgroundColor]
          highlightedColor:nil
             selectedTitle:logOutTitle
              selectedIcon:nil
-            selectedColor:nil
+            selectedColor:[super defaultBackgroundColor]
  selectedHighlightedColor:nil];
   self.titleLabel.textAlignment = NSTextAlignmentCenter;
 
@@ -170,6 +170,7 @@
 
 - (void)_buttonPressed:(id)sender
 {
+  [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:[self analyticsParameters]];
   if ([FBSDKAccessToken currentAccessToken]) {
     NSString *title = nil;
 

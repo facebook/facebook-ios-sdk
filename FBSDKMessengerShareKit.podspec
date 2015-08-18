@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKMessengerShareKit"
-  s.version      = "1.3.0"
+  s.version      = "1.2.3"
   s.summary      = "Official Facebook SDK for iOS to integrate with Messenger"
 
   s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "messenger-share-kit-version-1.3.0"
+                     :tag => "messenger-share-kit-version-1.2.3"
                     }
 
   s.source_files   = "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.{h,m}"

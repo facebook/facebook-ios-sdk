@@ -47,6 +47,7 @@
 #import "Network/FBSDKGraphRequestConnection+Internal.h"
 #import "Network/FBSDKGraphRequestMetadata.h"
 #import "ServerConfiguration/FBSDKDialogConfiguration.h"
+#import "ServerConfiguration/FBSDKServerConfiguration+Internal.h"
 #import "ServerConfiguration/FBSDKServerConfiguration.h"
 #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
 #import "ServerConfiguration/FBSDKServerConfigurationManager.h"

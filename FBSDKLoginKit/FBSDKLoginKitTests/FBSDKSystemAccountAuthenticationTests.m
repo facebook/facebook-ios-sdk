@@ -207,9 +207,12 @@
                              implicitLoggingEnabled:NO
                      implicitPurchaseLoggingEnabled:NO
                         systemAuthenticationEnabled:serverSupports
+                              nativeAuthFlowEnabled:serverSupports
                                dialogConfigurations:nil
+                                        dialogFlows:nil
                                           timestamp:[NSDate date]
-                                 errorConfiguration:nil];
+                                 errorConfiguration:nil
+                                           defaults:NO];
   [FBSDKServerConfigurationManager _didLoadServerConfiguration:configuration appID:[FBSDKSettings appID] error:nil didLoadFromUserDefaults:YES];
 
   [target setRequestedPermissions:permissions];

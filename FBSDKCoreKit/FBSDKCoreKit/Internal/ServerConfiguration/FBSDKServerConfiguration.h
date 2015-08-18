@@ -23,6 +23,17 @@
 #import "FBSDKDialogConfiguration.h"
 #import "FBSDKErrorConfiguration.h"
 
+// login kit
+extern NSString *const FBSDKDialogConfigurationNameLogin;
+
+// share kit
+extern NSString *const FBSDKDialogConfigurationNameAppInvite;
+extern NSString *const FBSDKDialogConfigurationNameGameRequest;
+extern NSString *const FBSDKDialogConfigurationNameGroup;
+extern NSString *const FBSDKDialogConfigurationNameLike;
+extern NSString *const FBSDKDialogConfigurationNameMessage;
+extern NSString *const FBSDKDialogConfigurationNameShare;
+
 @interface FBSDKServerConfiguration : NSObject <FBSDKCopying, NSSecureCoding>
 
 - (instancetype)initWithAppID:(NSString *)appID
@@ -34,23 +45,30 @@
        implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   systemAuthenticationEnabled:(BOOL)systemAuthenticationEnabled
+        nativeAuthFlowEnabled:(BOOL)nativeAuthFlowEnabled
          dialogConfigurations:(NSDictionary *)dialogConfigurations
+                  dialogFlows:(NSDictionary *)dialogFlows
                     timestamp:(NSDate *)timestamp
            errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
+                     defaults:(BOOL)defaults
 NS_DESIGNATED_INITIALIZER;
 
 @property (nonatomic, assign, readonly, getter=isAdvertisingIDEnabled) BOOL advertisingIDEnabled;
 @property (nonatomic, copy, readonly) NSString *appID;
 @property (nonatomic, copy, readonly) NSString *appName;
+@property (nonatomic, assign, readonly, getter=isDefaults) BOOL defaults;
+@property (nonatomic, copy, readonly) NSString *defaultShareMode;
+@property (nonatomic, strong, readonly) FBSDKErrorConfiguration *errorConfiguration;
 @property (nonatomic, assign, readonly, getter=isImplicitLoggingSupported) BOOL implicitLoggingEnabled;
 @property (nonatomic, assign, readonly, getter=isImplicitPurchaseLoggingSupported) BOOL implicitPurchaseLoggingEnabled;
 @property (nonatomic, assign, readonly, getter=isLoginTooltipEnabled) BOOL loginTooltipEnabled;
-@property (nonatomic, copy, readonly) NSString *loginTooltipText;
-@property (nonatomic, copy, readonly) NSString *defaultShareMode;
+@property (nonatomic, assign, readonly, getter=isNativeAuthFlowEnabled) BOOL nativeAuthFlowEnabled;
 @property (nonatomic, assign, readonly, getter=isSystemAuthenticationEnabled) BOOL systemAuthenticationEnabled;
+@property (nonatomic, copy, readonly) NSString *loginTooltipText;
 @property (nonatomic, copy, readonly) NSDate *timestamp;
-@property (nonatomic, strong, readonly) FBSDKErrorConfiguration *errorConfiguration;
 
 - (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
+- (BOOL)useNativeDialogForDialogName:(NSString *)dialogName;
+- (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
 
 @end

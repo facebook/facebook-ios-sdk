@@ -16,16 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "TestAppIdAndSecret.xcconfig"
+#import "FBSDKShareKitTestUtility.h"
 
-// Code Signing
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+#import <OCMock/OCMock.h>
 
-// Packaging
-WRAPPER_EXTENSION = xctest
+#import "FBSDKCoreKit+Internal.h"
 
-// Linking
-OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
+@implementation FBSDKShareKitTestUtility
 
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
++ (id)mainBundleMock
+{
+  // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
+  // and our keychain code is coded against mainBundle.
+  id mockNSBundle = [OCMockObject niceMockForClass:[NSBundle class]];
+  NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
+  [[[[mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
+  return mockNSBundle;
+}
+
+@end

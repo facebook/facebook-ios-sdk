@@ -32,6 +32,8 @@
 
 @interface FBSDKButton ()
 
+- (void)logTapEventWithEventName:(NSString *)eventName
+                      parameters:(NSDictionary *)parameters;
 - (void)checkImplicitlyDisabled;
 - (void)configureButton;
 - (void)configureWithIcon:(FBSDKIcon *)icon

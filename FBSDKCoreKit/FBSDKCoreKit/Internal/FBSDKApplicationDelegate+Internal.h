@@ -34,7 +34,10 @@ typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
 @interface FBSDKApplicationDelegate ()
 
 - (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
+     useSafariViewController:(BOOL)useSafariViewController
              completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock;
+
+- (void)openURLWithSafariViewController:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
 
 - (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
 
