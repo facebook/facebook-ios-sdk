@@ -16,6 +16,7 @@
 
 #import "FBSessionFacebookAppWebLoginStategy.h"
 
+#import "FBDialogConfig.h"
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
@@ -25,7 +26,9 @@
 @implementation FBSessionFacebookAppWebLoginStategy
 
 - (BOOL)tryPerformAuthorizeWithParams:(FBSessionLoginStrategyParams *)params session:(FBSession *)session logger:(FBSessionAuthLogger *)logger {
-    if (params.tryFBAppAuth && !TEST_DISABLE_FACEBOOKLOGIN) {
+    if (params.tryFBAppAuth &&
+        !TEST_DISABLE_FACEBOOKLOGIN &&
+        [FBDialogConfig useNativeDialogForDialogName:FBDialogConfigurationNameLogin]) {
         NSDictionary *clientState = @{FBSessionAuthLoggerParamAuthMethodKey: self.methodName,
                                       FBSessionAuthLoggerParamIDKey : logger.ID ?: @""};
         params.webParams[FBLoginUXClientState] = [session jsonClientStateWithDictionary:clientState];

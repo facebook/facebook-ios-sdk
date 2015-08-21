@@ -187,9 +187,7 @@ static NSString *const kPostHTTPMethod = @"POST";
 }
 
 + (FBRequest *)requestForMyFriends {
-    NSDictionary *params = @{ @"fields": (([FBSettings isPlatformCompatibilityEnabled]) ?
-                                          @"id,name,username,first_name,last_name" :
-                                          @"id,name,first_name,last_name") };
+    NSDictionary *params = @{ @"fields": @"id,name,first_name,last_name" };
 
     return [[[FBRequest alloc] initWithSession:[FBSession activeSessionIfOpen]
                                      graphPath:@"me/friends"

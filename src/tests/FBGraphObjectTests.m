@@ -87,13 +87,13 @@
 - (void)testCanSetProperty {
     id<NamedGraphObject> graphObject = (id<NamedGraphObject>)[FBGraphObject graphObject];
     [graphObject setName:@"A name"];
-    assertThat([graphObject name], equalTo(@"A name"));
+    XCTAssertTrue([@"A name"  isEqualToString:graphObject.name]);
 }
 
 - (void)testRespondsToSelector {
     id<NamedGraphObject> graphObject = (id<NamedGraphObject>)[FBGraphObject graphObject];
     BOOL respondsToSelector = [graphObject respondsToSelector:@selector(setName:)];
-    assertThatBool(respondsToSelector, equalToBool(YES));
+    XCTAssertTrue(respondsToSelector);
 }
 
 - (void)testDoesNotHandleNonGetterSetter {
@@ -272,10 +272,10 @@
     id o;
     int count = 0;
     while (o = [enumerator nextObject]) {
-        assertThat(o, notNilValue());
+        XCTAssertNotNil(o);
         count++;
     }
-    assertThatInt(count, equalToInt(3));
+    XCTAssertEqual(3, count);
 }
 
 - (void)testArrayObjectReverseEnumerator
@@ -287,10 +287,10 @@
     id o;
     int count = 0;
     while (o = [enumerator nextObject]) {
-        assertThat(o, notNilValue());
+        XCTAssertNotNil(o);
         count++;
     }
-    assertThatInt(count, equalToInt(3));
+    XCTAssertEqual(3, count);
 }
 
 - (void)testInsertObjectAtIndex {
@@ -298,7 +298,7 @@
     NSMutableArray *array = [obj objectForKey:@"array"];
     [array insertObject:@"two" atIndex:1];
 
-    assertThat([array objectAtIndex:1], equalTo(@"two"));
+    XCTAssertTrue([array[1] isEqualToString:@"two"]);
 
 }
 
@@ -307,7 +307,7 @@
     NSMutableArray *array = [obj objectForKey:@"array"];
     [array removeObjectAtIndex:1];
 
-    assertThatInteger([array count], equalToInteger(2));
+    XCTAssertEqual(2, array.count);
 }
 
 - (void)testAddObject {
@@ -315,7 +315,7 @@
     NSMutableArray *array = [obj objectForKey:@"array"];
     [array addObject:@"four"];
 
-    assertThat([array objectAtIndex:3], equalTo(@"four"));
+    XCTAssertTrue([array[3] isEqualToString:@"four"]);
 }
 
 - (void)testRemoveLastObject {
@@ -323,7 +323,7 @@
     NSMutableArray *array = [obj objectForKey:@"array"];
     [array removeLastObject];
 
-    assertThatInteger([array count], equalToInteger(2));
+    XCTAssertEqual(2, array.count);
 }
 
 - (void)testReplaceObjectAtIndex {
@@ -331,7 +331,7 @@
     NSMutableArray *array = [obj objectForKey:@"array"];
     [array replaceObjectAtIndex:1 withObject:@"two"];
 
-    assertThat([array objectAtIndex:1], equalTo(@"two"));
+    XCTAssertTrue([array[1] isEqualToString:@"two"]);
 }
 
 - (NSMutableDictionary<FBGraphObject> *)createGraphObjectWithArray {

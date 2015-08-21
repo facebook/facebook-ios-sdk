@@ -17,7 +17,7 @@
 #include "TestAppIdAndSecret.xcconfig"
 
 // Architectures
-IPHONEOS_DEPLOYMENT_TARGET = 7.0
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
 
 // Code Signing
 CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
@@ -30,7 +30,7 @@ INFOPLIST_FILE = $(TARGET_NAME)/$(TARGET_NAME)-Info.plist
 WRAPPER_EXTENSION = xctest
 
 // Search Paths
-FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks" "$(DEVELOPER_LIBRARY_DIR)/Frameworks" $(inherited) "$(SRCROOT)/../vendor/OCHamcrest/Source/build/Release"
+FRAMEWORK_SEARCH_PATHS = "$(SDKROOT)/Developer/Library/Frameworks" "$(DEVELOPER_LIBRARY_DIR)/Frameworks" $(inherited)
 
 // Language
 GCC_PREFIX_HEADER = $(TARGET_NAME)/$(TARGET_NAME)-Prefix.pch

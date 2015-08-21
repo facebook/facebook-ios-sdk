@@ -29,6 +29,8 @@ int const FBRefreshCacheDelaySeconds = 2;
 
 @implementation FBFriendPickerViewController
 
+@dynamic selection;
+
 #pragma mark - Custom Properties
 
 - (void)setSelection:(NSArray *)selection {

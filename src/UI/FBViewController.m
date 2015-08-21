@@ -203,7 +203,7 @@
         return;
     }
 
-    UINavigationItem *navigationItem = [[[UINavigationItem alloc] initWithTitle:nil] autorelease];
+    UINavigationItem *navigationItem = [[[UINavigationItem alloc] initWithTitle:@""] autorelease];
 
     if (self.cancelButton != nil) {
         navigationItem.leftBarButtonItem = self.cancelButton;

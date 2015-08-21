@@ -16,6 +16,19 @@
 
 #import "FBDialogConfig.h"
 
+#import "FBSettings.h"
+#import "FBUtility.h"
+
+NSString *const FBDialogConfigurationNameDefault = @"default";
+NSString *const FBDialogConfigurationNameLogin = @"login";
+NSString *const FBDialogConfigurationNameSharing = @"sharing";
+NSString *const FBDialogConfigurationNameLike = @"like";
+NSString *const FBDialogConfigurationNameMessage = @"message";
+NSString *const FBDialogConfigurationNameShare = @"share";
+
+NSString *const FBDialogConfigurationFeatureUseNativeFlow = @"use_native_flow";
+NSString *const FBDialogConfigurationFeatureUseSafariViewController = @"use_safari_vc";
+
 @interface FBDialogConfig ()
 @property (nonatomic, copy, readwrite) NSString *name;
 @property (nonatomic, copy, readwrite) NSURL *URL;
@@ -25,6 +38,85 @@
 @implementation FBDialogConfig
 
 #pragma mark - Class Methods
+
+static NSDictionary *g_dialogFlows = nil;
+static NSString *const FBDialogFlowsKey = @"com.facebook.sdk:dialogFlows%@";
+
++ (void)initialize
+{
+    if (self == [FBDialogConfig class]) {
+        [self updateDialogFlows];
+    }
+}
+
++ (void)updateDialogFlows
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        void(^block)() = ^{
+            // while this map is stored globally in FBFetchedAppSettings, we need to serialize it to disk so that it is
+            // persistent, so we will be storing it in another global here, and then replacing it once
+            // FBFetchedAppSettings has been loaded so that we always have something to read from once it has been
+            // loaded at least once.
+            NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+            NSString *appID = [FBSettings defaultAppID];
+            NSString *dialogFlowsKey = [NSString stringWithFormat:FBDialogFlowsKey, appID];
+            NSData *flowsData = [defaults objectForKey:dialogFlowsKey];
+            if ([flowsData isKindOfClass:[NSData class]]) {
+                NSDictionary *dialogFlows = [NSKeyedUnarchiver unarchiveObjectWithData:flowsData];
+                if ([dialogFlows isKindOfClass:[NSDictionary class]]) {
+                    g_dialogFlows = [dialogFlows copy];
+                }
+            }
+            if (g_dialogFlows == nil) {
+                BOOL useNative = ![FBUtility isRunningOnOrAfter:FBIOSVersion_9_0];
+                g_dialogFlows = [@{
+                                   FBDialogConfigurationNameDefault: @{
+                                           FBDialogConfigurationFeatureUseNativeFlow: @(useNative),
+                                           FBDialogConfigurationFeatureUseSafariViewController: @YES,
+                                           },
+                                   } copy];
+            }
+            [FBUtility fetchAppSettings:appID callback:^(FBFetchedAppSettings *settings, NSError *error) {
+                NSDictionary *dialogFlows = settings.dialogFlows;
+                if (error || !dialogFlows) {
+                    return;
+                }
+                [g_dialogFlows autorelease];
+                g_dialogFlows = [dialogFlows copy];
+                NSData *data = [NSKeyedArchiver archivedDataWithRootObject:dialogFlows];
+                [defaults setObject:data forKey:dialogFlowsKey];
+            }];
+        };
+        if ([NSThread isMainThread]) {
+            block();
+        } else {
+            dispatch_async(dispatch_get_main_queue(), block);
+        }
+    });
+}
+
++ (BOOL)useNativeDialogForDialogName:(NSString *)dialogName
+{
+    return [self _useFeatureWithKey:FBDialogConfigurationFeatureUseNativeFlow dialogName:dialogName];
+}
+
++ (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName
+{
+    return [self _useFeatureWithKey:FBDialogConfigurationFeatureUseSafariViewController dialogName:dialogName];
+}
+
++ (BOOL)_useFeatureWithKey:(NSString *)key dialogName:(NSString *)dialogName
+{
+    if ([dialogName isEqualToString:FBDialogConfigurationNameLogin]) {
+        return [(NSNumber *)(g_dialogFlows[dialogName][key] ?:
+                             g_dialogFlows[FBDialogConfigurationNameDefault][key]) boolValue];
+    } else {
+        return [(NSNumber *)(g_dialogFlows[dialogName][key] ?:
+                             g_dialogFlows[FBDialogConfigurationNameSharing][key] ?:
+                             g_dialogFlows[FBDialogConfigurationNameDefault][key]) boolValue];
+    }
+}
 
 + (instancetype)dialogConfigWithDictionary:(NSDictionary *)dictionary
 {

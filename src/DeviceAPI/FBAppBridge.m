@@ -23,6 +23,7 @@
 #import "FBCrypto.h"
 #import "FBDialogsData+Internal.h"
 #import "FBError.h"
+#import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
@@ -184,11 +185,13 @@ static FBAppBridge *g_sharedInstance;
 - (void)dispatchDialogAppCall:(FBAppCall *)appCall
                  bridgeScheme:(FBAppBridgeScheme *)bridgeScheme
                       session:(FBSession *)session
+      useSafariViewController:(BOOL)useSafariViewController
             completionHandler:(FBAppCallHandler)handler {
     dispatch_async(dispatch_get_main_queue(), ^() {
         [self performDialogAppCall:appCall
                       bridgeScheme:bridgeScheme
                            session:session
+           useSafariViewController:useSafariViewController
                  completionHandler:handler];
     });
 }
@@ -196,6 +199,7 @@ static FBAppBridge *g_sharedInstance;
 - (void)performDialogAppCall:(FBAppCall *)appCall
                 bridgeScheme:(FBAppBridgeScheme *)bridgeScheme
                      session:(FBSession *)session
+     useSafariViewController:(BOOL)useSafariViewController
            completionHandler:(FBAppCallHandler)handler {
     if (!session) {
         session = FBSession.activeSessionIfExists;
@@ -260,7 +264,12 @@ static FBAppBridge *g_sharedInstance;
     // Remember what items we put on the pasteboard for this call.
     [self savePasteboardNames:self.jsonConverter.createdPasteboardNames forAppCallID:appCall.ID];
 
-    BOOL success = [[UIApplication sharedApplication] openURL:url];
+    BOOL success;
+    if (useSafariViewController) {
+        success = [FBAppCall openURLWithSafariViewController:url];
+    } else {
+        success = [FBAppCall openURL:url];
+    }
 
     if (!success) {
         [self stopTrackingCallWithID:appCall.ID];
@@ -518,6 +527,15 @@ forFailedAppCall:(FBAppCall *)appCall
 }
 
 - (void)trackAppCall:(FBAppCall *)call withCompletionHandler:(FBAppCallHandler)handler {
+    // Clear any pending calls, we'll only support one.
+    [[self.pendingAppCalls allKeys] enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        [self deletePasteboardsForAppCallID:(NSString *)obj];
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                            logEntry:@"Warning: FBAppCall was removed without callback. You may ignore this warning if running on iOS 9 and the user had tapped cancel on the iOS alert when attempting an app switch for the first time"];
+    }];
+    [self.pendingAppCalls removeAllObjects];
+    [self.callbacks removeAllObjects];
+
     self.pendingAppCalls[call.ID] = call;
     if (!handler) {
         // a noop handler if nil is passed in

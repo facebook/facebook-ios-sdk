@@ -77,8 +77,7 @@
     [self postAndValidateWithSession:session
                            graphPath:@"me/"UNIT_TEST_OPEN_GRAPH_NAMESPACE":run"
                          graphObject:action
-                       hasProperties:[NSArray arrayWithObjects:
-                                      nil]];
+                       hasProperties:[NSArray array]];
 
 }
 

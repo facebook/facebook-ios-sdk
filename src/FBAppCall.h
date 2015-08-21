@@ -226,6 +226,13 @@ typedef void (^FBAppLinkFallbackHandler)(NSError *error);
  */
 + (void)openDeferredAppLink:(FBAppLinkFallbackHandler)fallbackHandler;
 
++ (BOOL)openURL:(NSURL *)url;
+
+#pragma mark - SafariViewController methods
+
++ (BOOL)openURLWithSafariViewController:(NSURL *)url;
++ (void)dismissSafariViewController;
+
 @end
 
 

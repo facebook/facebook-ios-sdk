@@ -27,6 +27,7 @@
 - (void)dispatchDialogAppCall:(FBAppCall *)appCall
                  bridgeScheme:(FBAppBridgeScheme *)bridgeScheme
                       session:(FBSession *)session
+      useSafariViewController:(BOOL)useSafariViewController
             completionHandler:(FBAppCallHandler)handler;
 
 - (BOOL)handleOpenURL:(NSURL *)url

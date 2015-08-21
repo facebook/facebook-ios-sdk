@@ -205,6 +205,10 @@ void fbdfl_AudioServicesPlaySystemSound(SystemSoundID inSystemSoundID);
 
 Class fbdfl_ASIdentifierManagerClass(void);
 
+#pragma mark - SafariServices Classes
+
+FBSDK_EXTERN Class fbdfl_SFSafariViewControllerClass(void);
+
 #pragma mark Accounts Constants
 
 NSString *fbdfl_ACFacebookAppIdKey(void);

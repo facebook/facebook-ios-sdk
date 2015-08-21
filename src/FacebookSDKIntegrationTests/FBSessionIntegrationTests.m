@@ -46,7 +46,7 @@
 {
     FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional %@", @"log");
     FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional log");
-    FBConditionalLog(YES, FBLoggingBehaviorInformational, nil, @"Testing conditional log");
+    FBConditionalLog(YES, FBLoggingBehaviorInformational, @"%@", @"Testing conditional log");
 
     // create valid
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
@@ -333,7 +333,7 @@
 {
     FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional %@", @"log");
     FBConditionalLog(NO, FBLoggingBehaviorInformational, @"Testing conditional log");
-    FBConditionalLog(YES, FBLoggingBehaviorInformational, nil, @"Testing conditional log");
+    FBConditionalLog(YES, FBLoggingBehaviorInformational, @"%@", @"Testing conditional log");
 
     FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
 
@@ -360,7 +360,7 @@
 
     [session openFromAccessTokenData:token completionHandler:^(FBSession *session3, FBSessionState status, NSError *error) {
         if (status == FBSessionStateOpen) {
-            assertThat(session.accessTokenData.userID, equalTo(@"4"));
+            XCTAssertTrue([@"4" isEqualToString:session.accessTokenData.userID]);
             [blocker signal];
         }
     }];
@@ -370,12 +370,12 @@
     XCTAssertTrue(session.isOpen, @"Session should be valid, and is not");
 
     [session requestNewPublishPermissions:@[@"publish_actions"] defaultAudience:FBSessionDefaultAudienceOnlyMe completionHandler:^(FBSession *session2, NSError *error) {
-        assertThat(session.accessTokenData.userID, equalTo(@"4"));
+        XCTAssertTrue([@"4" isEqualToString:session.accessTokenData.userID]);
         [blocker signal];
     }];
     [blocker waitWithTimeout:10];
 
-    assertThat(session.accessTokenData.userID, equalTo(@"4"));
+    XCTAssertTrue([@"4" isEqualToString:session.accessTokenData.userID]);
     [session close];
 }
 

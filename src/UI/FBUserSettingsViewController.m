@@ -249,7 +249,10 @@
     [self updateBackgroundImage];
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmismatched-return-types"
 - (NSUInteger)supportedInterfaceOrientations {
+#pragma GCC diagnostic pop
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
         return UIInterfaceOrientationMaskAll;
     } else {

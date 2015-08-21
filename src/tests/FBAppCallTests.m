@@ -17,6 +17,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBAppCall+Internal.h"
+#import "FBSettings.h"
 #import "FBTests.h"
 
 @interface FBAppCallTests : FBTests
@@ -100,8 +101,9 @@
                                                   appID:nil
                                         urlSchemeSuffix:nil];
 
-    assertThat(appCall1, equalTo(appCall2));
-    assertThatInteger([appCall1 hash], equalToInteger([appCall2 hash]));
+    XCTAssertEqualObjects(appCall2, appCall1);
+    XCTAssertEqual([appCall2 hash], [appCall1 hash]);
+
 }
 
 - (void)testAppCallsAreNotEqual {
@@ -113,10 +115,8 @@
                                           enforceScheme:NO
                                                   appID:nil
                                         urlSchemeSuffix:nil];
-
-    assertThat(appCall1, isNot(equalTo(appCall2)));
-    assertThat(appCall1, isNot(equalTo(nil)));
-    assertThat(appCall1, isNot(equalTo(@"string")));
+    XCTAssertNotEqualObjects(appCall2, appCall1);
+    XCTAssertNotNil(appCall1);
 }
 
 @end

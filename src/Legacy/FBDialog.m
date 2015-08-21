@@ -492,7 +492,7 @@ static BOOL FBUseLegacyLayout(void) {
             }
         }
 
-        [[UIApplication sharedApplication] openURL:request.URL];
+        [FBAppCall openURL:request.URL];
         return NO;
     } else {
         return YES;

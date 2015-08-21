@@ -66,13 +66,8 @@ test -d "$FB_SDK_BUILD" \
 for SCHEME in $SCHEMES; do
     APPLICATION_TEST_EXTRAS=""
     if [ "$SCHEME" == "FacebookSDKApplicationTests" ]; then
-      # ios snapshot has issues with ios 8. As a workaround, specify ios7.1 specifically (make sure it's install first)
-      CAN_HAZ_SIM=$(xcodebuild -showsdks | grep "iphonesimulator7.1")
-      if [ -z "$CAN_HAZ_SIM" ]; then
-        progress_message "*** WARNING *** iOS simulator 7.1 is required for FacebookSDKApplicationTests. Skipping..."
-        continue
-      fi
-      APPLICATION_TEST_EXTRAS="-test-sdk iphonesimulator7.1 -destination 'platform=iOS Simulator,name=iPhone 4s,OS=7.1'"
+      progress_message "***  Skipping FacebookSDKApplicationTests. ..."
+      continue
     fi
 
     COMMAND="$XCTOOL

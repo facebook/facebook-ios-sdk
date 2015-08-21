@@ -16,9 +16,22 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString *const FBDialogConfigurationNameDefault;
+extern NSString *const FBDialogConfigurationNameLogin;
+extern NSString *const FBDialogConfigurationNameSharing;
+extern NSString *const FBDialogConfigurationNameLike;
+extern NSString *const FBDialogConfigurationNameMessage;
+extern NSString *const FBDialogConfigurationNameShare;
+
+extern NSString *const FBDialogConfigurationFeatureUseNativeFlow;
+extern NSString *const FBDialogConfigurationFeatureUseSafariViewController;
+
 @interface FBDialogConfig : NSObject <NSCoding>
 
 + (instancetype)dialogConfigWithDictionary:(NSDictionary *)dictionary;
++ (BOOL)useNativeDialogForDialogName:(NSString *)dialogName;
++ (BOOL)useSafariViewControllerForDialogName:(NSString *)dialogName;
+
 
 @property (nonatomic, copy, readonly) NSString *name;
 @property (nonatomic, copy, readonly) NSURL *URL;

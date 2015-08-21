@@ -27,6 +27,7 @@
 #import "FBAppEvents+Internal.h"
 #import "FBAppEvents.h"
 #import "FBDataDiskCache.h"
+#import "FBDialogConfig.h"
 #import "FBDialogs+Internal.h"
 #import "FBError.h"
 #import "FBErrorUtility+Internal.h"
@@ -999,14 +1000,13 @@ static FBSession *g_activeSession = nil;
                                    FBLoginUXReturnScopesYES, FBLoginUXReturnScopes,
                                    FB_IOS_SDK_VERSION_STRING, FBLoginParamsSDKVersion,
                                    nil];
-    if (![FBSettings isPlatformCompatibilityEnabled]) {
-        params[FBLoginParamsLegacyOverride] = FB_IOS_SDK_TARGET_PLATFORM_VERSION;
+    params[FBLoginParamsLegacyOverride] = FB_IOS_SDK_TARGET_PLATFORM_VERSION;
 
-        // allows dialog to show permissions that have been requested before
-        if (isReauthorize) {
-            params[@"auth_type"] = @"rerequest";
-        }
+    // allows dialog to show permissions that have been requested before
+    if (isReauthorize) {
+        params[@"auth_type"] = @"rerequest";
     }
+
     NSString *defaultAudienceName = [FBSessionUtility audienceNameWithAudience:defaultAudience];
     if (defaultAudienceName) {
         params[FBLoginUXDefaultAudience] = defaultAudienceName;
@@ -1440,12 +1440,15 @@ static FBSession *g_activeSession = nil;
 }
 
 - (BOOL)tryOpenURL:(NSURL *)url {
-    BOOL canOpen = [[UIApplication sharedApplication] canOpenURL:url];
-    if (canOpen) {
-        // Safari openURL calls can wrongly return NO so rely on the more honest canOpenURL call for return.
-        [[UIApplication sharedApplication] openURL:url];
+    if ([url.scheme hasPrefix:@"http"] &&
+        [FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameLogin] &&
+        self == [FBSession activeSessionIfExists]) {
+        // Can only use SFVC for active session, otherwise we're not able to send
+        // a cancel if user taps "Done".
+        return [FBAppCall openURLWithSafariViewController:url];
+    } else {
+        return [FBAppCall openURL:url];
     }
-    return canOpen;
 }
 
 - (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params {
@@ -1869,10 +1872,14 @@ static FBSession *g_activeSession = nil;
     // trigger this block.
     if (_loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeNone
         && _loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeWebView) {
-
         if (state == FBSessionStateCreatedOpening) {
-            //if we're here, user had declined a fast app switch login.
-            [self close];
+            NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledValue
+                                                    errorCode:nil
+                                                   innerError:nil];
+            [self transitionAndCallHandlerWithState:FBSessionStateClosedLoginFailed
+                                              error:error
+                                          tokenData:nil
+                                        shouldCache:NO];
         } else {
             //this means the user declined a 'reauthorization' so we need
             // to clean out the in-flight request.

@@ -59,7 +59,7 @@ static NSString *const kAppLinksKey = @"app_links";
         askedForPhone = [queryParameters[@"fields"] rangeOfString:@"iphone"].location != NSNotFound;
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithData:nil
+        return [OHHTTPStubsResponse responseWithData:[NSData data]
                                           statusCode:200
                                              headers:nil];
     }];
@@ -69,7 +69,7 @@ static NSString *const kAppLinksKey = @"app_links";
     BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
     [self waitForTaskOnMainThread:task];
 
-    assertThatBool(askedForPhone, is(equalToBool(YES)));
+    XCTAssertTrue(askedForPhone);
 }
 
 - (void)testUsesPhoneDataOnPhone
@@ -102,9 +102,20 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.sourceURL.absoluteString, is(equalTo(kAppLinkURLString)));
-    assertThat(link.targets, contains(hasProperty(@"appStoreId", @"456"), hasProperty(@"appStoreId", @"123"), nil));
+    XCTAssertNotNil(link);
+    XCTAssertTrue([link.sourceURL.absoluteString isEqualToString:kAppLinkURLString]);
+    XCTAssertTrue([link.targets indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"appStoreId"] isEqualToString:@"456"]) {
+            return true;
+        }
+        return NO;
+    }] != NSNotFound);
+    XCTAssertTrue([link.targets indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"appStoreId"] isEqualToString:@"123"]) {
+            return true;
+        }
+        return NO;
+    }] != NSNotFound);
 }
 
 - (void)testAsksForPadDataOnPad
@@ -115,7 +126,7 @@ static NSString *const kAppLinksKey = @"app_links";
         askedForPad = [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
         return YES;
     } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
-        return [OHHTTPStubsResponse responseWithData:nil
+        return [OHHTTPStubsResponse responseWithData:[NSData data]
                                           statusCode:200
                                              headers:nil];
     }];
@@ -125,7 +136,7 @@ static NSString *const kAppLinksKey = @"app_links";
     BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
     [self waitForTaskOnMainThread:task];
 
-    assertThatBool(askedForPad, is(equalToBool(YES)));
+    XCTAssertTrue(askedForPad);
 }
 
 - (void)testUsesPadDataOnPad
@@ -158,9 +169,20 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.sourceURL.absoluteString, is(equalTo(kAppLinkURLString)));
-    assertThat(link.targets, contains(hasProperty(@"appStoreId", @"456"), hasProperty(@"appStoreId", @"123"), nil));
+    XCTAssertNotNil(link);
+    XCTAssertTrue([link.sourceURL.absoluteString isEqualToString:kAppLinkURLString]);
+    XCTAssertTrue([link.targets indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"appStoreId"] isEqualToString:@"456"]) {
+            return true;
+        }
+        return NO;
+    }] != NSNotFound);
+    XCTAssertTrue([link.targets indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"appStoreId"] isEqualToString:@"123"]) {
+            return true;
+        }
+        return NO;
+    }] != NSNotFound);
 }
 
 
@@ -195,8 +217,13 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.targets, contains(hasProperty(@"appStoreId", @"123"), nil));
+    XCTAssertNotNil(link);
+    XCTAssertTrue([link.targets indexOfObjectPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+        if ([[obj valueForKey:@"appStoreId"] isEqualToString:@"123"]) {
+            return true;
+        }
+        return NO;
+    }] != NSNotFound);
 }
 
 - (void)testHandlesNoTargets
@@ -213,9 +240,9 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.sourceURL.absoluteString, is(equalTo(kAppLinkURLString)));
-    assertThat(link.targets, isEmpty());
+    XCTAssertNotNil(link);
+    XCTAssertTrue([link.sourceURL.absoluteString isEqualToString:kAppLinkURLString]);
+    XCTAssertTrue(link.targets.count == 0);
 }
 
 - (void)testHandlesMultipleURLs
@@ -235,11 +262,10 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     NSDictionary *links = task.result;
-    assertThat(links, is(notNilValue()));
-    assertThatUnsignedInteger(links.count, is(equalToUnsignedInteger(2)));
-
-    assertThat([links[[NSURL URLWithString:kAppLinkURLString]] sourceURL].absoluteString, is(equalTo(kAppLinkURLString)));
-    assertThat([links[[NSURL URLWithString:kAppLinkURL2String]] sourceURL].absoluteString, is(equalTo(kAppLinkURL2String)));
+    XCTAssertNotNil(links);
+    XCTAssertEqual(2, links.count);
+    XCTAssertEqualObjects(kAppLinkURLString, [links[[NSURL URLWithString:kAppLinkURLString]] sourceURL].absoluteString);
+    XCTAssertEqualObjects((kAppLinkURL2String), [links[[NSURL URLWithString:kAppLinkURL2String]] sourceURL].absoluteString);
 }
 
 - (void)testSetsFallbackIfNotSpecified
@@ -256,8 +282,9 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.webURL.absoluteString, is(equalTo(kAppLinkURLString)));
+
+    XCTAssertNotNil(link);
+    XCTAssertEqualObjects(kAppLinkURLString, link.webURL.absoluteString);
 }
 
 - (void)testSetsFallbackIfSpecified
@@ -280,8 +307,8 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.webURL.absoluteString, is(equalTo(@"http://www.example.com/somethingelse")));
+    XCTAssertNotNil(link);
+    XCTAssertTrue([link.webURL.absoluteString isEqualToString:@"http://www.example.com/somethingelse"]);
 }
 
 - (void)testUsesSourceAsFallbackIfSpecified
@@ -303,8 +330,9 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.webURL.absoluteString, is(equalTo(kAppLinkURLString)));
+
+    XCTAssertNotNil(link);
+    XCTAssertEqualObjects(kAppLinkURLString, link.webURL.absoluteString);
 }
 
 - (void)testSetsNoFallbackIfSpecified
@@ -327,8 +355,8 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.webURL.absoluteString, is(nilValue()));
+    XCTAssertNotNil(link);
+    XCTAssertNil(link.webURL.absoluteString);
 }
 
 - (void)testHandlesError
@@ -345,10 +373,10 @@ static NSString *const kAppLinksKey = @"app_links";
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(nilValue()));
+    XCTAssertNil(link);
 
     NSError *error = task.error;
-    assertThat(error, is(notNilValue()));
+    XCTAssertNotNil(error);
 }
 
 - (void)testResultsAreCachedAndCacheIsUsed
@@ -386,7 +414,7 @@ static NSString *const kAppLinksKey = @"app_links";
     task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
     [self waitForTaskOnMainThread:task];
 
-    assertThatUnsignedInteger(callCount, is(equalToUnsignedInteger(expectedCallCount)));
+    XCTAssertEqual(expectedCallCount, callCount);
 }
 
 - (void)testMixOfCachedAndUncached
@@ -437,7 +465,7 @@ static NSString *const kAppLinksKey = @"app_links";
     BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
     [self waitForTaskOnMainThread:task];
 
-    assertThatUnsignedInteger(callCounts.count, is(equalToUnsignedInteger(1)));
+    XCTAssertEqual(1, callCounts.count);
 
     // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
     NSString *firstCallKey = callCounts.allKeys[0];
@@ -447,11 +475,11 @@ static NSString *const kAppLinksKey = @"app_links";
     task = [resolver appLinksFromURLsInBackground:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]];
     [self waitForTaskOnMainThread:task];
 
-    assertThatUnsignedInteger(callCounts.count, is(equalToUnsignedInteger(2)));
-    assertThatUnsignedInteger([callCounts[firstCallKey] unsignedIntegerValue], is(equalToUnsignedInteger(expectedCallCount)));
+    XCTAssertEqual(2, callCounts.count);
+    XCTAssertEqual(expectedCallCount,[callCounts[firstCallKey] unsignedIntegerValue]);
 
     NSDictionary *links = task.result;
-    assertThatUnsignedInteger(links.count, is(equalToUnsignedInteger(2)));
+    XCTAssertEqual(2, links.count);
 }
 
 @end

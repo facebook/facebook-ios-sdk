@@ -28,6 +28,7 @@
 #import "FBAppCall+Internal.h"
 #import "FBAppEvents+Internal.h"
 #import "FBAppLinkData+Internal.h"
+#import "FBDialogConfig.h"
 #import "FBDynamicFrameworkLoader.h"
 #import "FBError.h"
 #import "FBLinkShareParams.h"
@@ -99,8 +100,8 @@ return NO; \
         }
         return NO;
     }
-    SLComposeViewController *composeViewController = [FBDialogs composeViewControllerWithSession:session
-                                                                                         handler:handler];
+    SLComposeViewController *composeViewController = [self composeViewControllerWithSession:session
+                                                                                    handler:handler];
     if (!composeViewController) {
         return NO;
     }
@@ -166,7 +167,7 @@ return NO; \
 + (BOOL)canPresentOSIntegratedShareDialogWithSession:(FBSession *)session
 {
     return (([FBSettings restrictedTreatment] == FBRestrictedTreatmentNO) &&
-            ([FBDialogs composeViewControllerWithSession:session handler:nil] != nil));
+            ([self composeViewControllerWithSession:session handler:nil] != nil));
 }
 
 // A helper method to wrap common logic for any FBAppCalls. If `FBSettings restrictedTreatment` is
@@ -210,52 +211,54 @@ return NO; \
 + (FBAppCall *)presentShareDialogWithParams:(FBLinkShareParams *)params
                                 clientState:(NSDictionary *)clientState
                                     handler:(FBDialogAppCallCompletionHandler)handler {
-    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+    if ([self cancelAppCallBecauseOfRestrictedTreatment:handler]) {
         return nil;
     }
     FBAppBridgeScheme *bridgeScheme = [FBAppBridgeScheme bridgeSchemeForFBAppForShareDialogParams:params];
-    return [FBDialogs presentShareDialogWithParams:params
-                                      bridgeScheme:bridgeScheme
-                                       clientState:clientState
-                                           handler:handler];
+    return [self presentShareDialogWithParams:params
+                                 bridgeScheme:bridgeScheme
+                                  clientState:clientState
+                      useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameShare]
+                                      handler:handler];
 }
 
 + (FBAppCall *)presentShareDialogWithPhotoParams:(FBPhotoParams *)params
                                      clientState:(NSDictionary *)clientState
                                          handler:(FBDialogAppCallCompletionHandler)handler
 {
-    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+    if ([self cancelAppCallBecauseOfRestrictedTreatment:handler]) {
         return nil;
     }
     FBAppBridgeScheme *bridgeScheme = [FBAppBridgeScheme bridgeSchemeForFBAppForShareDialogPhotos];
-    return [FBDialogs presentShareDialogWithParams:params
-                                      bridgeScheme:bridgeScheme
-                                       clientState:clientState
-                                           handler:handler];
+    return [self presentShareDialogWithParams:params
+                                 bridgeScheme:bridgeScheme
+                                  clientState:clientState
+                      useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameShare]
+                                      handler:handler];
 }
 
 
 + (FBAppCall *)presentShareDialogWithLink:(NSURL *)link
                                   handler:(FBDialogAppCallCompletionHandler)handler {
-    return [FBDialogs presentShareDialogWithLink:link
-                                            name:nil
-                                         caption:nil
-                                     description:nil
-                                         picture:nil
-                                     clientState:nil
-                                         handler:handler];
+    return [self presentShareDialogWithLink:link
+                                       name:nil
+                                    caption:nil
+                                description:nil
+                                    picture:nil
+                                clientState:nil
+                                    handler:handler];
 }
 
 + (FBAppCall *)presentShareDialogWithLink:(NSURL *)link
                                      name:(NSString *)name
                                   handler:(FBDialogAppCallCompletionHandler)handler {
-    return [FBDialogs presentShareDialogWithLink:link
-                                            name:name
-                                         caption:nil
-                                     description:nil
-                                         picture:nil
-                                     clientState:nil
-                                         handler:handler];
+    return [self presentShareDialogWithLink:link
+                                       name:name
+                                    caption:nil
+                                description:nil
+                                    picture:nil
+                                clientState:nil
+                                    handler:handler];
 }
 
 
@@ -305,25 +308,25 @@ return NO; \
 + (FBAppCall *)presentShareDialogWithOpenGraphActionParams:(FBOpenGraphActionParams *)params
                                                clientState:(NSDictionary *)clientState
                                                    handler:(FBDialogAppCallCompletionHandler)handler {
-    if ([FBDialogs cancelAppCallBecauseOfRestrictedTreatment:handler]) {
+    if ([self cancelAppCallBecauseOfRestrictedTreatment:handler]) {
         return nil;
     }
     FBAppBridgeScheme *bridgeScheme = [FBAppBridgeScheme bridgeSchemeForFBAppForOpenGraphActionShareDialogParams:params];
-    return [FBDialogs presentShareDialogWithOpenGraphActionParams:params
-                                                     bridgeScheme:bridgeScheme
-                                                      clientState:clientState
-                                                          handler:handler];
+    return [self presentShareDialogWithOpenGraphActionParams:params
+                                                bridgeScheme:bridgeScheme
+                                                 clientState:clientState
+                                                     handler:handler];
 }
 
 + (FBAppCall *)presentShareDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action
                                           actionType:(NSString *)actionType
                                  previewPropertyName:(NSString *)previewPropertyName
                                              handler:(FBDialogAppCallCompletionHandler)handler {
-    return [FBDialogs presentShareDialogWithOpenGraphAction:action
-                                                 actionType:actionType
-                                        previewPropertyName:previewPropertyName
-                                                clientState:nil
-                                                    handler:handler];
+    return [self presentShareDialogWithOpenGraphAction:action
+                                            actionType:actionType
+                                   previewPropertyName:previewPropertyName
+                                           clientState:nil
+                                               handler:handler];
 }
 
 + (FBAppCall *)presentShareDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action
@@ -346,6 +349,7 @@ return NO; \
 + (FBAppCall *)presentShareDialogWithParams:(FBDialogsParams *)params
                                bridgeScheme:(FBAppBridgeScheme *)bridgeScheme
                                 clientState:(NSDictionary *)clientState
+                    useSafariViewController:(BOOL)useSafariViewController
                                     handler:(FBDialogAppCallCompletionHandler)handler {
     FBAppCall *call = nil;
     if (bridgeScheme) {
@@ -366,6 +370,7 @@ return NO; \
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                    bridgeScheme:bridgeScheme
                                                         session:nil
+                                        useSafariViewController:useSafariViewController
                                               completionHandler:^(FBAppCall *innerCall) {
                                                   if (handler) {
                                                       handler(innerCall, innerCall.dialogData.results, innerCall.error);
@@ -373,7 +378,7 @@ return NO; \
                                               }];
         }
     }
-    [FBAppEvents logImplicitEvent:[[self class] eventNameForParams:params bridgeScheme:bridgeScheme]
+    [FBAppEvents logImplicitEvent:[self eventNameForParams:params bridgeScheme:bridgeScheme]
                        valueToSum:nil
                        parameters:@{ FBAppEventParameterDialogOutcome : call ?
                                      FBAppEventsDialogOutcomeValue_Completed :
@@ -431,6 +436,7 @@ return NO; \
             [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                    bridgeScheme:bridgeScheme
                                                         session:nil
+                                        useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameShare]
                                               completionHandler:^(FBAppCall *innerCall) {
                                                   if (handler) {
                                                       handler(innerCall, innerCall.dialogData.results, innerCall.error);
@@ -438,7 +444,7 @@ return NO; \
                                               }];
         }
     }
-    [FBAppEvents logImplicitEvent:[[self class] eventNameForParams:params bridgeScheme:bridgeScheme]
+    [FBAppEvents logImplicitEvent:[self eventNameForParams:params bridgeScheme:bridgeScheme]
                        valueToSum:nil
                        parameters:@{
                                     FBAppEventParameterDialogOutcome : (call ?
@@ -495,17 +501,17 @@ return NO; \
     FBOpenGraphActionParams *params = [[[FBOpenGraphActionParams alloc] initWithAction:action
                                                                             actionType:actionType
                                                                    previewPropertyName:previewPropertyName] autorelease];
-    return [[self class] presentMessageDialogWithOpenGraphActionParams:params
-                                                           clientState:clientState
-                                                               handler:handler];
+    return [self presentMessageDialogWithOpenGraphActionParams:params
+                                                   clientState:clientState
+                                                       handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithOpenGraphAction:(id<FBOpenGraphAction>)action actionType:(NSString *)actionType previewPropertyName:(NSString *)previewPropertyName handler:(FBDialogAppCallCompletionHandler)handler {
-    return [[self class] presentMessageDialogWithOpenGraphAction:action
-                                                      actionType:actionType
-                                             previewPropertyName:previewPropertyName
-                                                     clientState:nil
-                                                         handler:handler];
+    return [self presentMessageDialogWithOpenGraphAction:action
+                                              actionType:actionType
+                                     previewPropertyName:previewPropertyName
+                                             clientState:nil
+                                                 handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithPhotoParams:(FBPhotoParams *)params clientState:(NSDictionary *)clientState handler:(FBDialogAppCallCompletionHandler)handler {
@@ -516,6 +522,7 @@ return NO; \
         return [self presentShareDialogWithParams:paramsCopy
                                      bridgeScheme:bridgeScheme
                                       clientState:clientState
+                          useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameMessage]
                                           handler:handler];
 
     } else {
@@ -527,11 +534,11 @@ return NO; \
                                   clientState:(NSDictionary *)clientState
                                       handler:(FBDialogAppCallCompletionHandler)handler {
     FBPhotoParams *params = [[[FBPhotoParams alloc] initWithPhotos:photos] autorelease];
-    return [[self class] presentMessageDialogWithPhotoParams:params clientState:clientState handler:handler];
+    return [self presentMessageDialogWithPhotoParams:params clientState:clientState handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithPhotos:(NSArray *)photos handler:(FBDialogAppCallCompletionHandler)handler {
-    return [[self class] presentMessageDialogWithPhotos:photos clientState:nil handler:handler];
+    return [self presentMessageDialogWithPhotos:photos clientState:nil handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithParams:(FBLinkShareParams *)params
@@ -548,6 +555,7 @@ return NO; \
         return [self presentShareDialogWithParams:paramsCopy
                                      bridgeScheme:bridgeScheme
                                       clientState:clientState
+                          useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameMessage]
                                           handler:handler];
 
     } else {
@@ -556,26 +564,26 @@ return NO; \
 }
 
 + (FBAppCall *)presentMessageDialogWithLink:(NSURL *)link
-                                     name:(NSString *)name
-                                  caption:(NSString *)caption
-                              description:(NSString *)description
-                                  picture:(NSURL *)picture
-                              clientState:(NSDictionary *)clientState
-                                  handler:(FBDialogAppCallCompletionHandler)handler {
+                                       name:(NSString *)name
+                                    caption:(NSString *)caption
+                                description:(NSString *)description
+                                    picture:(NSURL *)picture
+                                clientState:(NSDictionary *)clientState
+                                    handler:(FBDialogAppCallCompletionHandler)handler {
     FBLinkShareParams *params = [[[FBLinkShareParams alloc] initWithLink:link
                                                                     name:name
                                                                  caption:caption
                                                              description:description
                                                                  picture:picture] autorelease];
-    return [[self class] presentMessageDialogWithParams:params clientState:clientState handler:handler];
+    return [self presentMessageDialogWithParams:params clientState:clientState handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithLink:(NSURL *)link name:(NSString *)name handler:(FBDialogAppCallCompletionHandler)handler {
-    return [[self class] presentMessageDialogWithLink:link name:name caption:nil description:nil picture:nil clientState:nil handler:handler];
+    return [self presentMessageDialogWithLink:link name:name caption:nil description:nil picture:nil clientState:nil handler:handler];
 }
 
 + (FBAppCall *)presentMessageDialogWithLink:(NSURL *)link handler:(FBDialogAppCallCompletionHandler)handler {
-    return [[self class] presentMessageDialogWithLink:link name:nil caption:nil description:nil picture:nil clientState:nil handler:handler];
+    return [self presentMessageDialogWithLink:link name:nil caption:nil description:nil picture:nil clientState:nil handler:handler];
 }
 
 + (FBAppCall *)presentLikeDialogWithParams:(FBLikeDialogParams *)params
@@ -603,6 +611,7 @@ return NO; \
         [[FBAppBridge sharedInstance] dispatchDialogAppCall:call
                                                bridgeScheme:bridgeScheme
                                                     session:nil
+                                    useSafariViewController:[FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameLike]
                                           completionHandler:completionHandler];
     }
     NSString *outcome = (call ?

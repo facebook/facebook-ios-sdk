@@ -91,7 +91,7 @@ static NSString *const UNIT_TEST_OPEN_GRAPH_TEST_OBJECT_NAMESPACE = @""UNIT_TEST
 - (void)testRequestUploadVideo
 {
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"TestAssets" ofType:@"bundle"];
-    NSString *videoName = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"DarkScreen" ofType:@"mov"];
+    NSString *videoName = [[NSBundle bundleWithPath:bundlePath] pathForResource:@"sample_sorenson" ofType:@"mov"];
     FBRequest *uploadRequest = [FBRequest requestForUploadVideo:videoName];
     [uploadRequest setSession:self.defaultTestSession];
     NSArray *responses = [self sendRequests:uploadRequest, nil];
@@ -584,31 +584,6 @@ withExpectedResults:(NSArray *)expectedResults
             nil];
 }
 
-- (void)testLegacyCompatibility
-{
-    FBSession *session = self.defaultTestSession;
-    [FBSettings enablePlatformCompatibility:YES];
-    FBTestBlocker *blocker = [[[FBTestBlocker alloc] init] autorelease];
-    FBRequest *permissions = [FBRequest requestForGraphPath:@"me/permissions"];
-    permissions.session = session;
-    [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        NSArray *resultData = result[@"data"];
-        XCTAssertTrue((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
-                     @"expected v1.0 me/permission results but got %@", result);
-        [blocker signal];
-    }];
-    [blocker waitWithTimeout:10];
-    [FBSettings enablePlatformCompatibility:NO];
-
-    blocker = [[[FBTestBlocker alloc] init] autorelease];
-    [permissions startWithCompletionHandler:^(FBRequestConnection *connection, id result, NSError *error) {
-        NSArray *resultData = result[@"data"];
-        XCTAssertFalse((resultData.count == 1 && [resultData[0] isKindOfClass:[NSDictionary class]] && resultData[0][@"permission"] == nil),
-                     @"expected not v1.0 me/permission results but got %@", result);
-        [blocker signal];
-    }];
-    [blocker waitWithTimeout:10];
-}
 @end
 
 #endif

@@ -129,8 +129,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *session = [[FBSession alloc] init];
 
-    assertThat(session.refreshDate, nilValue());
-    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+    XCTAssertNil(session.refreshDate);
+
+    XCTAssertEqual(FBSessionLoginTypeNone, session.loginType);
     
     [session release];
 }
@@ -139,8 +140,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [FBSession setDefaultAppID:kTestAppId];
     
     FBSession *session = [[FBSession alloc] init];
-    
-    assertThat(session.appID, equalTo(kTestAppId));
+
+    XCTAssertTrue([kTestAppId isEqualToString:session.appID]);
     
     [session release];
 }
@@ -149,9 +150,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [FBSession setDefaultAppID:kTestAppId];
     
     FBSession *session = [[FBSession alloc] init];
-    
-    assertThatBool(session.isOpen, equalToBool(NO));
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+
+    XCTAssertFalse(session.isOpen);
+    XCTAssertEqual(FBSessionStateCreated, session.state);
     
     [session release];
 }
@@ -161,9 +162,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     NSArray *permissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
     FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
-    
-    assertThat(session.refreshDate, nilValue());
-    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+
+    XCTAssertNil(session.refreshDate);
+    XCTAssertEqual(FBSessionLoginTypeNone, session.loginType);
     
     [session release];
 }
@@ -173,8 +174,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     NSArray *permissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
     FBSession *session = [[FBSession alloc] initWithPermissions:permissions];
-    
-    assertThat(session.permissions, equalTo(permissions));
+
+    XCTAssertEqualObjects(permissions, session.permissions);
     
     [session release];
 }
@@ -188,7 +189,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:nil];
     
-    assertThat(session.urlSchemeSuffix, equalTo(@"defaultsuffix"));
+    XCTAssertTrue([@"defaultsuffix" isEqualToString:session.urlSchemeSuffix]);
     
     [session release];
 }
@@ -201,9 +202,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                           defaultAudience:FBSessionDefaultAudienceNone
                                           urlSchemeSuffix:@"asuffix"
                                        tokenCacheStrategy:nil];
-    
-    assertThat(session.urlSchemeSuffix, equalTo(@"asuffix"));
-    
+
+    XCTAssertTrue([@"asuffix" isEqualToString:session.urlSchemeSuffix]);
+
     [session release];
 }
 
@@ -235,10 +236,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThatBool(session.isOpen, equalToBool(NO));
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
-    
+
+    XCTAssertFalse(session.isOpen);
+    XCTAssertEqual(FBSessionStateCreated, session.state);
     [session release];
 }
 
@@ -253,7 +253,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
     
-    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, session.state);
     [session release];
 }
 
@@ -267,9 +267,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThatInt([session.refreshDate timeIntervalSinceNow], closeTo(0, 5000));
-    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeNone));
+
+    XCTAssertTrue([session.refreshDate timeIntervalSinceNow] < 5000);
+    XCTAssertEqual(FBSessionLoginTypeNone, session.loginType);
     
     [session release];
 }
@@ -285,8 +285,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
     
-    assertThatBool(session.isOpen, equalToBool(NO));
-    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertFalse(session.isOpen);
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, session.state);
     
     [session release];
 }
@@ -301,8 +301,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThat(session.appID, equalTo(kTestAppId));
+
+    XCTAssertTrue([kTestAppId isEqualToString:session.appID]);
     
     [session release];
 }
@@ -318,8 +318,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThat(session.accessToken, equalTo(mockToken.accessToken));
+
+    XCTAssertTrue([mockToken.accessToken isEqualToString:session.accessToken]);
     
     [session release];
 }
@@ -338,8 +338,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThat(session.refreshDate, equalTo(refreshDate));
+
+    XCTAssertEqualObjects(refreshDate, session.refreshDate);
     
     [session release];
 }
@@ -359,7 +359,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
     
-    assertThatInt(session.loginType, equalToInt(FBSessionLoginTypeWebView));
+    XCTAssertEqual(FBSessionLoginTypeWebView, session.loginType);
     
     [session release];
 }
@@ -376,7 +376,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
 
-    assertThat(session.expirationDate, equalTo(mockToken.expirationDate));
+    XCTAssertEqualObjects(mockToken.expirationDate, session.expirationDate);
     
     [session release];
 }
@@ -395,8 +395,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     
     [(id)mockStrategy verify];
-    
-    assertThat(session.permissions, equalTo(tokenPermissions));
+
+    XCTAssertEqualObjects(tokenPermissions, session.permissions);
     
     [session release];
 }
@@ -417,7 +417,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [(id)mockStrategy verify];
     
-    assertThat(session.permissions, equalTo(tokenPermissions));
+    XCTAssertEqualObjects(tokenPermissions, session.permissions);
     
     [session release];
 }
@@ -436,8 +436,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:mockStrategy];
     
-    assertThat(session.permissions, equalTo(tokenPermissions));
-    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertEqualObjects(tokenPermissions, session.permissions);
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, session.state);
     [session release];
 }
 
@@ -459,8 +459,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
         handlerCalled = YES;
     }];
     
-    assertThatInt(mockSession.state, equalToInt(FBSessionStateCreatedOpening));
-    assertThatBool(handlerCalled, equalToBool(NO));
+    XCTAssertEqual(FBSessionStateCreatedOpening, mockSession.state);
+    XCTAssertFalse(handlerCalled);
 }
 
 - (void)testOpenWithValidToken {
@@ -478,8 +478,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
         handlerCalled = YES;
     }];
     
-    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
-    assertThatBool(handlerCalled, equalToBool(YES));
+    XCTAssertEqual(FBSessionStateOpen, session.state);
+    XCTAssertTrue(handlerCalled);
     
     [session release];
 }
@@ -496,7 +496,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [session openWithCompletionHandler:nil];
 
-    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+    XCTAssertEqual(FBSessionStateOpen, session.state);
 
     [session release];
 }
@@ -513,7 +513,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [session openWithCompletionHandler:nil];
     
-    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+    XCTAssertEqual(FBSessionStateOpen, session.state);
     
     @try {
         [session openWithCompletionHandler:nil];
@@ -568,7 +568,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:nil];
 
     [session close];
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    XCTAssertEqual(FBSessionStateCreated, session.state);
 }
 
 - (void)testClose {
@@ -585,7 +585,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     // Verify that closing a token loaded session is not valid, it's the same
     // as closing a freshly init'd session (i.e., we also do not support going from
     // FBSessionStateCreated to FBSessionStateClosed).
-    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, session.state);
 }
 
 - (void)testCloseWhenOpeningSetsClosedLoginFailedState {
@@ -599,7 +599,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     [session openWithCompletionHandler:nil];
     
     [session close];
-    assertThatInt(session.state, equalToInt(FBSessionStateClosedLoginFailed));
+    XCTAssertEqual(FBSessionStateClosedLoginFailed, session.state);
 }
 
 - (void)testCloseAndClearTokenInformation {
@@ -621,7 +621,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     // Verify that closing a token loaded session is not valid, it's the same
     // as closing a freshly init'd session (i.e., we also do not support going from
     // FBSessionStateCreated to FBSessionStateClosed).
-    assertThatInt(session.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, session.state);
 }
 
 
@@ -739,7 +739,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:nil];
     
-    assertThatBool(session.isOpen, equalToBool(NO));
+    XCTAssertFalse(session.isOpen);
     
     @try {
         [session reauthorizeWithPermissions:nil
@@ -763,7 +763,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                  tokenCacheStrategy:mockStrategy];
     
     [session openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:nil];
-    assertThatBool(session.isOpen, equalToBool(YES));
+    XCTAssertTrue(session.isOpen);
     
     FBSessionRequestPermissionResultHandler handler = ^(FBSession *innerSession, NSError *error) {
     };
@@ -796,7 +796,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 
     [session openWithCompletionHandler:nil];
     
-    assertThatBool(session.isOpen, equalToBool(YES));
+    XCTAssertTrue(session.isOpen);
     
     [session reauthorizeWithPermissions:nil
                                behavior:FBSessionLoginBehaviorWithFallbackToWebView
@@ -818,7 +818,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                  tokenCacheStrategy:mockStrategy];
     
     [session openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:nil];
-    assertThatBool(session.isOpen, equalToBool(YES));
+    XCTAssertTrue(session.isOpen);
     
     // Because our session is mocked to do nothing with auth requests, it will stay in a "pending"
     // reauth state after this call.
@@ -866,7 +866,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:nil];
     
-    assertThatBool(session.isOpen, equalToBool(YES));
+    XCTAssertTrue(session.isOpen);
     
     NSArray *requestedPermissions = [NSArray arrayWithObjects:@"permission1", @"permission2", nil];
 
@@ -893,7 +893,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent completionHandler:nil];
     
-    assertThatBool(session.isOpen, equalToBool(YES));
+    XCTAssertTrue(session.isOpen);
     
     NSArray *requestedPermissions = [NSArray arrayWithObjects:@"publish_permission1", nil];
     
@@ -922,7 +922,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     [session handleDidBecomeActive];
     
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    XCTAssertEqual(FBSessionStateCreated, session.state);
 }
 
 - (void)testIsMultitaskingSupported {
@@ -930,7 +930,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     BOOL shouldBeSupported = [device respondsToSelector:@selector(isMultitaskingSupported)] &&
         [device isMultitaskingSupported];
 
-    assertThatBool([FBUtility isMultitaskingSupported], equalToBool(shouldBeSupported));
+    XCTAssertEqual(shouldBeSupported, [FBUtility isMultitaskingSupported]);
 }
 
 - (void)testWillAttemptToExtendToken {
@@ -953,7 +953,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     BOOL shouldExtend = [session shouldExtendAccessToken];
     
-    assertThatBool(shouldExtend, equalToBool(YES));
+    XCTAssertTrue(shouldExtend);
 }
 
 
@@ -962,26 +962,26 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 - (void)testActiveSessionDefaultsToNewCreatedSession {
     [FBSession setDefaultAppID:kTestAppId];
     
-    assertThat(FBSession.activeSessionIfOpen, nilValue());
+    XCTAssertNil(FBSession.activeSessionIfOpen);
     FBSession *session = FBSession.activeSession;
-    assertThat(session, notNilValue());
-    assertThatInt(session.state, equalToInt(FBSessionStateCreated));
+    XCTAssertNotNil(session);
+    XCTAssertEqual(FBSessionStateCreated, session.state);
 }
 
 - (void)testSetActiveSession {
     [FBSession setDefaultAppID:kTestAppId];
 
-    assertThat(FBSession.activeSessionIfOpen, nilValue());
+    XCTAssertNil(FBSession.activeSessionIfOpen);
 
     FBSession *originalActiveSession = FBSession.activeSession;
-    assertThat(originalActiveSession, notNilValue());
+    XCTAssertNotNil(originalActiveSession);
     
     FBSession *newSession = [[FBSession alloc] init];
     FBSession.activeSession = newSession;
     
     FBSession *activeSession = [FBSession activeSession];
-    assertThat(activeSession, notNilValue());
-    assertThat(activeSession, equalTo(newSession));
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqualObjects(newSession, activeSession);
 }
 
 - (void)testSetActiveSessionSendsSetNotification {
@@ -1112,10 +1112,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     BOOL result = [FBSession openActiveSessionWithAllowLoginUI:NO];
     
     FBSession *activeSession = FBSession.activeSession;
-    
-    assertThatBool(result, equalToBool(NO));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreated));
+
+    XCTAssertFalse(result);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateCreated, activeSession.state);
 }
 
 - (void)testOpenActiveSessionWithValidTokenAndNoUISucceeds {
@@ -1128,10 +1128,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(YES));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
-    assertThat(activeSession.accessTokenData, equalTo(token));
+    XCTAssertTrue(result);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateOpen, activeSession.state);
+    XCTAssertTrue([token isEqualToAccessTokenData:activeSession.accessTokenData]);
 }
 
 - (void)testOpenActiveSessionWithPermissionsAndValidTokenSucceeds {
@@ -1152,11 +1152,11 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(YES));
-    assertThatBool(handlerCalled, equalToBool(YES));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
-    assertThat(activeSession.accessTokenData, equalTo(token));
+    XCTAssertTrue(result);
+    XCTAssertTrue(handlerCalled);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateOpen, activeSession.state);
+    XCTAssertTrue([token isEqualToAccessTokenData:activeSession.accessTokenData]);
     
 }
 
@@ -1178,10 +1178,10 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(YES));
-    assertThatBool(handlerCalled, equalToBool(YES));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
+    XCTAssertTrue(result);
+    XCTAssertTrue(handlerCalled);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateOpen, activeSession.state);
     
 }
 
@@ -1204,11 +1204,11 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(YES));
-    assertThatBool(handlerCalled, equalToBool(YES));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
-    assertThat(activeSession.accessTokenData, equalTo(token));
+    XCTAssertTrue(result);
+    XCTAssertTrue(handlerCalled);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateOpen, activeSession.state);
+    XCTAssertTrue([token isEqualToAccessTokenData:activeSession.accessTokenData]);
 }
 
 - (void)testOpenSessionViaSystemAccountWithReadRequestingReadAndWritePermissionFails {
@@ -1229,8 +1229,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(handlerCalled, equalToBool(NO));
-    assertThat(activeSession, notNilValue());
+    XCTAssertFalse(handlerCalled);
+    XCTAssertNotNil(activeSession);
 }
 
 - (void)testOpenActiveSessionWithPublishRequestingReadAndWritePermissionSucceeds {
@@ -1253,11 +1253,11 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(result, equalToBool(YES));
-    assertThatBool(handlerCalled, equalToBool(YES));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateOpen));
-    assertThat(activeSession.accessTokenData, equalTo(token));
+    XCTAssertTrue(result);
+    XCTAssertTrue(handlerCalled);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateOpen, activeSession.state);
+    XCTAssertTrue([token isEqualToAccessTokenData:activeSession.accessTokenData]);
 }
 
 - (void)testOpenSessionViaSystemAccountWithPublishAndNoDefaultAudienceFails {
@@ -1282,9 +1282,9 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     FBSession *activeSession = FBSession.activeSession;
     
-    assertThatBool(handlerCalled, equalToBool(NO));
-    assertThat(activeSession, notNilValue());
-    assertThatInt(activeSession.state, equalToInt(FBSessionStateCreatedTokenLoaded));
+    XCTAssertFalse(handlerCalled);
+    XCTAssertNotNil(activeSession);
+    XCTAssertEqual(FBSessionStateCreatedTokenLoaded, activeSession.state);
     
 }
 
@@ -1297,29 +1297,29 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
 
     BOOL result = [FBSession openActiveSessionWithAllowLoginUI:NO];
 
-    assertThatBool(result, equalToBool(YES));
+    XCTAssertTrue(result);
     FBSession *target = [FBSession activeSession];
     id mockResponse = @{ @"data" : @[ @{@"permission":@"user_likes", @"status":@"granted"},
                                       @{@"permission":@"user_friends", @"status":@"denied"}
                                       ] };
     [target handleRefreshPermissions:mockResponse];
-    assertThatUnsignedInteger(target.permissions.count, equalToUnsignedInteger(1));
-    assertThat(target.permissions, hasItem(@"user_likes"));
-    assertThat(target.declinedPermissions, hasItem(@"user_friends"));
+    XCTAssertEqual(1, target.permissions.count);
+    XCTAssertTrue([target.permissions containsObject:@"user_likes"]);
+    XCTAssertTrue([target.declinedPermissions containsObject:@"user_friends"]);
 }
 
 #pragma mark Other statics tests
 
 - (void)testCanSetDefaultAppID {
-    assertThat([FBSession defaultAppID], nilValue());
+    XCTAssertNil([FBSession defaultAppID]);
     [FBSession setDefaultAppID:kTestAppId];
-    assertThat([FBSession defaultAppID], equalTo(kTestAppId));
+    XCTAssertTrue([kTestAppId isEqualToString:[FBSession defaultAppID]]);
 }
 
 - (void)testCanSetDefaultUrlSchemeSuffix {
-    assertThat([FBSession defaultUrlSchemeSuffix], nilValue());
+    XCTAssertNil([FBSession defaultUrlSchemeSuffix]);
     [FBSession setDefaultUrlSchemeSuffix:kURLSchemeSuffix];
-    assertThat([FBSession defaultUrlSchemeSuffix], equalTo(kURLSchemeSuffix));
+    XCTAssertTrue([kURLSchemeSuffix isEqualToString:[FBSession defaultUrlSchemeSuffix]]);
 }
 
 - (void)testSessionStateDescription {
@@ -1340,7 +1340,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     
     for (int i = 0; i < numTests; ++i) {
         NSString *description = [FBSessionUtility sessionStateDescription:states[i]];
-        assertThat(description, equalTo([expectedStrings objectAtIndex:i]));
+        XCTAssertTrue([description isEqualToString:expectedStrings[i]]);
     }
 }
 
@@ -1352,8 +1352,8 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:nil];
     
     NSString *description = [session description];
-    assertThat(description, containsString(kTestAppId));
-    assertThat(description, containsString(@"FBSessionStateCreated"));
+    XCTAssertTrue([description rangeOfString:kTestAppId].location != NSNotFound);
+    XCTAssertTrue([description rangeOfString:@"FBSessionStateCreated"].location != NSNotFound);
 }
 
 - (void)testDeleteFacebookCookies {
@@ -1362,14 +1362,14 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     NSURL *url = [NSURL URLWithString:[FBUtility dialogBaseURL]];
     NSArray *cookiesForFacebook = [storage cookiesForURL:url];
-    
-    assertThatInteger(cookiesForFacebook.count, greaterThan(@0));
+
+    XCTAssertGreaterThan(cookiesForFacebook.count, 0);
     
     [FBUtility deleteFacebookCookies];
     
     cookiesForFacebook = [storage cookiesForURL:url];
-    
-    assertThatInteger(cookiesForFacebook.count, equalToInteger(0));
+
+    XCTAssertEqual(0, cookiesForFacebook.count);
 }
 
 - (void)testFetchUserID {
@@ -1392,7 +1392,7 @@ static NSString *kURLSchemeSuffix = @"URLSuffix";
                                        tokenCacheStrategy:mockStrategy];
     [session openWithCompletionHandler:nil];
 
-    assertThat(session.accessTokenData.userID, equalTo(@"4"));
+    XCTAssertTrue([@"4" isEqualToString:session.accessTokenData.userID]);
 
 }
 

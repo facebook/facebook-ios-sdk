@@ -106,10 +106,10 @@
             }];
     
     [(id)mockSession verify];
-    
-    assertThat(handlerError, notNilValue());
-    assertThat(handlerError.userInfo[FBErrorLoginFailedReason], equalTo(FBErrorLoginFailedReasonInlineNotCancelledValue));
-    
+
+    XCTAssertNotNil(handlerError);
+    XCTAssertTrue([FBErrorLoginFailedReasonInlineNotCancelledValue isEqualToString:handlerError.userInfo[FBErrorLoginFailedReason]]);
+
     [handlerError release];
     [session release];
 }
@@ -178,11 +178,11 @@
             }];
     
     [(id)mockSession verify];
-    
-    assertThat(handlerError, nilValue());
-    assertThatInt(session.state, equalToInt(FBSessionStateOpen));
+
+    XCTAssertNil(handlerError);
+    XCTAssertEqual(FBSessionStateOpen, session.state);
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
-    assertThat(session.accessToken, equalTo(kAuthenticationTestValidToken));
+    XCTAssertTrue([kAuthenticationTestValidToken isEqualToString:session.accessToken]);
     
     [handlerError release];
     [session release];
@@ -212,9 +212,10 @@
     
     [(id)mockSession verify];
     
-    assertThat(handlerError, notNilValue());
-    assertThat(handlerError.userInfo[FBErrorLoginFailedReason], equalTo(FBErrorLoginFailedReasonSystemError));
-    assertThatInt(session.state, equalToInt(FBSessionStateClosedLoginFailed));
+
+    XCTAssertNotNil(handlerError);
+    XCTAssertTrue([handlerError.userInfo[FBErrorLoginFailedReason] isEqualToString:FBErrorLoginFailedReasonSystemError]);
+    XCTAssertEqual(FBSessionStateClosedLoginFailed, session.state);
     
     [handlerError release];
     [session release];

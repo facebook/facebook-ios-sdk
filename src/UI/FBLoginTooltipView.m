@@ -38,7 +38,7 @@
     } else {
         [FBUtility fetchAppSettings:[FBSettings defaultAppID] callback:^(FBFetchedAppSettings *settings, NSError *error) {
             self.message = settings.loginTooltipContent;
-            BOOL shouldDisplay = settings.enableLoginTooltip && ![FBSettings isPlatformCompatibilityEnabled];
+            BOOL shouldDisplay = settings.enableLoginTooltip;
             if ([self.delegate respondsToSelector:@selector(loginTooltipView:shouldAppear:)]) {
                 shouldDisplay = [self.delegate loginTooltipView:self shouldAppear:shouldDisplay];
             }

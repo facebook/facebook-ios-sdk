@@ -13,12 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #import "FBAuthenticationTests.h"
-#import "FBSession.h"
-#import "FBSystemAccountStoreAdapter.h"
+
+#import <OCMock/OCMock.h>
+
+#import "FBDialogConfig.h"
 #import "FBRequest.h"
+#import "FBSession.h"
 #import "FBSessionTokenCachingStrategy.h"
+#import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
 #import "FBUtility.h"
 
@@ -49,7 +52,9 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 
 @end
 
-@implementation FBAuthenticationTests
+@implementation FBAuthenticationTests {
+    id _mockFBDialogConfig;
+}
 
 - (void)setUp {
     [super setUp];
@@ -70,6 +75,10 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
     // and you can't change an existing mock's stub.
     self.mockFBUtility = [OCMockObject mockForClass:[FBUtility class]];
     [[[self.mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettingsIfCurrent]; // prevent fetching app settings during FBSession authorizeWithPermissions
+
+    _mockFBDialogConfig = [OCMockObject mockForClass:[FBDialogConfig class]];
+    [[[_mockFBDialogConfig stub] andReturnValue:OCMOCK_VALUE(YES)] useNativeDialogForDialogName:OCMOCK_ANY];
+    [[[_mockFBDialogConfig stub] andReturnValue:OCMOCK_VALUE(YES)] useSafariViewControllerForDialogName:OCMOCK_ANY];
 }
 
 - (void)tearDown {

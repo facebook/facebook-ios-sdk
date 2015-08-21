@@ -58,8 +58,8 @@ static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=ht
     [self waitForTaskOnMainThread:task];
 
     BFAppLink *link = task.result;
-    assertThat(link, is(notNilValue()));
-    assertThat(link.webURL.absoluteString, is(equalTo(kAppLinkURLString)));
+    XCTAssertNotNil(link);
+    XCTAssertTrue([kAppLinkURLString isEqualToString:link.webURL.absoluteString]);
 }
 
  - (void)testErrorWithoutClientToken
@@ -71,7 +71,7 @@ static NSString *const kAppLinkURLString = @"https://www.facebook.com/l.php?u=ht
     BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
     [self waitForTaskOnMainThread:task];
 
-    assertThat(task.error, is(notNilValue()));
+    XCTAssertNotNil(task.error);
 
     // restore the client token for later tests.
     [FBSettings setDefaultAppID:[self testAppId]];

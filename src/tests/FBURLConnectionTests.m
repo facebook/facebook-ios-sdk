@@ -166,7 +166,7 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThatBool(_handlerCalled, equalToBool(YES));
+    XCTAssertTrue(_handlerCalled);
 
     [connection release];
     [request release];
@@ -202,9 +202,8 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThat(connection.accumulatedLog, containsString(@"URL"));
-    assertThat(connection.accumulatedLog, containsString(request.URL.absoluteString));
-
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:@"URL"].location != NSNotFound);
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:request.URL.absoluteString].location != NSNotFound);
     [connection release];
     [request release];
 }
@@ -222,8 +221,8 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThat(connection.accumulatedLog, containsString(@"Duration"));
-    assertThat(connection.accumulatedLog, containsString(@"Response Size"));
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:@"Duration"].location != NSNotFound);
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:@"Response Size"].location != NSNotFound);
 
     [connection release];
     [request release];
@@ -254,7 +253,7 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThat(connection.accumulatedLog, containsString(javascript));
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:javascript].location != NSNotFound);
 
     [connection release];
     [request release];
@@ -292,7 +291,7 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThat(connection.accumulatedLog, containsString(@"Error"));
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:@"Error"].location != NSNotFound);
 
     [connection release];
     [request release];
@@ -310,7 +309,7 @@
     [connection setBlockerToSignalOnCompletion:_blocker];
 
     BOOL signaled = [_blocker waitWithTimeout:0.2];
-    assertThatBool(signaled, equalToBool(YES));
+    XCTAssertTrue(signaled);
 
     [connection release];
     [request release];
@@ -348,7 +347,7 @@
     [connection cancel];
 
     BOOL signaled = [_blocker waitWithTimeout:0.2];
-    assertThatBool(signaled, equalToBool(YES));
+    XCTAssertTrue(signaled);
 
     [connection release];
     [request release];
@@ -362,7 +361,7 @@
     TestFBURLConnection *connection = [[TestFBURLConnection alloc] initWithURL:request.URL
                                                              completionHandler:nil];
 
-    assertThatBool([(id)connection skipRoundtripIfCached], equalToBool(YES));
+    XCTAssertTrue([(id)connection skipRoundtripIfCached]);
 
     [connection release];
     [request release];
@@ -382,8 +381,7 @@
                                                              skipRoundTripIfCached:YES
                                                                  completionHandler:_handler
                                                                      dataDiskCache:mockDataDiskCache];
-
-    assertThatBool(_handlerCalled, equalToBool(YES));
+    XCTAssertTrue(_handlerCalled);
 
     [connection release];
     [request release];
@@ -406,7 +404,7 @@
 
     [_blocker waitWithTimeout:0.2];
 
-    assertThat(connection.accumulatedLog, containsString(@"Cached response"));
+    XCTAssertTrue([connection.accumulatedLog rangeOfString:@"Cached response"].location != NSNotFound);
 
     [connection release];
     [request release];
@@ -420,7 +418,7 @@
                                                      skipRoundTripIfCached:YES
                                                          completionHandler:nil];
 
-    assertThat([connection getCache], equalTo([FBDataDiskCache sharedCache]));
+    XCTAssertEqualObjects([FBDataDiskCache sharedCache], [connection getCache]);
 
     [connection release];
 }
@@ -438,7 +436,7 @@
                                                                      dataDiskCache:mockDataDiskCache];
 
     BOOL signaled = [_blocker waitWithTimeout:0.2];
-    assertThatBool(signaled, equalToBool(YES));
+    XCTAssertTrue(signaled);
 
     [connection release];
     [request release];
@@ -481,7 +479,7 @@
 
     [_blocker waitWithTimeout:.2];
 
-    assertThatBool(_handlerCalled, equalToBool(YES));
+    XCTAssertTrue(_handlerCalled);
 
     [connection release];
     [request release];
@@ -559,14 +557,14 @@
 - (void)setHandlerExpectingStatus:(int)expectedStatusCode andString:(NSString *)expectedString {
     id handler = ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *responseData) {
         NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
-        assertThatInteger(statusCode, equalToInteger(expectedStatusCode));
+        XCTAssertEqual(expectedStatusCode, statusCode);
 
         if (expectedString != nil) {
-            assertThat(responseData, notNilValue());
+            XCTAssertNotNil(responseData);
 
             NSString *responseString = [[[NSString alloc] initWithData:responseData
                                                               encoding:NSUTF8StringEncoding] autorelease];
-            assertThat(responseString, equalTo(expectedString));
+            XCTAssertTrue([expectedString isEqualToString:responseString]);
         }
 
         _handlerCalled = YES;
@@ -579,9 +577,9 @@
 - (void)setHandlerExpectingError:(NSError *)expectedError {
     id handler = ^(FBURLConnection *connection, NSError *error, NSURLResponse *response, NSData *responseData) {
         if (error != nil) {
-            assertThat(error, notNilValue());
-            assertThat([error domain], equalTo([expectedError domain]));
-            assertThatInteger([error code], equalToInteger([expectedError code]));
+            XCTAssertNotNil(error);
+            XCTAssertTrue([expectedError.domain isEqualToString:error.domain]);
+            XCTAssertEqual(expectedError.code, error.code);
         }
 
         _handlerCalled = YES;

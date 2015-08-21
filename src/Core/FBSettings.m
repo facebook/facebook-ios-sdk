@@ -115,17 +115,11 @@ static BOOL g_enableLegacyGraphAPI = NO;
 }
 
 + (void)enablePlatformCompatibility:(BOOL)enable {
-    if (enable != g_enableLegacyGraphAPI) {
-        g_enableLegacyGraphAPI = enable;
-    }
+    // intentional no-op
 }
 
 + (NSString *)platformVersion {
-    if ([[self class] isPlatformCompatibilityEnabled]) {
-        return @"v1.0";
-    } else {
-        return FB_IOS_SDK_TARGET_PLATFORM_VERSION;
-    }
+    return FB_IOS_SDK_TARGET_PLATFORM_VERSION;
 }
 
 + (NSString *)appVersion {

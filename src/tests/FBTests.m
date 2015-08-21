@@ -19,6 +19,7 @@
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBAccessTokenData+Internal.h"
+#import "FBAppEvents.h"
 #import "FBRequest.h"
 #import "FBRequestConnection.h"
 #import "FBSessionTokenCachingStrategy.h"
@@ -29,8 +30,16 @@
 NSString *kTestToken = @"This is a token";
 NSString *kTestAppId = @"AnAppId";
 
+@interface FBAppEvents (mocking)
++ (void)logImplicitEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+                 session:(FBSession *)session;
+@end
+
 @implementation FBTests {
     id _mockBundle;
+    id _mockAppEvents;
 }
 
 - (void)setUp {
@@ -42,9 +51,16 @@ NSString *kTestAppId = @"AnAppId";
     // Mock out various parts of FBUtility that would otherwise fail/hang in commandline runs.
     self.mockFBUtility = [OCMockObject mockForClass:[FBUtility class]];
     FBFetchedAppSettings *dummyFBFetchedAppSettings = [[[FBFetchedAppSettings alloc] init] autorelease];
+    dummyFBFetchedAppSettings.supportsImplicitSdkLogging = NO;
     [[[self.mockFBUtility stub] andReturn:dummyFBFetchedAppSettings] fetchedAppSettingsIfCurrent]; // prevent fetching app settings during FBSession authorizeWithPermissions
     [[[self.mockFBUtility stub] andReturn:nil] advertiserID];  //also stub advertiserID when it's going to access IDFA since that often hangs.
     [[[self.mockFBUtility stub] andReturnValue:OCMOCK_VALUE(NO)] isSystemAccountStoreAvailable]; // don't try to access ac account store.
+
+    _mockAppEvents = [OCMockObject mockForClass:[FBAppEvents class]];
+    [[_mockAppEvents stub] logImplicitEvent:OCMOCK_ANY
+                                 valueToSum:nil
+                                 parameters:OCMOCK_ANY
+                                    session:nil];
 }
 
 - (void)tearDown

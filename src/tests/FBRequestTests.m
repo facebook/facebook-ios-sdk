@@ -56,14 +56,14 @@
 
 - (void)testInitSetsDefaultsCorrectly {
     FBRequest *request = [[FBRequest alloc] init];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.HTTPMethod, equalTo(@"GET"));    
-    assertThat(request.session, nilValue());
-    assertThat(request.graphPath, nilValue());
-    assertThat(request.restMethod, nilValue());
-    assertThat(request.graphPath, nilValue());
-    
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.HTTPMethod isEqualToString:@"GET"]);
+    XCTAssertNil(request.session);
+    XCTAssertNil(request.graphPath);
+    XCTAssertNil(request.restMethod);
+    XCTAssertNil(request.graphPath);
+
     [request release];
 }
 
@@ -77,9 +77,10 @@
                                                   graphPath:nil
                                                  parameters:parameters
                                                  HTTPMethod:nil];
-    assertThat(request, notNilValue());
-    assertThat(request.parameters, hasEntries(@"key1", @"value1", @"key2", @"value2", nil));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.parameters[@"key1"] isEqualToString:@"value1"]);
+    XCTAssertTrue([request.parameters[@"key2"] isEqualToString:@"value2"]);
+
     [request release];
 }
 
@@ -93,10 +94,10 @@
                                                   graphPath:nil
                                                  parameters:parameters
                                                  HTTPMethod:nil];
-    assertThat(request, notNilValue());
-    assertThat(request.parameters, hasEntry(@"migration_bundle", @"my bundle"));
-    assertThat([request description], containsString(@"value1"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.parameters[@"migration_bundle"] isEqualToString:@"my bundle"]);
+    XCTAssertTrue([request.description rangeOfString:@"value1"].location != NSNotFound);
+
     [request release];
 }
 
@@ -107,9 +108,9 @@
                                                  HTTPMethod:nil];
     
     [request overrideVersionPartWith:@"v0.9"];
-    assertThat(request, notNilValue());
-    assertThat(request.versionPart, equalTo(@"v0.9"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.versionPart isEqualToString:@"v0.9"]);
+
     [request release];
 }
 
@@ -131,9 +132,9 @@
                                                   graphPath:nil
                                                  parameters:nil
                                                  HTTPMethod:@"POST"];
-    assertThat(request, notNilValue());
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.HTTPMethod isEqualToString:@"POST"]);
+
     [request release];
 }
 
@@ -142,10 +143,10 @@
                                                   graphPath:@"MyGraphPath"
                                                  parameters:nil
                                                  HTTPMethod:nil];
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"MyGraphPath"));
-    assertThat([request description], containsString(@"MyGraphPath"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.graphPath isEqualToString:@"MyGraphPath"]);
+    XCTAssertTrue([request.description rangeOfString:@"MyGraphPath"].location != NSNotFound);
+
     [request release];
 }
 
@@ -154,10 +155,10 @@
                                                  restMethod:@"amethod"
                                                  parameters:nil
                                                  HTTPMethod:nil];
-    assertThat(request, notNilValue());
-    assertThat(request.restMethod, equalTo(@"amethod"));
-    assertThat([request description], containsString(@"amethod"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.restMethod isEqualToString:@"amethod"]);
+    XCTAssertTrue([request.description rangeOfString:@"amethod"].location != NSNotFound);
+
     [request release];
 }
 
@@ -167,9 +168,9 @@
                                                   graphPath:nil
                                                  parameters:nil
                                                  HTTPMethod:nil];
-    assertThat(request, notNilValue());
-    assertThat(request.session, equalTo(session));
-    
+    XCTAssertNotNil(request);
+    XCTAssertEqualObjects(session, request.session);
+
     [request release];
 }
 
@@ -177,10 +178,10 @@
     FBSession *session = [self createMockValidSession];
     FBRequest *request = [[FBRequest alloc] initWithSession:session
                                                   graphPath:@"4"];
-    assertThat(request, notNilValue());
-    assertThat(request.session, equalTo(session));
-    assertThat(request.graphPath, equalTo(@"4"));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.graphPath isEqualToString:@"4"]);
+    XCTAssertEqualObjects(session, request.session);
+
     [request release];
 }
 
@@ -193,13 +194,13 @@
     FBRequest *request = [[FBRequest alloc] initForPostWithSession:session
                                                          graphPath:@"MyGraphPath"
                                                        graphObject:graphObject];
-    assertThat(request, notNilValue());
-    assertThat(request.session, equalTo(session));
-    assertThat(request.graphPath, equalTo(@"MyGraphPath"));
-    assertThat(request.graphObject, equalTo(graphObject));
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
-    assertThat([request description], containsString(@"MyID"));
-    assertThat([request description], containsString(@"POST"));
+    XCTAssertNotNil(request);
+    XCTAssertEqualObjects(session, request.session);
+    XCTAssertTrue([request.graphPath isEqualToString:@"MyGraphPath"]);
+    XCTAssertEqualObjects(request.graphObject, graphObject);
+    XCTAssertTrue([request.HTTPMethod isEqualToString:@"POST"]);
+    XCTAssertTrue([request.description rangeOfString:@"MyID"].location != NSNotFound);
+    XCTAssertTrue([request.description rangeOfString:@"POST"].location != NSNotFound);
     
     [request release];
 }
@@ -208,9 +209,9 @@
     FBRequest *request = [[FBRequest alloc] init];
     FBRequestConnection *connection = [request createRequestConnection];
     
-    assertThat(connection, notNilValue());
-    assertThat(connection, instanceOf([FBRequestConnection class]));
-    
+    XCTAssertNotNil(request);
+    XCTAssertTrue([connection isKindOfClass:[FBRequestConnection class]]);
+
     [request release];
 }
 
@@ -228,7 +229,7 @@
     };
     
     id connection = [request startWithCompletionHandler:handler];
-    assertThat(connection, notNilValue());
+    XCTAssertNotNil(connection);
     [connection verify];
     
     [request release];
@@ -242,51 +243,52 @@
     
     id<FBRequestDelegate> delegate = [OCMockObject mockForProtocol:@protocol(FBRequestDelegate)];
     request.delegate = delegate;
-    assertThat(request.delegate, equalTo(delegate));
-    
+    XCTAssertEqualObjects(delegate, request.delegate);
+
     request.url = @"anurl";
-    assertThat(request.url, equalTo(@"anurl"));
-    
+    XCTAssertTrue([request.url isEqualToString:@"anurl"]);
+
     request.httpMethod = @"METHOD";
-    assertThat(request.httpMethod, equalTo(@"METHOD"));
+    XCTAssertTrue([request.HTTPMethod isEqualToString:@"METHOD"]);
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"value", @"key",
                                    nil];
     request.params = params;
-    assertThat(request.params, equalTo(params));
+    XCTAssertEqualObjects(params, request.params);
     params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    @"value", @"key",
                                    nil];
     request.params = params;
-    assertThat(request.params, equalTo(params));
-    
+    XCTAssertEqualObjects(params, request.params);
+
     NSURLConnection *connection = [[NSURLConnection alloc] init];
     request.connection = connection;
-    assertThat(request.connection, equalTo(connection));
+    XCTAssertEqualObjects(connection, request.connection);
+
     connection = [[NSURLConnection alloc] init];
     request.connection = connection;
-    assertThat(request.connection, equalTo(connection));
+    XCTAssertEqualObjects(connection, request.connection);
 
     NSMutableData *responseText = [[NSMutableData alloc] init];
     request.responseText = responseText;
-    assertThat(request.responseText, equalTo(responseText));
+    XCTAssertEqualObjects(responseText, request.responseText);
     responseText = [[NSMutableData alloc] init];
     request.responseText = responseText;
-    assertThat(request.responseText, equalTo(responseText));
+    XCTAssertEqualObjects(responseText, request.responseText);
 
     NSError *error = [[NSError alloc] init];
     request.error = error;
-    assertThat(request.error, equalTo(error));
+    XCTAssertEqualObjects(error, request.error);
     error = [[NSError alloc] init];
     request.error = error;
-    assertThat(request.error, equalTo(error));
+    XCTAssertEqualObjects(error, request.error);
     
     request.state = kFBRequestStateLoading;
-    assertThatInteger(request.state, equalToInteger(kFBRequestStateLoading));
-    
+    XCTAssertEqual(kFBRequestStateLoading, request.state);
+
     request.sessionDidExpire = YES;
-    assertThatBool(request.sessionDidExpire, equalToBool(YES));
+    XCTAssertTrue(request.sessionDidExpire);
 }
 
 - (void)testDeprecatedMethods {
@@ -295,17 +297,17 @@
     FBRequest *request = [[FBRequest alloc] init];
 
     request.state = kFBRequestStateReady;
-    assertThatBool([request loading], equalToBool(NO));
+    XCTAssertFalse([request loading]);
     request.state = kFBRequestStateLoading;
-    assertThatBool([request loading], equalToBool(YES));
+    XCTAssertTrue([request loading]);
 
     NSDictionary *parameters = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"value1", @"key1",
                                 @"value2", @"key2",
                                 nil];
     NSString *url = [FBRequest serializeURL:@"http://www.example.com" params:parameters];
-    assertThat(url, containsString(@"value2"));
-    assertThat(url, containsString(@"http://www.example.com"));
+    XCTAssertTrue(([url rangeOfString:@"value2"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"http://www.example.com"].location != NSNotFound));
 
     UIImage *image = [[UIImage alloc] init];
     NSData *data = [[NSData alloc] init];
@@ -316,10 +318,11 @@
                                 data, @"somedata",
                                 nil];
     url = [FBRequest serializeURL:@"http://www.example.com" params:parameters];
-    assertThat(url, containsString(@"value2"));
-    assertThat(url, containsString(@"http://www.example.com"));
-    assertThat(url, isNot(containsString(@"animage")));
-    assertThat(url, isNot(containsString(@"somedata")));
+
+    XCTAssertTrue([url rangeOfString:@"value2"].location != NSNotFound);
+    XCTAssertTrue([url rangeOfString:@"http://www.example.com"].location != NSNotFound);
+    XCTAssertTrue([url rangeOfString:@"animage"].location == NSNotFound);
+    XCTAssertTrue([url rangeOfString:@"somedata"].location == NSNotFound);
 }
 
 - (void)testSerializeUrl{
@@ -328,43 +331,43 @@
                              @"key1": @"200",
                              @"key2": @300.5};
     NSString *url = [FBRequest serializeURL:@"http://www.example.com" params:parameters];
-    assertThat(url, containsString(@"http://www.example.com"));
-    assertThat(url, containsString(@"key0"));
-    assertThat(url, containsString(@"100"));
-    assertThat(url, containsString(@"key1"));
-    assertThat(url, containsString(@"200"));
-    assertThat(url, containsString(@"key2"));
-    assertThat(url, containsString(@"300.5"));
+    XCTAssertTrue(([url rangeOfString:@"http://www.example.com"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"key0"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"100"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"key1"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"200"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"key2"].location != NSNotFound));
+    XCTAssertTrue(([url rangeOfString:@"300.5"].location != NSNotFound));
 }
 
 - (void)testRequestForMe {
     FBRequest *request = [FBRequest requestForMe];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"me"));
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"me" isEqualToString:request.graphPath]);
 }
 
 - (void)testRequestForMyFriends {
     FBRequest *request = [FBRequest requestForMyFriends];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"me/friends"));
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"me/friends" isEqualToString:request.graphPath]);
 }
 
 - (void)testRequestForUploadPhotos {
     UIImage *image = [[UIImage alloc] init];
     FBRequest *request = [FBRequest requestForUploadPhoto:image];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"me/photos"));
-    assertThat(request.parameters, hasKey(@"picture"));
+
+    XCTAssertNotNil(request);
+    XCTAssertNotNil(request.parameters[@"picture"]);
+    XCTAssertTrue([@"me/photos" isEqualToString:request.graphPath]);
 }
 
 - (void)testRequestForGraphPath {
     FBRequest *request = [FBRequest requestForGraphPath:@"apath"];
     
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"apath"));
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"apath" isEqualToString:request.graphPath]);
 }
 
 - (void)testRequestForPostWithGraphPath {
@@ -372,11 +375,11 @@
     [graphObject setObject:@"value" forKey:@"key"];
     FBRequest *request = [FBRequest requestForPostWithGraphPath:@"apath"
                                                     graphObject:graphObject];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"apath"));
-    assertThat(request.graphObject, hasEntry(@"key", @"value"));
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.graphObject[@"key"] isEqualToString:@"value"]);
+    XCTAssertTrue([@"apath" isEqualToString:request.graphPath]);
+    XCTAssertTrue([@"POST" isEqualToString:request.HTTPMethod]);
 }
 
 - (void)testRequestForPostStatusUpdate {
@@ -388,24 +391,24 @@
     FBRequest *request = [FBRequest requestForPostStatusUpdate:@"my status"
                                                          place:place
                                                           tags:tags];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"me/feed"));
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
-    assertThat(request.parameters, hasEntry(@"message", @"my status"));
-    assertThat(request.parameters, hasEntry(@"place", @"placeid"));
-    assertThat(request.parameters, hasEntry(@"tags", @"id1,id2"));
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"me/feed" isEqualToString:request.graphPath]);
+    XCTAssertTrue([@"POST" isEqualToString:request.HTTPMethod]);
+    XCTAssertTrue([request.parameters[@"message"] isEqualToString:@"my status"]);
+    XCTAssertTrue([request.parameters[@"place"] isEqualToString:@"placeid"]);
+    XCTAssertTrue([request.parameters[@"tags"] isEqualToString:@"id1,id2"]);
 }
 
 - (void)testRequestForPostStatusUpdateHelper {
     FBRequest *request = [FBRequest requestForPostStatusUpdate:@"my status"];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"me/feed"));
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
-    assertThat(request.parameters, hasEntry(@"message", @"my status"));
-    assertThat(request.parameters, isNot(hasKey(@"place")));
-    assertThat(request.parameters, isNot(hasKey(@"tags")));
+
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"me/feed" isEqualToString:request.graphPath]);
+    XCTAssertTrue([@"POST" isEqualToString:request.HTTPMethod]);
+    XCTAssertTrue([request.parameters[@"message"] isEqualToString:@"my status"]);
+    XCTAssertNil(request.parameters[@"place"]);
+    XCTAssertNil(request.parameters[@"tags"]);
 }
 
 - (void)testRequestWithGraphPath {
@@ -417,11 +420,11 @@
     FBRequest *request = [FBRequest requestWithGraphPath:@"apath"
                                              parameters:parameters
                                              HTTPMethod:@"POST"];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"apath"));
-    assertThat(request.HTTPMethod, equalTo(@"POST"));
-    assertThat(request.parameters, hasEntries(@"key1", @"value1", @"key2", @"value2", nil));
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"apath" isEqualToString:request.graphPath]);
+    XCTAssertTrue([@"POST" isEqualToString:request.HTTPMethod]);
+    XCTAssertTrue([request.parameters[@"key1"] isEqualToString:@"value1"]);
+    XCTAssertTrue([request.parameters[@"key2"] isEqualToString:@"value2"]);
 }
 
 - (void)testRequestForPlacesSearch {
@@ -430,17 +433,15 @@
                                                         radiusInMeters:1234
                                                           resultsLimit:789
                                                             searchText:@"restaurant"];
-    
-    assertThat(request, notNilValue());
-    assertThat(request.graphPath, equalTo(@"search"));
-    assertThat(request.HTTPMethod, equalTo(@"GET"));
-    assertThat(request.parameters, hasEntry(@"type", @"place"));
-    assertThat(request.parameters, hasEntry(@"limit", @"789"));
-    assertThat(request.parameters, hasEntry(@"distance", @"1234"));
-    assertThat(request.parameters, hasEntry(@"q", @"restaurant"));
-    NSString *center = [request.parameters objectForKey:@"center"];
-    assertThat(center, containsString(@"23.5"));
-    assertThat(center, containsString(@"45.5"));
+    XCTAssertNotNil(request);
+    XCTAssertTrue([@"search" isEqualToString:request.graphPath]);
+    XCTAssertTrue([@"GET" isEqualToString:request.HTTPMethod]);
+    XCTAssertTrue([request.parameters[@"type"] isEqualToString:@"place"]);
+    XCTAssertTrue([request.parameters[@"limit"] isEqualToString:@"789"]);
+    XCTAssertTrue([request.parameters[@"distance"] isEqualToString:@"1234"]);
+    XCTAssertTrue([request.parameters[@"q"] isEqualToString:@"restaurant"]);
+    XCTAssertTrue([request.parameters[@"center"] rangeOfString:@"23.5"].location != NSNotFound);
+    XCTAssertTrue([request.parameters[@"center"] rangeOfString:@"45.5"].location != NSNotFound);
 }
 
 - (void)testRequestForPlacesSearchDoesNotRequireSearchText {
@@ -449,8 +450,7 @@
                                                         radiusInMeters:1234
                                                           resultsLimit:789
                                                             searchText:nil];
-    
-    assertThat(request.parameters, isNot(hasKey(@"q")));
+    XCTAssertNil(request.parameters[@"q"]);
 }
 
 #pragma mark Helpers

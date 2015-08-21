@@ -93,8 +93,7 @@ done
 # -----------------------------------------------------------------------------
 # Build FBAudienceNetwork framework
 #
-test -f $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh \
-  && $FB_ADS_FRAMEWORK_SCRIPT/build_distribution.sh
+# FBAudienceNetwork is no longer built in v3.x. Users should refer to v4.x of the Audience Network.
 
 # -----------------------------------------------------------------------------
 # Build .pkg from package directory

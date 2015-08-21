@@ -39,49 +39,46 @@ static BOOL NSProcessInfoRespondsToOperatingSystemVersion;
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/post"
                                      version:nil];
-    assertThat(url, equalTo(@"pre.facebook.com/" FB_IOS_SDK_TARGET_PLATFORM_VERSION @"/post"));
-    
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/" FB_IOS_SDK_TARGET_PLATFORM_VERSION @"/post"]);
+
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/post"
                                      version:@"v0.1"];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v0.1/post"));
-    
+
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v0.1/post"]);
+
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/v0.2/post"
                                      version:@"v0.1"];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v0.2/post"));
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v0.2/post"]);
     
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/v0.2/post"
                                      version:nil];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v0.2/post"));
-    
+
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v0.2/post"]);
+
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/v987654321.2/post"
                                      version:nil];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v987654321.2/post"));
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v987654321.2/post"]);
     
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/v.2/post"
                                      version:@"v99.99"];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v99.99/v.2/post"));
-    
-    url = [FBUtility buildFacebookUrlWithPre:@"pre."
-                                        post:@"/v2/post"
-                                     version:@"v99.99"];
-    
-    assertThat(url, equalTo(@"pre.facebook.com/v99.99/v2/post"));
+
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v99.99/v.2/post"]);
     
     url = [FBUtility buildFacebookUrlWithPre:@"pre."
                                         post:@"/v2/post"
                                      version:@"v99.99"];
+
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v99.99/v2/post"]);
     
-    assertThat(url, equalTo(@"pre.facebook.com/v99.99/v2/post"));
+    url = [FBUtility buildFacebookUrlWithPre:@"pre."
+                                        post:@"/v2/post"
+                                     version:@"v99.99"];
+    XCTAssertTrue([url isEqualToString:@"pre.facebook.com/v99.99/v2/post"]);
 
 }
 

@@ -31,6 +31,8 @@
 
 @implementation FBPeoplePickerViewController
 
+@dynamic allowsMultipleSelection;
+
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
 

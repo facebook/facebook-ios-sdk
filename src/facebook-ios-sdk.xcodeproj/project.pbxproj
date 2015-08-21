@@ -163,8 +163,6 @@
 		8525A5B0156EFCA1009F6F3F /* FBRequestConnectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8525A5AF156EFCA1009F6F3F /* FBRequestConnectionTests.m */; };
 		8525A5BA156F2049009F6F3F /* FBTestSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 8525A5B8156F2049009F6F3F /* FBTestSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8578B4B419059A49000A5103 /* FBAppLinkResolverTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8578B4B319059A49000A5103 /* FBAppLinkResolverTests.m */; };
-		857E927717CE959200F5F2BC /* FBIsURLHavingQueryParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BDF76617CE7FDF002E7225 /* FBIsURLHavingQueryParams.m */; };
-		857E927A17CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 857E927917CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.m */; };
 		8582701716E02E6000795734 /* FBOpenGraphActionShareDialogParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 8582701616E02E6000795734 /* FBOpenGraphActionShareDialogParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		85877C02169A3FBC00A6D70A /* FBRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85877C01169A3FBC00A6D70A /* FBRequestTests.m */; };
 		858E424E1565FA2E00246151 /* FBTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 858E424D1565FA2E00246151 /* FBTests.m */; };
@@ -191,10 +189,8 @@
 		85ADAAD116A0DA6D00145328 /* FBSystemAccountAuthenticationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85ADAACB16A0DA6D00145328 /* FBSystemAccountAuthenticationTests.m */; };
 		85BD346F187E0EDE007D8EEE /* FBLinkShareParamsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BD346E187E0EDE007D8EEE /* FBLinkShareParamsTests.m */; };
 		85BDF76317CD57C3002E7225 /* FBAppBridgeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85BDF76217CD57C3002E7225 /* FBAppBridgeTests.m */; };
-		85BDF76717CE7FDF002E7225 /* FBIsURLHavingQueryParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 85BDF76517CE7FDF002E7225 /* FBIsURLHavingQueryParams.h */; };
 		85C60EE41698CFC000E7BB7D /* FBURLConnectionTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85C60EE31698CFC000E7BB7D /* FBURLConnectionTests.m */; };
 		85D1B1F61908893400880700 /* FBAppLinksIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85D1B1F51908893400880700 /* FBAppLinksIntegrationTests.m */; };
-		85D1B2001908896A00880700 /* OCHamcrestIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C9D1BD16A79B4900D0ED57 /* OCHamcrestIOS.framework */; };
 		85DF1127156C64140082AA04 /* FBBatchRequestTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 85DF1126156C64140082AA04 /* FBBatchRequestTests.m */; };
 		85E4AC7715B63CB600F17346 /* FBUserSettingsViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 85E4AC7515B63CB600F17346 /* FBUserSettingsViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		85E4AC7D15B63CC500F17346 /* FBViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 85E4AC7A15B63CC500F17346 /* FBViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -246,7 +242,6 @@
 		8981CE7B19C8F6C80095C541 /* FBDialogConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 8981CE7919C8F6C80095C541 /* FBDialogConfig.h */; };
 		8981CE7C19C8F6C80095C541 /* FBDialogConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 8981CE7A19C8F6C80095C541 /* FBDialogConfig.m */; };
 		8991E21618E9F31A00D1AAB7 /* FBTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D3D36A417CBE6C500B9B049 /* FBTask.m */; };
-		89A4410118DB93BB001AC2F9 /* OCHamcrestIOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85C9D1BD16A79B4900D0ED57 /* OCHamcrestIOS.framework */; };
 		89B220A11926C22A00FD98CF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89B220A01926C22A00FD98CF /* XCTest.framework */; };
 		89B220A21926C23800FD98CF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89B220A01926C22A00FD98CF /* XCTest.framework */; };
 		89BEB3E718E3BC31006C97A6 /* FBUIHelpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 89BEB3E518E3BC31006C97A6 /* FBUIHelpers.h */; };
@@ -567,6 +562,13 @@
 			remoteGlobalIDString = 8EDDA63517E17DDD00655F8A;
 			remoteInfo = MacBolts;
 		};
+		9DE487C71B7A96CF003D4CC2 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C60EE61698DA5300E7BB7D /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 725CD99B1A9EB65100F84C8B;
+			remoteInfo = "OHHTTPStubs iOS Framework";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -727,8 +729,6 @@
 		8525A5B8156F2049009F6F3F /* FBTestSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = FBTestSession.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		8527EC5615C9D3CF00660673 /* FBUserSettingsViewResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = FBUserSettingsViewResources.bundle; sourceTree = "<group>"; };
 		8578B4B319059A49000A5103 /* FBAppLinkResolverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBAppLinkResolverTests.m; path = tests/FBAppLinkResolverTests.m; sourceTree = "<group>"; };
-		857E927817CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBIsStringRepresentingJSONDictionary.h; path = tests/FBIsStringRepresentingJSONDictionary.h; sourceTree = "<group>"; };
-		857E927917CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBIsStringRepresentingJSONDictionary.m; path = tests/FBIsStringRepresentingJSONDictionary.m; sourceTree = "<group>"; };
 		8582701616E02E6000795734 /* FBOpenGraphActionShareDialogParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBOpenGraphActionShareDialogParams.h; sourceTree = "<group>"; };
 		85877C01169A3FBC00A6D70A /* FBRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBRequestTests.m; path = tests/FBRequestTests.m; sourceTree = "<group>"; };
 		858E42481565EFC400246151 /* FBTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTests.h; path = tests/FBTests.h; sourceTree = "<group>"; };
@@ -757,12 +757,9 @@
 		85B08E38190596EB00EE0BB1 /* Bolts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bolts.xcodeproj; path = "../Bolts-IOS/Bolts.xcodeproj"; sourceTree = "<group>"; };
 		85BD346E187E0EDE007D8EEE /* FBLinkShareParamsTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBLinkShareParamsTests.m; path = tests/FBLinkShareParamsTests.m; sourceTree = "<group>"; };
 		85BDF76217CD57C3002E7225 /* FBAppBridgeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBAppBridgeTests.m; path = tests/FBAppBridgeTests.m; sourceTree = "<group>"; };
-		85BDF76517CE7FDF002E7225 /* FBIsURLHavingQueryParams.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBIsURLHavingQueryParams.h; path = tests/FBIsURLHavingQueryParams.h; sourceTree = "<group>"; };
-		85BDF76617CE7FDF002E7225 /* FBIsURLHavingQueryParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBIsURLHavingQueryParams.m; path = tests/FBIsURLHavingQueryParams.m; sourceTree = "<group>"; };
 		85C60EE31698CFC000E7BB7D /* FBURLConnectionTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBURLConnectionTests.m; path = tests/FBURLConnectionTests.m; sourceTree = "<group>"; };
 		85C60EE61698DA5300E7BB7D /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../vendor/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		85C610871699109000E7BB7D /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../vendor/OCMock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
-		85C9D1BD16A79B4900D0ED57 /* OCHamcrestIOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCHamcrestIOS.framework; path = ../vendor/OCHamcrest/Source/build/Release/OCHamcrestIOS.framework; sourceTree = "<group>"; };
 		85D1B1F51908893400880700 /* FBAppLinksIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBAppLinksIntegrationTests.m; sourceTree = "<group>"; };
 		85DF1126156C64140082AA04 /* FBBatchRequestTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBBatchRequestTests.m; path = tests/FBBatchRequestTests.m; sourceTree = "<group>"; };
 		85E4AC7515B63CB600F17346 /* FBUserSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBUserSettingsViewController.h; sourceTree = "<group>"; };
@@ -932,7 +929,6 @@
 				89D8D7C0199025C10041CF82 /* libOHHTTPStubs.a in Frameworks */,
 				89D8D7BF199025BA0041CF82 /* libOCMock.a in Frameworks */,
 				89D8D7B8199025860041CF82 /* libfacebook_ios_sdk.a in Frameworks */,
-				85D1B2001908896A00880700 /* OCHamcrestIOS.framework in Frameworks */,
 				85A44C1A16A8D64F007BE80E /* CoreLocation.framework in Frameworks */,
 				85A44C1116A8D559007BE80E /* CoreGraphics.framework in Frameworks */,
 				85A44BA116A8CE05007BE80E /* UIKit.framework in Frameworks */,
@@ -977,7 +973,6 @@
 				89D8D79219901B1A0041CF82 /* libfacebook_ios_sdk.a in Frameworks */,
 				89D8D79019901A880041CF82 /* libOHHTTPStubs.a in Frameworks */,
 				89D8D78F19901A840041CF82 /* libOCMock.a in Frameworks */,
-				89A4410118DB93BB001AC2F9 /* OCHamcrestIOS.framework in Frameworks */,
 				89B220A11926C22A00FD98CF /* XCTest.framework in Frameworks */,
 				89263BFA1926C83B00A44711 /* QuartzCore.framework in Frameworks */,
 				84FA4277153E1609009CEEF8 /* CoreLocation.framework in Frameworks */,
@@ -1036,7 +1031,6 @@
 			isa = PBXGroup;
 			children = (
 				81F5E4DB19FAD68300C95664 /* StoreKit.framework */,
-				85C9D1BD16A79B4900D0ED57 /* OCHamcrestIOS.framework */,
 				89B220A01926C22A00FD98CF /* XCTest.framework */,
 				89263BF91926C83B00A44711 /* QuartzCore.framework */,
 				B96F15E2152B927E00A52896 /* CoreLocation.framework */,
@@ -1401,22 +1395,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		85BDF76417CE7B76002E7225 /* Matchers */ = {
-			isa = PBXGroup;
-			children = (
-				85BDF76517CE7FDF002E7225 /* FBIsURLHavingQueryParams.h */,
-				85BDF76617CE7FDF002E7225 /* FBIsURLHavingQueryParams.m */,
-				857E927817CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.h */,
-				857E927917CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.m */,
-			);
-			name = Matchers;
-			sourceTree = "<group>";
-		};
 		85C60EE71698DA5300E7BB7D /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				89D8D767199015740041CF82 /* libOHHTTPStubs.a */,
 				89D8D769199015740041CF82 /* OHHTTPStubs iOS Tests.xctest */,
+				9DE487C81B7A96CF003D4CC2 /* OHHTTPStubs.framework */,
 				89D8D76B199015740041CF82 /* OHHTTPStubs.framework */,
 				89D8D76D199015740041CF82 /* OHHTTPStubs Mac Tests.xctest */,
 			);
@@ -1682,7 +1666,6 @@
 				85C60EE31698CFC000E7BB7D /* FBURLConnectionTests.m */,
 				848C2D1B18A4A4760059FAF2 /* FBUtilityTests.m */,
 				6D00AAF4197A07AB00CD9EE5 /* FBErrorUtilityTests.m */,
-				85BDF76417CE7B76002E7225 /* Matchers */,
 				B9CBC54415254CC00036AA71 /* Supporting Files */,
 				9D401169197D97EF0012586B /* FBInMemoryFBSessionTokenCachingStrategy.h */,
 				9D40116A197D97EF0012586B /* FBInMemoryFBSessionTokenCachingStrategy.m */,
@@ -1848,7 +1831,6 @@
 				9D5B916A17BD37A8009DBABB /* FBSessionInlineWebViewLoginStategy.h in Headers */,
 				9D9897471A1E5F08006D7562 /* FBTestUserSession.h in Headers */,
 				84F992731871DC9A00E3369F /* FBImageResourceLoader.h in Headers */,
-				85BDF76717CE7FDF002E7225 /* FBIsURLHavingQueryParams.h in Headers */,
 				9D7A374418FF14A600B1EFC2 /* FBPhotoParams.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1920,7 +1902,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B9CBC52B152537270036AA71 /* Build configuration list for PBXNativeTarget "FacebookSDKTests" */;
 			buildPhases = (
-				85C9D0E516A7957A00D0ED57 /* ShellScript */,
 				B9CBC514152537270036AA71 /* Sources */,
 				B9CBC515152537270036AA71 /* Frameworks */,
 				B9CBC516152537270036AA71 /* Resources */,
@@ -2100,6 +2081,13 @@
 			remoteRef = 9D84A95F1ABFECC400CBC230 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		9DE487C81B7A96CF003D4CC2 /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = 9DE487C71B7A96CF003D4CC2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -2140,25 +2128,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		85C9D0E516A7957A00D0ED57 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/../vendor/OCHamcrest/Source",
-			);
-			outputPaths = (
-				"$(SRCROOT)/../vendor/OCHamcrest/Source/build/Release/OCHamcrestIOS.framework/Headers/OCHamcrestIOS.h",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "HCSOURCE=\"${SRCROOT}/../vendor/OCHamcrest/Source\"\nHCFRAMEWORKDIR=\"${HCSOURCE}/build/Release/OCHamcrest.framework\"\ncd \"${HCSOURCE}\"\n\ntest -e \"${HCSOURCE}\" || { echo FATAL: OCHamcrest submodule does not appear to be updated; exit 1; }\n\n# xcodebuild should take care of this, but does not work consistently when MakeIOSFramework.sh\n# is launched as part of a build step.\nmkdir -p \"${HCFRAMEWORKDIR}/Versions\"\nln -sf A \"${HCFRAMEWORKDIR}/Versions/Current\"\nln -sf Versions/Current/Resources \"${HCFRAMEWORKDIR}/Resources\"\nln -sf Versions/Current/OCHamcrest \"${HCFRAMEWORKDIR}/OCHamcrest\"\nln -sf Versions/Current/Headers \"${HCFRAMEWORKDIR}/Headers\"\n\n./MakeIOSFramework.sh\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		85A44B9A16A8CE05007BE80E /* Sources */ = {
@@ -2229,8 +2198,6 @@
 				85BD346F187E0EDE007D8EEE /* FBLinkShareParamsTests.m in Sources */,
 				848C2D1C18A4A4760059FAF2 /* FBUtilityTests.m in Sources */,
 				85BDF76317CD57C3002E7225 /* FBAppBridgeTests.m in Sources */,
-				857E927717CE959200F5F2BC /* FBIsURLHavingQueryParams.m in Sources */,
-				857E927A17CE9C9800F5F2BC /* FBIsStringRepresentingJSONDictionary.m in Sources */,
 				6D00AAF5197A07AB00CD9EE5 /* FBErrorUtilityTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2521,6 +2488,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 892B1FA41926A84100E61379 /* FacebookSDK-LogicTests-Override.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 			};
 			name = Debug;
 		};
@@ -2528,6 +2500,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 892B1FA41926A84100E61379 /* FacebookSDK-LogicTests-Override.xcconfig */;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
+					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(inherited)",
+				);
 			};
 			name = Release;
 		};

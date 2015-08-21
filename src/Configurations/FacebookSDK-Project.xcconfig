@@ -14,6 +14,13 @@
 // limitations under the License.
 //
 
+// bitcode
+ENABLE_BITCODE = YES
+FB_BITCODE_FLAG = $()
+FB_BITCODE_FLAG[sdk=iphoneos9.0] = -fembed-bitcode-marker
+FB_BITCODE_FLAG[sdk=iphonesimulator9.0] = -fembed-bitcode-marker
+OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
+
 // Architectures
 ARCHS = i386 armv7 armv7s x86_64 arm64
 IPHONEOS_DEPLOYMENT_TARGET = 6.0

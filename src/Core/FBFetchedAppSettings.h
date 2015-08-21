@@ -33,6 +33,7 @@ typedef NS_OPTIONS(NSUInteger, FBAppEventsFeatureOptions) {
 @property (readonly, nonatomic) NSString *appID;
 @property (copy, nonatomic) NSString *loginTooltipContent;
 @property (copy, nonatomic) NSDictionary *dialogConfigs;
+@property (copy, nonatomic) NSDictionary *dialogFlows;
 
 - (instancetype)initWithAppID:(NSString *)appID
       appEventsFeatureOptions:(FBAppEventsFeatureOptions)appEventsFeatureOptions;
