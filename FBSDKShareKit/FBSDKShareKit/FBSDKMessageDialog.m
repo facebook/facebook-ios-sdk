@@ -35,7 +35,10 @@
 
 + (void)initialize
 {
-  [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+  if ([FBSDKMessageDialog class] == self) {
+    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  }
 }
 
 + (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
@@ -87,11 +90,16 @@
                                                       methodVersion:FBSDK_MESSAGE_METHOD_MIN_VERSION
                                                          parameters:parameters
                                                            userInfo:nil];
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
   FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request completionBlock:completionBlock];
+  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+                                          useSafariViewController:useSafariViewController
+                                               fromViewController:nil
+                                                  completionBlock:completionBlock];
 
   [self _logDialogShow];
   [FBSDKInternalUtility registerTransientObject:self];
@@ -114,7 +122,9 @@
 
 - (BOOL)_canShowNative
 {
-  return [FBSDKInternalUtility isMessengerAppInstalled];
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameMessage];
+  return (useNativeDialog && [FBSDKInternalUtility isMessengerAppInstalled]);
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results response:(FBSDKBridgeAPIResponse *)response

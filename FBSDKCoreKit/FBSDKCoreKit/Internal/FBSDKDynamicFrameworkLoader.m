@@ -451,6 +451,18 @@ Class fbsdkdfl_ASIdentifierManagerClass(void)
   return c;
 }
 
+#pragma mark - Safari Services
+_fbsdkdfl_load_framework_once_impl_(SafariServices)
+_fbsdkdfl_handle_get_impl_(SafariServices)
+
+#define _fbsdkdfl_SafariServices_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(SafariServices, SYMBOL);
+
+Class fbsdkdfl_SFSafariViewControllerClass(void)
+{
+  _fbsdkdfl_SafariServices_get_c(SFSafariViewController);
+  return c;
+}
+
 #pragma mark - Accounts Constants
 
 _fbsdkdfl_load_framework_once_impl_(Accounts)

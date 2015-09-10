@@ -366,7 +366,9 @@ typedef void (^RPSBlock)(void);
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
         case 0: { // Share on Facebook
-            if (![self shareWith:[[FBSDKShareDialog alloc] init] content:[self getGameShareContent]]) {
+            FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
+            shareDialog.fromViewController = self;
+            if (![self shareWith:shareDialog content:[self getGameShareContent]]) {
                 [self displayInstallAppWithAppName:@"Facebook"];
             }
             break;
@@ -381,8 +383,9 @@ typedef void (^RPSBlock)(void);
             // app link corresponds to rps-sample-applink-example://
             FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
             content.appLinkURL = [NSURL URLWithString:@"https://fb.me/319673994858989"];
-            [FBSDKAppInviteDialog showWithContent:content
-                                         delegate:self];
+            [FBSDKAppInviteDialog showFromViewController:self
+                                             withContent:content
+                                                delegate:self];
             break;
         }
         case 3: { // See Friends
@@ -496,6 +499,7 @@ typedef void (^RPSBlock)(void);
                                         errorHandler:(void (^)(NSError *)) errorHandler{
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
     [login logInWithPublishPermissions:@[@"publish_actions"]
+                    fromViewController:self
                                handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                    if (error) {
                                        if (errorHandler) {

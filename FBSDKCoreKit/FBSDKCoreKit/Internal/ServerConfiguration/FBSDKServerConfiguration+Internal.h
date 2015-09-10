@@ -16,16 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "TestAppIdAndSecret.xcconfig"
+#import <Foundation/Foundation.h>
 
-// Code Signing
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+extern NSString *const FBSDKDialogConfigurationNameDefault;
+extern NSString *const FBSDKDialogConfigurationNameSharing;
 
-// Packaging
-WRAPPER_EXTENSION = xctest
-
-// Linking
-OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
-
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
+extern NSString *const FBSDKDialogConfigurationFeatureUseNativeFlow;
+extern NSString *const FBSDKDialogConfigurationFeatureUseSafariViewController;

@@ -35,7 +35,7 @@
   dispatch_once(&onceToken, ^{
     _impressionTrackers = [[NSMutableDictionary alloc] init];
   });
-
+  // Maintains a single instance of an impression tracker for each event name
   FBSDKViewImpressionTracker *impressionTracker = _impressionTrackers[eventName];
   if (!impressionTracker) {
     impressionTracker = [[self alloc] initWithEventName:eventName];
@@ -73,7 +73,7 @@
   keys[@"__view_impression_identifier__"] = identifier;
   [keys addEntriesFromDictionary:parameters];
   NSDictionary *impressionKey = [keys copy];
-
+  // Ensure that each impression is only tracked once
   if ([_trackedImpressions containsObject:impressionKey]) {
     return;
   }

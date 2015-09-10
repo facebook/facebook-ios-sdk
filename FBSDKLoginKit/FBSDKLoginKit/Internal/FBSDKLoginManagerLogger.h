@@ -16,30 +16,26 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKLoginManager.h"
+#import "FBSDKLoginManager+Internal.h"
 
-typedef NS_ENUM(NSUInteger, FBSDKLoginManagerLoggerResult) {
-  FBSDKLoginManagerLoggerResultSuccess,
-  FBSDKLoginManagerLoggerResultCancel,
-  FBSDKLoginManagerLoggerResultError,
-  FBSDKLoginManagerLoggerResultSkipped,
-};
+extern NSString *const FBSDKLoginManagerLoggerAuthMethod_Native;
+extern NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser;
+extern NSString *const FBSDKLoginManagerLoggerAuthMethod_System;
+extern NSString *const FBSDKLoginManagerLoggerAuthMethod_Webview;
+extern NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
+
 
 @interface FBSDKLoginManagerLogger : NSObject
 + (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters;
 
-- (void)startEventWithBehavior:(FBSDKLoginBehavior)loginBehavior isReauthorize:(BOOL)isReauthorize;
-- (void)endEvent;
+// this must not retain loginManager - only used to conveniently grab various properties to log.
+- (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager;
+- (void)endSession;
 
-- (void)startLoginWithBehavior:(FBSDKLoginBehavior)loginBehavior;
-- (void)endLoginWithResult:(FBSDKLoginManagerLoggerResult)result error:(NSError *)error;
+- (void)startAuthMethod:(NSString *)authMethod;
+- (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
 
-- (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forLoginBehavior:(FBSDKLoginBehavior)loginBehavior;
+- (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod;
 - (void)willAttemptAppSwitchingBehavior;
 - (void)systemAuthDidShowDialog:(BOOL)didShowDialog isUnTOSedDevice:(BOOL)isUnTOSedDevice;
 @end
-
-extern NSString *const FBSDKLoginManagerLoggerTryNative;
-extern NSString *const FBSDKLoginManagerLoggerTryBrowser;
-extern NSString *const FBSDKLoginManagerLoggerTrySystemAccount;
-extern NSString *const FBSDKLoginManagerLoggerTryWebView;

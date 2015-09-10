@@ -55,6 +55,8 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     if (!error) {
       NSString *appLinkString = result[@"applink_url"];
       if (appLinkString) {
+        applinkURL = [NSURL URLWithString:appLinkString];
+
         NSString *createTimeUtc = result[@"click_time"];
         if (createTimeUtc) {
           // append/translate the create_time_utc so it can be used by clients
@@ -63,8 +65,6 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                          ([applinkURL query]) ? @"&" : @"?" ,
                                          createTimeUtc ];
           applinkURL = [NSURL URLWithString:modifiedURLString];
-        } else {
-          applinkURL = [NSURL URLWithString:appLinkString];
         }
       }
     }

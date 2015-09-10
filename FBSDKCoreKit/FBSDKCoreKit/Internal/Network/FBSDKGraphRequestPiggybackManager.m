@@ -73,7 +73,9 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
     }
   };
   FBSDKGraphRequest *extendRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"oauth/access_token"
-                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token"}
+                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token",
+                                                                              @"fields": @""
+                                                                              }
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:extendRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
@@ -82,7 +84,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
     expectingCallbackComplete();
   }];
   FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
-                                                                 parameters:@{@"grant_type" : @"fb_extend_sso_token"}
+                                                                 parameters:@{@"fields": @""}
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery];
 
   [connection addRequest:permissionsRequest completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
@@ -124,7 +126,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
 
 + (void)addServerConfigurationPiggyback:(FBSDKGraphRequestConnection *)connection
 {
-  if ([FBSDKServerConfigurationManager cachedServerConfiguration]) {
+  if (![[FBSDKServerConfigurationManager cachedServerConfiguration] isDefaults]) {
     return;
   }
   NSString *appID = [FBSDKSettings appID];

@@ -22,6 +22,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
@@ -32,13 +33,15 @@
 
 #define FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD @"app_events_feature_bitmask"
 #define FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD @"name"
+#define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD @"default_share_mode"
 #define FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD @"ios_dialog_configs"
+#define FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD @"ios_sdk_dialog_flows"
+#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD @"ios_sdk_error_categories"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD @"supports_implicit_sdk_logging"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD @"gdpv4_nux_enabled"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD @"gdpv4_nux_content"
-#define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD @"default_share_mode"
+#define FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD @"ios_supports_native_proxy_auth_flow"
 #define FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD @"ios_supports_system_auth"
-#define FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD @"ios_sdk_error_categories"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -66,12 +69,52 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
++ (FBSDKServerConfiguration *)_defaultServerConfigurationForAppID:(NSString *)appID
+{
+  // Use a default configuration while we do not have a configuration back from the server. This allows us to set
+  // the default values for any of the dialog sets or anything else in a centralized location while we are waiting for
+  // the server to respond.
+  static FBSDKServerConfiguration *_defaultServerConfiguration = nil;
+  if (![_defaultServerConfiguration.appID isEqualToString:appID]) {
+    // Bypass the native dialog flow for iOS 9+, as it produces a series of additional confirmation dialogs that lead to
+    // extra friction that is not desirable.
+    NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
+    BOOL useNativeFlow = ![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version];
+    // Also enable SFSafariViewController by default.
+    NSDictionary *dialogFlows = @{
+                                  FBSDKDialogConfigurationNameDefault: @{
+                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @(useNativeFlow),
+                                      FBSDKDialogConfigurationFeatureUseSafariViewController: @YES,
+                                      },
+                                  FBSDKDialogConfigurationNameMessage: @{
+                                      FBSDKDialogConfigurationFeatureUseNativeFlow: @YES,
+                                      },
+                                  };
+    _defaultServerConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
+                                                                          appName:nil
+                                                              loginTooltipEnabled:NO
+                                                                 loginTooltipText:nil
+                                                                 defaultShareMode:nil
+                                                             advertisingIDEnabled:NO
+                                                           implicitLoggingEnabled:NO
+                                                   implicitPurchaseLoggingEnabled:NO
+                                                      systemAuthenticationEnabled:NO
+                                                            nativeAuthFlowEnabled:NO
+                                                             dialogConfigurations:nil
+                                                                      dialogFlows:dialogFlows
+                                                                        timestamp:nil
+                                                               errorConfiguration:nil
+                                                                         defaults:YES];
+  }
+  return _defaultServerConfiguration;
+}
+
 + (FBSDKServerConfiguration *)cachedServerConfiguration
 {
   NSString *appID = [FBSDKSettings appID];
   @synchronized(self) {
-    return ([self _cachedServerConfigurationIsValidForAppID:appID] ? _serverConfiguration : nil);
-  }
+    FBSDKServerConfiguration *configuration = ([self _cachedServerConfigurationIsValidForAppID:appID] ? _serverConfiguration : nil);
+    return (configuration ?: [self _defaultServerConfigurationForAppID:appID]);  }
 }
 
 + (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationManagerLoadBlock)completionBlock
@@ -121,8 +164,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSString *defaultShareMode = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD]];
   BOOL implicitLoggingEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD]];
   BOOL systemAuthenticationEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD]];
+  BOOL nativeAuthFlowEnabled =      [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD]];
   NSDictionary *dialogConfigurations = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD]];
   dialogConfigurations = [self _parseDialogConfigurations:dialogConfigurations];
+  NSDictionary *dialogFlows = [FBSDKTypeUtility dictionaryValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD]];
   FBSDKErrorConfiguration *errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
   [errorConfiguration parseArray:resultDictionary[FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD]];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
@@ -134,23 +179,34 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                            implicitLoggingEnabled:implicitLoggingEnabled
                                                                    implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
                                                                       systemAuthenticationEnabled:systemAuthenticationEnabled
+                                                                            nativeAuthFlowEnabled:nativeAuthFlowEnabled
                                                                              dialogConfigurations:dialogConfigurations
+                                                                                      dialogFlows:dialogFlows
                                                                                         timestamp:[NSDate date]
-                                                                               errorConfiguration:errorConfiguration];
+                                                                               errorConfiguration:errorConfiguration
+                                                                                         defaults:NO];
   [self _didLoadServerConfiguration:serverConfiguration appID:appID error:nil didLoadFromUserDefaults:NO];
 }
 
 + (FBSDKGraphRequest *)requestToLoadServerConfiguration:(NSString *)appID
 {
+  NSOperatingSystemVersion operatingSystemVersion = [FBSDKInternalUtility operatingSystemVersion];
+  NSString *dialogFlowsField = [NSString stringWithFormat:@"%@.os_version(%ti.%ti.%ti)",
+                                FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_FIELD,
+                                operatingSystemVersion.majorVersion,
+                                operatingSystemVersion.minorVersion,
+                                operatingSystemVersion.patchVersion];
   NSArray *fields = @[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD,
                       FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
                       FBSDK_SERVER_CONFIGURATION_DIALOG_CONFIGS_FIELD,
+                      dialogFlowsField,
+                      FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD,
                       FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD,
                       ];
   NSDictionary *parameters = @{ @"fields": [fields componentsJoinedByString:@","] };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID

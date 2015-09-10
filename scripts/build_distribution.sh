@@ -83,8 +83,8 @@ echo Building Distribution.
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
-for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
-  sed "s|../../build|../../..|g;s|../../Bolts-IOS/build/ios|../../..|g" \
+for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
+  sed "s|../../build|../../|g;s|../../Bolts-IOS/build/ios||g" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
 

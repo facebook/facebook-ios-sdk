@@ -88,8 +88,14 @@
     handler(YES, nil);
   };
 
+  id shortCircuitBrowserAuthBlock = ^ (NSInvocation *invocation) {
+    void(^handler)(BOOL, NSString *,NSError*);
+    [invocation getArgument:&handler atIndex:3];
+    handler(YES, @"", nil);
+  };
+
   [[[target stub] andDo:shortCircuitAuthBlock] performNativeLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
-  [[[target stub] andDo:shortCircuitAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
+  [[[target stub] andDo:shortCircuitBrowserAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
   [[[target stub] andDo:shortCircuitAuthBlock] performWebLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
 
   // the test fails if system auth is performed
@@ -101,7 +107,7 @@
   }] performSystemLogIn];
 
   [target setLoginBehavior:behavior];
-  [target logInWithReadPermissions:@[@"public_profile"] handler:nil];
+  [target logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:nil];
   [mockUtility stopMocking];
 }
 
@@ -185,9 +191,16 @@
     handler(YES, nil);
     [expectation fulfill];
   };
+  id attemptBrowserAuthBlock = ^ (NSInvocation *invocation) {
+    invocationCount++;
+    void(^handler)(BOOL, NSString *,NSError*);
+    [invocation getArgument:&handler atIndex:3];
+    handler(YES, @"", nil);
+    [expectation fulfill];
+  };
 
   [[[target stub] andDo:attemptedAuthBlock] performNativeLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
-  [[[target stub] andDo:attemptedAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
+  [[[target stub] andDo:attemptBrowserAuthBlock] performBrowserLogInWithParameters:[OCMArg any] handler:[OCMArg any]];
 
   [[[target stub] andDo:^ (NSInvocation *invocation) {
     invocationCount++;
@@ -207,9 +220,12 @@
                              implicitLoggingEnabled:NO
                      implicitPurchaseLoggingEnabled:NO
                         systemAuthenticationEnabled:serverSupports
+                              nativeAuthFlowEnabled:serverSupports
                                dialogConfigurations:nil
+                                        dialogFlows:nil
                                           timestamp:[NSDate date]
-                                 errorConfiguration:nil];
+                                 errorConfiguration:nil
+                                           defaults:NO];
   [FBSDKServerConfigurationManager _didLoadServerConfiguration:configuration appID:[FBSDKSettings appID] error:nil didLoadFromUserDefaults:YES];
 
   [target setRequestedPermissions:permissions];

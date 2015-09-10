@@ -120,6 +120,11 @@ NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression       = @"fb_login_b
 NSString *const FBSDKAppEventNameFBSDKSendButtonImpression        = @"fb_send_button_impression";
 NSString *const FBSDKAppEventNameFBSDKShareButtonImpression       = @"fb_share_button_impression";
 
+NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap  = @"fb_like_button_did_tap";
+NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap  = @"fb_login_button_did_tap";
+NSString *const FBSDKAppEventNameFBSDKSendButtonDidTap  = @"fb_send_button_did_tap";
+NSString *const FBSDKAppEventNameFBSDKShareButtonDidTap  = @"fb_share_button_did_tap";
+
 NSString *const FBSDKAppEventNameFBSDKLikeControlDidDisable          = @"fb_like_control_did_disable";
 NSString *const FBSDKAppEventNameFBSDKLikeControlDidLike             = @"fb_like_control_did_like";
 NSString *const FBSDKAppEventNameFBSDKLikeControlDidPresentDialog    = @"fb_like_control_did_present_dialog";
@@ -162,7 +167,6 @@ NSString *const FBSDKAppEventsDialogShareContentTypeStatus          = @"Status";
 NSString *const FBSDKAppEventsDialogShareContentTypePhoto           = @"Photo";
 NSString *const FBSDKAppEventsDialogShareContentTypeVideo           = @"Video";
 NSString *const FBSDKAppEventsDialogShareContentTypeUnknown         = @"Unknown";
-
 
 NSString *const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";
 

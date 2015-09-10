@@ -24,6 +24,7 @@
 #import "BridgeAPI/FBSDKBridgeAPIRequest.h"
 #import "BridgeAPI/FBSDKBridgeAPIResponse.h"
 #import "BridgeAPI/FBSDKURLOpening.h"
+#import "FBSDKContainerViewController.h"
 
 FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
 
@@ -31,10 +32,17 @@ FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
 
 typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
 
-@interface FBSDKApplicationDelegate ()
+@interface FBSDKApplicationDelegate () <FBSDKContainerViewControllerDelegate>
 
 - (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
+     useSafariViewController:(BOOL)useSafariViewController
+          fromViewController:(UIViewController *)fromViewController
              completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock;
+
+- (void)openURLWithSafariViewController:(NSURL *)url
+                                 sender:(id<FBSDKURLOpening>)sender
+                     fromViewController:(UIViewController *)fromViewController
+                                handler:(void(^)(BOOL))handler;
 
 - (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
 
