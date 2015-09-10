@@ -16,26 +16,48 @@
 
 #import "FBSessionSafariLoginStategy.h"
 
+#import "FBDialogConfig.h"
 #import "FBLogger.h"
 #import "FBSession+Internal.h"
 #import "FBSessionAuthLogger.h"
 #import "FBSessionLoginStrategy.h"
 #import "FBUtility.h"
 
-@implementation FBSessionSafariLoginStategy
+@implementation FBSessionSafariLoginStategy {
+    NSString *_methodName;
+}
+
+- (instancetype)init {
+    if ((self = [super init])) {
+        _methodName = FBSessionAuthLoggerAuthMethodBrowser;
+    }
+    return self;
+}
+
+- (void)dealloc {
+    [_methodName release];
+    [super dealloc];
+}
 
 - (BOOL)tryPerformAuthorizeWithParams:(FBSessionLoginStrategyParams *)params session:(FBSession *)session logger:(FBSessionAuthLogger *)logger {
     if (params.trySafariAuth) {
+        BOOL useSFVC = ( [FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameLogin] &&
+                        session == [FBSession activeSessionIfExists] );
+        if (useSFVC) {
+            _methodName = FBSessionAuthLoggerAuthMethodSFVC;
+        }
+
         NSDictionary *clientState = @{FBSessionAuthLoggerParamAuthMethodKey: self.methodName,
                                       FBSessionAuthLoggerParamIDKey : logger.ID ?: @""};
         params.webParams[FBLoginUXClientState] = [session jsonClientStateWithDictionary:clientState];
-        return [session authorizeUsingSafari:params.webParams];
+
+        return [session authorizeUsingSafari:params.webParams useSFVC:useSFVC];
     }
     return NO;
 }
 
 - (NSString *)methodName {
-    return FBSessionAuthLoggerAuthMethodBrowser;
+    return _methodName;
 }
 
 @end

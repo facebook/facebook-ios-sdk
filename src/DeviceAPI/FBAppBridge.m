@@ -266,7 +266,7 @@ static FBAppBridge *g_sharedInstance;
 
     BOOL success;
     if (useSafariViewController) {
-        success = [FBAppCall openURLWithSafariViewController:url];
+        success = [FBAppCall openURLWithSafariViewController:url fromViewController:nil];
     } else {
         success = [FBAppCall openURL:url];
     }

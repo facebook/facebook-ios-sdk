@@ -78,6 +78,7 @@
                                  tokenCacheStrategy:nil];
     
     [session openWithBehavior:behavior
+           fromViewController:nil
             completionHandler:nil];
     
     [(id)mockSession verify];
@@ -113,6 +114,7 @@
                                  tokenCacheStrategy:nil];
     
     [session openWithBehavior:behavior
+           fromViewController:nil
             completionHandler:nil];
     
     [(id)mockSession verify];
@@ -157,7 +159,9 @@
                                  tokenCacheStrategy:nil];
     
     __block BOOL handlerCalled = NO;
-    [session openWithBehavior:behavior completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
+    [session openWithBehavior:behavior
+           fromViewController:nil
+            completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         handlerCalled = YES;
         [_blocker signal];
     }];

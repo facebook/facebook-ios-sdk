@@ -35,7 +35,7 @@ static const double APPSETTINGS_STALE_THRESHOLD_SECONDS = 60 * 60; // one hour.
 static FBFetchedAppSettings *g_fetchedAppSettings = nil;
 static NSError *g_fetchedAppSettingsError = nil;
 static NSDate *g_fetchedAppSettingsTimestamp = nil;
-
+static dispatch_group_t g_fetchedAppSettingsDispatchGroup;
 static const NSString *kAppSettingsFieldAppName = @"name";
 static const NSString *kAppSettingsFieldSupportsImplicitLogging = @"supports_implicit_sdk_logging";
 static const NSString *kAppSettingsFieldEnableLoginTooltip = @"gdpv4_nux_enabled";
@@ -235,8 +235,18 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 // with calling with a second appid are undefined (in reality will just return the previously requested app's results).
 + (void)fetchAppSettings:(NSString *)appID
                 callback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
-    if ([self isFetchedFBAppSettingsStale] || (!g_fetchedAppSettingsError && !g_fetchedAppSettings)) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        g_fetchedAppSettingsDispatchGroup = dispatch_group_create();
+    });
+    // track if we're in the middle of fetching to prevent redundant requests; otherwise, we've blocked the dispatch_group
+    // until the last fetch finishes.
+    static BOOL isFetching = NO;
 
+    if (!isFetching &&
+        ([self isFetchedFBAppSettingsStale] || (!g_fetchedAppSettingsError && !g_fetchedAppSettings))) {
+        dispatch_group_enter(g_fetchedAppSettingsDispatchGroup);
+        isFetching = YES;
         NSOperatingSystemVersion operatingSystemVersion = FBUtilityGetSystemVersion();
         NSString *dialogFlowsField = [NSString stringWithFormat:@"%@.os_version(%ti.%ti.%ti)",
                                       kAppSettingsFieldDialogFlows,
@@ -291,11 +301,14 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
                     g_fetchedAppSettings.supportsSystemAuth = [result[kAppSettingsFieldSupportsSystemAuth] boolValue];
                 }
             }
-            [self callTheFetchAppSettingsCallback:callback];
+            // make sure we clear isFetching before leaving group; otherwise,
+            // a callback may be notified and then would not be able to issue
+            // another fetch until the flag is set to NO.
+            isFetching = NO;
+            dispatch_group_leave(g_fetchedAppSettingsDispatchGroup);
         }];
-    } else {
-        [self callTheFetchAppSettingsCallback:callback];
     }
+    [self callTheFetchAppSettingsCallback:callback];
 }
 
 + (NSDictionary *)_parseDialogConfigs:(NSDictionary *)dialogConfigsDictionary
@@ -328,11 +341,13 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 
 + (void)callTheFetchAppSettingsCallback:(void (^)(FBFetchedAppSettings *, NSError *))callback {
     if (callback) {
-        if (g_fetchedAppSettingsError) {
-            callback(nil, g_fetchedAppSettingsError);
-        } else if (g_fetchedAppSettings) {
-            callback(g_fetchedAppSettings, nil);
-        }
+        dispatch_group_notify(g_fetchedAppSettingsDispatchGroup, dispatch_get_main_queue(), ^{
+            if (g_fetchedAppSettingsError) {
+                callback(nil, [[g_fetchedAppSettingsError retain] autorelease]);
+            } else if (g_fetchedAppSettings) {
+                callback(g_fetchedAppSettings, nil);
+            }
+        });
     }
 }
 

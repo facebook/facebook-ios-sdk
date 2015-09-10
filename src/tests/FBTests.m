@@ -134,7 +134,7 @@ NSString *kTestAppId = @"AnAppId";
                                           urlSchemeSuffix:nil
                                        tokenCacheStrategy:mockStrategy];
 
-    [session openWithCompletionHandler:nil];
+    [session openWithCompletionHandler:nil fromViewController:nil];
 
     return session;
 

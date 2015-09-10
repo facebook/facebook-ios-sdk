@@ -71,7 +71,8 @@ progress_message Updating Submodules
 progress_message Building Bolts
 
 # -----------------------------------------------------------------------------
-"$BOLTS_SCRIPT"/build_framework.sh || die "Could not build Bolts."
+rm -rf "$BOLTS_ROOT/build"
+"$BOLTS_SCRIPT"/build_framework.sh -c Release || die "Could not build Bolts."
 
 # -----------------------------------------------------------------------------
 

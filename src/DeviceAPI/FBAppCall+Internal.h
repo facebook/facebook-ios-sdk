@@ -46,4 +46,12 @@
 */
 - (instancetype)initWithID:(NSString *)ID enforceScheme:(BOOL)enforceScheme appID:(NSString *)appID urlSchemeSuffix:(NSString *)urlSchemeSuffix;
 
+
++ (BOOL)openURL:(NSURL *)url;
+
+#pragma mark - SafariViewController methods
+
++ (BOOL)openURLWithSafariViewController:(NSURL *)url fromViewController:(UIViewController *)fromViewController;
++ (void)dismissSafariViewController;
+
 @end

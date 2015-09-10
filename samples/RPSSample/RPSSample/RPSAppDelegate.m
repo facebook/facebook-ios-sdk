@@ -18,6 +18,7 @@
 
 #import <FacebookSDK/FacebookSDK.h>
 
+#import <Bolts/BFAppLink.h>
 #import <Bolts/Bolts.h>
 
 #import "RPSCommonObjects.h"
@@ -100,7 +101,7 @@
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
 
-    [FBSession openActiveSessionWithAllowLoginUI:NO];
+    [FBSession openActiveSessionWithAllowLoginUI:NO fromViewController:nil];
 
     return YES;
 }

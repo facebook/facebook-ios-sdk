@@ -37,6 +37,7 @@ NSString *const FBSessionAuthLoggerAuthMethodFBApplicationNative = @"fb_applicat
 NSString *const FBSessionAuthLoggerAuthMethodFBApplicationWeb = @"fb_application_web_auth";
 NSString *const FBSessionAuthLoggerAuthMethodBrowser = @"browser_auth";
 NSString *const FBSessionAuthLoggerAuthMethodFallback = @"fallback_auth";
+NSString *const FBSessionAuthLoggerAuthMethodSFVC = @"sfvc_auth";
 
 NSString *const FBSessionAuthLoggerResultSuccess = @"success";
 NSString *const FBSessionAuthLoggerResultError = @"error";

@@ -54,7 +54,7 @@
     FBTestUserSession *session = [self getTestSessionWithPermissions:nil];
     [session openWithCompletionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
         [blocker signal];
-    }];
+    } fromViewController:nil];
 
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
@@ -87,7 +87,7 @@
             wasNotifiedOfInvalid = YES;
         }
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     XCTAssertTrue(session.isOpen, @"Session should be open, and is not");
@@ -160,7 +160,7 @@
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     // Now construct the actual session under test (target) and open with the access token.
@@ -211,7 +211,7 @@
     [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
 
     FBAccessTokenData *tokenDataCopy = [target.accessTokenData copy];
@@ -237,7 +237,7 @@
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
     XCTAssertTrue([normalSession shouldRefreshPermissions], @"expected need for permissions refresh");
 
@@ -255,7 +255,7 @@
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
 
     // Now ask for permissions refresh, and verify that the piggyback will not be added.
@@ -284,7 +284,7 @@
     [normalSession openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertTrue(session.state == FBSessionStateOpen || expectClosed, @"Expected open session: %@, %@", session, error);
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:60], @"blocker timed out");
 
     // Now construct the actual session under test (target) and open with the access token.
@@ -344,7 +344,7 @@
         if (status == FBSessionStateOpen) {
             [blocker signal];
         }
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:10], @"blocker timed out");
 
     FBAccessTokenData *token = [FBAccessTokenData createTokenFromString:normalSession.accessTokenData.accessToken

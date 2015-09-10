@@ -413,6 +413,7 @@ static CGSize g_buttonSize;
     // we open it on the spot
     if (self.session.state == FBSessionStateCreatedTokenLoaded && (![userInfo[FBSessionDidSetActiveSessionNotificationUserInfoIsOpening] isEqual:@YES])) {
         [self.session openWithBehavior:self.loginBehavior
+                    fromViewController:nil
                      completionHandler:self.sessionStateHandler];
     }
 }
@@ -457,6 +458,18 @@ static CGSize g_buttonSize;
     }
 }
 
+- (UIViewController *)viewController
+{
+    UIResponder* responder = self.nextResponder;
+    while (responder) {
+        if ([responder isKindOfClass:[UIViewController class]]) {
+            return (UIViewController *)responder;
+        }
+        responder = responder.nextResponder;
+    }
+    return nil;
+}
+
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (void)buttonPressed:(id)sender {
     if (self.session == FBSession.activeSession) {
@@ -471,15 +484,19 @@ static CGSize g_buttonSize;
             //    when the user presses login
             if (self.permissions) {
                 [FBSession openActiveSessionWithPermissions:self.permissions
+                                               allowLoginUI:YES
                                               loginBehavior:self.loginBehavior
                                                      isRead:NO
                                             defaultAudience:self.defaultAudience
+                                         fromViewController:[self viewController]
                                           completionHandler:self.sessionStateHandler];
             } else if (![self.publishPermissions count]) {
                 [FBSession openActiveSessionWithPermissions:self.readPermissions
+                                               allowLoginUI:YES
                                               loginBehavior:self.loginBehavior
                                                      isRead:YES
                                             defaultAudience:FBSessionDefaultAudienceNone
+                                         fromViewController:[self viewController]
                                           completionHandler:self.sessionStateHandler];
             } else {
                 // combined read and publish permissions will usually fail, but if the app wants us to
@@ -491,9 +508,11 @@ static CGSize g_buttonSize;
                     permissions = [set allObjects];
                 }
                 [FBSession openActiveSessionWithPermissions:permissions
+                                               allowLoginUI:YES
                                               loginBehavior:self.loginBehavior
                                                      isRead:NO
                                             defaultAudience:self.defaultAudience
+                                         fromViewController:[self viewController]
                                           completionHandler:self.sessionStateHandler];
             }
             loggingInLogFlag = YES;

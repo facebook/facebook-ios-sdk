@@ -19,7 +19,7 @@
 
 #import "FBDialogConfig.h"
 #import "FBRequest.h"
-#import "FBSession.h"
+#import "FBSession+FBSessionLoginStrategy.h"
 #import "FBSessionTokenCachingStrategy.h"
 #import "FBSystemAccountStoreAdapter.h"
 #import "FBTestBlocker.h"
@@ -35,9 +35,6 @@ NSString *const kAuthenticationTestAppId = @"AnAppid";
 - (void)authorizeUsingSystemAccountStore:(NSArray *)permissions
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
                            isReauthorize:(BOOL)isReauthorize;
-- (BOOL)authorizeUsingFacebookApplication:(NSMutableDictionary *)params;
-- (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params;
-- (BOOL)authorizeUsingSafari:(NSMutableDictionary *)params;
 - (FBSystemAccountStoreAdapter *)getSystemAccountStoreAdapter;
 - (NSString *)appBaseUrl;
 - (BOOL)tryOpenURL:(NSURL *)url;
@@ -227,13 +224,13 @@ expectFacebookAppAuth:(BOOL)expect
 
         // We mock authorizeUsingFacebookApplication rather than tryOpenURL to avoid conflicting
         // with mockSession:expectFacebookAppAuth:try:succeed:
-        [mock authorizeUsingSafari:[OCMArg any]];
+        [mock authorizeUsingSafari:[OCMArg any] useSFVC:NO];
 
         // Make tryOpenURL: a no-op so it doesn't actually call out.
         BOOL no = NO;
         [[[mockSession stub] andReturnValue:OCMOCK_VALUE(no)] tryOpenURL:[OCMArg any]];
     } else {
-        [[mockSession reject] authorizeUsingSafari:[OCMArg any]];
+        [[mockSession reject] authorizeUsingSafari:[OCMArg any] useSFVC:NO];
     }
 }
 

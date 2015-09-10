@@ -23,5 +23,4 @@ PRODUCT_NAME = facebook_ios_sdk
 PUBLIC_HEADERS_FOLDER_PATH = $(TARGET_NAME)
 
 // Language
-GCC_PREFIX_HEADER = facebook_ios_sdk_Prefix.pch
 CLANG_WARN_DOCUMENTATION_COMMENTS = YES

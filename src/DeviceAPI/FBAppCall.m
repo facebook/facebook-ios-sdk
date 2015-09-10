@@ -21,6 +21,7 @@
 #import "FBAppEvents+Internal.h"
 #import "FBAppEvents.h"
 #import "FBAppLinkData+Internal.h"
+#import "FBContainerViewController.h"
 #import "FBDialogsData+Internal.h"
 #import "FBDynamicFrameworkLoader.h"
 #import "FBError.h"
@@ -33,7 +34,7 @@
 #import "FBSettings+Internal.h"
 #import "FBUtility.h"
 
-@interface FBAppCall ()
+@interface FBAppCall () <FBContainerViewControllerDelegate>
 
 // Defined as readwrite to only allow this module to set it.
 @property (nonatomic, readwrite, copy) NSString *ID;
@@ -55,6 +56,7 @@ NSString *const FBAppLinkInboundEvent = @"fb_al_inbound";
 
 static UIViewController *g_safariViewController = nil;
 static BOOL g_expectingBackground;
+static NSMutableArray *g_pendingFBAppCalls = nil;
 
 + (void)initialize
 {
@@ -63,6 +65,7 @@ static BOOL g_expectingBackground;
                                                  selector:@selector(applicationDidEnterBackground:)
                                                      name:UIApplicationDidEnterBackgroundNotification
                                                    object:nil];
+        g_pendingFBAppCalls = [[NSMutableArray alloc] init];
     }
 }
 
@@ -579,25 +582,35 @@ static BOOL g_expectingBackground;
 
 #pragma mark - SafariViewController methods
 
-+ (BOOL)openURLWithSafariViewController:(NSURL *)url
++ (BOOL)openURLWithSafariViewController:(NSURL *)url fromViewController:(UIViewController *)fromViewController
 {
     if (![url.scheme hasPrefix:@"http"]) {
         return [FBAppCall openURL:url];
     }
     Class SFSafariViewControllerClass = fbdfl_SFSafariViewControllerClass();
     if (SFSafariViewControllerClass) {
-        UIViewController *parent = [FBUtility topMostViewController];
+        UIViewController *parent = fromViewController ?: [FBUtility topMostViewController];
+        NSURLComponents *components = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:NO];
+        NSURLQueryItem *sfvcQueryItem = [[[NSURLQueryItem alloc] initWithName:@"sfvc" value:@"1"] autorelease];
+        [components setQueryItems:[components.queryItems arrayByAddingObject:sfvcQueryItem]];
+        url = components.URL;
+        FBContainerViewController *container = [[[FBContainerViewController alloc] init] autorelease];
+        FBAppCall *containerDelegate = [[[FBAppCall alloc] initWithID:nil enforceScheme:NO appID:nil urlSchemeSuffix:nil] autorelease];
+        container.delegate = containerDelegate;
+        [g_pendingFBAppCalls addObject:containerDelegate];
         if (parent.transitionCoordinator != nil) {
             // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.
             [parent.transitionCoordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
                 g_safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
                 [g_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-                [[FBUtility topMostViewController] presentViewController:g_safariViewController animated:YES completion:NULL];
+                [container displayChildController:g_safariViewController];
+                [parent presentViewController:container animated:YES completion:NULL];
             }];
         } else {
             g_safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
             [g_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-            [parent presentViewController:g_safariViewController animated:YES completion:nil];
+            [container displayChildController:g_safariViewController];
+            [parent presentViewController:container animated:YES completion:nil];
         }
         return YES;
     } else {
@@ -619,4 +632,17 @@ static BOOL g_expectingBackground;
     [self handleDidBecomeActive];
 }
 
+#pragma mark - FBContainerViewControllerDelegate
+
+- (void)viewControllerDidDisappear:(FBContainerViewController *)viewController animated:(BOOL)animated
+{
+    if (g_safariViewController) {
+        [FBLogger singleShotLogEntry:FBLoggingBehaviorDeveloperErrors
+                            logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\n"
+         "This can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view "
+         "controller will not be prematurely dismissed."];
+        [FBAppCall safariViewControllerDidFinish:g_safariViewController];
+    }
+    [g_pendingFBAppCalls removeObject:self];
+}
 @end

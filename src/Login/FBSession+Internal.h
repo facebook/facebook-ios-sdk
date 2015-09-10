@@ -74,12 +74,9 @@ FBSDK_EXTERN NSString *const FacebookNativeApplicationLoginDomain;
 
 + (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions
                             allowLoginUI:(BOOL)allowLoginUI
-                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                       completionHandler:(FBSessionStateHandler)handler;
-
-+ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions
                            loginBehavior:(FBSessionLoginBehavior)loginBehavior
                                   isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                      fromViewController:(UIViewController *)fromViewController
                        completionHandler:(FBSessionStateHandler)handler;
 @end

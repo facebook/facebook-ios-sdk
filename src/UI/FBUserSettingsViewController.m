@@ -369,7 +369,10 @@
     if (self.permissions) {
         [FBSession openActiveSessionWithPermissions:self.permissions
                                        allowLoginUI:allowLoginUI
+                                      loginBehavior:FBSessionLoginBehaviorWithFallbackToWebView
+                                             isRead:NO
                                     defaultAudience:self.defaultAudience
+                                 fromViewController:self
                                   completionHandler:self.sessionStateHandler];
     } else if (![self.publishPermissions count]) {
         [FBSession openActiveSessionWithReadPermissions:self.readPermissions

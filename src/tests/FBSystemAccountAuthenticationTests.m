@@ -66,6 +66,7 @@
                                  tokenCacheStrategy:nil];
     
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+           fromViewController:nil
             completionHandler:nil];
     
     [(id)mockSession verify];
@@ -101,6 +102,7 @@
     
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+           fromViewController:nil
             completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
                 handlerError = [error retain];
             }];
@@ -148,6 +150,7 @@
                                  tokenCacheStrategy:nil];
     
     [session openWithBehavior:behavior
+           fromViewController:nil
             completionHandler:nil];
     
     [(id)mockSession verify];
@@ -173,6 +176,7 @@
     
     __block NSError *handlerError = nil;
     [session openWithBehavior:FBSessionLoginBehaviorUseSystemAccountIfPresent
+           fromViewController:nil
             completionHandler:^(FBSession *innerSession, FBSessionState status, NSError *error) {
                 handlerError = [error retain];
             }];

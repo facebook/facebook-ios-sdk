@@ -153,7 +153,7 @@
                                                  FBSessionState status,
                                                  NSError *error) {
                 [self updateForSessionChangeForSlot:slot];
-            }];
+            } fromViewController:self];
         }
     }
 }
@@ -194,6 +194,7 @@
 
     // we pass the correct behavior here to indicate the login workflow to use (Facebook Login, fallback, etc.)
     [session openWithBehavior:behavior
+           fromViewController:self
             completionHandler:^(FBSession *innerSession,
                                 FBSessionState status,
                                 NSError *error) {

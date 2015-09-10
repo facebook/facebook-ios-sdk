@@ -261,7 +261,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
                         autorelease];
 
         // get the session into a valid state
-        [self.session openWithCompletionHandler:nil];
+        [self.session openWithCompletionHandler:nil fromViewController:nil];
     }
 }
 
@@ -330,7 +330,7 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
             default:
                 break; // so we do nothing in response to those state transitions
         }
-    }];
+    } fromViewController:nil];
 }
 
 - (NSString *)accessToken {

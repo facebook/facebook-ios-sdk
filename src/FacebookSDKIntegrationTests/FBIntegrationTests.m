@@ -169,7 +169,7 @@ static NSString *gAppClientToken;
         [blocker signal];
     };
 
-    [session openWithCompletionHandler:handler];
+    [session openWithCompletionHandler:handler fromViewController:nil];
 
     BOOL success = [blocker waitWithTimeout:60];
     XCTAssertTrue(success, @"blocker timed out");

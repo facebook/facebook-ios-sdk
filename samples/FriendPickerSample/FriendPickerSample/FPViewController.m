@@ -53,11 +53,13 @@
     // if the session is open, then load the data for our view controller
     if (!FBSession.activeSession.isOpen) {
         // if the session is closed, then we open it here, and establish a handler for state changes
-        [FBSession openActiveSessionWithReadPermissions:@[@"public_profile", @"user_friends"]
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session,
-                                                             FBSessionState state,
-                                                             NSError *error) {
+        FBSession *s = [[FBSession alloc] initWithPermissions:@[@"public_profile", @"user_friends"]];
+        [FBSession setActiveSession:s];
+        [s openWithBehavior:FBSessionLoginBehaviorForcingWebView
+    fromViewController:self
+    completionHandler:
+        ^(FBSession *session, FBSessionState status, NSError *error) {
+
             if (error) {
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                     message:error.localizedDescription

@@ -222,7 +222,9 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
     [target addObserver:kvoHelper forKeyPath:@"state" options:NSKeyValueObservingOptionNew context:nil];
 
     // Now open the session and it should transition to open (and hit our kvo helper block for each keypath)
-    [target openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+    [target openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView
+          fromViewController:nil
+           completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         XCTAssertNil(error, @"Unexpected error in session state change handler: %@", error);
     }];
 
@@ -339,7 +341,7 @@ typedef void (^kvo_handler_block)(NSString *keyPath, id object, NSDictionary *ch
     // Open the session and verify kvo
     [target openWithCompletionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
         [blocker signal];
-    }];
+    } fromViewController:nil];
     XCTAssertTrue([blocker waitWithTimeout:30], @"blocker timed out");
     XCTAssertTrue(target.isOpen, @"Session should be open, and is not");
     XCTAssertTrue([expectedKvoValuesForOpening count] == 0, @"There were still expected KVO events that did not occur: %@", expectedKvoValuesForOpening);

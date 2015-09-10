@@ -214,6 +214,7 @@
             __block RPSFriendsViewController *me = self;
             [FBSession openActiveSessionWithReadPermissions:nil
                                                allowLoginUI:YES
+                                         fromViewController:self
                                           completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
                                               if (me) {
                                                   if (session.isOpen) {

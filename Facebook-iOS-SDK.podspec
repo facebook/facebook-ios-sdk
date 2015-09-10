@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "3.24.0-beta1"
+  s.version      = "3.24.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -21,10 +21,10 @@ Pod::Spec.new do |s|
 
   s.author             = 'Facebook'
 
-  s.platform     = :ios, "6.0"
+  s.platform     = :ios, "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-3.24.0-beta1"
+                     :tag => "sdk-version-3.24.0"
                     }
 
   s.source_files  =  "src/**/*.{h,m}"
@@ -41,6 +41,6 @@ Pod::Spec.new do |s|
   # Note the prepare_command is not run against pods installed with the :path option (i.e., a local pod)
   s.prepare_command = "find src -name \\*.png | grep -v @ | grep -v '/tests/' | grep -v 'Tests/' | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).png|scripts/image_to_code.py -i \\1/\\2.png -c \\2 -o src/ImageResources|' | sh && find src -name \\*.wav | grep -v @ | grep -v -- - | sed -e 's|\\(.*\\)/\\([a-zA-Z0-9]*\\).wav|scripts/audio_to_code.py -i \\1/\\2.wav -c \\2 -o src/AudioResources|' | sh"
 
-  s.dependency 'Bolts', '~> 1.0'
+  s.dependency 'Bolts', '~> 1.2'
 
 end

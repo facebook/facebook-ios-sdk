@@ -29,6 +29,7 @@ FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFBApplicationNative;
 FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFBApplicationWeb;
 FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodBrowser;
 FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodFallback;
+FBSDK_EXTERN NSString *const FBSessionAuthLoggerAuthMethodSFVC;
 
 // Well-known result strings.
 FBSDK_EXTERN NSString *const FBSessionAuthLoggerResultSuccess;

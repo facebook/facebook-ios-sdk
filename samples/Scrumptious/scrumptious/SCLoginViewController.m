@@ -57,7 +57,7 @@
         // reset
         settings.shouldSkipLogin = NO;
     } else {
-        [FBSession openActiveSessionWithAllowLoginUI:NO];
+        [FBSession openActiveSessionWithAllowLoginUI:NO fromViewController:self];
         FBSession *session = [FBSession activeSession];
         if (settings.shouldSkipLogin || session.isOpen) {
             [self performSegueWithIdentifier:@"showMain" sender:nil];

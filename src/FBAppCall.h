@@ -15,6 +15,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "FBAccessTokenData.h"
 #import "FBAppLinkData.h"
@@ -225,14 +226,6 @@ typedef void (^FBAppLinkFallbackHandler)(NSError *error);
  }
  */
 + (void)openDeferredAppLink:(FBAppLinkFallbackHandler)fallbackHandler;
-
-+ (BOOL)openURL:(NSURL *)url;
-
-#pragma mark - SafariViewController methods
-
-+ (BOOL)openURLWithSafariViewController:(NSURL *)url;
-+ (void)dismissSafariViewController;
-
 @end
 
 

@@ -317,12 +317,31 @@ static FBSession *g_activeSession = nil;
 
 #pragma mark - Public Members
 
+//deprecated
 - (void)openWithCompletionHandler:(FBSessionStateHandler)handler {
-    [self openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView completionHandler:handler];
+    [self openWithCompletionHandler:handler fromViewController:nil];
+}
+
+- (void)openWithCompletionHandler:(FBSessionStateHandler)handler fromViewController:(UIViewController *)fromViewController
+{
+    [self openWithBehavior:FBSessionLoginBehaviorWithFallbackToWebView
+        fromViewController:fromViewController
+         completionHandler:handler];
+}
+
+//deprecated
+- (void)openWithBehavior:(FBSessionLoginBehavior)behavior
+       completionHandler:(FBSessionStateHandler)handler {
+    [self openWithBehavior:behavior
+        fromViewController:nil
+         completionHandler:handler];
 }
 
 - (void)openWithBehavior:(FBSessionLoginBehavior)behavior
-       completionHandler:(FBSessionStateHandler)handler {
+      fromViewController:(UIViewController *)fromViewController
+       completionHandler:(FBSessionStateHandler)handler
+{
+    self.fromViewController = fromViewController;
     // is everything in good order?
     [FBSessionUtility validateRequestForPermissions:_initializedPermissions
                                     defaultAudience:_defaultDefaultAudience
@@ -589,21 +608,31 @@ static FBSession *g_activeSession = nil;
 #pragma mark -
 #pragma mark Class Methods
 
-+ (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI {
+//deprecated
++ (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI
+{
+    return [self openActiveSessionWithAllowLoginUI:allowLoginUI fromViewController:nil];
+}
+
++ (BOOL)openActiveSessionWithAllowLoginUI:(BOOL)allowLoginUI fromViewController:(UIViewController *)fromViewController
+{
     return [FBSession openActiveSessionWithPermissions:nil
                                           allowLoginUI:allowLoginUI
                                     allowSystemAccount:NO
                                                 isRead:YES
                                        defaultAudience:FBSessionDefaultAudienceNone
+                                    fromViewController:fromViewController
                                      completionHandler:nil];
 }
 
+// deprecated (and used by tests)
 + (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions
                             allowLoginUI:(BOOL)allowLoginUI
                        completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:permissions
                                           allowLoginUI:allowLoginUI
                                        defaultAudience:FBSessionDefaultAudienceNone
+                                    fromViewController:nil
                                      completionHandler:handler];
 }
 
@@ -612,48 +641,68 @@ static FBSession *g_activeSession = nil;
 + (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions
                             allowLoginUI:(BOOL)allowLoginUI
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                      fromViewController:(UIViewController *)fromViewController
                        completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:permissions
                                           allowLoginUI:allowLoginUI
                                     allowSystemAccount:NO
                                                 isRead:NO
                                        defaultAudience:defaultAudience
+                                    fromViewController:fromViewController
                                      completionHandler:handler];
 }
 
-+ (BOOL)openActiveSessionWithPermissions:(NSArray *)permissions
-                           loginBehavior:(FBSessionLoginBehavior)loginBehavior
-                                  isRead:(BOOL)isRead
-                         defaultAudience:(FBSessionDefaultAudience)defaultAudience
-                       completionHandler:(FBSessionStateHandler)handler {
-    return [FBSession openActiveSessionWithPermissions:permissions
-                                          allowLoginUI:YES
-                                         loginBehavior:loginBehavior
-                                                isRead:isRead
-                                       defaultAudience:defaultAudience
-                                     completionHandler:handler];
+//deprecated
++ (BOOL)openActiveSessionWithReadPermissions:(NSArray *)readPermissions
+                                allowLoginUI:(BOOL)allowLoginUI
+                           completionHandler:(FBSessionStateHandler)handler
+{
+    return [self openActiveSessionWithReadPermissions:readPermissions
+                                         allowLoginUI:allowLoginUI
+                                   fromViewController:nil
+                                    completionHandler:handler];
 }
 
 + (BOOL)openActiveSessionWithReadPermissions:(NSArray *)readPermissions
                                 allowLoginUI:(BOOL)allowLoginUI
-                           completionHandler:(FBSessionStateHandler)handler {
+                          fromViewController:(UIViewController *)fromViewController
+                           completionHandler:(FBSessionStateHandler)handler
+{
     return [FBSession openActiveSessionWithPermissions:readPermissions
                                           allowLoginUI:allowLoginUI
                                     allowSystemAccount:NO
                                                 isRead:YES
                                        defaultAudience:FBSessionDefaultAudienceNone
+                                    fromViewController:fromViewController
                                      completionHandler:handler];
+}
+
+
+//deprecated
++ (BOOL)openActiveSessionWithPublishPermissions:(NSArray *)publishPermissions
+                                defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                                   allowLoginUI:(BOOL)allowLoginUI
+                              completionHandler:(FBSessionStateHandler)handler
+{
+    return [self openActiveSessionWithPublishPermissions:publishPermissions
+                                         defaultAudience:defaultAudience
+                                            allowLoginUI:allowLoginUI
+                                      fromViewController:nil
+                                       completionHandler:handler];
 }
 
 + (BOOL)openActiveSessionWithPublishPermissions:(NSArray *)publishPermissions
                                 defaultAudience:(FBSessionDefaultAudience)defaultAudience
                                    allowLoginUI:(BOOL)allowLoginUI
-                              completionHandler:(FBSessionStateHandler)handler {
+                             fromViewController:(UIViewController *)fromViewController
+                              completionHandler:(FBSessionStateHandler)handler
+{
     return [FBSession openActiveSessionWithPermissions:publishPermissions
                                           allowLoginUI:allowLoginUI
                                     allowSystemAccount:NO
                                                 isRead:NO
                                        defaultAudience:defaultAudience
+                                    fromViewController:fromViewController
                                      completionHandler:handler];
 }
 
@@ -922,24 +971,40 @@ static FBSession *g_activeSession = nil;
                  defaultAudience:(FBSessionDefaultAudience)audience
                    isReauthorize:(BOOL)isReauthorize {
     BOOL tryIntegratedAuth = NO, tryFacebookLogin = NO, tryFallback = NO, trySafari = NO;
+    NSString *behaviorString;
     switch (behavior) {
         case FBSessionLoginBehaviorForcingWebView:
             tryFallback  = YES;
+            behaviorString = @"FBSessionLoginBehaviorForcingWebView";
             break;
         case FBSessionLoginBehaviorUseSystemAccountIfPresent:
             tryIntegratedAuth = tryFacebookLogin = trySafari = YES;
+            behaviorString = @"FBSessionLoginBehaviorUseSystemAccountIfPresent";
             break;
         case FBSessionLoginBehaviorWithFallbackToWebView:
             tryFallback = tryFacebookLogin = trySafari = YES;
+            behaviorString = @"FBSessionLoginBehaviorWithFallbackToWebView";
             break;
         case FBSessionLoginBehaviorWithNoFallbackToWebView:
             tryFacebookLogin = trySafari = YES;
+            behaviorString = @"FBSessionLoginBehaviorWithNoFallbackToWebView";
             break;
         case FBSessionLoginBehaviorForcingSafari:
             trySafari = YES;
+            behaviorString = @"FBSessionLoginBehaviorForcingSafari";
             break;
     }
-
+    self.authLogger = [[[FBSessionAuthLogger alloc] initWithSession:self] autorelease];
+    [self.authLogger addExtrasForNextEvent:@{
+                                             @"tryIntegratedAuth": [NSNumber numberWithBool:tryIntegratedAuth],
+                                             @"tryFBAppAuth": [NSNumber numberWithBool:tryFacebookLogin],
+                                             @"trySafariAuth": [NSNumber numberWithBool:trySafari],
+                                             @"tryFallback": [NSNumber numberWithBool:tryFallback],
+                                             @"isReauthorize": [NSNumber numberWithBool:isReauthorize],
+                                             @"login_behavior" : behaviorString,
+                                             @"default_audience" : [FBSessionUtility audienceNameWithAudience:audience] ?: @"",
+                                             @"permissions" : [permissions componentsJoinedByString:@","] ?: @"",
+                                             }];
     [self authorizeWithPermissions:(NSArray *)permissions
                    defaultAudience:audience
                     integratedAuth:tryIntegratedAuth
@@ -958,15 +1023,6 @@ static FBSession *g_activeSession = nil;
                         fallback:(BOOL)tryFallback
                    isReauthorize:(BOOL)isReauthorize
              canFetchAppSettings:(BOOL)canFetchAppSettings {
-    self.authLogger = [[[FBSessionAuthLogger alloc] initWithSession:self] autorelease];
-    [self.authLogger addExtrasForNextEvent:@{
-                                             @"tryIntegratedAuth": [NSNumber numberWithBool:tryIntegratedAuth],
-                                             @"tryFBAppAuth": [NSNumber numberWithBool:tryFBAppAuth],
-                                             @"trySafariAuth": [NSNumber numberWithBool:trySafariAuth],
-                                             @"tryFallback": [NSNumber numberWithBool:tryFallback],
-                                             @"isReauthorize": [NSNumber numberWithBool:isReauthorize]
-                                             }];
-
     [self.authLogger logStartAuth];
 
     [self retryableAuthorizeWithPermissions:permissions
@@ -991,6 +1047,7 @@ static FBSession *g_activeSession = nil;
                       canFetchAppSettings:(BOOL)canFetchAppSettings {
 
     // setup parameters for either the safari or inline login
+    BOOL appPres = [[UIApplication sharedApplication] canOpenURL:[NSURL URLWithString:@"fbauth2://"]];
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithObjectsAndKeys:
                                    self.appID, FBLoginUXClientID,
                                    FBLoginUXResponseTypeTokenAndSignedRequest, FBLoginUXResponseType,
@@ -999,6 +1056,7 @@ static FBSession *g_activeSession = nil;
                                    FBLoginUXIOS, FBLoginUXSDK,
                                    FBLoginUXReturnScopesYES, FBLoginUXReturnScopes,
                                    FB_IOS_SDK_VERSION_STRING, FBLoginParamsSDKVersion,
+                                   @(appPres), @"fbapp_res",
                                    nil];
     params[FBLoginParamsLegacyOverride] = FB_IOS_SDK_TARGET_PLATFORM_VERSION;
 
@@ -1424,7 +1482,7 @@ static FBSession *g_activeSession = nil;
     return [self tryOpenURL:[NSURL URLWithString:fbAppUrl]];
 }
 
-- (BOOL)authorizeUsingSafari:(NSMutableDictionary *)params {
+- (BOOL)authorizeUsingSafari:(NSMutableDictionary *)params useSFVC:(BOOL)useSFVC {
     // add a timestamp for tracking GDP e2e time
     [FBSessionUtility addWebLoginStartTimeToParams:params];
 
@@ -1436,19 +1494,18 @@ static FBSession *g_activeSession = nil;
     NSString *fbAppUrl = [FBRequest serializeURL:loginDialogURL params:params];
     _loginTypeOfPendingOpenUrlCallback = FBSessionLoginTypeFacebookViaSafari;
 
-    return [self tryOpenURL:[NSURL URLWithString:fbAppUrl]];
+    NSURL *url = [NSURL URLWithString:fbAppUrl];
+    if ([url.scheme hasPrefix:@"http"] &&
+        useSFVC) {
+        return [FBAppCall openURLWithSafariViewController:url fromViewController:self.fromViewController];
+    } else {
+        return [self tryOpenURL:url];
+    }
 }
 
 - (BOOL)tryOpenURL:(NSURL *)url {
-    if ([url.scheme hasPrefix:@"http"] &&
-        [FBDialogConfig useSafariViewControllerForDialogName:FBDialogConfigurationNameLogin] &&
-        self == [FBSession activeSessionIfExists]) {
-        // Can only use SFVC for active session, otherwise we're not able to send
-        // a cancel if user taps "Done".
-        return [FBAppCall openURLWithSafariViewController:url];
-    } else {
-        return [FBAppCall openURL:url];
-    }
+    // tryOpenURL could be removed if we updated corresponding tests that mock/expect it.
+    return [FBAppCall openURL:url];
 }
 
 - (void)authorizeUsingLoginDialog:(NSMutableDictionary *)params {
@@ -1872,6 +1929,7 @@ static FBSession *g_activeSession = nil;
     // trigger this block.
     if (_loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeNone
         && _loginTypeOfPendingOpenUrlCallback != FBSessionLoginTypeWebView) {
+        [self.authLogger addExtrasForNextEvent:@{ @"implicit_cancel" : @(YES) }];
         if (state == FBSessionStateCreatedOpening) {
             NSError *error = [self errorLoginFailedWithReason:FBErrorLoginFailedReasonUserCancelledValue
                                                     errorCode:nil
@@ -2053,6 +2111,9 @@ static FBSession *g_activeSession = nil;
         authLoggerResult = FBSessionAuthLoggerResultCancelled;
     }
 
+    if (self.declinedPermissions.count) {
+        [self.authLogger addExtrasForNextEvent:@{ @"declined_permissions" : [self.declinedPermissions componentsJoinedByString:@","] }];
+    }
     [self.authLogger logEndAuthWithResult:authLoggerResult error:error];
     self.authLogger = nil; // Nil out the logger so there aren't any rogue events logged.
 
@@ -2238,7 +2299,9 @@ static FBSession *g_activeSession = nil;
 
     BOOL result = NO;
     if ([self initializeFromCachedToken:accessTokenData withPermissions:nil]) {
-        [self openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView completionHandler:handler];
+        [self openWithBehavior:FBSessionLoginBehaviorWithNoFallbackToWebView
+            fromViewController:self.fromViewController
+             completionHandler:handler];
         result = self.isOpen;
 
         [self.tokenCachingStrategy cacheFBAccessTokenData:accessTokenData];
@@ -2251,12 +2314,14 @@ static FBSession *g_activeSession = nil;
                       allowSystemAccount:(BOOL)allowSystemAccount
                                   isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                      fromViewController:(UIViewController *)fromViewController
                        completionHandler:(FBSessionStateHandler)handler {
     return [FBSession openActiveSessionWithPermissions:permissions
                                           allowLoginUI:allowLoginUI
                                          loginBehavior:allowSystemAccount ? FBSessionLoginBehaviorUseSystemAccountIfPresent : FBSessionLoginBehaviorWithFallbackToWebView
                                                 isRead:isRead
                                        defaultAudience:defaultAudience
+                                    fromViewController:fromViewController
                                      completionHandler:handler];
 }
 
@@ -2265,6 +2330,7 @@ static FBSession *g_activeSession = nil;
                            loginBehavior:(FBSessionLoginBehavior)loginBehavior
                                   isRead:(BOOL)isRead
                          defaultAudience:(FBSessionDefaultAudience)defaultAudience
+                      fromViewController:(UIViewController *)fromViewController
                        completionHandler:(FBSessionStateHandler)handler {
     BOOL result = NO;
     FBSession *session = [[[FBSession alloc] initWithAppID:nil
@@ -2273,11 +2339,13 @@ static FBSession *g_activeSession = nil;
                                            urlSchemeSuffix:nil
                                         tokenCacheStrategy:nil]
                           autorelease];
+    session.fromViewController = fromViewController;
     if (allowLoginUI || session.state == FBSessionStateCreatedTokenLoaded) {
         [FBSession setActiveSession:session userInfo:@{FBSessionDidSetActiveSessionNotificationUserInfoIsOpening: @YES}];
         // we open after the fact, in order to avoid overlapping close
         // and open handler calls for blocks
         [session openWithBehavior:loginBehavior
+               fromViewController:fromViewController
                 completionHandler:handler];
         result = session.isOpen;
     }

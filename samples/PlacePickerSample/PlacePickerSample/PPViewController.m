@@ -49,23 +49,26 @@ enum SampleLocation {
     // if the session is open, then load the data for our view controller
     if (FBSession.activeSession.isOpen) {
         // Default to Seattle, this method calls loadData
-        [self searchDisplayController:nil shouldReloadTableForSearchScope:SampleLocationSeattle];
+        [self searchDisplayController:self.searchDisplayController shouldReloadTableForSearchScope:SampleLocationSeattle];
     } else {
         // if the session isn't open, we open it here, which may cause UX to log in the user
-        [FBSession openActiveSessionWithReadPermissions:nil
-                                           allowLoginUI:YES
-                                      completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
-                                          if (!error) {
-                                              [self refresh];
-                                          } else {
-                                              [[[UIAlertView alloc] initWithTitle:@"Error"
-                                                                          message:error.localizedDescription
-                                                                         delegate:nil
-                                                                cancelButtonTitle:@"OK"
-                                                                otherButtonTitles:nil]
-                                               show];
-                                          }
-                                      }];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [FBSession openActiveSessionWithReadPermissions:nil
+                                               allowLoginUI:YES
+                                         fromViewController:nil
+                                          completionHandler:^(FBSession *session, FBSessionState status, NSError *error) {
+                                              if (!error) {
+                                                  [self refresh];
+                                              } else {
+                                                  [[[UIAlertView alloc] initWithTitle:@"Error"
+                                                                              message:error.localizedDescription
+                                                                             delegate:nil
+                                                                    cancelButtonTitle:@"OK"
+                                                                    otherButtonTitles:nil]
+                                                   show];
+                                              }
+                                          }];
+        });
     }
 }
 
