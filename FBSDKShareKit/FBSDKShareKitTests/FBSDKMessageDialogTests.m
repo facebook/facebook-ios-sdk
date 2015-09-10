@@ -27,6 +27,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 
 @interface FBSDKMessageDialogTests : XCTestCase
@@ -45,6 +46,12 @@
     [applicationClassMock stopMocking];
     [applicationMock stopMocking];
   }
+}
+
+- (void)setUp
+{
+  [super setUp];
+  [FBSDKShareKitTestUtility mainBundleMock];
 }
 
 - (void)testCanShow

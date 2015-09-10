@@ -74,6 +74,7 @@
   [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:nil
                                                       createIfNotFound:YES
                                                      completionHandler:^(NSArray *tokens, NSError *error) {
+                                                       XCTAssertNil(error);
                                                        [blocker signal];
 
                                                      }];
@@ -85,8 +86,8 @@
   [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:nil
                                                       createIfNotFound:YES
                                                      completionHandler:^(NSArray *tokens, NSError *error) {
+                                                       XCTAssertNil(error);
                                                        [blocker signal];
-
                                                      }];
   XCTAssertTrue([blocker waitWithTimeout:30], @"timed out fetching test user");
 

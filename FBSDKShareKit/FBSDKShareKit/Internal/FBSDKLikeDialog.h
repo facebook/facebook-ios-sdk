@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import <FBSDKShareKit/FBSDKLikeObjectType.h>
 
@@ -32,6 +33,7 @@
 @property (nonatomic, copy) NSString *objectID;
 @property (nonatomic, assign) FBSDKLikeObjectType objectType;
 @property (nonatomic, assign) BOOL shouldFailOnDataError;
+@property (nonatomic, weak) UIViewController *fromViewController;
 
 - (BOOL)canLike;
 - (BOOL)like;

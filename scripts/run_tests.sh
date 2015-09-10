@@ -85,16 +85,12 @@ for SCHEME in $SCHEMES; do
       source "internal/scripts/run_internal_tests.sh"
     fi
   else
-    BUILD_TEST=""
-    if [[ $SCHEME == "FBSDKIntegrationTests" ]]; then
-      BUILD_TEST="build-tests"
-    fi
     COMMAND="$XCTOOL
       -workspace FacebookSDK.xcworkspace \
       -scheme $SCHEME \
-      -configuration "$BUILDCONFIGURATION" \
+      -configuration $BUILDCONFIGURATION \
       -sdk iphonesimulator \
-      $BUILD_TEST run-tests"
+      build-tests run-tests"
       eval $COMMAND || die "Error while running tests ($COMMAND)"
   fi
 done

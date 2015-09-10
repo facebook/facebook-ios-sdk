@@ -119,6 +119,7 @@
     } else {
         [[[FBSDKLoginManager alloc] init]
          logInWithPublishPermissions:@[publish_actions]
+         fromViewController:nil
          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
              if ([result.grantedPermissions containsObject:publish_actions]) {
                  [self.delegate shareUtilityWillShare:self];

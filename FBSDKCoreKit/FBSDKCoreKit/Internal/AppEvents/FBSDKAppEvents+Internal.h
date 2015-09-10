@@ -129,6 +129,11 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSendButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKShareButtonImpression;
 
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSendButtonDidTap;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKShareButtonDidTap;
+
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlDidDisable;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlDidLike;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlDidPresentDialog;

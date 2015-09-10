@@ -86,6 +86,13 @@ static FBSDKAccessToken *g_currentAccessToken;
     }
 
     g_currentAccessToken = token;
+
+    // Only need to keep current session in web view for the case when token is current
+    // When token is abandoned cookies must to be cleaned up immediatelly
+    if (token == nil) {
+      [FBSDKInternalUtility deleteFacebookCookies];
+    }
+
     [[FBSDKSettings accessTokenCache] cacheAccessToken:token];
     [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
                                                         object:[self class]

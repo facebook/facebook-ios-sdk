@@ -16,16 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "TestAppIdAndSecret.xcconfig"
+#import <Foundation/Foundation.h>
 
-// Code Signing
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+#import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
 
-// Packaging
-WRAPPER_EXTENSION = xctest
+@interface FBSDKLoginManagerLoginResult()
 
-// Linking
-OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
+@property (nonatomic, readonly) NSDictionary *loggingExtras;
 
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
+// legacy flag indicating this is an intermediary result only for logging purposes.
+@property (nonatomic) BOOL isSkipped;
+
+// adds additional logging entry to extras - only sent as part of `endLoginWithResult:`
+-(void)addLoggingExtra:(id)object forKey:(id<NSCopying>)key;
+@end

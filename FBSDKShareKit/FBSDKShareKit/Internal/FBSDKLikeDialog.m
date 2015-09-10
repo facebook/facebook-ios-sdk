@@ -32,6 +32,13 @@
 
 #pragma mark - Class Methods
 
++ (void)initialize
+{
+  if ([FBSDKLikeDialog class] == self) {
+    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  }
+}
+
 + (instancetype)likeWithObjectID:(NSString *)objectID
                       objectType:(FBSDKLikeObjectType)objectType
                         delegate:(id<FBSDKLikeDialogDelegate>)delegate
@@ -80,6 +87,8 @@
     [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
   };
 
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameLike];
   if ([self _canLikeNative]) {
     FBSDKBridgeAPIRequest *nativeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
                                                                                             scheme:FBSDK_CANOPENURL_FACEBOOK
@@ -87,15 +96,25 @@
                                                                                      methodVersion:FBSDK_LIKE_METHOD_MIN_VERSION
                                                                                         parameters:parameters
                                                                                           userInfo:nil];
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:nativeRequest completionBlock:^(FBSDKBridgeAPIResponse *response) {
+    void (^networkCompletionBlock)(FBSDKBridgeAPIResponse *) = ^(FBSDKBridgeAPIResponse *response) {
       if (response.error.code == FBSDKAppVersionUnsupportedErrorCode) {
-        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest completionBlock:completionBlock];
+        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest
+                                                useSafariViewController:useSafariViewController
+                                                     fromViewController:self.fromViewController
+                                                        completionBlock:completionBlock];
       } else {
         completionBlock(response);
       }
-    }];
+    };
+    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:nativeRequest
+                                            useSafariViewController:useSafariViewController
+                                                 fromViewController:self.fromViewController
+                                                    completionBlock:networkCompletionBlock];
   } else {
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest completionBlock:completionBlock];
+    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webRequest
+                                            useSafariViewController:useSafariViewController
+                                                 fromViewController:self.fromViewController
+                                                    completionBlock:completionBlock];
   }
 
   return YES;
@@ -119,7 +138,9 @@
 
 - (BOOL)_canLikeNative
 {
-  return [FBSDKInternalUtility isFacebookAppInstalled];
+  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameLike];
+  return (useNativeDialog && [FBSDKInternalUtility isFacebookAppInstalled]);
 }
 
 - (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error

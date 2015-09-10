@@ -16,16 +16,24 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "TestAppIdAndSecret.xcconfig"
+#import "FBSDKContainerViewController.h"
 
-// Code Signing
-CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+@implementation FBSDKContainerViewController
 
-// Packaging
-WRAPPER_EXTENSION = xctest
+- (void)viewDidDisappear:(BOOL)animated
+{
+  [super viewDidDisappear:animated];
+  if ([self.delegate respondsToSelector:@selector(viewControllerDidDisappear:animated:)]) {
+    [self.delegate viewControllerDidDisappear:self animated:animated];
+  }
+}
 
-// Linking
-OTHER_LDFLAGS = -all_load -lc++
-ENABLE_BITCODE = NO
+- (void)displayChildController:(UIViewController *)childController
+{
+  [self addChildViewController:childController];
+  childController.view.frame = self.view.frame;
+  [self.view addSubview:childController.view];
+  [childController didMoveToParentViewController:self];
+}
 
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
+@end

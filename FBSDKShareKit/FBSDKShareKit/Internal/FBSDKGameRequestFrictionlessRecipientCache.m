@@ -85,7 +85,7 @@
     _recipientIDs = nil;
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/apprequestformerrecipients"
-                                                                 parameters:nil
+                                                                 parameters:@{@"fields":@""}
                                                                       flags:(FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
                                                                              FBSDKGraphRequestFlagDisableErrorRecovery)];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {

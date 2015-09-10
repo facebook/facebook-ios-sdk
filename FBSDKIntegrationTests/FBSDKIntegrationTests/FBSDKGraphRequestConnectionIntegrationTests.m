@@ -73,6 +73,26 @@
   }];
 }
 
+- (void)testRefreshToken {
+  XCTestExpectation *expectation = [self expectationWithDescription:@"token refreshed"];
+  // create token locally without permissions
+  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@""]];
+  [FBSDKAccessToken setCurrentAccessToken:token];
+
+  XCTAssertFalse([[FBSDKAccessToken currentAccessToken] hasGranted: @"public_profile"], "Permission is not expected to be granted.");
+
+  // refresh token not only should succeed but also update permissions data
+  [FBSDKAccessToken refreshCurrentAccessToken:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    XCTAssertNil(error, "@unexpected error: %@", error);
+    [expectation fulfill];
+  }];
+
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"expectation not fulfilled: %@", error);
+    XCTAssertTrue([[FBSDKAccessToken currentAccessToken] hasGranted: @"public_profile"], "Permission is expected to be granted.");
+  }];
+}
+
 - (void)testCancel {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
@@ -178,16 +198,18 @@
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:4];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
 
-  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/photos" parameters:@{ @"picture" : [self createSquareTestImage:120],
-                                                                                           @"method" : @"POST" }]
+  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/photos"
+                                                     parameters:@{ @"picture" : [self createSquareTestImage:120] }
+                                                     HTTPMethod:@"POST"]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error);
    XCTAssertNil(result[@"id"], @"unexpected post id since omit_response_on_success should default to YES");
    [blocker signal];
  } batchEntryName:@"uploadRequest1"];
 
-  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/photos" parameters:@{ @"picture" : [self createSquareTestImage:150],
-                                                                                           @"method" : @"POST"}]
+  [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/photos"
+                                                     parameters:@{ @"picture" : [self createSquareTestImage:150]}
+                                                     HTTPMethod:@"POST"]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error);
    // expect an id since we specify omit_response_on_success
@@ -210,7 +232,7 @@
    [blocker signal];
  }];
   [conn start];
-  XCTAssertTrue([blocker waitWithTimeout:10], @"batch request didn't finish.");
+  XCTAssertTrue([blocker waitWithTimeout:25], @"batch request didn't finish.");
 }
 
 // issue requests that will fail and make sure error is as expected.

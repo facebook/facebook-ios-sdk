@@ -19,6 +19,9 @@
 #import "FBSDKButton.h"
 #import "FBSDKButton+Subclass.h"
 
+#import "FBSDKAccessToken.h"
+#import "FBSDKAppEvents+Internal.h"
+#import "FBSDKAppEvents.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKLogo.h"
 #import "FBSDKMath.h"
@@ -160,6 +163,14 @@
 }
 
 #pragma mark - Subclass Methods
+
+- (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
+{
+    [FBSDKAppEvents logImplicitEvent:eventName
+                          valueToSum:nil
+                          parameters:parameters
+                         accessToken:[FBSDKAccessToken currentAccessToken]];
+}
 
 - (void)checkImplicitlyDisabled
 {

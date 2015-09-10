@@ -29,7 +29,7 @@
 #import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";
-static NSString *const kFakeChallenge = @"abcdef";
+static NSString *const kFakeChallenge = @"a+=bcdef";
 
 @interface FBSDKLoginManagerTests : XCTestCase
 
@@ -53,10 +53,12 @@ static NSString *const kFakeChallenge = @"abcdef";
 
 - (NSURL *)authorizeURLWithFragment:(NSString *)fragment challenge:(NSString *)challenge
 {
-  fragment = [NSString stringWithFormat:@"%@%@state=%%7B%%22challenge%%22%%3A%%22%@%%22%%7D",
+  challenge = [FBSDKUtility URLEncode:challenge];
+  fragment = [NSString stringWithFormat:@"%@%@state=%@",
               fragment,
               fragment.length > 0 ? @"&" : @"",
-              challenge];
+              [FBSDKUtility URLEncode:[NSString stringWithFormat:@"{\"challenge\":\"%@\"}", challenge]]
+              ];
   return [self authorizeURLWithParameters:fragment joinedBy:@"#"];
 
 }
@@ -248,14 +250,23 @@ static NSString *const kFakeChallenge = @"abcdef";
   FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
   NSArray *publishPermissions = @[@"publish_actions", @"manage_notifications"];
   NSArray *readPermissions = @[@"user_birthday", @"user_hometown"];
-  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:@[[publishPermissions componentsJoinedByString:@","]] handler:NULL],
+  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:@[[publishPermissions componentsJoinedByString:@","]]
+                                                fromViewController:nil
+                                                           handler:NULL],
                                NSException,
                                NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:readPermissions handler:NULL], NSException, NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:@[[readPermissions componentsJoinedByString:@","]] handler:NULL],
+  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:readPermissions
+                                                fromViewController:nil
+                                                           handler:NULL],
+                               NSException, NSInvalidArgumentException);
+  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:@[[readPermissions componentsJoinedByString:@","]]
+                                             fromViewController:nil
+                                                        handler:NULL],
                                NSException,
                                NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:publishPermissions handler:NULL], NSException, NSInvalidArgumentException);
+  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:publishPermissions
+                                             fromViewController:nil
+                                                        handler:NULL], NSException, NSInvalidArgumentException);
 }
 
 - (void)testOpenURLWithBadChallenge

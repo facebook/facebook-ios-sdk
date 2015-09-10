@@ -214,7 +214,9 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.userName = @"Loading ...";
-        [login logInWithReadPermissions:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+        [login logInWithReadPermissions:nil
+                     fromViewController:self
+                                handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
             if (error || result.isCancelled) {
                 cell.userName = @"Empty slot";
                 [self _deselectRow];

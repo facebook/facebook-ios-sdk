@@ -55,7 +55,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
   pendingCount++;
   FBSDKGraphRequest *permissionsRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/permissions"
-                                                                            parameters:nil
+                                                                            parameters:@{@"fields":@""}
                                                                            tokenString:tokenString
                                                                             HTTPMethod:nil
                                                                                  flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -196,8 +196,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
   NSError *error = nil;
   NSDictionary *state = [FBSDKInternalUtility objectForJSONString:parameters[@"state"] error:&error];
-  NSString *challenge = state[@"challenge"];
-  _parameters.challenge = challenge;
+  _parameters.challenge = [FBSDKUtility URLDecode:state[@"challenge"]];
 }
 
 - (void)setErrorWithDictionary:(NSDictionary *)parameters
