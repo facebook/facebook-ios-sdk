@@ -141,7 +141,7 @@
     return value;
   } else if ([value isKindOfClass:[NSDictionary class]]) {
     NSDictionary *properties = (NSDictionary *)value;
-    if ([FBSDKTypeUtility stringValue:properties[@"type"]]) {
+    if ([FBSDKTypeUtility stringValue:properties[@"og:type"]]) {
       return [FBSDKShareOpenGraphObject objectWithProperties:properties];
     } else {
       NSURL *imageURL = [FBSDKTypeUtility URLValue:properties[@"url"]];
