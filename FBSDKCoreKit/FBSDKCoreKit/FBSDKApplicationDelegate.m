@@ -167,13 +167,13 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     if (loginManagerClass) {
       id annotation = launchOptions[UIApplicationLaunchOptionsAnnotationKey];
       id<FBSDKURLOpening> loginManager = [[loginManagerClass alloc] init];
-      return [loginManager application:application
-                               openURL:launchedURL
-                     sourceApplication:sourceApplication
-                            annotation:annotation];
+      return ![loginManager application:application
+                                openURL:launchedURL
+                      sourceApplication:sourceApplication
+                             annotation:annotation];
     }
   }
-  return NO;
+  return YES;
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
