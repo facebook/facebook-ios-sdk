@@ -59,7 +59,7 @@
 
         // Set up a block to do the typical recovery work so that we can chain it for ios auth special cases.
         // the block returns YES if recovery UI is started (meaning we wait for the alertviewdelegate to resume control flow).
-        BOOL (^standardRecoveryWork)() = ^BOOL(){
+        BOOL (^standardRecoveryWork)(void) = ^BOOL {
           NSArray *recoveryOptionsTitles = error.userInfo[NSLocalizedRecoveryOptionsErrorKey];
           if (recoveryOptionsTitles.count > 0 && _recoveryAttempter) {
             NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
@@ -87,7 +87,7 @@
           // (for example, this can repair expired tokens seamlessly)
           [[FBSDKSystemAccountStoreAdapter sharedInstance]
            renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-             dispatch_async(dispatch_get_main_queue(), ^() {
+             dispatch_async(dispatch_get_main_queue(), ^{
                if (result == ACAccountCredentialRenewResultRenewed) {
                  [self.delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
                  self.delegate = nil;

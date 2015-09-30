@@ -241,7 +241,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
 
   // Prepare animation steps
   // 1st Step.
-  void (^zoomIn)() = ^() {
+  void (^zoomIn)(void) = ^{
     self.alpha = 1.0;
 
     CGFloat newZoomOffsetX = (centerPos - _arrowMidpoint) * (kZoomInScale - 1.0f);
@@ -256,7 +256,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   };
 
   // 2nd Step.
-  void (^bounceZoom)() = ^() {
+  void (^bounceZoom)(void) = ^{
     CGFloat centerPos2 = self.bounds.size.width / 2.0;
     CGFloat zoomOffsetX2 = (centerPos2 - _arrowMidpoint) * (kZoomBounceScale - 1.0f);
     CGFloat zoomOffsetY2 = -0.5f * self.bounds.size.height * (kZoomBounceScale - 1.0f);
@@ -268,7 +268,7 @@ static CGMutablePathRef _fbsdkCreateDownPointingBubbleWithRect(CGRect rect, CGFl
   };
 
   // 3rd Step.
-  void (^normalizeZoom)() = ^() {
+  void (^normalizeZoom)(void) = ^{
     self.layer.transform = fbsdkdfl_CATransform3DIdentity;
   };
 
