@@ -706,12 +706,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
 - (void)processResultBody:(NSDictionary *)body error:(NSError *)error metadata:(FBSDKGraphRequestMetadata *)metadata canNotifyDelegate:(BOOL)canNotifyDelegate
 {
-  void (^clearToken)() = ^{
+  void (^clearToken)(void) = ^{
     if (!(metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError)) {
       [FBSDKAccessToken setCurrentAccessToken:nil];
     }
   };
-  void (^finishAndInvokeCompletionHandler)() = ^{
+  void (^finishAndInvokeCompletionHandler)(void) = ^{
     NSDictionary *graphDebugDict = [body objectForKey:@"__debug__"];
     if ([graphDebugDict isKindOfClass:[NSDictionary class]]) {
       [self processResultDebugDictionary: graphDebugDict];

@@ -51,7 +51,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
   __block NSString *tokenString = nil;
   __block NSNumber *expirationDateNumber = nil;
   __block int expectingCallbacksCount = 2;
-  void (^expectingCallbackComplete)() = ^() {
+  void (^expectingCallbackComplete)(void) = ^{
     if (--expectingCallbacksCount == 0) {
       FBSDKAccessToken *currentToken = [FBSDKAccessToken currentAccessToken];
       NSDate *expirationDate = currentToken.expirationDate;
