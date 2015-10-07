@@ -420,10 +420,12 @@ static NSString *const FBexpirationDatePropertyName = @"expirationDate";
  * @return YES if the URL starts with 'fb[app_id]://authorize and hence was handled
  *   by SDK, NO otherwise.
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)handleOpenURL:(NSURL *)url {
     return [self.session handleOpenURL:url];
 }
-
+#pragma clang diagnostic pop
 /**
  * Invalidate the current user session by removing the access token in
  * memory and clearing the browser cookie.

@@ -395,12 +395,13 @@ static NSMutableArray *g_pendingFBAppCalls = nil;
                                         }
                               session:nil];
     }
-
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     // If we are here, it wasn't a bridge response and might be a non-native-login url response
     if ([workingSession handleOpenURL:url]) {
         return YES;
     }
-
+#pragma clang diagnostic pop
     // Last option is to see if maybe this has an access token. If yes, defer to handler to decide how to
     // proceed with the access token.
     FBAccessTokenData *accessToken = [FBAccessTokenData createTokenFromFacebookURL:url

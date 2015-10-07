@@ -102,12 +102,11 @@ typedef NS_ENUM(NSUInteger, FBSessionState) {
  by the application.
 
  The `FBSessionLoginBehavior` enum specifies whether to allow fallback, disallow fallback, or
- force fallback login behavior. Most applications will use the default, which attempts a normal
- Facebook Login, and only falls back if needed. In rare cases, it may be preferable to disallow
- fallback Facebook Login completely, or to force a fallback login.
+ force fallback login behavior. The SDK will determine the best behavior based on the current
+ device (such as iOS version).
  */
 typedef NS_ENUM(NSUInteger, FBSessionLoginBehavior) {
-    /*! Attempt Facebook Login, ask user for credentials if necessary */
+    /*! Attempt Facebook Login, ask user for credentials if necessary. This is the default behavior*/
     FBSessionLoginBehaviorWithFallbackToWebView      = 0,
     /*! Attempt Facebook Login, no direct request for credentials will be made */
     FBSessionLoginBehaviorWithNoFallbackToWebView    = 1,
@@ -582,10 +581,12 @@ __attribute__((deprecated));
  [UIApplicationDelegate application:openURL:sourceApplication:annotation:]. It should be invoked during
  the Facebook Login flow and will update the session information based on the incoming URL.
 
+ @deprecated use `[FBAppCall handleOpenURL:sourceApplication:]` or its overloads instead.
+
  @param url The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
  */
-- (BOOL)handleOpenURL:(NSURL *)url;
-
+- (BOOL)handleOpenURL:(NSURL *)url
+__attribute__((deprecated("use [FBAppCall handleOpenURL:sourceApplication:] or its overloads instead")));
 /*!
  @abstract
  A helper method that is used to provide an implementation for
