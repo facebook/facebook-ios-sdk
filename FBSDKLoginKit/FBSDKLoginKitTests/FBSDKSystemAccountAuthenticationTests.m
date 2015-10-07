@@ -210,23 +210,29 @@
     }
   }] beginSystemLogIn];
 
-  FBSDKServerConfiguration *configuration =
-    [[FBSDKServerConfiguration alloc] initWithAppID:[FBSDKSettings appID]
-                                            appName:@"Unit Tests"
-                                loginTooltipEnabled:NO
-                                   loginTooltipText:nil
-                                   defaultShareMode:nil
-                               advertisingIDEnabled:NO
-                             implicitLoggingEnabled:NO
-                     implicitPurchaseLoggingEnabled:NO
-                        systemAuthenticationEnabled:serverSupports
-                              nativeAuthFlowEnabled:serverSupports
-                               dialogConfigurations:nil
-                                        dialogFlows:nil
-                                          timestamp:[NSDate date]
-                                 errorConfiguration:nil
-                                           defaults:NO];
-  [FBSDKServerConfigurationManager _didLoadServerConfiguration:configuration appID:[FBSDKSettings appID] error:nil didLoadFromUserDefaults:YES];
+  FBSDKServerConfiguration *serverConfiguration =
+  [[FBSDKServerConfiguration alloc] initWithAppID:[FBSDKSettings appID]
+                                          appName:@"Unit Tests"
+                              loginTooltipEnabled:NO
+                                 loginTooltipText:nil
+                                 defaultShareMode:nil
+                             advertisingIDEnabled:NO
+                           implicitLoggingEnabled:NO
+                   implicitPurchaseLoggingEnabled:NO
+                      systemAuthenticationEnabled:serverSupports
+                            nativeAuthFlowEnabled:serverSupports
+                             dialogConfigurations:nil
+                                      dialogFlows:nil
+                                        timestamp:[NSDate date]
+                               errorConfiguration:nil
+                                         defaults:NO];
+  id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];
+  [[[serverConfigurationManager stub] andReturn:serverConfiguration] cachedServerConfiguration];
+  [[[serverConfigurationManager stub] andDo:^(NSInvocation *invocation) {
+    FBSDKServerConfigurationManagerLoadBlock block;
+    [invocation getArgument:&block atIndex:2];
+    block(serverConfiguration, nil);
+  }] loadServerConfigurationWithCompletionBlock:[OCMArg any]];
 
   [target setRequestedPermissions:permissions];
   if (deviceSupports) {
@@ -244,6 +250,7 @@
   XCTAssertEqual(invocationCount, (!serverSupports ? 1 : 2));
 
   [mockUtility stopMocking];
+  [serverConfigurationManager stopMocking];
 }
 
 @end

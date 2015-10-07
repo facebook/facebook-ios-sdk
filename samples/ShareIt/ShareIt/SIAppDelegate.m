@@ -31,8 +31,9 @@
   [FBSDKLikeControl class];
   [FBSDKLoginButton class];
 
-  return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                  didFinishLaunchingWithOptions:launchOptions];
+  [[FBSDKApplicationDelegate sharedInstance] application:application
+                           didFinishLaunchingWithOptions:launchOptions];
+  return YES;
 }
 
 - (BOOL)application:(UIApplication *)application

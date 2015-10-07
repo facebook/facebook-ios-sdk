@@ -100,7 +100,10 @@ static Class g_BFTaskClass;
         appLinks[url] = self.cachedLinks[url];
       } else {
         [toFind addObject:url];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         [toFindStrings addObject:[url.absoluteString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+#pragma clang diagnostic pop
       }
     }
   }

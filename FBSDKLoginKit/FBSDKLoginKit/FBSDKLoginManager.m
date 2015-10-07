@@ -761,8 +761,8 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
     [completer completeLogIn:self withHandler:^(FBSDKLoginCompletionParameters *parameters) {
       [self completeAuthentication:parameters expectChallenge:YES];
     }];
+    [FBSDKInternalUtility unregisterTransientObject:self];
   }
-  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 - (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error

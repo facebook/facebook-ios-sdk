@@ -31,8 +31,47 @@
 - (void)displayChildController:(UIViewController *)childController
 {
   [self addChildViewController:childController];
-  childController.view.frame = self.view.frame;
-  [self.view addSubview:childController.view];
+  UIView *view = self.view;
+  UIView *childView = childController.view;
+  childView.translatesAutoresizingMaskIntoConstraints = NO;
+  childView.frame = view.frame;
+  [view addSubview:childView];
+
+  [view addConstraints:
+   @[
+     [NSLayoutConstraint constraintWithItem:childView
+                                  attribute:NSLayoutAttributeTop
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:view
+                                  attribute:NSLayoutAttributeTop
+                                 multiplier:1.0
+                                   constant:0.0],
+
+     [NSLayoutConstraint constraintWithItem:childView
+                                  attribute:NSLayoutAttributeBottom
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:view
+                                  attribute:NSLayoutAttributeBottom
+                                 multiplier:1.0
+                                   constant:0.0],
+
+     [NSLayoutConstraint constraintWithItem:childView
+                                  attribute:NSLayoutAttributeLeading
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:view
+                                  attribute:NSLayoutAttributeLeading
+                                 multiplier:1.0
+                                   constant:0.0],
+
+     [NSLayoutConstraint constraintWithItem:childView
+                                  attribute:NSLayoutAttributeTrailing
+                                  relatedBy:NSLayoutRelationEqual
+                                     toItem:view
+                                  attribute:NSLayoutAttributeTrailing
+                                 multiplier:1.0
+                                   constant:0.0],
+   ]];
+
   [childController didMoveToParentViewController:self];
 }
 

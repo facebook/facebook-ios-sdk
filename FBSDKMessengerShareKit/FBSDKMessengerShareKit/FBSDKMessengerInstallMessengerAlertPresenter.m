@@ -40,7 +40,7 @@ static NSString *const kMessengerAppStoreLink = @"itms-apps://itunes.apple.com/a
 - (void)presentInstallMessengerAlert
 {
   UIAlertView * alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Get Messenger", @"Alert title telling a user they need to install Messenger")
-                                                   message:NSLocalizedString(@"You'll need to install the latest version of Messenger to send this.", @"Message when an old version of messenger is installed")
+                                                   message:NSLocalizedString(@"You are using an older version of Messenger that does not support this feature.", @"Message when an old version of messenger is installed")
                                                   delegate:self
                                          cancelButtonTitle:NSLocalizedString(@"Not Now", @"Button label when user doesn't want to install Messenger")
                                          otherButtonTitles:NSLocalizedString(@"Install", @"Button label to install Messenger"), nil];

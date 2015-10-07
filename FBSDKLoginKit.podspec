@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKLoginKit"
-  s.version      = "4.6.0"
+  s.version      = "4.7.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -17,10 +17,11 @@ Pod::Spec.new do |s|
   s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, "7.0"
+  s.platform     = :ios, "9.0"
+  s.ios.deployment_target = "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.6.0"
+                     :tag => "sdk-version-4.7.0"
                     }
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
