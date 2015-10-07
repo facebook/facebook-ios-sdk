@@ -450,14 +450,21 @@ static NSMapTable *_transientObjects;
   [_transientObjects setObject:@(count + 1) forKey:object];
 }
 
-+ (void)unregisterTransientObject:(id)object
++ (void)unregisterTransientObject:(__weak id)object
 {
+  if (!object) {
+    return;
+  }
   NSAssert([NSThread isMainThread], @"Must be called from the main thread!");
   NSUInteger count = [(NSNumber *)[_transientObjects objectForKey:object] unsignedIntegerValue];
   if (count == 1) {
     [_transientObjects removeObjectForKey:object];
   } else if (count != 0) {
     [_transientObjects setObject:@(count - 1) forKey:object];
+  } else {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                       formatString:@"unregisterTransientObject:%@ count is 0. This may indicate a bug in the FBSDK. Please"
+     " file a report to developers.facebook.com/bugs if you encounter any problems. Thanks!", [object class]];
   }
 }
 
@@ -481,10 +488,11 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
   });
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = FBSDK_CANOPENURL_FACEBOOK;
+  components.path = @"/";
   return [[UIApplication sharedApplication]
-          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_FACEBOOK
-                                              host:nil
-                                              path:@"/"]];
+          canOpenURL:components.URL];
 }
 
 + (BOOL)isMessengerAppInstalled
@@ -493,10 +501,11 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   });
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = FBSDK_CANOPENURL_MESSENGER;
+  components.path = @"/";
   return [[UIApplication sharedApplication]
-          canOpenURL:[[NSURL alloc] initWithScheme:FBSDK_CANOPENURL_MESSENGER
-                                              host:nil
-                                              path:@"/"]];
+          canOpenURL:components.URL];
 
 }
 

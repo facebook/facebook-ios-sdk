@@ -368,6 +368,8 @@ static NSString *const FBSDKShareAPIVideosEdge = @"videos";
     postVideoBlock(videoData, filename);
     return YES;
   } else if (videoURL) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [[[fbsdkdfl_ALAssetsLibraryClass() alloc] init] assetForURL:video.videoURL resultBlock:^(ALAsset *asset) {
       ALAssetRepresentation *defaultRepresentation = [asset defaultRepresentation];
       NSUInteger size = (NSUInteger)defaultRepresentation.size;
@@ -381,6 +383,7 @@ static NSString *const FBSDKShareAPIVideosEdge = @"videos";
       }
       NSData *videoData = [NSData dataWithBytesNoCopy:buffer length:bufferedLength freeWhenDone:YES];
       NSString *filename = [[NSString alloc] initWithFormat:@"video.%@", defaultRepresentation.filename.pathExtension];
+#pragma clang diagnostic pop
       postVideoBlock(videoData, filename);
     } failureBlock:^(NSError *error) {
       [_delegate sharer:self didFailWithError:error];

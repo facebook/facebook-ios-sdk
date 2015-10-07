@@ -149,6 +149,24 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
 
   NSError *error = [FBSDKShareError errorWithCode:[FBSDKTypeUtility unsignedIntegerValue:results[@"error_code"]]
                                           message:[FBSDKTypeUtility stringValue:results[@"error_message"]]];
+  if (!error.code) {
+    // reformat "to[x]" keys into an array.
+    int counter = 0;
+    NSMutableArray *toArray = [NSMutableArray array];
+    while (true) {
+      NSString *key = [NSString stringWithFormat:@"to[%d]", counter++];
+      if (results[key]) {
+        [toArray addObject:results[key]];
+      } else {
+        break;
+      }
+    }
+    if (toArray.count) {
+      NSMutableDictionary *mutableResults = [results mutableCopy];
+      mutableResults[@"to"] = toArray;
+      results = mutableResults;
+    }
+  }
   [self _handleCompletionWithDialogResults:results error:error];
   [FBSDKInternalUtility unregisterTransientObject:self];
 }

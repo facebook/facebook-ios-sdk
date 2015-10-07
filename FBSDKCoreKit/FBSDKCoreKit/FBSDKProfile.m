@@ -84,6 +84,18 @@ static FBSDKProfile *g_currentProfile;
   }
 }
 
+- (NSURL *)imageURLForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
+{
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  NSString *path = [self imagePathForPictureMode:FBSDKProfilePictureModeNormal size:size];
+#pragma clang diagnostic pop
+  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
+                                                    path:path
+                                         queryParameters:nil
+                                                   error:NULL];
+}
+
 - (NSString *)imagePathForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
 {
   NSString *type;

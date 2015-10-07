@@ -92,8 +92,9 @@
     self.window.rootViewController = self.navigationController;
     [self.window makeKeyAndVisible];
 
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    return YES;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

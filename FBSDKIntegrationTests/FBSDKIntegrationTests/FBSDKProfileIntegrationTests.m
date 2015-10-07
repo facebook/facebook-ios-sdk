@@ -192,4 +192,27 @@
   [FBSDKProfile setCurrentProfile:nil];
   [FBSDKAccessToken setCurrentAccessToken:nil];
 }
+
+- (void)testImageURLForPictureMode
+{
+  CGSize size = CGSizeMake(10, 10);
+  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  [FBSDKAccessToken setCurrentAccessToken:token];
+  [FBSDKProfile setCurrentProfile:[[FBSDKProfile alloc] initWithUserID:token.userID
+                                                             firstName:nil
+                                                            middleName:nil
+                                                              lastName:nil
+                                                                  name:nil
+                                                               linkURL:nil
+                                                           refreshDate:[NSDate date]]];
+  NSString *imageURL = [[[FBSDKProfile currentProfile] imageURLForPictureMode:FBSDKProfilePictureModeNormal size:size] absoluteString];
+  NSString *expectedImageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/%@/picture?type=%@&width=%d&height=%d",
+                                FBSDK_TARGET_PLATFORM_VERSION,
+                                token.userID,
+                                @"normal",
+                                (int) roundf(size.width),
+                                (int) roundf(size.height)
+                                ];
+  XCTAssertTrue([imageURL isEqualToString:expectedImageURL]);
+}
 @end

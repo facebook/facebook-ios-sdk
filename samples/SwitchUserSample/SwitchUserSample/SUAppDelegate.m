@@ -28,8 +28,9 @@
     //  so we enable automatic fetching on access token changes.
     [FBSDKProfile enableUpdatesOnAccessTokenChange:YES];
 
-    return [[FBSDKApplicationDelegate sharedInstance] application:application
-                                    didFinishLaunchingWithOptions:launchOptions];
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                             didFinishLaunchingWithOptions:launchOptions];
+    return YES;
 }
 
 - (BOOL)application:(UIApplication *)application

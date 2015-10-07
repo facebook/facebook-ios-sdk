@@ -66,23 +66,18 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
  provides the most secure and lowest friction way for a user to authorize the application to
  interact with Facebook.
 
- The \c FBSDKLoginBehavior enum specifies which log in method should be attempted. Most
- applications will use the default, which attempts a login through the Facebook app and falls
- back to the browser if needed.
-
- If log in cannot be completed using the specificed behavior, the completion handler will
- be invoked with an error in the \c FBSDKErrorDomain and a code of \c FBSDKLoginUnknownErrorCode.
+ The \c FBSDKLoginBehavior enum specifies which log-in methods may be used. The SDK
+  will determine the best behavior based on the current device (such as iOS version).
  */
 typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 {
   /*!
-   @abstract Attempts log in through the native Facebook app. If the Facebook app is
-   not installed on the device, falls back to \c FBSDKLoginBehaviorBrowser. This is the
-   default behavior.
+   @abstract This is the default behavior, and indicates logging in through the native
+   Facebook app may be used. The SDK may still use Safari instead.
    */
   FBSDKLoginBehaviorNative = 0,
   /*!
-   @abstract Attempts log in through the Safari browser
+   @abstract Attempts log in through the Safari or SFSafariViewController, if available.
    */
   FBSDKLoginBehaviorBrowser,
   /*!
@@ -122,8 +117,6 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 
 /*!
  @abstract the login behavior
- @discussion you should only set this if you want an explicit login flow; otherwise, the SDK
-  will automatically determine the best flow available.
  */
 @property (assign, nonatomic) FBSDKLoginBehavior loginBehavior;
 

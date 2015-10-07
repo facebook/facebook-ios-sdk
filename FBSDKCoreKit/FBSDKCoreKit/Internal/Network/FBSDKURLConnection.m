@@ -43,10 +43,13 @@
   if ((self = [super init])) {
       _requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
       _loggerSerialNumber = [FBSDKLogger generateSerialNumber];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
       _connection = [[NSURLConnection alloc]
                      initWithRequest:request
                      delegate:self
                      startImmediately:NO];
+#pragma clang diagnostic pop
       _data = [[NSMutableData alloc] init];
 
       _handler = [handler copy];

@@ -53,7 +53,7 @@ static NSString *const kUserAgentBase = @"FBiOSSDK";
 
 static NSString *const kBatchRestMethodBaseURL = @"method/";
 
-static const NSTimeInterval kDefaultTimeout = 180.0;
+static NSTimeInterval g_defaultTimeout = 60.0;
 
 static FBSDKErrorConfiguration *g_errorConfiguration;
 
@@ -98,7 +98,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 {
   if ((self = [super init])) {
     _requests = [[NSMutableArray alloc] init];
-    _timeout = kDefaultTimeout;
+    _timeout = g_defaultTimeout;
     _state = kStateCreated;
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
   }
@@ -112,6 +112,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 }
 
 #pragma mark - Public
+
++ (void)setDefaultConnectionTimeout:(NSTimeInterval)defaultTimeout
+{
+  if (defaultTimeout >= 0) {
+    g_defaultTimeout = defaultTimeout;
+  }
+}
 
 - (void)addRequest:(FBSDKGraphRequest *)request
  completionHandler:(FBSDKGraphRequestHandler)handler
@@ -682,8 +689,8 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
     id body = nil;
     if (!resultError && [result isKindOfClass:[NSDictionary class]]) {
-      NSDictionary *resultDictionary = (NSDictionary *)result;
-      body = [resultDictionary objectForKey:@"body"];
+      NSDictionary *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+      body = [FBSDKTypeUtility dictionaryValue:resultDictionary[@"body"]];
     }
 
     if (resultError && ![metadata.request isGraphErrorRecoveryDisabled] && isSingleRequestToRecover) {
@@ -706,12 +713,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
 - (void)processResultBody:(NSDictionary *)body error:(NSError *)error metadata:(FBSDKGraphRequestMetadata *)metadata canNotifyDelegate:(BOOL)canNotifyDelegate
 {
-  void (^clearToken)() = ^{
+  void (^clearToken)(void) = ^{
     if (!(metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError)) {
       [FBSDKAccessToken setCurrentAccessToken:nil];
     }
   };
-  void (^finishAndInvokeCompletionHandler)() = ^{
+  void (^finishAndInvokeCompletionHandler)(void) = ^{
     NSDictionary *graphDebugDict = [body objectForKey:@"__debug__"];
     if ([graphDebugDict isKindOfClass:[NSDictionary class]]) {
       [self processResultDebugDictionary: graphDebugDict];
@@ -800,7 +807,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 - (NSError *)errorFromResult:(id)result request:(FBSDKGraphRequest *)request
 {
   if ([result isKindOfClass:[NSDictionary class]]) {
-    NSDictionary *errorDictionary = result[@"body"][@"error"];
+    NSDictionary *errorDictionary = [FBSDKTypeUtility dictionaryValue:result[@"body"]][@"error"];
 
     if (errorDictionary) {
       NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];

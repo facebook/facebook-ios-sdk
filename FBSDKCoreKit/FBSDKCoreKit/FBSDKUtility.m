@@ -62,10 +62,15 @@
 + (NSString *)URLDecode:(NSString *)value
 {
   value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic pop
   return value;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
   return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
@@ -74,6 +79,7 @@
                                                                                CFSTR(":!*();@/&?+$,='"),
                                                                                kCFStringEncodingUTF8);
 }
+#pragma clang diagnostic pop
 
 - (instancetype)init
 {

@@ -181,7 +181,7 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
 
  Some things to note when logging events:
 
- + There is a limit on the number of unique event names an app can use, on the order of 300.
+ + There is a limit on the number of unique event names an app can use, on the order of 1000.
  + There is a limit to the number of unique parameter names in the provided parameters that can
  be used per event, on the order of 25.  This is not just for an individual call, but for all
  invocations for that eventName.

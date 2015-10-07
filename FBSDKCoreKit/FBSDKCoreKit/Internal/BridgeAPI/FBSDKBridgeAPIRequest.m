@@ -154,9 +154,10 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   if (type == FBSDKBridgeAPIProtocolTypeWeb) {
     return protocol;
   }
-  if ([[UIApplication sharedApplication] canOpenURL:[[NSURL alloc] initWithScheme:scheme
-                                                                             host:nil
-                                                                             path:@"/"]]) {
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = scheme;
+  components.path = @"/";
+  if ([[UIApplication sharedApplication] canOpenURL:components.URL]) {
     return protocol;
   }
   return nil;

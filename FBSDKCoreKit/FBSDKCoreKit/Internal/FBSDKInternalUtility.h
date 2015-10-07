@@ -274,7 +274,7 @@ setJSONStringForObject:(id)object
  @abstract Unregisters a transient object that was previously registered with registerTransientObject:
  @param object The transient object
  */
-+ (void)unregisterTransientObject:(id)object;
++ (void)unregisterTransientObject:(__weak id)object;
 
 /*!
  @abstract validates that the app ID is non-nil, throws an NSException if nil.
