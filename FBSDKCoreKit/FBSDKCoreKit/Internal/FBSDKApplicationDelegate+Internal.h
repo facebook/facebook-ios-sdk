@@ -21,9 +21,9 @@
 #import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
 #import <FBSDKCoreKit/FBSDKMacros.h>
 
-#import "BridgeAPI/FBSDKBridgeAPIRequest.h"
-#import "BridgeAPI/FBSDKBridgeAPIResponse.h"
-#import "BridgeAPI/FBSDKURLOpening.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKURLOpening.h"
 #import "FBSDKContainerViewController.h"
 
 FBSDK_EXTERN NSString *const FBSDKApplicationDidBecomeActiveNotification;
