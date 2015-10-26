@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKSharingContent.h"
 
 @protocol FBSDKSharingDelegate;
 

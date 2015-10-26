@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
+#import "FBSDKGraphRequest.h"
 
 typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 {

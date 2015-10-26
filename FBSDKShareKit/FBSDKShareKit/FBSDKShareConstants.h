@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 /*!
  @abstract The error domain for all errors from FBSDKShareKit.

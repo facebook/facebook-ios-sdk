@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "FBSDKLoginManager.h"
 
 @interface FBSDKLoginUtility : NSObject
 

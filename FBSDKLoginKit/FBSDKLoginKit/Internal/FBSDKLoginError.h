@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKLoginKit/FBSDKLoginConstants.h>
+#import "FBSDKLoginConstants.h"
 
 @interface FBSDKLoginError : NSObject
 

@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "FBSDKCoreKit.h"
 
 #import "AppEvents/FBSDKAppEvents+Internal.h"
 #import "AppEvents/FBSDKAppEventsState.h"

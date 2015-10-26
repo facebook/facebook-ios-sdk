@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import "FBSDKButton.h"
 
 #import "FBSDKIcon.h"
 

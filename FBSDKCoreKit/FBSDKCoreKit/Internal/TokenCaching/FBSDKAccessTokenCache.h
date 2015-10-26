@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
+#import "FBSDKAccessToken.h"
 
 #import "FBSDKAccessTokenCaching.h"
 

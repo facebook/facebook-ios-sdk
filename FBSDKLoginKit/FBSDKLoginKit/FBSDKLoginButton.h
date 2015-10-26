@@ -18,9 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import "FBSDKLoginKit+CoreKit.h"
 
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "FBSDKLoginManager.h"
 
 #import "FBSDKTooltipView.h"
 

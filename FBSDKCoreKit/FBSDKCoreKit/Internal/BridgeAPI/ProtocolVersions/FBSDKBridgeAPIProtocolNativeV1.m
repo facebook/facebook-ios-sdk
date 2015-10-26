@@ -20,7 +20,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKMacros.h"
 
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKBase64.h"

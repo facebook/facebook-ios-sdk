@@ -18,7 +18,7 @@
 
 #import "FBSDKGameRequestFrictionlessRecipientCache.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 #import "FBSDKCoreKit+Internal.h"
 

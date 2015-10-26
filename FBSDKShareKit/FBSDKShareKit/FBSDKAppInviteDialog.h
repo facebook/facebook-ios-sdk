@@ -19,7 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
+#import "FBSDKAppInviteContent.h"
 
 @protocol FBSDKAppInviteDialogDelegate;
 

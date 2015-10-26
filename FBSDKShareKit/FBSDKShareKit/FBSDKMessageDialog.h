@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKSharing.h>
+#import "FBSDKSharing.h"
 
 /*!
  @abstract A dialog for sharing content through Messenger.

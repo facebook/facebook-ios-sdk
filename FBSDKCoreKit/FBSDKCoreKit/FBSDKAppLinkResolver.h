@@ -21,9 +21,12 @@
 @class BFTask;
 
 // Check if Bolts.framework is available for import
-#if __has_include(<Bolts/BFAppLinkResolving.h>)
-// Import it if it's available
-# import <Bolts/BFAppLinkResolving.h>
+#if __has_include(<Bolts/Bolts-umbrella.h>)
+// Import CocoaPods umbrella if it's available
+# import <Bolts/Bolts-umbrella.h>
+#elif __has_include(<Bolts/Bolts.h>)
+// Import default umbrella if it's available
+# import <Bolts/Bolts.h>
 #else
 // Otherwise - redeclare BFAppLinkResolving protocol to resolve the problem of missing symbols
 // Please note: Bolts.framework is still required for AppLink resolving to work,

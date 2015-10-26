@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 /*!
  @abstract A model for app invite.

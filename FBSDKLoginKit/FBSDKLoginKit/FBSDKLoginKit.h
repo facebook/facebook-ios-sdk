@@ -18,8 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKLoginKit/FBSDKLoginButton.h>
-#import <FBSDKLoginKit/FBSDKLoginConstants.h>
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
-#import <FBSDKLoginKit/FBSDKLoginManagerLoginResult.h>
-#import <FBSDKLoginKit/FBSDKLoginTooltipView.h>
+#import "FBSDKLoginKit+CoreKit.h"
+#import "FBSDKLoginButton.h"
+#import "FBSDKLoginConstants.h"
+#import "FBSDKLoginManager.h"
+#import "FBSDKLoginManagerLoginResult.h"
+#import "FBSDKLoginTooltipView.h"

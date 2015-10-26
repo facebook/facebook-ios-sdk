@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKLoginKit/FBSDKLoginManager.h>
+#import "FBSDKLoginManager.h"
 
 #import "FBSDKCoreKit+Internal.h"
 
