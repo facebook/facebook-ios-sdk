@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKGameRequestContent.h>
+#import "FBSDKGameRequestContent.h"
 
 @protocol FBSDKGameRequestDialogDelegate;
 

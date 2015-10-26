@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 /*!
  @abstract A photo for sharing.

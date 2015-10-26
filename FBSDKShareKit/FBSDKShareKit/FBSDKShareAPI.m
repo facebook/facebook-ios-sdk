@@ -20,9 +20,7 @@
 
 #import <AssetsLibrary/AssetsLibrary.h>
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareConstants.h"

@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
-#import <FBSDKShareKit/FBSDKGameRequestContent.h>
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKAppInviteContent.h"
+#import "FBSDKGameRequestContent.h"
+#import "FBSDKShareLinkContent.h"
+#import "FBSDKShareOpenGraphContent.h"
+#import "FBSDKSharePhotoContent.h"
+#import "FBSDKSharingContent.h"
 
 @interface FBSDKShareUtility : NSObject
 

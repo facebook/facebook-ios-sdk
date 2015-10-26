@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKApplicationDelegate.h"
+#import "FBSDKMacros.h"
 
 #import "BridgeAPI/FBSDKBridgeAPIRequest.h"
 #import "BridgeAPI/FBSDKBridgeAPIResponse.h"

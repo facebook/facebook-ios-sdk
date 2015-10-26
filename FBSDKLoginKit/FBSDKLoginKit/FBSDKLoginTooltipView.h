@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKLoginKit/FBSDKTooltipView.h>
+#import "FBSDKTooltipView.h"
 
 @protocol FBSDKLoginTooltipViewDelegate;
 

@@ -18,8 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-#import <FBSDKShareKit/FBSDKSharing.h>
+#import "FBSDKShareOpenGraphObject.h"
+#import "FBSDKSharing.h"
 
 /*!
  @abstract A utility class for sharing through the graph API.  Using this class requires an access token in

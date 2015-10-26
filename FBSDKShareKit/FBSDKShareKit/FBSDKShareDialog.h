@@ -18,9 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKShareKit/FBSDKShareDialogMode.h>
-#import <FBSDKShareKit/FBSDKSharing.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKShareDialogMode.h"
+#import "FBSDKSharing.h"
+#import "FBSDKSharingContent.h"
 
 /*!
  @abstract A dialog for sharing content on Facebook.

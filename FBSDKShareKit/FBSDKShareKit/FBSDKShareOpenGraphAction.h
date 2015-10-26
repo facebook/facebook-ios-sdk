@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
+#import "FBSDKShareKit+CoreKit.h"
 
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphValueContainer.h>
+#import "FBSDKShareOpenGraphObject.h"
+#import "FBSDKShareOpenGraphValueContainer.h"
 
 /*!
  @abstract An Open Graph Action for sharing.

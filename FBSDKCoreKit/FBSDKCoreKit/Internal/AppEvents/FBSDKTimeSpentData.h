@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKMacros.h"
 
 FBSDK_EXTERN NSString *const FBSDKTimeSpentFilename;
 

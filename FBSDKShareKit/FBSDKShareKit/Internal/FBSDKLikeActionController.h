@@ -19,9 +19,9 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKShareKit+CoreKit.h"
 
-#import <FBSDKShareKit/FBSDKLikeObjectType.h>
+#import "FBSDKLikeObjectType.h"
 
 FBSDK_EXTERN NSString *const FBSDKLikeActionControllerDidDisableNotification;
 FBSDK_EXTERN NSString *const FBSDKLikeActionControllerDidResetNotification;

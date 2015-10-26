@@ -16,25 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-#import "FBSDKShareKit+CoreKit.h"
-
-/*!
- @typedef NS_ENUM (NSUInteger, FBSDKLikeObjectType)
- @abstract Specifies the type of object referenced by the objectID for likes.
- */
-typedef NS_ENUM(NSUInteger, FBSDKLikeObjectType)
-{
-  /*! The objectID refers to an unknown object type. */
-  FBSDKLikeObjectTypeUnknown = 0,
-  /*! The objectID refers to an Open Graph object. */
-  FBSDKLikeObjectTypeOpenGraph,
-  /*! The objectID refers to an Page object. */
-  FBSDKLikeObjectTypePage,
-};
-
-/*!
- @abstract Converts an FBLikeControlObjectType to an NSString.
- */
-FBSDK_EXTERN NSString *NSStringFromFBSDKLikeObjectType(FBSDKLikeObjectType objectType);
+#if __has_include(<FBSDKCoreKit/FBSDKCoreKit-umbrella.h>)
+#	import <FBSDKCoreKit/FBSDKCoreKit-umbrella.h> // CocoaPods
+#else
+#	import <FBSDKCoreKit/FBSDKCoreKit.h> // default
+#endif

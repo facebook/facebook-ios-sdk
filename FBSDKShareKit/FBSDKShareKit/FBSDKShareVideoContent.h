@@ -18,9 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKShareVideo.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import "FBSDKSharePhoto.h"
+#import "FBSDKShareVideo.h"
+#import "FBSDKSharingContent.h"
 
 /*!
  @abstract A model for video content to be shared.

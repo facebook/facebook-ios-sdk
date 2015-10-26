@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKMacros.h"
 
 /*
  * Constants defining logging behavior.  Use with <[FBSDKSettings setLoggingBehavior]>.

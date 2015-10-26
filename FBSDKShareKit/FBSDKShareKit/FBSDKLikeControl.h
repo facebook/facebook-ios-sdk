@@ -18,10 +18,10 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKShareKit+CoreKit.h"
 
-#import <FBSDKShareKit/FBSDKLikeObjectType.h>
-#import <FBSDKShareKit/FBSDKLiking.h>
+#import "FBSDKLikeObjectType.h"
+#import "FBSDKLiking.h"
 
 /*!
  @typedef NS_ENUM (NSUInteger, FBSDKLikeControlAuxiliaryPosition)

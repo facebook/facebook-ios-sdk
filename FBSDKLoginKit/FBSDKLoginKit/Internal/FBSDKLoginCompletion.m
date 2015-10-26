@@ -18,6 +18,7 @@
 
 #import "FBSDKLoginCompletion+Internal.h"
 
+#import "FBSDKLoginKit+CoreKit.h"
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKLoginConstants.h"
 #import "FBSDKLoginError.h"

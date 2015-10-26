@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 /*!
  @abstract A base interface for content to be shared.

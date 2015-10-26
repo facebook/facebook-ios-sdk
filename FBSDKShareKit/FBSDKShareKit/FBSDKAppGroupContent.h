@@ -18,8 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
+#import "FBSDKShareKit+CoreKit.h"
 
 /*!
  @typedef NS_ENUM(NSUInteger, FBSDKAppGroupPrivacy)

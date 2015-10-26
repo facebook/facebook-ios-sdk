@@ -18,9 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import "FBSDKShareKit+CoreKit.h"
 
-#import <FBSDKShareKit/FBSDKSharingButton.h>
+#import "FBSDKSharingButton.h"
 
 /*!
  @abstract A button to share content.
