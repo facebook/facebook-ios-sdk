@@ -46,14 +46,14 @@ static id g_mockNSBundle;
     if (g_AppID.length == 0 || g_AppSecret.length == 0 || g_AppClientToken.length == 0) {
       [[NSException exceptionWithName:NSInternalInconsistencyException
                                reason:
-        @"Integration Tests Cannot Be Run."
-        @"Missing App ID or App Secret, or Client Token in Build Settings."
-        @" You can set this in an xcconfig file containing your unit-testing Facebook"
-        @" Application's ID and Secret in this format:\n"
+        @"Integration Tests cannot be run. "
+        @"Missing App ID or App Secret, or Client Token in Build Settings. "
+        @"You can set this in an xcconfig file containing your unit-testing Facebook "
+        @"Application's ID and Secret in this format:\n"
         @"\tIOS_SDK_TEST_APP_ID = // your app ID, e.g.: 1234567890\n"
         @"\tIOS_SDK_TEST_APP_SECRET = // your app secret, e.g.: 1234567890abcdef\n"
         @"\tIOS_SDK_TEST_CLIENT_TOKEN = // your app client token, e.g.: 1234567890abcdef\n"
-        @"Do NOT release your app secret in your app"
+        @"Do NOT release your app secret in your app. "
         @"To create a Facebook AppID, visit https://developers.facebook.com/apps"
                              userInfo:nil]
        raise];
@@ -61,14 +61,11 @@ static id g_mockNSBundle;
     [FBSDKSettings setAppID:g_AppID];
     g_testUsersManager = [FBSDKTestUsersManager sharedInstanceForAppID:g_AppID appSecret:g_AppSecret];
   });
-
-  if (self == [FBSDKIntegrationTestCase class]) {
-    // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
-    // and our keychain code is coded against mainBundle.
-    g_mockNSBundle = [OCMockObject niceMockForClass:[NSBundle class]];
-    NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
-    [[[[g_mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
-  }
+  // swizzle out mainBundle - XCTest returns the XCTest program bundle instead of the target,
+  // and our keychain code is coded against mainBundle.
+  g_mockNSBundle = [OCMockObject niceMockForClass:[NSBundle class]];
+  NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
+  [[[[g_mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
 }
 
 + (void)tearDown

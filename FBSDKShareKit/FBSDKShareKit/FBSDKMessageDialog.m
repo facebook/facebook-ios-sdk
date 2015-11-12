@@ -115,6 +115,11 @@
     }
     return NO;
   }
+  if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    if (![FBSDKShareUtility validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)shareContent name:@"videoURL" error:errorRef]) {
+      return NO;
+    }
+  }
   return [FBSDKShareUtility validateShareContent:self.shareContent error:errorRef];
 }
 

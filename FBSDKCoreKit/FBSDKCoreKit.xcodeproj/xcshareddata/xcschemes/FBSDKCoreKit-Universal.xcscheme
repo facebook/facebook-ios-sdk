@@ -58,7 +58,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8E9C3CE817DE9DE000427E62"
                BuildableName = "Bolts.framework"
-               BlueprintName = "Bolts"
+               BlueprintName = "Bolts-iOS"
                ReferencedContainer = "container:../Bolts-IOS/Bolts.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

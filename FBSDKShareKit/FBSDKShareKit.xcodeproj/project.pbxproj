@@ -117,6 +117,8 @@
 		89FC9C6F1A3FA1E00001910E /* FBSDKSharePhotoContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 89FC9C6D1A3FA1E00001910E /* FBSDKSharePhotoContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		89FC9C701A3FA1E00001910E /* FBSDKSharePhotoContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FC9C6E1A3FA1E00001910E /* FBSDKSharePhotoContent.m */; };
 		89FC9C761A3FAB4B0001910E /* FBSDKSharePhotoContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FC9C751A3FAB4B0001910E /* FBSDKSharePhotoContentTests.m */; };
+		9382B7901BB3A5AD00E4B24F /* FBSDKVideoUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9382B78F1BB3A5AD00E4B24F /* FBSDKVideoUploader.m */; };
+		93AECB911BB4B93D001AC1C4 /* FBSDKVideoUploader.h in Headers */ = {isa = PBXBuildFile; fileRef = 9382B78D1BB3A54000E4B24F /* FBSDKVideoUploader.h */; };
 		9D46C5F61A11E5D800A0DDB6 /* FBSDKShareKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D46C5F51A11E5D800A0DDB6 /* FBSDKShareKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D46C5FC1A11E5D800A0DDB6 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D46C5F01A11E5D800A0DDB6 /* FBSDKShareKit.framework */; };
 		9DDACD501B45CAD100075EF3 /* FBSDKShareLinkContent+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 9DDACD4F1B45CA0100075EF3 /* FBSDKShareLinkContent+Internal.h */; };
@@ -253,6 +255,9 @@
 		89FC9C6D1A3FA1E00001910E /* FBSDKSharePhotoContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSharePhotoContent.h; sourceTree = "<group>"; };
 		89FC9C6E1A3FA1E00001910E /* FBSDKSharePhotoContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContent.m; sourceTree = "<group>"; };
 		89FC9C751A3FAB4B0001910E /* FBSDKSharePhotoContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSharePhotoContentTests.m; sourceTree = "<group>"; };
+		9382B78D1BB3A54000E4B24F /* FBSDKVideoUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKVideoUploader.h; sourceTree = "<group>"; };
+		9382B78F1BB3A5AD00E4B24F /* FBSDKVideoUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKVideoUploader.m; sourceTree = "<group>"; };
+		9382B7921BB47DC100E4B24F /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		9D46C5F01A11E5D800A0DDB6 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D46C5F41A11E5D800A0DDB6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9D46C5F51A11E5D800A0DDB6 /* FBSDKShareKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareKit.h; sourceTree = "<group>"; };
@@ -299,6 +304,7 @@
 		892EBBE91A3A475F00721B03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9382B7921BB47DC100E4B24F /* AssetsLibrary.framework */,
 				89FC8C491AC9A017004187B2 /* libOCMock.a */,
 				9DEE5C911A671B2700D750E1 /* QuartzCore.framework */,
 				9DEE5C8F1A671B2100D750E1 /* XCTest.framework */,
@@ -389,6 +395,8 @@
 				89C1DCB41A43528900F0F9B2 /* FBSDKShareOpenGraphValueContainer+Internal.h */,
 				891C54561A3BB23F00DF05AF /* FBSDKShareUtility.h */,
 				891C54571A3BB23F00DF05AF /* FBSDKShareUtility.m */,
+				9382B78D1BB3A54000E4B24F /* FBSDKVideoUploader.h */,
+				9382B78F1BB3A5AD00E4B24F /* FBSDKVideoUploader.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -474,10 +482,10 @@
 				89DC6CC71A81792000814152 /* FBSDKShareAPI.m */,
 				893774871A3B5B9A00BE2807 /* FBSDKShareConstants.h */,
 				893774881A3B5B9A00BE2807 /* FBSDKShareConstants.m */,
-				DB38B6811AAF663600099656 /* FBSDKShareDialogMode.h */,
-				DB38B6821AAF668100099656 /* FBSDKShareDialogMode.m */,
 				8973B3771A40A8B90001EDC5 /* FBSDKShareDialog.h */,
 				8973B3781A40A8B90001EDC5 /* FBSDKShareDialog.m */,
+				DB38B6811AAF663600099656 /* FBSDKShareDialogMode.h */,
+				DB38B6821AAF668100099656 /* FBSDKShareDialogMode.m */,
 				9D46C5F51A11E5D800A0DDB6 /* FBSDKShareKit.h */,
 				8904147F1A64849100617215 /* FBSDKSharing.h */,
 				8937747A1A3A5F5B00BE2807 /* Internal */,
@@ -546,6 +554,7 @@
 				89688B3B1AA62BD800A98519 /* FBSDKLikeBoxView.h in Headers */,
 				891C54581A3BB23F00DF05AF /* FBSDKShareUtility.h in Headers */,
 				8904147D1A64843500617215 /* FBSDKMessageDialog.h in Headers */,
+				93AECB911BB4B93D001AC1C4 /* FBSDKVideoUploader.h in Headers */,
 				89CE02E51A3F56470033C9CA /* FBSDKShareLinkContent.h in Headers */,
 				893774771A3A585600BE2807 /* FBSDKShareOpenGraphObject.h in Headers */,
 				89688B421AA62C4100A98519 /* FBSDKLikeBoxBorderView.h in Headers */,
@@ -717,6 +726,7 @@
 				8937748E1A3B5E9E00BE2807 /* FBSDKShareOpenGraphAction.m in Sources */,
 				896DE21B1A9E282800195731 /* FBSDKShareVideoContent.m in Sources */,
 				89DC6CC91A81792000814152 /* FBSDKShareAPI.m in Sources */,
+				9382B7901BB3A5AD00E4B24F /* FBSDKVideoUploader.m in Sources */,
 				DB38B6831AAF668100099656 /* FBSDKShareDialogMode.m in Sources */,
 				89D05A801AA0E0D300609300 /* FBSDKLikeActionController.m in Sources */,
 				EA3D468F1AA62A9500D0C7D5 /* FBSDKAppInviteDialog.m in Sources */,

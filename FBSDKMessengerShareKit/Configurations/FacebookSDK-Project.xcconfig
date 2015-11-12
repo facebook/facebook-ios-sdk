@@ -57,8 +57,7 @@ CLANG_CXX_LIBRARY = libc++
 // env which applies for Archive builds.
 ENABLE_BITCODE = NO
 FB_BITCODE_FLAG = $()
-FB_BITCODE_FLAG[sdk=iphoneos9.0] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphonesimulator9.0] = -fembed-bitcode
+FB_BITCODE_FLAG[sdk=iphoneos9.*] = -fembed-bitcode
 OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
 
 

@@ -43,7 +43,7 @@ FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER=$FB_SDK_BUILD_PACKAGE/DocSets/
 #
 progress_message "Building package directory structure."
 \rm -rf "$FB_SDK_BUILD_PACKAGE" "$FB_SDK_BUILD_PACKAGE_SCRIPTS"
-mkdir "$FB_SDK_BUILD_PACKAGE" \
+mkdir -p "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not create directory $FB_SDK_BUILD_PACKAGE"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SAMPLES"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SCRIPTS"

@@ -24,3 +24,4 @@
 #import "FBSDKShareError.h"
 #import "FBSDKShareOpenGraphValueContainer+Internal.h"
 #import "FBSDKShareUtility.h"
+#import "FBSDKVideoUploader.h"

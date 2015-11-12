@@ -169,6 +169,11 @@
   if (![FBSDKShareUtility validateShareContent:shareContent error:errorRef]) {
     return NO;
   }
+  if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
+    if (![FBSDKShareUtility validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)shareContent name:@"videoURL" error:errorRef]) {
+      return NO;
+    }
+  }
   switch (self.mode) {
     case FBSDKShareDialogModeAutomatic:{
       return (

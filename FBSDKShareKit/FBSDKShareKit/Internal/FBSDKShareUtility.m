@@ -244,6 +244,23 @@
           [self _validateNetworkURL:appInviteContent.appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]);
 }
 
++ (BOOL)validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)videoContent name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
+{
+  FBSDKShareVideo *video = videoContent.video;
+  NSURL *videoURL = video.videoURL;
+  if (!videoURL || [[videoURL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
+    if (errorRef != NULL) {
+      *errorRef = nil;
+    }
+    return YES;
+  } else {
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:videoURL message:nil];
+    }
+    return NO;
+  }
+}
+
 + (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef
 {
   if (![self _validateRequiredValue:gameRequestContent name:@"content" error:errorRef]
@@ -378,8 +395,7 @@
   NSURL *videoURL = video.videoURL;
   return ([self _validateRequiredValue:videoContent name:@"videoContent" error:errorRef] &&
           [self _validateRequiredValue:video name:@"video" error:errorRef] &&
-          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef] &&
-          [self _validateAssetLibraryURL:videoURL name:@"videoURL" error:errorRef]);
+          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
 }
 
 #pragma mark - Object Lifecycle
@@ -621,21 +637,6 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
       *errorRef = nil;
     }
     return YES;
-  }
-}
-
-+ (BOOL)_validateAssetLibraryURL:(NSURL *)URL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
-{
-  if (!URL || [[URL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
-    if (errorRef != NULL) {
-      *errorRef = nil;
-    }
-    return YES;
-  } else {
-    if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:URL message:nil];
-    }
-    return NO;
   }
 }
 
