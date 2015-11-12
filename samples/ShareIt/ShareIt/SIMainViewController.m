@@ -32,9 +32,7 @@
 @interface SIMainViewController () <
   MFMailComposeViewControllerDelegate,
   MFMessageComposeViewControllerDelegate,
-  UIActionSheetDelegate,
   FBSDKSharingDelegate>
-@property (nonatomic, strong) UIActionSheet *shareActionSheet;
 @end
 
 @implementation SIMainViewController
@@ -63,23 +61,6 @@
            ];
 }
 
-#pragma mark - Object Lifecycle
-
-- (void)dealloc
-{
-  _shareActionSheet.delegate = nil;
-}
-
-#pragma mark - Properties
-
-- (void)setShareActionSheet:(UIActionSheet *)shareActionSheet
-{
-  if (![_shareActionSheet isEqual:shareActionSheet]) {
-    _shareActionSheet.delegate = nil;
-    _shareActionSheet = shareActionSheet;
-  }
-}
-
 #pragma mark - View Management
 
 - (UIStatusBarStyle)preferredStatusBarStyle
@@ -98,6 +79,7 @@
 
   self.pageLikeControl.likeControlAuxiliaryPosition = FBSDKLikeControlAuxiliaryPositionBottom;
   self.pageLikeControl.likeControlHorizontalAlignment = FBSDKLikeControlHorizontalAlignmentCenter;
+  self.pageLikeControl.foregroundColor = [UIColor whiteColor];
   self.pageLikeControl.objectID = @"shareitexampleapp";
 
   [self _configurePhotos];
@@ -107,58 +89,51 @@
 
 - (void)share:(id)sender
 {
-  UIActionSheet *shareActionSheet = self.shareActionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                                                        delegate:self
-                                                                               cancelButtonTitle:nil
-                                                                          destructiveButtonTitle:nil
-                                                                               otherButtonTitles:nil];
+  SIPhoto *photo = [self _currentPhoto];
+  UIAlertController *shareAlertController = [UIAlertController alertControllerWithTitle:@"Share"
+                                                                                message:nil
+                                                                         preferredStyle:UIAlertControllerStyleAlert];
 
   if ([MFMailComposeViewController canSendMail]) {
-    [shareActionSheet addButtonWithTitle:@"Mail"];
+    UIAlertAction *sendMailAction = [UIAlertAction actionWithTitle:@"Mail"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:^(UIAlertAction *action) {
+                                                             [self _sendMailWithPhoto:photo];
+                                                           }];
+    [shareAlertController addAction:sendMailAction];
   }
 
   if ([MFMessageComposeViewController canSendAttachments]) {
-    [shareActionSheet addButtonWithTitle:@"Message"];
+    UIAlertAction *sendMessageAction = [UIAlertAction actionWithTitle:@"Message"
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction *action) {
+                                                                [self _sendMessageWithPhoto:photo];
+                                                              }];
+    [shareAlertController addAction:sendMessageAction];
   }
 
   FBSDKShareDialog *facebookShareDialog = [self getShareDialogWithContentURL:[self _currentPhoto].objectURL];
   if ([facebookShareDialog canShow]) {
-    [shareActionSheet addButtonWithTitle:@"Share on Facebook"];
+    UIAlertAction *shareOnFacebookAction = [UIAlertAction actionWithTitle:@"Share on Facebook"
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction *action) {
+                                                                    [self _shareFacebookWithPhoto:photo];
+                                                                  }];
+    [shareAlertController addAction:shareOnFacebookAction];
   }
+
   FBSDKMessageDialog *messengerShareDialog = [self getMessageDialogWithContentURL:[self _currentPhoto].objectURL];
   if ( [messengerShareDialog canShow]) {
-    [shareActionSheet addButtonWithTitle:@"Send with Messenger"];
+    UIAlertAction *sendWithMessengerAction = [UIAlertAction actionWithTitle:@"Send with Messenger"
+                                                                      style:UIAlertActionStyleDefault
+                                                                    handler:^(UIAlertAction *action) {
+                                                                      messengerShareDialog.delegate = self;
+                                                                      [messengerShareDialog show];
+                                                                    }];
+    [shareAlertController addAction:sendWithMessengerAction];
   }
 
-  [shareActionSheet addButtonWithTitle:@"Cancel"];
-  shareActionSheet.cancelButtonIndex = shareActionSheet.numberOfButtons - 1;
-  [shareActionSheet showInView:self.view];
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-  if (_shareActionSheet != actionSheet) {
-    return;
-  }
-
-  SIPhoto *photo = [self _currentPhoto];
-
-  NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-  if ([buttonTitle isEqualToString:@"Mail"]) {
-    [self _sendMailWithPhoto:photo];
-  } else if ([buttonTitle isEqualToString:@"Message"]) {
-    [self _sendMessageWithPhoto:photo];
-  } else if ([buttonTitle isEqualToString:@"Share on Facebook"]) {
-    FBSDKShareDialog *shareDialog = [self getShareDialogWithContentURL:photo.objectURL];
-    shareDialog.delegate = self;
-    [shareDialog show];
-  } else if ([buttonTitle isEqualToString:@"Send with Messenger"]) {
-    FBSDKMessageDialog *shareDialog = [self getMessageDialogWithContentURL:photo.objectURL];
-    shareDialog.delegate = self;
-    [shareDialog show];
-  }
-
-  _shareActionSheet = nil;
+  [self presentViewController:shareAlertController animated:YES completion:nil];
 }
 
 - (void)_sendMailWithPhoto:(SIPhoto *)photo
@@ -180,6 +155,13 @@
   viewController.body = photo.title;
   [viewController addAttachmentData:data typeIdentifier:@"public.jpeg" filename:@"image.jpg"];
   [self presentViewController:viewController animated:YES completion:NULL];
+}
+
+- (void)_shareFacebookWithPhoto:(SIPhoto *)photo
+{
+  [FBSDKShareDialog showFromViewController:self.parentViewController
+                               withContent:[self getShareLinkContentWithContentURL:photo.objectURL]
+                                  delegate:nil];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController *)controller

@@ -107,13 +107,11 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
-  XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL");
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
 }
 
-- (void)testValidationWithInvalidFileVideoURL
+- (void)testValidationWithValidFileVideoURL
 {
   NSURL *videoURL = [[[NSBundle mainBundle] resourceURL] URLByAppendingPathComponent:@"video.mp4"];
   FBSDKShareVideo *video = [FBSDKShareVideo videoWithVideoURL:videoURL];
@@ -122,10 +120,8 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
-  XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL");
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
 }
 
 @end

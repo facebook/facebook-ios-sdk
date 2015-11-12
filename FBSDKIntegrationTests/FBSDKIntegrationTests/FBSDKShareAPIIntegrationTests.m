@@ -27,15 +27,21 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKIntegrationTestCase.h"
+#import "FBSDKShareKit+Internal.h"
 #import "FBSDKTestBlocker.h"
 
-@interface FBSDKShareAPIIntegrationTests : FBSDKIntegrationTestCase <FBSDKSharingDelegate>
+@interface FBSDKShareAPIIntegrationTests : FBSDKIntegrationTestCase <FBSDKSharingDelegate, FBSDKVideoUploaderDelegate>
 
 @property (nonatomic, copy) void (^shareCallback)(NSDictionary *results, NSError *error, BOOL isCancel);
-
+@property (nonatomic, copy) void (^uploadCallback)(NSDictionary *results, NSError *error);
 @end
 
+static NSString *const kTaggedPlaceID = @"88603851976";
+
 @implementation FBSDKShareAPIIntegrationTests
+{
+  NSFileHandle *_fileHandle;
+}
 
 #pragma mark - FBSDKSharingDelegate
 
@@ -62,50 +68,46 @@
   }
 }
 
-- (void)testOpenGraph {
+#pragma mark - FBSDKVideoUploaderDelegate
+
+- (NSData *)videoChunkDataForVideoUploader:(FBSDKVideoUploader *)videoUploader startOffset:(NSUInteger)startOffset endOffset:(NSUInteger)endOffset
+{
+  NSUInteger chunkSize = endOffset - startOffset;
+  [_fileHandle seekToFileOffset:startOffset];
+  NSData *videoChunkData = [_fileHandle readDataOfLength:chunkSize];
+  if (videoChunkData == nil || videoChunkData.length != chunkSize) {
+    NSCAssert(videoChunkData == nil || videoChunkData.length != chunkSize, @"fail to get video chunk");
+    return nil;
+  }
+  return videoChunkData;
+}
+
+- (void)videoUploader:(FBSDKVideoUploader *)videoUploader didCompleteWithResults:(NSMutableDictionary *)results
+{
+  if (self.uploadCallback) {
+    self.uploadCallback(results, nil);
+    self.uploadCallback = nil;
+  }
+}
+
+- (void)videoUploader:(FBSDKVideoUploader *)videoUploader didFailWithError:(NSError *)error
+{
+  if (self.uploadCallback) {
+    self.uploadCallback(nil, error);
+    self.uploadCallback = nil;
+  }
+}
+
+#pragma mark - Test OpenGraph
+
+- (void)testOpenGraph
+{
   [FBSDKSettings setFacebookDomainPart:@"prod"];
-  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  __block FBSDKAccessToken *one = nil, *two = nil;
-  FBSDKTestUsersManager *userManager = [self testUsersManager];
-  // get two users.
-  [userManager requestTestAccountTokensWithArraysOfPermissions:@[
-                                                                 [NSSet setWithObjects:@"user_friends", @"publish_actions", nil],
-                                                                 [NSSet setWithObject:@"user_friends"]]
-                                              createIfNotFound:YES
-                                             completionHandler:^(NSArray *tokens, NSError *error) {
-                                               XCTAssertNil(error);
-                                               one = tokens[0];
-                                               two = tokens[1];
-                                               [blocker signal];
-                                             }];
-  XCTAssertTrue([blocker waitWithTimeout:5], @"couldn't get 2 test users");
-
-  // make them friends
-  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [userManager makeFriendsWithFirst:one second:two callback:^(NSError *error) {
-    XCTAssertNil(error);
-    [blocker signal];
-  }];
-  XCTAssertTrue([blocker waitWithTimeout:5], @"couldn't make friends between:\n%@\n%@", one.tokenString, two.tokenString);
-
-  // now set one as active, and get taggable friend.
-  [FBSDKAccessToken setCurrentAccessToken:one];
-  __block NSString *tag = nil;
-  __block NSString *taggedName = nil;
-  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?limit=1" parameters:nil]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-     XCTAssertNil(error);
-     tag = result[@"data"][0][@"id"];
-     // grab the name for later verification. unfortunately we can't just compare to
-     // two.userID since there may already be (other) friends for this test users.
-     taggedName = result[@"data"][0][@"name"];
-     [blocker signal];
-   }];
-  XCTAssertTrue([blocker waitWithTimeout:5], @"couldn't fetch taggable friends");
-  XCTAssertNotNil(tag);
-  XCTAssertNotNil(taggedName);
-
+  NSArray *testUsers = [self createTwoFriendedTestUsers];
+  FBSDKAccessToken *one = testUsers[0];
+  NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
+  NSString *tag = tagParameters[@"tag"];
+  NSString *taggedName = tagParameters[@"taggedName"];
   // now do the share
   FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
   content.action = [FBSDKShareOpenGraphAction actionWithType:@"facebooksdktests:run"
@@ -113,10 +115,9 @@
                                                          key:@"test"];
   content.peopleIDs = @[tag];
   content.previewPropertyName = @"test";
-  static NSString *const placeID = @"88603851976";
-  content.placeID = placeID;
+  content.placeID = kTaggedPlaceID;
 
-  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSString *postID = nil;
   self.shareCallback = ^(NSDictionary *results, NSError *error, BOOL isCancel) {
     NSCAssert(error == nil, @"share failed :%@", error);
@@ -136,10 +137,194 @@
     XCTAssertNil(error);
     XCTAssertEqualObjects(postID, result[@"id"]);
     XCTAssertEqualObjects(taggedName, result[@"tags"][0][@"name"]);
-    XCTAssertEqualObjects(placeID, result[@"place"][@"id"]);
+    XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
     [blocker signal];
   }];
+  XCTAssertTrue([blocker waitWithTimeout:20], @"couldn't fetch verify post.");
+}
+
+#pragma mark - Test Share Link
+
+- (void)testShareLink
+{
+  [FBSDKSettings setFacebookDomainPart:@"prod"];
+  NSArray *testUsers = [self createTwoFriendedTestUsers];
+  FBSDKAccessToken *one = testUsers[0];
+  NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
+  NSString *tag = tagParameters[@"tag"];
+  NSString *taggedName = tagParameters[@"taggedName"];
+  // now do the share
+  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  content.contentURL = [NSURL URLWithString:@"http://liveshows.disney.com/"];
+  content.peopleIDs = @[tag];
+  content.placeID = kTaggedPlaceID;
+
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block NSString *postID = nil;
+  self.shareCallback = ^(NSDictionary *results, NSError *error, BOOL isCancel) {
+    NSCAssert(error == nil, @"share failed :%@", error);
+    NSCAssert(!isCancel, @"share cancelled");
+    postID = results[@"postId"];
+    [blocker signal];
+  };
+  [FBSDKShareAPI shareWithContent:content delegate:self];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"share didn't complete");
+  XCTAssertNotNil(postID);
+
+  //now fetch and verify the share.
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:postID
+                                     parameters:@{ @"fields" : @"id,with_tags.limit(1){name}, place.limit(1){id}" } ]
+   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+     XCTAssertNil(error);
+     XCTAssertEqualObjects(postID, result[@"id"]);
+     XCTAssertEqualObjects(taggedName, result[@"with_tags"][@"data"][0][@"name"]);
+     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
+     [blocker signal];
+   }];
   XCTAssertTrue([blocker waitWithTimeout:200], @"couldn't fetch verify post.");
+}
+
+#pragma mark - Test Share Photo
+
+- (void)testSharePhoto
+{
+  [FBSDKSettings setFacebookDomainPart:@"prod"];
+  NSArray *testUsers = [self createTwoFriendedTestUsers];
+  FBSDKAccessToken *one = testUsers[0];
+  NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
+  NSString *tag = tagParameters[@"tag"];
+  NSString *taggedName = tagParameters[@"taggedName"];
+  // now do the share
+  [FBSDKAccessToken setCurrentAccessToken:one];
+  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
+  content.photos = @[[FBSDKSharePhoto photoWithImage:[UIImage imageNamed:@"hack.png"] userGenerated:YES]];
+  content.peopleIDs = @[tag];
+  content.placeID = kTaggedPlaceID;
+
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block NSString *postID = nil;
+  self.shareCallback = ^(NSDictionary *results, NSError *error, BOOL isCancel) {
+    NSCAssert(error == nil, @"share failed :%@", error);
+    NSCAssert(!isCancel, @"share cancelled");
+    postID = results[@"postId"];
+    [blocker signal];
+  };
+  [FBSDKShareAPI shareWithContent:content delegate:self];
+  XCTAssertTrue([blocker waitWithTimeout:10], @"share didn't complete");
+  XCTAssertNotNil(postID);
+
+  //now fetch and verify the share.
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:postID
+                                     parameters:@{ @"fields" : @"id,with_tags.limit(1){name}, place.limit(1){id}" } ]
+   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+     XCTAssertNil(error);
+     XCTAssertEqualObjects(taggedName, result[@"with_tags"][@"data"][0][@"name"]);
+     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
+     [blocker signal];
+   }];
+  XCTAssertTrue([blocker waitWithTimeout:200], @"couldn't fetch verify post.");
+}
+
+#pragma mark - Test Share Video
+
+- (void)testShareVideo
+{
+  [FBSDKSettings setFacebookDomainPart:@"prod"];
+  NSArray *testUsers = [self createTwoFriendedTestUsers];
+  FBSDKAccessToken *one = testUsers[0];
+  NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
+  NSString *tag = tagParameters[@"tag"];
+  // now do the share
+  [FBSDKAccessToken setCurrentAccessToken:one];
+  FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
+  NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
+  content.video = [FBSDKShareVideo videoWithVideoURL:bundleURL];
+  content.peopleIDs = @[tag];
+
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  self.shareCallback = ^(NSDictionary *results, NSError *error, BOOL isCancel) {
+    NSCAssert(results == nil, @"VideoContent should not allow peopleIDs");
+    NSCAssert(error != nil, @"VideoContent should not allow peopleIDs.");
+    [blocker signal];
+  };
+  [FBSDKShareAPI shareWithContent:content delegate:self];
+  XCTAssertTrue([blocker waitWithTimeout:10], @"share didn't complete");
+}
+
+- (void)testVideoUploader
+{
+  [FBSDKSettings setFacebookDomainPart:@"prod"];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
+  [FBSDKAccessToken setCurrentAccessToken:token];
+  NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
+  NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
+  //test on file URL
+  __block FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  _fileHandle = [NSFileHandle fileHandleForReadingFromURL:bundleURL error:nil];
+  NSCAssert(_fileHandle,  @"Fail to get file handler");
+  FBSDKVideoUploader *videoUploader = [[FBSDKVideoUploader alloc] initWithVideoName:[bundleURL lastPathComponent] videoSize:(unsigned long)[_fileHandle seekToEndOfFile] parameters:dictionary delegate:self];
+  self.uploadCallback = ^(NSDictionary *results, NSError *error) {
+    NSCAssert(error == nil, @"upload failed :%@", error);
+    NSCAssert(results[@"success"], @"upload fail");
+    [blocker signal];
+  };
+  [videoUploader start];
+  XCTAssertTrue([blocker waitWithTimeout:20], @"upload didn't complete");
+}
+
+#pragma mark - Help Method
+
+- (NSArray *)createTwoFriendedTestUsers
+{
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block FBSDKAccessToken *one = nil, *two = nil;
+  FBSDKTestUsersManager *userManager = [self testUsersManager];
+  // get two users.
+  [userManager requestTestAccountTokensWithArraysOfPermissions:@[
+                                                                 [NSSet setWithObjects:@"user_friends", @"publish_actions", @"user_posts", nil],
+                                                                 [NSSet setWithObject:@"user_friends"]]
+                                              createIfNotFound:YES
+                                             completionHandler:^(NSArray *tokens, NSError *error) {
+                                               XCTAssertNil(error);
+                                               one = tokens[0];
+                                               two = tokens[1];
+                                               [blocker signal];
+                                             }];
+  XCTAssertTrue([blocker waitWithTimeout:15], @"couldn't get 2 test users");
+
+  // make them friends
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [userManager makeFriendsWithFirst:one second:two callback:^(NSError *error) {
+    XCTAssertNil(error);
+    [blocker signal];
+  }];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"couldn't make friends between:\n%@\n%@", one.tokenString, two.tokenString);
+  return @[one, two];
+}
+
+- (NSDictionary *)taggableFriendsOfTestUser:(FBSDKAccessToken *)testUser
+{
+  [FBSDKAccessToken setCurrentAccessToken:testUser];
+  __block NSString *tag = nil;
+  __block NSString *taggedName = nil;
+  __block FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?limit=1" parameters:nil]
+   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+     XCTAssertNil(error);
+     tag = result[@"data"][0][@"id"];
+     // grab the name for later verification. unfortunately we can't just compare to
+     // two.userID since there may already be (other) friends for this test users.
+     taggedName = result[@"data"][0][@"name"];
+     [blocker signal];
+   }];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"couldn't fetch taggable friends");
+  XCTAssertNotNil(tag);
+  XCTAssertNotNil(taggedName);
+  return @{ @"tag" : tag,
+            @"taggedName" : taggedName };
 }
 
 @end
