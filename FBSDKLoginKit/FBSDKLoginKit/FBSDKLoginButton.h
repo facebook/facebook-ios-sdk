@@ -51,7 +51,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
   Like `FBSDKLoginManager`, you should make sure your app delegate is connected to
   `FBSDKApplicationDelegate` in order for the button's delegate to receive messages.
 
- `FBSDKLoginButton` has a fixed height, but you may change the width. `initWithFrame:CGRectZero`
+ `FBSDKLoginButton` has a fixed height of @c 30 pixels, but you may change the width. `initWithFrame:CGRectZero`
  will size the button to its minimum frame.
 */
 @interface FBSDKLoginButton : FBSDKButton
