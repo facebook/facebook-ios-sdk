@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		93266D961BBA121200874D8B /* videoviewdemo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 93266D941BBA11CB00874D8B /* videoviewdemo.mp4 */; settings = {ASSET_TAGS = (); }; };
-		9332A7591BF1DD6B004C53FD /* thumbs_up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7571BF1DCCD004C53FD /* thumbs_up.jpg */; settings = {ASSET_TAGS = (); }; };
-		9332A75A1BF1DD6F004C53FD /* hack.png in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7551BF1DCBD004C53FD /* hack.png */; settings = {ASSET_TAGS = (); }; };
+		93266D961BBA121200874D8B /* videoviewdemo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 93266D941BBA11CB00874D8B /* videoviewdemo.mp4 */; };
+		9332A7591BF1DD6B004C53FD /* thumbs_up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7571BF1DCCD004C53FD /* thumbs_up.jpg */; };
+		9332A75A1BF1DD6F004C53FD /* hack.png in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7551BF1DCBD004C53FD /* hack.png */; };
 		9D18A8F91A9596B600A41042 /* FBSDKAppEventsIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D18A8F81A9596B600A41042 /* FBSDKAppEventsIntegrationTests.m */; };
 		9D18A8FB1A95981F00A41042 /* libOHHTTPStubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */; };
 		9D1999C71A7AF5C900CAD112 /* FBSDKIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D1999C61A7AF5C900CAD112 /* FBSDKIntegrationTestCase.m */; };
@@ -141,7 +141,9 @@
 				9D1999EB1A7AF7FB00CAD112 /* Frameworks */,
 				9D1999B41A7AF44B00CAD112 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		9D1999B41A7AF44B00CAD112 /* Products */ = {
 			isa = PBXGroup;

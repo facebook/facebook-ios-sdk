@@ -136,7 +136,11 @@
 
 + (NSString *)attributionID
 {
+#if TARGET_OS_TV
+  return nil;
+#else
   return [[UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO] string];
+#endif
 }
 
 // for tests only.

@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "Posjetite %@ na pametnom telefonu ili računalu i unesite ovaj kôd:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "U redu";
 

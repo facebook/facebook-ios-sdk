@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "Επισκεφτείτε τον ιστότοπο %@ από το smartphone ή τον υπολογιστή σας και πληκτρολογήστε αυτόν τον κωδικό:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
 

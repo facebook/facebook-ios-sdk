@@ -72,7 +72,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 {
   [self assertPermissions:permissions];
   NSSet *permissionSet = [NSSet setWithArray:permissions];
-  if (![FBSDKLoginUtility areAllPermissionsReadPermissions:permissionSet]) {
+  if (![FBSDKInternalUtility areAllPermissionsReadPermissions:permissionSet]) {
     [[NSException exceptionWithName:NSInvalidArgumentException
                              reason:@"Publish or manage permissions are not permitted to be requested with read permissions."
                            userInfo:nil]
@@ -95,7 +95,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 {
   [self assertPermissions:permissions];
   NSSet *permissionSet = [NSSet setWithArray:permissions];
-  if (![FBSDKLoginUtility areAllPermissionsPublishPermissions:permissionSet]) {
+  if (![FBSDKInternalUtility areAllPermissionsPublishPermissions:permissionSet]) {
     [[NSException exceptionWithName:NSInvalidArgumentException
                              reason:@"Read permissions are not permitted to be requested with publish or manage permissions."
                            userInfo:nil]
@@ -240,8 +240,11 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
                                          [FBSDKAccessToken currentAccessToken].permissions :
                                          nil);
   if (previouslyGrantedPermissions.count > 0) {
-    // this is a reauth, so recentlyGranted should be a subset of what was requested.
-    [recentlyGrantedPermissions intersectSet:_requestedPermissions];
+      // If there were no requested permissions for this auth - treat all permissions as granted.
+      // Otherwise this is a reauth, so recentlyGranted should be a subset of what was requested.
+      if (_requestedPermissions.count != 0) {
+          [recentlyGrantedPermissions intersectSet:_requestedPermissions];
+      }
   }
 
   NSMutableSet *recentlyDeclinedPermissions = [_requestedPermissions mutableCopy];

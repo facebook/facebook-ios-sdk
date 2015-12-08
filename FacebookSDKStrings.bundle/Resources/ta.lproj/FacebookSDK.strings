@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "உங்கள் ஸ்மார்ட்ஃபோன் அல்லது கணினியில் %@ ஐப் பார்வையிட்டு, பின்வரும் குறியீட்டை உள்ளிடவும்:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "சரி";
 

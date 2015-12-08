@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
+#import <FBSDKCoreKit/FBSDKConstants.h>
 
 @class FBSDKErrorRecoveryConfiguration;
 

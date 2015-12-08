@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "Truy cập %@ trên điện thoại thông minh hoặc máy tính và nhập mã sau:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
 

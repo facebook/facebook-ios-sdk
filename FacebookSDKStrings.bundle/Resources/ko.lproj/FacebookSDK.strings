@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "스마트폰이나 컴퓨터에서 %@ 주소를 방문하여 다음 코드를 입력하세요.";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "확인";
 

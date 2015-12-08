@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "നിങ്ങളുടെ സ്‌മാർട്ട്ഫോണിലെ അല്ലെങ്കിൽ കമ്പ്യൂട്ടറിലെ %@ സന്ദർശിച്ച് ഇനിപ്പറയുന്ന കോഡ് നൽകുക:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "ശരി";
 

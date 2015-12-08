@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "ไปที่ %@ ในสมาร์ทโฟนหรือคอมพิวเตอร์ของคุณ แล้วป้อนรหัสนี้:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "ตกลง";
 

@@ -1,11 +1,11 @@
 Facebook SDK for iOS
 ====================
 
-This open-source library allows you to integrate Facebook into your iOS app.
+This library allows you to integrate Facebook into your iOS app.
 
 Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/docs/ios
 
-NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK
+NOTE: It is suggested you install the Facebook SDK to ~/Documents/FacebookSDK
 
 TRY IT OUT
 ----------
