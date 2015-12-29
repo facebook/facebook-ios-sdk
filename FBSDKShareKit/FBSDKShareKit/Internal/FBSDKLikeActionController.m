@@ -484,7 +484,7 @@ static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *a
   NSString *fields = @"engagement.fields(count_string_with_like,count_string_without_like,social_sentence_with_like,"
   @"social_sentence_without_like)";
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:objectID
-                                                                 parameters:@{ @"fields": fields }
+                                                                 parameters:@{ @"fields": fields, @"locale" : [NSLocale currentLocale].localeIdentifier}
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
