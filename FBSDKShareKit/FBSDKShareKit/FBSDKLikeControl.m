@@ -95,6 +95,11 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
   }
 }
 
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier
+{
+    [FBSDKLikeActionController setLocaleIdentifier:localeIdentifier];
+}
+
 #pragma mark - Object Lifecycle
 
 - (instancetype)initWithFrame:(CGRect)frame
