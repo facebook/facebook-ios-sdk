@@ -32,6 +32,8 @@ NSString *const FBSDKLikeActionControllerDidResetNotification = @"FBSDKLikeActio
 NSString *const FBSDKLikeActionControllerDidUpdateNotification = @"FBSDKLikeActionControllerDidUpdateNotification";
 NSString *const FBSDKLikeActionControllerAnimatedKey = @"animated";
 
+static NSString *FBSDKLikeActionControllerLocaleIdentifier = @"";
+
 #define FBSDK_LIKE_ACTION_CONTROLLER_ANIMATION_DELAY 0.5
 #define FBSDK_LIKE_ACTION_CONTROLLER_SOUND_DELAY 0.15
 #define FBSDK_LIKE_ACTION_CONTROLLER_API_VERSION @"v2.1"
@@ -134,6 +136,11 @@ static FBSDKLikeActionControllerCache *_cache = nil;
     if (!_cache) {
       _cache = [[FBSDKLikeActionControllerCache alloc] initWithAccessTokenString:accessTokenString];
     }
+      
+    if (!FBSDKLikeActionControllerLocaleIdentifier) {
+        FBSDKLikeActionControllerLocaleIdentifier = [NSLocale currentLocale].localeIdentifier;
+    }
+      
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc addObserver:self
            selector:@selector(_accessTokenDidChangeNotification:)
@@ -446,6 +453,18 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   _contentAccessCount = 1;
 }
 
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier
+{
+    FBSDKLikeActionControllerLocaleIdentifier = [localeIdentifier copy];
+}
+
+static NSDictionary* FBSDKLikeActionControllerGraphRequestParametersWithOptions(NSDictionary *options)
+{
+    NSMutableDictionary *parameters = @{@"locale" : FBSDKLikeActionControllerLocaleIdentifier}.mutableCopy;
+    [parameters addEntriesFromDictionary:options];
+    return parameters;
+}
+
 static void FBSDKLikeActionControllerLogError(NSString *currentAction,
                                               NSString *objectID,
                                               FBSDKLikeObjectType objectType,
@@ -484,7 +503,7 @@ static void FBSDKLikeActionControllerAddGetEngagementRequest(FBSDKAccessToken *a
   NSString *fields = @"engagement.fields(count_string_with_like,count_string_without_like,social_sentence_with_like,"
   @"social_sentence_without_like)";
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:objectID
-                                                                 parameters:@{ @"fields": fields }
+                                                                 parameters:FBSDKLikeActionControllerGraphRequestParametersWithOptions(@{@"fields": fields})
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -529,12 +548,12 @@ static void FBSDKLikeActionControllerAddGetObjectIDRequest(FBSDKAccessToken *acc
     return;
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@""
-                                                                 parameters:@{
+                                                                 parameters:FBSDKLikeActionControllerGraphRequestParametersWithOptions(@{
                                                                               @"fields": @"id",
                                                                               @"id": objectID,
                                                                               @"metadata": @"1",
                                                                               @"type": @"og",
-                                                                              }
+                                                                              })
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -556,10 +575,10 @@ static void FBSDKLikeActionControllerAddGetObjectIDWithObjectURLRequest(FBSDKAcc
     return;
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@""
-                                                                 parameters:@{
+                                                                 parameters:FBSDKLikeActionControllerGraphRequestParametersWithOptions(@{
                                                                               @"fields": @"og_object.fields(id)",
                                                                               @"id": objectID,
-                                                                              }
+                                                                              })
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -583,10 +602,10 @@ static void FBSDKLikeActionControllerAddGetOGObjectLikeRequest(FBSDKAccessToken 
     return;
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/og.likes"
-                                                                 parameters:@{
+                                                                 parameters:FBSDKLikeActionControllerGraphRequestParametersWithOptions(@{
                                                                               @"fields": @"id,application",
                                                                               @"object": objectID,
-                                                                              }
+                                                                              })
                                                                 tokenString:accessToken.tokenString
                                                                  HTTPMethod:@"GET"
                                                                       flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
@@ -624,7 +643,7 @@ static void FBSDKLikeActionControllerAddPublishLikeRequest(FBSDKAccessToken *acc
                                                            fbsdk_like_action_controller_publish_like_completion_block completionHandler)
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/og.likes"
-                                                                 parameters:@{ @"object": objectID }
+                                                                 parameters:FBSDKLikeActionControllerGraphRequestParametersWithOptions(@{ @"object": objectID })
                                                                 tokenString:accessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"POST"];

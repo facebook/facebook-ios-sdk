@@ -46,6 +46,11 @@
   }
 }
 
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier
+{
+    [FBSDKLikeActionController setLocaleIdentifier:localeIdentifier];
+}
+
 #pragma mark - Object Lifecycle
 
 - (void)dealloc
