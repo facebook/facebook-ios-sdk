@@ -136,4 +136,11 @@ FBSDK_EXTERN NSString *NSStringFromFBSDKLikeControlStyle(FBSDKLikeControlStyle s
  */
 @property (nonatomic, assign, getter = isSoundEnabled) BOOL soundEnabled;
 
+/*!
+ @abstract Sets the locale for social engagement sentences.
+ 
+ @default Current locale identifier
+ */
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier;
+
 @end
