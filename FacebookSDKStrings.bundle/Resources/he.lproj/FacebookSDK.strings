@@ -1,71 +1,71 @@
 /* The title of the label to dismiss the alert when presenting user facing error messages */
-"ErrorRecovery.Alert.OK" = "OK";
+"ErrorRecovery.Alert.OK" = "סגור";
 
 /* The title of the label to decline attempting error recovery */
-"ErrorRecovery.Cancel" = "Cancel";
+"ErrorRecovery.Cancel" = "ביטול";
 
 /* The fallback message to display to recover invalidated tokens */
-"ErrorRecovery.Login.Suggestion" = "Please log into this app again to reconnect your Facebook account.";
+"ErrorRecovery.Login.Suggestion" = "בבקשה התחבר/י שוב לאפליקציה זו בכדי לחבר שוב את חשבון הפייסבוק שלך.";
 
 /* The title of the label to start attempting error recovery */
-"ErrorRecovery.OK" = "OK";
+"ErrorRecovery.OK" = "אישור";
 
 /* The fallback message to display to retry transient errors */
-"ErrorRecovery.Transient.Suggestion" = "The server is temporarily busy, please try again.";
+"ErrorRecovery.Transient.Suggestion" = "השרת עמוס כרגע, אנא נסה/י שוב.";
 
 /* The label for the FBSDKLikeButton when the object is not currently liked. */
-"LikeButton.Like" = "Like";
+"LikeButton.Like" = "אהבתי";
 
 /* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "Liked";
+"LikeButton.Liked" = "אוהב/ת";
 
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
-"LoginButton.CancelLogout" = "Cancel";
+"LoginButton.CancelLogout" = "ביטול";
 
 /* The label for the FBSDKLoginButton action sheet to confirm logging out */
-"LoginButton.ConfirmLogOut" = "Log Out";
+"LoginButton.ConfirmLogOut" = "התנתק/י";
 
 /* The fallback string for the FBSDKLoginButton label when the user name is not available yet */
-"LoginButton.LoggedIn" = "Logged in using Facebook";
+"LoginButton.LoggedIn" = "מחובר/ת דרך פייסבוק";
 
 /* The format string for the FBSDKLoginButton label when the user is logged in */
-"LoginButton.LoggedInAs" = "Logged in as %@";
+"LoginButton.LoggedInAs" = "מחובר/ת כ %@";
 
 /* The short label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogIn" = "Log in";
+"LoginButton.LogIn" = "התחבר/י";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInLong" = "Log in with Facebook";
+"LoginButton.LogInLong" = "התחבר/י דרך פייסבוק";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
-"LoginButton.LogOut" = "Log out";
+"LoginButton.LogOut" = "התנתק/י";
 
 /* The user facing error message when the app slider has been disabled and login fails. */
-"LoginError.SystemAccount.Disabled" = "Access has not been granted to the Facebook account. Verify device settings.";
+"LoginError.SystemAccount.Disabled" = "הגישה לחשבון הפייסבוק נדחתה. בדוק את הגדרות המכשיר";
 
 /* The user facing error message when the Accounts framework encounters a network error. */
-"LoginError.SystemAccount.Network" = "Unable to connect to Facebook. Check your network connection and try again.";
+"LoginError.SystemAccount.Network" = "החיבור לפייסבוק נכשל. יש לבדוק את החיבור לרשת ולנסות שוב.";
 
 /* The user facing error message when the device Facebook account password is incorrect and login fails. */
-"LoginError.SystemAccount.PasswordChange" = "Your Facebook password has changed. To confirm your password, open Settings > Facebook and tap your name.";
+"LoginError.SystemAccount.PasswordChange" = "ססימתך לפייסבוק שונתה. כדי לאשר את הסיסמא, פתח/י הגדרות > Facebook ולחץ/י על שמך.";
 
 /* The user facing error message when the device Facebook account is unavailable and login fails. */
-"LoginError.SystemAccount.Unavailable" = "The Facebook account has not been configured on the device.";
+"LoginError.SystemAccount.Unavailable" = "חשבון הפייסבוק לא הוגדר במכשיר זה.";
 
 /* The user facing error message when the Facebook account signed in to the Accounts framework becomes unconfirmed. */
-"LoginError.SystemAccount.UnconfirmedUser" = "Your account is not confirmed. Please log in to www.facebook.com and follow the instructions given.";
+"LoginError.SystemAccount.UnconfirmedUser" = "חשבונך לא מאושר. התחבר/י בבקשה לwww.facebook.com ועקוב/י אחר ההוראות.";
 
 /* The user facing error message when the Facebook account signed in to the Accounts framework has been checkpointed. */
-"LoginError.SystemAccount.UserCheckpointed" = "You cannot log in to apps at this time. Please log in to www.facebook.com and follow the instructions given.";
+"LoginError.SystemAccount.UserCheckpointed" = "אינך יכול/ה להתחבר לאפליקציות כרגע. התחבר/י בבקשה לwww.facebook.com ועקוב/י אחר ההוראות.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "New! You're in control - choose what info you want to share with apps.";
+"LoginTooltip.Message" = "חדש! את/ה בשליטה - בחר/י איזה מידע לשתף עם אפליקציות";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
-"LoginWeb.LogInTitle" = "Log In";
+"LoginWeb.LogInTitle" = "התחבר/י";
 
 /* The label for FBSDKSendButton */
-"SendButton.Send" = "Send";
+"SendButton.Send" = "שלח/י";
 
 /* The label for FBSDKShareButton */
-"ShareButton.Share" = "Share";
+"ShareButton.Share" = "שתף/י";
