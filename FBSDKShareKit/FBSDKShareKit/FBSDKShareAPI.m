@@ -18,7 +18,9 @@
 
 #import "FBSDKShareAPI.h"
 
+#if !TARGET_OS_TV
 #import <AssetsLibrary/AssetsLibrary.h>
+#endif
 
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKCoreKit/FBSDKGraphRequest.h>
@@ -49,7 +51,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 @implementation FBSDKShareAPI {
   NSFileHandle *_fileHandle;
+#if !TARGET_OS_TV
   ALAssetRepresentation *_assetRepresentation;
+#endif
 }
 
 #pragma mark - Class Methods
@@ -71,6 +75,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 #pragma mark - Object Lifecycle
 
+#if !TARGET_OS_TV
 + (ALAssetsLibrary *)defaultAssetsLibrary {
   static dispatch_once_t pred = 0;
   static ALAssetsLibrary *library = nil;
@@ -79,6 +84,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   });
   return library;
 }
+#endif
 
 + (void)initialize
 {
@@ -171,20 +177,27 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if (!shareContent) {
-    if (errorRef == NULL) {
+    if (errorRef != NULL) {
       *errorRef = [FBSDKShareError requiredArgumentErrorWithName:@"shareContent" message:@"Share content cannot be null."];
     }
     return NO;
   }
   if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     if (shareContent.peopleIDs.count > 0) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"peopleIDs" value:shareContent.peopleIDs message:@"Cannot specify peopleIDs with FBSDKShareVideoContent."];
+      if (errorRef != NULL) {
+        *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"peopleIDs" value:shareContent.peopleIDs message:@"Cannot specify peopleIDs with FBSDKShareVideoContent."];
+      }
       return NO;
     }
     if (shareContent.placeID) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"placeID" value:shareContent.placeID message:@"Cannot specify place ID with FBSDKShareVideoContent."];
+      if (errorRef != NULL) {
+        *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"placeID" value:shareContent.placeID message:@"Cannot specify place ID with FBSDKShareVideoContent."];
+      }
       return NO;
     }
+  }
+  if (errorRef != NULL){
+    *errorRef = nil;
   }
   return [FBSDKShareUtility validateShareContent:shareContent error:errorRef];
 }
@@ -393,6 +406,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     [videoUploader start];
     return YES;
   } else if (videoURL) {
+#if TARGET_OS_TV
+    return NO;
+#else
     if (![self _addToPendingShareAPI]) {
       return NO;
     }
@@ -408,6 +424,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       [_delegate sharer:self didFailWithError:error];
     }];
     return YES;
+#endif
   } else {
     return NO;
   }
@@ -734,7 +751,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   @synchronized(g_pendingFBSDKShareAPI) {
     [g_pendingFBSDKShareAPI removeObject:self];
     _fileHandle = nil;
+#if !TARGET_OS_TV
     _assetRepresentation = nil;
+#endif
   }
 }
 
@@ -750,7 +769,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       return nil;
     }
     return videoChunkData;
-  } else if (_assetRepresentation) {
+  }
+#if !TARGET_OS_TV
+  else if (_assetRepresentation) {
     NSMutableData *data = [NSMutableData dataWithLength:chunkSize];
     NSError *error;
     NSUInteger bufferedLength = [_assetRepresentation getBytes:[data mutableBytes] fromOffset:startOffset length:chunkSize error:&error];
@@ -759,6 +780,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     }
     return data;
   }
+#endif
   return nil;
 }
 

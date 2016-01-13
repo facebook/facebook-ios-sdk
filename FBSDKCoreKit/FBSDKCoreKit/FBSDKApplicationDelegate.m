@@ -22,21 +22,24 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKBoltsMeasurementEventListener.h"
-#import "FBSDKBridgeAPIRequest.h"
-#import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKConstants.h"
-#import "FBSDKContainerViewController.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKProfile+Internal.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
+
+#if !TARGET_OS_TV
+#import "FBSDKBoltsMeasurementEventListener.h"
+#import "FBSDKBridgeAPIRequest.h"
+#import "FBSDKBridgeAPIResponse.h"
+#import "FBSDKContainerViewController.h"
+#import "FBSDKProfile+Internal.h"
+#endif
 
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
 
@@ -44,9 +47,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 @implementation FBSDKApplicationDelegate
 {
+#if !TARGET_OS_TV
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
+#endif
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
 }
@@ -67,9 +72,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 + (void)initializeWithLaunchData:(NSNotification *)note
 {
   NSDictionary *launchData = note.userInfo;
+#if !TARGET_OS_TV
   // Register Listener for Bolts measurement events
   [FBSDKBoltsMeasurementEventListener defaultListener];
-
+#endif
   // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
   [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]
                                    openURL:launchData[UIApplicationLaunchOptionsURLKey]];
@@ -125,6 +131,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                                  userInfo:nil];
   }
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
+#if !TARGET_OS_TV
   // if they completed a SFVC flow, dimiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;
@@ -144,7 +151,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   if ([self _handleBridgeAPIResponseURL:url sourceApplication:sourceApplication]) {
     return YES;
   }
-
+#endif
   [self _logIfAppLinkEvent:url];
 
   return NO;
@@ -152,11 +159,12 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
-  [FBSDKProfile setCurrentProfile:cachedProfile];
-
   FBSDKAccessToken *cachedToken = [[FBSDKSettings accessTokenCache] fetchAccessToken];
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
+
+#if !TARGET_OS_TV
+  FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
+  [FBSDKProfile setCurrentProfile:cachedProfile];
 
   NSURL *launchedURL = launchOptions[UIApplicationLaunchOptionsURLKey];
   NSString *sourceApplication = launchOptions[UIApplicationLaunchOptionsSourceApplicationKey];
@@ -173,6 +181,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                             annotation:annotation];
     }
   }
+#endif
   return NO;
 }
 
@@ -189,48 +198,41 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   // might have been a "didBecomeActive" event pending that we want to ignore.
   if (!_expectingBackground && !_safariViewController) {
     _active = YES;
+#if !TARGET_OS_TV
     [_pendingURLOpen applicationDidBecomeActive:[notification object]];
-
     [self _cancelBridgeRequest];
-
+#endif
     [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
   }
 }
 
-#pragma mark - SFSafariViewControllerDelegate
-
-// This means the user tapped "Done" which we should treat as a cancellation.
-- (void)safariViewControllerDidFinish:(UIViewController *)safariViewController
-{
-  if (_pendingURLOpen) {
-    id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
-
-    _pendingURLOpen = nil;
-
-    [pendingURLOpen application:nil
-                            openURL:nil
-                  sourceApplication:nil
-                     annotation:nil];
-
-  }
-  [self _cancelBridgeRequest];
-  _safariViewController = nil;
-}
-
-#pragma mark - FBSDKContainerViewControllerDelegate
-
-- (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated
-{
-  if (_safariViewController) {
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\n"
-     "This can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view "
-     "controller will not be prematurely dismissed."];
-    [self safariViewControllerDidFinish:_safariViewController];
-  }
-}
-
 #pragma mark - Internal Methods
+
+#pragma mark -- (non-tvos)
+
+#if !TARGET_OS_TV
+
+- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler
+{
+  _expectingBackground = YES;
+  _pendingURLOpen = sender;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
+    BOOL opened = [[UIApplication sharedApplication] openURL:url];
+
+    if ([url.scheme hasPrefix:@"http"] && !opened) {
+      NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+      if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
+        // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
+        // Otherwise we would rather trust in the actual result of openURL
+        opened = YES;
+      }
+    }
+    if (handler) {
+      handler(opened);
+    }
+  });
+}
 
 - (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
      useSafariViewController:(BOOL)useSafariViewController
@@ -325,63 +327,42 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
 }
 
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler
-{
-  _expectingBackground = YES;
-  _pendingURLOpen = sender;
-  dispatch_async(dispatch_get_main_queue(), ^{
-    // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
-    BOOL opened = [[UIApplication sharedApplication] openURL:url];
+#pragma mark -- SFSafariViewControllerDelegate
 
-    if ([url.scheme hasPrefix:@"http"] && !opened) {
-      NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-      if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-        // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
-        // Otherwise we would rather trust in the actual result of openURL
-        opened = YES;
-      }
-    }
-    if (handler) {
-      handler(opened);
-    }
-  });
+// This means the user tapped "Done" which we should treat as a cancellation.
+- (void)safariViewControllerDidFinish:(UIViewController *)safariViewController
+{
+  if (_pendingURLOpen) {
+    id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
+
+    _pendingURLOpen = nil;
+
+    [pendingURLOpen application:nil
+                        openURL:nil
+              sourceApplication:nil
+                     annotation:nil];
+
+  }
+  [self _cancelBridgeRequest];
+  _safariViewController = nil;
 }
+
+#pragma mark -- FBSDKContainerViewControllerDelegate
+
+- (void)viewControllerDidDisappear:(FBSDKContainerViewController *)viewController animated:(BOOL)animated
+{
+  if (_safariViewController) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:@"**ERROR**:\n The SFSafariViewController's parent view controller was dismissed.\n"
+     "This can happen if you are triggering login from a UIAlertController. Instead, make sure your top most view "
+     "controller will not be prematurely dismissed."];
+    [self safariViewControllerDidFinish:_safariViewController];
+  }
+}
+
+#endif
 
 #pragma mark - Helper Methods
-
-- (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
-{
-  FBSDKBridgeAPIRequest *request = _pendingRequest;
-  FBSDKBridgeAPICallbackBlock completionBlock = _pendingRequestCompletionBlock;
-  _pendingRequest = nil;
-  _pendingRequestCompletionBlock = NULL;
-  if (![responseURL.scheme isEqualToString:[FBSDKInternalUtility appURLScheme]]) {
-    return NO;
-  }
-  if (![responseURL.host isEqualToString:@"bridge"]) {
-    return NO;
-  }
-  if (!request) {
-    return NO;
-  }
-  if (!completionBlock) {
-    return YES;
-  }
-  NSError *error;
-  FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
-                                                                              responseURL:responseURL
-                                                                        sourceApplication:sourceApplication
-                                                                                    error:&error];
-  if (response) {
-    completionBlock(response);
-    return YES;
-  } else if (error) {
-    completionBlock([FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request error:error]);
-    return YES;
-  } else {
-    return NO;
-  }
-}
 
 - (void)_logIfAppLinkEvent:(NSURL *)url
 {
@@ -419,6 +400,42 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                        accessToken:nil];
 }
 
+#pragma mark -- (non-tvos)
+#if !TARGET_OS_TV
+- (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
+{
+  FBSDKBridgeAPIRequest *request = _pendingRequest;
+  FBSDKBridgeAPICallbackBlock completionBlock = _pendingRequestCompletionBlock;
+  _pendingRequest = nil;
+  _pendingRequestCompletionBlock = NULL;
+  if (![responseURL.scheme isEqualToString:[FBSDKInternalUtility appURLScheme]]) {
+    return NO;
+  }
+  if (![responseURL.host isEqualToString:@"bridge"]) {
+    return NO;
+  }
+  if (!request) {
+    return NO;
+  }
+  if (!completionBlock) {
+    return YES;
+  }
+  NSError *error;
+  FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
+                                                                              responseURL:responseURL
+                                                                        sourceApplication:sourceApplication
+                                                                                    error:&error];
+  if (response) {
+    completionBlock(response);
+    return YES;
+  } else if (error) {
+    completionBlock([FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request error:error]);
+    return YES;
+  } else {
+    return NO;
+  }
+}
+
 - (void)_cancelBridgeRequest
 {
   if (_pendingRequest && _pendingRequestCompletionBlock) {
@@ -427,4 +444,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   _pendingRequest = nil;
   _pendingRequestCompletionBlock = NULL;
 }
+#endif
+
 @end

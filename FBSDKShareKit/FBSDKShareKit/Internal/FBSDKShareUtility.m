@@ -236,6 +236,7 @@
   }
 }
 
+#if !TARGET_OS_TV
 + (BOOL)validateAppInviteContent:(FBSDKAppInviteContent *)appInviteContent error:(NSError *__autoreleasing *)errorRef
 {
   return ([self _validateRequiredValue:appInviteContent name:@"content" error:errorRef] &&
@@ -243,6 +244,7 @@
           [self _validateNetworkURL:appInviteContent.appLinkURL name:@"appLinkURL" error:errorRef] &&
           [self _validateNetworkURL:appInviteContent.appInvitePreviewImageURL name:@"appInvitePreviewImageURL" error:errorRef]);
 }
+#endif
 
 + (BOOL)validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)videoContent name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
@@ -261,6 +263,7 @@
   }
 }
 
+#if !TARGET_OS_TV
 + (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef
 {
   if (![self _validateRequiredValue:gameRequestContent name:@"content" error:errorRef]
@@ -329,6 +332,7 @@
                                        @(FBSDKGameRequestFilterAppNonUsers)]
                                error:errorRef];
 }
+#endif
 
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent error:(NSError *__autoreleasing *)errorRef
 {

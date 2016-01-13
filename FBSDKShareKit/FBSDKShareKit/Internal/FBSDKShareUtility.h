@@ -18,13 +18,16 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKShareKit/FBSDKAppInviteContent.h>
-#import <FBSDKShareKit/FBSDKGameRequestContent.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
 #import <FBSDKShareKit/FBSDKSharePhotoContent.h>
 #import <FBSDKShareKit/FBSDKShareVideoContent.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
+
+#if !TARGET_OS_TV
+#import <FBSDKShareKit/FBSDKAppInviteContent.h>
+#import <FBSDKShareKit/FBSDKGameRequestContent.h>
+#endif
 
 @interface FBSDKShareUtility : NSObject
 
@@ -44,9 +47,7 @@
 + (void)testShareContent:(id<FBSDKSharingContent>)shareContent
            containsMedia:(BOOL *)containsMediaRef
           containsPhotos:(BOOL *)containsPhotosRef;
-+ (BOOL)validateAppInviteContent:(FBSDKAppInviteContent *)appInviteContent error:(NSError *__autoreleasing *)errorRef;
 + (BOOL)validateAssetLibraryURLWithShareVideoContent:(FBSDKShareVideoContent *)videoContent name:(NSString *)name error:(NSError *__autoreleasing *)errorRef;
-+ (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef;
 + (BOOL)validateShareContent:(id<FBSDKSharingContent>)shareContent error:(NSError *__autoreleasing *)errorRef;
 + (BOOL)validateShareLinkContent:(FBSDKShareLinkContent *)linkContent error:(NSError *__autoreleasing *)errorRef;
 + (BOOL)validateShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
@@ -54,4 +55,8 @@
 + (BOOL)validateSharePhotoContent:(FBSDKSharePhotoContent *)photoContent error:(NSError *__autoreleasing *)errorRef;
 + (NSString *)getOpenGraphNameAndNamespaceFromFullName:(NSString *)fullName namespace:(NSString **)namespace;
 
+#if !TARGET_OS_TV
++ (BOOL)validateAppInviteContent:(FBSDKAppInviteContent *)appInviteContent error:(NSError *__autoreleasing *)errorRef;
++ (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef;
+#endif
 @end

@@ -44,15 +44,19 @@
   [FBSDKAppEventsStateManager persistAppEventsData:eventState];
 
   FBSDKAppEventsState *eventState2 = [[FBSDKAppEventsState alloc] initWithToken:@"token2" appID:@"appid"];
-  [eventState2 addEvent:@{ @"event2" : @2 } isImplicit:NO];
+  [eventState2 addEvent:@{ @"event2" : @2 } isImplicit:YES];
   [FBSDKAppEventsStateManager persistAppEventsData:eventState2];
 
   NSArray *savedArray = [FBSDKAppEventsStateManager retrievePersistedAppEventsStates];
   XCTAssertEqual(2, savedArray.count);
+  XCTAssertFalse([savedArray[0] areAllEventsImplicit]);
+  XCTAssertTrue([savedArray[1] areAllEventsImplicit]);
 
   NSString *zero = [savedArray[0] JSONStringForEvents:YES];
   NSString *one = [savedArray[1] JSONStringForEvents:YES];
   XCTAssertNotEqualObjects(zero, one);
+  XCTAssertFalse([savedArray[0] areAllEventsImplicit]);
+  XCTAssertTrue([savedArray[1] areAllEventsImplicit]);
 
   XCTAssertEqual(0, [FBSDKAppEventsStateManager retrievePersistedAppEventsStates].count);
 }

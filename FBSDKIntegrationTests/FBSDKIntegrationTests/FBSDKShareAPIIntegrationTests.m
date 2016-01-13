@@ -311,7 +311,7 @@ static NSString *const kTaggedPlaceID = @"88603851976";
   __block NSString *taggedName = nil;
   __block FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?limit=1" parameters:nil]
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/taggable_friends?limit=1" parameters:@{ @"fields": @"id,name" }]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(error);
      tag = result[@"data"][0][@"id"];

@@ -198,7 +198,9 @@
 				893774AF1A3B815D00BE2807 /* Frameworks */,
 				9D9DB8DA1A114E500086167B /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		9D9DB8DA1A114E500086167B /* Products */ = {
 			isa = PBXGroup;
@@ -344,7 +346,6 @@
 				TargetAttributes = {
 					9D9DB8D81A114E500086167B = {
 						CreatedOnToolsVersion = 6.1;
-						DevelopmentTeam = V9WTTPBFK9;
 					};
 					9D9DB8E31A114E500086167B = {
 						CreatedOnToolsVersion = 6.1;

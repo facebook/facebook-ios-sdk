@@ -18,6 +18,20 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKShareKit/FBSDKShareAPI.h>
+#import <FBSDKShareKit/FBSDKShareConstants.h>
+#import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
+#import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
+#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
+#import <FBSDKShareKit/FBSDKSharePhoto.h>
+#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
+#import <FBSDKShareKit/FBSDKShareVideo.h>
+#import <FBSDKShareKit/FBSDKShareVideoContent.h>
+#import <FBSDKShareKit/FBSDKSharing.h>
+#import <FBSDKShareKit/FBSDKSharingContent.h>
+
+#if !TARGET_OS_TV
 #import <FBSDKShareKit/FBSDKAppGroupAddDialog.h>
 #import <FBSDKShareKit/FBSDKAppGroupContent.h>
 #import <FBSDKShareKit/FBSDKAppGroupJoinDialog.h>
@@ -29,19 +43,8 @@
 #import <FBSDKShareKit/FBSDKLikeControl.h>
 #import <FBSDKShareKit/FBSDKLikeObjectType.h>
 #import <FBSDKShareKit/FBSDKMessageDialog.h>
-#import <FBSDKShareKit/FBSDKSendButton.h>
-#import <FBSDKShareKit/FBSDKShareAPI.h>
 #import <FBSDKShareKit/FBSDKShareButton.h>
-#import <FBSDKShareKit/FBSDKShareConstants.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
 #import <FBSDKShareKit/FBSDKShareDialogMode.h>
-#import <FBSDKShareKit/FBSDKShareLinkContent.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
-#import <FBSDKShareKit/FBSDKSharePhoto.h>
-#import <FBSDKShareKit/FBSDKSharePhotoContent.h>
-#import <FBSDKShareKit/FBSDKShareVideo.h>
-#import <FBSDKShareKit/FBSDKShareVideoContent.h>
-#import <FBSDKShareKit/FBSDKSharing.h>
-#import <FBSDKShareKit/FBSDKSharingContent.h>
+#import <FBSDKShareKit/FBSDKSendButton.h>
+#endif

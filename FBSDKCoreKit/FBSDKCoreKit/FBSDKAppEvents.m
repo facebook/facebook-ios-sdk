@@ -208,17 +208,18 @@ static NSString *g_overrideAppID = nil;
   self = [super init];
   if (self) {
     _flushBehavior = FBSDKAppEventsFlushBehaviorAuto;
-    _flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                                                   target:self
-                                                 selector:@selector(flushTimerFired:)
-                                                 userInfo:nil
-                                                  repeats:YES];
-
-    _attributionIDRecheckTimer = [NSTimer scheduledTimerWithTimeInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
-                                                                  target:self
-                                                                selector:@selector(appSettingsFetchStateResetTimerFired:)
-                                                                userInfo:nil
-                                                                 repeats:YES];
+    _flushTimer = [NSTimer timerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                                          target:self
+                                        selector:@selector(flushTimerFired:)
+                                        userInfo:nil
+                                         repeats:YES];
+    _attributionIDRecheckTimer = [NSTimer timerWithTimeInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
+                                                         target:self
+                                                       selector:@selector(appSettingsFetchStateResetTimerFired:)
+                                                       userInfo:nil
+                                                        repeats:YES];
+    [[NSRunLoop mainRunLoop] addTimer:_flushTimer forMode:NSDefaultRunLoopMode];
+    [[NSRunLoop mainRunLoop] addTimer:_attributionIDRecheckTimer forMode:NSDefaultRunLoopMode];
     [[NSNotificationCenter defaultCenter]
      addObserver:self
      selector:@selector(applicationMovingFromActiveStateOrTerminating)
@@ -345,7 +346,7 @@ static NSString *g_overrideAppID = nil;
 
 + (void)activateApp
 {
-  [FBSDKAppEventsUtility ensureOnMainThread];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
 
   // Fetch app settings and register for transaction notifications only if app supports implicit purchase
   // events
@@ -409,8 +410,8 @@ static NSString *g_overrideAppID = nil;
   static FBSDKAppEvents *shared = nil;
 
   dispatch_once(&pred, ^{
-    shared = [[FBSDKAppEvents alloc] init];
-  });
+      shared = [[FBSDKAppEvents alloc] init];
+    });
   return shared;
 }
 
@@ -631,7 +632,7 @@ static NSString *g_overrideAppID = nil;
   if (appEventsState.events.count == 0) {
     return;
   }
-  [FBSDKAppEventsUtility ensureOnMainThread];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self fetchServerConfiguration:^(void) {
     NSString *JSONString = [appEventsState JSONStringForEvents:_serverConfiguration.implicitLoggingEnabled];
@@ -694,7 +695,7 @@ static NSString *g_overrideAppID = nil;
     FlushResultNoConnectivity
   };
 
-  [FBSDKAppEventsUtility ensureOnMainThread];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   FBSDKAppEventsFlushResult flushResult = FlushResultSuccess;
   if (error) {
@@ -744,7 +745,7 @@ static NSString *g_overrideAppID = nil;
 
 - (void)flushTimerFired:(id)arg
 {
-  [FBSDKAppEventsUtility ensureOnMainThread];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
   if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly && !self.disableTimer) {
     [self flushForReason:FBSDKAppEventsFlushReasonTimer];
   }
@@ -757,7 +758,7 @@ static NSString *g_overrideAppID = nil;
 
 - (void)applicationDidBecomeActive
 {
-  [FBSDKAppEventsUtility ensureOnMainThread];
+  [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self checkPersistedEvents];
 

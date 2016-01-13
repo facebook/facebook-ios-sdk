@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKCoreKit"
-  s.version      = "4.8.0"
+  s.version      = "4.9.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's core features"
 
   s.description  = <<-DESC
@@ -17,33 +17,47 @@ Pod::Spec.new do |s|
   s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, "9.0"
-  s.ios.deployment_target = "7.0"
+  s.platform     = :ios, :tvos
+  s.ios.deployment_target = '7.0'
+  s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.8.0"
+                     :tag => "sdk-version-4.9.0"
                     }
 
-  s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
-
-  s.dependency 'Bolts', '~> 1.1'
+  s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
+  s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
 
   s.header_dir = "FBSDKCoreKit"
 
   # set header_mappings_dir to resolve our quoted imports in the +Internal file.
-  s.header_mappings_dir = "FBSDKCoreKit/FBSDKCoreKit/Internal"
+  s.header_mappings_dir = "FBSDKCoreKit/FBSDKCoreKit"
 
-  # The following subspecs are only to disable ARC on certain files. They should not be used as dependencies in your Podfile.
-  s.subspec 'arc' do |sp|
-    sp.public_header_files = "FBSDKCoreKit/FBSDKCoreKit/*.h"
-    sp.source_files   = "FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}"
-    sp.exclude_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.m"
-    sp.requires_arc = true
-  end
+  s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
+  s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
+  s.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h',
+                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
 
-  s.subspec 'no-arc' do |sp|
-    sp.source_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.m"
-    sp.requires_arc = false
-    sp.dependency 'FBSDKCoreKit/arc'
-  end
+  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
+  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
+
+  s.ios.dependency 'Bolts', '~> 1.5'
 end

@@ -170,12 +170,6 @@
 
 - (void)_buttonPressed:(id)sender
 {
-  if ([self.delegate respondsToSelector:@selector(loginButtonWillLogin:)]) {
-    if (![self.delegate loginButtonWillLogin:self]) {
-      return;
-    }
-  }
-
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:[self analyticsParameters]];
   if ([FBSDKAccessToken currentAccessToken]) {
     NSString *title = nil;
@@ -211,6 +205,12 @@
     [sheet showInView:self];
 #pragma clang diagnostic pop
   } else {
+    if ([self.delegate respondsToSelector:@selector(loginButtonWillLogin:)]) {
+      if (![self.delegate loginButtonWillLogin:self]) {
+        return;
+      }
+    }
+
     FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
       if ([self.delegate respondsToSelector:@selector(loginButton:didCompleteWithResult:error:)]) {
         [self.delegate loginButton:self didCompleteWithResult:result error:error];

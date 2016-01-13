@@ -40,7 +40,7 @@
   NSString *token = [NSString stringWithFormat:@"%@|%@", [self testAppID], [self testAppSecret]];
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/accounts/test-users", [self testAppID]]
-                                                                 parameters:nil
+                                                                 parameters:@{ @"fields": @"id" }
                                                                 tokenString:token
                                                                     version:nil
                                                                  HTTPMethod:nil];
@@ -133,7 +133,8 @@
     NSString *appAccessToken = [NSString stringWithFormat:@"%@|%@", [self testAppID], [self testAppSecret]];
     //verify they no longer exist.
     [[[FBSDKGraphRequest alloc] initWithGraphPath:tokenData.userID
-                                       parameters:@{@"access_token" : appAccessToken }
+                                       parameters:@{@"access_token" : appAccessToken,
+                                                    @"fields": @"id" }
       ]
      startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *verificationError) {
        XCTAssertNotNil(verificationError, @"expected error and not result %@", result);

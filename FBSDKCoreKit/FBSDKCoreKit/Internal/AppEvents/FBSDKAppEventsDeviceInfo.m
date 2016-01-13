@@ -21,8 +21,10 @@
 #import <sys/sysctl.h>
 #import <sys/utsname.h>
 
+#if !TARGET_OS_TV
 #import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
+#endif
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
@@ -243,10 +245,14 @@ static FBSDKAppEventsDeviceInfo *g_singleton;
 
 + (NSString *)_getCarrier
 {
+#if TARGET_OS_TV
+  return @"NoCarrier";
+#else
     // Dynamically load class for this so calling app doesn't need to link framework in.
     CTTelephonyNetworkInfo *networkInfo = [[fbsdkdfl_CTTelephonyNetworkInfoClass() alloc] init];
     CTCarrier *carrier = [networkInfo subscriberCellularProvider];
     return [carrier carrierName] ?: @"NoCarrier";
+#endif
 }
 
 @end
