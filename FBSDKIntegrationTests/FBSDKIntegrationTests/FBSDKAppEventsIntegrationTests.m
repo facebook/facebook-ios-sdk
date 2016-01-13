@@ -60,9 +60,6 @@
 - (void)setUp {
   [super setUp];
   [FBSDKSettings setAppID:self.testAppID];
-  // default to disabling timer based flushes so that long tests
-  // don't get more flushes than explicitly expecting.
-  [FBSDKAppEvents singleton].disableTimer = YES;
   // clear any persisted events
   [FBSDKAppEventsStateManager clearPersistedAppEventsStates];
 }
@@ -78,6 +75,9 @@
 }
 
 - (void)testActivate {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   FBSDKTestBlocker *blocker2 = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
@@ -124,6 +124,9 @@
 
 // same as below but inject no minimum time for considering new sessions in timespent
 - (void)testDeactivationsMultipleSessions {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSUInteger activiesEndpointCalledForActivateCount = 0;
   __block NSUInteger activiesEndpointCalledForDeactivateCount = 0;
@@ -170,6 +173,9 @@
 }
 
 - (void)testDeactivationsSingleSession {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSUInteger activiesEndpointCalledForActivateCount = 0;
   __block NSUInteger activiesEndpointCalledForDeactivateCount = 0;
@@ -214,6 +220,9 @@
 
 // test to verify flushing behavior when there are "session" changes.
 - (void)testLogEventsBetweenAppAndUser {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledForUserCount = 0;
@@ -267,6 +276,9 @@
 
 // similar to above but with explicit flushing.
 - (void)testLogEventsBetweenAppAndUserExplicitFlushing {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledForUserCount = 0;
@@ -322,6 +334,9 @@
 }
 
 - (void)testLogEventsThreshold {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -350,6 +365,9 @@
 
 // same as above but using explicit flush behavior and send more than the threshold
 - (void)testLogEventsThresholdExplicit {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -383,6 +401,9 @@
 }
 
 - (void)testLogEventsTimerThreshold {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -414,6 +435,9 @@
 
 // send logging events from different queues.
 - (void)testThreadsLogging {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -444,6 +468,43 @@
   }
   XCTAssertTrue([blocker waitWithTimeout:10], @"did not get automatic flushes");
   XCTAssertEqual(2,activiesEndpointCalledCount, @"more than two log request made");
+}
+
+- (void)testInitAppEventWorkerThread {
+  NSString *appID = self.testAppID;
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block int activiesEndpointCalledCount = 0;
+
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", appID];
+    if ([request.URL.path hasSuffix:activitiesPath]) {
+      ++activiesEndpointCalledCount;
+      [blocker signal];
+    }
+    // always return NO because we don't actually want to stub a http response, only
+    // to intercept and verify request to fufill the expectation.
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  // clear out all caches.
+  [self clearUserDefaults];
+  [FBSDKAppEventsUtility clearLibraryFiles];
+
+  dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+  // initiate singleton in a worker thread
+  dispatch_async(queue,^{
+    [FBSDKAppEvents singleton].disableTimer = NO;
+  });
+  // just one under the event count threshold.
+  for (int i = 0; i < 100; i++) {
+    [FBSDKAppEvents logEvent:@"event-to-test-threshold"];
+  }
+  XCTAssertTrue([blocker waitWithTimeout:25], @"did not get automatic flush");
+  XCTAssertEqual(1,activiesEndpointCalledCount, @"more than one log request made");
 }
 
 @end

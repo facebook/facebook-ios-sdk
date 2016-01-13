@@ -1,3 +1,6 @@
+/* The format string for device login instructions */
+"DeviceLogin.LogInPrompt" = "अपने स्मार्टफ़ोन या कंप्यूटर पर %@ पर जाएँ और यह कोड डालें:";
+
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "ठीक";
 

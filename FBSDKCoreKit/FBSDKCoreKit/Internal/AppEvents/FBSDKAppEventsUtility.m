@@ -136,7 +136,11 @@
 
 + (NSString *)attributionID
 {
+#if TARGET_OS_TV
+  return nil;
+#else
   return [[UIPasteboard pasteboardWithName:@"fb_app_attribution" create:NO] string];
+#endif
 }
 
 // for tests only.
@@ -148,9 +152,13 @@
                                              error:NULL];
 }
 
-+ (void)ensureOnMainThread
++ (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className
 {
-  FBSDKConditionalLog([NSThread isMainThread], FBSDKLoggingBehaviorInformational, @"*** This method expected to be called on the main thread.");
+  FBSDKConditionalLog([NSThread isMainThread],
+                      FBSDKLoggingBehaviorDeveloperErrors,
+                      @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
+                      methodName,
+                      className);
 }
 
 + (NSString *)flushReasonToString:(FBSDKAppEventsFlushReason)flushReason
@@ -239,7 +247,7 @@
 
 + (void)persistAnonymousID:(NSString *)anonymousID
 {
-  [[self class] ensureOnMainThread];
+  [[self class] ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
   NSDictionary *data = @{ FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY : anonymousID };
   NSString *content = [FBSDKInternalUtility JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
 
@@ -259,7 +267,7 @@
 
 + (NSString *)retrievePersistedAnonymousID
 {
-  [[self class] ensureOnMainThread];
+  [[self class] ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
   NSString *file = [[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME];
   NSString *content = [[NSString alloc] initWithContentsOfFile:file
                                                       encoding:NSASCIIStringEncoding

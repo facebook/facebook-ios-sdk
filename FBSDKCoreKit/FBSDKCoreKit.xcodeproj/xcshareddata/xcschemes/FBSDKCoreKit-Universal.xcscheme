@@ -3,7 +3,7 @@
    LastUpgradeVersion = "0630"
    version = "1.3">
    <BuildAction
-      parallelizeBuildables = "YES"
+      parallelizeBuildables = "NO"
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
@@ -36,7 +36,7 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "YES">
@@ -56,7 +56,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "8E9C3CE817DE9DE000427E62"
+               BlueprintIdentifier = "81ED94111BE147CF00795F05"
                BuildableName = "Bolts.framework"
                BlueprintName = "Bolts-iOS"
                ReferencedContainer = "container:../Bolts-IOS/Bolts.xcodeproj">

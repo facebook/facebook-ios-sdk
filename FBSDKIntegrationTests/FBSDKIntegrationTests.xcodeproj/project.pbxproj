@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		93266D961BBA121200874D8B /* videoviewdemo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 93266D941BBA11CB00874D8B /* videoviewdemo.mp4 */; settings = {ASSET_TAGS = (); }; };
-		9332A7591BF1DD6B004C53FD /* thumbs_up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7571BF1DCCD004C53FD /* thumbs_up.jpg */; settings = {ASSET_TAGS = (); }; };
-		9332A75A1BF1DD6F004C53FD /* hack.png in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7551BF1DCBD004C53FD /* hack.png */; settings = {ASSET_TAGS = (); }; };
+		93266D961BBA121200874D8B /* videoviewdemo.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 93266D941BBA11CB00874D8B /* videoviewdemo.mp4 */; };
+		9332A7591BF1DD6B004C53FD /* thumbs_up.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7571BF1DCCD004C53FD /* thumbs_up.jpg */; };
+		9332A75A1BF1DD6F004C53FD /* hack.png in Resources */ = {isa = PBXBuildFile; fileRef = 9332A7551BF1DCBD004C53FD /* hack.png */; };
 		9D18A8F91A9596B600A41042 /* FBSDKAppEventsIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D18A8F81A9596B600A41042 /* FBSDKAppEventsIntegrationTests.m */; };
 		9D18A8FB1A95981F00A41042 /* libOHHTTPStubs.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */; };
 		9D1999C71A7AF5C900CAD112 /* FBSDKIntegrationTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D1999C61A7AF5C900CAD112 /* FBSDKIntegrationTestCase.m */; };
@@ -34,6 +34,7 @@
 		9D2BA0A71AB9E110004C7C0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2BA0A61AB9E110004C7C0C /* Images.xcassets */; };
 		9D2BA0AA1AB9E110004C7C0C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D2BA0A81AB9E110004C7C0C /* LaunchScreen.xib */; };
 		9D2BA0BF1AB9EAEE004C7C0C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1999E91A7AF7F100CAD112 /* UIKit.framework */; };
+		9D4D73521C19F4D0001C505D /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D73501C19F30E001C505D /* Bolts.framework */; };
 		9D5F8ADC1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */; };
 		9D9ACC3B1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */; };
 		9D9ACC3C1ABCB9F90050BF2E /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1999CD1A7AF63600CAD112 /* FBSDKShareKit.framework */; };
@@ -96,7 +97,9 @@
 		9D2BA0A61AB9E110004C7C0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9D2BA0A91AB9E110004C7C0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		9D2BA0C01AB9EB9E004C7C0C /* FBSDKTestHost-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKTestHost-Prefix.pch"; sourceTree = "<group>"; };
+		9D4D73501C19F30E001C505D /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../build/Bolts.framework; sourceTree = "<group>"; };
 		9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsStateManagerIntegrationTests.m; sourceTree = "<group>"; };
+		9D5FB1FD1C19EE06002F07BD /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../Bolts-IOS/build/Debug-iphoneos/Bolts.framework"; sourceTree = "<group>"; };
 		9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareAPIIntegrationTests.m; sourceTree = "<group>"; };
 		9DA81B061AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileIntegrationTests.m; sourceTree = "<group>"; };
 		9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOHHTTPStubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,6 +113,7 @@
 			files = (
 				9D1999D21A7AF63600CAD112 /* libOCMock.a in Frameworks */,
 				9D18A8FB1A95981F00A41042 /* libOHHTTPStubs.a in Frameworks */,
+				9D4D73521C19F4D0001C505D /* Bolts.framework in Frameworks */,
 				9D9ACC3C1ABCB9F90050BF2E /* FBSDKShareKit.framework in Frameworks */,
 				9D1999EA1A7AF7F100CAD112 /* UIKit.framework in Frameworks */,
 				9D1999E81A7AF7E900CAD112 /* XCTest.framework in Frameworks */,
@@ -141,7 +145,9 @@
 				9D1999EB1A7AF7FB00CAD112 /* Frameworks */,
 				9D1999B41A7AF44B00CAD112 /* Products */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		9D1999B41A7AF44B00CAD112 /* Products */ = {
 			isa = PBXGroup;
@@ -202,6 +208,8 @@
 		9D1999EB1A7AF7FB00CAD112 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9D4D73501C19F30E001C505D /* Bolts.framework */,
+				9D5FB1FD1C19EE06002F07BD /* Bolts.framework */,
 				9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */,
 				9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */,
 				9D1999E91A7AF7F100CAD112 /* UIKit.framework */,

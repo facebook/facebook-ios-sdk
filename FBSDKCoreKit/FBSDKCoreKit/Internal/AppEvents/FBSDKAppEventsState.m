@@ -33,7 +33,6 @@
 @implementation FBSDKAppEventsState
 {
   NSMutableArray *_mutableEvents;
-  BOOL _containsExplicitEvent;
 }
 
 - (instancetype)init
@@ -58,7 +57,6 @@
   if (copy) {
     [copy->_mutableEvents addObjectsFromArray:_mutableEvents];
     copy->_numSkipped = _numSkipped;
-    copy->_containsExplicitEvent = _containsExplicitEvent;
   }
   return copy;
 }
@@ -117,9 +115,6 @@
   if (_mutableEvents.count >= FBSDK_APPEVENTSSTATE_MAX_EVENTS) {
     _numSkipped++;
   } else {
-    if (!isImplicit) {
-      _containsExplicitEvent = YES;
-    }
     [_mutableEvents addObject:@{
                                 @"event" : eventDictionary,
                                 FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY : @(isImplicit)
@@ -129,7 +124,12 @@
 
 - (BOOL)areAllEventsImplicit
 {
-  return !_containsExplicitEvent;
+  for (NSDictionary *event in _mutableEvents) {
+    if (![[event valueForKey:FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue]) {
+      return NO;
+    }
+  }
+  return YES;
 }
 
 - (BOOL)isCompatibleWithAppEventsState:(FBSDKAppEventsState *)appEventsState

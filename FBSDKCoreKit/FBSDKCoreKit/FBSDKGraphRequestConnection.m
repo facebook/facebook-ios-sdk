@@ -23,7 +23,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKErrorConfiguration.h"
-#import "FBSDKGraphErrorRecoveryProcessor.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestBody.h"
 #import "FBSDKGraphRequestDataAttachment.h"
@@ -48,9 +47,13 @@ static NSString *const kBatchFileNamePrefix = @"file";
 static NSString *const kBatchEntryName = @"name";
 
 static NSString *const kAccessTokenKey = @"access_token";
+#if TARGET_OS_TV
+static NSString *const kSDK = @"tvos";
+static NSString *const kUserAgentBase = @"FBtvOSSDK";
+#else
 static NSString *const kSDK = @"ios";
 static NSString *const kUserAgentBase = @"FBiOSSDK";
-
+#endif
 static NSString *const kBatchRestMethodBaseURL = @"method/";
 
 static NSTimeInterval g_defaultTimeout = 60.0;
@@ -72,7 +75,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 // ----------------------------------------------------------------------------
 // Private properties and methods
 
-@interface FBSDKGraphRequestConnection () <FBSDKURLConnectionDelegate, FBSDKGraphErrorRecoveryProcessorDelegate>
+@interface FBSDKGraphRequestConnection () <
+FBSDKURLConnectionDelegate
+#if !TARGET_OS_TV
+, FBSDKGraphErrorRecoveryProcessorDelegate
+#endif
+>
 
 @property (nonatomic, retain) FBSDKURLConnection *connection;
 @property (nonatomic, retain) NSMutableArray *requests;
@@ -88,10 +96,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 @implementation FBSDKGraphRequestConnection
 {
   NSString *_overrideVersionPart;
-  FBSDKGraphRequestMetadata *_recoveringRequestMetadata;
-  FBSDKGraphErrorRecoveryProcessor *_errorRecoveryProcessor;
   NSUInteger _expectingResults;
   NSOperationQueue *_delegateQueue;
+#if !TARGET_OS_TV
+  FBSDKGraphRequestMetadata *_recoveringRequestMetadata;
+  FBSDKGraphErrorRecoveryProcessor *_errorRecoveryProcessor;
+#endif
 }
 
 - (instancetype)init
@@ -458,6 +468,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
   request.parameters[@"format"] = @"json";
   request.parameters[@"sdk"] = kSDK;
   request.parameters[@"include_headers"] = @"false";
+  request.parameters[@"locale"] = [NSLocale currentLocale].localeIdentifier;
 
   NSString *baseURL;
   if (forBatch) {
@@ -681,7 +692,9 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
       disabledRecoveryCount++;
     }
   }
+#if !TARGET_OS_TV
   BOOL isSingleRequestToRecover = (count - disabledRecoveryCount == 1);
+#endif
 
   [self.requests enumerateObjectsUsingBlock:^(FBSDKGraphRequestMetadata *metadata, NSUInteger i, BOOL *stop) {
     id result = networkError ? nil : [results objectAtIndex:i];
@@ -693,6 +706,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
       body = [FBSDKTypeUtility dictionaryValue:resultDictionary[@"body"]];
     }
 
+#if !TARGET_OS_TV
     if (resultError && ![metadata.request isGraphErrorRecoveryDisabled] && isSingleRequestToRecover) {
       _recoveringRequestMetadata = metadata;
       _errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
@@ -700,6 +714,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
         return;
       }
     }
+#endif
 
     [self processResultBody:body error:resultError metadata:metadata canNotifyDelegate:(networkError ? NO : YES)];
   }];
@@ -713,11 +728,6 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
 - (void)processResultBody:(NSDictionary *)body error:(NSError *)error metadata:(FBSDKGraphRequestMetadata *)metadata canNotifyDelegate:(BOOL)canNotifyDelegate
 {
-  void (^clearToken)(void) = ^{
-    if (!(metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError)) {
-      [FBSDKAccessToken setCurrentAccessToken:nil];
-    }
-  };
   void (^finishAndInvokeCompletionHandler)(void) = ^{
     NSDictionary *graphDebugDict = [body objectForKey:@"__debug__"];
     if ([graphDebugDict isKindOfClass:[NSDictionary class]]) {
@@ -729,6 +739,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
       if (canNotifyDelegate && [_delegate respondsToSelector:@selector(requestConnectionDidFinishLoading:)]) {
         [_delegate requestConnectionDidFinishLoading:self];
       }
+    }
+  };
+
+#if !TARGET_OS_TV
+  void (^clearToken)(void) = ^{
+    if (!(metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError)) {
+      [FBSDKAccessToken setCurrentAccessToken:nil];
     }
   };
 
@@ -771,6 +788,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
       return;
     }
   }
+#endif
   // this is already on the queue since we are currently in the NSURLConnection callback.
   finishAndInvokeCompletionHandler();
 }
@@ -926,10 +944,11 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 + (NSString *)userAgent
 {
   static NSString *agent = nil;
-
-  if (!agent) {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
     agent = [NSString stringWithFormat:@"%@.%@", kUserAgentBase, FBSDK_VERSION_STRING];
-  }
+  });
+
   if ([FBSDKSettings userAgentSuffix]) {
     return [NSString stringWithFormat:@"%@/%@", agent, [FBSDKSettings userAgentSuffix]];
   }
@@ -962,6 +981,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
 
 #pragma mark - FBSDKGraphErrorRecoveryProcessorDelegate
 
+#if !TARGET_OS_TV
 - (void)processorDidAttemptRecovery:(FBSDKGraphErrorRecoveryProcessor *)processor didRecover:(BOOL)didRecover error:(NSError *)error
 {
   if (didRecover) {
@@ -985,6 +1005,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestConnectionState)
     _recoveringRequestMetadata = nil;
   }
 }
+#endif
 
 #pragma mark - Debugging helpers
 
