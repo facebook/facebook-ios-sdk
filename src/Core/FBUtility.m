@@ -409,7 +409,7 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 
 + (void)persistAnonymousID:(NSString *)anonymousID {
     
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
     NSDictionary *data = @{ FBPersistedAnonymousIDKey : anonymousID };
     NSString *content = [FBUtility simpleJSONEncode:data];
     
@@ -420,7 +420,7 @@ NSString *const FBPersistedAnonymousIDKey   = @"anon_id";
 }
 
 + (NSString *)retrievePersistedAnonymousID {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
     NSString *content =
         [[NSString alloc] initWithContentsOfFile:[FBAppEvents persistenceLibraryFilePath:FBPersistedAnonymousIDFilename]
                                     usedEncoding:nil

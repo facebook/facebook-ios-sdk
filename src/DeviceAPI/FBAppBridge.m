@@ -275,7 +275,7 @@ static FBAppBridge *g_sharedInstance;
         [self stopTrackingCallWithID:appCall.ID];
         [self invoke:handler
              forFailedAppCall:appCall
-                  withMessage:@"Failed to open native dialog. Please ensure that the Facebook app is installed"];
+                  withMessage:@"Failed to upload image/video. Please use a smaller image/video."];
     }
 }
 

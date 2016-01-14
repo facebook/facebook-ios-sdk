@@ -362,7 +362,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 + (void)activateApp {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
 
     // activateApp publishes an install on the first launch, and then logs an
     // activate app event.
@@ -456,17 +456,19 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         _anonymousSessions = [[NSMutableDictionary alloc] init];
 
         // Timer fires unconditionally on a regular interval... handler decides whether to call flush.
-        self.flushTimer = [NSTimer scheduledTimerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
-                                                           target:self
-                                                         selector:@selector(flushTimerFired:)
-                                                         userInfo:nil
-                                                          repeats:YES];
+        self.flushTimer = [NSTimer timerWithTimeInterval:FLUSH_PERIOD_IN_SECONDS
+                                                  target:self
+                                                selector:@selector(flushTimerFired:)
+                                                userInfo:nil
+                                                 repeats:YES];
 
-        self.attributionIDRecheckTimer = [NSTimer scheduledTimerWithTimeInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
-                                                                          target:self
-                                                                        selector:@selector(appSettingsFetchStateResetTimerFired:)
-                                                                        userInfo:nil
-                                                                         repeats:YES];
+        self.attributionIDRecheckTimer = [NSTimer timerWithTimeInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
+                                                                 target:self
+                                                               selector:@selector(appSettingsFetchStateResetTimerFired:)
+                                                               userInfo:nil
+                                                                repeats:YES];
+        [[NSRunLoop mainRunLoop] addTimer:self.flushTimer forMode:NSDefaultRunLoopMode];
+        [[NSRunLoop mainRunLoop] addTimer:self.attributionIDRecheckTimer forMode:NSDefaultRunLoopMode];
 
         // Register an observer to watch for app moving out of the active state, which we use
         // to signal a flush.  Since this is static, we don't unregister anywhere.
@@ -513,7 +515,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 - (void)fetchAppSettings:(FetchAppSettingsCallback)fetchAppSettingsCallback {
     NSString *appid = [[[FBSettings defaultAppID] copy] autorelease];
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     if (self.appSettingsFetchState == AppSettingsFetchStateInProgress) {
         return;
@@ -528,7 +530,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     [FBUtility fetchAppSettings:appid
                        callback:^(FBFetchedAppSettings *settings, NSError *error) {
 
-                           [FBAppEvents ensureOnMainThread];
+                           [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
                            self.appSupportsImplicitLogging = settings.supportsImplicitSdkLogging;
                            self.shouldAccessAdvertisingID = settings.shouldAccessAdvertisingID;
@@ -753,7 +755,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
  */
 - (void)flushOnMainQueue:(FBAppEventsFlushReason)flushReason
                  session:(FBSession *)session {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
     FBSessionAppEventsState *appEventsState = session.appEventsState;
 
     // If trying to flush a session already in flight, just ignore and continue to accum events
@@ -774,7 +776,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
 - (void)flushEventsToServer:(FBAppEventsFlushReason)flushReason
                     session:(FBSession *)session {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
     FBSessionAppEventsState *appEventsState = session.appEventsState;
 
     NSString *appid = [self appIDToLogEventsWith:session];
@@ -980,7 +982,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
         FlushResultNoConnectivity
     };
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     FlushResult flushResult = FlushResultSuccess;
     if (error) {
@@ -1035,7 +1037,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
 
 - (void)flushTimerFired:(id)arg {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     @synchronized (self) {
         if (self.flushBehavior != FBAppEventsFlushBehaviorExplicitOnly) {
@@ -1049,7 +1051,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 - (void)appSettingsFetchStateResetTimerFired:(id)arg {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     if (self.appSettingsFetchState != AppSettingsFetchStateInProgress) {
         // Reset app settings fetch state so it will be re-fetched in the event there was a server change.
@@ -1059,7 +1061,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
 - (void)applicationDidBecomeActive {
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     // We associate the deserialized persisted data with the current session.
     // It's possible we'll get false attribution if the user identity has changed
@@ -1118,7 +1120,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 }
 
 - (void)persistEventDataIfNotInFlight {
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     FBSessionAppEventsState *appEventsState = self.lastSessionLoggedTo.appEventsState;
     if (appEventsState.requestInFlight) {
@@ -1162,7 +1164,7 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
 
 + (void)persistAppEventsData:(FBSessionAppEventsState *)appEventsState {
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
     NSString *content;
 
     // We just persist from the last session being logged to.  When we switch sessions, we flush out
@@ -1236,8 +1238,12 @@ const int MAX_IDENTIFIER_LENGTH                      = 40;
     return [docDirectory stringByAppendingPathComponent:filename];
 }
 
-+ (void)ensureOnMainThread {
-    FBConditionalLog([NSThread isMainThread], FBLoggingBehaviorInformational, @"*** This method expected to be called on the main thread.");
++ (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className {
+    FBConditionalLog([NSThread isMainThread],
+                     FBLoggingBehaviorDeveloperErrors,
+                     @"*** <%@, %@> is not called on the main thread. This can lead to errors.",
+                     methodName,
+                     className);
 }
 
 #pragma mark - Custom Audience token stuff

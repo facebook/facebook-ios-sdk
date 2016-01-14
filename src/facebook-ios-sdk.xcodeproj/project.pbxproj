@@ -302,8 +302,8 @@
 		9D7A374418FF14A600B1EFC2 /* FBPhotoParams.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D7A374318FF14A600B1EFC2 /* FBPhotoParams.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D84A9611ABFECCD00CBC230 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B08E43190596EB00EE0BB1 /* Bolts.framework */; };
 		9D84A9621ABFECD300CBC230 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85B08E43190596EB00EE0BB1 /* Bolts.framework */; };
-		9D8661141BA0157000E1BB4B /* FBContainerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D8661121BA0157000E1BB4B /* FBContainerViewController.h */; settings = {ASSET_TAGS = (); }; };
-		9D8661151BA0157000E1BB4B /* FBContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8661131BA0157000E1BB4B /* FBContainerViewController.m */; settings = {ASSET_TAGS = (); }; };
+		9D8661141BA0157000E1BB4B /* FBContainerViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D8661121BA0157000E1BB4B /* FBContainerViewController.h */; };
+		9D8661151BA0157000E1BB4B /* FBContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8661131BA0157000E1BB4B /* FBContainerViewController.m */; };
 		9D8D5D991A1DACD6009BA594 /* FBTestUsersManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D8D5D971A1DACD6009BA594 /* FBTestUsersManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9D8D5D9A1A1DACD6009BA594 /* FBTestUsersManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D8D5D981A1DACD6009BA594 /* FBTestUsersManager.m */; };
 		9D9897471A1E5F08006D7562 /* FBTestUserSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D9897451A1E5F08006D7562 /* FBTestUserSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -548,6 +548,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = 09110A4019805F4800D175E4;
 			remoteInfo = "OHHTTPStubs iOS";
+		};
+		9D6574621C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85B08E38190596EB00EE0BB1 /* Bolts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F5AFCA021BA752750076E927;
+			remoteInfo = TVBolts;
+		};
+		9D6574641C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85B08E38190596EB00EE0BB1 /* Bolts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8178F99C1BB0F87700AD289D;
+			remoteInfo = "Bolts-watchOS";
+		};
+		9D6574661C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85B08E38190596EB00EE0BB1 /* Bolts.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F5AFCA131BA752770076E927;
+			remoteInfo = TVBoltsTests;
+		};
+		9D6574721C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C60EE61698DA5300E7BB7D /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 093442F91B80EC4A00A91535;
+			remoteInfo = "OHHTTPStubs iOS Fmk Tests";
+		};
+		9D6574741C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C60EE61698DA5300E7BB7D /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EAA436A51BE1598D000E9E99;
+			remoteInfo = "OHHTTPStubs tvOS Framework";
+		};
+		9D6574761C457D310050C468 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 85C60EE61698DA5300E7BB7D /* OHHTTPStubs.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EA100AB71BE15BE400129352;
+			remoteInfo = "OHHTTPStubs tvOS Fmk Tests";
 		};
 		9D84A95D1ABFECC400CBC230 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1391,8 +1433,11 @@
 			children = (
 				85B08E43190596EB00EE0BB1 /* Bolts.framework */,
 				9D84A9601ABFECC400CBC230 /* Bolts.framework */,
-				85B08E45190596EB00EE0BB1 /* BoltsTests.xctest */,
-				85B08E47190596EB00EE0BB1 /* MacBoltsTests.xctest */,
+				9D6574631C457D310050C468 /* Bolts.framework */,
+				9D6574651C457D310050C468 /* Bolts.framework */,
+				85B08E45190596EB00EE0BB1 /* BoltsTests-iOS.xctest */,
+				85B08E47190596EB00EE0BB1 /* BoltsTests-OSX.xctest */,
+				9D6574671C457D310050C468 /* BoltsTests-tvOS.xctest */,
 				85B08E49190596EB00EE0BB1 /* BoltsTestUI.app */,
 			);
 			name = Products;
@@ -1402,10 +1447,13 @@
 			isa = PBXGroup;
 			children = (
 				89D8D767199015740041CF82 /* libOHHTTPStubs.a */,
-				89D8D769199015740041CF82 /* OHHTTPStubs iOS Tests.xctest */,
+				89D8D769199015740041CF82 /* OHHTTPStubs iOS Lib Tests.xctest */,
 				9DE487C81B7A96CF003D4CC2 /* OHHTTPStubs.framework */,
+				9D6574731C457D310050C468 /* OHHTTPStubs iOS Fmk Tests.xctest */,
 				89D8D76B199015740041CF82 /* OHHTTPStubs.framework */,
 				89D8D76D199015740041CF82 /* OHHTTPStubs Mac Tests.xctest */,
+				9D6574751C457D310050C468 /* OHHTTPStubs.framework */,
+				9D6574771C457D310050C468 /* OHHTTPStubs tvOS Fmk Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2000,17 +2048,17 @@
 			remoteRef = 85B08E42190596EB00EE0BB1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		85B08E45190596EB00EE0BB1 /* BoltsTests.xctest */ = {
+		85B08E45190596EB00EE0BB1 /* BoltsTests-iOS.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = BoltsTests.xctest;
+			path = "BoltsTests-iOS.xctest";
 			remoteRef = 85B08E44190596EB00EE0BB1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		85B08E47190596EB00EE0BB1 /* MacBoltsTests.xctest */ = {
+		85B08E47190596EB00EE0BB1 /* BoltsTests-OSX.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = MacBoltsTests.xctest;
+			path = "BoltsTests-OSX.xctest";
 			remoteRef = 85B08E46190596EB00EE0BB1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -2056,10 +2104,10 @@
 			remoteRef = 89D8D766199015740041CF82 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		89D8D769199015740041CF82 /* OHHTTPStubs iOS Tests.xctest */ = {
+		89D8D769199015740041CF82 /* OHHTTPStubs iOS Lib Tests.xctest */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.cfbundle;
-			path = "OHHTTPStubs iOS Tests.xctest";
+			path = "OHHTTPStubs iOS Lib Tests.xctest";
 			remoteRef = 89D8D768199015740041CF82 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -2075,6 +2123,48 @@
 			fileType = wrapper.cfbundle;
 			path = "OHHTTPStubs Mac Tests.xctest";
 			remoteRef = 89D8D76C199015740041CF82 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574631C457D310050C468 /* Bolts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bolts.framework;
+			remoteRef = 9D6574621C457D310050C468 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574651C457D310050C468 /* Bolts.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Bolts.framework;
+			remoteRef = 9D6574641C457D310050C468 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574671C457D310050C468 /* BoltsTests-tvOS.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "BoltsTests-tvOS.xctest";
+			remoteRef = 9D6574661C457D310050C468 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574731C457D310050C468 /* OHHTTPStubs iOS Fmk Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs iOS Fmk Tests.xctest";
+			remoteRef = 9D6574721C457D310050C468 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574751C457D310050C468 /* OHHTTPStubs.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OHHTTPStubs.framework;
+			remoteRef = 9D6574741C457D310050C468 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9D6574771C457D310050C468 /* OHHTTPStubs tvOS Fmk Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = "OHHTTPStubs tvOS Fmk Tests.xctest";
+			remoteRef = 9D6574761C457D310050C468 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		9D84A9601ABFECC400CBC230 /* Bolts.framework */ = {

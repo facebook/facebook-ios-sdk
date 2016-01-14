@@ -109,7 +109,7 @@ long _lastRestoreTime;
 // Calculate and persist time spent data for this instance of the app activation.
 - (void)instanceSuspend {
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
     if (!_isCurrentlyLoaded) {
         FBConditionalLog(YES, FBLoggingBehaviorInformational, @"[FBTimeSpentData suspend] invoked without corresponding restore");
         return;
@@ -153,7 +153,7 @@ long _lastRestoreTime;
 // event if there's been enough time between the last deactivation and now.
 - (void)instanceRestore:(BOOL)calledFromActivateApp {
 
-    [FBAppEvents ensureOnMainThread];
+    [FBAppEvents ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
     // It's possible to call this multiple times during the time the app is in the foreground.  If this is the case,
     // just restore persisted data the first time.

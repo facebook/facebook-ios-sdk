@@ -150,7 +150,7 @@ typedef NS_ENUM(NSUInteger, FBAppEventsFlushReason) {
 - (void)instanceFlush:(FBAppEventsFlushReason)flushReason;
 
 + (long)unixTimeNow;
-+ (void)ensureOnMainThread;
++ (void)ensureOnMainThread:(NSString *)methodName className:(NSString *)className;
 + (NSString *)persistenceLibraryFilePath:(NSString *)filename;
 + (void)setSourceApplication:(NSString *)sourceApplication openURL:(NSURL *)url;
 + (void)setSourceApplication:(NSString *)sourceApp isAppLink:(BOOL)isAppLink;
