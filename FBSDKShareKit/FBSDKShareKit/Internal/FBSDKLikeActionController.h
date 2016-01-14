@@ -31,6 +31,7 @@ FBSDK_EXTERN NSString *const FBSDKLikeActionControllerAnimatedKey;
 @interface FBSDKLikeActionController : NSObject <NSDiscardableContent, NSSecureCoding>
 
 + (BOOL)isDisabled;
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier;
 
 // this method will call beginContentAccess before returning the instance
 + (instancetype)likeActionControllerForObjectID:(NSString *)objectID objectType:(FBSDKLikeObjectType)objectType;

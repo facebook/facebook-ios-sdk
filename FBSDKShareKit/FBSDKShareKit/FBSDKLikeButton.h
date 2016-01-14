@@ -33,6 +33,13 @@
 @interface FBSDKLikeButton : FBSDKButton <FBSDKLiking>
 
 /*!
+ @abstract Sets the locale for social engagement sentences.
+ 
+ @default Current locale identifier
+ */
++ (void)setLocaleIdentifier:(NSString *)localeIdentifier;
+
+/*!
  @abstract If YES, a sound is played when the receiver is toggled.
 
  @default YES
