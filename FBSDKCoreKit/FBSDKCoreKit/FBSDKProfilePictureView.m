@@ -364,7 +364,7 @@
   if (image) {
     _imageView.image = image;
     _hasProfileImage = YES;
-  } else if ((!_placeholderImageIsValid && !_hasProfileImage)) {
+  } else if (!_placeholderImageIsValid && !_hasProfileImage) {
     [self _setPlaceholderImage];
   }
 }
