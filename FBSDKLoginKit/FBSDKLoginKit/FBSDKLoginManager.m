@@ -541,7 +541,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
     }];
   }
 
-  return isFacebookURL;
+  return isFacebookURL && isExpectedSourceApplication;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
