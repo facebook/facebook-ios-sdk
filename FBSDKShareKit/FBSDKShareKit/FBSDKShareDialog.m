@@ -585,7 +585,9 @@
         break;
       }
     }
-    [FBSDKInternalUtility unregisterTransientObject:self];
+    dispatch_async(dispatch_get_main_queue(), ^{
+      [FBSDKInternalUtility unregisterTransientObject:self];
+    });
   };
   [fromViewController presentViewController:composeViewController animated:YES completion:nil];
   return YES;

@@ -22,4 +22,8 @@
 #import <FBSDKTVOSKit/FBSDKDeviceLoginCodeInfo.h>
 #import <FBSDKTVOSKit/FBSDKDeviceLoginManagerResult.h>
 #import <FBSDKTVOSKit/FBSDKDeviceLoginViewController.h>
+#import <FBSDKTVOSKit/FBSDKJS.h>
+#import <FBSDKTVOSKit/FBSDKTVInterfaceFactory.h>
+#import <FBSDKTVOSKit/FBSDKTVLoginButtonElement.h>
+#import <FBSDKTVOSKit/FBSDKTVLoginViewControllerElement.h>
 #import <FBSDKTVOSKit/FBSDKTVOSConstants.h>

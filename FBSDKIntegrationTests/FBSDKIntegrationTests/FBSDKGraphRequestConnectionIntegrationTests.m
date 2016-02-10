@@ -173,7 +173,7 @@
                                                         version:nil
                                                      HTTPMethod:nil]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-   XCTAssertNil(error);
+   XCTAssertNil(error, @"failed for %@", tokenWithLikes.tokenString);
    [blocker signal];
  }];
   [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=email"
@@ -182,7 +182,7 @@
                                                         version:nil
                                                      HTTPMethod:nil]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-   XCTAssertNil(error);
+   XCTAssertNil(error, @"failed for %@", tokenWithEmail.tokenString);
    XCTAssertEqualObjects(tokenWithEmail.userID, result[@"id"]);
    [blocker signal];
  }];
@@ -299,4 +299,45 @@
   XCTAssertTrue([blocker waitWithTimeout:5], @"request timeout");
 }
 
+- (void)testFetchGenderLocale {
+  XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
+  __block NSString *originalGender;
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                 parameters:@{ @"fields": @"gender" }
+                                                                tokenString:token.tokenString
+                                                                    version:nil
+                                                                 HTTPMethod:nil];
+  [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    XCTAssertNil(error, "@unexpected error: %@", error);
+    XCTAssertNotNil(result);
+    originalGender = result[@"gender"];
+    [expectation fulfill];
+  }];
+  [conn start];
+
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"expectation not fulfilled: %@", error);
+  }];
+
+  // now start another request with de_DE locale and make sure gender response is different
+  XCTestExpectation *expectation2 = [self expectationWithDescription:@"completed request2"];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                    parameters:@{ @"fields": @"gender",
+                                                  @"locale" : @"de_DE" }
+                                   tokenString:token.tokenString
+                                       version:nil
+                                    HTTPMethod:nil] startWithCompletionHandler:
+  ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    XCTAssertNil(error, "@unexpected error: %@", error);
+    XCTAssertNotNil(result);
+    XCTAssertFalse([originalGender isEqualToString:result[@"gender"]]);
+    [expectation2 fulfill];
+  }];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"expectation not fulfilled: %@", error);
+  }];
+
+}
 @end
