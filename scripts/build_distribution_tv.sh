@@ -36,7 +36,6 @@ FB_SDK_ZIP=$FB_SDK_BUILD/FacebookSDKs_TV-${FB_SDK_VERSION_SHORT}.zip
 FB_SDK_BUILD_PACKAGE=$FB_SDK_BUILD/package
 FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples
 FB_SDK_BUILD_PACKAGE_SCRIPTS=$FB_SDK_BUILD/Scripts
-FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER=$FB_SDK_BUILD_PACKAGE/DocSets/
 
 # -----------------------------------------------------------------------------gi
 # Build package directory structure
@@ -46,12 +45,7 @@ progress_message "Building package directory structure."
 mkdir -p "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not create directory $FB_SDK_BUILD_PACKAGE"
 mkdir -p "$FB_SDK_BUILD_PACKAGE_SCRIPTS"
-
-#TODO samples
-#mkdir -p "$FB_SDK_BUILD_PACKAGE_SAMPLES"
-
-#TODO docs
-#mkdir -p "$FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER"
+mkdir -p "$FB_SDK_BUILD_PACKAGE_SAMPLES"
 
 # -----------------------------------------------------------------------------
 # Call out to build prerequisites.
@@ -74,9 +68,10 @@ echo Building Distribution.
   || die "Could not copy FBSDKTVOSKit.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
-#TODO samples
-#\cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
-#  || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
+for SAMPLE in Configurations HelloTV; do
+  \cp -R "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
+    || die "Could not copy $SAMPLE"
+done
 \cp "$FB_SDK_ROOT/README_TV.txt" "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy README"
 \cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE"/LICENSE.txt \
@@ -86,22 +81,10 @@ echo Building Distribution.
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
 #
-#for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
-#  sed "s|../../build|../../|g;s|../../Bolts-IOS/build/ios||g" \
-#    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
-#done
-
-#TODO docs
-# -----------------------------------------------------------------------------
-# Build docs
-#
-#if [ -z $SKIPBUILD ]; then
-#  . "$FB_SDK_SCRIPT/build_documentation.sh"
-#fi
-#\ls -d "$FB_SDK_BUILD"/*.docset | xargs -I {} cp -R {} $FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER \
-#  || die "Could not copy docsets"
-#\cp "$FB_SDK_SCRIPT/install_docsets.sh" $FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER \
-#  || die "Could not copy install_docset"
+for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project-TVOS.xcconfig" -print); do \
+  sed "s|../../build/tv|../../|g" \
+    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
 
 # -----------------------------------------------------------------------------
 # Build .zip from package directory

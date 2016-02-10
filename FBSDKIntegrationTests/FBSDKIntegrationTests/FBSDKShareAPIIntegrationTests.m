@@ -216,15 +216,28 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
   //now fetch and verify the share.
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:postID
-                                     parameters:@{ @"fields" : @"id,with_tags.limit(1){name}, place.limit(1){id}" } ]
-   startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+
+  // Note in order to verify tags on a photo, we have to get the photo
+  // object id from the post id, rather than simply checking the with_tags
+  // of the post. This is because the photo can go in an album which
+  // doesn't have the same tags.
+  // So we build a batch request to get object_id and then et the tags and place off that.
+  FBSDKGraphRequestConnection *batch = [[FBSDKGraphRequestConnection alloc] init];
+  FBSDKGraphRequest *getPhotoIDRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:postID
+                                                                           parameters:@{ @"fields" : @"object_id"}];
+  [batch addRequest:getPhotoIDRequest completionHandler:NULL batchEntryName:@"get-id"];
+  FBSDKGraphRequest *getTagsToVerifyRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=get-id:$.object_id}" parameters:@{ @"fields" : @"id,tags.limit(1){name}, place.limit(1){id}"}];
+  [batch addRequest:getTagsToVerifyRequest completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(error);
-     XCTAssertEqualObjects(taggedName, result[@"with_tags"][@"data"][0][@"name"]);
-     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
+     XCTAssertEqualObjects(taggedName, result[@"tags"][@"data"][0][@"name"]);
+     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"],
+                           @"Failed to fetch place tag for post %@ for %@",
+                           postID,
+                           one.tokenString);
      [blocker signal];
    }];
-  XCTAssertTrue([blocker waitWithTimeout:200], @"couldn't fetch verify post.");
+  [batch start];
+  XCTAssertTrue([blocker waitWithTimeout:30], @"couldn't fetch verify post.");
 }
 
 #pragma mark - Test Share Video

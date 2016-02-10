@@ -72,8 +72,10 @@ echo Building Distribution.
   || die "Could not copy Bolts.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
-\cp -R "$FB_SDK_SAMPLES/" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
-  || die "Could not copy $FB_SDK_BUILD_PACKAGE_SAMPLES"
+for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
+  \cp -R "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
+    || die "Could not copy $SAMPLE"
+done
 \cp "$FB_SDK_ROOT/README.txt" "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy README"
 \cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE"/LICENSE.txt \

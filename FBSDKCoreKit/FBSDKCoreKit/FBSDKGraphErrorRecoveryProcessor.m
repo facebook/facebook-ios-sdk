@@ -138,12 +138,15 @@
 
 #pragma mark - UIAlertViewDelegate
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   [_recoveryAttempter attemptRecoveryFromError:_error optionIndex:buttonIndex delegate:self didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
   _alertView.delegate = nil;
   _alertView = nil;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
 

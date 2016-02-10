@@ -56,7 +56,7 @@
     } completion:NULL];
   } else if (self == context.previouslyFocusedView) {
     [coordinator addCoordinatedAnimations:^{
-      self.transform = CGAffineTransformInvert(CGAffineTransformMakeScale(1.05, 1.05));
+      self.transform = CGAffineTransformMakeScale(1.0, 1.0);
       self.layer.shadowOpacity = 0;
     } completion:NULL];
   }
