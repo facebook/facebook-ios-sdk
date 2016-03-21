@@ -6,7 +6,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "3.24.2"
+  s.version      = "3.24.4"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-3.24.2"
+                     :tag => "sdk-version-3.24.4"
                     }
 
   s.source_files  =  "src/**/*.{h,m}"
