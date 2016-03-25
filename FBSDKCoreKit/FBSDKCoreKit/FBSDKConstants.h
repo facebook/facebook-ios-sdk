@@ -102,7 +102,12 @@ typedef NS_ENUM(NSInteger, FBSDKErrorCode)
   /*!
    @abstract Indicates an app switch to the browser (typically for a dialog) failed.
    */
-  FBSDKBrowswerUnavailableErrorCode,
+  FBSDKBrowserUnavailableErrorCode,
+
+  /*!
+   @deprecated use FBSDKBrowserUnavailableErrorCode instead
+   */
+  FBSDKBrowswerUnavailableErrorCode __attribute__ ((deprecated("use FBSDKBrowserUnavailableErrorCode instead"))) = FBSDKBrowserUnavailableErrorCode,
 };
 
 /*!
