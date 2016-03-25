@@ -153,7 +153,7 @@
 
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventPrimaryActionTriggered];
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_acessTokenDidChangeNotification:)
+                                           selector:@selector(_accessTokenDidChangeNotification:)
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
 }
@@ -179,7 +179,7 @@
 
 #pragma mark - Helper Methods
 
-- (void)_acessTokenDidChangeNotification:(NSNotification *)notification
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
   if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
     [self _updateContent];
@@ -215,7 +215,7 @@
 
 - (void)_buttonPressed:(id)sender
 {
-  UIViewController *parentViewController = [FBSDKInternalUtility viewControllerforView:self];
+  UIViewController *parentViewController = [FBSDKInternalUtility viewControllerForView:self];
   if ([FBSDKAccessToken currentAccessToken]) {
     NSString *title = nil;
 

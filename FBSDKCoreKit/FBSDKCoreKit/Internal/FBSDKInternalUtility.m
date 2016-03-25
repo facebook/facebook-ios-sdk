@@ -468,7 +468,7 @@ static NSMapTable *_transientObjects;
   }
 }
 
-+ (UIViewController *)viewControllerforView:(UIView*)view
++ (UIViewController *)viewControllerForView:(UIView *)view
 {
   UIResponder *responder = view.nextResponder;
   while (responder) {
