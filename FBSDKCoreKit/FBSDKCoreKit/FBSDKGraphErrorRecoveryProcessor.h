@@ -82,7 +82,7 @@
 /*!
  @abstract Attempts to process the error, return YES if the error can be processed.
  @param error the error to process.
- @param request the relateed request that may be reissued.
+ @param request the related request that may be reissued.
  @param delegate the delegate that will be retained until recovery is complete.
  */
 - (BOOL)processError:(NSError *)error request:(FBSDKGraphRequest *)request delegate:(id<FBSDKGraphErrorRecoveryProcessorDelegate>) delegate;

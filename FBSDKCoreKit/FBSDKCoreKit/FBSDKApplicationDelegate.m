@@ -132,7 +132,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 #if !TARGET_OS_TV
-  // if they completed a SFVC flow, dimiss it.
+  // if they completed a SFVC flow, dismiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;
 

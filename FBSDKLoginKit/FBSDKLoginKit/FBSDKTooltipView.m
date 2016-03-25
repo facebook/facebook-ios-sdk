@@ -365,7 +365,7 @@ static CGMutablePathRef _createCloseCrossGlyphWithRect(CGRect rect)
   CGPathAddLineToPoint(path1, NULL, CGRectGetMaxX(rect) - lineThickness, CGRectGetMaxY(rect));
   CGPathCloseSubpath(path1);
 
-  // 2nd rectange - mirrored horizontally
+  // 2nd rectangle - mirrored horizontally
   CGMutablePathRef path2 = CGPathCreateMutable();
   CGPathMoveToPoint(path2, NULL, CGRectGetMinX(rect), CGRectGetMaxY(rect) - lineThickness);
   CGPathAddLineToPoint(path2, NULL, CGRectGetMaxX(rect) - lineThickness, CGRectGetMinY(rect));

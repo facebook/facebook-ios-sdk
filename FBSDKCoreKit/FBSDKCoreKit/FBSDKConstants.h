@@ -59,7 +59,7 @@ typedef NS_ENUM(NSInteger, FBSDKErrorCode)
   FBSDKNetworkErrorCode,
 
   /*!
-   @abstract The error code for errors encounted during an App Events flush.
+   @abstract The error code for errors encountered during an App Events flush.
    */
   FBSDKAppEventsFlushErrorCode,
 
