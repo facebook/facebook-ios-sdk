@@ -18,12 +18,13 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKAccessToken.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
 #import <FBSDKShareKit/FBSDKSharing.h>
 
 /*!
- @abstract A utility class for sharing through the graph API.  Using this class requires an access token in
- [FBSDKAccessToken currentAccessToken] that has been granted the "publish_actions" permission.
+ @abstract A utility class for sharing through the graph API.  Using this class requires an access token that
+ has been granted the "publish_actions" permission.
  @discussion FBSDKShareAPI network requests are scheduled on the current run loop in the default run loop mode
  (like NSURLConnection). If you want to use FBSDKShareAPI in a background thread, you must manage the run loop
  yourself.
@@ -46,6 +47,14 @@
  @abstract The graph node to which content should be shared.
  */
 @property (nonatomic, copy) NSString *graphNode;
+
+/*!
+ @abstract The access token to use instead of the global [FBSDKAccessToken currentAccessToken].  The access token must
+ have the "publish_actions" permission granted.
+ @discussion Set this value when sharing to a destination (ex. Page) that requires a separate access token from that
+ of the currently logged-in user.
+ */
+@property (nonatomic, strong) FBSDKAccessToken *accessTokenOverride;
 
 /*!
  @abstract A Boolean value that indicates whether the receiver can send the share.
