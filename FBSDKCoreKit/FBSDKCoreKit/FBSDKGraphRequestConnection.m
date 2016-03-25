@@ -662,7 +662,7 @@ FBSDKURLConnectionDelegate
   id parsed = nil;
   if (!(*error)) {
     parsed = [FBSDKInternalUtility objectForJSONString:utf8 error:error];
-    // if we fail parse we attemp a reparse of a modified input to support results in the form "foo=bar", "true", etc.
+    // if we fail parse we attempt a re-parse of a modified input to support results in the form "foo=bar", "true", etc.
     // which is shouldn't be necessary since Graph API v2.1.
     if (*error) {
       // we round-trip our hand-wired response through the parser in order to remain
@@ -715,7 +715,7 @@ FBSDKURLConnectionDelegate
     }
 #endif
 
-    [self processResultBody:body error:resultError metadata:metadata canNotifyDelegate:(networkError ? NO : YES)];
+    [self processResultBody:body error:resultError metadata:metadata canNotifyDelegate:networkError == nil];
   }];
 
   if (networkError) {
