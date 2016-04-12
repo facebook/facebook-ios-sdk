@@ -25,7 +25,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     FBSDKDeviceLoginButton.self
     FBSDKApplicationDelegate.sharedInstance().application(
@@ -37,6 +36,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func applicationDidBecomeActive(application: UIApplication) {
     FBSDKAppEvents.activateApp()
   }
-
 }
-

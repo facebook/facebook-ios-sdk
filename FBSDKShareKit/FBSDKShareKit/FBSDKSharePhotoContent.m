@@ -19,10 +19,12 @@
 #import "FBSDKSharePhotoContent.h"
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"
 
 #define FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY @"contentURL"
+#define FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY @"hashtag"
 #define FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY @"peopleIDs"
 #define FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY @"photos"
 #define FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY @"placeID"
@@ -33,6 +35,7 @@
 #pragma mark - Properties
 
 @synthesize contentURL = _contentURL;
+@synthesize hashtag = _hashtag;
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
@@ -59,6 +62,7 @@
 {
   NSUInteger subhashes[] = {
     [_contentURL hash],
+    [_hashtag hash],
     [_peopleIDs hash],
     [_photos hash],
     [_placeID hash],
@@ -82,6 +86,7 @@
 {
   return (content &&
           [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
+          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_photos isEqualToObject:content.photos] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
@@ -99,6 +104,7 @@
 {
   if ((self = [self init])) {
     _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY];
     NSSet *classes = [NSSet setWithObjects:[NSArray class], [FBSDKSharePhoto class], nil];
     _photos = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
@@ -111,6 +117,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
   [encoder encodeObject:_contentURL forKey:FBSDK_SHARE_PHOTO_CONTENT_CONTENT_URL_KEY];
+  [encoder encodeObject:_hashtag forKey:FBSDK_SHARE_PHOTO_CONTENT_HASHTAG_KEY];
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_PHOTO_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_photos forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
@@ -123,6 +130,7 @@
 {
   FBSDKSharePhotoContent *copy = [[FBSDKSharePhotoContent alloc] init];
   copy->_contentURL = [_contentURL copy];
+  copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_photos = [_photos copy];
   copy->_placeID = [_placeID copy];

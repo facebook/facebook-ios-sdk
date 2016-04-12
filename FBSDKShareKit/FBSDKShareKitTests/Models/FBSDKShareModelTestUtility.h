@@ -18,7 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
+#import <FBSDKShareKit/FBSDKShareMediaContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
@@ -42,7 +44,9 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSArray *)allOpenGraphObjectKeys;
 + (NSURL *)contentURL;
 + (NSURL *)fileURL;
++ (FBSDKHashtag *)hashtag;
 + (FBSDKShareLinkContent *)linkContent;
++ (FBSDKShareLinkContent *)linkContentWithoutQuote;
 + (NSString *)linkContentDescription;
 + (NSString *)linkContentTitle;
 + (NSURL *)linkImageURL;
@@ -52,6 +56,7 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (BOOL)openGraphBoolValue;
 + (FBSDKShareOpenGraphContent *)openGraphContent;
 + (FBSDKShareOpenGraphContent *)openGraphContentWithObjectID;
++ (FBSDKShareOpenGraphContent *)openGraphContentWithURLOnly;
 + (double)openGraphDoubleValue;
 + (float)openGraphFloatValue;
 + (NSInteger)openGraphIntegerValue;
@@ -73,9 +78,13 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)placeID;
 + (NSString *)previewPropertyName;
 + (NSString *)ref;
++ (NSString *)quote;
 + (FBSDKShareVideo *)video;
++ (FBSDKShareVideo *)videoWithPreviewPhoto;
 + (FBSDKShareVideoContent *)videoContentWithoutPreviewPhoto;
 + (FBSDKShareVideoContent *)videoContentWithPreviewPhoto;
 + (NSURL *)videoURL;
++ (NSArray *)media;
++ (FBSDKShareMediaContent *)mediaContent;
 
 @end

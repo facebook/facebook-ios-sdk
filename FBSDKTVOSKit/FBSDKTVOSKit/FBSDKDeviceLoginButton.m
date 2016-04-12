@@ -21,11 +21,6 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKDeviceLoginViewController.h"
 
-#define FB_LOGO_SIZE 54.0
-#define FB_LOGO_LEFT_MARGIN 36.0
-#define RIGHT_MARGIN 12.0
-#define PREFERRED_PADDING_BETWEEN_LOGO_TITLE 44.0
-
 @interface FBSDKDeviceLoginButton() <FBSDKDeviceLoginViewControllerDelegate>
 
 @end
@@ -41,32 +36,6 @@
 - (void)dealloc
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-#pragma mark - Layout
-
-- (void)didUpdateFocusInContext:(UIFocusUpdateContext *)context withAnimationCoordinator:(UIFocusAnimationCoordinator *)coordinator
-{
-  [super didUpdateFocusInContext:context withAnimationCoordinator:coordinator];
-
-  if (self == context.nextFocusedView) {
-    [coordinator addCoordinatedAnimations:^{
-      self.transform = CGAffineTransformMakeScale(1.05, 1.05);
-      self.layer.shadowOpacity = 0.5;
-    } completion:NULL];
-  } else if (self == context.previouslyFocusedView) {
-    [coordinator addCoordinatedAnimations:^{
-      self.transform = CGAffineTransformMakeScale(1.0, 1.0);
-      self.layer.shadowOpacity = 0;
-    } completion:NULL];
-  }
-}
-
-- (CGRect)imageRectForContentRect:(CGRect)contentRect
-{
-  CGFloat centerY = CGRectGetMidY(contentRect);
-  CGFloat y = centerY - (FB_LOGO_SIZE / 2.0);
-  return CGRectMake(FB_LOGO_LEFT_MARGIN, y, FB_LOGO_SIZE, FB_LOGO_SIZE);
 }
 
 - (void)layoutSubviews
@@ -92,31 +61,6 @@
   CGSize maxSize = CGSizeMake(MAX(normalSize.width, selectedSize.width),
                               MAX(normalSize.height, selectedSize.height));
   return CGSizeMake(maxSize.width, maxSize.height);
-}
-
-- (CGRect)titleRectForContentRect:(CGRect)contentRect
-{
-  if (self.hidden || CGRectIsEmpty(self.bounds)) {
-    return CGRectZero;
-  }
-  CGRect imageRect = [self imageRectForContentRect:contentRect];
-  CGFloat titleX = CGRectGetMaxX(imageRect);
-  CGRect rect = CGRectMake(titleX, 0, CGRectGetWidth(contentRect) - titleX - RIGHT_MARGIN, CGRectGetHeight(contentRect));
-
-  if (!self.layer.needsLayout) {
-    CGSize titleSize = [FBSDKMath ceilForSize:[self.titleLabel.attributedText boundingRectWithSize:contentRect.size
-                                                                                           options:(NSStringDrawingUsesDeviceMetrics |
-                                                                                                    NSStringDrawingUsesLineFragmentOrigin |
-                                                                                                    NSStringDrawingUsesFontLeading)
-                                                                                           context:NULL].size];
-    CGFloat titlePadding = ( CGRectGetWidth(rect) - titleSize.width ) / 2;
-    if (titlePadding > titleX) {
-      // if there's room to re-center the text, do so.
-      rect = CGRectMake(RIGHT_MARGIN, 0, CGRectGetWidth(contentRect) - RIGHT_MARGIN - RIGHT_MARGIN, CGRectGetHeight(contentRect));
-    }
-  }
-
-  return rect;
 }
 
 - (void)updateConstraints
@@ -158,25 +102,6 @@
                                              object:nil];
 }
 
-- (UIFont *)defaultFont
-{
-  return [UIFont fontWithName:@"HelveticaNeue-Medium" size:38];
-}
-
-- (CGSize)sizeThatFits:(CGSize)size attributedTitle:(NSAttributedString *)title
-{
-  CGSize titleSize = [FBSDKMath ceilForSize:[title boundingRectWithSize:size
-                                                                options:(NSStringDrawingUsesDeviceMetrics |
-                                                                         NSStringDrawingUsesLineFragmentOrigin |
-                                                                         NSStringDrawingUsesFontLeading)
-                                                                context:NULL].size];
-  CGFloat logoAndTitleWidth = FB_LOGO_SIZE + PREFERRED_PADDING_BETWEEN_LOGO_TITLE + titleSize.width + PREFERRED_PADDING_BETWEEN_LOGO_TITLE;
-  CGFloat height = 108;
-  CGSize contentSize = CGSizeMake(FB_LOGO_LEFT_MARGIN + logoAndTitleWidth + RIGHT_MARGIN,
-                                  height);
-  return contentSize;
-}
-
 #pragma mark - Helper Methods
 
 - (void)_acessTokenDidChangeNotification:(NSNotification *)notification
@@ -184,33 +109,6 @@
   if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
     [self _updateContent];
   }
-}
-
-- (NSAttributedString *)_attributeTitleString:(NSString *)string
-{
-  NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
-  style.alignment = NSTextAlignmentCenter;
-  style.lineBreakMode = NSLineBreakByClipping;
-  NSMutableAttributedString *attributedString =
-  [[NSMutableAttributedString alloc] initWithString:string
-                                         attributes:@{
-                                                      NSParagraphStyleAttributeName: style,
-                                                      NSFontAttributeName: [self defaultFont],
-                                                      NSForegroundColorAttributeName: [UIColor whiteColor]
-                                                      }];
-  // Now find all the spaces and widen their kerning.
-  NSRange range = NSMakeRange(0, string.length);
-  while (range.location != NSNotFound) {
-    NSRange spaceRange = [string rangeOfString:@" " options:0 range:range];
-    if (spaceRange.location == NSNotFound) {
-      break;
-    }
-    [attributedString addAttribute:NSKernAttributeName
-                             value:@(2.7)
-                             range:spaceRange];
-    range = NSMakeRange(spaceRange.location + 1, string.length - spaceRange.location - 1);
-  }
-  return attributedString;
 }
 
 - (void)_buttonPressed:(id)sender
@@ -255,6 +153,7 @@
     vc.delegate = self;
     vc.readPermissions = self.readPermissions;
     vc.publishPermissions = self.publishPermissions;
+    vc.redirectURL = self.redirectURL;
     [parentViewController presentViewController:vc animated:YES completion:NULL];
   }
 }
@@ -262,7 +161,7 @@
 - (NSAttributedString *)_loginTitle
 {
   CGSize size = self.bounds.size;
-  CGSize longTitleSize = [self sizeThatFits:size attributedTitle:[self _longLogInTitle]];
+  CGSize longTitleSize = [super sizeThatFits:size attributedTitle:[self _longLogInTitle]];
   NSAttributedString *title = (longTitleSize.width <= size.width ?
                                [self _longLogInTitle] :
                                [self _shortLogInTitle]);
@@ -274,7 +173,7 @@
   NSString *string = NSLocalizedStringWithDefaultValue(@"LoginButton.LogOut", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                                        @"Log out",
                                                        @"The label for the FBSDKLoginButton when the user is currently logged in");
-  return [self _attributeTitleString:string];
+  return [self attributedTitleStringFromString:string];
 }
 
 - (NSAttributedString *)_longLogInTitle
@@ -282,7 +181,7 @@
   NSString *string = NSLocalizedStringWithDefaultValue(@"LoginButton.LogInLong", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                                        @"Log in with Facebook",
                                                        @"The long label for the FBSDKLoginButton when the user is currently logged out");
-  return [self _attributeTitleString:string];
+  return [self attributedTitleStringFromString:string];
 }
 
 - (NSAttributedString *)_shortLogInTitle
@@ -290,7 +189,7 @@
   NSString *string = NSLocalizedStringWithDefaultValue(@"LoginButton.LogIn", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                                        @"Log in",
                                                        @"The short label for the FBSDKLoginButton when the user is currently logged out");
-  return [self _attributeTitleString:string];
+  return [self attributedTitleStringFromString:string];
 }
 
 - (void)_updateContent

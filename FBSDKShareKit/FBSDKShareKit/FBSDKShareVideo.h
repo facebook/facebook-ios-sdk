@@ -20,6 +20,8 @@
 
 #import <FBSDKCoreKit/FBSDKCopying.h>
 
+@class FBSDKSharePhoto;
+
 /*!
  @abstract A video for sharing.
  */
@@ -28,15 +30,27 @@
 /*!
  @abstract Convenience method to build a new video object with a videoURL.
  @param videoURL The URL to the video
- application
  */
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL;
+
+/*!
+ @abstract Convenience method to build a new video object with a videoURL and a previewPhoto
+ @param videoURL The URL to the video
+ @param previewPhoto The photo that represents the video
+ */
++ (instancetype)videoWithVideoURL:(NSURL *)videoURL previewPhoto:(FBSDKSharePhoto *)previewPhoto;
 
 /*!
  @abstract The file URL to the video.
  @return URL that points to the location of the video on disk
  */
 @property (nonatomic, copy) NSURL *videoURL;
+
+/*!
+ @abstract The photo that represents the video.
+ @return The photo
+ */
+@property (nonatomic, copy) FBSDKSharePhoto *previewPhoto;
 
 /*!
  @abstract Compares the receiver to another video.

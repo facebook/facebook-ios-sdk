@@ -36,6 +36,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY @"systemAuthenticationEnabled"
 #define FBSDK_SERVER_CONFIGURATION_NATIVE_AUTH_FLOW_ENABLED_KEY @"nativeAuthFlowEnabled"
 #define FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY @"timestamp"
+#define FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL @"sessionTimeoutInterval"
 
 #pragma mark - Dialog Names
 
@@ -82,6 +83,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                   dialogFlows:(NSDictionary *)dialogFlows
                     timestamp:(NSDate *)timestamp
            errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
+       sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval
                      defaults:(BOOL)defaults
 {
   if ((self = [super init])) {
@@ -99,6 +101,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _dialogFlows = [dialogFlows copy];
     _timestamp = [timestamp copy];
     _errorConfiguration = [errorConfiguration copy];
+    _sessionTimoutInterval = sessionTimeoutInterval;
     _defaults = defaults;
   }
   return self;
@@ -173,6 +176,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   NSDictionary *dialogFlows = [decoder decodeObjectOfClasses:dialogFlowsClasses
                                                       forKey:FBSDK_SERVER_CONFIGURATION_DIALOG_FLOWS_KEY];
   FBSDKErrorConfiguration *errorConfiguration = [decoder decodeObjectOfClass:[FBSDKErrorConfiguration class] forKey:FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGS_KEY];
+  NSTimeInterval sessionTimeoutInterval = [decoder decodeDoubleForKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
   return [self initWithAppID:appID
                      appName:appName
          loginTooltipEnabled:loginTooltipEnabled
@@ -187,6 +191,7 @@ implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabbled
                  dialogFlows:dialogFlows
                    timestamp:timestamp
           errorConfiguration:errorConfiguration
+      sessionTimeoutInterval:sessionTimeoutInterval
                     defaults:NO];
 }
 
@@ -207,6 +212,7 @@ implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabbled
   [encoder encodeBool:_nativeAuthFlowEnabled forKey:FBSDK_SERVER_CONFIGURATION_NATIVE_AUTH_FLOW_ENABLED_KEY];
   [encoder encodeBool:_systemAuthenticationEnabled forKey:FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY];
   [encoder encodeObject:_timestamp forKey:FBSDK_SERVER_CONFIGURATION_TIMESTAMP_KEY];
+  [encoder encodeDouble:_sessionTimoutInterval forKey:FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_INTERVAL];
 }
 
 #pragma mark - NSCopying

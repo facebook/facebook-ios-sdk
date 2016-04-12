@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKButton.h>
+#import <FBSDKCoreKit/FBSDKDeviceButton.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -34,12 +34,12 @@ NS_ASSUME_NONNULL_BEGIN
  `FBSDKLoginButton` has an instrinsic size and you should avoid changing its dimensions. `initWithFrame:CGRectZero`
  will size the button to its desired frame.
  */
-@interface FBSDKDeviceLoginButton : FBSDKButton
+@interface FBSDKDeviceLoginButton : FBSDKDeviceButton
 
 /*!
  @abstract Gets or sets the delegate.
  */
-@property (nonatomic, weak) IBOutlet id<FBSDKDeviceLoginButtonDelegate> delegate;
+@property (nullable, nonatomic, weak) IBOutlet id<FBSDKDeviceLoginButtonDelegate> delegate;
 
 /*!
  @abstract The publish permissions to request.
@@ -59,6 +59,12 @@ NS_ASSUME_NONNULL_BEGIN
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
 @property (nullable, nonatomic, copy) NSArray<NSString *> *readPermissions;
+
+/*!
+ @abstract the optional URL to redirect the user to after they complete the login.
+ @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs
+ */
+@property (nullable, nonatomic, copy) NSURL *redirectURL;
 
 @end
 

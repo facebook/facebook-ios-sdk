@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKCoreKit"
-  s.version      = "4.10.1"
+  s.version      = "4.11.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's core features"
 
   s.description  = <<-DESC
@@ -22,19 +22,17 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.10.1"
+                     :tag => "sdk-version-4.11.0"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
 
-  s.header_dir = "FBSDKCoreKit"
-
-  # set header_mappings_dir to resolve our quoted imports in the +Internal file.
-  s.header_mappings_dir = "FBSDKCoreKit/FBSDKCoreKit"
-
   s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
   s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
+  s.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
+                        'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
+                        'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*'
   s.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
@@ -59,5 +57,5 @@ Pod::Spec.new do |s|
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
-  s.ios.dependency 'Bolts', '~> 1.5'
+  s.ios.dependency 'Bolts', '~> 1.7'
 end

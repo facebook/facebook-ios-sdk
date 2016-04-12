@@ -27,6 +27,7 @@
 
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKUtility.h"
@@ -40,17 +41,6 @@ static NSString *const kIPhoneKey = @"iphone";
 static NSString *const kIPadKey = @"ipad";
 static NSString *const kShouldFallbackKey = @"should_fallback";
 static NSString *const kAppLinksKey = @"app_links";
-
-static void FBSDKAppLinkResolverBoltsClassFromString(Class *clazz, NSString *className)
-{
-  *clazz = NSClassFromString(className);
-  if (*clazz == nil) {
-    NSString *message = [NSString stringWithFormat:@"Unable to load class %@. Did you link Bolts.framework?", className];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:message
-                                 userInfo:nil];
-  }
-}
 
 @interface FBSDKAppLinkResolver ()
 
@@ -68,10 +58,11 @@ static Class g_BFTaskClass;
 + (void)initialize
 {
   if (self == [FBSDKAppLinkResolver class]) {
-    FBSDKAppLinkResolverBoltsClassFromString(&g_BFTaskCompletionSourceClass, @"BFTaskCompletionSource");
-    FBSDKAppLinkResolverBoltsClassFromString(&g_BFAppLinkTargetClass, @"BFAppLinkTarget");
-    FBSDKAppLinkResolverBoltsClassFromString(&g_BFAppLinkClass, @"BFAppLink");
-    FBSDKAppLinkResolverBoltsClassFromString(&g_BFTaskClass, @"BFTask");
+    g_BFTaskCompletionSourceClass = [FBSDKInternalUtility
+                                     resolveBoltsClassWithName:@"BFTaskCompletionSource"];
+    g_BFAppLinkTargetClass = [FBSDKInternalUtility resolveBoltsClassWithName:@"BFAppLinkTarget"];
+    g_BFTaskClass = [FBSDKInternalUtility resolveBoltsClassWithName:@"BFTask"];
+    g_BFAppLinkClass = [FBSDKInternalUtility resolveBoltsClassWithName:@"BFAppLink"];
   }
 }
 

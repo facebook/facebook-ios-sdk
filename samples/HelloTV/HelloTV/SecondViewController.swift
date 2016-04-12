@@ -22,7 +22,7 @@ import FBSDKCoreKit
 import FBSDKShareKit
 import FBSDKTVOSKit
 
-class SecondViewController: UIViewController, TVApplicationControllerDelegate, FBSDKSharingDelegate {
+class SecondViewController: UIViewController {
   static let kPort = "9002"
 
   var appController: TVApplicationController?
@@ -36,12 +36,11 @@ class SecondViewController: UIViewController, TVApplicationControllerDelegate, F
     NSNotificationCenter.defaultCenter().addObserverForName(
       FBSDKAccessTokenDidChangeNotification,
       object: nil,
-      queue: NSOperationQueue.mainQueue()) { (notification) -> Void in
+      queue: NSOperationQueue.mainQueue()) { notification -> Void in
         let event = (notification.userInfo![FBSDKAccessTokenChangeNewKey] != nil) ? "onFacebookLogin" : "onFacebookLogout"
-        self.appController?.evaluateInJavaScriptContext({ (context) -> Void in
+        self.appController?.evaluateInJavaScriptContext({ context -> Void in
           context.evaluateScript("navigationDocument.documents[0].dispatchEvent(new CustomEvent('\(event)'))")
-          },
-          completion: nil)
+          }, completion: nil)
     }
 
     // Connect the FBSDK to get TVML extensions
@@ -53,19 +52,16 @@ class SecondViewController: UIViewController, TVApplicationControllerDelegate, F
     let javascriptURL = NSURL(string: "http://localhost:\(SecondViewController.kPort)/main.js")
     let appControllerContext = TVApplicationControllerContext()
     appControllerContext.javaScriptApplicationURL = javascriptURL!
-    self.appController = TVApplicationController(
-      context: appControllerContext,
-      window: nil,
-      delegate: self)
+    appController = TVApplicationController(context: appControllerContext, window: nil, delegate: self)
   }
-
-  // MARK: TVApplicationControllerDelegate
+}
+extension SecondViewController: TVApplicationControllerDelegate {
 
   func appController(appController: TVApplicationController, didFinishLaunchingWithOptions options: [String: AnyObject]?) {
     // TVJS loaded, add its navigation controller to our heirarchy.
-    self.navigationController!.addChildViewController(self.appController!.navigationController)
-    self.navigationController!.view.addSubview(self.appController!.navigationController.view)
-    self.appController!.navigationController.didMoveToParentViewController(self.navigationController!)
+    navigationController?.addChildViewController(appController.navigationController)
+    navigationController?.view.addSubview(appController.navigationController.view)
+    appController.navigationController.didMoveToParentViewController(navigationController)
   }
 
   func appController(appController: TVApplicationController, evaluateAppJavaScriptInContext jsContext: JSContext) {
@@ -79,19 +75,20 @@ class SecondViewController: UIViewController, TVApplicationControllerDelegate, F
       FBSDKShareAPI.shareWithContent(content, delegate: self)
     }
     jsContext.setObject(unsafeBitCast(shareLink, AnyObject.self), forKeyedSubscript: "_shareLink")
-
   }
 
   func appController(appController: TVApplicationController, didFailWithError error: NSError) {
     let title = "TVML Error"
-    let message = (error.code == TVMLKitError.FailedToLaunch.rawValue) ?
-      "Did you start the web server in the 'client' directory on port \(SecondViewController.kPort)? You can run 'python -m SimpleHTTPServer \(SecondViewController.kPort)' from the 'client' directory."
+    let message = error.code == TVMLKitError.FailedToLaunch.rawValue ?
+      "Did you start the web server in the 'client' directory on port \(SecondViewController.kPort)? " +
+      "You can run 'python -m SimpleHTTPServer \(SecondViewController.kPort)' from the 'client' directory."
       : error.localizedDescription
-    let alertController = UIAlertController(title: title, message: message, preferredStyle:.Alert )
-    self.navigationController!.presentViewController(alertController, animated: true, completion: nil)
+    let alertController = UIAlertController(title: title, message: message, preferredStyle:.Alert)
+    navigationController?.presentViewController(alertController, animated: true, completion: nil)
   }
+}
 
-  //MARK: FBSDKSharingDelegate
+extension SecondViewController: FBSDKSharingDelegate {
 
   func sharer(sharer: FBSDKSharing!, didCompleteWithResults results: [NSObject : AnyObject]!) {
     appController!.evaluateInJavaScriptContext({ (context) -> Void in
@@ -102,8 +99,8 @@ class SecondViewController: UIViewController, TVApplicationControllerDelegate, F
   func sharer(sharer: FBSDKSharing!, didFailWithError error: NSError!) {
     print("Share failed %@", error)
   }
+
   func sharerDidCancel(sharer: FBSDKSharing!) {
     print("Share cancelled")
   }
 }
-
