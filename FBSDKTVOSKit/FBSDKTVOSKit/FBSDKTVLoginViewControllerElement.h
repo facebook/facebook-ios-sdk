@@ -20,6 +20,7 @@
 
 #import <TVMLKit/TVViewElement.h>
 
+NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @abstract Represents a '<FBSDKDeviceLoginViewController />' tag in TVML
@@ -39,9 +40,10 @@
  navigationDocument.presentModal(createLogin());
  </code>
 
- The '<FBSDKDeviceLoginViewController />' tag can have either a `readPermissions`
- or (not both) `publishPermissions` attribute whose value is a comma delimited
+ The '<FBSDKDeviceLoginViewController />' tag can also have the following attributes:
+ - either a `readPermissions` or (not both) `publishPermissions` attribute whose value is a comma delimited
  list of permissions to request.
+ - `redirectURL` an optional URL to redirect the user to after completing the login.
 
  This element can dispatch the following events to Javascript, which map to corresponding
  messages of `FBSDKDeviceLoginViewControllerDelegate`.
@@ -52,6 +54,8 @@
  These events can bubble up the DOM.
  */
 
-@interface FBSDKTVLoginViewControllerElement : TVViewElement<FBSDKDeviceLoginViewControllerDelegate>
+@interface FBSDKTVLoginViewControllerElement : TVViewElement <FBSDKDeviceLoginViewControllerDelegate>
 
 @end
+
+NS_ASSUME_NONNULL_END

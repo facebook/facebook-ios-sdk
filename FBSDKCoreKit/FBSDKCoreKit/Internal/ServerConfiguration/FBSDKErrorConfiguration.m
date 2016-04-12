@@ -18,8 +18,7 @@
 
 #import "FBSDKErrorConfiguration.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit+Internal.h>
-
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKErrorRecoveryConfiguration.h"
 
 static NSString *const kErrorCategoryOther = @"other";

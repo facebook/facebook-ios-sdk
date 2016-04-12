@@ -46,6 +46,8 @@ typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
                                 handler:(void(^)(BOOL))handler;
 
 - (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL))handler;
+
+@property (nonatomic, copy) FBSDKDeferredAppInviteHandler organicDeeplinkHandler;
 #endif
 
 @property (nonatomic, readonly, getter=isActive) BOOL active;

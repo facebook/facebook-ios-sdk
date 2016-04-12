@@ -427,6 +427,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Debug;
 		};
@@ -434,6 +435,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Release;
 		};

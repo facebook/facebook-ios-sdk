@@ -97,6 +97,72 @@
   XCTAssertNil(error);
 }
 
+- (void)testValidationWithNilPromotionTextNilPromotionCode
+{
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
+  NSError *error;
+  XCTAssertNotNil(content);
+  XCTAssertNil(error);
+  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testValidationWithValidPromotionCodeNilPromotionText
+{
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
+  content.promotionCode = @"XSKSK";
+  NSError *error;
+  XCTAssertNotNil(content);
+  XCTAssertNil(error);
+  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
+}
+
+- (void)testValidationWithValidPromotionTextNilPromotionCode
+{
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
+  content.promotionText = @"Some Promo Text";
+  NSError *error;
+  XCTAssertNotNil(content);
+  XCTAssertNil(error);
+  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testValidationWithInvalidPromotionText
+{
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
+  content.promotionText = @"_Invalid_promotionText";
+  NSError *error;
+  XCTAssertNotNil(content);
+  XCTAssertNil(error);
+  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
+}
+
+- (void)testValidationWithInvalidPromotionCode
+{
+  FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
+  content.appLinkURL = [[self class] _appLinkURL];
+  content.promotionText = @"Some promo text";
+  content.promotionCode = @"_invalid promo_code";
+  NSError *error;
+  XCTAssertNotNil(content);
+  XCTAssertNil(error);
+  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertNotNil(error);
+  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionCode");
+}
+
 #pragma mark - Helper Methods
 
 + (FBSDKAppInviteContent *)_content

@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import <JavaScriptCore/JavaScriptCore.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @abstract Marker protocol to export native functions to Javascript contexts.
  @discussion see `FBSDKJS` for integration in TVML apps.
@@ -26,12 +28,12 @@
 @protocol FBSDKJSExports <JSExport>
 
 /*!
- @abstract returns the current access token string, if available.
+ @abstract Returns the current access token string, if available.
  */
-+ (NSString *)accessTokenString;
++ (nullable NSString *)accessTokenString;
 
 /*!
- @abstract returns true if there is a current access token and the permission has been granted.
+ @abstract Returns true if there is a current access token and the permission has been granted.
  */
 + (BOOL)hasGranted:(NSString *)permission;
 
@@ -41,21 +43,21 @@
 + (BOOL)isLoggedIn;
 
 /*!
- @abstract log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
+ @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
  @param eventName the event name
  @param parameters the parameters (optional).
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName parameters:(NSDictionary *)parameters;
++ (void)logEvent:(NSString *)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 /*!
- @abstract log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
+ @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
  @param purchaseAmount the purchase amount
  @param currency the currency, e.g, "USD"
  @param parameters additional parameters (optional).
  @discussion See `FBSDKAppEvents logPurchase:currency:parameters:`.
  */
-+ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary *)parameters;
++ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(nullable NSDictionary<NSString *, id> *)parameters;
 
 @end
 
@@ -75,3 +77,5 @@
 @interface FBSDKJS : NSObject <FBSDKJSExports>
 
 @end
+
+NS_ASSUME_NONNULL_END

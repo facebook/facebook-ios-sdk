@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="9531" systemVersion="14F27" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
+<document type="com.apple.InterfaceBuilder.AppleTV.Storyboard" version="3.0" toolsVersion="10116" systemVersion="15D21" targetRuntime="AppleTV" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="49e-Tb-3d3">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
         <!--Native-->
@@ -23,35 +23,31 @@
                                     <constraint firstAttribute="width" constant="200" id="Gco-cJ-Ucr"/>
                                 </constraints>
                             </imageView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0nH-JI-OPi" customClass="FBSDKDeviceLoginButton">
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0nH-JI-OPi" customClass="FBSDKDeviceLoginButton">
                                 <rect key="frame" x="830" y="708" width="260" height="86"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r6C-Gm-BtT">
-                                <rect key="frame" x="830" y="814" width="260" height="86"/>
-                                <inset key="contentEdgeInsets" minX="40" minY="20" maxX="40" maxY="20"/>
-                                <state key="normal" title="Share Link"/>
-                                <connections>
-                                    <action selector="shareLinkTap:" destination="9pv-A4-QxB" eventType="primaryActionTriggered" id="18s-s5-qxY"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zgh-q0-D6H" customClass="FBSDKDeviceShareButton">
+                                <rect key="frame" x="830" y="802" width="260" height="86"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="r6C-Gm-BtT" firstAttribute="top" secondItem="0nH-JI-OPi" secondAttribute="bottom" constant="20" id="3C9-Jx-ASV"/>
+                            <constraint firstItem="zgh-q0-D6H" firstAttribute="top" secondItem="0nH-JI-OPi" secondAttribute="bottom" constant="8" id="BoF-xf-taC"/>
                             <constraint firstItem="BCK-O3-GUx" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="KB2-En-J1N"/>
                             <constraint firstItem="BCK-O3-GUx" firstAttribute="centerY" secondItem="tsR-hK-woN" secondAttribute="centerY" id="KVy-dN-PtB"/>
-                            <constraint firstItem="r6C-Gm-BtT" firstAttribute="height" secondItem="0nH-JI-OPi" secondAttribute="height" id="MdD-h4-Row"/>
                             <constraint firstItem="0nH-JI-OPi" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="bxX-QE-KLC"/>
                             <constraint firstItem="0nH-JI-OPi" firstAttribute="top" secondItem="BCK-O3-GUx" secondAttribute="bottom" constant="68" id="dnu-ne-AyN"/>
-                            <constraint firstItem="r6C-Gm-BtT" firstAttribute="width" secondItem="0nH-JI-OPi" secondAttribute="width" id="kPP-2P-rjE"/>
-                            <constraint firstItem="r6C-Gm-BtT" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="orJ-Et-2Ng"/>
+                            <constraint firstItem="zgh-q0-D6H" firstAttribute="width" secondItem="0nH-JI-OPi" secondAttribute="width" id="nFN-Oz-Nlb"/>
+                            <constraint firstItem="zgh-q0-D6H" firstAttribute="centerX" secondItem="tsR-hK-woN" secondAttribute="centerX" id="pg0-0e-d8Y"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Native" image="first" id="acW-dT-cKf"/>
                     <connections>
                         <outlet property="imageView" destination="BCK-O3-GUx" id="yUf-98-SE9"/>
                         <outlet property="loginButton" destination="0nH-JI-OPi" id="qf0-0d-2n4"/>
+                        <outlet property="shareButton" destination="zgh-q0-D6H" id="Cmi-7w-Bs3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>

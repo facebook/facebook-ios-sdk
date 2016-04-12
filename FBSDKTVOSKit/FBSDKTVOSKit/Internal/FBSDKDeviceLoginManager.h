@@ -82,6 +82,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nullable, nonatomic, copy, readonly) NSArray<NSString *> *permissions;
 
 /*!
+ @abstract the optional URL to redirect the user to after they complete the login.
+ @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs
+ */
+@property (nullable, nonatomic, copy) NSURL *redirectURL;
+
+/*!
  @abstract Starts the device login flow
  @discussion This instance will retain self until the flow is finished or cancelled.
  */

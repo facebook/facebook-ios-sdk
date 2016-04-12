@@ -45,6 +45,22 @@
 @property (nonatomic, copy) NSURL *previewImageURL __attribute__ ((deprecated("use appInvitePreviewImageURL instead")));
 
 /*!
+ @abstract Promotional code to be displayed while sending and receiving the invite.
+
+ @discussion This is optional. This can be between 0 and 10 characters long and can contain
+ alphanumeric characters only. To set a promo code, you need to set promo text.
+ */
+@property (nonatomic, copy) NSString *promotionCode;
+
+/*!
+ @abstract Promotional text to be displayed while sending and receiving the invite.
+
+ @discussion This is optional. This can be between 0 and 80 characters long and can contain
+ alphanumeric and spaces only.
+ */
+@property (nonatomic, copy) NSString *promotionText;
+
+/*!
  @abstract Compares the receiver to another app invite content.
  @param content The other content
  @return YES if the receiver's values are equal to the other content's values; otherwise NO

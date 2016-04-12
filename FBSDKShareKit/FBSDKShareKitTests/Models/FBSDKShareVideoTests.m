@@ -34,8 +34,9 @@
 
 - (void)testImageProperties
 {
-  FBSDKShareVideo *video = [FBSDKShareModelTestUtility video];
+  FBSDKShareVideo *video = [FBSDKShareModelTestUtility videoWithPreviewPhoto];
   XCTAssertEqualObjects(video.videoURL, [FBSDKShareModelTestUtility videoURL]);
+  XCTAssertEqualObjects(video.previewPhoto, [FBSDKShareModelTestUtility photoWithImageURL]);
 }
 
 - (void)testCopy
@@ -46,7 +47,7 @@
 
 - (void)testCoding
 {
-  FBSDKShareVideo *video = [FBSDKShareModelTestUtility video];
+  FBSDKShareVideo *video = [FBSDKShareModelTestUtility videoWithPreviewPhoto];
   NSData *data = [NSKeyedArchiver archivedDataWithRootObject:video];
   FBSDKShareVideo *unarchivedVideo = [NSKeyedUnarchiver unarchiveObjectWithData:data];
   XCTAssertEqualObjects(unarchivedVideo, video);

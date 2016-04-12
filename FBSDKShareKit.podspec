@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKShareKit"
-  s.version      = "4.10.1"
+  s.version      = "4.11.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's Sharing Features"
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.10.1"
+                     :tag => "sdk-version-4.11.0"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
@@ -32,11 +32,16 @@ Pod::Spec.new do |s|
 
   s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
   s.ios.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
-
-  s.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
+  s.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}'
+  s.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.{h,m}',
@@ -53,8 +58,11 @@ Pod::Spec.new do |s|
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.{h,m}'
-  s.tvos.public_header_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h',
+  s.tvos.public_header_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.h',
+                               'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.h',
+                               'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.h',
                                'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.h',
+                               'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.h',
                                'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
                                'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.h',
                                'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.h',

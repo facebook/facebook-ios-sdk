@@ -102,7 +102,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
 - (void)testOpenGraph
 {
-  [FBSDKSettings setFacebookDomainPart:@"prod"];
   NSArray *testUsers = [self createTwoFriendedTestUsers];
   FBSDKAccessToken *one = testUsers[0];
   NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
@@ -115,7 +114,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
                                                          key:@"test"];
   content.peopleIDs = @[tag];
   content.previewPropertyName = @"test";
-  content.placeID = kTaggedPlaceID;
 
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSString *postID = nil;
@@ -137,7 +135,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
     XCTAssertNil(error);
     XCTAssertEqualObjects(postID, result[@"id"]);
     XCTAssertEqualObjects(taggedName, result[@"tags"][0][@"name"]);
-    XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
     [blocker signal];
   }];
   XCTAssertTrue([blocker waitWithTimeout:20], @"couldn't fetch verify post.");
@@ -147,7 +144,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
 - (void)testShareLink
 {
-  [FBSDKSettings setFacebookDomainPart:@"prod"];
   NSArray *testUsers = [self createTwoFriendedTestUsers];
   FBSDKAccessToken *one = testUsers[0];
   NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
@@ -189,7 +185,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
 - (void)testSharePhoto
 {
-  [FBSDKSettings setFacebookDomainPart:@"prod"];
   NSArray *testUsers = [self createTwoFriendedTestUsers];
   FBSDKAccessToken *one = testUsers[0];
   NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
@@ -244,7 +239,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
 - (void)testShareVideo
 {
-  [FBSDKSettings setFacebookDomainPart:@"prod"];
   NSArray *testUsers = [self createTwoFriendedTestUsers];
   FBSDKAccessToken *one = testUsers[0];
   NSDictionary *tagParameters = [self taggableFriendsOfTestUser:one];
@@ -268,7 +262,6 @@ static NSString *const kTaggedPlaceID = @"88603851976";
 
 - (void)testVideoUploader
 {
-  [FBSDKSettings setFacebookDomainPart:@"prod"];
   FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];

@@ -18,15 +18,39 @@
 
 #import "FBSDKTVInterfaceFactory.h"
 
+#import <FBSDKShareKit/FBSDKShareKit.h>
+
 #import <TVMLKit/TVElementFactory.h>
 
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKDeviceLoginButton.h"
 #import "FBSDKTVLoginButtonElement.h"
 #import "FBSDKTVLoginViewControllerElement.h"
-
+#import "FBSDKTVShareButtonElement.h"
 
 static NSString *const FBSDKLoginButtonTag = @"FBSDKLoginButton";
+static NSString *const FBSDKShareButtonTag = @"FBSDKShareButton";
 static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController";
+
+static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
+{
+  static NSMutableDictionary *classes;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    classes = [NSMutableDictionary dictionary];
+  });
+  if (!classes[className]) {
+    classes[className] = NSClassFromString(className);
+  }
+  Class clazz = classes[className];
+  if (clazz == nil) {
+    NSString *message = [NSString stringWithFormat:@"Unable to load class %1$@. Did you link FBSDKShareKit.framework or add [%1$@ class] in your application delegate?", className];
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                   reason:message
+                                 userInfo:nil];
+  }
+  return clazz;
+}
 
 @implementation FBSDKTVInterfaceFactory {
   id<TVInterfaceCreating> _interfaceCreator;
@@ -48,6 +72,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
 {
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginButtonElement class] forElementName:FBSDKLoginButtonTag];
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginViewControllerElement class] forElementName:FBSDKLoginViewControllerTag];
+  [TVElementFactory registerViewElementClass:[FBSDKTVShareButtonElement class] forElementName:FBSDKShareButtonTag];
 }
 
 #pragma mark - TVInterfaceCreating
@@ -60,7 +85,36 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
     button.delegate = (FBSDKTVLoginButtonElement *)element;
     button.publishPermissions = [element.attributes[@"publishPermissions"] componentsSeparatedByString:@","];
     button.readPermissions = [element.attributes[@"readPermissions"] componentsSeparatedByString:@","];
+    button.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return button;
+  } else if ([element isKindOfClass:[FBSDKTVShareButtonElement class]]) {
+    FBSDKDeviceShareButton *button = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKDeviceShareButton") alloc] initWithFrame:CGRectZero];
+    id<FBSDKSharingContent> content = nil;
+    if (element.attributes[@"href"]) {
+      content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareLinkContent") alloc] init];
+      content.contentURL = [NSURL URLWithString:element.attributes[@"href"]];
+
+    } else {
+      NSString *actionType = element.attributes[@"action_type"];
+      NSURL *url = [NSURL URLWithString:element.attributes[@"object_url"]];
+      NSString *key = element.attributes[@"key"];
+      if (actionType.length > 0 && url && key.length > 0) {
+        FBSDKShareOpenGraphAction *action = [FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphAction") actionWithType:actionType objectURL:url key:key];
+        content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphContent") alloc] init];
+        ((FBSDKShareOpenGraphContent *)content).action = action;
+      }
+    }
+
+    if (content) {
+      button.shareContent = content;
+      return button;
+    } else {
+      NSString *message = [NSString stringWithFormat:@"Invalid parameters for %@ (%@)", element.elementIdentifier, element.elementName];
+      @throw [NSException exceptionWithName:NSInternalInconsistencyException
+                                     reason:message
+                                   userInfo:nil];
+    }
+
   }
   if ([_interfaceCreator respondsToSelector:@selector(viewForElement:existingView:)]) {
     return [_interfaceCreator viewForElement:element existingView:existingView];
@@ -77,6 +131,7 @@ static NSString *const FBSDKLoginViewControllerTag = @"FBSDKLoginViewController"
     vc.publishPermissions = publishPermissions;
     NSArray *readPermissions = [element.attributes[@"readPermissions"] componentsSeparatedByString:@","];
     vc.readPermissions = readPermissions;
+    vc.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return vc;
   }
   if ([_interfaceCreator respondsToSelector:@selector(viewControllerForElement:existingViewController:)]) {

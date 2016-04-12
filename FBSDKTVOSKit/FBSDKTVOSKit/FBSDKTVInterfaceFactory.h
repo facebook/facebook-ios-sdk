@@ -16,7 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
+
 #import <TVMLKit/TVInterfaceFactory.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 /*!
  @abstract An implementation of `TVInterfaceCreating` for using FBSDKTVOSKit elements in TVML apps.
@@ -31,11 +35,12 @@
  This class will also register Facebook `TVViewElement` subclasses to the `TVElementFactory`.
  This extends TVML with the following tags:
 
- * `<FBSDKLoginButton />`
- * `<FBSDKLoginViewController />`
+ * `<FBSDKLoginButton />` (see FBSDKTVLoginButtonElement.h for details)
+ * `<FBSDKLoginViewController />` (see FBSDKTVLoginViewControllerElement.h for details)
+ * `<FBSDKShareButton />` (see FBSDKTVShareButtonElement.h for details)
 
  */
-@interface FBSDKTVInterfaceFactory : NSObject<TVInterfaceCreating>
+@interface FBSDKTVInterfaceFactory : NSObject <TVInterfaceCreating>
 
 /*!
  @abstract The default initializer.
@@ -45,7 +50,9 @@
 /*!
  @abstract The designated initializer which can chain a `<TVInterfaceCreating>` implementation.
  */
-- (instancetype)initWithInterfaceCreator:(id<TVInterfaceCreating>)interfaceCreator
+- (instancetype)initWithInterfaceCreator:(nullable id<TVInterfaceCreating>)interfaceCreator
 NS_DESIGNATED_INITIALIZER;
 
 @end
+
+NS_ASSUME_NONNULL_END

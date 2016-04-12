@@ -87,6 +87,8 @@
 - (void)testFacebookURL
 {
   NSString *URLString;
+  NSString *tier = [FBSDKSettings facebookDomainPart];
+  [FBSDKSettings setFacebookDomainPart:@""];
 
   URLString = [FBSDKInternalUtility facebookURLWithHostPrefix:nil path:nil queryParameters:nil error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://facebook.com/" FBSDK_TARGET_PLATFORM_VERSION);
@@ -155,6 +157,7 @@
                                                defaultVersion:@"v2.0"
                                                         error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/v2.0/v1/dialog/share");
+  [FBSDKSettings setFacebookDomainPart:tier];
 }
 
 @end

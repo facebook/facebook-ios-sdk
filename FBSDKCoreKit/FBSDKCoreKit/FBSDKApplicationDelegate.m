@@ -39,6 +39,7 @@
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKProfile+Internal.h"
+#import "FBSDKOrganicDeeplinkHelper.h"
 #endif
 
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
@@ -51,6 +52,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
+  FBSDKDeferredAppInviteHandler _organicDeeplinkHandler;
 #endif
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
@@ -81,6 +83,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                                    openURL:launchData[UIApplicationLaunchOptionsURLKey]];
   // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
   [FBSDKTimeSpentData registerAutoResetSourceApplication];
+
+  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
 
   // Remove the observer
   [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -131,7 +135,34 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                                  userInfo:nil];
   }
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
+
 #if !TARGET_OS_TV
+  if (_organicDeeplinkHandler) {
+    NSDictionary *params = [FBSDKUtility dictionaryWithQueryString:url.query];
+    if([params[@"fbsdk_deeplink"]  isEqualToString: @"1"]) {
+
+      NSURL *sanitizedUrl = nil;
+
+      if(![params[@"fbsdk_deeplink_exception"] isEqualToString:@"1"]) {
+
+        NSMutableDictionary *sanitizedParams = [NSMutableDictionary dictionaryWithDictionary:params];
+        [sanitizedParams removeObjectForKey:@"fbsdk_deeplink"];
+        sanitizedUrl =  [FBSDKInternalUtility URLWithScheme:url.scheme
+                                                       host:url.host
+                                                       path:url.path
+                                            queryParameters:sanitizedParams
+                                                      error:nil];
+      }
+      dispatch_async(dispatch_get_main_queue(), ^{
+        // Callback handler for organic deeplinking.
+        _organicDeeplinkHandler(sanitizedUrl);
+        _organicDeeplinkHandler = nil;
+      });
+
+      return YES;
+    }
+  }
+
   // if they completed a SFVC flow, dimiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;

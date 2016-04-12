@@ -20,6 +20,8 @@
 
 #import <FBSDKCoreKit/FBSDKCopying.h>
 
+@class FBSDKHashtag;
+
 /*!
  @abstract A base interface for content to be shared.
  */
@@ -32,6 +34,12 @@
  @return URL representation of the content link
  */
 @property (nonatomic, copy) NSURL *contentURL;
+
+/*!
+ @abstract Hashtag for the content being shared.
+ @return The hashtag for the content being shared.
+ */
+@property (nonatomic, copy) FBSDKHashtag *hashtag;
 
 /*!
  @abstract List of IDs for taggable people to tag with this content.
