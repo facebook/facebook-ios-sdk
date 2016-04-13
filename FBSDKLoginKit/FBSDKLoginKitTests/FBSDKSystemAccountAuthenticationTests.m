@@ -225,6 +225,7 @@
                                       dialogFlows:nil
                                         timestamp:[NSDate date]
                                errorConfiguration:nil
+                           sessionTimeoutInterval:60.0
                                          defaults:NO];
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];
   [[[serverConfigurationManager stub] andReturn:serverConfiguration] cachedServerConfiguration];

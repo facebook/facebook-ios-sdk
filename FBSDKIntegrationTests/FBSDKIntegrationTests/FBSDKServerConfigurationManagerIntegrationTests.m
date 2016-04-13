@@ -41,10 +41,15 @@
     XCTAssertEqual(FBSDKGraphRequestErrorCategoryRecoverable, recoveryConfiguration.errorCategory);
     [expectation fulfill];
   };
+  [FBSDKServerConfigurationManager clearCache];
+  // assert just in case default of 60 seconds when there's nothing loaded.
+  XCTAssertEqual(60.0, [FBSDKServerConfigurationManager cachedServerConfiguration].sessionTimoutInterval);
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:completionBlock];
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error, @"expectation not fulfilled: %@", error);
   }];
+  // now make sure  have the fetched value.
+  XCTAssertEqual(61.0, [FBSDKServerConfigurationManager cachedServerConfiguration].sessionTimoutInterval);
 }
 
 @end

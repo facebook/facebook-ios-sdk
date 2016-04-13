@@ -16,15 +16,16 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Social/Social.h>
 #import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
 
 #import <OCMock/OCMock.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
-
-#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareKitTestUtility.h"
@@ -116,7 +117,7 @@
   FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeShareSheet;
   NSError *error;
-  dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
+  dialog.shareContent = [FBSDKShareModelTestUtility linkContentWithoutQuote];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
   dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
@@ -128,6 +129,9 @@
   dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
   XCTAssertFalse([dialog validateWithError:&error]);
   XCTAssertNotNil(error);
+  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContentWithURLOnly];
+  XCTAssertTrue([dialog validateWithError:&error]);
+  XCTAssertNil(error);
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   XCTAssertFalse([dialog validateWithError:&error]);
   XCTAssertNil(error);
@@ -267,6 +271,152 @@
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   XCTAssertFalse([dialog validateWithError:&error]);
   XCTAssertNotNil(error);
+}
+
+- (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
+  content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
+  content.quote = @"a quote";
+  dialog.shareContent = content;
+
+  NSDictionary *expectedJSON = @{@"app_id":@"appID", @"hashtags":@[@"#hashtag"], @"quotes":@[@"a quote"]};
+  [self _showDialog:dialog
+              appID:@"appID"
+shareSheetAvailable:YES
+expectedPreJSONtext:@"fb-app-id:appID #hashtag"
+       expectedJSON:expectedJSON];
+}
+
+#pragma mark - FullyCompatible Validation
+
+- (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsNOTAvailable
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContentWithoutQuote];
+  content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
+  dialog.shareContent = content;
+  [self _showDialog:dialog
+              appID:@"appID"
+shareSheetAvailable:NO
+expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
+}
+
+- (void)testThatValidateWithErrorReturnsNOForLinkQuoteIfAValidShareExtensionVersionIsNotAvailable
+{
+  [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
+                      expectValid:NO
+                             mode:FBSDKShareDialogModeShareSheet
+               nonSupportedScheme:@"fbapi20160328:/"];
+}
+
+- (void)testThatValidateWithErrorReturnsYESForLinkQuoteIfAValidShareExtensionVersionIsAvailable
+{
+  [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
+                      expectValid:YES
+                             mode:FBSDKShareDialogModeShareSheet
+               nonSupportedScheme:nil];
+
+}
+
+- (void)testThatValidateWithErrorReturnsNOForMMPIfAValidShareExtensionVersionIsNotAvailable
+{
+  [self _testValidateShareContent:[FBSDKShareModelTestUtility mediaContent]
+                      expectValid:NO
+                             mode:FBSDKShareDialogModeShareSheet
+               nonSupportedScheme:@"fbapi20160328:/"];
+}
+
+- (void)testThatValidateWithErrorReturnsYESForMMPIfAValidShareExtensionVersionIsAvailable
+{
+  [self _testValidateShareContent:[FBSDKShareModelTestUtility mediaContent]
+                      expectValid:YES
+                             mode:FBSDKShareDialogModeShareSheet
+               nonSupportedScheme:nil];
+}
+
+#pragma mark - Helpers
+
+- (void)_testValidateShareContent:(id<FBSDKSharingContent>)shareContent
+                      expectValid:(BOOL)expectValid
+                             mode:(FBSDKShareDialogMode)mode
+               nonSupportedScheme:(NSString *)nonSupportedScheme
+{
+  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
+  [[[mockApplication stub] andReturnValue:@YES] canOpenURL:[OCMArg checkWithBlock:^BOOL(NSURL *url) {
+    return ![url.absoluteString isEqualToString:nonSupportedScheme];
+  }]];
+  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[mockInternalUtility stub] andReturnValue:@YES] isOSRunTimeVersionAtLeast:iOS8Version];
+  id mockSLController = [OCMockObject niceMockForClass:[fbsdkdfl_SLComposeViewControllerClass() class]];
+  [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
+  [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
+
+  UIViewController *vc = [UIViewController new];
+  FBSDKShareDialog *dialog = [FBSDKShareDialog new];
+  dialog.shareContent = shareContent;
+  dialog.mode = mode;
+  dialog.fromViewController = vc;
+  NSError *error;
+  if (expectValid) {
+    XCTAssertTrue([dialog validateWithError:&error]);
+    XCTAssertNil(error);
+  } else {
+    XCTAssertFalse([dialog validateWithError:&error]);
+    XCTAssertNotNil(error);
+  }
+  XCTAssert([dialog show]);
+
+  [mockApplication stopMocking];
+  [mockInternalUtility stopMocking];
+  [mockSLController stopMocking];
+}
+
+- (void)_showDialog:(FBSDKShareDialog *)dialog
+              appID:(NSString *)appID
+shareSheetAvailable:(BOOL)shareSheetAvailable
+expectedPreJSONtext:(NSString *)expectedPreJSONText
+       expectedJSON:(NSDictionary *)expectedJSON
+{
+  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
+  [[[mockApplication stub] andReturnValue:@YES] canOpenURL:OCMOCK_ANY];
+  NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[mockInternalUtility stub] andReturnValue:@(shareSheetAvailable)] isOSRunTimeVersionAtLeast:iOS8Version];
+  id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  [[[settingsClassMock stub] andReturn:appID] appID];
+  id mockSLController = [OCMockObject niceMockForClass:[fbsdkdfl_SLComposeViewControllerClass() class]];
+  [[[mockSLController stub] andReturn:mockSLController] composeViewControllerForServiceType:OCMOCK_ANY];
+  [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
+  [[mockSLController expect] setInitialText:[OCMArg checkWithBlock:^BOOL(NSString *text) {
+    NSRange JSONDelimiterRange = [text rangeOfString:@"|"];
+    NSString *preJSONText;
+    NSDictionary *json;
+    if (JSONDelimiterRange.location == NSNotFound) {
+      preJSONText = text;
+    } else {
+      preJSONText = [text substringToIndex:JSONDelimiterRange.location];
+      NSString *jsonText = [text substringFromIndex:JSONDelimiterRange.location+1];
+      json = [NSJSONSerialization JSONObjectWithData:[jsonText dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+    }
+    return ((expectedPreJSONText == nil && preJSONText == nil) || [expectedPreJSONText isEqualToString:preJSONText]) &&
+           ((expectedJSON == nil && json == nil) || [expectedJSON isEqual:json]);
+  }]];
+
+  UIViewController *vc = [UIViewController new];
+  dialog.fromViewController = vc;
+  dialog.mode = FBSDKShareDialogModeShareSheet;
+  XCTAssert([dialog show]);
+  [mockSLController verify];
+
+  [mockSLController stopMocking];
+  [settingsClassMock stopMocking];
+  [mockApplication stopMocking];
+  [mockInternalUtility stopMocking];
 }
 
 @end

@@ -20,6 +20,25 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+typedef NS_ENUM(NSUInteger, FBSDKTVOSErrorSubcode) {
+  /**
+   Your device is polling too frequently.
+   */
+  FBSDKTVOSExcessivePollingErrorSubcode = 1349172,
+  /**
+   User has declined to authorize your application.
+   */
+  FBSDKTVOSAuthorizationDeclinedErrorSubcode = 1349173,
+  /**
+   User has not yet authorized your application. Continue polling.
+   */
+  FBSDKTVOSAuthorizationPendingErrorSubcode = 1349174,
+  /**
+   The code you entered has expired.
+   */
+  FBSDKTVOSCodeExpiredErrorSubcode = 1349152
+};
+
 NS_ASSUME_NONNULL_BEGIN
 
 @interface FBSDKTVOSError : FBSDKError

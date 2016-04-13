@@ -48,6 +48,11 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   return [[NSURL alloc] initWithString:@"https://developers.facebook.com/"];
 }
 
++ (FBSDKHashtag *)hashtag
+{
+  return [FBSDKHashtag hashtagWithString:@"#ashtag"];
+}
+
 + (NSURL *)fileURL
 {
   return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
@@ -55,10 +60,18 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (FBSDKShareLinkContent *)linkContent
 {
+  FBSDKShareLinkContent *linkContent = [self linkContentWithoutQuote];
+  linkContent.quote = [self quote];
+  return linkContent;
+}
+
++ (FBSDKShareLinkContent *)linkContentWithoutQuote
+{
   FBSDKShareLinkContent *linkContent = [[FBSDKShareLinkContent alloc] init];
   linkContent.contentDescription = [self linkContentDescription];
   linkContent.contentTitle = [self linkContentTitle];
   linkContent.contentURL = [self contentURL];
+  linkContent.hashtag = [self hashtag];
   linkContent.imageURL = [self linkImageURL];
   linkContent.peopleIDs = [self peopleIDs];
   linkContent.placeID = [self placeID];
@@ -90,6 +103,14 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   return action;
 }
 
++ (FBSDKShareOpenGraphAction *)openGraphActionWithURLObject
+{
+  FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:[self openGraphActionType]
+                                                                      objectURL:[self contentURL]
+                                                                            key:[self previewPropertyName]];
+  return action;
+}
+
 + (NSString *)openGraphActionType
 {
   return @"myActionType";
@@ -114,6 +135,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
   content.action = [self openGraphAction];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
   content.previewPropertyName = [self previewPropertyName];
@@ -126,10 +148,19 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
   content.action = [self openGraphActionWithObjectID];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
   content.previewPropertyName = [self previewPropertyName];
   content.ref = [self ref];
+  return content;
+}
+
++ (FBSDKShareOpenGraphContent *)openGraphContentWithURLOnly
+{
+  FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
+  content.action = [self openGraphActionWithURLObject];
+  content.previewPropertyName = [self previewPropertyName];
   return content;
 }
 
@@ -182,6 +213,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 {
   FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.photos = [self photos];
   content.placeID = [self placeID];
@@ -193,6 +225,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 {
   FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.photos = [self photosWithImages];
   content.placeID = [self placeID];
@@ -273,15 +306,26 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   return @"myref";
 }
 
++ (NSString *)quote
+{
+  return @"quote";
+}
+
 + (FBSDKShareVideo *)video
 {
   return [FBSDKShareVideo videoWithVideoURL:[self videoURL]];
+}
+
++ (FBSDKShareVideo *)videoWithPreviewPhoto
+{
+  return [FBSDKShareVideo videoWithVideoURL:[self videoURL] previewPhoto:[self photoWithImageURL]];
 }
 
 + (FBSDKShareVideoContent *)videoContentWithoutPreviewPhoto
 {
   FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
   content.ref = [self ref];
@@ -293,6 +337,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 {
   FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
   content.contentURL = [self contentURL];
+  content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
   content.previewPhoto = [self photoWithImage];
@@ -304,6 +349,18 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 + (NSURL *)videoURL
 {
   return [NSURL URLWithString:@"assets-library://asset/asset.mp4?id=86C6970B-1266-42D0-91E8-4E68127D3864&ext=mp4"];
+}
+
++ (NSArray *)media
+{
+  return @[[self video], [self photoWithImageURL]];
+}
+
++ (FBSDKShareMediaContent *)mediaContent
+{
+  FBSDKShareMediaContent *content = [FBSDKShareMediaContent new];
+  content.media = [self media];
+  return content;
 }
 
 #pragma mark - Helper Methods

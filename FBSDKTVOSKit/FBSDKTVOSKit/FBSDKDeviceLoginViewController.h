@@ -18,6 +18,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
+
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKDeviceLoginViewController;
@@ -61,12 +63,12 @@ NS_ASSUME_NONNULL_BEGIN
                     animated:YES
                   completion:NULL];
  */
-@interface FBSDKDeviceLoginViewController : UIViewController
+@interface FBSDKDeviceLoginViewController : FBSDKDeviceViewControllerBase
 
 /*!
  @abstract The delegate.
  */
-@property (nonatomic, weak) id<FBSDKDeviceLoginViewControllerDelegate> delegate;
+@property (nullable, nonatomic, weak) id<FBSDKDeviceLoginViewControllerDelegate> delegate;
 
 /*!
  @abstract The publish permissions to request.
@@ -86,6 +88,12 @@ NS_ASSUME_NONNULL_BEGIN
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
 @property (nullable, nonatomic, copy) NSArray<NSString *> *readPermissions;
+
+/*!
+ @abstract the optional URL to redirect the user to after they complete the login.
+ @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs
+ */
+@property (nullable, nonatomic, copy) NSURL *redirectURL;
 
 @end
 

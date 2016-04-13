@@ -206,13 +206,13 @@
                                                                linkURL:nil
                                                            refreshDate:[NSDate date]]];
   NSString *imageURL = [[[FBSDKProfile currentProfile] imageURLForPictureMode:FBSDKProfilePictureModeNormal size:size] absoluteString];
-  NSString *expectedImageURL = [NSString stringWithFormat:@"https://graph.facebook.com/%@/%@/picture?type=%@&width=%d&height=%d",
+  NSString *expectedImageURLSuffix = [NSString stringWithFormat:@".facebook.com/%@/%@/picture?type=%@&width=%d&height=%d",
                                 FBSDK_TARGET_PLATFORM_VERSION,
                                 token.userID,
                                 @"normal",
                                 (int) roundf(size.width),
                                 (int) roundf(size.height)
                                 ];
-  XCTAssertTrue([imageURL isEqualToString:expectedImageURL]);
+  XCTAssertTrue([imageURL hasSuffix:expectedImageURLSuffix]);
 }
 @end

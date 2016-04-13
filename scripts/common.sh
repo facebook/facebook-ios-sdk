@@ -119,9 +119,9 @@ if [ -z $FB_SDK_ENV ]; then
   test -n "$PRODUCTBUILD" || PRODUCTBUILD=$(which productbuild)
   test -n "$PRODUCTSIGN"  || PRODUCTSIGN=$(which productsign)
 
-  # < XCode 4.3.1
+  # < Xcode 4.3.1
   if [ ! -x "$XCODEBUILD" ]; then
-    # XCode from app store
+    # Xcode from app store
     XCODEBUILD="`"$XCODESELECT" -p`/usr/bin/xcodebuild"
   fi
 

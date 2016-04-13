@@ -20,6 +20,8 @@
 
 #import <TVMLKit/TVViewElement.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*!
  @abstract Represents a <FBSDKLoginButton /> tag in TVML.
  @discussion You should not need to use this class directly. Instead, make sure you
@@ -34,10 +36,14 @@
 
  These events can bubble up the DOM.
 
- The '<FBSDKLoginButton />' tag can have either a `readPermissions`
- or (not both) `publishPermissions` attribute whose value is a comma delimited
+ The '<FBSDKLoginButton />' tag can also have the following attributes:
+ - either a `readPermissions` or (not both) `publishPermissions` attribute whose value is a comma delimited
  list of permissions to request.
+ - `redirectURL` an optional URL to redirect the user to after completing the login.
+
  */
-@interface FBSDKTVLoginButtonElement : TVViewElement<FBSDKDeviceLoginButtonDelegate>
+@interface FBSDKTVLoginButtonElement : TVViewElement <FBSDKDeviceLoginButtonDelegate>
 
 @end
+
+NS_ASSUME_NONNULL_END

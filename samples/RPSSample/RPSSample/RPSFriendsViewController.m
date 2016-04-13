@@ -64,7 +64,7 @@
                                            if (![newToken.permissions containsObject:@"user_friends"]) {
                                                // Show alert
                                                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Login Failed"
-                                                                                                   message:@"You must login and grant access to your firends list to use this feature"
+                                                                                                   message:@"You must login and grant access to your friends list to use this feature"
                                                                                                   delegate:self
                                                                                          cancelButtonTitle:@"OK"
                                                                                          otherButtonTitles:nil];

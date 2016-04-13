@@ -82,6 +82,23 @@
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
   [FBSDKInternalUtility dictionary:parameters setObject:self.content.appLinkURL forKey:@"app_link_url"];
   [FBSDKInternalUtility dictionary:parameters setObject:self.content.appInvitePreviewImageURL forKey:@"preview_image_url"];
+
+  if (self.content.promotionText) {
+    NSString *promotionCode = self.content.promotionCode ?: @"";
+    NSDictionary *deeplinkContext =  @{@"promo_code" : promotionCode, @"promo_text" : self.content.promotionText};
+
+    NSError *jsonError = nil;
+    NSString *deeplinkContextString = [FBSDKInternalUtility JSONStringForObject:deeplinkContext error:&jsonError invalidObjectHandler:NULL];
+    if (!jsonError) {
+      [FBSDKInternalUtility dictionary:parameters setObject:promotionCode forKey:@"promo_code"];
+      [FBSDKInternalUtility dictionary:parameters setObject:self.content.promotionText forKey:@"promo_text"];
+      [FBSDKInternalUtility dictionary:parameters setObject:deeplinkContextString forKey:@"deeplink_context"];
+    } else {
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                         formatString:@"Cannot convert deeplink_contex to json:"];
+    }
+  }
+
   FBSDKBridgeAPIRequest *webBridgeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                                                              scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
                                                                                          methodName:FBSDK_APP_INVITE_METHOD_NAME

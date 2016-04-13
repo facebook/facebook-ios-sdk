@@ -76,6 +76,17 @@
   }
 }
 
++ (NSTimeInterval)timeIntervalValue:(id)object
+{
+  if ([object isKindOfClass:[NSNumber class]]) {
+    return [(NSNumber *)object doubleValue];
+  } else if ([object isKindOfClass:[NSString class]]) {
+    return [(NSString *)object doubleValue];
+  } else {
+    return 0;
+  }
+}
+
 + (NSUInteger)unsignedIntegerValue:(id)object
 {
   if ([object isKindOfClass:[NSNumber class]]) {

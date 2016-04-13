@@ -27,3 +27,4 @@
 #import <FBSDKTVOSKit/FBSDKTVLoginButtonElement.h>
 #import <FBSDKTVOSKit/FBSDKTVLoginViewControllerElement.h>
 #import <FBSDKTVOSKit/FBSDKTVOSConstants.h>
+#import <FBSDKTVOSKit/FBSDKTVShareButtonElement.h>
