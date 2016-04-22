@@ -156,7 +156,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                                      forKey:FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY];
   BOOL advertisingIDEnabled = [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_ADVERTISING_ID_ENABLED_KEY];
   BOOL implicitLoggingEnabled = [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
-  BOOL implicitPurchaseLoggingEnabbled =
+  BOOL implicitPurchaseLoggingEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
   BOOL systemAuthenticationEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY];
@@ -184,7 +184,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
             defaultShareMode:defaultShareMode
         advertisingIDEnabled:advertisingIDEnabled
       implicitLoggingEnabled:implicitLoggingEnabled
-implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabbled
+implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
  systemAuthenticationEnabled:systemAuthenticationEnabled
        nativeAuthFlowEnabled:nativeAuthFlowEnabled
         dialogConfigurations:dialogConfigurations

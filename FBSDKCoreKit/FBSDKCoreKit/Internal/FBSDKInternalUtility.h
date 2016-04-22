@@ -75,7 +75,7 @@ typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
 + (NSBundle *)bundleForStrings;
 
 /*!
- @abstract Converts simple value types to the string equivelant for serializing to a request query or body.
+ @abstract Converts simple value types to the string equivalent for serializing to a request query or body.
  @param value The value to be converted.
  @return The value that may have been converted if able (otherwise the input param).
  */
@@ -260,7 +260,7 @@ setJSONStringForObject:(id)object
  @abstract Extracts permissions from a response fetched from me/permissions
  @param responseObject the response
  @param grantedPermissions the set to add granted permissions to
- @param declinedPermissions the set to add decliend permissions to.
+ @param declinedPermissions the set to add declined permissions to.
  */
 + (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
@@ -302,7 +302,7 @@ setJSONStringForObject:(id)object
 /*!
  @abstract Attempts to find the first UIViewController in the view's responder chain. Returns nil if not found.
  */
-+ (UIViewController *)viewControllerforView:(UIView*)view;
++ (UIViewController *)viewControllerForView:(UIView *)view;
 
 /*!
  @abstract returns true if the url scheme is registered in the CFBundleURLTypes

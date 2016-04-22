@@ -837,7 +837,7 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
     }
     return NO;
   }
-  // ensure that the file exists.  per the latest spec for NSFileManager, we should not be checking for file existance,
+  // ensure that the file exists.  per the latest spec for NSFileManager, we should not be checking for file existence,
   // so they have removed that option for URLs and discourage it for paths, so we just construct a mapped NSData.
   NSError *fileError;
   if (![[NSData alloc] initWithContentsOfURL:URL
