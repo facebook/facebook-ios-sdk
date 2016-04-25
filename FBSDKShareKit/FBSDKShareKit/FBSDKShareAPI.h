@@ -49,12 +49,12 @@
 @property (nonatomic, copy) NSString *graphNode;
 
 /*!
- @abstract The access token to use instead of the global [FBSDKAccessToken currentAccessToken].  The access token must
- have the "publish_actions" permission granted.
- @discussion Set this value when sharing to a destination (ex. Page) that requires a separate access token from that
- of the currently logged-in user.
+ @abstract The access token used when performing a share. The access token must have the "publish_actions"
+ permission granted.
+ @discussion Defaults to [FBSDKAccessToken currentAccessToken]. Setting this to nil will revert the access token to
+ [FBSDKAccessToken currentAccessToken].
  */
-@property (nonatomic, strong) FBSDKAccessToken *accessTokenOverride;
+@property (nonatomic, strong) FBSDKAccessToken *accessToken;
 
 /*!
  @abstract A Boolean value that indicates whether the receiver can send the share.
