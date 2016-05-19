@@ -296,9 +296,8 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
   loginParams[@"return_scopes"] = @"true";
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
   loginParams[@"fbapp_pres"] = @([FBSDKInternalUtility isFacebookAppInstalled]);
-  if ([FBSDKAccessToken currentAccessToken]) {
-    loginParams[@"auth_type"] = @"rerequest";
-  }
+  loginParams[@"auth_type"] = @"rerequest";
+
   [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
   [FBSDKInternalUtility dictionary:loginParams setObject:[[permissions allObjects] componentsJoinedByString:@","] forKey:@"scope"];
@@ -369,11 +368,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
       [self performBrowserLogInWithParameters:loginParams handler:^(BOOL openedURL,
                                                                     NSString *authMethod,
                                                                     NSError *openedURLError) {
-        if (openedURL) {
-          completion(YES, authMethod, openedURLError);
-        } else {
-          completion(NO, authMethod, openedURLError);
-        }
+        completion(openedURL, authMethod, openedURLError);
       }];
       break;
     }
@@ -568,7 +563,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 - (void)beginSystemLogIn
 {
   // First, we need to validate the current access token. The user may have uninstalled the
-  // app, changed their password, etc., or the acceess token may have expired, which
+  // app, changed their password, etc., or the access token may have expired, which
   // requires us to renew the account before asking for additional permissions.
   NSString *accessTokenString = [FBSDKSystemAccountStoreAdapter sharedInstance].accessTokenString;
   if (accessTokenString.length > 0) {

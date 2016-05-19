@@ -163,7 +163,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     }
   }
 
-  // if they completed a SFVC flow, dimiss it.
+  // if they completed a SFVC flow, dismiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;
 
@@ -288,7 +288,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       _pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
-        openedURLError = [FBSDKError errorWithCode:FBSDKBrowswerUnavailableErrorCode
+        openedURLError = [FBSDKError errorWithCode:FBSDKBrowserUnavailableErrorCode
                                            message:@"the app switch failed because the browser is unavailable"];
       } else {
         openedURLError = [FBSDKError errorWithCode:FBSDKAppVersionUnsupportedErrorCode

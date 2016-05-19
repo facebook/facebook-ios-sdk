@@ -60,6 +60,13 @@ fi
 echo Building Distribution.
 
 # -----------------------------------------------------------------------------
+# Install required dependencies
+#
+(gem list naturally -i > /dev/null) || die "Run 'gem install naturally' first"
+(gem list xcpretty -i > /dev/null) || die "Run 'gem install xcpretty' first"
+(gem list rake -i > /dev/null) || die "Run 'gem install rake' first"
+
+# -----------------------------------------------------------------------------
 # Copy over stuff
 #
 \cp -R "$FB_SDK_BUILD"/FBSDKCoreKit.framework "$FB_SDK_BUILD_PACKAGE" \
@@ -72,7 +79,7 @@ echo Building Distribution.
   || die "Could not copy Bolts.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
-for SAMPLE in Configurations AccountKitSample Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
+for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
   \rsync -avmc --exclude "${SAMPLE}.xcworkspace" "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
     || die "Could not copy $SAMPLE"
 done
@@ -108,7 +115,10 @@ fi
 # -----------------------------------------------------------------------------
 # Build FBNotifications framework
 #
-\unzip "$FB_SDK_ROOT/internal/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
+
+# Build stuff
+\rake -f "$FB_SDK_ROOT/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
+\unzip "$FB_SDK_ROOT/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
 \cp -R "$FB_SDK_BUILD"/FBNotifications.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBNotifications.framework"
 

@@ -18,3 +18,6 @@
 	url = git://github.com/facebook/xctool.git
 
 
+[submodule "FBNotifications"]
+	path = FBNotifications
+	url = https://github.com/facebook/FBNotifications.git

@@ -828,7 +828,7 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
-    if ([self _contentImages] != 0) {
+    if ([self _contentImages].count != 0) {
       return YES;
     } else {
       if ((errorRef != NULL) && !*errorRef) {

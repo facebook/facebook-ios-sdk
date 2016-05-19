@@ -18,6 +18,9 @@
 
 #include "TestAppIdAndSecret.xcconfig"
 
+// Code signing
+CODE_SIGN_IDENTITY[sdk=iphoneos*] = iPhone Developer
+
 // Packaging
 WRAPPER_EXTENSION = xctest
 
