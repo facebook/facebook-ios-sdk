@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKShareKit"
-  s.version      = "4.11.0"
+  s.version      = "4.12.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's Sharing Features"
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.11.0"
+                     :tag => "sdk-version-4.12.0"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
@@ -37,6 +37,7 @@ Pod::Spec.new do |s|
   s.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.{h,m}',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',

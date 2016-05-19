@@ -163,7 +163,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     }
   }
 
-  // if they completed a SFVC flow, dimiss it.
+  // if they completed a SFVC flow, dismiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;
 

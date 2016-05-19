@@ -209,7 +209,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
       _timeSinceLastSuspend = now - _lastSuspendTime;
       _secondsSpentInCurrentSession = [[results objectForKey:FBSDKTimeSpentPersistKeySessionSecondsSpent] intValue];
-      _sessionID = results[FBSDKTimeSpentPersistKeySessionID];
+      _sessionID = results[FBSDKTimeSpentPersistKeySessionID] ? : [[NSUUID UUID] UUIDString];
       _numInterruptionsInCurrentSession = [[results objectForKey:FBSDKTimeSpentPersistKeySessionNumInterruptions] intValue];
       _shouldLogActivateEvent = (_timeSinceLastSuspend > [FBSDKServerConfigurationManager cachedServerConfiguration].sessionTimoutInterval);
 

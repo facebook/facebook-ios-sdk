@@ -143,9 +143,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
   are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
   provide more information to the user if they decline permissions.
 
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
-  and will pass the "rerequest" flag to the login dialog.
-
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
@@ -164,9 +161,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
  @discussion Use this method when asking for publish permissions. You should only ask for permissions when they
  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
  provide more information to the user if they decline permissions.
-
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
- and will pass the "rerequest" flag to the login dialog.
 
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,

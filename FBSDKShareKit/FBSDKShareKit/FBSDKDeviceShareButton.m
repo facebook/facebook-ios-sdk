@@ -59,7 +59,7 @@
 
 - (void)_buttonPressed:(id)sender
 {
-  UIViewController *parentViewController = [FBSDKInternalUtility viewControllerforView:self];
+  UIViewController *parentViewController = [FBSDKInternalUtility viewControllerForView:self];
   if (_shareContent) {
     FBSDKDeviceShareViewController *vc = [[FBSDKDeviceShareViewController alloc] initWithShareContent:_shareContent];
     [parentViewController presentViewController:vc animated:YES completion:NULL];

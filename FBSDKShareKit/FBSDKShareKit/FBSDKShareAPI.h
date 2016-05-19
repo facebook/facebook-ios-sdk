@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 
 #import <FBSDKCoreKit/FBSDKAccessToken.h>
+
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
 #import <FBSDKShareKit/FBSDKSharing.h>
 

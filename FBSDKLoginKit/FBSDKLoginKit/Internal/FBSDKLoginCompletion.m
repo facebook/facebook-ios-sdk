@@ -189,7 +189,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   NSDate *expirationDate = [NSDate distantFuture];
   if (expirationDateString && [expirationDateString doubleValue] > 0) {
     expirationDate = [NSDate dateWithTimeIntervalSince1970:[expirationDateString doubleValue]];
-  } else if (parameters[@"expires_in"]) {
+  } else if (parameters[@"expires_in"] && [parameters[@"expires_in"] integerValue] > 0) {
     expirationDate = [NSDate dateWithTimeIntervalSinceNow:[parameters[@"expires_in"] integerValue]];
   }
   _parameters.expirationDate = expirationDate;

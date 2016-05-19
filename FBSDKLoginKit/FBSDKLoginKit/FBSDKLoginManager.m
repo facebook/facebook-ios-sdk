@@ -296,9 +296,8 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
   loginParams[@"return_scopes"] = @"true";
   loginParams[@"sdk_version"] = FBSDK_VERSION_STRING;
   loginParams[@"fbapp_pres"] = @([FBSDKInternalUtility isFacebookAppInstalled]);
-  if ([FBSDKAccessToken currentAccessToken]) {
-    loginParams[@"auth_type"] = @"rerequest";
-  }
+  loginParams[@"auth_type"] = @"rerequest";
+
   [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
   [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
   [FBSDKInternalUtility dictionary:loginParams setObject:[[permissions allObjects] componentsJoinedByString:@","] forKey:@"scope"];
