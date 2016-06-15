@@ -33,6 +33,7 @@ GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
 // Deployment
 SKIP_INSTALL = YES
+CODE_SIGN_IDENTITY = 
 TARGETED_DEVICE_FAMILY = 3 // tvos
 
 // Bitcode Support
