@@ -361,8 +361,12 @@
     return;
   }
   UIImage *image = [[UIImage alloc] initWithData:data scale:state.scale];
-  _imageView.image = image;
-  _hasProfileImage = YES;
+  if (image) {
+    _imageView.image = image;
+    _hasProfileImage = YES;
+  } else if (!_placeholderImageIsValid && !_hasProfileImage) {
+    [self _setPlaceholderImage];
+  }
 }
 
 @end
