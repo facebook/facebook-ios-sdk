@@ -125,11 +125,10 @@ fi
 # -----------------------------------------------------------------------------
 # Build FBAudienceNetwork framework
 #
-(
-  if [ -z $SKIPBUILD ]; then
-    . "$FB_SDK_ROOT/internal/scripts/build_workspace.sh" -c Release "$FB_SDK_ROOT/ads/src/FBAudienceNetwork.xcworkspace"
-  fi
-) || die "Failed to build FBAudienceNetwork"
+
+if [ -z $SKIPBUILD ]; then
+  ("$XCTOOL" -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "BuildAll-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetwork"
+fi
 FBAN_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork
 \cp -R "$FB_SDK_ROOT"/ads/build/FBAudienceNetwork.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBAudienceNetwork.framework"
