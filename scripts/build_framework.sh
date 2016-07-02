@@ -18,12 +18,16 @@
 
 . "${FB_SDK_SCRIPT:-$(dirname "$0")}/common.sh"
 
-# process options, valid arguments -c [Debug|Release] -n
+# process options, valid arguments -c [Debug|Release] -n -s [scheme]
 BUILDCONFIGURATION=Debug
 NOEXTRAS=1
-while getopts ":ntc:" OPTNAME
+SCHEME=BuildAllKits
+while getopts ":ntc:s:" OPTNAME
 do
   case "$OPTNAME" in
+    "s")
+      SCHEME=$OPTARG
+      ;;
     "c")
       BUILDCONFIGURATION=$OPTARG
       ;;
@@ -38,6 +42,7 @@ do
       echo "       -c sets configuration (default=Debug)"
       echo "       -n no test run (default)"
       echo "       -t test run"
+      echo "       -s scheme (default=BuildAllKits)"
       die
       ;;
     ":")
@@ -72,7 +77,7 @@ test -d "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
 cd "$FB_SDK_ROOT"
-("$XCTOOL" -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "BuildAllKits" -configuration "${BUILDCONFIGURATION}" clean build) || die "Failed to build"
+("$XCTOOL" -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "${SCHEME}" -configuration "${BUILDCONFIGURATION}" clean build) || die "Failed to build"
 
 # -----------------------------------------------------------------------------
 # Run unit tests
@@ -92,7 +97,7 @@ fi
 progress_message "Generating strings"
 (
   cd "$FB_SDK_ROOT"
-  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ -name "*.m" | xargs genstrings -o FacebookSDKStrings.bundle/Resources/en.lproj/
+  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ FBSDKTVOSKit/ -name "*.m" | xargs genstrings -o FacebookSDKStrings.bundle/Resources/en.lproj/
 )
 
 # -----------------------------------------------------------------------------

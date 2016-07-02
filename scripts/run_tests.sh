@@ -68,6 +68,10 @@ cd "$FB_SDK_ROOT"
 
 for SCHEME in $SCHEMES; do
   if [[ $SCHEME == "samples" ]]; then
+    ( cd "$FB_SDK_ROOT/samples/HelloTV"
+      $XCTOOL -project "HelloTV.xcodeproj" -scheme "HelloTV" -sdk appletvsimulator build
+    ) || exit $?
+
     FAILED_SAMPLES=""
     for SAMPLE in Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
       (

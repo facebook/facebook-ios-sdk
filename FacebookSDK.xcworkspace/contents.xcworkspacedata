@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
    </FileRef>
    <FileRef

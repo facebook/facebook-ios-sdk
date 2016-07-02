@@ -153,7 +153,7 @@
                                        titleRect.size,
                                        titleLabel.lineBreakMode);
       CGFloat titlePaddingWidth = (CGRectGetWidth(titleRect) - titleSize.width) / 2;
-      CGFloat imagePaddingWidth = (titleX - [self _marginForHeight:height]) / 2;
+      CGFloat imagePaddingWidth = titleX / 2;
       CGFloat inset = MIN(titlePaddingWidth, imagePaddingWidth);
       titleEdgeInsets.left -= inset;
       titleEdgeInsets.right += inset;
@@ -241,6 +241,11 @@
   return [UIColor colorWithRed:189.0/255.0 green:193.0/255.0 blue:201.0/255.0 alpha:1.0];
 }
 
+- (UIFont *)defaultFont
+{
+  return [UIFont systemFontOfSize:14];
+}
+
 - (UIColor *)defaultHighlightedColor
 {
   return [UIColor colorWithRed:47.0/255.0 green:71.0/255.0 blue:122.0/255.0 alpha:1.0];
@@ -306,7 +311,12 @@
   CGContextFillPath(context);
   UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
   UIGraphicsEndImageContext();
+#if TARGET_OS_TV
+  return [image resizableImageWithCapInsets:UIEdgeInsetsMake(cornerRadius, cornerRadius, cornerRadius, cornerRadius)
+                               resizingMode:UIImageResizingModeStretch];
+#else
   return [image stretchableImageWithLeftCapWidth:cornerRadius topCapHeight:cornerRadius];
+#endif
 }
 
 - (void)_configureWithIcon:(FBSDKIcon *)icon
@@ -343,6 +353,9 @@
 
   backgroundImage = [self _backgroundImageWithColor:backgroundColor cornerRadius:3.0 scale:scale];
   [self setBackgroundImage:backgroundImage forState:UIControlStateNormal];
+#if TARGET_OS_TV
+  [self setBackgroundImage:backgroundImage forState:UIControlStateFocused];
+#endif
 
   backgroundImage = [self _backgroundImageWithColor:highlightedColor cornerRadius:3.0 scale:scale];
   [self setBackgroundImage:backgroundImage forState:UIControlStateHighlighted];
@@ -358,25 +371,37 @@
   if (selectedHighlightedColor) {
     backgroundImage = [self _backgroundImageWithColor:selectedHighlightedColor cornerRadius:3.0 scale:scale];
     [self setBackgroundImage:backgroundImage forState:UIControlStateSelected | UIControlStateHighlighted];
+#if TARGET_OS_TV
+    [self setBackgroundImage:backgroundImage forState:UIControlStateSelected | UIControlStateFocused];
+#endif
   }
 
   [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 
   [self setTitle:title forState:UIControlStateNormal];
+#if TARGET_OS_TV
+  [self setTitle:title forState:UIControlStateFocused];
+#endif
   if (selectedTitle) {
     [self setTitle:selectedTitle forState:UIControlStateSelected];
     [self setTitle:selectedTitle forState:UIControlStateSelected | UIControlStateHighlighted];
+#if TARGET_OS_TV
+    [self setTitle:selectedTitle forState:UIControlStateSelected | UIControlStateFocused];
+#endif
   }
 
   UILabel *titleLabel = self.titleLabel;
   titleLabel.lineBreakMode = NSLineBreakByClipping;
-  UIFont *font = [UIFont boldSystemFontOfSize:14.0];
+  UIFont *font = [self defaultFont];
   titleLabel.font = font;
 
   CGSize imageSize = CGSizeMake(font.pointSize, font.pointSize);
   UIImage *image = [icon imageWithSize:imageSize];
   image = [image resizableImageWithCapInsets:UIEdgeInsetsZero resizingMode:UIImageResizingModeStretch];
   [self setImage:image forState:UIControlStateNormal];
+#if TARGET_OS_TV
+  [self setImage:image forState:UIControlStateFocused];
+#endif
 
   if (selectedIcon) {
     UIImage *selectedImage = [selectedIcon imageWithSize:imageSize];
@@ -384,12 +409,14 @@
                                                   resizingMode:UIImageResizingModeStretch];
     [self setImage:selectedImage forState:UIControlStateSelected];
     [self setImage:selectedImage forState:UIControlStateSelected | UIControlStateHighlighted];
+#if TARGET_OS_TV
+    [self setImage:selectedImage forState:UIControlStateSelected | UIControlStateFocused];
+#endif
   }
 
   if (forceSizeToFit) {
     [self sizeToFit];
   }
-
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(_applicationDidBecomeActiveNotification:)
                                                name:FBSDKApplicationDidBecomeActiveNotification

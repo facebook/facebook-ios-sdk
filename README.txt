@@ -1,15 +1,15 @@
 Facebook SDK for iOS
 ====================
 
-This open-source library allows you to integrate Facebook into your iOS app.
+This library allows you to integrate Facebook into your iOS app.
 
 Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/docs/ios
 
-NOTE: By default, the Facebook SDK for iOS is installed in ~/Documents/FacebookSDK
+NOTE: It is suggested you install the Facebook SDK to ~/Documents/FacebookSDK
 
 TRY IT OUT
 ----------
-1. Download the SDK at https://developers.facebook.com/docs/ios or via Cocoapods by adding the 'FBSDKCoreKit', 'FBSDKLoginKit', and 'FBSDKShareKit' pods.
+1. Download the SDK at https://developers.facebook.com/docs/ios or via CocoaPods by adding the 'FBSDKCoreKit', 'FBSDKLoginKit', and 'FBSDKShareKit' pods.
 2. Test your install: build and run the project at ~/Documents/FacebookSDK/Samples/Scrumptious/Scrumptious.xcodeproj
 3. Check-out the tutorials available online at: https://developers.facebook.com/docs/ios/getting-started
 4. Start coding! Visit https://developers.facebook.com/docs/ios for tutorials and reference documentation.

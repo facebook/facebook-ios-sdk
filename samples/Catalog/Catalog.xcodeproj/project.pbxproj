@@ -1,0 +1,373 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		930ACC441C063386004598F0 /* ShareDialogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 930ACC431C063386004598F0 /* ShareDialogViewController.m */; };
+		93570B551BD0B71100D6BBF4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B541BD0B71100D6BBF4 /* main.m */; };
+		93570B581BD0B71100D6BBF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B571BD0B71100D6BBF4 /* AppDelegate.m */; };
+		93570B5E1BD0B71100D6BBF4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93570B5C1BD0B71100D6BBF4 /* Main.storyboard */; };
+		93570B601BD0B71100D6BBF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93570B5F1BD0B71100D6BBF4 /* Assets.xcassets */; };
+		93570B631BD0B71100D6BBF4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93570B611BD0B71100D6BBF4 /* LaunchScreen.storyboard */; };
+		93570B881BD0B79B00D6BBF4 /* MainCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B871BD0B79B00D6BBF4 /* MainCollectionViewController.m */; };
+		93570B8B1BD0B7AF00D6BBF4 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B8A1BD0B7AF00D6BBF4 /* CollectionViewCell.m */; };
+		93570B9F1BD1A26000D6BBF4 /* ShareAPIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B9E1BD1A26000D6BBF4 /* ShareAPIViewController.m */; };
+		93B88C0C1BD95D1B00300AF1 /* MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B88C0B1BD95D1B00300AF1 /* MenuItem.m */; };
+		93C2CA531BF584A2006E42DE /* AppInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA521BF584A2006E42DE /* AppInviteViewController.m */; };
+		93C2CA661BF675F8006E42DE /* CustomLoggingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */; };
+		93C2CA691BF67683006E42DE /* ManualLoggingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA681BF67683006E42DE /* ManualLoggingViewController.m */; };
+		93D7025F1BE19F5A00F8BD30 /* PermissionUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D7025E1BE19F5A00F8BD30 /* PermissionUtility.m */; };
+		93D702811BE355A000F8BD30 /* LoginButtonViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D702801BE355A000F8BD30 /* LoginButtonViewController.m */; };
+		93D702841BE3596400F8BD30 /* LoginManagerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D702831BE3596400F8BD30 /* LoginManagerViewController.m */; };
+		93DA31051BDE074200C9D5A1 /* AlertControllerUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 93DA31041BDE074200C9D5A1 /* AlertControllerUtility.m */; };
+		93DA31091BDE0BB200C9D5A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93DA31081BDE0BB200C9D5A1 /* CoreGraphics.framework */; };
+		93E4B5921C3B42E500A21170 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */; };
+		93E4B5931C3B42E500A21170 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */; };
+		93E4B5941C3B42E500A21170 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5901C3B42E500A21170 /* Bolts.framework */; };
+		93E4B5951C3B42E500A21170 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */; };
+		93E4B5971C3B464F00A21170 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */; };
+		93E4B5991C3B466D00A21170 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5981C3B466D00A21170 /* UIKit.framework */; };
+		93F8DF531BF9BA13003364F6 /* GraphAPIReadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F8DF521BF9BA13003364F6 /* GraphAPIReadViewController.m */; };
+		93F8DF731BFA9739003364F6 /* GraphAPIPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93F8DF721BFA9739003364F6 /* GraphAPIPostViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		930ACC421C063386004598F0 /* ShareDialogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareDialogViewController.h; path = Catalog/ShareDialogViewController.h; sourceTree = "<group>"; };
+		930ACC431C063386004598F0 /* ShareDialogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareDialogViewController.m; path = Catalog/ShareDialogViewController.m; sourceTree = "<group>"; };
+		93570B501BD0B71100D6BBF4 /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93570B541BD0B71100D6BBF4 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		93570B561BD0B71100D6BBF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		93570B571BD0B71100D6BBF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		93570B5D1BD0B71100D6BBF4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		93570B5F1BD0B71100D6BBF4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		93570B621BD0B71100D6BBF4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		93570B641BD0B71100D6BBF4 /* Catalog-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Catalog-Info.plist"; sourceTree = "<group>"; };
+		93570B861BD0B79B00D6BBF4 /* MainCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainCollectionViewController.h; sourceTree = "<group>"; };
+		93570B871BD0B79B00D6BBF4 /* MainCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainCollectionViewController.m; sourceTree = "<group>"; };
+		93570B891BD0B7AF00D6BBF4 /* CollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionViewCell.h; sourceTree = "<group>"; };
+		93570B8A1BD0B7AF00D6BBF4 /* CollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionViewCell.m; sourceTree = "<group>"; };
+		93570B9D1BD1A26000D6BBF4 /* ShareAPIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ShareAPIViewController.h; path = Catalog/ShareAPIViewController.h; sourceTree = "<group>"; };
+		93570B9E1BD1A26000D6BBF4 /* ShareAPIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareAPIViewController.m; path = Catalog/ShareAPIViewController.m; sourceTree = "<group>"; };
+		93B88C0A1BD95D1B00300AF1 /* MenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItem.h; sourceTree = "<group>"; };
+		93B88C0B1BD95D1B00300AF1 /* MenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItem.m; sourceTree = "<group>"; };
+		93C2CA511BF584A2006E42DE /* AppInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppInviteViewController.h; path = Catalog/AppInviteViewController.h; sourceTree = "<group>"; };
+		93C2CA521BF584A2006E42DE /* AppInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppInviteViewController.m; path = Catalog/AppInviteViewController.m; sourceTree = "<group>"; };
+		93C2CA641BF675F8006E42DE /* CustomLoggingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLoggingViewController.h; path = Catalog/CustomLoggingViewController.h; sourceTree = "<group>"; };
+		93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLoggingViewController.m; path = Catalog/CustomLoggingViewController.m; sourceTree = "<group>"; };
+		93C2CA671BF67683006E42DE /* ManualLoggingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManualLoggingViewController.h; path = Catalog/ManualLoggingViewController.h; sourceTree = "<group>"; };
+		93C2CA681BF67683006E42DE /* ManualLoggingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ManualLoggingViewController.m; path = Catalog/ManualLoggingViewController.m; sourceTree = "<group>"; };
+		93D7025D1BE19F5A00F8BD30 /* PermissionUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PermissionUtility.h; sourceTree = "<group>"; };
+		93D7025E1BE19F5A00F8BD30 /* PermissionUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PermissionUtility.m; sourceTree = "<group>"; };
+		93D7027F1BE355A000F8BD30 /* LoginButtonViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginButtonViewController.h; path = Catalog/LoginButtonViewController.h; sourceTree = "<group>"; };
+		93D702801BE355A000F8BD30 /* LoginButtonViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginButtonViewController.m; path = Catalog/LoginButtonViewController.m; sourceTree = "<group>"; };
+		93D702821BE3596400F8BD30 /* LoginManagerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginManagerViewController.h; path = Catalog/LoginManagerViewController.h; sourceTree = "<group>"; };
+		93D702831BE3596400F8BD30 /* LoginManagerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginManagerViewController.m; path = Catalog/LoginManagerViewController.m; sourceTree = "<group>"; };
+		93DA31031BDE073700C9D5A1 /* AlertControllerUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlertControllerUtility.h; sourceTree = "<group>"; };
+		93DA31041BDE074200C9D5A1 /* AlertControllerUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlertControllerUtility.m; sourceTree = "<group>"; };
+		93DA31081BDE0BB200C9D5A1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		93E4B57C1C3B406F00A21170 /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Application.xcconfig; path = ../Configurations/Application.xcconfig; sourceTree = "<group>"; };
+		93E4B57D1C3B406F00A21170 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Debug.xcconfig"; path = "../Configurations/Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		93E4B57E1C3B406F00A21170 /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Release.xcconfig"; path = "../Configurations/Project-Release.xcconfig"; sourceTree = "<group>"; };
+		93E4B57F1C3B406F00A21170 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = ../Configurations/Project.xcconfig; sourceTree = "<group>"; };
+		93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../build/FBSDKShareKit.framework; sourceTree = "<group>"; };
+		93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		93E4B5901C3B42E500A21170 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../build/Bolts.framework; sourceTree = "<group>"; };
+		93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		93E4B5981C3B466D00A21170 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		93F8DF511BF9BA13003364F6 /* GraphAPIReadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphAPIReadViewController.h; path = Catalog/GraphAPIReadViewController.h; sourceTree = "<group>"; };
+		93F8DF521BF9BA13003364F6 /* GraphAPIReadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphAPIReadViewController.m; path = Catalog/GraphAPIReadViewController.m; sourceTree = "<group>"; };
+		93F8DF711BFA9739003364F6 /* GraphAPIPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GraphAPIPostViewController.h; path = Catalog/GraphAPIPostViewController.h; sourceTree = "<group>"; };
+		93F8DF721BFA9739003364F6 /* GraphAPIPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GraphAPIPostViewController.m; path = Catalog/GraphAPIPostViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		93570B4D1BD0B71100D6BBF4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93E4B5991C3B466D00A21170 /* UIKit.framework in Frameworks */,
+				93E4B5971C3B464F00A21170 /* MobileCoreServices.framework in Frameworks */,
+				93E4B5951C3B42E500A21170 /* FBSDKCoreKit.framework in Frameworks */,
+				93E4B5921C3B42E500A21170 /* FBSDKShareKit.framework in Frameworks */,
+				93DA31091BDE0BB200C9D5A1 /* CoreGraphics.framework in Frameworks */,
+				93E4B5931C3B42E500A21170 /* FBSDKLoginKit.framework in Frameworks */,
+				93E4B5941C3B42E500A21170 /* Bolts.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		93570B471BD0B71100D6BBF4 = {
+			isa = PBXGroup;
+			children = (
+				93B88BD51BD82DBB00300AF1 /* Configurations */,
+				93570B521BD0B71100D6BBF4 /* Catalog */,
+				93570B991BD1A10C00D6BBF4 /* ViewControllers */,
+				93570B511BD0B71100D6BBF4 /* Products */,
+				93570BA61BD1AE7800D6BBF4 /* Framework */,
+			);
+			sourceTree = "<group>";
+		};
+		93570B511BD0B71100D6BBF4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93570B501BD0B71100D6BBF4 /* Catalog.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93570B521BD0B71100D6BBF4 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				93B88C0A1BD95D1B00300AF1 /* MenuItem.h */,
+				93B88C0B1BD95D1B00300AF1 /* MenuItem.m */,
+				93570B561BD0B71100D6BBF4 /* AppDelegate.h */,
+				93570B571BD0B71100D6BBF4 /* AppDelegate.m */,
+				93570B5C1BD0B71100D6BBF4 /* Main.storyboard */,
+				93570B5F1BD0B71100D6BBF4 /* Assets.xcassets */,
+				93570B611BD0B71100D6BBF4 /* LaunchScreen.storyboard */,
+				93570B531BD0B71100D6BBF4 /* Supporting Files */,
+				93570B861BD0B79B00D6BBF4 /* MainCollectionViewController.h */,
+				93570B871BD0B79B00D6BBF4 /* MainCollectionViewController.m */,
+				93570B891BD0B7AF00D6BBF4 /* CollectionViewCell.h */,
+				93570B8A1BD0B7AF00D6BBF4 /* CollectionViewCell.m */,
+				93DA31041BDE074200C9D5A1 /* AlertControllerUtility.m */,
+				93DA31031BDE073700C9D5A1 /* AlertControllerUtility.h */,
+				93D7025D1BE19F5A00F8BD30 /* PermissionUtility.h */,
+				93D7025E1BE19F5A00F8BD30 /* PermissionUtility.m */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		93570B531BD0B71100D6BBF4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				93570B641BD0B71100D6BBF4 /* Catalog-Info.plist */,
+				93570B541BD0B71100D6BBF4 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		93570B991BD1A10C00D6BBF4 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				93D7027F1BE355A000F8BD30 /* LoginButtonViewController.h */,
+				93D702801BE355A000F8BD30 /* LoginButtonViewController.m */,
+				93F8DF511BF9BA13003364F6 /* GraphAPIReadViewController.h */,
+				93F8DF521BF9BA13003364F6 /* GraphAPIReadViewController.m */,
+				93570B9D1BD1A26000D6BBF4 /* ShareAPIViewController.h */,
+				93570B9E1BD1A26000D6BBF4 /* ShareAPIViewController.m */,
+				93D702821BE3596400F8BD30 /* LoginManagerViewController.h */,
+				93D702831BE3596400F8BD30 /* LoginManagerViewController.m */,
+				93C2CA641BF675F8006E42DE /* CustomLoggingViewController.h */,
+				93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */,
+				93C2CA671BF67683006E42DE /* ManualLoggingViewController.h */,
+				93C2CA681BF67683006E42DE /* ManualLoggingViewController.m */,
+				93C2CA511BF584A2006E42DE /* AppInviteViewController.h */,
+				93C2CA521BF584A2006E42DE /* AppInviteViewController.m */,
+				93F8DF711BFA9739003364F6 /* GraphAPIPostViewController.h */,
+				93F8DF721BFA9739003364F6 /* GraphAPIPostViewController.m */,
+				930ACC421C063386004598F0 /* ShareDialogViewController.h */,
+				930ACC431C063386004598F0 /* ShareDialogViewController.m */,
+			);
+			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		93570BA61BD1AE7800D6BBF4 /* Framework */ = {
+			isa = PBXGroup;
+			children = (
+				93E4B5981C3B466D00A21170 /* UIKit.framework */,
+				93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */,
+				93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */,
+				93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */,
+				93E4B5901C3B42E500A21170 /* Bolts.framework */,
+				93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */,
+				93DA31081BDE0BB200C9D5A1 /* CoreGraphics.framework */,
+			);
+			name = Framework;
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		93B88BD51BD82DBB00300AF1 /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				93E4B57C1C3B406F00A21170 /* Application.xcconfig */,
+				93E4B57D1C3B406F00A21170 /* Project-Debug.xcconfig */,
+				93E4B57E1C3B406F00A21170 /* Project-Release.xcconfig */,
+				93E4B57F1C3B406F00A21170 /* Project.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		93570B4F1BD0B71100D6BBF4 /* Catalog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93570B7D1BD0B71100D6BBF4 /* Build configuration list for PBXNativeTarget "Catalog" */;
+			buildPhases = (
+				93570B4C1BD0B71100D6BBF4 /* Sources */,
+				93570B4D1BD0B71100D6BBF4 /* Frameworks */,
+				93570B4E1BD0B71100D6BBF4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Catalog;
+			productName = Catalog;
+			productReference = 93570B501BD0B71100D6BBF4 /* Catalog.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		93570B481BD0B71100D6BBF4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0700;
+				ORGANIZATIONNAME = "Facebook,Inc";
+				TargetAttributes = {
+					93570B4F1BD0B71100D6BBF4 = {
+						CreatedOnToolsVersion = 7.0.1;
+					};
+				};
+			};
+			buildConfigurationList = 93570B4B1BD0B71100D6BBF4 /* Build configuration list for PBXProject "Catalog" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 93570B471BD0B71100D6BBF4;
+			productRefGroup = 93570B511BD0B71100D6BBF4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				93570B4F1BD0B71100D6BBF4 /* Catalog */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		93570B4E1BD0B71100D6BBF4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93570B631BD0B71100D6BBF4 /* LaunchScreen.storyboard in Resources */,
+				93570B601BD0B71100D6BBF4 /* Assets.xcassets in Resources */,
+				93570B5E1BD0B71100D6BBF4 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		93570B4C1BD0B71100D6BBF4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				93C2CA531BF584A2006E42DE /* AppInviteViewController.m in Sources */,
+				93F8DF731BFA9739003364F6 /* GraphAPIPostViewController.m in Sources */,
+				93DA31051BDE074200C9D5A1 /* AlertControllerUtility.m in Sources */,
+				93B88C0C1BD95D1B00300AF1 /* MenuItem.m in Sources */,
+				93D7025F1BE19F5A00F8BD30 /* PermissionUtility.m in Sources */,
+				930ACC441C063386004598F0 /* ShareDialogViewController.m in Sources */,
+				93570B581BD0B71100D6BBF4 /* AppDelegate.m in Sources */,
+				93C2CA691BF67683006E42DE /* ManualLoggingViewController.m in Sources */,
+				93570B551BD0B71100D6BBF4 /* main.m in Sources */,
+				93D702811BE355A000F8BD30 /* LoginButtonViewController.m in Sources */,
+				93570B8B1BD0B7AF00D6BBF4 /* CollectionViewCell.m in Sources */,
+				93570B9F1BD1A26000D6BBF4 /* ShareAPIViewController.m in Sources */,
+				93C2CA661BF675F8006E42DE /* CustomLoggingViewController.m in Sources */,
+				93F8DF531BF9BA13003364F6 /* GraphAPIReadViewController.m in Sources */,
+				93570B881BD0B79B00D6BBF4 /* MainCollectionViewController.m in Sources */,
+				93D702841BE3596400F8BD30 /* LoginManagerViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		93570B5C1BD0B71100D6BBF4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93570B5D1BD0B71100D6BBF4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		93570B611BD0B71100D6BBF4 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				93570B621BD0B71100D6BBF4 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		93570B7B1BD0B71100D6BBF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93E4B57D1C3B406F00A21170 /* Project-Debug.xcconfig */;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		93570B7C1BD0B71100D6BBF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93E4B57E1C3B406F00A21170 /* Project-Release.xcconfig */;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		93570B7E1BD0B71100D6BBF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93E4B57C1C3B406F00A21170 /* Application.xcconfig */;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKCatalog;
+			};
+			name = Debug;
+		};
+		93570B7F1BD0B71100D6BBF4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 93E4B57C1C3B406F00A21170 /* Application.xcconfig */;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.FBSDKCatalog;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		93570B4B1BD0B71100D6BBF4 /* Build configuration list for PBXProject "Catalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93570B7B1BD0B71100D6BBF4 /* Debug */,
+				93570B7C1BD0B71100D6BBF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93570B7D1BD0B71100D6BBF4 /* Build configuration list for PBXNativeTarget "Catalog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93570B7E1BD0B71100D6BBF4 /* Debug */,
+				93570B7F1BD0B71100D6BBF4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 93570B481BD0B71100D6BBF4 /* Project object */;
+}

@@ -21,7 +21,6 @@
 #import <dlfcn.h>
 
 #import <Security/Security.h>
-#import <Social/Social.h>
 #import <StoreKit/StoreKit.h>
 
 #import "FBSDKLogger.h"

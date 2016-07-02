@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<document>
+  <divTemplate>
+    <img id="profileImage" style="tv-align:center; width:200; height:200; margin:50;" src="http://127.0.0.1:9002/Friends.png" />
+    <FBSDKLoginButton style="tv-align:center; width:573; margin:50" />
+
+    <FBSDKShareButton style="tv-align:center; width:573; margin:50" href="http://developers.facebook.com/docs/tvos/tvml" />
+
+    <button id="shareLinkButton" style="tv-align:center; width:573; height:108; margin:20;">
+      <text style="font-size:39" >Share Link (API)</text>
+    </button>
+  </divTemplate>
+</document>

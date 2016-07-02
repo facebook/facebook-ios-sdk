@@ -105,6 +105,8 @@
 
 #pragma mark - UIActionSheetDelegate
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   if (buttonIndex == 0) {
@@ -113,6 +115,7 @@
     [self.delegate loginButtonDidLogOut:self];
   }
 }
+#pragma clang diagnostic pop
 
 #pragma mark - FBSDKButtonImpressionTracking
 
@@ -154,14 +157,14 @@
 
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(_acessTokenDidChangeNotification:)
+                                           selector:@selector(_accessTokenDidChangeNotification:)
                                                name:FBSDKAccessTokenDidChangeNotification
                                              object:nil];
 }
 
 #pragma mark - Helper Methods
 
-- (void)_acessTokenDidChangeNotification:(NSNotification *)notification
+- (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
   if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
     [self _updateContent];
@@ -170,12 +173,6 @@
 
 - (void)_buttonPressed:(id)sender
 {
-  if ([self.delegate respondsToSelector:@selector(loginButtonWillLogin:)]) {
-    if (![self.delegate loginButtonWillLogin:self]) {
-      return;
-    }
-  }
-
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:[self analyticsParameters]];
   if ([FBSDKAccessToken currentAccessToken]) {
     NSString *title = nil;
@@ -211,6 +208,12 @@
     [sheet showInView:self];
 #pragma clang diagnostic pop
   } else {
+    if ([self.delegate respondsToSelector:@selector(loginButtonWillLogin:)]) {
+      if (![self.delegate loginButtonWillLogin:self]) {
+        return;
+      }
+    }
+
     FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
       if ([self.delegate respondsToSelector:@selector(loginButton:didCompleteWithResult:error:)]) {
         [self.delegate loginButton:self didCompleteWithResult:result error:error];
@@ -219,11 +222,11 @@
 
     if (self.publishPermissions.count > 0) {
       [_loginManager logInWithPublishPermissions:self.publishPermissions
-                              fromViewController:[FBSDKInternalUtility viewControllerforView:self]
+                              fromViewController:[FBSDKInternalUtility viewControllerForView:self]
                                          handler:handler];
     } else {
       [_loginManager logInWithReadPermissions:self.readPermissions
-                           fromViewController:[FBSDKInternalUtility viewControllerforView:self]
+                           fromViewController:[FBSDKInternalUtility viewControllerForView:self]
                                       handler:handler];
     }
   }

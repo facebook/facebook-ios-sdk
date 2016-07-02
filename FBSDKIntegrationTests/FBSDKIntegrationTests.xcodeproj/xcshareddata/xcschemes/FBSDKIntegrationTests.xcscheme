@@ -14,6 +14,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "81ED94111BE147CF00795F05"
+               BuildableName = "Bolts.framework"
+               BlueprintName = "Bolts-iOS"
+               ReferencedContainer = "container:../Bolts-IOS/Bolts.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "030EF0DB14632FF700B04273"
                BuildableName = "libOCMock.a"
                BlueprintName = "OCMockLib"
@@ -124,15 +138,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "030EF0DB14632FF700B04273"
-            BuildableName = "libOCMock.a"
-            BlueprintName = "OCMockLib"
-            ReferencedContainer = "container:../vendor/OCMock/Source/OCMock.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

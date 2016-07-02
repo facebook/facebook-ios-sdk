@@ -22,9 +22,6 @@
 
 @interface FBSDKLoginUtility : NSObject
 
-+ (BOOL)isPublishPermission:(NSString *)permission;
-+ (BOOL)areAllPermissionsReadPermissions:(NSSet *)permissions;
-+ (BOOL)areAllPermissionsPublishPermissions:(NSSet *)permissions;
 + (NSString *)stringForAudience:(FBSDKDefaultAudience)audience;
 + (NSDictionary *)queryParamsFromLoginURL:(NSURL *)url;
 

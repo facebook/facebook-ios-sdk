@@ -40,7 +40,7 @@
   NSString *token = [NSString stringWithFormat:@"%@|%@", [self testAppID], [self testAppSecret]];
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/accounts/test-users", [self testAppID]]
-                                                                 parameters:nil
+                                                                 parameters:@{ @"fields": @"id" }
                                                                 tokenString:token
                                                                     version:nil
                                                                  HTTPMethod:nil];
@@ -67,6 +67,60 @@
 
 
 #pragma mark - Tests
+- (void)testPermissionFetch
+{
+  __block FBSDKAccessToken *tokenWithLikes, *tokenWithEmail;
+  XCTestExpectation *fetchUsersExpectation = [self expectationWithDescription:@"fetch test user"];
+  FBSDKTestUsersManager *testAccountsManager = [FBSDKTestUsersManager sharedInstanceForAppID:[self testAppID] appSecret:[self testAppSecret]];
+  [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:@[
+                                                                             [NSSet setWithObject:@"user_likes"],
+                                                                             [NSSet setWithObject:@"email"]                                                                            ]
+                                                          createIfNotFound:YES
+                                                         completionHandler:^(NSArray *tokens, NSError *error) {
+                                                           tokenWithLikes = tokens[0];
+                                                           tokenWithEmail = tokens[1];
+                                                           [fetchUsersExpectation fulfill];
+                                                         }];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"failed to fetch test user");
+  }];
+  XCTestExpectation *verifyLikesPermissionExpectation = [self expectationWithDescription:@"verify user_likes"];
+  XCTestExpectation *verifyEmailPermissionExpectation = [self expectationWithDescription:@"verify email"];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                     parameters:@{ @"fields" : @"permissions" }
+                                    tokenString:tokenWithLikes.tokenString
+                                        version:nil
+                                     HTTPMethod:@"GET"] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    XCTAssertNil(error);
+    BOOL found = NO;
+    for (NSDictionary *p in result[@"permissions"][@"data"]) {
+      if ([p[@"permission"] isEqualToString:@"user_likes"] && [p[@"status"] isEqualToString:@"granted"]) {
+        found = YES;
+      }
+    }
+    XCTAssertTrue(found, @"Didn't find permission for %@", tokenWithLikes);
+    [verifyLikesPermissionExpectation fulfill];
+  }];
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                     parameters:@{ @"fields" : @"permissions" }
+                                    tokenString:tokenWithEmail.tokenString
+                                        version:nil
+                                     HTTPMethod:@"GET"] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    XCTAssertNil(error);
+    BOOL found = NO;
+    for (NSDictionary *p in result[@"permissions"][@"data"]) {
+      if ([p[@"permission"] isEqualToString:@"email"] && [p[@"status"] isEqualToString:@"granted"]) {
+        found = YES;
+      }
+    }
+    XCTAssertTrue(found, @"Didn't find permission for %@", tokenWithEmail);
+    [verifyEmailPermissionExpectation fulfill];
+  }];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"failed to verify test users' permissions for %@,%@", tokenWithLikes, tokenWithEmail);
+  }];
+}
+
 - (void)testTestUserManagerDoesntCreateUnnecessaryUsers
 {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
@@ -128,12 +182,12 @@
   //now delete it
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
 
-
   [testAccountsManager removeTestAccount:tokenData.userID completionHandler:^(NSError *error) {
     NSString *appAccessToken = [NSString stringWithFormat:@"%@|%@", [self testAppID], [self testAppSecret]];
     //verify they no longer exist.
     [[[FBSDKGraphRequest alloc] initWithGraphPath:tokenData.userID
-                                       parameters:@{@"access_token" : appAccessToken }
+                                       parameters:@{@"access_token" : appAccessToken,
+                                                    @"fields": @"id" }
       ]
      startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *verificationError) {
        XCTAssertNotNil(verificationError, @"expected error and not result %@", result);

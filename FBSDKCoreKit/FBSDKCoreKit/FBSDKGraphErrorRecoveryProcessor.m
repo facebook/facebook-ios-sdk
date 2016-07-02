@@ -15,6 +15,7 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#import "FBSDKGraphErrorRecoveryProcessor.h"
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKErrorRecoveryAttempter.h"
@@ -137,12 +138,15 @@
 
 #pragma mark - UIAlertViewDelegate
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   [_recoveryAttempter attemptRecoveryFromError:_error optionIndex:buttonIndex delegate:self didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
   _alertView.delegate = nil;
   _alertView = nil;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - FBSDKErrorRecoveryAttempting "delegate"
 

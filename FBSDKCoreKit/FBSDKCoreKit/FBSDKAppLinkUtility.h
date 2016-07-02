@@ -28,6 +28,14 @@
  */
 typedef void (^FBSDKDeferredAppLinkHandler)(NSURL *url, NSError *error);
 
+
+/*!
+ @abstract Describes the callback for fetchOrganicDeferredAppLink.
+ @param url the url representing the deferred App Link
+ */
+typedef void (^FBSDKDeferredAppInviteHandler)(NSURL *url);
+
+
 /*!
  @abstract Class containing App Links related utility methods.
  */
@@ -51,5 +59,42 @@ typedef void (^FBSDKDeferredAppLinkHandler)(NSURL *url, NSError *error);
  applicationDidBecomeActive:).
  */
 + (void)fetchDeferredAppLink:(FBSDKDeferredAppLinkHandler)handler;
+
+/*!
+ @abstract Call this method from the main thread to fetch deferred deeplink for App Invites
+ Handler is called with deeplink url, if found, nil otherwise.
+
+ @param handler Handler to be called when we fetch deeplink url.
+
+ @return YES if async fetch process was started, NO if it failed to start. Note it returns NO
+ for versions < iOS 9.
+
+ @discussion Call this method from the main thread to fetch deferred deeplink if you use App Invites.
+ This may require a network round trip. If successful, this will call the handler provided, with
+ deferred deeplink that was clicked by the user. If there is a error/timeout, handler will be called
+ with nil.
+ This method only works on iOS 9+ and returns NO otherwise.
+ This method should only be called from a location that occurs after any launching URL has
+ been processed (e.g., you should call this method from your application delegate's
+ didFinishLaunchingWithOptions:).
+ */
++ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler;
+
+/*
+ @abstract Call this method to fetch promotion code from the url, if it's present. This function
+ requires Bolts framework.
+
+ Note: This throws an exception if Bolts.framework is not linked. Add '[BFURL class]' in intialize method
+ of your AppDelegate.
+
+ @param url App Link url that was passed to the app.
+
+ @return Promotion code string.
+
+ @discussion Call this method to fetch App Invite Promotion Code from applink if present.
+ This can be used to fetch the promotion code that was associated with the invite when it
+ was created. This method should be called with the url from the openURL method.
+*/
++ (NSString*)appInvitePromotionCodeFromURL:(NSURL*)url;
 
 @end

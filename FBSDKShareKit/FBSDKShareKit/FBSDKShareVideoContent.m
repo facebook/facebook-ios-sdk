@@ -19,9 +19,11 @@
 #import "FBSDKShareVideoContent.h"
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKHashtag.h"
 #import "FBSDKShareUtility.h"
 
 #define FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY @"contentURL"
+#define FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY @"hashtag"
 #define FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY @"peopleIDs"
 #define FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY @"placeID"
 #define FBSDK_SHARE_VIDEO_CONTENT_PREVIEW_PHOTO_KEY @"previewPhoto"
@@ -33,6 +35,7 @@
 #pragma mark - Properties
 
 @synthesize contentURL = _contentURL;
+@synthesize hashtag = _hashtag;
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
@@ -51,6 +54,7 @@
 {
   NSUInteger subhashes[] = {
     [_contentURL hash],
+    [_hashtag hash],
     [_peopleIDs hash],
     [_placeID hash],
     [_previewPhoto hash],
@@ -75,6 +79,7 @@
 {
   return (content &&
           [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
+          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_previewPhoto isEqualToObject:content.previewPhoto] &&
@@ -93,6 +98,7 @@
 {
   if ((self = [self init])) {
     _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
     _previewPhoto = [decoder decodeObjectOfClass:[FBSDKSharePhoto class]
@@ -106,6 +112,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
   [encoder encodeObject:_contentURL forKey:FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY];
+  [encoder encodeObject:_hashtag forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
   [encoder encodeObject:_previewPhoto forKey:FBSDK_SHARE_VIDEO_CONTENT_PREVIEW_PHOTO_KEY];
@@ -119,6 +126,7 @@
 {
   FBSDKShareVideoContent *copy = [[FBSDKShareVideoContent alloc] init];
   copy->_contentURL = [_contentURL copy];
+  copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
   copy->_previewPhoto = [_previewPhoto copy];

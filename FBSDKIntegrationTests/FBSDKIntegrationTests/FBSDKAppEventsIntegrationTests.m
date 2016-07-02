@@ -16,12 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
+
+#import <OCMock/OCMock.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #import <OHHTTPStubs/OHHTTPStubs.h>
-
-#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKIntegrationTestCase.h"
@@ -39,7 +40,6 @@
 
 @interface FBSDKTimeSpentData (FBSDKAppEventsIntegrationTests)
 + (FBSDKTimeSpentData *)singleton;
-@property (nonatomic) NSInteger numSecondsIdleToBeNewSession;
 @end
 
 @interface FBSDKAppEventsIntegrationTests : FBSDKIntegrationTestCase
@@ -48,23 +48,18 @@
 
 @implementation FBSDKAppEventsIntegrationTests
 
-// useful for debugging
-//+ (void)setUp {
-//  [FBSDKSettings setLoggingBehavior:[NSSet setWithObjects:FBSDKLoggingBehaviorAppEvents, nil]];
-//}
-//
-//+ (void)tearDown {
-//  [FBSDKSettings setLoggingBehavior:[NSSet setWithObject:FBSDKLoggingBehaviorDeveloperErrors]];
-//}
-
 - (void)setUp {
   [super setUp];
   [FBSDKSettings setAppID:self.testAppID];
-  // default to disabling timer based flushes so that long tests
-  // don't get more flushes than explicitly expecting.
-  [FBSDKAppEvents singleton].disableTimer = YES;
   // clear any persisted events
   [FBSDKAppEventsStateManager clearPersistedAppEventsStates];
+  // make sure we've loaded configuration
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    [blocker signal];
+  }];
+  [blocker waitWithTimeout:5];
+
 }
 
 - (void)tearDown {
@@ -78,6 +73,9 @@
 }
 
 - (void)testActivate {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   FBSDKTestBlocker *blocker2 = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
@@ -94,6 +92,12 @@
       } else {
         NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
         XCTAssertTrue([body rangeOfString:@"fb_mobile_activate_app"].location != NSNotFound);
+        XCTAssertEqual([FBSDKAppEventsUtility unixTimeNow],
+                       [[[self class] formDataForRequestBody:body][0][@"_logTime"] longValue]);
+        NSSet *activateSessions, *deactivateSessions;
+        [[self class] appEventSessionIDsForRequestBody:body activateSessions:&activateSessions deactivateSessions:&deactivateSessions];
+        XCTAssertEqual(1, activateSessions.count);
+        XCTAssertEqual(0, deactivateSessions.count);
         [blocker2 signal];
       }
       activiesEndpointCalledCount++;
@@ -124,6 +128,11 @@
 
 // same as below but inject no minimum time for considering new sessions in timespent
 - (void)testDeactivationsMultipleSessions {
+  const int duration1 = 2;
+  const int duration2 = 3;
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSUInteger activiesEndpointCalledForActivateCount = 0;
   __block NSUInteger activiesEndpointCalledForDeactivateCount = 0;
@@ -133,6 +142,23 @@
       NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
       activiesEndpointCalledForDeactivateCount = [body countOfSubstring:@"fb_mobile_deactivate_app"];
       activiesEndpointCalledForActivateCount = [body countOfSubstring:@"fb_mobile_activate_app"];
+      NSSet *activateSessions, *deactivateSessions;
+      [[self class] appEventSessionIDsForRequestBody:body activateSessions:&activateSessions deactivateSessions:&deactivateSessions];
+      XCTAssertEqual(3, activateSessions.count);
+      // expect one less deactive session id (since we don't deactivate the last one).
+      XCTAssertEqual(2, deactivateSessions.count);
+      XCTAssertTrue([deactivateSessions isSubsetOfSet:activateSessions]);
+      // expect three distinct _logTimes (1/ initial activate, 2/deactivate/activate, 3/deactivate/activate)
+      NSArray *events = [[self class] formDataForRequestBody:body];
+      NSMutableSet *logTimes = [NSMutableSet set];
+      [events enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [logTimes addObject:obj[FBSDKAppEventParameterLogTime]];
+      }];
+      XCTAssertEqual(3, logTimes.count);
+      // verify _logTime differences (2 sec and 3 sec)
+      NSArray *sortedLogTimes = [[logTimes allObjects] sortedArrayUsingSelector:@selector(compare:)];
+      XCTAssertEqual(duration1, [sortedLogTimes[1] longValue] - [sortedLogTimes[0] longValue], @"expected 2 seconds between first and second log times");
+      XCTAssertEqual(duration2, [sortedLogTimes[2] longValue] - [sortedLogTimes[1] longValue], @"expected 3 seconds between second and third log times");
       [blocker signal];
     }
     // always return NO because we don't actually want to stub a http response, only
@@ -150,15 +176,23 @@
   [notificationCenter postNotificationName:UIApplicationWillTerminateNotification object:nil];
   // make sure we remove any time spent persistence.
   [FBSDKAppEventsUtility clearLibraryFiles];
-  // remove min time for considering deactivations (normally 60 seconds)
-  [FBSDKTimeSpentData singleton].numSecondsIdleToBeNewSession = -1;
+
+  // remove min time for considering deactivations
+  id mock = [OCMockObject partialMockForObject:[FBSDKServerConfigurationManager cachedServerConfiguration]];
+  [[[mock stub] andReturnValue:OCMOCK_VALUE(-1.0)] sessionTimoutInterval];
 
   [FBSDKAppEvents activateApp];
   [notificationCenter postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+  // wait 2 seconds so that the logTime of the deactivation should be different.
+  [[[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1] waitWithTimeout:duration1];
   [notificationCenter postNotificationName:UIApplicationWillResignActiveNotification object:nil];
+
   [FBSDKAppEvents activateApp];
   [notificationCenter postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
+  // wait 3 seconds so that the logTime of the deactivation should be different.
+  [[[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1] waitWithTimeout:duration2];
   [notificationCenter postNotificationName:UIApplicationWillTerminateNotification object:nil];
+
   [FBSDKAppEvents activateApp];
   [notificationCenter postNotificationName:UIApplicationDidBecomeActiveNotification object:nil];
   [FBSDKAppEvents flush];
@@ -166,10 +200,12 @@
   XCTAssertTrue([blocker waitWithTimeout:30], @"did not get expectedflushes");
   XCTAssertEqual(3, activiesEndpointCalledForActivateCount);
   XCTAssertEqual(2, activiesEndpointCalledForDeactivateCount);
-  [FBSDKTimeSpentData singleton].numSecondsIdleToBeNewSession = 60;
 }
 
 - (void)testDeactivationsSingleSession {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block NSUInteger activiesEndpointCalledForActivateCount = 0;
   __block NSUInteger activiesEndpointCalledForDeactivateCount = 0;
@@ -179,6 +215,10 @@
       NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
       activiesEndpointCalledForDeactivateCount = [body countOfSubstring:@"fb_mobile_deactivate_app"];
       activiesEndpointCalledForActivateCount = [body countOfSubstring:@"fb_mobile_activate_app"];
+      NSSet *activateSessions, *deactivateSessions;
+      [[self class] appEventSessionIDsForRequestBody:body activateSessions:&activateSessions deactivateSessions:&deactivateSessions];
+      XCTAssertEqual(1, activateSessions.count);
+      XCTAssertEqual(0, deactivateSessions.count);
       [blocker signal];
     }
     // always return NO because we don't actually want to stub a http response, only
@@ -214,6 +254,9 @@
 
 // test to verify flushing behavior when there are "session" changes.
 - (void)testLogEventsBetweenAppAndUser {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledForUserCount = 0;
@@ -267,6 +310,9 @@
 
 // similar to above but with explicit flushing.
 - (void)testLogEventsBetweenAppAndUserExplicitFlushing {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledForUserCount = 0;
@@ -322,6 +368,9 @@
 }
 
 - (void)testLogEventsThreshold {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -350,6 +399,9 @@
 
 // same as above but using explicit flush behavior and send more than the threshold
 - (void)testLogEventsThresholdExplicit {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -383,6 +435,9 @@
 }
 
 - (void)testLogEventsTimerThreshold {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -414,6 +469,9 @@
 
 // send logging events from different queues.
 - (void)testThreadsLogging {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
   NSString *appID = self.testAppID;
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block int activiesEndpointCalledCount = 0;
@@ -444,6 +502,79 @@
   }
   XCTAssertTrue([blocker waitWithTimeout:10], @"did not get automatic flushes");
   XCTAssertEqual(2,activiesEndpointCalledCount, @"more than two log request made");
+}
+
+- (void)testInitAppEventWorkerThread {
+  NSString *appID = self.testAppID;
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block int activiesEndpointCalledCount = 0;
+
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", appID];
+    if ([request.URL.path hasSuffix:activitiesPath]) {
+      ++activiesEndpointCalledCount;
+      [blocker signal];
+    }
+    // always return NO because we don't actually want to stub a http response, only
+    // to intercept and verify request to fufill the expectation.
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  // clear out all caches.
+  [self clearUserDefaults];
+  [FBSDKAppEventsUtility clearLibraryFiles];
+
+  dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
+  // initiate singleton in a worker thread
+  dispatch_async(queue,^{
+    [FBSDKAppEvents singleton].disableTimer = NO;
+  });
+  // just one under the event count threshold.
+  for (int i = 0; i < 100; i++) {
+    [FBSDKAppEvents logEvent:@"event-to-test-threshold"];
+  }
+  XCTAssertTrue([blocker waitWithTimeout:25], @"did not get automatic flush");
+  XCTAssertEqual(1,activiesEndpointCalledCount, @"more than one log request made");
+}
+
+#pragma mark - Helpers
+
++ (NSArray *)formDataForRequestBody:(NSString *)body
+{
+  // cheap way to deserialize form data without a regex.
+  // note we don't do bound checking so that failures indicate malformed data.
+  NSArray *lines = [body componentsSeparatedByString:@"\n"];
+  for (int i = 0; i < lines.count; i++) {
+    if ([lines[i] rangeOfString:@"Content-Disposition: form-data; name=\"custom_events_file\";"].location != NSNotFound) {
+      return [FBSDKInternalUtility objectForJSONString:lines[i+3] error:NULL];
+    }
+  }
+  return nil;
+}
+
+// extracts session ids for fb_mobile_activate_app,fb_mobile_deactivate_app respectively.
++ (void)appEventSessionIDsForRequestBody:(NSString *)body activateSessions:(NSSet **)activateSessionIDs deactivateSessions:(NSSet **)deactivateSessionIDs
+{
+  NSMutableSet *mutableActivateSessionIDs = [NSMutableSet set];
+  NSMutableSet *mutableDeactivateSessionIDs = [NSMutableSet set];
+  NSArray *events = [self formDataForRequestBody:body];
+  for (NSDictionary *event in events) {
+    if ([event[@"_eventName"] isEqualToString:@"fb_mobile_activate_app"]) {
+      [mutableActivateSessionIDs addObject:event[@"_session_id"]];
+    } else if ([event[@"_eventName"] isEqualToString:@"fb_mobile_deactivate_app"]) {
+      [mutableDeactivateSessionIDs addObject:event[@"_session_id"]];
+    }
+  }
+  if (activateSessionIDs) {
+    *activateSessionIDs = [mutableActivateSessionIDs copy];
+  }
+  if (deactivateSessionIDs) {
+    *deactivateSessionIDs = [mutableDeactivateSessionIDs copy];
+  }
 }
 
 @end

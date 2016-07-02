@@ -36,25 +36,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-  <key>NSAppTransportSecurity</key>
-  <dict>
-    <key>NSExceptionDomains</key>
-    <dict>
-      <key>fbcdn.net</key>
-      <dict>
-        <key>NSIncludesSubdomains</key>
-        <true/>
-        <key>NSExceptionRequiresForwardSecrecy</key>
-        <false/>
-      </dict>
-      <key>facebook.com</key>
-      <dict>
-        <key>NSExceptionRequiresForwardSecrecy</key>
-        <false/>
-        <key>NSIncludesSubdomains</key>
-        <true/>
-      </dict>
-    </dict>
-  </dict>
 </dict>
 </plist>

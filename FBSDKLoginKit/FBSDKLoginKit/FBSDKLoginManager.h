@@ -88,7 +88,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
    */
   FBSDKLoginBehaviorSystemAccount,
   /*!
-   @abstract Attemps log in through a modal \c UIWebView pop up
+   @abstract Attempts log in through a modal \c UIWebView pop up
 
    @note This behavior is only available to certain types of apps. Please check the Facebook
    Platform Policy to verify your app meets the restrictions.
@@ -105,7 +105,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
  a cached token available (typically in your viewDidLoad).
 
  If you are managing your own token instances outside of "currentAccessToken", you will need to set
- "currentAccessToken" before calling logIn* to authorize futher permissions on your tokens.
+ "currentAccessToken" before calling logIn* to authorize further permissions on your tokens.
  */
 @interface FBSDKLoginManager : NSObject
 
@@ -143,9 +143,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
   are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
   provide more information to the user if they decline permissions.
 
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
-  and will pass the "rerequest" flag to the login dialog.
-
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
@@ -165,9 +162,6 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
  provide more information to the user if they decline permissions.
 
- If `[FBSDKAccessToken currentAccessToken]` is not nil, it will be treated as a reauthorization for that user
- and will pass the "rerequest" flag to the login dialog.
-
  This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
  already contains the permissions you need before asking to reduce unnecessary app switching. For example,
  you could make that check at viewDidLoad.
@@ -185,7 +179,7 @@ __attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:h
 /*!
  @method
 
- @abstract Issues an asychronous renewCredentialsForAccount call to the device's Facebook account store.
+ @abstract Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
 
  @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
 

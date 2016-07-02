@@ -19,11 +19,13 @@
 #import "FBSDKShareOpenGraphContent.h"
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKHashtag.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"
 
 #define FBSDK_SHARE_OPEN_GRAPH_CONTENT_ACTION_KEY @"action"
 #define FBSDK_SHARE_OPEN_GRAPH_CONTENT_CONTENT_URL_KEY @"contentURL"
+#define FBSDK_SHARE_OPEN_GRAPH_CONTENT_HASHTAG_KEY @"hashtag"
 #define FBSDK_SHARE_OPEN_GRAPH_CONTENT_PEOPLE_IDS_KEY @"peopleIDs"
 #define FBSDK_SHARE_OPEN_GRAPH_CONTENT_PLACE_ID_KEY @"placeID"
 #define FBSDK_SHARE_OPEN_GRAPH_CONTENT_PREVIEW_PROPERTY_NAME_KEY @"previewPropertyName"
@@ -34,6 +36,7 @@
 #pragma mark - Properties
 
 @synthesize contentURL = _contentURL;
+@synthesize hashtag = _hashtag;
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
@@ -53,6 +56,7 @@
   NSUInteger subhashes[] = {
     [_action hash],
     [_contentURL hash],
+    [_hashtag hash],
     [_peopleIDs hash],
     [_placeID hash],
     [_previewPropertyName hash],
@@ -77,6 +81,7 @@
   return (content &&
           [FBSDKInternalUtility object:_action isEqualToObject:content.action] &&
           [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
+          [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_previewPropertyName isEqualToObject:content.previewPropertyName] &&
@@ -96,6 +101,7 @@
     _action = [decoder decodeObjectOfClass:[FBSDKShareOpenGraphAction class]
                                     forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_ACTION_KEY];
     _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_CONTENT_URL_KEY];
+    _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_PEOPLE_IDS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_PLACE_ID_KEY];
     _previewPropertyName = [decoder decodeObjectOfClass:[NSString class]
@@ -109,6 +115,7 @@
 {
   [encoder encodeObject:_action forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_ACTION_KEY];
   [encoder encodeObject:_contentURL forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_CONTENT_URL_KEY];
+  [encoder encodeObject:_hashtag forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_HASHTAG_KEY];
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_PLACE_ID_KEY];
   [encoder encodeObject:_previewPropertyName forKey:FBSDK_SHARE_OPEN_GRAPH_CONTENT_PREVIEW_PROPERTY_NAME_KEY];
@@ -122,6 +129,7 @@
   FBSDKShareOpenGraphContent *copy = [[FBSDKShareOpenGraphContent alloc] init];
   copy->_action = [_action copy];
   copy->_contentURL = [_contentURL copy];
+  copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
   copy->_previewPropertyName = [_previewPropertyName copy];

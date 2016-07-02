@@ -50,6 +50,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                   dialogFlows:(NSDictionary *)dialogFlows
                     timestamp:(NSDate *)timestamp
            errorConfiguration:(FBSDKErrorConfiguration *)errorConfiguration
+       sessionTimeoutInterval:(NSTimeInterval) sessionTimeoutInterval
                      defaults:(BOOL)defaults
 NS_DESIGNATED_INITIALIZER;
 
@@ -66,6 +67,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, assign, readonly, getter=isSystemAuthenticationEnabled) BOOL systemAuthenticationEnabled;
 @property (nonatomic, copy, readonly) NSString *loginTooltipText;
 @property (nonatomic, copy, readonly) NSDate *timestamp;
+@property (nonatomic, assign) NSTimeInterval sessionTimoutInterval;
 
 - (FBSDKDialogConfiguration *)dialogConfigurationForDialogName:(NSString *)dialogName;
 - (BOOL)useNativeDialogForDialogName:(NSString *)dialogName;
