@@ -1,0 +1,52 @@
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#include "Warnings.xcconfig"
+
+// Disable legacy-compatible header searching
+ALWAYS_SEARCH_USER_PATHS = NO
+
+// Architectures to build
+ARCHS = $(ARCHS_STANDARD)
+
+// Whether to enable module imports
+CLANG_ENABLE_MODULES = YES
+CLANG_ENABLE_MODULE_DEBUGGING = NO
+
+// Build Options
+CLANG_ENABLE_OBJC_ARC = YES
+GCC_VERSION = com.apple.compilers.llvm.clang.1_0
+
+// Whether to strip out code that isn't called from anywhere
+DEAD_CODE_STRIPPING = NO
+
+// The format of debugging symbols
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// C Language
+GCC_C_LANGUAGE_STANDARD = gnu99
+
+// C++ Language
+CLANG_CXX_LANGUAGE_STANDARD = c++11
+CLANG_CXX_LIBRARY = libc++
+
+// Code Generation
+GCC_DYNAMIC_NO_PIC = NO
+GCC_INLINES_ARE_PRIVATE_EXTERN = YES
+GCC_NO_COMMON_BLOCKS = YES
+GCC_SYMBOLS_PRIVATE_EXTERN = NO

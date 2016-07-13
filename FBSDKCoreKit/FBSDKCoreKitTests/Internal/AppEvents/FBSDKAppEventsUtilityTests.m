@@ -98,4 +98,11 @@
   [FBSDKSettings setLimitEventAndDataUsage:NO];
 }
 
+- (void)testLogImplicitEventsExists
+{
+  Class FBSDKAppEventsClass = NSClassFromString(@"FBSDKAppEvents");
+  SEL logEventSelector = NSSelectorFromString(@"logImplicitEvent:valueToSum:parameters:accessToken:");
+  XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
+}
+
 @end

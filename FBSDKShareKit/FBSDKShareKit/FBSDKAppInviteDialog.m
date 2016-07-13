@@ -83,6 +83,23 @@
   [FBSDKInternalUtility dictionary:parameters setObject:self.content.appLinkURL forKey:@"app_link_url"];
   [FBSDKInternalUtility dictionary:parameters setObject:self.content.appInvitePreviewImageURL forKey:@"preview_image_url"];
 
+  NSString *destination;
+  switch (self.content.destination) {
+    case FBSDKAppInviteDestinationMessenger:
+      destination = @"messenger";
+      break;
+
+    case FBSDKAppInviteDestinationFacebook:
+      destination = @"facebook";
+      break;
+
+    default:
+      destination = @"facebook";
+      break;
+  }
+
+  [FBSDKInternalUtility dictionary:parameters setObject:destination forKey:@"destination"];
+
   if (self.content.promotionText) {
     NSString *promotionCode = self.content.promotionCode ?: @"";
     NSDictionary *deeplinkContext =  @{@"promo_code" : promotionCode, @"promo_text" : self.content.promotionText};

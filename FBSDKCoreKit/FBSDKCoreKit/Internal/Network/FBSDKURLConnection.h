@@ -42,7 +42,7 @@ typedef void (^FBSDKURLConnectionHandler)(FBSDKURLConnection *connection,
                       completionHandler:(FBSDKURLConnectionHandler)handler
 NS_DESIGNATED_INITIALIZER;
 
-@property (nonatomic, assign) id<FBSDKURLConnectionDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKURLConnectionDelegate> delegate;
 
 - (void)cancel;
 - (void)start;

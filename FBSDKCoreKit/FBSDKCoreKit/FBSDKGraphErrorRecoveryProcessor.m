@@ -38,7 +38,9 @@
 
 - (void)dealloc
 {
-  _alertView.delegate = nil;
+  if (_alertView) {
+    _alertView.delegate = nil;
+  }
 }
 
 - (BOOL)processError:(NSError *)error request:(FBSDKGraphRequest *)request delegate:(id<FBSDKGraphErrorRecoveryProcessorDelegate>) delegate
@@ -69,18 +71,7 @@
             NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
             _error = error;
             dispatch_async(dispatch_get_main_queue(), ^{
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-              _alertView = [[UIAlertView alloc] initWithTitle:nil
-                                                      message:recoverySuggestion
-                                                     delegate:self
-                                            cancelButtonTitle:nil
-                                            otherButtonTitles:nil];
-#pragma clang diagnostic pop
-              for (NSString *option in recoveryOptionsTitles) {
-                [_alertView addButtonWithTitle:option];
-              }
-              [_alertView show];
+              [self displayAlertWithRecoverySuggestion:recoverySuggestion recoveryOptionsTitles:recoveryOptionsTitles];
             });
             return YES;
           }
@@ -120,20 +111,86 @@
             NSLocalizedStringWithDefaultValue(@"ErrorRecovery.Alert.OK", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                               @"OK",
                                               @"The title of the label to dismiss the alert when presenting user facing error messages");
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-            [[[UIAlertView alloc] initWithTitle:title
-                                        message:message
-                                       delegate:nil
-                              cancelButtonTitle:localizedOK
-                              otherButtonTitles:nil] show];
-#pragma clang diagnostic pop
+            [self displayAlertWithTitle:title message:message cancelButtonTitle:localizedOK];
           });
         }
       }
       return NO;
   }
   return NO;
+}
+
+#pragma mark - UIAlertView and UIAlertController support
+
+- (void)displayAlertWithRecoverySuggestion:(NSString *)recoverySuggestion recoveryOptionsTitles:(NSArray<NSString *> *)recoveryOptionsTitles
+{
+  if ([UIAlertController class]) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:recoverySuggestion
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    for (NSUInteger i = 0; i < recoveryOptionsTitles.count; i++) {
+      NSString *title = recoveryOptionsTitles[i];
+      UIAlertAction *option = [UIAlertAction actionWithTitle:title
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                       [_recoveryAttempter attemptRecoveryFromError:_error
+                                                                                        optionIndex:i
+                                                                                           delegate:self
+                                                                                 didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
+                                                                                        contextInfo:nil];
+                                                     }];
+      [alertController addAction:option];
+    }
+    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    [topMostViewController presentViewController:alertController
+                                        animated:YES
+                                      completion:nil];
+  } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    _alertView = [[UIAlertView alloc] initWithTitle:nil
+                                            message:recoverySuggestion
+                                           delegate:self
+                                  cancelButtonTitle:nil
+                                  otherButtonTitles:nil];
+#pragma clang diagnostic pop
+    for (NSString *option in recoveryOptionsTitles) {
+      [_alertView addButtonWithTitle:option];
+    }
+    [_alertView show];
+  }
+}
+
+- (void)displayAlertWithTitle:(NSString *)title message:(NSString *)message cancelButtonTitle:(NSString *)localizedOK
+{
+  if ([UIAlertController class]) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:message
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *OKAction = [UIAlertAction actionWithTitle:localizedOK
+                                                       style:UIAlertActionStyleCancel
+                                                     handler:^(UIAlertAction * _Nonnull action) {
+                                                       [_recoveryAttempter attemptRecoveryFromError:_error
+                                                                                        optionIndex:0
+                                                                                           delegate:self
+                                                                                 didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
+                                                                                        contextInfo:nil];
+                                                     }];
+    [alertController addAction:OKAction];
+    UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
+    [topMostViewController presentViewController:alertController
+                                        animated:YES
+                                      completion:nil];
+  } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    [[[UIAlertView alloc] initWithTitle:title
+                                message:message
+                               delegate:nil
+                      cancelButtonTitle:localizedOK
+                      otherButtonTitles:nil] show];
+#pragma clang diagnostic pop
+  }
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -143,8 +200,10 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
 {
   [_recoveryAttempter attemptRecoveryFromError:_error optionIndex:buttonIndex delegate:self didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:) contextInfo:nil];
-  _alertView.delegate = nil;
-  _alertView = nil;
+  if (_alertView) {
+    _alertView.delegate = nil;
+    _alertView = nil;
+  }
 }
 #pragma clang diagnostic pop
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0630"
+   LastUpgradeVersion = "0730"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -50,14 +50,14 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
-            buildForRunning = "YES"
+            buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9DEC558C1BBA636A00C7DB4A"
-               BuildableName = "FBSDKTVOSKit.xctest"
+               BuildableName = "FBSDKTVOSKitTests.xctest"
                BlueprintName = "FBSDKTVOSKitTests"
                ReferencedContainer = "container:FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
             </BuildableReference>

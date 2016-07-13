@@ -16,8 +16,6 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <sqlite3.h>
-
 #import <AudioToolbox/AudioToolbox.h>
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
@@ -154,24 +152,6 @@ FBSDK_EXTERN OSStatus fbsdkdfl_SecItemUpdate(CFDictionaryRef query, CFDictionary
 FBSDK_EXTERN OSStatus fbsdkdfl_SecItemAdd(CFDictionaryRef attributes, CFTypeRef *result);
 FBSDK_EXTERN OSStatus fbsdkdfl_SecItemCopyMatching(CFDictionaryRef query, CFTypeRef *result);
 FBSDK_EXTERN OSStatus fbsdkdfl_SecItemDelete(CFDictionaryRef query);
-
-#pragma mark - sqlite3 APIs
-
-// These are local wrappers around the corresponding sqlite3 method from /usr/include/sqlite3.h
-FBSDK_EXTERN SQLITE_API const char *fbsdkdfl_sqlite3_errmsg(sqlite3 *db);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_prepare_v2(sqlite3 *db, const char *zSql, int nByte, sqlite3_stmt **ppStmt, const char **pzTail);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_reset(sqlite3_stmt *pStmt);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_finalize(sqlite3_stmt *pStmt);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_open_v2(const char *filename, sqlite3 **ppDb, int flags, const char *zVfs);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_exec(sqlite3 *db, const char *sql, int (*callback)(void *, int, char **, char **), void *arg, char **errmsg);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_close(sqlite3 *db);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_bind_double(sqlite3_stmt *stmt, int index, double value);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_bind_int(sqlite3_stmt *stmt, int index, int value);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_bind_text(sqlite3_stmt *stmt, int index, const char *value, int n, void(*callback)(void *));
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_step(sqlite3_stmt *stmt);
-FBSDK_EXTERN SQLITE_API double fbsdkdfl_sqlite3_column_double(sqlite3_stmt *stmt, int iCol);
-FBSDK_EXTERN SQLITE_API int fbsdkdfl_sqlite3_column_int(sqlite3_stmt *stmt, int iCol);
-FBSDK_EXTERN SQLITE_API const unsigned char *fbsdkdfl_sqlite3_column_text(sqlite3_stmt *stmt, int iCol);
 
 #pragma mark - Social Constants
 
