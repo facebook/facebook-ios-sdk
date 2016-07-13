@@ -17,6 +17,7 @@ xcuserdata
 TestAppIdAndSecret.xcconfig
 .DS_Store
 *.xcscmblueprint
+Carthage
 
 # vim temp files
 *.swp

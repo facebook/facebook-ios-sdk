@@ -16,9 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#ifndef FBSDKIntegrationTests_FBSDKTestHost_Prefix_pch
-#define FBSDKIntegrationTests_FBSDKTestHost_Prefix_pch
+#include "Shared/Platform/iOS.xcconfig"
+#include "Shared/Target/StaticFramework.xcconfig"
 
-#import <UIKit/UIKit.h>
+PRODUCT_NAME = FBSDKCoreKit
+PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKCoreKit
 
-#endif
+INFOPLIST_FILE = $(SRCROOT)/FBSDKCoreKit/Info.plist
+MODULEMAP_FILE = $(SRCROOT)/FBSDKCoreKit/module.modulemap

@@ -67,7 +67,23 @@ SCHEMES=${SCHEMES/FacebookSDKApplicationTests/samples}
 cd "$FB_SDK_ROOT"
 
 for SCHEME in $SCHEMES; do
-  if [[ $SCHEME == "samples" ]]; then
+  if [[ $SCHEME == "BuildAllKits" ]]; then
+    # Build iOS frameworks and run unit tests
+    ( $XCTOOL -workspace FacebookSDK.xcworkspace \
+              -scheme "BuildAllKits" \
+              -configuration $BUILDCONFIGURATION \
+              -sdk iphonesimulator \
+              build-tests run-tests
+    ) || exit $?
+
+    # Build tvOS frameworks
+    ( $XCTOOL -workspace FacebookSDK.xcworkspace \
+              -scheme "BuildAllKits_TV" \
+              -configuration $BUILDCONFIGURATION \
+              -sdk appletvsimulator \
+              build
+    ) || exit $?
+  elif [[ $SCHEME == "samples" ]]; then
     ( cd "$FB_SDK_ROOT/samples/HelloTV"
       $XCTOOL -project "HelloTV.xcodeproj" -scheme "HelloTV" -sdk appletvsimulator build
     ) || exit $?

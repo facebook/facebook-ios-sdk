@@ -21,6 +21,18 @@
 #import <FBSDKCoreKit/FBSDKCopying.h>
 
 /*!
+ @typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
+ @abstract Specifies the privacy of a group.
+ */
+typedef NS_ENUM(NSUInteger, FBSDKAppInviteDestination)
+{
+  /*! Deliver to Facebook. */
+  FBSDKAppInviteDestinationFacebook = 0,
+  /*! Deliver to Messenger. */
+  FBSDKAppInviteDestinationMessenger,
+};
+
+/*!
  @abstract A model for app invite.
  */
 @interface FBSDKAppInviteContent : NSObject <FBSDKCopying, NSSecureCoding>
@@ -59,6 +71,13 @@
  alphanumeric and spaces only.
  */
 @property (nonatomic, copy) NSString *promotionText;
+
+/*!
+ @abstract Destination for the app invite.
+
+ @discussion This is optional and for declaring destination of the invite.
+ */
+@property FBSDKAppInviteDestination destination;
 
 /*!
  @abstract Compares the receiver to another app invite content.

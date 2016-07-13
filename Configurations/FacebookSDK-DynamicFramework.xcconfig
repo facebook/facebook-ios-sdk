@@ -1,0 +1,49 @@
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// Deployment
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
+
+// Cocoa Touch Framework
+MACH_O_TYPE = mh_dylib
+SKIP_INSTALL = YES
+CODE_SIGNING_REQUIRED = NO
+
+// Required for dynamic frameworks to properly emit bitcode
+ENABLE_BITCODE = YES
+FB_BITCODE_FLAG[sdk=iphoneos9.*] =
+
+// Whether to strip out code that isn't called from anywhere
+DEAD_CODE_STRIPPING = NO
+
+// Enables the framework to be included from any location as long as the
+// loader’s runpath search paths includes it. For example from an application
+// bundle (inside the "Frameworks" folder) or shared folder
+INSTALL_PATH = @rpath
+LD_DYLIB_INSTALL_NAME = @rpath/$(PRODUCT_NAME).$(WRAPPER_EXTENSION)/$(PRODUCT_NAME)
+
+// Where to find embedded frameworks
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+
+// Language
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+
+// Packaging
+DEFINES_MODULE = YES
+
+CLANG_ENABLE_MODULE_DEBUGGING = NO

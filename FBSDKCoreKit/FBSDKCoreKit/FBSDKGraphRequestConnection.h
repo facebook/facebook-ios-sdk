@@ -151,7 +151,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
  @abstract
  The delegate object that receives updates.
  */
-@property (nonatomic, assign) id<FBSDKGraphRequestConnectionDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKGraphRequestConnectionDelegate> delegate;
 
 /*!
  @abstract Gets or sets the timeout interval to wait for a response before giving up.

@@ -413,6 +413,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                             videoSize:(unsigned long)[_fileHandle seekToEndOfFile]
                                                                            parameters:parameters
                                                                              delegate:self];
+    videoUploader.graphNode = self.graphNode;
     [videoUploader start];
     return YES;
   } else if (videoURL) {
@@ -429,6 +430,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                               videoSize:size
                                                                              parameters:parameters
                                                                                delegate:self];
+      videoUploader.graphNode = self.graphNode;
       [videoUploader start];
     } failureBlock:^(NSError *error) {
       [_delegate sharer:self didFailWithError:error];

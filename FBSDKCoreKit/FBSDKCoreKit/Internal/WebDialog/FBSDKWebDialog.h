@@ -27,7 +27,7 @@
                     delegate:(id<FBSDKWebDialogDelegate>)delegate;
 
 @property (nonatomic, assign) BOOL deferVisibility;
-@property (nonatomic, assign) id<FBSDKWebDialogDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKWebDialogDelegate> delegate;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSDictionary *parameters;
 

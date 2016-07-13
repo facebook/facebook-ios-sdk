@@ -1,0 +1,35 @@
+// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+//
+// You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+// copy, modify, and distribute this software in source code or binary form for use
+// in connection with the web services and APIs provided by Facebook.
+//
+// As with any software that integrates with the Facebook platform, your use of
+// this software is subject to the Facebook Developer Principles and Policies
+// [http://developers.facebook.com/policy/]. This copyright notice shall be
+// included in all copies or substantial portions of the software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+SDKROOT = iphoneos
+IPHONEOS_DEPLOYMENT_TARGET = 7.0
+
+// Supported device families (1 is iPhone, 2 is iPad, 3 is Apple TV)
+TARGETED_DEVICE_FAMILY = 1,2
+
+// Where to find embedded frameworks
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+
+// Bitcode Support
+// We manually set the clang flags to embed-bitcode so we don't need the ENABLE_BITCODE
+// env which applies for Archive builds.
+ENABLE_BITCODE = NO
+FB_BITCODE_FLAG = $()
+// Only specify bitcode for iphoneos. Specifying iphonesimulator breaks Xcode 6
+FB_BITCODE_FLAG[sdk=iphoneos9.*] = -fembed-bitcode
+OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)

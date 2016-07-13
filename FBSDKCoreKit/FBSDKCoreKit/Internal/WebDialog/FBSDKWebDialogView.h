@@ -22,7 +22,7 @@
 
 @interface FBSDKWebDialogView : UIView
 
-@property (nonatomic, assign) id<FBSDKWebDialogViewDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKWebDialogViewDelegate> delegate;
 
 - (void)loadURL:(NSURL *)URL;
 - (void)stopLoading;

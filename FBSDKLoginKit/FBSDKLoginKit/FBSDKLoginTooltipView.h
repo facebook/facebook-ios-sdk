@@ -40,7 +40,7 @@
 @interface FBSDKLoginTooltipView : FBSDKTooltipView
 
 /*! @abstract the delegate */
-@property (nonatomic, assign) id<FBSDKLoginTooltipViewDelegate> delegate;
+@property (nonatomic, weak) id<FBSDKLoginTooltipViewDelegate> delegate;
 
 /*! @abstract if set to YES, the view will always be displayed and the delegate's
   `loginTooltipView:shouldAppear:` will NOT be called. */
