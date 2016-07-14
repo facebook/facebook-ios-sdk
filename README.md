@@ -15,29 +15,66 @@ Swift-taylored experience to integrate your app with Facebook. Including:
 ## Getting Started
 
 - **[CocoaPods](https://cocoapods.org)**
+    - Add the following line to your Podfile:
+    
+      ```ruby
+      pod 'FacebookCore'
+      pod 'FacebookLogin'
+      pod 'FacebookShare'
+      ```
+    - Run `pod install`
+    - You are all set!
 
- Add the following line to your Podfile:
- ```ruby
- pod 'FacebookCore'
- pod 'FacebookLogin'
- pod 'FacebookShare'
- ```
- Run `pod install`, and you are all set.
  You may also exclude any of these dependencies, if you not need the features of those parts of the SDK.
   
 - **[Carthage](https://github.com/carthage/carthage)**
 
- Add the following line to your Cartfile:
- ```
- github "facebook/Facebook-SDK-Swift"
- ```
- Run `carthage update`, you should be able to add `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` to your project, along with their Facebook SDK for iOS dependencies (`FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, `FBSDKShareKit.framework` and `Bolts.framework`).
+    - Add the following line to your Cartfile:
+      ```
+      github "facebook/Facebook-SDK-Swift"
+      ```
+
+    - Run `carthage update`.  
+      _This will fetch dependencies into a `Carthage/Checkouts` folder, then build each one._
+    - On your application targets' `General` settings tab, in the `Linked Frameworks and Libraries` section:
+        - Drag & drop the following frameworks from `Carthage/Build` folder on disk:
+        - At a minimum:
+            - `FacebookCore.framework`
+            - `FBSDKCoreKit.framework`
+            - `Bolts.framework`
+        - To use Login with Facebook:
+            - `FacebookLogin.framework`
+            - `FacebookCore.framework` (and it's dependencies)
+        - To use Share and Send Dialogs
+            - `FacebookShare.framework`
+            - `FacebookCore.framework` (and it's dependencies)
+    - On your application targets' `Build Phases` tab:
+        - Click `+` icon and choose `New Run Script Phase`.
+        - Create a script with a shell of your choice (e.g. `/bin/sh`).
+        - Add the following to the script area below the shell:
+          ```
+          /usr/local/bin/carthage copy-frameworks
+          ```
+
+        - Add the paths to the frameworks you want to use under `Input Files`, for example:
+        
+          ```
+          $(SRCROOT)/Carthage/Build/iOS/FacebookCore.framework
+          $(SRCROOT)/Carthage/Build/iOS/FBSDKCoreKit.framework
+          $(SRCROOT)/Carthage/Build/iOS/Bolts.framework
+          ```
 
 - **Using Facebook SDK as a sub-project**
 
- While not recommended, it is entirely possible for you to build the Facebook SDK for Swift outside of any dependency management system. Note that you will have to manage updating this solution (as well as the dependencies on the Facebook SDK for iOS) on your own.
+  While not recommended, it is entirely possible for you to build the Facebook SDK for Swift outside of any dependency management system. 
   
- After you've initialized the repository, you should add the FacebookSwift.xcodeproj as a sub-project to your application's project, and then add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from that subproject to your applications 'Link Frameworks and Libraries' section, as well as your 'Embedded Binaries' section. Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, and `FBSDKShareKit.framework`, too!
+  Note that you will have to manage updating this solution (as well as the dependencies on the Facebook SDK for iOS) on your own.
+  
+  - Clone the repository.
+  - Add `FacebookSwift.xcodeproj` as a sub-project to your applications' project.
+  - Add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from the sub-project to your applications `Link Frameworks and Libraries` and `Embedded Binaries` sections.
+  
+  Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, `FBSDKShareKit.framework` and `Bolts.framework` too!
   
 ## Modules
 
