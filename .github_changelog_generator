@@ -1,0 +1,3 @@
+issues=true
+add_issues_wo_labels=false
+exclude_labels=duplicate,question,wontfix,discussion,needs more info,off topic,product usage
