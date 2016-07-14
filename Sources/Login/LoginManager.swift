@@ -102,9 +102,9 @@ public class LoginManager {
                     viewController: UIViewController? = nil,
                     completion: ((LoginResult) -> Void)? = nil) {
     let sdkPermissions = permissions.map({ $0.permissionValue.name })
-    sdkManager.logInWithReadPermissions(sdkPermissions,
-                                        fromViewController: viewController,
-                                        handler: LoginManager.sdkCompletionFor(completion))
+    sdkManager.logInWithPublishPermissions(sdkPermissions,
+                                           fromViewController: viewController,
+                                           handler: LoginManager.sdkCompletionFor(completion))
   }
 
   /**
