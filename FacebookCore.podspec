@@ -22,6 +22,7 @@ Pod::Spec.new do |s|
 
   s.source_files = 'Sources/Core/**/*.swift'
   s.module_name = 'FacebookCore'
+  s.pod_target_xcconfig = { 'ENABLE_TESTABILITY' => 'YES' }
 
   s.ios.dependency 'Bolts', '~> 1.8'
   s.ios.dependency 'FBSDKCoreKit', '~> 4.14'
