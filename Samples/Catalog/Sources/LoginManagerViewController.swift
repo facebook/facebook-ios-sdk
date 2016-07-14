@@ -23,27 +23,43 @@ import FacebookCore
 import FacebookLogin
 
 class LoginManagerViewController: UIViewController {
-  @IBAction func customLogin() {
-    let loginManager = LoginManager()
 
-    if AccessToken.current == nil {
-      loginManager.logIn([.PublicProfile, .UserFriends], viewController: self) { result in
-        let alertController: UIAlertController
-        switch result {
-        case .Cancelled:
-          alertController = UIAlertController(title: "Login Cancelled", message: "User cancelled login.")
-        case .Failed(let error):
-          alertController = UIAlertController(title: "Login Fail", message: "Login failed with error \(error)")
-        case .Success(let grantedPermissions, _, _):
-          alertController = UIAlertController(title: "Login Success",
-                                              message: "Login succeeded with granted permissions: \(grantedPermissions)")
-        }
-        self.presentViewController(alertController, animated: true, completion: nil)
-      }
-    } else {
-      loginManager.logOut()
-      let alertController = UIAlertController(title: "Logout", message: "Logged out.")
-      presentViewController(alertController, animated: true, completion: nil)
+  func loginManagerDidComplete(result: LoginResult) {
+    let alertController: UIAlertController
+    switch result {
+    case .Cancelled:
+      alertController = UIAlertController(title: "Login Cancelled", message: "User cancelled login.")
+    case .Failed(let error):
+      alertController = UIAlertController(title: "Login Fail", message: "Login failed with error \(error)")
+    case .Success(let grantedPermissions, _, _):
+      alertController = UIAlertController(title: "Login Success",
+                                          message: "Login succeeded with granted permissions: \(grantedPermissions)")
     }
+    self.presentViewController(alertController, animated: true, completion: nil)
+  }
+}
+
+extension LoginManagerViewController {
+
+  @IBAction func loginWithReadPermissions() {
+    let loginManager = LoginManager()
+    loginManager.logIn([.PublicProfile, .UserFriends], viewController: self) { result in
+      self.loginManagerDidComplete(result)
+    }
+  }
+
+  @IBAction func loginWithPublishPermissions() {
+    let loginManager = LoginManager()
+    loginManager.logIn([.PublishActions], viewController: self) { result in
+      self.loginManagerDidComplete(result)
+    }
+  }
+
+  @IBAction func logOut() {
+    let loginManager = LoginManager()
+    loginManager.logOut()
+
+    let alertController = UIAlertController(title: "Logout", message: "Logged out.")
+    presentViewController(alertController, animated: true, completion: nil)
   }
 }
