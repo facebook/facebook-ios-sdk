@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'FacebookShare'
-  s.version      = '0.1.0'
+  s.version      = '0.1.1'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
   s.documentation_url = 'https://developers.facebook.com/docs/swift/reference'
