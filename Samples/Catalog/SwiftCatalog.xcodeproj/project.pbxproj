@@ -578,7 +578,9 @@
 				81EDA2D11D025EA600E742F4 /* Resources */,
 				81F43A091D060C5C00569A1A /* Frameworks */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		93570B511BD0B71100D6BBF4 /* Products */ = {
 			isa = PBXGroup;

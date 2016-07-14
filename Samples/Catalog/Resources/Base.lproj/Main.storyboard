@@ -1289,29 +1289,47 @@ It works directly with AccessToken.current()</string>
                                 <color key="textColor" red="0.21176470820000001" green="0.40784314269999999" blue="0.98823529480000005" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AOx-Qf-s2y">
-                                <rect key="frame" x="246" y="237" width="108" height="30"/>
-                                <state key="normal" title="Facebook Login"/>
-                                <connections>
-                                    <action selector="customLogin" destination="lyt-Nn-wQ5" eventType="touchUpInside" id="bAw-pH-cPm"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Login with LoginManager" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v3M-as-gVc">
                                 <rect key="frame" x="204" y="114" width="192" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.21176470820000001" green="0.40784314269999999" blue="0.98823529480000005" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nxO-bR-2oO">
+                                <rect key="frame" x="195" y="317" width="211" height="30"/>
+                                <state key="normal" title="Login with Publish Permissions"/>
+                                <connections>
+                                    <action selector="loginWithPublishPermissions" destination="lyt-Nn-wQ5" eventType="touchUpInside" id="pqq-hl-W56"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PDY-oD-GI4">
+                                <rect key="frame" x="276" y="397" width="48" height="30"/>
+                                <state key="normal" title="Logout"/>
+                                <connections>
+                                    <action selector="logOut" destination="lyt-Nn-wQ5" eventType="touchUpInside" id="9Q5-WV-lEQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AOx-Qf-s2y">
+                                <rect key="frame" x="202" y="237" width="196" height="30"/>
+                                <state key="normal" title="Login with Read Permissions"/>
+                                <connections>
+                                    <action selector="loginWithReadPermissions" destination="lyt-Nn-wQ5" eventType="touchUpInside" id="fkQ-ML-PAh"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.90196079019999997" green="0.92941176889999999" blue="0.99607843159999998" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="AOx-Qf-s2y" firstAttribute="centerX" secondItem="XGm-51-0HT" secondAttribute="centerX" id="E4a-y7-SrS"/>
+                            <constraint firstItem="PDY-oD-GI4" firstAttribute="centerX" secondItem="XGm-51-0HT" secondAttribute="centerX" id="GFr-3u-nkX"/>
+                            <constraint firstItem="PDY-oD-GI4" firstAttribute="top" secondItem="nxO-bR-2oO" secondAttribute="bottom" constant="50" id="GQB-Xe-WVA"/>
                             <constraint firstItem="v3M-as-gVc" firstAttribute="top" secondItem="K3H-LL-w0f" secondAttribute="bottom" constant="50" id="HOM-Rd-AEl"/>
                             <constraint firstItem="0Tn-w7-4KQ" firstAttribute="top" secondItem="v3M-as-gVc" secondAttribute="bottom" constant="20" id="URY-lk-IwI"/>
                             <constraint firstItem="0Tn-w7-4KQ" firstAttribute="centerX" secondItem="XGm-51-0HT" secondAttribute="centerX" id="VJ8-Tn-sbF"/>
+                            <constraint firstItem="nxO-bR-2oO" firstAttribute="centerX" secondItem="XGm-51-0HT" secondAttribute="centerX" id="Ydf-9T-1f7"/>
                             <constraint firstItem="v3M-as-gVc" firstAttribute="centerX" secondItem="0Tn-w7-4KQ" secondAttribute="centerX" id="a8o-jL-amp"/>
                             <constraint firstItem="0Tn-w7-4KQ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="XGm-51-0HT" secondAttribute="leadingMargin" constant="30" id="fY2-Cz-Nmd"/>
                             <constraint firstItem="AOx-Qf-s2y" firstAttribute="top" secondItem="0Tn-w7-4KQ" secondAttribute="bottom" constant="50" id="fwc-Ln-PKI"/>
+                            <constraint firstItem="nxO-bR-2oO" firstAttribute="top" secondItem="AOx-Qf-s2y" secondAttribute="bottom" constant="50" id="qig-3O-pWR"/>
                             <constraint firstAttribute="trailingMargin" relation="greaterThanOrEqual" secondItem="0Tn-w7-4KQ" secondAttribute="trailing" constant="30" id="spH-Iw-2vA"/>
                         </constraints>
                     </view>
