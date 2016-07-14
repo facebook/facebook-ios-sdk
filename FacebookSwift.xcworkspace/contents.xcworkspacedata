@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:FacebookSwift.xcodeproj">
+   </FileRef>
+   <Group
+      location = "container:"
+      name = "Samples">
+      <FileRef
+         location = "group:Samples/Catalog/SwiftCatalog.xcodeproj">
+      </FileRef>
+   </Group>
+   <Group
+      location = "container:"
+      name = "ObjC">
+      <FileRef
+         location = "group:Carthage/Checkouts/facebook-ios-sdk/Bolts-IOS/Bolts.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+      </FileRef>
+      <FileRef
+         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKShareKit/FBSDKShareKit.xcodeproj">
+      </FileRef>
+   </Group>
+</Workspace>

@@ -1,0 +1,11 @@
+line_length: 140
+file_length: 1000
+type_body_length: 500
+opt_in_rules:
+  - empty_count
+  - missing_docs
+disabled_rules:
+  - cyclomatic_complexity
+  - conditional_binding_cascade
+excluded:
+  - Pods

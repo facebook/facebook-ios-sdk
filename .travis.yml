@@ -1,0 +1,46 @@
+branches:
+  only:
+    - master
+language: objective-c
+os: osx
+osx_image: xcode7.3
+cache:
+  - cocoapods
+env:
+  matrix:
+    - TEST_TYPE=iOS
+    - TEST_TYPE=Lint
+    - TEST_TYPE=Samples
+    - TEST_TYPE=CocoaPods
+before_install:
+- |
+  if [ "$TEST_TYPE" = Lint ] || [ "$TEST_TYPE" = Carthage ]; then
+    brew update
+  fi
+install:
+- |
+  gem update --system --no-document
+  bundle install
+  if [ "$TEST_TYPE" = Lint ]; then
+    brew install swiftlint || brew upgrade swiftlint
+  elif [ "$TEST_TYPE" = CocoaPods ]; then
+    pod repo update --silent
+  fi
+script:
+- |
+  if [ "$TEST_TYPE" = iOS ]; then
+    set -o pipefail
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookCore -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookLogin -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookShare -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+  elif [ "$TEST_TYPE" = Lint ]; then
+    swiftlint lint --path Sources --quiet
+    swiftlint lint --path Samples --quiet
+  elif [ "$TEST_TYPE" = Samples ]; then
+    set -o pipefail    
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme SwiftCatalog -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+  elif [ "$TEST_TYPE" = CocoaPods ]; then
+    #pod lib lint FacebookCore.podspec
+    #pod lib lint FacebookLogin.podspec
+    #pod lib lint FacebookShare.podspec
+  fi
