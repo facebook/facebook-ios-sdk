@@ -40,7 +40,7 @@ script:
     set -o pipefail    
     xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme SwiftCatalog -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
   elif [ "$TEST_TYPE" = CocoaPods ]; then
-    #pod lib lint FacebookCore.podspec
-    #pod lib lint FacebookLogin.podspec
-    #pod lib lint FacebookShare.podspec
+    pod lib lint FacebookCore.podspec
+    pod lib lint FacebookLogin.podspec
+    pod lib lint FacebookShare.podspec
   fi

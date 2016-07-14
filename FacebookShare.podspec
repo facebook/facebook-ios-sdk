@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/Share/**/*.swift'
   s.module_name = 'FacebookShare'
 
+  s.ios.dependency 'FacebookCore'
   s.ios.dependency 'Bolts', '~> 1.8'
   s.ios.dependency 'FBSDKCoreKit', '~> 4.14'
   s.ios.dependency 'FBSDKShareKit', '~> 4.14'
