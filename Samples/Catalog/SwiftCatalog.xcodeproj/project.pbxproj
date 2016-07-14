@@ -8,13 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		813C9C241D1DB8E500288BFA /* LoginButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813C9C231D1DB8E500288BFA /* LoginButtonViewController.swift */; };
+		815463371D3808EA0069489A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B5C1D36D60100066F63 /* Bolts.framework */; };
+		815463381D3808EA0069489A /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B5C1D36D60100066F63 /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		815463411D38090E0069489A /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B791D36D60100066F63 /* FBSDKCoreKit.framework */; };
+		815463421D38090E0069489A /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B791D36D60100066F63 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		815463451D38090E0069489A /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B871D36D60100066F63 /* FBSDKLoginKit.framework */; };
+		815463461D38090E0069489A /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B871D36D60100066F63 /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		815463491D38090E0069489A /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B941D36D60100066F63 /* FBSDKShareKit.framework */; };
+		8154634A1D38090E0069489A /* FBSDKShareKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B941D36D60100066F63 /* FBSDKShareKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		816B75F01D07B7030012AC43 /* GraphAPIPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816B75EF1D07B7030012AC43 /* GraphAPIPostViewController.swift */; };
 		816B75FC1D07B70B0012AC43 /* GraphAPIReadViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 816B75FB1D07B70B0012AC43 /* GraphAPIReadViewController.swift */; };
 		819700A01D07921100286023 /* LoginManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8197009F1D07921100286023 /* LoginManagerViewController.swift */; };
-		81AB8BA31D36D63C00066F63 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B5A1D36D60100066F63 /* Bolts.framework */; };
-		81AB8BA41D36D63C00066F63 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B771D36D60100066F63 /* FBSDKCoreKit.framework */; };
-		81AB8BA51D36D63C00066F63 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B851D36D60100066F63 /* FBSDKLoginKit.framework */; };
-		81AB8BA61D36D63C00066F63 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B921D36D60100066F63 /* FBSDKShareKit.framework */; };
 		81D645311D2C590C00690609 /* AppInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D645301D2C590C00690609 /* AppInviteViewController.swift */; };
 		81D645361D2C59AA00690609 /* ShareDialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D645351D2C59AA00690609 /* ShareDialogViewController.swift */; };
 		81D645491D2C686500690609 /* ShareAPIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D645481D2C686500690609 /* ShareAPIViewController.swift */; };
@@ -35,6 +39,34 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		815463391D3808EA0069489A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1D5D7DA61BE3CE8200FD67C7;
+			remoteInfo = "Bolts-iOS-Dynamic";
+		};
+		815463431D38090E0069489A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81B71CFC1D19C87400933E93;
+			remoteInfo = "FBSDKCoreKit-Dynamic";
+		};
+		815463471D38090E0069489A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 818EB4211D1A283100252851;
+			remoteInfo = "FBSDKLoginKit-Dynamic";
+		};
+		8154634B1D38090E0069489A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B4B1D36D60100066F63 /* FBSDKShareKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
+			remoteInfo = "FBSDKShareKit-Dynamic";
+		};
 		81AB8B591D36D60100066F63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
@@ -282,9 +314,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				815463421D38090E0069489A /* FBSDKCoreKit.framework in Embed Frameworks */,
 				81F43A1F1D060C6F00569A1A /* FacebookShare.framework in Embed Frameworks */,
+				815463461D38090E0069489A /* FBSDKLoginKit.framework in Embed Frameworks */,
+				8154634A1D38090E0069489A /* FBSDKShareKit.framework in Embed Frameworks */,
 				81F43A1B1D060C6E00569A1A /* FacebookLogin.framework in Embed Frameworks */,
 				81F43A171D060C6E00569A1A /* FacebookCore.framework in Embed Frameworks */,
+				815463381D3808EA0069489A /* Bolts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -335,10 +371,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				81AB8BA31D36D63C00066F63 /* Bolts.framework in Frameworks */,
-				81AB8BA41D36D63C00066F63 /* FBSDKCoreKit.framework in Frameworks */,
-				81AB8BA51D36D63C00066F63 /* FBSDKLoginKit.framework in Frameworks */,
-				81AB8BA61D36D63C00066F63 /* FBSDKShareKit.framework in Frameworks */,
+				815463411D38090E0069489A /* FBSDKCoreKit.framework in Frameworks */,
+				815463371D3808EA0069489A /* Bolts.framework in Frameworks */,
+				815463451D38090E0069489A /* FBSDKLoginKit.framework in Frameworks */,
+				815463491D38090E0069489A /* FBSDKShareKit.framework in Frameworks */,
 				81F43A1E1D060C6F00569A1A /* FacebookShare.framework in Frameworks */,
 				81F43A1A1D060C6E00569A1A /* FacebookLogin.framework in Frameworks */,
 				81F43A161D060C6E00569A1A /* FacebookCore.framework in Frameworks */,
@@ -612,6 +648,10 @@
 				81F43A191D060C6E00569A1A /* PBXTargetDependency */,
 				81F43A1D1D060C6F00569A1A /* PBXTargetDependency */,
 				81F43A211D060C6F00569A1A /* PBXTargetDependency */,
+				8154633A1D3808EA0069489A /* PBXTargetDependency */,
+				815463441D38090E0069489A /* PBXTargetDependency */,
+				815463481D38090E0069489A /* PBXTargetDependency */,
+				8154634C1D38090E0069489A /* PBXTargetDependency */,
 			);
 			name = SwiftCatalog;
 			productName = Catalog;
@@ -902,6 +942,26 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8154633A1D3808EA0069489A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Bolts-iOS-Dynamic";
+			targetProxy = 815463391D3808EA0069489A /* PBXContainerItemProxy */;
+		};
+		815463441D38090E0069489A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKCoreKit-Dynamic";
+			targetProxy = 815463431D38090E0069489A /* PBXContainerItemProxy */;
+		};
+		815463481D38090E0069489A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKLoginKit-Dynamic";
+			targetProxy = 815463471D38090E0069489A /* PBXContainerItemProxy */;
+		};
+		8154634C1D38090E0069489A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "FBSDKShareKit-Dynamic";
+			targetProxy = 8154634B1D38090E0069489A /* PBXContainerItemProxy */;
+		};
 		81AB8B9C1D36D63000066F63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "Bolts-iOS-Dynamic";
