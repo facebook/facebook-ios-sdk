@@ -71,6 +71,7 @@ Swift-taylored experience to integrate your app with Facebook. Including:
   Note that you will have to manage updating this solution (as well as the dependencies on the Facebook SDK for iOS) on your own.
   
   - Clone the repository.
+  - Run the following command in the root directory of the repository: `git submodule update --init --recursive`
   - Add `FacebookSwift.xcodeproj` as a sub-project to your applications' project.
   - Add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from the sub-project to your applications `Link Frameworks and Libraries` and `Embedded Binaries` sections.
   
