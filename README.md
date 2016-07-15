@@ -15,7 +15,15 @@ Swift-taylored experience to integrate your app with Facebook. Including:
 ## Getting Started
 
 - **[CocoaPods](https://cocoapods.org)**
-    - Add the following line to your Podfile:
+    - Make sure you are running the latest version of CocoaPods by running:
+      ```bash
+      gem install cocoapods
+      # (or if the above fails)
+      sudo gem install cocoapods
+      ```
+      _We support any version of CocoaPods 1.0.1 or later._
+      
+    - Add the following lines to your Podfile:
     
       ```ruby
       pod 'FacebookCore'
