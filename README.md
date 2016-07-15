@@ -104,7 +104,7 @@ The following types are included, with enhancements for Swift:
 
  Logging behaviors are now implemented as a type-safe set, based on Swift enums.
  
-- `Permission`s
+- `Permission`
 
  Are no longer stringly-typed (string-based), but separate types for read and write permissions (also includes a built-in permission list, which includes most common permissions by default).
 
