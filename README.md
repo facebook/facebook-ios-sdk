@@ -33,7 +33,7 @@ Swift-taylored experience to integrate your app with Facebook. Including:
     - Run `pod install`
     - You are all set!
 
- You may also exclude any of these dependencies, if you not need the features of those parts of the SDK.
+ You may also exclude any of these dependencies, if you do not need the features of those parts of the SDK.
   
 - **[Carthage](https://github.com/carthage/carthage)**
 
