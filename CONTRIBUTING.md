@@ -30,4 +30,4 @@ outlined on that page and do not file a public issue.
 * Try to keep lines under 140 characters, if possible.
 
 ## License
-See the `LICENSE` file.
+See the [`LICENSE`](https://github.com/facebook/facebook-sdk-swift/blob/master/LICENSE) file.
