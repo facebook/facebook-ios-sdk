@@ -37,6 +37,13 @@ Swift-taylored experience to integrate your app with Facebook. Including:
   
 - **[Carthage](https://github.com/carthage/carthage)**
 
+    - Make sure you are running the latest version of Carthage by running:
+      ```bash
+      brew update
+      brew upgrade carthage
+      ```
+      _We recommend using Carthage version 0.17.2 or later._
+	  
     - Add the following line to your Cartfile:
       ```
       github "facebook/Facebook-SDK-Swift"
