@@ -22,7 +22,13 @@ Swift-taylored experience to integrate your app with Facebook. Including:
       sudo gem install cocoapods
       ```
       _We support any version of CocoaPods 1.0.1 or later._
-      
+
+    - Update your local specs repo by running:
+      ```bash
+      pod repo update
+      ```
+      _This step is optional, if you updated the specs repo recently._
+
     - Add the following lines to your Podfile:
     
       ```ruby
