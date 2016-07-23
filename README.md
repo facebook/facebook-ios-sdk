@@ -65,10 +65,10 @@ Swift-taylored experience to integrate your app with Facebook. Including:
             - `Bolts.framework`
         - To use Login with Facebook:
             - `FacebookLogin.framework`
-            - `FacebookCore.framework` (and it's dependencies)
+            - `FacebookCore.framework` (and its dependencies)
         - To use Share and Send Dialogs
             - `FacebookShare.framework`
-            - `FacebookCore.framework` (and it's dependencies)
+            - `FacebookCore.framework` (and its dependencies)
     - On your application targets' `Build Phases` tab:
         - Click `+` icon and choose `New Run Script Phase`.
         - Create a script with a shell of your choice (e.g. `/bin/sh`).
