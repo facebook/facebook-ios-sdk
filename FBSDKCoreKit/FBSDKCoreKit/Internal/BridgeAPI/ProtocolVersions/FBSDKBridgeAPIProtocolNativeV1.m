@@ -19,6 +19,7 @@
 #import "FBSDKBridgeAPIProtocolNativeV1.h"
 
 #import <UIKit/UIKit.h>
+#import <objc/runtime.h>
 
 #import <FBSDKCoreKit/FBSDKMacros.h>
 
@@ -323,16 +324,34 @@ static const struct
 
 + (void)clearData:(NSData *)data fromPasteboardOnApplicationDidBecomeActive:(UIPasteboard *)pasteboard
 {
+  id observer = objc_getAssociatedObject(self, @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:));
+  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+  if (observer) { // if this method was already called but not invoked yet we remove the preceding observer 
+    [center removeObserver:observer];
+  }
   void(^notificationBlock)(NSNotification *) = ^(NSNotification *note){
     NSData *pasteboardData = [pasteboard dataForPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     if ([data isEqualToData:pasteboardData]) {
       [pasteboard setData:[NSData data] forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     }
+    // after this block is invoked we need to clean up the observer: remove it from the center and nil out the reference
+    id currentObserver = objc_getAssociatedObject(self, @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:));
+    if (currentObserver) {
+      [[NSNotificationCenter defaultCenter] removeObserver:currentObserver];
+    }
+    objc_setAssociatedObject(self,
+                             @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:),
+                             nil,
+                             OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   };
-  [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
-                                                    object:[FBSDKApplicationDelegate sharedInstance]
-                                                     queue:nil
-                                                usingBlock:notificationBlock];
+  observer = [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
+                                                               object:[FBSDKApplicationDelegate sharedInstance]
+                                                                queue:nil
+                                                           usingBlock:notificationBlock];
+  objc_setAssociatedObject(self,
+                           @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:),
+                           observer,
+                           OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 @end
