@@ -324,18 +324,17 @@ static const struct
 
 + (void)clearData:(NSData *)data fromPasteboardOnApplicationDidBecomeActive:(UIPasteboard *)pasteboard
 {
-  id observer = objc_getAssociatedObject(self, @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:));
-  NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-  if (observer) { // if this method was already called but not invoked yet we remove the preceding observer 
-    [center removeObserver:observer];
-  }
+  // need both a __block and __weak reference
+  // __block so that the variable is captured by reference (so it's value can change to the block itself)
+  // __weak so that when the block pointed to by the variable does not strongly reference itself (retain cycle)
+  void(^ __block __weak weakNotificationBlock)(NSNotification *) = nil;
   void(^notificationBlock)(NSNotification *) = ^(NSNotification *note){
     NSData *pasteboardData = [pasteboard dataForPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     if ([data isEqualToData:pasteboardData]) {
       [pasteboard setData:[NSData data] forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
     }
-    // after this block is invoked we need to clean up the observer: remove it from the center and nil out the reference
-    id currentObserver = objc_getAssociatedObject(self, @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:));
+    // after this block is invoked we need to clean up the observer: remove it from the center and nil the reference
+    id currentObserver = objc_getAssociatedObject(self, (__bridge void *)weakNotificationBlock);
     if (currentObserver) {
       [[NSNotificationCenter defaultCenter] removeObserver:currentObserver];
     }
@@ -344,12 +343,14 @@ static const struct
                              nil,
                              OBJC_ASSOCIATION_RETAIN_NONATOMIC);
   };
-  observer = [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
-                                                               object:[FBSDKApplicationDelegate sharedInstance]
-                                                                queue:nil
-                                                           usingBlock:notificationBlock];
+  weakNotificationBlock = notificationBlock;
+  id observer = [[NSNotificationCenter defaultCenter] addObserverForName:FBSDKApplicationDidBecomeActiveNotification
+                                                                  object:[FBSDKApplicationDelegate sharedInstance]
+                                                                   queue:nil
+                                                              usingBlock:notificationBlock];
+  // we associate each observer with its corresponding notificationBlock
   objc_setAssociatedObject(self,
-                           @selector(clearData:fromPasteboardOnApplicationDidBecomeActive:),
+                           (__bridge void *)notificationBlock,
                            observer,
                            OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
