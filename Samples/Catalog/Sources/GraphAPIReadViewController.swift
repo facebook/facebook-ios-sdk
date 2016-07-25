@@ -22,7 +22,8 @@ import UIKit
 import FacebookCore
 
 class GraphAPIReadViewController: UITableViewController {
-  func presentAlertControllerFor(result: GraphRequestResult<GraphRequest>) {
+
+  func presentAlertControllerFor<P: GraphRequestProtocol>(result: GraphRequestResult<P>) {
     let alertController: UIAlertController
     switch result {
     case .Success(let response):
@@ -40,17 +41,26 @@ class GraphAPIReadViewController: UITableViewController {
 // MARK: - Read Profile
 //--------------------------------------
 
+struct FBProfileRequest: GraphRequestProtocol {
+  typealias Response = GraphResponse
+
+  var graphPath: String = "/me"
+  var parameters: [String : AnyObject]? = ["fields": "id, name"]
+  var accessToken: AccessToken? = AccessToken.current
+  var httpMethod: GraphRequestHTTPMethod = .GET
+  var apiVersion: GraphAPIVersion = 2.7
+}
+
 extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's public profile.
+   Uses a custom type for profile request.
 
    See https://developers.facebook.com/docs/graph-api/reference/user/ for details.
    */
   @IBAction func readProfile() {
-    let request = GraphRequest(graphPath: "/me",
-                               parameters: [ "fields" : "id, name" ],
-                               httpMethod: .GET)
-    request.start { httpResponse, result in
+    let request = FBProfileRequest()
+    request.start { (httpResponse, result) in
       switch result {
       case .Success(let response):
         print("Graph Request Succeeded: \(response)")

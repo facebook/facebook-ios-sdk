@@ -18,6 +18,8 @@
 
 import Foundation
 
+import FBSDKCoreKit
+
 /**
  Protocol that represents a request to the Facebook Graph API.
 
@@ -47,8 +49,8 @@ public protocol GraphRequestProtocol {
   /// The `HTTPMethod` to use for the request, e.g. `.GET`/`.POST`/`.DELETE`.
   var httpMethod: GraphRequestHTTPMethod { get }
 
-  /// Graph API Version to use, e.g. `"2.7"`.
-  var apiVersion: String { get }
+  /// Graph API Version to use. Default: `GraphAPIVersion.Default`.
+  var apiVersion: GraphAPIVersion { get }
 }
 
 extension GraphRequestProtocol {
