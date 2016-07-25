@@ -45,8 +45,8 @@ public struct GraphRequest: GraphRequestProtocol {
   /// The `HTTPMethod` to use for the request, e.g. `.GET`/`.POST`/`.DELETE`.
   public let httpMethod: GraphRequestHTTPMethod
 
-  /// Graph API Version to use, e.g. `"2.7"`.
-  public let apiVersion: String
+  /// Graph API Version to use, e.g. `"2.7"`. Default: `GraphRequestDefaultAPIVersion`.
+  public let apiVersion: GraphAPIVersion
 
   /**
    Initializes a new instance of graph request.
@@ -55,13 +55,13 @@ public struct GraphRequest: GraphRequestProtocol {
    - parameter parameters:  Optional parameters dictionary.
    - parameter accessToken: Optional authentication token to use. Defaults to `AccessToken.current`.
    - parameter httpMethod:  Optional `GraphRequestHTTPMethod` to use for the request. Defaults to `.GET`.
-   - parameter apiVersion:  Optional Graph API version to use. Defaults to `FBSDK_TARGET_PLATFORM_VERSION`.
+   - parameter apiVersion:  Optional Graph API version to use. Defaults to `GraphAPIVersion.Default`.
    */
   public init(graphPath: String,
               parameters: [String : AnyObject] = [:],
               accessToken: AccessToken? = AccessToken.current,
               httpMethod: GraphRequestHTTPMethod = .GET,
-              apiVersion: String = FBSDK_TARGET_PLATFORM_VERSION) {
+              apiVersion: GraphAPIVersion = .Default) {
     self.graphPath = graphPath
     self.parameters = parameters
     self.accessToken = accessToken

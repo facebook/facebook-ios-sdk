@@ -28,6 +28,9 @@ extension GraphRequestProtocol {
       }
       return (key, value)
     })
+
+    // ObjC SDK requires `v` as a prefix for the Graph API Version.
+    let apiVersion = "v" + self.apiVersion.stringValue
     return FBSDKGraphRequest(graphPath: graphPath,
                              parameters: sdkParameters,
                              tokenString: accessToken?.authenticationToken,
