@@ -86,6 +86,68 @@ public struct UserProfile {
 }
 
 //--------------------------------------
+// MARK: - Loading Profile
+//--------------------------------------
+
+extension UserProfile {
+
+  /// Convenience alias for type of closure that is used as a completion for fetching `UserProfile`.
+  public typealias Completion = (FetchResult) -> Void
+
+  /**
+   Fetches a user profile by userId.
+
+   If the `current` profile is set, and it has the same `userId`,
+   calling method will reset the current profile with the newly fetched one.
+
+   - parameter userId:     Facebook user id of the profile to fetch.
+   - parameter completion: The closure to be executed once the profile is refreshed.
+   */
+  public static func fetch(userId userId: String, completion: Completion) {
+    let request = GraphRequest(graphPath: userId,
+                               parameters: ["fields" : "first_name,middle_name,last_name,name,link"],
+                               httpMethod: .GET)
+    request.start { (httpResponse, result) in
+      switch result {
+      case .Success(let response):
+        let responseDictionary = response.dictionaryValue
+
+        let profile = UserProfile(userId: userId,
+          firstName: responseDictionary?["first_name"] as? String,
+          middleName: responseDictionary?["middle_name"] as? String,
+          lastName: responseDictionary?["last_name"] as? String,
+          fullName: responseDictionary?["name"] as? String,
+          profileURL: (responseDictionary?["link"] as? String).flatMap({ NSURL(string: $0) }),
+          refreshDate: NSDate())
+
+        // Reset the current profile if userId matches
+        if AccessToken.current?.userId == userId {
+          UserProfile.current = profile
+        }
+        completion(.Success(profile))
+
+      case .Failed(let error):
+        completion(.Failed(error))
+      }
+    }
+  }
+
+  /**
+   Refreshes the existing user profile.
+
+   If the `current` profile is set, and receiver has the same `userId`,
+   calling method will reset the current profile with the newly fetched one.
+
+   - parameter completion: Optional closure to be executed once the profile is refreshed. Default: `nil`.
+   */
+  public func refresh(completion: Completion? = nil) {
+    UserProfile.fetch(userId: userId) { result in
+      completion?(result)
+    }
+  }
+}
+
+//--------------------------------------
 // MARK: - Current Profile
 //--------------------------------------
 
@@ -111,9 +173,12 @@ extension UserProfile {
 
    - parameter completion: The closure to be executed once the profile is loaded.
    */
-  public static func loadCurrent(completion: ((UserProfile?, ErrorType?) -> Void)?) {
-    FBSDKProfile.loadCurrentProfileWithCompletion { (profile: FBSDKProfile?, error: NSError?) in
-      completion?(profile.map(UserProfile.init), error)
+  public static func loadCurrent(completion: Completion?) {
+    FBSDKProfile.loadCurrentProfileWithCompletion { (sdkProfile: FBSDKProfile?, error: NSError?) in
+      if let completion = completion {
+        let result = FetchResult(sdkProfile: sdkProfile, error: error)
+        completion(result)
+      }
     }
   }
 
