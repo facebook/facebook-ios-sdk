@@ -1,23 +1,7 @@
-samples/Hackbook/build/
-samples/Hackbook/Hackbook.xcodeproj/*.pbxuser
-samples/Hackbook/Hackbook.xcodeproj/*.mode*
-samples/Hackbook/Hackbook.xcodeproj/xcuserdata*
-samples/Hackbook/Hackbook.xcodeproj/project.xcworkspace
-src/facebook-ios-sdk.xcodeproj/*.pbxuser
-src/facebook-ios-sdk.xcodeproj/*.mode*
-src/build/
-build/
-lib/
-test/UnitTest/UnitTest.xcodeproj/*.pbxuser
-test/UnitTest/UnitTest.xcodeproj/*.mode*
-test/UnitTest/build/
-project.xcworkspace
-xcuserdata
-.arcbuildbootstrap
-TestAppIdAndSecret.xcconfig
-.DS_Store
-*.xcscmblueprint
-Carthage
 
-# vim temp files
-*.swp
+   /**
+    iOS SDK
+     */
+     THE MIT License 2016 [Henry Baez]
+     $facebook
+     $user
