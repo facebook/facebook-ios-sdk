@@ -40,6 +40,11 @@ extension AppDelegate: UIApplicationDelegate {
                                                      annotation: annotation)
   }
 
+  @available(iOS 9.0, *)
+  func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+    return SDKApplicationDelegate.shared.application(application, openURL: url, options: options)
+  }
+
   func applicationDidBecomeActive(application: UIApplication) {
     AppEventsLogger.activate(application)
   }
