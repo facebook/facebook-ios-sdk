@@ -14,7 +14,7 @@
 		810192B21D01305400B9E881 /* AppEventsLogger.FlushBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A71D01305400B9E881 /* AppEventsLogger.FlushBehavior.swift */; };
 		810192B31D01305400B9E881 /* AppEventsLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A81D01305400B9E881 /* AppEventsLogger.swift */; };
 		810192B41D01305400B9E881 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AA1D01305400B9E881 /* AccessToken.swift */; };
-		810192B51D01305400B9E881 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AB1D01305400B9E881 /* ApplicationDelegate.swift */; };
+		810192B51D01305400B9E881 /* SDKApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AB1D01305400B9E881 /* SDKApplicationDelegate.swift */; };
 		810192B61D01305400B9E881 /* SDKLoggingBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AC1D01305400B9E881 /* SDKLoggingBehavior.swift */; };
 		810192B71D01305400B9E881 /* SDKSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AD1D01305400B9E881 /* SDKSettings.swift */; };
 		810192C41D0130C500B9E881 /* GraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192C31D0130C500B9E881 /* GraphRequest.swift */; };
@@ -348,7 +348,7 @@
 		810192A71D01305400B9E881 /* AppEventsLogger.FlushBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEventsLogger.FlushBehavior.swift; sourceTree = "<group>"; };
 		810192A81D01305400B9E881 /* AppEventsLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEventsLogger.swift; sourceTree = "<group>"; };
 		810192AA1D01305400B9E881 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
-		810192AB1D01305400B9E881 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
+		810192AB1D01305400B9E881 /* SDKApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKApplicationDelegate.swift; sourceTree = "<group>"; };
 		810192AC1D01305400B9E881 /* SDKLoggingBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKLoggingBehavior.swift; sourceTree = "<group>"; };
 		810192AD1D01305400B9E881 /* SDKSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKSettings.swift; sourceTree = "<group>"; };
 		810192C31D0130C500B9E881 /* GraphRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequest.swift; sourceTree = "<group>"; };
@@ -499,7 +499,7 @@
 			isa = PBXGroup;
 			children = (
 				810192AA1D01305400B9E881 /* AccessToken.swift */,
-				810192AB1D01305400B9E881 /* ApplicationDelegate.swift */,
+				810192AB1D01305400B9E881 /* SDKApplicationDelegate.swift */,
 				810192AC1D01305400B9E881 /* SDKLoggingBehavior.swift */,
 				810192AD1D01305400B9E881 /* SDKSettings.swift */,
 			);
@@ -1279,7 +1279,7 @@
 				817021AE1D18DE1500ECE7AC /* UserProfile.PictureView.swift in Sources */,
 				810192B61D01305400B9E881 /* SDKLoggingBehavior.swift in Sources */,
 				81FC4CBB1D0674F4003F3A46 /* PublishPermission.swift in Sources */,
-				810192B51D01305400B9E881 /* ApplicationDelegate.swift in Sources */,
+				810192B51D01305400B9E881 /* SDKApplicationDelegate.swift in Sources */,
 				810192C81D01380600B9E881 /* GraphRequestConnection.swift in Sources */,
 				810192C41D0130C500B9E881 /* GraphRequest.swift in Sources */,
 				810192B01D01305400B9E881 /* AppEventName.swift in Sources */,

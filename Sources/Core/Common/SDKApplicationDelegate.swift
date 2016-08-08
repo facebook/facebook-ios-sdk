@@ -21,22 +21,22 @@ import UIKit
 import FBSDKCoreKit
 
 /**
- The ApplicationDelegate is designed to post process the results from Facebook Login or Facebook Dialogs
+ The `SDKApplicationDelegate` is designed to post process the results from Facebook Login or Facebook Dialogs
  (or any action that requires switching over to the native Facebook app or Safari).
 
  The methods in this class are designed to mirror those in UIApplicationDelegate, and you
  should call them in the respective methods in your AppDelegate implementation.
  */
-public final class ApplicationDelegate {
+public final class SDKApplicationDelegate {
   private let delegate: FBSDKApplicationDelegate = FBSDKApplicationDelegate.sharedInstance()
 
   /// Returns the singleton instance of an application delegate.
-  public static let shared = ApplicationDelegate()
+  public static let shared = SDKApplicationDelegate()
 
   private init() { }
 }
 
-extension ApplicationDelegate {
+extension SDKApplicationDelegate {
   /**
    Call this function from the `UIApplicationDelegate.application(application:didFinishLaunchingWithOptions:)` function
    of the AppDelegate of your app It should be invoked for the proper initialization of the Facebook SDK.

@@ -28,16 +28,16 @@ final class AppDelegate: UIResponder {
 
 extension AppDelegate: UIApplicationDelegate {
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-    ApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
+    SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 
     return true
   }
 
   func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-    return ApplicationDelegate.shared.application(application,
-                                                  openURL: url,
-                                                  sourceApplication: sourceApplication,
-                                                  annotation: annotation)
+    return SDKApplicationDelegate.shared.application(application,
+                                                     openURL: url,
+                                                     sourceApplication: sourceApplication,
+                                                     annotation: annotation)
   }
 
   func applicationDidBecomeActive(application: UIApplication) {
