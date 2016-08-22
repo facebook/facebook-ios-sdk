@@ -31,6 +31,17 @@ public struct OpenGraphShareContent {
   /// Property name that points to the primary Open Graph Object in the action. This is used for rendering the preview of the share.
   public var previewPropertyName: OpenGraphPropertyName?
 
+  /**
+   Create a new OpenGraphShareContent.
+
+   - parameter action:              The action to be shared.
+   - parameter previewPropertyName: Property name that points to the primary Open Graph Object in the action.
+   */
+  public init(action: OpenGraphAction? = nil, previewPropertyName: OpenGraphPropertyName? = nil) {
+    self.action = action
+    self.previewPropertyName = previewPropertyName
+  }
+
   //--------------------------------------
   // MARK: - ContentProtocol
   //--------------------------------------
