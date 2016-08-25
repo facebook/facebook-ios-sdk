@@ -212,6 +212,11 @@
                                                      }];
       [alertController addAction:cancel];
       [alertController addAction:logout];
+      
+      UIPopoverPresentationController *presentationController = alertController.popoverPresentationController;
+      presentationController.sourceView = self;
+      presentationController.sourceRect = self.bounds;
+      
       UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];
       [topMostViewController presentViewController:alertController
                                           animated:YES
