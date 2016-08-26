@@ -51,13 +51,6 @@ SFSafariViewControllerDelegate
     return NO;
   }
 
-  _safariWindow = [[UIWindow alloc] initWithFrame:[[[[UIApplication sharedApplication] delegate] window] bounds]];
-
-  _safariWindow.windowLevel = UIWindowLevelNormal - 1;
-
-  _safariWindow.rootViewController = [[UIViewController alloc] init];;
-  [_safariWindow setHidden:NO];
-  _safariViewController = [[SFSafariViewControllerClass alloc] initWithURL: [self constructDeeplinkRetrievalUrl]];
   dispatch_async(dispatch_get_main_queue(), ^{
     [FBSDKApplicationDelegate sharedInstance].organicDeeplinkHandler = handler;
     [self presentSafariViewController];
@@ -69,7 +62,6 @@ SFSafariViewControllerDelegate
         [self cleanUpSafariViewController];
         [FBSDKApplicationDelegate sharedInstance].organicDeeplinkHandler = nil;
         _handler(nil);
-
       }
     });
   });
@@ -79,29 +71,27 @@ SFSafariViewControllerDelegate
 
 - (void)presentSafariViewController
 {
+  Class SFSafariViewControllerClass = fbsdkdfl_SFSafariViewControllerClass();
+  _safariViewController = [[SFSafariViewControllerClass alloc] initWithURL: [self constructDeeplinkRetrievalUrl]];
   _safariViewController.view.userInteractionEnabled = NO;
-  _safariViewController.view.alpha = 0;
-  [_safariWindow.rootViewController addChildViewController:_safariViewController];
-  [_safariWindow.rootViewController.view addSubview:_safariViewController.view];
   [_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-  [_safariViewController didMoveToParentViewController:_safariWindow.rootViewController];
-  _safariViewController.view.frame = CGRectZero;
-  return;
+
+  _safariWindow = [[UIWindow alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+  _safariWindow.windowLevel -= 1000;
+  _safariWindow.rootViewController = _safariViewController;
+  _safariWindow.hidden = NO;
+  [_safariWindow makeKeyAndVisible];
 }
 
 - (void)cleanUpSafariViewController
 {
-  if(_safariViewController)
+  if (_safariViewController)
   {
     [_safariViewController performSelector:@selector(setDelegate:) withObject:nil];
-    [_safariViewController willMoveToParentViewController:nil];
-    [_safariViewController.view removeFromSuperview];
-    [_safariViewController removeFromParentViewController];
     _safariViewController = nil;
     _safariWindow.rootViewController = nil;
     _safariWindow = nil;
   }
-  return;
 }
 
 - (NSURL*)constructDeeplinkRetrievalUrl

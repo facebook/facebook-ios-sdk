@@ -201,6 +201,8 @@
       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title
                                                                                message:nil
                                                                         preferredStyle:UIAlertControllerStyleActionSheet];
+      alertController.popoverPresentationController.sourceView = self;
+      alertController.popoverPresentationController.sourceRect = self.bounds;
       UIAlertAction *cancel = [UIAlertAction actionWithTitle:cancelTitle
                                                        style:UIAlertActionStyleCancel
                                                      handler:nil];

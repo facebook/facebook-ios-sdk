@@ -199,7 +199,9 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
   __block BOOL askedForPad = NO;
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSDictionary *queryParameters = [FBSDKInternalUtility dictionaryFromFBURL:request.URL];
-    askedForPad = [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
+    // do an "OR" because we only need to verify we asked for it once (in cases where unrelated network requests
+    // were resetting the flag incorrectly back to NO).
+    askedForPad |= [queryParameters[@"fields"] rangeOfString:@"ipad"].location != NSNotFound;
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
     return [OHHTTPStubsResponse responseWithData:[NSData data]

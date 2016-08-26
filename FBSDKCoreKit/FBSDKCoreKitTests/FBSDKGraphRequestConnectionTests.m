@@ -17,12 +17,12 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
 
 #import <OCMock/OCMock.h>
 
+#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
-
-#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
@@ -108,7 +108,7 @@ static id g_mockNSBundle;
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setClientToken:@"clienttoken"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
     XCTAssertFalse([body rangeOfString:@"access_token"].location == NSNotFound);
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
@@ -448,14 +448,16 @@ static id g_mockNSBundle;
 {
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
-  __block int requestCount = 0;
+
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKSettings setUserAgentSuffix:@"UnitTest.1.0.0"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
-    if (++requestCount == 1) {
+    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+    BOOL expectUserAgentSuffix = ![body containsString:@"fields=name"];
+    if (expectUserAgentSuffix) {
       XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-    } else if (requestCount == 2){
+    } else {
       XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
     }
     return YES;
@@ -471,8 +473,8 @@ static id g_mockNSBundle;
   }];
 
   [FBSDKSettings setUserAgentSuffix:nil];
-  // issue a second request o verify clearing out of user agent suffix
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  // issue a second request o verify clearing out of user agent suffix, passing a field=name to uniquely identify the request.
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"name"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     [exp2 fulfill];
   }];
 

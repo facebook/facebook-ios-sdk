@@ -16,14 +16,20 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Shared/Platform/tvOS.xcconfig"
-#include "Shared/Target/DynamicFramework.xcconfig"
-#include "Shared/Version.xcconfig"
+#import <Foundation/Foundation.h>
 
-PRODUCT_NAME = FBSDKTVOSKit
-PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKTVOSKit
+typedef void (^FBSDKURLSessionTaskHandler)(NSError *error,
+                                           NSURLResponse *response,
+                                           NSData *responseData);
 
-CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
+@interface FBSDKURLSessionTask : NSObject
 
-INFOPLIST_FILE = $(SRCROOT)/FBSDKTVOSKit/Info.plist
-MODULEMAP_FILE = $(SRCROOT)/FBSDKTVOSKit/module.modulemap
+- (FBSDKURLSessionTask *)initWithRequest:(NSURLRequest *)request
+                             fromSession:(NSURLSession *)session
+                       completionHandler:(FBSDKURLSessionTaskHandler)handler
+NS_DESIGNATED_INITIALIZER;
+
+- (void)cancel;
+- (void)start;
+
+@end

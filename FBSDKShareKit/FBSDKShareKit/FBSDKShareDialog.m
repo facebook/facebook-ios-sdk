@@ -188,6 +188,14 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
   NSInteger errorCode = [results[@"error_code"] integerValue];
   if (errorCode == 4201) {
     [self _invokeDelegateDidCancel];
+  } else if (errorCode != 0) {
+    NSError *error = [FBSDKShareError errorWithCode:FBSDKShareUnknownErrorCode
+                                           userInfo:@{
+                                                      FBSDKGraphRequestErrorGraphErrorCode : @(errorCode)
+                                                      }
+                                            message:results[@"error_message"]
+                                    underlyingError:nil];
+    [self _handleWebResponseParameters:nil error:error];
   } else {
     // not all web dialogs report cancellation, so assume that the share has completed with no additional information
     [self _handleWebResponseParameters:results error:nil];

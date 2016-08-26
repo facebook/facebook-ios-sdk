@@ -213,6 +213,7 @@
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
+    [FBSDKInternalUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];

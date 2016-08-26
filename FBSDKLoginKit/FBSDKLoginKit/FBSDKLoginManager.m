@@ -741,7 +741,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
                                                            [FBSDKInternalUtility bundleForStrings],
                                                            @"Log In",
                                                            @"Title of the web dialog that prompts the user to log in to Facebook.");
-  [FBSDKWebDialog showWithName:@"oauth" parameters:loginParams delegate:self];
+  [FBSDKWebDialog showWithName:@"oauth" parameters:parameters delegate:self];
 
   if (handler) {
     handler(YES, nil);
