@@ -16,12 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #import <UIKit/UIKit.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKTestUsersManager.h>
 
+#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
-
-#import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKIntegrationTestCase.h"
@@ -129,7 +129,7 @@
  }];
 
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
-    NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+    NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
     if ([body rangeOfString:@"likes"].location != NSNotFound) {
       [blocker signal];
       XCTAssertEqual(1, [body countOfSubstring:@"access_token"]);

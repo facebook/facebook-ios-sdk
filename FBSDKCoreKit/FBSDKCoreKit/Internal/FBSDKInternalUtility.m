@@ -92,8 +92,9 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   static NSBundle *bundle;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSString *stringsBundlePath = [[NSBundle mainBundle] pathForResource:@"FacebookSDKStrings"
-                                                                  ofType:@"bundle"];
+    NSString *stringsBundlePath = [[NSBundle bundleForClass:[FBSDKApplicationDelegate class]]
+                                   pathForResource:@"FacebookSDKStrings"
+                                   ofType:@"bundle"];
     bundle = [NSBundle bundleWithPath:stringsBundlePath] ?: [NSBundle mainBundle];
   });
   return bundle;

@@ -18,9 +18,12 @@
 
 #include "Shared/Platform/tvOS.xcconfig"
 #include "Shared/Target/StaticFramework.xcconfig"
+#include "Shared/Version.xcconfig"
 
 PRODUCT_NAME = FBSDKShareKit
 PRODUCT_BUNDLE_IDENTIFIER = com.facebook.sdk.FBSDKShareKit
+
+CURRENT_PROJECT_VERSION = $(FBSDK_PROJECT_VERSION)
 
 INFOPLIST_FILE = $(SRCROOT)/FBSDKShareKit/Info.plist
 MODULEMAP_FILE = $(SRCROOT)/FBSDKShareKit/module.modulemap

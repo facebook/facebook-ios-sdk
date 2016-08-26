@@ -52,7 +52,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
-  FBSDKDeferredAppInviteHandler _organicDeeplinkHandler;
 #endif
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
@@ -153,10 +152,12 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                                             queryParameters:sanitizedParams
                                                       error:nil];
       }
+      // copy the _organicDeeplinkHandler here because it can get cleared in FBSDKOrganicDeeplinkHelper
+      // so that we avoid bad_exc_access in the dispatch_async below.
+      FBSDKDeferredAppInviteHandler appInviteHandler = [_organicDeeplinkHandler copy];
+      _organicDeeplinkHandler = nil;
       dispatch_async(dispatch_get_main_queue(), ^{
-        // Callback handler for organic deeplinking.
-        _organicDeeplinkHandler(sanitizedUrl);
-        _organicDeeplinkHandler = nil;
+        appInviteHandler(sanitizedUrl);
       });
 
       return YES;

@@ -368,6 +368,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     if ([errors count]) {
       [_delegate sharer:self didFailWithError:errors[0]];
     } else if ([results count]) {
+      NSArray *individualPhotoIDs = [results valueForKeyPath:@"id"];
       // each photo upload will be merged into the same post, so grab the post_id from the first and use that
       NSMutableDictionary *shareResults = [[NSMutableDictionary alloc] init];
       [FBSDKInternalUtility dictionary:shareResults setObject:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_POST
@@ -375,6 +376,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       NSDictionary *firstResult = [FBSDKTypeUtility dictionaryValue:results[0]];
       [FBSDKInternalUtility dictionary:shareResults setObject:[FBSDKTypeUtility stringValue:firstResult[@"post_id"]]
                                 forKey:FBSDK_SHARE_RESULT_POST_ID_KEY];
+      [FBSDKInternalUtility dictionary:shareResults setObject:individualPhotoIDs forKey:FBSDK_SHARE_RESULT_PHOTO_IDS_KEY];
       [_delegate sharer:self didCompleteWithResults:shareResults];
     }
   };

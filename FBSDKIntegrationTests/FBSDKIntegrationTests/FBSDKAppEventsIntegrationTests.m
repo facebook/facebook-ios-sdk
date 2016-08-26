@@ -22,6 +22,7 @@
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBSDKCoreKit+Internal.h"
@@ -90,7 +91,7 @@
         XCTAssertEqualObjects(@"MOBILE_APP_INSTALL", params[@"event"]);
         [blocker signal];
       } else {
-        NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+        NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
         XCTAssertTrue([body rangeOfString:@"fb_mobile_activate_app"].location != NSNotFound);
         XCTAssertEqual([FBSDKAppEventsUtility unixTimeNow],
                        [[[self class] formDataForRequestBody:body][0][@"_logTime"] longValue]);
@@ -139,7 +140,7 @@
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", self.testAppID];
     if ([request.URL.path hasSuffix:activitiesPath]) {
-      NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+      NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
       activiesEndpointCalledForDeactivateCount = [body countOfSubstring:@"fb_mobile_deactivate_app"];
       activiesEndpointCalledForActivateCount = [body countOfSubstring:@"fb_mobile_activate_app"];
       NSSet *activateSessions, *deactivateSessions;
@@ -212,7 +213,7 @@
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", self.testAppID];
     if ([request.URL.path hasSuffix:activitiesPath]) {
-      NSString *body = [[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding];
+      NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
       activiesEndpointCalledForDeactivateCount = [body countOfSubstring:@"fb_mobile_deactivate_app"];
       activiesEndpointCalledForActivateCount = [body countOfSubstring:@"fb_mobile_activate_app"];
       NSSet *activateSessions, *deactivateSessions;
