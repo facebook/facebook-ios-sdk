@@ -27,6 +27,7 @@ CODE_SIGNING_REQUIRED = NO
 // Required for dynamic frameworks to properly emit bitcode
 ENABLE_BITCODE = YES
 FB_BITCODE_FLAG[sdk=iphoneos9.*] =
+FB_BITCODE_FLAG[sdk=iphoneos10.*] =
 
 // Whether to strip out code that isn't called from anywhere
 DEAD_CODE_STRIPPING = NO

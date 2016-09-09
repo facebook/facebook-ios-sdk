@@ -21,11 +21,11 @@ import FBSDKShareKit
 import FBSDKTVOSKit
 
 class FirstViewController: UIViewController {
-  @IBOutlet private weak var imageView: UIImageView?
-  @IBOutlet private weak var loginButton: FBSDKDeviceLoginButton?
-  @IBOutlet private weak var shareButton: FBSDKDeviceShareButton?
+  @IBOutlet fileprivate weak var imageView: UIImageView?
+  @IBOutlet fileprivate weak var loginButton: FBSDKDeviceLoginButton?
+  @IBOutlet fileprivate weak var shareButton: FBSDKDeviceShareButton?
 
-  private var blankImage: UIImage?
+  fileprivate var blankImage: UIImage?
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -34,40 +34,40 @@ class FirstViewController: UIViewController {
     blankImage = imageView?.image
 
     // Subscribe to FB session changes (in case they logged in or out in the second tab)
-    NSNotificationCenter.defaultCenter().addObserverForName(
-      FBSDKAccessTokenDidChangeNotification,
+    NotificationCenter.default.addObserver(
+      forName: .FBSDKAccessTokenDidChange,
       object: nil,
-      queue: NSOperationQueue.mainQueue()) { (notification) -> Void in
+      queue: .main) { (notification) -> Void in
         self.updateContent()
     }
 
     // If the user is already logged in.
-    if FBSDKAccessToken.currentAccessToken() != nil {
+    if FBSDKAccessToken.current() != nil {
       updateContent()
     }
 
     let linkContent = FBSDKShareLinkContent()
-    linkContent.contentURL = NSURL(string: "https://developers.facebook.com/docs/tvos")
+    linkContent.contentURL = URL(string: "https://developers.facebook.com/docs/tvos")
     linkContent.contentDescription = "Let's build a tvOS app with Facebook!"
     shareButton?.shareContent = linkContent
   }
 
-  private func flipImageViewToImage(image: UIImage?) {
+  fileprivate func flipImageViewToImage(_ image: UIImage?) {
     guard let imageView = imageView else { return }
 
-    UIView.transitionWithView(imageView,
-                              duration: 1,
-                              options:.TransitionCrossDissolve,
-                              animations: { () -> Void in
-                                self.imageView?.image = image
+    UIView.transition(with: imageView,
+                      duration: 1,
+                      options:.transitionCrossDissolve,
+                      animations: { () -> Void in
+                        self.imageView?.image = image
       }, completion: nil)
   }
 
-  private func updateContent() {
+  fileprivate func updateContent() {
     guard let imageView = imageView else {
       return
     }
-    guard FBSDKAccessToken.currentAccessToken() != nil else {
+    guard FBSDKAccessToken.current() != nil else {
       imageView.image = blankImage
       return
     }
@@ -78,36 +78,37 @@ class FirstViewController: UIViewController {
       format: "https://graph.facebook.com/v2.5/me/picture?type=square&width=%d&height=%d&access_token=%@",
       Int(imageView.bounds.size.width),
       Int(imageView.bounds.size.height),
-      FBSDKAccessToken.currentAccessToken().tokenString)
+      FBSDKAccessToken.current().tokenString)
 
-    let url = NSURL(string: urlString)
-    let userImage = UIImage(data: NSData(contentsOfURL: url!)!)
+    let url = URL(string: urlString)
+    let userImage = UIImage(data: try! Data(contentsOf: url!))
     flipImageViewToImage(userImage!)
   }
 }
 
 extension FirstViewController: FBSDKDeviceLoginButtonDelegate {
-  func deviceLoginButtonDidCancel(button: FBSDKDeviceLoginButton) {
+  func deviceLoginButtonDidCancel(_ button: FBSDKDeviceLoginButton) {
     print("Login cancelled")
   }
 
-  func deviceLoginButtonDidLogIn(button: FBSDKDeviceLoginButton) {
+  func deviceLoginButtonDidLog(in button: FBSDKDeviceLoginButton) {
     print("Login complete")
     updateContent()
   }
 
-  func deviceLoginButtonDidLogOut(button: FBSDKDeviceLoginButton) {
+  func deviceLoginButtonDidLogOut(_ button: FBSDKDeviceLoginButton) {
     print("Logout complete")
     flipImageViewToImage(blankImage)
   }
 
-  func deviceLoginButtonDidFail(button: FBSDKDeviceLoginButton, error: NSError) {
+  public func deviceLoginButtonDidFail(_ button: FBSDKDeviceLoginButton, error: Error) {
     print("Login error : ", error)
   }
 }
 
 extension FirstViewController: FBSDKDeviceShareViewControllerDelegate {
-  func deviceShareViewControllerDidComplete(viewController: FBSDKDeviceShareViewController, error: NSError?) {
+
+  public func deviceShareViewControllerDidComplete(_ viewController: FBSDKDeviceShareViewController, error: Error?) {
     print("Device share finished with error?", error)
   }
 }

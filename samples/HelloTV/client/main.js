@@ -88,8 +88,8 @@ App.onLaunch = function(options) {
                             shareLinkButton.addEventListener("select", onShareLinkButtonSelect);
                             doc.addEventListener("onFacebookLoginCancel", onLoginCancel);
                             doc.addEventListener("onFacebookLoginError", onLoginError);
-                            doc.addEventListener("onFacebookLogin", onLoginStatusChange);
-                            doc.addEventListener("onFacebookLogout", onLoginStatusChange);
+                            doc.addEventListener("customOnFacebookLogin", onLoginStatusChange);
+                            doc.addEventListener("customOnFacebookLogout", onLoginStatusChange);
 
                             // Log event for app analytics.
                             FBSDKJS.logEventParameters('tvml-app-launch');

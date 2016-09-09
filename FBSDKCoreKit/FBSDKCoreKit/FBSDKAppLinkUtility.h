@@ -61,24 +61,10 @@ typedef void (^FBSDKDeferredAppInviteHandler)(NSURL *url);
 + (void)fetchDeferredAppLink:(FBSDKDeferredAppLinkHandler)handler;
 
 /*!
- @abstract Call this method from the main thread to fetch deferred deeplink for App Invites
- Handler is called with deeplink url, if found, nil otherwise.
-
- @param handler Handler to be called when we fetch deeplink url.
-
- @return YES if async fetch process was started, NO if it failed to start. Note it returns NO
- for versions < iOS 9.
-
- @discussion Call this method from the main thread to fetch deferred deeplink if you use App Invites.
- This may require a network round trip. If successful, this will call the handler provided, with
- deferred deeplink that was clicked by the user. If there is a error/timeout, handler will be called
- with nil.
- This method only works on iOS 9+ and returns NO otherwise.
- This method should only be called from a location that occurs after any launching URL has
- been processed (e.g., you should call this method from your application delegate's
- didFinishLaunchingWithOptions:).
+ @deprecated This method is no longer available and will always return NO.
  */
-+ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler;
++ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler
+__attribute__((deprecated("This method is no longer available.")));;
 
 /*
  @abstract Call this method to fetch promotion code from the url, if it's present. This function

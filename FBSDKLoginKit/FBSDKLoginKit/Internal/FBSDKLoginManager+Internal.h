@@ -42,7 +42,7 @@
 - (void)logInWithBehavior:(FBSDKLoginBehavior)loginBehavior;
 
 // made available for testing only
-- (NSDictionary *)logInParametersWithPermissions:(NSSet *)permissions;
+- (NSDictionary *)logInParametersWithPermissions:(NSSet *)permissions serverConfiguration:(FBSDKServerConfiguration *)serverConfiguration;
 // made available for testing only
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 

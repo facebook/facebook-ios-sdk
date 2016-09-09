@@ -111,20 +111,6 @@ if [ -z $FB_SDK_ENV ]; then
     show_summary
     exit 1
   }
-
-  test -n "$XCODESELECT"  || XCODESELECT=$(which xcode-select)
-  test -n "$XCTOOL"       || XCTOOL=$FB_SDK_ROOT/vendor/xctool/xctool.sh
-  test -n "$LIPO"         || LIPO=$(which lipo)
-  test -n "$PACKAGEBUILD" || PACKAGEBUILD=$(which pkgbuild)
-  test -n "$PRODUCTBUILD" || PRODUCTBUILD=$(which productbuild)
-  test -n "$PRODUCTSIGN"  || PRODUCTSIGN=$(which productsign)
-
-  # < Xcode 4.3.1
-  if [ ! -x "$XCODEBUILD" ]; then
-    # Xcode from app store
-    XCODEBUILD="`"$XCODESELECT" -p`/usr/bin/xcodebuild"
-  fi
-
 fi
 
 # Increment depth every time we . this file.  At the end of any script

@@ -39,7 +39,6 @@
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKProfile+Internal.h"
-#import "FBSDKOrganicDeeplinkHelper.h"
 #endif
 
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
@@ -136,34 +135,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 
 #if !TARGET_OS_TV
-  if (_organicDeeplinkHandler) {
-    NSDictionary *params = [FBSDKUtility dictionaryWithQueryString:url.query];
-    if([params[@"fbsdk_deeplink"]  isEqualToString: @"1"]) {
-
-      NSURL *sanitizedUrl = nil;
-
-      if(![params[@"fbsdk_deeplink_exception"] isEqualToString:@"1"]) {
-
-        NSMutableDictionary *sanitizedParams = [NSMutableDictionary dictionaryWithDictionary:params];
-        [sanitizedParams removeObjectForKey:@"fbsdk_deeplink"];
-        sanitizedUrl =  [FBSDKInternalUtility URLWithScheme:url.scheme
-                                                       host:url.host
-                                                       path:url.path
-                                            queryParameters:sanitizedParams
-                                                      error:nil];
-      }
-      // copy the _organicDeeplinkHandler here because it can get cleared in FBSDKOrganicDeeplinkHelper
-      // so that we avoid bad_exc_access in the dispatch_async below.
-      FBSDKDeferredAppInviteHandler appInviteHandler = [_organicDeeplinkHandler copy];
-      _organicDeeplinkHandler = nil;
-      dispatch_async(dispatch_get_main_queue(), ^{
-        appInviteHandler(sanitizedUrl);
-      });
-
-      return YES;
-    }
-  }
-
   // if they completed a SFVC flow, dismiss it.
   [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
   _safariViewController = nil;
