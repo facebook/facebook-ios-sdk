@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <document>
   <divTemplate>
-    <img id="profileImage" style="tv-align:center; width:200; height:200; margin:50;" src="http://127.0.0.1:9002/Friends.png" />
+    <img id="profileImage" style="tv-align:center; width:200; height:200; margin:50;" src="" />
     <FBSDKLoginButton style="tv-align:center; width:573; margin:50" />
 
     <FBSDKShareButton style="tv-align:center; width:573; margin:50" href="http://developers.facebook.com/docs/tvos/tvml" />

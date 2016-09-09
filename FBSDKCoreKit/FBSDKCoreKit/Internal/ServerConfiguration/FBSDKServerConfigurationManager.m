@@ -45,6 +45,7 @@
 #define FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD @"ios_supports_native_proxy_auth_flow"
 #define FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD @"ios_supports_system_auth"
 #define FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD @"app_events_session_timeout"
+#define FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD @"logging_token"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -181,6 +182,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   FBSDKErrorConfiguration *errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
   [errorConfiguration parseArray:resultDictionary[FBSDK_SERVER_CONFIGURATION_ERROR_CONFIGURATION_FIELD]];
   NSTimeInterval sessionTimeoutInterval = [FBSDKTypeUtility timeIntervalValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD]] ?: DEFAULT_SESSION_TIMEOUT_INTERVAL;
+  NSString *loggingToken = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD]];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                           appName:appName
                                                                               loginTooltipEnabled:loginTooltipEnabled
@@ -196,7 +198,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                         timestamp:[NSDate date]
                                                                                errorConfiguration:errorConfiguration
                                                                            sessionTimeoutInterval:sessionTimeoutInterval
-                                                                                         defaults:NO];
+                                                                                         defaults:NO
+                                                                                     loggingToken:loggingToken];
   [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
 }
 
@@ -220,6 +223,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
+                      FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
                       ];
   NSDictionary *parameters = @{ @"fields": [fields componentsJoinedByString:@","] };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
@@ -268,7 +272,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                         timestamp:nil
                                                                errorConfiguration:nil
                                                            sessionTimeoutInterval:DEFAULT_SESSION_TIMEOUT_INTERVAL
-                                                                         defaults:YES];
+                                                                         defaults:YES
+                                                                     loggingToken:nil];
   }
   return _defaultServerConfiguration;
 }

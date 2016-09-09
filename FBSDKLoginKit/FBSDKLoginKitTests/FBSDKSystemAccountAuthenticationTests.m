@@ -226,7 +226,8 @@
                                         timestamp:[NSDate date]
                                errorConfiguration:nil
                            sessionTimeoutInterval:60.0
-                                         defaults:NO];
+                                         defaults:NO
+                                     loggingToken:nil];
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];
   [[[serverConfigurationManager stub] andReturn:serverConfiguration] cachedServerConfiguration];
   [[[serverConfigurationManager stub] andDo:^(NSInvocation *invocation) {

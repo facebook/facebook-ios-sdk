@@ -25,6 +25,7 @@ CODE_SIGN_IDENTITY =
 // Required for dynamic frameworks to properly emit bitcode
 ENABLE_BITCODE = YES
 FB_BITCODE_FLAG[sdk=iphoneos9.*] =
+FB_BITCODE_FLAG[sdk=iphoneos10.*] =
 
 // Enables the framework to be included from any location as long as the
 // loader’s runpath search paths includes it. For example from an application

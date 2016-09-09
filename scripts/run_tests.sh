@@ -69,15 +69,16 @@ cd "$FB_SDK_ROOT"
 for SCHEME in $SCHEMES; do
   if [[ $SCHEME == "BuildAllKits" ]]; then
     # Build iOS frameworks and run unit tests
-    ( $XCTOOL -workspace FacebookSDK.xcworkspace \
+    ( xcodebuild -workspace FacebookSDK.xcworkspace \
               -scheme "BuildAllKits" \
               -configuration $BUILDCONFIGURATION \
               -sdk iphonesimulator \
-              build-tests run-tests
+              -destination 'platform=iOS Simulator,name=iPhone 5' \
+              test
     ) || exit $?
 
     # Build tvOS frameworks
-    ( $XCTOOL -workspace FacebookSDK.xcworkspace \
+    ( xcodebuild -workspace FacebookSDK.xcworkspace \
               -scheme "BuildAllKits_TV" \
               -configuration $BUILDCONFIGURATION \
               -sdk appletvsimulator \
@@ -85,14 +86,14 @@ for SCHEME in $SCHEMES; do
     ) || exit $?
   elif [[ $SCHEME == "samples" ]]; then
     ( cd "$FB_SDK_ROOT/samples/HelloTV"
-      $XCTOOL -project "HelloTV.xcodeproj" -scheme "HelloTV" -sdk appletvsimulator build
+      xcodebuild -project "HelloTV.xcodeproj" -scheme "HelloTV" -sdk appletvsimulator build
     ) || exit $?
 
     FAILED_SAMPLES=""
     for SAMPLE in Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
       (
         cd "$FB_SDK_ROOT/samples/$SAMPLE"
-        $XCTOOL -project "$SAMPLE.xcodeproj" -scheme "$SAMPLE" -sdk iphonesimulator build
+        xcodebuild -project "$SAMPLE.xcodeproj" -scheme "$SAMPLE" -sdk iphonesimulator build
       )
       if [[ $? -ne 0 ]]; then
         FAILED_SAMPLES="$FAILED_SAMPLES $SAMPLE"
@@ -105,12 +106,13 @@ for SCHEME in $SCHEMES; do
       source "internal/scripts/run_internal_tests.sh"
     fi
   else
-    COMMAND="$XCTOOL
+    COMMAND="xcodebuild
       -workspace FacebookSDK.xcworkspace \
       -scheme $SCHEME \
       -configuration $BUILDCONFIGURATION \
       -sdk iphonesimulator \
-      build-tests run-tests"
+      -destination 'platform=iOS Simulator,name=iPhone 5' \
+      test"
       eval $COMMAND || die "Error while running tests ($COMMAND)"
   fi
 done

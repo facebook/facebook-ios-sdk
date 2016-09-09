@@ -23,7 +23,6 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKOrganicDeeplinkHelper.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
@@ -83,12 +82,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 
 + (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler
 {
-  NSAssert([NSThread isMainThread], @"FBSDKAppLink fetchOrganicDeferredAppLink: must be invoked from main thread.");
-
-  NSAssert(handler, @"FBSDKAppLink fetchOrganicDeferredAppLink: must be invoked with valid handler.");
-
-  FBSDKOrganicDeeplinkHelper *deeplinkHelper = [[FBSDKOrganicDeeplinkHelper alloc] init];
-  return [deeplinkHelper fetchOrganicDeeplink:handler];
+  return NO;
 }
 
 + (NSString*)appInvitePromotionCodeFromURL:(NSURL*)url;

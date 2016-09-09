@@ -58,6 +58,7 @@ CLANG_CXX_LIBRARY = libc++
 ENABLE_BITCODE = NO
 FB_BITCODE_FLAG = $()
 FB_BITCODE_FLAG[sdk=iphoneos9.*] = -fembed-bitcode
+FB_BITCODE_FLAG[sdk=iphoneos10.*] = -fembed-bitcode
 OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
 
 
