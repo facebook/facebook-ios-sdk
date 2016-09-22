@@ -17,7 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 extension Optional {
-  internal func onSome(@noescape closure: (Wrapped) throws -> Void) rethrows {
+  internal func onSome(_ closure: (Wrapped) throws -> Void) rethrows {
     _ = try map(closure)
   }
 }

@@ -52,10 +52,10 @@ public struct UserProfile {
   public let fullName: String?
 
   /// A URL to the user's profile.
-  public let profileURL: NSURL?
+  public let profileURL: URL?
 
   /// The last time the profile was refreshed.
-  public let refreshDate: NSDate
+  public let refreshDate: Date
 
   /**
    Creates a new instance of `Profile`.
@@ -73,8 +73,8 @@ public struct UserProfile {
               middleName: String? = nil,
               lastName: String? = nil,
               fullName: String? = nil,
-              profileURL: NSURL? = nil,
-              refreshDate: NSDate = NSDate()) {
+              profileURL: URL? = nil,
+              refreshDate: Date = Date()) {
     self.userId = userId
     self.firstName = firstName
     self.middleName = middleName
@@ -103,13 +103,13 @@ extension UserProfile {
    - parameter userId:     Facebook user id of the profile to fetch.
    - parameter completion: The closure to be executed once the profile is refreshed.
    */
-  public static func fetch(userId userId: String, completion: Completion) {
+  public static func fetch(userId: String, completion: @escaping Completion) {
     let request = GraphRequest(graphPath: userId,
-                               parameters: ["fields" : "first_name,middle_name,last_name,name,link"],
+                               parameters: ["fields" : "first_name,middle_name,last_name,name,link" as AnyObject],
                                httpMethod: .GET)
     request.start { (httpResponse, result) in
       switch result {
-      case .Success(let response):
+      case .success(let response):
         let responseDictionary = response.dictionaryValue
 
         let profile = UserProfile(userId: userId,
@@ -117,17 +117,17 @@ extension UserProfile {
           middleName: responseDictionary?["middle_name"] as? String,
           lastName: responseDictionary?["last_name"] as? String,
           fullName: responseDictionary?["name"] as? String,
-          profileURL: (responseDictionary?["link"] as? String).flatMap({ NSURL(string: $0) }),
-          refreshDate: NSDate())
+          profileURL: (responseDictionary?["link"] as? String).flatMap({ URL(string: $0) }),
+          refreshDate: Date())
 
         // Reset the current profile if userId matches
         if AccessToken.current?.userId == userId {
           UserProfile.current = profile
         }
-        completion(.Success(profile))
+        completion(.success(profile))
 
-      case .Failed(let error):
-        completion(.Failed(error))
+      case .failed(let error):
+        completion(.failed(error))
       }
     }
   }
@@ -140,7 +140,7 @@ extension UserProfile {
 
    - parameter completion: Optional closure to be executed once the profile is refreshed. Default: `nil`.
    */
-  public func refresh(completion: Completion? = nil) {
+  public func refresh(_ completion: Completion?) {
     UserProfile.fetch(userId: userId) { result in
       completion?(result)
     }
@@ -157,11 +157,11 @@ extension UserProfile {
    */
   public static var current: UserProfile? {
     get {
-      let sdkProfile = FBSDKProfile.currentProfile() as FBSDKProfile?
+      let sdkProfile = FBSDKProfile.current() as FBSDKProfile?
       return sdkProfile.map(UserProfile.init)
     }
     set {
-      FBSDKProfile.setCurrentProfile(newValue?.sdkProfileRepresentation)
+      FBSDKProfile.setCurrent(newValue?.sdkProfileRepresentation)
     }
   }
 
@@ -173,8 +173,8 @@ extension UserProfile {
 
    - parameter completion: The closure to be executed once the profile is loaded.
    */
-  public static func loadCurrent(completion: Completion?) {
-    FBSDKProfile.loadCurrentProfileWithCompletion { (sdkProfile: FBSDKProfile?, error: NSError?) in
+  public static func loadCurrent(_ completion: Completion?) {
+    FBSDKProfile.loadCurrentProfile { (sdkProfile: FBSDKProfile?, error: Error?) in
       if let completion = completion {
         let result = FetchResult(sdkProfile: sdkProfile, error: error)
         completion(result)
@@ -182,20 +182,15 @@ extension UserProfile {
     }
   }
 
-  private static var _updatesOnAccessTokenChange: Bool = false
   /**
    Allows controlling whether `current` profile should automatically update when `AccessToken.current` changes.
 
    - note: If `AccessToken.current` is unset (changes to `nil`), the `current` profile instance remains.
    It's also possible for the `current` to return `nil` until the data is fetched.
    */
-  public static var updatesOnAccessTokenChange: Bool {
-    get {
-      return _updatesOnAccessTokenChange
-    }
-    set {
-      _updatesOnAccessTokenChange = newValue
-      FBSDKProfile.enableUpdatesOnAccessTokenChange(newValue)
+  public static var updatesOnAccessTokenChange: Bool = false {
+    didSet {
+      FBSDKProfile.enableUpdates(onAccessTokenChange: updatesOnAccessTokenChange)
     }
   }
 }
@@ -210,14 +205,14 @@ extension UserProfile {
    */
   public enum PictureAspectRatio {
     /// A square cropped version of the profile picture.
-    case Square
+    case square
     /// The original picture's aspect ratio.
-    case Normal
+    case normal
 
     internal var sdkPictureMode: FBSDKProfilePictureMode {
       switch self {
-      case Square: return .Square
-      case Normal: return .Normal
+      case .square: return .square
+      case .normal: return .normal
       }
     }
   }
@@ -228,8 +223,8 @@ extension UserProfile {
    - parameter aspectRatio: Apsect ratio of the source image to use.
    - parameter size:        Requested height and width of the image. Will be rounded to integer precision.
    */
-  public func imageURLWith(aspectRatio: PictureAspectRatio, size: CGSize) -> NSURL {
-    return sdkProfileRepresentation.imageURLForPictureMode(aspectRatio.sdkPictureMode, size: size)
+  public func imageURLWith(_ aspectRatio: PictureAspectRatio, size: CGSize) -> URL {
+    return sdkProfileRepresentation.imageURL(for: aspectRatio.sdkPictureMode, size: size)
   }
 }
 

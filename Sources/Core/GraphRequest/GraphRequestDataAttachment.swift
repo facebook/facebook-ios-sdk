@@ -25,7 +25,7 @@ import FBSDKCoreKit
 public class GraphRequestDataAttachment {
 
   /// The attachment data.
-  public let data: NSData
+  public let data: Data
 
   /// The file name of the attachment.
   public let filename: String?
@@ -40,7 +40,7 @@ public class GraphRequestDataAttachment {
    - parameter filename:    Optional filename for the attachment. Default: `nil`.
    - parameter contentType: Optional content type for the attachment. Default: `nil`.
    */
-  public init(data: NSData, filename: String? = nil, contentType: String? = nil) {
+  public init(data: Data, filename: String? = nil, contentType: String? = nil) {
     self.data = data
     self.filename = filename
     self.contentType = contentType

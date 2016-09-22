@@ -25,25 +25,25 @@ import Foundation
  */
 public enum ReadPermission {
   /// Provides access to a subset of items that are part of a person's public profile.
-  case PublicProfile
+  case publicProfile
   /// Provides access the list of friends that also use your app.
-  case UserFriends
+  case userFriends
   /// Provides access to the person's primary email address.
-  case Email
+  case email
   /**
    Permission with a custom string value.
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */
-  case Custom(String)
+  case custom(String)
 }
 
 extension ReadPermission: PermissionRepresentable {
   internal var permissionValue: Permission {
     switch self {
-    case .PublicProfile: return "public_profile"
-    case .UserFriends: return "user_friends"
-    case .Email: return "email"
-    case .Custom(let string): return Permission(name: string)
+    case .publicProfile: return "public_profile"
+    case .userFriends: return "user_friends"
+    case .email: return "email"
+    case .custom(let string): return Permission(name: string)
     }
   }
 }

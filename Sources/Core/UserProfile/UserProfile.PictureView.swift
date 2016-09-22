@@ -24,12 +24,12 @@ import FBSDKCoreKit.FBSDKProfilePictureView
 extension UserProfile {
 
   /// A view to display a profile picture.
-  public class PictureView: UIView {
+  public final class PictureView: UIView {
 
-    private let sdkProfilePictureView = FBSDKProfilePictureView(frame: .zero)
+    fileprivate let sdkProfilePictureView = FBSDKProfilePictureView(frame: .zero)
 
     /// The aspect ratio of the source image of the profile picture.
-    public var pictureAspectRatio = UserProfile.PictureAspectRatio.Square {
+    public var pictureAspectRatio = UserProfile.PictureAspectRatio.square {
       didSet {
         sdkProfilePictureView.pictureMode = pictureAspectRatio.sdkPictureMode
       }
@@ -81,9 +81,9 @@ extension UserProfile {
 
 extension UserProfile.PictureView {
 
-  private func setupSDKProfilePictureView() {
+  fileprivate func setupSDKProfilePictureView() {
     sdkProfilePictureView.frame = bounds
-    sdkProfilePictureView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+    sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     addSubview(sdkProfilePictureView)
     setNeedsImageUpdate() // Trigger the update to refresh the image, just in case.
   }

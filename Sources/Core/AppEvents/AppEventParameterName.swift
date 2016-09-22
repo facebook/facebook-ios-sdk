@@ -23,29 +23,29 @@ import FBSDKCoreKit.FBSDKAppEvents
  */
 public enum AppEventParameterName {
   /// Identifier for the specific piece of content.
-  case ContentId
+  case contentId
   /// Type of the content, e.g. "music"/"photo"/"video".
-  case ContentType
+  case contentType
   /// Currency. E.g. "USD"/"EUR"/"GBP". See ISO-4217 for specific values.
-  case Currency
+  case currency
   /// Appropriate description for the event.
   case Description
   /// Current level or level achieved.
-  case Level
+  case level
   /// Maximum rating available. E.g. "5"/"10".
-  case MaxRatingValue
+  case maxRatingValue
   /// Count of items being proccessed.
-  case ItemCount
+  case itemCount
   /// Boolean value indicating whether payment information is available.
-  case PaymentInfoAvailable
+  case paymentInfoAvailable
   /// Registration method used. E.g. "Facebook"/"email"/"sms".
-  case RegistrationMethod
+  case registrationMethod
   /// String provided by the user for a search operation.
-  case SearchedString
+  case searchedString
   /// Boolean value indicating wehtehr an activity being logged was succesful.
-  case Successful
+  case successful
   /// Custom name of the parameter that is represented by a string.
-  case Custom(String)
+  case custom(String)
 
   /**
    Create an `AppEventParameterName` from `String`.
@@ -53,7 +53,7 @@ public enum AppEventParameterName {
    - parameter string: String to create an app event name from.
    */
   public init(_ string: String) {
-    self = .Custom(string)
+    self = .custom(string)
   }
 }
 
@@ -64,36 +64,36 @@ extension AppEventParameterName: RawRepresentable {
    - parameter rawValue: String to create an app event name from.
    */
   public init?(rawValue: String) {
-    self = .Custom(rawValue)
+    self = .custom(rawValue)
   }
 
   /// The corresponding `String` value.
   public var rawValue: String {
     switch self {
-    case .ContentId: return FBSDKAppEventParameterNameContentID
-    case .ContentType: return FBSDKAppEventParameterNameContentType
-    case .Currency: return FBSDKAppEventParameterNameCurrency
+    case .contentId: return FBSDKAppEventParameterNameContentID
+    case .contentType: return FBSDKAppEventParameterNameContentType
+    case .currency: return FBSDKAppEventParameterNameCurrency
     case .Description: return FBSDKAppEventParameterNameDescription
-    case .Level: return FBSDKAppEventNameAchievedLevel
-    case .MaxRatingValue: return FBSDKAppEventParameterNameMaxRatingValue
-    case .ItemCount: return FBSDKAppEventParameterNameNumItems
-    case .PaymentInfoAvailable: return FBSDKAppEventParameterNamePaymentInfoAvailable
-    case .RegistrationMethod: return FBSDKAppEventParameterNameRegistrationMethod
-    case .SearchedString: return FBSDKAppEventParameterNameSearchString
-    case .Successful: return FBSDKAppEventParameterNameSuccess
-    case .Custom(let string): return string
+    case .level: return FBSDKAppEventNameAchievedLevel
+    case .maxRatingValue: return FBSDKAppEventParameterNameMaxRatingValue
+    case .itemCount: return FBSDKAppEventParameterNameNumItems
+    case .paymentInfoAvailable: return FBSDKAppEventParameterNamePaymentInfoAvailable
+    case .registrationMethod: return FBSDKAppEventParameterNameRegistrationMethod
+    case .searchedString: return FBSDKAppEventParameterNameSearchString
+    case .successful: return FBSDKAppEventParameterNameSuccess
+    case .custom(let string): return string
     }
   }
 }
 
-extension AppEventParameterName: StringLiteralConvertible {
+extension AppEventParameterName: ExpressibleByStringLiteral {
   /**
    Create an `AppEventParameterName` from a string literal.
 
    - parameter value: The string literal to create from.
    */
   public init(stringLiteral value: StringLiteralType) {
-    self = .Custom(value)
+    self = .custom(value)
   }
 
   /**
@@ -120,6 +120,18 @@ extension AppEventParameterName: Hashable {
   public var hashValue: Int {
     return self.rawValue.hashValue
   }
+
+  /**
+   Compare two `AppEventParameterName`s for equality.
+
+   - parameter lhs: The first parameter name to compare.
+   - parameter rhs: The second parameter name to compare.
+
+   - returns: Whether or not the parameter names are equal.
+   */
+  public static func == (lhs: AppEventParameterName, rhs: AppEventParameterName) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+  }
 }
 
 extension AppEventParameterName: CustomStringConvertible {
@@ -127,16 +139,4 @@ extension AppEventParameterName: CustomStringConvertible {
   public var description: String {
     return rawValue
   }
-}
-
-/**
- Compare two `AppEventParameterName`s for equality.
-
- - parameter lhs: The first parameter name to compare.
- - parameter rhs: The second parameter name to compare.
-
- - returns: Whether or not the parameter names are equal.
- */
-public func == (lhs: AppEventParameterName, rhs: AppEventParameterName) -> Bool {
-  return lhs.rawValue == rhs.rawValue
 }

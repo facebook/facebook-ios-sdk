@@ -34,9 +34,7 @@ public final class SDKApplicationDelegate {
   public static let shared = SDKApplicationDelegate()
 
   private init() { }
-}
 
-extension SDKApplicationDelegate {
   /**
    Call this function from the `UIApplicationDelegate.application(application:didFinishLaunchingWithOptions:)` function
    of the AppDelegate of your app It should be invoked for the proper initialization of the Facebook SDK.
@@ -46,7 +44,9 @@ extension SDKApplicationDelegate {
 
    - returns: `true` if the url contained in the `launchOptions` was intended for the Facebook SDK, otherwise - `false`.
    */
-  public func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
+  @discardableResult
+  public func application(_ application: UIApplication,
+                          didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
     return delegate.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -62,9 +62,10 @@ extension SDKApplicationDelegate {
 
    - returns: `true` if the url was intended for the Facebook SDK, otherwise - `false`.
    */
-  @available(iOS, deprecated=9.0, message="Please use application:openURL:options:")
-  public func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-    return delegate.application(application, openURL:url, sourceApplication:sourceApplication, annotation:annotation)
+  @available(iOS, deprecated: 9.0, message: "Please use application(open:options:).")
+  @discardableResult
+  public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+    return delegate.application(application, open:url, sourceApplication:sourceApplication, annotation:annotation)
   }
 
   /**
@@ -72,17 +73,18 @@ extension SDKApplicationDelegate {
    It should be invoked for the proper processing of responses during interaction
    with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
 
-   - parameter application: The application as passed to `UIApplicationDelegate`.
+   - parameter app: The application as passed to `UIApplicationDelegate`.
    - parameter url:         The URL as passed to `UIApplicationDelegate`.
    - parameter options:     The options as passed to `UIApplicationDelegate`.
 
    - returns: `true` if the url was intended for the Facebook SDK, otherwise - `false`.
    */
   @available(iOS 9.0, *)
-  public func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    return delegate.application(application,
-                                openURL: url,
-                                sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as? String,
-                                annotation: options[UIApplicationOpenURLOptionsAnnotationKey])
+  @discardableResult
+  public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+    return delegate.application(app,
+                                open: url,
+                                sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
+                                annotation: options[UIApplicationOpenURLOptionsKey.annotation])
   }
 }

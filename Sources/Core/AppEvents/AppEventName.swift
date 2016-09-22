@@ -30,42 +30,42 @@ public enum AppEventName {
   // MARK: General
 
   /// Name of the event that indicates that the user has completed a registration.
-  case CompletedRegistration
+  case completedRegistration
   /// Name of the event that indicates that the user has completed a tutorial.
-  case CompletedTutorial
+  case completedTutorial
   /// Name of the event that indicates that the user has viewed a content.
-  case ViewedContent
+  case viewedContent
   /// Name of the event that indicates that the user has performed search within the application.
-  case Searched
+  case searched
   /// Name of the event that indicates that the user has has rated an item in the app.
-  case Rated
+  case rated
 
   // MARK: Commerce
 
   /// Name of the event that indicates that the user has purchased something in the application.
-  case Purchased
+  case purchased
   /// Name of the event that indicates that the user has added an item to the cart.
-  case AddedToCart
+  case addedToCart
   /// Name of the event that indicates that the user has added an item to the wishlist.
-  case AddedToWishlist
+  case addedToWishlist
   /// Name of the event that indicates that the user has added payment information.
-  case AddedPaymentInfo
+  case addedPaymentInfo
   /// Name of the event that indicates that the user has initiated a checkout.
-  case InitiatedCheckout
+  case initiatedCheckout
 
   // MARK: Gaming
 
   /// Name of the event that indicates that the user has achieved a level.
-  case AchievedLevel
+  case achievedLevel
   /// Name of the event that indicates that the user has unlocked an achievement.
-  case UnlockedAchievement
+  case unlockedAchievement
   /// Name of the event that indicates that the user has spent in-app credits.
-  case SpentCredits
+  case spentCredits
 
   // MARK: Custom
 
   /// Custom name of the event that is represented by a string.
-  case Custom(String)
+  case custom(String)
 
   /**
    Create an `AppEventName` from `String`.
@@ -73,7 +73,7 @@ public enum AppEventName {
    - parameter string: String to create an app event name from.
    */
   public init(_ string: String) {
-    self = .Custom(string)
+    self = .custom(string)
   }
 }
 
@@ -84,41 +84,41 @@ extension AppEventName: RawRepresentable {
    - parameter rawValue: String to create an app event name from.
    */
   public init?(rawValue: String) {
-    self = .Custom(rawValue)
+    self = .custom(rawValue)
   }
 
   /// The corresponding `String` value.
   public var rawValue: String {
     switch self {
-    case .CompletedRegistration: return FBSDKAppEventNameCompletedRegistration
-    case .CompletedTutorial: return FBSDKAppEventNameCompletedTutorial
-    case .ViewedContent: return FBSDKAppEventNameViewedContent
-    case .Searched: return FBSDKAppEventNameSearched
-    case .Rated: return FBSDKAppEventNameRated
+    case .completedRegistration: return FBSDKAppEventNameCompletedRegistration
+    case .completedTutorial: return FBSDKAppEventNameCompletedTutorial
+    case .viewedContent: return FBSDKAppEventNameViewedContent
+    case .searched: return FBSDKAppEventNameSearched
+    case .rated: return FBSDKAppEventNameRated
 
-    case .Purchased: return "fb_mobile_purchase" // Hard-coded as a string, since it's internal API of FBSDKCoreKit.
-    case .AddedToCart: return FBSDKAppEventNameAddedToCart
-    case .AddedToWishlist: return FBSDKAppEventNameAddedToWishlist
-    case .AddedPaymentInfo: return FBSDKAppEventNameAddedPaymentInfo
-    case .InitiatedCheckout: return FBSDKAppEventNameInitiatedCheckout
+    case .purchased: return "fb_mobile_purchase" // Hard-coded as a string, since it's internal API of FBSDKCoreKit.
+    case .addedToCart: return FBSDKAppEventNameAddedToCart
+    case .addedToWishlist: return FBSDKAppEventNameAddedToWishlist
+    case .addedPaymentInfo: return FBSDKAppEventNameAddedPaymentInfo
+    case .initiatedCheckout: return FBSDKAppEventNameInitiatedCheckout
 
-    case .AchievedLevel: return FBSDKAppEventNameAchievedLevel
-    case .UnlockedAchievement: return FBSDKAppEventNameUnlockedAchievement
-    case .SpentCredits: return FBSDKAppEventNameSpentCredits
+    case .achievedLevel: return FBSDKAppEventNameAchievedLevel
+    case .unlockedAchievement: return FBSDKAppEventNameUnlockedAchievement
+    case .spentCredits: return FBSDKAppEventNameSpentCredits
 
-    case .Custom(let string): return string
+    case .custom(let string): return string
     }
   }
 }
 
-extension AppEventName: StringLiteralConvertible {
+extension AppEventName: ExpressibleByStringLiteral {
   /**
    Create an `AppEventName` from a string literal.
 
    - parameter value: The string literal to create from.
    */
   public init(stringLiteral value: StringLiteralType) {
-    self = .Custom(value)
+    self = .custom(value)
   }
 
   /**
@@ -145,6 +145,18 @@ extension AppEventName: Hashable {
   public var hashValue: Int {
     return self.rawValue.hashValue
   }
+
+  /**
+   Compare two `AppEventName`s for equality.
+
+   - parameter lhs: The first app event name to compare.
+   - parameter rhs: The second app event name to compare.
+
+   - returns: Whether or not the app event names are equal.
+   */
+  public static func == (lhs: AppEventName, rhs: AppEventName) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+  }
 }
 
 extension AppEventName: CustomStringConvertible {
@@ -152,16 +164,4 @@ extension AppEventName: CustomStringConvertible {
   public var description: String {
     return rawValue
   }
-}
-
-/**
- Compare two `AppEventName`s for equality.
-
- - parameter lhs: The first app event name to compare.
- - parameter rhs: The second app event name to compare.
-
- - returns: Whether or not the app event names are equal.
- */
-public func == (lhs: AppEventName, rhs: AppEventName) -> Bool {
-  return lhs.rawValue == rhs.rawValue
 }
