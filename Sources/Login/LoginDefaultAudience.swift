@@ -30,19 +30,19 @@ import FBSDKLoginKit
  */
 public enum LoginDefaultAudience {
   /// Indicates that the user's friends are able to see posts made by the application.
-  case Friends
+  case friends
   /// Indicates that only the user is able to see posts made by the application.
-  case OnlyMe
+  case onlyMe
   /// Indicates that all Facebook users are able to see posts made by the application.
-  case Everyone
+  case everyone
 }
 
 extension LoginDefaultAudience {
   internal var sdkAudience: FBSDKDefaultAudience {
     switch self {
-    case .Friends: return .Friends
-    case .OnlyMe: return .OnlyMe
-    case .Everyone: return .Everyone
+    case .friends: return .friends
+    case .onlyMe: return .onlyMe
+    case .everyone: return .everyone
     }
   }
 }

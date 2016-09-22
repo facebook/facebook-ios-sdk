@@ -37,34 +37,34 @@ public enum LoginBehavior {
    This is the default behavior, and indicates logging in through the native Facebook app may be used.
    The SDK may still use Safari.app or `SFSafariViewController` instead.
    */
-  case Native
+  case native
   /**
    Attempts log in through the Safari.app or `SFSafariViewController`, if available.
    */
-  case Browser
+  case browser
   /**
    Attempts log in through the Facebook account currently signed in through the the device Settings.
 
    - note: If the account is not available to the app (either not configured by user or
    as determined by the SDK) this behavior falls back to `.Native`.
    */
-  case SystemAccount
+  case systemAccount
   /**
    Attempts log in through a modal `WebView` pop up.
 
    - note: This behavior is only available to certain types of apps.
    Please check the Facebook Platform Policy to verify your app meets the restrictions.
    */
-  case Web
+  case web
 }
 
 extension LoginBehavior {
-  var sdkBehavior: FBSDKLoginBehavior {
+  internal var sdkBehavior: FBSDKLoginBehavior {
     switch self {
-    case .Native: return .Native
-    case .Browser: return .Browser
-    case .SystemAccount: return .SystemAccount
-    case .Web: return .Web
+    case .native: return .native
+    case .browser: return .browser
+    case .systemAccount: return .systemAccount
+    case .web: return .web
     }
   }
 }

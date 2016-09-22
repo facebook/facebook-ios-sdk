@@ -28,12 +28,12 @@ public protocol LoginButtonDelegate {
    - parameter loginButton: Button that was used to login.
    - parameter result:      The result of the login.
    */
-  func loginButtonDidCompleteLogin(loginButton: LoginButton, result: LoginResult)
+  func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult)
 
   /**
    Called when the button was used to logout.
 
    - parameter loginButton: Button that was used to logout.
    */
-  func loginButtonDidLogOut(loginButton: LoginButton)
+  func loginButtonDidLogOut(_ loginButton: LoginButton)
 }
