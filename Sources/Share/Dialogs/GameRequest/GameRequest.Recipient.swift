@@ -20,33 +20,52 @@ extension GameRequest {
   /**
    Represents a recipient for a game request.
    */
-  public enum Recipient: Hashable {
+  public enum Recipient {
     /**
      The Facebook user ID of the recipient.
      */
-    case UserId(String)
+    case userId(String)
 
     /// The username of the recipient.
-    case Username(String)
+    case username(String)
 
     /// An invite token describing the recipient.
-    case InviteToken(String)
-
-    /// Calculate the hash of this `Recipient.`
-    public var hashValue: Int {
-      switch self {
-      case .UserId(let userId): return userId.hashValue
-      case .Username(let username): return username.hashValue
-      case .InviteToken(let inviteToken): return inviteToken.hashValue
-      }
-    }
+    case inviteToken(String)
 
     internal var rawValue: String {
       switch self {
-      case .UserId(let userId): return userId
-      case .Username(let username): return username
-      case .InviteToken(let inviteToken): return inviteToken
+      case .userId(let userId): return userId
+      case .username(let username): return username
+      case .inviteToken(let inviteToken): return inviteToken
       }
+    }
+  }
+}
+
+extension GameRequest.Recipient: Hashable {
+  /// Calculate the hash of this `Recipient.`
+  public var hashValue: Int {
+    switch self {
+    case .userId(let userId): return userId.hashValue
+    case .username(let username): return username.hashValue
+    case .inviteToken(let inviteToken): return inviteToken.hashValue
+    }
+  }
+
+  /**
+   Compare two `Recipient`s for equality.
+
+   - parameter lhs: The first recipient to compare.
+   - parameter rhs: The second recipient to compare.
+
+   - returns: Whether or not the recipients are equal.
+   */
+  public static func == (lhs: GameRequest.Recipient, rhs: GameRequest.Recipient) -> Bool {
+    switch (lhs, rhs) {
+    case (.userId(let lhs), .userId(let rhs)): return lhs == rhs
+    case (.username(let lhs), .username(let rhs)): return lhs == rhs
+    case (.inviteToken(let lhs), .inviteToken(let rhs)): return lhs == rhs
+    default: return false
     }
   }
 }

@@ -29,8 +29,8 @@ import FBSDKShareKit
  */
 public final class GraphSharer<Content: ContentProtocol> {
 
-  private let sdkSharer: FBSDKShareAPI
-  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  fileprivate let sdkSharer: FBSDKShareAPI
+  fileprivate let sdkShareDelegate: SDKSharingDelegateBridge<Content>
 
   /// The message the person has provided through the custom dialog that will accompany the share content.
   public var message: String? {
@@ -88,10 +88,10 @@ extension GraphSharer {
    - throws: If the content fails to share.
    */
   public func share() throws {
-    var error: ErrorType?
+    var error: Error?
     let completionHandler = sdkShareDelegate.completion
     sdkShareDelegate.completion = {
-      if case .Failed(let resultError) = $0 {
+      if case .failed(let resultError) = $0 {
         error = resultError
       }
     }
@@ -165,7 +165,8 @@ extension GraphSharer {
    - returns: Whether or not the operation was successfully started.
    - throws: If the share fails.
    */
-  public static func share(content: Content, completion: (ContentSharerResult<Content> -> Void)? = nil) throws -> GraphSharer {
+  @discardableResult
+  public static func share(_ content: Content, completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
     let sharer = self.init(content: content)
     sharer.completion = completion
     try sharer.share()

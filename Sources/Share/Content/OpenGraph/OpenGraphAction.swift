@@ -23,12 +23,12 @@ import FBSDKShareKit
 /**
  An Open Graph action for sharing.
  */
-public struct OpenGraphAction: Equatable {
+public struct OpenGraphAction {
   // TODO (richardross): Make ActionType an enum with common action types.
   /// The action type.
   public var type: String
 
-  private var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
+  fileprivate var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
 
   /**
    Create an `OpenGraphAction` with a specific action type.
@@ -63,33 +63,36 @@ extension OpenGraphAction {
     sdkAction.actionType = type
     sdkAction.parseProperties(properties.keyValueMap { key, value in
       (key.rawValue, value.openGraphPropertyValue)
-      })
+    })
 
     return sdkAction
   }
 
   internal init(sdkAction: FBSDKShareOpenGraphAction) {
     self.type = sdkAction.actionType
-    self.properties = [:]
 
-    sdkAction.enumerateKeysAndObjectsUsingBlock { (key: String?, value: AnyObject?, stop) in
+    var properties = [OpenGraphPropertyName : OpenGraphPropertyValue]()
+    sdkAction.enumerateKeysAndObjects { (key: String?, value: Any?, stop) in
       guard let key = key.map(OpenGraphPropertyName.init(rawValue:)),
         let value = value.map(OpenGraphPropertyValueConverter.valueFrom) else {
           return
       }
-      self.properties[key] = value
+      properties[key] = value
     }
+    self.properties = properties
   }
 }
 
-/**
- Compare two `OpenGraphAction`s for equality.
+extension OpenGraphAction: Equatable {
+  /**
+   Compare two `OpenGraphAction`s for equality.
 
- - parameter lhs: The first action to compare.
- - parameter rhs: The second action to compare.
+   - parameter lhs: The first action to compare.
+   - parameter rhs: The second action to compare.
 
- - returns: Whether or not the actions are equal.
- */
-public func == (lhs: OpenGraphAction, rhs: OpenGraphAction) -> Bool {
-  return lhs.sdkActionRepresentation == rhs.sdkActionRepresentation
+   - returns: Whether or not the actions are equal.
+   */
+  public static func == (lhs: OpenGraphAction, rhs: OpenGraphAction) -> Bool {
+    return lhs.sdkActionRepresentation == rhs.sdkActionRepresentation
+  }
 }

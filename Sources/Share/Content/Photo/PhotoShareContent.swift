@@ -47,7 +47,7 @@ public struct PhotoShareContent: ContentProtocol {
    This URL will be checked for all link meta tags for linking in platform specific ways.
    See documentation for [App Links](https://developers.facebook.com/docs/applinks/)
    */
-  public var url: NSURL?
+  public var url: URL?
 
   /// Hashtag for the content being shared.
   public var hashtag: Hashtag?
@@ -66,7 +66,19 @@ public struct PhotoShareContent: ContentProtocol {
   public var referer: String?
 }
 
-extension PhotoShareContent: Equatable { }
+extension PhotoShareContent: Equatable {
+  /**
+   Compare two `PhotoShareContent`s for equality.
+
+   - parameter lhs: The first `PhotoShareContent` to compare.
+   - parameter rhs: The second `PhotoShareContent` to compare.
+
+   - returns: Whether or not the content are equal.
+   */
+  public static func == (lhs: PhotoShareContent, rhs: PhotoShareContent) -> Bool {
+    return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
+  }
+}
 
 extension PhotoShareContent: SDKBridgedContent {
   var sdkSharingContentRepresentation: FBSDKSharingContent {
@@ -79,16 +91,4 @@ extension PhotoShareContent: SDKBridgedContent {
     sdkPhotoContent.ref = referer
     return sdkPhotoContent
   }
-}
-
-/**
- Compare two `PhotoShareContent`s for equality.
-
- - parameter lhs: The first `PhotoShareContent` to compare.
- - parameter rhs: The second `PhotoShareContent` to compare.
-
- - returns: Whether or not the content are equal.
- */
-public func == (lhs: PhotoShareContent, rhs: PhotoShareContent) -> Bool {
-  return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
 }

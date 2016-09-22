@@ -31,15 +31,15 @@ import FBSDKShareKit
 
  ```
  let course: OpenGraphObject = [
-   "og:type": "fitness.course",
-   "og:title": "Sample course",
-   "fitness:metrics:location:latitude": "41.40338",
-   "fitness:metrics:location:longitude": "2.17403",
+ "og:type": "fitness.course",
+ "og:title": "Sample course",
+ "fitness:metrics:location:latitude": "41.40338",
+ "fitness:metrics:location:longitude": "2.17403",
  ]
  ```
  */
-public struct OpenGraphObject: Equatable {
-  private var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
+public struct OpenGraphObject {
+  fileprivate var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
 
   /**
    Create a new `OpenGraphObject`.
@@ -64,7 +64,7 @@ extension OpenGraphObject: OpenGraphPropertyContaining {
   }
 }
 
-extension OpenGraphObject: DictionaryLiteralConvertible {
+extension OpenGraphObject: ExpressibleByDictionaryLiteral {
   /**
    Convenience method to build a new object from a dictinary literal.
 
@@ -73,9 +73,9 @@ extension OpenGraphObject: DictionaryLiteralConvertible {
    - example:
    ```
    let object: OpenGraphObject = [
-     "og:type": "foo",
-     "og:title": "bar",
-     ....
+   "og:type": "foo",
+   "og:title": "bar",
+   ....
    ]
    ```
    */
@@ -97,26 +97,28 @@ extension OpenGraphObject {
   }
 
   internal init(sdkGraphObject: FBSDKShareOpenGraphObject) {
-    self.properties = [:]
-
-    sdkGraphObject.enumerateKeysAndObjectsUsingBlock { (key: String?, value: AnyObject?, stop) in
+    var properties = [OpenGraphPropertyName : OpenGraphPropertyValue]()
+    sdkGraphObject.enumerateKeysAndObjects { (key: String?, value: Any?, stop) in
       guard let key = key.map(OpenGraphPropertyName.init(rawValue:)),
         let value = value.map(OpenGraphPropertyValueConverter.valueFrom) else {
-        return
+          return
       }
-      self.properties[key] = value
+      properties[key] = value
     }
+    self.properties = properties
   }
 }
 
-/**
- Compare two `OpenGraphObject`s for equality.
+extension OpenGraphObject: Equatable {
+  /**
+   Compare two `OpenGraphObject`s for equality.
 
- - parameter lhs: The first `OpenGraphObject` to compare.
- - parameter rhs: The second `OpenGraphObject` to compare.
+   - parameter lhs: The first `OpenGraphObject` to compare.
+   - parameter rhs: The second `OpenGraphObject` to compare.
 
- - returns: Whether or not the objects are equal.
- */
-public func == (lhs: OpenGraphObject, rhs: OpenGraphObject) -> Bool {
-  return false
+   - returns: Whether or not the objects are equal.
+   */
+  public static func == (lhs: OpenGraphObject, rhs: OpenGraphObject) -> Bool {
+    return false
+  }
 }

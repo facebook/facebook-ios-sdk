@@ -47,11 +47,11 @@ public protocol ContentSharingProtocol {
  */
 public enum ContentSharerResult<Content: ContentProtocol> {
   /// The operation was successful.
-  case Success(Content.Result)
+  case success(Content.Result)
 
   /// The operation failed.
-  case Failed(ErrorType)
+  case failed(Error)
 
   /// The operation was cancelled by the user.
-  case Cancelled
+  case cancelled
 }

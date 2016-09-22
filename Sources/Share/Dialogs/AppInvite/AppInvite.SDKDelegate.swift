@@ -22,22 +22,22 @@ import FBSDKShareKit
 
 extension AppInvite {
   internal class SDKDelegate: NSObject, FBSDKAppInviteDialogDelegate {
-    internal var completion: (Result -> Void)?
+    internal var completion: ((Result) -> Void)?
 
-    func setupAsDelegateFor(dialog: FBSDKAppInviteDialog) {
+    func setupAsDelegateFor(_ dialog: FBSDKAppInviteDialog) {
       // We need for the connection to retain us,
       // so we can stick around and keep calling into handlers,
       // as long as the connection is alive/sending messages.
-      objc_setAssociatedObject(dialog, unsafeAddressOf(self), self, .OBJC_ASSOCIATION_RETAIN)
+      objc_setAssociatedObject(dialog, Unmanaged.passUnretained(self).toOpaque(), self, .OBJC_ASSOCIATION_RETAIN)
       dialog.delegate = self
     }
 
-    func appInviteDialog(appInviteDialog: FBSDKAppInviteDialog?, didCompleteWithResults results: [NSObject : AnyObject]?) {
-      completion?(.Success(results?.keyValueFlatMap { ($0 as? String, $1 as? String) } ?? [:]))
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog?, didCompleteWithResults results: [AnyHashable: Any]?) {
+      completion?(.success(results?.keyValueFlatMap { ($0 as? String, $1 as? String) } ?? [:]))
     }
 
-    func appInviteDialog(appInviteDialog: FBSDKAppInviteDialog?, didFailWithError error: NSError) {
-      completion?(.Failed(error))
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog?, didFailWithError error: Error) {
+      completion?(.failed(error))
     }
   }
 }

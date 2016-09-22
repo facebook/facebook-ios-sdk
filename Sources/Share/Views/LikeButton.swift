@@ -29,15 +29,15 @@ import FBSDKShareKit
  */
 public class LikeButton: UIView {
 
-  private var sdkLikeButton: FBSDKLikeButton
+  fileprivate var sdkLikeButton: FBSDKLikeButton
 
   /// If `true`, a sound is played when the reciever is toggled.
   public var isSoundEnabled: Bool {
     get {
-      return sdkLikeButton.soundEnabled
+      return sdkLikeButton.isSoundEnabled
     }
     set {
-      sdkLikeButton.soundEnabled = newValue
+      sdkLikeButton.isSoundEnabled = newValue
     }
   }
 
@@ -96,7 +96,7 @@ public class LikeButton: UIView {
    Resizes and moves the receiver view so it just encloses its subviews.
    */
   public override func sizeToFit() {
-    bounds.size = sizeThatFits(CGSize(width: CGFloat.max, height: CGFloat.max))
+    bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
   /**
@@ -106,7 +106,7 @@ public class LikeButton: UIView {
 
    - returns: A new size that fits the receiver’s subviews.
    */
-  public override func sizeThatFits(size: CGSize) -> CGSize {
+  public override func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLikeButton.sizeThatFits(size)
   }
 
@@ -115,7 +115,7 @@ public class LikeButton: UIView {
 
    - returns: A size indicating the natural size for the receiving view based on its intrinsic properties.
    */
-  public override func intrinsicContentSize() -> CGSize {
-    return sdkLikeButton.intrinsicContentSize()
+  public override var intrinsicContentSize: CGSize {
+    return sdkLikeButton.intrinsicContentSize
   }
 }

@@ -23,12 +23,12 @@ extension GameRequest {
   public enum Result {
     // TODO: Better concrete type for results here.
     /// The Game Request was succesfully sent.
-    case Success([String:String])
+    case success([String:String])
 
     /// The Game Request failed.
-    case Failed(ErrorType)
+    case failed(Error)
 
     /// The Game Request was cancelled by the user.
-    case Cancelled
+    case cancelled
   }
 }

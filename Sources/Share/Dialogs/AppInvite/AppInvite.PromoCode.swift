@@ -26,7 +26,7 @@ extension AppInvite {
    If you attempt to create a Promo Code with an invalid string literal, you will receive a runtime warning, and your
    code will be truncated.
    */
-  public struct PromoCode: Equatable, Hashable {
+  public struct PromoCode {
     internal let rawValue: String
 
     /**
@@ -35,43 +35,43 @@ extension AppInvite {
      - parameter string: The string to initialize from.
      */
     public init?(string: String) {
-      let truncated = PromoCode.truncateString(string)
+      let truncated = PromoCode.truncate(string: string)
       if string != truncated {
         return nil
       }
 
       rawValue = string
     }
-
-    /// The hash of this promo code.
-    public var hashValue: Int {
-      return rawValue.hashValue
-    }
   }
 }
 
-extension AppInvite.PromoCode {
-  private static func truncateString(string: String) -> String {
-    let validCharacters = NSCharacterSet.alphanumericCharacterSet()
-    let cleaned = string.unicodeScalars.filter {
-      validCharacters.characterIsMember(UInt16($0.value))
-    }
+extension AppInvite.PromoCode: Hashable {
+  /// The hash of this promo code.
+  public var hashValue: Int {
+    return rawValue.hashValue
+  }
 
-    let range = 0 ..< min(10, cleaned.count)
-    let characters = cleaned[range].map(Character.init)
+  /**
+   Compare two `PromoCode`s for equality.
 
-    return String(characters)
+   - parameter lhs: The first promo code to compare.
+   - parameter rhs: The second promo code to compare.
+
+   - returns: Whether or not the promo codes are equal.
+   */
+  public static func == (lhs: AppInvite.PromoCode, rhs: AppInvite.PromoCode) -> Bool {
+    return lhs.rawValue == rhs.rawValue
   }
 }
 
-extension AppInvite.PromoCode: StringLiteralConvertible {
+extension AppInvite.PromoCode: ExpressibleByStringLiteral {
   /**
    Create a PromoCode from a string literal.
 
    - parameter value: The string literal to intiialize from.
    */
   public init(stringLiteral value: String) {
-    let truncated = AppInvite.PromoCode.truncateString(value)
+    let truncated = AppInvite.PromoCode.truncate(string: value)
     if truncated != value {
       print("Warning: Attempted to create a PromoCode from \"\(value)\" which contained invalid characters, or was too long.")
     }
@@ -98,14 +98,16 @@ extension AppInvite.PromoCode: StringLiteralConvertible {
   }
 }
 
-/**
- Compare two `PromoCode`s for equality.
 
- - parameter lhs: The first promo code to compare.
- - parameter rhs: The second promo code to compare.
+extension AppInvite.PromoCode {
+  fileprivate static func truncate(string: String) -> String {
+    let validCharacters = CharacterSet.alphanumerics
+    let cleaned = string.unicodeScalars.filter {
+      validCharacters.contains(UnicodeScalar(UInt16($0.value))!)
+    }
 
- - returns: Whether or not the promo codes are equal.
- */
-public func == (lhs: AppInvite.PromoCode, rhs: AppInvite.PromoCode) -> Bool {
-  return lhs.rawValue == rhs.rawValue
+    let range = 0 ..< min(10, cleaned.count)
+    let characters = cleaned[range].map(Character.init)
+    return String(characters)
+  }
 }

@@ -21,14 +21,14 @@ import FBSDKShareKit
 extension GameRequest {
   /// A dialog for sending game requests.
   public final class Dialog {
-    private let sdkDialog: FBSDKGameRequestDialog
-    private let sdkDelegate: SDKDelegate
+    fileprivate let sdkDialog: FBSDKGameRequestDialog
+    fileprivate let sdkDelegate: SDKDelegate
 
     /// The content for the game request.
     public let request: GameRequest
 
     /// The completion handler to be invoked upon completion of the request.
-    public var completion: (Result -> Void)? {
+    public var completion: ((Result) -> Void)? {
       didSet {
         sdkDelegate.completion = completion
       }
@@ -65,10 +65,10 @@ extension GameRequest {
      - throws: If the dialog fails to be presented.
      */
     public func show() throws {
-      var error: ErrorType?
+      var error: Error?
       let completionHandler = sdkDelegate.completion
       sdkDelegate.completion = {
-        if case .Failed(let resultError) = $0 {
+        if case .failed(let resultError) = $0 {
           error = resultError
         }
       }
@@ -102,7 +102,8 @@ extension GameRequest.Dialog {
    - returns: The dialog instance that has been shown.
    - throws: If the  dialog fails to be presented.
    */
-  public static func show(request: GameRequest, completion: (GameRequest.Result -> Void)?) throws -> Self {
+  @discardableResult
+  public static func show(_ request: GameRequest, completion: ((GameRequest.Result) -> Void)?) throws -> Self {
     let dialog = self.init(request: request)
     dialog.completion = completion
     try dialog.show()

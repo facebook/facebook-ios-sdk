@@ -27,7 +27,7 @@ import FBSDKShareKit
  that allows the user to like the object. Upon return to the calling app, the view will update with the new state.
  */
 public class LikeControl: UIView {
-  private let sdkLikeControl: FBSDKLikeControl
+  fileprivate let sdkLikeControl: FBSDKLikeControl
 
   /**
    Create a new LikeControl with an optional frame and object.
@@ -118,10 +118,10 @@ public class LikeControl: UIView {
   /// If `true`, a sound is played when the control is toggled.
   public var isSoundEnabled: Bool {
     get {
-      return sdkLikeControl.soundEnabled
+      return sdkLikeControl.isSoundEnabled
     }
     set {
-      sdkLikeControl.soundEnabled = newValue
+      sdkLikeControl.isSoundEnabled = newValue
     }
   }
 }
@@ -140,7 +140,7 @@ extension LikeControl {
    Resizes and moves the receiver view so it just encloses its subviews.
    */
   public override func sizeToFit() {
-    bounds.size = sizeThatFits(CGSize(width: CGFloat.max, height: CGFloat.max))
+    bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
   /**
@@ -150,7 +150,7 @@ extension LikeControl {
 
    - returns: A new size that fits the receiver’s subviews.
    */
-  public override func sizeThatFits(size: CGSize) -> CGSize {
+  public override func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLikeControl.sizeThatFits(size)
   }
 
@@ -159,7 +159,7 @@ extension LikeControl {
 
    - returns: A size indicating the natural size for the receiving view based on its intrinsic properties.
    */
-  public override func intrinsicContentSize() -> CGSize {
-    return sdkLikeControl.intrinsicContentSize()
+  public override var intrinsicContentSize: CGSize {
+    return sdkLikeControl.intrinsicContentSize
   }
 }

@@ -21,22 +21,22 @@ import FBSDKShareKit
 /**
  Represents an error returned by the FacebookShare framework.
  */
-public enum ShareError: ErrorType {
+public enum ShareError: Error {
 
   /// Reserved.
-  case Reserved
+  case reserved
 
   /// The error code for errors from uploading open graph objects.
-  case OpenGraph
+  case openGraph
 
   /**
    The error code for when a sharing dialog is not available.
    Use the `canShare` property to check for this case before calling show.
    */
-  case DialogNotAvailable
+  case dialogNotAvailable
 
   /// The error code for unknown errors.
-  case Unknown
+  case unknown
 
   /**
    Attempt to create a share error from a NSError returned by the Facebook SDK.
@@ -49,10 +49,10 @@ public enum ShareError: ErrorType {
     }
 
     switch FBSDKShareErrorCode(rawValue: error.code) {
-    case .ReservedErrorCode?: self = .Reserved
-    case .OpenGraphErrorCode?: self = .OpenGraph
-    case .DialogNotAvailableErrorCode?: self = .DialogNotAvailable
-    case .UnknownErrorCode?: self = .Unknown
+    case .reservedErrorCode?: self = .reserved
+    case .openGraphErrorCode?: self = .openGraph
+    case .dialogNotAvailableErrorCode?: self = .dialogNotAvailable
+    case .unknownErrorCode?: self = .unknown
     default: return nil
     }
   }

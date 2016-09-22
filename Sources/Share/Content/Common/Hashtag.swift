@@ -33,13 +33,13 @@ public struct Hashtag {
    */
   public init?(_ string: String) {
     let sdkHashtag = FBSDKHashtag(string: string)
-    self.init(sdkHashtag: sdkHashtag)
+    self.init(sdkHashtag: sdkHashtag!)
   }
 }
 
 extension Hashtag {
   internal init?(sdkHashtag: FBSDKHashtag) {
-    if !sdkHashtag.valid {
+    if !sdkHashtag.isValid {
       return nil
     }
     self.stringValue = sdkHashtag.stringRepresentation
@@ -57,16 +57,17 @@ extension Hashtag: Hashable {
   public var hashValue: Int {
     return stringValue.hashValue
   }
-}
 
-/**
- Check if two hashtags are equal.
+  /**
+   Check if two hashtags are equal.
 
- - parameter lhs: The first hashtag to compare.
- - parameter rhs: The second hashtag to compare.
+   - parameter lhs: The first hashtag to compare.
+   - parameter rhs: The second hashtag to compare.
 
- - returns: `true` if the hashtags are equal, `false` otherwise.
- */
-public func == (lhs: Hashtag, rhs: Hashtag) -> Bool {
-  return lhs.stringValue == rhs.stringValue
+   - returns: `true` if the hashtags are equal, `false` otherwise.
+   */
+  public static func == (lhs: Hashtag, rhs: Hashtag) -> Bool {
+    return lhs.stringValue == rhs.stringValue
+  }
+
 }

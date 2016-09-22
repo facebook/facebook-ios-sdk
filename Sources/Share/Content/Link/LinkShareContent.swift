@@ -48,7 +48,7 @@ public struct LinkShareContent: ContentProtocol {
   public var quote: String?
 
   /// The URL of a picture to attach to this content.
-  public var imageURL: NSURL?
+  public var imageURL: URL?
 
   /**
    Create link share content.
@@ -59,11 +59,11 @@ public struct LinkShareContent: ContentProtocol {
    - parameter quote:       Optional quote text of the link.
    - parameter imageURL:    OPtional image URL of a picture to attach.
    */
-  public init(url: NSURL,
+  public init(url: URL,
               title: String? = nil,
               description: String? = nil,
               quote: String? = nil,
-              imageURL: NSURL? = nil) {
+              imageURL: URL? = nil) {
     self.url = url
     self.title = title
     self.description = description
@@ -81,7 +81,7 @@ public struct LinkShareContent: ContentProtocol {
    This URL will be checked for all link meta tags for linking in platform specific ways.
    See documentation for App Links (https://developers.facebook.com/docs/applinks/).
    */
-  public var url: NSURL?
+  public var url: URL?
 
   /// Hashtag for the content being shared.
   public var hashtag: Hashtag?
@@ -100,18 +100,19 @@ public struct LinkShareContent: ContentProtocol {
   public var referer: String?
 }
 
-extension LinkShareContent: Equatable { }
+extension LinkShareContent: Equatable {
 
-/**
- Compares two `LinkContent`s for equality.
+  /**
+   Compares two `LinkContent`s for equality.
 
- - parameter lhs: One content to compare.
- - parameter rhs: The other content to compare to.
+   - parameter lhs: One content to compare.
+   - parameter rhs: The other content to compare to.
 
- - returns: Whether or not the content are equivalent.
- */
-public func == (lhs: LinkShareContent, rhs: LinkShareContent) -> Bool {
-  return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
+   - returns: Whether or not the content are equivalent.
+   */
+  public static func == (lhs: LinkShareContent, rhs: LinkShareContent) -> Bool {
+    return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
+  }
 }
 
 extension LinkShareContent: SDKBridgedContent {
