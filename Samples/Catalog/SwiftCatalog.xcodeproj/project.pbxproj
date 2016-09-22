@@ -332,6 +332,7 @@
 		816B75EF1D07B7030012AC43 /* GraphAPIPostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphAPIPostViewController.swift; sourceTree = "<group>"; };
 		816B75FB1D07B70B0012AC43 /* GraphAPIReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphAPIReadViewController.swift; sourceTree = "<group>"; };
 		8197009F1D07921100286023 /* LoginManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
+		81A63BD31D94896000392266 /* SwiftCatalog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCatalog.entitlements; sourceTree = "<group>"; };
 		81AB8B421D36D60100066F63 /* Bolts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bolts.xcodeproj; path = "../../Carthage/Checkouts/facebook-ios-sdk/Bolts-IOS/Bolts.xcodeproj"; sourceTree = "<group>"; };
 		81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = "../../Carthage/Checkouts/facebook-ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj"; sourceTree = "<group>"; };
 		81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKLoginKit.xcodeproj; path = "../../Carthage/Checkouts/facebook-ios-sdk/FBSDKLoginKit/FBSDKLoginKit.xcodeproj"; sourceTree = "<group>"; };
@@ -536,6 +537,7 @@
 				81EDA2D21D025EA600E742F4 /* Assets.xcassets */,
 				81EDA2D31D025EA600E742F4 /* LaunchScreen.storyboard */,
 				81EDA2D51D025EA600E742F4 /* Main.storyboard */,
+				81A63BD31D94896000392266 /* SwiftCatalog.entitlements */,
 				81EDA3161D025F2D00E742F4 /* Info.plist */,
 			);
 			path = Resources;
@@ -671,6 +673,11 @@
 					81EDA31D1D025F4600E742F4 = {
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
