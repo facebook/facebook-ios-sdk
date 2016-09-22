@@ -3,7 +3,7 @@ branches:
     - master
 language: objective-c
 os: osx
-osx_image: xcode7.3
+osx_image: xcode8
 cache:
   - cocoapods
 env:
@@ -30,15 +30,15 @@ script:
 - |
   if [ "$TEST_TYPE" = iOS ]; then
     set -o pipefail
-    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookCore -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
-    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookLogin -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
-    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookShare -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookCore -configuration Debug -destination "platform=iOS Simulator,name=iPhone 5" -destination "platform=iOS Simulator,name=iPhone 7 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookLogin -configuration Debug -destination "platform=iOS Simulator,name=iPhone 5" -destination "platform=iOS Simulator,name=iPhone 7 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme FacebookShare -configuration Debug -destination "platform=iOS Simulator,name=iPhone 5" -destination "platform=iOS Simulator,name=iPhone 7 Plus" | xcpretty -c
   elif [ "$TEST_TYPE" = Lint ]; then
     swiftlint lint --path Sources --quiet
     swiftlint lint --path Samples --quiet
   elif [ "$TEST_TYPE" = Samples ]; then
     set -o pipefail    
-    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme SwiftCatalog -configuration Debug -destination "platform=iOS Simulator,name=iPhone 4s" -destination "platform=iOS Simulator,name=iPhone 6 Plus" | xcpretty -c
+    xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme SwiftCatalog -configuration Debug -destination "platform=iOS Simulator,name=iPhone 5" -destination "platform=iOS Simulator,name=iPhone 7 Plus" | xcpretty -c
   elif [ "$TEST_TYPE" = CocoaPods ]; then
     pod lib lint FacebookCore.podspec
     pod lib lint FacebookLogin.podspec
