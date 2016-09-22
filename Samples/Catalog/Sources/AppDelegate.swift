@@ -27,25 +27,26 @@ final class AppDelegate: UIResponder {
 }
 
 extension AppDelegate: UIApplicationDelegate {
-  func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+  func application(_ application: UIApplication,
+                   didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 
     return true
   }
 
-  func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+  func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
     return SDKApplicationDelegate.shared.application(application,
-                                                     openURL: url,
+                                                     open: url,
                                                      sourceApplication: sourceApplication,
                                                      annotation: annotation)
   }
 
   @available(iOS 9.0, *)
-  func application(application: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-    return SDKApplicationDelegate.shared.application(application, openURL: url, options: options)
+  func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+    return SDKApplicationDelegate.shared.application(application, open: url, options: options)
   }
 
-  func applicationDidBecomeActive(application: UIApplication) {
+  func applicationDidBecomeActive(_ application: UIApplication) {
     AppEventsLogger.activate(application)
   }
 }

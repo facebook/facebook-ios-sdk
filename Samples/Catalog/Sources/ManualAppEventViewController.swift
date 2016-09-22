@@ -36,22 +36,22 @@ extension ManualAppEventViewController {
       let priceString = purchasePriceField?.text,
       let price = Double(priceString) else {
         let alertController = UIAlertController(title: "Invalid Purchase Price", message: "Purchase price must be a valid number.")
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
         return
     }
     guard let currency = purchaseCurrencyField?.text else {
       let alertController = UIAlertController(title: "Invalid currency", message: "Currency cannot be empty.")
-      presentViewController(alertController, animated: true, completion: nil)
+      present(alertController, animated: true, completion: nil)
       return
     }
 
-    let event = AppEvent.Purchased(amount: price, currency: currency)
+    let event = AppEvent.purchased(amount: price, currency: currency)
     AppEventsLogger.log(event)
     // View your event at https://developers.facebook.com/analytics/<APP_ID>.
     // See https://developers.facebook.com/docs/analytics for details.
 
     let alertController = UIAlertController(title: "Log Event", message: "Log Event Success")
-    presentViewController(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }
 
@@ -65,19 +65,19 @@ extension ManualAppEventViewController {
       let priceString = itemPriceField?.text,
       let price = Double(priceString) else {
         let alertController = UIAlertController(title: "Invalid Item Price", message: "Item price must be a valid number.")
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
         return
     }
     guard let currency = itemCurrencyField?.text else {
       let alertController = UIAlertController(title: "Invalid currency", message: "Currency cannot be empty.")
-      presentViewController(alertController, animated: true, completion: nil)
+      present(alertController, animated: true, completion: nil)
       return
     }
 
-    let event = AppEvent.AddedToCart(currency: currency, valueToSum: price)
+    let event = AppEvent.addedToCart(currency: currency, valueToSum: price)
     AppEventsLogger.log(event)
 
     let alertController = UIAlertController(title: "Log Event", message: "Log Event Success")
-    presentViewController(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }

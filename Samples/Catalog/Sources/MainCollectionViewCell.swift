@@ -22,7 +22,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
   @IBOutlet var textLabel: UILabel?
   @IBOutlet var iconImageView: UIImageView?
 
-  func updateFrom(item: MainCollectionViewController.Item) {
+  func updateFrom(_ item: MainCollectionViewController.Item) {
     textLabel?.text = item.text
     iconImageView?.image = item.image
   }

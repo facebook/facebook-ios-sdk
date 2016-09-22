@@ -21,9 +21,9 @@ import UIKit
 
 extension UIAlertController {
   convenience init(title: String, message: String) {
-    self.init(title: title, message: message, preferredStyle: .Alert)
+    self.init(title: title, message: message, preferredStyle: .alert)
     let action = UIAlertAction(title: NSLocalizedString("OK", comment: "OK action"),
-                               style: .Default,
+                               style: .default,
                                handler: nil)
     addAction(action)
   }

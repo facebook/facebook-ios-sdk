@@ -23,7 +23,7 @@ import FacebookShare
 
 final class ShareDialogViewController: UITableViewController {
 
-  func showShareDialog<C: ContentProtocol>(content: C, mode: ShareDialogMode = .Automatic) {
+  func showShareDialog<C: ContentProtocol>(_ content: C, mode: ShareDialogMode = .automatic) {
     let dialog = ShareDialog(content: content)
     dialog.presentingViewController = self
     dialog.mode = mode
@@ -31,7 +31,7 @@ final class ShareDialogViewController: UITableViewController {
       try dialog.show()
     } catch (let error) {
       let alertController = UIAlertController(title: "Invalid share content", message: "Failed to present share dialog with error \(error)")
-      presentViewController(alertController, animated: true, completion: nil)
+      present(alertController, animated: true, completion: nil)
     }
   }
 }
@@ -42,27 +42,27 @@ final class ShareDialogViewController: UITableViewController {
 
 extension ShareDialogViewController {
   @IBAction func showLinkShareDialogModeAutomatic() {
-    var content = LinkShareContent(url: NSURL(string: "https://newsroom.fb.com/")!,
+    var content = LinkShareContent(url: URL(string: "https://newsroom.fb.com/")!,
                                    title: "Name: Facebook News Room",
                                    description: "Description: The Facebook Swift SDK helps you develop Facebook integrated iOS apps.",
-                                   imageURL: NSURL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
+                                   imageURL: URL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
     content.placeId = "166793820034304"
 
-    showShareDialog(content, mode: .Automatic)
+    showShareDialog(content, mode: .automatic)
   }
 
   @IBAction func showLinkShareDialogModeWeb() {
-    var content = LinkShareContent(url: NSURL(string: "https://newsroom.fb.com/")!,
+    var content = LinkShareContent(url: URL(string: "https://newsroom.fb.com/")!,
                                    title: "Name: Facebook News Room",
                                    description: "Description: The Facebook Swift SDK helps you develop Facebook integrated iOS apps.",
-                                   imageURL: NSURL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
+                                   imageURL: URL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
     content.placeId = "166793820034304"
 
-    showShareDialog(content, mode: .Web)
+    showShareDialog(content, mode: .web)
   }
 }
 
@@ -88,17 +88,17 @@ extension ShareDialogViewController {
   @IBAction func showShareDialogVideoContent() {
     let imagePickerController = UIImagePickerController()
     imagePickerController.delegate = self
-    imagePickerController.sourceType = .PhotoLibrary
+    imagePickerController.sourceType = .photoLibrary
     imagePickerController.mediaTypes = [kUTTypeMovie as String]
-    presentViewController(imagePickerController, animated: true, completion: nil)
+    present(imagePickerController, animated: true, completion: nil)
   }
 }
 
 extension ShareDialogViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-    picker.dismissViewControllerAnimated(true, completion: nil)
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    picker.dismiss(animated: true, completion: nil)
 
-    guard let videoURL = info[UIImagePickerControllerReferenceURL] as? NSURL else {
+    guard let videoURL = info[UIImagePickerControllerReferenceURL] as? URL else {
       return
     }
 
