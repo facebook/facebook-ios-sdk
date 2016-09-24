@@ -82,33 +82,33 @@ public protocol AppEventLoggable {
  */
 public protocol AppEventParameterValueType {
   /// Object value. Can be either `NSNumber` or `String`.
-  var appEventParameterValue: AnyObject { get }
+  var appEventParameterValue: Any { get }
 }
 
 extension NSNumber: AppEventParameterValueType {
   /// An object representation of `self`, suitable for parameter value of `AppEventLoggable`.
-  public var appEventParameterValue: AnyObject {
+  public var appEventParameterValue: Any {
     return self
   }
 }
 
 extension IntegerLiteralType: AppEventParameterValueType {
   /// An object representation of `self`, suitable for parameter value of `AppEventLoggable`.
-  public var appEventParameterValue: AnyObject {
+  public var appEventParameterValue: Any {
     return self as NSNumber
   }
 }
 
 extension FloatLiteralType: AppEventParameterValueType {
   /// An object representation of `self`, suitable for parameter value of `AppEventLoggable`.
-  public var appEventParameterValue: AnyObject {
+  public var appEventParameterValue: Any {
     return self as NSNumber
   }
 }
 
 extension String: AppEventParameterValueType {
   /// An object representation of `self`, suitable for parameter value of `AppEventLoggable`.
-  public var appEventParameterValue: AnyObject {
+  public var appEventParameterValue: Any {
     return self
   }
 }

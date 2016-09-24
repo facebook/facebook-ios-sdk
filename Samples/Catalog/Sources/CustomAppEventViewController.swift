@@ -32,7 +32,7 @@ extension CustomAppEventViewController {
   @IBAction func logCustomEvent() {
     guard let eventName = eventNameField?.text else {
       let alertController = UIAlertController(title: "Invalid Event", message: "Event name can't be empty.")
-      presentViewController(alertController, animated: true, completion: nil)
+      present(alertController, animated: true, completion: nil)
       return
     }
 
@@ -41,6 +41,6 @@ extension CustomAppEventViewController {
     // See https://developers.facebook.com/docs/analytics for details.
 
     let alertController = UIAlertController(title: "Log Event", message: "Log Event Success")
-    presentViewController(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }

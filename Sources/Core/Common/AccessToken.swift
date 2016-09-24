@@ -38,10 +38,10 @@ public struct AccessToken {
   public let userId: String?
 
   /// The date the token was last refreshed.
-  public let refreshDate: NSDate
+  public let refreshDate: Date
 
   /// The expirate date for the token.
-  public let expirationDate: NSDate
+  public let expirationDate: Date
 
   /// Known granted permissions.
   public let grantedPermissions: Set<Permission>?
@@ -63,8 +63,8 @@ public struct AccessToken {
   public init(appId: String = SDKSettings.appId,
               authenticationToken: String,
               userId: String? = nil,
-              refreshDate: NSDate = NSDate(),
-              expirationDate: NSDate = NSDate.distantFuture(),
+              refreshDate: Date = Date(),
+              expirationDate: Date = Date.distantFuture,
               grantedPermissions: Set<Permission>? = nil,
               declinedPermissions: Set<Permission>? = nil) {
     self.appId = appId
@@ -88,11 +88,11 @@ extension AccessToken {
    */
   public static var current: AccessToken? {
     get {
-      let token = FBSDKAccessToken.currentAccessToken() as FBSDKAccessToken?
+      let token = FBSDKAccessToken.current() as FBSDKAccessToken?
       return token.map(AccessToken.init)
     }
     set {
-      FBSDKAccessToken.setCurrentAccessToken(newValue?.sdkAccessTokenRepresentation)
+      FBSDKAccessToken.setCurrent(newValue?.sdkAccessTokenRepresentation)
     }
   }
 
@@ -104,8 +104,8 @@ extension AccessToken {
    - note: If a token is already expired, it can't be refreshed.
    - parameter completion: Optional completion to call when the token was refreshed or failed.
    */
-  public static func refreshCurrentToken(completion: ((AccessToken?, ErrorType?) -> Void)? = nil) {
-    FBSDKAccessToken.refreshCurrentAccessToken { (_, _, error: NSError?) in
+  public static func refreshCurrentToken(_ completion: ((AccessToken?, Error?) -> Void)? = nil) {
+    FBSDKAccessToken.refreshCurrentAccessToken { (_, _, error: Error?) in
       completion?(self.current, error)
     }
   }

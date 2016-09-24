@@ -24,18 +24,18 @@ import FacebookLogin
 
 class LoginManagerViewController: UIViewController {
 
-  func loginManagerDidComplete(result: LoginResult) {
+  func loginManagerDidComplete(_ result: LoginResult) {
     let alertController: UIAlertController
     switch result {
-    case .Cancelled:
+    case .cancelled:
       alertController = UIAlertController(title: "Login Cancelled", message: "User cancelled login.")
-    case .Failed(let error):
+    case .failed(let error):
       alertController = UIAlertController(title: "Login Fail", message: "Login failed with error \(error)")
-    case .Success(let grantedPermissions, _, _):
+    case .success(let grantedPermissions, _, _):
       alertController = UIAlertController(title: "Login Success",
                                           message: "Login succeeded with granted permissions: \(grantedPermissions)")
     }
-    self.presentViewController(alertController, animated: true, completion: nil)
+    self.present(alertController, animated: true, completion: nil)
   }
 }
 
@@ -43,14 +43,14 @@ extension LoginManagerViewController {
 
   @IBAction func loginWithReadPermissions() {
     let loginManager = LoginManager()
-    loginManager.logIn([.PublicProfile, .UserFriends], viewController: self) { result in
+    loginManager.logIn([.publicProfile, .userFriends], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }
 
   @IBAction func loginWithPublishPermissions() {
     let loginManager = LoginManager()
-    loginManager.logIn([.PublishActions], viewController: self) { result in
+    loginManager.logIn([.publishActions], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }
@@ -60,6 +60,6 @@ extension LoginManagerViewController {
     loginManager.logOut()
 
     let alertController = UIAlertController(title: "Logout", message: "Logged out.")
-    presentViewController(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }

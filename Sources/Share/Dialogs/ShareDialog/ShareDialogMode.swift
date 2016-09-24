@@ -26,49 +26,49 @@ import FBSDKShareKit
  */
 public enum ShareDialogMode {
   /// Acts with the most appropriate mode that is available.
-  case Automatic
+  case automatic
 
   /// Displays the dialog in the main native Facebook app.
-  case Native
+  case native
 
   /// Displays the dialog in the iOS integrated share sheet.
-  case ShareSheet
+  case shareSheet
 
   /// Displays the dialog in Safari.
-  case Browser
+  case browser
 
   /// Displays the dialog in a UIWebView within the app.
-  case Web
+  case web
 
   /// Displays the feed dialog in Safari.
-  case FeedBrowser
+  case feedBrowser
 
   /// Displays the feed dialog in a UIWebView within the app.
-  case FeedWeb
+  case feedWeb
 }
 
 extension ShareDialogMode {
   internal init(sdkShareMode: FBSDKShareDialogMode) {
     switch sdkShareMode {
-    case .Automatic:   self = .Automatic
-    case .Native:      self = .Native
-    case .ShareSheet:  self = .ShareSheet
-    case .Browser:     self = .Browser
-    case .Web:         self = .Web
-    case .FeedBrowser: self = .FeedBrowser
-    case .FeedWeb:     self = .FeedWeb
+    case .automatic:   self = .automatic
+    case .native:      self = .native
+    case .shareSheet:  self = .shareSheet
+    case .browser:     self = .browser
+    case .web:         self = .web
+    case .feedBrowser: self = .feedBrowser
+    case .feedWeb:     self = .feedWeb
     }
   }
 
   internal var sdkShareMode: FBSDKShareDialogMode {
     switch self {
-    case .Automatic: return .Automatic
-    case .Native: return .Native
-    case .ShareSheet: return .ShareSheet
-    case .Browser: return .Browser
-    case .Web: return .Web
-    case .FeedBrowser: return .FeedBrowser
-    case .FeedWeb: return .FeedWeb
+    case .automatic: return .automatic
+    case .native: return .native
+    case .shareSheet: return .shareSheet
+    case .browser: return .browser
+    case .web: return .web
+    case .feedBrowser: return .feedBrowser
+    case .feedWeb: return .feedWeb
     }
   }
 }

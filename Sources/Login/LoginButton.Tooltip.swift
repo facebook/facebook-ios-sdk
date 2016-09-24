@@ -25,17 +25,17 @@ extension LoginButton {
    */
   public enum TooltipBehavior {
     /// Tooltip will only be displayed if the app is eligible (determined by possible server round trip).
-    case Automatic
+    case automatic
     /// Force display of the tooltip (typically for UI testing).
-    case ForceDisplay
+    case forceDisplay
     /// Force disable the tooltip.
-    case Disable
+    case disable
 
     internal var sdkBehavior: FBSDKLoginButtonTooltipBehavior {
       switch self {
-      case .Automatic: return .Automatic
-      case .ForceDisplay: return .ForceDisplay
-      case .Disable: return .Disable
+      case .automatic: return .automatic
+      case .forceDisplay: return .forceDisplay
+      case .disable: return .disable
       }
     }
   }
@@ -47,14 +47,14 @@ extension LoginButton {
    */
   public enum TooltipColorStyle {
     /// Light blue background, white text, faded blue close button.
-    case FriendlyBlue
+    case friendlyBlue
     /// Dark gray background, white text, light gray close button.
-    case NeutralGray
+    case neutralGray
 
     internal var sdkColorStyle: FBSDKTooltipColorStyle {
       switch self {
-      case .FriendlyBlue: return .FriendlyBlue
-      case .NeutralGray: return .NeutralGray
+      case .friendlyBlue: return .friendlyBlue
+      case .neutralGray: return .neutralGray
       }
     }
   }

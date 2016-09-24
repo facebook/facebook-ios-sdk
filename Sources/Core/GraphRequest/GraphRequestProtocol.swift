@@ -41,7 +41,7 @@ public protocol GraphRequestProtocol {
   var graphPath: String { get }
 
   /// The request parameters.
-  var parameters: [String : AnyObject]? { get }
+  var parameters: [String : Any]? { get }
 
   /// The `AccessToken` used by the request to authenticate.
   var accessToken: AccessToken? { get }
@@ -59,7 +59,7 @@ extension GraphRequestProtocol {
 
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  public func start(completion: ((httpResponse: NSHTTPURLResponse?, result: GraphRequestResult<Self>) -> Void)? = nil) {
+  public func start(_ completion: GraphRequestConnection.Completion<Self>? = nil) {
     let connection = GraphRequestConnection()
     connection.add(self, completion: completion)
     connection.start()

@@ -23,8 +23,9 @@ PRODUCT_NAME = SwiftCatalog
 PRODUCT_BUNDLE_IDENTIFIER = com.facebook.SwiftCatalog
 
 CODE_SIGN_IDENTITY = iPhone Developer
+CODE_SIGN_ENTITLEMENTS = Resources/SwiftCatalog.entitlements
 
-SWIFT_VERSION = 2.3
+SWIFT_VERSION = 3.0
 
 IPHONEOS_DEPLOYMENT_TARGET = 8.0
 

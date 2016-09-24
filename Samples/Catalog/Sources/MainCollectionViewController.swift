@@ -20,7 +20,7 @@ import Foundation
 import UIKit
 
 final class MainCollectionViewController: UICollectionViewController {
-  private let iconArray = [
+  fileprivate let iconArray = [
     Item(text: "Login", iconImageName: "LoginIcon"),
     Item(text: "Share", iconImageName: "ShareIcon"),
     Item(text: "App Events", iconImageName: "AppEventsIcon"),
@@ -28,14 +28,14 @@ final class MainCollectionViewController: UICollectionViewController {
     Item(text: "Graph API", iconImageName: "GraphAPIIcon")
   ]
 
-  override func viewWillAppear(animated: Bool) {
+  override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    navigationController?.navigationBar.hidden = true
+    navigationController?.navigationBar.isHidden = true
   }
 
-  override func viewWillDisappear(animated: Bool) {
+  override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    navigationController?.navigationBar.hidden = false
+    navigationController?.navigationBar.isHidden = false
   }
 }
 
@@ -44,18 +44,18 @@ final class MainCollectionViewController: UICollectionViewController {
 //--------------------------------------
 
 extension MainCollectionViewController {
-  override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+  override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
 
-  override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+  override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return iconArray.count
   }
 
-  override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-    let cell = collectionView.dequeueReusableCellWithReuseIdentifier("cell", forIndexPath: indexPath)
+  override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
     if let menuCell = cell as? MainCollectionViewCell {
-      menuCell.updateFrom(iconArray[indexPath.row])
+      menuCell.updateFrom(iconArray[(indexPath as NSIndexPath).row])
     } else {
       fatalError("CollectionView provided wrong cell for indexPath \(indexPath)")
     }
@@ -68,8 +68,8 @@ extension MainCollectionViewController {
 //--------------------------------------
 
 extension MainCollectionViewController {
-  override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-    performSegueWithIdentifier(iconArray[indexPath.row].text, sender: self)
+  override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    performSegue(withIdentifier: iconArray[(indexPath as NSIndexPath).row].text, sender: self)
   }
 }
 

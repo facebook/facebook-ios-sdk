@@ -25,31 +25,31 @@ import FBSDKLoginKit
  */
 public enum LoginResult {
   /// User succesfully logged in. Contains granted, declined permissions and access token.
-  case Success(grantedPermissions: Set<Permission>, declinedPermissions: Set<Permission>, token: AccessToken)
+  case success(grantedPermissions: Set<Permission>, declinedPermissions: Set<Permission>, token: AccessToken)
   /// Login attempt was cancelled by the user.
-  case Cancelled
+  case cancelled
   /// Login attempt failed.
-  case Failed(ErrorType)
+  case failed(Error)
 }
 
 extension LoginResult {
-  internal init(sdkResult: FBSDKLoginManagerLoginResult?, error: NSError?) {
+  internal init(sdkResult: FBSDKLoginManagerLoginResult?, error: Error?) {
     if let error = error {
-      self = .Failed(error)
+      self = .failed(error)
       return
     }
     guard let sdkResult = sdkResult else {
       //FIXME: (nlutsenko) Use a good error type here.
       let error = NSError(domain: "", code: 42, userInfo: nil)
-      self = .Failed(error)
+      self = .failed(error)
       return
     }
     if sdkResult.isCancelled {
-      self = .Cancelled
+      self = .cancelled
     } else {
       let grantedPermissions = (sdkResult.grantedPermissions?.flatMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
       let declinedPermissions = (sdkResult.declinedPermissions?.flatMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
-      self = .Success(grantedPermissions: grantedPermissions ?? [],
+      self = .success(grantedPermissions: grantedPermissions ?? [],
                       declinedPermissions: declinedPermissions ?? [],
                       token: AccessToken(sdkAccessToken: sdkResult.token))
 

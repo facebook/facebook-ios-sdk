@@ -22,7 +22,7 @@ import Foundation
  Represents the results of a successful Facebook post share.
  */
 public struct PostSharingResult: ContentSharingResultProtocol {
-  private let dictionary: [String : String]
+  fileprivate let dictionary: [String : String]
 
   /**
    Initialize this result from the contents of a dictionary

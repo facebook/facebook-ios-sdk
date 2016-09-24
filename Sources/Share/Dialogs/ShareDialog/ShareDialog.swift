@@ -20,8 +20,8 @@ import FBSDKShareKit
 
 /// A dialog for sharing content on Facebook.
 public final class ShareDialog<Content: ContentProtocol> {
-  private let sdkSharer: FBSDKShareDialog
-  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  fileprivate let sdkSharer: FBSDKShareDialog
+  fileprivate let sdkShareDelegate: SDKSharingDelegateBridge<Content>
 
   /**
    A `UIViewController` to present the dialog from.
@@ -78,7 +78,7 @@ extension ShareDialog: ContentSharingProtocol {
   }
 
   /// The completion handler to be invoked upon the share performing.
-  public var completion: (ContentSharerResult<Content> -> Void)? {
+  public var completion: ((ContentSharerResult<Content>) -> Void)? {
     get {
       return sdkShareDelegate.completion
     }
@@ -114,10 +114,10 @@ extension ShareDialog: ContentSharingDialogProtocol {
    - throws: If the dialog cannot be presented.
    */
   public func show() throws {
-    var error: ErrorType?
+    var error: Error?
     let completionHandler = sdkShareDelegate.completion
     sdkShareDelegate.completion = {
-      if case .Failed(let resultError) = $0 {
+      if case .failed(let resultError) = $0 {
         error = resultError
       }
     }
@@ -142,9 +142,10 @@ extension ShareDialog {
    - returns: The `ShareDialog` that has been presented.
    - throws: If the dialog fails to validate.
    */
+  @discardableResult
   public static func show(from viewController: UIViewController,
-                               content: Content,
-                               completion: (ContentSharerResult<Content> -> Void)? = nil) throws -> Self {
+                          content: Content,
+                          completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
     let shareDialog = self.init(content: content)
     shareDialog.presentingViewController = viewController
     shareDialog.completion = completion

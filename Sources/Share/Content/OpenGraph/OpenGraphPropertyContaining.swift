@@ -64,10 +64,10 @@ extension OpenGraphPropertyContaining {
     }
   }
 
-  public subscript(key: OpenGraphPropertyName) -> NSURL? {
+  public subscript(key: OpenGraphPropertyName) -> URL? {
     get {
       let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? NSURL
+      return graphValue as? URL
     }
   }
 }

@@ -83,7 +83,7 @@ public class AppEventsLogger {
 
    - parameter application: Optional instance of UIApplication. Default: `UIApplication.sharedApplication()`.
    */
-  public static func activate(application: UIApplication = UIApplication.sharedApplication()) {
+  public static func activate(_ application: UIApplication = UIApplication.shared) {
     FBSDKAppEvents.activateApp()
   }
 
@@ -97,8 +97,8 @@ public class AppEventsLogger {
    - parameter event:       The application event to log.
    - parameter accessToken: Optional access token to use to log the event. Default: `AccessToken.current`.
    */
-  public static func log(event: AppEventLoggable, accessToken: AccessToken? = AccessToken.current) {
-    let valueToSum = event.valueToSum.map({ NSNumber(double:$0 ) })
+  public static func log(_ event: AppEventLoggable, accessToken: AccessToken? = AccessToken.current) {
+    let valueToSum = event.valueToSum.map({ NSNumber(value: $0 as Double) })
     let parameters = event.parameters.keyValueMap {
       ($0.0.rawValue as NSString, $0.1.appEventParameterValue)
     }
@@ -119,7 +119,7 @@ public class AppEventsLogger {
    - parameter event:       The application event to log.
    - parameter accessToken: Optional access token to use to log the event. Default: `AccessToken.current`.
    */
-  public static func log(event: AppEvent, accessToken: AccessToken? = AccessToken.current) {
+  public static func log(_ event: AppEvent, accessToken: AccessToken? = AccessToken.current) {
     log(event as AppEventLoggable, accessToken: accessToken)
   }
 
@@ -132,7 +132,7 @@ public class AppEventsLogger {
    the cumulative and average value of this amount.
    - parameter accessToken: The optional access token to log the event as. Default: `AccessToken.current`.
    */
-  public static func log(eventName: String,
+  public static func log(_ eventName: String,
                          parameters: AppEvent.ParametersDictionary = [:],
                          valueToSum: Double? = nil,
                          accessToken: AccessToken? = AccessToken.current) {

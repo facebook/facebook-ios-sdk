@@ -28,20 +28,20 @@ public enum PublishPermission {
    Provides access to publish Posts, Open Graph actions, achievements,
    scores and other activity on behalf of a person using your app.
    */
-  case PublishActions
+  case publishActions
 
   /**
    Permission with a custom string value.
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */
-  case Custom(String)
+  case custom(String)
 }
 
 extension PublishPermission: PermissionRepresentable {
   internal var permissionValue: Permission {
     switch self {
-    case .PublishActions: return "publish_actions"
-    case .Custom(let string): return Permission(name: string)
+    case .publishActions: return "publish_actions"
+    case .custom(let string): return Permission(name: string)
     }
   }
 }

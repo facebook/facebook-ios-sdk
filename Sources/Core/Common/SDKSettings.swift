@@ -109,7 +109,7 @@ public struct SDKSettings {
    */
   public static var JPEGCompressionQuality: Double {
     get {
-      return Double(FBSDKSettings.JPEGCompressionQuality())
+      return Double(FBSDKSettings.jpegCompressionQuality())
     }
     set {
       FBSDKSettings.setJPEGCompressionQuality(CGFloat(newValue))
@@ -161,7 +161,7 @@ extension SDKSettings {
 
    - parameter behavior: The behavior to enable
    */
-  public static func enableLoggingBehavior(behavior: SDKLoggingBehavior) {
+  public static func enableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.enableLoggingBehavior(behavior.sdkStringValue)
   }
 
@@ -170,7 +170,7 @@ extension SDKSettings {
 
    - parameter behavior: The behavior to disable.
    */
-  public static func disableLoggingBehavior(behavior: SDKLoggingBehavior) {
+  public static func disableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.disableLoggingBehavior(behavior.sdkStringValue)
   }
 }

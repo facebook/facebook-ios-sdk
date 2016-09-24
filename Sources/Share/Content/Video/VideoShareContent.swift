@@ -52,7 +52,7 @@ public struct VideoShareContent: ContentProtocol {
    This URL will be checked for all link meta tags for linking in platform specific ways.
    See documentation for [App Links](https://developers.facebook.com/docs/applinks/)
    */
-  public var url: NSURL?
+  public var url: URL?
 
   /// Hashtag for the content being shared.
   public var hashtag: Hashtag?
@@ -71,7 +71,19 @@ public struct VideoShareContent: ContentProtocol {
   public var referer: String?
 }
 
-extension VideoShareContent: Equatable { }
+extension VideoShareContent: Equatable {
+  /**
+   Compare two `VideoShareContent`s for equality.
+
+   - parameter lhs: The first `VideoShareContent` to compare.
+   - parameter rhs: The second `VideoShareContent` to compare.
+
+   - returns: Whether or not the content are equal.
+   */
+  public static func == (lhs: VideoShareContent, rhs: VideoShareContent) -> Bool {
+    return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
+  }
+}
 
 extension VideoShareContent: SDKBridgedContent {
   var sdkSharingContentRepresentation: FBSDKSharingContent {
@@ -85,16 +97,4 @@ extension VideoShareContent: SDKBridgedContent {
     sdkVideoContent.ref = referer
     return sdkVideoContent
   }
-}
-
-/**
- Compare two `VideoShareContent`s for equality.
-
- - parameter lhs: The first `VideoShareContent` to compare.
- - parameter rhs: The second `VideoShareContent` to compare.
-
- - returns: Whether or not the content are equal.
- */
-public func == (lhs: VideoShareContent, rhs: VideoShareContent) -> Bool {
-  return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
 }

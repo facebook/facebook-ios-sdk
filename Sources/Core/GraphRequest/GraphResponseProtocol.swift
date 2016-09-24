@@ -28,5 +28,5 @@ public protocol GraphResponseProtocol {
    - parameter rawResponse: Raw response received from a server.
    Usually is represented by either a `Dictionary` or `Array`.
    */
-  init(rawResponse: AnyObject?)
+  init(rawResponse: Any?)
 }

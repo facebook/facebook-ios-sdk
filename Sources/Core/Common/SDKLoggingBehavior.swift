@@ -24,68 +24,68 @@ import FBSDKCoreKit.FBSDKSettings
  */
 public enum SDKLoggingBehavior {
   /// Include access token in logging.
-  case AccessTokens
+  case accessTokens
 
   /// Log performance characteristics
-  case PerformanceCharacteristics
+  case performanceCharacteristics
 
   /// Log `AppEventsLogger` interactions.
-  case AppEvents
+  case appEvents
 
   /// Log informational occurences.
-  case Informational
+  case informational
 
   /// Log cache errors.
-  case CacheErrors
+  case cacheErrors
 
   /// Log errors from SDK UI controls.
-  case UIControlErrors
+  case uiControlErrors
 
   /// Log debug warnings from API responses, e.g. when friends fields were requested, but `user_friends` permissions isn't granted.
-  case GraphAPIDebugWarning
+  case graphAPIDebugWarning
 
   /**
    Log warnings from API responses, e.g. when requested feature will be deprecated in next version of API.
    Info is the lowest level of severity, using it will result in logging all previously mentioned levels.
    */
-  case GraphAPIDebugInfo
+  case graphAPIDebugInfo
 
   /// Log errors from SDK network requests.
-  case NetworkRequests
+  case networkRequests
 
   /// Log errors likely to be preventable by the developer. This behavior is enabled by default.
-  case DeveloperErrors
+  case developerErrors
 }
 
 extension SDKLoggingBehavior {
   internal init?(sdkStringValue: String) {
     switch sdkStringValue {
-    case FBSDKLoggingBehaviorAccessTokens: self = .AccessTokens
-    case FBSDKLoggingBehaviorPerformanceCharacteristics: self = .PerformanceCharacteristics
-    case FBSDKLoggingBehaviorAppEvents: self = .AppEvents
-    case FBSDKLoggingBehaviorInformational: self = .Informational
-    case FBSDKLoggingBehaviorCacheErrors: self = .CacheErrors
-    case FBSDKLoggingBehaviorUIControlErrors: self = .UIControlErrors
-    case FBSDKLoggingBehaviorGraphAPIDebugWarning: self = .GraphAPIDebugWarning
-    case FBSDKLoggingBehaviorGraphAPIDebugInfo: self = .GraphAPIDebugInfo
-    case FBSDKLoggingBehaviorNetworkRequests: self = .NetworkRequests
-    case FBSDKLoggingBehaviorDeveloperErrors: self = .DeveloperErrors
+    case FBSDKLoggingBehaviorAccessTokens: self = .accessTokens
+    case FBSDKLoggingBehaviorPerformanceCharacteristics: self = .performanceCharacteristics
+    case FBSDKLoggingBehaviorAppEvents: self = .appEvents
+    case FBSDKLoggingBehaviorInformational: self = .informational
+    case FBSDKLoggingBehaviorCacheErrors: self = .cacheErrors
+    case FBSDKLoggingBehaviorUIControlErrors: self = .uiControlErrors
+    case FBSDKLoggingBehaviorGraphAPIDebugWarning: self = .graphAPIDebugWarning
+    case FBSDKLoggingBehaviorGraphAPIDebugInfo: self = .graphAPIDebugInfo
+    case FBSDKLoggingBehaviorNetworkRequests: self = .networkRequests
+    case FBSDKLoggingBehaviorDeveloperErrors: self = .developerErrors
     default: return nil
     }
   }
 
   internal var sdkStringValue: String {
     switch self {
-    case .AccessTokens: return FBSDKLoggingBehaviorAccessTokens
-    case .PerformanceCharacteristics: return FBSDKLoggingBehaviorPerformanceCharacteristics
-    case .AppEvents: return FBSDKLoggingBehaviorAppEvents
-    case .Informational: return FBSDKLoggingBehaviorInformational
-    case .CacheErrors: return FBSDKLoggingBehaviorCacheErrors
-    case .UIControlErrors: return FBSDKLoggingBehaviorUIControlErrors
-    case .GraphAPIDebugWarning: return FBSDKLoggingBehaviorGraphAPIDebugWarning
-    case .GraphAPIDebugInfo: return FBSDKLoggingBehaviorGraphAPIDebugInfo
-    case .NetworkRequests: return FBSDKLoggingBehaviorNetworkRequests
-    case .DeveloperErrors: return FBSDKLoggingBehaviorDeveloperErrors
+    case .accessTokens: return FBSDKLoggingBehaviorAccessTokens
+    case .performanceCharacteristics: return FBSDKLoggingBehaviorPerformanceCharacteristics
+    case .appEvents: return FBSDKLoggingBehaviorAppEvents
+    case .informational: return FBSDKLoggingBehaviorInformational
+    case .cacheErrors: return FBSDKLoggingBehaviorCacheErrors
+    case .uiControlErrors: return FBSDKLoggingBehaviorUIControlErrors
+    case .graphAPIDebugWarning: return FBSDKLoggingBehaviorGraphAPIDebugWarning
+    case .graphAPIDebugInfo: return FBSDKLoggingBehaviorGraphAPIDebugInfo
+    case .networkRequests: return FBSDKLoggingBehaviorNetworkRequests
+    case .developerErrors: return FBSDKLoggingBehaviorDeveloperErrors
     }
   }
 }

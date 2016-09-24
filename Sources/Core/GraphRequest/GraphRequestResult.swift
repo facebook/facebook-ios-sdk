@@ -18,17 +18,17 @@
 
 /**
  Represents result of a single request.
- Can either be `.Success` or `.Failed`
+ Can either be `.success` or `.failed`
  */
 public enum GraphRequestResult<T: GraphRequestProtocol> {
   /**
    Represents succesful result of a `GraphRequestProtocol`.
    Encapsulates response from the server.
    */
-  case Success(response: T.Response)
+  case success(response: T.Response)
   /**
    Represents errored result of a `GraphRequestProtocol`.
    Encapsulates error that was encountered.
    */
-  case Failed(ErrorType)
+  case failed(Error)
 }

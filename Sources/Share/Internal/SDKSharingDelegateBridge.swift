@@ -20,40 +20,40 @@ import FBSDKShareKit
 
 @testable import FacebookCore
 
-private struct BridgingFailedError<Content: ContentProtocol>: ErrorType {
-  let nativeResults: [NSObject: AnyObject]?
+private struct BridgingFailedError<Content: ContentProtocol>: Error {
+  let nativeResults: [AnyHashable: Any]?
 }
 
 internal class SDKSharingDelegateBridge<Content: ContentProtocol>: NSObject, FBSDKSharingDelegate {
-  internal var completion: (ContentSharerResult<Content> -> Void)? = nil
+  internal var completion: ((ContentSharerResult<Content>) -> Void)? = nil
 
-  func setupAsDelegateFor(sharer: FBSDKSharing) {
+  func setupAsDelegateFor(_ sharer: FBSDKSharing) {
     // We need for the connection to retain us,
     // so we can stick around and keep calling into handlers,
     // as long as the connection is alive/sending messages.
-    objc_setAssociatedObject(sharer, unsafeAddressOf(self), self, .OBJC_ASSOCIATION_RETAIN)
+    objc_setAssociatedObject(sharer, Unmanaged.passUnretained(self).toOpaque(), self, .OBJC_ASSOCIATION_RETAIN)
     sharer.delegate = self
   }
 
-  func sharer(sharer: FBSDKSharing, didCompleteWithResults results: [NSObject : AnyObject]?) {
+  func sharer(_ sharer: FBSDKSharing, didCompleteWithResults results: [AnyHashable: Any]?) {
     let dictionary = results.map {
       $0.keyValueFlatMap { key, value in
         (key as? String, value as? String)
       }
     }
     let sharingResult = dictionary.map(Content.Result.init)
-    let result: ContentSharerResult<Content> = sharingResult.map(ContentSharerResult.Success) ??
-      .Failed(BridgingFailedError<Content>(nativeResults: results))
+    let result: ContentSharerResult<Content> = sharingResult.map(ContentSharerResult.success) ??
+      .failed(BridgingFailedError<Content>(nativeResults: results))
 
     completion?(result)
   }
 
-  func sharer(sharer: FBSDKSharing, didFailWithError error: NSError) {
-    let error: ErrorType = ShareError(error: error) ?? error
-    completion?(.Failed(error))
+  func sharer(_ sharer: FBSDKSharing, didFailWithError error: Error) {
+    let error: Error = ShareError(error: (error as NSError)) as Error? ?? error
+    completion?(.failed(error))
   }
 
-  func sharerDidCancel(sharer: FBSDKSharing) {
-    completion?(.Cancelled)
+  func sharerDidCancel(_ sharer: FBSDKSharing) {
+    completion?(.cancelled)
   }
 }

@@ -30,7 +30,7 @@ public protocol ContentProtocol {
    This URL will be checked for all link meta tags for linking in platform specific ways.
    See documentation for [App Links](https://developers.facebook.com/docs/applinks/)
    */
-  var url: NSURL? { get }
+  var url: URL? { get }
 
   /// Hashtag for the content being shared.
   var hashtag: Hashtag? { get }

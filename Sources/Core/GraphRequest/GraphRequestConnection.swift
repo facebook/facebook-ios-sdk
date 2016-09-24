@@ -30,10 +30,10 @@ import FBSDKCoreKit.FBSDKGraphRequestConnection
  */
 public class GraphRequestConnection {
   /// A type of the closure that could be used to track network progress of a specific connection.
-  public typealias NetworkProgressHandler = (bytesSent: Int64, totalBytesSent: Int64, totalExpectedBytes: Int64) -> Void
+  public typealias NetworkProgressHandler = (_ bytesSent: Int64, _ totalBytesSent: Int64, _ totalExpectedBytes: Int64) -> Void
 
   /// A type of the closure that could be used to track network errors of a specific connection.
-  public typealias NetworkFailureHandler = (ErrorType) -> Void
+  public typealias NetworkFailureHandler = (Error) -> Void
 
   /// Network progress closure that is going to be called every time data is sent to the server.
   public var networkProgressHandler: NetworkProgressHandler? = nil {
@@ -53,14 +53,14 @@ public class GraphRequestConnection {
   }
 
   /// The operation queue that is used to call all network handlers.
-  public var networkHandlerQueue: NSOperationQueue = NSOperationQueue.mainQueue() {
+  public var networkHandlerQueue: OperationQueue = OperationQueue.main {
     didSet {
       sdkConnection.setDelegateQueue(networkHandlerQueue)
     }
   }
 
-  private var sdkConnection = FBSDKGraphRequestConnection()
-  private var sdkDelegateBridge = GraphRequestConnectionDelegateBridge()
+  fileprivate var sdkConnection = FBSDKGraphRequestConnection()
+  fileprivate var sdkDelegateBridge = GraphRequestConnectionDelegateBridge()
 
   /**
    Initializes a connection.
@@ -75,6 +75,8 @@ public class GraphRequestConnection {
 //--------------------------------------
 
 extension GraphRequestConnection {
+  public typealias Completion<T: GraphRequestProtocol> = (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<T>) -> Void
+
   /**
    Adds a request object to this connection.
 
@@ -84,12 +86,11 @@ extension GraphRequestConnection {
    As described in [Graph API Batch Requests](https://developers.facebook.com/docs/reference/api/batch/).
    - parameter completion:     Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  public func add<T: GraphRequestProtocol>(
-    request: T,
-    batchEntryName: String? = nil,
-    completion: ((connectionHTTPResponse: NSHTTPURLResponse?, result: GraphRequestResult<T>) -> Void)? = nil) {
+  public func add<T: GraphRequestProtocol>(_ request: T,
+                  batchEntryName: String? = nil,
+                  completion: Completion<T>? = nil) {
     let batchParameters = batchEntryName.map({ ["name" : $0] })
-    add(request, batchParameters: batchParameters, completion: completion)
+    add(request, batchParameters: batchParameters as [String : Any]?, completion: completion)
   }
 
   /**
@@ -101,13 +102,12 @@ extension GraphRequestConnection {
    Examples include "depends_on", "name", or "omit_response_on_success".
    - parameter completion:      Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  public func add<T: GraphRequestProtocol>(
-    request: T,
-    batchParameters: [String : AnyObject]?,
-    completion: ((connectionHTTPResponse: NSHTTPURLResponse?, result: GraphRequestResult<T>) -> Void)? = nil) {
-    sdkConnection.addRequest(request.sdkRequest,
-                             completionHandler: completion.map(sdkRequestCompletion),
-                             batchParameters: batchParameters)
+  public func add<T: GraphRequestProtocol>(_ request: T,
+                  batchParameters: [String : Any]?,
+                  completion: Completion<T>? = nil) {
+    sdkConnection.add(request.sdkRequest,
+                      completionHandler: completion.map(sdkRequestCompletion),
+                      batchParameters: batchParameters)
   }
 
   /**
@@ -137,21 +137,19 @@ extension GraphRequestConnection {
 
 extension GraphRequestConnection {
   /// Custom typealias that is the same as FBSDKGraphRequestHandler, but without implicitly unwrapped optionals.
-  private typealias SDKRequestCompletion = (connection: FBSDKGraphRequestConnection?, rawResponse: AnyObject?, error: NSError?) -> Void
+  fileprivate typealias SDKRequestCompletion = (_ connection: FBSDKGraphRequestConnection?, _ rawResponse: Any?, _ error: Error?) -> Void
 
-  private func sdkRequestCompletion<T: GraphRequestProtocol>(
-    from completion: ((httpResponse: NSHTTPURLResponse?, result: GraphRequestResult<T>) -> Void)
-    ) -> SDKRequestCompletion {
+  fileprivate func sdkRequestCompletion<T: GraphRequestProtocol>(from completion: @escaping Completion<T>) -> SDKRequestCompletion {
     return { connection, rawResponse, error in
       let result: GraphRequestResult<T> = {
         switch error {
         case let error?:
-          return .Failed(error)
+          return .failed(error)
         default:
-          return .Success(response: T.Response(rawResponse: rawResponse))
+          return .success(response: T.Response(rawResponse: rawResponse))
         }
       }()
-      completion(httpResponse: connection?.URLResponse, result: result)
+      completion(connection?.urlResponse, result)
     }
   }
 }

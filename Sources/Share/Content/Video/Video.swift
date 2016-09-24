@@ -22,18 +22,32 @@ import FBSDKShareKit
 /**
  A video for sharing.
  */
-public struct Video: Equatable {
+public struct Video {
 
   /// The file URL to the video.
-  public var url: NSURL
+  public var url: URL
 
   /**
    Build a new video with a video URL and preivew photo.
 
    - parameter url: The file URL to the video.
    */
-  public init(url: NSURL) {
+  public init(url: URL) {
     self.url = url
+  }
+}
+
+extension Video: Equatable {
+  /**
+   Compare two `Video`s for equality.
+
+   - parameter lhs: The first `Video` to compare.
+   - parameter rhs: The second `Video` to compare.
+
+   - returns: Whether or not the videos are equal.
+   */
+  public static func == (lhs: Video, rhs: Video) -> Bool {
+    return lhs.sdkVideoRepresentation == rhs.sdkVideoRepresentation
   }
 }
 
@@ -51,16 +65,4 @@ extension Video {
     }
     self.url = url
   }
-}
-
-/**
- Compare two `Video`s for equality.
-
- - parameter lhs: The first `Video` to compare.
- - parameter rhs: The second `Video` to compare.
-
- - returns: Whether or not the videos are equal.
- */
-public func == (lhs: Video, rhs: Video) -> Bool {
-  return lhs.sdkVideoRepresentation == rhs.sdkVideoRepresentation
 }

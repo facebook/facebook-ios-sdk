@@ -52,7 +52,7 @@ public struct OpenGraphShareContent {
    This URL will be checked for all link meta tags for linking in platform specific ways.
    See documentation for [App Links](https://developers.facebook.com/docs/applinks/)
    */
-  public var url: NSURL?
+  public var url: URL?
 
   /// Hashtag for the content being shared.
   public var hashtag: Hashtag?
@@ -71,7 +71,19 @@ public struct OpenGraphShareContent {
   public var referer: String?
 }
 
-extension OpenGraphShareContent: Equatable { }
+extension OpenGraphShareContent: Equatable {
+  /**
+   Compares two `OpenGraphContent`s for equality.
+
+   - parameter lhs: The first content to compare.
+   - parameter rhs: The second content to comare.
+
+   - returns: Whether or not the content are equal.
+   */
+  public static func == (lhs: OpenGraphShareContent, rhs: OpenGraphShareContent) -> Bool {
+    return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
+  }
+}
 
 extension OpenGraphShareContent: SDKBridgedContent {
   internal var sdkSharingContentRepresentation: FBSDKSharingContent {
@@ -85,16 +97,4 @@ extension OpenGraphShareContent: SDKBridgedContent {
     sdkContent.ref = referer
     return sdkContent
   }
-}
-
-/**
- Compares two `OpenGraphContent`s for equality.
-
- - parameter lhs: The first content to compare.
- - parameter rhs: The second content to comare.
-
- - returns: Whether or not the content are equal.
- */
-public func == (lhs: OpenGraphShareContent, rhs: OpenGraphShareContent) -> Bool {
-  return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
 }

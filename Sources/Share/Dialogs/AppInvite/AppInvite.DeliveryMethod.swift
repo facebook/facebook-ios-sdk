@@ -25,25 +25,25 @@ extension AppInvite {
    */
   public enum DeliveryMethod {
     /// Deliver via Facebook
-    case Facebook
+    case facebook
 
     /// Deliver via Messenger
-    case Messenger
+    case messenger
   }
 }
 
 extension AppInvite.DeliveryMethod {
   internal init(sdkDestinationRepresentation: FBSDKAppInviteDestination) {
     switch sdkDestinationRepresentation {
-    case .Facebook: self = .Facebook
-    case .Messenger: self = .Messenger
+    case .facebook: self = .facebook
+    case .messenger: self = .messenger
     }
   }
 
   internal var sdkDestinationRepresentation: FBSDKAppInviteDestination {
     switch self {
-    case .Facebook: return .Facebook
-    case .Messenger: return .Messenger
+    case .facebook: return .facebook
+    case .messenger: return .messenger
     }
   }
 }

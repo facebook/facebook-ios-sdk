@@ -23,17 +23,17 @@ import FacebookCore
 
 class GraphAPIReadViewController: UITableViewController {
 
-  func presentAlertControllerFor<P: GraphRequestProtocol>(result: GraphRequestResult<P>) {
+  func presentAlertControllerFor<P: GraphRequestProtocol>(_ result: GraphRequestResult<P>) {
     let alertController: UIAlertController
     switch result {
-    case .Success(let response):
+    case .success(let response):
       alertController = UIAlertController(title: "Graph Request Success",
                                           message: "Graph Request Succeeded with response: \(response)")
-    case .Failed(let error):
+    case .failed(let error):
       alertController = UIAlertController(title: "Graph Request Failed",
                                           message: "Graph Request Failed with error: \(error)")
     }
-    presentViewController(alertController, animated: true, completion: nil)
+    present(alertController, animated: true, completion: nil)
   }
 }
 
@@ -44,9 +44,9 @@ class GraphAPIReadViewController: UITableViewController {
 struct FBProfileRequest: GraphRequestProtocol {
   typealias Response = GraphResponse
 
-  var graphPath: String = "/me"
-  var parameters: [String : AnyObject]? = ["fields": "id, name"]
-  var accessToken: AccessToken? = AccessToken.current
+  var graphPath = "/me"
+  var parameters: [String : Any]? = ["fields": "id, name" as AnyObject]
+  var accessToken = AccessToken.current
   var httpMethod: GraphRequestHTTPMethod = .GET
   var apiVersion: GraphAPIVersion = 2.7
 }
@@ -62,9 +62,9 @@ extension GraphAPIReadViewController {
     let request = FBProfileRequest()
     request.start { (httpResponse, result) in
       switch result {
-      case .Success(let response):
+      case .success(let response):
         print("Graph Request Succeeded: \(response)")
-      case .Failed(let error):
+      case .failed(let error):
         print("Graph Request Failed: \(error)")
       }
 
@@ -87,9 +87,9 @@ extension GraphAPIReadViewController {
                                httpMethod: .GET)
     request.start { _, result in
       switch result {
-      case .Success(let response):
+      case .success(let response):
         print("Graph Request Succeeded: \(response)")
-      case .Failed(let error):
+      case .failed(let error):
         print("Graph Request Failed: \(error)")
       }
 
@@ -112,9 +112,9 @@ extension GraphAPIReadViewController {
                                httpMethod: .GET)
     request.start { httpResponse, result in
       switch result {
-      case .Success(let response):
+      case .success(let response):
         print("Graph Request Succeeded: \(response)")
-      case .Failed(let error):
+      case .failed(let error):
         print("Graph Request Failed: \(error)")
       }
 

@@ -34,14 +34,15 @@ public struct OpenGraphPropertyName {
    - parameter string: The string to create from.
    */
   public init?(_ string: String) {
-    guard let components: [String.CharacterView] = string.characters.split(":") where components.count >= 2 else {
+    let components = string.characters.split(separator: ":")
+    guard components.count >= 2 else {
       return nil
     }
 
     self.namespace = String(components[0])
 
     let subcharacters = components[1 ... components.count]
-    self.name = subcharacters.reduce("", combine: { $0 + ":" + String($1) })
+    self.name = subcharacters.reduce("", { $0 + ":" + String($1) })
   }
 
   /**
@@ -76,7 +77,7 @@ extension OpenGraphPropertyName: RawRepresentable {
   }
 }
 
-extension OpenGraphPropertyName: StringLiteralConvertible {
+extension OpenGraphPropertyName: ExpressibleByStringLiteral {
   /**
    Create an `OpenGraphPropertyName` from a string literal.
 
@@ -119,16 +120,16 @@ extension OpenGraphPropertyName: Hashable {
   public var hashValue: Int {
     return rawValue.hashValue
   }
-}
 
-/**
- Compares two `OpenGraphPropertyName`s for equality.
+  /**
+   Compares two `OpenGraphPropertyName`s for equality.
 
- - parameter lhs: The first property name to compare.
- - parameter rhs: The second property name to compare.
+   - parameter lhs: The first property name to compare.
+   - parameter rhs: The second property name to compare.
 
- - returns: Whether or not these names are equal.
- */
-public func == (lhs: OpenGraphPropertyName, rhs: OpenGraphPropertyName) -> Bool {
-  return lhs.rawValue == rhs.rawValue
+   - returns: Whether or not these names are equal.
+   */
+  public static func == (lhs: OpenGraphPropertyName, rhs: OpenGraphPropertyName) -> Bool {
+    return lhs.rawValue == rhs.rawValue
+  }
 }

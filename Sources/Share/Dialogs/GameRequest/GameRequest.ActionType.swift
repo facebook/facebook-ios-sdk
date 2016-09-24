@@ -28,23 +28,23 @@ extension GameRequest {
 
      - parameter objectId: The Open Graph object ID of the object being sent.
      */
-    case Send(objectId: String)
+    case send(objectId: String)
 
     /**
      Ask for action type: The user is asking for an object from friends.
 
      - parameter objectId: The Open Graph object ID of the object being sent.
      */
-    case AskFor(objectId: String)
+    case askFor(objectId: String)
 
     /// Turn action type: It is the turn of the friends to play against the user in a match. (no object)
-    case Turn
+    case turn
 
-    internal var sdkActionRepresentation: (FBSDKGameRequestActionType, String!) {
+    internal var sdkActionRepresentation: (FBSDKGameRequestActionType, String?) {
       switch self {
-      case .Send(let objectId): return (FBSDKGameRequestActionType.Send, objectId)
-      case .AskFor(let objectId): return (FBSDKGameRequestActionType.AskFor, objectId)
-      case .Turn: return (FBSDKGameRequestActionType.Turn, nil)
+      case .send(let objectId): return (FBSDKGameRequestActionType.send, objectId)
+      case .askFor(let objectId): return (FBSDKGameRequestActionType.askFor, objectId)
+      case .turn: return (FBSDKGameRequestActionType.turn, nil)
       }
     }
   }

@@ -22,31 +22,31 @@ import FacebookShare
 
 final class ShareAPIViewController: UITableViewController {
 
-  func share<C: ContentProtocol>(content: C) {
+  func share<C: ContentProtocol>(_ content: C) {
     var title: String = ""
     var message: String = ""
 
     do {
       try GraphSharer.share(content) { result in
         switch result {
-        case .Success(let contentResult):
+        case .success(let contentResult):
           title = "Share Success"
           message = "Succesfully shared: \(contentResult)"
-        case .Cancelled:
+        case .cancelled:
           title = "Share Cancelled"
           message = "Sharing was cancelled by user."
-        case .Failed(let error):
+        case .failed(let error):
           title = "Share Failed"
           message = "Sharing failed with error \(error)"
         }
         let alertController = UIAlertController(title: title, message: message)
-        self.presentViewController(alertController, animated: true, completion: nil)
+        self.present(alertController, animated: true, completion: nil)
       }
     } catch (let error) {
       title = "Share API Fail"
       message = "Failed to invoke share API with error: \(error)"
       let alertController = UIAlertController(title: title, message: message)
-      presentViewController(alertController, animated: true, completion: nil)
+      present(alertController, animated: true, completion: nil)
     }
   }
 }
@@ -57,10 +57,10 @@ final class ShareAPIViewController: UITableViewController {
 
 extension ShareAPIViewController {
   @IBAction func shareLink() {
-    let content = LinkShareContent(url: NSURL(string: "https://newsroom.fb.com/")!,
+    let content = LinkShareContent(url: URL(string: "https://newsroom.fb.com/")!,
                                    title: "Name: Facebook News Room",
                                    description: "Description: The Facebook Swift SDK helps you develop Facebook integrated iOS apps.",
-                                   imageURL: NSURL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
+                                   imageURL: URL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
     share(content)
   }
 }
@@ -83,7 +83,7 @@ extension ShareAPIViewController {
 
 extension ShareAPIViewController {
   @IBAction func shareVideo() {
-    let video = Video(url: NSBundle.mainBundle().URLForResource("sky", withExtension: "mp4")!)
+    let video = Video(url: Bundle.main.url(forResource: "sky", withExtension: "mp4")!)
     let content = VideoShareContent(video: video)
     share(content)
   }

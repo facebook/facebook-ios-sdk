@@ -22,28 +22,28 @@ extension LikeControl {
   /**
    Specifies the style of the auxilary view in the like control.
    */
-  public enum AuxilaryStyle: Equatable {
+  public enum AuxilaryStyle {
     /// Use the standard social share message.
-    case Standard(horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment)
+    case standard(horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment)
 
     /// Use a more compact box count auxilary view.
-    case BoxCount(horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment)
+    case boxCount(horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment)
 
     /// The horizontal alignment of this style.
     public var horizontalAlignment: HorizontalAlignment {
       get {
         switch self {
-        case .Standard(let alignment): return alignment.horizontalAlignment
-        case .BoxCount(let alignment): return alignment.horizontalAlignment
+        case .standard(let alignment): return alignment.horizontalAlignment
+        case .boxCount(let alignment): return alignment.horizontalAlignment
         }
       }
       set {
         switch self {
-        case .Standard(let alignment):
-          self = .Standard(horizontalAlignment: newValue, verticalAlignment: alignment.verticalAlignment)
+        case .standard(let alignment):
+          self = .standard(horizontalAlignment: newValue, verticalAlignment: alignment.verticalAlignment)
 
-        case .BoxCount(let alignment):
-          self = .BoxCount(horizontalAlignment: newValue, verticalAlignment: alignment.verticalAlignment)
+        case .boxCount(let alignment):
+          self = .boxCount(horizontalAlignment: newValue, verticalAlignment: alignment.verticalAlignment)
         }
       }
     }
@@ -52,45 +52,61 @@ extension LikeControl {
     public var verticalAlignment: VerticalAlignment {
       get {
         switch self {
-        case .Standard(let alignment): return alignment.verticalAlignment
-        case .BoxCount(let alignment): return alignment.verticalAlignment
+        case .standard(let alignment): return alignment.verticalAlignment
+        case .boxCount(let alignment): return alignment.verticalAlignment
         }
       }
       set {
         switch self {
-        case .Standard(let alignment):
-          self = .Standard(horizontalAlignment: alignment.horizontalAlignment, verticalAlignment: newValue)
+        case .standard(let alignment):
+          self = .standard(horizontalAlignment: alignment.horizontalAlignment, verticalAlignment: newValue)
 
-        case .BoxCount(let alignment):
-          self = .BoxCount(horizontalAlignment: alignment.horizontalAlignment, verticalAlignment: newValue)
+        case .boxCount(let alignment):
+          self = .boxCount(horizontalAlignment: alignment.horizontalAlignment, verticalAlignment: newValue)
         }
       }
     }
   }
 }
 
+extension LikeControl.AuxilaryStyle: Equatable {
+  /**
+   Compare two `AuxilaryStyle`'s for equality.
+
+   - parameter lhs: The first style to compare.
+   - parameter rhs: The second style to compare.
+
+   - returns: Whether or not the styles are equal.
+   */
+  public static func == (lhs: LikeControl.AuxilaryStyle, rhs: LikeControl.AuxilaryStyle) -> Bool {
+    switch (lhs, rhs) {
+    case (.standard(let lhs), .standard(let rhs)): return lhs == rhs
+    case (.boxCount(let lhs), .boxCount(let rhs)): return lhs == rhs
+    default: return false
+    }
+  }
+}
+
 extension LikeControl.AuxilaryStyle {
-  internal init(
-    sdkStyle: FBSDKLikeControlStyle,
-    sdkHorizontalAlignment: FBSDKLikeControlHorizontalAlignment,
-    sdkAuxilaryPosition: FBSDKLikeControlAuxiliaryPosition
-    ) {
+  internal init(sdkStyle: FBSDKLikeControlStyle,
+                sdkHorizontalAlignment: FBSDKLikeControlHorizontalAlignment,
+                sdkAuxilaryPosition: FBSDKLikeControlAuxiliaryPosition) {
     let horizontalAlignment = HorizontalAlignment(sdkHorizontalAlignment: sdkHorizontalAlignment)
     let verticalAlignment = VerticalAlignment(sdkAuxilaryPosition: sdkAuxilaryPosition)
 
     switch sdkStyle {
-    case .Standard: self = .Standard(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
-    case .BoxCount: self = .BoxCount(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
+    case .standard: self = .standard(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
+    case .boxCount: self = .boxCount(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
     }
   }
 
   internal var sdkStyleRepresentation: (FBSDKLikeControlStyle, FBSDKLikeControlHorizontalAlignment, FBSDKLikeControlAuxiliaryPosition) {
     switch self {
-    case .Standard(let horizontal, let vertical):
-      return (.Standard, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
+    case .standard(let horizontal, let vertical):
+      return (.standard, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
 
-    case .BoxCount(let horizontal, let vertical):
-      return (.BoxCount, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
+    case .boxCount(let horizontal, let vertical):
+      return (.boxCount, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
     }
   }
 }
@@ -101,27 +117,27 @@ extension LikeControl.AuxilaryStyle {
    */
   public enum HorizontalAlignment {
     /// The auxilary view should be placed to the left of the like button.
-    case Left
+    case left
 
     /// The auxilary view should be placed centered to the like button.
-    case Center
+    case center
 
     /// The auxilary view should be placed to the right of the like button.
-    case Right
+    case right
 
     internal init(sdkHorizontalAlignment: FBSDKLikeControlHorizontalAlignment) {
       switch sdkHorizontalAlignment {
-      case .Left: self = .Left
-      case .Center: self = .Center
-      case .Right: self = .Right
+      case .left: self = .left
+      case .center: self = .center
+      case .right: self = .right
       }
     }
 
     internal var sdkHorizontalAlignment: FBSDKLikeControlHorizontalAlignment {
       switch self {
-      case .Left: return .Left
-      case .Center: return .Center
-      case .Right: return .Right
+      case .left: return .left
+      case .center: return .center
+      case .right: return .right
       }
     }
   }
@@ -131,44 +147,28 @@ extension LikeControl.AuxilaryStyle {
    */
   public enum VerticalAlignment {
     /// The auxilary view should be placed above the like button.
-    case Top
+    case top
 
     /// The auxilary view should be placed inline with the like button.
-    case Inline
+    case inline
 
     /// The auxilary view should be placed below the like button.
-    case Bottom
+    case bottom
 
     internal init(sdkAuxilaryPosition: FBSDKLikeControlAuxiliaryPosition) {
       switch sdkAuxilaryPosition {
-      case .Top: self = .Top
-      case .Inline: self = .Inline
-      case .Bottom: self = .Bottom
+      case .top: self = .top
+      case .inline: self = .inline
+      case .bottom: self = .bottom
       }
     }
 
     internal var sdkAuxilaryPosition: FBSDKLikeControlAuxiliaryPosition {
       switch self {
-      case .Top: return .Top
-      case .Inline: return .Inline
-      case .Bottom: return .Bottom
+      case .top: return .top
+      case .inline: return .inline
+      case .bottom: return .bottom
       }
     }
-  }
-}
-
-/**
- Compare two `AuxilaryStyle`'s for equality.
-
- - parameter lhs: The first style to compare.
- - parameter rhs: The second style to compare.
-
- - returns: Whether or not the styles are equal.
- */
-public func == (lhs: LikeControl.AuxilaryStyle, rhs: LikeControl.AuxilaryStyle) -> Bool {
-  switch (lhs, rhs) {
-  case (.Standard(let lhs), .Standard(let rhs)): return lhs == rhs
-  case (.BoxCount(let lhs), .BoxCount(let rhs)): return lhs == rhs
-  default: return false
   }
 }

@@ -24,16 +24,16 @@ import FBSDKShareKit
  */
 public protocol OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  var openGraphPropertyValue: AnyObject { get }
+  var openGraphPropertyValue: Any { get }
 }
 
 internal struct OpenGraphPropertyValueConverter {
-  internal static func valueFrom(openGraphObjectValue value: AnyObject) -> OpenGraphPropertyValue? {
+  internal static func valueFrom(openGraphObjectValue value: Any) -> OpenGraphPropertyValue? {
     switch value {
     case let value as String: return value
     case let value as NSNumber: return value
-    case let value as NSArray: return value.flatMap { valueFrom(openGraphObjectValue: $0) }
-    case let value as NSURL: return value
+    case let value as NSArray: return value.flatMap { valueFrom(openGraphObjectValue: $0 as AnyObject) }
+    case let value as URL: return value
     case let value as FBSDKSharePhoto: return Photo(sdkPhoto: value)
     case let value as FBSDKShareOpenGraphObject: return OpenGraphObject(sdkGraphObject: value)
     default:
@@ -45,44 +45,44 @@ internal struct OpenGraphPropertyValueConverter {
 
 extension NSNumber: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return self
   }
 }
 
 extension String: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return self
   }
 }
 
 extension Array: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return self
       .flatMap { $0 as? OpenGraphPropertyValue }
       .map { $0.openGraphPropertyValue }
   }
 }
 
-extension NSURL: OpenGraphPropertyValue {
+extension URL: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return self
   }
 }
 
 extension Photo: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return sdkPhotoRepresentation
   }
 }
 
 extension OpenGraphObject: OpenGraphPropertyValue {
   /// The bridged OpenGraph raw value.
-  public var openGraphPropertyValue: AnyObject {
+  public var openGraphPropertyValue: Any {
     return sdkGraphObjectRepresentation
   }
 }

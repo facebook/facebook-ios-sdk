@@ -26,29 +26,29 @@ extension AppEventsLogger {
     /**
      Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation.
      */
-    case Auto
+    case auto
 
     /**
      Only flush when the `flush` method is called.
      When an app is moved to background/terminated, the events are persisted and re-established at activation,
      but they will only be written with an explicit call to `flush`.
      */
-    case ExplicitOnly
+    case explicitOnly
   }
 }
 
 extension AppEventsLogger.FlushBehavior {
   internal init(sdkFlushBehavior: FBSDKAppEventsFlushBehavior) {
     switch sdkFlushBehavior {
-    case .Auto: self = .Auto
-    case .ExplicitOnly: self = .ExplicitOnly
+    case .auto: self = .auto
+    case .explicitOnly: self = .explicitOnly
     }
   }
 
   internal var sdkFlushBehavior: FBSDKAppEventsFlushBehavior {
     switch self {
-    case .Auto: return .Auto
-    case .ExplicitOnly: return .ExplicitOnly
+    case .auto: return .auto
+    case .explicitOnly: return .explicitOnly
     }
   }
 }
