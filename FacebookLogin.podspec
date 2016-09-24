@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'FacebookLogin'
-  s.version      = '0.1.1'
+  s.version      = '0.2.0'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
   s.documentation_url = 'https://developers.facebook.com/docs/swift/reference'
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.exclude_files = 'Sources/Login/LoginManager.DefaultAudience.swift'
   s.module_name = 'FacebookLogin'
 
-  s.ios.dependency 'FacebookCore'
+  s.ios.dependency 'FacebookCore', '~> 0.2'
   s.ios.dependency 'Bolts', '~> 1.8'
   s.ios.dependency 'FBSDKCoreKit', '~> 4.15'
   s.ios.dependency 'FBSDKLoginKit', '~> 4.15'

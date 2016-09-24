@@ -1,5 +1,30 @@
 # Change Log
 
+## [0.2.0](https://github.com/facebook/facebook-sdk-swift/tree/0.2.0) (2016-09-24)
+[Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.1.1...0.2.0)
+
+**Implemented enhancements:**
+
+- Add Swift 3.0 support. [\#58](https://github.com/facebook/facebook-sdk-swift/pull/58) ([nlutsenko](https://github.com/nlutsenko))
+- Add constructor for OpenGraphShareContent. [\#42](https://github.com/facebook/facebook-sdk-swift/pull/42) ([richardjrossiii](https://github.com/richardjrossiii))
+- Add iOS 9.0+ method for opening URLs to ApplicationDelegate. [\#37](https://github.com/facebook/facebook-sdk-swift/pull/37) ([nlutsenko](https://github.com/nlutsenko))
+- Refactor UserProfilePictureView into UserProfile.PictureView. [\#34](https://github.com/facebook/facebook-sdk-swift/pull/34) ([nlutsenko](https://github.com/nlutsenko))
+- Add ability to fetch and refresh UserProfile. [\#33](https://github.com/facebook/facebook-sdk-swift/pull/33) ([nlutsenko](https://github.com/nlutsenko))
+- Change type GraphRequestProtocol.apiVersion from String to concrete GraphAPIVersion. [\#32](https://github.com/facebook/facebook-sdk-swift/pull/32) ([nlutsenko](https://github.com/nlutsenko))
+
+**Merged pull requests:**
+
+- Update ObjC SDK dependency to 4.15. [\#46](https://github.com/facebook/facebook-sdk-swift/pull/46) ([nlutsenko](https://github.com/nlutsenko))
+- Rename ApplicationDelegate to SDKApplicationDelegate to avoid name clashes. [\#36](https://github.com/facebook/facebook-sdk-swift/pull/36) ([nlutsenko](https://github.com/nlutsenko))
+- Fix possessive typos in README [\#27](https://github.com/facebook/facebook-sdk-swift/pull/27) ([ashchan](https://github.com/ashchan))
+- Mention local CocoaPods repo update in README instructions. [\#23](https://github.com/facebook/facebook-sdk-swift/pull/23) ([nlutsenko](https://github.com/nlutsenko))
+- Clarify upgrade instructions for Carthage. [\#21](https://github.com/facebook/facebook-sdk-swift/pull/21) ([nlutsenko](https://github.com/nlutsenko))
+- Add License link to contributing page [\#19](https://github.com/facebook/facebook-sdk-swift/pull/19) ([jinjorge](https://github.com/jinjorge))
+- Typo fix [\#18](https://github.com/facebook/facebook-sdk-swift/pull/18) ([jinjorge](https://github.com/jinjorge))
+- Clarify versioning instruction for CocoaPods installation. [\#15](https://github.com/facebook/facebook-sdk-swift/pull/15) ([nlutsenko](https://github.com/nlutsenko))
+- Add missing `git submodule` command to README [\#13](https://github.com/facebook/facebook-sdk-swift/pull/13) ([hirschfl](https://github.com/hirschfl))
+- Update README.md [\#11](https://github.com/facebook/facebook-sdk-swift/pull/11) ([SandroMachado](https://github.com/SandroMachado))
+
 ## [0.1.1](https://github.com/facebook/facebook-sdk-swift/tree/0.1.1) (2016-07-14)
 [Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.1.0...0.1.1)
 
@@ -14,6 +39,7 @@
 
 **Merged pull requests:**
 
+- Facebook Swift 0.1.1 [\#9](https://github.com/facebook/facebook-sdk-swift/pull/9) ([nlutsenko](https://github.com/nlutsenko))
 - Remove unused LoginManager.DefaultAudience file. [\#8](https://github.com/facebook/facebook-sdk-swift/pull/8) ([nlutsenko](https://github.com/nlutsenko))
 - Fix failing login with publish permissions when using LoginManager. [\#4](https://github.com/facebook/facebook-sdk-swift/pull/4) ([nlutsenko](https://github.com/nlutsenko))
 - Update links and platforms badge in README. [\#2](https://github.com/facebook/facebook-sdk-swift/pull/2) ([nlutsenko](https://github.com/nlutsenko))
