@@ -1007,7 +1007,6 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 - (NSString *)_calculatePreJSONInitialTextWithHashtag:(NSString *)hashtag
 {
   NSMutableString *text = [NSMutableString new];
-  [text appendString:[NSString stringWithFormat:@"fb-app-id:%@", [FBSDKSettings appID]]];
   if (hashtag != nil) {
     [text appendString:@" "];
     [text appendString:hashtag];
