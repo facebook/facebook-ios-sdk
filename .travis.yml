@@ -41,4 +41,6 @@ script:
     xcodebuild build -workspace FacebookSwift.xcworkspace -sdk iphonesimulator -scheme SwiftCatalog -configuration Debug -destination "platform=iOS Simulator,name=iPhone 5" -destination "platform=iOS Simulator,name=iPhone 7 Plus" | xcpretty -c
   elif [ "$TEST_TYPE" = CocoaPods ]; then
     pod lib lint FacebookCore.podspec
+    pod lib lint FacebookLogin.podspec
+    pod lib lint FacebookShare.podspec
   fi
