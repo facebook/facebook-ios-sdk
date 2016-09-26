@@ -1,6 +1,7 @@
 # Facebook SDK in Swift (Beta)
 
 [![Platforms](https://img.shields.io/cocoapods/p/FacebookCore.svg)]()
+[![Swift Version](https://img.shields.io/badge/Swift-3.0.x-orange.svg)]()
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)]()
 
 [![Build Status](https://img.shields.io/travis/facebook/facebook-sdk-swift/master.svg?style=flat)](https://travis-ci.org/facebook/facebook-sdk-swift)
