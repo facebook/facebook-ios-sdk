@@ -64,7 +64,7 @@
  @param graphPath the graph path (e.g., @"me").
  @param parameters the optional parameters dictionary.
  @param tokenString the token string to use. Specifying nil will cause no token to be used.
- @param version the optional Graph API version (e.g., @"v2.0"). nil defaults to FBSDK_TARGET_PLATFORM_VERSION.
+ @param version the optional Graph API version (e.g., @"v2.0"). nil defaults to `[FBSDKSettings graphAPIVersion]`.
  @param HTTPMethod the optional HTTP method (e.g., @"POST"). nil defaults to @"GET".
  */
 - (instancetype)initWithGraphPath:(NSString *)graphPath

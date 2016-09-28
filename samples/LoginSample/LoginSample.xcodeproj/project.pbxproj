@@ -1,0 +1,592 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0301F3C61D75067900BFD0CE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0301F3C41D75067900BFD0CE /* Info.plist */; };
+		0301F3C71D75067900BFD0CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3C51D75067900BFD0CE /* main.m */; };
+		0301F3CF1D75069300BFD0CE /* SettingsUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3C81D75069300BFD0CE /* SettingsUtil.m */; };
+		0301F3D01D75069300BFD0CE /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3CA1D75069300BFD0CE /* LoginViewController.m */; };
+		0301F3D11D75069300BFD0CE /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3CB1D75069300BFD0CE /* AppDelegate.m */; };
+		0301F3D21D75069300BFD0CE /* LoggedInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3CD1D75069300BFD0CE /* LoggedInViewController.m */; };
+		0301F3EA1D7506A100BFD0CE /* AdvancedUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3D31D7506A100BFD0CE /* AdvancedUIManager.m */; };
+		0301F3EB1D7506A100BFD0CE /* Theme.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3D41D7506A100BFD0CE /* Theme.m */; };
+		0301F3EC1D7506A100BFD0CE /* PlaceholderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3D81D7506A100BFD0CE /* PlaceholderView.m */; };
+		0301F3ED1D7506A100BFD0CE /* ReverbActionBarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3DA1D7506A100BFD0CE /* ReverbActionBarView.m */; };
+		0301F3EE1D7506A100BFD0CE /* ReverbBodyView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3DC1D7506A100BFD0CE /* ReverbBodyView.m */; };
+		0301F3EF1D7506A100BFD0CE /* ReverbFooterView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3DE1D7506A100BFD0CE /* ReverbFooterView.m */; };
+		0301F3F01D7506A100BFD0CE /* ReverbHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3E01D7506A100BFD0CE /* ReverbHeaderView.m */; };
+		0301F3F11D7506A100BFD0CE /* ReverbProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3E21D7506A100BFD0CE /* ReverbProgressBar.m */; };
+		0301F3F21D7506A100BFD0CE /* ReverbProgressDots.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3E41D7506A100BFD0CE /* ReverbProgressDots.m */; };
+		0301F3F31D7506A100BFD0CE /* ReverbTheme.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3E71D7506A100BFD0CE /* ReverbTheme.m */; };
+		0301F3F41D7506A100BFD0CE /* ReverbUIManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3E91D7506A100BFD0CE /* ReverbUIManager.m */; };
+		0301F3F81D7508DC00BFD0CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0301F3F71D7508DC00BFD0CE /* Assets.xcassets */; };
+		03052A031D6B7D2C0072BA47 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 03052A011D6B7D2C0072BA47 /* LaunchScreen.storyboard */; };
+		035BFC1F1D80A37000908056 /* AccountKitStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 035BFC1E1D80A37000908056 /* AccountKitStrings.bundle */; };
+		03DB40921D78ED1D006AE2F9 /* AccountKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB408F1D78ED1D006AE2F9 /* AccountKit.framework */; };
+		03DB40931D78ED1D006AE2F9 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB40901D78ED1D006AE2F9 /* FBSDKCoreKit.framework */; };
+		03DB40941D78ED1D006AE2F9 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03DB40911D78ED1D006AE2F9 /* FBSDKLoginKit.framework */; };
+		03DB41171D78F82E006AE2F9 /* _FBColorComponentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40E81D78F82E006AE2F9 /* _FBColorComponentCell.m */; };
+		03DB41181D78F82E006AE2F9 /* _FBColorUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40EA1D78F82E006AE2F9 /* _FBColorUtils.m */; };
+		03DB41191D78F82E006AE2F9 /* _FBColorWheelCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40EC1D78F82E006AE2F9 /* _FBColorWheelCell.m */; };
+		03DB411A1D78F82E006AE2F9 /* _FBKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40EE1D78F82E006AE2F9 /* _FBKeyboardManager.m */; };
+		03DB411B1D78F82E006AE2F9 /* _FBSliderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40F01D78F82E006AE2F9 /* _FBSliderView.m */; };
+		03DB411C1D78F82E006AE2F9 /* _FBTweakArrayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40F21D78F82E006AE2F9 /* _FBTweakArrayViewController.m */; };
+		03DB411D1D78F82E006AE2F9 /* _FBTweakBindObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40F41D78F82E006AE2F9 /* _FBTweakBindObserver.m */; };
+		03DB411E1D78F82E006AE2F9 /* _FBTweakCategoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40F61D78F82E006AE2F9 /* _FBTweakCategoryViewController.m */; };
+		03DB411F1D78F82E006AE2F9 /* _FBTweakCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40F81D78F82E006AE2F9 /* _FBTweakCollectionViewController.m */; };
+		03DB41201D78F82E006AE2F9 /* _FBTweakColorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40FA1D78F82E006AE2F9 /* _FBTweakColorViewController.m */; };
+		03DB41211D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40FD1D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.m */; };
+		03DB41221D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB40FF1D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.m */; };
+		03DB41231D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41011D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.m */; };
+		03DB41241D78F82E006AE2F9 /* _FBTweakDictionaryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41031D78F82E006AE2F9 /* _FBTweakDictionaryViewController.m */; };
+		03DB41251D78F82E006AE2F9 /* _FBTweakTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41051D78F82E006AE2F9 /* _FBTweakTableViewCell.m */; };
+		03DB41261D78F82E006AE2F9 /* FBTweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41081D78F82E006AE2F9 /* FBTweak.m */; };
+		03DB41271D78F82E006AE2F9 /* FBTweakCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB410A1D78F82E006AE2F9 /* FBTweakCategory.m */; };
+		03DB41281D78F82E006AE2F9 /* FBTweakCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB410C1D78F82E006AE2F9 /* FBTweakCollection.m */; };
+		03DB41291D78F82E006AE2F9 /* FBTweakInline.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB410F1D78F82E006AE2F9 /* FBTweakInline.m */; };
+		03DB412A1D78F82E006AE2F9 /* FBTweakShakeWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41121D78F82E006AE2F9 /* FBTweakShakeWindow.m */; };
+		03DB412B1D78F82E006AE2F9 /* FBTweakStore.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41141D78F82E006AE2F9 /* FBTweakStore.m */; };
+		03DB412C1D78F82E006AE2F9 /* FBTweakViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 03DB41161D78F82E006AE2F9 /* FBTweakViewController.m */; };
+		03F4CF141D80BBE400C8135E /* Application.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03F4CF101D80BBE400C8135E /* Application.xcconfig */; };
+		03F4CF151D80BBE400C8135E /* Project-Debug.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03F4CF111D80BBE400C8135E /* Project-Debug.xcconfig */; };
+		03F4CF161D80BBE400C8135E /* Project-Release.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03F4CF121D80BBE400C8135E /* Project-Release.xcconfig */; };
+		03F4CF171D80BBE400C8135E /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 03F4CF131D80BBE400C8135E /* Project.xcconfig */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0301F3C41D75067900BFD0CE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = LoginSample/Info.plist; sourceTree = SOURCE_ROOT; };
+		0301F3C51D75067900BFD0CE /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = LoginSample/main.m; sourceTree = SOURCE_ROOT; };
+		0301F3C81D75069300BFD0CE /* SettingsUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SettingsUtil.m; path = LoginSample/SettingsUtil.m; sourceTree = SOURCE_ROOT; };
+		0301F3C91D75069300BFD0CE /* SettingsUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SettingsUtil.h; path = LoginSample/SettingsUtil.h; sourceTree = SOURCE_ROOT; };
+		0301F3CA1D75069300BFD0CE /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = LoginSample/LoginViewController.m; sourceTree = SOURCE_ROOT; };
+		0301F3CB1D75069300BFD0CE /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = LoginSample/AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		0301F3CC1D75069300BFD0CE /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = LoginSample/LoginViewController.h; sourceTree = SOURCE_ROOT; };
+		0301F3CD1D75069300BFD0CE /* LoggedInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoggedInViewController.m; path = LoginSample/LoggedInViewController.m; sourceTree = SOURCE_ROOT; };
+		0301F3CE1D75069300BFD0CE /* LoggedInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoggedInViewController.h; path = LoginSample/LoggedInViewController.h; sourceTree = SOURCE_ROOT; };
+		0301F3D31D7506A100BFD0CE /* AdvancedUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdvancedUIManager.m; path = LoginSample/AKThemes/AdvancedUIManager.m; sourceTree = SOURCE_ROOT; };
+		0301F3D41D7506A100BFD0CE /* Theme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Theme.m; path = LoginSample/AKThemes/Theme.m; sourceTree = SOURCE_ROOT; };
+		0301F3D51D7506A100BFD0CE /* Theme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Theme.h; path = LoginSample/AKThemes/Theme.h; sourceTree = SOURCE_ROOT; };
+		0301F3D61D7506A100BFD0CE /* AdvancedUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdvancedUIManager.h; path = LoginSample/AKThemes/AdvancedUIManager.h; sourceTree = SOURCE_ROOT; };
+		0301F3D71D7506A100BFD0CE /* PlaceholderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlaceholderView.h; path = LoginSample/AKThemes/PlaceholderView.h; sourceTree = SOURCE_ROOT; };
+		0301F3D81D7506A100BFD0CE /* PlaceholderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlaceholderView.m; path = LoginSample/AKThemes/PlaceholderView.m; sourceTree = SOURCE_ROOT; };
+		0301F3D91D7506A100BFD0CE /* ReverbActionBarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbActionBarView.h; path = LoginSample/AKThemes/ReverbActionBarView.h; sourceTree = SOURCE_ROOT; };
+		0301F3DA1D7506A100BFD0CE /* ReverbActionBarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbActionBarView.m; path = LoginSample/AKThemes/ReverbActionBarView.m; sourceTree = SOURCE_ROOT; };
+		0301F3DB1D7506A100BFD0CE /* ReverbBodyView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbBodyView.h; path = LoginSample/AKThemes/ReverbBodyView.h; sourceTree = SOURCE_ROOT; };
+		0301F3DC1D7506A100BFD0CE /* ReverbBodyView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbBodyView.m; path = LoginSample/AKThemes/ReverbBodyView.m; sourceTree = SOURCE_ROOT; };
+		0301F3DD1D7506A100BFD0CE /* ReverbFooterView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbFooterView.h; path = LoginSample/AKThemes/ReverbFooterView.h; sourceTree = SOURCE_ROOT; };
+		0301F3DE1D7506A100BFD0CE /* ReverbFooterView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbFooterView.m; path = LoginSample/AKThemes/ReverbFooterView.m; sourceTree = SOURCE_ROOT; };
+		0301F3DF1D7506A100BFD0CE /* ReverbHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbHeaderView.h; path = LoginSample/AKThemes/ReverbHeaderView.h; sourceTree = SOURCE_ROOT; };
+		0301F3E01D7506A100BFD0CE /* ReverbHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbHeaderView.m; path = LoginSample/AKThemes/ReverbHeaderView.m; sourceTree = SOURCE_ROOT; };
+		0301F3E11D7506A100BFD0CE /* ReverbProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbProgressBar.h; path = LoginSample/AKThemes/ReverbProgressBar.h; sourceTree = SOURCE_ROOT; };
+		0301F3E21D7506A100BFD0CE /* ReverbProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbProgressBar.m; path = LoginSample/AKThemes/ReverbProgressBar.m; sourceTree = SOURCE_ROOT; };
+		0301F3E31D7506A100BFD0CE /* ReverbProgressDots.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbProgressDots.h; path = LoginSample/AKThemes/ReverbProgressDots.h; sourceTree = SOURCE_ROOT; };
+		0301F3E41D7506A100BFD0CE /* ReverbProgressDots.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbProgressDots.m; path = LoginSample/AKThemes/ReverbProgressDots.m; sourceTree = SOURCE_ROOT; };
+		0301F3E51D7506A100BFD0CE /* ReverbProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbProgressView.h; path = LoginSample/AKThemes/ReverbProgressView.h; sourceTree = SOURCE_ROOT; };
+		0301F3E61D7506A100BFD0CE /* ReverbTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbTheme.h; path = LoginSample/AKThemes/ReverbTheme.h; sourceTree = SOURCE_ROOT; };
+		0301F3E71D7506A100BFD0CE /* ReverbTheme.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbTheme.m; path = LoginSample/AKThemes/ReverbTheme.m; sourceTree = SOURCE_ROOT; };
+		0301F3E81D7506A100BFD0CE /* ReverbUIManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ReverbUIManager.h; path = LoginSample/AKThemes/ReverbUIManager.h; sourceTree = SOURCE_ROOT; };
+		0301F3E91D7506A100BFD0CE /* ReverbUIManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ReverbUIManager.m; path = LoginSample/AKThemes/ReverbUIManager.m; sourceTree = SOURCE_ROOT; };
+		0301F3F71D7508DC00BFD0CE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		030529F01D6B7D2C0072BA47 /* LoginSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LoginSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		03052A021D6B7D2C0072BA47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		035BFC1E1D80A37000908056 /* AccountKitStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = AccountKitStrings.bundle; path = ../../../AccountKit/AccountKitStrings.bundle; sourceTree = "<group>"; };
+		03DB408F1D78ED1D006AE2F9 /* AccountKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AccountKit.framework; path = ../../build/AccountKit.framework; sourceTree = "<group>"; };
+		03DB40901D78ED1D006AE2F9 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		03DB40911D78ED1D006AE2F9 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		03DB40E71D78F82E006AE2F9 /* _FBColorComponentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBColorComponentCell.h; path = ../../vendor/FBTweak/FBTweak/_FBColorComponentCell.h; sourceTree = "<group>"; };
+		03DB40E81D78F82E006AE2F9 /* _FBColorComponentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBColorComponentCell.m; path = ../../vendor/FBTweak/FBTweak/_FBColorComponentCell.m; sourceTree = "<group>"; };
+		03DB40E91D78F82E006AE2F9 /* _FBColorUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBColorUtils.h; path = ../../vendor/FBTweak/FBTweak/_FBColorUtils.h; sourceTree = "<group>"; };
+		03DB40EA1D78F82E006AE2F9 /* _FBColorUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBColorUtils.m; path = ../../vendor/FBTweak/FBTweak/_FBColorUtils.m; sourceTree = "<group>"; };
+		03DB40EB1D78F82E006AE2F9 /* _FBColorWheelCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBColorWheelCell.h; path = ../../vendor/FBTweak/FBTweak/_FBColorWheelCell.h; sourceTree = "<group>"; };
+		03DB40EC1D78F82E006AE2F9 /* _FBColorWheelCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBColorWheelCell.m; path = ../../vendor/FBTweak/FBTweak/_FBColorWheelCell.m; sourceTree = "<group>"; };
+		03DB40ED1D78F82E006AE2F9 /* _FBKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBKeyboardManager.h; path = ../../vendor/FBTweak/FBTweak/_FBKeyboardManager.h; sourceTree = "<group>"; };
+		03DB40EE1D78F82E006AE2F9 /* _FBKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBKeyboardManager.m; path = ../../vendor/FBTweak/FBTweak/_FBKeyboardManager.m; sourceTree = "<group>"; };
+		03DB40EF1D78F82E006AE2F9 /* _FBSliderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBSliderView.h; path = ../../vendor/FBTweak/FBTweak/_FBSliderView.h; sourceTree = "<group>"; };
+		03DB40F01D78F82E006AE2F9 /* _FBSliderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBSliderView.m; path = ../../vendor/FBTweak/FBTweak/_FBSliderView.m; sourceTree = "<group>"; };
+		03DB40F11D78F82E006AE2F9 /* _FBTweakArrayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakArrayViewController.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakArrayViewController.h; sourceTree = "<group>"; };
+		03DB40F21D78F82E006AE2F9 /* _FBTweakArrayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakArrayViewController.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakArrayViewController.m; sourceTree = "<group>"; };
+		03DB40F31D78F82E006AE2F9 /* _FBTweakBindObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakBindObserver.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakBindObserver.h; sourceTree = "<group>"; };
+		03DB40F41D78F82E006AE2F9 /* _FBTweakBindObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakBindObserver.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakBindObserver.m; sourceTree = "<group>"; };
+		03DB40F51D78F82E006AE2F9 /* _FBTweakCategoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakCategoryViewController.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakCategoryViewController.h; sourceTree = "<group>"; };
+		03DB40F61D78F82E006AE2F9 /* _FBTweakCategoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakCategoryViewController.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakCategoryViewController.m; sourceTree = "<group>"; };
+		03DB40F71D78F82E006AE2F9 /* _FBTweakCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakCollectionViewController.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakCollectionViewController.h; sourceTree = "<group>"; };
+		03DB40F81D78F82E006AE2F9 /* _FBTweakCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakCollectionViewController.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakCollectionViewController.m; sourceTree = "<group>"; };
+		03DB40F91D78F82E006AE2F9 /* _FBTweakColorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakColorViewController.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewController.h; sourceTree = "<group>"; };
+		03DB40FA1D78F82E006AE2F9 /* _FBTweakColorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakColorViewController.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewController.m; sourceTree = "<group>"; };
+		03DB40FB1D78F82E006AE2F9 /* _FBTweakColorViewControllerDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakColorViewControllerDataSource.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerDataSource.h; sourceTree = "<group>"; };
+		03DB40FC1D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakColorViewControllerHexDataSource.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerHexDataSource.h; sourceTree = "<group>"; };
+		03DB40FD1D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakColorViewControllerHexDataSource.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerHexDataSource.m; sourceTree = "<group>"; };
+		03DB40FE1D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakColorViewControllerHSBDataSource.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerHSBDataSource.h; sourceTree = "<group>"; };
+		03DB40FF1D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakColorViewControllerHSBDataSource.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerHSBDataSource.m; sourceTree = "<group>"; };
+		03DB41001D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakColorViewControllerRGBDataSource.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerRGBDataSource.h; sourceTree = "<group>"; };
+		03DB41011D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakColorViewControllerRGBDataSource.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakColorViewControllerRGBDataSource.m; sourceTree = "<group>"; };
+		03DB41021D78F82E006AE2F9 /* _FBTweakDictionaryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakDictionaryViewController.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakDictionaryViewController.h; sourceTree = "<group>"; };
+		03DB41031D78F82E006AE2F9 /* _FBTweakDictionaryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakDictionaryViewController.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakDictionaryViewController.m; sourceTree = "<group>"; };
+		03DB41041D78F82E006AE2F9 /* _FBTweakTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = _FBTweakTableViewCell.h; path = ../../vendor/FBTweak/FBTweak/_FBTweakTableViewCell.h; sourceTree = "<group>"; };
+		03DB41051D78F82E006AE2F9 /* _FBTweakTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = _FBTweakTableViewCell.m; path = ../../vendor/FBTweak/FBTweak/_FBTweakTableViewCell.m; sourceTree = "<group>"; };
+		03DB41061D78F82E006AE2F9 /* FBTweak-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBTweak-Prefix.pch"; path = "../../vendor/FBTweak/FBTweak/FBTweak-Prefix.pch"; sourceTree = "<group>"; };
+		03DB41071D78F82E006AE2F9 /* FBTweak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweak.h; path = ../../vendor/FBTweak/FBTweak/FBTweak.h; sourceTree = "<group>"; };
+		03DB41081D78F82E006AE2F9 /* FBTweak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweak.m; path = ../../vendor/FBTweak/FBTweak/FBTweak.m; sourceTree = "<group>"; };
+		03DB41091D78F82E006AE2F9 /* FBTweakCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakCategory.h; path = ../../vendor/FBTweak/FBTweak/FBTweakCategory.h; sourceTree = "<group>"; };
+		03DB410A1D78F82E006AE2F9 /* FBTweakCategory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakCategory.m; path = ../../vendor/FBTweak/FBTweak/FBTweakCategory.m; sourceTree = "<group>"; };
+		03DB410B1D78F82E006AE2F9 /* FBTweakCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakCollection.h; path = ../../vendor/FBTweak/FBTweak/FBTweakCollection.h; sourceTree = "<group>"; };
+		03DB410C1D78F82E006AE2F9 /* FBTweakCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakCollection.m; path = ../../vendor/FBTweak/FBTweak/FBTweakCollection.m; sourceTree = "<group>"; };
+		03DB410D1D78F82E006AE2F9 /* FBTweakEnabled.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakEnabled.h; path = ../../vendor/FBTweak/FBTweak/FBTweakEnabled.h; sourceTree = "<group>"; };
+		03DB410E1D78F82E006AE2F9 /* FBTweakInline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakInline.h; path = ../../vendor/FBTweak/FBTweak/FBTweakInline.h; sourceTree = "<group>"; };
+		03DB410F1D78F82E006AE2F9 /* FBTweakInline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakInline.m; path = ../../vendor/FBTweak/FBTweak/FBTweakInline.m; sourceTree = "<group>"; };
+		03DB41101D78F82E006AE2F9 /* FBTweakInlineInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakInlineInternal.h; path = ../../vendor/FBTweak/FBTweak/FBTweakInlineInternal.h; sourceTree = "<group>"; };
+		03DB41111D78F82E006AE2F9 /* FBTweakShakeWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakShakeWindow.h; path = ../../vendor/FBTweak/FBTweak/FBTweakShakeWindow.h; sourceTree = "<group>"; };
+		03DB41121D78F82E006AE2F9 /* FBTweakShakeWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakShakeWindow.m; path = ../../vendor/FBTweak/FBTweak/FBTweakShakeWindow.m; sourceTree = "<group>"; };
+		03DB41131D78F82E006AE2F9 /* FBTweakStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakStore.h; path = ../../vendor/FBTweak/FBTweak/FBTweakStore.h; sourceTree = "<group>"; };
+		03DB41141D78F82E006AE2F9 /* FBTweakStore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakStore.m; path = ../../vendor/FBTweak/FBTweak/FBTweakStore.m; sourceTree = "<group>"; };
+		03DB41151D78F82E006AE2F9 /* FBTweakViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBTweakViewController.h; path = ../../vendor/FBTweak/FBTweak/FBTweakViewController.h; sourceTree = "<group>"; };
+		03DB41161D78F82E006AE2F9 /* FBTweakViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBTweakViewController.m; path = ../../vendor/FBTweak/FBTweak/FBTweakViewController.m; sourceTree = "<group>"; };
+		03F4CF101D80BBE400C8135E /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Application.xcconfig; path = ../Configurations/Application.xcconfig; sourceTree = "<group>"; };
+		03F4CF111D80BBE400C8135E /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Debug.xcconfig"; path = "../Configurations/Project-Debug.xcconfig"; sourceTree = "<group>"; };
+		03F4CF121D80BBE400C8135E /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "Project-Release.xcconfig"; path = "../Configurations/Project-Release.xcconfig"; sourceTree = "<group>"; };
+		03F4CF131D80BBE400C8135E /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = ../Configurations/Project.xcconfig; sourceTree = "<group>"; };
+		03F4CF181D80BC9500C8135E /* LoginSample-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "LoginSample-Prefix.pch"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		030529ED1D6B7D2C0072BA47 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03DB40921D78ED1D006AE2F9 /* AccountKit.framework in Frameworks */,
+				03DB40931D78ED1D006AE2F9 /* FBSDKCoreKit.framework in Frameworks */,
+				03DB40941D78ED1D006AE2F9 /* FBSDKLoginKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0301F3111D74A47E00BFD0CE /* FBTweak */ = {
+			isa = PBXGroup;
+			children = (
+				03DB40E71D78F82E006AE2F9 /* _FBColorComponentCell.h */,
+				03DB40E81D78F82E006AE2F9 /* _FBColorComponentCell.m */,
+				03DB40E91D78F82E006AE2F9 /* _FBColorUtils.h */,
+				03DB40EA1D78F82E006AE2F9 /* _FBColorUtils.m */,
+				03DB40EB1D78F82E006AE2F9 /* _FBColorWheelCell.h */,
+				03DB40EC1D78F82E006AE2F9 /* _FBColorWheelCell.m */,
+				03DB40ED1D78F82E006AE2F9 /* _FBKeyboardManager.h */,
+				03DB40EE1D78F82E006AE2F9 /* _FBKeyboardManager.m */,
+				03DB40EF1D78F82E006AE2F9 /* _FBSliderView.h */,
+				03DB40F01D78F82E006AE2F9 /* _FBSliderView.m */,
+				03DB40F11D78F82E006AE2F9 /* _FBTweakArrayViewController.h */,
+				03DB40F21D78F82E006AE2F9 /* _FBTweakArrayViewController.m */,
+				03DB40F31D78F82E006AE2F9 /* _FBTweakBindObserver.h */,
+				03DB40F41D78F82E006AE2F9 /* _FBTweakBindObserver.m */,
+				03DB40F51D78F82E006AE2F9 /* _FBTweakCategoryViewController.h */,
+				03DB40F61D78F82E006AE2F9 /* _FBTweakCategoryViewController.m */,
+				03DB40F71D78F82E006AE2F9 /* _FBTweakCollectionViewController.h */,
+				03DB40F81D78F82E006AE2F9 /* _FBTweakCollectionViewController.m */,
+				03DB40F91D78F82E006AE2F9 /* _FBTweakColorViewController.h */,
+				03DB40FA1D78F82E006AE2F9 /* _FBTweakColorViewController.m */,
+				03DB40FB1D78F82E006AE2F9 /* _FBTweakColorViewControllerDataSource.h */,
+				03DB40FC1D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.h */,
+				03DB40FD1D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.m */,
+				03DB40FE1D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.h */,
+				03DB40FF1D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.m */,
+				03DB41001D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.h */,
+				03DB41011D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.m */,
+				03DB41021D78F82E006AE2F9 /* _FBTweakDictionaryViewController.h */,
+				03DB41031D78F82E006AE2F9 /* _FBTweakDictionaryViewController.m */,
+				03DB41041D78F82E006AE2F9 /* _FBTweakTableViewCell.h */,
+				03DB41051D78F82E006AE2F9 /* _FBTweakTableViewCell.m */,
+				03DB41061D78F82E006AE2F9 /* FBTweak-Prefix.pch */,
+				03DB41071D78F82E006AE2F9 /* FBTweak.h */,
+				03DB41081D78F82E006AE2F9 /* FBTweak.m */,
+				03DB41091D78F82E006AE2F9 /* FBTweakCategory.h */,
+				03DB410A1D78F82E006AE2F9 /* FBTweakCategory.m */,
+				03DB410B1D78F82E006AE2F9 /* FBTweakCollection.h */,
+				03DB410C1D78F82E006AE2F9 /* FBTweakCollection.m */,
+				03DB410D1D78F82E006AE2F9 /* FBTweakEnabled.h */,
+				03DB410E1D78F82E006AE2F9 /* FBTweakInline.h */,
+				03DB410F1D78F82E006AE2F9 /* FBTweakInline.m */,
+				03DB41101D78F82E006AE2F9 /* FBTweakInlineInternal.h */,
+				03DB41111D78F82E006AE2F9 /* FBTweakShakeWindow.h */,
+				03DB41121D78F82E006AE2F9 /* FBTweakShakeWindow.m */,
+				03DB41131D78F82E006AE2F9 /* FBTweakStore.h */,
+				03DB41141D78F82E006AE2F9 /* FBTweakStore.m */,
+				03DB41151D78F82E006AE2F9 /* FBTweakViewController.h */,
+				03DB41161D78F82E006AE2F9 /* FBTweakViewController.m */,
+			);
+			name = FBTweak;
+			sourceTree = "<group>";
+		};
+		0301F39E1D74B04A00BFD0CE /* AKThemes */ = {
+			isa = PBXGroup;
+			children = (
+				0301F3D31D7506A100BFD0CE /* AdvancedUIManager.m */,
+				0301F3D41D7506A100BFD0CE /* Theme.m */,
+				0301F3D51D7506A100BFD0CE /* Theme.h */,
+				0301F3D61D7506A100BFD0CE /* AdvancedUIManager.h */,
+				0301F3D71D7506A100BFD0CE /* PlaceholderView.h */,
+				0301F3D81D7506A100BFD0CE /* PlaceholderView.m */,
+				0301F3D91D7506A100BFD0CE /* ReverbActionBarView.h */,
+				0301F3DA1D7506A100BFD0CE /* ReverbActionBarView.m */,
+				0301F3DB1D7506A100BFD0CE /* ReverbBodyView.h */,
+				0301F3DC1D7506A100BFD0CE /* ReverbBodyView.m */,
+				0301F3DD1D7506A100BFD0CE /* ReverbFooterView.h */,
+				0301F3DE1D7506A100BFD0CE /* ReverbFooterView.m */,
+				0301F3DF1D7506A100BFD0CE /* ReverbHeaderView.h */,
+				0301F3E01D7506A100BFD0CE /* ReverbHeaderView.m */,
+				0301F3E11D7506A100BFD0CE /* ReverbProgressBar.h */,
+				0301F3E21D7506A100BFD0CE /* ReverbProgressBar.m */,
+				0301F3E31D7506A100BFD0CE /* ReverbProgressDots.h */,
+				0301F3E41D7506A100BFD0CE /* ReverbProgressDots.m */,
+				0301F3E51D7506A100BFD0CE /* ReverbProgressView.h */,
+				0301F3E61D7506A100BFD0CE /* ReverbTheme.h */,
+				0301F3E71D7506A100BFD0CE /* ReverbTheme.m */,
+				0301F3E81D7506A100BFD0CE /* ReverbUIManager.h */,
+				0301F3E91D7506A100BFD0CE /* ReverbUIManager.m */,
+			);
+			name = AKThemes;
+			sourceTree = "<group>";
+		};
+		030529E71D6B7D2C0072BA47 = {
+			isa = PBXGroup;
+			children = (
+				03F4CF0F1D80BBCA00C8135E /* Configurations */,
+				03052A101D6B84950072BA47 /* Frameworks */,
+				030529F21D6B7D2C0072BA47 /* LoginSample */,
+				0301F3111D74A47E00BFD0CE /* FBTweak */,
+				030529F11D6B7D2C0072BA47 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		030529F11D6B7D2C0072BA47 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				030529F01D6B7D2C0072BA47 /* LoginSample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		030529F21D6B7D2C0072BA47 /* LoginSample */ = {
+			isa = PBXGroup;
+			children = (
+				0301F3F71D7508DC00BFD0CE /* Assets.xcassets */,
+				0301F3C81D75069300BFD0CE /* SettingsUtil.m */,
+				0301F3C91D75069300BFD0CE /* SettingsUtil.h */,
+				0301F3CA1D75069300BFD0CE /* LoginViewController.m */,
+				0301F3CB1D75069300BFD0CE /* AppDelegate.m */,
+				0301F3CC1D75069300BFD0CE /* LoginViewController.h */,
+				0301F3CD1D75069300BFD0CE /* LoggedInViewController.m */,
+				0301F3CE1D75069300BFD0CE /* LoggedInViewController.h */,
+				0301F39E1D74B04A00BFD0CE /* AKThemes */,
+				030529F31D6B7D2C0072BA47 /* Supporting Files */,
+			);
+			path = LoginSample;
+			sourceTree = "<group>";
+		};
+		030529F31D6B7D2C0072BA47 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				03F4CF181D80BC9500C8135E /* LoginSample-Prefix.pch */,
+				035BFC1E1D80A37000908056 /* AccountKitStrings.bundle */,
+				03052A011D6B7D2C0072BA47 /* LaunchScreen.storyboard */,
+				0301F3C41D75067900BFD0CE /* Info.plist */,
+				0301F3C51D75067900BFD0CE /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		03052A101D6B84950072BA47 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03DB408F1D78ED1D006AE2F9 /* AccountKit.framework */,
+				03DB40901D78ED1D006AE2F9 /* FBSDKCoreKit.framework */,
+				03DB40911D78ED1D006AE2F9 /* FBSDKLoginKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		03F4CF0F1D80BBCA00C8135E /* Configurations */ = {
+			isa = PBXGroup;
+			children = (
+				03F4CF101D80BBE400C8135E /* Application.xcconfig */,
+				03F4CF111D80BBE400C8135E /* Project-Debug.xcconfig */,
+				03F4CF121D80BBE400C8135E /* Project-Release.xcconfig */,
+				03F4CF131D80BBE400C8135E /* Project.xcconfig */,
+			);
+			name = Configurations;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		030529EF1D6B7D2C0072BA47 /* LoginSample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 03052A071D6B7D2C0072BA47 /* Build configuration list for PBXNativeTarget "LoginSample" */;
+			buildPhases = (
+				030529EC1D6B7D2C0072BA47 /* Sources */,
+				030529ED1D6B7D2C0072BA47 /* Frameworks */,
+				030529EE1D6B7D2C0072BA47 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LoginSample;
+			productName = LoginSample;
+			productReference = 030529F01D6B7D2C0072BA47 /* LoginSample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		030529E81D6B7D2C0072BA47 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = Facebook;
+				TargetAttributes = {
+					030529EF1D6B7D2C0072BA47 = {
+						CreatedOnToolsVersion = 7.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 030529EB1D6B7D2C0072BA47 /* Build configuration list for PBXProject "LoginSample" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 030529E71D6B7D2C0072BA47;
+			productRefGroup = 030529F11D6B7D2C0072BA47 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				030529EF1D6B7D2C0072BA47 /* LoginSample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		030529EE1D6B7D2C0072BA47 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				03F4CF151D80BBE400C8135E /* Project-Debug.xcconfig in Resources */,
+				03F4CF161D80BBE400C8135E /* Project-Release.xcconfig in Resources */,
+				03052A031D6B7D2C0072BA47 /* LaunchScreen.storyboard in Resources */,
+				03F4CF141D80BBE400C8135E /* Application.xcconfig in Resources */,
+				0301F3F81D7508DC00BFD0CE /* Assets.xcassets in Resources */,
+				0301F3C61D75067900BFD0CE /* Info.plist in Resources */,
+				03F4CF171D80BBE400C8135E /* Project.xcconfig in Resources */,
+				035BFC1F1D80A37000908056 /* AccountKitStrings.bundle in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		030529EC1D6B7D2C0072BA47 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0301F3ED1D7506A100BFD0CE /* ReverbActionBarView.m in Sources */,
+				03DB41251D78F82E006AE2F9 /* _FBTweakTableViewCell.m in Sources */,
+				03DB41201D78F82E006AE2F9 /* _FBTweakColorViewController.m in Sources */,
+				03DB41271D78F82E006AE2F9 /* FBTweakCategory.m in Sources */,
+				0301F3F31D7506A100BFD0CE /* ReverbTheme.m in Sources */,
+				03DB41211D78F82E006AE2F9 /* _FBTweakColorViewControllerHexDataSource.m in Sources */,
+				03DB411D1D78F82E006AE2F9 /* _FBTweakBindObserver.m in Sources */,
+				03DB41171D78F82E006AE2F9 /* _FBColorComponentCell.m in Sources */,
+				0301F3EC1D7506A100BFD0CE /* PlaceholderView.m in Sources */,
+				03DB41261D78F82E006AE2F9 /* FBTweak.m in Sources */,
+				03DB41241D78F82E006AE2F9 /* _FBTweakDictionaryViewController.m in Sources */,
+				0301F3EE1D7506A100BFD0CE /* ReverbBodyView.m in Sources */,
+				03DB411E1D78F82E006AE2F9 /* _FBTweakCategoryViewController.m in Sources */,
+				0301F3C71D75067900BFD0CE /* main.m in Sources */,
+				0301F3F01D7506A100BFD0CE /* ReverbHeaderView.m in Sources */,
+				03DB412C1D78F82E006AE2F9 /* FBTweakViewController.m in Sources */,
+				0301F3EA1D7506A100BFD0CE /* AdvancedUIManager.m in Sources */,
+				0301F3F11D7506A100BFD0CE /* ReverbProgressBar.m in Sources */,
+				0301F3F41D7506A100BFD0CE /* ReverbUIManager.m in Sources */,
+				03DB41221D78F82E006AE2F9 /* _FBTweakColorViewControllerHSBDataSource.m in Sources */,
+				03DB411F1D78F82E006AE2F9 /* _FBTweakCollectionViewController.m in Sources */,
+				03DB411B1D78F82E006AE2F9 /* _FBSliderView.m in Sources */,
+				03DB411C1D78F82E006AE2F9 /* _FBTweakArrayViewController.m in Sources */,
+				0301F3EB1D7506A100BFD0CE /* Theme.m in Sources */,
+				03DB412A1D78F82E006AE2F9 /* FBTweakShakeWindow.m in Sources */,
+				03DB41231D78F82E006AE2F9 /* _FBTweakColorViewControllerRGBDataSource.m in Sources */,
+				0301F3F21D7506A100BFD0CE /* ReverbProgressDots.m in Sources */,
+				0301F3EF1D7506A100BFD0CE /* ReverbFooterView.m in Sources */,
+				0301F3D11D75069300BFD0CE /* AppDelegate.m in Sources */,
+				03DB41291D78F82E006AE2F9 /* FBTweakInline.m in Sources */,
+				03DB412B1D78F82E006AE2F9 /* FBTweakStore.m in Sources */,
+				03DB411A1D78F82E006AE2F9 /* _FBKeyboardManager.m in Sources */,
+				03DB41281D78F82E006AE2F9 /* FBTweakCollection.m in Sources */,
+				03DB41191D78F82E006AE2F9 /* _FBColorWheelCell.m in Sources */,
+				0301F3CF1D75069300BFD0CE /* SettingsUtil.m in Sources */,
+				03DB41181D78F82E006AE2F9 /* _FBColorUtils.m in Sources */,
+				0301F3D01D75069300BFD0CE /* LoginViewController.m in Sources */,
+				0301F3D21D75069300BFD0CE /* LoggedInViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		03052A011D6B7D2C0072BA47 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				03052A021D6B7D2C0072BA47 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		03052A051D6B7D2C0072BA47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03F4CF111D80BBE400C8135E /* Project-Debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		03052A061D6B7D2C0072BA47 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03F4CF121D80BBE400C8135E /* Project-Release.xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		03052A081D6B7D2C0072BA47 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03F4CF101D80BBE400C8135E /* Application.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/LoginSample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.samples.LoginSample;
+				PRODUCT_NAME = LoginSample;
+			};
+			name = Debug;
+		};
+		03052A091D6B7D2C0072BA47 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 03F4CF101D80BBE400C8135E /* Application.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
+				INFOPLIST_FILE = "$(SRCROOT)/LoginSample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.samples.LoginSample;
+				PRODUCT_NAME = LoginSample;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		030529EB1D6B7D2C0072BA47 /* Build configuration list for PBXProject "LoginSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03052A051D6B7D2C0072BA47 /* Debug */,
+				03052A061D6B7D2C0072BA47 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		03052A071D6B7D2C0072BA47 /* Build configuration list for PBXNativeTarget "LoginSample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03052A081D6B7D2C0072BA47 /* Debug */,
+				03052A091D6B7D2C0072BA47 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 030529E81D6B7D2C0072BA47 /* Project object */;
+}

@@ -165,6 +165,38 @@
   return YES;
 }
 
++ (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
+                completionHandler:(void(^)(BOOL, NSString *, NSDictionary *))completion
+{
+  void(^stageImageCompletion)(NSArray<NSString *> *) = ^(NSArray<NSString *> *stagedURIs) {
+    NSString *methodName = @"share";
+    NSMutableDictionary *parameters = [[FBSDKShareUtility parametersForShareContent:content
+                                                             shouldFailOnDataError:NO] mutableCopy];
+    [parameters removeObjectForKey:@"photos"];
+
+    NSString *stagedURIJSONString = [FBSDKInternalUtility JSONStringForObject:stagedURIs
+                                                                        error:nil
+                                                         invalidObjectHandler:NULL];
+    [FBSDKInternalUtility dictionary:parameters
+                           setObject:stagedURIJSONString
+                              forKey:@"media"];
+
+    NSString *hashtagString = [self hashtagStringFromHashtag:content.hashtag];
+    if (hashtagString != nil) {
+      [FBSDKInternalUtility dictionary:parameters
+                             setObject:hashtagString
+                                forKey:@"hashtag"];
+    }
+
+    if (completion != NULL) {
+      completion(YES, methodName, [parameters copy]);
+    }
+  };
+
+  [self _stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
+              withCompletionHandler:stageImageCompletion];
+}
+
 + (id)convertOpenGraphValue:(id)value
 {
   if ([self _isOpenGraphValue:value]) {
@@ -726,6 +758,37 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
           [value isKindOfClass:[NSURL class]] ||
           [value isKindOfClass:[FBSDKSharePhoto class]] ||
           [value isKindOfClass:[FBSDKShareOpenGraphObject class]]);
+}
+
++ (void)_stageImagesForPhotoContent:(FBSDKSharePhotoContent *)content
+              withCompletionHandler:(void(^)(NSArray<NSString *> *))completion
+{
+  __block NSMutableArray<NSString *> *stagedURIs = [NSMutableArray array];
+  dispatch_group_t group = dispatch_group_create();
+  for (FBSDKSharePhoto *photo in content.photos) {
+    if (photo.image != nil) {
+      dispatch_group_enter(group);
+      NSDictionary *stagingParameters = @{
+                                          @"file" : photo.image,
+                                          };
+      FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/staging_resources"
+                                                                     parameters:stagingParameters
+                                                                     HTTPMethod:@"POST"];
+      [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+        NSString *photoStagedURI = result[@"uri"];
+        if (photoStagedURI != nil) {
+          [stagedURIs addObject:photoStagedURI];
+          dispatch_group_leave(group);
+        }
+      }];
+    }
+  }
+
+  dispatch_group_notify(group, dispatch_get_main_queue(), ^{
+    if (completion != NULL) {
+      completion([stagedURIs copy]);
+    }
+  });
 }
 
 + (void)_testObject:(id)object containsMedia:(BOOL *)containsMediaRef containsPhotos:(BOOL *)containsPhotosRef containsVideos:(BOOL *)containsVideosRef

@@ -156,13 +156,19 @@
 {
   FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeBrowser;
-  NSError *error;
+  __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
   dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
-  XCTAssertFalse([dialog validateWithError:&error]);
-  XCTAssertNotNil(error);
+  [self _performBlockWithAccessToken:^{
+    XCTAssertTrue([dialog validateWithError:&error]);
+    XCTAssertNil(error);
+  }];
+  [self _performBlockWithNilAccessToken:^{
+    XCTAssertFalse([dialog validateWithError:&error]);
+    XCTAssertNotNil(error);
+  }];
   dialog.shareContent = [FBSDKShareModelTestUtility openGraphContentWithObjectID];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
@@ -190,13 +196,19 @@
 {
   FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeWeb;
-  NSError *error;
+  __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
   dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
-  XCTAssertFalse([dialog validateWithError:&error]);
-  XCTAssertNotNil(error);
+  [self _performBlockWithAccessToken:^{
+    XCTAssertTrue([dialog validateWithError:&error]);
+    XCTAssertNil(error);
+  }];
+  [self _performBlockWithNilAccessToken:^{
+    XCTAssertFalse([dialog validateWithError:&error]);
+    XCTAssertNotNil(error);
+  }];
   dialog.shareContent = [FBSDKShareModelTestUtility openGraphContentWithObjectID];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
@@ -417,6 +429,29 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
   [settingsClassMock stopMocking];
   [mockApplication stopMocking];
   [mockInternalUtility stopMocking];
+}
+
+- (void)_performBlockWithAccessToken:(dispatch_block_t)block
+{
+  FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"FBSDKShareDialogTests" permissions:nil declinedPermissions:nil appID:nil userID:nil expirationDate:nil refreshDate:nil];
+  [self _setCurrentAccessToken:accessToken andPerformBlock:block];
+}
+
+- (void)_performBlockWithNilAccessToken:(dispatch_block_t)block
+{
+  [self _setCurrentAccessToken:nil andPerformBlock:block];
+}
+
+- (void)_setCurrentAccessToken:(FBSDKAccessToken *)accessToken
+               andPerformBlock:(dispatch_block_t)block
+{
+  if (block == NULL) {
+    return;
+  }
+  FBSDKAccessToken *oldToken = [FBSDKAccessToken currentAccessToken];
+  [FBSDKAccessToken setCurrentAccessToken:accessToken];
+  block();
+  [FBSDKAccessToken setCurrentAccessToken:oldToken];
 }
 
 @end

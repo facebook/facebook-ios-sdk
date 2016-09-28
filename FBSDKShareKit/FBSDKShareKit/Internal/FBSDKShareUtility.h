@@ -42,6 +42,8 @@
                   methodName:(NSString *__autoreleasing *)methodNameRef
                   parameters:(NSDictionary *__autoreleasing *)parametersRef
                        error:(NSError *__autoreleasing *)errorRef;
++ (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
+                completionHandler:(void(^)(BOOL, NSString *, NSDictionary *))completion;
 + (NSDictionary *)convertOpenGraphValues:(NSDictionary *)dictionary;
 + (NSDictionary *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content;
 + (NSString *)hashtagStringFromHashtag:(FBSDKHashtag *)hashtag;

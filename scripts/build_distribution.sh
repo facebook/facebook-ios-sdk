@@ -38,6 +38,13 @@ FB_SDK_BUILD_PACKAGE_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples
 FB_SDK_BUILD_PACKAGE_SCRIPTS=$FB_SDK_BUILD/Scripts
 FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER=$FB_SDK_BUILD_PACKAGE/DocSets/
 
+# -----------------------------------------------------------------------------
+# Install required dependencies
+#
+(gem list naturally -i > /dev/null) || die "Run 'gem install naturally' first"
+(gem list xcpretty -i > /dev/null) || die "Run 'gem install xcpretty' first"
+(gem list rake -i > /dev/null) || die "Run 'gem install rake' first"
+
 # -----------------------------------------------------------------------------gi
 # Build package directory structure
 #
@@ -58,13 +65,6 @@ if is_outermost_build; then
   fi
 fi
 echo Building Distribution.
-
-# -----------------------------------------------------------------------------
-# Install required dependencies
-#
-(gem list naturally -i > /dev/null) || die "Run 'gem install naturally' first"
-(gem list xcpretty -i > /dev/null) || die "Run 'gem install xcpretty' first"
-(gem list rake -i > /dev/null) || die "Run 'gem install rake' first"
 
 # -----------------------------------------------------------------------------
 # Copy over stuff
