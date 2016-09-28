@@ -188,7 +188,7 @@ setJSONStringForObject:(id)object
   }
   host = [NSString stringWithFormat:@"%@%@", hostPrefix ?: @"", host ?: @""];
 
-  NSString *version = defaultVersion ?: FBSDK_TARGET_PLATFORM_VERSION;
+  NSString *version = defaultVersion ?: [FBSDKSettings graphAPIVersion];
   if ([version length]) {
     version = [@"/" stringByAppendingString:version];
   }
@@ -199,6 +199,10 @@ setJSONStringForObject:(id)object
         [versionScanner scanInteger:NULL] &&
         [versionScanner scanString:@"." intoString:NULL] &&
         [versionScanner scanInteger:NULL]) {
+      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                             logEntry:[NSString stringWithFormat:@"Invalid Graph API version:%@, assuming %@ instead",
+                                       version,
+                                       [FBSDKSettings graphAPIVersion]]];
       version = nil;
     }
     if (![path hasPrefix:@"/"]) {

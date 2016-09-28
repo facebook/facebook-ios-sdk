@@ -206,4 +206,15 @@ FBSDK_EXTERN NSString *const FBSDKLoggingBehaviorDeveloperErrors;
 */
 + (NSString *)legacyUserDefaultTokenInformationKeyName;
 
+/*!
+ @abstract Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_TARGET_PLATFORM_VERSION`.
+ @discussion The string should be of the form `@"v2.7"`.
+*/
++ (void)setGraphAPIVersion:(NSString *)version;
+
+/*!
+ @abstract Returns the default Graph API version. Defaults to `FBSDK_TARGET_PLATFORM_VERSION`
+*/
++ (NSString *)graphAPIVersion;
+
 @end

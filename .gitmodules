@@ -1,23 +1,26 @@
 [submodule "vendor/OHHTTPStubs"]
 	path = vendor/OHHTTPStubs
-	url = git://github.com/AliSoftware/OHHTTPStubs.git
+	url = https://github.com/AliSoftware/OHHTTPStubs.git
 [submodule "vendor/OCMock"]
 	path = vendor/OCMock
-	url = git://github.com/erikdoe/ocmock
+	url = https://github.com/erikdoe/ocmock
 [submodule "vendor/appledoc"]
 	path = vendor/appledoc
-	url = git://github.com/tomaz/appledoc.git
+	url = https://github.com/tomaz/appledoc.git
 [submodule "Bolts-IOS"]
 	path = Bolts-IOS
-  	url = git://github.com/BoltsFramework/Bolts-iOS.git
+	url = https://github.com/BoltsFramework/Bolts-iOS.git
 [submodule "vendor/ios-snapshot-test-case"]
 	path = vendor/ios-snapshot-test-case
-	url = git://github.com/facebook/ios-snapshot-test-case.git
+	url = https://github.com/facebook/ios-snapshot-test-case.git
 [submodule "vendor/xctool"]
 	path = vendor/xctool
-	url = git://github.com/facebook/xctool.git
+	url = https://github.com/facebook/xctool.git
 
 
 [submodule "FBNotifications"]
 	path = FBNotifications
 	url = https://github.com/facebook/FBNotifications.git
+[submodule "vendor/FBTweak"]
+	path = vendor/FBTweak
+	url = git://github.com/facebook/Tweaks.git
