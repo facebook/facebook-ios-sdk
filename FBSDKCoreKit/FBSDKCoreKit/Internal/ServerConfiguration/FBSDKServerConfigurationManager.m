@@ -223,7 +223,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_NATIVE_PROXY_AUTH_FLOW_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
                       ];
   NSDictionary *parameters = @{ @"fields": [fields componentsJoinedByString:@","] };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
