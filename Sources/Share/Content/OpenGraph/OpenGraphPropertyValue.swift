@@ -32,7 +32,7 @@ internal struct OpenGraphPropertyValueConverter {
     switch value {
     case let value as String: return value
     case let value as NSNumber: return value
-    case let value as NSArray: return value.flatMap { valueFrom(openGraphObjectValue: $0 as AnyObject) }
+    case let value as NSArray: return value.flatMap { valueFrom(openGraphObjectValue: $0 as Any) }
     case let value as URL: return value
     case let value as FBSDKSharePhoto: return Photo(sdkPhoto: value)
     case let value as FBSDKShareOpenGraphObject: return OpenGraphObject(sdkGraphObject: value)

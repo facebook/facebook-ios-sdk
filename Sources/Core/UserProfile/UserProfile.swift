@@ -105,7 +105,7 @@ extension UserProfile {
    */
   public static func fetch(userId: String, completion: @escaping Completion) {
     let request = GraphRequest(graphPath: userId,
-                               parameters: ["fields" : "first_name,middle_name,last_name,name,link" as AnyObject],
+                               parameters: ["fields" : "first_name,middle_name,last_name,name,link"],
                                httpMethod: .GET)
     request.start { (httpResponse, result) in
       switch result {

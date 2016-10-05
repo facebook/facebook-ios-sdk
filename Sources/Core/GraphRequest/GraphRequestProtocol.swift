@@ -49,7 +49,7 @@ public protocol GraphRequestProtocol {
   /// The `HTTPMethod` to use for the request, e.g. `.GET`/`.POST`/`.DELETE`.
   var httpMethod: GraphRequestHTTPMethod { get }
 
-  /// Graph API Version to use. Default: `GraphAPIVersion.Default`.
+  /// Graph API Version to use. Default: `GraphAPIVersion.defaultVersion`.
   var apiVersion: GraphAPIVersion { get }
 }
 

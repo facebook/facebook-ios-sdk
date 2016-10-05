@@ -43,7 +43,7 @@ public struct GraphResponse: GraphResponseProtocol {
   }
 
   /**
-   Converts and returns a response in a form of `Array<AnyObject>`
+   Converts and returns a response in a form of `Array<Any>`
    If the conversion fails or there is was response - returns `nil`.
    */
   public var arrayValue: [Any]? {
