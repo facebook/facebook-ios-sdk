@@ -42,8 +42,19 @@
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation
+            options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [self application:application
+                   openURL:url
+         sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+}
+
+// Still need this for iOS8
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nonnull id)annotation
 {
   BFURL *parsedUrl = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
   if ([parsedUrl appLinkData]) {

@@ -52,11 +52,29 @@
  @param annotation The annotation as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 
  @return YES if the url was intended for the Facebook SDK, NO if not.
- */
+  */
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
+
+/*!
+ @abstract
+ Call this method from the [UIApplicationDelegate application:openURL:options:] method
+ of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
+ with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
+
+ @param application The application as passed to [UIApplicationDelegate application:openURL:options:].
+
+ @param url The URL as passed to [UIApplicationDelegate application:openURL:options:].
+
+ @param options The options dictionary as passed to [UIApplicationDelegate application:openURL:options:].
+
+ @return YES if the url was intended for the Facebook SDK, NO if not.
+ */
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options;
 
 /*!
  @abstract

@@ -154,7 +154,7 @@
   [target continueSystemLogInWithTokenString:nil error:error state:nil];
 }
 
-- (void)testSystemAccountNotAvailableOnServerTriesNextAuthMethod
+- (void)XCODE8DISABLED_testSystemAccountNotAvailableOnServerTriesNextAuthMethod
 {
   [self testSystemAccountNotAvailableTriesNextAuthMethodServer:NO device:YES];
 }
