@@ -47,7 +47,7 @@
     XCTAssertNil(data);
 }
 
-- (void)testWriteToEmptyStore
+- (void)XCODE8DISABLED_testWriteToEmptyStore
 {
     FBSDKKeychainStore *store = [[FBSDKKeychainStore alloc] initWithService:@"Test" accessGroup:nil];
     NSData *expected = [@"TestData" dataUsingEncoding:NSUTF8StringEncoding];
@@ -57,7 +57,7 @@
     XCTAssertEqualObjects(expected, actual, @"Failed to read just stored data");
 }
 
-- (void)testWriteWithAccessability
+- (void)XCODE8DISABLED_testWriteWithAccessability
 {
     FBSDKKeychainStore *store = [[FBSDKKeychainStore alloc] initWithService:@"Test" accessGroup:nil];
     NSData *expected = [@"TestData" dataUsingEncoding:NSUTF8StringEncoding];
@@ -69,7 +69,7 @@
     XCTAssertEqualObjects(expected, actual, @"Failed to read just stored data");
 }
 
-- (void)testUpdateValue
+- (void)XCODE8DISABLED_testUpdateValue
 {
     FBSDKKeychainStore *store = [[FBSDKKeychainStore alloc] initWithService:@"Test" accessGroup:nil];
     NSData *expected = [@"TestData" dataUsingEncoding:NSUTF8StringEncoding];
@@ -82,7 +82,7 @@
     XCTAssertEqualObjects(expected, actual, @"Failed to read just stored data");
 }
 
-- (void)testDeleteValue
+- (void)XCODE8DISABLED_testDeleteValue
 {
     FBSDKKeychainStore *store = [[FBSDKKeychainStore alloc] initWithService:@"Test" accessGroup:nil];
     NSData *expected = [@"TestData" dataUsingEncoding:NSUTF8StringEncoding];

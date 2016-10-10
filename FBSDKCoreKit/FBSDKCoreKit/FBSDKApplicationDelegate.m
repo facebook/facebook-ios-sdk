@@ -124,6 +124,16 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
+  return [self application:application
+                   openURL:url
+         sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
+                annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
+}
+
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {

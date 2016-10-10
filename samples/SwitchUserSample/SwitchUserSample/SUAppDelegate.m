@@ -35,12 +35,24 @@
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation {
+            options:(nonnull NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+{
     return [[FBSDKApplicationDelegate sharedInstance] application:application
                                                           openURL:url
-                                                sourceApplication:sourceApplication
-                                                       annotation:annotation];
+                                                          options:options];
+}
+
+// Still need this for iOS8
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nonnull id)annotation
+{
+    [[FBSDKApplicationDelegate sharedInstance] application:application
+                                                   openURL:url
+                                         sourceApplication:sourceApplication
+                                                annotation:annotation];
+    return YES;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
