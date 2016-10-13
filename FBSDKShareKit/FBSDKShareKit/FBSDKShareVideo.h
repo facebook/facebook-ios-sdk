@@ -34,7 +34,7 @@
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL;
 
 /*!
- @abstract Convenience method to build a new video object with a videoURL and a previewPhoto
+ @abstract Convenience method to build a new video object with a videoURL and a previewPhoto.
  @param videoURL The URL to the video
  @param previewPhoto The photo that represents the video
  */
