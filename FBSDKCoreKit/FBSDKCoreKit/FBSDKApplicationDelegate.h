@@ -52,7 +52,7 @@
  @param annotation The annotation as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
 
  @return YES if the url was intended for the Facebook SDK, NO if not.
-  */
+ */
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
