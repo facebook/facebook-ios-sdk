@@ -58,6 +58,7 @@
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_3
 /*!
  @abstract
  Call this method from the [UIApplicationDelegate application:openURL:options:] method
@@ -75,6 +76,7 @@
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options;
+#endif
 
 /*!
  @abstract
