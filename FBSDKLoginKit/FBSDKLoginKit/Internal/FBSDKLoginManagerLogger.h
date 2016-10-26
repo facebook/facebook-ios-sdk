@@ -32,10 +32,12 @@ extern NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
 - (void)startSessionForLoginManager:(FBSDKLoginManager *)loginManager;
 - (void)endSession;
 
-- (void)startAuthMethod:(NSString *)authMethod;
+- (void)startAuthMethod:(NSString *)authMethod loggingToken:(NSString *)loggingToken;
 - (void)endLoginWithResult:(FBSDKLoginManagerLoginResult *)result error:(NSError *)error;
 
 - (NSDictionary *)parametersWithTimeStampAndClientState:(NSDictionary *)loginParams forAuthMethod:(NSString *)authMethod;
 - (void)willAttemptAppSwitchingBehavior;
 - (void)systemAuthDidShowDialog:(BOOL)didShowDialog isUnTOSedDevice:(BOOL)isUnTOSedDevice;
+
+- (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration;
 @end

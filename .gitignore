@@ -23,3 +23,7 @@ Carthage
 
 # vim temp files
 *.swp
+
+# buck
+buck-out/
+.buckd/

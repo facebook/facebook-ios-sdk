@@ -16,11 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKDeviceDialogView.h"
+#import "FBSDKSmartDeviceDialogView.h"
 
 #import "FBSDKCoreKit+Internal.h"
 
-@implementation FBSDKDeviceDialogView
+// don't download icons more than once a day.
+static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
+
+@implementation FBSDKSmartDeviceDialogView
 {
   UIActivityIndicatorView *_spinner;
   UILabel *_confirmationCodeLabel;
@@ -29,8 +32,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    [self _buildView];
-    [self setNeedsUpdateConstraints];
+    [self _prepareImageCache];
   }
   return self;
 }
@@ -39,7 +41,7 @@
 
 - (void)setConfirmationCode:(NSString *)confirmationCode
 {
-  if (![_confirmationCode isEqualToString:confirmationCode]) {
+  if (![self.confirmationCode isEqualToString:confirmationCode]) {
     if (confirmationCode == nil) {
       _confirmationCodeLabel.text = @"";
       _confirmationCodeLabel.hidden = YES;
@@ -54,21 +56,59 @@
 
 #pragma mark - Helpers
 
-- (void)_buildView
+- (void)_prepareImageCache
+{
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    if ((serverConfiguration.smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled) &&
+        serverConfiguration.smartLoginMenuIconURL &&
+        serverConfiguration.smartLoginBookmarkIconURL) {
+      __block UIImage *bookmarkIconImage;
+      __block UIImage *menuIconImage;
+      __block NSUInteger count = 0;
+      void(^buildViewBlock)(void) = ^{
+        count++;
+        if (count >= 2){
+          dispatch_async(dispatch_get_main_queue(), ^{
+            [self _buildViewWithBookmarkIcon:bookmarkIconImage
+                                    menuIcon:menuIconImage];
+            [self setNeedsLayout];
+          });
+        }
+      };
+      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
+                                                              ttl:kSmartLoginIconsTTL
+                                                       completion:^(UIImage *image) {
+                                                         bookmarkIconImage = image;
+                                                         buildViewBlock();
+                                                       }];
+      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
+                                                              ttl:kSmartLoginIconsTTL
+                                                       completion:^(UIImage *image) {
+                                                         menuIconImage = image;
+                                                         buildViewBlock();
+                                                       }];
+    } else {
+      [self _buildViewWithBookmarkIcon:nil menuIcon:nil];
+    }
+  }];
+}
+
+- (void)_buildViewWithBookmarkIcon:(UIImage *)bookmarkIcon
+                          menuIcon:(UIImage *)menuIcon
 {
   // This is a "static" view with just a cancel button so add all the constraints here
   // rather than properly override `updateConstraints`.
   const CGFloat kWidth = 1080;
   const CGFloat kHeight = 820;
-  const CGFloat kVerticalSpaceBetweenHeaderViewAndInstructionLabel = 102;
-  const CGFloat kVerticalSpaceBetweenCancelButtonAndButtomAnchor = 117;
-  const CGFloat kDialogHeaderViewHeight = 309;
+  const CGFloat kVerticalSpaceBetweenHeaderViewAndInstructionLabel = 50;
+  const CGFloat kDialogHeaderViewHeight = 250;
   const CGFloat kLogoSize = 44;
   const CGFloat kLogoMargin = 30;
-  const CGFloat kInstructionTextHorizontalMargin = 151;
+  const CGFloat kInstructionTextHorizontalMargin = 100;
   const CGFloat kConfirmationCodeFontSize = 108;
   const CGFloat kFontColorValue = 119.0/255.0;
-  const CGFloat kInstructionFontSize = 36;
+  const CGFloat kInstructionFontSize = 32;
+  const CGFloat kVerticalMarginOrLabel = 40;
 
   // build the container view.
   UIView *dialogView = [[UIView alloc] init];
@@ -127,6 +167,87 @@
   [NSLayoutConstraint constraintWithItem:_confirmationCodeLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:dialogHeaderView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;
   _confirmationCodeLabel.hidden = YES;
 
+  // build the smartlogin instructions
+  UILabel *smartInstructionLabel = [[UILabel alloc] init];
+  smartInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  NSString *smartInstructionsStep0 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep0",
+                                                                      @"FacebookSDK",
+                                                                      [FBSDKInternalUtility bundleForStrings],
+                                                                      @"Confirm your code on Facebook.",
+                                                                      @"The string for smart login instructions");
+  NSString *smartInstructionsStep1 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep1",
+                                                                       @"FacebookSDK",
+                                                                       [FBSDKInternalUtility bundleForStrings],
+                                                                       @"\n1. Go to the Menu  ",
+                                                                       @"The string for smart login instructions");
+  NSString *smartInstructionsStep2 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep2",
+                                                                       @"FacebookSDK",
+                                                                       [FBSDKInternalUtility bundleForStrings],
+                                                                       @"\n2. Select Device Requests  ",
+                                                                       @"The string for smart login instructions");
+  NSString *smartInstructionsStep3 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep3",
+                                                                       @"FacebookSDK",
+                                                                       [FBSDKInternalUtility bundleForStrings],
+                                                                       @"\n3. Confirm code.",
+                                                                       @"The string for smart login instructions");
+  NSTextAttachment *bookmarkAttachment = [[NSTextAttachment alloc] init];
+  bookmarkAttachment.image = bookmarkIcon;
+  NSAttributedString *attributedBookmarkString = [NSAttributedString attributedStringWithAttachment:bookmarkAttachment];
+
+  NSTextAttachment *menuAttachment = [[NSTextAttachment alloc] init];
+  menuAttachment.image = menuIcon;
+  NSAttributedString *attributedMenuString = [NSAttributedString attributedStringWithAttachment:menuAttachment];
+
+  NSMutableParagraphStyle *instructionLabelParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+  instructionLabelParagraphStyle.lineHeightMultiple = 1.3;
+  NSMutableAttributedString *attributedSmartString = [[NSMutableAttributedString alloc] initWithString:smartInstructionsStep0
+                                                                                            attributes:@{ NSParagraphStyleAttributeName : instructionLabelParagraphStyle }];
+  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep1]];
+  [attributedSmartString appendAttributedString:attributedMenuString];
+  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep2]];
+  [attributedSmartString appendAttributedString:attributedBookmarkString];
+  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep3]];
+
+  UIFont *instructionFont = [UIFont systemFontOfSize:kInstructionFontSize weight:UIFontWeightLight];
+  smartInstructionLabel.font = instructionFont;
+  smartInstructionLabel.attributedText = attributedSmartString;
+  smartInstructionLabel.numberOfLines = 0;
+  smartInstructionLabel.textAlignment = NSTextAlignmentCenter;
+  [smartInstructionLabel sizeToFit];
+
+  // resize the icons to fit with the font, and also vertically align them
+  // so that they start at the cap height. Annoyingly, the menu bookmark has some extra padding
+  // in the image so we offset that by an additional 2 points.
+  menuAttachment.bounds = CGRectMake(0, -(instructionFont.ascender - instructionFont.capHeight)+2, kInstructionFontSize, kInstructionFontSize);
+  bookmarkAttachment.bounds = CGRectMake(0, -(instructionFont.ascender - instructionFont.capHeight), kInstructionFontSize, kInstructionFontSize);
+
+  smartInstructionLabel.textColor = [UIColor colorWithWhite:kFontColorValue alpha:1.0];
+  [dialogView addSubview:smartInstructionLabel];
+  [smartInstructionLabel.topAnchor constraintEqualToAnchor:dialogHeaderView.bottomAnchor
+                                             constant:kVerticalSpaceBetweenHeaderViewAndInstructionLabel].active = YES;
+  [smartInstructionLabel.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
+  [dialogView.trailingAnchor constraintEqualToAnchor:smartInstructionLabel.trailingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
+
+  // build 'or' label
+  UILabel *orInstructionLabel = [[UILabel alloc] init];
+  orInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
+  orInstructionLabel.font = [UIFont systemFontOfSize:kInstructionFontSize weight:UIFontWeightBold];
+  orInstructionLabel.text = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInOrLabel",
+                                                              @"FacebookSDK",
+                                                              [FBSDKInternalUtility bundleForStrings],
+                                                              @"-- OR --",
+                                                              @"The 'or' string for smart login instructions");;
+  orInstructionLabel.numberOfLines = 0;
+  orInstructionLabel.textAlignment = NSTextAlignmentCenter;
+  [orInstructionLabel sizeToFit];
+  orInstructionLabel.textColor = [UIColor colorWithWhite:kFontColorValue alpha:1.0];
+  [dialogView addSubview:orInstructionLabel];
+  [orInstructionLabel.topAnchor constraintGreaterThanOrEqualToAnchor:smartInstructionLabel.bottomAnchor
+                                                            constant:kVerticalMarginOrLabel].active = YES;
+
+  [orInstructionLabel.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
+  [dialogView.trailingAnchor constraintEqualToAnchor:orInstructionLabel.trailingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
+
   // build the instructions UILabel
   UILabel *instructionLabel = [[UILabel alloc] init];
   instructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -135,23 +256,22 @@
                                                                       [FBSDKInternalUtility bundleForStrings],
                                                                       @"Visit %@ and enter your code.",
                                                                       @"The format string for device login instructions");
+
   NSString *const deviceLoginURLString = @"facebook.com/device";
   NSString *instructionString = [NSString localizedStringWithFormat:localizedFormatString, deviceLoginURLString];
-  NSMutableParagraphStyle *instructionLabelParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-  instructionLabelParagraphStyle.lineHeightMultiple = 1.1;
   NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:instructionString
                                                                                        attributes:@{ NSParagraphStyleAttributeName : instructionLabelParagraphStyle }];
   NSRange range = [instructionString rangeOfString:deviceLoginURLString];
   [attributedString addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:kInstructionFontSize weight:UIFontWeightMedium] range:range];
-  instructionLabel.font = [UIFont systemFontOfSize:kInstructionFontSize weight:UIFontWeightLight];
+  instructionLabel.font = instructionFont;
   instructionLabel.attributedText = attributedString;
   instructionLabel.numberOfLines = 0;
   instructionLabel.textAlignment = NSTextAlignmentCenter;
   [instructionLabel sizeToFit];
   instructionLabel.textColor = [UIColor colorWithWhite:kFontColorValue alpha:1.0];
   [dialogView addSubview:instructionLabel];
-  [instructionLabel.topAnchor constraintEqualToAnchor:dialogHeaderView.bottomAnchor
-                                             constant:kVerticalSpaceBetweenHeaderViewAndInstructionLabel].active = YES;
+  [instructionLabel.topAnchor constraintEqualToAnchor:orInstructionLabel.bottomAnchor
+                                             constant:kVerticalMarginOrLabel].active = YES;
   [instructionLabel.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
   [dialogView.trailingAnchor constraintEqualToAnchor:instructionLabel.trailingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
 
@@ -160,14 +280,13 @@
   buttonContainerView.translatesAutoresizingMaskIntoConstraints = NO;
   [dialogView addSubview:buttonContainerView];
   [NSLayoutConstraint constraintWithItem:buttonContainerView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:dialogView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0].active = YES;
-
-  [buttonContainerView.heightAnchor constraintEqualToConstant:100].active = YES;
+  [buttonContainerView.heightAnchor constraintEqualToConstant:60].active = YES;
   [buttonContainerView.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor
                                                     constant:400].active = YES;
   [dialogView.trailingAnchor constraintEqualToAnchor:buttonContainerView.trailingAnchor
                                             constant:400].active = YES;
-  [dialogView.bottomAnchor constraintEqualToAnchor:buttonContainerView.bottomAnchor
-                                          constant:kVerticalSpaceBetweenCancelButtonAndButtomAnchor].active = YES;
+  [buttonContainerView.topAnchor constraintEqualToAnchor:instructionLabel.bottomAnchor
+                                                constant:kVerticalMarginOrLabel].active = YES;
 
   // build the cancel button.
   UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];

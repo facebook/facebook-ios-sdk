@@ -28,6 +28,8 @@
 
 @implementation FBSDKDeviceLoginViewController {
   FBSDKDeviceLoginManager *_loginManager;
+  BOOL _isRetry;
+  NSArray<NSString *> *_permissions;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -40,7 +42,6 @@
 {
   [super viewDidLoad];
 
-  NSArray<NSString *> *permissions = nil;
   if ((self.readPermissions).count > 0) {
     NSSet<NSString *> *permissionSet = [NSSet setWithArray:self.readPermissions];
     if ((self.publishPermissions).count > 0 || ![FBSDKInternalUtility areAllPermissionsReadPermissions:permissionSet]) {
@@ -49,7 +50,7 @@
                              userInfo:nil]
        raise];
     } else {
-      permissions = self.readPermissions;
+      _permissions = self.readPermissions;
     }
   } else {
     NSSet<NSString *> *permissionSet = [NSSet setWithArray:self.publishPermissions];
@@ -59,13 +60,10 @@
                              userInfo:nil]
        raise];
     } else {
-      permissions = self.publishPermissions;
+      _permissions = self.publishPermissions;
     }
   }
-  _loginManager = [[FBSDKDeviceLoginManager alloc] initWithPermissions:permissions];
-  _loginManager.delegate = self;
-  _loginManager.redirectURL = self.redirectURL;
-  [_loginManager start];
+  [self _initializeLoginManager];
 }
 
 - (void)dealloc
@@ -87,19 +85,104 @@
   // ourselves we don't want a didCancel (from viewDidDisappear) then didFinish.
   id<FBSDKDeviceLoginViewControllerDelegate> delegate = self.delegate;
   self.delegate = nil;
-  [self dismissViewControllerAnimated:YES completion:^{
-    if (result.isCancelled) {
-      [self _cancel];
-    } else if (result.accessToken) {
-      [FBSDKAccessToken setCurrentAccessToken:result.accessToken];
-      [delegate deviceLoginViewControllerDidFinish:self];
-    } else {
-      [delegate deviceLoginViewControllerDidFail:self error:error];
-    }
-  }];
+
+  FBSDKAccessToken *token = result.accessToken;
+  BOOL requireConfirm = (([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsRequireConfirmation) &&
+                         (token != nil) &&
+                         !_isRetry);
+  if (requireConfirm) {
+    FBSDKGraphRequest *graphRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
+                                                                        parameters:@{ @"fields" : @"name" }
+                                                                       tokenString:token.tokenString
+                                                                           version:nil
+                                                                        HTTPMethod:@"GET"];
+    [graphRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id graphResult, NSError *graphError) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self _presentConfirmationForDelegate:delegate
+                                        token:result.accessToken
+                                         name:graphResult[@"name"] ?: token.userID];
+      });
+    }];
+  } else {
+    [self dismissViewControllerAnimated:YES completion:^{
+      if (result.isCancelled) {
+        [self _cancel];
+      } else if (token != nil) {
+        [self _notifySuccessForDelegate:delegate token:token];
+      } else {
+        [delegate deviceLoginViewControllerDidFail:self error:error];
+      }
+    }];
+  }
 }
 
 #pragma mark - Private impl
+
+- (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
+  token:(FBSDKAccessToken *)token
+{
+  [FBSDKAccessToken setCurrentAccessToken:token];
+  [delegate deviceLoginViewControllerDidFinish:self];
+}
+
+- (void)_presentConfirmationForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
+                                  token:(FBSDKAccessToken *)token
+                                   name:(NSString *)name
+{
+    NSString *title =
+  NSLocalizedStringWithDefaultValue(@"SmartLogin.ConfirmationTitle", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
+                                    @"Confirm Login",
+                                    @"The title for the alert when smart login requires confirmation");
+  NSString *cancelTitle =
+  NSLocalizedStringWithDefaultValue(@"SmartLogin.NotYou", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
+                                    @"Not you?",
+                                    @"The cancel label for the alert when smart login requires confirmation");
+  NSString *continueTitleFormatString =
+  NSLocalizedStringWithDefaultValue(@"SmartLogin.Continue", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
+                                    @"Continue as %@",
+                                    @"The format string to continue as <name> for the alert when smart login requires confirmation");
+  NSString *continueTitle = [NSString stringWithFormat:continueTitleFormatString, name];
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                           message:title preferredStyle:UIAlertControllerStyleActionSheet];
+  [alertController addAction:[UIAlertAction actionWithTitle:continueTitle
+                                                      style:UIAlertActionStyleDestructive
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+                                                      [self dismissViewControllerAnimated:YES completion:^{
+                                                        [self _notifySuccessForDelegate:delegate token:token];
+                                                      }];
+                                                    }]];
+  [alertController addAction:[UIAlertAction actionWithTitle:cancelTitle
+                                                      style:UIAlertActionStyleCancel
+                                                    handler:^(UIAlertAction * _Nonnull action) {
+                                                      _isRetry = YES;
+                                                      FBSDKDeviceDialogView *view = [[FBSDKDeviceDialogView alloc] initWithFrame:self.view.frame];
+                                                      view.delegate = self;
+                                                      self.view = view;
+                                                      [self.view setNeedsDisplay];
+                                                      [self _initializeLoginManager];
+                                                      // reconnect delegate before since now
+                                                      // we are not dismissing.
+                                                      self.delegate = delegate;
+
+                                                    }]];
+  [self presentViewController:alertController animated:YES completion:NULL];
+}
+
+- (void)_initializeLoginManager
+{
+  //clear any existing login manager
+  _loginManager.delegate = nil;
+  [_loginManager cancel];
+  _loginManager = nil;
+
+  BOOL enableSmartLogin = (!_isRetry &&
+                           ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled));
+  _loginManager = [[FBSDKDeviceLoginManager alloc] initWithPermissions:_permissions
+                                                      enableSmartLogin:enableSmartLogin];
+  _loginManager.delegate = self;
+  _loginManager.redirectURL = self.redirectURL;
+  [_loginManager start];
+}
 
 - (void)_cancel
 {

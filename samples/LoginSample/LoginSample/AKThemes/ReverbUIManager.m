@@ -90,6 +90,7 @@
     case AKFLoginFlowStateEmailInput:
     case AKFLoginFlowStateCodeInput:
     case AKFLoginFlowStateNone:
+    case AKFLoginFlowStateResendCode:
       return nil;
   }
 
@@ -111,6 +112,7 @@
     case AKFLoginFlowStateEmailVerify:
     case AKFLoginFlowStateSendingCode:
     case AKFLoginFlowStateVerifyingCode:
+    case AKFLoginFlowStateResendCode:
       return AKFButtonTypeDefault;
   }
 }
@@ -140,6 +142,7 @@
       progress = 5;
       break;
     case AKFLoginFlowStateError:
+    case AKFLoginFlowStateResendCode:
     case AKFLoginFlowStateNone:
       return nil;
   }

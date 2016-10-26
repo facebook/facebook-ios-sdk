@@ -60,5 +60,7 @@
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Scrumptious lets you attach photos of delicious food.</string>
 </dict>
 </plist>

@@ -72,6 +72,7 @@
     case AKFLoginFlowStateEmailVerify:
     case AKFLoginFlowStateSendingCode:
     case AKFLoginFlowStateVerifyingCode:
+    case AKFLoginFlowStateResendCode:
       return AKFButtonTypeDefault;
   }
 }
@@ -158,6 +159,9 @@
       break;
     case AKFLoginFlowStateError:
       prefix = @"Custom Error";
+      break;
+    case AKFLoginFlowStateResendCode:
+      prefix = @"Custom Resend Code";
       break;
     case AKFLoginFlowStateNone:
       return nil;

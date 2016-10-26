@@ -352,7 +352,7 @@
 				TargetAttributes = {
 					030529EF1D6B7D2C0072BA47 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = V9WTTPBFK9;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -543,7 +543,7 @@
 			baseConfigurationReference = 03F4CF101D80BBE400C8135E /* Application.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/LoginSample/Info.plist";
@@ -558,7 +558,7 @@
 			baseConfigurationReference = 03F4CF101D80BBE400C8135E /* Application.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/LoginSample/Info.plist";

@@ -40,7 +40,12 @@ Subclasses should generally:
 
 - (void)loadView
 {
-  FBSDKDeviceDialogView *deviceView = [[FBSDKDeviceDialogView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+  CGRect frame = [UIScreen mainScreen].bounds;
+  BOOL smartLoginEnabled = ([FBSDKServerConfigurationManager cachedServerConfiguration].smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled);
+  FBSDKDeviceDialogView *deviceView =
+  (smartLoginEnabled ?
+   [[FBSDKSmartDeviceDialogView alloc] initWithFrame:frame] :
+   [[FBSDKDeviceDialogView alloc] initWithFrame:frame] );
   deviceView.delegate = self;
   self.view = deviceView;
 }
@@ -118,5 +123,4 @@ Subclasses should generally:
 {
   [self dismissViewControllerAnimated:YES completion:NULL];
 }
-
 @end

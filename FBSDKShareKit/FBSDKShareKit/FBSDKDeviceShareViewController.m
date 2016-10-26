@@ -34,6 +34,14 @@
   return self;
 }
 
+- (void)loadView
+{
+  CGRect frame = [UIScreen mainScreen].bounds;
+  FBSDKDeviceDialogView *deviceView = [[FBSDKDeviceDialogView alloc] initWithFrame:frame];
+  deviceView.delegate = self;
+  self.view = deviceView;
+}
+
 - (void)viewDidDisappear:(BOOL)animated
 {
   [super viewDidDisappear:animated];
@@ -56,9 +64,11 @@
     [self _dismissWithError:error];
     return;
   }
+  NSMutableDictionary *mutableParameters = [params mutableCopy];
+  [mutableParameters setValue:[FBSDKDeviceRequestsHelper getDeviceInfo] forKey:FBSDK_DEVICE_INFO_PARAM];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                 initWithGraphPath:@"device/share"
-                                parameters:params
+                                parameters:[mutableParameters copy]
                                 tokenString:[FBSDKInternalUtility validateRequiredClientAccessToken]
                                 HTTPMethod:@"POST"
                                 flags:FBSDKGraphRequestFlagNone];

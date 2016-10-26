@@ -41,6 +41,13 @@
 #import "FBSDKProfile+Internal.h"
 #endif
 
+// TODO: t13635729 Remove when Sandcastle builds witn Xcode8
+@interface UIApplication (iOS10)
+
+- (void)openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options completionHandler:(void (^)(BOOL))completion;
+
+@end
+
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
@@ -54,6 +61,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 #endif
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
+  BOOL _isDismissingSafariViewController;
 }
 
 #pragma mark - Class Methods
@@ -147,21 +155,30 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 
 #if !TARGET_OS_TV
-  // if they completed a SFVC flow, dismiss it.
-  [_safariViewController.presentingViewController dismissViewControllerAnimated:YES completion: nil];
-  _safariViewController = nil;
+  id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
 
-  if (_pendingURLOpen) {
-    id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
-
+  void (^completePendingOpenURLBlock)(void) = ^{
     _pendingURLOpen = nil;
-
-    if ([pendingURLOpen application:application
-                            openURL:url
-                  sourceApplication:sourceApplication
-                         annotation:annotation]) {
-      return YES;
-    }
+    [pendingURLOpen application:application
+                        openURL:url
+              sourceApplication:sourceApplication
+                     annotation:annotation];
+    _isDismissingSafariViewController = NO;
+  };
+  // if they completed a SFVC flow, dismiss it.
+  if (_safariViewController) {
+    _isDismissingSafariViewController = YES;
+    [_safariViewController.presentingViewController dismissViewControllerAnimated:YES
+                                                                       completion:completePendingOpenURLBlock];
+    _safariViewController = nil;
+  } else {
+    completePendingOpenURLBlock();
+  }
+  if ([pendingURLOpen canOpenURL:url
+                  forApplication:application
+               sourceApplication:sourceApplication
+                      annotation:annotation]) {
+    return YES;
   }
   if ([self _handleBridgeAPIResponseURL:url sourceApplication:sourceApplication]) {
     return YES;
@@ -211,7 +228,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   //  _expectingBackground can be YES if the caller started doing work (like login)
   // within the app delegate's lifecycle like openURL, in which case there
   // might have been a "didBecomeActive" event pending that we want to ignore.
-  if (!_expectingBackground && !_safariViewController) {
+  if (!_expectingBackground && !_safariViewController && !_isDismissingSafariViewController) {
     _active = YES;
 #if !TARGET_OS_TV
     [_pendingURLOpen applicationDidBecomeActive:[notification object]];
@@ -233,18 +250,23 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   _pendingURLOpen = sender;
   dispatch_async(dispatch_get_main_queue(), ^{
     // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
-    BOOL opened = [[UIApplication sharedApplication] openURL:url];
+    NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
+    if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS10Version]) {
+      [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:handler];
+    } else {
+      BOOL opened = [[UIApplication sharedApplication] openURL:url];
 
-    if ([url.scheme hasPrefix:@"http"] && !opened) {
-      NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-      if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-        // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
-        // Otherwise we would rather trust in the actual result of openURL
-        opened = YES;
+      if ([url.scheme hasPrefix:@"http"] && !opened) {
+        NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
+        if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
+          // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
+          // Otherwise we would rather trust in the actual result of openURL
+          opened = YES;
+        }
       }
-    }
-    if (handler) {
-      handler(opened);
+      if (handler) {
+        handler(opened);
+      }
     }
   });
 }

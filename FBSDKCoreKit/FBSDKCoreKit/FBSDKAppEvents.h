@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
+
 #import "FBSDKMacros.h"
 
 @class FBSDKAccessToken;
@@ -496,4 +498,24 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
  via the `[FBSDKSettings limitEventAndDataUsage]` flag, or a specific Facebook user cannot be identified.
  */
 + (FBSDKGraphRequest *)requestForCustomAudienceThirdPartyIDWithAccessToken:(FBSDKAccessToken *)accessToken;
+
+/*
+ @abstract Sets a custom user ID to associate with all app events.
+ @discussion The userID is persisted until it is cleared by passing nil.
+ */
++ (void)setUserID:(NSString *)userID;
+
+/*
+ @abstract Returns the set custom user ID.
+ */
++ (NSString *)userID;
+
+/*
+ @abstract Sends a request to update the properties for the current user, set by `setUserID:`
+ @discussion You must call `FBSDKAppEvents setUserID:` before making this call.
+ @param properties the custom user properties
+ @param handler the optional completion handler
+ */
++ (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler;
+
 @end
