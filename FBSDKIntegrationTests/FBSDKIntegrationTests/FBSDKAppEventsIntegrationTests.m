@@ -578,4 +578,130 @@
   }
 }
 
+- (void)testUserID {
+  // default to disabling timer based flushes so that long tests
+  // don't get more flushes than explicitly expecting.
+  [FBSDKAppEvents singleton].disableTimer = YES;
+  NSString *appID = self.testAppID;
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block int activiesEndpointCalledForUserCount = 0;
+  __block int activiesEndpointCalledWithoutUserCount = 0;
+  NSString *expectedUserID = @"bobbytables";
+  NSString *expectedEventString = [NSString stringWithFormat:@"_app_user_id\":\"%@", expectedUserID];
+
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", appID];
+    if ([request.URL.path hasSuffix:activitiesPath]) {
+      NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+      if ([body rangeOfString:expectedEventString].location != NSNotFound) {
+        activiesEndpointCalledForUserCount++;
+      } else {
+        activiesEndpointCalledWithoutUserCount++;
+      }
+
+      if (activiesEndpointCalledForUserCount + activiesEndpointCalledWithoutUserCount == 4){
+        [blocker signal];
+      }
+    }
+    // always return NO because we don't actually want to stub a http response, only
+    // to intercept and verify request to fufill the expectation.
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+
+  // perform 4 different flushes, making sure there's no userid
+  // then two flushes with user id, then verify again it is cleared.
+  [FBSDKAppEvents setUserID:nil];
+  [FBSDKAppEvents logEvent:@"testUserID"];
+  [FBSDKAppEvents flush];
+
+  [FBSDKAppEvents setUserID:expectedUserID];
+  [FBSDKAppEvents logEvent:@"testUserID"];
+  [FBSDKAppEvents flush];
+
+  XCTAssertEqualObjects([FBSDKAppEvents userID], expectedUserID);
+  [FBSDKAppEvents logEvent:@"testUserID"];
+  [FBSDKAppEvents flush];
+
+  [FBSDKAppEvents setUserID:nil];
+  [FBSDKAppEvents logEvent:@"testUserID"];
+  [FBSDKAppEvents flush];
+
+  XCTAssertTrue([blocker waitWithTimeout:16], @"did not get 4 flushes");
+  XCTAssertEqual(2,activiesEndpointCalledForUserCount, @"more than 2 log request made with userid");
+  XCTAssertEqual(2,activiesEndpointCalledWithoutUserCount, @"more than 2 log request made without userid");
+
+  // reset flush behavior.
+  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto];
+}
+
+
+- (void)testUserProperties {
+  NSString *appID = self.testAppID;
+  FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  __block int endpointCalledCount = 0;
+
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    NSString *const activitiesPath = [NSString stringWithFormat:@"%@/user_properties", appID];
+    if ([request.URL.path hasSuffix:activitiesPath]) {
+      NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
+      XCTAssertTrue([body rangeOfString:@"advertiser_id"].location != NSNotFound);
+      XCTAssertTrue([body rangeOfString:@"custom_data"].location != NSNotFound);
+      XCTAssertTrue([body rangeOfString:@"user_unique_id"].location != NSNotFound);
+      XCTAssertTrue([body rangeOfString:@"favorite_color"].location != NSNotFound);
+      endpointCalledCount++;
+    }
+    // always return NO because we don't actually want to stub a http response, only
+    // to intercept and verify request to fufill the expectation.
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  [FBSDKAppEvents setUserID:@"lilbobbytables"];
+  [FBSDKAppEvents updateUserProperties:@{
+                                         @"favorite_color" : @"blue",
+                                         @"created" : [NSDate date].description,
+                                         @"email" : @"someemail@email.com",
+                                         @"some_id" : @"Custom:1",
+                                         @"validated" : @YES,
+                                         }
+                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                 XCTAssertNil(error);
+                                 [blocker signal];
+                               }];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"did not get callback");
+  XCTAssertEqual(1, endpointCalledCount);
+
+  //now make sure there is an error for invalid values like nsdate
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [FBSDKAppEvents updateUserProperties:@{
+                                         @"created" : [NSDate date]
+                                         }
+                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                 XCTAssertNotNil(error);
+                                 [blocker signal];
+                               }];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"did not get callback for nsdate error");
+
+  //now make sure there is an error
+  blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
+  [FBSDKAppEvents setUserID:nil];
+  [FBSDKAppEvents updateUserProperties:@{
+                                         @"favorite_color" : @"blue"
+                                         }
+                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+                                 XCTAssertNotNil(error);
+                                 [blocker signal];
+                               }];
+  XCTAssertTrue([blocker waitWithTimeout:5], @"did not get callback");
+}
+
 @end

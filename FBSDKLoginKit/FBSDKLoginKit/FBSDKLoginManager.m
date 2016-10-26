@@ -326,9 +326,8 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 
 - (void)logInWithBehavior:(FBSDKLoginBehavior)loginBehavior
 {
-  __weak __typeof__(self) weakSelf = self;
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *loadError) {
-    [weakSelf logInWithBehavior:loginBehavior serverConfiguration:serverConfiguration serverConfigurationLoadError:loadError];
+    [self logInWithBehavior:loginBehavior serverConfiguration:serverConfiguration serverConfigurationLoadError:loadError];
   }];
 }
 
@@ -338,7 +337,7 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 
   void(^completion)(BOOL, NSString *, NSError *) = ^void(BOOL didPerformLogIn, NSString *authMethod, NSError *error) {
     if (didPerformLogIn) {
-      [_logger startAuthMethod:authMethod];
+      [_logger startAuthMethod:authMethod loggingToken:serverConfiguration.loggingToken];
       _performingLogIn = YES;
     } else {
       if (!error) {
@@ -459,7 +458,9 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
   NSError *error;
   NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:mutableParams error:&error];
 
+  NSDate *start = [NSDate date];
   [[FBSDKApplicationDelegate sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL) {
+    [_logger logNativeAppDialogResult:openedURL dialogDuration:-[start timeIntervalSinceNow]];
     if (handler) {
       handler(openedURL, error);
     }
@@ -516,18 +517,14 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-  // verify the URL is intended as a callback for the SDK's log in
-  BOOL isFacebookURL = [[url scheme] hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]] &&
-    [[url host] isEqualToString:@"authorize"];
-
-  BOOL isExpectedSourceApplication = [sourceApplication hasPrefix:@"com.facebook"] || [sourceApplication hasPrefix:@"com.apple"];
+  BOOL isFacebookURL = [self canOpenURL:url forApplication:application sourceApplication:sourceApplication annotation:annotation];
 
   if (!isFacebookURL && _performingLogIn) {
     [self handleImplicitCancelOfLogIn];
   }
   _performingLogIn = NO;
 
-  if (isFacebookURL && isExpectedSourceApplication) {
+  if (isFacebookURL) {
     NSDictionary *urlParameters = [FBSDKLoginUtility queryParamsFromLoginURL:url];
     id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:urlParameters appID:[FBSDKSettings appID]];
 
@@ -542,6 +539,20 @@ static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
   }
 
   return isFacebookURL;
+}
+
+- (BOOL)canOpenURL:(NSURL *)url
+    forApplication:(UIApplication *)application
+ sourceApplication:(NSString *)sourceApplication
+        annotation:(id)annotation
+{
+  // verify the URL is intended as a callback for the SDK's log in
+  BOOL isFacebookURL = [[url scheme] hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]] &&
+  [[url host] isEqualToString:@"authorize"];
+
+  BOOL isExpectedSourceApplication = [sourceApplication hasPrefix:@"com.facebook"] || [sourceApplication hasPrefix:@"com.apple"];
+
+  return isFacebookURL && isExpectedSourceApplication;
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application

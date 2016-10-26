@@ -227,7 +227,11 @@
                                errorConfiguration:nil
                            sessionTimeoutInterval:60.0
                                          defaults:NO
-                                     loggingToken:nil];
+                                     loggingToken:nil
+                                smartLoginOptions:0
+                        smartLoginBookmarkIconURL:nil
+                            smartLoginMenuIconURL:nil
+   ];
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];
   [[[serverConfigurationManager stub] andReturn:serverConfiguration] cachedServerConfiguration];
   [[[serverConfigurationManager stub] andDo:^(NSInvocation *invocation) {

@@ -108,7 +108,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
 
   // now test a cancel and make sure the current token is not touched.
   url = [self authorizeURLWithParameters:@"error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied#_=_" joinedBy:@"?"];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:nil annotation:nil]);
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   FBSDKAccessToken *actualTokenAfterCancel = [FBSDKAccessToken currentAccessToken];
   XCTAssertEqualObjects(tokenAfterAuth, actualTokenAfterCancel);
 }
@@ -239,7 +239,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
 
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:nil annotation:nil]);
+  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
 #pragma clang diagnostic pop
 
@@ -274,7 +274,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wnonnull"
 
-    XCTAssertTrue([target application:nil openURL:url sourceApplication:nil annotation:nil]);
+    XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
 #pragma clang diagnostic pop
 
@@ -342,6 +342,33 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
 
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+}
+
+
+- (void)testLoginManagerRetainsItselfForLoginMethod
+{
+  // Mock some methods to force an error callback.
+  id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[FBSDKInternalUtilityMock stub] andDo:^(NSInvocation *invocation) {
+    // Nothing
+  }] validateURLSchemes];
+  [[[FBSDKInternalUtilityMock stub] andReturnValue:@NO] isFacebookAppInstalled];
+  NSError *URLError = [NSError new];
+  [[FBSDKInternalUtilityMock stub]  appURLWithHost:OCMOCK_ANY
+   path:OCMOCK_ANY
+   queryParameters:OCMOCK_ANY
+   error:((NSError __autoreleasing **)[OCMArg setTo:URLError])];
+
+  XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
+  FBSDKLoginManager *manager = [FBSDKLoginManager new];
+  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    [expectation fulfill];
+  }];
+  // This makes sure that FBSDKLoginManager is retaining itself for the duration of the call
+  manager = nil;
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError * _Nullable error) {
     XCTAssertNil(error);
   }];
 }

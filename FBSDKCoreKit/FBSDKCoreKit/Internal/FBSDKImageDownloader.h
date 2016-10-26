@@ -16,33 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKAccessToken.h>
-#import <FBSDKCoreKit/FBSDKAppEvents.h>
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
-#import <FBSDKCoreKit/FBSDKButton.h>
-#import <FBSDKCoreKit/FBSDKConstants.h>
-#import <FBSDKCoreKit/FBSDKCopying.h>
-#import <FBSDKCoreKit/FBSDKGraphRequest.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKGraphRequestDataAttachment.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
-#import <FBSDKCoreKit/FBSDKSettings.h>
-#import <FBSDKCoreKit/FBSDKTestUsersManager.h>
-#import <FBSDKCoreKit/FBSDKUtility.h>
+/*
+ @abstract simple class to manage image downloads
+ @discussion this class is not smart enough to dedupe identical requests in flight.
+ */
+@interface FBSDKImageDownloader : NSObject
 
-#if !TARGET_OS_TV
-#import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
-#import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
-#import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
-#import <FBSDKCoreKit/FBSDKMutableCopying.h>
-#import <FBSDKCoreKit/FBSDKProfile.h>
-#import <FBSDKCoreKit/FBSDKProfilePictureView.h>
-#else
-#import <FBSDKCoreKit/FBSDKDeviceButton.h>
-#import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>
-#endif
++ (instancetype)sharedInstance;
 
-#define FBSDK_VERSION_STRING @"4.17.0"
-#define FBSDK_TARGET_PLATFORM_VERSION @"v2.8"
+/*
+ @abstract download an image or retrieve it from cache
+ @param url the url to download
+ @param ttl the amount of time (in seconds) that using a cached version is acceptable.
+ @param completion the callback with the image - for simplicity nil is returned rather than surfacing an error.
+ */
+- (void)downloadImageWithURL:(NSURL *)url ttl:(NSTimeInterval)ttl completion:(void(^)(UIImage* image))completion;
+
+- (void)removeAll;
+
+@end

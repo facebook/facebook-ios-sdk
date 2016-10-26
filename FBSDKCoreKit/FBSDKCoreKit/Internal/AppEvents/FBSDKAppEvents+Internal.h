@@ -85,6 +85,9 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsNativeLoginDialogEnd;
 /*! Use to log the e2e timestamp metrics for web login */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsWebLoginCompleted;
 
+/*! Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSessionNativeAppSwitchLoginDialogResult;
+
 /*! Use to log the results of a share dialog */
 FBSDK_EXTERN NSString *const FBSDLAppEventNameFBSDKEventShareDialogResult;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKEventMessengerShareDialogResult;
@@ -128,6 +131,8 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSendButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKShareButtonImpression;
+
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSmartLoginService;
 
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap;

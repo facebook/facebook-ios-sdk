@@ -106,6 +106,7 @@
   NSString *title;
   switch (state) {
     case AKFLoginFlowStateNone:
+    case AKFLoginFlowStateResendCode:
       return nil;
     case AKFLoginFlowStatePhoneNumberInput:
       title = @"Enter your phone number";

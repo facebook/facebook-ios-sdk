@@ -20,10 +20,19 @@
 
 // Implementations should make sure they can handle nil parameters
 // which is possible in SafariViewController.
+// see canOpenURL below.
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
+
+// create a different handler to return YES/NO if the receiver can process the above openURL:.
+// This is separated so that we can process the openURL: in callbacks, while still returning
+// the result of canOpenURL synchronously in FBSDKApplicationDelegate
+- (BOOL)canOpenURL:(NSURL *)url
+    forApplication:(UIApplication *)application
+ sourceApplication:(NSString *)sourceApplication
+        annotation:(id)annotation;
 
 - (void)applicationDidBecomeActive:(UIApplication *)application;
 

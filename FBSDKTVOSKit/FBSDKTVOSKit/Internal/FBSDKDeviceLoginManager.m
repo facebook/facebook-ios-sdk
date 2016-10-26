@@ -29,6 +29,8 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 @implementation FBSDKDeviceLoginManager {
   FBSDKDeviceLoginCodeInfo *_codeInfo;
   BOOL _isCancelled;
+  NSNetService * _loginAdvertisementService;
+  BOOL _isSmartLoginEnabled;
 }
 
 + (void)initialize
@@ -38,10 +40,11 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   }
 }
 
-- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions
+- (instancetype)initWithPermissions:(NSArray<NSString *> *)permissions enableSmartLogin:(BOOL)enableSmartLogin
 {
   if ((self = [super init])) {
     _permissions = [permissions copy];
+    _isSmartLoginEnabled = enableSmartLogin;
   }
   return self;
 }
@@ -54,6 +57,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
   NSDictionary *parameters = @{
                                @"scope": [self.permissions componentsJoinedByString:@","] ?: @"",
                                @"redirect_uri": self.redirectURL.absoluteString ?: @"",
+                               FBSDK_DEVICE_INFO_PARAM: [FBSDKDeviceRequestsHelper getDeviceInfo],
                                };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"device/login"
                                                                  parameters:parameters
@@ -73,6 +77,13 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
                                           verificationURL:[NSURL URLWithString:result[@"verification_uri"]]
                                           expirationDate:[[NSDate date] dateByAddingTimeInterval:[result[@"expires_in"] doubleValue]]
                                           pollingInterval:[result[@"interval"] integerValue]];
+
+    if (_isSmartLoginEnabled) {
+      [FBSDKDeviceRequestsHelper startAdvertisementService:_codeInfo.loginCode
+                                              withDelegate:self
+      ];
+    }
+
     [self.delegate deviceLoginManager:self startedWithCodeInfo:_codeInfo];
     [self _schedulePoll:_codeInfo.pollingInterval];
   }];
@@ -80,6 +91,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)cancel
 {
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
   _isCancelled = YES;
   [g_loginManagerInstances removeObject:self];
 }
@@ -88,6 +100,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_notifyError:(NSError *)error
 {
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
   [self.delegate deviceLoginManager:self
                 completedWithResult:nil
                               error:error];
@@ -96,6 +109,7 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
 
 - (void)_notifyToken:(NSString *)tokenString
 {
+  [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
   void(^completeWithResult)(FBSDKDeviceLoginManagerResult *) = ^(FBSDKDeviceLoginManagerResult *result) {
     [self.delegate deviceLoginManager:self completedWithResult:result error:nil];
     [g_loginManagerInstances removeObject:self];
@@ -195,6 +209,16 @@ static NSMutableArray<FBSDKDeviceLoginManager *> *g_loginManagerInstances;
       }
     }];
   });
+}
+
+- (void)netService:(NSNetService *)sender
+     didNotPublish:(NSDictionary<NSString *, NSNumber *> *)errorDict
+{
+  // Only cleanup if the publish error is from our advertising service
+  if ([FBSDKDeviceRequestsHelper isDelegate:self forAdvertisementService:sender])
+  {
+    [FBSDKDeviceRequestsHelper cleanUpAdvertisementService:self];
+  }
 }
 
 @end

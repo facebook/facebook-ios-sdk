@@ -15,10 +15,12 @@
  */
  
 //
-// Prefix header for all source files of the 'Scrumptious' target in the 'Scrumptious' project
+// Prefix header for all source files of the 'LoginSample' target in the 'LoginSample' project
 //
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
+
+#define FB_TWEAK_ENABLED 1

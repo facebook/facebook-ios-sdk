@@ -16,11 +16,9 @@
 [submodule "vendor/xctool"]
 	path = vendor/xctool
 	url = https://github.com/facebook/xctool.git
-
-
 [submodule "FBNotifications"]
 	path = FBNotifications
 	url = https://github.com/facebook/FBNotifications.git
 [submodule "vendor/FBTweak"]
 	path = vendor/FBTweak
-	url = git://github.com/facebook/Tweaks.git
+	url = https://github.com/facebook/Tweaks.git

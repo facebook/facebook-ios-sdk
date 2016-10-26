@@ -120,6 +120,8 @@ NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression       = @"fb_login_b
 NSString *const FBSDKAppEventNameFBSDKSendButtonImpression        = @"fb_send_button_impression";
 NSString *const FBSDKAppEventNameFBSDKShareButtonImpression       = @"fb_share_button_impression";
 
+NSString *const FBSDKAppEventNameFBSDKSmartLoginService      = @"fb_smart_login_service";
+
 NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap  = @"fb_like_button_did_tap";
 NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap  = @"fb_login_button_did_tap";
 NSString *const FBSDKAppEventNameFBSDKSendButtonDidTap  = @"fb_send_button_did_tap";
@@ -141,6 +143,8 @@ NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult =     @"fb
 NSString *const FBSDKAppEventNameFBSDKEventShareDialogShow =            @"fb_dialog_share_show";
 NSString *const FBSDKAppEventNameFBSDKEventMessengerShareDialogShow =   @"fb_messenger_dialog_share_show";
 NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow =   @"fb_app_invite_share_show";
+
+NSString *const FBSDKAppEventNameFBSessionNativeAppSwitchLoginDialogResult = @"fb_mobile_login_native_app_switch_dialog_result";
 
 // Event Parameters internal to this file
 NSString *const FBSDKAppEventParameterDialogOutcome               = @"fb_dialog_outcome";
@@ -191,6 +195,7 @@ static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
 #define NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER 100
 #define FLUSH_PERIOD_IN_SECONDS 15
 #define APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD 60 * 60 * 24
+#define USER_ID_USER_DEFAULTS_KEY @"com.facebook.sdk.appevents.userid"
 
 static NSString *g_overrideAppID = nil;
 
@@ -211,6 +216,7 @@ static NSString *g_overrideAppID = nil;
   NSTimer *_attributionIDRecheckTimer;
   FBSDKServerConfiguration *_serverConfiguration;
   FBSDKAppEventsState *_appEventsState;
+  NSString *_userID;
 }
 
 #pragma mark - Object Lifecycle
@@ -256,6 +262,9 @@ static NSString *g_overrideAppID = nil;
      selector:@selector(applicationDidBecomeActive)
      name:UIApplicationDidBecomeActiveNotification
      object:NULL];
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
   }
 
   return self;
@@ -443,6 +452,68 @@ static NSString *g_overrideAppID = nil;
   [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonExplicit];
 }
 
++ (void)setUserID:(NSString *)userID
+{
+  if ([[[self class] singleton]->_userID isEqualToString:userID]) {
+    return;
+  }
+  [[self class] singleton]->_userID = userID;
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
+  [defaults synchronize];
+}
+
++ (NSString *)userID
+{
+  return [[self class] singleton]->_userID;
+}
+
++ (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler
+{
+  NSString *userID = [[self class] userID];
+
+  if (userID.length == 0) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+    NSError *error = [FBSDKError requiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+    if (handler) {
+      handler(nil, nil, error);
+    }
+    return;
+  }
+  NSMutableDictionary *dataDictionary = [NSMutableDictionary dictionaryWithCapacity:3];
+  dataDictionary[@"user_unique_id"] = [FBSDKAppEvents userID];
+  [FBSDKInternalUtility dictionary:dataDictionary setObject:[FBSDKAppEventsUtility advertiserID] forKey:@"advertiser_id"];
+  [FBSDKInternalUtility dictionary:dataDictionary setObject:properties forKey:@"custom_data"];
+
+  NSError *error;
+  __block NSError *invalidObjectError;
+  NSString *dataJSONString = [FBSDKInternalUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
+    *stop = YES;
+    invalidObjectError = [FBSDKError unknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
+    return nil;
+  }];
+  if (!error) {
+    error = invalidObjectError;
+  }
+  if (error) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Failed to serialize properties for [FBSDKAppEvents updateUserProperties:]"];
+    if (handler) {
+      handler(nil, nil, error);
+    }
+    return;
+  }
+  NSDictionary *params = @{ @"data" : dataJSONString };
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", [FBSDKSettings appID]]
+                                                                 parameters:params
+                                                                tokenString:[FBSDKAccessToken currentAccessToken].tokenString
+                                                                 HTTPMethod:@"POST"
+                                                                      flags:FBSDKGraphRequestFlagDisableErrorRecovery |
+                                                                            FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
+                                                                            FBSDKGraphRequestFlagSkipClientToken
+                                ];
+  [request startWithCompletionHandler:handler];
+}
+
 #pragma mark - Internal Methods
 
 + (void)logImplicitEvent:(NSString *)eventName
@@ -593,6 +664,7 @@ static NSString *g_overrideAppID = nil;
   if (isImplicitlyLogged) {
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
+  [FBSDKInternalUtility dictionary:eventDictionary setObject:_userID forKey:@"_app_user_id"];
 
   NSString *currentViewControllerName;
   if ([NSThread isMainThread]) {

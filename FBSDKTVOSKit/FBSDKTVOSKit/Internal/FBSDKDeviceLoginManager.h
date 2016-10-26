@@ -60,13 +60,15 @@ NS_ASSUME_NONNULL_BEGIN
 
  See [Facebook Device Login](https://developers.facebook.com/docs/facebook-login/for-devices).
  */
-@interface FBSDKDeviceLoginManager : NSObject
+@interface FBSDKDeviceLoginManager : NSObject <NSNetServiceDelegate>
 
 /*!
  @abstract Initializes a new instance.
  @param permissions permissions to request.
  */
-- (instancetype)initWithPermissions:(nullable NSArray<NSString *> *)permissions NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithPermissions:(nullable NSArray<NSString *> *)permissions
+                   enableSmartLogin:(BOOL)enableSmartLogin
+NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

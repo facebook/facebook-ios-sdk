@@ -36,7 +36,7 @@
 @property (nonatomic, copy) void (^uploadCallback)(NSDictionary *results, NSError *error);
 @end
 
-static NSString *const kTaggedPlaceID = @"910055289103294";
+static NSString *const kTaggedPlaceID = @"1163806960341831";
 
 @implementation FBSDKShareAPIIntegrationTests
 {
@@ -175,8 +175,7 @@ static NSString *const kTaggedPlaceID = @"910055289103294";
      XCTAssertNil(error);
      XCTAssertEqualObjects(postID, result[@"id"]);
      XCTAssertEqualObjects(taggedName, result[@"with_tags"][@"data"][0][@"name"]);
-// TODO: t13669180 Fix place test
-//     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
+     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"]);
      [blocker signal];
    }];
   XCTAssertTrue([blocker waitWithTimeout:200], @"couldn't fetch verify post.");
@@ -284,11 +283,10 @@ static NSString *const kTaggedPlaceID = @"910055289103294";
   [batch addRequest:getTagsToVerifyRequest completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(error);
      XCTAssertEqualObjects(taggedName, result[@"tags"][@"data"][0][@"name"]);
-// TODO: t13669180 Fix place test
-//     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"],
-//                           @"Failed to fetch place tag for post %@ for %@",
-//                           postID,
-//                           one.tokenString);
+     XCTAssertEqualObjects(kTaggedPlaceID, result[@"place"][@"id"],
+                           @"Failed to fetch place tag for post %@ for %@",
+                           postID,
+                           one.tokenString);
      [blocker signal];
    }];
   [batch start];

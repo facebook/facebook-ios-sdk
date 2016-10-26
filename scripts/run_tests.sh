@@ -73,7 +73,7 @@ for SCHEME in $SCHEMES; do
               -scheme "BuildAllKits" \
               -configuration $BUILDCONFIGURATION \
               -sdk iphonesimulator \
-              -destination 'platform=iOS Simulator,name=iPhone 5' \
+              -destination 'platform=iOS Simulator,name=iPhone 6' \
               test
     ) || exit $?
 
@@ -111,7 +111,7 @@ for SCHEME in $SCHEMES; do
       -scheme $SCHEME \
       -configuration $BUILDCONFIGURATION \
       -sdk iphonesimulator \
-      -destination 'platform=iOS Simulator,name=iPhone 5' \
+      -destination 'platform=iOS Simulator,name=iPhone 6' \
       test"
       eval $COMMAND || die "Error while running tests ($COMMAND)"
   fi
