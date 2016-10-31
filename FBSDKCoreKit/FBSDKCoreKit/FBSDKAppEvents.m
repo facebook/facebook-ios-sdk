@@ -144,7 +144,9 @@ NSString *const FBSDKAppEventNameFBSDKEventShareDialogShow =            @"fb_dia
 NSString *const FBSDKAppEventNameFBSDKEventMessengerShareDialogShow =   @"fb_messenger_dialog_share_show";
 NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow =   @"fb_app_invite_share_show";
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_3
 NSString *const FBSDKAppEventNameFBSessionNativeAppSwitchLoginDialogResult = @"fb_mobile_login_native_app_switch_dialog_result";
+#endif
 
 // Event Parameters internal to this file
 NSString *const FBSDKAppEventParameterDialogOutcome               = @"fb_dialog_outcome";
