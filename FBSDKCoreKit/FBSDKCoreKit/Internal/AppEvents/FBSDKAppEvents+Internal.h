@@ -85,8 +85,10 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsNativeLoginDialogEnd;
 /*! Use to log the e2e timestamp metrics for web login */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsWebLoginCompleted;
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_3
 /*! Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSessionNativeAppSwitchLoginDialogResult;
+#endif
 
 /*! Use to log the results of a share dialog */
 FBSDK_EXTERN NSString *const FBSDLAppEventNameFBSDKEventShareDialogResult;

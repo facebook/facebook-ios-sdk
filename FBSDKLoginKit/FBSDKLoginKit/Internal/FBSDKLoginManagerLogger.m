@@ -211,6 +211,7 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
   }];
 }
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_3
 - (void)logNativeAppDialogResult:(BOOL)result dialogDuration:(NSTimeInterval)dialogDuration
 {
   NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
@@ -220,6 +221,7 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
     [self logEvent:FBSDKAppEventNameFBSessionNativeAppSwitchLoginDialogResult params:[self _parametersForNewEvent]];
   }
 }
+#endif
 
 #pragma mark - Private
 
