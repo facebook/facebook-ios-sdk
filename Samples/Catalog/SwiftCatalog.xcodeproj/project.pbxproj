@@ -667,7 +667,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Facebook, Inc";
 				TargetAttributes = {
 					81EDA31D1D025F4600E742F4 = {

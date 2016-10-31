@@ -1024,7 +1024,7 @@
 		8115C0CF1CFE540D001FF33B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0800;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Facebook Inc";
 				TargetAttributes = {
 					8115C0D71CFE540D001FF33B = {
