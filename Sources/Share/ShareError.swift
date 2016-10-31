@@ -31,7 +31,7 @@ public enum ShareError: Error {
 
   /**
    The error code for when a sharing dialog is not available.
-   Use the `canShare` property to check for this case before calling show.
+   Use the `validate()` function on the dialog/sharer to check for this case before calling `show()`.
    */
   case dialogNotAvailable
 
