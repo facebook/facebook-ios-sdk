@@ -43,14 +43,14 @@ extension LoginManagerViewController {
 
   @IBAction func loginWithReadPermissions() {
     let loginManager = LoginManager()
-    loginManager.logIn([.publicProfile, .userFriends], viewController: self) { result in
+    loginManager.logIn(readPermissions: [.publicProfile, .userFriends], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }
 
   @IBAction func loginWithPublishPermissions() {
     let loginManager = LoginManager()
-    loginManager.logIn([.publishActions], viewController: self) { result in
+    loginManager.logIn(publishPermissions: [.publishActions], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }

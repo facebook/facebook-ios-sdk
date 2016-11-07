@@ -75,10 +75,10 @@ public final class LoginManager {
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
    - parameter completion:     Optional callback.
    */
-  public func logIn(_ permissions: [ReadPermission] = [.publicProfile],
+  public func logIn(readPermissions: [ReadPermission] = [.publicProfile],
                     viewController: UIViewController? = nil,
                     completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = permissions.map({ $0.permissionValue.name })
+    let sdkPermissions = readPermissions.map({ $0.permissionValue.name })
     sdkManager.logIn(withReadPermissions: sdkPermissions,
                      from: viewController,
                      handler: LoginManager.sdkCompletionFor(completion))
@@ -98,10 +98,10 @@ public final class LoginManager {
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
    - parameter completion:     Optional callback.
    */
-  public func logIn(_ permissions: [PublishPermission] = [.publishActions],
+  public func logIn(publishPermissions: [PublishPermission] = [.publishActions],
                     viewController: UIViewController? = nil,
                     completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = permissions.map({ $0.permissionValue.name })
+    let sdkPermissions = publishPermissions.map({ $0.permissionValue.name })
     sdkManager.logIn(withPublishPermissions: sdkPermissions,
                      from: viewController,
                      handler: LoginManager.sdkCompletionFor(completion))
