@@ -24,7 +24,9 @@ import Foundation
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
 public struct Permission {
-  internal let name: String
+
+  /// Name of the permission.
+  public let name: String
 
   /**
    Create a permission with a string value.
