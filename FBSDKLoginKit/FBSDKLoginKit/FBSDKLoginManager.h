@@ -78,6 +78,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
   FBSDKLoginBehaviorNative = 0,
   /*!
    @abstract Attempts log in through the Safari or SFSafariViewController, if available.
+   @note The SDK prefers this as the default behavior in iOS 9 and above.
    */
   FBSDKLoginBehaviorBrowser,
   /*!
