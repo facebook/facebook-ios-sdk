@@ -318,6 +318,8 @@
 		D5158B5C1C5FD492003E32EE /* FBSDKHashtag.h in Headers */ = {isa = PBXBuildFile; fileRef = D5158B5A1C5FD492003E32EE /* FBSDKHashtag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5158B5D1C5FD492003E32EE /* FBSDKHashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = D5158B5B1C5FD492003E32EE /* FBSDKHashtag.m */; };
 		D5158B5F1C5FEAE6003E32EE /* FBSDKHashtagTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D5158B5E1C5FEAE6003E32EE /* FBSDKHashtagTests.m */; };
+		D530CB671D51253100D803D6 /* test-image.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = D530CB661D51253100D803D6 /* test-image.jpeg */; };
+		D55660171D91FF6600046113 /* bicycle.png in Resources */ = {isa = PBXBuildFile; fileRef = D55660161D91FF6600046113 /* bicycle.png */; };
 		DB38B6831AAF668100099656 /* FBSDKShareDialogMode.m in Sources */ = {isa = PBXBuildFile; fileRef = DB38B6821AAF668100099656 /* FBSDKShareDialogMode.m */; };
 		DB38B6851AAF765900099656 /* FBSDKShareDialogMode.h in Headers */ = {isa = PBXBuildFile; fileRef = DB38B6811AAF663600099656 /* FBSDKShareDialogMode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EA3D468E1AA62A9500D0C7D5 /* FBSDKAppInviteDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = EA3D468C1AA62A9500D0C7D5 /* FBSDKAppInviteDialog.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -571,6 +573,8 @@
 		D5158B5A1C5FD492003E32EE /* FBSDKHashtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKHashtag.h; sourceTree = "<group>"; };
 		D5158B5B1C5FD492003E32EE /* FBSDKHashtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtag.m; sourceTree = "<group>"; };
 		D5158B5E1C5FEAE6003E32EE /* FBSDKHashtagTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtagTests.m; sourceTree = "<group>"; };
+		D530CB661D51253100D803D6 /* test-image.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "test-image.jpeg"; sourceTree = "<group>"; };
+		D55660161D91FF6600046113 /* bicycle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bicycle.png; sourceTree = "<group>"; };
 		DB38B6811AAF663600099656 /* FBSDKShareDialogMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKShareDialogMode.h; sourceTree = "<group>"; };
 		DB38B6821AAF668100099656 /* FBSDKShareDialogMode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareDialogMode.m; sourceTree = "<group>"; };
 		EA3D468C1AA62A9500D0C7D5 /* FBSDKAppInviteDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAppInviteDialog.h; sourceTree = "<group>"; };
@@ -738,6 +742,8 @@
 				89D05A6F1A9FE02400609300 /* FBSDKLikeObjectType.m */,
 				89CE02E31A3F56470033C9CA /* FBSDKShareLinkContent.h */,
 				89CE02E41A3F56470033C9CA /* FBSDKShareLinkContent.m */,
+				03A419D81C922A2A006E7767 /* FBSDKShareMediaContent.h */,
+				03A419D91C922A2A006E7767 /* FBSDKShareMediaContent.m */,
 				8937748B1A3B5E9E00BE2807 /* FBSDKShareOpenGraphAction.h */,
 				8937748C1A3B5E9E00BE2807 /* FBSDKShareOpenGraphAction.m */,
 				898D17DF1A407F2F005E32C7 /* FBSDKShareOpenGraphContent.h */,
@@ -750,8 +756,6 @@
 				892EBBF51A3A50D700721B03 /* FBSDKSharePhoto.m */,
 				89FC9C6D1A3FA1E00001910E /* FBSDKSharePhotoContent.h */,
 				89FC9C6E1A3FA1E00001910E /* FBSDKSharePhotoContent.m */,
-				03A419D81C922A2A006E7767 /* FBSDKShareMediaContent.h */,
-				03A419D91C922A2A006E7767 /* FBSDKShareMediaContent.m */,
 				896DE2101A9E280900195731 /* FBSDKShareVideo.h */,
 				896DE2111A9E280900195731 /* FBSDKShareVideo.m */,
 				896DE2181A9E282800195731 /* FBSDKShareVideoContent.h */,
@@ -806,6 +810,7 @@
 				EAC370A21AAE3A9C000F0F04 /* FBSDKGameRequestContentTests.m */,
 				D5158B5E1C5FEAE6003E32EE /* FBSDKHashtagTests.m */,
 				89FC9C6B1A3F9B6C0001910E /* FBSDKShareLinkContentTests.m */,
+				0302743D1C98A661000D666D /* FBSDKShareMediaContentTests.m */,
 				8937749A1A3B6B6F00BE2807 /* FBSDKShareModelTestUtility.h */,
 				8937749B1A3B6B6F00BE2807 /* FBSDKShareModelTestUtility.m */,
 				891C545A1A3BBC1B00DF05AF /* FBSDKShareOpenGraphActionTests.m */,
@@ -815,7 +820,6 @@
 				893774971A3B6A2900BE2807 /* FBSDKSharePhotoTests.m */,
 				896DE2221A9E33C000195731 /* FBSDKShareVideoContentTests.m */,
 				896DE2241A9E33CC00195731 /* FBSDKShareVideoTests.m */,
-				0302743D1C98A661000D666D /* FBSDKShareMediaContentTests.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -918,11 +922,11 @@
 			children = (
 				89FC8C4D1AC9ADD5004187B2 /* FBSDKMessageDialogTests.m */,
 				89FC8C431AC99B8A004187B2 /* FBSDKShareDialogTests.m */,
+				896A52A11B795AAB00E3A6AB /* FBSDKShareKitTestUtility.h */,
+				896A52A21B795AAB00E3A6AB /* FBSDKShareKitTestUtility.m */,
 				896B8C831A7967170074220D /* Internal */,
 				893774991A3B6A3300BE2807 /* Models */,
 				9D46C6001A11E5D800A0DDB6 /* Supporting Files */,
-				896A52A11B795AAB00E3A6AB /* FBSDKShareKitTestUtility.h */,
-				896A52A21B795AAB00E3A6AB /* FBSDKShareKitTestUtility.m */,
 			);
 			path = FBSDKShareKitTests;
 			sourceTree = "<group>";
@@ -930,6 +934,8 @@
 		9D46C6001A11E5D800A0DDB6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				D55660161D91FF6600046113 /* bicycle.png */,
+				D530CB661D51253100D803D6 /* test-image.jpeg */,
 				9D46C6011A11E5D800A0DDB6 /* Info.plist */,
 			);
 			name = "Supporting Files";
@@ -1339,6 +1345,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D530CB671D51253100D803D6 /* test-image.jpeg in Resources */,
+				D55660171D91FF6600046113 /* bicycle.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -18,11 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-/*!
- @class FBSDKMessengerInstallMessengerAlertPresenter
+/**
 
- @abstract
- Presents an alert telling the user they don't have a new enough verion of Messenger installed and
+  Presents an alert telling the user they don't have a new enough verion of Messenger installed and
  gives them an option to jump to the app store
  */
 @interface FBSDKMessengerInstallMessengerAlertPresenter : NSObject

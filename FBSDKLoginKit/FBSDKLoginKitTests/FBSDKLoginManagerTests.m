@@ -373,4 +373,32 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   }];
 }
 
+- (void)testCallingLoginWhileAnotherLoginHasNotFinishedNoOps
+{
+  // Mock some methods to force a SafariVC load
+  id FBSDKInternalUtilityMock = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[FBSDKInternalUtilityMock stub] andDo:^(NSInvocation *invocation) {
+    // Nothing
+  }] validateURLSchemes];
+  [[[FBSDKInternalUtilityMock stub] andReturnValue:@NO] isFacebookAppInstalled];
+
+  __block int loginCount = 0;
+  FBSDKLoginManager *manager = [OCMockObject partialMockForObject:[FBSDKLoginManager new]];
+  [[[(id)manager stub] andDo:^(NSInvocation *invocation) {
+    loginCount++;
+  }] logInWithBehavior:FBSDKLoginBehaviorNative];
+  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    // This will never be called
+    XCTFail(@"Should not be called");
+  }];
+
+  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    // This will never be called
+    XCTFail(@"Should not be called");
+  }];
+
+  XCTAssertEqual(loginCount, 1);
+
+}
+
 @end

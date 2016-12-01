@@ -24,8 +24,7 @@
 
 @property (nonatomic, weak) id<SCImagePickerDelegate> delegate;
 
-- (void)presentFromRect:(CGRect)rect inView:(UIView *)view;
-- (void)presentWithViewController:(UIViewController *)viewController;
+- (void)presentFromRect:(CGRect)rect withViewController:(UIViewController *)viewController;
 
 @end
 

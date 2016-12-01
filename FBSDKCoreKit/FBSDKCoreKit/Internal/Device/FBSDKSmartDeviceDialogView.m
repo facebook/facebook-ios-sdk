@@ -37,7 +37,7 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   return self;
 }
 
-#pragma mark - Properties
+#pragma mark - Overrides
 
 - (void)setConfirmationCode:(NSString *)confirmationCode
 {
@@ -52,6 +52,11 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
       _confirmationCodeLabel.hidden = NO;
     }
   }
+}
+
+- (void)buildView
+{
+  //intentionally blank.
 }
 
 #pragma mark - Helpers

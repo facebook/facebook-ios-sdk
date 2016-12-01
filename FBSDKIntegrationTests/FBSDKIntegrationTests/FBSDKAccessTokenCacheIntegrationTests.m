@@ -55,6 +55,10 @@
 }
 
 - (void)testV3CacheCompatibility {
+#if IPHONE_SIMULATOR
+  [[NSUserDefaults standardUserDefaults] setPersistentDomain:[NSDictionary dictionary] forName:[[NSBundle mainBundle] bundleIdentifier]];
+#endif
+  
   NSDictionary *tokenDictionary = @{
                                     @"com.facebook.sdk:TokenInformationTokenKey" : @"tokenString",
                                     @"com.facebook.sdk:TokenInformationPermissionsKey": @[ @"email"],

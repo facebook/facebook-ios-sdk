@@ -24,34 +24,34 @@
 /*
  @class
 
- @abstract Helper class for device requests mDNS broadcasts. Note this is only intended for
+  Helper class for device requests mDNS broadcasts. Note this is only intended for
  internal consumption.
  */
 @interface FBSDKDeviceRequestsHelper : NSObject
 
-/*!
- @abstract Get device info to include with the GraphRequest
+/**
+  Get device info to include with the GraphRequest
  */
 + (NSString *)getDeviceInfo;
 
-/*!
- @abstract Start the mDNS advertisement service for a device request
- @param loginCode The login code associated with the action for the device request.
- @return True if the service broadcast was successfully started.
+/**
+  Start the mDNS advertisement service for a device request
+ - Parameter loginCode: The login code associated with the action for the device request.
+ - Returns: True if the service broadcast was successfully started.
  */
 + (BOOL)startAdvertisementService:(NSString *)loginCode withDelegate:(id<NSNetServiceDelegate>)delegate;
 
-/*!
- @abstract Check if a service delegate is registered with particular advertisement service
- @param delegate The delegate to check if registered.
- @param service The advertisement service to check for.
- @return True if the service is the one the delegate registered with.
+/**
+  Check if a service delegate is registered with particular advertisement service
+ - Parameter delegate: The delegate to check if registered.
+ - Parameter service: The advertisement service to check for.
+ - Returns: True if the service is the one the delegate registered with.
  */
 + (BOOL)isDelegate:(id<NSNetServiceDelegate>)delegate forAdvertisementService:(NSNetService *)service;
 
-/*!
- @abstract Stop the mDNS advertisement service for a device request
- @param delegate The delegate registered with the service.
+/**
+  Stop the mDNS advertisement service for a device request
+ - Parameter delegate: The delegate registered with the service.
  */
 + (void)cleanUpAdvertisementService:(id<NSNetServiceDelegate>)delegate;
 

@@ -18,7 +18,15 @@
 
 #import "FBSDKShareKitTestUtility.h"
 
+#import <objc/runtime.h>
+
+#import <MessageUI/MessageUI.h>
+#import <Social/Social.h>
+
 #import <OCMock/OCMock.h>
+
+#import <FBSDKShareKit/FBSDKMessageDialog.h>
+#import <FBSDKShareKit/FBSDKShareDialog.h>
 
 #import "FBSDKCoreKit+Internal.h"
 
@@ -32,6 +40,30 @@
   NSBundle *correctMainBundle = [NSBundle bundleForClass:[self class]];
   [[[[mockNSBundle stub] classMethod] andReturn:correctMainBundle] mainBundle];
   return mockNSBundle;
+}
+
++ (UIImage *)testImage
+{
+  static UIImage *image = nil;
+  if (image == nil) {
+    NSData *imageData = [NSData dataWithContentsOfURL:[[self class] testImageURL]];
+    image = [UIImage imageWithData:imageData];
+  }
+  return image;
+}
+
++ (NSURL *)testImageURL
+{
+  NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+  NSURL *imageURL = [bundle URLForResource:@"test-image" withExtension:@"jpeg"];
+  return imageURL;
+}
+
++ (NSURL *)testPNGImageURL
+{
+  NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+  NSURL *imageURL = [bundle URLForResource:@"bicycle" withExtension:@"png"];
+  return imageURL;
 }
 
 @end

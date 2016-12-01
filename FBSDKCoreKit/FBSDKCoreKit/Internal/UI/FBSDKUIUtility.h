@@ -22,8 +22,8 @@
 
 #import "../FBSDKMath.h"
 
-/*!
- @abstract Insets a CGSize with the insets in a UIEdgeInsets.
+/**
+  Insets a CGSize with the insets in a UIEdgeInsets.
  */
 FBSDK_STATIC_INLINE CGSize FBSDKEdgeInsetsInsetSize(CGSize size, UIEdgeInsets insets)
 {
@@ -32,8 +32,8 @@ FBSDK_STATIC_INLINE CGSize FBSDKEdgeInsetsInsetSize(CGSize size, UIEdgeInsets in
   return UIEdgeInsetsInsetRect(rect, insets).size;
 }
 
-/*!
- @abstract Outsets a CGSize with the insets in a UIEdgeInsets.
+/**
+  Outsets a CGSize with the insets in a UIEdgeInsets.
  */
 FBSDK_STATIC_INLINE CGSize FBSDKEdgeInsetsOutsetSize(CGSize size, UIEdgeInsets insets)
 {
@@ -41,10 +41,11 @@ FBSDK_STATIC_INLINE CGSize FBSDKEdgeInsetsOutsetSize(CGSize size, UIEdgeInsets i
                     insets.top + size.height + insets.bottom);
 }
 
-/*!
- @abstract Limits a CGFloat value, using the scale to limit to pixels (instead of points).
+/**
+  Limits a CGFloat value, using the scale to limit to pixels (instead of points).
 
- @discussion The limitFunction is frequention floorf, ceilf or roundf.  If the scale is 2.0,
+
+ The limitFunction is frequention floorf, ceilf or roundf.  If the scale is 2.0,
  you may get back values of *.5 to correspond to pixels.
  */
 typedef float (*FBSDKLimitFunctionType)(float);

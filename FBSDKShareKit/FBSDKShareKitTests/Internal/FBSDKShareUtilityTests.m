@@ -17,11 +17,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
-#import <XCTest/XCTest.h>
-
+#import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 #import "FBSDKShareUtility.h"
 

@@ -90,6 +90,34 @@
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D5C618081DC90E9000C406B9"
+               BuildableName = "FBSDKShareTray-Universal"
+               BlueprintName = "FBSDKShareTray-Universal"
+               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
+               BuildableName = "FBSDKShareTrayTests.xctest"
+               BlueprintName = "FBSDKShareTrayTests"
+               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -126,6 +154,16 @@
                BuildableName = "FBSDKShareKitTests.xctest"
                BlueprintName = "FBSDKShareKitTests"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
+               BuildableName = "FBSDKShareTrayTests.xctest"
+               BlueprintName = "FBSDKShareTrayTests"
+               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

@@ -18,11 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
-/*!
- @class FBSDKMessengerInvalidOptionsAlertPresenter
+/**
 
- @abstract
- Presents an alert telling the developer that they didn't provide valid options
+  Presents an alert telling the developer that they didn't provide valid options
  */
 @interface FBSDKMessengerInvalidOptionsAlertPresenter : NSObject
 

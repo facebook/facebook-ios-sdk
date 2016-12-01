@@ -20,10 +20,14 @@
 
 @protocol FBSDKDeviceDialogViewDelegate;
 
+// internal class, APIs are subject to change.
 @interface FBSDKDeviceDialogView : UIView
 
 @property (nonatomic, weak) id<FBSDKDeviceDialogViewDelegate> delegate;
 @property (nonatomic, copy) NSString *confirmationCode;
+
+// override point for subclasses.
+- (void)buildView;
 
 @end
 

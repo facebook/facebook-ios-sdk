@@ -20,6 +20,7 @@
 
 #import <dlfcn.h>
 
+#import <MobileCoreServices/MobileCoreServices.h>
 #import <Security/Security.h>
 #import <StoreKit/StoreKit.h>
 
@@ -245,6 +246,11 @@ NSString *fbsdkdfl_SLServiceTypeFacebook(void)
   _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeFacebook);
 }
 
+NSString *fbsdkdfl_SLServiceTypeTwitter(void)
+{
+  _fbsdkdfl_Social_get_and_return_constant(SLServiceTypeTwitter);
+}
+
 #pragma mark - Social Classes
 
 #define _fbsdkdfl_Social_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(Social, SYMBOL)
@@ -252,6 +258,25 @@ NSString *fbsdkdfl_SLServiceTypeFacebook(void)
 Class fbsdkdfl_SLComposeViewControllerClass(void)
 {
   _fbsdkdfl_Social_get_c(SLComposeViewController);
+  return c;
+}
+
+#pragma mark - MessageUI Classes
+
+_fbsdkdfl_load_framework_once_impl_(MessageUI)
+_fbsdkdfl_handle_get_impl_(MessageUI)
+
+#define _fbsdkdfl_MessageUI_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(MessageUI, SYMBOL)
+
+Class fbsdkdfl_MFMailComposeViewControllerClass(void)
+{
+  _fbsdkdfl_MessageUI_get_c(MFMailComposeViewController);
+  return c;
+}
+
+Class fbsdkdfl_MFMessageComposeViewControllerClass(void)
+{
+  _fbsdkdfl_MessageUI_get_c(MFMessageComposeViewController);
   return c;
 }
 
@@ -440,4 +465,97 @@ Class fbsdkdfl_CTTelephonyNetworkInfoClass(void)
 {
     _fbsdkdfl_CoreTelephonyLibrary_get_c(CTTelephonyNetworkInfo);
     return c;
+}
+
+#pragma mark - CoreImage
+
+_fbsdkdfl_load_framework_once_impl_(CoreImage)
+_fbsdkdfl_handle_get_impl_(CoreImage)
+
+#define _fbsdkdfl_CoreImage_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(CoreImage, SYMBOL);
+#define _fbsdkdfl_CoreImage_get_and_return_NSString(SYMBOL) _fbsdkdfl_get_and_return_NSString(CoreImage, SYMBOL)
+
+
+Class fbsdkdfl_CIImageClass(void)
+{
+  _fbsdkdfl_CoreImage_get_c(CIImage);
+  return c;
+}
+
+Class fbsdkdfl_CIFilterClass(void)
+{
+  _fbsdkdfl_CoreImage_get_c(CIFilter);
+  return c;
+}
+
+NSString *fbsdkdfl_kCIInputImageKey(void)
+{
+  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputImageKey);
+}
+
+NSString *fbsdkdfl_kCIInputRadiusKey(void)
+{
+  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIInputRadiusKey);
+}
+
+NSString *fbsdkdfl_kCIOutputImageKey(void)
+{
+  _fbsdkdfl_CoreImage_get_and_return_NSString(kCIOutputImageKey);
+}
+
+#pragma mark - Photos.framework
+
+_fbsdkdfl_load_framework_once_impl_(Photos)
+_fbsdkdfl_handle_get_impl_(Photos)
+
+#define _fbsdkdfl_Photos_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(Photos, SYMBOL);
+#define _fbsdkdfl_Photos_get_and_return_NSString(SYMBOL) _fbsdkdfl_get_and_return_NSString(Photos, SYMBOL)
+
+Class fbsdkdfl_PHPhotoLibrary(void)
+{
+  _fbsdkdfl_Photos_get_c(PHPhotoLibrary);
+  return c;
+}
+
+Class fbsdkdfl_PHAssetChangeRequest(void)
+{
+  _fbsdkdfl_Photos_get_c(PHAssetChangeRequest);
+  return c;
+}
+
+#pragma mark - MobileCoreServices
+
+_fbsdkdfl_load_framework_once_impl_(MobileCoreServices)
+_fbsdkdfl_handle_get_impl_(MobileCoreServices)
+
+#define _fbsdkdfl_MobileCoreServices_get_k(SYMBOL) _fbsdkdfl_symbol_get_k(MobileCoreServices, SYMBOL, CFStringRef *)
+
+#define _fbsdkdfl_MobileCoreServices_get_and_return_k(SYMBOL) \
+_fbsdkdfl_MobileCoreServices_get_k(SYMBOL); \
+_fbsdkdfl_return_k(MobileCoreServices, SYMBOL)
+
+#define _fbsdkdfl_MobileCoreServices_get_f(SYMBOL) _fbsdkdfl_symbol_get_f(MobileCoreServices, SYMBOL)
+
+typedef CFStringRef (*UTTypeCopyPreferredTagWithClass_type)(CFStringRef inUTI, CFStringRef inTagClass);
+
+CFStringRef fbsdkdfl_UTTypeCopyPreferredTagWithClass(CFStringRef inUTI,
+                                                     CFStringRef inTagClass)
+{
+  _fbsdkdfl_MobileCoreServices_get_f(UTTypeCopyPreferredTagWithClass);
+  return f(inUTI, inTagClass);
+}
+
+CFStringRef fbsdkdfl_kUTTagClassMIMEType(void)
+{
+  _fbsdkdfl_MobileCoreServices_get_and_return_k(kUTTagClassMIMEType);
+}
+
+CFStringRef fbsdkdfl_kUTTypeJPEG(void)
+{
+  _fbsdkdfl_MobileCoreServices_get_and_return_k(kUTTypeJPEG);
+}
+
+CFStringRef fbsdkdfl_kUTTypePNG(void)
+{
+  _fbsdkdfl_MobileCoreServices_get_and_return_k(kUTTypePNG);
 }
