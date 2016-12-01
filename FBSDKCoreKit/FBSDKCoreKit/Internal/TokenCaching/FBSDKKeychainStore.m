@@ -89,6 +89,12 @@
         return NO;
     }
 
+#if TARGET_OS_SIMULATOR
+    NSLog(@"Falling back to storing access token in NSUserDefaults because of simulator bug");
+    [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
+
+    return [[NSUserDefaults standardUserDefaults] synchronize];
+#else
     NSMutableDictionary *query = [self queryForKey:key];
 
     OSStatus status;
@@ -115,6 +121,7 @@
     }
 
     return (status == errSecSuccess);
+#endif
 }
 
 - (NSData *)dataForKey:(NSString *)key
@@ -123,6 +130,10 @@
         return nil;
     }
 
+#if TARGET_OS_SIMULATOR
+    NSLog(@"Falling back to loading access token from NSUserDefaults because of simulator bug");
+    return [[NSUserDefaults standardUserDefaults] dataForKey:key];
+#else
     NSMutableDictionary *query = [self queryForKey:key];
     [query setObject:(id)kCFBooleanTrue forKey:[FBSDKDynamicFrameworkLoader loadkSecReturnData]];
     [query setObject:[FBSDKDynamicFrameworkLoader loadkSecMatchLimitOne] forKey:[FBSDKDynamicFrameworkLoader loadkSecMatchLimit]];
@@ -141,6 +152,7 @@
     CFRelease(data);
 
     return ret;
+#endif
 }
 
 - (NSMutableDictionary *)queryForKey:(NSString *)key

@@ -21,6 +21,8 @@
 #import <Foundation/Foundation.h>
 #import <XCTest/XCTest.h>
 
+#import <OCMock/OCMock.h>
+
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKIntegrationTestCase.h"
 
@@ -90,6 +92,20 @@
 
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error, @"expectations not fulfilled: %@", error);
+  }];
+
+  // make sure we don't make another network request.
+  XCTestExpectation *expectation3 = [self expectationWithDescription:@"completed load3"];
+  id mock = [OCMockObject niceMockForClass:[FBSDKServerConfigurationManager class]];
+  [[mock reject] processLoadRequestResponse:OCMOCK_ANY error:OCMOCK_ANY appID:OCMOCK_ANY];
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:
+   ^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+     XCTAssertNotNil(serverConfiguration);
+     XCTAssertNil(error, @"unexpected error: %@", error);
+     [expectation3 fulfill];
+   }];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error, @"expectation3 not fulfilled: %@", error);
   }];
 }
 @end

@@ -18,11 +18,9 @@
 
 #import "FBSDKMessengerShareKit.h"
 
-/*!
- @class FBSDKMessengerBroadcastContext
+/**
 
- @abstract
- This object is used as an override in FBSDKMessengerShareOptions to ensure
+  This object is used as an override in FBSDKMessengerShareOptions to ensure
  the broadcast flow in Messenger is triggered, even if your app was entered from
  a flow that normally triggers the Messenger reply flow
  */

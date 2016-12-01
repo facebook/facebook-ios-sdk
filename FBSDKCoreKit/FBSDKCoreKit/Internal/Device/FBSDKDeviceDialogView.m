@@ -29,7 +29,7 @@
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    [self _buildView];
+    [self buildView];
     [self setNeedsUpdateConstraints];
   }
   return self;
@@ -54,7 +54,7 @@
 
 #pragma mark - Helpers
 
-- (void)_buildView
+- (void)buildView
 {
   // This is a "static" view with just a cancel button so add all the constraints here
   // rather than properly override `updateConstraints`.

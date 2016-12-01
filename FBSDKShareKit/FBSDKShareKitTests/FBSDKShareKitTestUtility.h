@@ -16,14 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface FBSDKShareKitTestUtility : NSObject
 
-/*!
- * @abstract Mocks the main NSBundle to return the bundle containing this class, instead
+/**
+ *  Mocks the main NSBundle to return the bundle containing this class, instead
  * of the XCTest program bundle.
  */
 + (id)mainBundleMock;
+
+/*!
+ * @abstract Returns a UIImage for sharing.
+ */
++ (UIImage *)testImage;
+
+/*!
+ * @abstract Returns an NSURL to JPEG image data in the bundle.
+ */
++ (NSURL *)testImageURL;
+
+/*!
+ * @abstract Returns an NSURL to PNG image data in the bundle.
+ */
++ (NSURL *)testPNGImageURL;
 
 @end

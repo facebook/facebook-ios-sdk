@@ -26,24 +26,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKDeviceShareViewController;
 
-/*!
- @abstract A delegate for `FBSDKDeviceShareViewController`
+/**
+  A delegate for `FBSDKDeviceShareViewController`
  */
 @protocol FBSDKDeviceShareViewControllerDelegate <NSObject>
 
-/*!
- @abstract Indicates the dialog was completed
- @discussion This can happen if the user tapped cancel, or menu on their Siri remote, or if the
+/**
+  Indicates the dialog was completed
+
+ This can happen if the user tapped cancel, or menu on their Siri remote, or if the
   device code has expired. You will not be informed if the user actually posted a share to Facebook.
  */
 - (void)deviceShareViewControllerDidComplete:(FBSDKDeviceShareViewController *)viewController error:(nullable NSError *)error;
 
 @end
 
-/*!
- @abstract Use this view controller to initiate Sharing for Devices, an easy way for people to share content
+/**
+  Use this view controller to initiate Sharing for Devices, an easy way for people to share content
   from your tvOS app without requiring Facebook Login.
- @discussion The `FBSDKDeviceShareViewController` can dismiss itself and notify its delegate
+
+ The `FBSDKDeviceShareViewController` can dismiss itself and notify its delegate
  of completion. You should not re-use a `FBSDKDeviceShareViewController` instance again.
 
  See [Sharing for Devices](https://developers.facebook.com/docs/sharing/for-devices).
@@ -58,10 +60,11 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface FBSDKDeviceShareViewController : FBSDKDeviceViewControllerBase
 
-/*!
- @abstract Initializes a new instance with share content.
- @param shareContent The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
- @discussion Invalid content types will result in notifying the delegate with an error when the view controller is presented.
+/**
+  Initializes a new instance with share content.
+ - Parameter shareContent: The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
+
+ Invalid content types will result in notifying the delegate with an error when the view controller is presented.
 
  For `FBSDKShareLinkContent`, only contentURL is used (e.g., <FBSDKSharingContent> properties are not supported)
  For `FBSDKShareOpenGraphContent`, only the action is used (e.g., <FBSDKSharingContent> properties are not supported).
@@ -73,13 +76,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
 - (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil  NS_UNAVAILABLE;
 
-/*!
- @abstract The delegate.
+/**
+  The delegate.
  */
 @property (nullable, nonatomic, weak) id<FBSDKDeviceShareViewControllerDelegate> delegate;
 
-/*!
- @abstract The share content.
+/**
+  The share content.
  */
 @property (nonatomic, readonly, strong) id<FBSDKSharingContent> shareContent;
 

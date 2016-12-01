@@ -41,13 +41,6 @@
 #import "FBSDKProfile+Internal.h"
 #endif
 
-// TODO: t13635729 Remove when Sandcastle builds witn Xcode8
-@interface UIApplication (iOS10)
-
-- (void)openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options completionHandler:(void (^)(BOOL))completion;
-
-@end
-
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
@@ -193,6 +186,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 {
   FBSDKAccessToken *cachedToken = [[FBSDKSettings accessTokenCache] fetchAccessToken];
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
+  // fetch app settings
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
 
 #if !TARGET_OS_TV
   FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];

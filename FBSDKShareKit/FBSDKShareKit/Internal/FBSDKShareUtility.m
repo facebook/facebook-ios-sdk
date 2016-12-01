@@ -267,6 +267,23 @@
   }
 }
 
++ (UIImage *)imageWithCircleColor:(UIColor *)color
+                       canvasSize:(CGSize)canvasSize
+                       circleSize:(CGSize)circleSize
+{
+  CGRect circleFrame = CGRectMake((canvasSize.width - circleSize.width) / 2.0,
+                                  (canvasSize.height - circleSize.height) / 2.0,
+                                  circleSize.width,
+                                  circleSize.height);
+  UIGraphicsBeginImageContextWithOptions(canvasSize, NO, 0);
+  CGContextRef context = UIGraphicsGetCurrentContext();
+  [color setFill];
+  CGContextFillEllipseInRect(context, circleFrame);
+  UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  return image;
+}
+
 + (NSDictionary *)parametersForShareContent:(id<FBSDKSharingContent>)shareContent
                       shouldFailOnDataError:(BOOL)shouldFailOnDataError
 {

@@ -129,7 +129,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       }
     }
 
-    if ((_serverConfiguration && [self _serverConfigurationTimestampIsValid:_serverConfiguration.timestamp] && _serverConfiguration.version > FBSDKServerConfigurationVersion) ||
+    if ((_serverConfiguration && [self _serverConfigurationTimestampIsValid:_serverConfiguration.timestamp] && _serverConfiguration.version >= FBSDKServerConfigurationVersion) ||
         (_serverConfigurationErrorTimestamp && [self _serverConfigurationTimestampIsValid:_serverConfigurationErrorTimestamp])) {
       // we have a valid server configuration, use that
       loadBlock = [self _wrapperBlockForLoadBlock:completionBlock];

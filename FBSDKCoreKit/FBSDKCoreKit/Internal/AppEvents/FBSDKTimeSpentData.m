@@ -243,6 +243,11 @@ static const long INACTIVE_SECONDS_QUANTA[] =
       if (_shouldLogActivateEvent) {
         [FBSDKAppEvents logEvent:FBSDKAppEventNameActivatedApp
                       parameters:[self appEventsParametersForActivate]];
+        // Unless the behavior is set to only allow explicit flushing, we go ahead and flush. App launch
+        // events are critical to Analytics so we don't want to lose them.
+        if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+          [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+        }
       }
     }
   }

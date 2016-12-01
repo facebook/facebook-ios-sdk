@@ -45,7 +45,7 @@ FB_SDK_BUILD_PACKAGE_DOCSETS_FOLDER=$FB_SDK_BUILD_PACKAGE/DocSets/
 (gem list xcpretty -i > /dev/null) || die "Run 'gem install xcpretty' first"
 (gem list rake -i > /dev/null) || die "Run 'gem install rake' first"
 
-# -----------------------------------------------------------------------------gi
+# -----------------------------------------------------------------------------
 # Build package directory structure
 #
 progress_message "Building package directory structure."
@@ -87,7 +87,6 @@ done
   || die "Could not copy README"
 \cp "$FB_SDK_ROOT/LICENSE" "$FB_SDK_BUILD_PACKAGE"/LICENSE.txt \
   || die "Could not copy LICENSE"
-
 
 # -----------------------------------------------------------------------------
 # Fixup projects to point to the SDK framework
@@ -137,6 +136,12 @@ FBAN_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork
   || die "Could not copy FBAudienceNetwork samples"
 # Fix up samples
 for fname in $(find "$FBAN_SAMPLES" -name "project.pbxproj" -print); do \
+  sed 's|"\\"\$(SRCROOT)/\.\./\.\./\.\./build\\"",||g;s|\.\./\.\./\.\./build||g;' \
+    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
+
+# Fix up samples
+for fname in $(find "$FBAN_SAMPLES" -name "project.pbxproj" -print); do \
   sed "s|../../build|../../../|g;" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
@@ -146,6 +151,22 @@ for fname in $(find "$FBADSDK_SAMPLES" -name "project.pbxproj" -print); do \
   sed "s|../../build|../../../|g;s|../../../../ads/build|../../../|g;" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
+
+LANG=C
+
+find "$FBAN_SAMPLES" -name "entitlements.plist" -delete
+
+find "$FBAN_SAMPLES" -name "Info.plist" -exec perl -p -i -0777 -e 's/\s*<key>CFBundleURLTypes<\/key>\s*<array>\s*<dict>\s*<key>CFBundleURLSchemes<\/key>\s*<array>\s*<string>fb\d*<\/string>\s*<\/array>\s*<\/dict>\s*<\/array>\s*<key>FacebookAppID<\/key>\s*<string>\d*<\/string>\s*<key>FacebookDisplayName<\/key>\s*<string>.*<\/string>\s*<key>LSApplicationQueriesSchemes<\/key>\s*<array>\s*<string>fbapi<\/string>\s*<string>fb-messenger-api<\/string>\s*<string>fbauth2<\/string>\s*<string>fbshareextension<\/string>\s*<\/array>\n//g' {} \;
+find "$FBAN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/\n\s*com\.apple\.Keychain = {\s*enabled = 1;\s*};//gms' {} \;
+find "$FBAN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/NativeAdSample.entitlements/d' {} \;
+find "$FBAN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdUnitsSample.entitlements/d' {} \;
+find "$FBAN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/^\s*<FileRef\n\s*location = "group:\.\.\/\.\.\/FBSDKCoreKit\/FBSDKCoreKit\.xcodeproj">\n\s*<\/FileRef>\n//gms' {} \;
+
+find "$FBAN_SAMPLES" -type f -exec sed -i '' -E -e "/fbLoginButton/d" {} \;
+find "$FBAN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKCoreKit/d" {} \;
+find "$FBAN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKLogin/d" {} \;
+find "$FBAN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKApplicationDelegate/d" {} \;
+find "$FBAN_SAMPLES" -type f -exec  perl -p -i -0777 -e 's/\n\/\/ START REMOVED AT DISTRIBUTION BUILD TIME.*?\/\/ END REMOVED AT DISTRIBUTION BUILD TIME\n//gms' {} \;
 
 # -----------------------------------------------------------------------------
 # Build Messenger Kit

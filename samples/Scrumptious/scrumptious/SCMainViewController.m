@@ -154,18 +154,13 @@ static int const MIN_USER_GENERATED_PHOTO_DIMENSION = 480;
 
 #pragma mark - Actions
 
-- (IBAction)pickImage:(id)sender
+- (IBAction)pickImage:(UIView *)sender
 {
     SCImagePicker *imagePicker = [[SCImagePicker alloc] init];
     self.imagePicker = imagePicker;
     imagePicker.delegate = self;
-    if ((UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) && [sender isKindOfClass:[UIView class]]) {
-        UIView *senderView = (UIView *)sender;
-        UIView *view = self.view;
-        [imagePicker presentFromRect:[view convertRect:senderView.bounds fromView:senderView] inView:self.view];
-    } else {
-        [imagePicker presentWithViewController:self];
-    }
+    CGRect senderFrame = [self.view convertRect:sender.bounds fromView:sender];
+    [imagePicker presentFromRect:senderFrame withViewController:self];
 }
 
 - (IBAction)pickMeal:(id)sender

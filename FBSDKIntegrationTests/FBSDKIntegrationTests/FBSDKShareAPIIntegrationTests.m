@@ -36,7 +36,7 @@
 @property (nonatomic, copy) void (^uploadCallback)(NSDictionary *results, NSError *error);
 @end
 
-static NSString *const kTaggedPlaceID = @"1163806960341831";
+static NSString *const kTaggedPlaceID = @"110843418940484";
 
 @implementation FBSDKShareAPIIntegrationTests
 {
