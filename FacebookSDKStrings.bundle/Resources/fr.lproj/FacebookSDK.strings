@@ -8,10 +8,10 @@
 "DeviceLogin.SmartLogInStep0" = "Confirmez votre code sur Facebook.";
 
 /* The string for smart login instructions */
-"DeviceLogin.SmartLogInStep1" = "\n1. Allez dans le Menu  ";
+"DeviceLogin.SmartLogInStep1" = "\n1. Allez dans le Menu";
 
 /* The string for smart login instructions */
-"DeviceLogin.SmartLogInStep2" = "\n2. Sélectionnez Demandes d'appareils  ";
+"DeviceLogin.SmartLogInStep2" = "\n2. Sélectionnez Demandes d'appareils";
 
 /* The string for smart login instructions */
 "DeviceLogin.SmartLogInStep3" = "\n3. Confirmez le code.";
