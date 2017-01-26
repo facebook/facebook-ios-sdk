@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "লগ ইন করুন";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebook এর সাথে চালিয়ে যান";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebook -এর সাথে লগ ইন করুন";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "এই সময়ে আপনি অ্যাপসে লগ ইন করতে পারবেন না৷ অনুগ্রহ করে www.facebook.com-এ লগ ইন করুন এবং উল্লিখিত নির্দেশাবলী অনুসরণ করুন৷";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "নতুন! আপনি নিয়ন্ত্রণে আছেন-অ্যাপসের সাথে আপনি কোন তথ্য ভাগ করতে চাইছেন তা চয়ন করুন৷";
+"LoginTooltip.Message" = "আপনি নিয়ন্ত্রণে আছেন - অ্যাপ্সের সাথে আপনি যে তথ্য শেয়ার করতে চান তা বাছুন৷";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "লগ ইন করুন";

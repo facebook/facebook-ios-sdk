@@ -129,10 +129,10 @@ if [ -z $SKIPBUILD ]; then
   (xcodebuild -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "BuildAll-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetwork"
 fi
 FBAN_SAMPLES=$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork
-\cp -R "$FB_SDK_ROOT"/ads/build/FBAudienceNetwork.framework "$FB_SDK_BUILD_PACKAGE" \
+\rsync -avmc "$FB_SDK_ROOT"/ads/build/FBAudienceNetwork.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBAudienceNetwork.framework"
 \mkdir -p "$FB_SDK_BUILD_PACKAGE/Samples/FBAudienceNetwork"
-\cp -R "$FB_SDK_ROOT"/ads/samples/ $FBAN_SAMPLES \
+\rsync -avmc "$FB_SDK_ROOT"/ads/samples/ "$FBAN_SAMPLES" \
   || die "Could not copy FBAudienceNetwork samples"
 # Fix up samples
 for fname in $(find "$FBAN_SAMPLES" -name "project.pbxproj" -print); do \
@@ -153,6 +153,12 @@ for fname in $(find "$FBADSDK_SAMPLES" -name "project.pbxproj" -print); do \
 done
 
 LANG=C
+
+# Remove all BUCK related files from AN samples
+find "$FBAN_SAMPLES" -name "BUCK" -delete
+find "$FBAN_SAMPLES" -name "build-buck.sh" -delete
+find "$FBAN_SAMPLES" -name "Buck-Info.plist" -delete
+find "$FBAN_SAMPLES" -name "Entitlements" -type d -exec rm -r "{}" \;
 
 find "$FBAN_SAMPLES" -name "entitlements.plist" -delete
 

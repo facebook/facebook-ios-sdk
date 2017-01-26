@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "Inicio de sesión";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Continuar con Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Iniciar sesión con Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "No puedes iniciar sesión en las aplicaciones en este momento. Inicia sesión en www.facebook.com y sigue las instrucciones.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Novedad: Tú eres quien controla y elige la información que quieres compartir con las aplicaciones.";
+"LoginTooltip.Message" = "Tú tienes el control: elige la información que quieres compartir con las aplicaciones.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Inicio de sesión";

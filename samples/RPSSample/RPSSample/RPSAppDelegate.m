@@ -19,9 +19,7 @@
 #import "RPSAppDelegate.h"
 
 #import <Bolts/Bolts.h>
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "RPSAppLinkedViewController.h"
@@ -106,11 +104,6 @@
     [[FBSDKApplicationDelegate sharedInstance] application:application
                              didFinishLaunchingWithOptions:launchOptions];
     return YES;
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    [FBSDKAppEvents activateApp];
 }
 
 @end

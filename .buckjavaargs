@@ -1,3 +1,0 @@
--Xmx3g
--XX:+HeapDumpOnOutOfMemoryError
--XX:HeapDumpPath=buck-out/log

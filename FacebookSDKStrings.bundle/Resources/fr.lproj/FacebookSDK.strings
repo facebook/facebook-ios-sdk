@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "Connexion";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Continuer avec Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Connexion avec Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Vous ne pouvez pas vous connecter à des applications pour le moment. Veuillez vous connecter à www.facebook.com et suivre les instructions indiquées.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Nouveau ! Choisissez les informations que vous souhaitez partager avec les applications.";
+"LoginTooltip.Message" = "Vous gardez le contrôle. Choisissez les informations que vous souhaitez partager avec les applications.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Connexion";

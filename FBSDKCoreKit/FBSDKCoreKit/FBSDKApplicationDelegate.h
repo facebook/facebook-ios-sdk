@@ -78,6 +78,8 @@
 /**
   Call this method from the [UIApplicationDelegate application:didFinishLaunchingWithOptions:] method
  of the AppDelegate for your app. It should be invoked for the proper use of the Facebook SDK.
+ As part of SDK initialization basic auto logging of app events will occur, this can be
+controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist file.
 
  - Parameter application: The application as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
 

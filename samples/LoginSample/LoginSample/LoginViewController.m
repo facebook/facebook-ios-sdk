@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -19,14 +19,13 @@
 #import "LoginViewController.h"
 
 #import <AccountKit/AccountKit.h>
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
-#import "FBTweakInline.h"
-#import "FBTweakStore.h"
-#import "FBTweakViewController.h"
+#import "FBTweak/FBTweakInline.h"
+#import "FBTweak/FBTweakStore.h"
+#import "FBTweak/FBTweakViewController.h"
+
 #import "LoggedInViewController.h"
 #import "SettingsUtil.h"
 #import "Theme.h"

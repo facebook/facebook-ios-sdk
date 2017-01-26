@@ -19,19 +19,12 @@
 #import "AppDelegate.h"
 
 #import <Bolts/Bolts.h>
-
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
 #import "AlertControllerUtility.h"
 
 @implementation AppDelegate
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-  [FBSDKAppEvents activateApp];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {

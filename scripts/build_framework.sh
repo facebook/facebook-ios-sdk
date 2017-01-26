@@ -1,3 +1,4 @@
+#!/bin/sh
 # Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
 # You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -57,13 +58,6 @@ do
   esac
 done
 
-
-# -----------------------------------------------------------------------------
-
-progress_message Updating Submodules
-
-# -----------------------------------------------------------------------------
-(cd "$FB_SDK_ROOT"; git submodule foreach 'git fetch --tags'; git submodule update --init --recursive)
 
 # -----------------------------------------------------------------------------
 
