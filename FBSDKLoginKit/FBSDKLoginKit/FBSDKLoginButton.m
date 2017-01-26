@@ -21,6 +21,12 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKLoginTooltipView.h"
 
+static const CGFloat kFBLogoSize = 16.0;
+static const CGFloat kFBLogoLeftMargin = 6.0;
+static const CGFloat kButtonHeight = 28.0;
+static const CGFloat kRightMargin = 8.0;
+static const CGFloat kPaddingBetweenLogoTitle = 8.0;
+
 @interface FBSDKLoginButton() <FBSDKButtonImpressionTracking, UIActionSheetDelegate>
 @end
 
@@ -61,6 +67,16 @@
   _loginManager.loginBehavior = loginBehavior;
 }
 
+- (UIFont *)defaultFont
+{
+  return [UIFont systemFontOfSize:13];
+}
+
+- (UIColor *)backgroundColor
+{
+  return [UIColor colorWithRed:66.0/255.0 green:103.0/255.0 blue:178.0/255.0 alpha:1.0];
+}
+
 #pragma mark - UIView
 
 - (void)didMoveToWindow
@@ -75,6 +91,25 @@
 }
 
 #pragma mark - Layout
+
+- (CGRect)imageRectForContentRect:(CGRect)contentRect
+{
+  CGFloat centerY = CGRectGetMidY(contentRect);
+  CGFloat y = centerY - (kFBLogoSize / 2.0);
+  return CGRectMake(kFBLogoLeftMargin, y, kFBLogoSize, kFBLogoSize);
+}
+
+- (CGRect)titleRectForContentRect:(CGRect)contentRect
+{
+  if (self.hidden || CGRectIsEmpty(self.bounds)) {
+    return CGRectZero;
+  }
+  CGRect imageRect = [self imageRectForContentRect:contentRect];
+  CGFloat titleX = CGRectGetMaxX(imageRect) + kPaddingBetweenLogoTitle;
+  CGRect titleRect = CGRectMake(titleX, 0, CGRectGetWidth(contentRect) - titleX - kRightMargin, CGRectGetHeight(contentRect));
+
+  return titleRect;
+}
 
 - (void)layoutSubviews
 {
@@ -95,12 +130,17 @@
   if ([self isHidden]) {
     return CGSizeZero;
   }
-  CGSize selectedSize = [self sizeThatFits:size title:[self _logOutTitle]];
-  CGSize normalSize = [self sizeThatFits:CGSizeMake(CGFLOAT_MAX, size.height) title:[self _longLogInTitle]];
+  UIFont *font = self.titleLabel.font;
+
+  CGSize selectedSize = FBSDKTextSize([self _logOutTitle], font, size, self.titleLabel.lineBreakMode);
+  CGSize normalSize = FBSDKTextSize([self _longLogInTitle], font, size, self.titleLabel.lineBreakMode);
   if (normalSize.width > size.width) {
-    return normalSize = [self sizeThatFits:size title:[self _shortLogInTitle]];
+    normalSize = FBSDKTextSize([self _shortLogInTitle], font, size, self.titleLabel.lineBreakMode);
   }
-  return CGSizeMake(MAX(normalSize.width, selectedSize.width), MAX(normalSize.height, selectedSize.height));
+
+  CGFloat titleWidth = MAX(normalSize.width, selectedSize.width);
+  CGFloat buttonWidth = kFBLogoLeftMargin + kFBLogoSize + kPaddingBetweenLogoTitle + titleWidth + kRightMargin;
+  return CGSizeMake(buttonWidth, kButtonHeight);
 }
 
 #pragma mark - UIActionSheetDelegate
@@ -144,14 +184,20 @@
 
   [self configureWithIcon:nil
                     title:logInTitle
-          backgroundColor:[super defaultBackgroundColor]
+          backgroundColor:[self backgroundColor]
          highlightedColor:nil
             selectedTitle:logOutTitle
              selectedIcon:nil
-            selectedColor:[super defaultBackgroundColor]
+            selectedColor:[self backgroundColor]
  selectedHighlightedColor:nil];
   self.titleLabel.textAlignment = NSTextAlignmentCenter;
-
+  [self addConstraint:[NSLayoutConstraint constraintWithItem:self
+                                                   attribute:NSLayoutAttributeHeight
+                                                   relatedBy:NSLayoutRelationEqual
+                                                      toItem:nil
+                                                   attribute:NSLayoutAttributeNotAnAttribute
+                                                  multiplier:1
+                                                    constant:28]];
   [self _updateContent];
 
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -264,8 +310,8 @@
 
 - (NSString *)_longLogInTitle
 {
-  return NSLocalizedStringWithDefaultValue(@"LoginButton.LogInLong", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
-                                           @"Log in with Facebook",
+  return NSLocalizedStringWithDefaultValue(@"LoginButton.LogInContinue", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
+                                           @"Continue with Facebook",
                                            @"The long label for the FBSDKLoginButton when the user is currently logged out");
 }
 

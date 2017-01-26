@@ -35,6 +35,9 @@
 "LoginButton.LogIn" = "Log masuk";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Teruskan dengan Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Log masuk dengan Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -59,7 +62,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Anda tidak boleh log masuk ke aplikasi pada masa ini. Sila log masuk ke www.facebook.com dan ikuti arahan yang diberi.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Baru! Anda yang mengawal - pilih maklumat yang anda ingin kongsi dengan aplikasi.";
+"LoginTooltip.Message" = "Anda yang mengawal - pilih maklumat yang anda ingin kongsi dengan apl.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Log Masuk";

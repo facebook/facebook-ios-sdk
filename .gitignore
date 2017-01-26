@@ -1,3 +1,11 @@
+ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
+ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
+ads/samples/InstreamAdSample/InstreamAdSample.xcodeproj/*
+ads/samples/InstreamAdSample/InstreamAdSample.xcworkspace/*
+ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
+ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
+ads/src/FBAudienceNetwork.xcworkspace/*
+ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*
 samples/Hackbook/build/
 samples/Hackbook/Hackbook.xcodeproj/*.pbxuser
 samples/Hackbook/Hackbook.xcodeproj/*.mode*
@@ -10,6 +18,7 @@ src/facebook-ios-sdk.xcodeproj/*.mode*
 src/build/
 build/
 lib/
+docs/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
@@ -30,3 +39,7 @@ buck-out/
 .buckd/
 
 infer-out
+
+#generated doc files
+docs/
+

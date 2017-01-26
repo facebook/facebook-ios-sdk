@@ -19,9 +19,7 @@
 #import "SCAppDelegate.h"
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-
 #import <FBSDKShareKit/FBSDKShareKit.h>
 
 #import "SCSettings.h"
@@ -70,8 +68,6 @@
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-    [FBSDKAppEvents activateApp];
-
     // Do the following if you use Mobile App Engagement Ads to get the deferred
     // app link after your app is installed.
     [FBSDKAppLinkUtility fetchDeferredAppLink:^(NSURL *url, NSError *error) {

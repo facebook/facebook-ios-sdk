@@ -381,7 +381,10 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
 
 /**
 
-  Notifies the events system that the app has launched and, when appropriate, logs an "activated app" event.  Should typically be placed in the
+  Notifies the events system that the app has launched and, when appropriate, logs an "activated app" event.
+ This function is called automatically from FBSDKApplicationDelegate applicationDidBecomeActive, unless
+ one overrides 'FacebookAutoLogAppEventsEnabled' key to false in the project info plist file.
+ In case 'FacebookAutoLogAppEventsEnabled' is set to false, then it should typically be placed in the
  app delegates' `applicationDidBecomeActive:` method.
 
  This method also takes care of logging the event indicating the first time this app has been launched, which, among other things, is used to

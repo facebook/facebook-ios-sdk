@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "تسجيل الدخول";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "متابعة بحساب فيسبوك";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "تسجيل الدخول بحساب فيسبوك";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "لا يمكنك تسجيل الدخول إلى التطبيقات حاليًا. يُرجى تسجيل الدخول إلى www.facebook.com واتباع التعليمات الموضحة.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "جديد! أنت المتحكم - اختر المعلومات التي تريد مشاركتها مع التطبيقات.";
+"LoginTooltip.Message" = "أنت المتحكم - اختر المعلومات التي تريد مشاركتها مع التطبيقات.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "تسجيل الدخول";

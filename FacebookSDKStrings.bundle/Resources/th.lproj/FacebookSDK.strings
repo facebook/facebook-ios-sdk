@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "เข้าสู่ระบบ";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "ดำเนินการต่อด้วย Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "เข้าสู่ระบบด้วย Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "คุณไม่สามารถเข้าสู่ระบบของแอพได้ในตอนนี้ โปรดเข้าสู่ระบบที่ www.facebook.com และทำตามคำแนะนำที่ปรากฏ";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "ใหม่! คุณเป็นฝ่ายควบคุม โปรดเลือกสิ่งที่คุณต้องการแชร์ด้วยแอพ";
+"LoginTooltip.Message" = "คุณเป็นฝ่ายควบคุม โปรดเลือกข้อมูลที่คุณต้องการแชร์ด้วยแอพ";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "เข้าสู่ระบบ";

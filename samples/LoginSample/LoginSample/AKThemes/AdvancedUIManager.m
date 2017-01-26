@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright 2004-present Facebook. All Rights Reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -72,6 +72,7 @@
     case AKFLoginFlowStateEmailVerify:
     case AKFLoginFlowStateSendingCode:
     case AKFLoginFlowStateVerifyingCode:
+    case AKFLoginFlowStateCountryCode:
     case AKFLoginFlowStateResendCode:
       return AKFButtonTypeDefault;
   }
@@ -164,6 +165,7 @@
       prefix = @"Custom Resend Code";
       break;
     case AKFLoginFlowStateNone:
+    case AKFLoginFlowStateCountryCode:
       return nil;
   }
   return [self _viewWithText:[NSString stringWithFormat:@"%@ %@", prefix, suffix] intrinsicHeight:intrinsicHeight];

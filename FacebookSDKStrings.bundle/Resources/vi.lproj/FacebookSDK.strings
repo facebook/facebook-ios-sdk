@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "Đăng nhập";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Tiếp tục với Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Đăng nhập bằng Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Bạn không thể đăng nhập vào các ứng dụng lúc này. Vui lòng đăng nhập vào www.facebook.com và làm theo hướng dẫn được cung cấp.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Mới! Bạn đang có quyền kiểm soát - hãy chọn thông tin bạn muốn chia sẻ với các ứng dụng.";
+"LoginTooltip.Message" = "Bạn đang có quyền kiểm soát - hãy chọn thông tin bạn muốn chia sẻ với ứng dụng.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Đăng nhập";

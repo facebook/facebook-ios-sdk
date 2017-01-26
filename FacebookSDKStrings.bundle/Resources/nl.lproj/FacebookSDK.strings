@@ -38,6 +38,9 @@
 "LoginButton.LogIn" = "Aanmelden";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Doorgaan met Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Aanmelden met Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -62,7 +65,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Je kunt je momenteel niet aanmelden bij apps. Meld je aan bij www.facebook.com en volg de instructies.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Nieuw! Jij hebt de controle. Kies welke informatie je met apps wilt delen.";
+"LoginTooltip.Message" = "Jij hebt de controle. Kies welke informatie je met apps wilt delen.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Aanmelden";
