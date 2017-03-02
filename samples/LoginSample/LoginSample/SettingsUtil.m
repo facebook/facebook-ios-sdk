@@ -124,17 +124,17 @@ static NSArray *fbPermissions;
     AKFButtonType confirmButtonType = [FBTweakValue(@"Settings", @"AccountKit", @"Confirm Button", @(AKFButtonTypeDefault), [SettingsUtil entryButtonTweakValues]) integerValue];
     AKFTextPosition textPosition = [FBTweakValue(@"Settings", @"AccountKit", @"Text Position", @(AKFButtonTypeDefault), [SettingsUtil textPositionTweakValues]) integerValue];
     if ([Theme isReverbTheme:theme.themeType]) {
-      controller.advancedUIManager = [[ReverbUIManager alloc] initWithConfirmButtonType:confirmButtonType
-                                                                        entryButtonType:entryButtonType
-                                                                              loginType:controller.loginType
-                                                                           textPosition:textPosition
-                                                                                  theme:(ReverbTheme *)theme
-                                                                               delegate:nil];
+      controller.uiManager = [[ReverbUIManager alloc] initWithConfirmButtonType:confirmButtonType
+                                                                entryButtonType:entryButtonType
+                                                                      loginType:controller.loginType
+                                                                   textPosition:textPosition
+                                                                          theme:(ReverbTheme *)theme
+                                                                       delegate:nil];
     } else {
-      controller.advancedUIManager = [[AdvancedUIManager alloc] initWithConfirmButtonType:confirmButtonType
-                                                                          entryButtonType:entryButtonType
-                                                                                loginType:controller.loginType
-                                                                             textPosition:textPosition];
+      controller.uiManager = [[AdvancedUIManager alloc] initWithConfirmButtonType:confirmButtonType
+                                                                  entryButtonType:entryButtonType
+                                                                        loginType:controller.loginType
+                                                                     textPosition:textPosition];
     }
   }
 }

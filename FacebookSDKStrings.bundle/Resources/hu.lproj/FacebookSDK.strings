@@ -1,5 +1,11 @@
-/* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "Keresd fel a(z) %@ oldalt a telefonodról vagy számítógépről, és írd be a következő kódot:";
+/* Prompts a person to go to the URL listed to enter the confirmation code that is presented to them above the given string. */
+"DeviceLogin.LogInPrompt" = "Keresd fel a %@ címet, és írd be a fent megjelenített kódot.";
+
+/* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
+"DeviceLogin.SmartLogInPrompt" = "A fiók hozzákapcsolásához nyisd meg a Facebook alkalmazást a mobilkészülékeden, és nézd meg az értesítéseket.";
+
+/* Displayed as a separator between two options. First option is on a line above this, and second option is below */
+"DeviceLogin.SmartLogInOrLabel" = "- VAGY -";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "Bejelentkezés";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Folytatás a Facebookkal";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Bejelentkezés a Facebook használatával";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Jelenleg nem tudsz alkalmazásokba bejelentkezni. Jelentkezz be a www.facebook.com címre, és kövesd az utasításokat.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "A döntés a kezedben van: kiválaszthatod, hogy milyen adatokat osztasz meg az alkalmazásokkal.";
+"LoginTooltip.Message" = "Újdonság! A döntés a kezedben van: kiválaszthatod, hogy milyen adatokat osztasz meg az alkalmazásokkal.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Bejelentkezés";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "Megosztás";
+
+/* Prompts a person if this is their current account */
+"SmartLogin.NotYou" = "Nem te vagy az?";
+
+/* Text on a button that a person presses to confirm that they are finished with the login experience */
+"SmartLogin.ConfirmationTitle" = "Bejelentkezés megerősítése";
+
+/* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
+"SmartLogin.Continue" = "Folytatás mint %@";

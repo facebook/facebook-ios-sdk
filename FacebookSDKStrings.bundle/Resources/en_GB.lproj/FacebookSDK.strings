@@ -1,5 +1,11 @@
 /* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "Visit %@ on your smartphone or computer and enter this code:";
+"DeviceLogin.LogInPrompt" = "Visit %@ and enter the code shown above.";
+
+/* The 'or' string for smart login instructions */
+"DeviceLogin.SmartLogInOrLabel" = "-- OR --";
+
+/* The string for smart login instructions */
+"DeviceLogin.SmartLogInPrompt" = "To connect your account, open the Facebook app on your mobile device and check for notifications.";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "Log in";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Continue with Facebook";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Log in with Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "You cannot log in to apps at this time. Please log in to www.facebook.com and follow the instructions given.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "You're in control – choose what information you want to share with apps.";
+"LoginTooltip.Message" = "New! You're in control – choose what info you want to share with apps.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Log In";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "Share";
+
+/* The title for the alert when smart login requires confirmation */
+"SmartLogin.ConfirmationTitle" = "Confirm Login";
+
+/* The format string to continue as <name> for the alert when smart login requires confirmation */
+"SmartLogin.Continue" = "Continue as %@";
+
+/* The cancel label for the alert when smart login requires confirmation */
+"SmartLogin.NotYou" = "Not you?";

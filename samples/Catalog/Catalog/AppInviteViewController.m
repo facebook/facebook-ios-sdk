@@ -45,7 +45,7 @@
   FBSDKAppInviteContent *content =[[FBSDKAppInviteContent alloc] init];
   // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
   content.appLinkURL = [NSURL URLWithString:@"https://fb.me/1539184863038815"];
-  content.appInvitePreviewImageURL = [NSURL URLWithString:@"http://catalogapp.parseapp.com/FacebookDeveloper.jpg"];
+  content.appInvitePreviewImageURL = [NSURL URLWithString:@"https://d3uu10x6fsg06w.cloudfront.net/catalogapp/FacebookDeveloper.png"];
   [FBSDKAppInviteDialog showFromViewController:self withContent:content delegate:self];
 }
 

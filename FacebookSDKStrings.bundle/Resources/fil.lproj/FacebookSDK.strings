@@ -1,5 +1,11 @@
-/* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "Puntahan ang %@ sa iyong smartphone o computer at ilagay ang code na ito:";
+/* Prompts a person to go to the URL listed to enter the confirmation code that is presented to them above the given string. */
+"DeviceLogin.LogInPrompt" = "Pumunta sa %@ at ilagay ang code na ipinapakita sa itaas.";
+
+/* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
+"DeviceLogin.SmartLogInPrompt" = "Para ikonekta ang iyong account, buksan ang Facebook app sa iyong cellphone at tumingin ng mga notification.";
+
+/* Displayed as a separator between two options. First option is on a line above this, and second option is below */
+"DeviceLogin.SmartLogInOrLabel" = "- O KAYA -";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "Mag-log in";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Magatuloy sa Facebook";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Mag-log in sa pamamagitan ng Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Hindi ka makakapag-log in sa mga app sa oras na ito. Mangyaring mag-log in sa www.facebook.com at sundin ang mga ibinigay na tagubilin.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Ikaw ang may kontrol - piliin kung anong impormasyon ang gusto mong ibahagi sa mga app.";
+"LoginTooltip.Message" = "Bago! Ikaw ang may kontrol - piliin kung anong impormasyon ang gusto mong ibahagi sa mga app.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Mag-log In";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "Ibahagi";
+
+/* Prompts a person if this is their current account */
+"SmartLogin.NotYou" = "Hindi ikaw?";
+
+/* Text on a button that a person presses to confirm that they are finished with the login experience */
+"SmartLogin.ConfirmationTitle" = "I-confirm ang Pag-log in";
+
+/* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
+"SmartLogin.Continue" = "Magpatuloy bilang %@";

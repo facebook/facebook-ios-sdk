@@ -38,9 +38,6 @@
 "LoginButton.LogIn" = "ಲಾಗ್‌ ಇನ್‌";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Facebook ಅನ್ನು ಮುಂದುವರಿಸಿ";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebook ಮೂಲಕ ಲಾಗ್‌ ಇನ್‌ ಮಾಡಿ";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +62,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "ನೀವು ಈ ಸಮಯದಲ್ಲಿ ಅಪ್ಲಿಕೇಶನ್‌ಗಳಿಗೆ ಲಾಗಿನ್‌ ಮಾಡಲು ಸಾಧ್ಯವಿಲ್ಲ. ದಯವಿಟ್ಟು www.facebook.com ಗೆ ಲಾಗಿನ್‌ ಮಾಡಿ ಮತ್ತು ಕೆಳಗೆ ನೀಡಿದ ಸೂಚನೆಗಳನ್ನು ಅನುಸರಿಸಿ.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "ನೀವು ನಿಯಂತ್ರಣದಲ್ಲಿರುವಿರಿ - ನೀವು ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುವ ವಿಷಯವನ್ನು ಆರಿಸಿ.";
+"LoginTooltip.Message" = "ಹೊಸ!  ನೀವು ನಿಯಂತ್ರಣದಲ್ಲಿರುವಿರಿ - ನೀವು ಅಪ್ಲಿಕೇಶನ್‌ಗಳನ್ನು ಬಳಸಿಕೊಂಡು ಹಂಚಿಕೊಳ್ಳಲು ಬಯಸುವ ವಿಷಯವನ್ನು ಆರಿಸಿ.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "ಲಾಗ್‌ ಇನ್‌";

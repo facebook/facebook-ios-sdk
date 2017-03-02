@@ -1,5 +1,11 @@
-/* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "Επισκεφτείτε τον ιστότοπο %@ από το smartphone ή τον υπολογιστή σας και πληκτρολογήστε αυτόν τον κωδικό:";
+/* Prompts a person to go to the URL listed to enter the confirmation code that is presented to them above the given string. */
+"DeviceLogin.LogInPrompt" = "Επισκεφτείτε τη διεύθυνση %@ και συμπληρώστε τον παραπάνω κωδικό.";
+
+/* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
+"DeviceLogin.SmartLogInPrompt" = "Για να συνδεθείτε στο λογαριασμό σας, ανοίξτε την εφαρμογή Facebook στη φορητή συσκευή σας και ελέγξτε τις ειδοποιήσεις.";
+
+/* Displayed as a separator between two options. First option is on a line above this, and second option is below */
+"DeviceLogin.SmartLogInOrLabel" = "- Ή -";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "Σύνδεση";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Συνεχίστε με το Facebook";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Σύνδεση μέσω Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Προς το παρόν δεν μπορείτε να συνδεθείτε σε εφαρμογές. Συνδεθείτε στο www.facebook.com και ακολουθήστε τις οδηγίες που εμφανίζονται.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Έχετε τον έλεγχο - επιλέξτε ποιες πληροφορίες θέλετε να κοινοποιούνται στις εφαρμογές.";
+"LoginTooltip.Message" = "Νέο! Έχετε τον έλεγχο - επιλέξτε ποιες πληροφορίες θέλετε να κοινοποιούνται στις εφαρμογές.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Σύνδεση";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "Κοινοποίηση";
+
+/* Prompts a person if this is their current account */
+"SmartLogin.NotYou" = "Δεν είστε εσείς;";
+
+/* Text on a button that a person presses to confirm that they are finished with the login experience */
+"SmartLogin.ConfirmationTitle" = "Επιβεβαίωση σύνδεσης";
+
+/* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
+"SmartLogin.Continue" = "Συνέχεια ως %@";
