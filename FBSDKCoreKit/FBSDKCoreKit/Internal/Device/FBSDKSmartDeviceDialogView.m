@@ -20,9 +20,6 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
-// don't download icons more than once a day.
-static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
-
 @implementation FBSDKSmartDeviceDialogView
 {
   UIActivityIndicatorView *_spinner;
@@ -32,7 +29,7 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
 - (instancetype)initWithFrame:(CGRect)frame
 {
   if ((self = [super initWithFrame:frame])) {
-    [self _prepareImageCache];
+    [self _buildView];
   }
   return self;
 }
@@ -61,50 +58,11 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
 
 #pragma mark - Helpers
 
-- (void)_prepareImageCache
-{
-  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
-    if ((serverConfiguration.smartLoginOptions & FBSDKServerConfigurationSmartLoginOptionsEnabled) &&
-        serverConfiguration.smartLoginMenuIconURL &&
-        serverConfiguration.smartLoginBookmarkIconURL) {
-      __block UIImage *bookmarkIconImage;
-      __block UIImage *menuIconImage;
-      __block NSUInteger count = 0;
-      void(^buildViewBlock)(void) = ^{
-        count++;
-        if (count >= 2){
-          dispatch_async(dispatch_get_main_queue(), ^{
-            [self _buildViewWithBookmarkIcon:bookmarkIconImage
-                                    menuIcon:menuIconImage];
-            [self setNeedsLayout];
-          });
-        }
-      };
-      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
-                                                              ttl:kSmartLoginIconsTTL
-                                                       completion:^(UIImage *image) {
-                                                         bookmarkIconImage = image;
-                                                         buildViewBlock();
-                                                       }];
-      [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
-                                                              ttl:kSmartLoginIconsTTL
-                                                       completion:^(UIImage *image) {
-                                                         menuIconImage = image;
-                                                         buildViewBlock();
-                                                       }];
-    } else {
-      [self _buildViewWithBookmarkIcon:nil menuIcon:nil];
-    }
-  }];
-}
-
-- (void)_buildViewWithBookmarkIcon:(UIImage *)bookmarkIcon
-                          menuIcon:(UIImage *)menuIcon
+- (void)_buildView
 {
   // This is a "static" view with just a cancel button so add all the constraints here
   // rather than properly override `updateConstraints`.
   const CGFloat kWidth = 1080;
-  const CGFloat kHeight = 820;
   const CGFloat kVerticalSpaceBetweenHeaderViewAndInstructionLabel = 50;
   const CGFloat kDialogHeaderViewHeight = 250;
   const CGFloat kLogoSize = 44;
@@ -125,7 +83,6 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0].active = YES;;
   [NSLayoutConstraint constraintWithItem:dialogView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;
   [dialogView.widthAnchor constraintEqualToConstant:kWidth].active = YES;
-  [dialogView.heightAnchor constraintEqualToConstant:kHeight].active = YES;
 
   // build the header container view (which will contain the logo and code).
   UIView *dialogHeaderView = [[UIView alloc] init];
@@ -175,43 +132,16 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   // build the smartlogin instructions
   UILabel *smartInstructionLabel = [[UILabel alloc] init];
   smartInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
-  NSString *smartInstructionsStep0 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep0",
-                                                                      @"FacebookSDK",
-                                                                      [FBSDKInternalUtility bundleForStrings],
-                                                                      @"Confirm your code on Facebook.",
-                                                                      @"The string for smart login instructions");
-  NSString *smartInstructionsStep1 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep1",
+  NSString *smartInstructionString = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInPrompt",
                                                                        @"FacebookSDK",
                                                                        [FBSDKInternalUtility bundleForStrings],
-                                                                       @"\n1. Go to the Menu  ",
-                                                                       @"The string for smart login instructions");
-  NSString *smartInstructionsStep2 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep2",
-                                                                       @"FacebookSDK",
-                                                                       [FBSDKInternalUtility bundleForStrings],
-                                                                       @"\n2. Select Device Requests  ",
-                                                                       @"The string for smart login instructions");
-  NSString *smartInstructionsStep3 = NSLocalizedStringWithDefaultValue(@"DeviceLogin.SmartLogInStep3",
-                                                                       @"FacebookSDK",
-                                                                       [FBSDKInternalUtility bundleForStrings],
-                                                                       @"\n3. Confirm code.",
-                                                                       @"The string for smart login instructions");
-  NSTextAttachment *bookmarkAttachment = [[NSTextAttachment alloc] init];
-  bookmarkAttachment.image = bookmarkIcon;
-  NSAttributedString *attributedBookmarkString = [NSAttributedString attributedStringWithAttachment:bookmarkAttachment];
-
-  NSTextAttachment *menuAttachment = [[NSTextAttachment alloc] init];
-  menuAttachment.image = menuIcon;
-  NSAttributedString *attributedMenuString = [NSAttributedString attributedStringWithAttachment:menuAttachment];
+                                                                       @"To connect your account, open the Facebook app on your mobile device and check for notifications.",
+                                                                       @"Instructions telling the user to open their Facebook app on a mobile device and check for a login notification.");
 
   NSMutableParagraphStyle *instructionLabelParagraphStyle = [[NSMutableParagraphStyle alloc] init];
   instructionLabelParagraphStyle.lineHeightMultiple = 1.3;
-  NSMutableAttributedString *attributedSmartString = [[NSMutableAttributedString alloc] initWithString:smartInstructionsStep0
+  NSMutableAttributedString *attributedSmartString = [[NSMutableAttributedString alloc] initWithString:smartInstructionString
                                                                                             attributes:@{ NSParagraphStyleAttributeName : instructionLabelParagraphStyle }];
-  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep1]];
-  [attributedSmartString appendAttributedString:attributedMenuString];
-  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep2]];
-  [attributedSmartString appendAttributedString:attributedBookmarkString];
-  [attributedSmartString appendAttributedString:[[NSAttributedString alloc] initWithString:smartInstructionsStep3]];
 
   UIFont *instructionFont = [UIFont systemFontOfSize:kInstructionFontSize weight:UIFontWeightLight];
   smartInstructionLabel.font = instructionFont;
@@ -219,12 +149,6 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   smartInstructionLabel.numberOfLines = 0;
   smartInstructionLabel.textAlignment = NSTextAlignmentCenter;
   [smartInstructionLabel sizeToFit];
-
-  // resize the icons to fit with the font, and also vertically align them
-  // so that they start at the cap height. Annoyingly, the menu bookmark has some extra padding
-  // in the image so we offset that by an additional 2 points.
-  menuAttachment.bounds = CGRectMake(0, -(instructionFont.ascender - instructionFont.capHeight)+2, kInstructionFontSize, kInstructionFontSize);
-  bookmarkAttachment.bounds = CGRectMake(0, -(instructionFont.ascender - instructionFont.capHeight), kInstructionFontSize, kInstructionFontSize);
 
   smartInstructionLabel.textColor = [UIColor colorWithWhite:kFontColorValue alpha:1.0];
   [dialogView addSubview:smartInstructionLabel];
@@ -247,8 +171,7 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   [orInstructionLabel sizeToFit];
   orInstructionLabel.textColor = [UIColor colorWithWhite:kFontColorValue alpha:1.0];
   [dialogView addSubview:orInstructionLabel];
-  [orInstructionLabel.topAnchor constraintGreaterThanOrEqualToAnchor:smartInstructionLabel.bottomAnchor
-                                                            constant:kVerticalMarginOrLabel].active = YES;
+  [orInstructionLabel.topAnchor constraintEqualToAnchor:smartInstructionLabel.bottomAnchor constant:kVerticalMarginOrLabel].active = YES;
 
   [orInstructionLabel.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
   [dialogView.trailingAnchor constraintEqualToAnchor:orInstructionLabel.trailingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
@@ -259,7 +182,7 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
   NSString *localizedFormatString = NSLocalizedStringWithDefaultValue(@"DeviceLogin.LogInPrompt",
                                                                       @"FacebookSDK",
                                                                       [FBSDKInternalUtility bundleForStrings],
-                                                                      @"Visit %@ and enter your code.",
+                                                                      @"Visit %@ and enter the code shown above.",
                                                                       @"The format string for device login instructions");
 
   NSString *const deviceLoginURLString = @"facebook.com/device";
@@ -292,6 +215,8 @@ static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
                                             constant:400].active = YES;
   [buttonContainerView.topAnchor constraintEqualToAnchor:instructionLabel.bottomAnchor
                                                 constant:kVerticalMarginOrLabel].active = YES;
+  [dialogView.bottomAnchor constraintEqualToAnchor:buttonContainerView.bottomAnchor
+                                          constant:kVerticalMarginOrLabel].active = YES;
 
   // build the cancel button.
   UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];

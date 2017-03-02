@@ -47,7 +47,7 @@ NSString *const FBSDKAppEventNameViewedContent           = @"fb_mobile_content_v
 NSString *const FBSDKAppEventNameSearched                = @"fb_mobile_search";
 NSString *const FBSDKAppEventNameRated                   = @"fb_mobile_rate";
 NSString *const FBSDKAppEventNameCompletedTutorial       = @"fb_mobile_tutorial_completion";
-NSString *const FBSDKAppEventParameterLaunchSource          = @"fb_mobile_launch_source";
+NSString *const FBSDKAppEventParameterLaunchSource       = @"fb_mobile_launch_source";
 
 // Ecommerce related
 NSString *const FBSDKAppEventNameAddedToCart             = @"fb_mobile_add_to_cart";
@@ -185,9 +185,11 @@ NSString *const FBSDKAppEventsOverrideAppIDBundleKey = @"FacebookLoggingOverride
 
 //
 // Push Notifications
+//
 // Activities Endpoint Parameter
 static NSString *const FBSDKActivitesParameterPushDeviceToken = @"device_token";
-// Event Name
+// Event Names
+static NSString *const FBSDKAppEventNamePushTokenObtained = @"fb_mobile_obtain_push_token";
 static NSString *const FBSDKAppEventNamePushOpened = @"fb_mobile_push_opened";
 // Event Parameter
 static NSString *const FBSDKAppEventParameterPushCampaign = @"fb_push_campaign";
@@ -423,7 +425,22 @@ static NSString *g_overrideAppID = nil;
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
 {
-  [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
+  NSString *deviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
+  if (deviceTokenString == nil) {
+    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = nil;
+    return;
+  }
+
+  if (![deviceTokenString isEqualToString:([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString)]) {
+    [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = deviceTokenString;
+
+    [FBSDKAppEvents logEvent:FBSDKAppEventNamePushTokenObtained];
+
+    // Unless the behavior is set to only allow explicit flushing, we go ahead and flush the event
+    if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
+      [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+    }
+  }
 }
 
 + (FBSDKAppEventsFlushBehavior)flushBehavior

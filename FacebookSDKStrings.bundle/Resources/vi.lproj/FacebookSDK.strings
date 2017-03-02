@@ -1,5 +1,11 @@
-/* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "Truy cập %@ trên điện thoại thông minh hoặc máy tính và nhập mã sau:";
+/* Prompts a person to go to the URL listed to enter the confirmation code that is presented to them above the given string. */
+"DeviceLogin.LogInPrompt" = "Truy cập %@ và nhập mã hiển thị ở trên.";
+
+/* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
+"DeviceLogin.SmartLogInPrompt" = "Để kết nối tài khoản của bạn, hãy mở ứng dụng Facebook trên thiết bị di động và kiểm tra thông báo.";
+
+/* Displayed as a separator between two options. First option is on a line above this, and second option is below */
+"DeviceLogin.SmartLogInOrLabel" = "- HOẶC -";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "Đăng nhập";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Tiếp tục với Facebook";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Đăng nhập bằng Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Bạn không thể đăng nhập vào các ứng dụng lúc này. Vui lòng đăng nhập vào www.facebook.com và làm theo hướng dẫn được cung cấp.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Bạn đang có quyền kiểm soát - hãy chọn thông tin bạn muốn chia sẻ với ứng dụng.";
+"LoginTooltip.Message" = "Mới! Bạn đang có quyền kiểm soát - hãy chọn thông tin bạn muốn chia sẻ với các ứng dụng.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Đăng nhập";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "Chia sẻ";
+
+/* Prompts a person if this is their current account */
+"SmartLogin.NotYou" = "Không phải bạn?";
+
+/* Text on a button that a person presses to confirm that they are finished with the login experience */
+"SmartLogin.ConfirmationTitle" = "Xác nhận đăng nhập";
+
+/* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
+"SmartLogin.Continue" = "Tiếp tục với tư cách %@";

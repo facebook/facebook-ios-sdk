@@ -23,6 +23,7 @@ test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
 test/UnitTest/build/
 project.xcworkspace
+ios-sdk.xcodeproj
 xcuserdata
 .arcbuildbootstrap
 TestAppIdAndSecret.xcconfig

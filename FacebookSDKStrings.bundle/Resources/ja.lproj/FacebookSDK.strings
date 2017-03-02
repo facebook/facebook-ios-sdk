@@ -1,5 +1,11 @@
-/* The format string for device login instructions */
-"DeviceLogin.LogInPrompt" = "スマートフォンまたはコンピュータから%@にアクセスし、次のコードを入力してください。";
+/* Prompts a person to go to the URL listed to enter the confirmation code that is presented to them above the given string. */
+"DeviceLogin.LogInPrompt" = "%@にアクセスし、上に表示されているコードを入力してください。";
+
+/* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
+"DeviceLogin.SmartLogInPrompt" = "アカウントを接続するには、お使いのモバイル機器でFacebookアプリを開き、通知をご確認ください。";
+
+/* Displayed as a separator between two options. First option is on a line above this, and second option is below */
+"DeviceLogin.SmartLogInOrLabel" = "- または -";
 
 /* The title of the label to dismiss the alert when presenting user facing error messages */
 "ErrorRecovery.Alert.OK" = "OK";
@@ -38,9 +44,6 @@
 "LoginButton.LogIn" = "ログイン";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
-"LoginButton.LogInContinue" = "Facebookで続ける";
-
-/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebookでログイン";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -65,7 +68,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "今はアプリにログインできません。www.facebook.comにログインし、表示される説明に従ってください。";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "アプリと共有する情報をコントロールできます。";
+"LoginTooltip.Message" = "新機能！アプリと共有する情報をコントロールできます。";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "ログイン";
@@ -75,3 +78,12 @@
 
 /* The label for FBSDKShareButton */
 "ShareButton.Share" = "シェア";
+
+/* Prompts a person if this is their current account */
+"SmartLogin.NotYou" = "別のユーザーとしてログイン";
+
+/* Text on a button that a person presses to confirm that they are finished with the login experience */
+"SmartLogin.ConfirmationTitle" = "ログインの確認";
+
+/* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
+"SmartLogin.Continue" = "%@として続行";

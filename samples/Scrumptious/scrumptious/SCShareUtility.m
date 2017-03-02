@@ -139,21 +139,21 @@
     // These OG object URLs were created using the edit open graph feature of the graph tool
     // at https://www.developers.facebook.com/apps/
     if ([title isEqualToString:@"Cheeseburger"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/cheeseburger";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/cheeseburger.html";
     } else if ([title isEqualToString:@"Pizza"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/pizza";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/pizza.html";
     } else if ([title isEqualToString:@"Hotdog"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/hotdog";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/hotdog.html";
     } else if ([title isEqualToString:@"Italian"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/italian";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/italian.html";
     } else if ([title isEqualToString:@"French"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/french";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/french.html";
     } else if ([title isEqualToString:@"Chinese"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/chinese";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/chinese.html";
     } else if ([title isEqualToString:@"Thai"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/thai";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/thai.html";
     } else if ([title isEqualToString:@"Indian"]) {
-        return @"https://scrumptious-facebook.parseapp.com/meals/indian";
+        return @"https://d3uu10x6fsg06w.cloudfront.net/scrumptious-facebook/indian.html";
     } else {
         return nil;
     }
