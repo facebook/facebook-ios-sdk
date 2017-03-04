@@ -59,6 +59,8 @@ public final class LoginManager {
               defaultAudience: LoginDefaultAudience = .friends) {
     self.loginBehavior = loginBehavior
     self.defaultAudience = defaultAudience
+    sdkManager.loginBehavior = loginBehavior.sdkBehavior
+    sdkManager.defaultAudience = defaultAudience.sdkAudience
   }
 
   /**
