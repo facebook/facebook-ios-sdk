@@ -420,6 +420,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     return;
   }
 
+  NSString * targetURLString = applinkData[@"target_url"];
+  if (targetURLString == nil || ![targetURLString isKindOfClass: [NSString class]]) {
+    return;
+  }
+
   NSURL *targetURL = [NSURL URLWithString:applinkData[@"target_url"]];
   NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
   [FBSDKInternalUtility dictionary:logData setObject:[targetURL absoluteString] forKey:@"targetURL"];
