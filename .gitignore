@@ -15,12 +15,14 @@ samples/LoginSample/Pods
 samples/LoginSample/LoginSample.xcworkspace
 src/facebook-ios-sdk.xcodeproj/*.pbxuser
 src/facebook-ios-sdk.xcodeproj/*.mode*
+src/facebook-ios-sdk.xcodeproj/xcuserdata/
 src/build/
 build/
 lib/
 docs/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
 test/UnitTest/UnitTest.xcodeproj/*.mode*
+test/UnitTest/UnitTest.xcodeproj/xcuserdata/
 test/UnitTest/build/
 project.xcworkspace
 ios-sdk.xcodeproj
