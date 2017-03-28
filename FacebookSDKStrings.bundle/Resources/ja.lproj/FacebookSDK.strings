@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "ログイン";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebookで続ける";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebookでログイン";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
