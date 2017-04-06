@@ -751,7 +751,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -759,7 +758,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Release;
 		};
@@ -781,7 +779,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -789,7 +786,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Release;
 		};
@@ -811,7 +807,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -819,7 +814,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKLoginKit/FBSDKLoginKit.modulemap";
 			};
 			name = Release;
 		};

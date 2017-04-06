@@ -906,7 +906,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2151D302F6900784D79 /* FBSDKTVOSKit-Dynamic.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -914,7 +913,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2151D302F6900784D79 /* FBSDKTVOSKit-Dynamic.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Release;
 		};
@@ -936,7 +934,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -944,7 +941,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Release;
 		};
@@ -966,7 +962,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -974,7 +969,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8117C2161D302F6900784D79 /* FBSDKTVOSKit.xcconfig */;
 			buildSettings = {
-				MODULEMAP_FILE = "$(SRCROOT)/FBSDKTVOSKit/FBSDKTVOSKit.modulemap";
 			};
 			name = Release;
 		};
