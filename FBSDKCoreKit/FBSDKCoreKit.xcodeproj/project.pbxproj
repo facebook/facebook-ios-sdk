@@ -2745,6 +2745,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8751D1B52DC00D61E6C /* FBSDKCoreKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2752,6 +2753,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8751D1B52DC00D61E6C /* FBSDKCoreKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -2759,6 +2761,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2766,6 +2769,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -2787,6 +2791,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2794,6 +2799,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -2815,6 +2821,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2822,6 +2829,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -2829,6 +2837,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2836,6 +2845,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -2843,6 +2853,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -2850,6 +2861,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
