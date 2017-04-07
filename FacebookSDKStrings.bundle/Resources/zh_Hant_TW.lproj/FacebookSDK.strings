@@ -83,7 +83,7 @@
 "SmartLogin.NotYou" = "這不是您？";
 
 /* Text on a button that a person presses to confirm that they are finished with the login experience */
-"SmartLogin.ConfirmationTitle" = "確認登入"
+"SmartLogin.ConfirmationTitle" = "確認登入";
 
 /* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
 "SmartLogin.Continue" = "以 %@ 身分繼續";
