@@ -201,4 +201,40 @@ public class AppEventsLogger {
       return FBSDKAppEvents.setLoggingOverrideAppID(newValue)
     }
   }
+
+  //--------------------------------------
+  // MARK: - User Id
+  //--------------------------------------
+
+  ///
+  /// A custom user identifier to associate with all app events.
+  /// The `userId` is persisted until it is cleared by passing `nil`.
+  ///
+  public static var userId: String? {
+    get {
+      return FBSDKAppEvents.userID() as String?
+    }
+    set {
+      FBSDKAppEvents.setUserID(userId)
+    }
+  }
+
+  //--------------------------------------
+  // MARK: - User Parameters
+  //--------------------------------------
+
+  /**
+   Sends a request to update the properties for the current user, set by `AppEventsLogger.userId`.
+
+   - properties: A dictionary of key-value pairs representing user properties and their values.
+   Values should be strings or numbers only. Each key must be less than 40 character in length,
+   and the key can contain only letters, number, whitespace, hyphens (`-`), or underscores (`_`).
+   Each value must be less than 100 characters.
+   - completion: Optional completion closure that is going to be called when the request finishes or fails.
+   */
+  public static func updateUserProperties(_ properties: [String : Any],
+                                          completion: @escaping (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<GraphRequest>) -> Void) {
+    FBSDKAppEvents.updateUserProperties(properties,
+                                        handler: GraphRequestConnection.sdkRequestCompletion(from: completion))
+  }
 }

@@ -106,7 +106,7 @@ extension GraphRequestConnection {
                   batchParameters: [String : Any]?,
                   completion: Completion<T>? = nil) {
     sdkConnection.add(request.sdkRequest,
-                      completionHandler: completion.map(sdkRequestCompletion),
+                      completionHandler: completion.map(type(of: self).sdkRequestCompletion),
                       batchParameters: batchParameters)
   }
 
@@ -137,9 +137,9 @@ extension GraphRequestConnection {
 
 extension GraphRequestConnection {
   /// Custom typealias that is the same as FBSDKGraphRequestHandler, but without implicitly unwrapped optionals.
-  fileprivate typealias SDKRequestCompletion = (_ connection: FBSDKGraphRequestConnection?, _ rawResponse: Any?, _ error: Error?) -> Void
+  internal typealias SDKRequestCompletion = (_ connection: FBSDKGraphRequestConnection?, _ rawResponse: Any?, _ error: Error?) -> Void
 
-  fileprivate func sdkRequestCompletion<T: GraphRequestProtocol>(from completion: @escaping Completion<T>) -> SDKRequestCompletion {
+  internal static func sdkRequestCompletion<T: GraphRequestProtocol>(from completion: @escaping Completion<T>) -> SDKRequestCompletion {
     return { connection, rawResponse, error in
       let result: GraphRequestResult<T> = {
         switch error {
