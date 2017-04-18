@@ -19,6 +19,20 @@
 
 . "${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh"
 
+COMMON_ARCHS="arm64 armv7 i386 x86_64"
+
+check_binary_has_architectures() {
+	local BINARY=$1
+	local VALID_ARCHS=$2
+	local SORTED_ARCHS
+  SORTED_ARCHS=$(lipo -info "$BINARY" | cut -d: -f3 | xargs -n1 | sort | xargs)
+
+	if [ "$SORTED_ARCHS" != "$VALID_ARCHS" ] ; then
+		echo "ERROR: Invalid Architectures for $1. Expected $VALID_ARCHS   Received: $SORTED_ARCHS";
+    exit 1
+	fi
+}
+
 # option s to skip build
 SKIPBUILD=""
 while getopts "s" OPTNAME
@@ -75,11 +89,13 @@ echo Building Distribution.
   || die "Could not copy FBSDKLoginKit.framework"
 \cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKShareKit.framework"
+\cp -R "$FB_SDK_BUILD"/FBSDKPlacesKit.framework "$FB_SDK_BUILD_PACKAGE" \
+|| die "Could not copy FBSDKPlacesKit.framework"
 \cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy Bolts.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FacebookSDKStrings.bundle"
-for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample; do
+for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample FBSDKPlacesSample; do
   \rsync -avmc --exclude "${SAMPLE}.xcworkspace" "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
     || die "Could not copy $SAMPLE"
 done
@@ -106,6 +122,7 @@ done
 if [ -z $SKIPBUILD ]; then
   (xcodebuild -project "${FB_SDK_ROOT}"/AccountKit/AccountKit.xcodeproj -scheme "AccountKit-Universal" -configuration Release clean build) || die "Failed to build account kit"
 fi
+check_binary_has_architectures "$FB_SDK_BUILD"/AccountKit.framework/AccountKit "$COMMON_ARCHS";
 \cp -R "$FB_SDK_BUILD"/AccountKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy AccountKit.framework"
 \cp -R "$FB_SDK_BUILD"/AccountKitStrings.bundle "$FB_SDK_BUILD_PACKAGE" \

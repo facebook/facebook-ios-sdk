@@ -49,6 +49,20 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9D9DB95F1A116A860086167B"
+               BuildableName = "FBSDKPlacesKit-Universal"
+               BlueprintName = "FBSDKPlacesKit-Universal"
+               ReferencedContainer = "container:FBSDKPlacesKit/FBSDKPlacesKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
@@ -88,6 +102,20 @@
                BuildableName = "FBSDKShareKitTests.xctest"
                BlueprintName = "FBSDKShareKitTests"
                ReferencedContainer = "container:FBSDKShareKit/FBSDKShareKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "9D9DB8E31A114E500086167B"
+               BuildableName = "FBSDKPlacesKitTests.xctest"
+               BlueprintName = "FBSDKPlacesKitTests"
+               ReferencedContainer = "container:FBSDKPlacesKit/FBSDKPlacesKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

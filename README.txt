@@ -20,7 +20,7 @@ FEATURES
 * Sharing - https://developers.facebook.com/docs/sharing
 * App Links - https://developers.facebook.com/docs/applinks
 * Graph API - https://developers.facebook.com/docs/ios/graph
-* Analytics for Apps - https://developers.facebook.com/docs/analytics
+* Analytics - https://developers.facebook.com/docs/analytics
 
 GIVE FEEDBACK
 -------------

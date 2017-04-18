@@ -92,6 +92,8 @@
 
 - (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return (content &&
           [FBSDKInternalUtility object:_contentDescription isEqualToObject:content.contentDescription] &&
           [FBSDKInternalUtility object:_contentTitle isEqualToObject:content.contentTitle] &&
@@ -103,6 +105,7 @@
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]) &&
           [FBSDKInternalUtility object:_quote isEqualToObject:content.quote];
+#pragma clang diagnostic pop
 }
 
 #pragma mark - NSCoding

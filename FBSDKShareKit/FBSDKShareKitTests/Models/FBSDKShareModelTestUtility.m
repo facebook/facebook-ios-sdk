@@ -353,13 +353,20 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSArray *)media
 {
-  return @[[self video], [self photoWithImageURL]];
+  return @[[self video], [self photoWithImage]];
 }
 
 + (FBSDKShareMediaContent *)mediaContent
 {
   FBSDKShareMediaContent *content = [FBSDKShareMediaContent new];
   content.media = [self media];
+  return content;
+}
+
++ (FBSDKShareMediaContent *)multiVideoMediaContent
+{
+  FBSDKShareMediaContent *content = [FBSDKShareMediaContent new];
+  content.media = @[[self video], [self video]];
   return content;
 }
 

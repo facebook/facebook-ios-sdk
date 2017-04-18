@@ -2,7 +2,7 @@
 "DeviceLogin.LogInPrompt" = "%@にアクセスし、上に表示されているコードを入力してください。";
 
 /* Prompts a person that the next thing they need to do to finish connecting their Smart TV and Facebook application is to navigate to their Facebook application on their mobile device and look through their notifications for a message about the connection being formed */
-"DeviceLogin.SmartLogInPrompt" = "アカウントを接続するには、お使いのモバイル機器でFacebookアプリを開き、通知をご確認ください。";
+"DeviceLogin.SmartLogInPrompt" = "アカウントをリンクするには、お使いのモバイル機器でFacebookアプリを開き、お知らせをご確認ください。";
 
 /* Displayed as a separator between two options. First option is on a line above this, and second option is below */
 "DeviceLogin.SmartLogInOrLabel" = "- または -";

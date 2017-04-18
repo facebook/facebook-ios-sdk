@@ -3,13 +3,13 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '4.21.0'
+  s.version      = '4.22.0'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
                    The Facebook SDK for tvOS Kit framework provides Facebook Login with a confirmation code
                    to easily sign in users on Apple TV without using the remote.
-                   See FBSDKCoreKit for additional functionality like Analytics for Apps and Graph API.
+                   See FBSDKCoreKit for additional functionality like Analytics and Graph API.
                    DESC
 
   s.homepage     = 'https://developers.facebook.com/docs/tvos'
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => 'sdk-version-4.21.0' }
+                     :tag => 'sdk-version-4.22.0' }
 
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'

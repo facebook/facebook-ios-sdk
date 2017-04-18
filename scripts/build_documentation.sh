@@ -29,6 +29,7 @@ hash jazzy >/dev/null || die 'Jazzy is not installed! Run `sudo gem install jazz
 KITS=("FBSDKCoreKit"
       "FBSDKShareKit"
       "FBSDKLoginKit"
+      "FBSDKPlacesKit"
       "FBSDKMessengerShareKit"
       "AccountKit")
 
