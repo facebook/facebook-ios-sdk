@@ -794,18 +794,6 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
       }
       return NO;
     }
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
-    FBSDKShareMediaContent *mediaContent = (FBSDKShareMediaContent *)shareContent;
-    if ([FBSDKShareUtility shareMediaContentContainsPhotosAndVideos:mediaContent] &&
-        self.mode == FBSDKShareDialogModeShareSheet &&
-        ![self _canUseMMPInShareSheet]) {
-      if ((errorRef != NULL) && !*errorRef) {
-        *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
-                                                            value:shareContent
-                                                          message:@"Multimedia content (photos + videos) is only supported if Facebook for iOS version 52 and above is installed"];
-      }
-      return NO;
-    }
   }
   return YES;
 }
@@ -898,6 +886,7 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
             [self _validateVideoURL:((FBSDKShareVideoContent *)shareContent).video.videoURL error:errorRef]);
   } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
     return ([self _canUseFBShareSheet] &&
+            [self _validateShareMediaContentAvailability:shareContent error:errorRef] &&
             [FBSDKShareUtility validateShareMediaContent:(FBSDKShareMediaContent *)shareContent error:errorRef]);
   } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
     FBSDKShareOpenGraphContent *ogContent = (FBSDKShareOpenGraphContent *)shareContent;
@@ -930,6 +919,21 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
     if ((errorRef != NULL) && !*errorRef) {
       NSString *message = @"Only asset file URLs are allowed for videos.";
       *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"videoURL" value:videoURL message:message];
+    }
+    return NO;
+  }
+  return YES;
+}
+
+- (BOOL)_validateShareMediaContentAvailability:(FBSDKShareMediaContent *)shareContent error:(NSError **)errorRef
+{
+  if ([FBSDKShareUtility shareMediaContentContainsPhotosAndVideos:shareContent] &&
+      self.mode == FBSDKShareDialogModeShareSheet &&
+      ![self _canUseMMPInShareSheet]) {
+    if ((errorRef != NULL) && !*errorRef) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
+                                                          value:shareContent
+                                                        message:@"Multimedia content (photos + videos) is only supported if Facebook for iOS version 52 and above is installed"];
     }
     return NO;
   }

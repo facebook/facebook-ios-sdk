@@ -86,5 +86,6 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSURL *)videoURL;
 + (NSArray *)media;
 + (FBSDKShareMediaContent *)mediaContent;
++ (FBSDKShareMediaContent *)multiVideoMediaContent;
 
 @end

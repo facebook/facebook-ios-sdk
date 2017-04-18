@@ -11,7 +11,7 @@ FEATURES
 --------
 * Device Login - Login via Facebook without having to enter credentials on your Apple TV remote.
 * Graph API and Sharing content- https://developers.facebook.com/docs/ios/graph
-* Analytics for Apps - https://developers.facebook.com/docs/analytics
+* Analytics - https://developers.facebook.com/docs/analytics
 
 GIVE FEEDBACK
 -------------

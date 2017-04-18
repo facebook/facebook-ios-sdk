@@ -239,6 +239,8 @@
 + (NSDictionary *)feedShareDictionaryForContent:(id<FBSDKSharingContent>)content
 {
   NSMutableDictionary *parameters = nil;
+#pragma clang diagnostic pop
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
     parameters = [[NSMutableDictionary alloc] initWithDictionary:linkContent.feedParameters];
@@ -250,6 +252,7 @@
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
   }
+#pragma clang diagnostic pop
   return [parameters copy];
 }
 
@@ -556,6 +559,7 @@
       ![self _validateArray:medias minCount:1 maxCount:20 name:@"photos" error:errorRef]) {
     return NO;
   }
+  int videoCount = 0;
   for (id media in medias) {
     if ([media isKindOfClass:[FBSDKSharePhoto class]]) {
       FBSDKSharePhoto *photo = (FBSDKSharePhoto *)media;
@@ -568,10 +572,21 @@
         return NO;
       }
     } else if ([media isKindOfClass:[FBSDKShareVideo class]]) {
+      if (videoCount > 0) {
+        if (errorRef != NULL) {
+          *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"media"
+                                                              value:media
+                                                            message:@"Only 1 video is allowed"];
+          return NO;
+        }
+      }
+      videoCount++;
       FBSDKShareVideo *video = (FBSDKShareVideo *)media;
       NSURL *videoURL = video.videoURL;
-      return ([self _validateRequiredValue:video name:@"video" error:errorRef] &&
-              [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
+      if (![self _validateRequiredValue:video name:@"video" error:errorRef] &&
+          [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]) {
+        return NO;
+      }
 
     } else {
       if (errorRef != NULL) {
@@ -585,12 +600,14 @@
   return YES;
 }
 
-
 + (BOOL)validateShareLinkContent:(FBSDKShareLinkContent *)linkContent error:(NSError *__autoreleasing *)errorRef
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return ([self _validateRequiredValue:linkContent name:@"shareContent" error:errorRef] &&
           [self _validateNetworkURL:linkContent.contentURL name:@"contentURL" error:errorRef] &&
           [self _validateNetworkURL:linkContent.imageURL name:@"imageURL" error:errorRef]);
+#pragma clang diagnostic pop
 }
 
 + (BOOL)validateShareVideoContent:(FBSDKShareVideoContent *)videoContent error:(NSError *__autoreleasing *)errorRef
@@ -662,10 +679,13 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
 + (void)_addToParameters:(NSMutableDictionary *)parameters
      forShareLinkContent:(FBSDKShareLinkContent *)linkContent
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
+#pragma clang diagnostic pop
 }
 
 + (void)_addToParameters:(NSMutableDictionary *)parameters

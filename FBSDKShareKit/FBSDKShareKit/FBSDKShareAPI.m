@@ -268,10 +268,12 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   [self _addCommonParameters:parameters content:linkContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
-
+#pragma clang diagnostic pop
   [[[FBSDKGraphRequest alloc] initWithGraphPath:[self _graphPathWithSuffix:@"feed", nil]
                                      parameters:parameters
                                     tokenString:self.accessToken.tokenString

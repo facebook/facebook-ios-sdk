@@ -319,6 +319,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
 {
   [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
                       expectValid:NO
+                       expectShow:YES
                              mode:FBSDKShareDialogModeShareSheet
                nonSupportedScheme:@"fbapi20160328:/"];
 }
@@ -327,6 +328,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
 {
   [self _testValidateShareContent:[FBSDKShareModelTestUtility linkContent]
                       expectValid:YES
+                       expectShow:YES
                              mode:FBSDKShareDialogModeShareSheet
                nonSupportedScheme:nil];
 
@@ -336,6 +338,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
 {
   [self _testValidateShareContent:[FBSDKShareModelTestUtility mediaContent]
                       expectValid:NO
+                       expectShow:NO
                              mode:FBSDKShareDialogModeShareSheet
                nonSupportedScheme:@"fbapi20160328:/"];
 }
@@ -344,6 +347,16 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
 {
   [self _testValidateShareContent:[FBSDKShareModelTestUtility mediaContent]
                       expectValid:YES
+                       expectShow:YES
+                             mode:FBSDKShareDialogModeShareSheet
+               nonSupportedScheme:nil];
+}
+
+- (void)testThatValidateWithErrorReturnsNOForMMPWithMoreThan1Video
+{
+  [self _testValidateShareContent:[FBSDKShareModelTestUtility multiVideoMediaContent]
+                      expectValid:NO
+                       expectShow:NO
                              mode:FBSDKShareDialogModeShareSheet
                nonSupportedScheme:nil];
 }
@@ -352,6 +365,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
 
 - (void)_testValidateShareContent:(id<FBSDKSharingContent>)shareContent
                       expectValid:(BOOL)expectValid
+                       expectShow:(BOOL)expectShow
                              mode:(FBSDKShareDialogMode)mode
                nonSupportedScheme:(NSString *)nonSupportedScheme
 {
@@ -380,7 +394,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
     XCTAssertFalse([dialog validateWithError:&error]);
     XCTAssertNotNil(error);
   }
-  XCTAssert([dialog show]);
+  XCTAssertEqual(expectShow, [dialog show]);
 
   [mockApplication stopMocking];
   [mockInternalUtility stopMocking];
