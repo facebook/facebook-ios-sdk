@@ -512,4 +512,14 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
  */
 + (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler;
 
+/*
+ Sends a request to update the properties for the current user, set by `setUserID:`
+
+ You must call `FBSDKAppEvents setUserID:` before making this call.
+ - Parameter properties: the custom user properties
+ - Parameter handler: the optional completion handler
+ - Parameter accessToken:  The optional access token to log the event as.
+ */
++ (void)updateUserProperties:(NSDictionary *)properties accessToken:(FBSDKAccessToken *)accessToken handler:(FBSDKGraphRequestHandler)handler;
+
 @end
