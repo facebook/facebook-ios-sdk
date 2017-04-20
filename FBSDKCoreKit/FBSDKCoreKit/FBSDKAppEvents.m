@@ -489,17 +489,7 @@ static NSString *g_overrideAppID = nil;
   return [[self class] singleton]->_userID;
 }
 
-+ (void)updateUserProperties:(NSDictionary *)properties
-                     handler:(FBSDKGraphRequestHandler)handler
-{
-  [FBSDKAppEvents updateUserProperties:properties
-                           accessToken:nil
-                               handler:handler];
-}
-
-+ (void)updateUserProperties:(NSDictionary *)properties
-                 accessToken:(FBSDKAccessToken *)accessToken
-                     handler:(FBSDKGraphRequestHandler)handler
++ (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler
 {
   NSString *userID = [[self class] userID];
 
@@ -534,12 +524,11 @@ static NSString *g_overrideAppID = nil;
     return;
   }
 
-  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
   NSString *appID = [FBSDKAppEvents loggingOverrideAppID] ?: [FBSDKSettings appID];
   NSDictionary *params = @{ @"data" : dataJSONString };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", appID]
                                                                  parameters:params
-                                                                tokenString:tokenString
+                                                                tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                                                                  HTTPMethod:@"POST"
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery |
                                                                             FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
