@@ -110,13 +110,11 @@
 		4117F43E1E492496005F8991 /* FBSDKPlacesSample */ = {
 			isa = PBXGroup;
 			children = (
-				4120F5F41E737535006D9380 /* LaunchScreen.storyboard */,
-				4120F5F11E73752F006D9380 /* Main.storyboard */,
 				41E4F27D1E7373410093F831 /* AppDelegate.h */,
 				41E4F27E1E7373410093F831 /* AppDelegate.m */,
 				41FA9A791E71FAF400C8EBB2 /* Models */,
 				41FA9A781E71FAE600C8EBB2 /* View Controllers */,
-				41E4F2801E73734B0093F831 /* Assets.xcassets */,
+				DB9228511EAD152A00DAFCE5 /* Resources */,
 				4117F43F1E492496005F8991 /* Supporting Files */,
 				41E4F2601E7373020093F831 /* main.m */,
 			);
@@ -168,6 +166,16 @@
 				4160884A1E831C0B00BF8B15 /* Hours.m */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		DB9228511EAD152A00DAFCE5 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4120F5F41E737535006D9380 /* LaunchScreen.storyboard */,
+				4120F5F11E73752F006D9380 /* Main.storyboard */,
+				41E4F2801E73734B0093F831 /* Assets.xcassets */,
+			);
+			name = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

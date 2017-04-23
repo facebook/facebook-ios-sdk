@@ -24,9 +24,9 @@
 {
   NSURLSessionDataTask *imageDataTask = [[NSURLSession sharedSession] dataTaskWithURL:url completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
     UIImage *image = [[UIImage alloc] initWithData:data];
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    dispatch_async(dispatch_get_main_queue(), ^{
       self.image = image;
-    }];
+    });
   }];
   [imageDataTask resume];
 }

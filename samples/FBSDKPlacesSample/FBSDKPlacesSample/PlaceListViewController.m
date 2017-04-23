@@ -48,6 +48,7 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 @property (nonatomic, strong) CLLocation *mostRecentLocation;
+@property (nonatomic, strong) UIActivityIndicatorView *loader;
 
 @property (nonatomic, copy) NSArray<Place *> *placeSearchResults;
 @property (nonatomic, copy) NSArray<Place *> *currentPlaceCandidates;
@@ -69,6 +70,10 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
     self.locationManager = [CLLocationManager new];
     [self.locationManager requestWhenInUseAuthorization];
   }
+    
+  self.loader = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+  self.loader.hidden = YES;
+  [[self navigationItem] setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:self.loader]];
 
   self.placesManager = [FBSDKPlacesManager new];
   [self fetchCurrentPlaces];
@@ -86,29 +91,40 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
 
 - (void)fetchCurrentPlaces
 {
+  [self showLoader];
+    
   [self.placesManager
    generateCurrentPlaceRequestWithMinimumConfidenceLevel:FBSDKPlaceLocationConfidenceNotApplicable
    fields:placeFieldsWithConfidence
    completion:^(FBSDKGraphRequest * _Nullable graphRequest, NSError * _Nullable error) {
      if (graphRequest) {
        [graphRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *requestError) {
+         [self hideLoader];
+
          self.currentPlaceCandidates = [self parsePlacesJSON:result[FBSDKPlacesResponseKeyData]];
          self.currentPlacesTrackingID = result[FBSDKPlacesParameterKeySummary][FBSDKPlacesSummaryKeyTracking];
          [self refreshUI];
        }];
+     }
+     else {
+       [self hideLoader];
      }
    }];
 }
 
 - (void)performSearchForTerm:(NSString *)searchTerm
 {
+  [self showLoader];
+
   void (^graphCompletionHandler)(FBSDKGraphRequestConnection *connection, id result, NSError *error) = ^void(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    [self hideLoader];
+
     if (!error)  {
       self.placeSearchResults = [self parsePlacesJSON:result[FBSDKPlacesResponseKeyData]];
     }
-    [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+    dispatch_async(dispatch_get_main_queue(), ^{
       [self refreshUI];
-    }];
+    });
   };
 
   if (self.mostRecentLocation) {
@@ -135,6 +151,7 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
          [graphRequest startWithCompletionHandler:graphCompletionHandler];
        }
        else {
+         [self hideLoader];
          [self refreshUI];
        }
      }];
@@ -145,6 +162,21 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
 {
+  if ([searchBar.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length == 0) {
+    UIAlertController *error = [UIAlertController alertControllerWithTitle:@"Error"
+                                                                   message:@"Enter at least one character"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+
+    [error addAction:[UIAlertAction actionWithTitle:@"OK"
+                                              style:UIAlertActionStyleDefault
+                                            handler:nil]];
+
+    [self presentViewController:error
+                       animated:YES
+                     completion:nil];
+    return;
+  }
+
   [searchBar resignFirstResponder];
   [self performSearchForTerm:searchBar.text];
 }
@@ -196,9 +228,6 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
   }
   else if ([place.confidence isEqualToString:@"high"]) {
     cell.textLabel.textColor = [UIColor greenColor];
-  }
-  else {
-    cell.textLabel.textColor = [UIColor blackColor];
   }
 
   return cell;
@@ -262,6 +291,18 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
 - (Place *)placeForRow:(NSInteger)row
 {
   return (self.mode == PlacesModeSearch) ? self.placeSearchResults[row] : self.currentPlaceCandidates[row];
+}
+
+- (void)showLoader
+{
+  [self.loader setHidden:NO];
+  [self.loader startAnimating];
+}
+
+- (void)hideLoader
+{
+  [self.loader setHidden:YES];
+  [self.loader stopAnimating];
 }
 
 @end
