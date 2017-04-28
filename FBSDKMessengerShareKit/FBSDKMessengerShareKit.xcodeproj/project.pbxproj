@@ -534,6 +534,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -541,6 +542,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Release;
 		};
@@ -562,6 +564,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -569,6 +572,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Release;
 		};
@@ -576,6 +580,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -583,6 +588,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(TARGET_NAME)/FBSDKMessengerShareKit.modulemap";
 			};
 			name = Release;
 		};
