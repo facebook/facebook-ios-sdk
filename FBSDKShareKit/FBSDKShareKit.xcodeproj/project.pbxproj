@@ -37,6 +37,7 @@
 		0302743E1C98A661000D666D /* FBSDKShareMediaContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0302743D1C98A661000D666D /* FBSDKShareMediaContentTests.m */; };
 		03A419DA1C922A2A006E7767 /* FBSDKShareMediaContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 03A419D81C922A2A006E7767 /* FBSDKShareMediaContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03A419DB1C922A2A006E7767 /* FBSDKShareMediaContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A419D91C922A2A006E7767 /* FBSDKShareMediaContent.m */; };
+		80C8BA411EA5FF99003569B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 80C8BA401EA5FF99003569B7 /* CoreGraphics.framework */; };
 		8131FB1A1D261D8B000350FF /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6411D0A49B500962084 /* FBSDKCoreKit.framework */; };
 		8131FB4E1D261E5E000350FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A71A3B807300BE2807 /* UIKit.framework */; };
 		8131FB4F1D261E5F000350FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A71A3B807300BE2807 /* UIKit.framework */; };
@@ -428,6 +429,7 @@
 		0302743D1C98A661000D666D /* FBSDKShareMediaContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareMediaContentTests.m; sourceTree = "<group>"; };
 		03A419D81C922A2A006E7767 /* FBSDKShareMediaContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKShareMediaContent.h; sourceTree = "<group>"; };
 		03A419D91C922A2A006E7767 /* FBSDKShareMediaContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareMediaContent.m; sourceTree = "<group>"; };
+		80C8BA401EA5FF99003569B7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 		8144D91B1D261D2900C8E4AC /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		819043CB1D261A7900B2E437 /* FBSDKShareKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKShareKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
@@ -590,6 +592,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				80C8BA411EA5FF99003569B7 /* CoreGraphics.framework in Frameworks */,
 				8131FB1A1D261D8B000350FF /* FBSDKCoreKit.framework in Frameworks */,
 				8131FB4F1D261E5F000350FF /* UIKit.framework in Frameworks */,
 			);
@@ -716,6 +719,7 @@
 		892EBBE91A3A475F00721B03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				80C8BA401EA5FF99003569B7 /* CoreGraphics.framework */,
 				8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */,
 				9382B7921BB47DC100E4B24F /* AssetsLibrary.framework */,
 				89FC8C491AC9A017004187B2 /* libOCMock.a */,
