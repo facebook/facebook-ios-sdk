@@ -501,7 +501,6 @@ static id g_mockNSBundle;
   }];
   
   // adding fresh token to avoid piggybacking a token refresh
-  [FBSDKAccessToken setCurrentAccessToken:nil];
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
                                       permissions:nil
