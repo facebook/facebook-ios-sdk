@@ -83,7 +83,7 @@
 "SmartLogin.NotYou" = "तुम्ही नाही?";
 
 /* Text on a button that a person presses to confirm that they are finished with the login experience */
-"SmartLogin.ConfirmationTitle" = "लॉग इन पुष्टी करा"
+"SmartLogin.ConfirmationTitle" = "लॉग इन पुष्टी करा";
 
 /* Text on a button that lets a person continue with their name linked to a Facebook account (Name = %@) */
 "SmartLogin.Continue" = "%@ म्हणून चालू ठेवा";
