@@ -524,9 +524,8 @@ static NSString *g_overrideAppID = nil;
     return;
   }
 
-  NSString *appID = [FBSDKAppEvents loggingOverrideAppID] ?: [FBSDKSettings appID];
   NSDictionary *params = @{ @"data" : dataJSONString };
-  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", appID]
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", [[self singleton] appID]]
                                                                  parameters:params
                                                                 tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                                                                  HTTPMethod:@"POST"
