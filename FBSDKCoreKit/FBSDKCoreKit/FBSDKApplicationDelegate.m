@@ -123,7 +123,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 #pragma mark - UIApplicationDelegate
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_3
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
             options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
@@ -420,14 +420,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     return;
   }
 
-  NSURL *targetURL;
-  NSString * targetURLString = applinkData[@"target_url"];
-  if (targetURLString == nil || ![targetURLString isKindOfClass: [NSString class]]) {
-    targetURL = nil;
-  } else {
-    targetURL = [NSURL URLWithString: targetURLString];
-  }
-
+  NSURL *targetURL = [NSURL URLWithString:applinkData[@"target_url"]];
   NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
   [FBSDKInternalUtility dictionary:logData setObject:[targetURL absoluteString] forKey:@"targetURL"];
   [FBSDKInternalUtility dictionary:logData setObject:[targetURL host] forKey:@"targetURLHost"];

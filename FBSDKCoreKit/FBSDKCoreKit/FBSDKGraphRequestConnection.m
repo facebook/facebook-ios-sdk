@@ -824,7 +824,7 @@ NSURLSessionDataDelegate
   if ([result isKindOfClass:[NSDictionary class]]) {
     NSDictionary *errorDictionary = [FBSDKTypeUtility dictionaryValue:result[@"body"]][@"error"];
 
-    if ([errorDictionary isKindOfClass:[NSDictionary class]]) {
+    if (errorDictionary) {
       NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
       [FBSDKInternalUtility dictionary:userInfo setObject:errorDictionary[@"code"] forKey:FBSDKGraphRequestErrorGraphErrorCode];
       [FBSDKInternalUtility dictionary:userInfo setObject:errorDictionary[@"error_subcode"] forKey:FBSDKGraphRequestErrorGraphErrorSubcode];

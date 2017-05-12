@@ -26,7 +26,7 @@
 "LikeButton.Like" = "Sviđa mi se";
 
 /* The label for the FBSDKLikeButton when the object is currently liked. */
-"LikeButton.Liked" = "Označeno sa \"sviđa mi se\"";
+"LikeButton.Liked" = "Označeno sa "sviđa mi se"";
 
 /* The label for the FBSDKLoginButton action sheet to cancel logging out */
 "LoginButton.CancelLogout" = "Odustani";
