@@ -23,7 +23,7 @@
 
 + (FBSDKAccessTokenCache *)accessTokenCache;
 
-- (void)setAccessTokenCache;
+- (void)setAccessTokenCache:(FBSDKAccessTokenCache *)cache;
 
 + (NSString *)graphAPIDebugParamValue;
 
