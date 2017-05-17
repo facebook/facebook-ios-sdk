@@ -36,7 +36,7 @@ Pod::Spec.new do |s|
     spec.public_header_files = "FBSDKCoreKit/FBSDKCoreKit/*.{h}"
     spec.header_dir = "FBSDKCoreKit"
     spec.subspec 'no-arc' do |sp|
-      sp.source_files = "FBSDKCoreKit/FBSDKCoreKit/**/*.h","FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.{h,m}"
+      sp.source_files = "FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKDynamicFrameworkLoader.m"
       sp.requires_arc = false
     end
   end
