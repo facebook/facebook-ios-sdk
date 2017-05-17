@@ -88,7 +88,7 @@ static FBSDKProfile *g_currentProfile;
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  NSString *path = [self imagePathForPictureMode:FBSDKProfilePictureModeNormal size:size];
+  NSString *path = [self imagePathForPictureMode:mode size:size];
 #pragma clang diagnostic pop
   return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
                                                     path:path
