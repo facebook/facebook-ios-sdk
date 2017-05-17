@@ -1,6 +1,9 @@
 Facebook SDK for iOS
 ====================
 
+[![Dependency Status](https://www.versioneye.com/objective-c/facebook-ios-sdk/3.16.2/badge.svg?style=flat)](https://www.versioneye.com/objective-c/facebook-ios-sdk/3.16.2)
+[![Reference Status](https://www.versioneye.com/objective-c/facebook-ios-sdk/reference_badge.svg?style=flat)](https://www.versioneye.com/objective-c/facebook-ios-sdk/references)
+
 This open-source library allows you to integrate Facebook into your iOS app.
 
 Learn more about the provided samples, documentation, integrating the SDK into your app, accessing source code, and more at https://developers.facebook.com/docs/ios
