@@ -81,7 +81,7 @@
     }
 }
 
-#pragma makr - InvitFriends Button
+#pragma mark - InviteFriends Button
 
 - (IBAction)tapChallengeFriends:(id)sender {
     FBSDKGameRequestDialog *gameRequestDialog = [[FBSDKGameRequestDialog alloc] init];
