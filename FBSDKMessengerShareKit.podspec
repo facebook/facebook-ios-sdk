@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
                      :tag => "messenger-share-kit-version-1.3.2"
                     }
 
+  s.requires_arc = true
   s.source_files   = "FBSDKMessengerShareKit/FBSDKMessengerShareKit/**/*.{h,m}"
   s.public_header_files = "FBSDKMessengerShareKit/FBSDKMessengerShareKit/*.{h}"
   s.header_dir = "FBSDKMessengerShareKit"
