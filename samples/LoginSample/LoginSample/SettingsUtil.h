@@ -29,8 +29,7 @@
 + (NSDictionary *)themeTweakValues;
 + (NSArray *)publishPermissions;
 + (NSArray *)readPermissions;
-+ (Theme *)currentTheme;
 + (AKFResponseType)responseType;
-+ (void)setAdvancedUIManagerForController:(id<AKFViewController>)controller;
++ (void)setUIManagerForController:(id<AKFViewController>)controller;
 
 @end

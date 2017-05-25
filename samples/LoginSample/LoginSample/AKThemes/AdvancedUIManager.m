@@ -32,12 +32,14 @@
                           entryButtonType:(AKFButtonType)entryButtonType
                                 loginType:(AKFLoginType)loginType
                              textPosition:(AKFTextPosition)textPosition
+                                    theme:(AKFTheme *)theme
 {
   if ((self = [super init])) {
     _confirmButtonType = confirmButtonType;
     _entryButtonType = entryButtonType;
     _textPosition = textPosition;
     _loginType = loginType;
+    _theme = theme;
   }
   return self;
 }

@@ -20,12 +20,13 @@
 
 #import <AccountKit/AccountKit.h>
 
-@interface AdvancedUIManager : NSObject <AKFAdvancedUIManager>
+@interface AdvancedUIManager : NSObject <AKFUIManager>
 
 - (instancetype)initWithConfirmButtonType:(AKFButtonType)confirmButtonType
                           entryButtonType:(AKFButtonType)entryButtonType
                                 loginType:(AKFLoginType)loginType
                              textPosition:(AKFTextPosition)textPosition
+                                    theme:(AKFTheme *)theme
 NS_DESIGNATED_INITIALIZER;
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -34,5 +35,6 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, assign, readonly) AKFButtonType entryButtonType;
 @property (nonatomic, assign, readonly) AKFLoginType loginType;
 @property (nonatomic, assign, readonly) AKFTextPosition textPosition;
+@property (nonatomic, copy, readonly) AKFTheme *theme;
 
 @end

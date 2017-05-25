@@ -16,10 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@import Foundation;
+#import <Foundation/Foundation.h>
 
 /**
- These are the fields currently exposed by FBSDKPlacesKit. They map to the fields on Place objects returned by the Graph API, which can be found here: https://developers.facebook.com/docs/places. Should fields be added to the Graph API in the future, you can use strings found in the online documenation in addition to these string constants.
+ These are the fields currently exposed by FBSDKPlacesKit. They map to the fields on
+ Place objects returned by the Graph API, which can be found here:
+ https://developers.facebook.com/docs/places. Should fields be added to the Graph API in
+ the future, you can use strings found in the online documenation in addition to
+ these string constants.
  */
 
 /**
@@ -43,7 +47,9 @@ extern NSString *const FBSDKPlacesFieldKeyCategories;
 extern NSString *const FBSDKPlacesFieldKeyCheckins;
 
 /**
- Field Key for the OpenGraphContext of the place, including friends who were at this place, or who liked to its page. This field requires authentication with a user token. An error will be thrown if this field is requested using a client token.
+ Field Key for the OpenGraphContext of the place, including friends who were at this
+ place, or who liked to its page. This field requires authentication with a user token.
+ An error will be thrown if this field is requested using a client token.
  */
 extern NSString *const FBSDKPlacesFieldKeyContext;
 
@@ -53,7 +59,8 @@ extern NSString *const FBSDKPlacesFieldKeyContext;
 extern NSString *const FBSDKPlacesFieldKeyConfidence;
 
 /**
- Field Key for the Place's cover photo. Note that this is not the actual photo data, but rather URLs and other metadata.
+ Field Key for the Place's cover photo. Note that this is not the actual photo data,
+ but rather URLs and other metadata.
  */
 extern NSString *const FBSDKPlacesFieldKeyCoverPhoto;
 
@@ -63,7 +70,8 @@ extern NSString *const FBSDKPlacesFieldKeyCoverPhoto;
 extern NSString *const FBSDKPlacesFieldKeyDescription;
 
 /**
- Field Key for the social sentence and like count information for this place. This is the same information used for the Like button.
+ Field Key for the social sentence and like count information for this place. This is
+ the same information used for the Like button.
  */
 extern NSString *const FBSDKPlacesFieldKeyEngagement;
 
@@ -73,7 +81,14 @@ extern NSString *const FBSDKPlacesFieldKeyEngagement;
 extern NSString *const FBSDKPlacesFieldKeyFanCount;
 
 /**
- Field Key for hour ranges for when the Place is open. Each day can have two different hours ranges. The keys in the dictionary are in the form of {day}_{number}_{status}. {day} should be the first 3 characters of the day of the week, {number} should be either 1 or 2 to allow for the two different hours ranges per day. {status} should be either open or close, to delineate the start or end of a time range. An example would be mon_1_open with value 17:00 and mon_1_close with value 21:15 which would represent a single opening range of 5 PM to 9:15 PM on Mondays. You can find an example of hours being parsed out in the Sample App.
+ Field Key for hour ranges for when the Place is open. Each day can have two different
+ hours ranges. The keys in the dictionary are in the form of {day}_{number}_{status}.
+ {day} should be the first 3 characters of the day of the week, {number} should be
+ either 1 or 2 to allow for the two different hours ranges per day. {status} should be
+ either open or close, to delineate the start or end of a time range. An example would
+ be mon_1_open with value 17:00 and mon_1_close with value 21:15 which would represent
+ a single opening range of 5 PM to 9:15 PM on Mondays. You can find an example of hours
+ being parsed out in the Sample App.
  */
 extern NSString *const FBSDKPlacesFieldKeyHours;
 
@@ -88,7 +103,8 @@ extern NSString *const FBSDKPlacesFieldKeyIsAlwaysOpen;
 extern NSString *const FBSDKPlacesFieldKeyIsPermanentlyClosed;
 
 /**
- Pages with a large number of followers can be manually verified by Facebook as having an authentic identity. This field indicates whether the page is verified by this process.
+ Pages with a large number of followers can be manually verified by Facebook as having an
+ authentic identity. This field indicates whether the page is verified by this process.
  */
 extern NSString *const FBSDKPlacesFieldKeyIsVerified;
 
@@ -108,7 +124,9 @@ extern NSString *const FBSDKPlacesFieldKeyLink;
 extern NSString *const FBSDKPlacesFieldKeyName;
 
 /**
- Field Key for the overall page rating based on rating surveys from users on a scale of 1-5. This value is normalized, and is not guaranteed to be a strict average of user ratings.
+ Field Key for the overall page rating based on rating surveys from users on a scale
+ from 1-5. This value is normalized, and is not guaranteed to be a strict average of
+ user ratings.
  */
 extern NSString *const FBSDKPlacesFieldKeyOverallStarRating;
 
@@ -133,17 +151,21 @@ extern NSString *const FBSDKPlacesFieldKeyPlaceID;
 extern NSString *const FBSDKPlacesFieldKeyPhone;
 
 /**
- Field Key for the Place's photos. Note that this is not the actual photo data, but rather URLs and other metadata.
+ Field Key for the Place's photos. Note that this is not the actual photo data, but
+ rather URLs and other metadata.
  */
 extern NSString *const FBSDKPlacesFieldKeyPhotos;
 
 /**
- Field Key for the price range of the business, expressed as a string. Applicable to Restaurants or Nightlife. Can be one of $ (0-10), $$ (10-30), $$$ (30-50), $$$$ (50+), or Unspecified.
+ Field Key for the price range of the business, expressed as a string. Applicable to
+ Restaurants or Nightlife. Can be one of $ (0-10), $$ (10-30), $$$ (30-50), $$$$ (50+),
+ or Unspecified.
  */
 extern NSString *const FBSDKPlacesFieldKeyPriceRange;
 
 /**
- Field Key for the Place's profile photo. Note that this is not the actual photo data, but rather URLs and other metadata.
+ Field Key for the Place's profile photo. Note that this is not the actual photo data,
+ but rather URLs and other metadata.
  */
 extern NSString *const FBSDKPlacesFieldKeyProfilePhoto;
 
@@ -264,9 +286,11 @@ extern NSString *const FBSDKPlacesParameterKeySummary;
 extern NSString *const FBSDKPlacesSummaryKeyTracking;
 
 /**
- The level of confidence the Facebook SDK has that a Place is the correct one for the user's current location.
+ The level of confidence the Facebook SDK has that a Place is the correct one for the
+ user's current location.
 
- - FBSDKPlaceLocationConfidenceNotApplicable: Used to indicate that any level is acceptable as a minimum threshold
+ - FBSDKPlaceLocationConfidenceNotApplicable: Used to indicate that any level is
+ acceptable as a minimum threshold
  - FBSDKPlaceLocationConfidenceLow: Low confidence level.
  - FBSDKPlaceLocationConfidenceMedium: Medium confidence level.
  - FBSDKPlaceLocationConfidenceHigh: High confidence level.

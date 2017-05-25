@@ -18,9 +18,9 @@
 
 #import "FBSDKPlacesManager.h"
 
-#import "FBSDKPlacesBluetoothScanner.h"
+#import <SystemConfiguration/CaptiveNetwork.h>
 
-@import SystemConfiguration.CaptiveNetwork;
+#import "FBSDKPlacesBluetoothScanner.h"
 
 static NSString *const ParameterKeyFields = @"fields";
 
@@ -82,7 +82,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   if (!location && !searchTerm) {
     return nil;
   }
-  
+
   NSMutableDictionary *parameters = [@{@"type" : @"place"} mutableCopy];
 
   if (searchTerm) {
