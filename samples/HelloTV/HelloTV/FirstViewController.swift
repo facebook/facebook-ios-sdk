@@ -48,7 +48,6 @@ class FirstViewController: UIViewController {
 
     let linkContent = FBSDKShareLinkContent()
     linkContent.contentURL = URL(string: "https://developers.facebook.com/docs/tvos")
-    linkContent.contentDescription = "Let's build a tvOS app with Facebook!"
     shareButton?.shareContent = linkContent
   }
 

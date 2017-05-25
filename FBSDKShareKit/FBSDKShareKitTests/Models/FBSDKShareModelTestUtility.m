@@ -68,11 +68,8 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 + (FBSDKShareLinkContent *)linkContentWithoutQuote
 {
   FBSDKShareLinkContent *linkContent = [[FBSDKShareLinkContent alloc] init];
-  linkContent.contentDescription = [self linkContentDescription];
-  linkContent.contentTitle = [self linkContentTitle];
   linkContent.contentURL = [self contentURL];
   linkContent.hashtag = [self hashtag];
-  linkContent.imageURL = [self linkImageURL];
   linkContent.peopleIDs = [self peopleIDs];
   linkContent.placeID = [self placeID];
   linkContent.ref = [self ref];

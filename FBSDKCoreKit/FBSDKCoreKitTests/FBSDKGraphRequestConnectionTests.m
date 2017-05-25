@@ -483,6 +483,43 @@ static id g_mockNSBundle;
   }];
 }
 
+- (void)testNonDictionaryInError
+{
+  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
+  XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
+
+  [FBSDKAccessToken setCurrentAccessToken:nil];
+  [FBSDKSettings setClientToken:@"clienttoken"];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    return YES;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+      NSData *data =  [@"{\"error\": \"a-non-dictionary\"}" dataUsingEncoding:NSUTF8StringEncoding];
+      return [OHHTTPStubsResponse responseWithData:data
+                                        statusCode:200
+                                          headers:nil];
+  }];
+
+  // adding fresh token to avoid piggybacking a token refresh
+  FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
+                                      initWithTokenString:@"token"
+                                      permissions:nil
+                                      declinedPermissions:nil
+                                      appID:@"appid"
+                                      userID:@"userid"
+                                      expirationDate:[NSDate distantPast]
+                                      refreshDate:[NSDate date]];
+  [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
+
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    // should not crash when receiving something other than a dictionary within the response.
+    [exp fulfill];
+  }];
+  [self waitForExpectationsWithTimeout:2 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+  [mockPiggybackManager stopMocking];
+}
+
 #pragma mark - Error recovery.
 
 // verify we do a single retry.

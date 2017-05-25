@@ -20,7 +20,7 @@
 
 #import "ReverbTheme.h"
 
-const NSUInteger ThemeTypeCount = 9;
+const NSUInteger ThemeTypeCount = 11;
 
 @interface Theme ()
 
@@ -36,6 +36,8 @@ const NSUInteger ThemeTypeCount = 9;
 {
   switch (themeType) {
     case ThemeTypeDefault:
+    case ThemeTypeContemporary:
+    case ThemeTypeTranslucent:
     case ThemeTypeSalmon:
     case ThemeTypeYellow:
     case ThemeTypeRed:
@@ -49,11 +51,48 @@ const NSUInteger ThemeTypeCount = 9;
   }
 }
 
++ (BOOL)isSkinTheme:(ThemeType)themeType
+{
+  switch (themeType) {
+    case ThemeTypeDefault:
+    case ThemeTypeContemporary:
+    case ThemeTypeTranslucent:
+      return YES;
+    case ThemeTypeSalmon:
+    case ThemeTypeYellow:
+    case ThemeTypeRed:
+    case ThemeTypeDog:
+    case ThemeTypeBicycle:
+    case ThemeTypeReverbA:
+    case ThemeTypeReverbB:
+    case ThemeTypeReverbC:
+      return NO;
+  }
+}
+
++ (AKFSkinType)skinTypeForThemeType:(ThemeType)themeType
+{
+  switch (themeType) {
+    case ThemeTypeDefault:
+      return AKFSkinTypeClassic;
+    case ThemeTypeTranslucent:
+      return AKFSkinTypeTranslucent;
+    case ThemeTypeContemporary:
+      return AKFSkinTypeContemporary;
+    default:
+      return AKFSkinTypeClassic;
+  }
+}
+
 + (NSString *)labelForThemeType:(ThemeType)themeType
 {
   switch (themeType) {
     case ThemeTypeDefault:
-      return @"Default";
+      return @"Skin-Classic (Default)";
+    case ThemeTypeContemporary:
+      return @"Skin-Contemporary";
+    case ThemeTypeTranslucent:
+      return @"Skin-Translucent";
     case ThemeTypeSalmon:
       return @"Salmon";
     case ThemeTypeYellow:
@@ -65,11 +104,11 @@ const NSUInteger ThemeTypeCount = 9;
     case ThemeTypeBicycle:
       return @"Bicycle";
     case ThemeTypeReverbA:
-      return @"Reverb A";
+      return @"Advanced-Reverb A";
     case ThemeTypeReverbB:
-      return @"Reverb B";
+      return @"Advanced-Reverb B";
     case ThemeTypeReverbC:
-      return @"Reverb C";
+      return @"Advanced-Reverb C";
   }
 }
 
@@ -78,7 +117,13 @@ const NSUInteger ThemeTypeCount = 9;
   Theme *theme;
   switch (themeType) {
     case ThemeTypeDefault:
-      theme = [self defaultTheme];
+      theme = nil;
+      break;
+    case ThemeTypeContemporary:
+      theme = nil;
+      break;
+    case ThemeTypeTranslucent:
+      theme = nil;
       break;
     case ThemeTypeSalmon:
       theme = [self _salmonTheme];

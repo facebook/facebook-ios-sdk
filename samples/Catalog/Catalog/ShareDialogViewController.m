@@ -89,9 +89,6 @@
   dialog.fromViewController = self;
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
   content.contentURL = [NSURL URLWithString:@"https://newsroom.fb.com/"];
-  content.imageURL = [NSURL URLWithString:@"https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"];
-  content.contentTitle = @"Name: Facebook News Room";
-  content.contentDescription = @"Description: The Facebook SDK for iOS makes it easier and faster to develop Facebook integrated iOS apps.";
   // placeID is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
   content.placeID = @"166793820034304";
   dialog.shareContent = content;

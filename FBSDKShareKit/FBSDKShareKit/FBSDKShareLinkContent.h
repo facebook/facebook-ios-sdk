@@ -35,7 +35,7 @@
  @deprecated `contentDescription` is deprecated from Graph API 2.9.
  For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations.
  */
-@property (nonatomic, copy) NSString *contentDescription
+@property (nonatomic, readonly) NSString *contentDescription
   DEPRECATED_MSG_ATTRIBUTE("`contentDescription` is deprecated from Graph API 2.9");
 
 /**
@@ -47,7 +47,7 @@
  @deprecated `contentTitle` is deprecated from Graph API 2.9.
  For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations
  */
-@property (nonatomic, copy) NSString *contentTitle
+@property (nonatomic, readonly) NSString *contentTitle
   DEPRECATED_MSG_ATTRIBUTE("`contentTitle` is deprecated from Graph API 2.9");
 
 /**
@@ -57,7 +57,7 @@
  @deprecated `imageURL` is deprecated from Graph API 2.9.
  For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations
  */
-@property (nonatomic, copy) NSURL *imageURL
+@property (nonatomic, readonly) NSURL *imageURL
   DEPRECATED_MSG_ATTRIBUTE("`imageURL` is deprecated from Graph API 2.9");
 
 /**

@@ -36,8 +36,6 @@
   void (^shareLinkBlock)(void) = ^{
     FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
     content.contentURL = [NSURL URLWithString:@"https://newsroom.fb.com/"];
-    content.contentTitle = @"Name: Facebook News Room";
-    content.contentDescription = @"Description: The Facebook SDK for iOS makes it easier and faster to develop Facebook integrated iOS apps.";
     [FBSDKShareAPI shareWithContent:content delegate:self];
   };
   EnsureWritePermission(self, @"publish_actions", shareLinkBlock);

@@ -470,7 +470,6 @@ typedef void (^RPSBlock)(void);
 - (FBSDKShareLinkContent *)getGameLinkShareContent {
     FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
     content.contentURL = [NSURL URLWithString:@"https://developers.facebook.com/"];
-    content.contentTitle = @"Rock, Papers, Scissors Sample Application";
     return content;
 }
 

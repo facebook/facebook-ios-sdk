@@ -206,8 +206,6 @@
 {
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
   content.contentURL = [self _gameURL];
-  content.contentTitle = @"Play this game!";
-  content.contentDescription = @"Check out this game of Iconicus that I was playing. Can you finish it?";
   self.shareButton.shareContent = content;
   self.sendButton.shareContent = content;
 }

@@ -211,7 +211,7 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
   UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
   PlaceDetailViewController *placeDetailVC = [storyboard instantiateViewControllerWithIdentifier:@"PlaceDetail"];
   placeDetailVC.place = [self placeForRow:indexPath.row];
-  placeDetailVC.placesManger = self.placesManager;
+  placeDetailVC.placesManager = self.placesManager;
   if (self.mode == PlacesModeCurrent) {
     placeDetailVC.currentPlacesTrackingID = self.currentPlacesTrackingID;
   }

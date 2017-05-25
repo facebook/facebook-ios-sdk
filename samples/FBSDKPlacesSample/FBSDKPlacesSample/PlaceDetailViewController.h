@@ -24,7 +24,7 @@
 
 @interface PlaceDetailViewController : UIViewController
 
-@property (nonatomic, strong) FBSDKPlacesManager *placesManger;
+@property (nonatomic, strong) FBSDKPlacesManager *placesManager;
 
 @property (nonatomic, strong) Place *place;
 @property (nonatomic, copy) NSString *currentPlacesTrackingID;
