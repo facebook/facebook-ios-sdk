@@ -583,7 +583,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
     }];
   }
 
-  return isFacebookURL;
+  return isFacebookURL && isExpectedSourceApplication;
 }
 
 - (BOOL)canOpenURL:(NSURL *)url
