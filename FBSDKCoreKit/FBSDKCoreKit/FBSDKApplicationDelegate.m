@@ -337,6 +337,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     [components setQueryItems:[components.queryItems arrayByAddingObject:sfvcQueryItem]];
     url = components.URL;
     FBSDKContainerViewController *container = [[FBSDKContainerViewController alloc] init];
+    container.modalPresentationStyle = UIModalPresentationOverFullScreen;
     container.delegate = self;
     if (parent.transitionCoordinator != nil) {
       // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.
