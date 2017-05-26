@@ -105,7 +105,7 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   [FBSDKInternalUtility dictionary:parameters setObject:[self _actionTypeNameForActionType:content.actionType] forKey:@"action_type"];
   [FBSDKInternalUtility dictionary:parameters setObject:content.objectID forKey:@"object_id"];
   [FBSDKInternalUtility dictionary:parameters setObject:[self _filtersNameForFilters:content.filters] forKey:@"filters"];
-  [FBSDKInternalUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"suggestions"];
+  [FBSDKInternalUtility dictionary:parameters setObject:[content.recipientSuggestions componentsJoinedByString:@","] forKey:@"recipientSuggestions"];
   [FBSDKInternalUtility dictionary:parameters setObject:content.data forKey:@"data"];
   [FBSDKInternalUtility dictionary:parameters setObject:content.title forKey:@"title"];
 
