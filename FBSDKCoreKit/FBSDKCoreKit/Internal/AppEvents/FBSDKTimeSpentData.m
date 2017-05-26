@@ -189,7 +189,11 @@ static const long INACTIVE_SECONDS_QUANTA[] =
                        formatString:@"FBSDKTimeSpentData Restore: %@", content];
 
     long now = [FBSDKAppEventsUtility unixTimeNow];
-    if (!content) {
+
+    //If no content of no stored sessionID, consider it's a first launch
+    //Note that stored sessionID could be nil since it was not persisted in previous versions of the SDK
+    NSDictionary *results = [FBSDKInternalUtility objectForJSONString:content error:NULL];
+    if (!content || !results[FBSDKTimeSpentPersistKeySessionID]) {
 
       // Nothing persisted, so this is the first launch.
       _sessionID = [[NSUUID UUID] UUIDString];
@@ -202,8 +206,6 @@ static const long INACTIVE_SECONDS_QUANTA[] =
       _shouldLogDeactivateEvent = NO;
 
     } else {
-
-      NSDictionary *results = [FBSDKInternalUtility objectForJSONString:content error:NULL];
 
       _lastSuspendTime = [[results objectForKey:FBSDKTimeSpentPersistKeyLastSuspendTime] longValue];
 
