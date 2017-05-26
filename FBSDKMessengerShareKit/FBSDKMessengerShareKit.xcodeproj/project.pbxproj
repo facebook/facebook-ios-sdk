@@ -382,7 +382,7 @@
 		9D05589A1A797E7B009B7108 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0730;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9CAE10111B15353900163BDA = {
@@ -534,6 +534,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -541,6 +542,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
@@ -548,6 +550,9 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF544A1A8AB66C001D9871 /* FacebookSDK-Project-Debug.xcconfig */;
 			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				ONLY_ACTIVE_ARCH = YES;
 			};
 			name = Debug;
 		};
@@ -555,6 +560,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF544B1A8AB66C001D9871 /* FacebookSDK-Project-Release.xcconfig */;
 			buildSettings = {
+				GCC_NO_COMMON_BLOCKS = YES;
 			};
 			name = Release;
 		};
@@ -562,6 +568,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -569,6 +576,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 23AF54481A8AB66C001D9871 /* FacebookSDK-Library.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};
