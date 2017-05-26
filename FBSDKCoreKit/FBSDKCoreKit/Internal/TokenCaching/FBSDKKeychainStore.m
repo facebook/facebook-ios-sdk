@@ -91,6 +91,10 @@
 
 #if TARGET_OS_SIMULATOR
     NSLog(@"Falling back to storing access token in NSUserDefaults because of simulator bug");
+  
+    key = [key stringByAppendingString:@".TARGET_SIMULATOR"];
+    NSLog(@"To prevent key collisions between keychain store and nsuserdefaults in simulator, key changed to : %@",key);
+  
     [[NSUserDefaults standardUserDefaults] setObject:value forKey:key];
 
     return [[NSUserDefaults standardUserDefaults] synchronize];
@@ -132,6 +136,10 @@
 
 #if TARGET_OS_SIMULATOR
     NSLog(@"Falling back to loading access token from NSUserDefaults because of simulator bug");
+  
+    key = [key stringByAppendingString:@".TARGET_SIMULATOR"];
+    NSLog(@"To prevent key collisions between keychain store and nsuserdefaults in simulator, key changed to : %@",key);
+  
     return [[NSUserDefaults standardUserDefaults] dataForKey:key];
 #else
     NSMutableDictionary *query = [self queryForKey:key];
