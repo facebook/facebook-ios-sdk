@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Prihlásiť sa";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Pokračovať s Facebookom";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Prihlásiť sa cez Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Momentálne sa nemôžete prihlásiť do aplikácií. Prihláste sa na stránke www.facebook.com a postupujte podľa pokynov.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Novinka! Máte to pod kontrolou: vyberte, ktoré informácie chcete zdieľať s aplikáciami.";
+"LoginTooltip.Message" = "Máte to pod kontrolou: vyberte, ktoré informácie chcete zdieľať s aplikáciami.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Prihlásenie sa";

@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Kirjaudu sisään";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Jatka Facebook-tunnuksilla";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Kirjaudu sisään Facebookin avulla";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Et pysty kirjautumaan sovelluksiin tällä hetkellä. Kirjaudu sisään osoitteeseen www.facebook.com ja noudata annettuja ohjeita.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Uutta! Sinä päätät – valitse, mitä haluat jakaa sovellusten kanssa.";
+"LoginTooltip.Message" = "Sinä voit valita, mitä tietoja jaat sovelluksille.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Kirjaudu sisään";

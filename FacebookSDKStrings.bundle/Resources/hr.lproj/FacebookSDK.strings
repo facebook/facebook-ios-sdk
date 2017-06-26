@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Prijavi se";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Nastavite s korištenjem Facebooka";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Prijava putem Facebooka";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "U ovome trenutku prijava u aplikacije nije moguća. Prijavite se na www.facebook.com i slijedite upute.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Novo! Vi odlučujete – odaberite koje informacije želite podijeliti u aplikacijama.";
+"LoginTooltip.Message" = "Vi odlučujete – odaberite koje podatke želite dijeliti u aplikacijama.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Prijava";

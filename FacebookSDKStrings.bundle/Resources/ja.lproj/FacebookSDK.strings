@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "ログイン";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebookで続ける";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebookでログイン";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "今はアプリにログインできません。www.facebook.comにログインし、表示される説明に従ってください。";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "新機能！アプリと共有する情報をコントロールできます。";
+"LoginTooltip.Message" = "アプリと共有する情報をコントロールできます。";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "ログイン";

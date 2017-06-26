@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "లాగిన్ చేయి";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebookతో కొనసాగించండి";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebookతో లాగిన్ చేయి";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "ప్రస్తుతం మీరు అప్లికేషన్‌లకు లాగిన్ చేయలేరు. దయచేసి www.facebook.comకి లాగిన్ చేసి, అందించిన సూచనలను అనుసరించండి.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "సరికొత్తది! మీకు నియంత్రణ ఉంది - మీరు అప్లికేషన్‌లతో ఏ సమాచారాన్ని భాగస్వామ్యం చేయాలనుకుంటున్నారో ఎంచుకోండి.";
+"LoginTooltip.Message" = "మీకు నియంత్రణ ఉంది - మీరు అనువర్తనాలతో భాగస్వామ్యం చేయాలనుకునే సమాచారాన్ని ఎంచుకోండి.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "లాగిన్ చేయండి";
