@@ -61,9 +61,9 @@
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (result) {
       self.place = [[Place alloc] initWithDictionary:result];
-      [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+      dispatch_async(dispatch_get_main_queue(), ^{
         [self refreshUI];
-      }];
+      });
     }
   }];
 }

@@ -117,18 +117,6 @@ for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -pri
 done
 
 # -----------------------------------------------------------------------------
-# Build AKFAccountKit framework
-#
-if [ -z $SKIPBUILD ]; then
-  (xcodebuild -project "${FB_SDK_ROOT}"/AccountKit/AccountKit.xcodeproj -scheme "AccountKit-Universal" -configuration Release clean build) || die "Failed to build account kit"
-fi
-check_binary_has_architectures "$FB_SDK_BUILD"/AccountKit.framework/AccountKit "$COMMON_ARCHS";
-\cp -R "$FB_SDK_BUILD"/AccountKit.framework "$FB_SDK_BUILD_PACKAGE" \
-  || die "Could not copy AccountKit.framework"
-\cp -R "$FB_SDK_BUILD"/AccountKitStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
-  || die "Could not copy AccountKitStrings.bundle"
-
-# -----------------------------------------------------------------------------
 # Build FBNotifications framework
 #
 
