@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		039F241D1F018FAA00489799 /* FBSDKSettingsInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 039F241B1F018FAA00489799 /* FBSDKSettingsInitializer.h */; };
+		039F241E1F018FAA00489799 /* FBSDKSettingsInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 039F241C1F018FAA00489799 /* FBSDKSettingsInitializer.m */; };
 		810192AE1D01305400B9E881 /* AppEvent.Builtin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A31D01305400B9E881 /* AppEvent.Builtin.swift */; };
 		810192AF1D01305400B9E881 /* AppEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A41D01305400B9E881 /* AppEvent.swift */; };
 		810192B01D01305400B9E881 /* AppEventName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A51D01305400B9E881 /* AppEventName.swift */; };
@@ -341,6 +343,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		039F241B1F018FAA00489799 /* FBSDKSettingsInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSettingsInitializer.h; sourceTree = "<group>"; };
+		039F241C1F018FAA00489799 /* FBSDKSettingsInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSettingsInitializer.m; sourceTree = "<group>"; };
 		810192A31D01305400B9E881 /* AppEvent.Builtin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEvent.Builtin.swift; sourceTree = "<group>"; };
 		810192A41D01305400B9E881 /* AppEvent.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEvent.swift; sourceTree = "<group>"; };
 		810192A51D01305400B9E881 /* AppEventName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEventName.swift; sourceTree = "<group>"; };
@@ -581,6 +585,8 @@
 			isa = PBXGroup;
 			children = (
 				811C5E741CFFD5DD00E4A925 /* Extensions */,
+				039F241B1F018FAA00489799 /* FBSDKSettingsInitializer.h */,
+				039F241C1F018FAA00489799 /* FBSDKSettingsInitializer.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";
@@ -934,6 +940,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				039F241D1F018FAA00489799 /* FBSDKSettingsInitializer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1298,6 +1305,7 @@
 				819E34C61D495A9A000D33E8 /* UserProfile.FetchResult.swift in Sources */,
 				81FC4CAB1D067490003F3A46 /* ReadPermission.swift in Sources */,
 				810192CA1D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift in Sources */,
+				039F241E1F018FAA00489799 /* FBSDKSettingsInitializer.m in Sources */,
 				816B75A71D07AEB70012AC43 /* GraphRequestDataAttachment.swift in Sources */,
 				810192CC1D013FC100B9E881 /* GraphRequestProtocol.swift in Sources */,
 				81FC4EF21D068564003F3A46 /* UserProfile.swift in Sources */,
