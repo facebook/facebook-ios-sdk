@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "로그인";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebook으로 계속";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebook으로 로그인";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "현재 앱에 로그인할 수 없습니다. www.facebook.com에 로그인한 뒤 안내를 따라주세요.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "새로운 기능! 이제 앱과 어떤 정보를 공유할지 자유롭게 선택할 수 있습니다.";
+"LoginTooltip.Message" = "원하는 정보를 선택하여 앱에 공유할 수 있습니다.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "로그인";

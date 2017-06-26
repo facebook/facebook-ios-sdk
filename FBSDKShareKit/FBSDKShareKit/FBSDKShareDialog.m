@@ -109,20 +109,25 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 
 - (BOOL)canShow
 {
-  switch (self.mode) {
-    case FBSDKShareDialogModeAutomatic:
-    case FBSDKShareDialogModeBrowser:
-    case FBSDKShareDialogModeFeedBrowser:
-    case FBSDKShareDialogModeFeedWeb:
-    case FBSDKShareDialogModeWeb:{
-      return YES;
+  if (!self.shareContent) {
+    switch (self.mode) {
+      case FBSDKShareDialogModeAutomatic:
+      case FBSDKShareDialogModeBrowser:
+      case FBSDKShareDialogModeFeedBrowser:
+      case FBSDKShareDialogModeFeedWeb:
+      case FBSDKShareDialogModeWeb:{
+        return YES;
+      }
+      case FBSDKShareDialogModeNative:{
+        return [self _canShowNative];
+      }
+      case FBSDKShareDialogModeShareSheet:{
+        return [self _canShowShareSheet];
+      }
     }
-    case FBSDKShareDialogModeNative:{
-      return [self _canShowNative];
-    }
-    case FBSDKShareDialogModeShareSheet:{
-      return [self _canShowShareSheet];
-    }
+  } else {
+    NSError *error = nil;
+    return [self _validateWithError:&error];
   }
 }
 

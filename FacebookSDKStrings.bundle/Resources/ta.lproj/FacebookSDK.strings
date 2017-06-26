@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "உள்நுழைவு";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebook இல் தொடரவும்";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebook மூலம் உள்நுழையவும்";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "இப்போது பயன்பாடுகளில் உள்நுழைய முடியாது. www.facebook.com இல் உள்நுழைந்து, வழங்கப்பட்டுள்ள வழிமுறைகளைப் பின்பற்றவும்.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "புதிது! உங்கள் கட்டுப்பாட்டில் இருப்பதால், பயன்பாடுகளுடன் பகிர வேண்டிய தகவலைத் தேர்வுசெய்யவும்.";
+"LoginTooltip.Message" = "பயன்பாடுகளில் எந்தத் தகவலைப் பகிர விரும்புகிறீர்கள் என்பதை நீங்கள் கட்டுப்படுத்தலாம்.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "உள்நுழைவு";

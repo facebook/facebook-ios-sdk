@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Mag-log in";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Magatuloy sa Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Mag-log in sa pamamagitan ng Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Hindi ka makakapag-log in sa mga app sa oras na ito. Mangyaring mag-log in sa www.facebook.com at sundin ang mga ibinigay na tagubilin.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Bago! Ikaw ang may kontrol - piliin kung anong impormasyon ang gusto mong ibahagi sa mga app.";
+"LoginTooltip.Message" = "Ikaw ang may kontrol - piliin kung anong impormasyon ang gusto mong ibahagi sa mga app.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Mag-log In";

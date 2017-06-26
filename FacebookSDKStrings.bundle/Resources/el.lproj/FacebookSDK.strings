@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Σύνδεση";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Συνεχίστε με το Facebook";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Σύνδεση μέσω Facebook";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Προς το παρόν δεν μπορείτε να συνδεθείτε σε εφαρμογές. Συνδεθείτε στο www.facebook.com και ακολουθήστε τις οδηγίες που εμφανίζονται.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Νέο! Έχετε τον έλεγχο - επιλέξτε ποιες πληροφορίες θέλετε να κοινοποιούνται στις εφαρμογές.";
+"LoginTooltip.Message" = "Έχετε τον έλεγχο - επιλέξτε ποιες πληροφορίες θέλετε να κοινοποιούνται στις εφαρμογές.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Σύνδεση";

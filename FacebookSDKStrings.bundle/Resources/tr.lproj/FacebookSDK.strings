@@ -44,6 +44,9 @@
 "LoginButton.LogIn" = "Giriş yap";
 
 /* The long label for the FBSDKLoginButton when the user is currently logged out */
+"LoginButton.LogInContinue" = "Facebook ile Devam Et";
+
+/* The long label for the FBSDKLoginButton when the user is currently logged out */
 "LoginButton.LogInLong" = "Facebook ile giriş yap";
 
 /* The label for the FBSDKLoginButton when the user is currently logged in */
@@ -68,7 +71,7 @@
 "LoginError.SystemAccount.UserCheckpointed" = "Şu an için uygulamalara giriş yapamazsın. Lütfen www.facebook.com adresine giriş yap ve verilen talimatları izle.";
 
 /* The message of the FBSDKLoginTooltipView */
-"LoginTooltip.Message" = "Yeni! Kontrol sende. Uygulamalarla paylaşmak istediğin bilgileri seç.";
+"LoginTooltip.Message" = "Kontrol sende. Uygulamalarla paylaşmak istediğin bilgileri seç.";
 
 /* Title of the web dialog that prompts the user to log in to Facebook. */
 "LoginWeb.LogInTitle" = "Giriş Yap";
