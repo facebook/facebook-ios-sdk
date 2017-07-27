@@ -91,12 +91,29 @@
   }
 }
 
-- (IBAction)yesButtonClicked:(id)sender {
+- (IBAction)yesButtonClicked:(id)sender
+{
+  [self showFeedbackAlertWithMessage:[NSString stringWithFormat:@"Thanks for confirming you're at %@!", self.place.title]];
   [self provideLocationFeedbackWasAtPlace:YES];
 }
 
-- (IBAction)noButtonClicked:(id)sender {
+- (IBAction)noButtonClicked:(id)sender
+{
+  [self showFeedbackAlertWithMessage:[NSString stringWithFormat:@"Thanks for letting us know you're not at %@!", self.place.title]];
   [self provideLocationFeedbackWasAtPlace:NO];
+}
+
+- (void)showFeedbackAlertWithMessage:(NSString *)message
+{
+  UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Feedback Submitted"
+                                                                 message:message
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+
+  UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                        handler:NULL];
+
+  [alert addAction:defaultAction];
+  [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)refreshUI

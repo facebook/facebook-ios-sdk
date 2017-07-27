@@ -179,6 +179,7 @@ FBSDK_EXTERN Class fbsdkdfl_ASIdentifierManagerClass(void);
 #pragma mark - SafariServices Classes
 
 FBSDK_EXTERN Class fbsdkdfl_SFSafariViewControllerClass(void);
+FBSDK_EXTERN Class fbsdkdfl_SFAuthenticationSessionClass(void);
 
 #pragma mark - Accounts Constants
 

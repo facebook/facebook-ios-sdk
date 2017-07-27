@@ -375,6 +375,12 @@ Class fbsdkdfl_SFSafariViewControllerClass(void)
   return c;
 }
 
+Class fbsdkdfl_SFAuthenticationSessionClass(void)
+{
+  _fbsdkdfl_SafariServices_get_c(SFAuthenticationSession);
+  return c;
+}
+
 #pragma mark - Accounts Constants
 
 _fbsdkdfl_load_framework_once_impl_(Accounts)
