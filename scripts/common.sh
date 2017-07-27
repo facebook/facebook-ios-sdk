@@ -41,6 +41,10 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   FB_SDK_BUILD=$FB_SDK_ROOT/build
   FB_SDK_BUILD_LOG=$FB_SDK_BUILD/build.log
 
+  # BUILD TARGET
+  PACAKAGE_FACEBOOK="FacebookSDK"
+  PACAKAGE_AN="AudienceNetwork"
+
   # Extract the SDK version from FacebookSDK.h
   FB_SDK_VERSION_RAW=$(sed -n 's/.*FBSDK_VERSION_STRING @\"\(.*\)\"/\1/p' "${FB_SDK_ROOT}"/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h)
   FB_SDK_VERSION_MAJOR=$(echo $FB_SDK_VERSION_RAW | awk -F'.' '{print $1}')
@@ -59,8 +63,8 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   MN_SDK_VERSION_MINOR=${MN_SDK_VERSION_MINOR:-0}
   MN_SDK_VERSION_SHORT=$(echo $MN_SDK_VERSION_RAW | sed 's/\.0$//')
 
-  # The path to AudienceNetwork scripts directory
-  FB_ADS_FRAMEWORK_SCRIPT=$FB_SDK_ROOT/ads/scripts
+  # The path to AudienceNetwork directory
+  FB_AD_SDK_SCRIPT=$FB_SDK_ROOT/ads/scripts
 fi
 
 # Set up one-time variables

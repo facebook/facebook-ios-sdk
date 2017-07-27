@@ -300,6 +300,7 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
     }
   } else if (error) {
     params[FBSDKLoginManagerLoggerParamErrorCodeKey] = @(error.code);
+    params[FBSDKLoginManagerLoggerParamErrorMessageKey] = error.localizedDescription;
   }
 
   [self logEvent:eventName params:params];

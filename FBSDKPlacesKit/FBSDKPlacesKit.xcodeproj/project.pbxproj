@@ -22,6 +22,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		0376AF5E1F202B5D0008A6AB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0376AF5D1F202B5D0008A6AB /* CoreLocation.framework */; };
+		0376AF651F202B630008A6AB /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0376AF641F202B630008A6AB /* CoreBluetooth.framework */; };
+		0376AF671F202B690008A6AB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0376AF661F202B690008A6AB /* SystemConfiguration.framework */; };
 		411C078D1E70BF660042959F /* FBSDKPlacesKitConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 411C078B1E70BF660042959F /* FBSDKPlacesKitConstants.m */; };
 		411C078E1E70BF660042959F /* FBSDKPlacesKitConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 411C078C1E70BF660042959F /* FBSDKPlacesKitConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		412C1CA71E81BDBD00BBA19E /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412C1CA61E81BDBD00BBA19E /* CoreBluetooth.framework */; };
@@ -129,6 +132,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0376AF5D1F202B5D0008A6AB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CoreLocation.framework; sourceTree = DEVELOPER_DIR; };
+		0376AF641F202B630008A6AB /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/CoreBluetooth.framework; sourceTree = DEVELOPER_DIR; };
+		0376AF661F202B690008A6AB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/SystemConfiguration.framework; sourceTree = DEVELOPER_DIR; };
 		411C078B1E70BF660042959F /* FBSDKPlacesKitConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKPlacesKitConstants.m; sourceTree = "<group>"; };
 		411C078C1E70BF660042959F /* FBSDKPlacesKitConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKPlacesKitConstants.h; sourceTree = "<group>"; };
 		412C1CA61E81BDBD00BBA19E /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.2.sdk/System/Library/Frameworks/CoreBluetooth.framework; sourceTree = DEVELOPER_DIR; };
@@ -186,6 +192,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0376AF671F202B690008A6AB /* SystemConfiguration.framework in Frameworks */,
+				0376AF651F202B630008A6AB /* CoreBluetooth.framework in Frameworks */,
+				0376AF5E1F202B5D0008A6AB /* CoreLocation.framework in Frameworks */,
 				81A07EAB1D1A2B560041A29C /* FBSDKCoreKit.framework in Frameworks */,
 				8199F1081D1A2B34007AA5AD /* UIKit.framework in Frameworks */,
 				8199F1061D1A2B30007AA5AD /* CoreGraphics.framework in Frameworks */,
@@ -299,6 +308,9 @@
 		893774AF1A3B815D00BE2807 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0376AF661F202B690008A6AB /* SystemConfiguration.framework */,
+				0376AF641F202B630008A6AB /* CoreBluetooth.framework */,
+				0376AF5D1F202B5D0008A6AB /* CoreLocation.framework */,
 				412C1CA91E81BDD200BBA19E /* CoreLocation.framework */,
 				412C1CA61E81BDBD00BBA19E /* CoreBluetooth.framework */,
 				4132FE5B1E60CD45006B7D46 /* Bolts.framework */,
