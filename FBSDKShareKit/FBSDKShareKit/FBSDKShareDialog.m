@@ -447,6 +447,8 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
     NSString *completionGesture = webResponseParameters[FBSDK_SHARE_RESULT_COMPLETION_GESTURE_KEY];
     if ([completionGesture isEqualToString:FBSDK_SHARE_RESULT_COMPLETION_GESTURE_VALUE_CANCEL]) {
       [self _invokeDelegateDidCancel];
+    } else if (completionGesture == nil){
+      [self _invokeDelegateDidCancel];
     } else {
       // not all web dialogs report cancellation, so assume that the share has completed with no additional information
       NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
@@ -605,7 +607,9 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
       [self _invokeDelegateDidCancel];
     } else if (response.error) {
       [self _invokeDelegateDidFailWithError:response.error];
-    } else {
+    } else if (completionGesture == nil){
+      [self _invokeDelegateDidCancel];
+    }else{
       NSMutableDictionary *results = [[NSMutableDictionary alloc] init];
       [FBSDKInternalUtility dictionary:results
                              setObject:responseParameters[FBSDK_SHARE_RESULT_POST_ID_KEY]
