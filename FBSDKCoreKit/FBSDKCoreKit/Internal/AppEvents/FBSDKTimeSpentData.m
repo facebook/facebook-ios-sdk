@@ -79,7 +79,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
  * do to other device activity, like a text message, so this class allows those interruptions to be smoothed
  * out and the time actually spent in the app excluding this interruption time to be accumulated.  Also,
  * once a certain amount of time has gone by where the app is not in the foreground, we consider the
- * session to be complete, and a new session beginning.  When this occurs, we log an 'activate app' event
+ * session to be complete, and a new session beginning.  When this occurs, we log a 'deactivate app' event
  * with the duration of the previous session as the 'value' of this event, along with the number of
  * interruptions from that previous session as an event parameter.
  */

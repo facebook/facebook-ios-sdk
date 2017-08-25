@@ -67,11 +67,25 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	AN_ZIP=$FB_AD_SDK_BUILD/$FB_AD_SDK_BINARY_NAME-$FB_AD_SDK_VERSION.zip
 	AN_BUILD_PACKAGE=$FB_AD_SDK_BUILD/package
 	AN_SAMPLES=$AN_BUILD_PACKAGE/Samples/FBAudienceNetwork
+	AN_STATIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkFramework.out
+	AN_DYNAMIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkDynamicFramework.out
 
 	if [ -z $SKIPBUILD ]; then
-	  (xcodebuild -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "BuildAll-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetwork"
-	  (xcodebuild -workspace "${FB_SDK_ROOT}"/ads/src/FBAudienceNetwork.xcworkspace -scheme "FBAudienceNetworkDynamicFramework-Universal" -configuration Release clean build) || die "Failed to build FBAudienceNetworkDynamicFramework"
+		buck build //ios-sdk/ads/src/FBAudienceNetwork:FBAudienceNetworkFramework --build-report "$AN_STATIC_REPORT" || die "Failed to build FBAudienceNetwork"
+		buck build //ios-sdk/ads/src/FBAudienceNetwork:FBAudienceNetworkDynamicFramework --build-report "$AN_DYNAMIC_REPORT" || die "Failed to build FBAudienceNetworkDynamicFramework"
+
+		AN_BUCK_STATIC_OUTPUT="${FB_SDK_ROOT}/../"$(cat "$AN_STATIC_REPORT" | grep -E -m 1 '"output"' | awk -F '"' '{ print $4 }')
+		AN_BUCK_DYNAMIC_OUTPUT="${FB_SDK_ROOT}/../"$(cat "$AN_DYNAMIC_REPORT" | grep -E -m 1 '"output"' | awk -F '"' '{ print $4 }')
+
+		rsync -avmc "$AN_BUCK_STATIC_OUTPUT" "$FB_AD_SDK_BUILD" \
+		  || die "Could not copy FBAudienceNetwork.framework"
+		rsync -avmc "$AN_BUCK_DYNAMIC_OUTPUT" "$FB_AD_SDK_BUILD" \
+		  || die "Could not copy FBAudienceNetworkDynamicFramework.framework"
+
+		rm "$AN_STATIC_REPORT"
+		rm "$AN_DYNAMIC_REPORT"
 	fi
+
 	rsync -avmc "$FB_AD_SDK_BUILD"/FBAudienceNetwork.framework "$AN_BUILD_PACKAGE" \
 	  || die "Could not copy FBAudienceNetwork.framework"
 	rsync -avmc "$FB_AD_SDK_BUILD"/FBAudienceNetworkDynamicFramework.framework "$AN_BUILD_PACKAGE" \
@@ -84,6 +98,9 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	  sed 's|"\\"\$(SRCROOT)/\.\./\.\./\.\./build\\"",||g;s|\.\./\.\./\.\./build||g;' \
 	    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 	done
+
+	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetwork.framework/FBAudienceNetwork "$COMMON_ARCHS";
+	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetworkDynamicFramework.framework/FBAudienceNetworkDynamicFramework "$COMMON_ARCHS";
 
 	# Fix up samples
 	for fname in $(find "$AN_SAMPLES" -name "project.pbxproj" -print); do \

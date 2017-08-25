@@ -314,6 +314,11 @@ setJSONStringForObject:(id)object
 + (BOOL)isRegisteredURLScheme:(NSString *)urlScheme;
 
 /**
+ returns the current key window
+ */
++ (UIWindow *)findWindow;
+
+/**
   returns currently displayed top view controller.
  */
 + (UIViewController *)topMostViewController;

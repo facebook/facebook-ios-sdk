@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4AF47D151F42509E00A57A67 /* FBSDKTVOSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */; };
+		4AF47D161F42509E00A57A67 /* FBSDKTVOSKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4AF47D191F4250AB00A57A67 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */; };
+		4AF47D1A1F4250AB00A57A67 /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		4AF47D1C1F4250BB00A57A67 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */; };
+		4AF47D1D1F4250BB00A57A67 /* FBSDKShareKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9D81FDB21C5048A900AF5F8D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D81FDB11C5048A900AF5F8D /* AppDelegate.swift */; };
 		9D81FDB41C5048A900AF5F8D /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D81FDB31C5048A900AF5F8D /* FirstViewController.swift */; };
 		9D81FDB61C5048A900AF5F8D /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D81FDB51C5048A900AF5F8D /* SecondViewController.swift */; };
@@ -19,7 +25,26 @@
 		9DF0AAF21C51588500107B85 /* main.tvml in Resources */ = {isa = PBXBuildFile; fileRef = 9DF0AAF11C51588500107B85 /* main.tvml */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4AF47D171F42509E00A57A67 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				4AF47D161F42509E00A57A67 /* FBSDKTVOSKit.framework in Embed Frameworks */,
+				4AF47D1A1F4250AB00A57A67 /* FBSDKCoreKit.framework in Embed Frameworks */,
+				4AF47D1D1F4250BB00A57A67 /* FBSDKShareKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKTVOSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D81FDAE1C5048A900AF5F8D /* HelloTV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelloTV.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9D81FDB11C5048A900AF5F8D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9D81FDB31C5048A900AF5F8D /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -47,6 +72,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AF47D191F4250AB00A57A67 /* FBSDKCoreKit.framework in Frameworks */,
+				4AF47D151F42509E00A57A67 /* FBSDKTVOSKit.framework in Frameworks */,
+				4AF47D1C1F4250BB00A57A67 /* FBSDKShareKit.framework in Frameworks */,
 				9D81FDD61C50502400AF5F8D /* FBSDKTVOSKit.framework in Frameworks */,
 				9D81FDD51C50502400AF5F8D /* FBSDKCoreKit.framework in Frameworks */,
 				9D81FDD71C50502400AF5F8D /* FBSDKShareKit.framework in Frameworks */,
@@ -59,6 +87,9 @@
 		9D81FDA51C5048A900AF5F8D = {
 			isa = PBXGroup;
 			children = (
+				4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */,
+				4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */,
+				4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */,
 				9D81FDC21C5049BC00AF5F8D /* Configurations */,
 				9D81FDD81C50502800AF5F8D /* Frameworks */,
 				9D81FDB01C5048A900AF5F8D /* HelloTV */,
@@ -135,6 +166,7 @@
 				9D81FDAA1C5048A900AF5F8D /* Sources */,
 				9D81FDAB1C5048A900AF5F8D /* Frameworks */,
 				9D81FDAC1C5048A900AF5F8D /* Resources */,
+				4AF47D171F42509E00A57A67 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -157,6 +189,7 @@
 				TargetAttributes = {
 					9D81FDAD1C5048A900AF5F8D = {
 						CreatedOnToolsVersion = 7.2;
+						DevelopmentTeam = V9WTTPBFK9;
 						LastSwiftMigration = 0800;
 					};
 				};
@@ -305,6 +338,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D81FDD11C504A0000AF5F8D /* Application-TVOS.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -313,6 +348,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D81FDD11C504A0000AF5F8D /* Application-TVOS.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Release;

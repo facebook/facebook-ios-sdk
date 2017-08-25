@@ -19,11 +19,13 @@
 #import "FBSDKDeviceDialogView.h"
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKDeviceUtilities.h"
 
 @implementation FBSDKDeviceDialogView
 {
   UIActivityIndicatorView *_spinner;
   UILabel *_confirmationCodeLabel;
+  UIImageView *_qrImageView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -43,11 +45,14 @@
     if (confirmationCode == nil) {
       _confirmationCodeLabel.text = @"";
       _confirmationCodeLabel.hidden = YES;
+      _qrImageView.hidden = YES;
       [_spinner startAnimating];
     } else {
       [_spinner stopAnimating];
       _confirmationCodeLabel.text = confirmationCode;
       _confirmationCodeLabel.hidden = NO;
+      _qrImageView.hidden = NO;
+      [_qrImageView setImage:[FBSDKDeviceUtilities buildQRCodeWithAuthorizationCode:confirmationCode]];
     }
   }
 }
@@ -69,6 +74,8 @@
   const CGFloat kConfirmationCodeFontSize = 108;
   const CGFloat kFontColorValue = 119.0/255.0;
   const CGFloat kInstructionFontSize = 36;
+  const CGFloat kQRCodeMargin = 50;
+  const CGFloat kQRCodeSize = 200;
 
   // build the container view.
   UIView *dialogView = [[UIView alloc] init];
@@ -127,6 +134,20 @@
   [NSLayoutConstraint constraintWithItem:_confirmationCodeLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:dialogHeaderView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0].active = YES;
   _confirmationCodeLabel.hidden = YES;
 
+  // Build the QR code view
+  _qrImageView = [[UIImageView alloc] initWithImage:[FBSDKDeviceUtilities buildQRCodeWithAuthorizationCode:NULL]];
+  _qrImageView.translatesAutoresizingMaskIntoConstraints = NO;
+  [dialogView addSubview:_qrImageView];
+
+  [_qrImageView.topAnchor constraintEqualToAnchor:dialogHeaderView.bottomAnchor
+                                         constant:kQRCodeMargin].active = YES;
+  [_qrImageView.bottomAnchor constraintEqualToAnchor:_qrImageView.topAnchor
+                                            constant:kQRCodeSize].active = YES;
+  [_qrImageView.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor
+                                             constant:kQRCodeMargin].active = YES;
+  [_qrImageView.trailingAnchor constraintEqualToAnchor:_qrImageView.leadingAnchor
+                                            constant:kQRCodeSize].active = YES;
+
   // build the instructions UILabel
   UILabel *instructionLabel = [[UILabel alloc] init];
   instructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
@@ -152,8 +173,10 @@
   [dialogView addSubview:instructionLabel];
   [instructionLabel.topAnchor constraintEqualToAnchor:dialogHeaderView.bottomAnchor
                                              constant:kVerticalSpaceBetweenHeaderViewAndInstructionLabel].active = YES;
-  [instructionLabel.leadingAnchor constraintEqualToAnchor:dialogView.leadingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
-  [dialogView.trailingAnchor constraintEqualToAnchor:instructionLabel.trailingAnchor constant:kInstructionTextHorizontalMargin].active = YES;
+  [instructionLabel.leadingAnchor constraintEqualToAnchor:_qrImageView.trailingAnchor
+                                                 constant:kQRCodeMargin].active = YES;
+  [dialogView.trailingAnchor constraintEqualToAnchor:instructionLabel.trailingAnchor
+                                            constant:kInstructionTextHorizontalMargin].active = YES;
 
   // build the container view for the cancel button.
   UIView *buttonContainerView = [[UIView alloc] init];
