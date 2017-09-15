@@ -338,6 +338,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   if ([sender isAuthenticationURL:url]) {
     Class SFAuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
     if (SFAuthenticationSessionClass != nil) {
+      _expectingBackground = YES;
       _authenticationSession = [[SFAuthenticationSessionClass alloc] initWithURL:url callbackURLScheme:[FBSDKInternalUtility appURLScheme] completionHandler:^ (NSURL *aURL, NSError *error) {
         handler(error == nil, error);
         if (error == nil) {
