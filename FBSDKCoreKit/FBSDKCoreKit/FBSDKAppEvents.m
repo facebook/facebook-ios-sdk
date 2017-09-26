@@ -177,6 +177,7 @@ NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph       = @"OpenGrap
 NSString *const FBSDKAppEventsDialogShareContentTypeStatus          = @"Status";
 NSString *const FBSDKAppEventsDialogShareContentTypePhoto           = @"Photo";
 NSString *const FBSDKAppEventsDialogShareContentTypeVideo           = @"Video";
+NSString *const FBSDKAppEventsDialogShareContentTypeCamera          = @"Camera";
 NSString *const FBSDKAppEventsDialogShareContentTypeUnknown         = @"Unknown";
 
 NSString *const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";

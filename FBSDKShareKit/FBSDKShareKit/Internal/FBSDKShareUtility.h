@@ -28,6 +28,7 @@
 #if !TARGET_OS_TV
 #import <FBSDKShareKit/FBSDKAppInviteContent.h>
 #import <FBSDKShareKit/FBSDKGameRequestContent.h>
+#import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
 #endif
 
 @interface FBSDKShareUtility : NSObject
@@ -69,6 +70,8 @@
 
 #if !TARGET_OS_TV
 + (BOOL)validateAppInviteContent:(FBSDKAppInviteContent *)appInviteContent error:(NSError *__autoreleasing *)errorRef;
++ (BOOL)validateShareCameraEffectContent:(FBSDKShareCameraEffectContent *)ShareCameraEffectContent
+                                   error:(NSError *__autoreleasing *)errorRef;
 + (BOOL)validateGameRequestContent:(FBSDKGameRequestContent *)gameRequestContent error:(NSError *__autoreleasing *)errorRef;
 #endif
 @end

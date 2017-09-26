@@ -493,11 +493,7 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
   });
-  NSURLComponents *components = [[NSURLComponents alloc] init];
-  components.scheme = FBSDK_CANOPENURL_FACEBOOK;
-  components.path = @"/";
-  return [[UIApplication sharedApplication]
-          canOpenURL:components.URL];
+  return [self _canOpenURLScheme:FBSDK_CANOPENURL_FACEBOOK];
 }
 
 + (BOOL)isMessengerAppInstalled
@@ -506,12 +502,16 @@ static NSMapTable *_transientObjects;
   dispatch_once(&onceToken, ^{
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
   });
-  NSURLComponents *components = [[NSURLComponents alloc] init];
-  components.scheme = FBSDK_CANOPENURL_MESSENGER;
-  components.path = @"/";
-  return [[UIApplication sharedApplication]
-          canOpenURL:components.URL];
+  return [self _canOpenURLScheme:FBSDK_CANOPENURL_MESSENGER];
+}
 
++ (BOOL)isMSQRDPlayerAppInstalled
+{
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
+  });
+  return [self _canOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
 }
 
 #pragma mark - Object Lifecycle
@@ -581,6 +581,14 @@ static NSMapTable *_transientObjects;
     *stopRef = stop;
   }
   return object;
+}
+
++ (BOOL)_canOpenURLScheme:(NSString *)scheme
+{
+  NSURLComponents *components = [[NSURLComponents alloc] init];
+  components.scheme = scheme;
+  components.path = @"/";
+  return [[UIApplication sharedApplication] canOpenURL:components.URL];
 }
 
 + (void)validateAppID

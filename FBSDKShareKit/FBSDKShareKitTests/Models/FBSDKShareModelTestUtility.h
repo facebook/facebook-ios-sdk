@@ -18,7 +18,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
 #import <FBSDKShareKit/FBSDKHashtag.h>
+#import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareMediaContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
@@ -87,5 +89,8 @@ extern NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSArray *)media;
 + (FBSDKShareMediaContent *)mediaContent;
 + (FBSDKShareMediaContent *)multiVideoMediaContent;
++ (NSString *)cameraEffectID;
++ (FBSDKCameraEffectArguments *)cameraEffectArguments;
++ (FBSDKShareCameraEffectContent *)cameraEffectContent;
 
 @end

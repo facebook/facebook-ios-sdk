@@ -18,6 +18,7 @@
 
 #import "FBSDKSystemAccountStoreAdapter.h"
 
+#import "FBSDKAccessToken.h"
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"

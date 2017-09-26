@@ -2,12 +2,13 @@ AccountKit/**/AccountKitServerSnapshotTests.xcworkspace/*
 AccountKit/**/AccountKitServerSnapshotTests.xcodeproj/*
 ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
 ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
-ads/samples/InstreamAdSample/InstreamAdSample.xcodeproj/*
-ads/samples/InstreamAdSample/InstreamAdSample.xcworkspace/*
 ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
 ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
+ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
 ads/src/FBAudienceNetwork.xcworkspace/*
+ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*
+ads/src/FBAudienceNetwork/FBAudienceNetwork.xcworkspace/*
 internal/testing/IpaSizeTestApp/**/*.xcworkspace/*
 internal/testing/IpaSizeTestApp/**/*.xcodeproj/*
 samples/Hackbook/build/

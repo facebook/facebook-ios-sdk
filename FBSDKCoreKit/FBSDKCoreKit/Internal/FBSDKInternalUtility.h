@@ -22,6 +22,7 @@
 #define FBSDK_CANOPENURL_FACEBOOK @"fbauth2"
 #define FBSDK_CANOPENURL_FBAPI @"fbapi"
 #define FBSDK_CANOPENURL_MESSENGER @"fb-messenger-api"
+#define FBSDK_CANOPENURL_MSQRD_PLAYER @"msqrdplayer"
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
 typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
@@ -347,6 +348,7 @@ setJSONStringForObject:(id)object
 
 + (BOOL)isFacebookAppInstalled;
 + (BOOL)isMessengerAppInstalled;
++ (BOOL)isMSQRDPlayerAppInstalled;
 + (void)checkRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 + (BOOL)isRegisteredCanOpenURLScheme:(NSString *)urlScheme;
 

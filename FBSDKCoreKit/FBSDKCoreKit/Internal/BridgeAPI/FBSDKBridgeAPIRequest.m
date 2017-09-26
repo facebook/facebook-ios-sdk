@@ -60,7 +60,8 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
     _protocolMap = @{
                      @(FBSDKBridgeAPIProtocolTypeNative): @{
                          FBSDK_CANOPENURL_FACEBOOK:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fbapi20130214"],
-                         FBSDK_CANOPENURL_MESSENGER:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-api20140430"]
+                         FBSDK_CANOPENURL_MESSENGER:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"fb-messenger-api20140430"],
+                         FBSDK_CANOPENURL_MSQRD_PLAYER:[[FBSDKBridgeAPIProtocolNativeV1 alloc] initWithAppScheme:@"msqrdplayer-api20170208"]
                          },
                      @(FBSDKBridgeAPIProtocolTypeWeb): @{
                          @"https": [[FBSDKBridgeAPIProtocolWebV1 alloc] init],

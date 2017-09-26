@@ -16,22 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <UIKit/UIKit.h>
 
-@protocol FBSDKAccessTokenCaching;
+#import <FBSDKCoreKit/FBSDKCopying.h>
 
-@interface FBSDKSettings(Internal)
+/**
+ * A container of textures for a camera effect.
+ * A texture for a camera effect is an UIImages identified by a NSString key.
+ */
+@interface FBSDKCameraEffectTextures : NSObject <FBSDKCopying, NSSecureCoding>
 
-+ (NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
+/**
+ Sets the image for a texture key.
+ - Parameter image: The UIImage for the texture
+ - Parameter name: The key for the texture
+ */
+- (void)setImage:(UIImage *)image forKey:(NSString *)key;
 
-+ (void)setAccessTokenCache:(NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
-
-+ (NSString *)graphAPIDebugParamValue;
-
-+ (BOOL)isGraphErrorRecoveryDisabled;
-
-// used by Unity.
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
+/**
+ Gets the image for a texture key.
+ - Parameter name: The key for the texture
+ - Returns: The texture UIImage or nil
+ */
+- (UIImage *)imageForKey:(NSString *)key;
 
 @end

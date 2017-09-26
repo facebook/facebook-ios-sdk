@@ -16,22 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <Foundation/Foundation.h>
 
-@protocol FBSDKAccessTokenCaching;
+#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
+#import <FBSDKShareKit/FBSDKCameraEffectTextures.h>
+#import <FBSDKShareKit/FBSDKSharingContent.h>
 
-@interface FBSDKSettings(Internal)
+/**
+ A model for content to share with a Facebook camera effect.
+ */
+@interface FBSDKShareCameraEffectContent : NSObject <FBSDKSharingContent>
 
-+ (NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
+/**
+ ID of the camera effect to use.
+ */
+@property (nonatomic, copy) NSString *effectID;
 
-+ (void)setAccessTokenCache:(NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
+/**
+ Arguments for the effect.
+ */
+@property (nonatomic, copy) FBSDKCameraEffectArguments *effectArguments;
 
-+ (NSString *)graphAPIDebugParamValue;
+/**
+ Textures for the effect.
+ */
+@property (nonatomic, copy) FBSDKCameraEffectTextures *effectTextures;
 
-+ (BOOL)isGraphErrorRecoveryDisabled;
-
-// used by Unity.
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
+/**
+ Compares the receiver to another camera effect content.
+ - Parameter content: The other content
+ - Returns: YES if the receiver's values are equal to the other content's values; otherwise NO
+ */
+- (BOOL)isEqualToShareCameraEffectContent:(FBSDKShareCameraEffectContent *)content;
 
 @end

@@ -23,11 +23,11 @@
 #import <OCMock/OCMock.h>
 
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import <FBSDKShareKit/FBSDKHashtag.h>
 #import <FBSDKShareKit/FBSDKShareDialog.h>
 
 #import "FBSDKCoreKit+Internal.h"
+#import "FBSDKShareDefines.h"
 #import "FBSDKShareKitTestUtility.h"
 #import "FBSDKShareModelTestUtility.h"
 
@@ -301,6 +301,81 @@ expectedPreJSONtext:@"fb-app-id:appID #hashtag"
        expectedJSON:expectedJSON];
 }
 
+#pragma mark - Camera Share
+
+- (void)testCameraShareModes
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+
+  // When native is available.
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    [self _mockUseNativeDialogUsingBlock:^{
+      // Check supported modes
+      NSError *error;
+      dialog.mode = FBSDKShareDialogModeAutomatic;
+      XCTAssertTrue([dialog validateWithError:&error]);
+      XCTAssertNil(error);
+      dialog.mode = FBSDKShareDialogModeNative;
+      XCTAssertTrue([dialog validateWithError:&error]);
+      XCTAssertNil(error);
+
+      // Check unsupported modes
+      dialog.mode = FBSDKShareDialogModeWeb;
+      error = nil;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+      dialog.mode = FBSDKShareDialogModeBrowser;
+      error = nil;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+      error = nil;
+      dialog.mode = FBSDKShareDialogModeShareSheet;
+      error = nil;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+      dialog.mode = FBSDKShareDialogModeFeedWeb;
+      error = nil;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+      dialog.mode = FBSDKShareDialogModeFeedBrowser;
+      error = nil;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+    }];
+  }];
+
+  // When native isn't available.
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
+    [self _mockUseNativeDialogUsingBlock:^{
+      NSError *error;
+      dialog.mode = FBSDKShareDialogModeAutomatic;
+      XCTAssertFalse([dialog validateWithError:&error]);
+      XCTAssertNotNil(error);
+    }];
+  }];
+}
+
+- (void)testShowCameraShareToPlayerWhenPlayerInstalled
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+  [self _showNativeDialog:dialog
+       nonSupportedScheme:nil
+      expectRequestScheme:FBSDK_CANOPENURL_MSQRD_PLAYER
+               methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
+}
+
+- (void)testShowCameraShareToFBWhenPlayerNotInstalled
+{
+  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+  [self _showNativeDialog:dialog
+       nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDK_CANOPENURL_MSQRD_PLAYER]
+      expectRequestScheme:FBSDK_CANOPENURL_FACEBOOK
+               methodName:FBSDK_SHARE_CAMERA_METHOD_NAME];
+}
+
 #pragma mark - FullyCompatible Validation
 
 - (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsNOTAvailable
@@ -445,6 +520,42 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
   [mockInternalUtility stopMocking];
 }
 
+- (void)_showNativeDialog:(FBSDKShareDialog *)dialog
+       nonSupportedScheme:(NSString *)nonSupportedScheme
+      expectRequestScheme:(NSString *)scheme
+               methodName:(NSString *)methodName
+{
+  id mockApplication = [OCMockObject niceMockForClass:[UIApplication class]];
+  [[[mockApplication stub] andReturn:mockApplication] sharedApplication];
+  [[[mockApplication stub] andReturnValue:@YES] canOpenURL:[OCMArg checkWithBlock:^BOOL(NSURL *url) {
+    return ![url.absoluteString isEqualToString:nonSupportedScheme];
+  }]];
+  id settingsClassMock = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  [[[settingsClassMock stub] andReturn:@"AppID"] appID];
+  id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[mockInternalUtility stub] validateURLSchemes];
+
+  id mockSDKApplicationDelegate = [OCMockObject niceMockForClass:[FBSDKApplicationDelegate class]];
+  [[[mockSDKApplicationDelegate stub] andReturn:mockSDKApplicationDelegate] sharedInstance];
+  // Check API bridge request
+  [[mockSDKApplicationDelegate expect] openBridgeAPIRequest:[OCMArg checkWithBlock:^BOOL(FBSDKBridgeAPIRequest *request) {
+    XCTAssertEqualObjects(request.scheme, scheme);
+    XCTAssertEqualObjects(request.methodName, methodName);
+    return YES;
+  }]
+                                    useSafariViewController:OCMOCK_ANY
+                                         fromViewController:OCMOCK_ANY
+                                            completionBlock:OCMOCK_ANY];
+
+  UIViewController *vc = [UIViewController new];
+  dialog.fromViewController = vc;
+  XCTAssert([dialog show]);
+
+  [mockSDKApplicationDelegate stopMocking];
+  [mockInternalUtility stopMocking];
+  [settingsClassMock stopMocking];
+  [mockApplication stopMocking];
+}
 - (void)_performBlockWithAccessToken:(dispatch_block_t)block
 {
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"FBSDKShareDialogTests" permissions:nil declinedPermissions:nil appID:nil userID:nil expirationDate:nil refreshDate:nil];

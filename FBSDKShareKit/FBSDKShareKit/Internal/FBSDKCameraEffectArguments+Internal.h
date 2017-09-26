@@ -16,22 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <FBSDKShareKit/FBSDKCameraEffectArguments.h>
 
-@protocol FBSDKAccessTokenCaching;
+@interface FBSDKCameraEffectArguments ()
 
-@interface FBSDKSettings(Internal)
-
-+ (NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
-
-+ (void)setAccessTokenCache:(NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
-
-+ (NSString *)graphAPIDebugParamValue;
-
-+ (BOOL)isGraphErrorRecoveryDisabled;
-
-// used by Unity.
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
+- (NSDictionary *)allArguments;
 
 @end

@@ -120,6 +120,13 @@
       return NO;
     }
   }
+  if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKShareError requiredArgumentErrorWithName:@"shareContent"
+                                                         message:@"Message dialog does not support camera content."];
+    }
+    return NO;
+  }
   return [FBSDKShareUtility validateShareContent:self.shareContent error:errorRef];
 }
 

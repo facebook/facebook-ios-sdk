@@ -16,22 +16,42 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
+#import <Foundation/Foundation.h>
 
-@protocol FBSDKAccessTokenCaching;
+#import <FBSDKCoreKit/FBSDKCopying.h>
 
-@interface FBSDKSettings(Internal)
+/**
+ * A container of arguments for a camera effect.
+ * An argument is a NSString identified by a NSString key.
+ */
+@interface FBSDKCameraEffectArguments : NSObject <FBSDKCopying, NSSecureCoding>
 
-+ (NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
+/**
+ Sets a string argument in the container.
+ - Parameter string: The argument
+ - Parameter key: The key for the argument
+ */
+- (void)setString:(NSString *)string forKey:(NSString *)key;
 
-+ (void)setAccessTokenCache:(NSObject<FBSDKAccessTokenCaching> *)accessTokenCache;
+/**
+ Gets a string argument from the container.
+ - Parameter key: The key for the argument
+ - Returns: The string value or nil
+ */
+- (NSString *)stringForKey:(NSString *)key;
 
-+ (NSString *)graphAPIDebugParamValue;
+/**
+ Sets a string array argument in the container.
+ - Parameter array: The array argument
+ - Parameter key: The key for the argument
+ */
+- (void)setArray:(NSArray<NSString *> *)array forKey:(NSString *)key;
 
-+ (BOOL)isGraphErrorRecoveryDisabled;
-
-// used by Unity.
-+ (NSString *)userAgentSuffix;
-+ (void)setUserAgentSuffix:(NSString *)suffix;
+/**
+ Gets an array argument from the container.
+ - Parameter key: The key for the argument
+ - Returns: The array argument
+ */
+- (NSArray *)arrayForKey:(NSString *)key;
 
 @end
