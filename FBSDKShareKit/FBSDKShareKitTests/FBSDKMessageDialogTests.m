@@ -98,6 +98,11 @@
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
+
+  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
+  error = nil;
+  XCTAssertFalse([dialog validateWithError:&error]);
+  XCTAssertNotNil(error);
 }
 
 @end

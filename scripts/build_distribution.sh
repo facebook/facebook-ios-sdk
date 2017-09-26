@@ -30,8 +30,22 @@ check_binary_has_architectures() {
 
 	if [ "$SORTED_ARCHS" != "$VALID_ARCHS" ] ; then
 		echo "ERROR: Invalid Architectures for $1. Expected $VALID_ARCHS   Received: $SORTED_ARCHS";
-    exit 1
+    	exit 1
 	fi
+}
+
+check_binary_has_bitcode() {
+	# static lib only
+	local BINARY=$1
+	local BITCODE_SCRIPT="${FB_AD_SDK_ROOT}"/scripts/bitcodesize.rb
+
+	local ISSUES=$("$BITCODE_SCRIPT" "$BINARY")
+
+	if [ ! -z "$ISSUES" ] ; then
+		echo "$ISSUES"
+		echo "ERROR: Bitcode not found or weirdly small for $1. Check logs above.";
+    	exit 1
+    fi
 }
 
 # valid arguments -s -p [AudienceNetwork|FacebookSDK]
@@ -102,10 +116,16 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetwork.framework/FBAudienceNetwork "$COMMON_ARCHS";
 	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetworkDynamicFramework.framework/FBAudienceNetworkDynamicFramework "$COMMON_ARCHS";
 
+	check_binary_has_bitcode "$FB_AD_SDK_BUILD"/FBAudienceNetwork.framework/FBAudienceNetwork
+
 	# Fix up samples
 	for fname in $(find "$AN_SAMPLES" -name "project.pbxproj" -print); do \
 	  sed "s|../../build|../../../|g;" \
 	    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+	done
+	for fname in $(find "$AN_SAMPLES" -name "*-PUBLIC.xcodeproj" -print); do \
+	  newfname="$(echo ${fname} | sed -e 's/-PUBLIC//')" ; \
+	    mv "${fname}" "${newfname}" ; \
 	done
 
 	LANG=C

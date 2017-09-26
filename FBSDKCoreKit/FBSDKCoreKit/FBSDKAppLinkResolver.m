@@ -25,6 +25,7 @@
 #import <Bolts/BFTask.h>
 #import <Bolts/BFTaskCompletionSource.h>
 
+#import "FBSDKAccessToken.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequestConnection.h"
 #import "FBSDKInternalUtility.h"

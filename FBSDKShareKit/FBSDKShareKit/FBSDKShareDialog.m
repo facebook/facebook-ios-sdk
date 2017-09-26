@@ -36,6 +36,7 @@
 #import "FBSDKShareVideoContent.h"
 
 #define FBSDK_SHARE_FEED_METHOD_NAME @"feed"
+#define FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION @"20170417"
 #define FBSDK_SHARE_METHOD_MIN_VERSION @"20130410"
 #define FBSDK_SHARE_METHOD_OG_MIN_VERSION @"20130214"
 #define FBSDK_SHARE_METHOD_OG_IMAGE_MIN_VERSION @"20130410"
@@ -232,6 +233,9 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 
 -(BOOL)_isDefaultToShareSheet
 {
+  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    return NO;
+  }
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
 }
@@ -261,6 +265,16 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
           (!useNativeDialog && [self _showNativeWithCanShowError:NULL validationError:errorRef]));
 }
 
+- (NSString *)_nativeScheme {
+  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    if ([FBSDKInternalUtility isMSQRDPlayerAppInstalled]) {
+      // If installed, launch MSQRD Player for testing effects.
+      return FBSDK_CANOPENURL_MSQRD_PLAYER;
+    }
+  }
+  return FBSDK_CANOPENURL_FACEBOOK;
+}
+
 - (void)_loadNativeMethodName:(NSString **)methodNameRef methodVersion:(NSString **)methodVersionRef
 {
   if (methodNameRef != NULL) {
@@ -288,6 +302,9 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
     } else {
       methodVersion = FBSDK_SHARE_METHOD_OG_MIN_VERSION;
     }
+  } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    methodName = FBSDK_SHARE_CAMERA_METHOD_NAME;
+    methodVersion = FBSDK_SHARE_METHOD_CAMERA_MIN_VERSION;
   } else {
     methodName = FBSDK_SHARE_METHOD_NAME;
     if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]]) {
@@ -317,8 +334,10 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
   if (!composeViewControllerClass) {
     return NO;
   }
+  // iOS 11 returns NO for `isAvailableForServiceType` but it will still work
   NSString *facebookServiceType = fbsdkdfl_SLServiceTypeFacebook();
-  if (![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
+  NSOperatingSystemVersion iOS11Version = { .majorVersion = 11, .minorVersion = 0, .patchVersion = 0 };
+  if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS11Version] && ![composeViewControllerClass isAvailableForServiceType:facebookServiceType]) {
     return NO;
   }
   return YES;
@@ -587,7 +606,7 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
                                                     shouldFailOnDataError:self.shouldFailOnDataError];
   FBSDKBridgeAPIRequest *request;
   request = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                             scheme:FBSDK_CANOPENURL_FACEBOOK
+                                                             scheme:[self _nativeScheme]
                                                          methodName:methodName
                                                       methodVersion:methodVersion
                                                          parameters:parameters
@@ -714,12 +733,18 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 
 - (BOOL)_useNativeDialog
 {
+  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    return YES;
+  }
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   return [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameShare];
 }
 
 - (BOOL)_useSafariViewController
 {
+  if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    return NO;
+  }
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   return [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameShare];
 }
@@ -808,6 +833,14 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 - (BOOL)_validateShareContentForBrowser:(NSError **)errorRef
 {
   id<FBSDKSharingContent> shareContent = self.shareContent;
+  if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    if ((errorRef != NULL) && !*errorRef) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
+                                                          value:shareContent
+                                                        message:@"Camera Content must be shared in `Native` mode."];
+    }
+    return NO;
+  }
   BOOL containsMedia;
   BOOL containsPhotos;
   [FBSDKShareUtility testShareContent:shareContent containsMedia:&containsMedia containsPhotos:&containsPhotos containsVideos:NULL];
@@ -850,6 +883,13 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
       *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
                                                           value:shareContent
                                                         message:@"Feed share dialogs support FBSDKShareLinkContent."];
+    }
+    return NO;
+  } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    if ((errorRef != NULL) && !*errorRef) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
+                                                          value:shareContent
+                                                        message:@"Camera Content must be shared in `Native` mode."];
     }
     return NO;
   }
@@ -914,6 +954,13 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
       NSString *message = @"Share content must be FBSDKShareLinkContent or FBSDKShareMediaContent in order to share "
       @"with the share sheet.";
       *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent" value:shareContent message:message];
+    }
+    return NO;
+  } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    if ((errorRef != NULL) && !*errorRef) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent"
+                                                          value:shareContent
+                                                        message:@"Camera Content must be shared in `Native` mode."];
     }
     return NO;
   }
@@ -1003,6 +1050,8 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
     contentType = FBSDKAppEventsDialogShareContentTypePhoto;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeVideo;
+  } else if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
+    contentType = FBSDKAppEventsDialogShareContentTypeCamera;
   } else {
     contentType = FBSDKAppEventsDialogShareContentTypeUnknown;
   }

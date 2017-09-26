@@ -120,6 +120,7 @@ FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeStatus;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypePhoto;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeVideo;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeCamera;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeUnknown;
 
 

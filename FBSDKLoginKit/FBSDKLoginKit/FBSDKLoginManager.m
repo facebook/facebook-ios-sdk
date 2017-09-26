@@ -596,7 +596,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   BOOL isFacebookURL = [[url scheme] hasPrefix:[NSString stringWithFormat:@"fb%@", [FBSDKSettings appID]]] &&
   [[url host] isEqualToString:@"authorize"];
 
-  BOOL isExpectedSourceApplication = [sourceApplication hasPrefix:@"com.facebook"] || [sourceApplication hasPrefix:@"com.apple"];
+  BOOL isExpectedSourceApplication = [sourceApplication hasPrefix:@"com.facebook"] || [sourceApplication hasPrefix:@"com.apple"] || [sourceApplication hasPrefix:@"com.burbn"];
 
   return isFacebookURL && isExpectedSourceApplication;
 }
