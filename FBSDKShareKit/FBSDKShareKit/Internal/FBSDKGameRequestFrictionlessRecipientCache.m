@@ -83,6 +83,7 @@
 {
   if (![FBSDKAccessToken currentAccessToken]) {
     _recipientIDs = nil;
+    return; // Don't attempt to retrieve the recipients without an access token
   }
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/apprequestformerrecipients"
                                                                  parameters:@{@"fields":@""}
