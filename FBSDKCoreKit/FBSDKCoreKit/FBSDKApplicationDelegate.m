@@ -242,8 +242,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   // within the app delegate's lifecycle like openURL, in which case there
   // might have been a "didBecomeActive" event pending that we want to ignore.
   BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController;
-#ifdef __IPHONE_11_0
+#if !TARGET_OS_TV
+ #ifdef __IPHONE_11_0
   notExpectingBackground = notExpectingBackground && !_authenticationSession;
+ #endif
 #endif
   if (notExpectingBackground) {
     _active = YES;
