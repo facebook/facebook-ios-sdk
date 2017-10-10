@@ -200,7 +200,8 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   if (networkInfo) {
     NSString *ssid = networkInfo[@"SSID"];
     NSString *bssid = networkInfo[@"BSSID"];
-    if (ssid && bssid) {
+    if ((ssid && bssid) &&
+        !([ssid containsString:@"_nomap"] || [ssid containsString:@"_optout"])) {
       parameters[@"wifi"] = [self _jsonStringForObject:@{@"enabled" : @YES,
                                                          @"current_connection" : @{@"ssid" : ssid,
                                                                                    @"mac_address" : bssid}}];

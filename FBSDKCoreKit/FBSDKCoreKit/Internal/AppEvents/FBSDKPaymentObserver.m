@@ -25,7 +25,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
-static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase    = @"_implicitlyLoggedPurchaseEvent";
+static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase = @"_implicitlyLogged";
 static NSString *const FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
 static NSString *const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
 static NSString *const FBSDKAppEventParameterNameTransactionID = @"fb_transaction_id";
@@ -121,6 +121,10 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)handleTransaction:(SKPaymentTransaction *)transaction
 {
+  // Ignore restored transaction
+  if (transaction.originalTransaction != nil) {
+    return;
+  }
   FBSDKPaymentProductRequestor *productRequest = [[FBSDKPaymentProductRequestor alloc] initWithTransaction:transaction];
   [productRequest resolveProducts];
 }
@@ -269,7 +273,7 @@ static NSMutableArray *g_pendingRequestors;
   [eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:valueToSum
-                parameters:parameters];
+                parameters:eventParameters];
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.

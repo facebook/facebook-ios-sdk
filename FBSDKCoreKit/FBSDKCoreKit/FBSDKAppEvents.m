@@ -67,6 +67,7 @@ NSString *const FBSDKAppEventNameSpentCredits            = @"fb_mobile_spent_cre
 NSString *const FBSDKAppEventParameterNameCurrency               = @"fb_currency";
 NSString *const FBSDKAppEventParameterNameRegistrationMethod     = @"fb_registration_method";
 NSString *const FBSDKAppEventParameterNameContentType            = @"fb_content_type";
+NSString *const FBSDKAppEventParameterNameContent                = @"fb_content";
 NSString *const FBSDKAppEventParameterNameContentID              = @"fb_content_id";
 NSString *const FBSDKAppEventParameterNameSearchString           = @"fb_search_string";
 NSString *const FBSDKAppEventParameterNameSuccess                = @"fb_success";
@@ -329,7 +330,7 @@ static NSString *g_overrideAppID = nil;
   [[FBSDKAppEvents singleton] instanceLogEvent:eventName
                                     valueToSum:valueToSum
                                     parameters:parameters
-                            isImplicitlyLogged:NO
+                            isImplicitlyLogged:(BOOL)parameters[FBSDKAppEventParameterImplicitlyLogged]
                                    accessToken:accessToken];
 }
 
