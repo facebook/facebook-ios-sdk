@@ -2803,6 +2803,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
 			};
 			name = Debug;
 		};
@@ -2810,6 +2811,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
 			};
 			name = Release;
 		};

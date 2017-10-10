@@ -78,6 +78,15 @@ fi
 # Build FBAudienceNetwork framework
 #
 if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
+
+	# refuse to build with unclean state
+	repository_unclean=$(hg status -i ios-sdk/ | grep -v .DS_Store)
+	if [ "$repository_unclean" ]; then
+		echo "Detected unclean repository state:"
+		echo "$repository_unclean"
+		die "Please run 'hg purge --all' before building"
+	fi
+
 	AN_ZIP=$FB_AD_SDK_BUILD/$FB_AD_SDK_BINARY_NAME-$FB_AD_SDK_VERSION.zip
 	AN_BUILD_PACKAGE=$FB_AD_SDK_BUILD/package
 	AN_SAMPLES=$AN_BUILD_PACKAGE/Samples/FBAudienceNetwork
@@ -125,6 +134,7 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	done
 	for fname in $(find "$AN_SAMPLES" -name "*-PUBLIC.xcodeproj" -print); do \
 	  newfname="$(echo ${fname} | sed -e 's/-PUBLIC//')" ; \
+	    rm -rf "${newfname}"; \
 	    mv "${fname}" "${newfname}" ; \
 	done
 
