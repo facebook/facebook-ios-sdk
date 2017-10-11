@@ -57,10 +57,8 @@ final class ShareAPIViewController: UITableViewController {
 
 extension ShareAPIViewController {
   @IBAction func shareLink() {
-    let content = LinkShareContent(url: URL(string: "https://newsroom.fb.com/")!,
-                                   title: "Name: Facebook News Room",
-                                   description: "Description: The Facebook Swift SDK helps you develop Facebook integrated iOS apps.",
-                                   imageURL: URL(string: "https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png"))
+    let url = URL(string: "https://newsroom.fb.com/")
+    let content = LinkShareContent(url: url!)
     share(content)
   }
 }

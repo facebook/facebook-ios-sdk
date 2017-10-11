@@ -53,7 +53,6 @@ extension PublishPermission: PermissionRepresentable {
     case .publishPages: return "publish_pages"
     case .rsvpEvent: return "rsvp_event"
     case .custom(let string): return Permission(name: string)
-    default: return "publish_actions"
     }
   }
 }

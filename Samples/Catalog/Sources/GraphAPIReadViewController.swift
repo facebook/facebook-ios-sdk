@@ -23,7 +23,7 @@ import FacebookCore
 
 class GraphAPIReadViewController: UITableViewController {
 
-  func presentAlertControllerFor<P: GraphRequestProtocol>(_ result: GraphRequestResult<P>) {
+  func presentAlertControllerFor<P>(_ result: GraphRequestResult<P>) {
     let alertController: UIAlertController
     switch result {
     case .success(let response):

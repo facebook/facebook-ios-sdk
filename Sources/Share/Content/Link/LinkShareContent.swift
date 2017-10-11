@@ -30,6 +30,7 @@ public struct LinkShareContent: ContentProtocol {
 
    This value may be discarded for specially handled links (ex: iTunes URLs).
    */
+  @available(*, deprecated, message: "`title` is deprecated from Graph API 2.9")
   public var title: String?
 
   /**
@@ -38,6 +39,7 @@ public struct LinkShareContent: ContentProtocol {
    If not specified, this field is automatically populated by information scraped from the contentURL,
    typically the title of the page. This value may be discarded for specially handled links (ex: iTunes URLs).
    */
+  @available(*, deprecated, message: "`description` is deprecated from Graph API 2.9")
   public var description: String?
 
   /**
@@ -48,6 +50,7 @@ public struct LinkShareContent: ContentProtocol {
   public var quote: String?
 
   /// The URL of a picture to attach to this content.
+  @available(*, deprecated, message: "`imageURL` is deprecated from Graph API 2.9")
   public var imageURL: URL?
 
   /**
@@ -59,6 +62,7 @@ public struct LinkShareContent: ContentProtocol {
    - parameter quote:       Optional quote text of the link.
    - parameter imageURL:    OPtional image URL of a picture to attach.
    */
+  @available(*, deprecated, message: "`title`, `description`, `imageURL` are deprecated from Graph API 2.9")
   public init(url: URL,
               title: String? = nil,
               description: String? = nil,
@@ -69,6 +73,18 @@ public struct LinkShareContent: ContentProtocol {
     self.description = description
     self.quote = quote
     self.imageURL = imageURL
+  }
+  
+  /**
+   Create link share content.
+   
+   - parameter url:         The URL being shared.
+   - parameter quote:       Optional quote text of the link.
+   */
+  public init(url: URL,
+              quote: String? = nil) {
+    self.url = url
+    self.quote = quote
   }
 
   //--------------------------------------
@@ -118,9 +134,6 @@ extension LinkShareContent: Equatable {
 extension LinkShareContent: SDKBridgedContent {
   internal var sdkSharingContentRepresentation: FBSDKSharingContent {
     let content = FBSDKShareLinkContent()
-    content.contentDescription = self.description
-    content.contentTitle = self.title
-    content.imageURL = self.imageURL
     content.quote = self.quote
     content.contentURL = self.url
     content.hashtag = self.hashtag?.sdkHashtagRepresentation

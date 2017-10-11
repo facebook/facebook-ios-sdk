@@ -122,7 +122,7 @@ extension AppEvent {
     var parameters = extraParameters
     contentType.onSome({ parameters[.contentType] = $0 })
     contentId.onSome({ parameters[.contentId] = $0 })
-    maxRatingValue.onSome({ parameters[.maxRatingValue] = NSNumber(value: $0.toUIntMax() as UInt64) })
+    maxRatingValue.onSome({ parameters[.maxRatingValue] = NSNumber(value: UInt64($0)) })
     return AppEvent(name: .rated, parameters: parameters, valueToSum: valueToSum)
   }
 }
@@ -236,7 +236,7 @@ extension AppEvent {
     var parameters = extraParameters
     contentType.onSome({ parameters[.contentType] = $0 })
     contentId.onSome({ parameters[.contentId] = $0 })
-    itemCount.onSome({ parameters[.itemCount] = NSNumber(value: $0.toUIntMax() as UInt64) })
+    itemCount.onSome({ parameters[.itemCount] = NSNumber(value: UInt64($0)) })
     paymentInfoAvailable.onSome({
       parameters[.paymentInfoAvailable] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo
     })
