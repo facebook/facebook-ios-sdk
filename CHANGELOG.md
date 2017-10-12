@@ -1,5 +1,33 @@
 # Change Log
 
+## [0.3.0](https://github.com/facebook/facebook-sdk-swift/tree/0.3.0) (2017-10-11)
+[Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.2.0...0.3.0)
+
+**Implemented enhancements:**
+
+- Update for Xcode 9 and Swift 4 [\#184](https://github.com/facebook/facebook-sdk-swift/pull/184) ([gfosco](https://github.com/gfosco))
+- Add userId and user properties to AppEventsLogger. [\#147](https://github.com/facebook/facebook-sdk-swift/pull/147) ([nlutsenko](https://github.com/nlutsenko))
+- Expand a set of predefined Read and Publish permissions. [\#130](https://github.com/facebook/facebook-sdk-swift/pull/130) ([ranesr](https://github.com/ranesr))
+- Publicize .name property on Permission. [\#96](https://github.com/facebook/facebook-sdk-swift/pull/96) ([nlutsenko](https://github.com/nlutsenko))
+- Add AppEventsLogger.pushNotificationsDeviceToken [\#71](https://github.com/facebook/facebook-sdk-swift/pull/71) ([arsonik](https://github.com/arsonik))
+- Doc fix, Any/Object [\#69](https://github.com/facebook/facebook-sdk-swift/pull/69) ([arsonik](https://github.com/arsonik))
+
+**Fixed bugs:**
+
+- Fix LoginManager's initializer problem. [\#137](https://github.com/facebook/facebook-sdk-swift/pull/137) ([RyogaK](https://github.com/RyogaK))
+
+**Merged pull requests:**
+
+- Set `swift` user agent suffix in FBSDKSettings [\#164](https://github.com/facebook/facebook-sdk-swift/pull/164) ([mcohnen](https://github.com/mcohnen))
+- Update to Xcode 8.3 and Swift 3.1. [\#146](https://github.com/facebook/facebook-sdk-swift/pull/146) ([nlutsenko](https://github.com/nlutsenko))
+- Improve ambiguous `logIn\(\)` function names in LoginManager. [\#97](https://github.com/facebook/facebook-sdk-swift/pull/97) ([nlutsenko](https://github.com/nlutsenko))
+- Improve UIAlertController APIs in the SwiftCatalog sample app [\#92](https://github.com/facebook/facebook-sdk-swift/pull/92) ([mohshin-shah](https://github.com/mohshin-shah))
+- Minor documentation fixes. [\#90](https://github.com/facebook/facebook-sdk-swift/pull/90) ([nlutsenko](https://github.com/nlutsenko))
+- Update Facebook ObjC SDK dependency to 4.17. [\#88](https://github.com/facebook/facebook-sdk-swift/pull/88) ([nlutsenko](https://github.com/nlutsenko))
+- Update Facebook ObjC SDK dependency to 4.16. [\#68](https://github.com/facebook/facebook-sdk-swift/pull/68) ([nlutsenko](https://github.com/nlutsenko))
+- Re-enable Travis-CI CocoaPods linting for all frameworks. [\#61](https://github.com/facebook/facebook-sdk-swift/pull/61) ([nlutsenko](https://github.com/nlutsenko))
+- Add Swift version badge to README. [\#60](https://github.com/facebook/facebook-sdk-swift/pull/60) ([nlutsenko](https://github.com/nlutsenko))
+
 ## [0.2.0](https://github.com/facebook/facebook-sdk-swift/tree/0.2.0) (2016-09-24)
 [Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.1.1...0.2.0)
 
@@ -19,8 +47,6 @@
 - Fix possessive typos in README [\#27](https://github.com/facebook/facebook-sdk-swift/pull/27) ([ashchan](https://github.com/ashchan))
 - Mention local CocoaPods repo update in README instructions. [\#23](https://github.com/facebook/facebook-sdk-swift/pull/23) ([nlutsenko](https://github.com/nlutsenko))
 - Clarify upgrade instructions for Carthage. [\#21](https://github.com/facebook/facebook-sdk-swift/pull/21) ([nlutsenko](https://github.com/nlutsenko))
-- Add License link to contributing page [\#19](https://github.com/facebook/facebook-sdk-swift/pull/19) ([jinjorge](https://github.com/jinjorge))
-- Typo fix [\#18](https://github.com/facebook/facebook-sdk-swift/pull/18) ([jinjorge](https://github.com/jinjorge))
 - Clarify versioning instruction for CocoaPods installation. [\#15](https://github.com/facebook/facebook-sdk-swift/pull/15) ([nlutsenko](https://github.com/nlutsenko))
 - Add missing `git submodule` command to README [\#13](https://github.com/facebook/facebook-sdk-swift/pull/13) ([hirschfl](https://github.com/hirschfl))
 - Update README.md [\#11](https://github.com/facebook/facebook-sdk-swift/pull/11) ([SandroMachado](https://github.com/SandroMachado))
