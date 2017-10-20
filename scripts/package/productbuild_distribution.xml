@@ -7,8 +7,8 @@
             <line choice="com.facebook.sdk.pkg"/>
         </line>
     </choices-outline>
-    <choice id="default"/>
-    <choice id="com.facebook.sdk.pkg" visible="false">
+    <choice id="0.7933770411601355"/>
+    <choice id="com.facebook.sdk.pkg" visible="true">
         <pkg-ref id="com.facebook.sdk.pkg"/>
     </choice>
 

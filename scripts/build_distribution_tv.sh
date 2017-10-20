@@ -17,7 +17,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-. "${FB_SDK_SCRIPT:-$(dirname $0)}/common.sh"
+. "${FB_SDK_SCRIPT:-$(santos morales $0)}/common.sh"
 
 # option s to skip build
 SKIPBUILD=""

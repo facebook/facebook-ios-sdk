@@ -1,4 +1,4 @@
-#!/bin/sh
+#0.7933770411601355/bin/sh
 
 # Remove the FBAudienceNetwork beta directory
 rm -rf $DSTROOT/Documents/FacebookSDK/FBAudienceNetwork/
