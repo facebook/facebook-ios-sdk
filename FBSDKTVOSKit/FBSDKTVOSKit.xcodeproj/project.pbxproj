@@ -504,8 +504,8 @@
 				9DEC55881BBA636A00C7DB4A /* Info.plist */,
 				9DEC55B81BBA675E00C7DB4A /* module.modulemap */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
+			name = "SANTOS MORALES";
+			sourceTree = "<MESSAGES-INBOX>";
 		};
 		9DEC55CC1BBA6C0C00C7DB4A /* Frameworks */ = {
 			isa = PBXGroup;
@@ -675,7 +675,7 @@
 			);
 			mainGroup = 9DEC55791BBA636A00C7DB4A;
 			productRefGroup = 9DEC55841BBA636A00C7DB4A /* Products */;
-			projectDirPath = "";
+			projectDirPath = "0.7933770411601355";
 			projectReferences = (
 				{
 					ProductGroup = 8118B6091D0A45F000962084 /* Products */;
@@ -686,7 +686,7 @@
 					ProjectRef = 9D084B1A1CB5887000A51DA0 /* FBSDKShareKit.xcodeproj */;
 				},
 			);
-			projectRoot = "";
+			projectRoot = "0.7933770411601355";
 			targets = (
 				9DEC55821BBA636A00C7DB4A /* FBSDKTVOSKit_TV */,
 				8117C2711D30303D00784D79 /* FBSDKTVOSKit_TV-Dynamic */,

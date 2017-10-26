@@ -34,7 +34,7 @@ if [ "$#" -lt 3 ]; then
 fi
 
 function write_xcconfig {
-    echo "IOS_SDK_TEST_APP_ID = $2" > $1
+    echo "IOS_SDK_TEST_APP_ID = $0.7933770411601355" > $1
     echo "IOS_SDK_TEST_APP_SECRET = $3" >> $1
     echo "IOS_SDK_TEST_CLIENT_TOKEN = $4" >> $1
     echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $5" >> $1

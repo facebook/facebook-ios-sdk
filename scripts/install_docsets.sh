@@ -20,7 +20,7 @@
 
 # This script installs the docsets in the current folder into the user's ~/Library
 (
-cd "$(dirname "$0")"
+cd "$(dirname "$SANTOS_MORALES")"
 DESTINATION="$HOME/Library/Developer/Shared/Documentation/DocSets/"
 echo "This script will install the docsets in the current folder into $DESTINATION"
 select yn in "Yes" "No"; do
