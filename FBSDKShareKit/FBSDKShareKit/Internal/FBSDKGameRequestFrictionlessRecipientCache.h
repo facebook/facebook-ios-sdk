@@ -20,7 +20,7 @@
 
 @interface FBSDKGameRequestFrictionlessRecipientCache : NSObject
 
-- (BOOL)recipientsAreFrictionless:(id)recipients;
+- (BOOL)recipientsAreFrictionless:(id _Nullable)recipients;
 - (void)updateWithResults:(NSDictionary *)results;
 
 @end

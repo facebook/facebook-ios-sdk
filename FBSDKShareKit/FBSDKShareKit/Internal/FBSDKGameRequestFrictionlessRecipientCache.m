@@ -56,7 +56,10 @@
   NSArray *recipientIDArray = [FBSDKTypeUtility arrayValue:recipients];
   if (!recipientIDArray && [recipients isKindOfClass:[NSString class]]) {
     recipientIDArray = [recipients componentsSeparatedByString:@","];
+  } else {
+    recipientIDArray = @[];
   }
+
   NSSet *recipientIDs = [[NSSet alloc] initWithArray:recipientIDArray];
   return [recipientIDs isSubsetOfSet:_recipientIDs];
 }
