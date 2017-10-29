@@ -657,6 +657,10 @@ static NSString *g_overrideAppID = nil;
   if (![FBSDKAppEventsUtility validateIdentifier:eventName]) {
     failed = YES;
   }
+  
+  if (parameters == nil) {
+    failed = YES;
+  }
 
   // Make sure parameter dictionary is well formed.  Log and exit if not.
   [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
