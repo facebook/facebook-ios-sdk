@@ -40,6 +40,7 @@
   [super setUp];
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [[[_mockAppEventsUtility stub] andReturn:[[NSUUID UUID] UUIDString]] advertiserID];
+  [FBSDKAppEvents setUserID:@"test-user-id"];
 }
 
 - (void)tearDown
@@ -75,6 +76,7 @@
   XCTAssertEqualObjects(@"event", dict[@"event"]);
   XCTAssertNotNil(dict[@"advertiser_id"]);
   XCTAssertEqualObjects(@"1", dict[@"application_tracking_enabled"]);
+  XCTAssertEqualObjects(@"test-user-id", dict[@"app_user_id"]);
 }
 
 

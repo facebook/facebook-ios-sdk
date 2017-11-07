@@ -211,18 +211,18 @@ static NSMutableArray *g_pendingRequestors;
 
   SKPayment *payment = self.transaction.payment;
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary: @{
-    FBSDKAppEventParameterNameContentID: payment.productIdentifier ?: @"",
-    FBSDKAppEventParameterNameNumItems: @(payment.quantity),
-  }];
+                                                                                          FBSDKAppEventParameterNameContentID: payment.productIdentifier ?: @"",
+                                                                                          FBSDKAppEventParameterNameNumItems: @(payment.quantity),
+                                                                                          }];
   double totalAmount = 0;
   if (product) {
     totalAmount = payment.quantity * product.price.doubleValue;
     [eventParameters addEntriesFromDictionary: @{
-      FBSDKAppEventParameterNameCurrency: [product.priceLocale objectForKey:NSLocaleCurrencyCode],
-      FBSDKAppEventParameterNameNumItems: @(payment.quantity),
-      FBSDKAppEventParameterNameProductTitle: [self getTruncatedString:product.localizedTitle],
-      FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
-    }];
+                                                 FBSDKAppEventParameterNameCurrency: [product.priceLocale objectForKey:NSLocaleCurrencyCode],
+                                                 FBSDKAppEventParameterNameNumItems: @(payment.quantity),
+                                                 FBSDKAppEventParameterNameProductTitle: [self getTruncatedString:product.localizedTitle],
+                                                 FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
+                                                 }];
     if (transactionID) {
       [eventParameters setObject:transactionID forKey:FBSDKAppEventParameterNameTransactionID];
     }
@@ -270,7 +270,16 @@ static NSMutableArray *g_pendingRequestors;
                       valueToSum:(double)valueToSum
                       parameters:(NSDictionary *)parameters {
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
-  [eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
+
+  if ([eventName isEqualToString:FBSDKAppEventNamePurchased]) {
+    NSData* receipt = [self fetchDeviceReceipt];
+    if (receipt) {
+      NSString *base64encodedReceipt = [receipt base64EncodedStringWithOptions:0];
+      eventParameters[@"receipt_data"] = base64encodedReceipt;
+    }
+  }
+
+  [eventParameters setObject:@"1"forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:valueToSum
                 parameters:eventParameters];
@@ -280,6 +289,13 @@ static NSMutableArray *g_pendingRequestors;
   if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
     [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   }
+}
+
+// Fetch the current receipt for this application.
+- (NSData*)fetchDeviceReceipt {
+  NSURL *receiptURL = [[NSBundle bundleForClass:[self class]] appStoreReceiptURL];
+  NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
+  return receipt;
 }
 
 @end

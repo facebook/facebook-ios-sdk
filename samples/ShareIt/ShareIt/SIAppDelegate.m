@@ -28,7 +28,6 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FBSDKLikeControl class];
   [FBSDKLoginButton class];
 
   [[FBSDKApplicationDelegate sharedInstance] application:application

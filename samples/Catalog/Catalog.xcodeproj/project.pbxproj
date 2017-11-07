@@ -17,7 +17,6 @@
 		93570B8B1BD0B7AF00D6BBF4 /* CollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B8A1BD0B7AF00D6BBF4 /* CollectionViewCell.m */; };
 		93570B9F1BD1A26000D6BBF4 /* ShareAPIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93570B9E1BD1A26000D6BBF4 /* ShareAPIViewController.m */; };
 		93B88C0C1BD95D1B00300AF1 /* MenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 93B88C0B1BD95D1B00300AF1 /* MenuItem.m */; };
-		93C2CA531BF584A2006E42DE /* AppInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA521BF584A2006E42DE /* AppInviteViewController.m */; };
 		93C2CA661BF675F8006E42DE /* CustomLoggingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */; };
 		93C2CA691BF67683006E42DE /* ManualLoggingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 93C2CA681BF67683006E42DE /* ManualLoggingViewController.m */; };
 		93D7025F1BE19F5A00F8BD30 /* PermissionUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 93D7025E1BE19F5A00F8BD30 /* PermissionUtility.m */; };
@@ -54,8 +53,6 @@
 		93570B9E1BD1A26000D6BBF4 /* ShareAPIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ShareAPIViewController.m; path = Catalog/ShareAPIViewController.m; sourceTree = "<group>"; };
 		93B88C0A1BD95D1B00300AF1 /* MenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuItem.h; sourceTree = "<group>"; };
 		93B88C0B1BD95D1B00300AF1 /* MenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuItem.m; sourceTree = "<group>"; };
-		93C2CA511BF584A2006E42DE /* AppInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppInviteViewController.h; path = Catalog/AppInviteViewController.h; sourceTree = "<group>"; };
-		93C2CA521BF584A2006E42DE /* AppInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppInviteViewController.m; path = Catalog/AppInviteViewController.m; sourceTree = "<group>"; };
 		93C2CA641BF675F8006E42DE /* CustomLoggingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CustomLoggingViewController.h; path = Catalog/CustomLoggingViewController.h; sourceTree = "<group>"; };
 		93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CustomLoggingViewController.m; path = Catalog/CustomLoggingViewController.m; sourceTree = "<group>"; };
 		93C2CA671BF67683006E42DE /* ManualLoggingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ManualLoggingViewController.h; path = Catalog/ManualLoggingViewController.h; sourceTree = "<group>"; };
@@ -169,8 +166,6 @@
 				93C2CA651BF675F8006E42DE /* CustomLoggingViewController.m */,
 				93C2CA671BF67683006E42DE /* ManualLoggingViewController.h */,
 				93C2CA681BF67683006E42DE /* ManualLoggingViewController.m */,
-				93C2CA511BF584A2006E42DE /* AppInviteViewController.h */,
-				93C2CA521BF584A2006E42DE /* AppInviteViewController.m */,
 				93F8DF711BFA9739003364F6 /* GraphAPIPostViewController.h */,
 				93F8DF721BFA9739003364F6 /* GraphAPIPostViewController.m */,
 				930ACC421C063386004598F0 /* ShareDialogViewController.h */,
@@ -275,7 +270,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93C2CA531BF584A2006E42DE /* AppInviteViewController.m in Sources */,
 				93F8DF731BFA9739003364F6 /* GraphAPIPostViewController.m in Sources */,
 				93DA31051BDE074200C9D5A1 /* AlertControllerUtility.m in Sources */,
 				93B88C0C1BD95D1B00300AF1 /* MenuItem.m in Sources */,
