@@ -687,7 +687,6 @@ static NSString *g_overrideAppID = nil;
   if (isImplicitlyLogged) {
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
-  [FBSDKInternalUtility dictionary:eventDictionary setObject:_userID forKey:@"_app_user_id"];
 
   NSString *currentViewControllerName;
   if ([NSThread isMainThread]) {
@@ -785,6 +784,7 @@ static NSString *g_overrideAppID = nil;
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self fetchServerConfiguration:^(void) {
+    NSString *receipt_data = [appEventsState extractReceiptData];
     NSString *JSONString = [appEventsState JSONStringForEvents:_serverConfiguration.implicitLoggingEnabled];
     NSData *encodedEvents = [JSONString dataUsingEncoding:NSUTF8StringEncoding];
     if (!encodedEvents) {
@@ -796,6 +796,11 @@ static NSString *g_overrideAppID = nil;
                                            activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
                                            implicitEventsOnly:appEventsState.areAllEventsImplicit
                                            shouldAccessAdvertisingID:_serverConfiguration.advertisingIDEnabled];
+    NSInteger length = [receipt_data length];
+    if (length > 0) {
+      postParameters[@"receipt_data"] = receipt_data;
+    }
+
     postParameters[@"custom_events_file"] = encodedEvents;
     if (appEventsState.numSkipped > 0) {
       postParameters[@"num_skipped_events"] = [NSString stringWithFormat:@"%lu", (unsigned long)appEventsState.numSkipped];

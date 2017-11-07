@@ -33,6 +33,7 @@
 static int const FBClientStateChallengeLength = 20;
 static NSString *const FBSDKExpectedChallengeKey = @"expected_login_challenge";
 static NSString *const FBSDKOauthPath = @"/dialog/oauth";
+static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 
 typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   FBSDKLoginManagerStateIdle,
@@ -386,6 +387,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
     if (didPerformLogIn) {
       [_logger startAuthMethod:authMethod];
       _state = FBSDKLoginManagerStatePerformingLogin;
+    } else if (error && [error.domain isEqualToString:SFVCCanceledLogin]) {
+      [self handleImplicitCancelOfLogIn];
     } else {
       if (!error) {
         error = [NSError errorWithDomain:FBSDKLoginErrorDomain code:FBSDKLoginUnknownErrorCode userInfo:nil];

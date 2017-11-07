@@ -85,7 +85,6 @@
   [array addObject:[[MenuItem alloc] initWithIconText:@"Login" iconImage:@"LoginIcon"]];
   [array addObject:[[MenuItem alloc] initWithIconText:@"Share" iconImage:@"ShareIcon"]];
   [array addObject:[[MenuItem alloc] initWithIconText:@"App Events" iconImage:@"AppEventsIcon"]];
-  [array addObject:[[MenuItem alloc] initWithIconText:@"App Invites" iconImage:@"AppInvitesIcon"]];
   [array addObject:[[MenuItem alloc] initWithIconText:@"App Links" iconImage:@"AppLinksIcon"]];
   [array addObject:[[MenuItem alloc] initWithIconText:@"Graph API" iconImage:@"GraphAPIIcon"]];
   return array;

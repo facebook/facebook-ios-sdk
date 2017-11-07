@@ -46,186 +46,29 @@
   return [self showFromViewController:nil withContent:content delegate:delegate];
 }
 
+
 + (instancetype)showFromViewController:(UIViewController *)viewController
                            withContent:(FBSDKAppInviteContent *)content
                               delegate:(id<FBSDKAppInviteDialogDelegate>)delegate;
 {
-  FBSDKAppInviteDialog *appInvite = [[self alloc] init];
-  appInvite.content = content;
-  appInvite.delegate = delegate;
-  appInvite.fromViewController = viewController;
-  [appInvite show];
-  return appInvite;
+  return nil;
 }
 
 #pragma mark - Public Methods
 
 - (BOOL)canShow
 {
-  return YES;
+  return NO;
 }
 
 - (BOOL)show
 {
-  NSError *error;
-  if (![self canShow]) {
-    error = [FBSDKShareError errorWithCode:FBSDKShareDialogNotAvailableErrorCode
-                                   message:@"App invite dialog is not available."];
-    [self _invokeDelegateDidFailWithError:error];
-    return NO;
-  }
-  if (![self validateWithError:&error]) {
-    [self _invokeDelegateDidFailWithError:error];
-    return NO;
-  }
-
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-  [FBSDKInternalUtility dictionary:parameters setObject:self.content.appLinkURL forKey:@"app_link_url"];
-  [FBSDKInternalUtility dictionary:parameters setObject:self.content.appInvitePreviewImageURL forKey:@"preview_image_url"];
-
-  NSString *destination;
-  switch (self.content.destination) {
-    case FBSDKAppInviteDestinationMessenger:
-      destination = @"messenger";
-      break;
-
-    case FBSDKAppInviteDestinationFacebook:
-      destination = @"facebook";
-      break;
-
-    default:
-      destination = @"facebook";
-      break;
-  }
-
-  [FBSDKInternalUtility dictionary:parameters setObject:destination forKey:@"destination"];
-
-  if (self.content.promotionText) {
-    NSString *promotionCode = self.content.promotionCode ?: @"";
-    NSDictionary *deeplinkContext =  @{@"promo_code" : promotionCode, @"promo_text" : self.content.promotionText};
-
-    NSError *jsonError = nil;
-    NSString *deeplinkContextString = [FBSDKInternalUtility JSONStringForObject:deeplinkContext error:&jsonError invalidObjectHandler:NULL];
-    if (!jsonError) {
-      [FBSDKInternalUtility dictionary:parameters setObject:promotionCode forKey:@"promo_code"];
-      [FBSDKInternalUtility dictionary:parameters setObject:self.content.promotionText forKey:@"promo_text"];
-      [FBSDKInternalUtility dictionary:parameters setObject:deeplinkContextString forKey:@"deeplink_context"];
-    } else {
-      [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                         formatString:@"Cannot convert deeplink_contex to json:"];
-    }
-  }
-
-  FBSDKBridgeAPIRequest *webBridgeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
-                                                                                             scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
-                                                                                         methodName:FBSDK_APP_INVITE_METHOD_NAME
-                                                                                      methodVersion:nil
-                                                                                         parameters:parameters
-                                                                                           userInfo:nil];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
-    [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
-  };
-
-  [self _logDialogShow];
-
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameAppInvite];
-  if ([self _canShowNative]) {
-    FBSDKBridgeAPIRequest *nativeRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeNative
-                                                                                            scheme:FBSDK_CANOPENURL_FACEBOOK
-                                                                                        methodName:FBSDK_APP_INVITE_METHOD_NAME
-                                                                                     methodVersion:FBSDK_APP_INVITE_METHOD_MIN_VERSION
-                                                                                        parameters:parameters
-                                                                                          userInfo:nil];
-    void (^nativeCompletionBlock)(FBSDKBridgeAPIResponse *) = ^(FBSDKBridgeAPIResponse *response) {
-      if (response.error.code == FBSDKAppVersionUnsupportedErrorCode) {
-        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webBridgeRequest
-                                                useSafariViewController:useSafariViewController
-                                                     fromViewController:self.fromViewController
-                                                        completionBlock:completionBlock];
-      } else {
-        completionBlock(response);
-      }
-    };
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:nativeRequest
-                                            useSafariViewController:useSafariViewController
-                                                 fromViewController:self.fromViewController
-                                                    completionBlock:nativeCompletionBlock];
-  } else {
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:webBridgeRequest
-                                            useSafariViewController:useSafariViewController
-                                                 fromViewController:self.fromViewController
-                                                    completionBlock:completionBlock];
-  }
-  return YES;
+  return NO;
 }
 
 - (BOOL)validateWithError:(NSError *__autoreleasing *)errorRef
 {
   return [FBSDKShareUtility validateAppInviteContent:self.content error:errorRef];
-}
-
-#pragma mark - Helper Methods
-
-- (BOOL)_canShowNative
-{
-  FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  BOOL useNativeDialog = [configuration useNativeDialogForDialogName:FBSDKDialogConfigurationNameAppInvite];
-  return (useNativeDialog && [FBSDKInternalUtility isFacebookAppInstalled]);
-}
-
-- (void)_handleCompletionWithDialogResults:(NSDictionary *)results error:(NSError *)error
-{
-  if (error) {
-    [self _invokeDelegateDidFailWithError:error];
-  } else {
-    [self _invokeDelegateDidCompleteWithResults:results];
-  }
-}
-
-- (void)_invokeDelegateDidCompleteWithResults:(NSDictionary *)results
-{
-  NSDictionary * parameters =@{
-                               FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed,
-                               };
-
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult
-                        valueToSum:nil
-                        parameters:parameters
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
-
-  if (!_delegate) {
-    return;
-  }
-
-  [_delegate appInviteDialog:self didCompleteWithResults:[results copy]];
-}
-
-- (void)_invokeDelegateDidFailWithError:(NSError *)error
-{
-  NSDictionary * parameters =@{
-                               FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Failed,
-                               FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
-                               };
-
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult
-                        valueToSum:nil
-                        parameters:parameters
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
-
-  if (!_delegate) {
-    return;
-  }
-
-  [_delegate appInviteDialog:self didFailWithError:error];
-}
-
-- (void)_logDialogShow
-{
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow
-                        valueToSum:nil
-                        parameters:nil
-                       accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
 @end
