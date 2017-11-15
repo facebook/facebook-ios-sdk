@@ -114,7 +114,9 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
 {
   struct timeval time;
   gettimeofday(&time, NULL);
-  return (time.tv_sec * 1000) + (time.tv_usec / 1000);
+    long second = (time.tv_usec / 1000);
+    long long timeL = time.tv_sec;
+    return (timeL * 1000) + (time.tv_usec / 1000);
 }
 
 + (BOOL)dictionary:(NSMutableDictionary *)dictionary
