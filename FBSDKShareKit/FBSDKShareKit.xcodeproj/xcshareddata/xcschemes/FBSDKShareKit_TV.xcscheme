@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+               BlueprintIdentifier = "9D2D99931BC452DE00929E76"
                BuildableName = "FBSDKShareKit.framework"
-               BlueprintName = "FBSDKShareKit-Dynamic"
+               BlueprintName = "FBSDKShareKit_TV"
                ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+            BlueprintIdentifier = "9D2D99931BC452DE00929E76"
             BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
+            BlueprintName = "FBSDKShareKit_TV"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+            BlueprintIdentifier = "9D2D99931BC452DE00929E76"
             BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
+            BlueprintName = "FBSDKShareKit_TV"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

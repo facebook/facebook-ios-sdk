@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+               BlueprintIdentifier = "9D46C5EF1A11E5D800A0DDB6"
                BuildableName = "FBSDKShareKit.framework"
-               BlueprintName = "FBSDKShareKit-Dynamic"
+               BlueprintName = "FBSDKShareKit"
                ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,9 +47,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+            BlueprintIdentifier = "9D46C5EF1A11E5D800A0DDB6"
             BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
+            BlueprintName = "FBSDKShareKit"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -65,9 +65,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
+            BlueprintIdentifier = "9D46C5EF1A11E5D800A0DDB6"
             BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
+            BlueprintName = "FBSDKShareKit"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

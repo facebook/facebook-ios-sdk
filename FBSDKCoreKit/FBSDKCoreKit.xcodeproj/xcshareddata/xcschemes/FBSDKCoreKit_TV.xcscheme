@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
-               BuildableName = "FBSDKShareKit.framework"
-               BlueprintName = "FBSDKShareKit-Dynamic"
-               ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+               BlueprintIdentifier = "9DB0FA721BC1CA71005EB8B1"
+               BuildableName = "FBSDKCoreKit.framework"
+               BlueprintName = "FBSDKCoreKit_TV"
+               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,10 +47,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
-            BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
-            ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+            BlueprintIdentifier = "9DB0FA721BC1CA71005EB8B1"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKit_TV"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -65,10 +65,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "81A07EDF1D1A2E6A0041A29C"
-            BuildableName = "FBSDKShareKit.framework"
-            BlueprintName = "FBSDKShareKit-Dynamic"
-            ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
+            BlueprintIdentifier = "9DB0FA721BC1CA71005EB8B1"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKit_TV"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

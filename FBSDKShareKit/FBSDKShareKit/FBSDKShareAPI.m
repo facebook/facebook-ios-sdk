@@ -449,7 +449,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 - (BOOL)_addEncodedParametersToDictionary:(NSMutableDictionary *)parameters
                                       key:(NSString *)key
                                     value:(id)value
-                                    error:(NSError **)errorRef
+                                    error:(__autoreleasing NSError **)errorRef
 {
   if ([value isKindOfClass:[NSString class]] ||
       [value isKindOfClass:[NSNumber class]] ||
