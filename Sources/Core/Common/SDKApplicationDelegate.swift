@@ -62,7 +62,7 @@ public final class SDKApplicationDelegate {
 
    - returns: `true` if the url was intended for the Facebook SDK, otherwise - `false`.
    */
-  @available(iOS, deprecated: 9.0, message: "Please use application(open:options:).")
+  @available(iOS, deprecated: 9.0, message: "Please use application(_:open:options:).")
   @discardableResult
   public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
     return delegate.application(application, open:url, sourceApplication:sourceApplication, annotation:annotation)
