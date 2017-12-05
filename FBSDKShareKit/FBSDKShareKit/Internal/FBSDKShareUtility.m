@@ -25,12 +25,6 @@
 #import "FBSDKShareError.h"
 #import "FBSDKShareLinkContent+Internal.h"
 #import "FBSDKShareMediaContent.h"
-#import "FBSDKShareMessengerContentUtility.h"
-#import "FBSDKShareMessengerGenericTemplateContent.h"
-#import "FBSDKShareMessengerGenericTemplateElement.h"
-#import "FBSDKShareMessengerMediaTemplateContent.h"
-#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
-#import "FBSDKShareMessengerURLActionButton.h"
 #import "FBSDKShareOpenGraphContent.h"
 #import "FBSDKShareOpenGraphObject.h"
 #import "FBSDKSharePhoto.h"
@@ -42,6 +36,12 @@
 #if !TARGET_OS_TV
 #import "FBSDKCameraEffectArguments+Internal.h"
 #import "FBSDKCameraEffectTextures+Internal.h"
+#import "FBSDKShareMessengerContentUtility.h"
+#import "FBSDKShareMessengerGenericTemplateContent.h"
+#import "FBSDKShareMessengerGenericTemplateElement.h"
+#import "FBSDKShareMessengerMediaTemplateContent.h"
+#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
+#import "FBSDKShareMessengerURLActionButton.h"
 #endif
 
 @implementation FBSDKShareUtility
@@ -310,6 +310,9 @@
     [self _addToParameters:parameters forSharePhotoContent:(FBSDKSharePhotoContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     [self _addToParameters:parameters forShareVideoContent:(FBSDKShareVideoContent *)shareContent];
+  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+    [self _addToParameters:parameters forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent];
+#if !TARGET_OS_TV
   } else if ([shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]]) {
     [FBSDKShareMessengerContentUtility addToParameters:parameters
                forShareMessengerGenericTemplateContent:(FBSDKShareMessengerGenericTemplateContent *)shareContent];
@@ -318,10 +321,7 @@
                  forShareMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
     [FBSDKShareMessengerContentUtility addToParameters:parameters
-                 forShareMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)shareContent];
-  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
-    [self _addToParameters:parameters forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent];
-#if !TARGET_OS_TV
+        forShareMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     [self _addToParameters:parameters forShareCameraEffectContent:(FBSDKShareCameraEffectContent *)shareContent];
 #endif
@@ -550,17 +550,17 @@
     return [self validateSharePhotoContent:(FBSDKSharePhotoContent *)shareContent error:errorRef];
   } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     return [self validateShareVideoContent:(FBSDKShareVideoContent *)shareContent error:errorRef];
+  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
+    return [self validateShareMediaContent:(FBSDKShareMediaContent *)shareContent error:errorRef];
+  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+    return [self validateShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent error:errorRef];
+#if !TARGET_OS_TV
   } else if ([shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]]) {
     return [self validateMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)shareContent error:errorRef];
   } else if ([shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]]) {
     return [self validateMessengerGenericTemplateContent:(FBSDKShareMessengerGenericTemplateContent *)shareContent error:errorRef];
   } else if ([shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
     return [self validateMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)shareContent error:errorRef];
-  } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
-    return [self validateShareMediaContent:(FBSDKShareMediaContent *)shareContent error:errorRef];
-  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
-    return [self validateShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent error:errorRef];
-#if !TARGET_OS_TV
   } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return [self validateShareCameraEffectContent:(FBSDKShareCameraEffectContent *)shareContent error:errorRef];
 #endif
@@ -671,6 +671,8 @@
           [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
 }
 
+#if !TARGET_OS_TV
+
 + (BOOL)validateMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)messengerMediaTemplateContent
                                         error:(NSError *__autoreleasing *)errorRef
 {
@@ -690,21 +692,21 @@
                                           error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:genericTemplateContent.element.title name:@"element.title" error:errorRef] &&
-         [self _validateMessengerActionButton:genericTemplateContent.element.defaultAction
-                        isDefaultActionButton:YES
-                                       pageID:genericTemplateContent.pageID
-                                        error:errorRef] &&
-         [self _validateMessengerActionButton:genericTemplateContent.element.button
-                        isDefaultActionButton:NO
-                                       pageID:genericTemplateContent.pageID
-                                        error:errorRef];
+  [self _validateMessengerActionButton:genericTemplateContent.element.defaultAction
+                 isDefaultActionButton:YES
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef] &&
+  [self _validateMessengerActionButton:genericTemplateContent.element.button
+                 isDefaultActionButton:NO
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef];
 }
 
 + (BOOL)validateMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)openGraphMusicTemplateContent
                                                  error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:openGraphMusicTemplateContent.url name:@"url" error:errorRef] &&
-         [self _validateRequiredValue:openGraphMusicTemplateContent.pageID name:@"pageID" error:errorRef] &&
+  [self _validateRequiredValue:openGraphMusicTemplateContent.pageID name:@"pageID" error:errorRef] &&
   [self _validateMessengerActionButton:openGraphMusicTemplateContent.button
                  isDefaultActionButton:NO
                                 pageID:openGraphMusicTemplateContent.pageID
@@ -739,9 +741,11 @@
                            error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:urlActionButton.url name:@"button.url" error:errorRef] &&
-         (!isDefaultActionButton ? [self _validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
-         (urlActionButton.isMessengerExtensionURL ? [self _validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
+  (!isDefaultActionButton ? [self _validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
+  (urlActionButton.isMessengerExtensionURL ? [self _validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
 }
+
+#endif
 
 + (BOOL)shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareMediaContent
 {
