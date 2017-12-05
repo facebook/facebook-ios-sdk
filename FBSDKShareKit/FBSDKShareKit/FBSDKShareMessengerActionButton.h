@@ -16,22 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-SDKROOT = iphoneos
-IPHONEOS_DEPLOYMENT_TARGET = 8.0
+#import <Foundation/Foundation.h>
 
-// Supported device families (1 is iPhone, 2 is iPad, 3 is Apple TV)
-TARGETED_DEVICE_FAMILY = 1,2
+#import <FBSDKCoreKit/FBSDKCopying.h>
 
-// Where to find embedded frameworks
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks
+/**
+ A base interface for Messenger share action buttons.
+ */
+@protocol FBSDKShareMessengerActionButton <FBSDKCopying, NSSecureCoding>
 
-// Bitcode Support
-// We manually set the clang flags to embed-bitcode so we don't need the ENABLE_BITCODE
-// env which applies for Archive builds.
-ENABLE_BITCODE = NO
-FB_BITCODE_FLAG = $()
-// Only specify bitcode for iphoneos. Specifying iphonesimulator breaks Xcode 6
-FB_BITCODE_FLAG[sdk=iphoneos9.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos10.*] = -fembed-bitcode
-FB_BITCODE_FLAG[sdk=iphoneos11.*] = -fembed-bitcode
-OTHER_CFLAGS = $(inherited) $(FB_BITCODE_FLAG)
+/**
+ The title displayed to the user for the button.
+ - Returns: The title for the button.
+ */
+@property (nonatomic, copy) NSString *title;
+
+@end

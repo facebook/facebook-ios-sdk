@@ -163,11 +163,11 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
 
     // Only log if there's been an associated start time.
     if (startTimeNumber) {
-      unsigned long elapsed = [FBSDKInternalUtility currentTimeInMilliseconds] - startTimeNumber.unsignedLongValue;
+      uint64_t elapsed = [FBSDKInternalUtility currentTimeInMilliseconds] - startTimeNumber.unsignedLongLongValue;
       [g_startTimesWithTags removeObjectForKey:tagAsNumber];  // served its purpose, remove
 
       // Log string is appended with "%d msec", with nothing intervening.  This gives the most control to the caller.
-      logString = [NSString stringWithFormat:@"%@%lu msec", logString, elapsed];
+      logString = [NSString stringWithFormat:@"%@%llu msec", logString, elapsed];
 
       [self singleShotLogEntry:loggingBehavior logEntry:logString];
     }
@@ -188,12 +188,12 @@ static NSMutableDictionary *g_startTimesWithTags = nil;
        @"Unexpectedly large number of outstanding perf logging start times, something is likely wrong."];
     }
 
-    unsigned long currTime = [FBSDKInternalUtility currentTimeInMilliseconds];
+    uint64_t currTime = [FBSDKInternalUtility currentTimeInMilliseconds];
 
     // Treat the incoming object tag simply as an address, since it's only used to identify during lifetime.  If
     // we send in as an object, the dictionary will try to copy it.
     unsigned long tagAsNumber = (unsigned long)(__bridge void *)timestampTag;
-    [g_startTimesWithTags setObject:[NSNumber numberWithUnsignedLong:currTime]
+    [g_startTimesWithTags setObject:@(currTime)
                              forKey:[NSNumber numberWithUnsignedLong:tagAsNumber]];
   }
 }

@@ -105,6 +105,8 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow
 
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogMode;
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentType;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentUUID;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentPageID;
 
 /*! Use to log parameters for share tray use */
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterShareTrayActivityName;
@@ -121,6 +123,9 @@ FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeStatus;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypePhoto;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeVideo;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeCamera;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeUnknown;
 
 

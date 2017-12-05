@@ -23,6 +23,11 @@
 #import <FBSDKShareKit/FBSDKShareCameraEffectContent.h>
 #import <FBSDKShareKit/FBSDKShareLinkContent.h>
 #import <FBSDKShareKit/FBSDKShareMediaContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerGenericTemplateElement.h>
+#import <FBSDKShareKit/FBSDKShareMessengerMediaTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerOpenGraphMusicTemplateContent.h>
+#import <FBSDKShareKit/FBSDKShareMessengerURLActionButton.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
