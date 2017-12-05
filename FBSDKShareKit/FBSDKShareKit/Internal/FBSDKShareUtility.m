@@ -692,21 +692,21 @@
                                           error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:genericTemplateContent.element.title name:@"element.title" error:errorRef] &&
-         [self _validateMessengerActionButton:genericTemplateContent.element.defaultAction
-                        isDefaultActionButton:YES
-                                       pageID:genericTemplateContent.pageID
-                                        error:errorRef] &&
-         [self _validateMessengerActionButton:genericTemplateContent.element.button
-                        isDefaultActionButton:NO
-                                       pageID:genericTemplateContent.pageID
-                                        error:errorRef];
+  [self _validateMessengerActionButton:genericTemplateContent.element.defaultAction
+                 isDefaultActionButton:YES
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef] &&
+  [self _validateMessengerActionButton:genericTemplateContent.element.button
+                 isDefaultActionButton:NO
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef];
 }
 
 + (BOOL)validateMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)openGraphMusicTemplateContent
                                                  error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:openGraphMusicTemplateContent.url name:@"url" error:errorRef] &&
-         [self _validateRequiredValue:openGraphMusicTemplateContent.pageID name:@"pageID" error:errorRef] &&
+  [self _validateRequiredValue:openGraphMusicTemplateContent.pageID name:@"pageID" error:errorRef] &&
   [self _validateMessengerActionButton:openGraphMusicTemplateContent.button
                  isDefaultActionButton:NO
                                 pageID:openGraphMusicTemplateContent.pageID
@@ -741,8 +741,8 @@
                            error:(NSError *__autoreleasing *)errorRef
 {
   return [self _validateRequiredValue:urlActionButton.url name:@"button.url" error:errorRef] &&
-         (!isDefaultActionButton ? [self _validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
-         (urlActionButton.isMessengerExtensionURL ? [self _validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
+  (!isDefaultActionButton ? [self _validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
+  (urlActionButton.isMessengerExtensionURL ? [self _validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
 }
 
 #endif
