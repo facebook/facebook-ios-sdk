@@ -154,6 +154,8 @@ NSString *const FBSDKAppEventParameterDialogOutcome               = @"fb_dialog_
 NSString *const FBSDKAppEventParameterDialogErrorMessage          = @"fb_dialog_outcome_error_message";
 NSString *const FBSDKAppEventParameterDialogMode                  = @"fb_dialog_mode";
 NSString *const FBSDKAppEventParameterDialogShareContentType      = @"fb_dialog_share_content_type";
+NSString *const FBSDKAppEventParameterDialogShareContentUUID      = @"fb_dialog_share_content_uuid";
+NSString *const FBSDKAppEventParameterDialogShareContentPageID    = @"fb_dialog_share_content_page_id";
 NSString *const FBSDKAppEventParameterShareTrayActivityName       = @"fb_share_tray_activity";
 NSString *const FBSDKAppEventParameterShareTrayResult             = @"fb_share_tray_result";
 NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
@@ -174,12 +176,15 @@ NSString *const FBSDKAppEventsDialogShareModeFeedBrowser    = @"FeedBrowser";
 NSString *const FBSDKAppEventsDialogShareModeFeedWeb        = @"FeedWeb";
 NSString *const FBSDKAppEventsDialogShareModeUnknown        = @"Unknown";
 
-NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph       = @"OpenGraph";
-NSString *const FBSDKAppEventsDialogShareContentTypeStatus          = @"Status";
-NSString *const FBSDKAppEventsDialogShareContentTypePhoto           = @"Photo";
-NSString *const FBSDKAppEventsDialogShareContentTypeVideo           = @"Video";
-NSString *const FBSDKAppEventsDialogShareContentTypeCamera          = @"Camera";
-NSString *const FBSDKAppEventsDialogShareContentTypeUnknown         = @"Unknown";
+NSString *const FBSDKAppEventsDialogShareContentTypeOpenGraph                         = @"OpenGraph";
+NSString *const FBSDKAppEventsDialogShareContentTypeStatus                            = @"Status";
+NSString *const FBSDKAppEventsDialogShareContentTypePhoto                             = @"Photo";
+NSString *const FBSDKAppEventsDialogShareContentTypeVideo                             = @"Video";
+NSString *const FBSDKAppEventsDialogShareContentTypeCamera                            = @"Camera";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate          = @"GenericTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate            = @"MediaTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate   = @"OpenGraphMusicTemplate";
+NSString *const FBSDKAppEventsDialogShareContentTypeUnknown                           = @"Unknown";
 
 NSString *const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";
 

@@ -87,7 +87,7 @@ NSURLSessionDataDelegate
 @property (nonatomic, retain) NSMutableArray *requests;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
-@property (nonatomic, assign) unsigned long requestStartTime;
+@property (nonatomic, assign) uint64_t requestStartTime;
 
 @end
 
@@ -540,7 +540,7 @@ NSURLSessionDataDelegate
       error = [FBSDKError errorWithCode:FBSDKGraphRequestProtocolMismatchErrorCode
                                 message:@"Unexpected number of results returned from server."];
     } else {
-      [_logger appendFormat:@"Response <#%lu>\nDuration: %lu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
+      [_logger appendFormat:@"Response <#%lu>\nDuration: %llu msec\nSize: %lu kB\nResponse Body:\n%@\n\n",
        (unsigned long)[_logger loggerSerialNumber],
        [FBSDKInternalUtility currentTimeInMilliseconds] - _requestStartTime,
        (unsigned long)[data length],

@@ -28,6 +28,7 @@ CODE_SIGNING_REQUIRED = NO
 ENABLE_BITCODE = YES
 FB_BITCODE_FLAG[sdk=iphoneos9.*] =
 FB_BITCODE_FLAG[sdk=iphoneos10.*] =
+FB_BITCODE_FLAG[sdk=iphoneos11.*] =
 
 // Whether to strip out code that isn't called from anywhere
 DEAD_CODE_STRIPPING = NO

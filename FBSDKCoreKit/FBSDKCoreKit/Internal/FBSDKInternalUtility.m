@@ -110,11 +110,11 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return value;
 }
 
-+ (unsigned long)currentTimeInMilliseconds
++ (uint64_t)currentTimeInMilliseconds
 {
   struct timeval time;
   gettimeofday(&time, NULL);
-  return (time.tv_sec * 1000) + (time.tv_usec / 1000);
+  return ((uint64_t)time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
 + (BOOL)dictionary:(NSMutableDictionary *)dictionary

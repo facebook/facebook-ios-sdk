@@ -38,7 +38,7 @@
 - (void)testShareLinkContentValidationWithNilValues
 {
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
-  XCTAssertNotNil(content);
+  XCTAssertNotNil(content.shareUUID);
   NSError *error;
   XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
   XCTAssertNil(error);
@@ -51,9 +51,198 @@
   content.peopleIDs = [FBSDKShareModelTestUtility peopleIDs];
   content.placeID = [FBSDKShareModelTestUtility placeID];
   content.ref = [FBSDKShareModelTestUtility ref];
-  XCTAssertNotNil(content);
+  XCTAssertNotNil(content.shareUUID);
   NSError *error;
   XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testShareLinkContentParameters
+{
+  FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
+  content.contentURL = [FBSDKShareModelTestUtility contentURL];
+  XCTAssertNotNil(content.shareUUID);
+  NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:content shouldFailOnDataError:YES];
+  XCTAssertEqualObjects(content.contentURL, parameters[@"messenger_link"], @"Incorrect messenger_link param.");
+}
+
+- (void)testOpenGraphMusicWithoutURL
+{
+  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
+  content.pageID = @"123";
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testOpenGraphMusicWithURL
+{
+  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
+  content.pageID = @"123";
+  content.url = [NSURL URLWithString:@"www.facebook.com"];
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testOpenGraphMusicWithoutPageID
+{
+  FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
+  content.url = [NSURL URLWithString:@"www.facebook.com"];
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testMediaTemplateWithoutAttachmentIDOrMediaURL
+{
+  FBSDKShareMessengerMediaTemplateContent *contentWithNilAttachmentInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:nil];
+  XCTAssertNotNil(contentWithNilAttachmentInitializer.shareUUID);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilAttachmentInitializer error:&error]);
+  XCTAssertNotNil(error);
+
+  FBSDKShareMessengerMediaTemplateContent *contentWithNilURLInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:nil];
+  XCTAssertNotNil(contentWithNilURLInitializer.shareUUID);
+  NSError *error2;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilURLInitializer error:&error2]);
+  XCTAssertNotNil(error2);
+}
+
+- (void)testMediaTemplateWithAttachmentID
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:@"1"];
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testMediaTemplateWithMediaURL
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testGenericTemplateWithoutTitle
+{
+  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
+  content.element = [FBSDKShareMessengerGenericTemplateElement new];
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testGenericTemplateWithTitle
+{
+  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
+  content.element = [FBSDKShareMessengerGenericTemplateElement new];
+  content.element.title = @"Some Title";
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testGenericTemplateWithButtonAndDefaultAction
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.url = [NSURL URLWithString:@"www.facebook.com"];
+  button.title = @"test button";
+
+  FBSDKShareMessengerURLActionButton *defaultAction = [FBSDKShareMessengerURLActionButton new];
+  defaultAction.url = [NSURL URLWithString:@"www.facebook.com"];
+
+  FBSDKShareMessengerGenericTemplateContent *content = [FBSDKShareMessengerGenericTemplateContent new];
+  content.element = [FBSDKShareMessengerGenericTemplateElement new];
+  content.element.title = @"Some Title";
+  content.element.button = button;
+  content.element.defaultAction = defaultAction;
+  XCTAssertNotNil(content.shareUUID);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testButtonWithoutTitle
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.url = [NSURL URLWithString:@"www.facebook.com"];
+
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  content.button = button;
+  XCTAssertNotNil(content.shareUUID);
+  XCTAssertNotNil(content.button);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testButtonWithoutURL
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.title = @"Test";
+
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  content.button = button;
+  XCTAssertNotNil(content.shareUUID);
+  XCTAssertNotNil(content.button);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testButtonWithURLAndTitle
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.url = [NSURL URLWithString:@"www.facebook.com"];
+  button.title = @"Title";
+
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  content.button = button;
+  XCTAssertNotNil(content.shareUUID);
+  XCTAssertNotNil(content.button);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNil(error);
+}
+
+- (void)testMessengerExtensionButtonWithoutPageID
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.url = [NSURL URLWithString:@"www.facebook.com"];
+  button.isMessengerExtensionURL = YES;
+
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  content.button = button;
+  XCTAssertNotNil(content.shareUUID);
+  XCTAssertNotNil(content.button);
+  NSError *error;
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertNotNil(error);
+}
+
+- (void)testMessengerExtensionButtonWithPageID
+{
+  FBSDKShareMessengerURLActionButton *button = [FBSDKShareMessengerURLActionButton new];
+  button.url = [NSURL URLWithString:@"www.facebook.com"];
+  button.title = @"Title";
+  button.isMessengerExtensionURL = YES;
+
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
+  content.pageID = @"123";
+  content.button = button;
+  XCTAssertNotNil(content.shareUUID);
+  XCTAssertNotNil(content.button);
+  NSError *error;
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
   XCTAssertNil(error);
 }
 
