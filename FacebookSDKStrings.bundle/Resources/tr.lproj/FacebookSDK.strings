@@ -59,7 +59,7 @@
 "LoginError.SystemAccount.Network" = "Facebook'a bağlanılamıyor. Ağ bağlantını kontrol edip tekrar dene.";
 
 /* The user facing error message when the device Facebook account password is incorrect and login fails. */
-"LoginError.SystemAccount.PasswordChange" = "Facebook şifren değiştirildi. Şifreni onaylamak için Ayarlar &gt; Facebook'u aç ve adına dokunun.";
+"LoginError.SystemAccount.PasswordChange" = "Facebook şifren değiştirildi. Şifreni onaylamak için Ayarlar &gt; Facebook'u aç ve adına dokun.";
 
 /* The user facing error message when the device Facebook account is unavailable and login fails. */
 "LoginError.SystemAccount.Unavailable" = "Facebook hesabı cihaz üzerinde yapılandırılmadı.";
