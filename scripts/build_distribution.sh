@@ -151,9 +151,8 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	find "$AN_SAMPLES" -name "Info.plist" -exec perl -p -i -0777 -e 's/\s*<key>CFBundleURLTypes<\/key>\s*<array>\s*<dict>\s*<key>CFBundleURLSchemes<\/key>\s*<array>\s*<string>fb\d*<\/string>\s*<\/array>\s*<\/dict>\s*<\/array>\s*<key>FacebookAppID<\/key>\s*<string>\d*<\/string>\s*<key>FacebookDisplayName<\/key>\s*<string>.*<\/string>\s*<key>LSApplicationQueriesSchemes<\/key>\s*<array>\s*<string>fbapi<\/string>\s*<string>fb-messenger-api<\/string>\s*<string>fbauth2<\/string>\s*<string>fbshareextension<\/string>\s*<\/array>\n//g' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/\n\s*com\.apple\.Keychain = {\s*enabled = 1;\s*};//gms' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/NativeAdSample.entitlements/d' {} \;
-	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdUnitsSample.entitlements/d' {} \;
+	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdBiddingSample.entitlements/d' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/^\s*<FileRef\n\s*location = "group:\.\.\/\.\.\/FBSDKCoreKit\/FBSDKCoreKit\.xcodeproj">\n\s*<\/FileRef>\n//gms' {} \;
-
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/fbLoginButton/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKCoreKit/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKLogin/d" {} \;

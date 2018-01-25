@@ -35,6 +35,22 @@ static NSString *const kButtonsKey = @"buttons";
 
 @implementation FBSDKShareMessengerContentUtility
 
+static BOOL _URLHasFacebookDomain(NSURL *URL)
+{
+  NSString *urlHost = [URL.host lowercaseString];
+  NSArray<NSString *> *pathComponents = [URL pathComponents];
+
+  /**
+   Check the following three different cases...
+   1. Check if host is facebook.com, such as in 'https://facebok.com/test'
+   2. Check if host is someprefix.facebook.com, such as in 'https://www.facebook.com/test'
+   3. Check if host is null, but the first path component is facebook.com
+   */
+  return [urlHost isEqualToString:@"facebook.com"] ||
+  [urlHost hasSuffix:@".facebook.com"] ||
+  ([[[pathComponents firstObject] lowercaseString] hasSuffix:@"facebook.com"]);
+}
+
 static void _AddToContentPreviewDictionaryForURLButton(NSMutableDictionary *dictionary,
                                                        FBSDKShareMessengerURLActionButton *urlButton)
 {
@@ -168,6 +184,15 @@ static NSArray *_SerializableOpenGraphMusicTemplateContentFromContent(FBSDKShare
   return serializableOpenGraphMusicTemplateContent;
 }
 
+static NSString *_MediaTemplateURLSerializationKey(NSURL *mediaURL)
+{
+  if (_URLHasFacebookDomain(mediaURL)) {
+    return @"facebook_media_url";
+  } else {
+    return @"image_url";
+  }
+}
+
 + (void)_addToParameters:(NSMutableDictionary *)parameters
          contentForShare:(NSMutableDictionary *)contentForShare
        contentForPreview:(NSMutableDictionary *)contentForPreview
@@ -232,7 +257,9 @@ forShareMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *
   NSMutableDictionary *contentForPreview = [NSMutableDictionary dictionary];
   [FBSDKInternalUtility dictionary:contentForPreview setObject:@"DEFAULT" forKey:@"preview_type"];
   [FBSDKInternalUtility dictionary:contentForPreview setObject:mediaTemplateContent.attachmentID forKey:@"attachment_id"];
-  [FBSDKInternalUtility dictionary:contentForPreview setObject:mediaTemplateContent.mediaURL.absoluteString forKey:@"facebook_media_url"];
+  [FBSDKInternalUtility dictionary:contentForPreview
+                         setObject:mediaTemplateContent.mediaURL.absoluteString
+                            forKey:_MediaTemplateURLSerializationKey(mediaTemplateContent.mediaURL)];
   [FBSDKInternalUtility dictionary:contentForPreview setObject:_MediaTypeString(mediaTemplateContent.mediaType) forKey:@"media_type"];
   _AddToContentPreviewDictionaryForButton(contentForPreview, mediaTemplateContent.button);
 

@@ -65,6 +65,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   FBSDKServerConfigurationManagerAppEventsFeaturesNone                            = 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled            = 1 << 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled  = 1 << 1,
+  FBSDKServerConfigurationManagerAppEventsFeaturesAppIndexingTriggerEnabled       = 1 << 6,
 };
 
 #pragma mark - Public Class Methods
@@ -172,7 +173,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSUInteger appEventsFeatures = [FBSDKTypeUtility unsignedIntegerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD]];
   BOOL advertisingIDEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled);
   BOOL implicitPurchaseLoggingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled);
-
+  BOOL appIndexingTriggerEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAppIndexingTriggerEnabled);
   NSString *appName = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD]];
   BOOL loginTooltipEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD]];
   NSString *loginTooltipText = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD]];
@@ -198,6 +199,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                              advertisingIDEnabled:advertisingIDEnabled
                                                                            implicitLoggingEnabled:implicitLoggingEnabled
                                                                    implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                                                        appIndexingTriggerEnabled:appIndexingTriggerEnabled
                                                                       systemAuthenticationEnabled:systemAuthenticationEnabled
                                                                             nativeAuthFlowEnabled:nativeAuthFlowEnabled
                                                                              dialogConfigurations:dialogConfigurations
@@ -298,6 +300,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                              advertisingIDEnabled:NO
                                                            implicitLoggingEnabled:NO
                                                    implicitPurchaseLoggingEnabled:NO
+                                                        appIndexingTriggerEnabled:NO
                                                       systemAuthenticationEnabled:NO
                                                             nativeAuthFlowEnabled:NO
                                                              dialogConfigurations:nil

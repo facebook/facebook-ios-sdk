@@ -31,6 +31,7 @@
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY @"implicitLoggingEnabled"
 #define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY @"defaultShareMode"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY @"implicitPurchaseLoggingEnabled"
+#define FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY @"appIndexingTriggerEnabled"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_KEY @"loginTooltipEnabled"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY @"loginTooltipText"
 #define FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY @"systemAuthenticationEnabled"
@@ -87,6 +88,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
          advertisingIDEnabled:(BOOL)advertisingIDEnabled
        implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
+    appIndexingTriggerEnabled:(BOOL)appIndexingTriggerEnabled
   systemAuthenticationEnabled:(BOOL)systemAuthenticationEnabled
         nativeAuthFlowEnabled:(BOOL)nativeAuthFlowEnabled
          dialogConfigurations:(NSDictionary *)dialogConfigurations
@@ -109,6 +111,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _advertisingIDEnabled = advertisingIDEnabled;
     _implicitLoggingEnabled = implicitLoggingEnabled;
     _implicitPurchaseLoggingEnabled = implicitPurchaseLoggingEnabled;
+    _appIndexingTriggerEnabled = appIndexingTriggerEnabled;
     _systemAuthenticationEnabled = systemAuthenticationEnabled;
     _nativeAuthFlowEnabled = nativeAuthFlowEnabled;
     _dialogConfigurations = [dialogConfigurations copy];
@@ -177,6 +180,8 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   BOOL implicitLoggingEnabled = [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   BOOL implicitPurchaseLoggingEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
+  BOOL appIndexingTriggerEnabled =
+  [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY];
   BOOL systemAuthenticationEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY];
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
@@ -209,6 +214,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                            advertisingIDEnabled:advertisingIDEnabled
                                          implicitLoggingEnabled:implicitLoggingEnabled
                                  implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                      appIndexingTriggerEnabled:appIndexingTriggerEnabled
                                     systemAuthenticationEnabled:systemAuthenticationEnabled
                                           nativeAuthFlowEnabled:nativeAuthFlowEnabled
                                            dialogConfigurations:dialogConfigurations
@@ -238,6 +244,8 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   [encoder encodeBool:_implicitLoggingEnabled forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   [encoder encodeBool:_implicitPurchaseLoggingEnabled
                forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
+  [encoder encodeBool:_appIndexingTriggerEnabled
+               forKey:FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY];
   [encoder encodeBool:_loginTooltipEnabled forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_KEY];
   [encoder encodeObject:_loginTooltipText forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY];
   [encoder encodeBool:_nativeAuthFlowEnabled forKey:FBSDK_SERVER_CONFIGURATION_NATIVE_AUTH_FLOW_ENABLED_KEY];
