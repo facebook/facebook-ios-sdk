@@ -367,13 +367,13 @@ typedef void (^RPSBlock)(void);
         case 0: { // Share on Facebook
             FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
             shareDialog.fromViewController = self;
-            if (![self shareWith:shareDialog content:[self getGameShareContent]]) {
+            if (![self shareWith:shareDialog content:[self getGameShareContent:NO]]) {
                 [self displayInstallAppWithAppName:@"Facebook"];
             }
             break;
         }
         case 1: { // Share on Messenger
-            if (![self shareWith:[[FBSDKMessageDialog alloc] init] content:[self getGameShareContent]]) {
+            if (![self shareWith:[[FBSDKMessageDialog alloc] init] content:[self getGameShareContent:YES]]) {
                 [self displayInstallAppWithAppName:@"Messenger"];
             }
             break;
@@ -419,8 +419,8 @@ typedef void (^RPSBlock)(void);
     return _lastPlayerCall != RPSCallNone && _lastComputerCall != RPSCallNone;
 }
 
-- (id<FBSDKSharingContent>) getGameShareContent {
-    return self.hasPlayedAtLeastOnce ? [self getGameActivityShareContent] : [self getGameLinkShareContent];
+- (id<FBSDKSharingContent>) getGameShareContent:(BOOL)isShareForMessenger {
+    return (self.hasPlayedAtLeastOnce && !isShareForMessenger) ? [self getGameActivityShareContent] : [self getGameLinkShareContent];
 }
 
 - (FBSDKShareOpenGraphContent *) getGameActivityShareContent {

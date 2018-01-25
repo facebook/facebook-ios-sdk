@@ -714,11 +714,7 @@ static NSMapTable *_transientObjects;
 
   if (![self isRegisteredCanOpenURLScheme:urlScheme]){
     NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required for iOS 9.0", urlScheme];
-#ifdef __IPHONE_9_0
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
-#else
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
-#endif
   }
 }
 
