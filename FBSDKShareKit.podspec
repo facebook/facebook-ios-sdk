@@ -40,7 +40,6 @@ Pod::Spec.new do |s|
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.{h,m}',
