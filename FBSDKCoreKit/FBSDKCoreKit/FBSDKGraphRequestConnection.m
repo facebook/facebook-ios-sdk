@@ -443,7 +443,7 @@ NSURLSessionDataDelegate
   NSUInteger bodyLength = [[body data] length] / 1024;
 
   [request setValue:[FBSDKGraphRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
-  [request setValue:[FBSDKGraphRequestBody mimeContentType] forHTTPHeaderField:@"Content-Type"];
+  [request setValue:[body mimeContentType] forHTTPHeaderField:@"Content-Type"];
   [request setHTTPShouldHandleCookies:NO];
 
   [self logRequest:request bodyLength:bodyLength bodyLogger:bodyLogger attachmentLogger:attachmentLogger];

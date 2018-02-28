@@ -42,6 +42,6 @@
   dataAttachmentValue:(FBSDKGraphRequestDataAttachment *)dataAttachment
                logger:(FBSDKLogger *)logger;
 
-+ (NSString *)mimeContentType;
+- (NSString *)mimeContentType;
 
 @end
