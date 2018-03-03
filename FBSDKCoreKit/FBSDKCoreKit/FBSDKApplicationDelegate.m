@@ -309,8 +309,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   _pendingRequestCompletionBlock = [completionBlock copy];
   void (^handler)(BOOL, NSError *) = ^(BOOL openedURL, NSError *anError) {
     if (!openedURL) {
-      _pendingRequest = nil;
-      _pendingRequestCompletionBlock = nil;
+      self->_pendingRequest = nil;
+      self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
         openedURLError = [FBSDKError errorWithCode:FBSDKBrowserUnavailableErrorCode
@@ -354,7 +354,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
           if (error == nil) {
             [self application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
           }
-          _authenticationSession = nil;
+          self->_authenticationSession = nil;
         }];
         [_authenticationSession start];
         return;
@@ -385,11 +385,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.
       [parent.transitionCoordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         // Note SFVC init must occur inside block to avoid blank screen.
-        _safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
+        self->_safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
         // Disable dismissing with edge pan gesture
-        _safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        [_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-        [container displayChildController:_safariViewController];
+        self->_safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        [self->_safariViewController performSelector:@selector(setDelegate:) withObject:self];
+        [container displayChildController:self->_safariViewController];
         [parent presentViewController:container animated:YES completion:nil];
       }];
     } else {
