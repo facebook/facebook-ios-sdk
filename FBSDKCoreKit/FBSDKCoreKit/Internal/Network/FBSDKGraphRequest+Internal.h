@@ -51,6 +51,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKGraphRequestFlags)
 + (BOOL)isAttachment:(id)item;
 + (NSString *)serializeURL:(NSString *)baseUrl
                     params:(NSDictionary *)params
-                httpMethod:(NSString *)httpMethod;
+                httpMethod:(NSString *)httpMethod
+                  forBatch:(BOOL)forBatch;
 
 @end
