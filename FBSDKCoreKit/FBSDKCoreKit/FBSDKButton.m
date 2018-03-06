@@ -185,10 +185,10 @@
 
 - (void)configureButton
 {
-  [self configureWithIcon:[[self class] defaultIcon]
+  [self configureWithIcon:[self defaultIcon]
                     title:nil
-          backgroundColor:[[self class] defaultBackgroundColor]
-         highlightedColor:[[self class] defaultHighlightedColor]];
+          backgroundColor:[self defaultBackgroundColor]
+         highlightedColor:[self defaultHighlightedColor]];
 }
 
 - (void)configureWithIcon:(FBSDKIcon *)icon
