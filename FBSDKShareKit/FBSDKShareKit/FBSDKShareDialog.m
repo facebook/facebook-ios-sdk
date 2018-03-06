@@ -110,7 +110,7 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 
 - (BOOL)canShow
 {
-  if (!self.shareContent) {
+  if (self.shareContent) {
     switch (self.mode) {
       case FBSDKShareDialogModeAutomatic:
       case FBSDKShareDialogModeBrowser:
