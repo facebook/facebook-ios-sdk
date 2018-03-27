@@ -215,7 +215,7 @@ public class AppEventsLogger {
       return FBSDKAppEvents.userID() as String?
     }
     set {
-      FBSDKAppEvents.setUserID(userId)
+      FBSDKAppEvents.setUserID(newValue)
     }
   }
 
