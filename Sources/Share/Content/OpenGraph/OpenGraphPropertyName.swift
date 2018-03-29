@@ -34,7 +34,7 @@ public struct OpenGraphPropertyName {
    - parameter string: The string to create from.
    */
   public init?(_ string: String) {
-    let components = string.characters.split(separator: ":")
+    let components = string.split(separator: ":")
     guard components.count >= 2 else {
       return nil
     }
