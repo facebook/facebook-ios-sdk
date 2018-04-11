@@ -50,6 +50,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD @"seamless_login"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD @"smart_login_bookmark_icon_url"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD @"smart_login_menu_icon_url"
+#define FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD @"sdk_update_message"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -59,6 +60,7 @@ static FBSDKServerConfiguration *_serverConfiguration;
 static NSError *_serverConfigurationError;
 static NSDate *_serverConfigurationErrorTimestamp;
 static const NSTimeInterval kTimeout = 4.0;
+static BOOL _printedUpdateMessage;
 
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {
@@ -191,6 +193,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [FBSDKTypeUtility integerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD]];
   NSURL *smartLoginBookmarkIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD]];
   NSURL *smartLoginMenuIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD]];
+  NSString *updateMessage = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD]];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                           appName:appName
                                                                               loginTooltipEnabled:loginTooltipEnabled
@@ -212,6 +215,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                 smartLoginOptions:smartLoginOptions
                                                                         smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
                                                                             smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                                                    updateMessage:updateMessage
                                                    ];
 #if TARGET_OS_TV
   // don't download icons more than once a day.
@@ -254,6 +258,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD
+#ifdef DEBUG
+                      ,FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
+#endif
 #if TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
@@ -313,6 +320,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                 smartLoginOptions:FBSDKServerConfigurationSmartLoginOptionsUnknown
                                                         smartLoginBookmarkIconURL:nil
                                                             smartLoginMenuIconURL:nil
+                                                                    updateMessage:nil
                                    ];
   }
   return _defaultServerConfiguration;
@@ -342,6 +350,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       _serverConfiguration = serverConfiguration;
       _serverConfigurationError = nil;
       _serverConfigurationErrorTimestamp = nil;
+
+#ifdef DEBUG
+      NSString *updateMessage = _serverConfiguration.updateMessage;
+      if (updateMessage && [updateMessage length] > 0 && !_printedUpdateMessage) {
+        _printedUpdateMessage = YES;
+        NSLog(@"%@", updateMessage);
+      }
+#endif
     }
 
     // update the cached copy in NSUserDefaults
