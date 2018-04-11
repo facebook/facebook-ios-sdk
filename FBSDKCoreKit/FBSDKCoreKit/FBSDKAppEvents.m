@@ -122,6 +122,7 @@ NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression        = @"fb_like_bu
 NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression       = @"fb_login_button_impression";
 NSString *const FBSDKAppEventNameFBSDKSendButtonImpression        = @"fb_send_button_impression";
 NSString *const FBSDKAppEventNameFBSDKShareButtonImpression       = @"fb_share_button_impression";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression = @"fb_live_streaming_button_impression";
 
 NSString *const FBSDKAppEventNameFBSDKSmartLoginService      = @"fb_smart_login_service";
 
@@ -129,6 +130,7 @@ NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap  = @"fb_like_button_did_t
 NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap  = @"fb_login_button_did_tap";
 NSString *const FBSDKAppEventNameFBSDKSendButtonDidTap  = @"fb_send_button_did_tap";
 NSString *const FBSDKAppEventNameFBSDKShareButtonDidTap  = @"fb_share_button_did_tap";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap  = @"fb_live_streaming_button_did_tap";
 
 NSString *const FBSDKAppEventNameFBSDKLikeControlDidDisable          = @"fb_like_control_did_disable";
 NSString *const FBSDKAppEventNameFBSDKLikeControlDidLike             = @"fb_like_control_did_like";
@@ -149,6 +151,16 @@ NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow =   @"fb_app
 
 NSString *const FBSDKAppEventNameFBSessionFASLoginDialogResult = @"fb_mobile_login_fas_dialog_result";
 
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingStart        = @"fb_sdk_live_streaming_start";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingStop         = @"fb_sdk_live_streaming_stop";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingPause        = @"fb_sdk_live_streaming_pause";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingResume       = @"fb_sdk_live_streaming_resume";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingError        = @"fb_sdk_live_streaming_error";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingUpdateStatus = @"fb_sdk_live_streaming_update_status";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingVideoID      = @"fb_sdk_live_streaming_video_id";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingMic          = @"fb_sdk_live_streaming_mic";
+NSString *const FBSDKAppEventNameFBSDKLiveStreamingCamera       = @"fb_sdk_live_streaming_camera";
+
 // Event Parameters internal to this file
 NSString *const FBSDKAppEventParameterDialogOutcome               = @"fb_dialog_outcome";
 NSString *const FBSDKAppEventParameterDialogErrorMessage          = @"fb_dialog_outcome_error_message";
@@ -161,6 +173,13 @@ NSString *const FBSDKAppEventParameterShareTrayResult             = @"fb_share_t
 NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
 NSString *const FBSDKAppEventParameterEventName = @"_eventName";
 NSString *const FBSDKAppEventParameterImplicitlyLogged = @"_implicitlyLogged";
+
+NSString *const FBSDKAppEventParameterLiveStreamingPrevStatus    = @"live_streaming_prev_status";
+NSString *const FBSDKAppEventParameterLiveStreamingStatus        = @"live_streaming_status";
+NSString *const FBSDKAppEventParameterLiveStreamingError         = @"live_streaming_error";
+NSString *const FBSDKAppEventParameterLiveStreamingVideoID       = @"live_streaming_video_id";
+NSString *const FBSDKAppEventParameterLiveStreamingMicEnabled    = @"live_streaming_mic_enabled";
+NSString *const FBSDKAppEventParameterLiveStreamingCameraEnabled = @"live_streaming_camera_enabled";
 
 // Event parameter values internal to this file
 NSString *const FBSDKAppEventsDialogOutcomeValue_Completed = @"Completed";

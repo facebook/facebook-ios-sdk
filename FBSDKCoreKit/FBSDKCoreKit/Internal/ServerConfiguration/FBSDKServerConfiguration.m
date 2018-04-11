@@ -42,6 +42,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY @"smartLoginEnabled"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY @"smarstLoginBookmarkIconURL"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY @"smarstLoginBookmarkMenuURL"
+#define FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY @"SDKUpdateMessage"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 
 #pragma mark - Dialog Names
@@ -101,6 +102,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
             smartLoginOptions:(FBSDKServerConfigurationSmartLoginOptions)smartLoginOptions
     smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
         smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
+                updateMessage:(NSString *)updateMessage
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -124,6 +126,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _smartLoginOptions = smartLoginOptions;
     _smartLoginMenuIconURL = [smartLoginMenuIconURL copy];
     _smartLoginBookmarkIconURL = [smartLoginBookmarkIconURL copy];
+    _updateMessage = [updateMessage copy];
     _version = FBSDKServerConfigurationVersion;
   }
   return self;
@@ -205,6 +208,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   NSString *loggingToken = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
+  NSString *updateMessage = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                         appName:appName
@@ -227,6 +231,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                               smartLoginOptions:smartLoginOptions
                                       smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
                                           smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                  updateMessage:updateMessage
                                              ];
   configuration->_version = version;
   return configuration;
@@ -256,6 +261,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   [encoder encodeInteger:_smartLoginOptions forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   [encoder encodeObject:_smartLoginBookmarkIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   [encoder encodeObject:_smartLoginMenuIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
+  [encoder encodeObject:_updateMessage forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
 }
 
