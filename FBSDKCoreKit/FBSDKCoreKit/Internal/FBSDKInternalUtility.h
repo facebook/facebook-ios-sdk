@@ -21,7 +21,7 @@
 
 #define FBSDK_CANOPENURL_FACEBOOK @"fbauth2"
 #define FBSDK_CANOPENURL_FBAPI @"fbapi"
-#define FBSDK_CANOPENURL_MESSENGER @"fb-messenger-api"
+#define FBSDK_CANOPENURL_MESSENGER @"fb-messenger-share-api"
 #define FBSDK_CANOPENURL_MSQRD_PLAYER @"msqrdplayer"
 #define FBSDK_CANOPENURL_SHARE_EXTENSION @"fbshareextension"
 
@@ -89,7 +89,7 @@ typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
  Changes in the system clock will affect this value.
  - Returns: The number of milliseconds since the Unix Epoch.
  */
-+ (unsigned long)currentTimeInMilliseconds;
++ (uint64_t)currentTimeInMilliseconds;
 
 /**
   Sets an object for a key in a dictionary if it is not nil.

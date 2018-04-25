@@ -55,10 +55,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
- #ifdef __IPHONE_11_0
   SFAuthenticationSession *_authenticationSession NS_AVAILABLE_IOS(11_0);
   SFAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
- #endif
 #endif
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
@@ -173,12 +171,12 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
                                                                        completion:completePendingOpenURLBlock];
     _safariViewController = nil;
   } else {
-#ifdef __IPHONE_11_0
-    if (_authenticationSession != nil) {
-      [_authenticationSession cancel];
-      _authenticationSession = nil;
+    if (@available(iOS 11.0, *)) {
+      if (_authenticationSession != nil) {
+        [_authenticationSession cancel];
+        _authenticationSession = nil;
+      }
     }
-#endif
     completePendingOpenURLBlock();
   }
   if ([pendingURLOpen canOpenURL:url
@@ -373,7 +371,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       return;
     }
   }
-#endif
 
   // trying to dynamically load SFSafariViewController class
   // so for the cases when it is available we can send users through Safari View Controller flow

@@ -602,7 +602,7 @@
   __block int activiesEndpointCalledForUserCount = 0;
   __block int activiesEndpointCalledWithoutUserCount = 0;
   NSString *expectedUserID = @"bobbytables";
-  NSString *expectedEventString = [NSString stringWithFormat:@"_app_user_id\":\"%@", expectedUserID];
+  NSString *expectedEventString = [NSString stringWithFormat:@"app_user_id\":\"%@", expectedUserID];
 
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSString *const activitiesPath = [NSString stringWithFormat:@"%@/activities", appID];

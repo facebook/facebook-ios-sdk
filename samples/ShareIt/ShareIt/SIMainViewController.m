@@ -37,7 +37,6 @@
 
 @implementation SIMainViewController
 {
-  FBSDKLikeButton *_photoLikeButton;
   NSArray *_photos;
 }
 
@@ -72,15 +71,6 @@
 {
   [super viewDidLoad];
   self.loginButton.publishPermissions = @[@"publish_actions"];
-
-  _photoLikeButton = [[FBSDKLikeButton alloc] init];
-  _photoLikeButton.objectType = FBSDKLikeObjectTypeOpenGraph;
-  self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:_photoLikeButton];
-
-  self.pageLikeControl.likeControlAuxiliaryPosition = FBSDKLikeControlAuxiliaryPositionBottom;
-  self.pageLikeControl.likeControlHorizontalAlignment = FBSDKLikeControlHorizontalAlignmentCenter;
-  self.pageLikeControl.foregroundColor = [UIColor whiteColor];
-  self.pageLikeControl.objectID = @"shareitexampleapp";
 
   [self _configurePhotos];
 }
@@ -241,7 +231,6 @@
 {
   SIPhoto *photo = [self _currentPhoto];
   [self _mainView].photo = photo;
-  _photoLikeButton.objectID = photo.objectURL.absoluteString;
 }
 
 #pragma mark - FBSDKSharingDelegate

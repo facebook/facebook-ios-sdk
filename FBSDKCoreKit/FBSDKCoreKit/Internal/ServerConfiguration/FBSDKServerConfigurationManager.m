@@ -50,6 +50,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD @"seamless_login"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD @"smart_login_bookmark_icon_url"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD @"smart_login_menu_icon_url"
+#define FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD @"sdk_update_message"
 
 @implementation FBSDKServerConfigurationManager
 
@@ -60,11 +61,16 @@ static NSError *_serverConfigurationError;
 static NSDate *_serverConfigurationErrorTimestamp;
 static const NSTimeInterval kTimeout = 4.0;
 
+#ifdef DEBUG
+static BOOL _printedUpdateMessage;
+#endif
+
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {
   FBSDKServerConfigurationManagerAppEventsFeaturesNone                            = 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled            = 1 << 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled  = 1 << 1,
+  FBSDKServerConfigurationManagerAppEventsFeaturesAppIndexingTriggerEnabled       = 1 << 6,
 };
 
 #pragma mark - Public Class Methods
@@ -172,7 +178,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSUInteger appEventsFeatures = [FBSDKTypeUtility unsignedIntegerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_EVENTS_FEATURES_FIELD]];
   BOOL advertisingIDEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled);
   BOOL implicitPurchaseLoggingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled);
-
+  BOOL appIndexingTriggerEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAppIndexingTriggerEnabled);
   NSString *appName = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD]];
   BOOL loginTooltipEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD]];
   NSString *loginTooltipText = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD]];
@@ -190,6 +196,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [FBSDKTypeUtility integerValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD]];
   NSURL *smartLoginBookmarkIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD]];
   NSURL *smartLoginMenuIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD]];
+  NSString *updateMessage = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD]];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                           appName:appName
                                                                               loginTooltipEnabled:loginTooltipEnabled
@@ -198,6 +205,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                              advertisingIDEnabled:advertisingIDEnabled
                                                                            implicitLoggingEnabled:implicitLoggingEnabled
                                                                    implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                                                        appIndexingTriggerEnabled:appIndexingTriggerEnabled
                                                                       systemAuthenticationEnabled:systemAuthenticationEnabled
                                                                             nativeAuthFlowEnabled:nativeAuthFlowEnabled
                                                                              dialogConfigurations:dialogConfigurations
@@ -210,6 +218,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                 smartLoginOptions:smartLoginOptions
                                                                         smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
                                                                             smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                                                    updateMessage:updateMessage
                                                    ];
 #if TARGET_OS_TV
   // don't download icons more than once a day.
@@ -252,6 +261,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD
+#ifdef DEBUG
+                      ,FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD
+#endif
 #if TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_FIELD,
@@ -298,6 +310,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                              advertisingIDEnabled:NO
                                                            implicitLoggingEnabled:NO
                                                    implicitPurchaseLoggingEnabled:NO
+                                                        appIndexingTriggerEnabled:NO
                                                       systemAuthenticationEnabled:NO
                                                             nativeAuthFlowEnabled:NO
                                                              dialogConfigurations:nil
@@ -310,6 +323,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                 smartLoginOptions:FBSDKServerConfigurationSmartLoginOptionsUnknown
                                                         smartLoginBookmarkIconURL:nil
                                                             smartLoginMenuIconURL:nil
+                                                                    updateMessage:nil
                                    ];
   }
   return _defaultServerConfiguration;
@@ -339,6 +353,14 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       _serverConfiguration = serverConfiguration;
       _serverConfigurationError = nil;
       _serverConfigurationErrorTimestamp = nil;
+
+#ifdef DEBUG
+      NSString *updateMessage = _serverConfiguration.updateMessage;
+      if (updateMessage && [updateMessage length] > 0 && !_printedUpdateMessage) {
+        _printedUpdateMessage = YES;
+        NSLog(@"%@", updateMessage);
+      }
+#endif
     }
 
     // update the cached copy in NSUserDefaults

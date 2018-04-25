@@ -110,11 +110,11 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return value;
 }
 
-+ (unsigned long)currentTimeInMilliseconds
++ (uint64_t)currentTimeInMilliseconds
 {
   struct timeval time;
   gettimeofday(&time, NULL);
-  return (time.tv_sec * 1000) + (time.tv_usec / 1000);
+  return ((uint64_t)time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
 + (BOOL)dictionary:(NSMutableDictionary *)dictionary
@@ -714,11 +714,7 @@ static NSMapTable *_transientObjects;
 
   if (![self isRegisteredCanOpenURLScheme:urlScheme]){
     NSString *reason = [NSString stringWithFormat:@"%@ is missing from your Info.plist under LSApplicationQueriesSchemes and is required for iOS 9.0", urlScheme];
-#ifdef __IPHONE_9_0
-    @throw [NSException exceptionWithName:@"InvalidOperationException" reason:reason userInfo:nil];
-#else
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:reason];
-#endif
   }
 }
 

@@ -36,6 +36,12 @@
 #if !TARGET_OS_TV
 #import "FBSDKCameraEffectArguments+Internal.h"
 #import "FBSDKCameraEffectTextures+Internal.h"
+#import "FBSDKShareMessengerContentUtility.h"
+#import "FBSDKShareMessengerGenericTemplateContent.h"
+#import "FBSDKShareMessengerGenericTemplateElement.h"
+#import "FBSDKShareMessengerMediaTemplateContent.h"
+#import "FBSDKShareMessengerOpenGraphMusicTemplateContent.h"
+#import "FBSDKShareMessengerURLActionButton.h"
 #endif
 
 @implementation FBSDKShareUtility
@@ -307,6 +313,15 @@
   } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
     [self _addToParameters:parameters forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent];
 #if !TARGET_OS_TV
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]]) {
+    [FBSDKShareMessengerContentUtility addToParameters:parameters
+               forShareMessengerGenericTemplateContent:(FBSDKShareMessengerGenericTemplateContent *)shareContent];
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]]) {
+    [FBSDKShareMessengerContentUtility addToParameters:parameters
+                 forShareMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)shareContent];
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
+    [FBSDKShareMessengerContentUtility addToParameters:parameters
+        forShareMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     [self _addToParameters:parameters forShareCameraEffectContent:(FBSDKShareCameraEffectContent *)shareContent];
 #endif
@@ -540,6 +555,12 @@
   } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
     return [self validateShareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent error:errorRef];
 #if !TARGET_OS_TV
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerMediaTemplateContent class]]) {
+    return [self validateMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)shareContent error:errorRef];
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerGenericTemplateContent class]]) {
+    return [self validateMessengerGenericTemplateContent:(FBSDKShareMessengerGenericTemplateContent *)shareContent error:errorRef];
+  } else if ([shareContent isKindOfClass:[FBSDKShareMessengerOpenGraphMusicTemplateContent class]]) {
+    return [self validateMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)shareContent error:errorRef];
   } else if ([shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]]) {
     return [self validateShareCameraEffectContent:(FBSDKShareCameraEffectContent *)shareContent error:errorRef];
 #endif
@@ -650,6 +671,82 @@
           [self _validateRequiredValue:videoURL name:@"videoURL" error:errorRef]);
 }
 
+#if !TARGET_OS_TV
+
++ (BOOL)validateMessengerMediaTemplateContent:(FBSDKShareMessengerMediaTemplateContent *)messengerMediaTemplateContent
+                                        error:(NSError *__autoreleasing *)errorRef
+{
+  if (!messengerMediaTemplateContent.mediaURL && !messengerMediaTemplateContent.attachmentID) {
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKShareError requiredArgumentErrorWithName:@"attachmentID/mediaURL" message:@"Must specify either attachmentID or mediaURL"];
+    }
+    return NO;
+  }
+  return [self _validateMessengerActionButton:messengerMediaTemplateContent.button
+                        isDefaultActionButton:NO
+                                       pageID:messengerMediaTemplateContent.pageID
+                                        error:errorRef];
+}
+
++ (BOOL)validateMessengerGenericTemplateContent:(FBSDKShareMessengerGenericTemplateContent *)genericTemplateContent
+                                          error:(NSError *__autoreleasing *)errorRef
+{
+  return [self _validateRequiredValue:genericTemplateContent.element.title name:@"element.title" error:errorRef] &&
+  [self _validateMessengerActionButton:genericTemplateContent.element.defaultAction
+                 isDefaultActionButton:YES
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef] &&
+  [self _validateMessengerActionButton:genericTemplateContent.element.button
+                 isDefaultActionButton:NO
+                                pageID:genericTemplateContent.pageID
+                                 error:errorRef];
+}
+
++ (BOOL)validateMessengerOpenGraphMusicTemplateContent:(FBSDKShareMessengerOpenGraphMusicTemplateContent *)openGraphMusicTemplateContent
+                                                 error:(NSError *__autoreleasing *)errorRef
+{
+  return [self _validateRequiredValue:openGraphMusicTemplateContent.url name:@"url" error:errorRef] &&
+  [self _validateRequiredValue:openGraphMusicTemplateContent.pageID name:@"pageID" error:errorRef] &&
+  [self _validateMessengerActionButton:openGraphMusicTemplateContent.button
+                 isDefaultActionButton:NO
+                                pageID:openGraphMusicTemplateContent.pageID
+                                 error:errorRef];
+}
+
++ (BOOL)_validateMessengerActionButton:(id<FBSDKShareMessengerActionButton>)button
+                 isDefaultActionButton:(BOOL)isDefaultActionButton
+                                pageID:(NSString *)pageID
+                                 error:(NSError *__autoreleasing *)errorRef
+{
+  if (!button) {
+    return YES;
+  }
+
+  if ([button isKindOfClass:[FBSDKShareMessengerURLActionButton class]]) {
+    return [self _validateURLActionButton:(FBSDKShareMessengerURLActionButton *)button
+                    isDefaultActionButton:isDefaultActionButton
+                                   pageID:pageID
+                                    error:errorRef];
+  } else {
+    if (errorRef != NULL) {
+      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"buttons" value:button message:nil];
+    }
+    return NO;
+  }
+}
+
++ (BOOL)_validateURLActionButton:(FBSDKShareMessengerURLActionButton *)urlActionButton
+           isDefaultActionButton:(BOOL)isDefaultActionButton
+                          pageID:(NSString *)pageID
+                           error:(NSError *__autoreleasing *)errorRef
+{
+  return [self _validateRequiredValue:urlActionButton.url name:@"button.url" error:errorRef] &&
+  (!isDefaultActionButton ? [self _validateRequiredValue:urlActionButton.title name:@"button.title" error:errorRef] : YES) &&
+  (urlActionButton.isMessengerExtensionURL ? [self _validateRequiredValue:pageID name:@"content pageID" error:errorRef] : YES);
+}
+
+#endif
+
 + (BOOL)shareMediaContentContainsPhotosAndVideos:(FBSDKShareMediaContent *)shareMediaContent
 {
   BOOL containsPhotos = NO;
@@ -674,6 +771,10 @@
   if (hashtagString != nil) {
     [FBSDKInternalUtility dictionary:parameters setObject:@[hashtagString] forKey:@"hashtags"];
   }
+
+  [FBSDKInternalUtility dictionary:parameters setObject:shareContent.pageID forKey:@"pageID"];
+  [FBSDKInternalUtility dictionary:parameters setObject:shareContent.shareUUID forKey:@"shareUUID"];
+
   if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
     FBSDKShareOpenGraphAction *action = ((FBSDKShareOpenGraphContent *)shareContent).action;
     [action setArray:shareContent.peopleIDs forKey:@"tags"];
@@ -716,6 +817,12 @@ forShareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
+
+  /**
+   Pass link parameter as "messenger_link" due to versioning requirements for message dialog flow.
+   We will only use the new share flow we developed if messenger_link is present, not link.
+   */
+  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"messenger_link"];
 #pragma clang diagnostic pop
 }
 

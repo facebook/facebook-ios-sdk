@@ -29,7 +29,7 @@
 @property (nonatomic, retain) NSMutableData *data;
 @property (nonatomic, copy) FBSDKURLConnectionHandler handler;
 @property (nonatomic, retain) NSURLResponse *response;
-@property (nonatomic) unsigned long requestStartTime;
+@property (nonatomic, assign) uint64_t requestStartTime;
 @property (nonatomic, readonly) NSUInteger loggerSerialNumber;
 
 @end
@@ -83,7 +83,7 @@
                responseData:(NSData *)responseData {
   // Basic FBSDKURLConnection logging just prints out the URL.  FBSDKGraphRequest logging provides more details.
   NSString *mimeType = [response MIMEType];
-  NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKURLConnection <#%lu>:\n  Duration: %lu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
+  NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKURLConnection <#%lu>:\n  Duration: %llu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
                                       (unsigned long)self.loggerSerialNumber,
                                       [FBSDKInternalUtility currentTimeInMilliseconds] - self.requestStartTime,
                                       (unsigned long)[responseData length] / 1024,

@@ -27,7 +27,7 @@
 
 @property (nonatomic, strong) NSURLSessionTask *task;
 @property (nonatomic, copy) FBSDKURLSessionTaskHandler handler;
-@property (nonatomic, assign) unsigned long requestStartTime;
+@property (nonatomic, assign) uint64_t requestStartTime;
 @property (nonatomic, assign, readonly) NSUInteger loggerSerialNumber;
 
 @end
@@ -85,7 +85,7 @@
                responseData:(NSData *)responseData {
   // Basic FBSDKURLSessionTask logging just prints out the URL.  FBSDKGraphRequest logging provides more details.
   NSString *mimeType = [response MIMEType];
-  NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKURLSessionTask <#%lu>:\n  Duration: %lu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
+  NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKURLSessionTask <#%lu>:\n  Duration: %llu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
                                       (unsigned long)self.loggerSerialNumber,
                                       [FBSDKInternalUtility currentTimeInMilliseconds] - self.requestStartTime,
                                       (unsigned long)[responseData length] / 1024,

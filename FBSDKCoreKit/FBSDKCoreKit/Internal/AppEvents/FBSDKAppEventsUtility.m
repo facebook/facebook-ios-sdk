@@ -62,6 +62,11 @@
 
   parameters[@"application_tracking_enabled"] = [@(!FBSDKSettings.limitEventAndDataUsage) stringValue];
 
+  NSString *userID = [FBSDKAppEvents userID];
+  if (userID) {
+    parameters[@"app_user_id"] = userID;
+  }
+
   [FBSDKAppEventsDeviceInfo extendDictionaryWithDeviceInfo:parameters];
 
   static dispatch_once_t fetchBundleOnce;

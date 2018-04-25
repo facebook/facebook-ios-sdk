@@ -94,6 +94,17 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsWebLoginCompleted;
 /** Use to log the result of the App Switch OS AlertView. Only available on OS >= iOS10 */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSessionFASLoginDialogResult;
 
+/** Use to log the live streaming events from sdk */
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingStart;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingStop;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingPause;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingResume;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingError;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingUpdateStatus;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingVideoID;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingMic;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingCamera;
+
 /** Use to log the results of a share dialog */
 FBSDK_EXTERN NSString *const FBSDLAppEventNameFBSDKEventShareDialogResult;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKEventMessengerShareDialogResult;
@@ -105,10 +116,20 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKEventAppInviteShareDialogShow
 
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogMode;
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentType;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentUUID;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogShareContentPageID;
 
 /*! Use to log parameters for share tray use */
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterShareTrayActivityName;
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterShareTrayResult;
+
+/*! Use to log parameters for live streaming*/
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingPrevStatus;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingStatus;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingError;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingVideoID;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingMicEnabled;
+FBSDK_EXTERN NSString *const FBSDKAppEventParameterLiveStreamingCameraEnabled;
 
 // Internally known event parameter values
 
@@ -121,6 +142,9 @@ FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeStatus;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypePhoto;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeVideo;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeCamera;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerGenericTemplate;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate;
+FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate;
 FBSDK_EXTERN NSString *const FBSDKAppEventsDialogShareContentTypeUnknown;
 
 
@@ -142,6 +166,7 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSendButtonImpression;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKShareButtonImpression;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonImpression;
 
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSmartLoginService;
 
@@ -149,6 +174,7 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeButtonDidTap;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLoginButtonDidTap;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKSendButtonDidTap;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKShareButtonDidTap;
+FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLiveStreamingButtonDidTap;
 
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlDidDisable;
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlDidLike;

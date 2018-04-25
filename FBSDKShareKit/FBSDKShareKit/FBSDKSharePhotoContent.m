@@ -29,6 +29,8 @@
 #define FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY @"photos"
 #define FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY @"placeID"
 #define FBSDK_SHARE_PHOTO_CONTENT_REF_KEY @"ref"
+#define FBSDK_SHARE_PHOTO_CONTENT_PAGE_ID_KEY @"pageID"
+#define FBSDK_SHARE_PHOTO_CONTENT_UUID_KEY @"uuid"
 
 @implementation FBSDKSharePhotoContent
 
@@ -39,6 +41,21 @@
 @synthesize peopleIDs = _peopleIDs;
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
+@synthesize pageID = _pageID;
+@synthesize shareUUID = _shareUUID;
+
+#pragma mark - Initializer
+
+- (instancetype)init
+{
+  self = [super init];
+  if (self) {
+    _shareUUID = [NSUUID UUID].UUIDString;
+  }
+  return self;
+}
+
+#pragma mark - Setters
 
 - (void)setPeopleIDs:(NSArray *)peopleIDs
 {
@@ -67,6 +84,8 @@
     [_photos hash],
     [_placeID hash],
     [_ref hash],
+    [_pageID hash],
+    [_shareUUID hash],
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -90,7 +109,9 @@
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_photos isEqualToObject:content.photos] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
-          [FBSDKInternalUtility object:_ref isEqualToObject:content.ref]);
+          [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
+          [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
+          [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID]);
 }
 
 #pragma mark - NSCoding
@@ -110,6 +131,8 @@
     _photos = [decoder decodeObjectOfClasses:classes forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_REF_KEY];
+    _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_PAGE_ID_KEY];
+    _shareUUID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_PHOTO_CONTENT_UUID_KEY];
   }
   return self;
 }
@@ -122,6 +145,8 @@
   [encoder encodeObject:_photos forKey:FBSDK_SHARE_PHOTO_CONTENT_PHOTOS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_PHOTO_CONTENT_PLACE_ID_KEY];
   [encoder encodeObject:_ref forKey:FBSDK_SHARE_PHOTO_CONTENT_REF_KEY];
+  [encoder encodeObject:_pageID forKey:FBSDK_SHARE_PHOTO_CONTENT_PAGE_ID_KEY];
+  [encoder encodeObject:_shareUUID forKey:FBSDK_SHARE_PHOTO_CONTENT_UUID_KEY];
 }
 
 #pragma mark - NSCopying
@@ -135,6 +160,8 @@
   copy->_photos = [_photos copy];
   copy->_placeID = [_placeID copy];
   copy->_ref = [_ref copy];
+  copy->_pageID = [_pageID copy];
+  copy->_shareUUID = [_shareUUID copy];
   return copy;
 }
 

@@ -110,7 +110,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 }
 
 - (void)generateCurrentPlaceRequestWithMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                                       fields:(NSArray *)fields
+                                                       fields:(NSArray<NSString *> *)fields
                                                    completion:(FBSDKCurrentPlaceGraphRequestCompletion)completion
 {
 
@@ -143,6 +143,16 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
       completion([self _currentPlaceGraphRequestForLocation:currentLocation bluetoothBeacons:currentBeacons minimumConfidenceLevel:minimumConfidence fields:fields], nil);
     }
   });
+}
+
+- (void)generateCurrentPlaceRequestForCurrentLocation:(CLLocation *)currentLocation
+                           withMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
+                                               fields:(nullable NSArray<NSString *> *)fields
+                                           completion:(nonnull FBSDKCurrentPlaceGraphRequestCompletion)completion
+{
+  [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> * _Nullable beacons) {
+    completion([self _currentPlaceGraphRequestForLocation:currentLocation bluetoothBeacons:beacons minimumConfidenceLevel:minimumConfidence fields:fields], nil);
+  }];
 }
 
 
@@ -200,7 +210,8 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   if (networkInfo) {
     NSString *ssid = networkInfo[@"SSID"];
     NSString *bssid = networkInfo[@"BSSID"];
-    if (ssid && bssid) {
+    if ((ssid && bssid) &&
+        !([ssid containsString:@"_nomap"] || [ssid containsString:@"_optout"])) {
       parameters[@"wifi"] = [self _jsonStringForObject:@{@"enabled" : @YES,
                                                          @"current_connection" : @{@"ssid" : ssid,
                                                                                    @"mac_address" : bssid}}];

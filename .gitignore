@@ -4,7 +4,13 @@ ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
 ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
 ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
 ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
+
 ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
+ads/internal/samples/Hackvertising/Hackvertising.xcworkspace/*
+
+ads/ancamp/ANCampApp/ANCampApp.xcodeproj/*
+ads/ancamp/ANCampApp/ANCampApp.xcworkspace/*
+
 ads/src/FBAudienceNetwork.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*

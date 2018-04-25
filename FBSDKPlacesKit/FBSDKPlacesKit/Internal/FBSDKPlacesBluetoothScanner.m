@@ -47,7 +47,7 @@ static NSTimeInterval const scanLength = 0.5;
 {
   self = [super init];
   if (self) {
-    _manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil];
+    _manager = [[CBCentralManager alloc] initWithDelegate:self queue:nil options:@{CBCentralManagerOptionShowPowerAlertKey: @NO}];
     _discoveredBeacons = [NSMutableArray new];
     _eddystoneBeaconUUID = [CBUUID UUIDWithString:EddystoneBeaconUUIDString];
     _bluetoothServices = @[[CBUUID UUIDWithString:FBBeaconUUIDString], _eddystoneBeaconUUID];
@@ -98,6 +98,7 @@ static NSTimeInterval const scanLength = 0.5;
       completion(nil);
     }
   }
+  [self.scanCompletionBlocks removeAllObjects];
   self.didPerformScan = NO;
 }
 

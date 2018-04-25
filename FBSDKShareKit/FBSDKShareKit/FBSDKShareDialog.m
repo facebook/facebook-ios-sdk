@@ -330,6 +330,10 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredF
 
 - (BOOL)_canShowShareSheet
 {
+  if (![FBSDKInternalUtility isFacebookAppInstalled]) {
+    return NO;
+  }
+
   Class composeViewControllerClass = [fbsdkdfl_SLComposeViewControllerClass() class];
   if (!composeViewControllerClass) {
     return NO;

@@ -88,7 +88,7 @@ static FBSDKProfile *g_currentProfile;
 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  NSString *path = [self imagePathForPictureMode:FBSDKProfilePictureModeNormal size:size];
+  NSString *path = [self imagePathForPictureMode:mode size:size];
 #pragma clang diagnostic pop
   return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph"
                                                     path:path
@@ -278,9 +278,14 @@ static FBSDKProfile *g_currentProfile;
 {
   NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
   NSData *data = [userDefaults objectForKey:FBSDKProfileUserDefaultsKey];
-  return (data != nil)
-    ? [NSKeyedUnarchiver unarchiveObjectWithData:data]
-    : nil;
+  if (data != nil) {
+    @try {
+      return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    } @catch (NSException *exception) {
+      return nil;
+    }
+  }
+  return nil;
 }
 
 @end

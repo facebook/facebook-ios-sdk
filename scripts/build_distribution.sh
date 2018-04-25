@@ -78,6 +78,15 @@ fi
 # Build FBAudienceNetwork framework
 #
 if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
+
+	# refuse to build with unclean state
+	repository_unclean=$(hg status -i ios-sdk/ | grep -v .DS_Store)
+	if [ "$repository_unclean" ]; then
+		echo "Detected unclean repository state:"
+		echo "$repository_unclean"
+		die "Please run 'hg purge --all' before building"
+	fi
+
 	AN_ZIP=$FB_AD_SDK_BUILD/$FB_AD_SDK_BINARY_NAME-$FB_AD_SDK_VERSION.zip
 	AN_BUILD_PACKAGE=$FB_AD_SDK_BUILD/package
 	AN_SAMPLES=$AN_BUILD_PACKAGE/Samples/FBAudienceNetwork
@@ -125,6 +134,7 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	done
 	for fname in $(find "$AN_SAMPLES" -name "*-PUBLIC.xcodeproj" -print); do \
 	  newfname="$(echo ${fname} | sed -e 's/-PUBLIC//')" ; \
+	    rm -rf "${newfname}"; \
 	    mv "${fname}" "${newfname}" ; \
 	done
 
@@ -141,9 +151,8 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	find "$AN_SAMPLES" -name "Info.plist" -exec perl -p -i -0777 -e 's/\s*<key>CFBundleURLTypes<\/key>\s*<array>\s*<dict>\s*<key>CFBundleURLSchemes<\/key>\s*<array>\s*<string>fb\d*<\/string>\s*<\/array>\s*<\/dict>\s*<\/array>\s*<key>FacebookAppID<\/key>\s*<string>\d*<\/string>\s*<key>FacebookDisplayName<\/key>\s*<string>.*<\/string>\s*<key>LSApplicationQueriesSchemes<\/key>\s*<array>\s*<string>fbapi<\/string>\s*<string>fb-messenger-api<\/string>\s*<string>fbauth2<\/string>\s*<string>fbshareextension<\/string>\s*<\/array>\n//g' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/\n\s*com\.apple\.Keychain = {\s*enabled = 1;\s*};//gms' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/NativeAdSample.entitlements/d' {} \;
-	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdUnitsSample.entitlements/d' {} \;
+	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdBiddingSample.entitlements/d' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/^\s*<FileRef\n\s*location = "group:\.\.\/\.\.\/FBSDKCoreKit\/FBSDKCoreKit\.xcodeproj">\n\s*<\/FileRef>\n//gms' {} \;
-
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/fbLoginButton/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKCoreKit/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKLogin/d" {} \;
@@ -193,7 +202,7 @@ else
 		\cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBSDKShareKit.framework"
 		\cp -R "$FB_SDK_BUILD"/FBSDKPlacesKit.framework "$FB_SDK_BUILD_PACKAGE" \
-		|| die "Could not copy FBSDKPlacesKit.framework"
+			|| die "Could not copy FBSDKPlacesKit.framework"
 		\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy Bolts.framework"
 		\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
