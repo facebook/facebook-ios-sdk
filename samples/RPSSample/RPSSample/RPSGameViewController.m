@@ -54,7 +54,7 @@ static NSString *photoURLs[] = {
 
 typedef void (^RPSBlock)(void);
 
-@interface RPSGameViewController () <UIActionSheetDelegate, UIAlertViewDelegate, FBSDKSharingDelegate, FBSDKAppInviteDialogDelegate>
+@interface RPSGameViewController () <UIActionSheetDelegate, UIAlertViewDelegate, FBSDKSharingDelegate>
 @end
 
 @implementation RPSGameViewController {
@@ -346,7 +346,6 @@ typedef void (^RPSBlock)(void);
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"Share on Facebook",
                             @"Share on Messenger",
-                            @"Invite Friends",
                             @"Friends' Activity",
                             [FBSDKAccessToken currentAccessToken] ? @"Log out" : @"Log in",
                             nil];
@@ -368,27 +367,18 @@ typedef void (^RPSBlock)(void);
         case 0: { // Share on Facebook
             FBSDKShareDialog *shareDialog = [[FBSDKShareDialog alloc] init];
             shareDialog.fromViewController = self;
-            if (![self shareWith:shareDialog content:[self getGameShareContent]]) {
+            if (![self shareWith:shareDialog content:[self getGameShareContent:NO]]) {
                 [self displayInstallAppWithAppName:@"Facebook"];
             }
             break;
         }
         case 1: { // Share on Messenger
-            if (![self shareWith:[[FBSDKMessageDialog alloc] init] content:[self getGameShareContent]]) {
+            if (![self shareWith:[[FBSDKMessageDialog alloc] init] content:[self getGameShareContent:YES]]) {
                 [self displayInstallAppWithAppName:@"Messenger"];
             }
             break;
         }
-        case 2: { // Invite Friends"
-            // app link corresponds to rps-sample-applink-example://
-            FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];
-            content.appLinkURL = [NSURL URLWithString:@"https://fb.me/319673994858989"];
-            [FBSDKAppInviteDialog showFromViewController:self
-                                             withContent:content
-                                                delegate:self];
-            break;
-        }
-        case 3: { // See Friends
+        case 2: { // See Friends
             UIViewController *friends;
             if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
                 friends = [[RPSFriendsViewController alloc] initWithNibName:@"RPSFriendsViewController_iPhone" bundle:nil];
@@ -399,7 +389,7 @@ typedef void (^RPSBlock)(void);
                                                  animated:YES];
             break;
         }
-        case 4: { // Login and logout
+        case 3: { // Login and logout
             if ([FBSDKAccessToken currentAccessToken]) {
                 FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
                 [login logOut];
@@ -429,8 +419,8 @@ typedef void (^RPSBlock)(void);
     return _lastPlayerCall != RPSCallNone && _lastComputerCall != RPSCallNone;
 }
 
-- (id<FBSDKSharingContent>) getGameShareContent {
-    return self.hasPlayedAtLeastOnce ? [self getGameActivityShareContent] : [self getGameLinkShareContent];
+- (id<FBSDKSharingContent>) getGameShareContent:(BOOL)isShareForMessenger {
+    return (self.hasPlayedAtLeastOnce && !isShareForMessenger) ? [self getGameActivityShareContent] : [self getGameLinkShareContent];
 }
 
 - (FBSDKShareOpenGraphContent *) getGameActivityShareContent {
@@ -656,22 +646,4 @@ typedef void (^RPSBlock)(void);
                   valueToSum:timeTaken
                   parameters:@{@"Time Taken" : timeTakenStr}];
 }
-
-#pragma mark - FBSDKAppInviteDialogDelegate
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didCompleteWithResults:(NSDictionary *)results
-{
-    // Intentionally no-op.
-}
-
-- (void)appInviteDialog:(FBSDKAppInviteDialog *)appInviteDialog didFailWithError:(NSError *)error
-{
-    NSLog(@"app invite error:%@", error);
-    NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey] ?:
-    @"There was a problem sending the invite, please try again later.";
-    NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey] ?: @"Oops!";
-
-    [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-}
-
 @end

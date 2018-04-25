@@ -193,7 +193,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   self.titleLabel.textAlignment = NSTextAlignmentCenter;
   [self addConstraint:[NSLayoutConstraint constraintWithItem:self
                                                    attribute:NSLayoutAttributeHeight
-                                                   relatedBy:NSLayoutRelationEqual
+                                                   relatedBy:NSLayoutRelationGreaterThanOrEqual
                                                       toItem:nil
                                                    attribute:NSLayoutAttributeNotAnAttribute
                                                   multiplier:1

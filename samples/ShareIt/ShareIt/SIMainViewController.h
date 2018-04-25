@@ -24,7 +24,6 @@
 
 @interface SIMainViewController : UIViewController <UIScrollViewDelegate>
 
-@property (nonatomic, strong) IBOutlet FBSDKLikeControl *pageLikeControl;
 @property (nonatomic, strong) IBOutlet FBSDKLoginButton *loginButton;
 @property (nonatomic, strong) IBOutlet UIPageControl *pageControl;
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;

@@ -31,6 +31,7 @@
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY @"implicitLoggingEnabled"
 #define FBSDK_SERVER_CONFIGURATION_DEFAULT_SHARE_MODE_KEY @"defaultShareMode"
 #define FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY @"implicitPurchaseLoggingEnabled"
+#define FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY @"appIndexingTriggerEnabled"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_KEY @"loginTooltipEnabled"
 #define FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY @"loginTooltipText"
 #define FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY @"systemAuthenticationEnabled"
@@ -41,6 +42,7 @@
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY @"smartLoginEnabled"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY @"smarstLoginBookmarkIconURL"
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY @"smarstLoginBookmarkMenuURL"
+#define FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY @"SDKUpdateMessage"
 #define FBSDK_SERVER_CONFIGURATION_VERSION_KEY @"version"
 
 #pragma mark - Dialog Names
@@ -87,6 +89,7 @@ const NSInteger FBSDKServerConfigurationVersion = 2;
          advertisingIDEnabled:(BOOL)advertisingIDEnabled
        implicitLoggingEnabled:(BOOL)implicitLoggingEnabled
 implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
+    appIndexingTriggerEnabled:(BOOL)appIndexingTriggerEnabled
   systemAuthenticationEnabled:(BOOL)systemAuthenticationEnabled
         nativeAuthFlowEnabled:(BOOL)nativeAuthFlowEnabled
          dialogConfigurations:(NSDictionary *)dialogConfigurations
@@ -99,6 +102,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
             smartLoginOptions:(FBSDKServerConfigurationSmartLoginOptions)smartLoginOptions
     smartLoginBookmarkIconURL:(NSURL *)smartLoginBookmarkIconURL
         smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
+                updateMessage:(NSString *)updateMessage
 {
   if ((self = [super init])) {
     _appID = [appID copy];
@@ -109,6 +113,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _advertisingIDEnabled = advertisingIDEnabled;
     _implicitLoggingEnabled = implicitLoggingEnabled;
     _implicitPurchaseLoggingEnabled = implicitPurchaseLoggingEnabled;
+    _appIndexingTriggerEnabled = appIndexingTriggerEnabled;
     _systemAuthenticationEnabled = systemAuthenticationEnabled;
     _nativeAuthFlowEnabled = nativeAuthFlowEnabled;
     _dialogConfigurations = [dialogConfigurations copy];
@@ -121,6 +126,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
     _smartLoginOptions = smartLoginOptions;
     _smartLoginMenuIconURL = [smartLoginMenuIconURL copy];
     _smartLoginBookmarkIconURL = [smartLoginBookmarkIconURL copy];
+    _updateMessage = [updateMessage copy];
     _version = FBSDKServerConfigurationVersion;
   }
   return self;
@@ -177,6 +183,8 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   BOOL implicitLoggingEnabled = [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   BOOL implicitPurchaseLoggingEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
+  BOOL appIndexingTriggerEnabled =
+  [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY];
   BOOL systemAuthenticationEnabled =
   [decoder decodeBoolForKey:FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_KEY];
   FBSDKServerConfigurationSmartLoginOptions smartLoginOptions = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
@@ -200,6 +208,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   NSString *loggingToken = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_LOGGING_TOKEN];
   NSURL *smartLoginBookmarkIconURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   NSURL *smartLoginMenuIconURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
+  NSString *updateMessage = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   NSInteger version = [decoder decodeIntegerForKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
   FBSDKServerConfiguration *configuration = [self initWithAppID:appID
                                                         appName:appName
@@ -209,6 +218,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                            advertisingIDEnabled:advertisingIDEnabled
                                          implicitLoggingEnabled:implicitLoggingEnabled
                                  implicitPurchaseLoggingEnabled:implicitPurchaseLoggingEnabled
+                                      appIndexingTriggerEnabled:appIndexingTriggerEnabled
                                     systemAuthenticationEnabled:systemAuthenticationEnabled
                                           nativeAuthFlowEnabled:nativeAuthFlowEnabled
                                            dialogConfigurations:dialogConfigurations
@@ -221,6 +231,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
                                               smartLoginOptions:smartLoginOptions
                                       smartLoginBookmarkIconURL:smartLoginBookmarkIconURL
                                           smartLoginMenuIconURL:smartLoginMenuIconURL
+                                                  updateMessage:updateMessage
                                              ];
   configuration->_version = version;
   return configuration;
@@ -238,6 +249,8 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   [encoder encodeBool:_implicitLoggingEnabled forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_LOGGING_ENABLED_KEY];
   [encoder encodeBool:_implicitPurchaseLoggingEnabled
                forKey:FBSDK_SERVER_CONFIGURATION_IMPLICIT_PURCHASE_LOGGING_ENABLED_KEY];
+  [encoder encodeBool:_appIndexingTriggerEnabled
+               forKey:FBSDK_SERVER_CONFIGURATION_APP_INDEXING_TRIGGER_ENABLED_KEY];
   [encoder encodeBool:_loginTooltipEnabled forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_KEY];
   [encoder encodeObject:_loginTooltipText forKey:FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_KEY];
   [encoder encodeBool:_nativeAuthFlowEnabled forKey:FBSDK_SERVER_CONFIGURATION_NATIVE_AUTH_FLOW_ENABLED_KEY];
@@ -248,6 +261,7 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
   [encoder encodeInteger:_smartLoginOptions forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_OPTIONS_KEY];
   [encoder encodeObject:_smartLoginBookmarkIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_BOOKMARK_ICON_URL_KEY];
   [encoder encodeObject:_smartLoginMenuIconURL forKey:FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_KEY];
+  [encoder encodeObject:_updateMessage forKey:FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_KEY];
   [encoder encodeInteger:_version forKey:FBSDK_SERVER_CONFIGURATION_VERSION_KEY];
 }
 

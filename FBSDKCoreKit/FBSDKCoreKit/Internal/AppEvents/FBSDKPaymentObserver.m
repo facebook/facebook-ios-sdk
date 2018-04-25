@@ -25,7 +25,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
-static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase    = @"_implicitlyLoggedPurchaseEvent";
+static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase = @"_implicitlyLogged";
 static NSString *const FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
 static NSString *const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
 static NSString *const FBSDKAppEventParameterNameTransactionID = @"fb_transaction_id";
@@ -121,6 +121,10 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)handleTransaction:(SKPaymentTransaction *)transaction
 {
+  // Ignore restored transaction
+  if (transaction.originalTransaction != nil) {
+    return;
+  }
   FBSDKPaymentProductRequestor *productRequest = [[FBSDKPaymentProductRequestor alloc] initWithTransaction:transaction];
   [productRequest resolveProducts];
 }
@@ -207,18 +211,18 @@ static NSMutableArray *g_pendingRequestors;
 
   SKPayment *payment = self.transaction.payment;
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary: @{
-    FBSDKAppEventParameterNameContentID: payment.productIdentifier ?: @"",
-    FBSDKAppEventParameterNameNumItems: @(payment.quantity),
-  }];
+                                                                                          FBSDKAppEventParameterNameContentID: payment.productIdentifier ?: @"",
+                                                                                          FBSDKAppEventParameterNameNumItems: @(payment.quantity),
+                                                                                          }];
   double totalAmount = 0;
   if (product) {
     totalAmount = payment.quantity * product.price.doubleValue;
     [eventParameters addEntriesFromDictionary: @{
-      FBSDKAppEventParameterNameCurrency: [product.priceLocale objectForKey:NSLocaleCurrencyCode],
-      FBSDKAppEventParameterNameNumItems: @(payment.quantity),
-      FBSDKAppEventParameterNameProductTitle: [self getTruncatedString:product.localizedTitle],
-      FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
-    }];
+                                                 FBSDKAppEventParameterNameCurrency: [product.priceLocale objectForKey:NSLocaleCurrencyCode],
+                                                 FBSDKAppEventParameterNameNumItems: @(payment.quantity),
+                                                 FBSDKAppEventParameterNameProductTitle: [self getTruncatedString:product.localizedTitle],
+                                                 FBSDKAppEventParameterNameDescription: [self getTruncatedString:product.localizedDescription],
+                                                 }];
     if (transactionID) {
       [eventParameters setObject:transactionID forKey:FBSDKAppEventParameterNameTransactionID];
     }
@@ -266,16 +270,32 @@ static NSMutableArray *g_pendingRequestors;
                       valueToSum:(double)valueToSum
                       parameters:(NSDictionary *)parameters {
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
-  [eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
+
+  if ([eventName isEqualToString:FBSDKAppEventNamePurchased]) {
+    NSData* receipt = [self fetchDeviceReceipt];
+    if (receipt) {
+      NSString *base64encodedReceipt = [receipt base64EncodedStringWithOptions:0];
+      eventParameters[@"receipt_data"] = base64encodedReceipt;
+    }
+  }
+
+  [eventParameters setObject:@"1"forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:valueToSum
-                parameters:parameters];
+                parameters:eventParameters];
 
   // Unless the behavior is set to only allow explicit flushing, we go ahead and flush, since purchase events
   // are relatively rare and relatively high value and worth getting across on wire right away.
   if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
     [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
   }
+}
+
+// Fetch the current receipt for this application.
+- (NSData*)fetchDeviceReceipt {
+  NSURL *receiptURL = [[NSBundle bundleForClass:[self class]] appStoreReceiptURL];
+  NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
+  return receipt;
 }
 
 @end

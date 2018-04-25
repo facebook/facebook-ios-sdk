@@ -100,7 +100,7 @@ typedef void(^fbsdk_like_action_controller_ensure_verified_object_id_completion_
 
 #pragma mark - Class Methods
 
-static BOOL _fbsdkLikeActionControllerDisabled = NO;
+static BOOL _fbsdkLikeActionControllerDisabled = YES;
 
 + (BOOL)isDisabled
 {
