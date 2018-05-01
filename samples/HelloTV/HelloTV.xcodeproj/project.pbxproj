@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0BC692782093850500A59082 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BC692772093850500A59082 /* FBSDKLoginKit.framework */; };
+		0BC692792093850500A59082 /* FBSDKLoginKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BC692772093850500A59082 /* FBSDKLoginKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4AF47D151F42509E00A57A67 /* FBSDKTVOSKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */; };
 		4AF47D161F42509E00A57A67 /* FBSDKTVOSKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4AF47D191F4250AB00A57A67 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */; };
@@ -34,6 +36,7 @@
 			files = (
 				4AF47D161F42509E00A57A67 /* FBSDKTVOSKit.framework in Embed Frameworks */,
 				4AF47D1A1F4250AB00A57A67 /* FBSDKCoreKit.framework in Embed Frameworks */,
+				0BC692792093850500A59082 /* FBSDKLoginKit.framework in Embed Frameworks */,
 				4AF47D1D1F4250BB00A57A67 /* FBSDKShareKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -42,6 +45,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0BC692772093850500A59082 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKTVOSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,6 +80,7 @@
 				4AF47D151F42509E00A57A67 /* FBSDKTVOSKit.framework in Frameworks */,
 				4AF47D1C1F4250BB00A57A67 /* FBSDKShareKit.framework in Frameworks */,
 				9D81FDD61C50502400AF5F8D /* FBSDKTVOSKit.framework in Frameworks */,
+				0BC692782093850500A59082 /* FBSDKLoginKit.framework in Frameworks */,
 				9D81FDD51C50502400AF5F8D /* FBSDKCoreKit.framework in Frameworks */,
 				9D81FDD71C50502400AF5F8D /* FBSDKShareKit.framework in Frameworks */,
 			);
@@ -87,6 +92,7 @@
 		9D81FDA51C5048A900AF5F8D = {
 			isa = PBXGroup;
 			children = (
+				0BC692772093850500A59082 /* FBSDKLoginKit.framework */,
 				4AF47D1B1F4250BB00A57A67 /* FBSDKShareKit.framework */,
 				4AF47D181F4250AB00A57A67 /* FBSDKCoreKit.framework */,
 				4AF47D141F42509E00A57A67 /* FBSDKTVOSKit.framework */,

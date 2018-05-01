@@ -5,6 +5,9 @@
       location = "group:HelloTV.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:../../FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:../../FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
    </FileRef>
    <FileRef
