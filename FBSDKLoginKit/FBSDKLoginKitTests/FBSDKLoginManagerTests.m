@@ -355,7 +355,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
     // Nothing
   }] validateURLSchemes];
   [[[FBSDKInternalUtilityMock stub] andReturnValue:@NO] isFacebookAppInstalled];
-  NSError *URLError = [NSError new];
+  NSError *URLError = [[NSError alloc] initWithDomain:FBSDKErrorDomain code:0 userInfo:nil];
   [[FBSDKInternalUtilityMock stub]  appURLWithHost:OCMOCK_ANY
    path:OCMOCK_ANY
    queryParameters:OCMOCK_ANY

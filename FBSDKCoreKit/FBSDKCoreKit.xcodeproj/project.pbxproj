@@ -35,6 +35,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		033429B220894D4700C94913 /* FBSDKAccessTokenExpirer.h in Headers */ = {isa = PBXBuildFile; fileRef = 033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */; };
+		033429B320894D4700C94913 /* FBSDKAccessTokenExpirer.m in Sources */ = {isa = PBXBuildFile; fileRef = 033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */; };
+		033429C8208951E300C94913 /* FBSDKAccessTokenExpirer.h in Headers */ = {isa = PBXBuildFile; fileRef = 033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */; };
+		033429C9208951E400C94913 /* FBSDKAccessTokenExpirer.h in Headers */ = {isa = PBXBuildFile; fileRef = 033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */; };
+		033429CA208951E400C94913 /* FBSDKAccessTokenExpirer.h in Headers */ = {isa = PBXBuildFile; fileRef = 033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */; };
+		0384CEBB208E60660013D404 /* FBSDKAccessTokenExpirer.m in Sources */ = {isa = PBXBuildFile; fileRef = 033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */; };
+		0384CED0208E606A0013D404 /* FBSDKAccessTokenExpirer.m in Sources */ = {isa = PBXBuildFile; fileRef = 033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */; };
+		0384CED1208E606B0013D404 /* FBSDKAccessTokenExpirer.m in Sources */ = {isa = PBXBuildFile; fileRef = 033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */; };
 		2A3DA4161CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.m */; };
 		4AF47CF31F42468E00A57A67 /* FBSDKDeviceUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AF47CF11F42468D00A57A67 /* FBSDKDeviceUtilities.m */; };
 		4AF47CF41F42468E00A57A67 /* FBSDKDeviceUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4AF47CF11F42468D00A57A67 /* FBSDKDeviceUtilities.m */; };
@@ -835,6 +843,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAccessTokenExpirer.h; sourceTree = "<group>"; };
+		033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKAccessTokenExpirer.m; sourceTree = "<group>"; };
 		2A3DA4151CB4C0F600339BD4 /* FBSDKAppLinkUtilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkUtilityTests.m; sourceTree = "<group>"; };
 		4AF47CF11F42468D00A57A67 /* FBSDKDeviceUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceUtilities.m; sourceTree = "<group>"; };
 		4AF47CF21F42468D00A57A67 /* FBSDKDeviceUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceUtilities.h; sourceTree = "<group>"; };
@@ -1641,6 +1651,8 @@
 				9D32A83D1A69941A000A936D /* FBSDKKeychainStore.m */,
 				9DE1F3CB1A89D9CD00B54D98 /* FBSDKKeychainStoreViaBundleID.h */,
 				9DE1F3CC1A89D9CD00B54D98 /* FBSDKKeychainStoreViaBundleID.m */,
+				033429B020894D4700C94913 /* FBSDKAccessTokenExpirer.h */,
+				033429B120894D4700C94913 /* FBSDKAccessTokenExpirer.m */,
 			);
 			path = TokenCaching;
 			sourceTree = "<group>";
@@ -1717,6 +1729,7 @@
 				814AC82C1D1B528900D61E6C /* FBSDKTestUsersManager.h in Headers */,
 				814AC82D1D1B528900D61E6C /* _FBSDKTemporaryErrorRecoveryAttempter.h in Headers */,
 				814AC82E1D1B528900D61E6C /* FBSDKGraphRequestBody.h in Headers */,
+				033429CA208951E400C94913 /* FBSDKAccessTokenExpirer.h in Headers */,
 				814AC82F1D1B528900D61E6C /* FBSDKURLConnection.h in Headers */,
 				814AC8301D1B528900D61E6C /* FBSDKGraphRequestDataAttachment.h in Headers */,
 				814AC8311D1B528900D61E6C /* FBSDKUtility.h in Headers */,
@@ -1813,6 +1826,7 @@
 				81B71D761D19C87400933E93 /* FBSDKLogger.h in Headers */,
 				81B71D771D19C87400933E93 /* FBSDKError.h in Headers */,
 				81B71D781D19C87400933E93 /* FBSDKServerConfigurationManager.h in Headers */,
+				033429C8208951E300C94913 /* FBSDKAccessTokenExpirer.h in Headers */,
 				81B71D791D19C87400933E93 /* FBSDKGraphRequestMetadata.h in Headers */,
 				81B71D7A1D19C87400933E93 /* FBSDKURLConnection.h in Headers */,
 				81B71D7B1D19C87400933E93 /* FBSDKGraphRequest+Internal.h in Headers */,
@@ -1909,6 +1923,7 @@
 				9D6999FE1A76E166003AE384 /* FBSDKLogger.h in Headers */,
 				894C0B611A7150AC009137EF /* FBSDKError.h in Headers */,
 				89830F2B1A7805D100226ABB /* FBSDKServerConfigurationManager.h in Headers */,
+				033429B220894D4700C94913 /* FBSDKAccessTokenExpirer.h in Headers */,
 				9DF2A3FF1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.h in Headers */,
 				9DC658A81A6EE7E200B85AAF /* FBSDKURLConnection.h in Headers */,
 				9DC6589B1A6EE5CD00B85AAF /* FBSDKGraphRequest+Internal.h in Headers */,
@@ -1980,6 +1995,7 @@
 				9D6DEEDB1BC24295001A94ED /* FBSDKTestUsersManager.h in Headers */,
 				9D6DEED11BC23A93001A94ED /* _FBSDKTemporaryErrorRecoveryAttempter.h in Headers */,
 				9DB0FAA01BC22CF5005EB8B1 /* FBSDKGraphRequestBody.h in Headers */,
+				033429C9208951E400C94913 /* FBSDKAccessTokenExpirer.h in Headers */,
 				9DB0FAAA1BC22D8F005EB8B1 /* FBSDKURLConnection.h in Headers */,
 				9DB0FAA21BC22D00005EB8B1 /* FBSDKGraphRequestDataAttachment.h in Headers */,
 				9DB0FA961BC22BB5005EB8B1 /* FBSDKUtility.h in Headers */,
@@ -2428,6 +2444,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD3FEE11D62454D00D35472 /* FBSDKURLSessionTask.m in Sources */,
+				0384CED0208E606A0013D404 /* FBSDKAccessTokenExpirer.m in Sources */,
 				814AC7E31D1B528900D61E6C /* FBSDKAppEventsDeviceInfo.m in Sources */,
 				814AC7E41D1B528900D61E6C /* FBSDKAppEventsUtility.m in Sources */,
 				814AC7E51D1B528900D61E6C /* FBSDKServerConfigurationManager.m in Sources */,
@@ -2536,6 +2553,7 @@
 				81B71D2C1D19C87400933E93 /* FBSDKBridgeAPIProtocolWebV1.m in Sources */,
 				81B71D2D1D19C87400933E93 /* FBSDKMath.m in Sources */,
 				81B71D2E1D19C87400933E93 /* FBSDKWebDialog.m in Sources */,
+				0384CEBB208E60660013D404 /* FBSDKAccessTokenExpirer.m in Sources */,
 				81B71D2F1D19C87400933E93 /* FBSDKColor.m in Sources */,
 				81B71D301D19C87400933E93 /* FBSDKAppLinkResolver.m in Sources */,
 				81B71D311D19C87400933E93 /* FBSDKIcon.m in Sources */,
@@ -2614,6 +2632,7 @@
 				89D4AEA01A803F1E00DB8C72 /* FBSDKBridgeAPIProtocolWebV1.m in Sources */,
 				893F44AD1A644744001DB0B6 /* FBSDKMath.m in Sources */,
 				89FB8C421A8425C4003CAE60 /* FBSDKWebDialog.m in Sources */,
+				033429B320894D4700C94913 /* FBSDKAccessTokenExpirer.m in Sources */,
 				9DBA6A311A80265A00B4DE6A /* FBSDKColor.m in Sources */,
 				7E5557371A8D833100344F86 /* FBSDKAppLinkResolver.m in Sources */,
 				891687D31AB33CA200F55364 /* FBSDKIcon.m in Sources */,
@@ -2664,6 +2683,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9DD3FECC1D62454C00D35472 /* FBSDKURLSessionTask.m in Sources */,
+				0384CED1208E606B0013D404 /* FBSDKAccessTokenExpirer.m in Sources */,
 				9D6DEEAC1BC236D9001A94ED /* FBSDKAppEventsDeviceInfo.m in Sources */,
 				9DB0FA8D1BC1CEF4005EB8B1 /* FBSDKAppEventsUtility.m in Sources */,
 				9D6DEEC91BC23A30001A94ED /* FBSDKServerConfigurationManager.m in Sources */,

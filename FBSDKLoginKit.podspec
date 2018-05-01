@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKLoginKit"
-  s.version      = "4.32.0"
+  s.version      = "4.33.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -17,19 +17,31 @@ Pod::Spec.new do |s|
   s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
   s.author       = 'Facebook'
 
-  s.platform     = :ios, "9.0"
-  s.ios.deployment_target = "7.0"
+  s.platform     = :ios, :tvos
+  s.ios.deployment_target = '7.0'
+  s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.32.0"
+                     :tag => "sdk-version-4.33.0"
                     }
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "QuartzCore", "CoreGraphics", "UIKit", "Foundation", "AudioToolbox"
+  s.tvos.weak_frameworks = 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'UIKit'
 
   s.requires_arc = true
 
   s.source_files   = "FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}"
   s.public_header_files = "FBSDKLoginKit/FBSDKLoginKit/*.{h}"
+  s.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
+                        'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
+                        'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
+                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
+                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h',
+  s.tvos.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h',
+                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
+                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
+                               'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h',
+
   # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
   s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
   s.dependency 'FBSDKCoreKit'

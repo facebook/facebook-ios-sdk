@@ -18,8 +18,9 @@
 
 #import "FBSDKDeviceLoginViewController.h"
 
+#import <FBSDKLoginKit/FBSDKDeviceLoginManager.h>
+
 #import "FBSDKCoreKit+Internal.h"
-#import "FBSDKDeviceLoginManager.h"
 
 @interface FBSDKDeviceLoginViewController() <
   FBSDKDeviceLoginManagerDelegate

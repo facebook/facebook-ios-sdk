@@ -19,8 +19,6 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKTVOSKit/FBSDKDeviceLoginButton.h>
-#import <FBSDKTVOSKit/FBSDKDeviceLoginCodeInfo.h>
-#import <FBSDKTVOSKit/FBSDKDeviceLoginManagerResult.h>
 #import <FBSDKTVOSKit/FBSDKDeviceLoginViewController.h>
 #import <FBSDKTVOSKit/FBSDKJS.h>
 #import <FBSDKTVOSKit/FBSDKTVInterfaceFactory.h>

@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKPlacesKit"
-  s.version      = "4.32.0"
+  s.version      = "4.33.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Places"
 
   s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "7.0"
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.32.0"
+                     :tag => "sdk-version-4.33.0"
                     }
 
   s.weak_frameworks = "Accounts", "CoreLocation", "Social", "Security", "Foundation"

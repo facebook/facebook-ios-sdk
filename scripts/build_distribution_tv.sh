@@ -64,6 +64,8 @@ echo Building Distribution.
   || die "Could not copy FBSDKCoreKit.framework"
 \cp -R "$FB_SDK_BUILD"/tv/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKShareKit.framework"
+\cp -R "$FB_SDK_BUILD"/tv/FBSDKLoginKit.framework "$FB_SDK_BUILD_PACKAGE" \
+  || die "Could not copy FBSDKLoginKit.framework"
 \cp -R "$FB_SDK_BUILD"/tv/FBSDKTVOSKit.framework "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy FBSDKTVOSKit.framework"
 \cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \

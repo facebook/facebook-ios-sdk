@@ -60,10 +60,7 @@ static FBSDKServerConfiguration *_serverConfiguration;
 static NSError *_serverConfigurationError;
 static NSDate *_serverConfigurationErrorTimestamp;
 static const NSTimeInterval kTimeout = 4.0;
-
-#ifdef DEBUG
 static BOOL _printedUpdateMessage;
-#endif
 
 typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 {

@@ -612,6 +612,10 @@ static NSString *g_overrideAppID = nil;
 - (void)publishInstall
 {
   NSString *appID = [self appID];
+  if ([appID length] == 0) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishInstall:]"];
+    return;
+  }
   NSString *lastAttributionPingString = [NSString stringWithFormat:@"com.facebook.sdk:lastAttributionPing%@", appID];
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   if ([defaults objectForKey:lastAttributionPingString]) {
@@ -801,9 +805,16 @@ static NSString *g_overrideAppID = nil;
 - (void)flushOnMainQueue:(FBSDKAppEventsState *)appEventsState
                forReason:(FBSDKAppEventsFlushReason)reason
 {
+
   if (appEventsState.events.count == 0) {
     return;
   }
+
+  if ([appEventsState.appID length] == 0) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appEventsState.appID] for [FBSDKAppEvents flushOnMainQueue:]"];
+    return;
+  }
+
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self fetchServerConfiguration:^(void) {
@@ -883,7 +894,8 @@ static NSString *g_overrideAppID = nil;
 
     // We interpret a 400 coming back from FBRequestConnection as a server error due to improper data being
     // sent down.  Otherwise we assume no connectivity, or another condition where we could treat it as no connectivity.
-    flushResult = errorCode == 400 ? FlushResultServerError : FlushResultNoConnectivity;
+    // Adding 404 as having wrong/missing appID results in 404 and that is not a connectivity issue
+    flushResult = (errorCode == 400 || errorCode == 404) ? FlushResultServerError : FlushResultNoConnectivity;
   }
 
   if (flushResult == FlushResultServerError) {

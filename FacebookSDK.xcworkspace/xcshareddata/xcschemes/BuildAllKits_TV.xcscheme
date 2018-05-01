@@ -50,6 +50,20 @@
          </BuildActionEntry>
          <BuildActionEntry
             buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0B9DBF6E207C0B5C00662776"
+               BuildableName = "FBSDKLoginKit_TV-Universal"
+               BlueprintName = "FBSDKLoginKit_TV-Universal"
+               ReferencedContainer = "container:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
             buildForRunning = "NO"
             buildForProfiling = "NO"
             buildForArchiving = "NO"

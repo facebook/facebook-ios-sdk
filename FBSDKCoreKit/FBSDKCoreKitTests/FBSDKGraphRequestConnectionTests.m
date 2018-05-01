@@ -196,6 +196,46 @@ static id g_mockNSBundle;
   [mockPiggybackManager stopMocking];
 }
 
+- (void)testNonErrorEmptyDictionaryOrNullResponse
+{
+  id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    return YES;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    NSString *responseString = [NSString stringWithFormat:@"[ {\"code\":200,\"body\": null }, {\"code\":200,\"body\": {} } ]"];
+    NSData *data = [responseString dataUsingEncoding:NSUTF8StringEncoding];
+    return [OHHTTPStubsResponse responseWithData:data
+                                      statusCode:200
+                                         headers:nil];
+  }];
+  FBSDKGraphRequestConnection *connection = [[FBSDKGraphRequestConnection alloc] init];
+  __block int actualCallbacksCount = 0;
+  XCTestExpectation *expectation = [self expectationWithDescription:@"expected not to crash on null or empty dict responses"];
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+       completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
+         XCTAssertEqual(1, actualCallbacksCount++, @"this should have been the second callback");
+       }];
+  [connection addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}]
+       completionHandler:^(FBSDKGraphRequestConnection *conn, id result, NSError *error) {
+         XCTAssertEqual(2, actualCallbacksCount++, @"this should have been the third callback");
+       }];
+  self.requestConnectionStartingCallback = ^(FBSDKGraphRequestConnection *conn) {
+    NSCAssert(0 == actualCallbacksCount++, @"this should have been the first callback");
+  };
+  self.requestConnectionCallback = ^(FBSDKGraphRequestConnection *conn, NSError *error) {
+    NSCAssert(error == nil, @"unexpected error:%@", error);
+    NSCAssert(3 == actualCallbacksCount++, @"this should have been the fourth callback");
+    [expectation fulfill];
+  };
+  connection.delegate = self;
+  [connection start];
+  [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
+
+  [mockPiggybackManager stopMocking];
+}
+
 - (void)testConnectionDelegateWithNetworkError
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
