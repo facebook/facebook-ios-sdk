@@ -128,17 +128,15 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 #pragma mark - UIApplicationDelegate
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options NS_AVAILABLE_IOS(9_0)
 {
   return [self application:application
                    openURL:url
          sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
                 annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
 }
-#endif
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
