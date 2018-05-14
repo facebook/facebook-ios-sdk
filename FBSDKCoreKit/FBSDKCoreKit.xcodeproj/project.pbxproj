@@ -80,7 +80,7 @@
 		814AC7E91D1B528900D61E6C /* _FBSDKTemporaryErrorRecoveryAttempter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF18BB81A9F1A05000F6748 /* _FBSDKTemporaryErrorRecoveryAttempter.m */; };
 		814AC7EA1D1B528900D61E6C /* FBSDKGraphRequestMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DF2A3FE1A70572B00DFB2FD /* FBSDKGraphRequestMetadata.m */; };
 		814AC7EB1D1B528900D61E6C /* FBSDKServerConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 89830F2E1A7805E100226ABB /* FBSDKServerConfiguration.m */; };
-		814AC7EC1D1B528900D61E6C /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		814AC7EC1D1B528900D61E6C /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; };
 		814AC7ED1D1B528900D61E6C /* FBSDKDialogConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 89830F321A78060A00226ABB /* FBSDKDialogConfiguration.m */; };
 		814AC7EE1D1B528900D61E6C /* FBSDKKeychainStoreViaBundleID.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DE1F3CC1A89D9CD00B54D98 /* FBSDKKeychainStoreViaBundleID.m */; };
 		814AC7EF1D1B528900D61E6C /* FBSDKInternalUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 893F448A1A642F11001DB0B6 /* FBSDKInternalUtility.m */; };
@@ -200,7 +200,7 @@
 		81B71D111D19C87400933E93 /* FBSDKTriStateBOOL.m in Sources */ = {isa = PBXBuildFile; fileRef = 89D05A941AA0E89B00609300 /* FBSDKTriStateBOOL.m */; };
 		81B71D121D19C87400933E93 /* FBSDKLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D6999FD1A76E166003AE384 /* FBSDKLogger.m */; };
 		81B71D131D19C87400933E93 /* FBSDKApplicationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D34A11E1A5F038300C37317 /* FBSDKApplicationDelegate.m */; };
-		81B71D141D19C87400933E93 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		81B71D141D19C87400933E93 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; };
 		81B71D151D19C87400933E93 /* FBSDKGraphRequestDataAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 896DE2331A9E509300195731 /* FBSDKGraphRequestDataAttachment.m */; };
 		81B71D161D19C87400933E93 /* FBSDKDialogConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 89830F321A78060A00226ABB /* FBSDKDialogConfiguration.m */; };
 		81B71D171D19C87400933E93 /* FBSDKAccessToken.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D3029091A65C4420086B9ED /* FBSDKAccessToken.m */; };
@@ -340,8 +340,8 @@
 		81B71E0D1D19CBFD00933E93 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A8FB1831C921D9F00027121 /* Bolts.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		81C969321C114723002FC037 /* FBSDKDynamicFrameworkLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */; };
 		81C969331C114723002FC037 /* FBSDKDynamicFrameworkLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */; };
-		81C969341C114723002FC037 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		81C969351C114723002FC037 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		81C969341C114723002FC037 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; };
+		81C969351C114723002FC037 /* FBSDKDynamicFrameworkLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */; };
 		890414741A647D8800617215 /* FBSDKCoreKit+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */; };
 		890414881A64893100617215 /* FBSDKCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414861A64893100617215 /* FBSDKCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		890414891A64893100617215 /* FBSDKMutableCopying.h in Headers */ = {isa = PBXBuildFile; fileRef = 890414871A64893100617215 /* FBSDKMutableCopying.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1318,14 +1318,6 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		81C9692F1C114723002FC037 /* Internal_NoARC */ = {
-			isa = PBXGroup;
-			children = (
-				81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */,
-			);
-			path = Internal_NoARC;
-			sourceTree = "<group>";
-		};
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
@@ -1367,6 +1359,7 @@
 				C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */,
 				894C0B6E1A717D60009137EF /* FBSDKTypeUtility.h */,
 				894C0B6F1A717D60009137EF /* FBSDKTypeUtility.m */,
+				81C969311C114723002FC037 /* FBSDKDynamicFrameworkLoader.m */,
 				89FB8C3D1A84237A003CAE60 /* Network */,
 				89830F251A7805A900226ABB /* ServerConfiguration */,
 				9D32A8381A69941A000A936D /* TokenCaching */,
@@ -1664,7 +1657,6 @@
 				89C8B1971A8D7A15009B07F5 /* FBSDKUtility.h */,
 				89C8B1981A8D7A15009B07F5 /* FBSDKUtility.m */,
 				893F44921A64448E001DB0B6 /* Internal */,
-				81C9692F1C114723002FC037 /* Internal_NoARC */,
 				9D26974A1A5DF40700143BFC /* Supporting Files */,
 			);
 			path = FBSDKCoreKit;

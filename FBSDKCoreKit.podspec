@@ -56,9 +56,6 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
 
-  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
-  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
-
+  s.requires_arc = true
   s.ios.dependency 'Bolts', '~> 1.7'
 end
