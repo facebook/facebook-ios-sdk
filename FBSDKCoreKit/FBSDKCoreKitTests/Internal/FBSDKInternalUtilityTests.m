@@ -21,6 +21,7 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKCoreKit.h"
+#import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKInternalUtility.h"
 
 @interface FBSDKInternalUtilityTests : XCTestCase
@@ -174,6 +175,10 @@
                                                         error:NULL].absoluteString;
   XCTAssertEqualObjects(URLString, @"https://m.facebook.com/" FBSDK_TARGET_PLATFORM_VERSION @"/dialog/share");
 
+}
+
+- (void)testAccessingDynamicStringConstant {
+  XCTAssertEqualObjects(fbsdkdfl_kCIInputImageKey(), @"inputImage");
 }
 
 @end
