@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version      = '0.3.0'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
-  s.documentation_url = 'https://developers.facebook.com/docs/swift/reference'
+  s.documentation_url = 'https://developers.facebook.com/docs/swift/sdk-reference'
   s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
 
   s.summary      = "Official Facebook SDK in Swift to access Facebook Platform's core features."
