@@ -50,6 +50,8 @@ public enum ReadPermission {
   case userEvents
   /// Provides access to read a person's game activity (scores, achievements) in any game the person has played.
   case userGamesActivity
+  /// Provides access to a person's gender.
+  case userGender
   /// Provides access to a person's hometown location through the hometown field on the User object.
   case userHometown
   /// Provides access to the list of all Facebook Pages and Open Graph objects that a person has liked.
@@ -115,6 +117,7 @@ extension ReadPermission: PermissionRepresentable {
     case .userEducationHistory: return "user_education_history"
     case .userEvents: return "user_events"
     case .userGamesActivity: return "user_games_activity"
+    case .userGender: return "user_gender"
     case .userHometown: return "user_hometown"
     case .userLikes: return "user_likes"
     case .userLocation: return "user_location"
