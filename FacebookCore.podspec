@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'FacebookCore'
-  s.version      = '0.3.0'
+  s.version      = '0.3.1'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
   s.documentation_url = 'https://developers.facebook.com/docs/swift/sdk-reference'
@@ -26,5 +26,5 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = { 'ENABLE_TESTABILITY' => 'YES' }
 
   s.ios.dependency 'Bolts', '~> 1.8'
-  s.ios.dependency 'FBSDKCoreKit', '~> 4.27'
+  s.ios.dependency 'FBSDKCoreKit', '~> 4.33'
 end
