@@ -52,7 +52,9 @@ Pod::Spec.new do |s|
     spec.header_dir = "FBSDKShareKit"
     spec.dependency 'Facebook-iOS-SDK/CoreKit'
   end
-
-  s.deprecated = true
-  s.deprecated_in_favor_of = 'FBSDKCoreKit'
+  s.subspec 'MarketingKit' do |spec|
+    spec.platform = :ios
+    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+    spec.dependency 'FBSDKMarketingKit'
+  end
 end

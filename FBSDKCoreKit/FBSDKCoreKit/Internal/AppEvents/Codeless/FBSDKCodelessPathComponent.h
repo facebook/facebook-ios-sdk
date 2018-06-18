@@ -16,7 +16,29 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
+#import <Foundation/Foundation.h>
 
+typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField)
+{
+  FBSDKCodelessMatchBitmaskFieldID = 1,
+  FBSDKCodelessMatchBitmaskFieldText = 1 << 1,
+  FBSDKCodelessMatchBitmaskFieldTag = 1 << 2,
+  FBSDKCodelessMatchBitmaskFieldDescription = 1 << 3,
+  FBSDKCodelessMatchBitmaskFieldHint = 1 << 4
+};
+
+@interface FBSDKCodelessPathComponent : NSObject
+
+@property (nonatomic, copy, readonly) NSString *className;
+@property (nonatomic, copy, readonly) NSString *text;
+@property (nonatomic, copy, readonly) NSString *hint;
+@property (nonatomic, copy, readonly) NSString *desc; // description
+@property (nonatomic, readonly) int index;
+@property (nonatomic, readonly) int tag;
+@property (nonatomic, readonly) int section;
+@property (nonatomic, readonly) int row;
+@property (nonatomic, readonly) int matchBitmask;
+
+- (instancetype)initWithJSON:(NSDictionary*)dict;
+
+@end

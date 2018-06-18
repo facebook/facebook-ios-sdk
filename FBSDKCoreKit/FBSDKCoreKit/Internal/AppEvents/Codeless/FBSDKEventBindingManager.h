@@ -16,7 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
+#import <Foundation/Foundation.h>
 
+@interface FBSDKEventBindingManager : NSObject
+
+- (FBSDKEventBindingManager*)initWithJSON:(NSDictionary*)dict;
+- (void)start;
+- (void)updateBindings:(NSArray *)bindings;
++ (NSArray *)parseArray:(NSArray *)array;
+
+@end

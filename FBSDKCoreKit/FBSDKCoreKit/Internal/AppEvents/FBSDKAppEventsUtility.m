@@ -18,6 +18,8 @@
 
 #import "FBSDKAppEventsUtility.h"
 
+#import <objc/runtime.h>
+
 #import <AdSupport/AdSupport.h>
 
 #import "FBSDKAccessToken.h"
@@ -332,6 +334,49 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
 + (long)unixTimeNow
 {
   return (long)round([[NSDate date] timeIntervalSince1970]);
+}
+
++ (id)getVariable:(NSString *)variableName fromInstance:(NSObject *)instance {
+  Ivar ivar = class_getInstanceVariable([instance class], [variableName UTF8String]);
+  if (ivar != NULL) {
+    const char *encoding = ivar_getTypeEncoding(ivar);
+    if (encoding != NULL && encoding[0] == '@') {
+      return object_getIvar(instance, ivar);
+    }
+  }
+
+  return nil;
+}
+
++ (NSNumber *)getNumberValue:(NSString *)text {
+  NSNumber *value = @0;
+
+  NSLocale *locale = [NSLocale currentLocale];
+
+  NSString *ds = [locale objectForKey:NSLocaleDecimalSeparator] ?: @".";
+  NSString *gs = [locale objectForKey:NSLocaleGroupingSeparator] ?: @",";
+  NSString *separators = [ds stringByAppendingString:gs];
+
+  NSString *regex = [NSString stringWithFormat:@"[+-]?([0-9]+[%1$@]?)?[%1$@]?([0-9]+[%1$@]?)+", separators];
+  NSRegularExpression *re = [NSRegularExpression regularExpressionWithPattern:regex
+                                                                      options:0
+                                                                        error:nil];
+  NSTextCheckingResult *match = [re firstMatchInString:text
+                                               options:0
+                                                 range:NSMakeRange(0, text.length)];
+  if (match) {
+    NSString *validText = [text substringWithRange:match.range];
+    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+    formatter.locale = locale;
+    formatter.numberStyle = NSNumberFormatterDecimalStyle;
+
+    value = [formatter numberFromString:validText];
+    if (nil == value) {
+      value = @([validText floatValue]);
+    }
+  }
+
+  return value;
 }
 
 - (instancetype)init

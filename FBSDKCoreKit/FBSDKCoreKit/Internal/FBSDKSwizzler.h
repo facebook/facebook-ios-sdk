@@ -16,7 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
+#import <Foundation/Foundation.h>
 
+// Cast to turn things that are not ids into NSMapTable keys
+#define MAPTABLE_ID(x) (__bridge id)((void *)x)
+
+typedef void (^swizzleBlock)();
+
+// Rename to avoid duplicate symbol errors
+@interface FBSDKSwizzler : NSObject
+
++ (void)swizzleSelector:(SEL)aSelector onClass:(Class)aClass withBlock:(swizzleBlock)block named:(NSString *)aName;
++ (void)unswizzleSelector:(SEL)aSelector onClass:(Class)aClass named:(NSString *)aName;
++ (void)printSwizzles;
+
+@end

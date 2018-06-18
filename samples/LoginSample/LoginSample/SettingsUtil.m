@@ -108,7 +108,7 @@ static NSArray *fbPermissions;
   ThemeType themeType = [FBTweakValue(@"Settings", @"AccountKit", @"Theme", @(ThemeTypeDefault), [SettingsUtil themeTweakValues]) integerValue];
   BOOL useAdvancedUIManager = FBTweakValue(@"Settings", @"AccountKit", @"Advanced Theme", NO);
   if ([Theme isSkinTheme:themeType]) {
-    controller.uiManager = [[AKFSkinManager alloc] initWithSkinType:themeType];
+    controller.uiManager = [[AKFSkinManager alloc] initWithSkinType:[Theme skinTypeForThemeType:themeType]];
   } else if ([Theme isReverbTheme:themeType] || useAdvancedUIManager) {
     AKFButtonType entryButtonType = [FBTweakValue(@"Settings", @"AccountKit", @"Entry Button", @(AKFButtonTypeDefault), [SettingsUtil entryButtonTweakValues]) integerValue];
     AKFButtonType confirmButtonType = [FBTweakValue(@"Settings", @"AccountKit", @"Confirm Button", @(AKFButtonTypeDefault), [SettingsUtil entryButtonTweakValues]) integerValue];

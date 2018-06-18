@@ -200,7 +200,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   // fetch app settings
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
 
-  [self _logSDKInitialize];
+  if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
+    [self _logSDKInitialize];
+  }
 #if !TARGET_OS_TV
   FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
   [FBSDKProfile setCurrentProfile:cachedProfile];

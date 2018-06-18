@@ -21,6 +21,7 @@
 #import <FBSDKCoreKit/FBSDKCopying.h>
 
 @class FBSDKSharePhoto;
+@class PHAsset;
 
 /**
   A video for sharing.
@@ -28,17 +29,36 @@
 @interface FBSDKShareVideo : NSObject <FBSDKCopying, NSSecureCoding>
 
 /**
+ Convenience method to build a new video object with a PHAsset.
+ - Parameter videoAsset: The PHAsset that represents the video in the Photos library.
+ */
++ (instancetype)videoWithVideoAsset:(PHAsset *)videoAsset;
+
+/**
+ Convenience method to build a new video object with a PHAsset and a previewPhoto.
+ - Parameter videoAsset: The PHAsset that represents the video in the Photos library.
+ - Parameter previewPhoto: The photo that represents the video.
+ */
++ (instancetype)videoWithVideoAsset:(PHAsset *)videoAsset previewPhoto:(FBSDKSharePhoto *)previewPhoto;
+
+/**
   Convenience method to build a new video object with a videoURL.
- - Parameter videoURL: The URL to the video
+ - Parameter videoURL: The URL to the video.
  */
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL;
 
 /**
-  Convenience method to build a new video object with a videoURL and a previewPhoto
- - Parameter videoURL: The URL to the video
- - Parameter previewPhoto: The photo that represents the video
+  Convenience method to build a new video object with a videoURL and a previewPhoto.
+ - Parameter videoURL: The URL to the video.
+ - Parameter previewPhoto: The photo that represents the video.
  */
 + (instancetype)videoWithVideoURL:(NSURL *)videoURL previewPhoto:(FBSDKSharePhoto *)previewPhoto;
+
+/**
+ The representation of the video in the Photos library.
+ - Returns: PHAsset that represents the video in the Photos library.
+ */
+@property (nonatomic, copy) PHAsset *videoAsset;
 
 /**
   The file URL to the video.
