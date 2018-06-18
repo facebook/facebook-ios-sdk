@@ -26,6 +26,7 @@
 #import "FBSDKAppEventsStateManager.h"
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKConstants.h"
+#import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
@@ -36,6 +37,11 @@
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
+
+#if !TARGET_OS_TV
+#import "FBSDKEventBindingManager.h"
+#import "FBSDKHybridAppEventsScriptMessageHandler.h"
+#endif
 
 //
 // Public event names
@@ -224,6 +230,16 @@ static NSString *const FBSDKAppEventParameterPushAction = @"fb_push_action";
 static NSString *const FBSDKAppEventsPushPayloadKey = @"fb_push_payload";
 static NSString *const FBSDKAppEventsPushPayloadCampaignKey = @"campaign";
 
+//
+// Augmentation of web browser constants
+//
+NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey = @"pixelID";
+NSString *const FBSDKAppEventsWKWebViewMessagesHandlerKey = @"fbmqHandler";
+NSString *const FBSDKAppEventsWKWebViewMessagesEventKey = @"event";
+NSString *const FBSDKAppEventsWKWebViewMessagesParamsKey = @"params";
+NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
+
+
 #define NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER 100
 #define FLUSH_PERIOD_IN_SECONDS 15
 #define APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD 60 * 60 * 24
@@ -249,6 +265,9 @@ static NSString *g_overrideAppID = nil;
   BOOL _explicitEventsLoggedYet;
   FBSDKServerConfiguration *_serverConfiguration;
   FBSDKAppEventsState *_appEventsState;
+#if !TARGET_OS_TV
+  FBSDKEventBindingManager *_eventBindingManager;
+#endif
   NSString *_userID;
 }
 
@@ -560,6 +579,35 @@ static NSString *g_overrideAppID = nil;
   [request startWithCompletionHandler:handler];
 }
 
+#if !TARGET_OS_TV
++ (void)augmentHybridWKWebView:(WKWebView *)webView {
+  // Ensure we can instantiate WebKit before trying this
+  Class WKWebViewClass = fbsdkdfl_WKWebViewClass();
+  if (WKWebViewClass != nil && [webView isKindOfClass:WKWebViewClass]) {
+    Class WKUserScriptClass = fbsdkdfl_WKUserScriptClass();
+    if (WKUserScriptClass != nil) {
+      WKUserContentController *controller = webView.configuration.userContentController;
+      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [[FBSDKHybridAppEventsScriptMessageHandler alloc] init];
+      [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
+
+      NSString *js =  [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
+                         [[self singleton] appID],
+                         FBSDKAppEventsWKWebViewMessagesPixelIDKey,
+                         FBSDKAppEventsWKWebViewMessagesEventKey,
+                         FBSDKAppEventsWKWebViewMessagesParamsKey,
+                         FBSDKAppEventsWKWebViewMessagesHandlerKey,
+                         FBSDKAPPEventsWKWebViewMessagesProtocolKey
+                       ];
+
+      [controller addUserScript:[[WKUserScriptClass alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
+    }
+  }
+  else {
+    [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWKWebView with WebKit linked to your project and a WKWebView instance"];
+  }
+}
+#endif
+
 #pragma mark - Internal Methods
 
 + (void)logImplicitEvent:(NSString *)eventName
@@ -642,6 +690,20 @@ static NSString *g_overrideAppID = nil;
   }];
 }
 
+#if !TARGET_OS_TV
+- (void)enableCodelessEvents {
+  if (_serverConfiguration.isCodelessEventsEnabled) {
+    if (!_eventBindingManager) {
+      _eventBindingManager = [[FBSDKEventBindingManager alloc] init];
+      [_eventBindingManager start];
+    }
+
+    [_eventBindingManager updateBindings:[FBSDKEventBindingManager
+                                          parseArray:_serverConfiguration.eventBindings]];
+  }
+}
+#endif
+
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
 - (void)fetchServerConfiguration:(void (^)(void))callback
 {
@@ -654,12 +716,18 @@ static NSString *g_overrideAppID = nil;
       } else {
         [FBSDKPaymentObserver stopObservingTransactions];
       }
+#if !TARGET_OS_TV
+      [self enableCodelessEvents];
+#endif
       if (callback) {
         callback();
       }
     }];
     return;
   }
+#if !TARGET_OS_TV
+  [self enableCodelessEvents];
+#endif
   if (callback) {
     callback();
   }

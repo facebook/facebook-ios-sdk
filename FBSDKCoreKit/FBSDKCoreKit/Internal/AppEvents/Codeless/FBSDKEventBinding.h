@@ -16,7 +16,22 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
 
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
+@interface FBSDKEventBinding : NSObject
+
+@property (nonatomic, copy, readonly) NSString *eventName;
+@property (nonatomic, copy, readonly) NSString *eventType;
+@property (nonatomic, copy, readonly) NSString *appVersion;
+@property (nonatomic, readonly) NSArray *path;
+@property (nonatomic, copy, readonly) NSString *pathType;
+@property (nonatomic, readonly) NSArray *parameters;
+
++ (BOOL)isViewMatchPath:(UIView *)view path:(NSArray *)path;
++ (BOOL)isPath:(NSArray *)path matchViewPath:(NSArray *)viewPath;
+- (FBSDKEventBinding *)initWithJSON:(NSDictionary *)dict;
+- (void)trackEvent:(id)sender;
+
+@end

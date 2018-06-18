@@ -73,7 +73,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
 
  @param fields A list of fields that you might want the request to return. See
  `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see
- https://developers.intern.facebook.com/docs/places/fields" for the most up to date list.
+ https://developers.facebook.com/docs/places/fields" for the most up to date list.
 
  @param distance The search radius. For an unlimited radius, use 0.
 
@@ -104,7 +104,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  for the most up to date list.
 
  @param fields A list of fields that you might want the request to return. See
- `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.intern.facebook.com/docs/places/fields
+ `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
  @param distance The search radius. For an unlimited radius, use 0.
@@ -129,7 +129,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  @param minimumConfidence The Minimum Confidence level place estimate candidates must meet.
 
  @param fields A list of fields that you might want the request to return. See
- `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.intern.facebook.com/docs/places/fields
+ `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
  @param completion A `FBSDKCurrentPlaceGraphRequestCompletion` block, that contains the graph request.
@@ -152,7 +152,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  @param minimumConfidence The Minimum Confidence level place estimate candidates must meet.
 
  @param fields A list of fields that you might want the request to return. See
- `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.intern.facebook.com/docs/places/fields
+ `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
  @param completion A `FBSDKCurrentPlaceGraphRequestCompletion` block, that contains the graph request.
@@ -187,7 +187,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  @param placeID The ID of the place.
 
  @param fields A list of fields that you might want the request to return. See
- `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.intern.facebook.com/docs/places/fields
+ `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
  @return An `FBSDKGraphRequest` for the given parameters.

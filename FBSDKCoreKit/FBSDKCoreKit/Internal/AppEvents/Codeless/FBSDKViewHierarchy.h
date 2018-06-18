@@ -16,7 +16,18 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
+@interface FBSDKViewHierarchy : NSObject
+
++ (NSObject *)getParent:(NSObject *)obj;
++ (NSArray *)getChildren:(NSObject *)obj;
++ (NSArray *)getPath:(NSObject *)obj;
+
++ (NSString *)getText:(NSObject *)obj;
++ (NSString *)getHint:(NSObject *)obj;
++ (UITableView *)getParentTableView:(UIView *)cell;
++ (UICollectionView *)getParentCollectionView:(UIView *)cell;
+
+@end

@@ -188,6 +188,16 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogErrorMessage;
 FBSDK_EXTERN NSString *const FBSDKAppEventParameterLogTime;
 
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesHandlerKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesActionKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesEventKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesParamsKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackCustomKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingleKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesPixelTrackSingleCustomKey;
+FBSDK_EXTERN NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
+
 @interface FBSDKAppEvents (Internal)
 
 + (void)logImplicitEvent:(NSString *)eventName

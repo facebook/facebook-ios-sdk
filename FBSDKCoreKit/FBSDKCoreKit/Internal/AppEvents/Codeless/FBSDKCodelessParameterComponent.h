@@ -16,7 +16,15 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// The versions for FBSDK and Messenger SDK.
-FBSDK_PROJECT_VERSION=4.34.0
-MNSDK_PROJECT_VERSION=TODO_SUPPORT_MNSDK
+#import <Foundation/Foundation.h>
 
+@interface FBSDKCodelessParameterComponent : NSObject
+
+@property (nonatomic, copy, readonly) NSString *name;
+@property (nonatomic, copy, readonly) NSString *value;
+@property (nonatomic, readonly) NSArray *path;
+@property (nonatomic, copy, readonly) NSString *pathType;
+
+- (instancetype)initWithJSON:(NSDictionary *)dict;
+
+@end
