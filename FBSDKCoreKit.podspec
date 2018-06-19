@@ -41,6 +41,8 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/Codeless/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',

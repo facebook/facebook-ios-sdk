@@ -21,6 +21,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #if !TARGET_OS_TV
+#import "AppEvents/Codeless/FBSDKViewHierarchy.h"
+#import "AppEvents/Codeless/FBSDKCodelessMacros.h"
 #import "BridgeAPI/FBSDKBridgeAPIProtocol.h"
 #import "BridgeAPI/FBSDKBridgeAPIProtocolType.h"
 #import "BridgeAPI/FBSDKBridgeAPIRequest.h"
@@ -46,8 +48,6 @@
 #import "Device/FBSDKModalFormPresentationController.h"
 #endif
 
-#import "AppEvents/Codeless/FBSDKViewHierarchy.h"
-#import "AppEvents/Codeless/FBSDKCodelessMacros.h"
 #import "AppEvents/FBSDKAppEvents+Internal.h"
 #import "AppEvents/FBSDKAppEventsState.h"
 #import "AppEvents/FBSDKAppEventsStateManager.h"
