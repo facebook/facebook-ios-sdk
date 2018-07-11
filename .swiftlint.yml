@@ -14,3 +14,7 @@ excluded:
 
 indentation: 2
 line_length: 140
+
+disabled_rules:
+- identifier_name # TODO: Move to Opt In
+- todo # TODO: Move to Opt In
