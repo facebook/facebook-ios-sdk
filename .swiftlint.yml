@@ -1,11 +1,16 @@
-line_length: 140
-file_length: 1000
-type_body_length: 500
-opt_in_rules:
-  - empty_count
-  - missing_docs
-disabled_rules:
-  - cyclomatic_complexity
-  - conditional_binding_cascade
+swiftlint_version: 0.26.0
+
+included:
+- Sources
+- Samples
+- Tests
+
 excluded:
-  - Pods
+- Pods
+- Carthage
+- Carthage/facebook-ios-sdk/samples
+- Carthage/facebook-ios-sdk/vendor
+- Vendor
+
+indentation: 2
+line_length: 140
