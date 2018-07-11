@@ -4,7 +4,7 @@ We want to make contributing to this project as easy and transparent as possible
 
 ## Code of Conduct
 
-The code of conduct is described in [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
+The code of conduct is described in the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Pull Requests
 

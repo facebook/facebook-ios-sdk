@@ -225,4 +225,4 @@ Facebook SDK in Swift is still in beta, and we would love to hear your thoughts 
 
 ## Contribute
 
-All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new contributors with tremendous joy. We request that you read our [contributing guidelines](https://github.com/facebook/facebook-sdk-swift/blob/master/CONTRIBUTING.md) before submitting a Pull Request.
+All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new contributors with tremendous joy. We request that you read our [contributing guidelines](.github/CONTRIBUTING.md) before submitting a Pull Request.
