@@ -36,7 +36,7 @@ outlined on that page and do not file a public issue.
 ## Coding Style
 
 - Most importantly, match the existing code style as much as possible.
-- Try to keep lines under 140 characters, if possible.
+- Try to keep lines under 120 characters, if possible.
 
 ## License
 

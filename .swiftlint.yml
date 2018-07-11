@@ -13,7 +13,7 @@ excluded:
 - Vendor
 
 indentation: 2
-line_length: 140
+line_length: 120
 
 disabled_rules:
 - identifier_name # TODO: Move to Opt In
