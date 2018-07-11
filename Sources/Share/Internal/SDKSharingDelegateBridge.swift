@@ -25,7 +25,7 @@ private struct BridgingFailedError<Content: ContentProtocol>: Error {
 }
 
 internal class SDKSharingDelegateBridge<Content: ContentProtocol>: NSObject, FBSDKSharingDelegate {
-  internal var completion: ((ContentSharerResult<Content>) -> Void)? = nil
+  internal var completion: ((ContentSharerResult<Content>) -> Void)?
 
   func setupAsDelegateFor(_ sharer: FBSDKSharing) {
     // We need for the connection to retain us,

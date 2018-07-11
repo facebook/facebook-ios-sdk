@@ -22,7 +22,7 @@ import Foundation
  Represents a single application event that can be logged to Facebook Analytics.
  */
 public struct AppEvent: AppEventLoggable {
-  public typealias ParametersDictionary = [AppEventParameterName : AppEventParameterValueType]
+  public typealias ParametersDictionary = [AppEventParameterName: AppEventParameterValueType]
 
   /// Name of the application event.
   public let name: AppEventName

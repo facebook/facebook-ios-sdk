@@ -115,10 +115,10 @@ extension AppEvent {
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
   public static func rated<T: UnsignedInteger>(contentType: String? = nil,
-                           contentId: String? = nil,
-                           maxRatingValue: T? = nil,
-                           valueToSum: Double? = nil,
-                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
+                                               contentId: String? = nil,
+                                               maxRatingValue: T? = nil,
+                                               valueToSum: Double? = nil,
+                                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome({ parameters[.contentType] = $0 })
     contentId.onSome({ parameters[.contentId] = $0 })
@@ -227,12 +227,12 @@ extension AppEvent {
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
   public static func initiatedCheckout<T: UnsignedInteger>(contentType: String? = nil,
-                                       contentId: String? = nil,
-                                       itemCount: T? = nil,
-                                       paymentInfoAvailable: Bool? = nil,
-                                       currency: String? = nil,
-                                       valueToSum: Double? = nil,
-                                       extraParameters: ParametersDictionary = [:]) -> AppEvent {
+                                                           contentId: String? = nil,
+                                                           itemCount: T? = nil,
+                                                           paymentInfoAvailable: Bool? = nil,
+                                                           currency: String? = nil,
+                                                           valueToSum: Double? = nil,
+                                                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome({ parameters[.contentType] = $0 })
     contentId.onSome({ parameters[.contentId] = $0 })

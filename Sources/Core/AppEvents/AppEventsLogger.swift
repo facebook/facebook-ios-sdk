@@ -148,7 +148,7 @@ public class AppEventsLogger {
    Sets a device token to register the current application installation for push notifications.
    */
   public static var pushNotificationsDeviceToken: Data? {
-    didSet{
+    didSet {
       FBSDKAppEvents.setPushNotificationsDeviceToken(pushNotificationsDeviceToken)
     }
   }
@@ -232,7 +232,7 @@ public class AppEventsLogger {
    Each value must be less than 100 characters.
    - completion: Optional completion closure that is going to be called when the request finishes or fails.
    */
-  public static func updateUserProperties(_ properties: [String : Any],
+  public static func updateUserProperties(_ properties: [String: Any],
                                           completion: @escaping (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<GraphRequest>) -> Void) {
     FBSDKAppEvents.updateUserProperties(properties,
                                         handler: GraphRequestConnection.sdkRequestCompletion(from: completion))

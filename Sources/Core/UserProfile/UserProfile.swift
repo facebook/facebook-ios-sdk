@@ -105,20 +105,20 @@ extension UserProfile {
    */
   public static func fetch(userId: String, completion: @escaping Completion) {
     let request = GraphRequest(graphPath: userId,
-                               parameters: ["fields" : "first_name,middle_name,last_name,name,link"],
+                               parameters: ["fields": "first_name,middle_name,last_name,name,link"],
                                httpMethod: .GET)
-    request.start { (httpResponse, result) in
+    request.start { (_, result) in
       switch result {
       case .success(let response):
         let responseDictionary = response.dictionaryValue
 
         let profile = UserProfile(userId: userId,
-          firstName: responseDictionary?["first_name"] as? String,
-          middleName: responseDictionary?["middle_name"] as? String,
-          lastName: responseDictionary?["last_name"] as? String,
-          fullName: responseDictionary?["name"] as? String,
-          profileURL: (responseDictionary?["link"] as? String).flatMap({ URL(string: $0) }),
-          refreshDate: Date())
+                                  firstName: responseDictionary?["first_name"] as? String,
+                                  middleName: responseDictionary?["middle_name"] as? String,
+                                  lastName: responseDictionary?["last_name"] as? String,
+                                  fullName: responseDictionary?["name"] as? String,
+                                  profileURL: (responseDictionary?["link"] as? String).flatMap({ URL(string: $0) }),
+                                  refreshDate: Date())
 
         // Reset the current profile if userId matches
         if AccessToken.current?.userId == userId {

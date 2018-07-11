@@ -105,7 +105,6 @@ extension GraphSharer {
   }
 }
 
-
 //--------------------------------------
 // MARK: - ContentSharingProtocol
 //--------------------------------------

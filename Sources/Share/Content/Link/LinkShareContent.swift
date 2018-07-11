@@ -74,10 +74,10 @@ public struct LinkShareContent: ContentProtocol {
     self.quote = quote
     self.imageURL = imageURL
   }
-  
+
   /**
    Create link share content.
-   
+
    - parameter url:         The URL being shared.
    - parameter quote:       Optional quote text of the link.
    */
@@ -88,7 +88,7 @@ public struct LinkShareContent: ContentProtocol {
   }
 
   //--------------------------------------
-  // MARK - Content
+  // MARK: - Content
   //--------------------------------------
 
   /**

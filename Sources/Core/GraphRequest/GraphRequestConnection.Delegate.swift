@@ -20,8 +20,8 @@ import Foundation
 import FBSDKCoreKit.FBSDKGraphRequestConnection
 
 internal class GraphRequestConnectionDelegateBridge: NSObject {
-  var networkFailureHandler: GraphRequestConnection.NetworkFailureHandler? = nil
-  var networkProgressHandler: GraphRequestConnection.NetworkProgressHandler? = nil
+  var networkFailureHandler: GraphRequestConnection.NetworkFailureHandler?
+  var networkProgressHandler: GraphRequestConnection.NetworkProgressHandler?
 
   func setupAsDelegateFor(_ connection: FBSDKGraphRequestConnection) {
     // We need for the connection to retain us,

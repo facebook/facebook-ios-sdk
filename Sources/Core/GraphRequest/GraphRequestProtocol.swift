@@ -41,7 +41,7 @@ public protocol GraphRequestProtocol {
   var graphPath: String { get }
 
   /// The request parameters.
-  var parameters: [String : Any]? { get }
+  var parameters: [String: Any]? { get }
 
   /// The `AccessToken` used by the request to authenticate.
   var accessToken: AccessToken? { get }

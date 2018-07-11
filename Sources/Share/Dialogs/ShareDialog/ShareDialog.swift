@@ -106,7 +106,6 @@ extension ShareDialog: ContentSharingProtocol {
   }
 }
 
-
 extension ShareDialog: ContentSharingDialogProtocol {
   /**
    Shows the dialog.

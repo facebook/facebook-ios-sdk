@@ -45,7 +45,7 @@ struct FBProfileRequest: GraphRequestProtocol {
   typealias Response = GraphResponse
 
   var graphPath = "/me"
-  var parameters: [String : Any]? = ["fields": "id, name"]
+  var parameters: [String: Any]? = ["fields": "id, name"]
   var accessToken = AccessToken.current
   var httpMethod: GraphRequestHTTPMethod = .GET
   var apiVersion: GraphAPIVersion = 2.7
@@ -60,7 +60,7 @@ extension GraphAPIReadViewController {
    */
   @IBAction func readProfile() {
     let request = FBProfileRequest()
-    request.start { (httpResponse, result) in
+    request.start { (_, result) in
       switch result {
       case .success(let response):
         print("Graph Request Succeeded: \(response)")
@@ -83,7 +83,7 @@ extension GraphAPIReadViewController {
    */
   @IBAction func readUserEvents() {
     let request = GraphRequest(graphPath: "/me/events",
-                               parameters: [ "fields" : "data, description" ],
+                               parameters: [ "fields": "data, description" ],
                                httpMethod: .GET)
     request.start { _, result in
       switch result {
@@ -108,9 +108,9 @@ extension GraphAPIReadViewController {
    */
   @IBAction func readUserFriendList() {
     let request = GraphRequest(graphPath: "/me/friends",
-                               parameters: [ "fields" : "data" ],
+                               parameters: [ "fields": "data" ],
                                httpMethod: .GET)
-    request.start { httpResponse, result in
+    request.start { _, result in
       switch result {
       case .success(let response):
         print("Graph Request Succeeded: \(response)")

@@ -28,7 +28,7 @@ public struct OpenGraphAction {
   /// The action type.
   public var type: String
 
-  fileprivate var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
+  fileprivate var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
 
   /**
    Create an `OpenGraphAction` with a specific action type.
@@ -71,8 +71,8 @@ extension OpenGraphAction {
   internal init(sdkAction: FBSDKShareOpenGraphAction) {
     self.type = sdkAction.actionType
 
-    var properties = [OpenGraphPropertyName : OpenGraphPropertyValue]()
-    sdkAction.enumerateKeysAndObjects { (key: String?, value: Any?, stop) in
+    var properties = [OpenGraphPropertyName: OpenGraphPropertyValue]()
+    sdkAction.enumerateKeysAndObjects { (key: String?, value: Any?, _) in
       guard let key = key.map(OpenGraphPropertyName.init(rawValue:)),
         let value = value.map(OpenGraphPropertyValueConverter.valueFrom) else {
           return

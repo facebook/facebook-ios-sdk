@@ -98,7 +98,6 @@ extension AppInvite.PromoCode: ExpressibleByStringLiteral {
   }
 }
 
-
 extension AppInvite.PromoCode {
   fileprivate static func truncate(string: String) -> String {
     let validCharacters = CharacterSet.alphanumerics

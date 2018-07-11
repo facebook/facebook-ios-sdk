@@ -138,7 +138,7 @@ extension ReadPermission: PermissionRepresentable {
     case .pagesShowList: return "pages_show_list"
     case .pagesManageCta: return "pages_manage_cta"
     case .pagesManageInstantArticles: return "pages_manage_instant_articles"
-    case .adsRead: return "ads_read"      
+    case .adsRead: return "ads_read"
     case .custom(let string): return Permission(name: string)
     }
   }

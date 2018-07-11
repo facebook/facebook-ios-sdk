@@ -87,10 +87,10 @@ extension GraphRequestConnection {
    - parameter completion:     Optional completion closure that is going to be called when the connection finishes or fails.
    */
   public func add<T>(_ request: T,
-                  batchEntryName: String? = nil,
-                  completion: Completion<T>? = nil) {
-    let batchParameters = batchEntryName.map({ ["name" : $0] })
-    add(request, batchParameters: batchParameters as [String : Any]?, completion: completion)
+                     batchEntryName: String? = nil,
+                     completion: Completion<T>? = nil) {
+    let batchParameters = batchEntryName.map({ ["name": $0] })
+    add(request, batchParameters: batchParameters as [String: Any]?, completion: completion)
   }
 
   /**
@@ -103,8 +103,8 @@ extension GraphRequestConnection {
    - parameter completion:      Optional completion closure that is going to be called when the connection finishes or fails.
    */
   public func add<T>(_ request: T,
-                  batchParameters: [String : Any]?,
-                  completion: Completion<T>? = nil) {
+                     batchParameters: [String: Any]?,
+                     completion: Completion<T>? = nil) {
     sdkConnection.add(request.sdkRequest,
                       completionHandler: completion.map(type(of: self).sdkRequestCompletion),
                       batchParameters: batchParameters)

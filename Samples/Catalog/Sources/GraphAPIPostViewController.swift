@@ -48,9 +48,9 @@ extension GraphAPIPostViewController {
    */
   @IBAction func postCheckin() {
     let request = GraphRequest(graphPath: "/me/feed",
-                               parameters: [ "message" : "Here I am!", "place" : "141887372509674" ],
+                               parameters: [ "message": "Here I am!", "place": "141887372509674" ],
                                httpMethod: .POST)
-    request.start { httpResponse, result in
+    request.start { _, result in
       switch result {
       case .success(let response):
         print("Graph Request Succeeded: \(response)")

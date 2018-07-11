@@ -54,7 +54,7 @@ extension ShareDialogViewController {
   @IBAction func showLinkShareDialogModeWeb() {
     let url = URL(string: "https://newsroom.fb.com/")
     var content = LinkShareContent(url: url!)
-    
+
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
     content.placeId = "166793820034304"
 
@@ -91,7 +91,7 @@ extension ShareDialogViewController {
 }
 
 extension ShareDialogViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
     picker.dismiss(animated: true, completion: nil)
 
     guard let videoURL = info[UIImagePickerControllerReferenceURL] as? URL else {

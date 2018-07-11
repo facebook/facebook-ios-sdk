@@ -25,5 +25,5 @@ public protocol ContentSharingResultProtocol {
 
    - parameter dictionary: The dictionary representation of the sharing results
    */
-  init(dictionary: [String : String])
+  init(dictionary: [String: String])
 }

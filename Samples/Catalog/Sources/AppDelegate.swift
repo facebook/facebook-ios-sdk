@@ -42,7 +42,7 @@ extension AppDelegate: UIApplicationDelegate {
   }
 
   @available(iOS 9.0, *)
-  func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any]) -> Bool {
+  func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
     return SDKApplicationDelegate.shared.application(application, open: url, options: options)
   }
 

@@ -37,7 +37,7 @@ public struct GraphRequest: GraphRequestProtocol {
   public let graphPath: String
 
   /// The request parameters.
-  public var parameters: [String : Any]?
+  public var parameters: [String: Any]?
 
   /// The `AccessToken` used by the request to authenticate.
   public let accessToken: AccessToken?
@@ -58,7 +58,7 @@ public struct GraphRequest: GraphRequestProtocol {
    - parameter apiVersion:  Optional Graph API version to use. Defaults to `GraphAPIVersion.Default`.
    */
   public init(graphPath: String,
-              parameters: [String : Any] = [:],
+              parameters: [String: Any] = [:],
               accessToken: AccessToken? = AccessToken.current,
               httpMethod: GraphRequestHTTPMethod = .GET,
               apiVersion: GraphAPIVersion = .defaultVersion) {

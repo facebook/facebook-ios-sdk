@@ -39,7 +39,7 @@ import FBSDKShareKit
  ```
  */
 public struct OpenGraphObject {
-  fileprivate var properties: [OpenGraphPropertyName : OpenGraphPropertyValue]
+  fileprivate var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
 
   /**
    Create a new `OpenGraphObject`.
@@ -97,8 +97,8 @@ extension OpenGraphObject {
   }
 
   internal init(sdkGraphObject: FBSDKShareOpenGraphObject) {
-    var properties = [OpenGraphPropertyName : OpenGraphPropertyValue]()
-    sdkGraphObject.enumerateKeysAndObjects { (key: String?, value: Any?, stop) in
+    var properties = [OpenGraphPropertyName: OpenGraphPropertyValue]()
+    sdkGraphObject.enumerateKeysAndObjects { (key: String?, value: Any?, _) in
       guard let key = key.map(OpenGraphPropertyName.init(rawValue:)),
         let value = value.map(OpenGraphPropertyValueConverter.valueFrom) else {
           return

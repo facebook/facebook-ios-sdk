@@ -34,7 +34,7 @@ public enum PublishPermission {
   /**
    When you also have the manage_pages permission, gives your app the ability to post, comment and like as any of the Pages managed by a person using your app.
    Apps need both manage_pages and publish_pages to be able to publish as a Page.
-  */
+   */
   case publishPages
   /// Provides the ability to set a person's attendee status on Facebook Events (e.g. attending, maybe, or declined).
   case rsvpEvent

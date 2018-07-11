@@ -43,7 +43,7 @@ public struct VideoShareContent: ContentProtocol {
   }
 
   //--------------------------------------
-  // MARK - ContentProtocol
+  // MARK: - ContentProtocol
   //--------------------------------------
 
   /**

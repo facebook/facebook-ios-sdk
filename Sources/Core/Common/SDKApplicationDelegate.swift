@@ -46,7 +46,7 @@ public final class SDKApplicationDelegate {
    */
   @discardableResult
   public func application(_ application: UIApplication,
-                          didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey : Any]? = nil) -> Bool {
+                          didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
     return delegate.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -65,7 +65,7 @@ public final class SDKApplicationDelegate {
   @available(iOS, deprecated: 9.0, message: "Please use application(_:open:options:).")
   @discardableResult
   public func application(_ application: UIApplication, open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
-    return delegate.application(application, open:url, sourceApplication:sourceApplication, annotation:annotation)
+    return delegate.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
   }
 
   /**
@@ -81,7 +81,7 @@ public final class SDKApplicationDelegate {
    */
   @available(iOS 9.0, *)
   @discardableResult
-  public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+  public func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
     return delegate.application(app,
                                 open: url,
                                 sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,

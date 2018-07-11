@@ -38,7 +38,7 @@ public struct PhotoShareContent: ContentProtocol {
   }
 
   //--------------------------------------
-  // MARK - ContentProtocol
+  // MARK: - ContentProtocol
   //--------------------------------------
 
   /**
