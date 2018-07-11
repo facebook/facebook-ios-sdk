@@ -139,10 +139,10 @@ extension AccessToken {
 
 private extension FBSDKAccessToken {
   var grantedSwiftPermissions: Set<Permission>? {
-    return (permissions?.flatMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
+    return (permissions?.compactMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
   }
 
   var declinedSwiftPermissions: Set<Permission>? {
-    return (declinedPermissions?.flatMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
+    return (declinedPermissions?.compactMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
   }
 }

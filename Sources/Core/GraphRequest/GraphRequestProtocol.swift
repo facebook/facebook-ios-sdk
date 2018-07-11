@@ -71,9 +71,9 @@ extension GraphRequestProtocol {
  */
 public enum GraphRequestHTTPMethod: String {
   /// `GET` graph request HTTP method.
-  case GET = "GET"
+  case GET
   /// `POST` graph request HTTP method.
-  case POST = "POST"
+  case POST
   /// `DELETE` graph request HTTP method.
-  case DELETE = "DELETE"
+  case DELETE
 }
