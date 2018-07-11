@@ -34,4 +34,4 @@ Carthage/Build
 .idea/
 
 ## Ignore Docs Folder
-.docs
+docs/
