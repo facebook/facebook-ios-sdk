@@ -32,20 +32,17 @@ internal class GraphRequestConnectionDelegateBridge: NSObject, FBSDKGraphRequest
   }
 
   // MARK: FBSDKGraphRequestConnectionDelegate
+
+  // swiftlint:disable:next implicitly_unwrapped_optional
   func requestConnection(_ connection: FBSDKGraphRequestConnection!,
                          didSendBodyData bytesWritten: Int,
                          totalBytesWritten: Int,
                          totalBytesExpectedToWrite: Int) {
-    if let handler = networkProgressHandler {
-      handler(Int64(bytesWritten),
-              Int64(totalBytesWritten),
-              Int64(totalBytesExpectedToWrite))
-    }
+    networkProgressHandler?(Int64(bytesWritten), Int64(totalBytesWritten), Int64(totalBytesExpectedToWrite))
   }
 
+  // swiftlint:disable:next implicitly_unwrapped_optional
   func requestConnection(_ connection: FBSDKGraphRequestConnection!, didFailWithError error: Error!) {
-    if let handler = networkFailureHandler {
-      handler(error)
-    }
+    networkFailureHandler?(error)
   }
 }

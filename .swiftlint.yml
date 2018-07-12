@@ -49,7 +49,6 @@ disabled_rules:
 - explicit_acl
 - explicit_enum_raw_value
 - explicit_top_level_acl
-- identifier_name
 - no_extension_access_modifier
 - number_separator
 - prefixed_toplevel_constant
@@ -58,7 +57,7 @@ disabled_rules:
 - discouraged_optional_boolean
 - discouraged_optional_collection
 - function_default_parameter_at_end
-- implicitly_unwrapped_optional
+- identifier_name
 - todo
 - weak_delegate
 
@@ -105,6 +104,7 @@ opt_in_rules:
 - generic_type_name
 - implicit_getter
 - implicit_return
+- implicitly_unwrapped_optional
 - is_disjoint
 - joined_default_parameter
 - large_tuple
