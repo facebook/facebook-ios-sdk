@@ -27,7 +27,7 @@ public protocol OpenGraphPropertyValue {
   var openGraphPropertyValue: Any { get }
 }
 
-internal struct OpenGraphPropertyValueConverter {
+internal enum OpenGraphPropertyValueConverter {
   internal static func valueFrom(openGraphObjectValue value: Any) -> OpenGraphPropertyValue? {
     switch value {
     case let value as String: return value

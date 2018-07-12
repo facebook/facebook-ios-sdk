@@ -18,13 +18,21 @@ large_tuple: 3
 line_length: 120
 
 disabled_rules:
-- class_delegate_protocol # TODO: Move to Opt In
-- identifier_name # TODO: Move to Opt In
+- discouraged_object_literal
+- explicit_enum_raw_value
 - number_separator
-- todo # TODO: Move to Opt In
-- weak_delegate # TODO: Move to Opt In
+# TODO: All below to move to Opt In
+- class_delegate_protocol
+- discouraged_optional_boolean
+- discouraged_optional_collection
+- explicit_type_interface
+- identifier_name
+- todo
+- weak_delegate
 
 opt_in_rules:
+- array_init
+- attributes
 - block_based_kvo
 - closing_brace
 - closure_end_indentation
@@ -33,17 +41,23 @@ opt_in_rules:
 - colon
 - comma
 - compiler_protocol_init
+- conditional_returns_on_newline
+- contains_over_first_not_nil
 - control_statement
-- custom_rules
+- convenience_type
 - cyclomatic_complexity
 - discarded_notification_center_observer
 - discouraged_direct_init
 - dynamic_inline
+- empty_count
+- empty_string
 - empty_enum_arguments
 - empty_parameters
 - empty_parentheses_with_trailing_closure
+- empty_xctest_method
 - explicit_init
 - file_length
+- first_where
 - for_where
 - force_cast
 - force_try
@@ -60,14 +74,18 @@ opt_in_rules:
 - legacy_constant
 - legacy_constructor
 - legacy_nsgeometry_functions
+- let_var_whitespace
 - line_length
 - literal_expression_end_indentation
 - mark
+- multiline_arguments
+- multiline_parameters
 - multiple_closures_with_trailing_closure
 - nesting
 - nimble_operator
 - no_fallthrough_only
 - notification_center_detachment
+- object_literal
 - opening_brace
 - operator_usage_whitespace
 - operator_whitespace
@@ -82,11 +100,13 @@ opt_in_rules:
 - redundant_void_return
 - return_arrow_whitespace
 - shorthand_operator
+- sorted_first_last
 - sorted_imports
 - statement_position
 - superfluous_disable_command
 - switch_case_alignment
 - syntactic_sugar
+- trailing_closure
 - trailing_comma
 - trailing_newline
 - trailing_semicolon

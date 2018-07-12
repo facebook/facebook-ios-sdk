@@ -42,7 +42,7 @@ public struct OpenGraphPropertyName {
     self.namespace = String(components[0])
 
     let subcharacters = components[1 ... components.count]
-    self.name = subcharacters.reduce("", { $0 + ":" + String($1) })
+    self.name = subcharacters.reduce("") { $0 + ":" + String($1) }
   }
 
   /**

@@ -77,7 +77,7 @@ public class LoginButton: UIView {
    */
   public init(frame: CGRect? = nil, readPermissions: [ReadPermission]) {
     let sdkLoginButton = FBSDKLoginButton()
-    sdkLoginButton.readPermissions = readPermissions.map({ $0.permissionValue.name })
+    sdkLoginButton.readPermissions = readPermissions.map { $0.permissionValue.name }
 
     self.sdkLoginButton = sdkLoginButton
     delegateBridge = LoginButtonDelegateBridge()
@@ -97,7 +97,7 @@ public class LoginButton: UIView {
    */
   public init(frame: CGRect? = nil, publishPermissions: [PublishPermission]) {
     let sdkLoginButton = FBSDKLoginButton()
-    sdkLoginButton.publishPermissions = publishPermissions.map({ $0.permissionValue.name })
+    sdkLoginButton.publishPermissions = publishPermissions.map { $0.permissionValue.name }
 
     self.sdkLoginButton = sdkLoginButton
     delegateBridge = LoginButtonDelegateBridge()

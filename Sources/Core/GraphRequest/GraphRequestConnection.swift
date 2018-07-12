@@ -93,7 +93,7 @@ extension GraphRequestConnection {
   public func add<T>(_ request: T,
                      batchEntryName: String? = nil,
                      completion: Completion<T>? = nil) {
-    let batchParameters = batchEntryName.map({ ["name": $0] })
+    let batchParameters = batchEntryName.map { ["name": $0] }
     add(request, batchParameters: batchParameters as [String: Any]?, completion: completion)
   }
 

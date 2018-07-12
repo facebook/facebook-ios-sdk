@@ -34,7 +34,9 @@ internal class GraphRequestConnectionDelegateBridge: NSObject {
 
 extension GraphRequestConnectionDelegateBridge: FBSDKGraphRequestConnectionDelegate {
   func requestConnection(_ connection: FBSDKGraphRequestConnection!,
-                         didSendBodyData bytesWritten: Int, totalBytesWritten: Int, totalBytesExpectedToWrite: Int) {
+                         didSendBodyData bytesWritten: Int,
+                         totalBytesWritten: Int,
+                         totalBytesExpectedToWrite: Int) {
     if let handler = networkProgressHandler {
       handler(Int64(bytesWritten),
               Int64(totalBytesWritten),

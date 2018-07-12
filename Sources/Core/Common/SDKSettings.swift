@@ -33,7 +33,7 @@ public let SDKVersion = FBSDKSettings.sdkVersion()
 /**
  Provides access to settings and configuration used by the entire SDK.
  */
-public struct SDKSettings {
+public enum SDKSettings {
   /**
    Facebook App ID used by the SDK.
    Default value is read from the application's Info.plist under `FacebookAppId` key.
@@ -158,7 +158,7 @@ extension SDKSettings {
       return Set(behaviors)
     }
     set {
-      let behaviors = newValue.map({ $0.sdkStringValue })
+      let behaviors = newValue.map { $0.sdkStringValue }
       FBSDKSettings.setLoggingBehavior(Set(behaviors))
     }
   }

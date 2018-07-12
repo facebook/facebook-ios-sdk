@@ -80,7 +80,7 @@ public final class LoginManager {
   public func logIn(readPermissions: [ReadPermission] = [.publicProfile],
                     viewController: UIViewController? = nil,
                     completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = readPermissions.map({ $0.permissionValue.name })
+    let sdkPermissions = readPermissions.map { $0.permissionValue.name }
     sdkManager.logIn(withReadPermissions: sdkPermissions,
                      from: viewController,
                      handler: LoginManager.sdkCompletionFor(completion))
@@ -103,7 +103,7 @@ public final class LoginManager {
   public func logIn(publishPermissions: [PublishPermission] = [.publishActions],
                     viewController: UIViewController? = nil,
                     completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = publishPermissions.map({ $0.permissionValue.name })
+    let sdkPermissions = publishPermissions.map { $0.permissionValue.name }
     sdkManager.logIn(withPublishPermissions: sdkPermissions,
                      from: viewController,
                      handler: LoginManager.sdkCompletionFor(completion))

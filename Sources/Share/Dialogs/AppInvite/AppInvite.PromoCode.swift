@@ -104,9 +104,9 @@ extension AppInvite.PromoCode {
     let validCharacters = CharacterSet.alphanumerics
     let cleaned = string
       .unicodeScalars
-      .filter({
+      .filter {
         validCharacters.contains(UnicodeScalar(UInt16($0.value))!)
-      })
+      }
       .map(Character.init)
     return String(cleaned)
   }

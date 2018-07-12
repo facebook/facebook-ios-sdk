@@ -62,7 +62,7 @@ import Foundation
  and must consist of alphanumeric characters, _, -, or spaces.
  * The length of each parameter value can be no more than on the order of 100 characters.
  */
-public class AppEventsLogger {
+public enum AppEventsLogger {
 
   public typealias UpdateUserPropertiesCompletion =
     (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<GraphRequest>) -> Void
@@ -104,7 +104,7 @@ public class AppEventsLogger {
    - parameter accessToken: Optional access token to use to log the event. Default: `AccessToken.current`.
    */
   public static func log(_ event: AppEventLoggable, accessToken: AccessToken? = AccessToken.current) {
-    let valueToSum = event.valueToSum.map({ NSNumber(value: $0 as Double) })
+    let valueToSum = event.valueToSum.map { NSNumber(value: $0 as Double) }
     let parameters = event.parameters.keyValueMap {
       ($0.0.rawValue as NSString, $0.1.appEventParameterValue)
     }

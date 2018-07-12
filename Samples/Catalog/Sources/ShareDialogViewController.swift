@@ -72,7 +72,7 @@ extension ShareDialogViewController {
 extension ShareDialogViewController {
 
   @IBAction func showShareDialogPhotoContent() {
-    let photo = Photo(image: UIImage(named: "sky.jpg")!, userGenerated: true)
+    let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
     let content = PhotoShareContent(photos: [photo])
     showShareDialog(content)
   }

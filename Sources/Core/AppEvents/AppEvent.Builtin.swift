@@ -36,7 +36,7 @@ extension AppEvent {
                                            valueToSum: Double? = nil,
                                            extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    registrationMethod.onSome({ parameters[.registrationMethod] = $0 })
+    registrationMethod.onSome { parameters[.registrationMethod] = $0 }
     return AppEvent(name: .completedRegistration, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -53,7 +53,7 @@ extension AppEvent {
                                        valueToSum: Double? = nil,
                                        extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    successful.onSome({ parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo })
+    successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .completedTutorial, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -74,9 +74,9 @@ extension AppEvent {
                                    valueToSum: Double? = nil,
                                    extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
-    currency.onSome({ parameters[.currency] = $0 })
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
+    currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .viewedContent, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -97,9 +97,9 @@ extension AppEvent {
                               valueToSum: Double? = nil,
                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentId.onSome({ parameters[.contentId] = $0 })
-    searchedString.onSome({ parameters[.searchedString] = $0 })
-    successful.onSome({ parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo })
+    contentId.onSome { parameters[.contentId] = $0 }
+    searchedString.onSome { parameters[.searchedString] = $0 }
+    successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .searched, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -120,9 +120,9 @@ extension AppEvent {
                                                valueToSum: Double? = nil,
                                                extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
-    maxRatingValue.onSome({ parameters[.maxRatingValue] = NSNumber(value: UInt64($0)) })
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
+    maxRatingValue.onSome { parameters[.maxRatingValue] = NSNumber(value: UInt64($0)) }
     return AppEvent(name: .rated, parameters: parameters, valueToSum: valueToSum)
   }
 }
@@ -146,7 +146,7 @@ extension AppEvent {
                                currency: String? = nil,
                                extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    currency.onSome({ parameters[.currency] = $0 })
+    currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .purchased, parameters: parameters, valueToSum: amount)
   }
 
@@ -167,9 +167,9 @@ extension AppEvent {
                                  valueToSum: Double? = nil,
                                  extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
-    currency.onSome({ parameters[.currency] = $0 })
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
+    currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .addedToCart, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -190,9 +190,9 @@ extension AppEvent {
                                      valueToSum: Double? = nil,
                                      extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
-    currency.onSome({ parameters[.currency] = $0 })
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
+    currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .addedToWishlist, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -209,7 +209,7 @@ extension AppEvent {
                                       valueToSum: Double? = nil,
                                       extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    successful.onSome({ parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo })
+    successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .addedPaymentInfo, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -234,13 +234,13 @@ extension AppEvent {
                                                            valueToSum: Double? = nil,
                                                            extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
-    itemCount.onSome({ parameters[.itemCount] = NSNumber(value: UInt64($0)) })
-    paymentInfoAvailable.onSome({
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
+    itemCount.onSome { parameters[.itemCount] = NSNumber(value: UInt64($0)) }
+    paymentInfoAvailable.onSome {
       parameters[.paymentInfoAvailable] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo
-    })
-    currency.onSome({ parameters[.currency] = $0 })
+    }
+    currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .initiatedCheckout, parameters: parameters, valueToSum: valueToSum)
   }
 }
@@ -264,7 +264,7 @@ extension AppEvent {
                                    valueToSum: Double? = nil,
                                    extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    level.onSome({ parameters[.level] = $0 })
+    level.onSome { parameters[.level] = $0 }
     return AppEvent(name: .achievedLevel, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -281,7 +281,7 @@ extension AppEvent {
                                          valueToSum: Double? = nil,
                                          extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    description.onSome({ parameters[.Description] = $0 })
+    description.onSome { parameters[.Description] = $0 }
     return AppEvent(name: .unlockedAchievement, parameters: parameters, valueToSum: valueToSum)
   }
 
@@ -300,8 +300,8 @@ extension AppEvent {
                                   valueToSum: Double? = nil,
                                   extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    contentType.onSome({ parameters[.contentType] = $0 })
-    contentId.onSome({ parameters[.contentId] = $0 })
+    contentType.onSome { parameters[.contentType] = $0 }
+    contentId.onSome { parameters[.contentId] = $0 }
     return AppEvent(name: .spentCredits, parameters: parameters, valueToSum: valueToSum)
   }
 }

@@ -128,8 +128,8 @@ extension AccessToken {
 
   internal var sdkAccessTokenRepresentation: FBSDKAccessToken {
     return FBSDKAccessToken(tokenString: authenticationToken,
-                            permissions: grantedPermissions?.map({ $0.name }),
-                            declinedPermissions: declinedPermissions?.map({ $0.name }),
+                            permissions: grantedPermissions?.map { $0.name },
+                            declinedPermissions: declinedPermissions?.map { $0.name },
                             appID: appId,
                             userID: userId,
                             expirationDate: expirationDate,
@@ -139,10 +139,10 @@ extension AccessToken {
 
 private extension FBSDKAccessToken {
   var grantedSwiftPermissions: Set<Permission>? {
-    return (permissions?.compactMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
+    return (permissions?.compactMap { $0 as? String }.map { Permission(name: $0) }).map(Set.init)
   }
 
   var declinedSwiftPermissions: Set<Permission>? {
-    return (declinedPermissions?.compactMap({ $0 as? String }).map({ Permission(name: $0) })).map(Set.init)
+    return (declinedPermissions?.compactMap { $0 as? String }.map { Permission(name: $0) }).map(Set.init)
   }
 }

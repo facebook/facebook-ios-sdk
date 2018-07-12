@@ -22,12 +22,12 @@ import Foundation
 extension GraphRequestProtocol {
   internal var sdkRequest: FBSDKGraphRequest {
     // TODO: (nlutsenko) Consider constraining `parameters` for specific types aka create `GraphRequestParameterValue`
-    let sdkParameters: [String: Any]? = parameters?.keyValueMap({ key, value in
+    let sdkParameters: [String: Any]? = parameters?.keyValueMap { key, value in
       if let value = value as? GraphRequestDataAttachment {
         return (key, value.sdkDataAttachment)
       }
       return (key, value)
-    })
+    }
 
     // ObjC SDK requires `v` as a prefix for the Graph API Version.
     let apiVersion = "v" + self.apiVersion.stringValue
