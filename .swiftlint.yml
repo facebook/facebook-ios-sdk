@@ -58,6 +58,7 @@ opt_in_rules:
 - empty_parentheses_with_trailing_closure
 - empty_xctest_method
 - explicit_init
+- fatal_error_message
 - file_length
 - first_where
 - for_where
@@ -95,14 +96,19 @@ opt_in_rules:
 - private_over_fileprivate
 - private_unit_test
 - protocol_property_accessors_order
+- quick_discouraged_call
+- quick_discouraged_focused_test
+- quick_discouraged_pending_test
 - redundant_discardable_let
 - redundant_nil_coalescing
 - redundant_optional_initialization
 - redundant_set_access_control
 - redundant_string_enum_value
 - redundant_void_return
+- required_enum_case
 - return_arrow_whitespace
 - shorthand_operator
+- single_test_class
 - sorted_first_last
 - sorted_imports
 - statement_position
