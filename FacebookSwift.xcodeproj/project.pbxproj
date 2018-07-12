@@ -21,7 +21,7 @@
 		810192B71D01305400B9E881 /* SDKSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AD1D01305400B9E881 /* SDKSettings.swift */; };
 		810192C41D0130C500B9E881 /* GraphRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192C31D0130C500B9E881 /* GraphRequest.swift */; };
 		810192C81D01380600B9E881 /* GraphRequestConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192C71D01380600B9E881 /* GraphRequestConnection.swift */; };
-		810192CA1D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192C91D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift */; };
+		810192CA1D0139CF00B9E881 /* GraphRequestConnectionDelegateBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192C91D0139CF00B9E881 /* GraphRequestConnectionDelegateBridge.swift */; };
 		810192CC1D013FC100B9E881 /* GraphRequestProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192CB1D013FC100B9E881 /* GraphRequestProtocol.swift */; };
 		810192CE1D01409400B9E881 /* GraphResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192CD1D01409400B9E881 /* GraphResponse.swift */; };
 		810192D01D0145AE00B9E881 /* GraphResponseProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192CF1D0145AE00B9E881 /* GraphResponseProtocol.swift */; };
@@ -75,7 +75,7 @@
 		81D646A91D2C8D7800690609 /* MessageDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D6467A1D2C8D7800690609 /* MessageDialog.swift */; };
 		81D646AA1D2C8D7800690609 /* ShareDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D6467C1D2C8D7800690609 /* ShareDialog.swift */; };
 		81D646AB1D2C8D7800690609 /* ShareDialogMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D6467D1D2C8D7800690609 /* ShareDialogMode.swift */; };
-		81D646AC1D2C8D7800690609 /* Constants.Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D6467F1D2C8D7800690609 /* Constants.Internal.swift */; };
+		81D646AC1D2C8D7800690609 /* ShareResultKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D6467F1D2C8D7800690609 /* ShareResultKeys.swift */; };
 		81D646AD1D2C8D7800690609 /* ContentBridger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D646801D2C8D7800690609 /* ContentBridger.swift */; };
 		81D646AE1D2C8D7800690609 /* SDKSharingDelegateBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D646811D2C8D7800690609 /* SDKSharingDelegateBridge.swift */; };
 		81D646AF1D2C8D7800690609 /* ShareError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81D646821D2C8D7800690609 /* ShareError.swift */; };
@@ -357,7 +357,7 @@
 		810192AD1D01305400B9E881 /* SDKSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKSettings.swift; sourceTree = "<group>"; };
 		810192C31D0130C500B9E881 /* GraphRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequest.swift; sourceTree = "<group>"; };
 		810192C71D01380600B9E881 /* GraphRequestConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequestConnection.swift; sourceTree = "<group>"; };
-		810192C91D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequestConnection.Delegate.swift; sourceTree = "<group>"; };
+		810192C91D0139CF00B9E881 /* GraphRequestConnectionDelegateBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequestConnectionDelegateBridge.swift; sourceTree = "<group>"; };
 		810192CB1D013FC100B9E881 /* GraphRequestProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphRequestProtocol.swift; sourceTree = "<group>"; };
 		810192CD1D01409400B9E881 /* GraphResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphResponse.swift; sourceTree = "<group>"; };
 		810192CF1D0145AE00B9E881 /* GraphResponseProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphResponseProtocol.swift; sourceTree = "<group>"; };
@@ -424,7 +424,7 @@
 		81D6467A1D2C8D7800690609 /* MessageDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageDialog.swift; sourceTree = "<group>"; };
 		81D6467C1D2C8D7800690609 /* ShareDialog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareDialog.swift; sourceTree = "<group>"; };
 		81D6467D1D2C8D7800690609 /* ShareDialogMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareDialogMode.swift; sourceTree = "<group>"; };
-		81D6467F1D2C8D7800690609 /* Constants.Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.Internal.swift; sourceTree = "<group>"; };
+		81D6467F1D2C8D7800690609 /* ShareResultKeys.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareResultKeys.swift; sourceTree = "<group>"; };
 		81D646801D2C8D7800690609 /* ContentBridger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBridger.swift; sourceTree = "<group>"; };
 		81D646811D2C8D7800690609 /* SDKSharingDelegateBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SDKSharingDelegateBridge.swift; sourceTree = "<group>"; };
 		81D646821D2C8D7800690609 /* ShareError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShareError.swift; sourceTree = "<group>"; };
@@ -521,7 +521,7 @@
 				810192CD1D01409400B9E881 /* GraphResponse.swift */,
 				810192CF1D0145AE00B9E881 /* GraphResponseProtocol.swift */,
 				810192C71D01380600B9E881 /* GraphRequestConnection.swift */,
-				810192C91D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift */,
+				810192C91D0139CF00B9E881 /* GraphRequestConnectionDelegateBridge.swift */,
 				8110E62E1D46A0AA00C349B4 /* GraphAPIVersion.swift */,
 			);
 			path = GraphRequest;
@@ -860,7 +860,7 @@
 		81D6467E1D2C8D7800690609 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				81D6467F1D2C8D7800690609 /* Constants.Internal.swift */,
+				81D6467F1D2C8D7800690609 /* ShareResultKeys.swift */,
 				81D646801D2C8D7800690609 /* ContentBridger.swift */,
 				81D646811D2C8D7800690609 /* SDKSharingDelegateBridge.swift */,
 			);
@@ -1352,7 +1352,7 @@
 				810192B41D01305400B9E881 /* AccessToken.swift in Sources */,
 				819E34C61D495A9A000D33E8 /* UserProfile.FetchResult.swift in Sources */,
 				81FC4CAB1D067490003F3A46 /* ReadPermission.swift in Sources */,
-				810192CA1D0139CF00B9E881 /* GraphRequestConnection.Delegate.swift in Sources */,
+				810192CA1D0139CF00B9E881 /* GraphRequestConnectionDelegateBridge.swift in Sources */,
 				039F241E1F018FAA00489799 /* FBSDKSettingsInitializer.m in Sources */,
 				816B75A71D07AEB70012AC43 /* GraphRequestDataAttachment.swift in Sources */,
 				810192CC1D013FC100B9E881 /* GraphRequestProtocol.swift in Sources */,
@@ -1421,7 +1421,7 @@
 				F5FE8BFE1D2DDB1100A0E4CF /* AppInvite.PromoCode.swift in Sources */,
 				F5FE8C001D2DDB1100A0E4CF /* AppInvite.SDKDelegate.swift in Sources */,
 				81D6468D1D2C8D7800690609 /* PostSharingResult.swift in Sources */,
-				81D646AC1D2C8D7800690609 /* Constants.Internal.swift in Sources */,
+				81D646AC1D2C8D7800690609 /* ShareResultKeys.swift in Sources */,
 				81D646AA1D2C8D7800690609 /* ShareDialog.swift in Sources */,
 				81D646B41D2C8D7800690609 /* SendButton.swift in Sources */,
 				F5FE8BFF1D2DDB1100A0E4CF /* AppInvite.Result.swift in Sources */,

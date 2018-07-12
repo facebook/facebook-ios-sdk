@@ -64,6 +64,7 @@ opt_in_rules:
 - fallthrough
 - fatal_error_message
 - file_length
+- file_name
 - first_where
 - for_where
 - force_cast

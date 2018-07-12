@@ -34,7 +34,7 @@
 		81F43B461D0611B700569A1A /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F43B451D0611B700569A1A /* MainCollectionViewCell.swift */; };
 		81F43B8A1D06139900569A1A /* ManualAppEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F43B891D06139900569A1A /* ManualAppEventViewController.swift */; };
 		81F43B941D0613A100569A1A /* CustomAppEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81F43B931D0613A100569A1A /* CustomAppEventViewController.swift */; };
-		81FC4A511D064717003F3A46 /* AlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FC4A501D064717003F3A46 /* AlertController.swift */; };
+		81FC4A511D064717003F3A46 /* UIAlertController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81FC4A501D064717003F3A46 /* UIAlertController+Extensions.swift */; };
 		81FC4B061D064A39003F3A46 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81EDA2D21D025EA600E742F4 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -364,7 +364,7 @@
 		81F43B451D0611B700569A1A /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
 		81F43B891D06139900569A1A /* ManualAppEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManualAppEventViewController.swift; sourceTree = "<group>"; };
 		81F43B931D0613A100569A1A /* CustomAppEventViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomAppEventViewController.swift; sourceTree = "<group>"; };
-		81FC4A501D064717003F3A46 /* AlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertController.swift; sourceTree = "<group>"; };
+		81FC4A501D064717003F3A46 /* UIAlertController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIAlertController+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -603,7 +603,7 @@
 		81FC4A4F1D06470C003F3A46 /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
-				81FC4A501D064717003F3A46 /* AlertController.swift */,
+				81FC4A501D064717003F3A46 /* UIAlertController+Extensions.swift */,
 			);
 			name = Utilities;
 			sourceTree = "<group>";
@@ -940,7 +940,7 @@
 				81D645311D2C590C00690609 /* AppInviteViewController.swift in Sources */,
 				81D645491D2C686500690609 /* ShareAPIViewController.swift in Sources */,
 				81D645361D2C59AA00690609 /* ShareDialogViewController.swift in Sources */,
-				81FC4A511D064717003F3A46 /* AlertController.swift in Sources */,
+				81FC4A511D064717003F3A46 /* UIAlertController+Extensions.swift in Sources */,
 				813C9C241D1DB8E500288BFA /* LoginButtonViewController.swift in Sources */,
 				81F43A981D060DB300569A1A /* MainCollectionViewController.swift in Sources */,
 			);
