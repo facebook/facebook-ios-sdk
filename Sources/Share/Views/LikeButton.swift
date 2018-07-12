@@ -86,7 +86,7 @@ public class LikeButton: UIView {
   /**
    Performs logic for laying out subviews.
    */
-  public override func layoutSubviews() {
+  override public func layoutSubviews() {
     super.layoutSubviews()
 
     sdkLikeButton.frame = CGRect(origin: .zero, size: bounds.size)
@@ -95,7 +95,7 @@ public class LikeButton: UIView {
   /**
    Resizes and moves the receiver view so it just encloses its subviews.
    */
-  public override func sizeToFit() {
+  override public func sizeToFit() {
     bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
@@ -106,7 +106,7 @@ public class LikeButton: UIView {
 
    - returns: A new size that fits the receiver’s subviews.
    */
-  public override func sizeThatFits(_ size: CGSize) -> CGSize {
+  override public func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLikeButton.sizeThatFits(size)
   }
 
@@ -115,7 +115,7 @@ public class LikeButton: UIView {
 
    - returns: A size indicating the natural size for the receiving view based on its intrinsic properties.
    */
-  public override var intrinsicContentSize: CGSize {
+  override public var intrinsicContentSize: CGSize {
     return sdkLikeButton.intrinsicContentSize
   }
 }

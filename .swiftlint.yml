@@ -20,7 +20,9 @@ line_length: 120
 disabled_rules:
 - conditional_returns_on_newline
 - discouraged_object_literal
+- explicit_acl
 - explicit_enum_raw_value
+- explicit_top_level_acl
 - number_separator
 - switch_case_on_newline
 # TODO: All below to move to Opt In
@@ -84,6 +86,7 @@ opt_in_rules:
 - line_length
 - literal_expression_end_indentation
 - mark
+- modifier_order
 - multiline_arguments
 - multiline_function_chains
 - multiline_parameters
