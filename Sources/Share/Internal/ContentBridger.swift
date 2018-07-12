@@ -29,10 +29,21 @@ internal protocol SDKBridgedContent {
 }
 
 internal enum ContentBridger {
+
+  // Basic class wrapper for holding `Content`. This gets set as an associated object on the Objective-C
+  // FBSDKSharingContent, so we can extract the swift content (which is probably a struct) back as its proper type.
+  class SwiftContentHolder<C: ContentProtocol>: NSObject {
+    let swiftContent: C
+
+    init(swiftContent: C) {
+      self.swiftContent = swiftContent
+    }
+  }
+
   // The only way for swift to guarantee a stable pointer is by using UnsafeMutablePointer.alloc. Using the `&`
   // operator, or using withUnsafePointer is liable to have a stack-copied pointer,
   // not a static pointer, which is what we need.
-  fileprivate static let contentHolderKey = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
+  private static let contentHolderKey = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
 
   internal static func bridgeToObjC<C: ContentProtocol>(_ content: C) -> FBSDKSharingContent? {
     guard let nativeContent = content as? SDKBridgedContent else {
@@ -53,15 +64,5 @@ internal enum ContentBridger {
     }
 
     return contentHolder.swiftContent
-  }
-}
-
-// Basic class wrapper for holding `Content`. This gets set as an associated object on the Objective-C
-// FBSDKSharingContent, so we can extract the swift content (which is probably a struct) back as its proper type.
-private class SwiftContentHolder<C: ContentProtocol>: NSObject {
-  fileprivate let swiftContent: C
-
-  fileprivate init(swiftContent: C) {
-    self.swiftContent = swiftContent
   }
 }

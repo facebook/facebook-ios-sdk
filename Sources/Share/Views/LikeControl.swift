@@ -27,7 +27,7 @@ import UIKit
  that allows the user to like the object. Upon return to the calling app, the view will update with the new state.
  */
 public class LikeControl: UIView {
-  fileprivate let sdkLikeControl: FBSDKLikeControl
+  private let sdkLikeControl: FBSDKLikeControl
 
   /**
    Create a new LikeControl with an optional frame and object.

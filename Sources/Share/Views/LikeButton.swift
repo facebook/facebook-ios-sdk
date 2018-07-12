@@ -29,7 +29,7 @@ import Foundation
  */
 public class LikeButton: UIView {
 
-  fileprivate var sdkLikeButton: FBSDKLikeButton
+  private var sdkLikeButton: FBSDKLikeButton
 
   /// If `true`, a sound is played when the reciever is toggled.
   public var isSoundEnabled: Bool {

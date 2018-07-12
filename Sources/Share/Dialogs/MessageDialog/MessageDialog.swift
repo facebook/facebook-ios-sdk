@@ -21,8 +21,8 @@ import FBSDKShareKit
 /// A dialog for sharing content through Messenger.
 public final class MessageDialog<Content: ContentProtocol> {
 
-  fileprivate let sdkSharer: FBSDKMessageDialog
-  fileprivate let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  private let sdkSharer: FBSDKMessageDialog
+  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
 
   /**
    Create a `MessageDialog` with a given content.

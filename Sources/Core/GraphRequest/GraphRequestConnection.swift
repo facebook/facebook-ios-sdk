@@ -61,8 +61,8 @@ public class GraphRequestConnection {
     }
   }
 
-  fileprivate var sdkConnection = FBSDKGraphRequestConnection()
-  fileprivate var sdkDelegateBridge = GraphRequestConnectionDelegateBridge()
+  private var sdkConnection = FBSDKGraphRequestConnection()
+  private var sdkDelegateBridge = GraphRequestConnectionDelegateBridge()
 
   /**
    Initializes a connection.

@@ -23,8 +23,8 @@ import UIKit
 public extension AppInvite {
   /// A dialog to send app invites.
   final class Dialog {
-    fileprivate let sdkDialog: FBSDKAppInviteDialog
-    fileprivate let sdkDelegate: SDKDelegate
+    private let sdkDialog: FBSDKAppInviteDialog
+    private let sdkDelegate: SDKDelegate
 
     /// The invite to send.
     public let invite: AppInvite

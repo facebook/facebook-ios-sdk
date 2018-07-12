@@ -23,7 +23,7 @@ import Foundation
  A button for sharing content.
  */
 public class ShareButton<C: ContentProtocol>: UIView {
-  fileprivate var sdkShareButton: FBSDKShareButton
+  private var sdkShareButton: FBSDKShareButton
 
   /// The content to share.
   public var content: C? = nil {

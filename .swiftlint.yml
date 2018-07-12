@@ -37,7 +37,6 @@ disabled_rules:
 - identifier_name
 - implicitly_unwrapped_optional
 - no_grouping_extension
-- strict_fileprivate
 - todo
 - weak_delegate
 
@@ -132,6 +131,7 @@ opt_in_rules:
 - sorted_first_last
 - sorted_imports
 - statement_position
+- strict_fileprivate
 - superfluous_disable_command
 - switch_case_alignment
 - syntactic_sugar

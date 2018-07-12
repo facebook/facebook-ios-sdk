@@ -35,11 +35,11 @@ import FBSDKLoginKit
  */
 public class LoginButton: UIView {
 
-  fileprivate var sdkLoginButton: FBSDKLoginButton
+  private var sdkLoginButton: FBSDKLoginButton
 
   /// Delegate of the login button that can handle the result, logout events.
   public var delegate: LoginButtonDelegate?
-  fileprivate var delegateBridge: LoginButtonDelegateBridge
+  private var delegateBridge: LoginButtonDelegateBridge
 
   /// The login behavior that is going to be used. Default: `.Native`.
   public var loginBehavior = LoginBehavior.native {

@@ -28,7 +28,7 @@ public struct OpenGraphAction {
   /// The action type.
   public var type: String
 
-  fileprivate var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
+  private var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
 
   /**
    Create an `OpenGraphAction` with a specific action type.

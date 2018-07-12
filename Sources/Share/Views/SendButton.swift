@@ -23,7 +23,7 @@ import Foundation
  A button for sending content with messenger.
  */
 public class SendButton<C: ContentProtocol>: UIView {
-  fileprivate var sdkSendButton: FBSDKSendButton
+  private var sdkSendButton: FBSDKSendButton
 
   /// The content to share.
   public var content: C? = nil {

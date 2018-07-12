@@ -29,8 +29,8 @@ import FBSDKShareKit
  */
 public final class GraphSharer<Content: ContentProtocol> {
 
-  fileprivate let sdkSharer: FBSDKShareAPI
-  fileprivate let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  private let sdkSharer: FBSDKShareAPI
+  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
 
   /// The message the person has provided through the custom dialog that will accompany the share content.
   public var message: String? {

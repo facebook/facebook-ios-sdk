@@ -39,7 +39,7 @@ import FBSDKShareKit
  ```
  */
 public struct OpenGraphObject {
-  fileprivate var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
+  private var properties: [OpenGraphPropertyName: OpenGraphPropertyValue]
 
   /**
    Create a new `OpenGraphObject`.

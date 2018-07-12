@@ -21,8 +21,8 @@ import FBSDKShareKit
 public extension GameRequest {
   /// A dialog for sending game requests.
   final class Dialog {
-    fileprivate let sdkDialog: FBSDKGameRequestDialog
-    fileprivate let sdkDelegate: SDKDelegate
+    private let sdkDialog: FBSDKGameRequestDialog
+    private let sdkDelegate: SDKDelegate
 
     /// The content for the game request.
     public let request: GameRequest
