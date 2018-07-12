@@ -22,7 +22,7 @@ public extension GameRequest {
   /// A dialog for sending game requests.
   final class Dialog {
     private let sdkDialog: FBSDKGameRequestDialog
-    private let sdkDelegate: SDKDelegate
+    private weak var sdkDelegate: SDKDelegate?
 
     /// The content for the game request.
     public let request: GameRequest
@@ -30,7 +30,7 @@ public extension GameRequest {
     /// The completion handler to be invoked upon completion of the request.
     public var completion: ((Result) -> Void)? {
       didSet {
-        sdkDelegate.completion = completion
+        sdkDelegate?.completion = completion
       }
     }
 
@@ -55,7 +55,7 @@ public extension GameRequest {
       sdkDialog = FBSDKGameRequestDialog()
       sdkDelegate = SDKDelegate()
 
-      sdkDelegate.setupAsDelegateFor(sdkDialog)
+      sdkDelegate?.setupAsDelegateFor(sdkDialog)
       sdkDialog.content = request.sdkContentRepresentation
     }
 
@@ -66,15 +66,15 @@ public extension GameRequest {
      */
     public func show() throws {
       var error: Error?
-      let completionHandler = sdkDelegate.completion
-      sdkDelegate.completion = {
+      let completionHandler = sdkDelegate?.completion
+      sdkDelegate?.completion = {
         if case .failed(let resultError) = $0 {
           error = resultError
         }
       }
 
       sdkDialog.show()
-      sdkDelegate.completion = completionHandler
+      sdkDelegate?.completion = completionHandler
 
       if let error = error {
         throw error

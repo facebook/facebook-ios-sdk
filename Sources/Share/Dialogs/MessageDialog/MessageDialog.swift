@@ -22,7 +22,7 @@ import FBSDKShareKit
 public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtocol, ContentSharingDialogProtocol {
 
   private let sdkSharer: FBSDKMessageDialog
-  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  private weak var sdkShareDelegate: SDKSharingDelegateBridge<Content>?
 
   /**
    Create a `MessageDialog` with a given content.
@@ -33,7 +33,7 @@ public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtoc
     sdkSharer = FBSDKMessageDialog()
     sdkShareDelegate = SDKSharingDelegateBridge<Content>()
 
-    sdkShareDelegate.setupAsDelegateFor(sdkSharer)
+    sdkShareDelegate?.setupAsDelegateFor(sdkSharer)
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
 
@@ -50,10 +50,10 @@ public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtoc
   /// The completion handler to be invoked upon the share performing.
   public var completion: ((ContentSharerResult<Content>) -> Void)? {
     get {
-      return sdkShareDelegate.completion
+      return sdkShareDelegate?.completion
     }
     set {
-      sdkShareDelegate.completion = newValue
+      sdkShareDelegate?.completion = newValue
     }
   }
 
@@ -84,15 +84,15 @@ public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtoc
    */
   public func show() throws {
     var error: Error?
-    let completionHandler = sdkShareDelegate.completion
-    sdkShareDelegate.completion = {
+    let completionHandler = sdkShareDelegate?.completion
+    sdkShareDelegate?.completion = {
       if case .failed(let resultError) = $0 {
         error = resultError
       }
     }
 
     sdkSharer.show()
-    sdkShareDelegate.completion = completionHandler
+    sdkShareDelegate?.completion = completionHandler
 
     if let error = error {
       throw error

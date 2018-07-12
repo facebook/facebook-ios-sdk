@@ -28,12 +28,14 @@ import UIKit
  should call them in the respective methods in your AppDelegate implementation.
  */
 public final class SDKApplicationDelegate {
-  private let delegate: FBSDKApplicationDelegate = FBSDKApplicationDelegate.sharedInstance()
+  private weak var delegate: FBSDKApplicationDelegate?
 
   /// Returns the singleton instance of an application delegate.
   public static let shared: SDKApplicationDelegate = SDKApplicationDelegate()
 
-  private init() { }
+  private init() {
+    self.delegate = FBSDKApplicationDelegate.sharedInstance()
+  }
 
   /**
    Call this function from the `UIApplicationDelegate.application(application:didFinishLaunchingWithOptions:)` function
@@ -48,7 +50,7 @@ public final class SDKApplicationDelegate {
   public func
     application(_ application: UIApplication,
                 didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
-    return delegate.application(application, didFinishLaunchingWithOptions: launchOptions)
+    return delegate?.application(application, didFinishLaunchingWithOptions: launchOptions) ?? false
   }
 
   /**
@@ -69,7 +71,10 @@ public final class SDKApplicationDelegate {
                           open url: URL,
                           sourceApplication: String?,
                           annotation: Any) -> Bool {
-    return delegate.application(application, open: url, sourceApplication: sourceApplication, annotation: annotation)
+    return delegate?.application(application,
+                                 open: url,
+                                 sourceApplication: sourceApplication,
+                                 annotation: annotation) ?? false
   }
 
   /**
@@ -89,9 +94,9 @@ public final class SDKApplicationDelegate {
   public func application(_ app: UIApplication,
                           open url: URL,
                           options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
-    return delegate.application(app,
-                                open: url,
-                                sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String,
-                                annotation: options[UIApplicationOpenURLOptionsKey.annotation])
+    return delegate?.application(app,
+                                 open: url,
+                                 sourceApplication: options[.sourceApplication] as? String,
+                                 annotation: options[.annotation]) ?? false
   }
 }

@@ -30,7 +30,7 @@ import FBSDKShareKit
 public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol {
 
   private let sdkSharer: FBSDKShareAPI
-  private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
+  private weak var sdkShareDelegate: SDKSharingDelegateBridge<Content>?
 
   /// The message the person has provided through the custom dialog that will accompany the share content.
   public var message: String? {
@@ -73,7 +73,7 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
     sdkSharer = FBSDKShareAPI()
     sdkShareDelegate = SDKSharingDelegateBridge()
 
-    sdkShareDelegate.setupAsDelegateFor(sdkSharer)
+    sdkShareDelegate?.setupAsDelegateFor(sdkSharer)
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
 
@@ -88,15 +88,15 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
    */
   public func share() throws {
     var error: Error?
-    let completionHandler = sdkShareDelegate.completion
-    sdkShareDelegate.completion = {
+    let completionHandler = sdkShareDelegate?.completion
+    sdkShareDelegate?.completion = {
       if case .failed(let resultError) = $0 {
         error = resultError
       }
     }
 
     sdkSharer.share()
-    sdkShareDelegate.completion = completionHandler
+    sdkShareDelegate?.completion = completionHandler
 
     if let error = error {
       throw error
@@ -118,10 +118,10 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
   /// The completion handler to be invoked upon the share performing.
   public var completion: ((ContentSharerResult<Content>) -> Void)? {
     get {
-      return sdkShareDelegate.completion
+      return sdkShareDelegate?.completion
     }
     set {
-      sdkShareDelegate.completion = newValue
+      sdkShareDelegate?.completion = newValue
     }
   }
 

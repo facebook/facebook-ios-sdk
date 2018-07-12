@@ -59,7 +59,6 @@ disabled_rules:
 - function_default_parameter_at_end
 - identifier_name
 - todo
-- weak_delegate
 
 opt_in_rules:
 - array_init
@@ -180,5 +179,6 @@ opt_in_rules:
 - vertical_parameter_alignment_on_call
 - vertical_whitespace
 - void_return
+- weak_delegate
 - xctfail_message
 - yoda_condition

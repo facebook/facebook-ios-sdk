@@ -24,7 +24,7 @@ public extension AppInvite {
   /// A dialog to send app invites.
   final class Dialog {
     private let sdkDialog: FBSDKAppInviteDialog
-    private let sdkDelegate: SDKDelegate
+    private weak var sdkDelegate: SDKDelegate?
 
     /// The invite to send.
     public let invite: AppInvite
@@ -46,10 +46,10 @@ public extension AppInvite {
     /// The completion handler to be invoked upon showing the dialog.
     public var completion: ((Result) -> Void)? {
       get {
-        return sdkDelegate.completion
+        return sdkDelegate?.completion
       }
       set {
-        sdkDelegate.completion = newValue
+        sdkDelegate?.completion = newValue
       }
     }
 
@@ -63,7 +63,7 @@ public extension AppInvite {
       sdkDialog.content = invite.sdkInviteRepresentation
 
       sdkDelegate = SDKDelegate()
-      sdkDelegate.setupAsDelegateFor(sdkDialog)
+      sdkDelegate?.setupAsDelegateFor(sdkDialog)
 
       self.invite = invite
     }
@@ -75,15 +75,15 @@ public extension AppInvite {
      */
     public func show() throws {
       var error: Error?
-      let completionHandler = sdkDelegate.completion
-      sdkDelegate.completion = {
+      let completionHandler = sdkDelegate?.completion
+      sdkDelegate?.completion = {
         if case .failed(let resultError) = $0 {
           error = resultError
         }
       }
 
       sdkDialog.show()
-      sdkDelegate.completion = completionHandler
+      sdkDelegate?.completion = completionHandler
 
       if let error = error {
         throw error
