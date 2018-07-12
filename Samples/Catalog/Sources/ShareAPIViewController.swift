@@ -57,8 +57,8 @@ final class ShareAPIViewController: UITableViewController {
 
 extension ShareAPIViewController {
   @IBAction func shareLink() {
-    let url = URL(string: "https://newsroom.fb.com/")
-    let content = LinkShareContent(url: url!)
+    guard let url = URL(string: "https://newsroom.fb.com/") else { return }
+    let content = LinkShareContent(url: url)
     share(content)
   }
 }
@@ -81,7 +81,8 @@ extension ShareAPIViewController {
 
 extension ShareAPIViewController {
   @IBAction func shareVideo() {
-    let video = Video(url: Bundle.main.url(forResource: "sky", withExtension: "mp4")!)
+    guard let url = Bundle.main.url(forResource: "sky", withExtension: "mp4") else { return }
+    let video = Video(url: url)
     let content = VideoShareContent(video: video)
     share(content)
   }

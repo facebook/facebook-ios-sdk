@@ -18,15 +18,18 @@ large_tuple: 3
 line_length: 120
 
 disabled_rules:
+- conditional_returns_on_newline
 - discouraged_object_literal
 - explicit_enum_raw_value
 - number_separator
+- switch_case_on_newline
 # TODO: All below to move to Opt In
 - class_delegate_protocol
 - discouraged_optional_boolean
 - discouraged_optional_collection
 - explicit_type_interface
 - identifier_name
+- strict_fileprivate
 - todo
 - weak_delegate
 
@@ -41,7 +44,6 @@ opt_in_rules:
 - colon
 - comma
 - compiler_protocol_init
-- conditional_returns_on_newline
 - contains_over_first_not_nil
 - control_statement
 - convenience_type
@@ -61,6 +63,7 @@ opt_in_rules:
 - for_where
 - force_cast
 - force_try
+- force_unwrapping
 - function_body_length
 - function_parameter_count
 - generic_type_name
@@ -113,6 +116,7 @@ opt_in_rules:
 - trailing_whitespace
 - type_body_length
 - type_name
+- unavailable_function
 - unneeded_break_in_switch
 - unneeded_parentheses_in_closure_argument
 - untyped_error_in_catch

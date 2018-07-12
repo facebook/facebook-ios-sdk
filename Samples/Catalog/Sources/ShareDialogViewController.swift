@@ -43,8 +43,8 @@ final class ShareDialogViewController: UITableViewController {
 
 extension ShareDialogViewController {
   @IBAction func showLinkShareDialogModeAutomatic() {
-    let url = URL(string: "https://newsroom.fb.com/")
-    var content = LinkShareContent(url: url!)
+    guard let url = URL(string: "https://newsroom.fb.com/") else { return }
+    var content = LinkShareContent(url: url)
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
     // for building a place picker.
@@ -54,8 +54,8 @@ extension ShareDialogViewController {
   }
 
   @IBAction func showLinkShareDialogModeWeb() {
-    let url = URL(string: "https://newsroom.fb.com/")
-    var content = LinkShareContent(url: url!)
+    guard let url = URL(string: "https://newsroom.fb.com/") else { return }
+    var content = LinkShareContent(url: url)
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
     // for building a place picker.

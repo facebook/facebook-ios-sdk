@@ -95,7 +95,8 @@ extension UIAlertController {
     } else {
       //Fetching actions specidied by the user and adding actions accordingly
       for actionType in actions {
-        addAction((actionType?.action(handler: handler))!)
+        guard let actionType = actionType else { continue }
+        addAction(actionType.action(handler: handler))
       }
     }
 

@@ -49,6 +49,7 @@ public class ShareButton<C: ContentProtocol>: UIView {
     addSubview(sdkShareButton)
   }
 
+  @available(*, unavailable)
   required public init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
