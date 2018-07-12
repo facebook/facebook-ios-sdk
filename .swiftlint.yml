@@ -42,6 +42,7 @@ disabled_rules:
 - explicit_acl
 - explicit_enum_raw_value
 - explicit_top_level_acl
+- identifier_name
 - no_extension_access_modifier
 - number_separator
 - prefixed_toplevel_constant
@@ -51,7 +52,6 @@ disabled_rules:
 - discouraged_optional_collection
 - explicit_type_interface
 - function_default_parameter_at_end
-- identifier_name
 - implicitly_unwrapped_optional
 - no_grouping_extension
 - todo
