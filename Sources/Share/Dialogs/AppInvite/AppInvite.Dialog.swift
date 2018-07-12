@@ -103,8 +103,8 @@ public extension AppInvite {
      Convenience method to show a `Dialog` with a `presentingViewController`, `invite`, and `completion`.
 
      - parameter viewController: The view controller to present from.
-     - parameter invite:         The invite to send.
-     - parameter completion:     The completion handler to invoke upon success.
+     - parameter invite: The invite to send.
+     - parameter completion: The completion handler to invoke upon success.
 
      - throws: If the dialog fails to present.
 

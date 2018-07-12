@@ -35,7 +35,7 @@ public struct OpenGraphShareContent: Equatable, SDKBridgedContent {
   /**
    Create a new OpenGraphShareContent.
 
-   - parameter action:              The action to be shared.
+   - parameter action: The action to be shared.
    - parameter previewPropertyName: Property name that points to the primary Open Graph Object in the action.
    */
   public init(action: OpenGraphAction? = nil, previewPropertyName: OpenGraphPropertyName? = nil) {

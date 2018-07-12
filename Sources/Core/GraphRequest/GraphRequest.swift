@@ -51,11 +51,11 @@ public struct GraphRequest: GraphRequestProtocol {
   /**
    Initializes a new instance of graph request.
 
-   - parameter graphPath:   The Graph API endpoint to use for the request.
-   - parameter parameters:  Optional parameters dictionary.
+   - parameter graphPath: The Graph API endpoint to use for the request.
+   - parameter parameters: Optional parameters dictionary.
    - parameter accessToken: Optional authentication token to use. Defaults to `AccessToken.current`.
-   - parameter httpMethod:  Optional `GraphRequestHTTPMethod` to use for the request. Defaults to `.GET`.
-   - parameter apiVersion:  Optional Graph API version to use. Defaults to `GraphAPIVersion.Default`.
+   - parameter httpMethod: Optional `GraphRequestHTTPMethod` to use for the request. Defaults to `.GET`.
+   - parameter apiVersion: Optional Graph API version to use. Defaults to `GraphAPIVersion.Default`.
    */
   public init(graphPath: String,
               parameters: [String: Any] = [:],

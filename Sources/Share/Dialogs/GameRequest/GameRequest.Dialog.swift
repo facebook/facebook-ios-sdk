@@ -93,7 +93,7 @@ public extension GameRequest {
     /**
      Convenience method to build and show a game request dialog.
 
-     - parameter request:    The request to send.
+     - parameter request: The request to send.
      - parameter completion: The completion handler to be invoked upon completion of the request.
 
      - returns: The dialog instance that has been shown.

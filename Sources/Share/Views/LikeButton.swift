@@ -56,7 +56,7 @@ public class LikeButton: UIView {
   /**
    Create a new LikeButton with a given frame and object.
 
-   - parameter frame:   The frame to initialize with.
+   - parameter frame: The frame to initialize with.
    - parameter object: The object to like.
    */
   public init(frame: CGRect? = nil, object: LikableObject) {

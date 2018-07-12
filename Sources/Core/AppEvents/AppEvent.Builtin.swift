@@ -27,8 +27,8 @@ public extension AppEvent {
    Create an event that indicates that the user has completed registration.
 
    - parameter registrationMethod: Optional registration method used.
-   - parameter valueToSum:         Optional value to sum.
-   - parameter extraParameters:    Optional dictionary of extra parameters.
+   - parameter valueToSum: Optional value to sum.
+   - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
@@ -43,8 +43,8 @@ public extension AppEvent {
   /**
    Create an event that indicates that the user has completed tutorial.
 
-   - parameter successful:      Optional boolean value that indicates whether operation was succesful.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter successful: Optional boolean value that indicates whether operation was succesful.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -60,10 +60,10 @@ public extension AppEvent {
   /**
    Create an event that indicates that the user viewed specific content.
 
-   - parameter contentType:     Optional content type.
-   - parameter contentId:       Optional content identifier.
-   - parameter currency:        Optional string representation of currency.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentType: Optional content type.
+   - parameter contentId: Optional content identifier.
+   - parameter currency: Optional string representation of currency.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -83,10 +83,10 @@ public extension AppEvent {
   /**
    Create an event that indicatest that the user has performed a search within the app.
 
-   - parameter contentId:       Optional content identifer.
-   - parameter searchedString:  Optional searched string.
-   - parameter successful:      Optional boolean value that indicatest whether the operation was succesful.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentId: Optional content identifer.
+   - parameter searchedString: Optional searched string.
+   - parameter successful: Optional boolean value that indicatest whether the operation was succesful.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -106,10 +106,10 @@ public extension AppEvent {
   /**
    Create an event that indicatest the user has rated an item in the app.
 
-   - parameter contentType:     Optional type of the content.
-   - parameter contentId:       Optional content identifier.
-   - parameter maxRatingValue:  Optional max rating value.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentType: Optional type of the content.
+   - parameter contentId: Optional content identifier.
+   - parameter maxRatingValue: Optional max rating value.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -136,8 +136,8 @@ public extension AppEvent {
   /**
    Create an app event that a user has purchased something in the application.
 
-   - parameter amount:          An amount of purchase.
-   - parameter currency:        Optional string representation of currency.
+   - parameter amount: An amount of purchase.
+   - parameter currency: Optional string representation of currency.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -153,10 +153,10 @@ public extension AppEvent {
   /**
    Create an app event that indicatest that user has added an item to the cart.
 
-   - parameter contentType:     Optional content type.
-   - parameter contentId:       Optional content identifier.
-   - parameter currency:        Optional string representation of currency.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentType: Optional content type.
+   - parameter contentId: Optional content identifier.
+   - parameter currency: Optional string representation of currency.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -176,10 +176,10 @@ public extension AppEvent {
   /**
    Create an app event that indicates that user added an item to the wishlist.
 
-   - parameter contentType:     Optional content type.
-   - parameter contentId:       Optional content identifier.
-   - parameter currency:        Optional string representation of currency.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentType: Optional content type.
+   - parameter contentId: Optional content identifier.
+   - parameter currency: Optional string representation of currency.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -199,8 +199,8 @@ public extension AppEvent {
   /**
    Create an event that indicatest that a user added payment information.
 
-   - parameter successful:      Optional boolean value that indicates whether operation was succesful.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter successful: Optional boolean value that indicates whether operation was succesful.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -216,13 +216,13 @@ public extension AppEvent {
   /**
    Create an event that indicatest that a user has initiated a checkout.
 
-   - parameter contentType:          Optional content type.
-   - parameter contentId:            Optional content identifier.
-   - parameter itemCount:            Optional count of items.
+   - parameter contentType: Optional content type.
+   - parameter contentId: Optional content identifier.
+   - parameter itemCount: Optional count of items.
    - parameter paymentInfoAvailable: Optional boolean value that indicatest whether payment info is available.
-   - parameter currency:             Optional string representation of currency.
-   - parameter valueToSum:           Optional value to sum.
-   - parameter extraParameters:      Optional dictionary of extra parameters.
+   - parameter currency: Optional string representation of currency.
+   - parameter valueToSum: Optional value to sum.
+   - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
@@ -254,8 +254,8 @@ public extension AppEvent {
   /**
    Create an app event that indicates that a user has achieved a level in the application.
 
-   - parameter level:           Optional level achieved. Can be either a `String` or `NSNumber`.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter level: Optional level achieved. Can be either a `String` or `NSNumber`.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -271,8 +271,8 @@ public extension AppEvent {
   /**
    Create an app event that indicatest that a user has unlocked an achievement.
 
-   - parameter description:     Optional achievement description.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter description: Optional achievement description.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.
@@ -288,9 +288,9 @@ public extension AppEvent {
   /**
    Create an event that indicatest that a user spent in-app credits.
 
-   - parameter contentType:     Optional content type.
-   - parameter contentId:       Optional content identifier.
-   - parameter valueToSum:      Optional value to sum.
+   - parameter contentType: Optional content type.
+   - parameter contentId: Optional content identifier.
+   - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
    - returns: An app event that can be logged via `AppEventsLogger`.

@@ -39,10 +39,10 @@ public struct AppInvite: Equatable {
   /**
    Create an `AppInvite` with a link, delivery method, preview image, and promotion.
 
-   - parameter appLink:         The app link target.
-   - parameter deliveryMethod:  Optonal delivery method to use. Default: `.Facebook`.
+   - parameter appLink: The app link target.
+   - parameter deliveryMethod: Optonal delivery method to use. Default: `.Facebook`.
    - parameter previewImageURL: Optional preview image to use. Default: `nil`.
-   - parameter promotion:       Optional promotion to be displayed. Default: `nil`.
+   - parameter promotion: Optional promotion to be displayed. Default: `nil`.
    */
   public init(appLink: URL,
               deliveryMethod: DeliveryMethod = .facebook,

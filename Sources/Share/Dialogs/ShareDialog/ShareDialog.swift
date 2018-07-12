@@ -130,8 +130,8 @@ public final class ShareDialog<Content: ContentProtocol>: ContentSharingProtocol
    Convenience method to create and show a `ShareDialog` with a `fromViewController`, `content`, and `completion`.
 
    - parameter viewController: The viewController to present the dialog from.
-   - parameter content:        The content to share.
-   - parameter completion:     The completion handler to invoke.
+   - parameter content: The content to share.
+   - parameter completion: The completion handler to invoke.
 
    - returns: The `ShareDialog` that has been presented.
    - throws: If the dialog fails to validate.

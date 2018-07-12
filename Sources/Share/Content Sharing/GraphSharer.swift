@@ -67,7 +67,7 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
   /**
    Create a new Graph API sharer.
 
-   - parameter content:  The content to share.
+   - parameter content: The content to share.
    */
   public init(content: Content) {
     sdkSharer = FBSDKShareAPI()
@@ -150,7 +150,7 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
   /**
    Share a given `content` to the Graph API, with a completion handler.
 
-   - parameter content:    The content to share.
+   - parameter content: The content to share.
    - parameter completion: The completion handler to invoke.
 
    - returns: Whether or not the operation was successfully started.

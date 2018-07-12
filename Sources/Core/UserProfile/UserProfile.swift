@@ -61,12 +61,12 @@ public struct UserProfile {
   /**
    Creates a new instance of `Profile`.
 
-   - parameter userId:      The user id.
-   - parameter firstName:   Optional user's first name.
-   - parameter middleName:  Optional user's middle name.
-   - parameter lastName:    Optional user's last name.
-   - parameter fullName:    Optional user's full name.
-   - parameter profileURL:  Optional user's profile URL.
+   - parameter userId: The user id.
+   - parameter firstName: Optional user's first name.
+   - parameter middleName: Optional user's middle name.
+   - parameter lastName: Optional user's last name.
+   - parameter fullName: Optional user's full name.
+   - parameter profileURL: Optional user's profile URL.
    - parameter refreshDate: Optional user's last refresh date. Default: `NSDate()` aka current date/time.
    */
   public init(userId: String,
@@ -98,7 +98,7 @@ public struct UserProfile {
    If the `current` profile is set, and it has the same `userId`,
    calling method will reset the current profile with the newly fetched one.
 
-   - parameter userId:     Facebook user id of the profile to fetch.
+   - parameter userId: Facebook user id of the profile to fetch.
    - parameter completion: The closure to be executed once the profile is refreshed.
    */
   public static func fetch(userId: String, completion: @escaping Completion) {
@@ -216,7 +216,7 @@ public struct UserProfile {
    Returns a complete `NSURL` for retrieving the user's profile image.
 
    - parameter aspectRatio: Apsect ratio of the source image to use.
-   - parameter size:        Requested height and width of the image. Will be rounded to integer precision.
+   - parameter size: Requested height and width of the image. Will be rounded to integer precision.
    */
   public func imageURLWith(_ aspectRatio: PictureAspectRatio, size: CGSize) -> URL {
     return sdkProfileRepresentation.imageURL(for: aspectRatio.sdkPictureMode, size: size)

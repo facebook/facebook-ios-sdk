@@ -100,7 +100,7 @@ public enum AppEventsLogger {
   /**
    Log an app event.
 
-   - parameter event:       The application event to log.
+   - parameter event: The application event to log.
    - parameter accessToken: Optional access token to use to log the event. Default: `AccessToken.current`.
    */
   public static func log(_ event: AppEventLoggable, accessToken: AccessToken? = AccessToken.current) {
@@ -122,7 +122,7 @@ public enum AppEventsLogger {
    AppEventsLogger().log(.Searched())
    ```
 
-   - parameter event:       The application event to log.
+   - parameter event: The application event to log.
    - parameter accessToken: Optional access token to use to log the event. Default: `AccessToken.current`.
    */
   public static func log(_ event: AppEvent, accessToken: AccessToken? = AccessToken.current) {
@@ -132,9 +132,9 @@ public enum AppEventsLogger {
   /**
    Log an app event.
 
-   - parameter eventName:   The name of the event to record.
-   - parameter parameters:  Arbitrary parameter dictionary of characteristics.
-   - parameter valueToSum:  Amount to be aggregated into all events of this eventName, and App Insights will report
+   - parameter eventName: The name of the event to record.
+   - parameter parameters: Arbitrary parameter dictionary of characteristics.
+   - parameter valueToSum: Amount to be aggregated into all events of this eventName, and App Insights will report
    the cumulative and average value of this amount.
    - parameter accessToken: The optional access token to log the event as. Default: `AccessToken.current`.
    */

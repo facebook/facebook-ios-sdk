@@ -74,7 +74,7 @@ extension UIAlertController {
   /**
    Creates the alert view controller using the actions specified, including an "OK" Action
 
-   - parameter title:  Title of the alert.
+   - parameter title: Title of the alert.
    - parameter message: Alert message body.
    - parameter style: UIAlertControllerStyle enum value
    - parameter handler: Handler block/closure for the clicked option.

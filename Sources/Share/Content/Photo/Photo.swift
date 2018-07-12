@@ -42,7 +42,7 @@ public struct Photo: Equatable {
   /**
    Conveniece method to Create a `Photo` with an image.
 
-   - parameter image:         The image to create with.
+   - parameter image: The image to create with.
    - parameter userGenerated: Whether or not this image was user generated.
    */
   public init(image: UIImage, userGenerated: Bool) {
@@ -53,7 +53,7 @@ public struct Photo: Equatable {
   /**
    Conveniece method to Create a `Photo` with an image.
 
-   - parameter url:           The image URL to create with.
+   - parameter url: The image URL to create with.
    - parameter userGenerated: Whether or not this image was user generated.
    */
   public init(url: URL, userGenerated: Bool) {

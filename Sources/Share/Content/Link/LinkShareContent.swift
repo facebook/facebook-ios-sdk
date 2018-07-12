@@ -56,11 +56,11 @@ public struct LinkShareContent: Equatable, ContentProtocol, SDKBridgedContent {
   /**
    Create link share content.
 
-   - parameter url:         The URL being shared.
-   - parameter title:       Optional title to display for this link.
+   - parameter url: The URL being shared.
+   - parameter title: Optional title to display for this link.
    - parameter description: Optional description of the link.
-   - parameter quote:       Optional quote text of the link.
-   - parameter imageURL:    OPtional image URL of a picture to attach.
+   - parameter quote: Optional quote text of the link.
+   - parameter imageURL: OPtional image URL of a picture to attach.
    */
   @available(*, deprecated, message: "`title`, `description`, `imageURL` are deprecated from Graph API 2.9")
   public init(url: URL,
@@ -78,8 +78,8 @@ public struct LinkShareContent: Equatable, ContentProtocol, SDKBridgedContent {
   /**
    Create link share content.
 
-   - parameter url:         The URL being shared.
-   - parameter quote:       Optional quote text of the link.
+   - parameter url: The URL being shared.
+   - parameter quote: Optional quote text of the link.
    */
   public init(url: URL,
               quote: String? = nil) {

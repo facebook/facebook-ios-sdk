@@ -35,7 +35,7 @@ public class SendButton<C: ContentProtocol>: UIView {
   /**
    Create a new SendButton with a given frame and content.
 
-   - parameter frame:   The frame to initialize with.
+   - parameter frame: The frame to initialize with.
    - parameter content: The content to share.
    */
   public init(frame: CGRect? = nil, content: C? = nil) {

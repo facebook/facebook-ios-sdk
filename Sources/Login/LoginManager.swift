@@ -52,7 +52,7 @@ public final class LoginManager {
   /**
    Initialize an instance of `LoginManager.`
 
-   - parameter loginBehavior:   Optional login behavior to use. Default: `.Native`.
+   - parameter loginBehavior: Optional login behavior to use. Default: `.Native`.
    - parameter defaultAudience: Optional default audience to use. Default: `.Friends`.
    */
   public init(loginBehavior: LoginBehavior = .native,
@@ -73,9 +73,9 @@ public final class LoginManager {
    This method will present UI the user. You typically should check if `AccessToken.current` already
    contains the permissions you need before asking to reduce unnecessary app switching.
 
-   - parameter permissions:    Array of read permissions. Default: `[.PublicProfile]`
+   - parameter permissions: Array of read permissions. Default: `[.PublicProfile]`
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
-   - parameter completion:     Optional callback.
+   - parameter completion: Optional callback.
    */
   public func logIn(readPermissions: [ReadPermission] = [.publicProfile],
                     viewController: UIViewController? = nil,
@@ -96,9 +96,9 @@ public final class LoginManager {
    This method will present UI the user. You typically should check if `AccessToken.current` already
    contains the permissions you need before asking to reduce unnecessary app switching.
 
-   - parameter permissions:    Array of publish permissions. Default: `[.PublishActions]`
+   - parameter permissions: Array of publish permissions. Default: `[.PublishActions]`
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
-   - parameter completion:     Optional callback.
+   - parameter completion: Optional callback.
    */
   public func logIn(publishPermissions: [PublishPermission] = [.publishActions],
                     viewController: UIViewController? = nil,

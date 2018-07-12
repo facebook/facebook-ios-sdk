@@ -34,7 +34,7 @@ public struct VideoShareContent: ContentProtocol, Equatable, SDKBridgedContent {
   /**
    Create a `VideoShareContent` with a list of of photos to share.
 
-   - parameter video:        The video to share.
+   - parameter video: The video to share.
    - parameter previewPhoto: The photo that represents the video.
    */
   public init(video: Video, previewPhoto: Photo? = nil) {

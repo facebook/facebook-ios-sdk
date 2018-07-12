@@ -37,8 +37,8 @@ public class GraphRequestDataAttachment {
   /**
    Initializes a data attachment
 
-   - parameter data:        The attachment data (retained, not copied).
-   - parameter filename:    Optional filename for the attachment. Default: `nil`.
+   - parameter data: The attachment data (retained, not copied).
+   - parameter filename: Optional filename for the attachment. Default: `nil`.
    - parameter contentType: Optional content type for the attachment. Default: `nil`.
    */
   public init(data: Data, filename: String? = nil, contentType: String? = nil) {

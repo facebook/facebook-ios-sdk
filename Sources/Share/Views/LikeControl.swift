@@ -32,7 +32,7 @@ public class LikeControl: UIView {
   /**
    Create a new LikeControl with an optional frame and object.
 
-   - parameter frame:  The frame to use for this control. If `nil`, defaults to a default size.
+   - parameter frame: The frame to use for this control. If `nil`, defaults to a default size.
    - parameter object: The object to like.
    */
   public init(frame: CGRect? = nil, object: LikableObject) {

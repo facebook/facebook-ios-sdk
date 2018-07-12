@@ -41,7 +41,7 @@ public final class SDKApplicationDelegate {
    Call this function from the `UIApplicationDelegate.application(application:didFinishLaunchingWithOptions:)` function
    of the AppDelegate of your app It should be invoked for the proper initialization of the Facebook SDK.
 
-   - parameter application:   The application as passed to `UIApplicationDelegate`.
+   - parameter application: The application as passed to `UIApplicationDelegate`.
    - parameter launchOptions: The launchOptions as passed to `UIApplicationDelegate`.
 
    - returns: `true` if the url contained in the `launchOptions` was intended for the Facebook SDK, otherwise - `false`.
@@ -58,10 +58,10 @@ public final class SDKApplicationDelegate {
    function of the AppDelegate for your app. It should be invoked for the proper processing of responses during
    interaction with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
 
-   - parameter application:       The application as passed to `UIApplicationDelegate`.
-   - parameter url:               The URL as passed to `UIApplicationDelegate`.
+   - parameter application: The application as passed to `UIApplicationDelegate`.
+   - parameter url: The URL as passed to `UIApplicationDelegate`.
    - parameter sourceApplication: The sourceApplication as passed to `UIApplicationDelegate`.
-   - parameter annotation:        The annotation as passed to `UIApplicationDelegate`.
+   - parameter annotation: The annotation as passed to `UIApplicationDelegate`.
 
    - returns: `true` if the url was intended for the Facebook SDK, otherwise - `false`.
    */
@@ -84,8 +84,8 @@ public final class SDKApplicationDelegate {
    with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
 
    - parameter app: The application as passed to `UIApplicationDelegate`.
-   - parameter url:         The URL as passed to `UIApplicationDelegate`.
-   - parameter options:     The options as passed to `UIApplicationDelegate`.
+   - parameter url: The URL as passed to `UIApplicationDelegate`.
+   - parameter options: The options as passed to `UIApplicationDelegate`.
 
    - returns: `true` if the url was intended for the Facebook SDK, otherwise - `false`.
    */

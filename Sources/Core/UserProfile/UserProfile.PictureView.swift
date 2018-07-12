@@ -45,7 +45,7 @@ public extension UserProfile {
     /**
      Create a new instance of `UserProfilePictureView`.
 
-     - parameter frame:   Optional frame rectangle for the view, measured in points.
+     - parameter frame: Optional frame rectangle for the view, measured in points.
      - parameter profile: Optional profile to display a picture for. Default: `UserProfile.current`.
      */
     public init(frame: CGRect = .zero, profile: UserProfile? = nil) {

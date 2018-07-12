@@ -49,7 +49,7 @@ public struct OpenGraphPropertyName: Hashable, RawRepresentable, ExpressibleBySt
    Create an `OpenGraphPropertyName` with a specific namespace and name.
 
    - parameter namespace: The namespace to use.
-   - parameter name:      The name to use.
+   - parameter name: The name to use.
    */
   public init(namespace: String, name: String) {
     self.namespace = namespace

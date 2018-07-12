@@ -102,7 +102,7 @@ public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtoc
   /**
    Convenience method to show a Message Share Dialog with content and a completion handler.
 
-   - parameter content:    The content to share.
+   - parameter content: The content to share.
    - parameter completion: The completion handler to invoke.
 
    - returns: The dialog that has been presented.

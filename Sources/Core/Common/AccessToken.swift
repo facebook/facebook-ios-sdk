@@ -52,12 +52,12 @@ public struct AccessToken {
   /**
    Creates a new access token instance.
 
-   - parameter appId:               Optional application id for this token. Default: `SDKSettings.appId`.
+   - parameter appId: Optional application id for this token. Default: `SDKSettings.appId`.
    - parameter authenticationToken: An opaque authentication token.
-   - parameter userId:              Optional logged in user identifier.
-   - parameter refreshDate:         Optional date the token was last refreshed (defaults to current date).
-   - parameter expirationDate:      Optional expiration date (defaults to `NSDate.distantFuture()`).
-   - parameter grantedPermissions:  Set of known granted permissions.
+   - parameter userId: Optional logged in user identifier.
+   - parameter refreshDate: Optional date the token was last refreshed (defaults to current date).
+   - parameter expirationDate: Optional expiration date (defaults to `NSDate.distantFuture()`).
+   - parameter grantedPermissions: Set of known granted permissions.
    - parameter declinedPermissions: Set of known declined permissions.
    */
   public init(appId: String = SDKSettings.appId,

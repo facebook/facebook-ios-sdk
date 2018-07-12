@@ -67,7 +67,7 @@ public struct GameRequest: Equatable {
   /**
    Create a new game request content with a title and a message.
 
-   - parameter title:   The title for the dialog.
+   - parameter title: The title for the dialog.
    - parameter message: The message to be sent as part of the request.
    */
   public init(title: String, message: String) {
