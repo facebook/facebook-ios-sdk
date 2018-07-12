@@ -12,13 +12,13 @@ excluded:
 - Carthage/facebook-ios-sdk/vendor
 - Vendor
 
+cyclomatic_complexity: 11
 indentation: 2
-line_length: 120
 large_tuple: 3
+line_length: 120
 
 disabled_rules:
 - class_delegate_protocol # TODO: Move to Opt In
-- cyclomatic_complexity # TODO: Move to Opt In
 - identifier_name # TODO: Move to Opt In
 - todo # TODO: Move to Opt In
 - weak_delegate # TODO: Move to Opt In
@@ -32,6 +32,7 @@ opt_in_rules:
 - compiler_protocol_init
 - control_statement
 - custom_rules
+- cyclomatic_complexity
 - discarded_notification_center_observer
 - discouraged_direct_init
 - dynamic_inline
