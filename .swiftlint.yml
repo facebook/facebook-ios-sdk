@@ -29,6 +29,7 @@ disabled_rules:
 - discouraged_optional_collection
 - explicit_type_interface
 - identifier_name
+- implicitly_unwrapped_optional
 - strict_fileprivate
 - todo
 - weak_delegate
@@ -58,6 +59,7 @@ opt_in_rules:
 - empty_parentheses_with_trailing_closure
 - empty_xctest_method
 - explicit_init
+- fallthrough
 - fatal_error_message
 - file_length
 - first_where
@@ -83,6 +85,7 @@ opt_in_rules:
 - literal_expression_end_indentation
 - mark
 - multiline_arguments
+- multiline_function_chains
 - multiline_parameters
 - multiple_closures_with_trailing_closure
 - nesting
@@ -93,8 +96,10 @@ opt_in_rules:
 - opening_brace
 - operator_usage_whitespace
 - operator_whitespace
+- pattern_matching_keywords
 - private_over_fileprivate
 - private_unit_test
+- prohibited_super_call
 - protocol_property_accessors_order
 - quick_discouraged_call
 - quick_discouraged_focused_test

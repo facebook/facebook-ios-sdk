@@ -52,7 +52,7 @@ extension UIAlertAction {
         title = optionTitle
         actionStyle = .destructive
 
-      case .custom(let optionTitle, let style):
+      case let .custom(optionTitle, style):
         title = optionTitle
         actionStyle = style
 

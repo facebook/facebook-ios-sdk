@@ -62,9 +62,9 @@ extension GameRequest.Recipient: Hashable {
    */
   public static func == (lhs: GameRequest.Recipient, rhs: GameRequest.Recipient) -> Bool {
     switch (lhs, rhs) {
-    case (.userId(let lhs), .userId(let rhs)): return lhs == rhs
-    case (.username(let lhs), .username(let rhs)): return lhs == rhs
-    case (.inviteToken(let lhs), .inviteToken(let rhs)): return lhs == rhs
+    case let (.userId(lhs), .userId(rhs)): return lhs == rhs
+    case let (.username(lhs), .username(rhs)): return lhs == rhs
+    case let (.inviteToken(lhs), .inviteToken(rhs)): return lhs == rhs
     default: return false
     }
   }

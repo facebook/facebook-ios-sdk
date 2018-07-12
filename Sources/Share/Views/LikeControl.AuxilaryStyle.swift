@@ -81,8 +81,8 @@ extension LikeControl.AuxilaryStyle: Equatable {
    */
   public static func == (lhs: LikeControl.AuxilaryStyle, rhs: LikeControl.AuxilaryStyle) -> Bool {
     switch (lhs, rhs) {
-    case (.standard(let lhs), .standard(let rhs)): return lhs == rhs
-    case (.boxCount(let lhs), .boxCount(let rhs)): return lhs == rhs
+    case let (.standard(lhs), .standard(rhs)): return lhs == rhs
+    case let (.boxCount(lhs), .boxCount(rhs)): return lhs == rhs
     default: return false
     }
   }
@@ -107,10 +107,9 @@ extension LikeControl.AuxilaryStyle {
 
   internal var sdkStyleRepresentation: SDKStyleRepresentation {
     switch self {
-    case .standard(let horizontal, let vertical):
+    case let .standard(horizontal, vertical):
       return (.standard, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
-
-    case .boxCount(let horizontal, let vertical):
+    case let .boxCount(horizontal, vertical):
       return (.boxCount, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
     }
   }

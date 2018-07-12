@@ -102,12 +102,10 @@ extension AppInvite.PromoCode: ExpressibleByStringLiteral {
 extension AppInvite.PromoCode {
   fileprivate static func truncate(string: String) -> String {
     let validCharacters = CharacterSet.alphanumerics
-    let cleaned = string
+    return string
       .unicodeScalars
-      .filter {
-        validCharacters.contains(UnicodeScalar(UInt16($0.value))!)
-      }
-      .map(Character.init)
-    return String(cleaned)
+      .filter { validCharacters.contains($0) }
+      .map(String.init)
+      .joined()
   }
 }
