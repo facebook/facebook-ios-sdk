@@ -16,9 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import Foundation
-import FBSDKShareKit
 @testable import FacebookCore
+import FBSDKShareKit
+import Foundation
 
 /**
  An Open Graph action for sharing.

@@ -60,7 +60,7 @@ extension GraphAPIReadViewController {
    */
   @IBAction func readProfile() {
     let request = FBProfileRequest()
-    request.start { (_, result) in
+    request.start { _, result in
       switch result {
       case .success(let response):
         print("Graph Request Succeeded: \(response)")

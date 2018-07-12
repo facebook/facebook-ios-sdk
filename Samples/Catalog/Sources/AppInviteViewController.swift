@@ -31,7 +31,7 @@ final class AppInviteViewController: UITableViewController {
           print("Failed to send app invite with error \(error)")
         }
       }
-    } catch let error {
+    } catch {
       print("Failed to show app invite dialog with error \(error)")
     }
   }

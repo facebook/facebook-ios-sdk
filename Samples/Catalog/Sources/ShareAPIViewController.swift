@@ -42,7 +42,7 @@ final class ShareAPIViewController: UITableViewController {
         let alertController = UIAlertController(title: title, message: message)
         self.present(alertController, animated: true, completion: nil)
       }
-    } catch let error {
+    } catch {
       title = "Share API Fail"
       message = "Failed to invoke share API with error: \(error)"
       let alertController = UIAlertController(title: title, message: message)

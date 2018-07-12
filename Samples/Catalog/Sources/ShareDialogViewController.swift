@@ -16,8 +16,8 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import UIKit
 import MobileCoreServices
+import UIKit
 
 import FacebookShare
 
@@ -29,7 +29,7 @@ final class ShareDialogViewController: UITableViewController {
     dialog.mode = mode
     do {
       try dialog.show()
-    } catch let error {
+    } catch {
       let alertController = UIAlertController(title: "Invalid share content",
                                               message: "Failed to present share dialog with error \(error)")
       present(alertController, animated: true, completion: nil)

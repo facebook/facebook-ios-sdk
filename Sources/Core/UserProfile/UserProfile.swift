@@ -16,9 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBSDKCoreKit.FBSDKProfile
 import Foundation
 import UIKit
-import FBSDKCoreKit.FBSDKProfile
 
 //--------------------------------------
 // MARK: - UserProfile
@@ -108,7 +108,7 @@ extension UserProfile {
     let request = GraphRequest(graphPath: userId,
                                parameters: ["fields": "first_name,middle_name,last_name,name,link"],
                                httpMethod: .GET)
-    request.start { (_, result) in
+    request.start { _, result in
       switch result {
       case .success(let response):
         let responseDictionary = response.dictionaryValue

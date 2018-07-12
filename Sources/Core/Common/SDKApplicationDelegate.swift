@@ -16,9 +16,9 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBSDKCoreKit
 import Foundation
 import UIKit
-import FBSDKCoreKit
 
 /**
  The `SDKApplicationDelegate` is designed to post process the results from Facebook Login or Facebook Dialogs
