@@ -29,7 +29,7 @@ public enum AppEventParameterName: Hashable, RawRepresentable, ExpressibleByStri
   /// Currency. E.g. "USD"/"EUR"/"GBP". See ISO-4217 for specific values.
   case currency
   /// Appropriate description for the event.
-  case Description
+  case description
   /// Current level or level achieved.
   case level
   /// Maximum rating available. E.g. "5"/"10".
@@ -73,7 +73,7 @@ public enum AppEventParameterName: Hashable, RawRepresentable, ExpressibleByStri
     case .contentId: return FBSDKAppEventParameterNameContentID
     case .contentType: return FBSDKAppEventParameterNameContentType
     case .currency: return FBSDKAppEventParameterNameCurrency
-    case .Description: return FBSDKAppEventParameterNameDescription
+    case .description: return FBSDKAppEventParameterNameDescription
     case .level: return FBSDKAppEventNameAchievedLevel
     case .maxRatingValue: return FBSDKAppEventParameterNameMaxRatingValue
     case .itemCount: return FBSDKAppEventParameterNameNumItems

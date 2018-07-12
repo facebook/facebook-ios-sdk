@@ -21,7 +21,7 @@ import Foundation
 // Taken from FBSDKShareDefines.h
 
 enum ShareResultKeys: String {
-  case CompletionGesture = "completionGesture"
-  case DidComplete = "didComplete"
-  case PostId = "postId"
+  case completionGesture
+  case didComplete
+  case postId
 }

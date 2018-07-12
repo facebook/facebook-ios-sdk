@@ -35,6 +35,9 @@ file_header:
                     \/\/ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
                     \/\/ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
                     \/\/ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\.
+identifier_name:
+  excluded:
+  - ok
 indentation: 2
 large_tuple: 3
 line_length: 120
@@ -57,7 +60,6 @@ disabled_rules:
 - discouraged_optional_boolean
 - discouraged_optional_collection
 - function_default_parameter_at_end
-- identifier_name
 - todo
 
 opt_in_rules:
@@ -101,6 +103,7 @@ opt_in_rules:
 - function_body_length
 - function_parameter_count
 - generic_type_name
+- identifier_name
 - implicit_getter
 - implicit_return
 - implicitly_unwrapped_optional

@@ -281,7 +281,7 @@ public extension AppEvent {
                                   valueToSum: Double? = nil,
                                   extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
-    description.onSome { parameters[.Description] = $0 }
+    description.onSome { parameters[.description] = $0 }
     return AppEvent(name: .unlockedAchievement, parameters: parameters, valueToSum: valueToSum)
   }
 
