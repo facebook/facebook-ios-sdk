@@ -36,6 +36,7 @@ disabled_rules:
 - function_default_parameter_at_end
 - identifier_name
 - implicitly_unwrapped_optional
+- no_grouping_extension
 - strict_fileprivate
 - todo
 - weak_delegate
