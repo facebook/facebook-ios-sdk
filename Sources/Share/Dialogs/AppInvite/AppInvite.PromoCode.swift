@@ -18,7 +18,7 @@
 
 import Foundation
 
-extension AppInvite {
+public extension AppInvite {
   /**
    A promo code for an App Invite promotion. This can be between 0 and 10 characters long, and can contain alphanumeric
    and spaces only.
@@ -26,7 +26,7 @@ extension AppInvite {
    If you attempt to create a Promo Code with an invalid string literal, you will receive a runtime warning, and your
    code will be truncated.
    */
-  public struct PromoCode {
+  struct PromoCode {
     internal let rawValue: String
 
     /**
@@ -99,8 +99,8 @@ extension AppInvite.PromoCode: ExpressibleByStringLiteral {
   }
 }
 
-extension AppInvite.PromoCode {
-  fileprivate static func truncate(string: String) -> String {
+fileprivate extension AppInvite.PromoCode {
+  static func truncate(string: String) -> String {
     let validCharacters = CharacterSet.alphanumerics
     return string
       .unicodeScalars

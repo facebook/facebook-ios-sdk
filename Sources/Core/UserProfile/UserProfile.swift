@@ -90,10 +90,10 @@ public struct UserProfile {
 // MARK: - Loading Profile
 //--------------------------------------
 
-extension UserProfile {
+public extension UserProfile {
 
   /// Convenience alias for type of closure that is used as a completion for fetching `UserProfile`.
-  public typealias Completion = (FetchResult) -> Void
+  typealias Completion = (FetchResult) -> Void
 
   /**
    Fetches a user profile by userId.
@@ -104,7 +104,7 @@ extension UserProfile {
    - parameter userId:     Facebook user id of the profile to fetch.
    - parameter completion: The closure to be executed once the profile is refreshed.
    */
-  public static func fetch(userId: String, completion: @escaping Completion) {
+  static func fetch(userId: String, completion: @escaping Completion) {
     let request = GraphRequest(graphPath: userId,
                                parameters: ["fields": "first_name,middle_name,last_name,name,link"],
                                httpMethod: .GET)
@@ -141,7 +141,7 @@ extension UserProfile {
 
    - parameter completion: Optional closure to be executed once the profile is refreshed. Default: `nil`.
    */
-  public func refresh(_ completion: Completion?) {
+  func refresh(_ completion: Completion?) {
     UserProfile.fetch(userId: userId) { result in
       completion?(result)
     }
@@ -152,11 +152,11 @@ extension UserProfile {
 // MARK: - Current Profile
 //--------------------------------------
 
-extension UserProfile {
+public extension UserProfile {
   /**
    Current instance of `Profile` that represents the currently logged in user's profile.
    */
-  public static var current: UserProfile? {
+  static var current: UserProfile? {
     get {
       let sdkProfile = FBSDKProfile.current() as FBSDKProfile?
       return sdkProfile.map(UserProfile.init)
@@ -175,7 +175,7 @@ extension UserProfile {
 
    - parameter completion: The closure to be executed once the profile is loaded.
    */
-  public static func loadCurrent(_ completion: Completion?) {
+  static func loadCurrent(_ completion: Completion?) {
     FBSDKProfile.loadCurrentProfile { (sdkProfile: FBSDKProfile?, error: Error?) in
       if let completion = completion {
         let result = FetchResult(sdkProfile: sdkProfile, error: error)
@@ -190,7 +190,7 @@ extension UserProfile {
    - note: If `AccessToken.current` is unset (changes to `nil`), the `current` profile instance remains.
    It's also possible for the `current` to return `nil` until the data is fetched.
    */
-  public static var updatesOnAccessTokenChange: Bool = false {
+  static var updatesOnAccessTokenChange: Bool = false {
     didSet {
       FBSDKProfile.enableUpdates(onAccessTokenChange: updatesOnAccessTokenChange)
     }
@@ -201,11 +201,11 @@ extension UserProfile {
 // MARK: - Profile Picture
 //--------------------------------------
 
-extension UserProfile {
+public extension UserProfile {
   /**
    Defines the aspect ratio for the source image of the profile picture.
    */
-  public enum PictureAspectRatio {
+  enum PictureAspectRatio {
     /// A square cropped version of the profile picture.
     case square
     /// The original picture's aspect ratio.
@@ -225,7 +225,7 @@ extension UserProfile {
    - parameter aspectRatio: Apsect ratio of the source image to use.
    - parameter size:        Requested height and width of the image. Will be rounded to integer precision.
    */
-  public func imageURLWith(_ aspectRatio: PictureAspectRatio, size: CGSize) -> URL {
+  func imageURLWith(_ aspectRatio: PictureAspectRatio, size: CGSize) -> URL {
     return sdkProfileRepresentation.imageURL(for: aspectRatio.sdkPictureMode, size: size)
   }
 }

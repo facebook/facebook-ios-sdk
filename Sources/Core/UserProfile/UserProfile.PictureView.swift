@@ -21,10 +21,10 @@ import UIKit
 
 import FBSDKCoreKit.FBSDKProfilePictureView
 
-extension UserProfile {
+public extension UserProfile {
 
   /// A view to display a profile picture.
-  public final class PictureView: UIView {
+  final class PictureView: UIView {
 
     fileprivate let sdkProfilePictureView = FBSDKProfilePictureView(frame: .zero)
 
@@ -79,9 +79,9 @@ extension UserProfile {
   }
 }
 
-extension UserProfile.PictureView {
+fileprivate extension UserProfile.PictureView {
 
-  fileprivate func setupSDKProfilePictureView() {
+  func setupSDKProfilePictureView() {
     sdkProfilePictureView.frame = bounds
     sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     addSubview(sdkProfilePictureView)

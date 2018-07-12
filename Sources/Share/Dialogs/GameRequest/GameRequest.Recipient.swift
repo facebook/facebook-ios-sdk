@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-extension GameRequest {
+public extension GameRequest {
   /**
    Represents a recipient for a game request.
    */
-  public enum Recipient {
+  enum Recipient {
     /**
      The Facebook user ID of the recipient.
      */

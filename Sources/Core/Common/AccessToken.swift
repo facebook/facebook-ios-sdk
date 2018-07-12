@@ -81,12 +81,12 @@ public struct AccessToken {
 // MARK: - Current Token
 //--------------------------------------
 
-extension AccessToken {
+public extension AccessToken {
   /**
    A convenient representation of the authentication token of the current user
    that is used by other SDK components (like `LoginManager` or `AppEventsLogger`).
    */
-  public static var current: AccessToken? {
+  static var current: AccessToken? {
     get {
       let token = FBSDKAccessToken.current() as FBSDKAccessToken?
       return token.map(AccessToken.init)
@@ -104,7 +104,7 @@ extension AccessToken {
    - note: If a token is already expired, it can't be refreshed.
    - parameter completion: Optional completion to call when the token was refreshed or failed.
    */
-  public static func refreshCurrentToken(_ completion: ((AccessToken?, Error?) -> Void)? = nil) {
+  static func refreshCurrentToken(_ completion: ((AccessToken?, Error?) -> Void)? = nil) {
     FBSDKAccessToken.refreshCurrentAccessToken { (_, _, error: Error?) in
       completion?(self.current, error)
     }

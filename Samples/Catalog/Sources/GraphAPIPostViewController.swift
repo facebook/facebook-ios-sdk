@@ -47,7 +47,7 @@ extension GraphAPIPostViewController {
    Place is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
    for building a place picker.
    */
-  @IBAction func postCheckin() {
+  @IBAction private func postCheckin() {
     let request = GraphRequest(graphPath: "/me/feed",
                                parameters: [ "message": "Here I am!", "place": "141887372509674" ],
                                httpMethod: .POST)

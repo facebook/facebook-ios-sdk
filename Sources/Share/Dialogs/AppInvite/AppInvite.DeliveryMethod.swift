@@ -19,11 +19,11 @@
 import FBSDKShareKit
 import Foundation
 
-extension AppInvite {
+public extension AppInvite {
   /**
    Specifies the delivery method for an app invite.
    */
-  public enum DeliveryMethod {
+  enum DeliveryMethod {
     /// Deliver via Facebook
     case facebook
 

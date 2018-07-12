@@ -19,9 +19,9 @@
 import Foundation
 import UIKit
 
-extension UIAlertAction {
+public extension UIAlertAction {
   /// Action types most commonly used
-  public enum ActionType {
+  enum ActionType {
     ///Ok Option
     case ok
     /// Default Cancel Option
@@ -76,7 +76,7 @@ extension UIAlertController {
 
    - parameter title:  Title of the alert.
    - parameter message: Alert message body.
-   - parameter actions: Variable numbre of actions as an Array of actionType values.
+   - parameter actions: Variable number of actions as an Array of actionType values.
    - parameter style: UIAlertControllerStyle enum value
    - parameter handler: Handler block/closure for the clicked option.
 

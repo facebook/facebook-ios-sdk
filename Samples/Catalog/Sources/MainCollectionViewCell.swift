@@ -19,8 +19,8 @@
 import UIKit
 
 final class MainCollectionViewCell: UICollectionViewCell {
-  @IBOutlet var textLabel: UILabel?
-  @IBOutlet var iconImageView: UIImageView?
+  @IBOutlet private var textLabel: UILabel?
+  @IBOutlet private var iconImageView: UIImageView?
 
   func updateFrom(_ item: MainCollectionViewController.Item) {
     textLabel?.text = item.text

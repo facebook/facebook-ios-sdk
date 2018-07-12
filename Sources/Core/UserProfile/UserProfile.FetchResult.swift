@@ -18,11 +18,11 @@
 
 import FBSDKCoreKit
 
-extension UserProfile {
+public extension UserProfile {
   /**
    Describes the result of a fetch of `UserProfile`.
    */
-  public enum FetchResult {
+  enum FetchResult {
     /// Profile was succesfully fetched.
     case success(UserProfile)
     /// Profile fetch failed.

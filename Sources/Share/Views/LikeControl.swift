@@ -126,11 +126,11 @@ public class LikeControl: UIView {
   }
 }
 
-extension LikeControl {
+public extension LikeControl {
   /**
    Performs logic for laying out subviews.
    */
-  override public func layoutSubviews() {
+  override func layoutSubviews() {
     super.layoutSubviews()
 
     sdkLikeControl.frame = CGRect(origin: .zero, size: bounds.size)
@@ -139,7 +139,7 @@ extension LikeControl {
   /**
    Resizes and moves the receiver view so it just encloses its subviews.
    */
-  override public func sizeToFit() {
+  override func sizeToFit() {
     bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
@@ -150,7 +150,7 @@ extension LikeControl {
 
    - returns: A new size that fits the receiver’s subviews.
    */
-  override public func sizeThatFits(_ size: CGSize) -> CGSize {
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLikeControl.sizeThatFits(size)
   }
 
@@ -159,7 +159,7 @@ extension LikeControl {
 
    - returns: A size indicating the natural size for the receiving view based on its intrinsic properties.
    */
-  override public var intrinsicContentSize: CGSize {
+  override var intrinsicContentSize: CGSize {
     return sdkLikeControl.intrinsicContentSize
   }
 }

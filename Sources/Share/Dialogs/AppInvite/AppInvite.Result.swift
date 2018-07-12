@@ -18,11 +18,11 @@
 
 import Foundation
 
-extension AppInvite {
+public extension AppInvite {
   /**
    Represents the results of an AppGroupDialog action.
    */
-  public enum Result {
+  enum Result {
     // TODO: Better concrete type for results here.
     /// The App Invite was sent succesfully.
     case success([String:String])

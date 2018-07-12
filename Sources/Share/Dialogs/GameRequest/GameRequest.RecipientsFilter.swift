@@ -18,11 +18,11 @@
 
 import FBSDKShareKit
 
-extension GameRequest {
+public extension GameRequest {
   /**
    Filter for who can be displayed in the multi-friend selector.
    */
-  public struct RecipientsFilter: OptionSet {
+  struct RecipientsFilter: OptionSet {
     /// The raw value of the filter.
     public let rawValue: Int
 

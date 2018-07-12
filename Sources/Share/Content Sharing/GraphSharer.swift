@@ -82,13 +82,13 @@ public final class GraphSharer<Content: ContentProtocol> {
 // MARK: - Share
 //--------------------------------------
 
-extension GraphSharer {
+public extension GraphSharer {
   /**
    Attempt to share `content` with the graph API.
 
    - throws: If the content fails to share.
    */
-  public func share() throws {
+  func share() throws {
     var error: Error?
     let completionHandler = sdkShareDelegate.completion
     sdkShareDelegate.completion = {
@@ -153,7 +153,7 @@ extension GraphSharer: ContentSharingProtocol {
 // MARK: - Convenience
 //--------------------------------------
 
-extension GraphSharer {
+public extension GraphSharer {
   /**
    Share a given `content` to the Graph API, with a completion handler.
 
@@ -164,8 +164,8 @@ extension GraphSharer {
    - throws: If the share fails.
    */
   @discardableResult
-  public static func share(_ content: Content,
-                           completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
+  static func share(_ content: Content,
+                    completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
     let sharer = self.init(content: content)
     sharer.completion = completion
     try sharer.share()

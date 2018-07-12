@@ -20,9 +20,9 @@ import FBSDKShareKit
 import Foundation
 import UIKit
 
-extension AppInvite {
+public extension AppInvite {
   /// A dialog to send app invites.
-  public final class Dialog {
+  final class Dialog {
     fileprivate let sdkDialog: FBSDKAppInviteDialog
     fileprivate let sdkDelegate: SDKDelegate
 
@@ -101,7 +101,7 @@ extension AppInvite {
   }
 }
 
-extension AppInvite.Dialog {
+public extension AppInvite.Dialog {
   /**
    Convenience method to show a `Dialog` with a `presentingViewController`, `invite`, and `completion`.
 
@@ -114,9 +114,9 @@ extension AppInvite.Dialog {
    - returns: The dialog that has been presented.
    */
   @discardableResult
-  public static func show(from viewController: UIViewController,
-                          invite: AppInvite,
-                          completion: ((AppInvite.Result) -> Void)? = nil) throws -> Self {
+  static func show(from viewController: UIViewController,
+                   invite: AppInvite,
+                   completion: ((AppInvite.Result) -> Void)? = nil) throws -> Self {
     let dialog = self.init(invite: invite)
     dialog.presentingViewController = viewController
     dialog.completion = completion

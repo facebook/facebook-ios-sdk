@@ -19,11 +19,11 @@
 import FBSDKLoginKit
 import Foundation
 
-extension LoginButton {
+public extension LoginButton {
   /**
    Indicates the desired login tooltip behavior.
    */
-  public enum TooltipBehavior {
+  enum TooltipBehavior {
     /// Tooltip will only be displayed if the app is eligible (determined by possible server round trip).
     case automatic
     /// Force display of the tooltip (typically for UI testing).
@@ -41,11 +41,11 @@ extension LoginButton {
   }
 }
 
-extension LoginButton {
+public extension LoginButton {
   /**
    Indicates the desired login tooltip color style.
    */
-  public enum TooltipColorStyle {
+  enum TooltipColorStyle {
     /// Light blue background, white text, faded blue close button.
     case friendlyBlue
     /// Dark gray background, white text, light gray close button.

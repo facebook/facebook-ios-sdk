@@ -18,11 +18,11 @@
 
 import FBSDKCoreKit.FBSDKAppEvents
 
-extension AppEventsLogger {
+public extension AppEventsLogger {
   /**
    Specifies when `AppEventsLogger` sends log events to the server.
    */
-  public enum FlushBehavior {
+  enum FlushBehavior {
     /**
      Flush automatically: periodically (once a minute or every 100 logged events) and always at app reactivation.
      */

@@ -41,21 +41,21 @@ class LoginManagerViewController: UIViewController {
 
 extension LoginManagerViewController {
 
-  @IBAction func loginWithReadPermissions() {
+  @IBAction private func loginWithReadPermissions() {
     let loginManager = LoginManager()
     loginManager.logIn(readPermissions: [.publicProfile, .userFriends], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }
 
-  @IBAction func loginWithPublishPermissions() {
+  @IBAction private func loginWithPublishPermissions() {
     let loginManager = LoginManager()
     loginManager.logIn(publishPermissions: [.publishActions], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }
 
-  @IBAction func logOut() {
+  @IBAction private func logOut() {
     let loginManager = LoginManager()
     loginManager.logOut()
 

@@ -18,12 +18,12 @@
 
 import FBSDKShareKit
 
-extension LikeControl {
+public extension LikeControl {
 
   /**
    Specifies the style of the auxilary view in the like control.
    */
-  public enum AuxilaryStyle {
+  enum AuxilaryStyle {
     /// Use the standard social share message.
     case standard(horizontalAlignment: HorizontalAlignment, verticalAlignment: VerticalAlignment)
 
@@ -115,11 +115,11 @@ extension LikeControl.AuxilaryStyle {
   }
 }
 
-extension LikeControl.AuxilaryStyle {
+public extension LikeControl.AuxilaryStyle {
   /**
    Control the horizontal alignment of the auxilary view.
    */
-  public enum HorizontalAlignment {
+  enum HorizontalAlignment {
     /// The auxilary view should be placed to the left of the like button.
     case left
 
@@ -149,7 +149,7 @@ extension LikeControl.AuxilaryStyle {
   /**
    Controls vertical alignment of the auxilary view.
    */
-  public enum VerticalAlignment {
+  enum VerticalAlignment {
     /// The auxilary view should be placed above the like button.
     case top
 

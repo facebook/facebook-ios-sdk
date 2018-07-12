@@ -135,12 +135,12 @@ public enum SDKSettings {
 // MARK: - SDKSettings + Logging Behavior
 //--------------------------------------
 
-extension SDKSettings {
+public extension SDKSettings {
   /**
    Current logging behaviors of Facebook SDK.
    The default enabled behavior is `.DeveloperErrors` only.
    */
-  public static var enabledLoggingBehaviors: Set<SDKLoggingBehavior> {
+  static var enabledLoggingBehaviors: Set<SDKLoggingBehavior> {
     get {
       let createBehavior = { (object: AnyHashable) -> SDKLoggingBehavior? in
         if let value = object as? String {
@@ -168,7 +168,7 @@ extension SDKSettings {
 
    - parameter behavior: The behavior to enable
    */
-  public static func enableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
+  static func enableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.enableLoggingBehavior(behavior.sdkStringValue)
   }
 
@@ -177,7 +177,7 @@ extension SDKSettings {
 
    - parameter behavior: The behavior to disable.
    */
-  public static func disableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
+  static func disableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.disableLoggingBehavior(behavior.sdkStringValue)
   }
 }

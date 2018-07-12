@@ -76,8 +76,8 @@ public class GraphRequestConnection {
 // MARK: - Requests
 //--------------------------------------
 
-extension GraphRequestConnection {
-  public typealias Completion<T: GraphRequestProtocol> =
+public extension GraphRequestConnection {
+  typealias Completion<T: GraphRequestProtocol> =
     (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<T>) -> Void
 
   /**
@@ -90,9 +90,9 @@ extension GraphRequestConnection {
    As described in [Graph API Batch Requests](https://developers.facebook.com/docs/reference/api/batch/).
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  public func add<T>(_ request: T,
-                     batchEntryName: String? = nil,
-                     completion: Completion<T>? = nil) {
+  func add<T>(_ request: T,
+              batchEntryName: String? = nil,
+              completion: Completion<T>? = nil) {
     let batchParameters = batchEntryName.map { ["name": $0] }
     add(request, batchParameters: batchParameters as [String: Any]?, completion: completion)
   }
@@ -106,9 +106,9 @@ extension GraphRequestConnection {
    Examples include "depends_on", "name", or "omit_response_on_success".
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  public func add<T>(_ request: T,
-                     batchParameters: [String: Any]?,
-                     completion: Completion<T>? = nil) {
+  func add<T>(_ request: T,
+              batchParameters: [String: Any]?,
+              completion: Completion<T>? = nil) {
     sdkConnection.add(request.sdkRequest,
                       completionHandler: completion.map(type(of: self).sdkRequestCompletion),
                       batchParameters: batchParameters)
@@ -118,7 +118,7 @@ extension GraphRequestConnection {
    Starts a connection with the server and sends all the requests in this connection.
    - warning: This method can't be called twice per a single `GraphRequestConnection` instance.
    */
-  public func start() {
+  func start() {
     sdkConnection.start()
   }
 
@@ -130,7 +130,7 @@ extension GraphRequestConnection {
    It does promise that all handlers will complete before the cancel returns.
    A call to `cancel` prior to a start implies a cancellation of all requests associated with the connection.
    */
-  public func cancel() {
+  func cancel() {
     sdkConnection.cancel()
   }
 }

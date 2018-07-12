@@ -38,14 +38,14 @@ final class AppInviteViewController: UITableViewController {
 }
 
 extension AppInviteViewController {
-  @IBAction func appInviteWithDefaultImage() {
+  @IBAction private func appInviteWithDefaultImage() {
     // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
     guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
     let appInvite = AppInvite(appLink: appLink, deliveryMethod: .facebook)
     showAppInviteDialog(for: appInvite)
   }
 
-  @IBAction func appInviteWithCustomImage() {
+  @IBAction private func appInviteWithCustomImage() {
     // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
     guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
     let previewImageURL = URL(string: "http://catalogapp.parseapp.com/FacebookDeveloper.jpg")

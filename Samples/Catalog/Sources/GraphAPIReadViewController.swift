@@ -58,7 +58,7 @@ extension GraphAPIReadViewController {
 
    See https://developers.facebook.com/docs/graph-api/reference/user/ for details.
    */
-  @IBAction func readProfile() {
+  @IBAction private func readProfile() {
     let request = FBProfileRequest()
     request.start { _, result in
       switch result {
@@ -81,7 +81,7 @@ extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's list of events.
    */
-  @IBAction func readUserEvents() {
+  @IBAction private func readUserEvents() {
     let request = GraphRequest(graphPath: "/me/events",
                                parameters: [ "fields": "data, description" ],
                                httpMethod: .GET)
@@ -106,7 +106,7 @@ extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's list of facebook friends.
    */
-  @IBAction func readUserFriendList() {
+  @IBAction private func readUserFriendList() {
     let request = GraphRequest(graphPath: "/me/friends",
                                parameters: [ "fields": "data" ],
                                httpMethod: .GET)

@@ -18,11 +18,11 @@
 
 import FBSDKShareKit
 
-extension GameRequest {
+public extension GameRequest {
   /**
    Additional context about the nature of the request.
    */
-  public enum ActionType {
+  enum ActionType {
     /**
      Send action type: The user is sending an object to the friends.
 

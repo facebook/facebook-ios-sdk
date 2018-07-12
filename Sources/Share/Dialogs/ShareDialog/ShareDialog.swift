@@ -128,7 +128,7 @@ extension ShareDialog: ContentSharingDialogProtocol {
   }
 }
 
-extension ShareDialog {
+public extension ShareDialog {
   /**
    Convenience method to create and show a `ShareDialog` with a `fromViewController`, `content`, and `completion`.
 
@@ -140,9 +140,9 @@ extension ShareDialog {
    - throws: If the dialog fails to validate.
    */
   @discardableResult
-  public static func show(from viewController: UIViewController,
-                          content: Content,
-                          completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
+  static func show(from viewController: UIViewController,
+                   content: Content,
+                   completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
     let shareDialog = self.init(content: content)
     shareDialog.presentingViewController = viewController
     shareDialog.completion = completion

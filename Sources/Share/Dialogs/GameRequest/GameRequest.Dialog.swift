@@ -18,9 +18,9 @@
 
 import FBSDKShareKit
 
-extension GameRequest {
+public extension GameRequest {
   /// A dialog for sending game requests.
-  public final class Dialog {
+  final class Dialog {
     fileprivate let sdkDialog: FBSDKGameRequestDialog
     fileprivate let sdkDelegate: SDKDelegate
 
@@ -92,7 +92,7 @@ extension GameRequest {
   }
 }
 
-extension GameRequest.Dialog {
+public extension GameRequest.Dialog {
   /**
    Convenience method to build and show a game request dialog.
 
@@ -103,7 +103,7 @@ extension GameRequest.Dialog {
    - throws: If the  dialog fails to be presented.
    */
   @discardableResult
-  public static func show(_ request: GameRequest, completion: ((GameRequest.Result) -> Void)?) throws -> Self {
+  static func show(_ request: GameRequest, completion: ((GameRequest.Result) -> Void)?) throws -> Self {
     let dialog = self.init(request: request)
     dialog.completion = completion
     try dialog.show()

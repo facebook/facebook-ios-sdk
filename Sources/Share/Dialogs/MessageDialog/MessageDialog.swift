@@ -101,7 +101,7 @@ extension MessageDialog: ContentSharingDialogProtocol {
   }
 }
 
-extension MessageDialog {
+public extension MessageDialog {
   /**
    Convenience method to show a Message Share Dialog with content and a completion handler.
 
@@ -112,8 +112,8 @@ extension MessageDialog {
    - throws: If the dialog fails to validate.
    */
   @discardableResult
-  public static func show(_ content: Content,
-                          completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
+  static func show(_ content: Content,
+                   completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
     let dialog = self.init(content: content)
     dialog.completion = completion
     try dialog.show()

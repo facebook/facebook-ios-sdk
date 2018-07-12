@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-extension GameRequest {
+public extension GameRequest {
   /**
    Represents the results of an attempted game request.
    */
-  public enum Result {
+  enum Result {
     // TODO: Better concrete type for results here.
     /// The Game Request was succesfully sent.
     case success([String:String])

@@ -22,7 +22,7 @@ import FBSDKCoreKit.FBSDKAppEvents
 // MARK: - General
 //--------------------------------------
 
-extension AppEvent {
+public extension AppEvent {
   /**
    Create an event that indicates that the user has completed registration.
 
@@ -32,9 +32,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func completedRegistration(registrationMethod: String? = nil,
-                                           valueToSum: Double? = nil,
-                                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func completedRegistration(registrationMethod: String? = nil,
+                                    valueToSum: Double? = nil,
+                                    extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     registrationMethod.onSome { parameters[.registrationMethod] = $0 }
     return AppEvent(name: .completedRegistration, parameters: parameters, valueToSum: valueToSum)
@@ -49,9 +49,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func completedTutorial(successful: Bool? = nil,
-                                       valueToSum: Double? = nil,
-                                       extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func completedTutorial(successful: Bool? = nil,
+                                valueToSum: Double? = nil,
+                                extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .completedTutorial, parameters: parameters, valueToSum: valueToSum)
@@ -68,11 +68,11 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func viewedContent(contentType: String? = nil,
-                                   contentId: String? = nil,
-                                   currency: String? = nil,
-                                   valueToSum: Double? = nil,
-                                   extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func viewedContent(contentType: String? = nil,
+                            contentId: String? = nil,
+                            currency: String? = nil,
+                            valueToSum: Double? = nil,
+                            extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
@@ -91,11 +91,11 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func searched(contentId: String? = nil,
-                              searchedString: String? = nil,
-                              successful: Bool? = nil,
-                              valueToSum: Double? = nil,
-                              extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func searched(contentId: String? = nil,
+                       searchedString: String? = nil,
+                       successful: Bool? = nil,
+                       valueToSum: Double? = nil,
+                       extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentId.onSome { parameters[.contentId] = $0 }
     searchedString.onSome { parameters[.searchedString] = $0 }
@@ -114,11 +114,11 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func rated<T: UnsignedInteger>(contentType: String? = nil,
-                                               contentId: String? = nil,
-                                               maxRatingValue: T? = nil,
-                                               valueToSum: Double? = nil,
-                                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func rated<T: UnsignedInteger>(contentType: String? = nil,
+                                        contentId: String? = nil,
+                                        maxRatingValue: T? = nil,
+                                        valueToSum: Double? = nil,
+                                        extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
@@ -131,7 +131,7 @@ extension AppEvent {
 // MARK: - Commerce
 //--------------------------------------
 
-extension AppEvent {
+public extension AppEvent {
 
   /**
    Create an app event that a user has purchased something in the application.
@@ -142,9 +142,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func purchased(amount: Double,
-                               currency: String? = nil,
-                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func purchased(amount: Double,
+                        currency: String? = nil,
+                        extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .purchased, parameters: parameters, valueToSum: amount)
@@ -161,11 +161,11 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func addedToCart(contentType: String? = nil,
-                                 contentId: String? = nil,
-                                 currency: String? = nil,
-                                 valueToSum: Double? = nil,
-                                 extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func addedToCart(contentType: String? = nil,
+                          contentId: String? = nil,
+                          currency: String? = nil,
+                          valueToSum: Double? = nil,
+                          extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
@@ -184,11 +184,11 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func addedToWishlist(contentType: String? = nil,
-                                     contentId: String? = nil,
-                                     currency: String? = nil,
-                                     valueToSum: Double? = nil,
-                                     extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func addedToWishlist(contentType: String? = nil,
+                              contentId: String? = nil,
+                              currency: String? = nil,
+                              valueToSum: Double? = nil,
+                              extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
@@ -205,9 +205,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func addedPaymentInfo(successful: Bool? = nil,
-                                      valueToSum: Double? = nil,
-                                      extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func addedPaymentInfo(successful: Bool? = nil,
+                               valueToSum: Double? = nil,
+                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .addedPaymentInfo, parameters: parameters, valueToSum: valueToSum)
@@ -226,13 +226,13 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func initiatedCheckout<T: UnsignedInteger>(contentType: String? = nil,
-                                                           contentId: String? = nil,
-                                                           itemCount: T? = nil,
-                                                           paymentInfoAvailable: Bool? = nil,
-                                                           currency: String? = nil,
-                                                           valueToSum: Double? = nil,
-                                                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func initiatedCheckout<T: UnsignedInteger>(contentType: String? = nil,
+                                                    contentId: String? = nil,
+                                                    itemCount: T? = nil,
+                                                    paymentInfoAvailable: Bool? = nil,
+                                                    currency: String? = nil,
+                                                    valueToSum: Double? = nil,
+                                                    extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
@@ -249,7 +249,7 @@ extension AppEvent {
 // MARK: - Gaming
 //--------------------------------------
 
-extension AppEvent {
+public extension AppEvent {
 
   /**
    Create an app event that indicates that a user has achieved a level in the application.
@@ -260,9 +260,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func achievedLevel(level: AppEventParameterValueType? = nil,
-                                   valueToSum: Double? = nil,
-                                   extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func achievedLevel(level: AppEventParameterValueType? = nil,
+                            valueToSum: Double? = nil,
+                            extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     level.onSome { parameters[.level] = $0 }
     return AppEvent(name: .achievedLevel, parameters: parameters, valueToSum: valueToSum)
@@ -277,9 +277,9 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func unlockedAchievement(description: String? = nil,
-                                         valueToSum: Double? = nil,
-                                         extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func unlockedAchievement(description: String? = nil,
+                                  valueToSum: Double? = nil,
+                                  extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     description.onSome { parameters[.Description] = $0 }
     return AppEvent(name: .unlockedAchievement, parameters: parameters, valueToSum: valueToSum)
@@ -295,10 +295,10 @@ extension AppEvent {
 
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
-  public static func spentCredits(contentType: String? = nil,
-                                  contentId: String? = nil,
-                                  valueToSum: Double? = nil,
-                                  extraParameters: ParametersDictionary = [:]) -> AppEvent {
+  static func spentCredits(contentType: String? = nil,
+                           contentId: String? = nil,
+                           valueToSum: Double? = nil,
+                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }

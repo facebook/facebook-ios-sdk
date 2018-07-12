@@ -125,22 +125,22 @@ public class LoginButton: UIView {
   }
 }
 
-extension LoginButton {
-  override public func layoutSubviews() {
+public extension LoginButton {
+  override func layoutSubviews() {
     super.layoutSubviews()
 
     sdkLoginButton.frame = CGRect(origin: .zero, size: bounds.size)
   }
 
-  override public func sizeToFit() {
+  override func sizeToFit() {
     bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
-  override public func sizeThatFits(_ size: CGSize) -> CGSize {
+  override func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLoginButton.sizeThatFits(size)
   }
 
-  override public var intrinsicContentSize: CGSize {
+  override var intrinsicContentSize: CGSize {
     return sdkLoginButton.intrinsicContentSize
   }
 }

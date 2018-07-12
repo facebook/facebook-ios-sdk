@@ -21,7 +21,7 @@ import Foundation
 import UIKit
 
 final class CustomAppEventViewController: UIViewController {
-  @IBOutlet var eventNameField: UITextField?
+  @IBOutlet private var eventNameField: UITextField?
 }
 
 //--------------------------------------
@@ -29,7 +29,7 @@ final class CustomAppEventViewController: UIViewController {
 //--------------------------------------
 
 extension CustomAppEventViewController {
-  @IBAction func logCustomEvent() {
+  @IBAction private func logCustomEvent() {
     guard let eventName = eventNameField?.text else {
       let alertController = UIAlertController(title: "Invalid Event", message: "Event name can't be empty.")
       present(alertController, animated: true, completion: nil)

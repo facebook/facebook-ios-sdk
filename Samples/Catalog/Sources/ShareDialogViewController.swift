@@ -42,7 +42,7 @@ final class ShareDialogViewController: UITableViewController {
 //--------------------------------------
 
 extension ShareDialogViewController {
-  @IBAction func showLinkShareDialogModeAutomatic() {
+  @IBAction private func showLinkShareDialogModeAutomatic() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
     var content = LinkShareContent(url: url)
 
@@ -53,7 +53,7 @@ extension ShareDialogViewController {
     showShareDialog(content, mode: .automatic)
   }
 
-  @IBAction func showLinkShareDialogModeWeb() {
+  @IBAction private func showLinkShareDialogModeWeb() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
     var content = LinkShareContent(url: url)
 
@@ -71,7 +71,7 @@ extension ShareDialogViewController {
 
 extension ShareDialogViewController {
 
-  @IBAction func showShareDialogPhotoContent() {
+  @IBAction private func showShareDialogPhotoContent() {
     let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
     let content = PhotoShareContent(photos: [photo])
     showShareDialog(content)
@@ -84,7 +84,7 @@ extension ShareDialogViewController {
 
 extension ShareDialogViewController {
 
-  @IBAction func showShareDialogVideoContent() {
+  @IBAction private func showShareDialogVideoContent() {
     let imagePickerController = UIImagePickerController()
     imagePickerController.delegate = self
     imagePickerController.sourceType = .photoLibrary
