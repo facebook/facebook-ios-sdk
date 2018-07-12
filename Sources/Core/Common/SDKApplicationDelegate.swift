@@ -31,7 +31,7 @@ public final class SDKApplicationDelegate {
   private let delegate: FBSDKApplicationDelegate = FBSDKApplicationDelegate.sharedInstance()
 
   /// Returns the singleton instance of an application delegate.
-  public static let shared = SDKApplicationDelegate()
+  public static let shared: SDKApplicationDelegate = SDKApplicationDelegate()
 
   private init() { }
 

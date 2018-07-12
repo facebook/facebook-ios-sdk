@@ -26,17 +26,17 @@ public extension UserProfile {
   /// A view to display a profile picture.
   final class PictureView: UIView {
 
-    private let sdkProfilePictureView = FBSDKProfilePictureView(frame: .zero)
+    private let sdkProfilePictureView: FBSDKProfilePictureView = FBSDKProfilePictureView(frame: .zero)
 
     /// The aspect ratio of the source image of the profile picture.
-    public var pictureAspectRatio = UserProfile.PictureAspectRatio.square {
+    public var pictureAspectRatio: UserProfile.PictureAspectRatio = .square {
       didSet {
         sdkProfilePictureView.pictureMode = pictureAspectRatio.sdkPictureMode
       }
     }
 
     /// The user id to show the picture for.
-    public var userId = "me" {
+    public var userId: String = "me" {
       didSet {
         sdkProfilePictureView.profileID = userId
       }

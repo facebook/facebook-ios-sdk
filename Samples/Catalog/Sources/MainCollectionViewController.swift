@@ -20,7 +20,7 @@ import Foundation
 import UIKit
 
 final class MainCollectionViewController: UICollectionViewController {
-  private let iconArray = [
+  private let iconArray: [Item] = [
     Item(text: "Login", iconImageName: "LoginIcon"),
     Item(text: "Share", iconImageName: "ShareIcon"),
     Item(text: "App Events", iconImageName: "AppEventsIcon"),

@@ -42,28 +42,28 @@ public class LoginButton: UIView {
   private var delegateBridge: LoginButtonDelegateBridge
 
   /// The login behavior that is going to be used. Default: `.Native`.
-  public var loginBehavior = LoginBehavior.native {
+  public var loginBehavior: LoginBehavior = .native {
     didSet {
       sdkLoginButton.loginBehavior = loginBehavior.sdkBehavior
     }
   }
 
   /// The default audience. Default: `.Friends`.
-  public var defaultAudience = LoginDefaultAudience.friends {
+  public var defaultAudience: LoginDefaultAudience = .friends {
     didSet {
       sdkLoginButton.defaultAudience = defaultAudience.sdkAudience
     }
   }
 
   /// The desired tooltip behavior. Default: `.Automatic`.
-  public var tooltipBehavior = TooltipBehavior.automatic {
+  public var tooltipBehavior: TooltipBehavior = .automatic {
     didSet {
       sdkLoginButton.tooltipBehavior = tooltipBehavior.sdkBehavior
     }
   }
 
   /// The desired tooltip color style. Default: `.FriendlyBlue`.
-  public var tooltipColorStyle = TooltipColorStyle.friendlyBlue {
+  public var tooltipColorStyle: TooltipColorStyle = .friendlyBlue {
     didSet {
       sdkLoginButton.tooltipColorStyle = tooltipColorStyle.sdkColorStyle
     }

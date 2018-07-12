@@ -44,9 +44,9 @@ class GraphAPIReadViewController: UITableViewController {
 struct FBProfileRequest: GraphRequestProtocol {
   typealias Response = GraphResponse
 
-  var graphPath = "/me"
+  var graphPath: String = "/me"
   var parameters: [String: Any]? = ["fields": "id, name"]
-  var accessToken = AccessToken.current
+  var accessToken: AccessToken? = .current
   var httpMethod: GraphRequestHTTPMethod = .GET
   var apiVersion: GraphAPIVersion = 2.7
 }

@@ -13,6 +13,9 @@ excluded:
 - Vendor
 
 cyclomatic_complexity: 11
+explicit_type_interface:
+  excluded:
+  - local
 file_header:
   required_pattern: |
                     \/\/ Copyright \(c\) \d{4}-present, Facebook, Inc\. All rights reserved\.
@@ -50,7 +53,6 @@ disabled_rules:
 # TODO: All below to move to Opt In
 - discouraged_optional_boolean
 - discouraged_optional_collection
-- explicit_type_interface
 - function_default_parameter_at_end
 - implicitly_unwrapped_optional
 - no_grouping_extension
@@ -83,6 +85,7 @@ opt_in_rules:
 - empty_parentheses_with_trailing_closure
 - empty_xctest_method
 - explicit_init
+- explicit_type_interface
 - extension_access_modifier
 - fallthrough
 - fatal_error_message

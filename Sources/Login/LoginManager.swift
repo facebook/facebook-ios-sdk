@@ -33,7 +33,7 @@ import UIKit
  `current` before calling `logIn()` to authorize further permissions on your tokens.
  */
 public final class LoginManager {
-  private let sdkManager = FBSDKLoginManager()
+  private let sdkManager: FBSDKLoginManager = FBSDKLoginManager()
 
   /// The login behavior that is going to be used. Default: `.Native`.
   public var loginBehavior: LoginBehavior {

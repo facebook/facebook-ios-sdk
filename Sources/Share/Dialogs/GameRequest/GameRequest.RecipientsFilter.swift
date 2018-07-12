@@ -36,10 +36,10 @@ public extension GameRequest {
     }
 
     /// Friends using the app cannot be displayed.
-    public static let hideUsers = RecipientsFilter(rawValue: 1 << 0)
+    public static let hideUsers: RecipientsFilter = RecipientsFilter(rawValue: 1 << 0)
 
     /// Friends not using the app cannot be displayed.
-    public static let hideNonUsers = RecipientsFilter(rawValue: 1 << 1)
+    public static let hideNonUsers: RecipientsFilter = RecipientsFilter(rawValue: 1 << 1)
 
     /// The default filter. Includes users and non-users.
     public static let none: RecipientsFilter = [ ]
