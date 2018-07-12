@@ -37,9 +37,6 @@ class LoginManagerViewController: UIViewController {
     }
     self.present(alertController, animated: true, completion: nil)
   }
-}
-
-extension LoginManagerViewController {
 
   @IBAction private func loginWithReadPermissions() {
     let loginManager = LoginManager()

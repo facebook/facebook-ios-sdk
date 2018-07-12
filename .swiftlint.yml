@@ -38,6 +38,10 @@ file_header:
 indentation: 2
 large_tuple: 3
 line_length: 120
+nesting:
+  type_level: 2
+private_outlet:
+  allow_private_set: true
 
 disabled_rules:
 - conditional_returns_on_newline
@@ -55,7 +59,6 @@ disabled_rules:
 - discouraged_optional_collection
 - function_default_parameter_at_end
 - implicitly_unwrapped_optional
-- no_grouping_extension
 - todo
 - weak_delegate
 
@@ -123,6 +126,7 @@ opt_in_rules:
 - nesting
 - nimble_operator
 - no_fallthrough_only
+- no_grouping_extension
 - notification_center_detachment
 - object_literal
 - opening_brace

@@ -23,7 +23,7 @@ import Foundation
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
-public enum PublishPermission {
+public enum PublishPermission: PermissionRepresentable {
   /**
    Provides access to publish Posts, Open Graph actions, achievements,
    scores and other activity on behalf of a person using your app.
@@ -44,9 +44,9 @@ public enum PublishPermission {
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */
   case custom(String)
-}
 
-extension PublishPermission: PermissionRepresentable {
+  // MARK: PermissionRepresentable
+
   internal var permissionValue: Permission {
     switch self {
     case .publishActions: return "publish_actions"

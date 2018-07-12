@@ -34,21 +34,19 @@ public extension AppEventsLogger {
      but they will only be written with an explicit call to `flush`.
      */
     case explicitOnly
-  }
-}
 
-extension AppEventsLogger.FlushBehavior {
-  internal init(sdkFlushBehavior: FBSDKAppEventsFlushBehavior) {
-    switch sdkFlushBehavior {
-    case .auto: self = .auto
-    case .explicitOnly: self = .explicitOnly
+    internal init(sdkFlushBehavior: FBSDKAppEventsFlushBehavior) {
+      switch sdkFlushBehavior {
+      case .auto: self = .auto
+      case .explicitOnly: self = .explicitOnly
+      }
     }
-  }
 
-  internal var sdkFlushBehavior: FBSDKAppEventsFlushBehavior {
-    switch self {
-    case .auto: return .auto
-    case .explicitOnly: return .explicitOnly
+    internal var sdkFlushBehavior: FBSDKAppEventsFlushBehavior {
+      switch self {
+      case .auto: return .auto
+      case .explicitOnly: return .explicitOnly
+      }
     }
   }
 }

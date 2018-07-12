@@ -33,13 +33,11 @@ class GraphAPIPostViewController: UITableViewController {
     }
     present(alertController, animated: true, completion: nil)
   }
-}
 
-//--------------------------------------
-// MARK: - Post Checkin
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Post Checkin
+  //--------------------------------------
 
-extension GraphAPIPostViewController {
   /**
    Posts a check-in to your feed.
 

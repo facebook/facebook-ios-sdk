@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for photo content to be shared.
  */
-public struct PhotoShareContent: ContentProtocol {
+public struct PhotoShareContent: ContentProtocol, Equatable, SDKBridgedContent {
   public typealias Result = PostSharingResult
 
   /// Photos to be shared.
@@ -65,9 +65,9 @@ public struct PhotoShareContent: ContentProtocol {
 
   /// A value to be added to the referrer URL when a person follows a link from this shared content on feed.
   public var referer: String?
-}
 
-extension PhotoShareContent: Equatable {
+  // MARK: Equatable
+
   /**
    Compare two `PhotoShareContent`s for equality.
 
@@ -79,9 +79,9 @@ extension PhotoShareContent: Equatable {
   public static func == (lhs: PhotoShareContent, rhs: PhotoShareContent) -> Bool {
     return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
   }
-}
 
-extension PhotoShareContent: SDKBridgedContent {
+  // MARK: SDKBridgedContent
+
   var sdkSharingContentRepresentation: FBSDKSharingContent {
     let sdkPhotoContent = FBSDKSharePhotoContent()
     sdkPhotoContent.photos = photos.map { $0.sdkPhotoRepresentation }

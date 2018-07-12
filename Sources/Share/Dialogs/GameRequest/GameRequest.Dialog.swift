@@ -89,24 +89,22 @@ public extension GameRequest {
     public func validate() throws {
       return try sdkDialog.validate()
     }
-  }
-}
 
-public extension GameRequest.Dialog {
-  /**
-   Convenience method to build and show a game request dialog.
+    /**
+     Convenience method to build and show a game request dialog.
 
-   - parameter request:    The request to send.
-   - parameter completion: The completion handler to be invoked upon completion of the request.
+     - parameter request:    The request to send.
+     - parameter completion: The completion handler to be invoked upon completion of the request.
 
-   - returns: The dialog instance that has been shown.
-   - throws: If the  dialog fails to be presented.
-   */
-  @discardableResult
-  static func show(_ request: GameRequest, completion: ((GameRequest.Result) -> Void)?) throws -> Self {
-    let dialog = self.init(request: request)
-    dialog.completion = completion
-    try dialog.show()
-    return dialog
+     - returns: The dialog instance that has been shown.
+     - throws: If the  dialog fails to be presented.
+     */
+    @discardableResult
+    public static func show(_ request: GameRequest, completion: ((GameRequest.Result) -> Void)?) throws -> Self {
+      let dialog = self.init(request: request)
+      dialog.completion = completion
+      try dialog.show()
+      return dialog
+    }
   }
 }

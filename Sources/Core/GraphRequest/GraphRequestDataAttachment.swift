@@ -46,13 +46,11 @@ public class GraphRequestDataAttachment {
     self.filename = filename
     self.contentType = contentType
   }
-}
 
-//--------------------------------------
-// MARK: - Bridging
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Bridging
+  //--------------------------------------
 
-extension GraphRequestDataAttachment {
   internal var sdkDataAttachment: FBSDKGraphRequestDataAttachment {
     return FBSDKGraphRequestDataAttachment(data: data, filename: filename, contentType: contentType)
   }

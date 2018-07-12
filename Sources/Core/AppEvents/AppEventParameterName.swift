@@ -21,7 +21,7 @@ import FBSDKCoreKit.FBSDKAppEvents
 /**
  Represents a parameter name of the Facebook Analytics application event.
  */
-public enum AppEventParameterName {
+public enum AppEventParameterName: Hashable, RawRepresentable, ExpressibleByStringLiteral, CustomStringConvertible {
   /// Identifier for the specific piece of content.
   case contentId
   /// Type of the content, e.g. "music"/"photo"/"video".
@@ -55,9 +55,9 @@ public enum AppEventParameterName {
   public init(_ string: String) {
     self = .custom(string)
   }
-}
 
-extension AppEventParameterName: RawRepresentable {
+  // MARK: RawRepresentable
+
   /**
    Create an `AppEventParameterName` from `String`.
 
@@ -84,9 +84,9 @@ extension AppEventParameterName: RawRepresentable {
     case .custom(let string): return string
     }
   }
-}
 
-extension AppEventParameterName: ExpressibleByStringLiteral {
+  // MARK: ExpressibleByStringLiteral
+
   /**
    Create an `AppEventParameterName` from a string literal.
 
@@ -113,9 +113,9 @@ extension AppEventParameterName: ExpressibleByStringLiteral {
   public init(extendedGraphemeClusterLiteral value: String) {
     self.init(stringLiteral: value)
   }
-}
 
-extension AppEventParameterName: Hashable {
+  // MARK: Hashable
+
   /// The hash value.
   public var hashValue: Int {
     return self.rawValue.hashValue
@@ -132,9 +132,9 @@ extension AppEventParameterName: Hashable {
   public static func == (lhs: AppEventParameterName, rhs: AppEventParameterName) -> Bool {
     return lhs.rawValue == rhs.rawValue
   }
-}
 
-extension AppEventParameterName: CustomStringConvertible {
+  // MARK: CustomStringConvertible
+
   /// Textual representation of an app event parameter name.
   public var description: String {
     return rawValue

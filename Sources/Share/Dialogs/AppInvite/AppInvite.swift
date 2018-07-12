@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for an app invite.
  */
-public struct AppInvite {
+public struct AppInvite: Equatable {
 
   /// An app link target that will be used as a target when the user accepts the invite.
   public var appLink: URL
@@ -53,9 +53,9 @@ public struct AppInvite {
     self.previewImageURL = previewImageURL
     self.promotion = promotion
   }
-}
 
-extension AppInvite: Equatable {
+  // MARK: Equatable
+
   /**
    Compare two `AppInvite`s for equality.
 
@@ -67,9 +67,9 @@ extension AppInvite: Equatable {
   public static func == (lhs: AppInvite, rhs: AppInvite) -> Bool {
     return lhs.sdkInviteRepresentation == rhs.sdkInviteRepresentation
   }
-}
 
-extension AppInvite {
+  // MARK: Internal
+
   internal var sdkInviteRepresentation: FBSDKAppInviteContent {
     let sdkContent = FBSDKAppInviteContent()
     sdkContent.appLinkURL = appLink

@@ -6,7 +6,8 @@
 - [ ] I've read the [Code of Conduct](CODE_OF_CONDUCT.md)
 - [ ] I've completed the [Contributor License Agreement](https://developers.facebook.com/opensource/cla)
 - [ ] I've ensured that all existing tests pass
-- [ ] I've ensured that my code lints properly (using Swiftlint)
+- [ ] I've ensured that my code lints properly
+  - [ ] I've run: `swiftlint` & `swiftlint autocorrect --format`
 - [ ] I've added tests (when/where necessary)
 - [ ] I've updated the documentation (when/where necessary)
 - [ ] I've updated the [Changelog](CHANGELOG.md) (when/where necessary)

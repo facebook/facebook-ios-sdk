@@ -35,9 +35,7 @@ public enum LoginDefaultAudience {
   case onlyMe
   /// Indicates that all Facebook users are able to see posts made by the application.
   case everyone
-}
 
-extension LoginDefaultAudience {
   internal var sdkAudience: FBSDKDefaultAudience {
     switch self {
     case .friends: return .friends

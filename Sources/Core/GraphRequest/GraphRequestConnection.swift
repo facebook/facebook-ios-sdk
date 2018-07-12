@@ -70,14 +70,12 @@ public class GraphRequestConnection {
   public init() {
     sdkDelegateBridge.setupAsDelegateFor(sdkConnection)
   }
-}
 
-//--------------------------------------
-// MARK: - Requests
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Requests
+  //--------------------------------------
 
-public extension GraphRequestConnection {
-  typealias Completion<T: GraphRequestProtocol> =
+  public typealias Completion<T: GraphRequestProtocol> =
     (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<T>) -> Void
 
   /**
@@ -133,13 +131,11 @@ public extension GraphRequestConnection {
   func cancel() {
     sdkConnection.cancel()
   }
-}
 
-//--------------------------------------
-// MARK: - Private
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Private
+  //--------------------------------------
 
-extension GraphRequestConnection {
   /// Custom typealias that is the same as FBSDKGraphRequestHandler, but without implicitly unwrapped optionals.
   internal typealias SDKRequestCompletion =
     (_ connection: FBSDKGraphRequestConnection?, _ rawResponse: Any?, _ error: Error?) -> Void

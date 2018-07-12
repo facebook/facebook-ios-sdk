@@ -21,7 +21,7 @@ import Foundation
 /**
  Represents a type-safe OpenGraph property name.
  */
-public struct OpenGraphPropertyName {
+public struct OpenGraphPropertyName: Hashable, RawRepresentable, ExpressibleByStringLiteral {
   /// The namespace of this open graph property
   public var namespace: String
 
@@ -55,9 +55,9 @@ public struct OpenGraphPropertyName {
     self.namespace = namespace
     self.name = name
   }
-}
 
-extension OpenGraphPropertyName: RawRepresentable {
+  // MARK: RawRepresentable
+
   public typealias RawValue = String
 
   /// The raw OpenGraph formatted property name.
@@ -75,9 +75,9 @@ extension OpenGraphPropertyName: RawRepresentable {
   public init(rawValue: String) {
     self.init(stringLiteral: rawValue)
   }
-}
 
-extension OpenGraphPropertyName: ExpressibleByStringLiteral {
+  // MARK: ExpressibleByStringLiteral
+
   /**
    Create an `OpenGraphPropertyName` from a string literal.
 
@@ -113,9 +113,9 @@ extension OpenGraphPropertyName: ExpressibleByStringLiteral {
   public init(extendedGraphemeClusterLiteral value: ExtendedGraphemeClusterType) {
     self.init(stringLiteral: value)
   }
-}
 
-extension OpenGraphPropertyName: Hashable {
+  // MARK: Hashable
+
   /// Calculates the hash value of this `OpenGraphPropertyName`.
   public var hashValue: Int {
     return rawValue.hashValue

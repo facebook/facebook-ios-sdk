@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for video content to be shared.
  */
-public struct VideoShareContent: ContentProtocol {
+public struct VideoShareContent: ContentProtocol, Equatable, SDKBridgedContent {
   public typealias Result = PostSharingResult
 
   /// Video to be shared.
@@ -70,9 +70,9 @@ public struct VideoShareContent: ContentProtocol {
 
   /// A value to be added to the referrer URL when a person follows a link from this shared content on feed.
   public var referer: String?
-}
 
-extension VideoShareContent: Equatable {
+  // MARK: Equatable
+
   /**
    Compare two `VideoShareContent`s for equality.
 
@@ -84,9 +84,9 @@ extension VideoShareContent: Equatable {
   public static func == (lhs: VideoShareContent, rhs: VideoShareContent) -> Bool {
     return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
   }
-}
 
-extension VideoShareContent: SDKBridgedContent {
+  // MARK: SDKBridgedContent
+
   var sdkSharingContentRepresentation: FBSDKSharingContent {
     let sdkVideoContent = FBSDKShareVideoContent()
     sdkVideoContent.video = video.sdkVideoRepresentation

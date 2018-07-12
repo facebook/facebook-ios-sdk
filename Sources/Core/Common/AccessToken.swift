@@ -75,18 +75,16 @@ public struct AccessToken {
     self.grantedPermissions = grantedPermissions
     self.declinedPermissions = declinedPermissions
   }
-}
 
-//--------------------------------------
-// MARK: - Current Token
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Current Token
+  //--------------------------------------
 
-public extension AccessToken {
   /**
    A convenient representation of the authentication token of the current user
    that is used by other SDK components (like `LoginManager` or `AppEventsLogger`).
    */
-  static var current: AccessToken? {
+  public static var current: AccessToken? {
     get {
       let token = FBSDKAccessToken.current() as FBSDKAccessToken?
       return token.map(AccessToken.init)
@@ -104,18 +102,16 @@ public extension AccessToken {
    - note: If a token is already expired, it can't be refreshed.
    - parameter completion: Optional completion to call when the token was refreshed or failed.
    */
-  static func refreshCurrentToken(_ completion: ((AccessToken?, Error?) -> Void)? = nil) {
+  public static func refreshCurrentToken(_ completion: ((AccessToken?, Error?) -> Void)? = nil) {
     FBSDKAccessToken.refreshCurrentAccessToken { (_, _, error: Error?) in
       completion?(self.current, error)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - Internal
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Internal
+  //--------------------------------------
 
-extension AccessToken {
   internal init(sdkAccessToken: FBSDKAccessToken) {
     self.init(appId: sdkAccessToken.appID,
               authenticationToken: sdkAccessToken.tokenString,

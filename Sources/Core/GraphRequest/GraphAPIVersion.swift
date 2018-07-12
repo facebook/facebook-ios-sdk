@@ -25,7 +25,7 @@ import FBSDKCoreKit
 
  To find out the current latest version - refer to https://developers.facebook.com/docs/graph-api/overview
  */
-public struct GraphAPIVersion {
+public struct GraphAPIVersion: ExpressibleByStringLiteral, ExpressibleByFloatLiteral {
   /// String representation of an api version.
   public let stringValue: String
 
@@ -41,9 +41,8 @@ public struct GraphAPIVersion {
     }
     return GraphAPIVersion(stringLiteral: version)
   }()
-}
 
-extension GraphAPIVersion: ExpressibleByStringLiteral {
+  // MARK: ExpressibleByStringLiteral
 
   /**
    Create a `GraphAPIVersion` from a string literal.
@@ -71,9 +70,8 @@ extension GraphAPIVersion: ExpressibleByStringLiteral {
   public init(extendedGraphemeClusterLiteral value: String) {
     self.init(stringLiteral: value)
   }
-}
 
-extension GraphAPIVersion: ExpressibleByFloatLiteral {
+  // MARK: ExpressibleByFloatLiteral
 
   /**
    Create a `GraphAPIVersion` from a float literal.

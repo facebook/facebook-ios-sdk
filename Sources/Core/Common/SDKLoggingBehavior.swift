@@ -56,9 +56,7 @@ public enum SDKLoggingBehavior {
 
   /// Log errors likely to be preventable by the developer. This behavior is enabled by default.
   case developerErrors
-}
 
-extension SDKLoggingBehavior {
   internal init?(sdkStringValue: String) {
     switch sdkStringValue {
     case FBSDKLoggingBehaviorAccessTokens: self = .accessTokens

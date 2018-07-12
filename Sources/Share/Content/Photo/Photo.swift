@@ -23,7 +23,7 @@ import UIKit
 /**
  A photo for sharing.
  */
-public struct Photo {
+public struct Photo: Equatable {
   ///  If the photo is resident in memory, this method supplies the data.
   public var image: UIImage?
 
@@ -60,9 +60,8 @@ public struct Photo {
     self.url = url
     self.isUserGenerated = userGenerated
   }
-}
 
-extension Photo {
+  // MARK: Internal
   internal var sdkPhotoRepresentation: FBSDKSharePhoto {
     let photo = FBSDKSharePhoto()
     photo.image = image
@@ -79,9 +78,9 @@ extension Photo {
     self.isUserGenerated = sdkPhoto.isUserGenerated
     self.caption = sdkPhoto.caption
   }
-}
 
-extension Photo: Equatable {
+  // MARK: Equatable
+
   /**
    Compare to photos for equality.
 

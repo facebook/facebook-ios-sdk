@@ -19,7 +19,7 @@
 import FBSDKShareKit
 
 /// A dialog for sharing content on Facebook.
-public final class ShareDialog<Content: ContentProtocol> {
+public final class ShareDialog<Content: ContentProtocol>: ContentSharingProtocol, ContentSharingDialogProtocol {
   private let sdkSharer: FBSDKShareDialog
   private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
 
@@ -63,9 +63,8 @@ public final class ShareDialog<Content: ContentProtocol> {
     sdkShareDelegate.setupAsDelegateFor(sdkSharer)
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
-}
 
-extension ShareDialog: ContentSharingProtocol {
+  // MARK: ContentSharingProtocol
 
   /// The content that is being shared.
   public var content: Content {
@@ -102,9 +101,9 @@ extension ShareDialog: ContentSharingProtocol {
   public func validate() throws {
     try sdkSharer.validate()
   }
-}
 
-extension ShareDialog: ContentSharingDialogProtocol {
+  // MARK: ContentSharingDialogProtocol
+
   /**
    Shows the dialog.
 
@@ -126,9 +125,7 @@ extension ShareDialog: ContentSharingDialogProtocol {
       throw error
     }
   }
-}
 
-public extension ShareDialog {
   /**
    Convenience method to create and show a `ShareDialog` with a `fromViewController`, `content`, and `completion`.
 
@@ -140,9 +137,9 @@ public extension ShareDialog {
    - throws: If the dialog fails to validate.
    */
   @discardableResult
-  static func show(from viewController: UIViewController,
-                   content: Content,
-                   completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
+  public static func show(from viewController: UIViewController,
+                          content: Content,
+                          completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
     let shareDialog = self.init(content: content)
     shareDialog.presentingViewController = viewController
     shareDialog.completion = completion

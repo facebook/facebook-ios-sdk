@@ -27,7 +27,7 @@ import FBSDKShareKit
  (like NSURLConnection). If you want to use GraphSharer in a background thread, you must manage the run loop
  yourself.
  */
-public final class GraphSharer<Content: ContentProtocol> {
+public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol {
 
   private let sdkSharer: FBSDKShareAPI
   private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
@@ -76,19 +76,17 @@ public final class GraphSharer<Content: ContentProtocol> {
     sdkShareDelegate.setupAsDelegateFor(sdkSharer)
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
-}
 
-//--------------------------------------
-// MARK: - Share
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Share
+  //--------------------------------------
 
-public extension GraphSharer {
   /**
    Attempt to share `content` with the graph API.
 
    - throws: If the content fails to share.
    */
-  func share() throws {
+  public func share() throws {
     var error: Error?
     let completionHandler = sdkShareDelegate.completion
     sdkShareDelegate.completion = {
@@ -104,13 +102,10 @@ public extension GraphSharer {
       throw error
     }
   }
-}
 
-//--------------------------------------
-// MARK: - ContentSharingProtocol
-//--------------------------------------
-
-extension GraphSharer: ContentSharingProtocol {
+  //--------------------------------------
+  // MARK: - ContentSharingProtocol
+  //--------------------------------------
 
   /// The content that is being shared.
   public var content: Content {
@@ -147,13 +142,11 @@ extension GraphSharer: ContentSharingProtocol {
   public func validate() throws {
     try sdkSharer.validate()
   }
-}
 
-//--------------------------------------
-// MARK: - Convenience
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Convenience
+  //--------------------------------------
 
-public extension GraphSharer {
   /**
    Share a given `content` to the Graph API, with a completion handler.
 
@@ -164,8 +157,8 @@ public extension GraphSharer {
    - throws: If the share fails.
    */
   @discardableResult
-  static func share(_ content: Content,
-                    completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
+  public static func share(_ content: Content,
+                           completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
     let sharer = self.init(content: content)
     sharer.completion = completion
     try sharer.share()

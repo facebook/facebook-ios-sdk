@@ -45,9 +45,7 @@ public enum ShareDialogMode {
 
   /// Displays the feed dialog in a UIWebView within the app.
   case feedWeb
-}
 
-extension ShareDialogMode {
   internal init(sdkShareMode: FBSDKShareDialogMode) {
     switch sdkShareMode {
     case .automatic:   self = .automatic

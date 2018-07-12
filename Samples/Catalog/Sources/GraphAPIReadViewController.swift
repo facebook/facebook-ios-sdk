@@ -21,6 +21,18 @@ import UIKit
 
 import FacebookCore
 
+struct FBProfileRequest: GraphRequestProtocol {
+  typealias Response = GraphResponse
+
+  var graphPath: String = "/me"
+  var parameters: [String: Any]? = ["fields": "id, name"]
+  var accessToken: AccessToken? = .current
+  var httpMethod: GraphRequestHTTPMethod = .GET
+  var apiVersion: GraphAPIVersion = 2.7
+}
+
+// MARK: -
+
 class GraphAPIReadViewController: UITableViewController {
 
   func presentAlertControllerFor<P>(_ result: GraphRequestResult<P>) {
@@ -35,23 +47,11 @@ class GraphAPIReadViewController: UITableViewController {
     }
     present(alertController, animated: true, completion: nil)
   }
-}
 
-//--------------------------------------
-// MARK: - Read Profile
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Read Profile
+  //--------------------------------------
 
-struct FBProfileRequest: GraphRequestProtocol {
-  typealias Response = GraphResponse
-
-  var graphPath: String = "/me"
-  var parameters: [String: Any]? = ["fields": "id, name"]
-  var accessToken: AccessToken? = .current
-  var httpMethod: GraphRequestHTTPMethod = .GET
-  var apiVersion: GraphAPIVersion = 2.7
-}
-
-extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's public profile.
    Uses a custom type for profile request.
@@ -71,13 +71,11 @@ extension GraphAPIReadViewController {
       self.presentAlertControllerFor(result)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - Read User Events
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Read User Events
+  //--------------------------------------
 
-extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's list of events.
    */
@@ -96,13 +94,11 @@ extension GraphAPIReadViewController {
       self.presentAlertControllerFor(result)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - Read User Friend List
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Read User Friend List
+  //--------------------------------------
 
-extension GraphAPIReadViewController {
   /**
    Fetches the currently logged in user's list of facebook friends.
    */

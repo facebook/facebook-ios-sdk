@@ -23,7 +23,7 @@ import Foundation
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
-public enum ReadPermission {
+public enum ReadPermission: PermissionRepresentable {
   /// Provides access to a subset of items that are part of a person's public profile.
   case publicProfile
   /// Provides access the list of friends that also use your app.
@@ -108,9 +108,8 @@ public enum ReadPermission {
    See https://developers.facebook.com/docs/facebook-login/permissions for full list of available permissions.
    */
   case custom(String)
-}
 
-extension ReadPermission: PermissionRepresentable {
+  // MARK: PermissionRepresentable
   internal var permissionValue: Permission {
     switch self {
     case .publicProfile: return "public_profile"

@@ -22,7 +22,7 @@ import Foundation
 /**
  A video for sharing.
  */
-public struct Video {
+public struct Video: Equatable {
 
   /// The file URL to the video.
   public var url: URL
@@ -35,23 +35,7 @@ public struct Video {
   public init(url: URL) {
     self.url = url
   }
-}
 
-extension Video: Equatable {
-  /**
-   Compare two `Video`s for equality.
-
-   - parameter lhs: The first `Video` to compare.
-   - parameter rhs: The second `Video` to compare.
-
-   - returns: Whether or not the videos are equal.
-   */
-  public static func == (lhs: Video, rhs: Video) -> Bool {
-    return lhs.sdkVideoRepresentation == rhs.sdkVideoRepresentation
-  }
-}
-
-extension Video {
   internal var sdkVideoRepresentation: FBSDKShareVideo {
     let sdkVideo = FBSDKShareVideo()
     sdkVideo.videoURL = url
@@ -64,5 +48,19 @@ extension Video {
       return nil
     }
     self.url = url
+  }
+
+  // MARK: Equatable
+
+  /**
+   Compare two `Video`s for equality.
+
+   - parameter lhs: The first `Video` to compare.
+   - parameter rhs: The second `Video` to compare.
+
+   - returns: Whether or not the videos are equal.
+   */
+  public static func == (lhs: Video, rhs: Video) -> Bool {
+    return lhs.sdkVideoRepresentation == rhs.sdkVideoRepresentation
   }
 }

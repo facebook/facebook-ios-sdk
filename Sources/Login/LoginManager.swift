@@ -116,11 +116,10 @@ public final class LoginManager {
   public func logOut() {
     AccessToken.current = nil
     UserProfile.current = nil
-  }
-}
 
-private extension LoginManager {
-  class func sdkCompletionFor(_ completion: ((LoginResult) -> Void)?) -> FBSDKLoginManagerRequestTokenHandler? {
+  }
+
+  private class func sdkCompletionFor(_ completion: ((LoginResult) -> Void)?) -> FBSDKLoginManagerRequestTokenHandler? {
     guard let completion = completion else {
       return nil
     }

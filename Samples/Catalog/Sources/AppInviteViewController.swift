@@ -35,9 +35,7 @@ final class AppInviteViewController: UITableViewController {
       print("Failed to show app invite dialog with error \(error)")
     }
   }
-}
 
-extension AppInviteViewController {
   @IBAction private func appInviteWithDefaultImage() {
     // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
     guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }

@@ -21,14 +21,12 @@ import Foundation
 import UIKit
 
 final class CustomAppEventViewController: UIViewController {
-  @IBOutlet private var eventNameField: UITextField?
-}
+  @IBOutlet private(set) var eventNameField: UITextField?
 
-//--------------------------------------
-// MARK: - Log Custom Event
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Log Custom Event
+  //--------------------------------------
 
-extension CustomAppEventViewController {
   @IBAction private func logCustomEvent() {
     guard let eventName = eventNameField?.text else {
       let alertController = UIAlertController(title: "Invalid Event", message: "Event name can't be empty.")

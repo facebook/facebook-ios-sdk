@@ -56,9 +56,7 @@ public enum LoginBehavior {
    Please check the Facebook Platform Policy to verify your app meets the restrictions.
    */
   case web
-}
 
-extension LoginBehavior {
   internal var sdkBehavior: FBSDKLoginBehavior {
     switch self {
     case .native: return .native

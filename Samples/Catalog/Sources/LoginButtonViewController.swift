@@ -20,7 +20,7 @@ import FacebookLogin
 import Foundation
 import UIKit
 
-class LoginButtonViewController: UIViewController {
+class LoginButtonViewController: UIViewController, LoginButtonDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     let button = LoginButton(publishPermissions: [.publishActions])
@@ -28,9 +28,9 @@ class LoginButtonViewController: UIViewController {
     button.center = view.center
     view.addSubview(button)
   }
-}
 
-extension LoginButtonViewController: LoginButtonDelegate {
+  // MARK: LoginButtonDelegate
+
   func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
     print("Did complete login via LoginButton with result \(result)")
   }

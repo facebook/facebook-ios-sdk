@@ -19,7 +19,7 @@
 import FBSDKShareKit
 
 /// A dialog for sharing content through Messenger.
-public final class MessageDialog<Content: ContentProtocol> {
+public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtocol, ContentSharingDialogProtocol {
 
   private let sdkSharer: FBSDKMessageDialog
   private let sdkShareDelegate: SDKSharingDelegateBridge<Content>
@@ -36,9 +36,8 @@ public final class MessageDialog<Content: ContentProtocol> {
     sdkShareDelegate.setupAsDelegateFor(sdkSharer)
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
-}
 
-extension MessageDialog: ContentSharingProtocol {
+  // MARK: ContentSharingProtocol
 
   /// The content that is being shared.
   public var content: Content {
@@ -75,9 +74,9 @@ extension MessageDialog: ContentSharingProtocol {
   public func validate() throws {
     try sdkSharer.validate()
   }
-}
 
-extension MessageDialog: ContentSharingDialogProtocol {
+  // MARK: ContentSharingDialogProtocol
+
   /**
    Shows the dialog.
 
@@ -99,9 +98,7 @@ extension MessageDialog: ContentSharingDialogProtocol {
       throw error
     }
   }
-}
 
-public extension MessageDialog {
   /**
    Convenience method to show a Message Share Dialog with content and a completion handler.
 
@@ -112,8 +109,8 @@ public extension MessageDialog {
    - throws: If the dialog fails to validate.
    */
   @discardableResult
-  static func show(_ content: Content,
-                   completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
+  public static func show(_ content: Content,
+                          completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> Self {
     let dialog = self.init(content: content)
     dialog.completion = completion
     try dialog.show()

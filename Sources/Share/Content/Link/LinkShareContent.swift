@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for status and link content to be shared
  */
-public struct LinkShareContent: ContentProtocol {
+public struct LinkShareContent: Equatable, ContentProtocol, SDKBridgedContent {
   public typealias Result = PostSharingResult
 
   /**
@@ -115,9 +115,8 @@ public struct LinkShareContent: ContentProtocol {
 
   ///  A value to be added to the referrer URL when a person follows a link from this shared content on feed.
   public var referer: String?
-}
 
-extension LinkShareContent: Equatable {
+  // MARK: Equatable
 
   /**
    Compares two `LinkContent`s for equality.
@@ -130,9 +129,9 @@ extension LinkShareContent: Equatable {
   public static func == (lhs: LinkShareContent, rhs: LinkShareContent) -> Bool {
     return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
   }
-}
 
-extension LinkShareContent: SDKBridgedContent {
+  // MARK: SDKBridgedContent
+
   internal var sdkSharingContentRepresentation: FBSDKSharingContent {
     let content = FBSDKShareLinkContent()
     content.quote = self.quote

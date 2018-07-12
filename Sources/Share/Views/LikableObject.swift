@@ -21,7 +21,7 @@ import FBSDKShareKit
 /**
  Specifies the type of object referenced by the objectID for likes.
  */
-public enum LikableObject {
+public enum LikableObject: Equatable {
   /// The objectId refers to an OpenGraph object.
   case openGraph(objectId: String)
 
@@ -34,9 +34,7 @@ public enum LikableObject {
    The control will determine the object type by querying the server with the objectID.
    */
   case unknown(objectId: String)
-}
 
-extension LikableObject {
   internal init(sdkObjectType: FBSDKLikeObjectType, sdkObjectId: String) {
     switch sdkObjectType {
     case .openGraph: self = .openGraph(objectId: sdkObjectId)
@@ -52,9 +50,9 @@ extension LikableObject {
     case .unknown(let objectId): return (.unknown, objectId)
     }
   }
-}
 
-extension LikableObject: Equatable {
+  // MARK: Equatable
+
   /**
    Compare two `LikableObject`s for equality.
 

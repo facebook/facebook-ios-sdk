@@ -124,13 +124,11 @@ public class LikeControl: UIView {
       sdkLikeControl.isSoundEnabled = newValue
     }
   }
-}
 
-public extension LikeControl {
   /**
    Performs logic for laying out subviews.
    */
-  override func layoutSubviews() {
+  override public func layoutSubviews() {
     super.layoutSubviews()
 
     sdkLikeControl.frame = CGRect(origin: .zero, size: bounds.size)
@@ -139,7 +137,7 @@ public extension LikeControl {
   /**
    Resizes and moves the receiver view so it just encloses its subviews.
    */
-  override func sizeToFit() {
+  override public func sizeToFit() {
     bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
@@ -150,7 +148,7 @@ public extension LikeControl {
 
    - returns: A new size that fits the receiver’s subviews.
    */
-  override func sizeThatFits(_ size: CGSize) -> CGSize {
+  override public func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLikeControl.sizeThatFits(size)
   }
 
@@ -159,7 +157,7 @@ public extension LikeControl {
 
    - returns: A size indicating the natural size for the receiving view based on its intrinsic properties.
    */
-  override var intrinsicContentSize: CGSize {
+  override public var intrinsicContentSize: CGSize {
     return sdkLikeControl.intrinsicContentSize
   }
 }

@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for Open Graph content to be shared.
  */
-public struct OpenGraphShareContent {
+public struct OpenGraphShareContent: Equatable, SDKBridgedContent {
   public typealias Result = PostSharingResult
 
   /// The Open Graph action to be shared.
@@ -71,9 +71,9 @@ public struct OpenGraphShareContent {
 
   ///  A value to be added to the referrer URL when a person follows a link from this shared content on feed.
   public var referer: String?
-}
 
-extension OpenGraphShareContent: Equatable {
+  // MARK: Equatable
+
   /**
    Compares two `OpenGraphContent`s for equality.
 
@@ -85,9 +85,9 @@ extension OpenGraphShareContent: Equatable {
   public static func == (lhs: OpenGraphShareContent, rhs: OpenGraphShareContent) -> Bool {
     return lhs.sdkSharingContentRepresentation.isEqual(rhs.sdkSharingContentRepresentation)
   }
-}
 
-extension OpenGraphShareContent: SDKBridgedContent {
+  // MARK: SDKBridgedContent
+
   internal var sdkSharingContentRepresentation: FBSDKSharingContent {
     let sdkContent = FBSDKShareOpenGraphContent()
     sdkContent.action = action?.sdkActionRepresentation

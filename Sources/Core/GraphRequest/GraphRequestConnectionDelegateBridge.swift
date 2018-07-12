@@ -19,7 +19,7 @@
 import FBSDKCoreKit.FBSDKGraphRequestConnection
 import Foundation
 
-internal class GraphRequestConnectionDelegateBridge: NSObject {
+internal class GraphRequestConnectionDelegateBridge: NSObject, FBSDKGraphRequestConnectionDelegate {
   var networkFailureHandler: GraphRequestConnection.NetworkFailureHandler?
   var networkProgressHandler: GraphRequestConnection.NetworkProgressHandler?
 
@@ -30,9 +30,8 @@ internal class GraphRequestConnectionDelegateBridge: NSObject {
     objc_setAssociatedObject(connection, Unmanaged.passUnretained(self).toOpaque(), self, .OBJC_ASSOCIATION_RETAIN)
     connection.delegate = self
   }
-}
 
-extension GraphRequestConnectionDelegateBridge: FBSDKGraphRequestConnectionDelegate {
+  // MARK: FBSDKGraphRequestConnectionDelegate
   func requestConnection(_ connection: FBSDKGraphRequestConnection!,
                          didSendBodyData bytesWritten: Int,
                          totalBytesWritten: Int,

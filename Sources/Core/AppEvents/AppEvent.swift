@@ -48,9 +48,7 @@ public struct AppEvent: AppEventLoggable {
     self.parameters = parameters
     self.valueToSum = valueToSum
   }
-}
 
-public extension AppEvent {
   /**
    Creates an app event.
 
@@ -58,7 +56,7 @@ public extension AppEvent {
    - parameter parameters: Parameters dictionary. Default: empty.
    - parameter valueToSum: Optional value to sum. Default: `nil`.
    */
-  init(name: String, parameters: ParametersDictionary = [:], valueToSum: Double? = nil) {
+  public init(name: String, parameters: ParametersDictionary = [:], valueToSum: Double? = nil) {
     self.init(name: AppEventName(name), parameters: parameters, valueToSum: valueToSum)
   }
 }

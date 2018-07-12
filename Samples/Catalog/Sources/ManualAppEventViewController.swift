@@ -20,17 +20,15 @@ import FacebookCore
 import UIKit
 
 final class ManualAppEventViewController: UITableViewController {
-  @IBOutlet private var purchasePriceField: UITextField?
-  @IBOutlet private var purchaseCurrencyField: UITextField?
-  @IBOutlet private var itemPriceField: UITextField?
-  @IBOutlet private var itemCurrencyField: UITextField?
-}
+  @IBOutlet private(set) var purchasePriceField: UITextField?
+  @IBOutlet private(set) var purchaseCurrencyField: UITextField?
+  @IBOutlet private(set) var itemPriceField: UITextField?
+  @IBOutlet private(set) var itemCurrencyField: UITextField?
 
-//--------------------------------------
-// MARK: - Log Purchase
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Log Purchase
+  //--------------------------------------
 
-extension ManualAppEventViewController {
   @IBAction private func logPurchase() {
     guard
       let priceString = purchasePriceField?.text,
@@ -54,13 +52,11 @@ extension ManualAppEventViewController {
     let alertController = UIAlertController(title: "Log Event", message: "Log Event Success")
     present(alertController, animated: true, completion: nil)
   }
-}
 
-//--------------------------------------
-// MARK: - Log Add To Cart
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Log Add To Cart
+  //--------------------------------------
 
-extension ManualAppEventViewController {
   @IBAction private func logAddToCart() {
     guard
       let priceString = itemPriceField?.text,

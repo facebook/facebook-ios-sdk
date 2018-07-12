@@ -49,37 +49,31 @@ final class ShareAPIViewController: UITableViewController {
       present(alertController, animated: true, completion: nil)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - Link Content
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Link Content
+  //--------------------------------------
 
-extension ShareAPIViewController {
   @IBAction private func shareLink() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
     let content = LinkShareContent(url: url)
     share(content)
   }
-}
 
-//--------------------------------------
-// MARK: - Photo Content
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Photo Content
+  //--------------------------------------
 
-extension ShareAPIViewController {
   @IBAction private func sharePhoto() {
     let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
     let content = PhotoShareContent(photos: [photo])
     share(content)
   }
-}
 
-//--------------------------------------
-// MARK: - Video Content
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Video Content
+  //--------------------------------------
 
-extension ShareAPIViewController {
   @IBAction private func shareVideo() {
     guard let url = Bundle.main.url(forResource: "sky", withExtension: "mp4") else { return }
     let video = Video(url: url)

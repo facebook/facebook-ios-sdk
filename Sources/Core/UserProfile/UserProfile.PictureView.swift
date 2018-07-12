@@ -76,15 +76,12 @@ public extension UserProfile {
     public func setNeedsImageUpdate() {
       sdkProfilePictureView.setNeedsImageUpdate()
     }
-  }
-}
 
-private extension UserProfile.PictureView {
-
-  func setupSDKProfilePictureView() {
-    sdkProfilePictureView.frame = bounds
-    sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-    addSubview(sdkProfilePictureView)
-    setNeedsImageUpdate() // Trigger the update to refresh the image, just in case.
+    private func setupSDKProfilePictureView() {
+      sdkProfilePictureView.frame = bounds
+      sdkProfilePictureView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      addSubview(sdkProfilePictureView)
+      setNeedsImageUpdate() // Trigger the update to refresh the image, just in case.
+    }
   }
 }

@@ -25,7 +25,7 @@ import FBSDKCoreKit.FBSDKAppEvents
  - seealso: AppEvent
  - seealso: AppEventLoggable
  */
-public enum AppEventName {
+public enum AppEventName: Hashable, RawRepresentable, CustomStringConvertible, ExpressibleByStringLiteral {
 
   // MARK: General
 
@@ -75,9 +75,9 @@ public enum AppEventName {
   public init(_ string: String) {
     self = .custom(string)
   }
-}
 
-extension AppEventName: RawRepresentable {
+  // MARK: RawRepresentable
+
   /**
    Create an `AppEventName` from `String`.
 
@@ -109,9 +109,9 @@ extension AppEventName: RawRepresentable {
     case .custom(let string): return string
     }
   }
-}
 
-extension AppEventName: ExpressibleByStringLiteral {
+  // MARK: ExpressibleByStringLiteral
+
   /**
    Create an `AppEventName` from a string literal.
 
@@ -138,9 +138,9 @@ extension AppEventName: ExpressibleByStringLiteral {
   public init(extendedGraphemeClusterLiteral value: String) {
     self.init(stringLiteral: value)
   }
-}
 
-extension AppEventName: Hashable {
+  // MARK: Hashable
+
   /// The hash value.
   public var hashValue: Int {
     return self.rawValue.hashValue
@@ -157,9 +157,9 @@ extension AppEventName: Hashable {
   public static func == (lhs: AppEventName, rhs: AppEventName) -> Bool {
     return lhs.rawValue == rhs.rawValue
   }
-}
 
-extension AppEventName: CustomStringConvertible {
+  // MARK: CustomStringConvertible
+
   /// Textual representation of an app event name.
   public var description: String {
     return rawValue

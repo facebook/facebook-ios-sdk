@@ -37,13 +37,11 @@ final class MainCollectionViewController: UICollectionViewController {
     super.viewWillDisappear(animated)
     navigationController?.navigationBar.isHidden = false
   }
-}
 
-//--------------------------------------
-// MARK: - UICollectionViewDataSource
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - UICollectionViewDataSource
+  //--------------------------------------
 
-extension MainCollectionViewController {
   override func numberOfSections(in collectionView: UICollectionView) -> Int {
     return 1
   }
@@ -62,23 +60,19 @@ extension MainCollectionViewController {
     }
     return cell
   }
-}
 
-//--------------------------------------
-// MARK: - UICollectionViewDelegate
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - UICollectionViewDelegate
+  //--------------------------------------
 
-extension MainCollectionViewController {
   override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     performSegue(withIdentifier: iconArray[(indexPath as NSIndexPath).row].text, sender: self)
   }
-}
 
-//--------------------------------------
-// MARK: - Types
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Types
+  //--------------------------------------
 
-extension MainCollectionViewController {
   struct Item {
     var text: String
     var iconImageName: String

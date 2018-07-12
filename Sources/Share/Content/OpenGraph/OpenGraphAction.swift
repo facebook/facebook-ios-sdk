@@ -23,7 +23,7 @@ import Foundation
 /**
  An Open Graph action for sharing.
  */
-public struct OpenGraphAction {
+public struct OpenGraphAction: Equatable, OpenGraphPropertyContaining {
   // TODO (richardross): Make ActionType an enum with common action types.
   /// The action type.
   public var type: String
@@ -39,9 +39,9 @@ public struct OpenGraphAction {
     self.type = type
     self.properties = [:]
   }
-}
 
-extension OpenGraphAction: OpenGraphPropertyContaining {
+  // MARK: OpenGraphPropertyContaining
+
   /// Get the property names contained in this container.
   public var propertyNames: Set<OpenGraphPropertyName> {
     return Set(properties.keys)
@@ -55,9 +55,7 @@ extension OpenGraphAction: OpenGraphPropertyContaining {
       properties[key] = newValue
     }
   }
-}
 
-extension OpenGraphAction {
   internal var sdkActionRepresentation: FBSDKShareOpenGraphAction {
     let sdkAction = FBSDKShareOpenGraphAction()
     sdkAction.actionType = type
@@ -81,9 +79,9 @@ extension OpenGraphAction {
     }
     self.properties = properties
   }
-}
 
-extension OpenGraphAction: Equatable {
+  // MARK: Equatable
+
   /**
    Compare two `OpenGraphAction`s for equality.
 

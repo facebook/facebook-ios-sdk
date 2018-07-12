@@ -123,24 +123,22 @@ public class LoginButton: UIView {
     delegateBridge.setupAsDelegateFor(sdkLoginButton, loginButton: self)
     addSubview(sdkLoginButton)
   }
-}
 
-public extension LoginButton {
-  override func layoutSubviews() {
+  override public func layoutSubviews() {
     super.layoutSubviews()
 
     sdkLoginButton.frame = CGRect(origin: .zero, size: bounds.size)
   }
 
-  override func sizeToFit() {
+  override public func sizeToFit() {
     bounds.size = sizeThatFits(CGSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude))
   }
 
-  override func sizeThatFits(_ size: CGSize) -> CGSize {
+  override public func sizeThatFits(_ size: CGSize) -> CGSize {
     return sdkLoginButton.sizeThatFits(size)
   }
 
-  override var intrinsicContentSize: CGSize {
+  override public var intrinsicContentSize: CGSize {
     return sdkLoginButton.intrinsicContentSize
   }
 }

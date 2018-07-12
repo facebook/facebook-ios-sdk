@@ -98,29 +98,27 @@ public extension AppInvite {
     public func validate() throws {
       try sdkDialog.validate()
     }
-  }
-}
 
-public extension AppInvite.Dialog {
-  /**
-   Convenience method to show a `Dialog` with a `presentingViewController`, `invite`, and `completion`.
+    /**
+     Convenience method to show a `Dialog` with a `presentingViewController`, `invite`, and `completion`.
 
-   - parameter viewController: The view controller to present from.
-   - parameter invite:         The invite to send.
-   - parameter completion:     The completion handler to invoke upon success.
+     - parameter viewController: The view controller to present from.
+     - parameter invite:         The invite to send.
+     - parameter completion:     The completion handler to invoke upon success.
 
-   - throws: If the dialog fails to present.
+     - throws: If the dialog fails to present.
 
-   - returns: The dialog that has been presented.
-   */
-  @discardableResult
-  static func show(from viewController: UIViewController,
-                   invite: AppInvite,
-                   completion: ((AppInvite.Result) -> Void)? = nil) throws -> Self {
-    let dialog = self.init(invite: invite)
-    dialog.presentingViewController = viewController
-    dialog.completion = completion
-    try dialog.show()
-    return dialog
+     - returns: The dialog that has been presented.
+     */
+    @discardableResult
+    public static func show(from viewController: UIViewController,
+                            invite: AppInvite,
+                            completion: ((AppInvite.Result) -> Void)? = nil) throws -> Self {
+      let dialog = self.init(invite: invite)
+      dialog.presentingViewController = viewController
+      dialog.completion = completion
+      try dialog.show()
+      return dialog
+    }
   }
 }

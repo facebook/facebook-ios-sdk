@@ -129,18 +129,16 @@ public enum SDKSettings {
       FBSDKSettings.setLimitEventAndDataUsage(newValue)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - SDKSettings + Logging Behavior
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - SDKSettings + Logging Behavior
+  //--------------------------------------
 
-public extension SDKSettings {
   /**
    Current logging behaviors of Facebook SDK.
    The default enabled behavior is `.DeveloperErrors` only.
    */
-  static var enabledLoggingBehaviors: Set<SDKLoggingBehavior> {
+  public static var enabledLoggingBehaviors: Set<SDKLoggingBehavior> {
     get {
       let createBehavior = { (object: AnyHashable) -> SDKLoggingBehavior? in
         if let value = object as? String {
@@ -168,7 +166,7 @@ public extension SDKSettings {
 
    - parameter behavior: The behavior to enable
    */
-  static func enableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
+  public static func enableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.enableLoggingBehavior(behavior.sdkStringValue)
   }
 
@@ -177,7 +175,7 @@ public extension SDKSettings {
 
    - parameter behavior: The behavior to disable.
    */
-  static func disableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
+  public static func disableLoggingBehavior(_ behavior: SDKLoggingBehavior) {
     FBSDKSettings.disableLoggingBehavior(behavior.sdkStringValue)
   }
 }

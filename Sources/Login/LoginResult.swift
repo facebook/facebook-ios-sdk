@@ -30,9 +30,7 @@ public enum LoginResult {
   case cancelled
   /// Login attempt failed.
   case failed(Error)
-}
 
-extension LoginResult {
   internal init(sdkResult: FBSDKLoginManagerLoginResult?, error: Error?) {
     if let error = error {
       self = .failed(error)

@@ -29,21 +29,19 @@ public extension AppInvite {
 
     /// Deliver via Messenger
     case messenger
-  }
-}
 
-extension AppInvite.DeliveryMethod {
-  internal init(sdkDestinationRepresentation: FBSDKAppInviteDestination) {
-    switch sdkDestinationRepresentation {
-    case .facebook: self = .facebook
-    case .messenger: self = .messenger
+    internal init(sdkDestinationRepresentation: FBSDKAppInviteDestination) {
+      switch sdkDestinationRepresentation {
+      case .facebook: self = .facebook
+      case .messenger: self = .messenger
+      }
     }
-  }
 
-  internal var sdkDestinationRepresentation: FBSDKAppInviteDestination {
-    switch self {
-    case .facebook: return .facebook
-    case .messenger: return .messenger
+    internal var sdkDestinationRepresentation: FBSDKAppInviteDestination {
+      switch self {
+      case .facebook: return .facebook
+      case .messenger: return .messenger
+      }
     }
   }
 }

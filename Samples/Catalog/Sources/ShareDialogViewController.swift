@@ -21,7 +21,9 @@ import UIKit
 
 import FacebookShare
 
-final class ShareDialogViewController: UITableViewController {
+final class ShareDialogViewController: UITableViewController,
+  UIImagePickerControllerDelegate,
+UINavigationControllerDelegate {
 
   func showShareDialog<C: ContentProtocol>(_ content: C, mode: ShareDialogMode = .automatic) {
     let dialog = ShareDialog(content: content)
@@ -35,13 +37,11 @@ final class ShareDialogViewController: UITableViewController {
       present(alertController, animated: true, completion: nil)
     }
   }
-}
 
-//--------------------------------------
-// MARK: - Link Content
-//--------------------------------------
+  //--------------------------------------
+  // MARK: - Link Content
+  //--------------------------------------
 
-extension ShareDialogViewController {
   @IBAction private func showLinkShareDialogModeAutomatic() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
     var content = LinkShareContent(url: url)
@@ -63,26 +63,20 @@ extension ShareDialogViewController {
 
     showShareDialog(content, mode: .web)
   }
-}
 
-//--------------------------------------
-// MARK: - Photo Content
-//--------------------------------------
-
-extension ShareDialogViewController {
+  //--------------------------------------
+  // MARK: - Photo Content
+  //--------------------------------------
 
   @IBAction private func showShareDialogPhotoContent() {
     let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
     let content = PhotoShareContent(photos: [photo])
     showShareDialog(content)
   }
-}
 
-//--------------------------------------
-// MARK: - Video Content
-//--------------------------------------
-
-extension ShareDialogViewController {
+  //--------------------------------------
+  // MARK: - Video Content
+  //--------------------------------------
 
   @IBAction private func showShareDialogVideoContent() {
     let imagePickerController = UIImagePickerController()
@@ -91,9 +85,9 @@ extension ShareDialogViewController {
     imagePickerController.mediaTypes = [kUTTypeMovie as String]
     present(imagePickerController, animated: true, completion: nil)
   }
-}
 
-extension ShareDialogViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  // MARK: UIImagePickerControllerDelegate
+
   func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
     picker.dismiss(animated: true, completion: nil)
 

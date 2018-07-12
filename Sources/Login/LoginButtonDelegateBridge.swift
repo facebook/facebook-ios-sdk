@@ -20,16 +20,16 @@ import Foundation
 
 import FBSDKLoginKit
 
-internal class LoginButtonDelegateBridge: NSObject {
+internal class LoginButtonDelegateBridge: NSObject, FBSDKLoginButtonDelegate {
   internal weak var loginButton: LoginButton?
 
   func setupAsDelegateFor(_ sdkLoginButton: FBSDKLoginButton, loginButton: LoginButton) {
     self.loginButton = loginButton
     sdkLoginButton.delegate = self
   }
-}
 
-extension LoginButtonDelegateBridge: FBSDKLoginButtonDelegate {
+  // MARK: FBSDKLoginButtonDelegate
+
   func loginButton(_ sdkButton: FBSDKLoginButton!,
                    didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?,
                    error: Error?) {
