@@ -37,37 +37,27 @@ public protocol OpenGraphPropertyContaining {
 
 extension OpenGraphPropertyContaining {
   public subscript(key: OpenGraphPropertyName) -> String? {
-    get {
-      let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? String
-    }
+    let graphValue: OpenGraphPropertyValue? = self[key]
+    return graphValue as? String
   }
 
   public subscript(key: OpenGraphPropertyName) -> NSNumber? {
-    get {
-      let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? NSNumber
-    }
+    let graphValue: OpenGraphPropertyValue? = self[key]
+    return graphValue as? NSNumber
   }
 
   public subscript(key: OpenGraphPropertyName) -> [OpenGraphPropertyValue]? {
-    get {
-      let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? [OpenGraphPropertyValue]
-    }
+    let graphValue: OpenGraphPropertyValue? = self[key]
+    return graphValue as? [OpenGraphPropertyValue]
   }
 
   public subscript(key: OpenGraphPropertyName) -> Photo? {
-    get {
-      let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? Photo
-    }
+    let graphValue: OpenGraphPropertyValue? = self[key]
+    return graphValue as? Photo
   }
 
   public subscript(key: OpenGraphPropertyName) -> URL? {
-    get {
-      let graphValue: OpenGraphPropertyValue? = self[key]
-      return graphValue as? URL
-    }
+    let graphValue: OpenGraphPropertyValue? = self[key]
+    return graphValue as? URL
   }
 }

@@ -41,7 +41,8 @@ public enum SDKLoggingBehavior {
   /// Log errors from SDK UI controls.
   case uiControlErrors
 
-  /// Log debug warnings from API responses, e.g. when friends fields were requested, but `user_friends` permissions isn't granted.
+  /// Log debug warnings from API responses, e.g. when friends fields were requested,
+  /// but `user_friends` permissions isn't granted.
   case graphAPIDebugWarning
 
   /**

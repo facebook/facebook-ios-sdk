@@ -25,44 +25,47 @@ import FBSDKCoreKit.FBSDKAppEvents
 
  The `AppEventsLogger` static class has a few related roles:
 
- + Logging predefined and application-defined events to Facebook App Insights with a
+ * Logging predefined and application-defined events to Facebook App Insights with a
  numeric value to sum across a large number of events, and an optional set of key/value
  parameters that define "segments" for this event (e.g., 'purchaserStatus' : 'frequent', or
  'gamerLevel' : 'intermediate')
 
- + Logging events to later be used for ads optimization around lifetime value.
+ * Logging events to later be used for ads optimization around lifetime value.
 
- + Methods that control the way in which events are flushed out to the Facebook servers.
+ * Methods that control the way in which events are flushed out to the Facebook servers.
 
  Here are some important characteristics of the logging mechanism provided by `AppEventsLogger`:
 
- + Events are not sent immediately when logged. They're cached and flushed out to the Facebook servers
+ * Events are not sent immediately when logged. They're cached and flushed out to the Facebook servers
  in a number of situations:
- - when an event count threshold is passed (currently 100 logged events).
- - when a time threshold is passed (currently 15 seconds).
- - when an app has gone to background and is then brought back to the foreground.
+ * when an event count threshold is passed (currently 100 logged events).
+ * when a time threshold is passed (currently 15 seconds).
+ * when an app has gone to background and is then brought back to the foreground.
 
- + Events will be accumulated when the app is in a disconnected state, and sent when the connection is
+ * Events will be accumulated when the app is in a disconnected state, and sent when the connection is
  restored and one of the above 'flush' conditions are met.
 
- + The `AppEventsLogger` class is thread-safe in that events may be logged from any of the app's threads.
+ * The `AppEventsLogger` class is thread-safe in that events may be logged from any of the app's threads.
 
- + The developer can set the `flushBehavior` to force the flushing of events to only
+ * The developer can set the `flushBehavior` to force the flushing of events to only
  occur on an explicit call to the `flush` method.
 
- + The developer can turn on console debug output for event logging and flushing to the server by using
+ * The developer can turn on console debug output for event logging and flushing to the server by using
  the `FBSDKLoggingBehaviorAppEvents` value in `[FBSettings setLoggingBehavior:]`.
 
  Some things to note when logging events:
 
- + There is a limit on the number of unique event names an app can use, on the order of 1000.
- + There is a limit to the number of unique parameter names in the provided parameters that can
- be used per event, on the order of 25. This is not just for an individual call, but for all invocations for that eventName.
- + Event names and parameter names (the keys in the Dictionary) must be between 2 and 40 characters,
+ * There is a limit on the number of unique event names an app can use, on the order of 1000.
+ * There is a limit to the number of unique parameter names in the provided parameters that can be used per event,
+ on the order of 25. This is not just for an individual call, but for all invocations for that eventName.
+ * Event names and parameter names (the keys in the Dictionary) must be between 2 and 40 characters,
  and must consist of alphanumeric characters, _, -, or spaces.
- + The length of each parameter value can be no more than on the order of 100 characters.
+ * The length of each parameter value can be no more than on the order of 100 characters.
  */
 public class AppEventsLogger {
+
+  public typealias UpdateUserPropertiesCompletion =
+    (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<GraphRequest>) -> Void
 
   //--------------------------------------
   // MARK: - Activate
@@ -75,11 +78,14 @@ public class AppEventsLogger {
    This method also takes care of logging the event indicating the first time this app has been launched,
    which, among other things, is used to track user acquisition and app install ads conversions.
 
-   `activate()` will not log an event on every app launch, since launches happen every time the app is backgrounded and then foregrounded.
+   `activate()` will not log an event on every app launch,
+   since launches happen every time the app is backgrounded and then foregrounded.
    "activated app" events will be logged when the app has not been active for more than 60 seconds.
    This method also causes a "deactivated app" event to be logged when sessions are "completed",
-   and these events are logged with the session length, with an indication of how much time has elapsed between sessions,
-   and with the number of background/foreground interruptions that session had. This data is all visible in your app's App Events Insights.
+   and these events are logged with the session length,
+   with an indication of how much time has elapsed between sessions,
+   and with the number of background/foreground interruptions that session had.
+   This data is all visible in your app's App Events Insights.
 
    - parameter application: Optional instance of UIApplication. Default: `UIApplication.sharedApplication()`.
    */
@@ -172,7 +178,8 @@ public class AppEventsLogger {
   /**
    Explicitly kick off flushing of events to Facebook.
    This is an asynchronous method, but it does initiate an immediate kick off.
-   Server failures will be reported through the NotificationCenter with notification ID `FBSDKAppEventsLoggingResultNotification`.
+   Server failures will be reported through the NotificationCenter with notification ID
+   `FBSDKAppEventsLoggingResultNotification`.
    */
   public static func flush() {
     FBSDKAppEvents.flush()
@@ -185,7 +192,8 @@ public class AppEventsLogger {
   /**
    Facebook application id that is going to be used for logging all app events.
 
-   In some cases, you might want to use one Facebook App ID for login and social presence and another for App Event logging.
+   In some cases, you might want to use one Facebook App ID for login
+   and social presence and another for App Event logging.
    (An example is if multiple apps from the same company share an app ID for login, but want distinct logging.)
    By default, this value defers to the `FBSDKAppEventsOverrideAppIDBundleKey` plist value.
    If that's not set, it defaults to `FBSDKSettings.appId`.
@@ -226,14 +234,14 @@ public class AppEventsLogger {
   /**
    Sends a request to update the properties for the current user, set by `AppEventsLogger.userId`.
 
-   - properties: A dictionary of key-value pairs representing user properties and their values.
+   - parameter properties: A dictionary of key-value pairs representing user properties and their values.
    Values should be strings or numbers only. Each key must be less than 40 character in length,
    and the key can contain only letters, number, whitespace, hyphens (`-`), or underscores (`_`).
    Each value must be less than 100 characters.
-   - completion: Optional completion closure that is going to be called when the request finishes or fails.
+   - parameter completion: Optional completion closure that is going to be called when the request finishes or fails.
    */
   public static func updateUserProperties(_ properties: [String: Any],
-                                          completion: @escaping (_ httpResponse: HTTPURLResponse?, _ result: GraphRequestResult<GraphRequest>) -> Void) {
+                                          completion: @escaping UpdateUserPropertiesCompletion) {
     FBSDKAppEvents.updateUserProperties(properties,
                                         handler: GraphRequestConnection.sdkRequestCompletion(from: completion))
   }

@@ -29,8 +29,9 @@ final class ShareDialogViewController: UITableViewController {
     dialog.mode = mode
     do {
       try dialog.show()
-    } catch (let error) {
-      let alertController = UIAlertController(title: "Invalid share content", message: "Failed to present share dialog with error \(error)")
+    } catch let error {
+      let alertController = UIAlertController(title: "Invalid share content",
+                                              message: "Failed to present share dialog with error \(error)")
       present(alertController, animated: true, completion: nil)
     }
   }
@@ -45,7 +46,8 @@ extension ShareDialogViewController {
     let url = URL(string: "https://newsroom.fb.com/")
     var content = LinkShareContent(url: url!)
 
-    // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
+    // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
+    // for building a place picker.
     content.placeId = "166793820034304"
 
     showShareDialog(content, mode: .automatic)
@@ -55,7 +57,8 @@ extension ShareDialogViewController {
     let url = URL(string: "https://newsroom.fb.com/")
     var content = LinkShareContent(url: url!)
 
-    // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
+    // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
+    // for building a place picker.
     content.placeId = "166793820034304"
 
     showShareDialog(content, mode: .web)

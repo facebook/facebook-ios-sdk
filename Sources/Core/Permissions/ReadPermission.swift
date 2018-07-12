@@ -32,17 +32,24 @@ public enum ReadPermission {
   case email
   /// Provides access to a person's personal description (the 'About Me' section on their Profile)
   case userAboutMe
-  /// Provides access to all common books actions published by any app the person has used. This includes books they've read, want to read, rated or quoted.
+  /// Provides access to all common books actions published by any app the person has used.
+  /// This includes books they've read, want to read, rated or quoted.
   case userActionsBooks
-  /// Provides access to all common Open Graph fitness actions published by any app the person has used. This includes runs, walks and bikes actions.
+  /// Provides access to all common Open Graph fitness actions published by any app the person has used.
+  /// This includes runs, walks and bikes actions.
   case userActionsFitness
-  /// Provides access to all common Open Graph music actions published by any app the person has used. This includes songs they've listened to, and playlists they've created.
+  /// Provides access to all common Open Graph music actions published by any app the person has used.
+  /// This includes songs they've listened to, and playlists they've created.
   case userActionsMusic
-  /// Provides access to all common Open Graph news actions published by any app the person has used which publishes these actions. This includes news articles they've read or news articles they've published.
+  /// Provides access to all common Open Graph news actions published by any app the person
+  /// has used which publishes these actions.
+  /// This includes news articles they've read or news articles they've published.
   case userActionsNews
-  /// Provides access to all common Open Graph video actions published by any app the person has used which publishes these actions.
+  /// Provides access to all common Open Graph video actions published by any app the person
+  /// has used which publishes these actions.
   case userActionsVideo
-  /// Access the date and month of a person's birthday. This may or may not include the person's year of birth, dependent upon their privacy settings and the access token being used to query this field.
+  /// Access the date and month of a person's birthday. This may or may not include the person's year of birth,
+  /// dependent upon their privacy settings and the access token being used to query this field.
   case userBirthday
   /// Provides access to a person's education history through the education field on the User object.
   case userEducationHistory
@@ -62,9 +69,11 @@ public enum ReadPermission {
   case userManagedGroups
   /// Provides access to the photos a person has uploaded or been tagged in.
   case userPhotos
-  /// Provides access to the posts on a person's Timeline. Includes their own posts, posts they are tagged in, and posts other people make on their Timeline.
+  /// Provides access to the posts on a person's Timeline. Includes their own posts, posts they are tagged in,
+  /// and posts other people make on their Timeline.
   case userPosts
-  /// Provides access to a person's relationship status, significant other and family members as fields on the User object.
+  /// Provides access to a person's relationship status,
+  /// significant other and family members as fields on the User object.
   case userRelationships
   /// Provides access to a person's relationship interests as the interested_in field on the User object.
   case userRelationshipDetails

@@ -52,7 +52,8 @@ public final class GraphSharer<Content: ContentProtocol> {
     }
   }
 
-  /// The access token used when performing a share. The access token must have the "publish_actions" permission granted.
+  /// The access token used when performing a share.
+  /// The access token must have the "publish_actions" permission granted.
   public var accessToken: AccessToken? {
     get {
       let accessToken: FBSDKAccessToken? = sdkSharer.accessToken
@@ -113,12 +114,10 @@ extension GraphSharer: ContentSharingProtocol {
 
   /// The content that is being shared.
   public var content: Content {
-    get {
-      guard let swiftContent: Content = ContentBridger.bridgeToSwift(sdkSharer.shareContent) else {
-        fatalError("Content of our private sharer has changed type. Something horrible has happened.")
-      }
-      return swiftContent
+    guard let swiftContent: Content = ContentBridger.bridgeToSwift(sdkSharer.shareContent) else {
+      fatalError("Content of our private sharer has changed type. Something horrible has happened.")
     }
+    return swiftContent
   }
 
   /// The completion handler to be invoked upon the share performing.
@@ -165,7 +164,8 @@ extension GraphSharer {
    - throws: If the share fails.
    */
   @discardableResult
-  public static func share(_ content: Content, completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
+  public static func share(_ content: Content,
+                           completion: ((ContentSharerResult<Content>) -> Void)? = nil) throws -> GraphSharer {
     let sharer = self.init(content: content)
     sharer.completion = completion
     try sharer.share()

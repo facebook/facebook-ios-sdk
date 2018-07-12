@@ -30,7 +30,9 @@ internal class LoginButtonDelegateBridge: NSObject {
 }
 
 extension LoginButtonDelegateBridge: FBSDKLoginButtonDelegate {
-  func loginButton(_ sdkButton: FBSDKLoginButton!, didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?, error: Error?) {
+  func loginButton(_ sdkButton: FBSDKLoginButton!,
+                   didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?,
+                   error: Error?) {
     guard
       let loginButton = loginButton,
       let delegate = loginButton.delegate else {

@@ -69,12 +69,10 @@ extension ShareDialog: ContentSharingProtocol {
 
   /// The content that is being shared.
   public var content: Content {
-    get {
-      guard let swiftContent: Content = ContentBridger.bridgeToSwift(sdkSharer.shareContent) else {
-        fatalError("Content of our private share dialog has changed type. Something horrible has happened.")
-      }
-      return swiftContent
+    guard let swiftContent: Content = ContentBridger.bridgeToSwift(sdkSharer.shareContent) else {
+      fatalError("Content of our private share dialog has changed type. Something horrible has happened.")
     }
+    return swiftContent
   }
 
   /// The completion handler to be invoked upon the share performing.

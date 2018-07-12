@@ -38,7 +38,8 @@ public protocol ContentProtocol {
   /**
    List of IDs for taggable people to tag with this content.
 
-   See documentation for [Taggable Friends](https://developers.facebook.com/docs/graph-api/reference/user/taggable_friends)
+   See documentation for
+   [Taggable Friends](https://developers.facebook.com/docs/graph-api/reference/user/taggable_friends)
    */
   var taggedPeopleIds: [String]? { get }
 

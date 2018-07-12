@@ -20,7 +20,8 @@ import Foundation
 import FBSDKCoreKit
 
 /**
- A container for data attachments so that additional metadata can be provided about the attachment (like content type or filename).
+ A container for data attachments so that additional metadata can be provided about the attachment
+ (like content type or filename).
  */
 public class GraphRequestDataAttachment {
 

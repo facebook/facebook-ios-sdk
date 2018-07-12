@@ -28,7 +28,8 @@ import FBSDKCoreKit.FBSDKProfile
  Represents an immutable Facebook profile.
 
  This class provides a global `current` instance to more easily add social context to your application.
- When the profile changes, a notification is posted so that you can update relevant parts of your UI and is persisted to `NSUserDefaults`.
+ When the profile changes, a notification is posted so that you can update relevant parts of your UI
+ and is persisted to `NSUserDefaults`.
 
  Typically, you will want to call `Profile.updatesOnAccessTokenChange = true`,
  so that it automatically observes changes to the `AccessToken.current`.
@@ -169,7 +170,8 @@ extension UserProfile {
    Loads the current profile and passes it to the completion closure.
 
    If the `current` profile is already loaded, this method will call the completion block synchronously,
-   otherwise it will begin a graph request to update `current` profile and the call the completion closure when finished.
+   otherwise it will begin a graph request to update `current` profile
+   and the call the completion closure when finished.
 
    - parameter completion: The closure to be executed once the profile is loaded.
    */

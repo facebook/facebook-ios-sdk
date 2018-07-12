@@ -25,7 +25,8 @@ extension GameRequest {
   internal class SDKDelegate: NSObject, FBSDKGameRequestDialogDelegate {
     var completion: ((Result) -> Void)?
 
-    func gameRequestDialog(_ gameRequestDialog: FBSDKGameRequestDialog?, didCompleteWithResults results: [AnyHashable: Any]?) {
+    func gameRequestDialog(_ gameRequestDialog: FBSDKGameRequestDialog?,
+                           didCompleteWithResults results: [AnyHashable: Any]?) {
       let result: Result = .success(results?.keyValueFlatMap { ($0 as? String, $1 as? String) } ?? [:])
       completion?(result)
     }

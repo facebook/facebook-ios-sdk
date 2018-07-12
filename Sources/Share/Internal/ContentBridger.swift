@@ -30,7 +30,8 @@ internal protocol SDKBridgedContent {
 
 internal struct ContentBridger {
   // The only way for swift to guarantee a stable pointer is by using UnsafeMutablePointer.alloc. Using the `&`
-  // operator, or using withUnsafePointer is liable to have a stack-copied pointer, not a static pointer, which is what we need.
+  // operator, or using withUnsafePointer is liable to have a stack-copied pointer,
+  // not a static pointer, which is what we need.
   fileprivate static let contentHolderKey = UnsafeMutablePointer<UInt8>.allocate(capacity: 1)
 
   internal static func bridgeToObjC<C: ContentProtocol>(_ content: C) -> FBSDKSharingContent? {

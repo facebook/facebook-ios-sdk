@@ -46,9 +46,7 @@ extension Hashtag {
   }
 
   internal var sdkHashtagRepresentation: FBSDKHashtag {
-    get {
-      return FBSDKHashtag(string: stringValue)
-    }
+    return FBSDKHashtag(string: stringValue)
   }
 }
 

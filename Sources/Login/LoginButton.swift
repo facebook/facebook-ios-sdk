@@ -72,7 +72,7 @@ public class LoginButton: UIView {
   /**
    Create a new `LoginButton` with a given optional frame and read permissions.
 
-   - parameter frame:              Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
+   - parameter frame: Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
    - parameter readPermissions: Array of read permissions to request when logging in.
    */
   public init(frame: CGRect? = nil, readPermissions: [ReadPermission]) {
@@ -92,7 +92,7 @@ public class LoginButton: UIView {
   /**
    Create a new `LoginButton` with a given optional frame and publish permissions.
 
-   - parameter frame:              Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
+   - parameter frame: Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
    - parameter publishPermissions: Array of publish permissions to request when logging in.
    */
   public init(frame: CGRect? = nil, publishPermissions: [PublishPermission]) {

@@ -52,7 +52,8 @@ extension MainCollectionViewController {
     return iconArray.count
   }
 
-  override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+  override func collectionView(_ collectionView: UICollectionView,
+                               cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
     if let menuCell = cell as? MainCollectionViewCell {
       menuCell.updateFrom(iconArray[(indexPath as NSIndexPath).row])

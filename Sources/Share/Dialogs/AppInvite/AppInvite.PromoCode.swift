@@ -73,7 +73,8 @@ extension AppInvite.PromoCode: ExpressibleByStringLiteral {
   public init(stringLiteral value: String) {
     let truncated = AppInvite.PromoCode.truncate(string: value)
     if truncated != value {
-      print("Warning: Attempted to create a PromoCode from \"\(value)\" which contained invalid characters, or was too long.")
+      print("Warning: Attempted to create a PromoCode from \"\(value)\" which contained invalid characters,"
+        + "or was too long.")
     }
 
     rawValue = truncated

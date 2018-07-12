@@ -32,7 +32,8 @@ extension AppInvite {
       dialog.delegate = self
     }
 
-    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog?, didCompleteWithResults results: [AnyHashable: Any]?) {
+    func appInviteDialog(_ appInviteDialog: FBSDKAppInviteDialog?,
+                         didCompleteWithResults results: [AnyHashable: Any]?) {
       completion?(.success(results?.keyValueFlatMap { ($0 as? String, $1 as? String) } ?? [:]))
     }
 

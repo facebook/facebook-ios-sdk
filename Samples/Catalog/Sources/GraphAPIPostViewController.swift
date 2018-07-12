@@ -44,7 +44,8 @@ extension GraphAPIPostViewController {
    Posts a check-in to your feed.
 
    See https://developers.facebook.com/docs/graph-api/reference/user/feed for details.
-   Place is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search for building a place picker.
+   Place is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
+   for building a place picker.
    */
   @IBAction func postCheckin() {
     let request = GraphRequest(graphPath: "/me/feed",

@@ -28,7 +28,8 @@ public struct OpenGraphShareContent {
   /// The Open Graph action to be shared.
   public var action: OpenGraphAction?
 
-  /// Property name that points to the primary Open Graph Object in the action. This is used for rendering the preview of the share.
+  /// Property name that points to the primary Open Graph Object in the action.
+  /// This is used for rendering the preview of the share.
   public var previewPropertyName: OpenGraphPropertyName?
 
   /**
@@ -60,7 +61,8 @@ public struct OpenGraphShareContent {
   /**
    List of IDs for taggable people to tag with this content.
 
-   See documentation for [Taggable Friends](https://developers.facebook.com/docs/graph-api/reference/user/taggable_friends)
+   See documentation for
+   [Taggable Friends](https://developers.facebook.com/docs/graph-api/reference/user/taggable_friends)
    */
   public var taggedPeopleIds: [String]?
 

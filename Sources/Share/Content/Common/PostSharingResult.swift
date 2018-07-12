@@ -35,9 +35,7 @@ public struct PostSharingResult: ContentSharingResultProtocol {
 
   /// The post ID of the shared content
   public var postId: String? {
-    get {
-      return dictionary[ShareResultKeys.PostId.rawValue]
-    }
+    return dictionary[ShareResultKeys.PostId.rawValue]
   }
 
   /**

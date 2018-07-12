@@ -35,7 +35,8 @@ extension ManualAppEventViewController {
     guard
       let priceString = purchasePriceField?.text,
       let price = Double(priceString) else {
-        let alertController = UIAlertController(title: "Invalid Purchase Price", message: "Purchase price must be a valid number.")
+        let alertController = UIAlertController(title: "Invalid Purchase Price",
+                                                message: "Purchase price must be a valid number.")
         present(alertController, animated: true, completion: nil)
         return
     }
@@ -64,7 +65,8 @@ extension ManualAppEventViewController {
     guard
       let priceString = itemPriceField?.text,
       let price = Double(priceString) else {
-        let alertController = UIAlertController(title: "Invalid Item Price", message: "Item price must be a valid number.")
+        let alertController = UIAlertController(title: "Invalid Item Price",
+                                                message: "Item price must be a valid number.")
         present(alertController, animated: true, completion: nil)
         return
     }

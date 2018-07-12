@@ -19,6 +19,7 @@
 import FBSDKShareKit
 
 extension LikeControl {
+
   /**
    Specifies the style of the auxilary view in the like control.
    */
@@ -88,6 +89,10 @@ extension LikeControl.AuxilaryStyle: Equatable {
 }
 
 extension LikeControl.AuxilaryStyle {
+
+  internal typealias SDKStyleRepresentation =
+    (FBSDKLikeControlStyle, FBSDKLikeControlHorizontalAlignment, FBSDKLikeControlAuxiliaryPosition)
+
   internal init(sdkStyle: FBSDKLikeControlStyle,
                 sdkHorizontalAlignment: FBSDKLikeControlHorizontalAlignment,
                 sdkAuxilaryPosition: FBSDKLikeControlAuxiliaryPosition) {
@@ -100,7 +105,7 @@ extension LikeControl.AuxilaryStyle {
     }
   }
 
-  internal var sdkStyleRepresentation: (FBSDKLikeControlStyle, FBSDKLikeControlHorizontalAlignment, FBSDKLikeControlAuxiliaryPosition) {
+  internal var sdkStyleRepresentation: SDKStyleRepresentation {
     switch self {
     case .standard(let horizontal, let vertical):
       return (.standard, horizontal.sdkHorizontalAlignment, vertical.sdkAuxilaryPosition)
