@@ -21,7 +21,7 @@ import Foundation
 /**
  A delegate for `LoginButton`.
  */
-public protocol LoginButtonDelegate {
+public protocol LoginButtonDelegate: class {
   /**
    Called when the button was used to login and the process finished.
 

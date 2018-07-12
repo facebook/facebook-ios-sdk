@@ -47,7 +47,6 @@ disabled_rules:
 - prefixed_toplevel_constant
 - switch_case_on_newline
 # TODO: All below to move to Opt In
-- class_delegate_protocol
 - discouraged_optional_boolean
 - discouraged_optional_collection
 - explicit_type_interface
@@ -62,6 +61,7 @@ opt_in_rules:
 - array_init
 - attributes
 - block_based_kvo
+- class_delegate_protocol
 - closing_brace
 - closure_end_indentation
 - closure_parameter_position
