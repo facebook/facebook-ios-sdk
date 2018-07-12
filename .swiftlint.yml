@@ -100,6 +100,7 @@ opt_in_rules:
 - opening_brace
 - operator_usage_whitespace
 - operator_whitespace
+- overridden_super_call
 - pattern_matching_keywords
 - private_over_fileprivate
 - private_unit_test

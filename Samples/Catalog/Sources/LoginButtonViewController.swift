@@ -22,6 +22,7 @@ import UIKit
 
 class LoginButtonViewController: UIViewController {
   override func viewDidLoad() {
+    super.viewDidLoad()
     let button = LoginButton(publishPermissions: [.publishActions])
     button.delegate = self
     button.center = view.center
