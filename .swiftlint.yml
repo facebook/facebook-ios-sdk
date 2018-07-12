@@ -121,6 +121,8 @@ opt_in_rules:
 - unused_optional_binding
 - valid_ibinspectable
 - vertical_parameter_alignment
+- vertical_parameter_alignment_on_call
 - vertical_whitespace
 - void_return
 - xctfail_message
+- yoda_condition
