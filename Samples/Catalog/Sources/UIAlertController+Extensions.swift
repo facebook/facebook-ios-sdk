@@ -72,33 +72,22 @@ public extension UIAlertAction {
 
 extension UIAlertController {
   /**
-   Creates the alert view controller using the actions specified
+   Creates the alert view controller using the actions specified, including an "OK" Action
 
    - parameter title:  Title of the alert.
    - parameter message: Alert message body.
-   - parameter actions: Variable number of actions as an Array of actionType values.
    - parameter style: UIAlertControllerStyle enum value
    - parameter handler: Handler block/closure for the clicked option.
-
    */
   convenience init(title: String,
                    message: String,
-                   actions: UIAlertAction.ActionType?...,
                    style: UIAlertControllerStyle = .alert,
                    handler: ((String) -> Swift.Void)? = nil) {
-
     //initialize the contoller (self) instance
     self.init(title: title, message: message, preferredStyle: style)
 
     if actions.isEmpty {
       addAction(UIAlertAction.ActionType.ok.action(handler: handler))
-    } else {
-      //Fetching actions specidied by the user and adding actions accordingly
-      for actionType in actions {
-        guard let actionType = actionType else { continue }
-        addAction(actionType.action(handler: handler))
-      }
     }
-
   }
 }
