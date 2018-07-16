@@ -21,6 +21,8 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #if !TARGET_OS_TV
+#import "AppEvents/Codeless/FBSDKViewHierarchy.h"
+#import "AppEvents/Codeless/FBSDKCodelessMacros.h"
 #import "BridgeAPI/FBSDKBridgeAPIProtocol.h"
 #import "BridgeAPI/FBSDKBridgeAPIProtocolType.h"
 #import "BridgeAPI/FBSDKBridgeAPIRequest.h"
@@ -62,6 +64,7 @@
 #import "FBSDKLogger.h"
 #import "FBSDKMath.h"
 #import "FBSDKSettings+Internal.h"
+#import "FBSDKSwizzler.h"
 #import "FBSDKTypeUtility.h"
 #import "Network/FBSDKGraphRequest+Internal.h"
 #import "Network/FBSDKGraphRequestConnection+Internal.h"

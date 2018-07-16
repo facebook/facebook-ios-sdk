@@ -60,6 +60,12 @@ FBSDK_EXTERN NSString *const FBSDKAccessTokenChangeOldKey;
  */
 FBSDK_EXTERN NSString *const FBSDKAccessTokenChangeNewKey;
 
+/*
+ A key in the notification's userInfo that will be set
+ if and only if the token has expired.
+ */
+FBSDK_EXTERN NSString *const FBSDKAccessTokenDidExpire;
+
 
 /**
   Represents an immutable access token for using Facebook services.
@@ -100,6 +106,11 @@ FBSDK_EXTERN NSString *const FBSDKAccessTokenChangeNewKey;
   Returns the user ID.
  */
 @property (readonly, copy, nonatomic) NSString *userID;
+
+/**
+ Returns whether the access token is expired by checking its expirationDate property
+ */
+@property (readonly, assign, nonatomic, getter = isExpired) BOOL expired;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -149,6 +160,12 @@ NS_DESIGNATED_INITIALIZER;
  current user and is used by other SDK components (like `FBSDKLoginManager`).
  */
 + (FBSDKAccessToken *)currentAccessToken;
+
+/**
+ Returns YES if currentAccessToken is not nil AND currentAccessToken is not expired
+
+ */
++ (BOOL)currentAccessTokenIsActive;
 
 /**
   Sets the "global" access token that represents the currently logged in user.

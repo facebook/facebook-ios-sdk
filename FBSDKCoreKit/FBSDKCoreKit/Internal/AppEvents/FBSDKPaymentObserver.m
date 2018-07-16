@@ -279,7 +279,7 @@ static NSMutableArray *g_pendingRequestors;
     }
   }
 
-  [eventParameters setObject:@"1"forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
+  [eventParameters setObject:@"1" forKey:FBSDKAppEventParameterImplicitlyLoggedPurchase];
   [FBSDKAppEvents logEvent:eventName
                 valueToSum:valueToSum
                 parameters:eventParameters];

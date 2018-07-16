@@ -129,17 +129,15 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 #pragma mark - UIApplicationDelegate
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options NS_AVAILABLE_IOS(9_0)
 {
   return [self application:application
                    openURL:url
          sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
                 annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
 }
-#endif
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -201,7 +199,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   // fetch app settings
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
 
-  [self _logSDKInitialize];
+  if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
+    [self _logSDKInitialize];
+  }
 #if !TARGET_OS_TV
   FBSDKProfile *cachedProfile = [FBSDKProfile fetchCachedProfile];
   [FBSDKProfile setCurrentProfile:cachedProfile];
@@ -313,8 +313,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   _pendingRequestCompletionBlock = [completionBlock copy];
   void (^handler)(BOOL, NSError *) = ^(BOOL openedURL, NSError *anError) {
     if (!openedURL) {
-      _pendingRequest = nil;
-      _pendingRequestCompletionBlock = nil;
+      self->_pendingRequest = nil;
+      self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
         openedURLError = [FBSDKError errorWithCode:FBSDKBrowserUnavailableErrorCode
@@ -395,11 +395,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.
       [parent.transitionCoordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         // Note SFVC init must occur inside block to avoid blank screen.
-        _safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
+        self->_safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
         // Disable dismissing with edge pan gesture
-        _safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        [_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-        [container displayChildController:_safariViewController];
+        self->_safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        [self->_safariViewController performSelector:@selector(setDelegate:) withObject:self];
+        [container displayChildController:self->_safariViewController];
         [parent presentViewController:container animated:YES completion:nil];
       }];
     } else {

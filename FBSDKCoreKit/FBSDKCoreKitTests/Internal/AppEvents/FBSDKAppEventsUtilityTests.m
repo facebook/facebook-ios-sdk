@@ -29,6 +29,7 @@
 @interface FBSDKAppEventsUtilityTests : XCTestCase
 {
   id _mockAppEventsUtility;
+  id _mockNSLocale;
 }
 
 @end
@@ -41,6 +42,7 @@
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
   [[[_mockAppEventsUtility stub] andReturn:[[NSUUID UUID] UUIDString]] advertiserID];
   [FBSDKAppEvents setUserID:@"test-user-id"];
+  _mockNSLocale = OCMClassMock([NSLocale class]);
 }
 
 - (void)tearDown
@@ -105,6 +107,33 @@
   Class FBSDKAppEventsClass = NSClassFromString(@"FBSDKAppEvents");
   SEL logEventSelector = NSSelectorFromString(@"logImplicitEvent:valueToSum:parameters:accessToken:");
   XCTAssertTrue([FBSDKAppEventsClass respondsToSelector:logEventSelector]);
+}
+
+- (void)testGetNumberValue {
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: $1,234.56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertTrue([str isEqualToString:@"1234.56"]);
+}
+
+- (void)testGetNumberValueWithLocaleFR {
+  OCMStub([_mockNSLocale currentLocale]).
+  _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"fr"]));
+
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: 1\u00a0234,56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertTrue([str isEqualToString:@"1234.56"]);
+}
+
+- (void)testGetNumberValueWithLocaleIT {
+  OCMStub([_mockNSLocale currentLocale]).
+  _andReturn(OCMOCK_VALUE([NSLocale localeWithLocaleIdentifier:@"it"]));
+
+  NSNumber *result = [FBSDKAppEventsUtility
+                      getNumberValue:@"Price: 1.234,56; Buy 1 get 2!"];
+  NSString *str = [NSString stringWithFormat:@"%.2f", result.floatValue];
+  XCTAssertTrue([str isEqualToString:@"1234.56"]);
 }
 
 @end

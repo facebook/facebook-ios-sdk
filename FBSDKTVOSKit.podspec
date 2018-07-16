@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '4.32.0'
+  s.version      = '4.34.0'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-ios-sdk.git',
-                     :tag => 'sdk-version-4.32.0' }
+                     :tag => 'sdk-version-4.34.0' }
 
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
@@ -28,5 +28,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'FBSDKCoreKit', '~> 4.11'
   # We have a compile time depend on FBSDKShareKit
-  s.dependency 'FBSDKShareKit', '~> 4.11'
+  s.dependency 'FBSDKShareKit', '~> 4.33'
+  s.dependency 'FBSDKLoginKit', '~> 4.11'
 end

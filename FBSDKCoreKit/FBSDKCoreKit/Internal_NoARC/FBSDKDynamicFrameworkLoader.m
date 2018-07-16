@@ -565,3 +565,21 @@ CFStringRef fbsdkdfl_kUTTypePNG(void)
 {
   _fbsdkdfl_MobileCoreServices_get_and_return_k(kUTTypePNG);
 }
+
+#pragma mark - WebKit Classes
+_fbsdkdfl_load_framework_once_impl_(WebKit)
+_fbsdkdfl_handle_get_impl_(WebKit)
+
+#define _fbsdkdfl_WebKit_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(WebKit, SYMBOL);
+
+Class fbsdkdfl_WKWebViewClass(void)
+{
+  _fbsdkdfl_WebKit_get_c(WKWebView);
+  return c;
+}
+
+Class fbsdkdfl_WKUserScriptClass(void)
+{
+  _fbsdkdfl_WebKit_get_c(WKUserScript);
+  return c;
+}
