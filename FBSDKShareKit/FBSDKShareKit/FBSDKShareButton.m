@@ -84,9 +84,7 @@
 - (void)_share:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKShareButtonDidTap parameters:[self analyticsParameters]];
-  [_dialog showFromViewController:self.parentViewController
-                           withContent:_dialog.shareContent
-                              delegate:nil];
+  [_dialog show];
 }
 
 @end
