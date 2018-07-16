@@ -56,8 +56,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
   id<FBSDKURLOpening> _pendingURLOpen;
   SFAuthenticationSession *_authenticationSession NS_AVAILABLE_IOS(11_0);
+  SFAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 #endif
   BOOL _expectingBackground;
+  BOOL _isRequestingSFAuthenticationSession;
   UIViewController *_safariViewController;
   BOOL _isDismissingSafariViewController;
 }
@@ -226,6 +228,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
+  _isRequestingSFAuthenticationSession = NO;
   _active = NO;
   _expectingBackground = NO;
 }
@@ -239,9 +242,12 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   //  _expectingBackground can be YES if the caller started doing work (like login)
   // within the app delegate's lifecycle like openURL, in which case there
   // might have been a "didBecomeActive" event pending that we want to ignore.
-  BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController;
+  BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController && !_isRequestingSFAuthenticationSession;
 #if !TARGET_OS_TV
   if (@available(iOS 11.0, *)) {
+    if (notExpectingBackground && _authenticationSessionCompletionHandler != nil) {
+      _authenticationSessionCompletionHandler(nil, nil);
+    }
     notExpectingBackground = notExpectingBackground && !_authenticationSession;
   }
 #endif
@@ -349,13 +355,21 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     if ([sender isAuthenticationURL:url]) {
       Class SFAuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
       if (SFAuthenticationSessionClass != nil) {
-        _authenticationSession = [[SFAuthenticationSessionClass alloc] initWithURL:url callbackURLScheme:[FBSDKInternalUtility appURLScheme] completionHandler:^ (NSURL *aURL, NSError *error) {
+        __weak typeof(self) weakSelf = self;
+        _authenticationSessionCompletionHandler = ^ (NSURL *aURL, NSError *error) {
+          typeof(self) strongSelf = weakSelf;
+          strongSelf->_isRequestingSFAuthenticationSession = NO;
           handler(error == nil, error);
           if (error == nil) {
-            [self application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
+            [strongSelf application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
           }
-          self->_authenticationSession = nil;
-        }];
+          strongSelf->_authenticationSession = nil;
+          strongSelf->_authenticationSessionCompletionHandler = nil;
+        };
+        _authenticationSession = [[SFAuthenticationSessionClass alloc] initWithURL:url
+                                                                 callbackURLScheme:[FBSDKInternalUtility appURLScheme]
+                                                                 completionHandler:_authenticationSessionCompletionHandler];
+        _isRequestingSFAuthenticationSession = YES;
         [_authenticationSession start];
         return;
       }
