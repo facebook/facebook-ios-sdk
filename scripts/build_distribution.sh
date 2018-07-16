@@ -151,9 +151,8 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	find "$AN_SAMPLES" -name "Info.plist" -exec perl -p -i -0777 -e 's/\s*<key>CFBundleURLTypes<\/key>\s*<array>\s*<dict>\s*<key>CFBundleURLSchemes<\/key>\s*<array>\s*<string>fb\d*<\/string>\s*<\/array>\s*<\/dict>\s*<\/array>\s*<key>FacebookAppID<\/key>\s*<string>\d*<\/string>\s*<key>FacebookDisplayName<\/key>\s*<string>.*<\/string>\s*<key>LSApplicationQueriesSchemes<\/key>\s*<array>\s*<string>fbapi<\/string>\s*<string>fb-messenger-api<\/string>\s*<string>fbauth2<\/string>\s*<string>fbshareextension<\/string>\s*<\/array>\n//g' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/\n\s*com\.apple\.Keychain = {\s*enabled = 1;\s*};//gms' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/NativeAdSample.entitlements/d' {} \;
-	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdUnitsSample.entitlements/d' {} \;
+	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdBiddingSample.entitlements/d' {} \;
 	find "$AN_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/^\s*<FileRef\n\s*location = "group:\.\.\/\.\.\/FBSDKCoreKit\/FBSDKCoreKit\.xcodeproj">\n\s*<\/FileRef>\n//gms' {} \;
-
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/fbLoginButton/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKCoreKit/d" {} \;
 	find "$AN_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKLogin/d" {} \;
@@ -203,7 +202,7 @@ else
 		\cp -R "$FB_SDK_BUILD"/FBSDKShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBSDKShareKit.framework"
 		\cp -R "$FB_SDK_BUILD"/FBSDKPlacesKit.framework "$FB_SDK_BUILD_PACKAGE" \
-		|| die "Could not copy FBSDKPlacesKit.framework"
+			|| die "Could not copy FBSDKPlacesKit.framework"
 		\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy Bolts.framework"
 		\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
@@ -249,6 +248,13 @@ else
 		fi
 		\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBSDKMessengerShareKit.framework"
+
+		# Build Marketing Kit
+		if [ -z $SKIPBUILD ]; then
+			(xcodebuild -project "${FB_SDK_ROOT}"/FBSDKMarketingKit/FBSDKMarketingKit.xcodeproj -scheme "FBSDKMarketingKit-universal" -configuration Release clean build) || die "Failed to build marketing kit"
+		fi
+		\cp -R "$FB_SDK_BUILD"/FBSDKMarketingKit.framework "$FB_SDK_BUILD_PACKAGE" \
+			|| die "Could not copy FBSDKMarketingKit.framework"
 
 		# Build docs
 		if [ -z $SKIPBUILD ]; then

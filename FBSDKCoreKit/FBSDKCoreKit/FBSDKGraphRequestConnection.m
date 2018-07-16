@@ -60,6 +60,26 @@ static NSTimeInterval g_defaultTimeout = 60.0;
 
 static FBSDKErrorConfiguration *g_errorConfiguration;
 
+#if !TARGET_OS_TV
+static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken)
+{
+  if (accessToken == nil) {
+    return nil;
+  }
+  if (accessToken.isExpired) {
+    return accessToken;
+  }
+  NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-1];
+  return [[FBSDKAccessToken alloc] initWithTokenString:accessToken.tokenString
+                                           permissions:accessToken.permissions.allObjects
+                                   declinedPermissions:accessToken.declinedPermissions.allObjects
+                                                 appID:accessToken.appID
+                                                userID:accessToken.userID
+                                        expirationDate:expirationDate
+                                           refreshDate:expirationDate];
+}
+#endif
+
 // ----------------------------------------------------------------------------
 // FBSDKGraphRequestConnectionState
 
@@ -443,7 +463,7 @@ NSURLSessionDataDelegate
   NSUInteger bodyLength = [[body data] length] / 1024;
 
   [request setValue:[FBSDKGraphRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
-  [request setValue:[FBSDKGraphRequestBody mimeContentType] forHTTPHeaderField:@"Content-Type"];
+  [request setValue:[body mimeContentType] forHTTPHeaderField:@"Content-Type"];
   [request setHTTPShouldHandleCookies:NO];
 
   [self logRequest:request bodyLength:bodyLength bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
@@ -495,7 +515,8 @@ NSURLSessionDataDelegate
 
   NSString *url = [FBSDKGraphRequest serializeURL:baseURL
                                            params:request.parameters
-                                       httpMethod:request.HTTPMethod];
+                                       httpMethod:request.HTTPMethod
+                                         forBatch:forBatch];
   return url;
 }
 
@@ -658,7 +679,7 @@ NSURLSessionDataDelegate
                      error:(NSError **)error
 {
   id parsed = nil;
-  if (!(*error)) {
+  if (!(*error) && [utf8 isKindOfClass:[NSString class]]) {
     parsed = [FBSDKInternalUtility objectForJSONString:utf8 error:error];
     // if we fail parse we attempt a re-parse of a modified input to support results in the form "foo=bar", "true", etc.
     // which is shouldn't be necessary since Graph API v2.1.
@@ -705,9 +726,9 @@ NSURLSessionDataDelegate
 
 #if !TARGET_OS_TV
     if (resultError && ![metadata.request isGraphErrorRecoveryDisabled] && isSingleRequestToRecover) {
-      _recoveringRequestMetadata = metadata;
-      _errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
-      if ([_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
+      self->_recoveringRequestMetadata = metadata;
+      self->_errorRecoveryProcessor = [[FBSDKGraphErrorRecoveryProcessor alloc] init];
+      if ([self->_errorRecoveryProcessor processError:resultError request:metadata.request delegate:self]) {
         return;
       }
     }
@@ -732,18 +753,24 @@ NSURLSessionDataDelegate
     }
     [metadata invokeCompletionHandlerForConnection:self withResults:body error:error];
 
-    if (--_expectingResults == 0) {
-      if (canNotifyDelegate && [_delegate respondsToSelector:@selector(requestConnectionDidFinishLoading:)]) {
-        [_delegate requestConnectionDidFinishLoading:self];
+    if (--self->_expectingResults == 0) {
+      if (canNotifyDelegate && [self->_delegate respondsToSelector:@selector(requestConnectionDidFinishLoading:)]) {
+        [self->_delegate requestConnectionDidFinishLoading:self];
       }
     }
   };
 
 #if !TARGET_OS_TV
-  void (^clearToken)(void) = ^{
-    if (!(metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError)) {
+  void (^clearToken)(NSInteger) = ^(NSInteger errorSubcode){
+    if (metadata.request.flags & FBSDKGraphRequestFlagDoNotInvalidateTokenOnError) {
+      return;
+    }
+    if (errorSubcode == 493) {
+      [FBSDKAccessToken setCurrentAccessToken:_CreateExpiredAccessToken([FBSDKAccessToken currentAccessToken])];
+    } else {
       [FBSDKAccessToken setCurrentAccessToken:nil];
     }
+
   };
 
   FBSDKSystemAccountStoreAdapter *adapter = [FBSDKSystemAccountStoreAdapter sharedInstance];
@@ -766,20 +793,20 @@ NSURLSessionDataDelegate
           adapter.forceBlockingRenew = YES;
         } else {
           [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-            NSOperationQueue *queue = _delegateQueue ?: [NSOperationQueue mainQueue];
+            NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
             [queue addOperationWithBlock:^{
-              clearToken();
+              clearToken(errorSubcode);
               finishAndInvokeCompletionHandler();
             }];
           }];
           return;
         }
       }
-      clearToken();
+      clearToken(errorSubcode);
     } else if (errorCode >= 200 && errorCode < 300) {
       // permission error
       [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-        NSOperationQueue *queue = _delegateQueue ?: [NSOperationQueue mainQueue];
+        NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
         [queue addOperationWithBlock:finishAndInvokeCompletionHandler];
       }];
       return;
@@ -1001,8 +1028,8 @@ totalBytesExpectedToSend:(int64_t)totalBytesExpectedToSend
     FBSDKGraphRequestMetadata *retryMetadata = [[FBSDKGraphRequestMetadata alloc] initWithRequest:retryRequest completionHandler:_recoveringRequestMetadata.completionHandler batchParameters:_recoveringRequestMetadata.batchParameters];
     [retryRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *retriedError) {
       [self processResultBody:result error:retriedError metadata:retryMetadata canNotifyDelegate:YES];
-      _errorRecoveryProcessor = nil;
-      _recoveringRequestMetadata = nil;
+      self->_errorRecoveryProcessor = nil;
+      self->_recoveringRequestMetadata = nil;
     }];
   } else {
     [self processResultBody:nil error:error metadata:_recoveringRequestMetadata canNotifyDelegate:YES];

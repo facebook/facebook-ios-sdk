@@ -21,12 +21,32 @@
 #import <FBSDKShareKit/FBSDKSharing.h>
 
 /**
-  A dialog for sharing content through Messenger.
+ A dialog for sharing content through Messenger.
+
+ DEPRECATION WARNING: AS OF THE JULY 2018 RELEASE, FBSDKMessageDialog WILL STOP SUPPORTING
+ SOME OF THE EXISTING FBSDKSharingContent TYPES. validateWithError WILL RETURN NO WITH AN
+ ERROR FOR UNSUPPORTED TYPES, AND TRYING TO show UNSUPPOTED CONTENT WILL CALL
+ sharer: didFailWithError: ON THE DELEGATE. THE FOLLOWING SHARE TYPES WILL CONTINUE TO BE
+ SUPPORTED ON AND AFTER JULY 2018:
+ - FBSDKShareLinkContent
+ - FBSDKShareMessengerOpenGraphMusicTemplateContent
+ - FBSDKShareMessengerMediaTemplateContent
+ - FBSDKShareMessengerGenericTemplateContent
+
+ THE FOLLOWING WILL NO LONGER BE SUPPORTED AS OF JULY 2018:
+ - FBSDKShareOpenGraphContent
+ - FBSDKSharePhotoContent
+ - FBSDKShareVideoContent
+ - Any other types that are not one of the four supported types listed above
+
+ FBSDKShareMessengerMediaTemplateContent and FBSDKShareMessengerGenericTemplateContent
+ SHOULD BE ABLE TO REPLACE THE FUNCTIONALITY OF FBSDKSharePhotoContent AND
+ FBSDKShareVideoContent, SO CONSIDER MIGRATING TO THESE NEW SHARE TYPES.
  */
 @interface FBSDKMessageDialog : NSObject <FBSDKSharingDialog>
 
 /**
-  Convenience method to show a Message Share Dialog with content and a delegate.
+ Convenience method to show a Message Share Dialog with content and a delegate.
  - Parameter content: The content to be shared.
  - Parameter delegate: The receiver's delegate.
  */

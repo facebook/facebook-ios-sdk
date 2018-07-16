@@ -451,6 +451,7 @@
 				TargetAttributes = {
 					9D1999B21A7AF44B00CAD112 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = V9WTTPBFK9;
 						TestTargetID = 9D2BA0961AB9E110004C7C0C;
 					};
 					9D2BA0961AB9E110004C7C0C = {
@@ -701,6 +702,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Debug;
@@ -709,6 +711,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
+				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Release;

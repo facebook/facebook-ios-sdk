@@ -211,7 +211,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
-  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
+  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID] || notification.userInfo[FBSDKAccessTokenDidExpire]) {
     [self _updateContent];
   }
 }
@@ -219,7 +219,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (void)_buttonPressed:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:[self analyticsParameters]];
-  if ([FBSDKAccessToken currentAccessToken]) {
+  if ([FBSDKAccessToken currentAccessTokenIsActive]) {
     NSString *title = nil;
 
     if (_userName) {
@@ -338,8 +338,9 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_updateContent
 {
-  self.selected = ([FBSDKAccessToken currentAccessToken] != nil);
-  if ([FBSDKAccessToken currentAccessToken]) {
+  BOOL accessTokenIsValid = [FBSDKAccessToken currentAccessTokenIsActive];
+  self.selected = accessTokenIsValid;
+  if (accessTokenIsValid) {
     if (![[FBSDKAccessToken currentAccessToken].userID isEqualToString:_userID]) {
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me?fields=id,name"
                                                                      parameters:nil

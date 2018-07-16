@@ -388,6 +388,7 @@
 		A4B471F11E662F74009678AA /* FBSDKCameraEffectTextures.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B471ED1E662F74009678AA /* FBSDKCameraEffectTextures.m */; };
 		A4F33E741E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */; };
 		A4F33E751E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */; };
+		B388E34F20A0E22500BFECA5 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388E34B20A0E22500BFECA5 /* Photos.framework */; };
 		D5158B5C1C5FD492003E32EE /* FBSDKHashtag.h in Headers */ = {isa = PBXBuildFile; fileRef = D5158B5A1C5FD492003E32EE /* FBSDKHashtag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D5158B5D1C5FD492003E32EE /* FBSDKHashtag.m in Sources */ = {isa = PBXBuildFile; fileRef = D5158B5B1C5FD492003E32EE /* FBSDKHashtag.m */; };
 		D5158B5F1C5FEAE6003E32EE /* FBSDKHashtagTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D5158B5E1C5FEAE6003E32EE /* FBSDKHashtagTests.m */; };
@@ -667,6 +668,7 @@
 		A4B471EC1E662F74009678AA /* FBSDKCameraEffectTextures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCameraEffectTextures.h; sourceTree = "<group>"; };
 		A4B471ED1E662F74009678AA /* FBSDKCameraEffectTextures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCameraEffectTextures.m; sourceTree = "<group>"; };
 		A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectArguments+Internal.h"; sourceTree = "<group>"; };
+		B388E34B20A0E22500BFECA5 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		D5158B5A1C5FD492003E32EE /* FBSDKHashtag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKHashtag.h; sourceTree = "<group>"; };
 		D5158B5B1C5FD492003E32EE /* FBSDKHashtag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtag.m; sourceTree = "<group>"; };
 		D5158B5E1C5FEAE6003E32EE /* FBSDKHashtagTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKHashtagTests.m; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B388E34F20A0E22500BFECA5 /* Photos.framework in Frameworks */,
 				8174916D1D1C6D79006E09DF /* FBSDKCoreKit.framework in Frameworks */,
 				8131FB4E1D261E5E000350FF /* UIKit.framework in Frameworks */,
 				81A07F511D1A2EBE0041A29C /* CoreGraphics.framework in Frameworks */,
@@ -814,6 +817,7 @@
 		892EBBE91A3A475F00721B03 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B388E34B20A0E22500BFECA5 /* Photos.framework */,
 				939000631EB80C1A00250D4C /* CoreGraphics.framework */,
 				8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */,
 				9382B7921BB47DC100E4B24F /* AssetsLibrary.framework */,

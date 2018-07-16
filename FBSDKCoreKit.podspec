@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKCoreKit"
-  s.version      = "4.29.0"
+  s.version      = "4.34.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's core features"
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.29.0"
+                     :tag => "sdk-version-4.34.0"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
@@ -41,6 +41,8 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/Codeless/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
@@ -54,9 +56,6 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
 
-  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
-  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
-
+  s.requires_arc = true
   s.ios.dependency 'Bolts', '~> 1.7'
 end

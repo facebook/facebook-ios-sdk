@@ -42,6 +42,8 @@ static NSString *const kButtonTitleKey = @"button_title";
 static NSString *const kButtonURLKey = @"button_url";
 static NSString *const kItemURLKey = @"item_url";
 static NSString *const kMediaTypeKey = @"media_type";
+static NSString *const kFacebookMediaURLKey = @"facebook_media_url";
+static NSString *const kNonFacebookMediaURLKey = @"image_url";
 static NSString *const kTargetDisplayKey = @"target_display";
 static NSString *const kButtonTitle = @"Visit Facebook";
 static NSString *const kButtonURL = @"http://www.facebook.com/someAdditionalURL";
@@ -276,7 +278,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
   NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
-  XCTAssertEqualObjects(kDefaultActionURL, contentForPreview[@"facebook_media_url"], @"facebook_media_url key has incorrect value.");
+  XCTAssertEqualObjects(kDefaultActionURL, contentForPreview[kNonFacebookMediaURLKey], @"facebook_media_url key has incorrect value.");
   XCTAssertEqualObjects(@"video", contentForPreview[kMediaTypeKey], @"%@ key has incorrect value.", kMediaTypeKey);
   XCTAssertEqualObjects(@"DEFAULT", contentForPreview[kPreviewTypeKey], @"%@ key has incorrect value.", kPreviewTypeKey);
   XCTAssertEqualObjects(@"Visit Facebook - http://www.facebook.com", contentForPreview[kTargetDisplayKey], @"%@ key has incorrect value.", kTargetDisplayKey);
@@ -284,6 +286,66 @@ static NSString *const kSubtitle = @"Test subtitle";
   NSString *contentForShare = messengerShareContent[kContentForShareKey];
   NSString *contentForShareExpectedValue = @"{\"attachment\":{\"type\":\"template\",\"payload\":{\"template_type\":\"media\",\"elements\":[{\"url\":\"http:\\/\\/www.messenger.com\\/something\",\"buttons\":[{\"webview_share_button\":\"hide\",\"messenger_extensions\":true,\"title\":\"Visit Facebook\",\"fallback_url\":\"https:\\/\\/plus.google.com\\/something\",\"type\":\"web_url\",\"webview_height_ratio\":\"compact\",\"url\":\"http:\\/\\/www.facebook.com\\/someAdditionalURL\"}],\"media_type\":\"video\"}]}}}";
   XCTAssertEqualObjects(contentForShare, contentForShareExpectedValue, @"%@ key has incorrect value.", kContentForShareKey);
+}
+
+- (void)testMediaTemplateBasicFacebookURLSerialization
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"http://www.facebook.com/something"]];
+  content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
+
+  [FBSDKShareMessengerContentUtility
+   addToParameters:_parameters
+   forShareMessengerMediaTemplateContent:content];
+
+  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
+  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
+  XCTAssertEqualObjects(@"http://www.facebook.com/something", contentForPreview[kFacebookMediaURLKey], @"facebook_media_url key has incorrect value.");
+  XCTAssertNil(contentForPreview[kNonFacebookMediaURLKey], @"non-facebook url key should be nil.");
+}
+
+- (void)testMediaTemplateWWWFacebookURLSerialization
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com/something"]];
+  content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
+
+  [FBSDKShareMessengerContentUtility
+   addToParameters:_parameters
+   forShareMessengerMediaTemplateContent:content];
+
+  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
+  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
+  XCTAssertEqualObjects(@"www.facebook.com/something", contentForPreview[kFacebookMediaURLKey], @"facebook_media_url key has incorrect value.");
+  XCTAssertNil(contentForPreview[kNonFacebookMediaURLKey], @"non-facebook url key should be nil.");
+}
+
+- (void)testMediaTemplateNoHostFacebookURLSerialization
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"facebook.com/something"]];
+  content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
+
+  [FBSDKShareMessengerContentUtility
+   addToParameters:_parameters
+   forShareMessengerMediaTemplateContent:content];
+
+  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
+  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
+  XCTAssertEqualObjects(@"facebook.com/something", contentForPreview[kFacebookMediaURLKey], @"facebook_media_url key has incorrect value.");
+  XCTAssertNil(contentForPreview[kNonFacebookMediaURLKey], @"non-facebook url key should be nil.");
+}
+
+- (void)testMediaTemplateNonFacebookURLSerialization
+{
+  FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"http://www.definitelynotfacebook.com/something"]];
+  content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
+
+  [FBSDKShareMessengerContentUtility
+   addToParameters:_parameters
+   forShareMessengerMediaTemplateContent:content];
+
+  NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
+  NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
+  XCTAssertEqualObjects(@"http://www.definitelynotfacebook.com/something", contentForPreview[kNonFacebookMediaURLKey], @"non-facebook url key has incorrect value.");
+  XCTAssertNil(contentForPreview[kFacebookMediaURLKey], @"facebook_media_url key should be nil.");
 }
 
 @end

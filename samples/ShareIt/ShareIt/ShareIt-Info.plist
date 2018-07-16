@@ -45,8 +45,10 @@
 	</array>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
+		<string>fb-messenger-share-api</string>
 		<string>fbapi</string>
 		<string>fb-messenger-api</string>
+		<string>fb-messenger-share-api</string>
 		<string>fbauth2</string>
 		<string>fbshareextension</string>
 	</array>

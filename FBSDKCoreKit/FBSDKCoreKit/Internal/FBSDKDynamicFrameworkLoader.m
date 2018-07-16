@@ -85,7 +85,7 @@ static void fbsdkdfl_load_symbol_once(void *context)
 #define _fbsdkdfl_symbol_get(LIBRARY, PREFIX, SYMBOL, TYPE, VARIABLE_NAME) \
   static TYPE VARIABLE_NAME; \
   static dispatch_once_t SYMBOL##_once; \
-  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_##LIBRARY, .name = PREFIX #SYMBOL, .address = (void **)&VARIABLE_NAME }; \
+  static struct FBSDKDFLLoadSymbolContext ctx = { .library = &fbsdkdfl_handle_get_##LIBRARY, .name = PREFIX #SYMBOL, .address = (void **)(void *)&VARIABLE_NAME }; \
   dispatch_once_f(&SYMBOL##_once, &ctx, &fbsdkdfl_load_symbol_once)
 
 #define _fbsdkdfl_symbol_get_c(LIBRARY, SYMBOL) _fbsdkdfl_symbol_get(LIBRARY, "OBJC_CLASS_$_", SYMBOL, Class, c) // convenience symbol retrieval macro for getting an Objective-C class symbol and storing it in the local static c
@@ -99,7 +99,7 @@ static void fbsdkdfl_load_symbol_once(void *context)
 
 // convenience macro for getting a pointer to a named NSString, verifying it loaded correctly, and returning it
 #define _fbsdkdfl_get_and_return_NSString(LIBRARY, SYMBOL) \
-  _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, NSString **); \
+  _fbsdkdfl_symbol_get_k(LIBRARY, SYMBOL, __unsafe_unretained NSString **); \
   NSCAssert([*k isKindOfClass:[NSString class]], @"Loaded symbol %@ is not of type NSString *", @#SYMBOL); \
   _fbsdkdfl_return_k(LIBRARY, SYMBOL)
 
@@ -564,4 +564,22 @@ CFStringRef fbsdkdfl_kUTTypeJPEG(void)
 CFStringRef fbsdkdfl_kUTTypePNG(void)
 {
   _fbsdkdfl_MobileCoreServices_get_and_return_k(kUTTypePNG);
+}
+
+#pragma mark - WebKit Classes
+_fbsdkdfl_load_framework_once_impl_(WebKit)
+_fbsdkdfl_handle_get_impl_(WebKit)
+
+#define _fbsdkdfl_WebKit_get_c(SYMBOL) _fbsdkdfl_symbol_get_c(WebKit, SYMBOL);
+
+Class fbsdkdfl_WKWebViewClass(void)
+{
+  _fbsdkdfl_WebKit_get_c(WKWebView);
+  return c;
+}
+
+Class fbsdkdfl_WKUserScriptClass(void)
+{
+  _fbsdkdfl_WebKit_get_c(WKUserScript);
+  return c;
 }
