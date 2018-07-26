@@ -111,6 +111,10 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 @interface FBSDKLoginManager : NSObject
 
 /**
+ Auth type
+ */
+@property (strong, nonatomic) NSString *authType;
+/**
   the default audience.
 
  you should set this if you intend to ask for publish permissions.

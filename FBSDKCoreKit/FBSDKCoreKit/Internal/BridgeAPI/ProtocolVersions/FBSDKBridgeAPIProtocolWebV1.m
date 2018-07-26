@@ -65,9 +65,6 @@
                                       cancelled:(BOOL *)cancelledRef
                                           error:(NSError *__autoreleasing *)errorRef
 {
-  if (cancelledRef != NULL) {
-    *cancelledRef = NO;
-  }
   if (errorRef != NULL) {
     *errorRef = nil;
   }

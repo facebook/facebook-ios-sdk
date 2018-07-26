@@ -296,30 +296,31 @@ static NSString *g_overrideAppID = nil;
                                                                        block:^{
                                                                          [weakSelf appSettingsFetchStateResetTimerFired:nil];
                                                                        }];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationMovingFromActiveStateOrTerminating)
-     name:UIApplicationWillResignActiveNotification
-     object:NULL];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationMovingFromActiveStateOrTerminating)
-     name:UIApplicationWillTerminateNotification
-     object:NULL];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationDidBecomeActive)
-     name:UIApplicationDidBecomeActiveNotification
-     object:NULL];
-
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
   }
 
   return self;
+}
+
+- (void)registerNotifications {
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillResignActiveNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillTerminateNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationDidBecomeActive)
+   name:UIApplicationDidBecomeActiveNotification
+   object:NULL];
 }
 
 - (void)dealloc
@@ -528,6 +529,11 @@ static NSString *g_overrideAppID = nil;
   [defaults synchronize];
 }
 
++ (void)clearUserID
+{
+  [self setUserID:nil];
+}
+
 + (NSString *)userID
 {
   return [[self class] singleton]->_userID;
@@ -672,7 +678,7 @@ static NSString *g_overrideAppID = nil;
   [self fetchServerConfiguration:^{
     NSDictionary *params = [FBSDKAppEventsUtility activityParametersDictionaryForEvent:@"MOBILE_APP_INSTALL"
                                                                     implicitEventsOnly:NO
-                                                             shouldAccessAdvertisingID:self->_serverConfiguration.isAdvertisingIDEnabled];
+                                                             shouldAccessAdvertisingID:_serverConfiguration.isAdvertisingIDEnabled];
     NSString *path = [NSString stringWithFormat:@"%@/activities", appID];
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
                                                          parameters:params
@@ -711,7 +717,7 @@ static NSString *g_overrideAppID = nil;
     [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       _serverConfiguration = serverConfiguration;
 
-      if (self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
+      if (_serverConfiguration.implicitPurchaseLoggingEnabled) {
         [FBSDKPaymentObserver startObservingTransactions];
       } else {
         [FBSDKPaymentObserver stopObservingTransactions];
@@ -887,7 +893,7 @@ static NSString *g_overrideAppID = nil;
 
   [self fetchServerConfiguration:^(void) {
     NSString *receipt_data = [appEventsState extractReceiptData];
-    NSString *encodedEvents = [appEventsState JSONStringForEvents:self->_serverConfiguration.implicitLoggingEnabled];
+    NSString *encodedEvents = [appEventsState JSONStringForEvents:_serverConfiguration.implicitLoggingEnabled];
     if (!encodedEvents) {
       [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                              logEntry:@"FBSDKAppEvents: Flushing skipped - no events after removing implicitly logged ones.\n"];
@@ -896,7 +902,7 @@ static NSString *g_overrideAppID = nil;
     NSMutableDictionary *postParameters = [FBSDKAppEventsUtility
                                            activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
                                            implicitEventsOnly:appEventsState.areAllEventsImplicit
-                                           shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
+                                           shouldAccessAdvertisingID:_serverConfiguration.advertisingIDEnabled];
     NSInteger length = [receipt_data length];
     if (length > 0) {
       postParameters[@"receipt_data"] = receipt_data;

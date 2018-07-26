@@ -78,7 +78,7 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
                                                                                data:data
                                                                            userInfo:@{ kCachedResponseUserInfoKeyTimestamp : [NSDate date] }
                                                                       storagePolicy:NSURLCacheStorageAllowed];
-                                      [self->_urlCache storeCachedResponse:responseToCache forRequest:request];
+                                      [_urlCache storeCachedResponse:responseToCache forRequest:request];
                                       completionWrapper(responseToCache);
                                     } else if (completion != NULL) {
                                       completion(nil);

@@ -218,7 +218,7 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
   if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS10Version]) {
     _extras[@"native_app_login_dialog_duration"] = @(dialogDuration);
     _extras[@"native_app_login_dialog_result"] = @(result);
-    [self logEvent:FBSDKAppEventNameFBDialogsNativeLoginDialogEnd params:[self _parametersForNewEvent]];
+    [self logEvent:FBSDKAppEventNameFBSessionFASLoginDialogResult params:[self _parametersForNewEvent]];
   }
 }
 

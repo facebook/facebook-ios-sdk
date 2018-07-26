@@ -511,6 +511,11 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
 + (void)setUserID:(NSString *)userID;
 
 /*
+ Clears the custom user ID to associate with all app events.
+ */
++ (void)clearUserID;
+
+/*
   Returns the set custom user ID.
  */
 + (NSString *)userID;

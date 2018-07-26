@@ -1,6 +1,7 @@
 Thanks for proposing a pull request.
 
 To help us review the request, please complete the following:
-- [ ] sign contributor license agreement: https://developers.facebook.com/opensource/cla
-- [ ] submit against our `:dev` branch, not `master`.
+
+- [ ] sign [contributor license agreement](https://developers.facebook.com/opensource/cla)
+- [ ] submit against our `dev` branch, not `master`.
 - [ ] describe the change (for example, what happens before the change, and after the change)
