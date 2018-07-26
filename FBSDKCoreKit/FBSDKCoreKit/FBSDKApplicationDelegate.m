@@ -112,6 +112,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [[FBSDKAppEvents singleton] registerNotifications];
   }
   return self;
 }
@@ -508,6 +510,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
   if (objc_lookUpClass("FBSDKTVInterfaceFactory.m") != nil) {
     [params setObject:@1 forKey:@"tv_lib_included"];
+  }
+  if (objc_lookUpClass("FBSDKAutoLog") != nil) {
+    [params setObject:@1 forKey:@"marketing_lib_included"];
   }
   [FBSDKAppEvents logEvent:@"fb_sdk_initialize" parameters:params];
 }

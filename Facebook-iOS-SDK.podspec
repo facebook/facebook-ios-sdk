@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "Facebook-iOS-SDK"
-  s.version      = "SDK_VERSION_TO_RELEASE"
+  s.version      = "4.35.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API"
 
   s.description  = <<-DESC
@@ -14,16 +14,14 @@ Pod::Spec.new do |s|
                    DESC
 
   s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
+  s.license      = { :type => "Facebook Platform License", :file => "FacebookSDKs-iOS-universal-4.35.0/iOS/LICENSE.txt" }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
 
-  s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-SDK_VERSION_TO_RELEASE"
-                    }
+  s.source       = { :http => 'https://origincache.facebook.com/developers/resources/?id=FacebookSDKs-iOS-universal-4.35.0.zip', :type => :zip }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox', 'WebKit'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
@@ -33,125 +31,53 @@ Pod::Spec.new do |s|
   s.dependency 'Bolts', '~> 1.7'
 
   s.subspec 'CoreKit' do |spec|
-    spec.requires_arc = false
-    spec.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
-    spec.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
-    spec.resources = 'FacebookSDKStrings.bundle'
-    spec.header_dir = 'FBSDKCoreKit'
-    spec.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*'
-    spec.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/Codeless/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKContainerViewController.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKMonotonicTime.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKProfile+Internal.h',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKSystemAccountStoreAdapter.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKTriStateBOOL.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKCloseIcon.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
-                            'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
-
-    # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
-    spec.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
-                      'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
+    spec.ios.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKCoreKit.framework/**/*.h'
+    spec.ios.resources = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FacebookSDKStrings.bundle'
+    spec.ios.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKCoreKit.framework/**/*.h'
+    spec.ios.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKCoreKit.framework'
+    spec.tvos.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKCoreKit.framework/**/*.h'
+    spec.tvos.resources = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FacebookSDKStrings.bundle'
+    spec.tvos.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKCoreKit.framework/**/*.h'
+    spec.tvos.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKCoreKit.framework'
   end
   s.subspec 'LoginKit' do |spec|
-    spec.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
-    spec.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
-    spec.header_dir = 'FBSDKLoginKit'
-    spec.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
-                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
-                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
-                          'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
-                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
-                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginError.{h,m}',
-                          'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h'
-    spec.tvos.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.h',
-                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
-                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
-                                 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h'
-
-    # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-    spec.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
+    spec.ios.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKLoginKit.framework/**/*.h'
+    spec.ios.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKLoginKit.framework/**/*.h'
+    spec.ios.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKLoginKit.framework'
+    spec.tvos.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework/**/*.h'
+    spec.tvos.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework/**/*.h'
+    spec.tvos.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework'
     spec.dependency 'Facebook-iOS-SDK/CoreKit'
   end
   s.subspec 'ShareKit' do |spec|
-    spec.requires_arc = true
-    spec.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
-    spec.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
-    spec.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}'
-    spec.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareKit.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareAPI.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareConstants.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareLinkContent.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMediaContent.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphAction.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphContent.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphObject.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareOpenGraphValueContainer.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhoto.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKSharePhotoContent.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideo.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerActionButton.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerGenericTemplateContent.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerGenericTemplateElement.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerMediaTemplateContent.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerOpenGraphMusicTemplateContent.h',
-                          'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerURLActionButton.h',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.{h,m}',
-                          'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.{h,m}'
-
-    spec.header_dir = "FBSDKShareKit"
-    # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-    spec.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
-  end
-  s.subspec 'PlacesKit' do |spec|
-    spec.platform     = :ios
-    spec.requires_arc = true
-    spec.source_files   = "FBSDKPlacesKit/FBSDKPlacesKit/**/*.{h,m}"
-    spec.public_header_files = "FBSDKPlacesKit/FBSDKPlacesKit/*.{h}"
-    # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-    spec.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
+    spec.ios.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKShareKit.framework/**/*.h'
+    spec.ios.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKShareKit.framework/**/*.h'
+    spec.ios.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKShareKit.framework'
+    spec.tvos.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework/**/*.h'
+    spec.tvos.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework/**/*.h'
+    spec.tvos.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework'
     spec.dependency 'Facebook-iOS-SDK/CoreKit'
   end
   s.subspec 'TVOSKit' do |spec|
-    spec.platform     = :tvos
-    spec.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
-    spec.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
-    spec.header_dir = 'FBSDKTVOSKit'
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
-    # We have a compile time depend on FBSDKShareKit
+    spec.platform = :tvos
+    spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework/**/*.h'
+    spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework/**/*.h'
+    spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework'
     spec.dependency 'Facebook-iOS-SDK/ShareKit'
     spec.dependency 'Facebook-iOS-SDK/LoginKit'
   end
+  s.subspec 'PlacesKit' do |spec|
+    spec.platform = :ios
+    spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework/**/*.h'
+    spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework/**/*.h'
+    spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework'
+    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+  end
   s.subspec 'MarketingKit' do |spec|
     spec.platform = :ios
+    spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework/**/*.h'
+    spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework/**/*.h'
+    spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework'
     spec.dependency 'Facebook-iOS-SDK/CoreKit'
-    spec.dependency 'FBSDKMarketingKit'
   end
 end

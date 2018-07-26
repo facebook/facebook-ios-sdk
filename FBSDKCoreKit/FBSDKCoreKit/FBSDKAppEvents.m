@@ -296,30 +296,31 @@ static NSString *g_overrideAppID = nil;
                                                                        block:^{
                                                                          [weakSelf appSettingsFetchStateResetTimerFired:nil];
                                                                        }];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationMovingFromActiveStateOrTerminating)
-     name:UIApplicationWillResignActiveNotification
-     object:NULL];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationMovingFromActiveStateOrTerminating)
-     name:UIApplicationWillTerminateNotification
-     object:NULL];
-
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(applicationDidBecomeActive)
-     name:UIApplicationDidBecomeActiveNotification
-     object:NULL];
-
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
   }
 
   return self;
+}
+
+- (void)registerNotifications {
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillResignActiveNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationMovingFromActiveStateOrTerminating)
+   name:UIApplicationWillTerminateNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationDidBecomeActive)
+   name:UIApplicationDidBecomeActiveNotification
+   object:NULL];
 }
 
 - (void)dealloc
@@ -526,6 +527,11 @@ static NSString *g_overrideAppID = nil;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   [defaults setObject:userID forKey:USER_ID_USER_DEFAULTS_KEY];
   [defaults synchronize];
+}
+
++ (void)clearUserID
+{
+  [self setUserID:nil];
 }
 
 + (NSString *)userID

@@ -166,6 +166,18 @@ FBSDK_EXTERN NSString *const FBSDKLoggingBehaviorDeveloperErrors;
 + (void)setAutoLogAppEventsEnabled:(NSNumber *)AutoLogAppEventsEnabled;
 
 /**
+ Flag which controls the fb_codeless_debug logging event
+ If not explicitly set, the default is 1 - true
+ */
++ (NSNumber *)codelessDebugLogEnabled;
+
+/**
+ Set the flag which controls the fb_codeless_debug logging event
+ - Parameter CodelessDebugEnabled: Flag value, expressed as a value from 0 - false or 1 - true.
+ */
++ (void)setCodelessDebugLogEnabled:(NSNumber *)CodelessDebugLogEnabled;
+
+/**
   Gets whether data such as that generated through FBSDKAppEvents and sent to Facebook should be restricted from being used for other than analytics and conversions.  Defaults to NO.  This value is stored on the device and persists across app launches.
  */
 + (BOOL)limitEventAndDataUsage;
