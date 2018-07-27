@@ -88,7 +88,7 @@ public class GraphRequestConnection {
    As described in [Graph API Batch Requests](https://developers.facebook.com/docs/reference/api/batch/).
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  func add<T>(_ request: T,
+  public func add<T>(_ request: T,
               batchEntryName: String? = nil,
               completion: Completion<T>? = nil) {
     let batchParameters = batchEntryName.map { ["name": $0] }
@@ -104,7 +104,7 @@ public class GraphRequestConnection {
    Examples include "depends_on", "name", or "omit_response_on_success".
    - parameter completion: Optional completion closure that is going to be called when the connection finishes or fails.
    */
-  func add<T>(_ request: T,
+  public func add<T>(_ request: T,
               batchParameters: [String: Any]?,
               completion: Completion<T>? = nil) {
     sdkConnection.add(request.sdkRequest,
@@ -116,7 +116,7 @@ public class GraphRequestConnection {
    Starts a connection with the server and sends all the requests in this connection.
    - warning: This method can't be called twice per a single `GraphRequestConnection` instance.
    */
-  func start() {
+  public func start() {
     sdkConnection.start()
   }
 
@@ -128,7 +128,7 @@ public class GraphRequestConnection {
    It does promise that all handlers will complete before the cancel returns.
    A call to `cancel` prior to a start implies a cancellation of all requests associated with the connection.
    */
-  func cancel() {
+  public func cancel() {
     sdkConnection.cancel()
   }
 
