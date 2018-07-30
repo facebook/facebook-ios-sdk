@@ -83,12 +83,15 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 + (void)setCurrentAccessToken:(FBSDKAccessToken *)token
 {
+  if(token != nil && token.isExpired)
+    token = nil;
+  
   if (token != g_currentAccessToken) {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
     [FBSDKInternalUtility dictionary:userInfo setObject:token forKey:FBSDKAccessTokenChangeNewKey];
     [FBSDKInternalUtility dictionary:userInfo setObject:g_currentAccessToken forKey:FBSDKAccessTokenChangeOldKey];
     // We set this flag also when the current Access Token was not valid, since there might be legacy code relying on it
-    if (![g_currentAccessToken.userID isEqualToString:token.userID] || ![self currentAccessTokenIsActive]) {
+    if (![g_currentAccessToken.userID isEqualToString:token.userID]) {
       userInfo[FBSDKAccessTokenDidChangeUserID] = @YES;
     }
 
