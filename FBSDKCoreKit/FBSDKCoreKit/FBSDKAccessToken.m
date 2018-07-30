@@ -83,8 +83,9 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 + (void)setCurrentAccessToken:(FBSDKAccessToken *)token
 {
-  if(token != nil && token.isExpired)
+  if(token != nil && token.isExpired) {
     token = nil;
+  }
   
   if (token != g_currentAccessToken) {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
