@@ -83,7 +83,7 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 + (void)setCurrentAccessToken:(FBSDKAccessToken *)token
 {
-  if(token != nil && token.isExpired) {
+  if (token != nil && token.isExpired) {
     token = nil;
   }
   
