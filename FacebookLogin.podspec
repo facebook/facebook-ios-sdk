@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name         = 'FacebookLogin'
-  s.version      = '0.3.1'
+  s.version      = '0.3.2'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
-  s.documentation_url = 'https://developers.facebook.com/docs/swift/sdk-reference'
+  s.documentation_url = 'https://developers.facebook.com/docs/swift/reference'
   s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
 
   s.summary      = "Official Facebook SDK in Swift to integrate with Facebook Login."
@@ -19,8 +19,8 @@ Pod::Spec.new do |s|
   s.exclude_files = 'Sources/Login/LoginManager.DefaultAudience.swift'
   s.module_name = 'FacebookLogin'
 
-  s.ios.dependency 'FacebookCore', '~> 0.3.1'
+  s.ios.dependency 'FacebookCore', '~> 0.3.2'
   s.ios.dependency 'Bolts', '~> 1.8'
-  s.ios.dependency 'FBSDKCoreKit', '~> 4.33'
-  s.ios.dependency 'FBSDKLoginKit', '~> 4.33'
+  s.ios.dependency 'FBSDKCoreKit', '~> 4.35'
+  s.ios.dependency 'FBSDKLoginKit', '~> 4.35'
 end

@@ -4,10 +4,10 @@ author_url: https://developers.facebook.com
 copyright: Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 clean: true
 github_url: https://github.com/facebook/facebook-sdk-swift
-github_file_prefix: https://github.com/facebook/facebook-sdk-swift/tree/0.3.1
+github_file_prefix: https://github.com/facebook/facebook-sdk-swift/tree/0.3.2
 hide_documentation_coverage: true
 module: FacebookCore
-module_version: 0.3.1
+module_version: 0.3.2
 output: docs
 podspec: FacebookCore.podspec
 readme: README.md
