@@ -37,45 +37,6 @@
 + (instancetype)sharedInstance;
 
 /**
-  Call this method from the [UIApplicationDelegate application:openURL:sourceApplication:annotation:] method
- of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
- with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
-
- - Parameter application: The application as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
-
- - Parameter url: The URL as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
-
- - Parameter sourceApplication: The sourceApplication as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
-
- - Parameter annotation: The annotation as passed to [UIApplicationDelegate application:openURL:sourceApplication:annotation:].
-
- - Returns: YES if the url was intended for the Facebook SDK, NO if not.
- */
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-  sourceApplication:(NSString *)sourceApplication
-         annotation:(id)annotation;
-
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
-/**
-  Call this method from the [UIApplicationDelegate application:openURL:options:] method
- of the AppDelegate for your app. It should be invoked for the proper processing of responses during interaction
- with the native Facebook app or Safari as part of SSO authorization flow or Facebook dialogs.
-
- - Parameter application: The application as passed to [UIApplicationDelegate application:openURL:options:].
-
- - Parameter url: The URL as passed to [UIApplicationDelegate application:openURL:options:].
-
- - Parameter options: The options dictionary as passed to [UIApplicationDelegate application:openURL:options:].
-
- - Returns: YES if the url was intended for the Facebook SDK, NO if not.
- */
-- (BOOL)application:(UIApplication *)application
-            openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options;
-#endif
-
-/**
   Call this method from the [UIApplicationDelegate application:didFinishLaunchingWithOptions:] method
  of the AppDelegate for your app. It should be invoked for the proper use of the Facebook SDK.
  As part of SDK initialization basic auto logging of app events will occur, this can be

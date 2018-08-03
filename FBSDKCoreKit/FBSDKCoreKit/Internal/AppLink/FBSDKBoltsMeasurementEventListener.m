@@ -19,7 +19,6 @@
 #import "FBSDKBoltsMeasurementEventListener.h"
 
 #import "FBSDKAppEvents+Internal.h"
-#import "FBSDKTimeSpentData.h"
 
 static NSString *const BoltsMeasurementEventNotificationName = @"com.parse.bolts.measurement_event";
 static NSString *const BoltsMeasurementEventName = @"event_name";
@@ -45,13 +44,6 @@ static NSString *const BoltsMeasurementEventPrefix = @"bf_";
 
 - (void)logFBAppEventForNotification:(NSNotification *)note
 {
-    // when catch al_nav_in event, we set source application for FBAppEvents.
-    if ([note.userInfo[BoltsMeasurementEventName] isEqualToString:@"al_nav_in"]) {
-        NSString *sourceApplication = note.userInfo[BoltsMeasurementEventArgs][@"sourceApplication"];
-        if (sourceApplication) {
-            [FBSDKTimeSpentData setSourceApplication:sourceApplication isFromAppLink:YES];
-        }
-    }
     NSDictionary *eventArgs = note.userInfo[BoltsMeasurementEventArgs];
     NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
     for(NSString *key in eventArgs.allKeys) {
