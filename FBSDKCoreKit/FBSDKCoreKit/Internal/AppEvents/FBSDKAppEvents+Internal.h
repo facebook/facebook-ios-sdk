@@ -25,50 +25,7 @@
 
 // Internally known event names
 
-FBSDK_EXTERN NSString *const FBSDKAppEventNamePurchased;
-
-/** Use to log that the share dialog was launched */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameShareSheetLaunch;
-
-/** Use to log that the share dialog was dismissed */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameShareSheetDismiss;
-
-/** Use to log that the permissions UI was launched */
-FBSDK_EXTERN NSString *const FBSDKAppEventNamePermissionsUILaunch;
-
-/** Use to log that the permissions UI was dismissed */
-FBSDK_EXTERN NSString *const FBSDKAppEventNamePermissionsUIDismiss;
-
-/** Use to log that the login view was used */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameLoginViewUsage;
-
-/*! Use to log that the share tray launched. */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameShareTrayDidLaunch;
-
-/*! Use to log that the person selected a sharing target. */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameShareTrayDidSelectActivity;
-
 // Internally known event parameters
-
-/** String parameter specifying the outcome of a dialog invocation */
-FBSDK_EXTERN NSString *const FBSDKAppEventParameterDialogOutcome;
-
-/** Parameter key used to specify which application launches this application. */
-FBSDK_EXTERN NSString *const FBSDKAppEventParameterLaunchSource;
-
-/** Use to log the result of a call to FBDialogs presentShareDialogWithParams: */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentShareDialog;
-
-/** Use to log the result of a call to FBDialogs presentShareDialogWithOpenGraphActionParams: */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogOG;
-
-/** Use to log the result of a call to FBDialogs presentLikeDialogWithLikeParams: */
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentLikeDialogOG;
-
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentShareDialogPhoto;
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialog;
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogPhoto;
-FBSDK_EXTERN NSString *const FBSDKAppEventNameFBDialogsPresentMessageDialogOG;
 
 /** Use to log the start of an auth request that cannot be fulfilled by the token cache */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameFBSessionAuthStart;

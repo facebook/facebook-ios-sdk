@@ -529,17 +529,4 @@ FBSDK_EXTERN NSString *const FBSDKAppEventParameterValueNo;
  */
 + (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler;
 
-#if !TARGET_OS_TV
-/*
-  Intended to be used as part of a hybrid webapp.
- If you call this method, the FB SDK will inject a new JavaScript object into your webview.
- If the FB Pixel is used within the webview, and references the app ID of this app,
- then it will detect the presence of this injected JavaScript object
- and pass Pixel events back to the FB SDK for logging using the AppEvents framework.
-
- - Parameter webView: The webview to augment with the additional JavaScript behaviour
- */
-+ (void)augmentHybridWKWebView:(WKWebView *)webView;
-#endif
-
 @end

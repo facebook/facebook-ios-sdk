@@ -34,7 +34,6 @@
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
-#import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
@@ -75,16 +74,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 // Don't call this function in any place else. It should only be called when the class is loaded.
 + (void)initializeWithLaunchData:(NSNotification *)note
 {
-  NSDictionary *launchData = note.userInfo;
 #if !TARGET_OS_TV
   // Register Listener for Bolts measurement events
   [FBSDKBoltsMeasurementEventListener defaultListener];
 #endif
-  // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
-  [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]
-                                   openURL:launchData[UIApplicationLaunchOptionsURLKey]];
-  // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
-  [FBSDKTimeSpentData registerAutoResetSourceApplication];
 
   [FBSDKInternalUtility validateFacebookReservedURLSchemes];
 
@@ -138,7 +131,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
     [self _logSDKInitialize];
   }
-  
+
   return NO;
 }
 

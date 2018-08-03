@@ -31,16 +31,13 @@
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKPaymentObserver.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings.h"
-#import "FBSDKTimeSpentData.h"
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
 #import "FBSDKEventBindingManager.h"
-#import "FBSDKHybridAppEventsScriptMessageHandler.h"
 #endif
 
 //
@@ -461,11 +458,6 @@ static NSString *g_overrideAppID = nil;
   FBSDKAppEvents *instance = [FBSDKAppEvents singleton];
   [instance publishInstall];
   [instance fetchServerConfiguration:NULL];
-
-  // Restore time spent data, indicating that we're being called from "activateApp", which will,
-  // when appropriate, result in logging an "activated app" and "deactivated app" (for the
-  // previous session) App Event.
-  [FBSDKTimeSpentData restore:YES];
 }
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
@@ -585,35 +577,6 @@ static NSString *g_overrideAppID = nil;
   [request startWithCompletionHandler:handler];
 }
 
-#if !TARGET_OS_TV
-+ (void)augmentHybridWKWebView:(WKWebView *)webView {
-  // Ensure we can instantiate WebKit before trying this
-  Class WKWebViewClass = fbsdkdfl_WKWebViewClass();
-  if (WKWebViewClass != nil && [webView isKindOfClass:WKWebViewClass]) {
-    Class WKUserScriptClass = fbsdkdfl_WKUserScriptClass();
-    if (WKUserScriptClass != nil) {
-      WKUserContentController *controller = webView.configuration.userContentController;
-      FBSDKHybridAppEventsScriptMessageHandler *scriptHandler = [[FBSDKHybridAppEventsScriptMessageHandler alloc] init];
-      [controller addScriptMessageHandler:scriptHandler name:FBSDKAppEventsWKWebViewMessagesHandlerKey];
-
-      NSString *js =  [NSString stringWithFormat:@"window.fbmq_%@={'sendEvent': function(pixel_id,event_name,custom_data){var msg={\"%@\":pixel_id, \"%@\":event_name,\"%@\":custom_data};window.webkit.messageHandlers[\"%@\"].postMessage(msg);}, 'getProtocol':function(){return \"%@\";}}",
-                         [[self singleton] appID],
-                         FBSDKAppEventsWKWebViewMessagesPixelIDKey,
-                         FBSDKAppEventsWKWebViewMessagesEventKey,
-                         FBSDKAppEventsWKWebViewMessagesParamsKey,
-                         FBSDKAppEventsWKWebViewMessagesHandlerKey,
-                         FBSDKAPPEventsWKWebViewMessagesProtocolKey
-                       ];
-
-      [controller addUserScript:[[WKUserScriptClass alloc] initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO]];
-    }
-  }
-  else {
-    [FBSDKAppEventsUtility logAndNotify:@"You must call augmentHybridWKWebView with WebKit linked to your project and a WKWebView instance"];
-  }
-}
-#endif
-
 #pragma mark - Internal Methods
 
 + (void)logImplicitEvent:(NSString *)eventName
@@ -717,11 +680,6 @@ static NSString *g_overrideAppID = nil;
     [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
       _serverConfiguration = serverConfiguration;
 
-      if (_serverConfiguration.implicitPurchaseLoggingEnabled) {
-        [FBSDKPaymentObserver startObservingTransactions];
-      } else {
-        [FBSDKPaymentObserver stopObservingTransactions];
-      }
 #if !TARGET_OS_TV
       [self enableCodelessEvents];
 #endif
@@ -1027,9 +985,6 @@ static NSString *g_overrideAppID = nil;
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self checkPersistedEvents];
-
-  // Restore time spent data, indicating that we're not being called from "activateApp".
-  [FBSDKTimeSpentData restore:NO];
 }
 
 - (void)applicationMovingFromActiveStateOrTerminating
@@ -1044,7 +999,6 @@ static NSString *g_overrideAppID = nil;
   if (copy) {
     [FBSDKAppEventsStateManager persistAppEventsData:copy];
   }
-  [FBSDKTimeSpentData suspend];
 }
 
 #pragma mark - Custom Audience
