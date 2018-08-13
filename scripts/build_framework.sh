@@ -71,7 +71,7 @@ test -d "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
 cd "$FB_SDK_ROOT"
-(xcodebuild -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "${SCHEME}" -configuration "${BUILDCONFIGURATION}" clean build) || die "Failed to build"
+(xcodebuild -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "${SCHEME}" -configuration "${BUILDCONFIGURATION}") || die "Failed to build"
 
 # -----------------------------------------------------------------------------
 # Run unit tests
