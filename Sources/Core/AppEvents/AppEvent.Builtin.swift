@@ -62,6 +62,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional content type.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter currency: Optional string representation of currency.
    - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
@@ -70,12 +71,14 @@ public extension AppEvent {
    */
   static func viewedContent(contentType: String? = nil,
                             contentId: String? = nil,
+                            contentData: String? = nil,
                             currency: String? = nil,
                             valueToSum: Double? = nil,
                             extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .viewedContent, parameters: parameters, valueToSum: valueToSum)
   }
@@ -84,6 +87,8 @@ public extension AppEvent {
    Create an event that indicatest that the user has performed a search within the app.
 
    - parameter contentId: Optional content identifer.
+   - parameter contentData: Optional content data.
+   - parameter contentType: Optional type of the content.
    - parameter searchedString: Optional searched string.
    - parameter successful: Optional boolean value that indicatest whether the operation was succesful.
    - parameter valueToSum: Optional value to sum.
@@ -92,12 +97,16 @@ public extension AppEvent {
    - returns: An app event that can be logged via `AppEventsLogger`.
    */
   static func searched(contentId: String? = nil,
+                       contentData: String? = nil,
+                       contentType: String? = nil,
                        searchedString: String? = nil,
                        successful: Bool? = nil,
                        valueToSum: Double? = nil,
                        extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
+    contentType.onSome { parameters[.contentType] = $0 }
     searchedString.onSome { parameters[.searchedString] = $0 }
     successful.onSome { parameters[.successful] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo }
     return AppEvent(name: .searched, parameters: parameters, valueToSum: valueToSum)
@@ -108,6 +117,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional type of the content.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter maxRatingValue: Optional max rating value.
    - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
@@ -116,12 +126,14 @@ public extension AppEvent {
    */
   static func rated<T: UnsignedInteger>(contentType: String? = nil,
                                         contentId: String? = nil,
+                                        contentData: String? = nil,
                                         maxRatingValue: T? = nil,
                                         valueToSum: Double? = nil,
                                         extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     maxRatingValue.onSome { parameters[.maxRatingValue] = NSNumber(value: UInt64($0)) }
     return AppEvent(name: .rated, parameters: parameters, valueToSum: valueToSum)
   }
@@ -155,6 +167,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional content type.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter currency: Optional string representation of currency.
    - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
@@ -163,12 +176,14 @@ public extension AppEvent {
    */
   static func addedToCart(contentType: String? = nil,
                           contentId: String? = nil,
+                          contentData: String? = nil,
                           currency: String? = nil,
                           valueToSum: Double? = nil,
                           extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .addedToCart, parameters: parameters, valueToSum: valueToSum)
   }
@@ -178,6 +193,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional content type.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter currency: Optional string representation of currency.
    - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
@@ -186,12 +202,14 @@ public extension AppEvent {
    */
   static func addedToWishlist(contentType: String? = nil,
                               contentId: String? = nil,
+                              contentData: String? = nil,
                               currency: String? = nil,
                               valueToSum: Double? = nil,
                               extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     currency.onSome { parameters[.currency] = $0 }
     return AppEvent(name: .addedToWishlist, parameters: parameters, valueToSum: valueToSum)
   }
@@ -218,6 +236,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional content type.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter itemCount: Optional count of items.
    - parameter paymentInfoAvailable: Optional boolean value that indicatest whether payment info is available.
    - parameter currency: Optional string representation of currency.
@@ -228,6 +247,7 @@ public extension AppEvent {
    */
   static func initiatedCheckout<T: UnsignedInteger>(contentType: String? = nil,
                                                     contentId: String? = nil,
+                                                    contentData: String? = nil,
                                                     itemCount: T? = nil,
                                                     paymentInfoAvailable: Bool? = nil,
                                                     currency: String? = nil,
@@ -236,6 +256,7 @@ public extension AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     itemCount.onSome { parameters[.itemCount] = NSNumber(value: UInt64($0)) }
     paymentInfoAvailable.onSome {
       parameters[.paymentInfoAvailable] = $0 ? FBSDKAppEventParameterValueYes : FBSDKAppEventParameterValueNo
@@ -290,6 +311,7 @@ public extension AppEvent {
 
    - parameter contentType: Optional content type.
    - parameter contentId: Optional content identifier.
+   - parameter contentData: Optional content data.
    - parameter valueToSum: Optional value to sum.
    - parameter extraParameters: Optional dictionary of extra parameters.
 
@@ -297,11 +319,13 @@ public extension AppEvent {
    */
   static func spentCredits(contentType: String? = nil,
                            contentId: String? = nil,
+                           contentData: String? = nil,
                            valueToSum: Double? = nil,
                            extraParameters: ParametersDictionary = [:]) -> AppEvent {
     var parameters = extraParameters
     contentType.onSome { parameters[.contentType] = $0 }
     contentId.onSome { parameters[.contentId] = $0 }
+    contentData.onSome { parameters[.content] = $0 }
     return AppEvent(name: .spentCredits, parameters: parameters, valueToSum: valueToSum)
   }
 }
