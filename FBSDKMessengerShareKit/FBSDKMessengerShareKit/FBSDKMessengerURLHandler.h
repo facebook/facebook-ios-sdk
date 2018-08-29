@@ -30,8 +30,8 @@ FBSDKMessengerURLHandlerCancelContext;
 /**
   This is called after FBSDKMessengerURLHandler has received a reply from messenger
 
- - Parameter messengerURLHandler: The handler that handled the URL
- - Parameter context: The data passed from Messenger
+ @param messengerURLHandler The handler that handled the URL
+ @param context The data passed from Messenger
  */
 - (void)messengerURLHandler:(FBSDKMessengerURLHandler *)messengerURLHandler
   didHandleReplyWithContext:(FBSDKMessengerURLHandlerReplyContext *)context;
@@ -39,8 +39,8 @@ FBSDKMessengerURLHandlerCancelContext;
 /**
   This is called after a user tapped this app from the composer in Messenger
 
- - Parameter messengerURLHandler: The handler that handled the URL
- - Parameter context: The data passed from Messenger
+ @param messengerURLHandler The handler that handled the URL
+ @param context The data passed from Messenger
  */
 - (void)          messengerURLHandler:(FBSDKMessengerURLHandler *)messengerURLHandler
  didHandleOpenFromComposerWithContext:(FBSDKMessengerURLHandlerOpenFromComposerContext *)context;
@@ -48,8 +48,8 @@ FBSDKMessengerURLHandlerCancelContext;
 /**
   This is called after a user canceled a share and Messenger redirected here
 
- - Parameter messengerURLHandler: The handler that handled the URL
- - Parameter context: The data passed from Messenger
+ @param messengerURLHandler The handler that handled the URL
+ @param context The data passed from Messenger
  */
 - (void)messengerURLHandler:(FBSDKMessengerURLHandler *)messengerURLHandler
  didHandleCancelWithContext:(FBSDKMessengerURLHandlerCancelContext *)context;
@@ -65,10 +65,10 @@ FBSDKMessengerURLHandlerCancelContext;
 /**
     Determines whether an incoming URL can be handled by this class
 
-  - Parameter url: The URL passed in from the source application
-  - Parameter sourceApplication: The bundle id representing the source application
+  @param url The URL passed in from the source application
+  @param sourceApplication The bundle id representing the source application
 
-  - Returns: YES if this URL can be handled
+  @return YES if this URL can be handled
  */
 - (BOOL)canOpenURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication;
 
@@ -76,10 +76,10 @@ FBSDKMessengerURLHandlerCancelContext;
     Attempts to handle the Messenger URL and returns YES if and only if successful.
   This should be called from the AppDelegate's -openURL: method
 
-  - Parameter url: The URL passed in from the source application
-  - Parameter sourceApplication: The bundle id representing the source application
+  @param url The URL passed in from the source application
+  @param sourceApplication The bundle id representing the source application
 
-   - Returns: YES if this successfully handled the URL
+   @return YES if this successfully handled the URL
  */
 - (BOOL)openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication;
 

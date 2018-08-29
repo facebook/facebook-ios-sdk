@@ -15,3 +15,21 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+#import <XCTest/XCTest.h>
+
+#import "FBSDKCoreKit+Internal.h"
+
+@interface FBSDKUtilityTests : XCTestCase
+
+@end
+
+@implementation FBSDKUtilityTests
+
+- (void)testSHA256Hash {
+  NSString *hashed = [FBSDKUtility SHA256Hash:@"facebook"];
+
+  XCTAssertTrue([hashed isEqualToString:@"3d59f7548e1af2151b64135003ce63c0a484c26b9b8b166a7b1c1805ec34b00a"]);
+}
+
+@end

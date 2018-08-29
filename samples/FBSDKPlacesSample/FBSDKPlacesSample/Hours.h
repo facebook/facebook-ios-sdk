@@ -20,7 +20,7 @@
 
 @interface Hours : NSObject
 
-+ (NSArray<Hours *> *)hourRangesForDictionary:(NSDictionary *)dictionary;
++ (NSArray<Hours *> *)hourRangesForArray:(NSArray *)hoursArray;
 
 @property (nonatomic, readonly) NSDateComponents *openingTimeDateComponents;
 @property (nonatomic, readonly) NSDateComponents *closingTimeDateComponents;

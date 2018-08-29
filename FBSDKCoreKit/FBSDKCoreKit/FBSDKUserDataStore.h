@@ -18,17 +18,27 @@
 
 #import <Foundation/Foundation.h>
 
-/**
-  Extension protocol for NSCopying that adds the copy method, which is implemented on NSObject.
+#import <FBSDKCoreKit/FBSDKMacros.h>
 
- NSObject<NSCopying> implicitly conforms to this protocol.
- */
-@protocol FBSDKCopying <NSCopying, NSObject>
+FBSDK_EXTERN NSString* const EMAIL;
+FBSDK_EXTERN NSString* const FIRST_NAME;
+FBSDK_EXTERN NSString* const LAST_NAME;
+FBSDK_EXTERN NSString* const PHONE;
+FBSDK_EXTERN NSString* const DATE_OF_BIRTH;
+FBSDK_EXTERN NSString* const GENDER;
+FBSDK_EXTERN NSString* const CITY;
+FBSDK_EXTERN NSString* const STATE;
+FBSDK_EXTERN NSString* const ZIP;
+FBSDK_EXTERN NSString* const COUNTRY;
 
-/**
-  Implemented by NSObject as a convenience to copyWithZone:.
- @return A copy of the receiver.
- */
-- (id)copy;
+@interface FBSDKUserDataStore : NSObject
+
++ (void)initStore;
+
++ (void)initAndWait;
+
++ (void) setUserDataAndHash:(NSDictionary*)ud;
+
++ (NSString*) getHashedUserData;
 
 @end

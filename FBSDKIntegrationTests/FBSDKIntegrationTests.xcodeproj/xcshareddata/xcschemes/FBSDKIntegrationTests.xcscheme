@@ -17,7 +17,7 @@
                BlueprintIdentifier = "81ED94111BE147CF00795F05"
                BuildableName = "Bolts.framework"
                BlueprintName = "Bolts-iOS"
-               ReferencedContainer = "container:../Bolts-IOS/Bolts.xcodeproj">
+               ReferencedContainer = "container:../Bolts-ObjC/Bolts.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

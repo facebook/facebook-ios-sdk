@@ -4,12 +4,19 @@ ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
 ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
 ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
 ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
+ads/samples/AdBiddingSample/AdBiddingSample.xcodeproj/*
+ads/samples/AdBiddingSample/AdBiddingSample.xcworkspace/*
 
 ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
 ads/internal/samples/Hackvertising/Hackvertising.xcworkspace/*
 
+ads/internal/samples/TinyKitten/TinyKitten.xcodeproj/*
+ads/internal/samples/TinyKitten/TinyKitten.xcworkspace/*
+
 ads/ancamp/ANCampApp/ANCampApp.xcodeproj/*
 ads/ancamp/ANCampApp/ANCampApp.xcworkspace/*
+
+ads/games/galaxyCollector/galaxyCollector.xcworkspace/*
 
 ads/src/FBAudienceNetwork.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
@@ -54,4 +61,3 @@ infer-out
 
 #generated doc files
 docs/
-

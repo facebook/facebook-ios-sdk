@@ -218,7 +218,7 @@ else
 
 		# Fixup projects to point to the SDK framework
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
-		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Bolts-IOS/build/ios||g' \
+		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Bolts-ObjC/build/ios||g' \
 		    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 		done
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
