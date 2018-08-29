@@ -66,7 +66,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -76,7 +76,7 @@
   content.previewPropertyName = [FBSDKShareModelTestUtility previewPropertyName];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"action");
@@ -88,7 +88,7 @@
   content.action = [FBSDKShareModelTestUtility openGraphAction];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"previewPropertyName");
@@ -102,7 +102,7 @@
   content.previewPropertyName = previewPropertyName;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], previewPropertyName);

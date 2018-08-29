@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2038
 # Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
 # You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -91,7 +92,7 @@ fi
 progress_message "Generating strings"
 (
   cd "$FB_SDK_ROOT"
-  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ FBSDKTVOSKit/ -name "*.m" | xargs genstrings -o FacebookSDKStrings.bundle/Resources/en.lproj/
+  find FBSDKCoreKit/ FBSDKShareKit/ FBSDKLoginKit/ FBSDKTVOSKit/ FBSDKMarketingKit/ -name "*.m" | xargs genstrings -o FacebookSDKStrings.bundle/Resources/en.lproj/
 )
 
 # -----------------------------------------------------------------------------

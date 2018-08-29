@@ -2,12 +2,11 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "Facebook-iOS-SDK"
+  s.name         = "FacebookSDK"
   s.version      = "4.35.0"
-  s.summary      = "(DEPRECATED: Use FacebookSDK instead) Official Facebook SDK for iOS to access Facebook Platform"
+  s.summary      = "Official Facebook SDK for iOS to access Facebook Platform"
 
   s.description  = <<-DESC
-                   (DEPRECATED: Use FacebookSDK podspec instead)
                    The Facebook SDK for iOS enables you to use Facebook's Platform such as:
                    * Facebook Login to easily sign in users.
                    * Sharing features like the Share or Message Dialog to grow your app.
@@ -29,10 +28,8 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.deprecated = true
-  s.deprecated_in_favor_of = 'FacebookSDK'
-
   s.dependency 'Bolts', '~> 1.7'
+  s.default_subspecs = 'CoreKit', 'MarketingKit'
 
   s.subspec 'CoreKit' do |spec|
     spec.ios.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKCoreKit.framework/**/*.h'
@@ -51,7 +48,7 @@ Pod::Spec.new do |s|
     spec.tvos.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework/**/*.h'
     spec.tvos.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework/**/*.h'
     spec.tvos.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKLoginKit.framework'
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+    spec.dependency 'FacebookSDK/CoreKit'
   end
   s.subspec 'ShareKit' do |spec|
     spec.ios.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKShareKit.framework/**/*.h'
@@ -60,28 +57,28 @@ Pod::Spec.new do |s|
     spec.tvos.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework/**/*.h'
     spec.tvos.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework/**/*.h'
     spec.tvos.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKShareKit.framework'
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+    spec.dependency 'FacebookSDK/CoreKit'
   end
   s.subspec 'TVOSKit' do |spec|
     spec.platform = :tvos
     spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework/**/*.h'
     spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework/**/*.h'
     spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/tvOS/FBSDKTVOSKit.framework'
-    spec.dependency 'Facebook-iOS-SDK/ShareKit'
-    spec.dependency 'Facebook-iOS-SDK/LoginKit'
+    spec.dependency 'FacebookSDK/ShareKit'
+    spec.dependency 'FacebookSDK/LoginKit'
   end
   s.subspec 'PlacesKit' do |spec|
     spec.platform = :ios
     spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework/**/*.h'
     spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework/**/*.h'
     spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKPlacesKit.framework'
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+    spec.dependency 'FacebookSDK/CoreKit'
   end
   s.subspec 'MarketingKit' do |spec|
     spec.platform = :ios
     spec.source_files      = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework/**/*.h'
     spec.public_header_files = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework/**/*.h'
     spec.vendored_frameworks = 'FacebookSDKs-iOS-universal-4.35.0/iOS/FBSDKMarketingKit.framework'
-    spec.dependency 'Facebook-iOS-SDK/CoreKit'
+    spec.dependency 'FacebookSDK/CoreKit'
   end
 end

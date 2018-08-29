@@ -62,7 +62,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
   Initializes a new instance with share content.
- - Parameter shareContent: The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
+ @param shareContent The share content. Only `FBSDKShareLinkContent` and `FBSDKShareOpenGraphContent` are supported.
 
  Invalid content types will result in notifying the delegate with an error when the view controller is presented.
 
