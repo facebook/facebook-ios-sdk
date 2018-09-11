@@ -22,6 +22,11 @@ ads/src/FBAudienceNetwork.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcworkspace/*
+
+ads/src/FB-SDK-MP/FB_SDK_MP_Workspace.xcworkspace/*
+ads/src/FB-SDK-MP/FB-SDK-MP.xcworkspace/*
+ads/src/FB-SDK-MP/FB-SDK-MP.xcodeproj/*
+
 internal/testing/IpaSizeTestApp/**/*.xcworkspace/*
 internal/testing/IpaSizeTestApp/**/*.xcodeproj/*
 samples/Hackbook/build/

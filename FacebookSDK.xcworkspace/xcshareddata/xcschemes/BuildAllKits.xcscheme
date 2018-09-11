@@ -129,7 +129,7 @@
                BlueprintIdentifier = "D5C618081DC90E9000C406B9"
                BuildableName = "FBSDKShareTray-Universal"
                BlueprintName = "FBSDKShareTray-Universal"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
+               ReferencedContainer = "container:internal/FBSDKShareTray/FBSDKShareTray.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -143,7 +143,7 @@
                BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
                BuildableName = "FBSDKShareTrayTests.xctest"
                BlueprintName = "FBSDKShareTrayTests"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
+               ReferencedContainer = "container:internal/FBSDKShareTray/FBSDKShareTray.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -191,7 +191,7 @@
                BlueprintIdentifier = "D5EAC5361DCA740D00F0ADC6"
                BuildableName = "FBSDKShareTrayTests.xctest"
                BlueprintName = "FBSDKShareTrayTests"
-               ReferencedContainer = "container:FBSDKShareTray/FBSDKShareTray.xcodeproj">
+               ReferencedContainer = "container:internal/FBSDKShareTray/FBSDKShareTray.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
