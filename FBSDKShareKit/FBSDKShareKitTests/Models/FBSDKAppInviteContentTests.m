@@ -22,8 +22,6 @@
 
 #import <XCTest/XCTest.h>
 
-#import "FBSDKShareUtility.h"
-
 @interface FBSDKAppInviteContentTests : XCTestCase
 @end
 
@@ -59,7 +57,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -67,7 +65,7 @@
 {
   NSError *error;
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:nil error:&error]);
+  XCTAssertFalse([nil validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"content");
@@ -80,7 +78,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"appLinkURL");
@@ -93,7 +91,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -104,7 +102,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -116,7 +114,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
@@ -130,7 +128,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -142,7 +140,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
@@ -157,7 +155,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateAppInviteContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionCode");

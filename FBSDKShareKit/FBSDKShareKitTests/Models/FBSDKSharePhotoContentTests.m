@@ -80,7 +80,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -89,7 +89,7 @@
   FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"photos");
@@ -101,7 +101,7 @@
   content.photos = @[];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"photos");

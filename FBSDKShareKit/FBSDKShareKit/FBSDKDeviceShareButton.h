@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   The required content to share. The button is disabled until this is set.
 
-- See:FBSDKDeviceShareViewController
+ @see FBSDKDeviceShareViewController
  */
 @property (nullable, nonatomic, strong) id<FBSDKSharingContent> shareContent;
 

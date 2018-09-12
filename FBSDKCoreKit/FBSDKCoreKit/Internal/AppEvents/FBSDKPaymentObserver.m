@@ -228,7 +228,7 @@ static NSMutableArray *g_pendingRequestors;
 #if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_2
     if (@available(iOS 11.2, *)) {
-      BOOL isSubscription = product.subscriptionPeriod != nil;
+      BOOL isSubscription = (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
       if (isSubscription) {
         // subs inapp
         SKProductSubscriptionPeriod *period = product.subscriptionPeriod;
