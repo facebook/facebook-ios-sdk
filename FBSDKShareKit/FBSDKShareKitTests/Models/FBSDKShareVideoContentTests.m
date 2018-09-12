@@ -72,7 +72,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -81,7 +81,7 @@
   FBSDKShareVideoContent *content = [[FBSDKShareVideoContent alloc] init];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"video");
@@ -93,7 +93,7 @@
   content.video = [[FBSDKShareVideo alloc] init];
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"videoURL");
@@ -107,7 +107,7 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -120,7 +120,7 @@
   content.video = video;
   XCTAssertNotNil(content);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 

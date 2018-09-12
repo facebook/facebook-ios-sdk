@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "FBSDKShareKit"
-  s.version      = "4.35.0"
+  s.version      = "4.36.0"
   s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's Sharing Features"
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
-                     :tag => "sdk-version-4.35.0"
+                     :tag => "sdk-version-4.36.0"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
@@ -53,6 +53,7 @@ Pod::Spec.new do |s|
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareVideoContent.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKSharing.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKSharingContent.h',
+                        'FBSDKShareKit/FBSDKShareKit/FBSDKSharingValidation.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerActionButton.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerGenericTemplateContent.h',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerGenericTemplateElement.h',
@@ -69,6 +70,6 @@ Pod::Spec.new do |s|
   s.header_dir = "FBSDKShareKit"
   # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
   s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.dependency 'FBSDKCoreKit', '~> 4.35.0'
+  s.dependency 'FBSDKCoreKit', '~> 4.36.0'
 
 end

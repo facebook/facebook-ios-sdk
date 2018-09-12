@@ -188,7 +188,7 @@
   NSError *error;
   XCTAssertNotNil(content);
   XCTAssertNil(error);
-  XCTAssertTrue([FBSDKShareUtility validateGameRequestContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -196,7 +196,7 @@
 {
   NSError *error;
   XCTAssertNil(error);
-  XCTAssertFalse([FBSDKShareUtility validateGameRequestContent:content error:&error]);
+  XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
   XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], argumentName);

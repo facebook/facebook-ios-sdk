@@ -40,7 +40,7 @@
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -53,7 +53,7 @@
   content.ref = [FBSDKShareModelTestUtility ref];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareLinkContent:content error:&error]);
+  XCTAssertTrue([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -62,7 +62,7 @@
   FBSDKShareLinkContent *content = [[FBSDKShareLinkContent alloc] init];
   content.contentURL = [FBSDKShareModelTestUtility contentURL];
   XCTAssertNotNil(content.shareUUID);
-  NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:content shouldFailOnDataError:YES];
+  NSDictionary<NSString *, id> *parameters = [FBSDKShareUtility parametersForShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault shouldFailOnDataError:YES];
   XCTAssertEqualObjects(content.contentURL, parameters[@"messenger_link"], @"Incorrect messenger_link param.");
 }
 
@@ -72,7 +72,7 @@
   content.pageID = @"123";
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -83,7 +83,7 @@
   content.url = [NSURL URLWithString:@"www.facebook.com"];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -93,7 +93,7 @@
   content.url = [NSURL URLWithString:@"www.facebook.com"];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -102,13 +102,13 @@
   FBSDKShareMessengerMediaTemplateContent *contentWithNilAttachmentInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:nil];
   XCTAssertNotNil(contentWithNilAttachmentInitializer.shareUUID);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilAttachmentInitializer error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilAttachmentInitializer bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 
   FBSDKShareMessengerMediaTemplateContent *contentWithNilURLInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:nil];
   XCTAssertNotNil(contentWithNilURLInitializer.shareUUID);
   NSError *error2;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilURLInitializer error:&error2]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilURLInitializer bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error2]);
   XCTAssertNotNil(error2);
 }
 
@@ -117,7 +117,7 @@
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:@"1"];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -126,7 +126,7 @@
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com"]];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -136,7 +136,7 @@
   content.element = [FBSDKShareMessengerGenericTemplateElement new];
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -147,7 +147,7 @@
   content.element.title = @"Some Title";
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -167,7 +167,7 @@
   content.element.defaultAction = defaultAction;
   XCTAssertNotNil(content.shareUUID);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -181,7 +181,7 @@
   XCTAssertNotNil(content.shareUUID);
   XCTAssertNotNil(content.button);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -195,7 +195,7 @@
   XCTAssertNotNil(content.shareUUID);
   XCTAssertNotNil(content.button);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -210,7 +210,7 @@
   XCTAssertNotNil(content.shareUUID);
   XCTAssertNotNil(content.button);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 
@@ -225,7 +225,7 @@
   XCTAssertNotNil(content.shareUUID);
   XCTAssertNotNil(content.button);
   NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertFalse([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
 }
 
@@ -242,7 +242,7 @@
   XCTAssertNotNil(content.shareUUID);
   XCTAssertNotNil(content.button);
   NSError *error;
-  XCTAssertTrue([FBSDKShareUtility validateShareContent:content error:&error]);
+  XCTAssertTrue([FBSDKShareUtility validateShareContent:content bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNil(error);
 }
 

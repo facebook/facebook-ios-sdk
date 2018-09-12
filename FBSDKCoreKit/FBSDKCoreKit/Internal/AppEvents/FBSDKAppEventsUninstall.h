@@ -18,17 +18,11 @@
 
 #import <Foundation/Foundation.h>
 
-/**
-  Extension protocol for NSCopying that adds the copy method, which is implemented on NSObject.
 
- NSObject<NSCopying> implicitly conforms to this protocol.
- */
-@protocol FBSDKCopying <NSCopying, NSObject>
+@interface FBSDKAppEventsUninstall : NSObject
 
-/**
-  Implemented by NSObject as a convenience to copyWithZone:.
- @return A copy of the receiver.
- */
-- (id)copy;
-
++ (BOOL)initiated;
++ (void)setUninstallTrackingEnabled:(BOOL)_uninstallTrackingEnabled;
++ (void)installSwizzler;
++ (void)updateAndUploadToken:(NSString*)tokenString;
 @end

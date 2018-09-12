@@ -36,7 +36,7 @@ typedef NS_ENUM(NSUInteger, FBSDKMessengerShareButtonStyle) {
 /**
   Returns a rounded rectangular UIButton customized for sharing to Messenger
 
- - Parameter style: Specifies how the button should look
+ @param style Specifies how the button should look
 
  
 
@@ -53,8 +53,8 @@ typedef NS_ENUM(NSUInteger, FBSDKMessengerShareButtonStyle) {
 /**
   Returns a circular UIButton customized for sharing to Messenger
 
- - Parameter style: Specifies how the button should look
- - Parameter width: The desired frame width (and height) of this button.
+ @param style Specifies how the button should look
+ @param width The desired frame width (and height) of this button.
 
  
 
@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, FBSDKMessengerShareButtonStyle) {
 /**
   Returns a circular UIButton customized for sharing to Messenger of default size
 
- - Parameter style: Specifies how the button should look
+ @param style Specifies how the button should look
  */
 + (UIButton *)circularButtonWithStyle:(FBSDKMessengerShareButtonStyle)style;
 

@@ -42,7 +42,7 @@
     }
 
     if (dictionary[FBSDKPlacesFieldKeyHours]) {
-      _hours = [Hours hourRangesForDictionary:dictionary[FBSDKPlacesFieldKeyHours]];
+      _hours = [Hours hourRangesForArray:dictionary[FBSDKPlacesFieldKeyHours]];
     }
     _overallStarRating = dictionary[FBSDKPlacesFieldKeyOverallStarRating];
     _placeID = dictionary[FBSDKPlacesFieldKeyPlaceID];

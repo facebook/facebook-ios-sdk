@@ -27,7 +27,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
 
   # The directory containing this script
   # We need to go there and use pwd so these are all absolute paths
-  pushd "$(dirname $BASH_SOURCE[0])" >/dev/null
+  pushd "$(dirname ${BASH_SOURCE[0]})" >/dev/null
   FB_SDK_SCRIPT=$(pwd)
   popd >/dev/null
 
@@ -44,6 +44,7 @@ if [ -z "$FB_SDK_SCRIPT" ]; then
   # BUILD TARGET
   PACAKAGE_FACEBOOK="FacebookSDK"
   PACAKAGE_AN="AudienceNetwork"
+  PACKAGE_BIDDING_KIT="AudienceNetworkBiddingKit"
 
   # Extract the SDK version from FacebookSDK.h
   FB_SDK_VERSION_RAW=$(sed -n 's/.*FBSDK_VERSION_STRING @\"\(.*\)\"/\1/p' "${FB_SDK_ROOT}"/FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h)

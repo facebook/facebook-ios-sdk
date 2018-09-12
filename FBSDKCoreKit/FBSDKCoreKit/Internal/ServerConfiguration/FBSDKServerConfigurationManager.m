@@ -68,6 +68,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled            = 1 << 0,
   FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled  = 1 << 1,
   FBSDKServerConfigurationManagerAppEventsFeaturesCodelessEventsTriggerEnabled    = 1 << 5,
+  FBSDKServerConfigurationManagerAppEventsFeaturesUninstallTrackingEnabled        = 1 << 7,
 };
 
 #pragma mark - Public Class Methods
@@ -176,6 +177,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   BOOL advertisingIDEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesAdvertisingIDEnabled);
   BOOL implicitPurchaseLoggingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesImplicitPurchaseLoggingEnabled);
   BOOL codelessEventsEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesCodelessEventsTriggerEnabled);
+  BOOL uninstallTrackingEnabled = (appEventsFeatures & FBSDKServerConfigurationManagerAppEventsFeaturesUninstallTrackingEnabled);
   NSString *appName = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_APP_NAME_FIELD]];
   BOOL loginTooltipEnabled = [FBSDKTypeUtility boolValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_ENABLED_FIELD]];
   NSString *loginTooltipText = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_LOGIN_TOOLTIP_TEXT_FIELD]];
@@ -206,6 +208,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                             codelessEventsEnabled:codelessEventsEnabled
                                                                       systemAuthenticationEnabled:systemAuthenticationEnabled
                                                                             nativeAuthFlowEnabled:nativeAuthFlowEnabled
+                                                                         uninstallTrackingEnabled:uninstallTrackingEnabled
                                                                              dialogConfigurations:dialogConfigurations
                                                                                       dialogFlows:dialogFlows
                                                                                         timestamp:[NSDate date]
@@ -315,6 +318,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                             codelessEventsEnabled:NO
                                                       systemAuthenticationEnabled:NO
                                                             nativeAuthFlowEnabled:NO
+                                                         uninstallTrackingEnabled:NO
                                                              dialogConfigurations:nil
                                                                       dialogFlows:dialogFlows
                                                                         timestamp:nil
