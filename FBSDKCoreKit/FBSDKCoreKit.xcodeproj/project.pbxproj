@@ -2562,7 +2562,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf ../Bolts-ObjC/build/ ../build/Bolts.framework\n../Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Bolts-ObjC/build/ios/Bolts.framework ../build/\n";
+			shellScript = "rm -rf ../Bolts-ObjC/build/ ../build/Bolts.framework\n../Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Bolts-ObjC/build/Release-iphonesimulator/Bolts.framework ../build/\n";
 		};
 		9D6DEEFD1BC2E546001A94ED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
