@@ -21,10 +21,9 @@
 #import <AccountKit/AccountKit.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
-
-#import "FBTweak/FBTweakInline.h"
-#import "FBTweak/FBTweakStore.h"
-#import "FBTweak/FBTweakViewController.h"
+#import <Tweaks/FBTweakInline.h>
+#import <Tweaks/FBTweakStore.h>
+#import <Tweaks/FBTweakViewController.h>
 
 #import "LoggedInViewController.h"
 #import "SettingsUtil.h"

@@ -18,8 +18,7 @@
 #import "SettingsUtil.h"
 
 #import <AccountKit/AKFViewController.h>
-
-#import "FBTweak/FBTweakInline.h"
+#import <Tweaks/FBTweakInline.h>
 
 #import "AdvancedUIManager.h"
 #import "ReverbTheme.h"
