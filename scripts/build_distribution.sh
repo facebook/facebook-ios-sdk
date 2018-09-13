@@ -329,8 +329,8 @@ else
 		  || die "Could not copy AccountKitStrings.bundle"
 
 		# Build FBNotifications framework
-		\rake -f "$FB_SDK_ROOT/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
-		\unzip "$FB_SDK_ROOT/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
+		\rake -f "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
+		\unzip "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
 		\cp -R "$FB_SDK_BUILD"/FBNotifications.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBNotifications.framework"
 

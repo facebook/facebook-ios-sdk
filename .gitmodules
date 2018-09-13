@@ -16,8 +16,8 @@
 [submodule "vendor/xctool"]
   path = vendor/xctool
   url = https://github.com/facebook/xctool.git
-[submodule "FBNotifications"]
-  path = FBNotifications
+[submodule "Carthage/Checkouts/FBNotifications"]
+  path = Carthage/Checkouts/FBNotifications
   url = https://github.com/facebook/FBNotifications.git
 [submodule "vendor/FBTweak"]
   path = vendor/FBTweak
