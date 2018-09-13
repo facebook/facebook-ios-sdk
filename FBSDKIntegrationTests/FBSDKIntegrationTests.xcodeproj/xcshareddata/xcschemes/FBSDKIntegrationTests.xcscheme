@@ -31,7 +31,7 @@
                BlueprintIdentifier = "030EF0DB14632FF700B04273"
                BuildableName = "libOCMock.a"
                BlueprintName = "OCMockLib"
-               ReferencedContainer = "container:../vendor/OCMock/Source/OCMock.xcodeproj">
+               ReferencedContainer = "container:../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -45,7 +45,7 @@
                BlueprintIdentifier = "09110A4019805F4800D175E4"
                BuildableName = "libOHHTTPStubs.a"
                BlueprintName = "OHHTTPStubs iOS StaticLib"
-               ReferencedContainer = "container:../vendor/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj">
+               ReferencedContainer = "container:../Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry

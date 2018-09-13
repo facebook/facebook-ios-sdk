@@ -913,7 +913,7 @@
 		7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolver.m; sourceTree = "<group>"; };
 		7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkResolver.h; sourceTree = "<group>"; };
 		7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKAppLinkResolverTests.m; path = AppLinks/FBSDKAppLinkResolverTests.m; sourceTree = "<group>"; };
-		7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../vendor/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
+		7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OHHTTPStubs.xcodeproj; path = ../Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/OHHTTPStubs.xcodeproj; sourceTree = "<group>"; };
 		7EB63D9D1A9BE730003A7AED /* FBSDKBoltsMeasurementEventListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKBoltsMeasurementEventListener.m; path = AppLink/FBSDKBoltsMeasurementEventListener.m; sourceTree = "<group>"; };
 		7EB63D9E1A9BE730003A7AED /* FBSDKBoltsMeasurementEventListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FBSDKBoltsMeasurementEventListener.h; path = AppLink/FBSDKBoltsMeasurementEventListener.h; sourceTree = "<group>"; };
 		814AC8571D1B528900D61E6C /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKCoreKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1079,7 +1079,7 @@
 		9D7E7E601ADF038800F53E38 /* FBSDKTestUsersManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestUsersManager.m; sourceTree = "<group>"; };
 		9D92FC611CB320430091B6F7 /* FBSDKDeviceDialogView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceDialogView.h; sourceTree = "<group>"; };
 		9D92FC621CB320430091B6F7 /* FBSDKDeviceDialogView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceDialogView.m; sourceTree = "<group>"; };
-		9D99470F1A9531B5003375EC /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../vendor/OCMock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
+		9D99470F1A9531B5003375EC /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
 		9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKDeviceButton.h; sourceTree = "<group>"; };
 		9D9E16AB1CB46C7D00C8B68F /* FBSDKDeviceButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKDeviceButton.m; sourceTree = "<group>"; };
 		9D9E16B01CB46D1500C8B68F /* FBSDKDeviceButton+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKDeviceButton+Internal.h"; sourceTree = "<group>"; };

@@ -1,1 +1,6 @@
 github "facebook/FBNotifications" "0666010b261558495fa0c614f7bffb59b7c3a01f"
+github "AliSoftware/OHHTTPStubs" "826a9217fcd468220d154ed0075cbc1a20d0c5c9"
+github "facebook/Tweaks" "858506f594462073a1dee82a4c8254e23d10aef0"
+github "facebook/ios-snapshot-test-case" "3efc829601128f7d9306e8e58db04d32594b62ce"
+github "erikdoe/ocmock" "c4be5d9d9238fcd10449424f651fba2b7aff87c0"
+github "facebook/xctool" "fe6fb5dfab112cfbb0a2fbda1f6a528abbe0d272"
