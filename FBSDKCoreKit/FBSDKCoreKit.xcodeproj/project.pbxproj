@@ -909,7 +909,7 @@
 		7E253D841A8EB78300CCCFE7 /* FBSDKCoreKitTestUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCoreKitTestUtility.h; sourceTree = "<group>"; };
 		7E30916C1AA907BD004E91D5 /* FBSDKAppLinkUtility.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkUtility.h; sourceTree = "<group>"; };
 		7E3091791AA907E0004E91D5 /* FBSDKAppLinkUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkUtility.m; sourceTree = "<group>"; };
-		7E5557191A8D3D7400344F86 /* Bolts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bolts.xcodeproj; path = "../Bolts-ObjC/Bolts.xcodeproj"; sourceTree = "<group>"; };
+		7E5557191A8D3D7400344F86 /* Bolts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bolts.xcodeproj; path = "../Carthage/Checkouts/Bolts-ObjC/Bolts.xcodeproj"; sourceTree = "<group>"; };
 		7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppLinkResolver.m; sourceTree = "<group>"; };
 		7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKAppLinkResolver.h; sourceTree = "<group>"; };
 		7E55573A1A8D834B00344F86 /* FBSDKAppLinkResolverTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FBSDKAppLinkResolverTests.m; path = AppLinks/FBSDKAppLinkResolverTests.m; sourceTree = "<group>"; };
@@ -2562,7 +2562,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf ../Bolts-ObjC/build/ ../build/Bolts.framework\n../Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Bolts-ObjC/build/Release-iphonesimulator/Bolts.framework ../build/\n";
+			shellScript = "rm -rf ../Carthage/Checkouts/Bolts-ObjC/build/ ../build/Bolts.framework\n../Carthage/Checkouts/Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Carthage/Checkouts/Bolts-ObjC/build/Release-iphonesimulator/Bolts.framework ../build/\n";
 		};
 		9D6DEEFD1BC2E546001A94ED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
