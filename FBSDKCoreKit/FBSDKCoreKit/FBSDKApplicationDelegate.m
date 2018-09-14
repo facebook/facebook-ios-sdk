@@ -61,6 +61,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   BOOL _expectingBackground;
   UIViewController *_safariViewController;
   BOOL _isDismissingSafariViewController;
+  BOOL _isAppLaunched;
 }
 
 #pragma mark - Class Methods
@@ -79,6 +80,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 + (void)initializeWithLaunchData:(NSNotification *)note
 {
   NSDictionary *launchData = note.userInfo;
+
+  [[self sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchData];
+
 #if !TARGET_OS_TV
   // Register Listener for Bolts measurement events
   [FBSDKBoltsMeasurementEventListener defaultListener];
@@ -205,6 +209,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  if (_isAppLaunched) {
+    return NO;
+  }
+
+  _isAppLaunched = YES;
   FBSDKAccessToken *cachedToken = [[FBSDKSettings accessTokenCache] fetchAccessToken];
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
   // fetch app settings
