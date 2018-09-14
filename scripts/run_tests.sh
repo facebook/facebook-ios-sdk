@@ -102,9 +102,6 @@ for SCHEME in $SCHEMES; do
     if [[ -n $FAILED_SAMPLES ]]; then
         die "Failed to build $FAILED_SAMPLES"
     fi
-    if [[ -a "internal/scripts/run_internal_tests.sh" ]]; then
-      source "internal/scripts/run_internal_tests.sh"
-    fi
   else
     COMMAND="xcodebuild
       -workspace FacebookSDK.xcworkspace \
