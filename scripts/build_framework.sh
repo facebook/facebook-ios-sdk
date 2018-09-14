@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck disable=SC2038
 # Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
 # You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -71,7 +72,7 @@ test -d "$FB_SDK_BUILD" \
   || die "Could not create directory $FB_SDK_BUILD"
 
 cd "$FB_SDK_ROOT"
-(xcodebuild -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "${SCHEME}" -configuration "${BUILDCONFIGURATION}" clean build) || die "Failed to build"
+(xcodebuild -workspace "${FB_SDK_ROOT}"/FacebookSDK.xcworkspace -scheme "${SCHEME}" -configuration "${BUILDCONFIGURATION}") || die "Failed to build"
 
 # -----------------------------------------------------------------------------
 # Run unit tests

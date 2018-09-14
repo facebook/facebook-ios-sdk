@@ -144,7 +144,7 @@
 		9CAE10151B15353900163BDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9CAE10161B15353900163BDA /* FBSDKMessengerShareKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKMessengerShareKitTests.m; sourceTree = "<group>"; };
 		9CAE101E1B15355200163BDA /* FacebookSDK-LogicTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "FacebookSDK-LogicTests.xcconfig"; path = "../../Configurations/FacebookSDK-LogicTests.xcconfig"; sourceTree = "<group>"; };
-		9CAE10201B15380100163BDA /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../vendor/OCMock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
+		9CAE10201B15380100163BDA /* OCMock.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = OCMock.xcodeproj; path = ../Carthage/Checkouts/ocmock/Source/OCMock.xcodeproj; sourceTree = "<group>"; };
 		9CAE10311B15385400163BDA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		9CAE10341B1538B300163BDA /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		9CAE10361B153B2700163BDA /* FBSDKMessengerSharer+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKMessengerSharer+Internal.h"; sourceTree = "<group>"; };

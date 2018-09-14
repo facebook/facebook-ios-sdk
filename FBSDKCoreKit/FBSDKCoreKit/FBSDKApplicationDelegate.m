@@ -38,6 +38,7 @@
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
+#import "FBSDKAppEventsUninstall.h"
 #import "FBSDKBoltsMeasurementEventListener.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
@@ -94,6 +95,13 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
   // Remove the observer
   [[NSNotificationCenter defaultCenter] removeObserver:self];
+  
+#if !TARGET_OS_TV
+  if (![FBSDKAppEventsUninstall initiated]){
+    [FBSDKAppEventsUninstall installSwizzler];
+  }
+#endif
+
 }
 
 + (instancetype)sharedInstance
@@ -114,6 +122,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
     [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    [[FBSDKAppEvents singleton] registerNotifications];
   }
   return self;
 }
@@ -130,15 +140,17 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 #pragma mark - UIApplicationDelegate
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
-            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options NS_AVAILABLE_IOS(9_0)
+            options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
 {
   return [self application:application
                    openURL:url
          sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey]
                 annotation:options[UIApplicationOpenURLOptionsAnnotationKey]];
 }
+#endif
 
 - (BOOL)application:(UIApplication *)application
             openURL:(NSURL *)url
@@ -315,8 +327,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   _pendingRequestCompletionBlock = [completionBlock copy];
   void (^handler)(BOOL, NSError *) = ^(BOOL openedURL, NSError *anError) {
     if (!openedURL) {
-      self->_pendingRequest = nil;
-      self->_pendingRequestCompletionBlock = nil;
+      _pendingRequest = nil;
+      _pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
         openedURLError = [FBSDKError errorWithCode:FBSDKBrowserUnavailableErrorCode
@@ -355,6 +367,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     if ([sender isAuthenticationURL:url]) {
       Class SFAuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
       if (SFAuthenticationSessionClass != nil) {
+        if (_authenticationSession != nil) {
+          [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                             formatString:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one.", nil];
+          [_authenticationSession cancel];
+        }
         __weak typeof(self) weakSelf = self;
         _authenticationSessionCompletionHandler = ^ (NSURL *aURL, NSError *error) {
           typeof(self) strongSelf = weakSelf;
@@ -399,11 +416,11 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       // Wait until the transition is finished before presenting SafariVC to avoid a blank screen.
       [parent.transitionCoordinator animateAlongsideTransition:NULL completion:^(id<UIViewControllerTransitionCoordinatorContext> context) {
         // Note SFVC init must occur inside block to avoid blank screen.
-        self->_safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
+        _safariViewController = [[SFSafariViewControllerClass alloc] initWithURL:url];
         // Disable dismissing with edge pan gesture
-        self->_safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
-        [self->_safariViewController performSelector:@selector(setDelegate:) withObject:self];
-        [container displayChildController:self->_safariViewController];
+        _safariViewController.modalPresentationStyle = UIModalPresentationOverFullScreen;
+        [_safariViewController performSelector:@selector(setDelegate:) withObject:self];
+        [container displayChildController:_safariViewController];
         [parent presentViewController:container animated:YES completion:nil];
       }];
     } else {
@@ -520,6 +537,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   }
   if (objc_lookUpClass("FBSDKTVInterfaceFactory.m") != nil) {
     [params setObject:@1 forKey:@"tv_lib_included"];
+  }
+  if (objc_lookUpClass("FBSDKAutoLog") != nil) {
+    [params setObject:@1 forKey:@"marketing_lib_included"];
   }
   [FBSDKAppEvents logEvent:@"fb_sdk_initialize" parameters:params];
 }

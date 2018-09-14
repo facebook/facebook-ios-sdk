@@ -4,19 +4,29 @@ ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
 ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
 ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
 ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
+ads/samples/AdBiddingSample/AdBiddingSample.xcodeproj/*
+ads/samples/AdBiddingSample/AdBiddingSample.xcworkspace/*
 
 ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
 ads/internal/samples/Hackvertising/Hackvertising.xcworkspace/*
 
+ads/internal/samples/TinyKitten/TinyKitten.xcodeproj/*
+ads/internal/samples/TinyKitten/TinyKitten.xcworkspace/*
+
 ads/ancamp/ANCampApp/ANCampApp.xcodeproj/*
 ads/ancamp/ANCampApp/ANCampApp.xcworkspace/*
+
+ads/games/galaxyCollector/galaxyCollector.xcworkspace/*
 
 ads/src/FBAudienceNetwork.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*
 ads/src/FBAudienceNetwork/FBAudienceNetwork.xcworkspace/*
-internal/testing/IpaSizeTestApp/**/*.xcworkspace/*
-internal/testing/IpaSizeTestApp/**/*.xcodeproj/*
+
+ads/src/FB-SDK-MP/FB_SDK_MP_Workspace.xcworkspace/*
+ads/src/FB-SDK-MP/FB-SDK-MP.xcworkspace/*
+ads/src/FB-SDK-MP/FB-SDK-MP.xcodeproj/*
+
 samples/Hackbook/build/
 samples/Hackbook/Hackbook.xcodeproj/*.pbxuser
 samples/Hackbook/Hackbook.xcodeproj/*.mode*
@@ -24,9 +34,6 @@ samples/Hackbook/Hackbook.xcodeproj/xcuserdata*
 samples/Hackbook/Hackbook.xcodeproj/project.xcworkspace
 samples/LoginSample/Pods
 samples/LoginSample/LoginSample.xcworkspace
-src/facebook-ios-sdk.xcodeproj/*.pbxuser
-src/facebook-ios-sdk.xcodeproj/*.mode*
-src/build/
 build/
 lib/
 docs/
@@ -54,4 +61,3 @@ infer-out
 
 #generated doc files
 docs/
-

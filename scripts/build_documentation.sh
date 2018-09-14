@@ -31,7 +31,8 @@ KITS=("FBSDKCoreKit"
       "FBSDKLoginKit"
       "FBSDKPlacesKit"
       "FBSDKMessengerShareKit"
-      "AccountKit")
+      "AccountKit"
+      "FBSDKMarketingKit")
 
 CNT=${#KITS[@]}
 

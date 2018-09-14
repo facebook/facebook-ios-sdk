@@ -33,7 +33,7 @@ INFOPLIST_FILE = $(TARGET_NAME)/$(TARGET_NAME)-Info.plist
 
 // Search Paths
 ALWAYS_SEARCH_USER_PATHS = NO
-FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SRCROOT)/../../build" "$(SRCROOT)/../../Bolts-IOS/build/ios"
+FRAMEWORK_SEARCH_PATHS = $(inherited) "$(SRCROOT)/../../build" "$(SRCROOT)/../../Carthage/Checkouts/Bolts-ObjC/build/ios"
 
 // Code Generation
 GCC_DYNAMIC_NO_PIC = NO

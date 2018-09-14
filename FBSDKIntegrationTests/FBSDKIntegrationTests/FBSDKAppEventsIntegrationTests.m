@@ -643,7 +643,7 @@
   [FBSDKAppEvents logEvent:@"testUserID"];
   [FBSDKAppEvents flush];
 
-  [FBSDKAppEvents setUserID:nil];
+  [FBSDKAppEvents clearUserID];
   [FBSDKAppEvents logEvent:@"testUserID"];
   [FBSDKAppEvents flush];
 
@@ -708,7 +708,7 @@
 
   //now make sure there is an error
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [FBSDKAppEvents setUserID:nil];
+  [FBSDKAppEvents clearUserID];
   [FBSDKAppEvents updateUserProperties:@{
                                          @"favorite_color" : @"blue"
                                          }

@@ -67,9 +67,9 @@
         // the block returns YES if recovery UI is started (meaning we wait for the alertviewdelegate to resume control flow).
         BOOL (^standardRecoveryWork)(void) = ^BOOL{
           NSArray *recoveryOptionsTitles = error.userInfo[NSLocalizedRecoveryOptionsErrorKey];
-          if (recoveryOptionsTitles.count > 0 && self->_recoveryAttempter) {
+          if (recoveryOptionsTitles.count > 0 && _recoveryAttempter) {
             NSString *recoverySuggestion = error.userInfo[NSLocalizedRecoverySuggestionErrorKey];
-            self->_error = error;
+            _error = error;
             dispatch_async(dispatch_get_main_queue(), ^{
               [self displayAlertWithRecoverySuggestion:recoverySuggestion recoveryOptionsTitles:recoveryOptionsTitles];
             });
@@ -90,7 +90,7 @@
                  [self.delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
                  self.delegate = nil;
                } else if (!standardRecoveryWork()) {
-                 [self.delegate processorDidAttemptRecovery:self didRecover:NO error:self->_error];
+                 [self.delegate processorDidAttemptRecovery:self didRecover:NO error:_error];
                };
              });
            }];
@@ -133,11 +133,11 @@
       UIAlertAction *option = [UIAlertAction actionWithTitle:title
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * _Nonnull action) {
-                                                       [self->_recoveryAttempter attemptRecoveryFromError:self->_error
-                                                                                              optionIndex:i
-                                                                                                 delegate:self
-                                                                                       didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
-                                                                                              contextInfo:nil];
+                                                       [_recoveryAttempter attemptRecoveryFromError:_error
+                                                                                        optionIndex:i
+                                                                                           delegate:self
+                                                                                 didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
+                                                                                        contextInfo:nil];
                                                      }];
       [alertController addAction:option];
     }
@@ -170,11 +170,11 @@
     UIAlertAction *OKAction = [UIAlertAction actionWithTitle:localizedOK
                                                        style:UIAlertActionStyleCancel
                                                      handler:^(UIAlertAction * _Nonnull action) {
-                                                       [self->_recoveryAttempter attemptRecoveryFromError:self->_error
-                                                                                              optionIndex:0
-                                                                                                 delegate:self
-                                                                                       didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
-                                                                                              contextInfo:nil];
+                                                       [_recoveryAttempter attemptRecoveryFromError:_error
+                                                                                        optionIndex:0
+                                                                                           delegate:self
+                                                                                 didRecoverSelector:@selector(didPresentErrorWithRecovery:contextInfo:)
+                                                                                        contextInfo:nil];
                                                      }];
     [alertController addAction:OKAction];
     UIViewController *topMostViewController = [FBSDKInternalUtility topMostViewController];

@@ -212,7 +212,7 @@
 		9D2BA0A91AB9E110004C7C0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		9D4D73501C19F30E001C505D /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../build/Bolts.framework; sourceTree = "<group>"; };
 		9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsStateManagerIntegrationTests.m; sourceTree = "<group>"; };
-		9D5FB1FD1C19EE06002F07BD /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../Bolts-IOS/build/Debug-iphoneos/Bolts.framework"; sourceTree = "<group>"; };
+		9D5FB1FD1C19EE06002F07BD /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../Carthage/Checkouts/Bolts-ObjC/build/Debug-iphoneos/Bolts.framework"; sourceTree = "<group>"; };
 		9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareAPIIntegrationTests.m; sourceTree = "<group>"; };
 		9DA81B061AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileIntegrationTests.m; sourceTree = "<group>"; };
 		9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOHHTTPStubs.a; sourceTree = BUILT_PRODUCTS_DIR; };

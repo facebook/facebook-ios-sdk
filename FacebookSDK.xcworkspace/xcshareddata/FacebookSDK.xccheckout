@@ -13,7 +13,7 @@
 		<key>38C2A0D4F62B675E8C16C8BC1437C7753846C8AC</key>
 		<string>git://github.com/AliSoftware/OHHTTPStubs.git</string>
 		<key>61C4B9E3B61282127C102C87B46B8CDE985974AE</key>
-		<string>git://github.com/BoltsFramework/Bolts-iOS.git</string>
+		<string>git://github.com/BoltsFramework/Bolts-ObjC.git</string>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
 		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
@@ -26,15 +26,15 @@
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>38C2A0D4F62B675E8C16C8BC1437C7753846C8AC</key>
-		<string>../vendor/OHHTTPStubs</string>
+		<string>../Carthage/Checkouts/OHHTTPStubs</string>
 		<key>61C4B9E3B61282127C102C87B46B8CDE985974AE</key>
-		<string>../Bolts-IOS</string>
+		<string>../Carthage/Checkouts/Bolts-ObjC</string>
 		<key>A20D666FF4B08EFE53F147818C2D4D17E2242912</key>
 		<string>..</string>
 		<key>DD20A1A48C66B5213E0FEBB87A95EF51D6C6F3E8</key>
-		<string>../vendor/OHHTTPStubs/OHHTTPStubs/UnitTests/AFNetworking</string>
+		<string>../Carthage/Checkouts/OHHTTPStubs/OHHTTPStubs/UnitTests/AFNetworking</string>
 		<key>E4BCE3AE6B24E41B9BCE312FF3B0B6CD0B8B8025</key>
-		<string>../vendor/OCMock</string>
+		<string>../Carthage/Checkouts/ocmock</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>ssh://projects.git.vip.facebook.com/data/gitrepos/ios-sdk</string>
@@ -58,7 +58,7 @@
 			<key>IDESourceControlWCCIdentifierKey</key>
 			<string>61C4B9E3B61282127C102C87B46B8CDE985974AE</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Bolts-IOS</string>
+			<string>Bolts-ObjC</string>
 		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>

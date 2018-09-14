@@ -300,17 +300,17 @@ static const struct
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isPasteboard] = @YES;
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.value] = _pasteboard.name;
-        [self->_pasteboard setData:data forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
+        [_pasteboard setData:data forPasteboardType:FBSDKBridgeAPIProtocolNativeV1DataPasteboardKey];
         // this version of the protocol only supports a single item on the pasteboard, so if when we add an item, make
         // sure we don't add another item
         didAddToPasteboard = YES;
         // if we are adding this to the general pasteboard, then we want to remove it when we are done with the share.
         // the Facebook app will not clear the value with this version of the protocol, so we should do it when the app
         // becomes active again
-        NSString *pasteboardName = self->_pasteboard.name;
+        NSString *pasteboardName = _pasteboard.name;
         if ([pasteboardName isEqualToString:UIPasteboardNameGeneral] ||
             [pasteboardName isEqualToString:UIPasteboardNameFind]) {
-          [[self class] clearData:data fromPasteboardOnApplicationDidBecomeActive:self->_pasteboard];
+          [[self class] clearData:data fromPasteboardOnApplicationDidBecomeActive:_pasteboard];
         }
       }
       return dictionary;

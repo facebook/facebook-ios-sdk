@@ -120,10 +120,10 @@ static NSString *const kErrorCategoryLogin = @"login";
       for (NSDictionary *codeSubcodesDictionary in dictionary[@"items"]) {
         NSString *code = [codeSubcodesDictionary[@"code"] stringValue];
 
-        NSMutableDictionary *currentSubcodes = self->_configurationDictionary[code];
+        NSMutableDictionary *currentSubcodes = _configurationDictionary[code];
         if (!currentSubcodes) {
           currentSubcodes = [NSMutableDictionary dictionary];
-          self->_configurationDictionary[code] = currentSubcodes;
+          _configurationDictionary[code] = currentSubcodes;
         }
 
         NSArray *subcodes = codeSubcodesDictionary[@"subcodes"];

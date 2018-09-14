@@ -92,6 +92,8 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	AN_SAMPLES=$AN_BUILD_PACKAGE/Samples/FBAudienceNetwork
 	AN_STATIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkFramework.out
 	AN_DYNAMIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkDynamicFramework.out
+  AN_BIDDING_STATIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkBiddingKitFramework.out
+  AN_BIDDING_DYNAMIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkBiddingKitDynamicFramework.out
 
 	if [ -z $SKIPBUILD ]; then
 		buck build //ios-sdk/ads/src/FBAudienceNetwork:FBAudienceNetworkFramework --build-report "$AN_STATIC_REPORT" || die "Failed to build FBAudienceNetwork"
@@ -114,7 +116,7 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	rsync -avmc "$FB_AD_SDK_BUILD"/FBAudienceNetworkDynamicFramework.framework "$AN_BUILD_PACKAGE" \
 	  || die "Could not copy FBAudienceNetworkDynamicFramework.framework"
 	mkdir -p "$AN_BUILD_PACKAGE/Samples/FBAudienceNetwork"
-	rsync -avmc "$FB_SDK_ROOT"/ads/samples/ "$AN_SAMPLES" \
+	rsync -avmc "$FB_SDK_ROOT"/ads/samples/AdUnitsSample "$AN_SAMPLES" \
 	  || die "Could not copy FBAudienceNetwork samples"
 	# Fix up samples
 	for fname in $(find "$AN_SAMPLES" -name "project.pbxproj" -print); do \
@@ -164,6 +166,96 @@ if [ "$PACKAGE" == "$PACAKAGE_AN" ]; then
 	(
 		cd $FB_AD_SDK_BUILD
 		ditto -ck --sequesterRsrc $AN_BUILD_PACKAGE $AN_ZIP
+	)
+
+elif [ "$PACKAGE" = "$PACKAGE_BIDDING_KIT" ]; then
+	# refuse to build with unclean state
+	repository_unclean=$(hg status -i ios-sdk/ | grep -v .DS_Store)
+	if [ "$repository_unclean" ]; then
+		echo "Detected unclean repository state:"
+		echo "$repository_unclean"
+		die "Please run 'hg purge --all' before building"
+	fi
+
+	AN_BIDDING_ZIP=$FB_AD_SDK_BUILD/$FB_BIDDING_KIT_BINARY_NAME-$FB_BIDDING_KIT_VERSION.zip
+	AN_BIDDING_BUILD_PACKAGE=$FB_AD_SDK_BUILD/package
+	AN_BIDDING_SAMPLES=$AN_BIDDING_BUILD_PACKAGE/Samples/FBAudienceNetworkBiddingKit
+	AN_BIDDING_STATIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkBiddingKitFramework.out
+	#AN_BIDDING_DYNAMIC_REPORT="${FB_SDK_ROOT}"/FBAudienceNetworkBiddingKitDynamicFramework.out
+
+	if [ -z $SKIPBUILD ]; then
+		buck build //ios-sdk/ads/src/FBAudienceNetwork:FBAudienceNetworkBiddingKitFramework --build-report "$AN_BIDDING_STATIC_REPORT" || die "Failed to build FBAudienceNetworkBiddingKit"
+    # dynamic not supported yet
+		buck build //ios-sdk/ads/src/FBAudienceNetwork:FBAudienceNetworkBiddingKitDynamicFramework --build-report "$AN_BIDDING_DYNAMIC_REPORT" || die "Failed to build FBAudienceNetworkBiddingKitDynamicFramework"
+
+    AN_BIDDING_BUCK_STATIC_OUTPUT="${FB_SDK_ROOT}/../"$(grep -E -m 1 '"output"' "$AN_BIDDING_STATIC_REPORT" | awk -F '"' '{ print $4 }')
+		AN_BIDDING_BUCK_DYNAMIC_OUTPUT="${FB_SDK_ROOT}/../"$(grep -E -m 1 '"output"' "$AN_BIDDING_DYNAMIC_REPORT" | awk -F '"' '{ print $4 }')
+
+		rsync -avmc "$AN_BIDDING_BUCK_STATIC_OUTPUT" "$FB_AD_SDK_BUILD" \
+		  || die "Could not copy FBAudienceNetworkBiddingKit.framework"
+		rsync -avmc "$AN_BIDDING_BUCK_DYNAMIC_OUTPUT" "$FB_AD_SDK_BUILD" \
+		  || die "Could not copy FBAudienceNetworkBiddingKitDynamicFramework.framework"
+
+		rm "$AN_BIDDING_STATIC_REPORT"
+		rm "$AN_BIDDING_DYNAMIC_REPORT"
+	fi
+
+
+	rsync -avmc "$FB_AD_SDK_BUILD"/FBAudienceNetworkBiddingKit.framework "$AN_BIDDING_BUILD_PACKAGE" \
+	  || die "Could not copy FBAudienceNetworkBiddingKit.framework"
+	rsync -avmc "$FB_AD_SDK_BUILD"/FBAudienceNetworkBiddingKitDynamicFramework.framework "$AN_BIDDING_BUILD_PACKAGE" \
+	  || die "Could not copy FBAudienceNetworkBiddingKitDynamicFramework.framework"
+	mkdir -p "$AN_BIDDING_BUILD_PACKAGE/Samples/FBAudienceNetworkBiddingKit"
+	rsync -avmc "$FB_SDK_ROOT"/ads/samples/AdBiddingSample "$AN_BIDDING_SAMPLES" \
+	  || die "Could not copy FBAudienceNetworkBiddingKit samples"
+	# Fix up samples
+	for fname in $(find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -print); do \
+	  sed 's|"\\"\$(SRCROOT)/\.\./\.\./\.\./build\\"",||g;s|\.\./\.\./\.\./build||g;' \
+	    "${fname}" > "${fname}".tmpfile  && mv "${fname}".tmpfile "${fname}"; \
+	done
+
+	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetworkBiddingKit.framework/FBAudienceNetworkBiddingKit "$COMMON_ARCHS";
+	check_binary_has_architectures "$FB_AD_SDK_BUILD"/FBAudienceNetworkBiddingKitDynamicFramework.framework/FBAudienceNetworkBiddingKitDynamicFramework "$COMMON_ARCHS";
+
+	check_binary_has_bitcode "$FB_AD_SDK_BUILD"/FBAudienceNetworkBiddingKit.framework/FBAudienceNetworkBiddingKit
+
+	# Fix up samples
+	for fname in $(find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -print); do \
+	  sed "s|../../build|../../../|g;" \
+	    "${fname}" > "${fname}".tmpfile  && mv "${fname}".tmpfile "${fname}"; \
+	done
+	for fname in $(find "$AN_BIDDING_SAMPLES" -name "*-PUBLIC.xcodeproj" -print); do \
+	  newfname="$(echo "${fname}" | sed -e 's/-PUBLIC//')" ; \
+	    rm -rf "${newfname}"; \
+	    mv "${fname}" "${newfname}" ; \
+	done
+
+	LANG=C
+
+	# Remove all BUCK related files from AN samples
+	find "$AN_BIDDING_SAMPLES" -name "BUCK" -delete
+	find "$AN_BIDDING_SAMPLES" -name "build-buck.sh" -delete
+	find "$AN_BIDDING_SAMPLES" -name "Buck-Info.plist" -delete
+	find "$AN_BIDDING_SAMPLES" -name "Entitlements" -type d -exec rm -r "{}" \;
+
+	find "$AN_BIDDING_SAMPLES" -name "entitlements.plist" -delete
+
+	find "$AN_BIDDING_SAMPLES" -name "Info.plist" -exec perl -p -i -0777 -e 's/\s*<key>CFBundleURLTypes<\/key>\s*<array>\s*<dict>\s*<key>CFBundleURLSchemes<\/key>\s*<array>\s*<string>fb\d*<\/string>\s*<\/array>\s*<\/dict>\s*<\/array>\s*<key>FacebookAppID<\/key>\s*<string>\d*<\/string>\s*<key>FacebookDisplayName<\/key>\s*<string>.*<\/string>\s*<key>LSApplicationQueriesSchemes<\/key>\s*<array>\s*<string>fbapi<\/string>\s*<string>fb-messenger-api<\/string>\s*<string>fbauth2<\/string>\s*<string>fbshareextension<\/string>\s*<\/array>\n//g' {} \;
+	find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/\n\s*com\.apple\.Keychain = {\s*enabled = 1;\s*};//gms' {} \;
+	find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/NativeAdSample.entitlements/d' {} \;
+	find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e '/AdBiddingSample.entitlements/d' {} \;
+	find "$AN_BIDDING_SAMPLES" -name "project.pbxproj" -exec perl -p -i -0777 -e 's/^\s*<FileRef\n\s*location = "group:\.\.\/\.\.\/FBSDKCoreKit\/FBSDKCoreKit\.xcodeproj">\n\s*<\/FileRef>\n//gms' {} \;
+	find "$AN_BIDDING_SAMPLES" -type f -exec sed -i '' -E -e "/fbLoginButton/d" {} \;
+	find "$AN_BIDDING_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKCoreKit/d" {} \;
+	find "$AN_BIDDING_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKLogin/d" {} \;
+	find "$AN_BIDDING_SAMPLES" -type f -exec sed -i '' -E -e "/FBSDKApplicationDelegate/d" {} \;
+	find "$AN_BIDDING_SAMPLES" -type f -exec  perl -p -i -0777 -e 's/\n\/\/ START REMOVED AT DISTRIBUTION BUILD TIME.*?\/\/ END REMOVED AT DISTRIBUTION BUILD TIME\n//gms' {} \;
+
+	# Build .zip from package directory
+	progress_message "Building .zip from package directory."
+	(
+		cd "$FB_AD_SDK_BUILD" || die "Failed to change directory to package directory to build the zip"
+		ditto -ck --sequesterRsrc "$AN_BIDDING_BUILD_PACKAGE" "$AN_BIDDING_ZIP"
 	)
 else
 	# -----------------------------------------------------------------------------
@@ -218,7 +310,7 @@ else
 
 		# Fixup projects to point to the SDK framework
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
-		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Bolts-IOS/build/ios||g' \
+		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Carthage/Checkouts/Bolts-ObjC/build/ios||g' \
 		    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 		done
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
@@ -237,8 +329,8 @@ else
 		  || die "Could not copy AccountKitStrings.bundle"
 
 		# Build FBNotifications framework
-		\rake -f "$FB_SDK_ROOT/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
-		\unzip "$FB_SDK_ROOT/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
+		\rake -f "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
+		\unzip "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
 		\cp -R "$FB_SDK_BUILD"/FBNotifications.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBNotifications.framework"
 
@@ -248,13 +340,6 @@ else
 		fi
 		\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FBSDKMessengerShareKit.framework"
-
-		# Build Marketing Kit
-		if [ -z $SKIPBUILD ]; then
-			(xcodebuild -project "${FB_SDK_ROOT}"/FBSDKMarketingKit/FBSDKMarketingKit.xcodeproj -scheme "FBSDKMarketingKit-universal" -configuration Release clean build) || die "Failed to build marketing kit"
-		fi
-		\cp -R "$FB_SDK_BUILD"/FBSDKMarketingKit.framework "$FB_SDK_BUILD_PACKAGE" \
-			|| die "Could not copy FBSDKMarketingKit.framework"
 
 		# Build docs
 		if [ -z $SKIPBUILD ]; then
