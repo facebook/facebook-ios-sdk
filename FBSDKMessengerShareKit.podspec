@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, "9.0"
   s.ios.deployment_target = "7.0"
 
-  s.source       = { :git => "https://github.com/facebook/facebook-ios-sdk.git",
+  s.source       = { :git => "https://github.com/facebook/facebook-objc-sdk.git",
                      :tag => "messenger-share-kit-version-1.3.2"
                     }
 
