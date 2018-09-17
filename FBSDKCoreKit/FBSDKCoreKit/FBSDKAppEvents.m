@@ -270,7 +270,6 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 
 #define NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER 100
 #define FLUSH_PERIOD_IN_SECONDS 15
-#define APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD 60 * 60 * 24
 #define USER_ID_USER_DEFAULTS_KEY @"com.facebook.sdk.appevents.userid"
 
 static NSString *g_overrideAppID = nil;
@@ -284,7 +283,6 @@ static NSString *g_overrideAppID = nil;
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
 
 @property (nonatomic, strong) dispatch_source_t flushTimer;
-@property (nonatomic, strong) dispatch_source_t attributionIDRecheckTimer;
 
 @end
 
@@ -320,10 +318,6 @@ static NSString *g_overrideAppID = nil;
                                                           [weakSelf flushTimerFired:nil];
                                                         }];
 
-    self.attributionIDRecheckTimer = [FBSDKUtility startGCDTimerWithInterval:APP_SUPPORTS_ATTRIBUTION_ID_RECHECK_PERIOD
-                                                                       block:^{
-                                                                         [weakSelf appSettingsFetchStateResetTimerFired:nil];
-                                                                       }];
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
   }
@@ -355,7 +349,6 @@ static NSString *g_overrideAppID = nil;
 {
   [[NSNotificationCenter defaultCenter] removeObserver:self];
   [FBSDKUtility stopGCDTimer:self.flushTimer];
-  [FBSDKUtility stopGCDTimer:self.attributionIDRecheckTimer];
 }
 
 #pragma mark - Public Methods
@@ -857,31 +850,22 @@ static NSString *g_overrideAppID = nil;
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
 - (void)fetchServerConfiguration:(void (^)(void))callback
 {
-  if (_serverConfiguration == nil) {
-    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
-      _serverConfiguration = serverConfiguration;
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    _serverConfiguration = serverConfiguration;
 
-      if (_serverConfiguration.implicitPurchaseLoggingEnabled) {
-        [FBSDKPaymentObserver startObservingTransactions];
-      } else {
-        [FBSDKPaymentObserver stopObservingTransactions];
-      }
+    if (_serverConfiguration.implicitPurchaseLoggingEnabled) {
+      [FBSDKPaymentObserver startObservingTransactions];
+    } else {
+      [FBSDKPaymentObserver stopObservingTransactions];
+    }
 #if !TARGET_OS_TV
-      [self enableCodelessEvents];
-      [FBSDKAppEventsUninstall setUninstallTrackingEnabled:_serverConfiguration.uninstallTrackingEnabled];
+    [self enableCodelessEvents];
+    [FBSDKAppEventsUninstall setUninstallTrackingEnabled:_serverConfiguration.uninstallTrackingEnabled];
 #endif
-      if (callback) {
-        callback();
-      }
-    }];
-    return;
-  }
-#if !TARGET_OS_TV
-  [self enableCodelessEvents];
-#endif
-  if (callback) {
-    callback();
-  }
+    if (callback) {
+      callback();
+    }
+  }];
 }
 
 - (void)instanceLogEvent:(NSString *)eventName
@@ -1161,11 +1145,6 @@ static NSString *g_overrideAppID = nil;
   if (self.flushBehavior != FBSDKAppEventsFlushBehaviorExplicitOnly && !self.disableTimer) {
     [self flushForReason:FBSDKAppEventsFlushReasonTimer];
   }
-}
-
-- (void)appSettingsFetchStateResetTimerFired:(id)arg
-{
-  _serverConfiguration = nil;
 }
 
 - (void)applicationDidBecomeActive
