@@ -18,6 +18,8 @@
 
 #import "FBSDKAppEventsUninstall.h"
 
+#import <objc/runtime.h>
+
 #import <UIKit/UIKit.h>
 
 #import "FBSDKAppEventsUtility.h"
@@ -68,19 +70,40 @@ static NSString *_token = nil;
 
 + (void)installSwizzler
 {
-  void (^registerToken)(id delegate, SEL selector, UIApplication *application, NSData *deviceToken) =
-      ^(id delegate, SEL selector, UIApplication *application, NSData *deviceToken)
-  {
+  Class cls = [[UIApplication sharedApplication].delegate class];
+  SEL selector = @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:);
+  BOOL hasMethod = class_getInstanceMethod(cls, selector) != nil;
+  void (^block)(id) = ^(NSData *deviceToken) {
     NSString *tokenString = [self stringWithDeviceToken:deviceToken];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
                            logEntry:[NSString stringWithFormat:@"Register token from Swizzling: %@", tokenString]];
     // try upload token immediately after receiving it from swizzling
-    [self updateAndUploadToken: tokenString];
+    [self updateAndUploadToken:tokenString];
   };
 
-  [FBSDKSwizzler swizzleSelector:@selector(application:didRegisterForRemoteNotificationsWithDeviceToken:)
-                         onClass:[[UIApplication sharedApplication].delegate class]
-                       withBlock:registerToken named:@"map_control"];
+  if (!hasMethod)
+  {
+    void (^registerBlock)(id, id, id) = ^(id _, id __, NSData *deviceToken)
+    {
+      block(deviceToken);
+    };
+    IMP imp = imp_implementationWithBlock(registerBlock);
+    struct objc_method_description desc = protocol_getMethodDescription(@protocol(UIApplicationDelegate),
+                                                                         selector, NO, YES);
+    const char *types = desc.types;
+    class_addMethod(cls, selector, imp, types);
+  } else
+  {
+    void (^registerBlock)(id, SEL, id, id) = ^(id _, SEL __, id ___, NSData *deviceToken)
+    {
+      block(deviceToken);
+    };
+    [FBSDKSwizzler swizzleSelector:selector
+                           onClass:cls
+                         withBlock:registerBlock
+                             named:@"map_control"];
+  }
+
   [self setInitiated];
 }
 
