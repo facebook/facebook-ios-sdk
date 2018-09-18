@@ -6,6 +6,8 @@ ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
 ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
 ads/samples/AdBiddingSample/AdBiddingSample.xcodeproj/*
 ads/samples/AdBiddingSample/AdBiddingSample.xcworkspace/*
+ads/samples/MPVideoSample/MPVideoSample.xcodeproj/*
+ads/samples/MPVideoSample/MPVideoSample.xcworkspace/*
 
 ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
 ads/internal/samples/Hackvertising/Hackvertising.xcworkspace/*
