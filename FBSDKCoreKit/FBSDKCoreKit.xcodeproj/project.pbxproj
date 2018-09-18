@@ -702,6 +702,20 @@
 			remoteGlobalIDString = 819573F11C2B8ECB00BFCA39;
 			remoteInfo = "Bolts-watchOS-Dynamic";
 		};
+		52279E552150732600F31455 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F0B950F11B0080BE00942C38;
+			remoteInfo = "OCMock iOS";
+		};
+		52279E572150732600F31455 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D99470F1A9531B5003375EC /* OCMock.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 817EB1621BD765130047E85A;
+			remoteInfo = "OCMock tvOS";
+		};
 		7E55574B1A8E89A800344F86 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7E55573F1A8E89A800344F86 /* OHHTTPStubs.xcodeproj */;
@@ -1780,6 +1794,8 @@
 				9D9947251A9531B5003375EC /* OCMockTests.xctest */,
 				9D9947271A9531B5003375EC /* libOCMock.a */,
 				9D9947291A9531B5003375EC /* OCMockLibTests.xctest */,
+				52279E562150732600F31455 /* OCMock.framework */,
+				52279E582150732600F31455 /* OCMock.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2281,7 +2297,7 @@
 		9D26973E1A5DF40700143BFC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D2697461A5DF40700143BFC = {
@@ -2355,6 +2371,20 @@
 			fileType = wrapper.framework;
 			path = Bolts.framework;
 			remoteRef = 2A8FB1861C921D9F00027121 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52279E562150732600F31455 /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 52279E552150732600F31455 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52279E582150732600F31455 /* OCMock.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = OCMock.framework;
+			remoteRef = 52279E572150732600F31455 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		7E55574C1A8E89A800344F86 /* libOHHTTPStubs.a */ = {
@@ -2979,6 +3009,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8861D1B552600D61E6C /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 			};
 			name = Debug;
 		};
@@ -2986,6 +3026,16 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8871D1B552600D61E6C /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 			};
 			name = Release;
 		};

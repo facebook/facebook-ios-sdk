@@ -398,8 +398,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   void(^completion)(BOOL, NSString *, NSError *) = ^void(BOOL didPerformLogIn, NSString *authMethod, NSError *error) {
     if (didPerformLogIn) {
-      [_logger startAuthMethod:authMethod];
-      _state = FBSDKLoginManagerStatePerformingLogin;
+      [self->_logger startAuthMethod:authMethod];
+      self->_state = FBSDKLoginManagerStatePerformingLogin;
     } else if (error && [error.domain isEqualToString:SFVCCanceledLogin]) {
       [self handleImplicitCancelOfLogIn];
     } else {
@@ -523,7 +523,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSDate *start = [NSDate date];
   [[FBSDKApplicationDelegate sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL, NSError *anError) {
-    [_logger logNativeAppDialogResult:openedURL dialogDuration:-[start timeIntervalSinceNow]];
+    [self->_logger logNativeAppDialogResult:openedURL dialogDuration:-[start timeIntervalSinceNow]];
     if (handler) {
       handler(openedURL, anError);
     }
@@ -720,7 +720,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
      // false positives.
      BOOL didShowDialog = [FBSDKInternalUtility currentTimeInMilliseconds] - timePriorToSystemAuthUI > 350;
      BOOL isUnTOSedDevice = !oauthToken && accountStoreError.code == ACErrorAccountNotFound;
-     [_logger systemAuthDidShowDialog:didShowDialog isUnTOSedDevice:isUnTOSedDevice];
+     [self->_logger systemAuthDidShowDialog:didShowDialog isUnTOSedDevice:isUnTOSedDevice];
 
      if (accountStoreError && [FBSDKSystemAccountStoreAdapter sharedInstance].forceBlockingRenew) {
        accountStoreError = [FBSDKLoginError errorForSystemPasswordChange:accountStoreError];

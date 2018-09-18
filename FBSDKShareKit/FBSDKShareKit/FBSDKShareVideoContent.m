@@ -91,7 +91,7 @@
                                                 resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary<NSString *, id> *info) {
                                                   NSURL *filePathURL = [[(AVURLAsset *)avAsset URL] filePathURL];
                                                   NSString *pathExtension = [filePathURL pathExtension];
-                                                  NSString *localIdentifier = [_video.videoAsset localIdentifier];
+                                                  NSString *localIdentifier = [self->_video.videoAsset localIdentifier];
                                                   NSRange range = [localIdentifier rangeOfString:@"/"];
                                                   NSString *uuid = [localIdentifier substringToIndex:range.location];
                                                   NSString *assetPath = [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@", pathExtension, uuid, pathExtension];

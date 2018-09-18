@@ -43,6 +43,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		52EFEFED2150950D00CD2592 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6BB1D0A6FE300962084 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF2C207C05CD00662776;
+			remoteInfo = FBSDKLoginKit_TV;
+		};
+		52EFEFEF2150950D00CD2592 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6BB1D0A6FE300962084 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF52207C07C600662776;
+			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
+		};
 		8118B6A71D0A6FD600962084 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8118B69F1D0A6FD600962084 /* FBSDKCoreKit.xcodeproj */;
@@ -279,6 +293,8 @@
 				8118B6C21D0A6FE400962084 /* FBSDKLoginKit.framework */,
 				9D28F1BF1DB162FC0057D709 /* FBSDKLoginKit.framework */,
 				8118B6C41D0A6FE400962084 /* FBSDKLoginKitTests.xctest */,
+				52EFEFEE2150950D00CD2592 /* FBSDKLoginKit.framework */,
+				52EFEFF02150950D00CD2592 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -447,7 +463,7 @@
 		9D1999A91A7AF41B00CAD112 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0940;
 				TargetAttributes = {
 					9D1999B21A7AF44B00CAD112 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -493,6 +509,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		52EFEFEE2150950D00CD2592 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52EFEFED2150950D00CD2592 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52EFEFF02150950D00CD2592 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52EFEFEF2150950D00CD2592 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		8118B6A81D0A6FD600962084 /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -688,6 +718,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C11A7AF46300CAD112 /* FacebookSDK-Project-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
 		};
@@ -695,6 +736,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C21A7AF46300CAD112 /* FacebookSDK-Project-Release.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Release;
 		};
@@ -703,6 +755,7 @@
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Debug;
@@ -712,6 +765,7 @@
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
 			};
 			name = Release;
@@ -720,6 +774,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999BE1A7AF46300CAD112 /* FacebookSDK-Application.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
 		};
@@ -727,6 +782,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999BE1A7AF46300CAD112 /* FacebookSDK-Application.xcconfig */;
 			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
 		};

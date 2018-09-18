@@ -153,7 +153,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   if (_parameters.accessTokenString && !_parameters.userID) {
     void(^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
     FBSDKLoginRequestMeAndPermissions(_parameters, ^{
-      handlerCopy(_parameters);
+      handlerCopy(self->_parameters);
     });
     return;
   }
@@ -265,7 +265,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     // It's possible the graph error has a value set for NSRecoveryAttempterErrorKey but we don't
     // have any login-specific attempter to provide since system auth succeeded and the error is a
     // graph API error.
-    NSError *serverError = _parameters.error;
+    NSError *serverError = self->_parameters.error;
     NSError *error = [FBSDKLoginError errorFromServerError:serverError];
     if (error != nil) {
       // In the event the user's password changed the Accounts framework will still return
@@ -275,16 +275,16 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
       if (error.code == FBSDKLoginPasswordChangedErrorCode) {
         [FBSDKSystemAccountStoreAdapter sharedInstance].forceBlockingRenew = YES;
 
-        _parameters.accessTokenString = nil;
-        _parameters.appID = nil;
+        self->_parameters.accessTokenString = nil;
+        self->_parameters.appID = nil;
 
         error = [FBSDKLoginError errorForSystemPasswordChange:serverError];
       }
 
-      _parameters.error = error;
+      self->_parameters.error = error;
     }
 
-    handlerCopy(_parameters);
+    handlerCopy(self->_parameters);
   });
 }
 
