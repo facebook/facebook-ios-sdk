@@ -216,7 +216,8 @@ static NSMutableDictionary *gInstancesDictionary;
                                                  appID:_appID
                                                 userID:userId
                                         expirationDate:nil
-                                           refreshDate:nil];
+                                           refreshDate:nil
+                                           dataAccessExpirationDate:nil];
 }
 
 - (NSArray *)userIdAndTokenOfExistingAccountWithPermissions:(NSSet *)permissions skip:(NSSet *)setToSkip {

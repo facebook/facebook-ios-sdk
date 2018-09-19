@@ -194,6 +194,12 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   }
   _parameters.expirationDate = expirationDate;
 
+  NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+  if (parameters[@"data_access_expiration_time"] && [parameters[@"data_access_expiration_time"] integerValue] > 0) {
+    dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[parameters[@"data_access_expiration_time"] integerValue]];
+  }
+  _parameters.dataAccessExpirationDate = dataAccessExpirationDate;
+
   NSError *error = nil;
   NSDictionary *state = [FBSDKInternalUtility objectForJSONString:parameters[@"state"] error:&error];
   _parameters.challenge = [FBSDKUtility URLDecode:state[@"challenge"]];

@@ -250,7 +250,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
                                                                           appID:parameters.appID
                                                                          userID:parameters.userID
                                                                  expirationDate:parameters.expirationDate
-                                                                    refreshDate:[NSDate date]];
+                                                                    refreshDate:[NSDate date]
+                                                                    dataAccessExpirationDate:parameters.dataAccessExpirationDate];
         result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:token
                                                          isCancelled:NO
                                                   grantedPermissions:recentlyGrantedPermissions

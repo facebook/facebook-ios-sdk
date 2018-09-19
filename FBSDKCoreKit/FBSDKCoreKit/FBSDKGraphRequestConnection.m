@@ -76,7 +76,8 @@ static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken
                                                  appID:accessToken.appID
                                                 userID:accessToken.userID
                                         expirationDate:expirationDate
-                                           refreshDate:expirationDate];
+                                           refreshDate:expirationDate
+                                           dataAccessExpirationDate:expirationDate];
 }
 #endif
 
