@@ -286,8 +286,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 #endif
                       ];
   NSDictionary *parameters = @{ @"fields": [fields componentsJoinedByString:@","] };
-  if (objc_lookUpClass("FBSDKAutoLog") != nil &&
-      FBSDKAdvertisingTrackingAllowed == [FBSDKAppEventsUtility advertisingTrackingStatus]) {
+  if (objc_lookUpClass("FBSDKAutoLog") != nil) {
     NSString *advertiserID = [FBSDKAppEventsUtility advertiserID];
 
     if (advertiserID) {
