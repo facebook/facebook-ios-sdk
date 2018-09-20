@@ -155,7 +155,7 @@
   [alertController addAction:[UIAlertAction actionWithTitle:cancelTitle
                                                       style:UIAlertActionStyleCancel
                                                     handler:^(UIAlertAction * _Nonnull action) {
-                                                      _isRetry = YES;
+                                                      self->_isRetry = YES;
                                                       FBSDKDeviceDialogView *view = [[FBSDKDeviceDialogView alloc] initWithFrame:self.view.frame];
                                                       view.delegate = self;
                                                       self.view = view;
