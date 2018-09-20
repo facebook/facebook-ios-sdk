@@ -38,7 +38,6 @@
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
-#import "FBSDKAppEventsUninstall.h"
 #import "FBSDKBoltsMeasurementEventListener.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
@@ -99,13 +98,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
   // Remove the observer
   [[NSNotificationCenter defaultCenter] removeObserver:self];
-  
-#if !TARGET_OS_TV
-  if (![FBSDKAppEventsUninstall initiated]){
-    [FBSDKAppEventsUninstall installSwizzler];
-  }
-#endif
-
 }
 
 + (instancetype)sharedInstance

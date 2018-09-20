@@ -1598,8 +1598,8 @@
 				9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */,
 				9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */,
 				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
-				9EBCC49B20EBFBBF00291885 /* FBSDKAppEventsUninstall.m */,
 				9EBCC4B120EBFBCB00291885 /* FBSDKAppEventsUninstall.h */,
+				9EBCC49B20EBFBBF00291885 /* FBSDKAppEventsUninstall.m */,
 			);
 			path = AppEvents;
 			sourceTree = "<group>";
@@ -3043,6 +3043,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
 			};
 			name = Debug;
@@ -3051,6 +3052,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				CLANG_WARN_STRICT_PROTOTYPES = NO;
 				"FB_BITCODE_FLAG[sdk=iphoneos11.0]" = "-fembed-bitcode";
 			};
 			name = Release;

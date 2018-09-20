@@ -21,12 +21,12 @@
 #import <objc/runtime.h>
 
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
 
 #import "FBSDKAppEventsUtility.h"
-#import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKLogger.h"
-#import "FBSDKServerConfiguration.h"
+#import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings.h"
 #import "FBSDKSwizzler.h"
 
@@ -37,24 +37,9 @@
 
 @implementation FBSDKAppEventsUninstall
 
-static BOOL _initiated = NO;
-static BOOL _uploaded = NO;
-static BOOL _uninstallTrackingEnabled = NO;
-static NSString *_token = nil;
-
-+ (void)setUninstallTrackingEnabled:(BOOL)uninstallTrackingEnabled{
-  _uninstallTrackingEnabled = uninstallTrackingEnabled;
-  // try upload token when enable setting changed
-  // will upload if never uploaded before and newly enabled
-  [self updateAndUploadToken: _token];
-}
-
-+ (BOOL)initiated{
-  return _initiated;
-}
-
-+ (void)setInitiated{
-  _initiated = YES;
++ (void)load
+{
+  [FBSDKAppEventsUninstall installSwizzler];
 }
 
 + (NSString *)stringWithDeviceToken:(NSData *)deviceToken {
@@ -103,52 +88,31 @@ static NSString *_token = nil;
                          withBlock:registerBlock
                              named:@"map_control"];
   }
-
-  [self setInitiated];
 }
 
 // Token is updated when (changed OR not uploaded)
 // Token is uploaded when enabled AND (changed OR not uploaded)
-+ (void)updateAndUploadToken:(NSString*) tokenString
++ (void)updateAndUploadToken:(NSString *)tokenString
 {
-  if ((tokenString != nil) && ((_token != tokenString) || !_uploaded)){
-    // update token
-    _token = tokenString;
-    if (_uninstallTrackingEnabled){
-      // upload token
+  if (!tokenString) {
+    return;
+  }
+
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+    if (serverConfiguration.uninstallTrackingEnabled) {
       FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                     initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                        [FBSDKSettings appID], UNINSTALL_TRACKING_TOKEN_ENDPOINT]
                                     parameters:@{
-                                                 UNINSTALL_TRACKING_DEVICE_TOKEN_KEY: _token,
+                                                 UNINSTALL_TRACKING_DEVICE_TOKEN_KEY: tokenString,
                                                  UNINSTALL_TRACKING_PLATFORM_KEY: @"ios",
                                                  // advertiserID could be 0s if user select limit ad tracking
                                                  UNINSTALL_TRACKING_DEVICE_ID_KEY:  [FBSDKAppEventsUtility advertiserID]?:@""
                                                  }
-                                    tokenString:nil
-                                    HTTPMethod:@"POST"
-                                    flags:FBSDKGraphRequestFlagDisableErrorRecovery |
-                                              FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
-                                              FBSDKGraphRequestFlagSkipClientToken
-                                    ];
-      [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-          if (!error)
-          {
-            [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational
-                                   logEntry:[NSString stringWithFormat:@"Upload token complete: %@", result]];
-            _uploaded = YES;
-         }
-          else
-          {
-            [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                   logEntry:[NSString stringWithFormat:
-                                             @"Upload token fail with parameter: %@, error: %@", request.parameters, error]];
-          }
-        }
-      ];
+                                    HTTPMethod:@"POST"];
+      [request startWithCompletionHandler:nil];
     }
-  }
+  }];
 }
-
 
 @end

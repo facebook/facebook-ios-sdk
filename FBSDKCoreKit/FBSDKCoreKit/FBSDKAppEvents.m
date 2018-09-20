@@ -40,7 +40,6 @@
 #import "FBSDKUserDataStore.h"
 
 #if !TARGET_OS_TV
-#import "FBSDKAppEventsUninstall.h"
 #import "FBSDKEventBindingManager.h"
 #import "FBSDKHybridAppEventsScriptMessageHandler.h"
 #endif
@@ -860,7 +859,6 @@ static NSString *g_overrideAppID = nil;
     }
 #if !TARGET_OS_TV
     [self enableCodelessEvents];
-    [FBSDKAppEventsUninstall setUninstallTrackingEnabled:self->_serverConfiguration.uninstallTrackingEnabled];
 #endif
     if (callback) {
       callback();
