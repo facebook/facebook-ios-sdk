@@ -61,16 +61,6 @@
   XCTAssertNil(error);
 }
 
-- (void)testValidationWithNilContent
-{
-  NSError *error;
-  XCTAssertNil(error);
-  XCTAssertFalse([nil validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
-  XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"content");
-}
-
 - (void)testValidationWithNilAppLinkURL
 {
   FBSDKAppInviteContent *content = [[FBSDKAppInviteContent alloc] init];

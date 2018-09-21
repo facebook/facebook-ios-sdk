@@ -235,6 +235,7 @@
                             smartLoginMenuIconURL:nil
                                     updateMessage:nil
                                     eventBindings:nil
+                             codelessSetupEnabled:NO
    ];
 
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];

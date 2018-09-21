@@ -61,8 +61,6 @@
   XCTAssertEqualObjects([arguments arrayForKey:@"nil_array"], nil);
 
   // Unsupported types
-  XCTAssertThrows([arguments setArray:@[@{}] forKey:@"dictionary_array"]);
-  XCTAssertThrows([arguments setArray:@[@[]] forKey:@"nested_array"]);
   XCTAssertThrows([arguments setString:(NSString *)[NSData new] forKey:@"fake_string"]);
 }
 
