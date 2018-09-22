@@ -29,7 +29,7 @@ public extension UIAlertAction {
     /// Destructive action with custom title
     case destructive(String)
     /// Custom action with title and style
-    case custom(String, UIAlertActionStyle)
+    case custom(String, UIAlertAction.Style)
 
     /**
      Creates the action instance for UIAlertController
@@ -39,7 +39,7 @@ public extension UIAlertAction {
      */
     public func action(handler: ((String) -> Void)? = nil) -> UIAlertAction {
       //Default value
-      var actionStyle = UIAlertActionStyle.default
+      var actionStyle: UIAlertAction.Style = .default
       var title = ""
       // Action configuration based on the action type
       switch self {
@@ -81,7 +81,7 @@ extension UIAlertController {
    */
   convenience init(title: String,
                    message: String,
-                   style: UIAlertControllerStyle = .alert,
+                   style: UIAlertController.Style = .alert,
                    handler: ((String) -> Swift.Void)? = nil) {
     //initialize the contoller (self) instance
     self.init(title: title, message: message, preferredStyle: style)

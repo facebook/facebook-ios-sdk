@@ -49,7 +49,7 @@ public final class SDKApplicationDelegate {
   @discardableResult
   public func
     application(_ application: UIApplication,
-                didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]? = nil) -> Bool {
+                didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
     return delegate?.application(application, didFinishLaunchingWithOptions: launchOptions) ?? false
   }
 
@@ -93,7 +93,7 @@ public final class SDKApplicationDelegate {
   @discardableResult
   public func application(_ app: UIApplication,
                           open url: URL,
-                          options: [UIApplicationOpenURLOptionsKey: Any] = [:]) -> Bool {
+                          options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
     return delegate?.application(app,
                                  open: url,
                                  sourceApplication: options[.sourceApplication] as? String,

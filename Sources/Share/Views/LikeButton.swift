@@ -27,6 +27,8 @@ import Foundation
  currentAccessToken has "publish_actions" permission and the object is an Open Graph object, then the like can happen
  seamlessly without the fast-app-switch.
  */
+
+@available(*, deprecated, message: "FBSDKLikeButton is deprecated")
 public class LikeButton: UIView {
 
   private var sdkLikeButton: FBSDKLikeButton

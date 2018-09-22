@@ -18,6 +18,7 @@
 
 import FBSDKShareKit
 
+@available(*, deprecated, message: "LikeControl is deprecated")
 public extension LikeControl {
 
   /**

@@ -8,8 +8,8 @@ included:
 excluded:
 - Pods
 - Carthage
-- Carthage/facebook-ios-sdk/samples
-- Carthage/facebook-ios-sdk/vendor
+- Carthage/facebook-objc-sdk/samples
+- Carthage/facebook-objc-sdk/vendor
 - Vendor
 
 cyclomatic_complexity: 11

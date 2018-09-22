@@ -28,7 +28,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   // MARK: UIApplicationDelegate
 
   func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
 
     return true
@@ -44,7 +44,7 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
   @available(iOS 9.0, *)
   func application(_ application: UIApplication,
                    open url: URL,
-                   options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
+                   options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool {
     return SDKApplicationDelegate.shared.application(application, open: url, options: options)
   }
 

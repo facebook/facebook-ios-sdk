@@ -88,10 +88,11 @@ UINavigationControllerDelegate {
 
   // MARK: UIImagePickerControllerDelegate
 
-  func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String: Any]) {
+  func imagePickerController(_ picker: UIImagePickerController,
+                             didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
     picker.dismiss(animated: true, completion: nil)
 
-    guard let videoURL = info[UIImagePickerControllerReferenceURL] as? URL else {
+    guard let videoURL = info[.referenceURL] as? URL else {
       return
     }
 

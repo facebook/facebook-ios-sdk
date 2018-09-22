@@ -15,16 +15,16 @@
       location = "container:"
       name = "ObjC">
       <FileRef
-         location = "group:Carthage/Checkouts/facebook-ios-sdk/Bolts-IOS/Bolts.xcodeproj">
+         location = "group:Carthage/Checkouts/facebook-objc-sdk/Bolts-ObjC/Bolts.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+         location = "group:Carthage/Checkouts/facebook-objc-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
+         location = "group:Carthage/Checkouts/facebook-objc-sdk/FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
       </FileRef>
       <FileRef
-         location = "group:Carthage/Checkouts/facebook-ios-sdk/FBSDKShareKit/FBSDKShareKit.xcodeproj">
+         location = "group:Carthage/Checkouts/facebook-objc-sdk/FBSDKShareKit/FBSDKShareKit.xcodeproj">
       </FileRef>
    </Group>
 </Workspace>

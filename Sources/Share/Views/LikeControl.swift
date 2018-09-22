@@ -26,6 +26,8 @@ import UIKit
  Taps on the like button within this control will invoke an API call to the Facebook app through a fast-app-switch
  that allows the user to like the object. Upon return to the calling app, the view will update with the new state.
  */
+
+@available(*, deprecated, message: "FBSDKLikeControl is deprecated")
 public class LikeControl: UIView {
   private let sdkLikeControl: FBSDKLikeControl
 
