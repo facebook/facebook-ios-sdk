@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'FacebookCore'
-  s.version      = '0.3.3'
+  s.version      = '0.4.0'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
   s.documentation_url = 'https://developers.facebook.com/docs/swift/reference'
@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.platform     = :ios
 
-  s.swift_version = '4.0'
+  s.swift_version = '4.2'
 
   s.ios.deployment_target = '8.0'
 
