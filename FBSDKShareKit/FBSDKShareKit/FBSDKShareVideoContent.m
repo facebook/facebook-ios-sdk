@@ -182,7 +182,10 @@
           [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
           [FBSDKInternalUtility object:_previewPhoto isEqualToObject:content.previewPhoto] &&
+#pragma clang diagnostic pop
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
           [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID] &&
           [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&

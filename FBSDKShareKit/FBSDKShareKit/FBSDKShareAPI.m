@@ -394,7 +394,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   [self _addCommonParameters:parameters content:videoContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"description"];
   if ([self.accessToken.permissions containsObject:@"ads_management"]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     FBSDKSharePhoto *photo = videoContent.previewPhoto;
+#pragma clang diagnostic pop
     UIImage *image = photo.image;
     if (!image && [photo.imageURL isFileURL]) {
       image = [UIImage imageWithContentsOfFile:[photo.imageURL path]];
