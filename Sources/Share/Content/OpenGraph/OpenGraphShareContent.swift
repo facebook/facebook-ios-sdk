@@ -22,7 +22,7 @@ import Foundation
 /**
  A model for Open Graph content to be shared.
  */
-public struct OpenGraphShareContent: Equatable, SDKBridgedContent {
+public struct OpenGraphShareContent: Equatable, SDKBridgedContent, ContentProtocol {
   public typealias Result = PostSharingResult
 
   /// The Open Graph action to be shared.
