@@ -2592,7 +2592,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "rm -rf ../Carthage/Checkouts/Bolts-ObjC/build/ ../build/Bolts.framework\n../Carthage/Checkouts/Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Carthage/Checkouts/Bolts-ObjC/build/Release-iphonesimulator/Bolts.framework ../build/\n";
+			shellScript = "rm -rf ../Carthage/Checkouts/Bolts-ObjC/build/ ../build/Bolts.framework\n../Carthage/Checkouts/Bolts-ObjC/scripts/build_framework.sh -c Release\ncp -R ../Carthage/Checkouts/Bolts-ObjC/build/Release-universal/Bolts.framework ../build/\n";
 		};
 		9D6DEEFD1BC2E546001A94ED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
