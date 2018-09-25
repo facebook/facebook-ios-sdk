@@ -7,9 +7,6 @@
 [submodule "Carthage/Checkouts/Tweaks"]
   path = Carthage/Checkouts/Tweaks
   url = https://github.com/facebook/Tweaks.git
-[submodule "Carthage/Checkouts/ios-snapshot-test-case"]
-  path = Carthage/Checkouts/ios-snapshot-test-case
-  url = https://github.com/facebook/ios-snapshot-test-case.git
 [submodule "Carthage/Checkouts/ocmock"]
   path = Carthage/Checkouts/ocmock
   url = https://github.com/erikdoe/ocmock.git
