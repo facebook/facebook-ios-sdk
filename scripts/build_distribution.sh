@@ -328,12 +328,6 @@ else
 		\cp -R "$FB_SDK_BUILD"/AccountKitStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy AccountKitStrings.bundle"
 
-		# Build FBNotifications framework
-		\rake -f "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/Rakefile" package:frameworks || die "Could not build FBNotifications.framework"
-		\unzip "$FB_SDK_ROOT/Carthage/Checkouts/FBNotifications/iOS/build/release/FBNotifications-iOS.zip" -d $FB_SDK_BUILD
-		\cp -R "$FB_SDK_BUILD"/FBNotifications.framework "$FB_SDK_BUILD_PACKAGE" \
-		  || die "Could not copy FBNotifications.framework"
-
 		# Build Messenger Kit
 		if [ -z $SKIPBUILD ]; then
 		  (xcodebuild -project "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit.xcodeproj -scheme "FBSDKMessengerShareKit-universal" -configuration Release clean build) || die "Failed to build messenger kit"
