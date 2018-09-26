@@ -1,33 +1,64 @@
-AccountKit/**/AccountKitServerSnapshotTests.xcworkspace/*
-AccountKit/**/AccountKitServerSnapshotTests.xcodeproj/*
-ads/samples/AdUnitsSample/AdUnitsSample.xcodeproj/*
-ads/samples/AdUnitsSample/AdUnitsSample.xcworkspace/*
-ads/samples/NativeAdSample/NativeAdSample.xcodeproj/*
-ads/samples/NativeAdSample/NativeAdSample.xcworkspace/*
-ads/samples/AdBiddingSample/AdBiddingSample.xcodeproj/*
-ads/samples/AdBiddingSample/AdBiddingSample.xcworkspace/*
-ads/samples/MPVideoSample/MPVideoSample.xcodeproj/*
-ads/samples/MPVideoSample/MPVideoSample.xcworkspace/*
+# Xcode
+#
+# gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
-ads/internal/samples/Hackvertising/Hackvertising.xcodeproj/*
-ads/internal/samples/Hackvertising/Hackvertising.xcworkspace/*
+## Build generated
+build/
+DerivedData/
 
-ads/internal/samples/TinyKitten/TinyKitten.xcodeproj/*
-ads/internal/samples/TinyKitten/TinyKitten.xcworkspace/*
+## Various settings
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata/
 
-ads/ancamp/ANCampApp/ANCampApp.xcodeproj/*
-ads/ancamp/ANCampApp/ANCampApp.xcworkspace/*
+## Other
+*.moved-aside
+*.xccheckout
+*.xcscmblueprint
 
-ads/games/galaxyCollector/galaxyCollector.xcworkspace/*
+## Obj-C/Swift specific
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
 
-ads/src/FBAudienceNetwork.xcworkspace/*
-ads/src/FBAudienceNetwork/FBAudienceNetworkWorkspace.xcworkspace/*
-ads/src/FBAudienceNetwork/FBAudienceNetwork.xcodeproj/*
-ads/src/FBAudienceNetwork/FBAudienceNetwork.xcworkspace/*
+# CocoaPods
+#
+# We recommend against adding the Pods directory to your .gitignore. However
+# you should judge for yourself, the pros and cons are mentioned at:
+# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
+#
 
-ads/src/FB-SDK-MP/FB_SDK_MP_Workspace.xcworkspace/*
-ads/src/FB-SDK-MP/FB-SDK-MP.xcworkspace/*
-ads/src/FB-SDK-MP/FB-SDK-MP.xcodeproj/*
+Pods/
+
+
+# Carthage
+#
+# Add this line if you want to avoid checking in source code from Carthage dependencies.
+
+Carthage/Checkouts
+Carthage/Build
+
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/#source-control
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Custom
 
 samples/Hackbook/build/
 samples/Hackbook/Hackbook.xcodeproj/*.pbxuser
@@ -36,7 +67,6 @@ samples/Hackbook/Hackbook.xcodeproj/xcuserdata*
 samples/Hackbook/Hackbook.xcodeproj/project.xcworkspace
 samples/LoginSample/Pods
 samples/LoginSample/LoginSample.xcworkspace
-build/
 lib/
 docs/
 test/UnitTest/UnitTest.xcodeproj/*.pbxuser
@@ -49,7 +79,6 @@ xcuserdata
 TestAppIdAndSecret.xcconfig
 .DS_Store
 *.xcscmblueprint
-Carthage
 
 # vim temp files
 *.sw?
@@ -60,6 +89,3 @@ buck-out/
 .buckd/
 
 infer-out
-
-#generated doc files
-docs/
