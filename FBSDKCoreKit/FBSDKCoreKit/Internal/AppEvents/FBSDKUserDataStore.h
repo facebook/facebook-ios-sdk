@@ -20,25 +20,23 @@
 
 #import <FBSDKCoreKit/FBSDKMacros.h>
 
-FBSDK_EXTERN NSString* const EMAIL;
-FBSDK_EXTERN NSString* const FIRST_NAME;
-FBSDK_EXTERN NSString* const LAST_NAME;
-FBSDK_EXTERN NSString* const PHONE;
-FBSDK_EXTERN NSString* const DATE_OF_BIRTH;
-FBSDK_EXTERN NSString* const GENDER;
-FBSDK_EXTERN NSString* const CITY;
-FBSDK_EXTERN NSString* const STATE;
-FBSDK_EXTERN NSString* const ZIP;
-FBSDK_EXTERN NSString* const COUNTRY;
-
 @interface FBSDKUserDataStore : NSObject
 
 + (void)initStore;
 
-+ (void)initAndWait;
++ (void)setUserDataAndHash:(NSDictionary *)ud;
 
-+ (void) setUserDataAndHash:(NSDictionary*)ud;
++ (void)setUserDataAndHash:(nullable NSString *)email
+                 firstName:(nullable NSString *)firstName
+                  lastName:(nullable NSString *)lastName
+                     phone:(nullable NSString *)phone
+               dateOfBirth:(nullable NSString *)dateOfBirth
+                    gender:(nullable NSString *)gender
+                      city:(nullable NSString *)city
+                     state:(nullable NSString *)state
+                       zip:(nullable NSString *)zip
+                   country:(nullable NSString *)country;
 
-+ (NSString*) getHashedUserData;
++ (NSString *) getHashedUserData;
 
 @end

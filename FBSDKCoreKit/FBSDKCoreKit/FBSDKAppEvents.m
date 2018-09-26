@@ -663,16 +663,51 @@ static NSString *g_overrideAppID = nil;
   return [[self class] singleton]->_userID;
 }
 
-+ (void) setUserData:(NSDictionary*)userData{
++ (void)setUserData:(NSDictionary*)userData
+{
   [FBSDKUserDataStore setUserDataAndHash:userData];
 }
 
-+ (NSString*) getUserData{
++ (void)setUserEmail:(nullable NSString *)email
+           firstName:(nullable NSString *)firstName
+            lastName:(nullable NSString *)lastName
+               phone:(nullable NSString *)phone
+         dateOfBirth:(nullable NSString *)dateOfBirth
+              gender:(nullable NSString *)gender
+                city:(nullable NSString *)city
+               state:(nullable NSString *)state
+                 zip:(nullable NSString *)zip
+             country:(nullable NSString *)country
+{
+  [FBSDKUserDataStore setUserDataAndHash:email
+                               firstName:firstName
+                                lastName:lastName
+                                   phone:phone
+                             dateOfBirth:dateOfBirth
+                                  gender:gender
+                                    city:city
+                                   state:state
+                                     zip:zip
+                                 country:country];
+}
+
++ (NSString*)getUserData
+{
   return [FBSDKUserDataStore getHashedUserData];
 }
 
-+ (void) clearUserData{
-  [FBSDKUserDataStore setUserDataAndHash:nil];
++ (void)clearUserData
+{
+  [FBSDKUserDataStore setUserDataAndHash:nil
+                               firstName:nil
+                                lastName:nil
+                                   phone:nil
+                             dateOfBirth:nil
+                                  gender:nil
+                                    city:nil
+                                   state:nil
+                                     zip:nil
+                                 country:nil];
 }
 
 + (void)updateUserProperties:(NSDictionary *)properties handler:(FBSDKGraphRequestHandler)handler
