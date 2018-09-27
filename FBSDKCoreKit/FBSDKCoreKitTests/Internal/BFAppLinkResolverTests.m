@@ -20,7 +20,7 @@
 
 #import <OCMock/OCMock.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <Bolts/Bolts.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
 #import "FBSDKAppLinkResolver.h"
@@ -35,22 +35,22 @@ static id g_mockAccountStoreAdapter;
 
 typedef void (^HTTPStubCallback)(NSURLRequest *request);
 
-@interface NSURL (FBSDKAppLinkResolverTests)
+@interface NSURL (BFAppLinkResolverTests)
 
 - (id)queryParameters;
 
 @end
 
-@interface FBSDKAppLinkResolver (FBSDKAppLinkResolverTests)
+@interface FBSDKAppLinkResolver (BFAppLinkResolverTests)
 
 - (instancetype)initWithUserInterfaceIdiom:(UIUserInterfaceIdiom)userInterfaceIdiom;
 
 @end
 
-@interface FBSDKAppLinkResolverTests : XCTestCase
+@interface BFAppLinkResolverTests : XCTestCase
 @end
 
-@implementation FBSDKAppLinkResolverTests
+@implementation BFAppLinkResolverTests
 {
   id _mockNSBundle;
 }
@@ -64,6 +64,14 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
 {
   [g_mockAccountStoreAdapter stopMocking];
   g_mockAccountStoreAdapter = nil;
+}
+
+- (void)waitForTaskOnMainThread:(BFTask *)task
+{
+  while (!task.isCompleted) {
+    [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode
+                             beforeDate:[NSDate dateWithTimeIntervalSinceNow:0.1]];
+  }
 }
 
 #pragma mark - HTTP stubbing helpers
@@ -128,12 +136,11 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
   _mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
 - (void)testAsksForPhoneDataOnPhone
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"asksForPhoneDataOnPhone"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   __block BOOL askedForPhone = NO;
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSDictionary<NSString *, NSString *> *queryParameters =
@@ -147,25 +154,15 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
   }];
 
   FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable appLink, NSError * _Nullable error) {
-     XCTAssertTrue(askedForPhone);
-     [expectation fulfill];
-  }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
+
+  XCTAssertTrue(askedForPhone);
 }
 
 - (void)testUsesPhoneDataOnPhone
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"usesPhoneDataOnPhone"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        kAppLinksKey: @{
@@ -189,30 +186,19 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPhone];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
 
-     XCTAssertNotNil(link);
-     XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
-     XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
-     XCTAssertEqualObjects([link.targets[1] appStoreId], @"123");
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-     [expectation fulfill];
-   }];
-
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
+  XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
+  XCTAssertEqualObjects([link.targets[1] appStoreId], @"123");
 }
 
 - (void)testAsksForPadDataOnPad
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"asksForPadDataOnPad"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   __block BOOL askedForPad = NO;
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSDictionary<NSString *, NSString *> *queryParameters =
@@ -228,25 +214,15 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
   }];
 
   FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPad];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertTrue(askedForPad);
-     [expectation fulfill];
-   }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
+
+  XCTAssertTrue(askedForPad);
 }
 
 - (void)testUsesPadDataOnPad
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"usesPadDataOnPad"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        kAppLinksKey: @{
@@ -270,30 +246,20 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [[FBSDKAppLinkResolver alloc] initWithUserInterfaceIdiom:UIUserInterfaceIdiomPad];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
-     XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
-     XCTAssertEqualObjects([link.targets[1] appStoreId], @"123");
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
+  XCTAssertEqualObjects([link.targets[0] appStoreId], @"456");
+  XCTAssertEqualObjects([link.targets[1] appStoreId], @"123");
 }
 
 
 - (void)testIgnoresAndroidData
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"ignoresAndroidData"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   // We are not asking for it, but just make sure we ignore any non-iOS-platform data we get, to be safe.
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
@@ -318,27 +284,17 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqualObjects([link.targets[0] appStoreId], @"123");
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqualObjects([link.targets[0] appStoreId], @"123");
 }
 
 - (void)testHandlesNoTargets
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"handlesNoTargets"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        @"id": kAppLinkURLString
@@ -346,28 +302,18 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
-     XCTAssertEqual(link.targets.count, 0);
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqual(link.sourceURL.absoluteString, kAppLinkURLString);
+  XCTAssertEqual(link.targets.count, 0);
 }
 
 - (void)testHandlesMultipleURLs
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"handlesMultipleURLs"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        @"id": kAppLinkURLString
@@ -378,29 +324,19 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinksFromURLs:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]
-   handler:^(NSDictionary<NSURL *,FBSDKAppLink *> * _Nonnull links, NSError * _Nullable error) {
-     XCTAssertNotNil(links);
-     XCTAssertEqual(links.count, 2);
-     XCTAssertEqual([links[[NSURL URLWithString:kAppLinkURLString]] sourceURL].absoluteString, kAppLinkURLString);
-     XCTAssertEqual([links[[NSURL URLWithString:kAppLinkURL2String]] sourceURL].absoluteString, kAppLinkURL2String);
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinksFromURLsInBackground:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  NSDictionary<NSURL *, BFAppLink *> *links = task.result;
+  XCTAssertNotNil(links);
+  XCTAssertEqual(links.count, 2);
+  XCTAssertEqual([links[[NSURL URLWithString:kAppLinkURLString]] sourceURL].absoluteString, kAppLinkURLString);
+  XCTAssertEqual([links[[NSURL URLWithString:kAppLinkURL2String]] sourceURL].absoluteString, kAppLinkURL2String);
 }
 
 - (void)testSetsFallbackIfNotSpecified
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"setsFallbackIfNotSpecified"];
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        @"id": kAppLinkURLString
@@ -408,28 +344,17 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 }
 
 - (void)testSetsFallbackIfSpecified
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"setsFallbackIfSpecified"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        kAppLinksKey : @{
@@ -443,28 +368,17 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqualObjects(link.webURL.absoluteString, @"http://www.example.com/somethingelse");
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqualObjects(link.webURL.absoluteString, @"http://www.example.com/somethingelse");
 }
 
 - (void)testUsesSourceAsFallbackIfSpecified
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"usesSourceAsFallbackIfSpecified"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        kAppLinksKey: @{
@@ -477,28 +391,17 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertEqual(link.webURL.absoluteString, kAppLinkURLString);
 }
 
 - (void)testSetsNoFallbackIfSpecified
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"setsNoFallbackIfSpecified"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   [self stubAllResponsesWithResult:@{
                                      kAppLinkURLString : @{
                                        kAppLinksKey : @{
@@ -512,28 +415,17 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                    }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNotNil(link);
-     XCTAssertNil(link.webURL.absoluteString);
 
-     [expectation fulfill];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFAppLink *link = task.result;
+  XCTAssertNotNil(link);
+  XCTAssertNil(link.webURL.absoluteString);
 }
 
 - (void)testHandlesError
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"handlesError"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   // We are not asking for it, but just make sure we ignore any non-iOS-platform data we get, to be safe.
   [self stubAllResponsesWithResult:@{
                                      @"error" : @{}
@@ -541,27 +433,19 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                         statusCode:404];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link, NSError * _Nullable error) {
-     XCTAssertNil(link);
-     XCTAssertNotNil(error);
-     [expectation fulfill];
-   }];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
+
+  BFAppLink *link = task.result;
+  XCTAssertNil(link);
+
+  NSError *error = task.error;
+  XCTAssertNotNil(error);
 }
 
 - (void)testResultsAreCachedAndCacheIsUsed
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"handlesCache"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   __block NSUInteger callCount = 0;
 
   [self stubAllResponsesWithResult:@{
@@ -584,33 +468,21 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                           }];
 
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable link1, NSError * _Nullable error1) {
-     // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
-     NSUInteger expectedCallCount = callCount;
 
-     [resolver
-      appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-      handler:^(FBSDKAppLink * _Nullable link2, NSError * _Nullable error2) {
-        XCTAssertEqual(callCount, expectedCallCount);
-        [expectation fulfill];
-      }];
-   }];
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
+  NSUInteger expectedCallCount = callCount;
+
+  task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
+
+  XCTAssertEqual(callCount, expectedCallCount);
 }
 
 - (void)testMixOfCachedAndUncached
 {
-  XCTestExpectation *expectation = [self expectationWithDescription:@"mixOfCachedAndUncached"];
-
-  [FBSDKAccessToken setCurrentAccessToken:nil];
-  [FBSDKSettings setClientToken:@"clienttoken"];
-
   __block NSMutableDictionary<NSString *, NSNumber *> *callCounts =
    [NSMutableDictionary dictionary];
 
@@ -654,31 +526,26 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
   FBSDKAppLinkResolver *resolver = [FBSDKAppLinkResolver resolver];
 
   // Prime the cache with kAppLinkURL
-  [resolver
-   appLinkFromURL:[NSURL URLWithString:kAppLinkURLString]
-   handler:^(FBSDKAppLink * _Nullable appLink, NSError * _Nullable error1) {
-     XCTAssertEqual(callCounts.count, 1);
+  BFTask *task = [resolver appLinkFromURLInBackground:[NSURL URLWithString:kAppLinkURLString]];
+  [self waitForTaskOnMainThread:task];
 
-     // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
-     NSString *firstCallKey = callCounts.allKeys[0];
-     NSUInteger expectedCallCount = [callCounts[firstCallKey] unsignedIntegerValue];
+  XCTAssertEqual(callCounts.count, 1);
 
-     // Now request them both; we expect the call count for kAppLinkURL to be unchanged.
-     [resolver
-      appLinksFromURLs:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]
-      handler:^(NSDictionary<NSURL *,FBSDKAppLink *> * _Nonnull links, NSError * _Nullable error2) {
-        XCTAssertEqual(callCounts.count, 2);
-        XCTAssertEqual([callCounts[firstCallKey] unsignedIntegerValue], expectedCallCount);
+  // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
+  NSString *firstCallKey = callCounts.allKeys[0];
+  NSUInteger expectedCallCount = [callCounts[firstCallKey] unsignedIntegerValue];
 
-        XCTAssertEqual(links.count, 2);
-        [expectation fulfill];
-     }];
-   }];
+  // Now request them both; we expect the call count for kAppLinkURL to be unchanged.
+  task = [resolver appLinksFromURLsInBackground:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]];
+  [self waitForTaskOnMainThread:task];
 
-  [self waitForExpectationsWithTimeout:2 handler:^(NSError * _Nullable error) {
-    XCTAssertNil(error);
-  }];
-  [FBSDKSettings setClientToken:nil];
+  XCTAssertEqual(callCounts.count, 2);
+  XCTAssertEqual([callCounts[firstCallKey] unsignedIntegerValue], expectedCallCount);
+
+  NSDictionary<NSURL *, BFAppLink *> *links = task.result;
+  XCTAssertEqual(links.count, 2);
 }
+
+#pragma clang diagnostic pop
 
 @end

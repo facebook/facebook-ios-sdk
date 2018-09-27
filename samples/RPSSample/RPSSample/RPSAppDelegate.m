@@ -18,7 +18,6 @@
 
 #import "RPSAppDelegate.h"
 
-#import <Bolts/Bolts.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
@@ -31,7 +30,7 @@
 #pragma mark - Class methods
 
 + (RPSCall)callFromAppLinkURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication {
-    BFURL *appLinkURL = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
+    FBSDKURL *appLinkURL = [FBSDKURL URLWithInboundURL:url sourceApplication:sourceApplication];
     NSURL *appLinkTargetURL = [appLinkURL targetURL];
     if (!appLinkTargetURL) {
         return RPSCallNone;

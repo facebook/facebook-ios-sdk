@@ -16,27 +16,25 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "FBSDKAppLink.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkDataParameterName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkTargetKeyName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkUserAgentKeyName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkExtrasKeyName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersionKeyName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppLink;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererAppName;
+FOUNDATION_EXPORT NSString *const FBSDKAppLinkRefererUrl;
 
-#import "BoardView.h"
-#import "TileContainerView.h"
+@interface FBSDKAppLink (Internal)
 
-@interface GameViewController : UIViewController <BoardViewDelegate>
++ (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
+                             targets:(NSArray<FBSDKAppLinkTarget *> *)targets
+                              webURL:(NSURL *)webURL
+                    isBackToReferrer:(BOOL)isBackToReferrer;
 
-@property (nonatomic, strong) IBOutlet BoardView *boardView;
-@property (nonatomic, strong) IBOutlet FBSDKAppLinkReturnToRefererView *returnToRefererView;
-@property (nonatomic, strong) IBOutlet FBSDKSendButton *sendButton;
-@property (nonatomic, strong) IBOutlet FBSDKShareButton *shareButton;
-@property (nonatomic, strong) IBOutlet TileContainerView *tileContainerView;
-
-- (BOOL)loadGameFromAppLinkURL:(FBSDKURL *)appLinkURL;
-- (BOOL)loadGameFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked;
-
-- (IBAction)copyGameURL:(id)sender;
-- (IBAction)reset:(id)sender;
-- (IBAction)startGame:(id)sender;
+/*! return if this AppLink is to go back to referrer. */
+@property (nonatomic, assign, readonly, getter=isBackToReferrer) BOOL backToReferrer;
 
 @end

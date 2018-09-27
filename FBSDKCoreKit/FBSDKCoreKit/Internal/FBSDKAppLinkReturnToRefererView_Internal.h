@@ -16,27 +16,10 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import "FBSDKAppLinkReturnToRefererView.h"
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
+@interface FBSDKAppLinkReturnToRefererView (Internal)
 
-#import "BoardView.h"
-#import "TileContainerView.h"
-
-@interface GameViewController : UIViewController <BoardViewDelegate>
-
-@property (nonatomic, strong) IBOutlet BoardView *boardView;
-@property (nonatomic, strong) IBOutlet FBSDKAppLinkReturnToRefererView *returnToRefererView;
-@property (nonatomic, strong) IBOutlet FBSDKSendButton *sendButton;
-@property (nonatomic, strong) IBOutlet FBSDKShareButton *shareButton;
-@property (nonatomic, strong) IBOutlet TileContainerView *tileContainerView;
-
-- (BOOL)loadGameFromAppLinkURL:(FBSDKURL *)appLinkURL;
-- (BOOL)loadGameFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked;
-
-- (IBAction)copyGameURL:(id)sender;
-- (IBAction)reset:(id)sender;
-- (IBAction)startGame:(id)sender;
+- (CGFloat)statusBarHeight;
 
 @end

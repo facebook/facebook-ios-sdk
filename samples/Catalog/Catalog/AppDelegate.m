@@ -18,7 +18,6 @@
 
 #import "AppDelegate.h"
 
-#import <Bolts/Bolts.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <FBSDKLoginKit/FBSDKLoginKit.h>
 
@@ -49,7 +48,7 @@
   sourceApplication:(nullable NSString *)sourceApplication
          annotation:(nonnull id)annotation
 {
-  BFURL *parsedUrl = [BFURL URLWithInboundURL:url sourceApplication:sourceApplication];
+  FBSDKURL *parsedUrl = [FBSDKURL URLWithInboundURL:url sourceApplication:sourceApplication];
   if ([parsedUrl appLinkData]) {
     // this is an applink url, handle it here
     NSURL *targetUrl = [parsedUrl targetURL];

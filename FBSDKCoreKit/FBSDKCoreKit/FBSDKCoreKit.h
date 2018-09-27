@@ -33,12 +33,21 @@
 #import <FBSDKCoreKit/FBSDKUtility.h>
 
 #if !TARGET_OS_TV
+#import <FBSDKCoreKit/FBSDKAppLink.h>
+#import <FBSDKCoreKit/FBSDKAppLinkNavigation.h>
 #import <FBSDKCoreKit/FBSDKAppLinkResolver.h>
+#import <FBSDKCoreKit/FBSDKAppLinkResolving.h>
+#import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.h>
+#import <FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.h>
+#import <FBSDKCoreKit/FBSDKAppLinkTarget.h>
 #import <FBSDKCoreKit/FBSDKAppLinkUtility.h>
 #import <FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.h>
+#import <FBSDKCoreKit/FBSDKMeasurementEvent.h>
 #import <FBSDKCoreKit/FBSDKMutableCopying.h>
 #import <FBSDKCoreKit/FBSDKProfile.h>
 #import <FBSDKCoreKit/FBSDKProfilePictureView.h>
+#import <FBSDKCoreKit/FBSDKURL.h>
+#import <FBSDKCoreKit/FBSDKWebViewAppLinkResolver.h>
 #else
 #import <FBSDKCoreKit/FBSDKDeviceButton.h>
 #import <FBSDKCoreKit/FBSDKDeviceViewControllerBase.h>

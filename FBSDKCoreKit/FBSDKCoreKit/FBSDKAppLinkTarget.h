@@ -16,27 +16,30 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import <FBSDKShareKit/FBSDKShareKit.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import "BoardView.h"
-#import "TileContainerView.h"
+/*!
+ Represents a target defined in App Link metadata, consisting of at least
+ a URL, and optionally an App Store ID and name.
+ */
+@interface FBSDKAppLinkTarget : NSObject
 
-@interface GameViewController : UIViewController <BoardViewDelegate>
+/*! Creates a FBSDKAppLinkTarget with the given app site and target URL. */
++ (instancetype)appLinkTargetWithURL:(NSURL *)url
+                          appStoreId:(nullable NSString *)appStoreId
+                             appName:(NSString *)appName;
 
-@property (nonatomic, strong) IBOutlet BoardView *boardView;
-@property (nonatomic, strong) IBOutlet FBSDKAppLinkReturnToRefererView *returnToRefererView;
-@property (nonatomic, strong) IBOutlet FBSDKSendButton *sendButton;
-@property (nonatomic, strong) IBOutlet FBSDKShareButton *shareButton;
-@property (nonatomic, strong) IBOutlet TileContainerView *tileContainerView;
+/*! The URL prefix for this app link target */
+@property (nonatomic, strong, readonly) NSURL *URL;
 
-- (BOOL)loadGameFromAppLinkURL:(FBSDKURL *)appLinkURL;
-- (BOOL)loadGameFromStringRepresentationWithData:(NSString *)data locked:(NSString *)locked;
+/*! The app ID for the app store */
+@property (nonatomic, copy, readonly, nullable) NSString *appStoreId;
 
-- (IBAction)copyGameURL:(id)sender;
-- (IBAction)reset:(id)sender;
-- (IBAction)startGame:(id)sender;
+/*! The name of the app */
+@property (nonatomic, copy, readonly) NSString *appName;
 
 @end
+
+NS_ASSUME_NONNULL_END
