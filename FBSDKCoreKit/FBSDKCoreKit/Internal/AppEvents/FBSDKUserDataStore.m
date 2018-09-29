@@ -18,7 +18,7 @@
 
 #import "FBSDKUserDataStore.h"
 
-#import <FBSDKSettings.h>
+#import "FBSDKSettings.h"
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKLogger.h"

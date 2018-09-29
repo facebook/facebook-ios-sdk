@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "814AC7E11D1B528900D61E6C"
-               BuildableName = "FBSDKCoreKit.framework"
+               BuildableName = "FBSDKCoreKit-Dynamic.framework"
                BlueprintName = "FBSDKCoreKit_TV-Dynamic"
                ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "814AC7E11D1B528900D61E6C"
-            BuildableName = "FBSDKCoreKit.framework"
+            BuildableName = "FBSDKCoreKit-Dynamic.framework"
             BlueprintName = "FBSDKCoreKit_TV-Dynamic"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "814AC7E11D1B528900D61E6C"
-            BuildableName = "FBSDKCoreKit.framework"
+            BuildableName = "FBSDKCoreKit-Dynamic.framework"
             BlueprintName = "FBSDKCoreKit_TV-Dynamic"
             ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
