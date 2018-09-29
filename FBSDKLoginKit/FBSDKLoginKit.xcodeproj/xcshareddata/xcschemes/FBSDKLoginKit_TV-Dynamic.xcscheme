@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0B9DBF40207C07C600662776"
-               BuildableName = "FBSDKLoginKit.framework"
+               BuildableName = "FBSDKLoginKit-Dynamic.framework"
                BlueprintName = "FBSDKLoginKit_TV-Dynamic"
                ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0B9DBF40207C07C600662776"
-            BuildableName = "FBSDKLoginKit.framework"
+            BuildableName = "FBSDKLoginKit-Dynamic.framework"
             BlueprintName = "FBSDKLoginKit_TV-Dynamic"
             ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0B9DBF40207C07C600662776"
-            BuildableName = "FBSDKLoginKit.framework"
+            BuildableName = "FBSDKLoginKit-Dynamic.framework"
             BlueprintName = "FBSDKLoginKit_TV-Dynamic"
             ReferencedContainer = "container:FBSDKLoginKit.xcodeproj">
          </BuildableReference>
