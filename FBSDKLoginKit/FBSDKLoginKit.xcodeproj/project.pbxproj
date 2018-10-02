@@ -250,7 +250,7 @@
 		0B9DBF2C207C05CD00662776 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B9DBF3E207C074300662776 /* FBSDKLoginKit-tvOS.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-tvOS.xcconfig"; sourceTree = "<group>"; };
 		0B9DBF3F207C074300662776 /* FBSDKLoginKit-tvOS-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-tvOS-Dynamic.xcconfig"; sourceTree = "<group>"; };
-		0B9DBF52207C07C600662776 /* FBSDKLoginKit-Dynamic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBSDKLoginKit-Dynamic.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B9DBF52207C07C600662776 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BD1F34C2093A1A0005109EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS11.3.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		0BD1F3512093A1A3005109EC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS11.3.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		6B34A7EB1ABA4E6B00AF9858 /* FBSDKLoginManagerLogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKLoginManagerLogger.h; sourceTree = "<group>"; };
@@ -289,7 +289,7 @@
 		812E0D131D23840500291B71 /* StaticFramework.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = StaticFramework.xcconfig; sourceTree = "<group>"; };
 		812E0D141D23840500291B71 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		812E0D1C1D23843800291B71 /* FBSDKLoginKitTests.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKLoginKitTests.xcconfig; sourceTree = "<group>"; };
-		818EB4411D1A283100252851 /* FBSDKLoginKit-Dynamic.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "FBSDKLoginKit-Dynamic.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		818EB4411D1A283100252851 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKLoginKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "FBSDKLoginKit-Dynamic.xcconfig"; sourceTree = "<group>"; };
 		81B71EAC1D1A277300933E93 /* FBSDKLoginKit.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = FBSDKLoginKit.xcconfig; sourceTree = "<group>"; };
 		893774A91A3B80FD00BE2807 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -380,10 +380,10 @@
 			isa = PBXGroup;
 			children = (
 				8118B6811D0A5B9400962084 /* FBSDKCoreKit.framework */,
-				817490FF1D1C6C11006E09DF /* FBSDKCoreKit-Dynamic.framework */,
+				817490FF1D1C6C11006E09DF /* FBSDKCoreKit.framework */,
 				8118B6831D0A5B9400962084 /* FBSDKCoreKitTests.xctest */,
 				8118B6851D0A5B9400962084 /* FBSDKCoreKit.framework */,
-				812E0D1B1D23840500291B71 /* FBSDKCoreKit-Dynamic.framework */,
+				812E0D1B1D23840500291B71 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -514,9 +514,9 @@
 			children = (
 				9D9DB8D91A114E500086167B /* FBSDKLoginKit.framework */,
 				9D9DB8E41A114E500086167B /* FBSDKLoginKitTests.xctest */,
-				818EB4411D1A283100252851 /* FBSDKLoginKit-Dynamic.framework */,
+				818EB4411D1A283100252851 /* FBSDKLoginKit.framework */,
 				0B9DBF2C207C05CD00662776 /* FBSDKLoginKit.framework */,
-				0B9DBF52207C07C600662776 /* FBSDKLoginKit-Dynamic.framework */,
+				0B9DBF52207C07C600662776 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -696,7 +696,7 @@
 			);
 			name = "FBSDKLoginKit_TV-Dynamic";
 			productName = FBSDKLoginKit_TV;
-			productReference = 0B9DBF52207C07C600662776 /* FBSDKLoginKit-Dynamic.framework */;
+			productReference = 0B9DBF52207C07C600662776 /* FBSDKLoginKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		818EB4211D1A283100252851 /* FBSDKLoginKit-Dynamic */ = {
@@ -715,7 +715,7 @@
 			);
 			name = "FBSDKLoginKit-Dynamic";
 			productName = FBSDKLoginKit;
-			productReference = 818EB4411D1A283100252851 /* FBSDKLoginKit-Dynamic.framework */;
+			productReference = 818EB4411D1A283100252851 /* FBSDKLoginKit.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		9D9DB8D81A114E500086167B /* FBSDKLoginKit */ = {
@@ -830,17 +830,17 @@
 			remoteRef = 8118B6841D0A5B9400962084 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		812E0D1B1D23840500291B71 /* FBSDKCoreKit-Dynamic.framework */ = {
+		812E0D1B1D23840500291B71 /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = "FBSDKCoreKit-Dynamic.framework";
+			path = FBSDKCoreKit.framework;
 			remoteRef = 812E0D1A1D23840500291B71 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		817490FF1D1C6C11006E09DF /* FBSDKCoreKit-Dynamic.framework */ = {
+		817490FF1D1C6C11006E09DF /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
-			path = "FBSDKCoreKit-Dynamic.framework";
+			path = FBSDKCoreKit.framework;
 			remoteRef = 817490FE1D1C6C11006E09DF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
@@ -1058,7 +1058,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0B9DBF3F207C074300662776 /* FBSDKLoginKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = "FBSDKLoginKit-Dynamic";
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Debug;
@@ -1067,7 +1066,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0B9DBF3F207C074300662776 /* FBSDKLoginKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = "FBSDKLoginKit-Dynamic";
 				TARGETED_DEVICE_FAMILY = 3;
 			};
 			name = Release;
@@ -1090,7 +1088,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = "FBSDKLoginKit-Dynamic";
 			};
 			name = Debug;
 		};
@@ -1098,7 +1095,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81B71EAB1D1A277300933E93 /* FBSDKLoginKit-Dynamic.xcconfig */;
 			buildSettings = {
-				PRODUCT_NAME = "FBSDKLoginKit-Dynamic";
 			};
 			name = Release;
 		};
