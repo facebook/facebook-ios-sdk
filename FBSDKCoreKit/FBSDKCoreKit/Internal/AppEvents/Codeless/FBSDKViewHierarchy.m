@@ -191,6 +191,16 @@
     path = [NSMutableArray array];
   }
 
+  NSDictionary *componentInfo = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
+
+  FBSDKCodelessPathComponent *pathComponent = [[FBSDKCodelessPathComponent alloc]
+                                        initWithJSON:componentInfo];
+  [path addObject:pathComponent];
+
+  return [NSArray arrayWithArray:path];
+}
+
++ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *)parent {
   NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
   [componentInfo setObject:NSStringFromClass([obj class])
                     forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
@@ -226,19 +236,19 @@
                           forKey:CODELESS_MAPPING_ROW_KEY];
       }
     } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
-        UICollectionView *collectionView = [FBSDKViewHierarchy getParentCollectionView:(UIView *)obj];
-        NSIndexPath *indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)obj];
-        if (indexPath) {
-          [componentInfo setObject:@(indexPath.section)
-                            forKey:CODELESS_MAPPING_SECTION_KEY];
-          [componentInfo setObject:@(indexPath.row)
-                            forKey:CODELESS_MAPPING_ROW_KEY];
-        }
+      UICollectionView *collectionView = [FBSDKViewHierarchy getParentCollectionView:(UIView *)obj];
+      NSIndexPath *indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)obj];
+      if (indexPath) {
+        [componentInfo setObject:@(indexPath.section)
+                          forKey:CODELESS_MAPPING_SECTION_KEY];
+        [componentInfo setObject:@(indexPath.row)
+                          forKey:CODELESS_MAPPING_ROW_KEY];
+      }
     } else if ([obj isKindOfClass:[UITextField class]]) {
-        NSString *hint = [FBSDKViewHierarchy getHint:obj];
-        if (hint) {
-          [componentInfo setObject:hint forKey:CODELESS_MAPPING_HINT_KEY];
-        }
+      NSString *hint = [FBSDKViewHierarchy getHint:obj];
+      if (hint) {
+        [componentInfo setObject:hint forKey:CODELESS_MAPPING_HINT_KEY];
+      }
     }
   } else if ([obj isKindOfClass:[UINavigationController class]]) {
     NSString *hint = [FBSDKViewHierarchy getHint:obj];
@@ -247,11 +257,7 @@
     }
   }
 
-  FBSDKCodelessPathComponent *pathComponent = [[FBSDKCodelessPathComponent alloc]
-                                        initWithJSON:componentInfo];
-  [path addObject:pathComponent];
-
-  return [NSArray arrayWithArray:path];
+  return [componentInfo copy];
 }
 
 + (NSString *)getText:(NSObject *)obj {
