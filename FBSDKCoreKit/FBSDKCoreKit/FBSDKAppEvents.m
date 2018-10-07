@@ -51,6 +51,7 @@
 // General purpose
 NSString *const FBSDKAppEventNameCompletedRegistration   = @"fb_mobile_complete_registration";
 NSString *const FBSDKAppEventNameViewedContent           = @"fb_mobile_content_view";
+NSString *const FBSDKAppEventNameLead                    = @"fb_mobile_lead";
 NSString *const FBSDKAppEventNameSearched                = @"fb_mobile_search";
 NSString *const FBSDKAppEventNameRated                   = @"fb_mobile_rate";
 NSString *const FBSDKAppEventNameCompletedTutorial       = @"fb_mobile_tutorial_completion";
