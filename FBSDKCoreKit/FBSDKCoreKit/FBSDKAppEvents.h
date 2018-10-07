@@ -120,6 +120,9 @@ FBSDK_EXTERN NSString *const FBSDKAppEventNameCompletedTutorial;
 /** Log this event when the user has entered the checkout process.  The valueToSum passed to logEvent should be the total price in the cart. */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameInitiatedCheckout;
 
+/** Log this event when the user has generated a lead in the app. */
+FBSDK_EXTERN NSString *const FBSDKAppEventNameLead;
+
 /** Log this event when the user has rated an item in the app.  The valueToSum passed to logEvent should be the numeric rating. */
 FBSDK_EXTERN NSString *const FBSDKAppEventNameRated;
 
