@@ -18,6 +18,8 @@
 
 #import "FBSDKEventBindingManager.h"
 
+#import <objc/runtime.h>
+
 #import <UIKit/UIKit.h>
 
 #import "FBSDKCodelessMacros.h"
@@ -31,10 +33,10 @@
 #define ReactNativeViewTagKey         @"viewTag"
 #define ReactNativeTouchEndEventName  @"touchEnd"
 
-#define ReactNativeClassRCTTextView   @"RCTTextView"
-#define ReactNativeClassRCTImageView  @"RCTImageVIew"
-#define ReactNativeClassRCTEventDispatcher @"RCTEventDispatcher"
-#define ReactNativeClassRCTTouchEvent @"RCTTouchEvent"
+#define ReactNativeClassRCTTextView   "RCTTextView"
+#define ReactNativeClassRCTImageView  "RCTImageVIew"
+#define ReactNativeClassRCTEventDispatcher "RCTEventDispatcher"
+#define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
 
 static void fb_dispatch_on_main_thread(dispatch_block_t block) {
   dispatch_async(dispatch_get_main_queue(), block);
@@ -68,12 +70,12 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
     [classes addObject:[UITableView class]];
     [classes addObject:[UICollectionView class]];
     // ReactNative
-    Class classRCTRootView = NSClassFromString(ReactNativeClassRCTRootView);
+    Class classRCTRootView = objc_lookUpClass(ReactNativeClassRCTRootView);
     if (classRCTRootView != nil) {
       hasReactNative = YES;
-      Class classRCTView = NSClassFromString(ReactNativeClassRCTView);
-      Class classRCTTextView = NSClassFromString(ReactNativeClassRCTTextView);
-      Class classRCTImageView = NSClassFromString(ReactNativeClassRCTImageView);
+      Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
+      Class classRCTTextView = objc_lookUpClass(ReactNativeClassRCTTextView);
+      Class classRCTImageView = objc_lookUpClass(ReactNativeClassRCTImageView);
       if (classRCTView) {
         [classes addObject:classRCTView];
       }
@@ -141,10 +143,10 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
   // ReactNative
   if (hasReactNative) { // If app is built via ReactNative
-    Class classRCTView = NSClassFromString(ReactNativeClassRCTView);
-    Class classRCTTextView = NSClassFromString(ReactNativeClassRCTTextView);
-    Class classRCTImageView = NSClassFromString(ReactNativeClassRCTImageView);
-    Class classRCTEventDispatcher = NSClassFromString(ReactNativeClassRCTEventDispatcher);
+    Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
+    Class classRCTTextView = objc_lookUpClass(ReactNativeClassRCTTextView);
+    Class classRCTImageView = objc_lookUpClass(ReactNativeClassRCTImageView);
+    Class classRCTEventDispatcher = objc_lookUpClass(ReactNativeClassRCTEventDispatcher);
 
     //  All react-native views would be added tp RCTRootView, so no need to check didMoveToWindow
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
@@ -161,7 +163,7 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
                           named:@"match_react_native"];
 
     [FBSDKSwizzler swizzleSelector:@selector(dispatchEvent:) onClass:classRCTEventDispatcher withBlock:^(id dispatcher, SEL command, id event){
-      if ([event isKindOfClass:NSClassFromString(ReactNativeClassRCTTouchEvent)]) {
+      if ([event isKindOfClass:objc_lookUpClass(ReactNativeClassRCTTouchEvent)]) {
         @try {
           NSString *eventName = [event valueForKeyPath:ReactNativeEventNameKey];
           NSNumber *viewTag = [event valueForKeyPath:ReactNativeViewTagKey];

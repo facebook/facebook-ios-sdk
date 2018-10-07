@@ -299,13 +299,13 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ssZ"];
     text = [formatter stringFromDate:picker.date];
-  } else if ([obj isKindOfClass:NSClassFromString(@"RCTTextView")]) {
+  } else if ([obj isKindOfClass:objc_lookUpClass("RCTTextView")]) {
     NSTextStorage *textStorage = [FBSDKAppEventsUtility getVariable:@"_textStorage"
                                                        fromInstance:obj];
     if (textStorage) {
       text = [textStorage string];
     }
-  } else if ([obj isKindOfClass:NSClassFromString(@"RCTBaseTextInputView")]) {
+  } else if ([obj isKindOfClass:objc_lookUpClass("RCTBaseTextInputView")]) {
     NSAttributedString *attributedText = [FBSDKAppEventsUtility getVariable:@"attributedText"
                                                                fromInstance:obj];
     text = [attributedText string];

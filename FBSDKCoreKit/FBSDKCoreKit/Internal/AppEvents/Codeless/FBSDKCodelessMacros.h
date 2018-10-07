@@ -42,7 +42,7 @@
 #define CODELESS_MAPPING_PARENT_CLASS_NAME      @".."
 #define CODELESS_MAPPING_CURRENT_CLASS_NAME     @"."
 
-#define ReactNativeClassRCTView       @"RCTView"
-#define ReactNativeClassRCTRootView       @"RCTRootView"
+#define ReactNativeClassRCTView       "RCTView"
+#define ReactNativeClassRCTRootView       "RCTRootView"
 
 #endif /* FBSDKCodelessMacros_h */
