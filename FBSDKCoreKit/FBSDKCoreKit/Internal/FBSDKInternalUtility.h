@@ -344,6 +344,11 @@ setJSONStringForObject:(id)object
  */
 + (BOOL)areAllPermissionsPublishPermissions:(NSSet *)permissions;
 
+/*
+ Checks if the app is Unity.
+ */
++ (BOOL)isUnity;
+
 #pragma mark - FB Apps Installed
 
 + (BOOL)isFacebookAppInstalled;

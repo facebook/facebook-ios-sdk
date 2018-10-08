@@ -22,9 +22,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import <FBSDKCoreKit/FBSDKSettings.h>
+
 #import "FBSDKCodelessMacros.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKEventBinding.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKSettings+internal.h"
 #import "FBSDKSwizzler.h"
 #import "FBSDKTypeUtility.h"
 #import "FBSDKViewHierarchy.h"
@@ -37,6 +41,9 @@
 #define ReactNativeClassRCTImageView  "RCTImageVIew"
 #define ReactNativeClassRCTEventDispatcher "RCTEventDispatcher"
 #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
+
+#define FBUnityUtility                "FBUnityUtility"
+#define FBUnityUtilityUpdateBindings  @"triggerUpdateBindings:"
 
 static void fb_dispatch_on_main_thread(dispatch_block_t block) {
   dispatch_async(dispatch_get_main_queue(), block);
@@ -61,7 +68,7 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 - (id)init {
   self = [super init];
   if (self) {
-    isStarted = false;
+    isStarted = NO;
     hasReactNative = NO;
     reactBindings = [NSMutableDictionary dictionary];
 
@@ -117,13 +124,14 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 }
 
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)start
 {
   if (isStarted) {
     return;
   }
-  isStarted = true;
+  isStarted = YES;
 
   void (^blockToSuperview)(id view) = ^(id view) {
     [self matchView:view delegate:nil];
@@ -370,13 +378,26 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
   });
 }
 
-#pragma clang diagnostic pop
-- (void)updateBindings:(NSArray *)bindings {
-  eventBindings = bindings;
-  [reactBindings removeAllObjects];
-  fb_dispatch_on_main_thread(^{
-    [self rematchBindings];
-  });
+- (void)updateBindings:(NSArray *)bindings
+{
+  if ([FBSDKInternalUtility isUnity]) {
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:bindings
+                                                       options:0
+                                                         error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    Class classFBUnityUtility = objc_lookUpClass(FBUnityUtility);
+    SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindings);
+    if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
+      [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
+    }
+  } else {
+    eventBindings = bindings;
+    [reactBindings removeAllObjects];
+    fb_dispatch_on_main_thread(^{
+      [self rematchBindings];
+    });
+  }
 }
+#pragma clang diagnostic pop
 
 @end

@@ -25,6 +25,7 @@
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
 #import "FBSDKMacros.h"
+#import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
@@ -770,6 +771,15 @@ static NSMapTable *_transientObjects;
   }
 
   return clazz;
+}
+
++ (BOOL)isUnity
+{
+  NSString *userAgentSuffix = [FBSDKSettings userAgentSuffix];
+  if (userAgentSuffix != nil && [userAgentSuffix rangeOfString:@"Unity"].location != NSNotFound) {
+    return YES;
+  }
+  return NO;
 }
 
 @end
