@@ -28,6 +28,29 @@
 
 #define MAX_VIEW_HIERARCHY_LEVEL 35
 
+typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
+  /*! Indicates that the class is subclass of UIControl */
+  FBCodelessClassBitmaskUIControl     = 1 << 3,
+  /*! Indicates that the class is subclass of UIControl */
+  FBCodelessClassBitmaskUIButton      = 1 << 4,
+  /*! Indicates that the class is ReactNative Button */
+  FBCodelessClassBitmaskReactNativeButton = 1 << 6,
+  /*! Indicates that the class is UITableViewCell */
+  FBCodelessClassBitmaskUITableViewCell = 1 << 7,
+  /*! Indicates that the class is UICollectionViewCell */
+  FBCodelessClassBitmaskUICollectionViewCell = 1 << 8,
+  /*! Indicates that the class is UILabel */
+  FBCodelessClassBitmaskLabel = 1 << 10,
+  /*! Indicates that the class is UITextView or UITextField*/
+  FBCodelessClassBitmaskInput = 1 << 11,
+  /*! Indicates that the class is UIPicker*/
+  FBCodelessClassBitmaskPicker = 1 << 12,
+  /*! Indicates that the class is UISwitch*/
+  FBCodelessClassBitmaskSwitch = 1 << 13,
+  /*! Indicates that the class is UIViewController*/
+  FBCodelessClassBitmaskUIViewController = 1 << 17,
+};
+
 @implementation FBSDKViewHierarchy
 
 + (NSArray*)getChildren:(NSObject*)obj {
@@ -342,6 +365,49 @@
   }
 
   return hint.length > 0 ? hint : nil;
+}
+
++ (NSUInteger)getClassBitmask:(NSObject *)obj
+{
+  NSUInteger bitmask = 0;
+
+  if ([obj isKindOfClass:[UIView class]]) {
+    if ([obj isKindOfClass:[UIControl class]]) {
+      bitmask |= FBCodelessClassBitmaskUIControl;
+      if ([obj isKindOfClass:[UIButton class]]) {
+        bitmask |= FBCodelessClassBitmaskUIButton;
+      } else if ([obj isKindOfClass:[UISwitch class]]) {
+        bitmask |= FBCodelessClassBitmaskSwitch;
+      }else if ([obj isKindOfClass:[UIDatePicker class]]) {
+        bitmask |= FBCodelessClassBitmaskPicker;
+      }
+    } else if ([obj isKindOfClass:[UITableViewCell class]]) {
+      bitmask |= FBCodelessClassBitmaskUITableViewCell;
+    } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
+      bitmask |= FBCodelessClassBitmaskUICollectionViewCell;
+    } else if ([obj isKindOfClass:[UIPickerView class]]) {
+      bitmask |= FBCodelessClassBitmaskPicker;
+    } else if ([obj isKindOfClass:[UILabel class]]) {
+      bitmask |= FBCodelessClassBitmaskLabel;
+    }
+
+    if ([(UIView *)obj isAccessibilityElement] &&
+        [(UIView *)obj accessibilityTraits] == UIAccessibilityTraitButton) {
+      Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
+      if (classRCTView && [obj isKindOfClass:classRCTView]) {
+        bitmask |= FBCodelessClassBitmaskReactNativeButton;
+      }
+    }
+
+    // Check selector of UITextInput protocol instead of checking conformsToProtocol
+    if ([obj respondsToSelector:@selector(textInRange:)]) {
+      bitmask |= FBCodelessClassBitmaskInput;
+    }
+  } else if ([obj isKindOfClass:[UIViewController class]]) {
+    bitmask |= FBCodelessClassBitmaskUIViewController;
+  }
+
+  return bitmask;
 }
 
 + (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2 {

@@ -27,6 +27,7 @@
 
 + (NSString *)getText:(NSObject *)obj;
 + (NSString *)getHint:(NSObject *)obj;
++ (NSUInteger)getClassBitmask:(NSObject *)obj;
 + (UITableView *)getParentTableView:(UIView *)cell;
 + (UICollectionView *)getParentCollectionView:(UIView *)cell;
 

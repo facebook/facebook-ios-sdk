@@ -37,12 +37,12 @@
 #define CODELESS_MAPPING_HINT_KEY               @"hint"
 #define CODELESS_MAPPING_PARAMETERS_KEY         @"parameters"
 #define CODELESS_MAPPING_PARAMETER_NAME_KEY     @"name"
-#define CODELESS_MAPPING_PARAMETER_VALUE_KEY     @"value"
+#define CODELESS_MAPPING_PARAMETER_VALUE_KEY    @"value"
 
 #define CODELESS_MAPPING_PARENT_CLASS_NAME      @".."
 #define CODELESS_MAPPING_CURRENT_CLASS_NAME     @"."
 
 #define ReactNativeClassRCTView       "RCTView"
-#define ReactNativeClassRCTRootView       "RCTRootView"
+#define ReactNativeClassRCTRootView   "RCTRootView"
 
 #endif /* FBSDKCodelessMacros_h */
