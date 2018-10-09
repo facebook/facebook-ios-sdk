@@ -53,7 +53,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
 
 @implementation FBSDKViewHierarchy
 
-+ (NSArray*)getChildren:(NSObject*)obj {
++ (NSArray*)getChildren:(NSObject*)obj
+{
   if ([obj isKindOfClass:[UIControl class]]) {
     return nil;
   }
@@ -195,11 +196,13 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return nil;
 }
 
-+ (NSArray *)getPath:(NSObject *)obj {
++ (NSArray *)getPath:(NSObject *)obj
+{
   return [FBSDKViewHierarchy getPath:obj limit:MAX_VIEW_HIERARCHY_LEVEL];
 }
 
-+ (NSArray *)getPath:(NSObject *)obj limit:(int)limit {
++ (NSArray *)getPath:(NSObject *)obj limit:(int)limit
+{
   if (!obj || limit <= 0) {
     return nil;
   }
@@ -223,7 +226,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return [NSArray arrayWithArray:path];
 }
 
-+ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *)parent {
++ (NSDictionary<NSString *, id> *)getAttributesOf:(NSObject *)obj parent:(NSObject *)parent
+{
   NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
   [componentInfo setObject:NSStringFromClass([obj class])
                     forKey:CODELESS_MAPPING_CLASS_NAME_KEY];
@@ -231,6 +235,19 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   NSString *text = [FBSDKViewHierarchy getText:obj];
   if (text) {
     [componentInfo setObject:text forKey:CODELESS_MAPPING_TEXT_KEY];
+  }
+
+  NSString *hint = [FBSDKViewHierarchy getHint:obj];
+  if (hint) {
+    [componentInfo setObject:hint forKey:CODELESS_MAPPING_HINT_KEY];
+  }
+
+  NSIndexPath *indexPath = [FBSDKViewHierarchy getIndexPath:obj];
+  if (indexPath) {
+    [componentInfo setObject:@(indexPath.section)
+                      forKey:CODELESS_MAPPING_SECTION_KEY];
+    [componentInfo setObject:@(indexPath.row)
+                      forKey:CODELESS_MAPPING_ROW_KEY];
   }
 
   if (parent != nil) {
@@ -247,43 +264,28 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   if ([obj isKindOfClass:[UIView class]]) {
     [componentInfo setObject:@(((UIView *)obj).tag)
                       forKey:CODELESS_MAPPING_TAG_KEY];
-
-    // Handle UITableViewCell & UICollectionViewCell
-    if ([obj isKindOfClass:[UITableViewCell class]]) {
-      UITableView *tableView = [FBSDKViewHierarchy getParentTableView:(UIView *)obj];
-      NSIndexPath *indexPath = [tableView indexPathForCell:(UITableViewCell *)obj];
-      if (indexPath) {
-        [componentInfo setObject:@(indexPath.section)
-                          forKey:CODELESS_MAPPING_SECTION_KEY];
-        [componentInfo setObject:@(indexPath.row)
-                          forKey:CODELESS_MAPPING_ROW_KEY];
-      }
-    } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
-      UICollectionView *collectionView = [FBSDKViewHierarchy getParentCollectionView:(UIView *)obj];
-      NSIndexPath *indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)obj];
-      if (indexPath) {
-        [componentInfo setObject:@(indexPath.section)
-                          forKey:CODELESS_MAPPING_SECTION_KEY];
-        [componentInfo setObject:@(indexPath.row)
-                          forKey:CODELESS_MAPPING_ROW_KEY];
-      }
-    } else if ([obj isKindOfClass:[UITextField class]]) {
-      NSString *hint = [FBSDKViewHierarchy getHint:obj];
-      if (hint) {
-        [componentInfo setObject:hint forKey:CODELESS_MAPPING_HINT_KEY];
-      }
-    }
-  } else if ([obj isKindOfClass:[UINavigationController class]]) {
-    NSString *hint = [FBSDKViewHierarchy getHint:obj];
-    if (hint) {
-      [componentInfo setObject:hint forKey:CODELESS_MAPPING_HINT_KEY];
-    }
   }
 
   return [componentInfo copy];
 }
 
-+ (NSString *)getText:(NSObject *)obj {
++ (NSIndexPath *)getIndexPath:(NSObject *)obj
+{
+  NSIndexPath *indexPath = nil;
+
+  if ([obj isKindOfClass:[UITableViewCell class]]) {
+    UITableView *tableView = [FBSDKViewHierarchy getParentTableView:(UIView *)obj];
+    indexPath = [tableView indexPathForCell:(UITableViewCell *)obj];
+  } else if ([obj isKindOfClass:[UICollectionViewCell class]]) {
+    UICollectionView *collectionView = [FBSDKViewHierarchy getParentCollectionView:(UIView *)obj];
+    indexPath = [collectionView indexPathForCell:(UICollectionViewCell *)obj];
+  }
+
+  return indexPath;
+}
+
++ (NSString *)getText:(NSObject *)obj
+{
   NSString *text = nil;
 
   if ([obj isKindOfClass:[UIButton class]]) {
@@ -352,7 +354,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return text.length > 0 ? text : nil;
 }
 
-+ (NSString *)getHint:(NSObject *)obj {
++ (NSString *)getHint:(NSObject *)obj
+{
   NSString *hint = nil;
 
   if ([obj isKindOfClass:[UITextField class]]) {
@@ -410,7 +413,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return bitmask;
 }
 
-+ (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2 {
++ (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2
+{
   if (![obj1 isKindOfClass:[UIView class]]
       || ![obj2 isKindOfClass:[UIView class]]) {
     return NO;
@@ -428,7 +432,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return NO;
 }
 
-+ (UIViewController *)getParentViewController:(UIView *)view {
++ (UIViewController *)getParentViewController:(UIView *)view
+{
   UIResponder *parentResponder = view;
 
   while (parentResponder) {
@@ -441,7 +446,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return nil;
 }
 
-+ (UITableView *)getParentTableView:(UIView *)cell {
++ (UITableView *)getParentTableView:(UIView *)cell
+{
   UIView *superview = cell.superview;
   while (superview) {
     if ([superview isKindOfClass:[UITableView class]]) {
@@ -452,7 +458,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   return nil;
 }
 
-+ (UICollectionView *)getParentCollectionView:(UIView *)cell {
++ (UICollectionView *)getParentCollectionView:(UIView *)cell
+{
   UIView *superview = cell.superview;
   while (superview) {
     if ([superview isKindOfClass:[UICollectionView class]]) {
@@ -461,6 +468,17 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     superview = [superview superview];
   }
   return nil;
+}
+
++ (NSInteger)getTag:(NSObject *)obj
+{
+  if ([obj isKindOfClass:[UIView class]]) {
+    return ((UIView *)obj).tag;
+  } else if ([obj isKindOfClass:[UIViewController class]]) {
+    return ((UIViewController *)obj).view.tag;
+  }
+
+  return 0;
 }
 
 @end
