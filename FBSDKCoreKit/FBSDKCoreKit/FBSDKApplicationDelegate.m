@@ -29,6 +29,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKGateKeeperManager.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKServerConfiguration.h"
@@ -212,6 +213,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
   [FBSDKAccessToken setCurrentAccessToken:cachedToken];
   // fetch app settings
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
+  // fetch gate keepers
+  [FBSDKGateKeeperManager loadGateKeepers];
 
   if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
     [self _logSDKInitialize];
