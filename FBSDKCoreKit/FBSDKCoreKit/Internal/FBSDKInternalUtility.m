@@ -248,7 +248,7 @@ setJSONStringForObject:(id)object
   static dispatch_once_t getVersionOnce;
   dispatch_once(&getVersionOnce, ^{
     int32_t linkTimeVersion = NSVersionOfLinkTimeLibrary("UIKit");
-    linkTimeMajorVersion = ((MAX(linkTimeVersion, 0) & FBSDKInternalUtilityMajorVersionMask) >> FBSDKInternalUtilityMajorVersionShift);
+    linkTimeMajorVersion = [self getMajorVersionFromFullLibraryVersion:linkTimeVersion];
   });
   return (version <= linkTimeMajorVersion);
 }
@@ -259,9 +259,22 @@ setJSONStringForObject:(id)object
   static dispatch_once_t getVersionOnce;
   dispatch_once(&getVersionOnce, ^{
     int32_t runTimeVersion = NSVersionOfRunTimeLibrary("UIKit");
-    runTimeMajorVersion = ((MAX(runTimeVersion, 0) & FBSDKInternalUtilityMajorVersionMask) >> FBSDKInternalUtilityMajorVersionShift);
+    runTimeMajorVersion = [self getMajorVersionFromFullLibraryVersion:runTimeVersion];
   });
   return (version <= runTimeMajorVersion);
+}
+
++ (int32_t)getMajorVersionFromFullLibraryVersion:(int32_t)version
+{
+  // Negative values returned by NSVersionOfRunTimeLibrary/NSVersionOfLinkTimeLibrary
+  // are still valid version numbers, as long as it's not -1.
+  // After bitshift by 16, the negatives become valid positive major version number.
+  // We ran into this first time with iOS 12.
+  if (version != -1) {
+    return ((version & FBSDKInternalUtilityMajorVersionMask) >> FBSDKInternalUtilityMajorVersionShift);
+  } else {
+    return 0;
+  }
 }
 
 + (NSString *)JSONStringForObject:(id)object
