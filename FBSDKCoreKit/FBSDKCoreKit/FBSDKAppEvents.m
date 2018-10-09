@@ -1097,7 +1097,6 @@ static NSString *g_overrideAppID = nil;
                       prettyPrintedJsonEvents];
     }
 
-    [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"param %@", postParameters]];
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
                                                          parameters:postParameters
                                                         tokenString:appEventsState.tokenString
