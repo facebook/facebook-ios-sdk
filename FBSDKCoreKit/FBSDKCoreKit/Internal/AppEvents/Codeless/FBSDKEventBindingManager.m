@@ -22,13 +22,9 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKSettings.h>
-
 #import "FBSDKCodelessMacros.h"
 #import "FBSDKCodelessPathComponent.h"
 #import "FBSDKEventBinding.h"
-#import "FBSDKInternalUtility.h"
-#import "FBSDKSettings+internal.h"
 #import "FBSDKSwizzler.h"
 #import "FBSDKTypeUtility.h"
 #import "FBSDKViewHierarchy.h"
@@ -41,9 +37,6 @@
 #define ReactNativeClassRCTImageView  "RCTImageVIew"
 #define ReactNativeClassRCTEventDispatcher "RCTEventDispatcher"
 #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
-
-#define FBUnityUtility                "FBUnityUtility"
-#define FBUnityUtilityUpdateBindings  @"triggerUpdateBindings:"
 
 static void fb_dispatch_on_main_thread(dispatch_block_t block) {
   dispatch_async(dispatch_get_main_queue(), block);
@@ -124,7 +117,6 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 }
 
 #pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 - (void)start
 {
@@ -142,11 +134,11 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
   };
 
   [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
-                      onClass:[UIControl class]
-                    withBlock:blockToSuperview named:@"map_control"];
+                         onClass:[UIControl class]
+                       withBlock:blockToSuperview named:@"map_control"];
   [FBSDKSwizzler swizzleSelector:@selector(didMoveToWindow)
-                      onClass:[UIControl class]
-                    withBlock:blockToWindow named:@"map_control"];
+                         onClass:[UIControl class]
+                       withBlock:blockToWindow named:@"map_control"];
 
 
   // ReactNative
@@ -158,17 +150,17 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 
     //  All react-native views would be added tp RCTRootView, so no need to check didMoveToWindow
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
-                        onClass:classRCTView
-                      withBlock:blockToSuperview
-                          named:@"match_react_native"];
+                           onClass:classRCTView
+                         withBlock:blockToSuperview
+                             named:@"match_react_native"];
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
-                        onClass:classRCTTextView
-                      withBlock:blockToSuperview
-                          named:@"match_react_native"];
+                           onClass:classRCTTextView
+                         withBlock:blockToSuperview
+                             named:@"match_react_native"];
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
-                        onClass:classRCTImageView
-                      withBlock:blockToSuperview
-                          named:@"match_react_native"];
+                           onClass:classRCTImageView
+                         withBlock:blockToSuperview
+                             named:@"match_react_native"];
 
     [FBSDKSwizzler swizzleSelector:@selector(dispatchEvent:) onClass:classRCTEventDispatcher withBlock:^(id dispatcher, SEL command, id event){
       if ([event isKindOfClass:objc_lookUpClass(ReactNativeClassRCTTouchEvent)]) {
@@ -203,9 +195,9 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
     [self matchView:tableView delegate:delegate];
   };
   [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
-                      onClass:[UITableView class]
-                    withBlock:tableViewBlock
-                        named:@"match_table_view"];
+                         onClass:[UITableView class]
+                       withBlock:tableViewBlock
+                           named:@"match_table_view"];
   //  UICollectionView
   void (^collectionViewBlock)(UICollectionView *collectionView,
                               SEL cmd,
@@ -218,9 +210,9 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
     [self matchView:collectionView delegate:delegate];
   };
   [FBSDKSwizzler swizzleSelector:@selector(setDelegate:)
-                      onClass:[UICollectionView class]
-                    withBlock:collectionViewBlock
-                        named:@"handle_collection_view"];
+                         onClass:[UICollectionView class]
+                       withBlock:collectionViewBlock
+                           named:@"handle_collection_view"];
 }
 
 - (void)rematchBindings {
@@ -334,9 +326,9 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
               });
             };
             [FBSDKSwizzler swizzleSelector:@selector(tableView:didSelectRowAtIndexPath:)
-                                onClass:[delegate class]
-                              withBlock:block
-                                  named:@"handle_table_view"];
+                                   onClass:[delegate class]
+                                 withBlock:block
+                                     named:@"handle_table_view"];
           }
         });
       } else if ([view isKindOfClass:[UICollectionView class]]
@@ -368,9 +360,9 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
               });
             };
             [FBSDKSwizzler swizzleSelector:@selector(collectionView:didSelectItemAtIndexPath:)
-                                onClass:[delegate class]
-                              withBlock:block
-                                  named:@"handle_collection_view"];
+                                   onClass:[delegate class]
+                                 withBlock:block
+                                     named:@"handle_collection_view"];
           }
         });
       }
@@ -378,26 +370,13 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
   });
 }
 
-- (void)updateBindings:(NSArray *)bindings
-{
-  if ([FBSDKInternalUtility isUnity]) {
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:bindings
-                                                       options:0
-                                                         error:nil];
-    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    Class classFBUnityUtility = objc_lookUpClass(FBUnityUtility);
-    SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindings);
-    if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
-      [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
-    }
-  } else {
-    eventBindings = bindings;
-    [reactBindings removeAllObjects];
-    fb_dispatch_on_main_thread(^{
-      [self rematchBindings];
-    });
-  }
-}
 #pragma clang diagnostic pop
+- (void)updateBindings:(NSArray *)bindings {
+  eventBindings = bindings;
+  [reactBindings removeAllObjects];
+  fb_dispatch_on_main_thread(^{
+    [self rematchBindings];
+  });
+}
 
 @end

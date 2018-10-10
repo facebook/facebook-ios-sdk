@@ -19,6 +19,8 @@
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
 
+#import <objc/runtime.h>
+
 #import <UIKit/UIApplication.h>
 
 #import "FBSDKAccessToken.h"
@@ -270,6 +272,9 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define NUM_LOG_EVENTS_TO_TRY_TO_FLUSH_AFTER 100
 #define FLUSH_PERIOD_IN_SECONDS 15
 #define USER_ID_USER_DEFAULTS_KEY @"com.facebook.sdk.appevents.userid"
+
+#define FBUnityUtilityClassName "FBUnityUtility"
+#define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
 static NSString *g_overrideAppID = nil;
 
@@ -868,6 +873,8 @@ static NSString *g_overrideAppID = nil;
 }
 
 #if !TARGET_OS_TV
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)enableCodelessEvents {
   if (_serverConfiguration.isCodelessEventsEnabled) {
     if (!_eventBindingManager) {
@@ -875,10 +882,23 @@ static NSString *g_overrideAppID = nil;
       [_eventBindingManager start];
     }
 
-    [_eventBindingManager updateBindings:[FBSDKEventBindingManager
-                                          parseArray:_serverConfiguration.eventBindings]];
+    if ([FBSDKInternalUtility isUnity]) {
+      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:_serverConfiguration.eventBindings ?: @""
+                                                         options:0
+                                                           error:nil];
+      NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+      Class classFBUnityUtility = objc_lookUpClass(FBUnityUtilityClassName);
+      SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
+      if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
+        [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
+      }
+    } else {
+      [_eventBindingManager updateBindings:[FBSDKEventBindingManager
+                                            parseArray:_serverConfiguration.eventBindings]];
+    }
   }
 }
+#pragma clang diagnostic pop
 #endif
 
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
