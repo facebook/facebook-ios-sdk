@@ -721,6 +721,8 @@
 		EA8D50491D356BDC00622F03 /* FBSDKURLSessionTask.m in Sources */ = {isa = PBXBuildFile; fileRef = EA4CF23E1D344BFC007AA2EB /* FBSDKURLSessionTask.m */; };
 		EA8D505E1D356BE900622F03 /* FBSDKURLSessionTask.h in Headers */ = {isa = PBXBuildFile; fileRef = EA4CF23D1D344BFC007AA2EB /* FBSDKURLSessionTask.h */; };
 		F9169B842155A03C00FA1789 /* FBSDKUserDataStore.m in Sources */ = {isa = PBXBuildFile; fileRef = F9169B832155A03C00FA1789 /* FBSDKUserDataStore.m */; };
+		F91BA4DD216D6CF200CDDFE0 /* FBSDKCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B081A702194009137EF /* FBSDKCrypto.m */; };
+		F91BA4F4216D6CF300CDDFE0 /* FBSDKCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = 894C0B081A702194009137EF /* FBSDKCrypto.m */; };
 		F9FD9A6221659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6321659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
 		F9FD9A6421659F120068DEAF /* FBSDKGateKeeperManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F9FD9A6121659F120068DEAF /* FBSDKGateKeeperManager.h */; };
@@ -2773,6 +2775,7 @@
 				814AC7FA1D1B528900D61E6C /* FBSDKMath.m in Sources */,
 				814AC7FB1D1B528900D61E6C /* FBSDKAccessTokenCacheV3.m in Sources */,
 				9DC277951DAF4D71004F4AB5 /* FBSDKSmartDeviceDialogView.m in Sources */,
+				F91BA4F4216D6CF300CDDFE0 /* FBSDKCrypto.m in Sources */,
 				814AC7FC1D1B528900D61E6C /* FBSDKAccessToken.m in Sources */,
 				814AC7FD1D1B528900D61E6C /* FBSDKGraphRequestBody.m in Sources */,
 				814AC7FE1D1B528900D61E6C /* FBSDKErrorConfiguration.m in Sources */,
@@ -3055,6 +3058,7 @@
 				9D6DEEBB1BC238EB001A94ED /* FBSDKMath.m in Sources */,
 				9D6DEEC61BC23A11001A94ED /* FBSDKAccessTokenCacheV3.m in Sources */,
 				9DC277941DAF4D70004F4AB5 /* FBSDKSmartDeviceDialogView.m in Sources */,
+				F91BA4DD216D6CF200CDDFE0 /* FBSDKCrypto.m in Sources */,
 				9D6DEEAA1BC236B9001A94ED /* FBSDKAccessToken.m in Sources */,
 				9DB0FAA11BC22CF9005EB8B1 /* FBSDKGraphRequestBody.m in Sources */,
 				9DB0FA9B1BC22BED005EB8B1 /* FBSDKErrorConfiguration.m in Sources */,
