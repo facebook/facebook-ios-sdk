@@ -81,6 +81,14 @@
 - (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
           bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 {
+  [parameters addEntriesFromDictionary:[self addParameters:parameters bridgeOptions:bridgeOptions]];
+}
+
+- (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
+                                  bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
+{
+  NSMutableDictionary<NSString *, id> *updatedParameters = [NSMutableDictionary dictionaryWithDictionary:existingParameters];
+
   NSMutableArray<UIImage *> *images = [[NSMutableArray alloc] init];
   for (FBSDKSharePhoto *photo in _photos) {
     if (photo.photoAsset) {
@@ -113,10 +121,12 @@
     }
   }
   if (images.count > 0) {
-    [FBSDKInternalUtility dictionary:parameters
+    [FBSDKInternalUtility dictionary:updatedParameters
                            setObject:images
                               forKey:@"photos"];
   }
+
+  return updatedParameters;
 }
 
 #pragma mark - FBSDKSharingValidation

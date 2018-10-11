@@ -307,8 +307,9 @@
   parameters[@"dataFailuresFatal"] = @(shouldFailOnDataError);
 
   // media/destination-specific content parameters
-  if ([shareContent respondsToSelector:@selector(addToParameters:bridgeOptions:)]) {
-    [shareContent addToParameters:parameters bridgeOptions:bridgeOptions];
+  if ([shareContent respondsToSelector:@selector(addParameters:bridgeOptions:)]) {
+    [parameters
+     addEntriesFromDictionary:[shareContent addParameters:parameters bridgeOptions:bridgeOptions]];
   }
 
   return [parameters copy];

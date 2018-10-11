@@ -83,6 +83,13 @@
   // FBSDKShareMediaContent is currently available via the Share extension only (thus no parameterization implemented at this time)
 }
 
+- (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
+                                  bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
+{
+  // FBSDKShareMediaContent is currently available via the Share extension only (thus no parameterization implemented at this time)
+  return existingParameters;
+}
+
 #pragma mark - FBSDKSharingValidation
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef

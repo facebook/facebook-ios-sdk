@@ -38,7 +38,10 @@
   XCTAssertEqualObjects(content.contentURL, [FBSDKShareModelTestUtility contentURL]);
   XCTAssertEqualObjects(content.peopleIDs, [FBSDKShareModelTestUtility peopleIDs]);
   XCTAssertEqualObjects(content.placeID, [FBSDKShareModelTestUtility placeID]);
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   XCTAssertEqualObjects(content.previewPhoto, [FBSDKShareModelTestUtility photoWithImage]);
+#pragma clang diagnostic pop
   XCTAssertEqualObjects(content.ref, [FBSDKShareModelTestUtility ref]);
   XCTAssertEqualObjects(content.video, [FBSDKShareModelTestUtility video]);
 }
@@ -66,7 +69,10 @@
   content.contentURL = [FBSDKShareModelTestUtility contentURL];
   content.peopleIDs = [FBSDKShareModelTestUtility peopleIDs];
   content.placeID = [FBSDKShareModelTestUtility placeID];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   content.previewPhoto = [FBSDKShareModelTestUtility photoWithImage];
+#pragma clang diagnostic pop
   content.ref = [FBSDKShareModelTestUtility ref];
   content.video = [FBSDKShareModelTestUtility video];
   NSError *error;

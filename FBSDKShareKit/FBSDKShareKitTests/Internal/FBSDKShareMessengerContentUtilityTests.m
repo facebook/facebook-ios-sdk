@@ -81,7 +81,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerOpenGraphMusicTemplateContent *content = [FBSDKShareMessengerOpenGraphMusicTemplateContent new];
   content.url = [FBSDKShareModelTestUtility contentURL];
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -104,7 +104,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   content.url = [FBSDKShareModelTestUtility contentURL];
   content.button = urlButton;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -146,7 +146,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   content.imageAspectRatio = FBSDKShareMessengerGenericTemplateImageAspectRatioSquare;
   content.element = element;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -181,7 +181,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   content.imageAspectRatio = FBSDKShareMessengerGenericTemplateImageAspectRatioHorizontal;
   content.element = element;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -202,7 +202,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:@"123"];
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -230,7 +230,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeVideo;
   content.button = urlButton;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -259,7 +259,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeVideo;
   content.button = urlButton;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
 
@@ -279,7 +279,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"http://www.facebook.com/something"]];
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
   NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
@@ -292,7 +292,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"www.facebook.com/something"]];
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
   NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
@@ -305,7 +305,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"facebook.com/something"]];
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
   NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
@@ -318,7 +318,7 @@ static NSString *const kSubtitle = @"Test subtitle";
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:[NSURL URLWithString:@"http://www.definitelynotfacebook.com/something"]];
   content.mediaType = FBSDKShareMessengerMediaTemplateMediaTypeImage;
 
-  [content addToParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault];
+  [_parameters addEntriesFromDictionary:[content addParameters:_parameters bridgeOptions:FBSDKShareBridgeOptionsDefault]];
 
   NSDictionary *messengerShareContent = _parameters[kMessengerShareContentKey];
   NSDictionary *contentForPreview = messengerShareContent[kContentForPreviewKey];
