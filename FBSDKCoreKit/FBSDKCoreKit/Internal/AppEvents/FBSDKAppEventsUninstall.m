@@ -37,7 +37,7 @@
 
 @implementation FBSDKAppEventsUninstall
 
-+ (void)load
++ (void)prepare
 {
   [FBSDKAppEventsUninstall installSwizzler];
 }
@@ -58,6 +58,7 @@
   Class cls = [[UIApplication sharedApplication].delegate class];
   SEL selector = @selector(application:didRegisterForRemoteNotificationsWithDeviceToken:);
   BOOL hasMethod = class_getInstanceMethod(cls, selector) != nil;
+
   void (^block)(id) = ^(NSData *deviceToken) {
     NSString *tokenString = [self stringWithDeviceToken:deviceToken];
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational

@@ -18,7 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface FBSDKAppEventsUninstall : NSObject
+
++ (void)prepare;
 
 @end
