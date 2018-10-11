@@ -120,6 +120,16 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [self logInWithPermissions:permissionSet handler:handler];
 }
 
+- (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerRequestTokenHandler)handler
+{
+  if (![self validateLoginStartState]) {
+    return;
+  }
+  self.fromViewController = fromViewController;
+  [self reauthorizeDataAccess:handler];
+}
+
+
 - (void)logOut
 {
   [FBSDKAccessToken setCurrentAccessToken:nil];
@@ -388,6 +398,18 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   [_logger startSessionForLoginManager:self];
 
+  [self logInWithBehavior:self.loginBehavior];
+}
+
+- (void)reauthorizeDataAccess:(FBSDKLoginManagerRequestTokenHandler)handler
+{
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
+  _handler = [handler copy];
+  // Don't need to pass permissions for data reauthorization.
+  _requestedPermissions = [NSSet set];
+  self.authType = @"reauthorize";
+  [_logger startSessionForLoginManager:self];
   [self logInWithBehavior:self.loginBehavior];
 }
 
