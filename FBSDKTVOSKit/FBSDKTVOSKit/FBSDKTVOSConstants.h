@@ -22,27 +22,54 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+/*!
+ @abstract The error domain for all errors from FBSDKTVOSKit.
+ @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
+ */
+FBSDK_EXTERN NSErrorDomain const FBSDKTVOSErrorDomain;
+
+#else
+
 /*!
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
 FBSDK_EXTERN NSString *const FBSDKTVOSErrorDomain;
 
+#endif
+
+#ifndef NS_ERROR_ENUM
+#define NS_ERROR_ENUM(_domain, _name) \
+enum _name: NSInteger _name; \
+enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+#endif
+
 /*!
- @typedef NS_ENUM(NSInteger, FBSDKTVOSErrorCode)
+ FBSDKTVOSError
  @abstract Error codes for FBSDKTVOSErrorDomain.
  */
-typedef NS_ENUM(NSInteger, FBSDKTVOSErrorCode)
+typedef NS_ERROR_ENUM(FBSDKTVOSErrorDomain, FBSDKTVOSError)
 {
   /*!
    @abstract Reserved.
    */
-  FBSDKTVOSReservedErrorCode = 400,
+  FBSDKTVOSErrorReserved = 400,
 
   /*!
    @abstract The error code for unknown errors.
    */
-  FBSDKTVOSUnknownErrorCode,
+  FBSDKTVOSErrorUnknown,
 };
+
+/**
+ Deprecated
+ */
+typedef NS_ENUM(NSInteger, FBSDKTVOSErrorCode)
+{
+  FBSDKTVOSReservedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSErrorReserved instead") = 400,
+  FBSDKTVOSUnknownErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSErrorUnknown instead"),
+} DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSError instead");
 
 NS_ASSUME_NONNULL_END

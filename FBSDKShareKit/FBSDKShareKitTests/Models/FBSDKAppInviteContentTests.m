@@ -70,7 +70,7 @@
   XCTAssertNil(error);
   XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"appLinkURL");
 }
 
@@ -106,7 +106,7 @@
   XCTAssertNil(error);
   XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
 }
 
@@ -132,7 +132,7 @@
   XCTAssertNil(error);
   XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionText");
 }
 
@@ -147,7 +147,7 @@
   XCTAssertNil(error);
   XCTAssertFalse([content validateWithOptions:FBSDKShareBridgeOptionsDefault error:&error]);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"promotionCode");
 }
 

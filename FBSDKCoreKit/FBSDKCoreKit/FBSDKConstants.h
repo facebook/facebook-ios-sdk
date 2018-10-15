@@ -20,122 +20,115 @@
 
 #import <FBSDKCoreKit/FBSDKMacros.h>
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
 /**
-  The error domain for all errors from FBSDKCoreKit.
+ The error domain for all errors from FBSDKCoreKit.
+
+ Error codes from the SDK in the range 0-99 are reserved for this domain.
+ */
+FBSDK_EXTERN NSErrorDomain const FBSDKErrorDomain;
+
+#else
+
+/**
+ The error domain for all errors from FBSDKCoreKit.
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorDomain;
 
-/**
- NS_ENUM(NSInteger, FBSDKErrorCode)
-  Error codes for FBSDKErrorDomain.
- */
-typedef NS_ENUM(NSInteger, FBSDKErrorCode)
-{
-  /**
-    Reserved.
-   */
-  FBSDKReservedErrorCode = 0,
+#endif
 
-  /**
-    The error code for errors from invalid encryption on incoming encryption URLs.
-   */
-  FBSDKEncryptionErrorCode,
-
-  /**
-    The error code for errors from invalid arguments to SDK methods.
-   */
-  FBSDKInvalidArgumentErrorCode,
-
-  /**
-    The error code for unknown errors.
-   */
-  FBSDKUnknownErrorCode,
-
-  /**
-    A request failed due to a network error. Use NSUnderlyingErrorKey to retrieve
-   the error object from the NSURLConnection for more information.
-   */
-  FBSDKNetworkErrorCode,
-
-  /**
-    The error code for errors encountered during an App Events flush.
-   */
-  FBSDKAppEventsFlushErrorCode,
-
-  /**
-    An endpoint that returns a binary response was used with FBSDKGraphRequestConnection.
-
- Endpoints that return image/jpg, etc. should be accessed using NSURLRequest
-   */
-  FBSDKGraphRequestNonTextMimeTypeReturnedErrorCode,
-
-  /**
-    The operation failed because the server returned an unexpected response.
-
- You can get this error if you are not using the most recent SDK, or you are accessing a version of the
-   Graph API incompatible with the current SDK.
-   */
-  FBSDKGraphRequestProtocolMismatchErrorCode,
-
-  /**
-    The Graph API returned an error.
-
- See below for useful userInfo keys (beginning with FBSDKGraphRequestError*)
-   */
-  FBSDKGraphRequestGraphAPIErrorCode,
-
-  /**
-    The specified dialog configuration is not available.
-
- This error may signify that the configuration for the dialogs has not yet been downloaded from the server
-   or that the dialog is unavailable.  Subsequent attempts to use the dialog may succeed as the configuration is loaded.
-   */
-  FBSDKDialogUnavailableErrorCode,
-
-  /**
-    Indicates an operation failed because a required access token was not found.
-   */
-  FBSDKAccessTokenRequiredErrorCode,
-
-  /**
-    Indicates an app switch (typically for a dialog) failed because the destination app is out of date.
-   */
-  FBSDKAppVersionUnsupportedErrorCode,
-
-  /**
-    Indicates an app switch to the browser (typically for a dialog) failed.
-   */
-  FBSDKBrowserUnavailableErrorCode,
-
-  /**
-
-@warning use FBSDKBrowserUnavailableErrorCode instead
-   */
-  FBSDKBrowswerUnavailableErrorCode __attribute__ ((deprecated("use FBSDKBrowserUnavailableErrorCode instead"))) = FBSDKBrowserUnavailableErrorCode,
-};
-
-/**
- NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
-  Describes the category of Facebook error. See `FBSDKGraphRequestErrorCategoryKey`.
- */
-typedef NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
-{
-  /** The default error category that is not known to be recoverable. Check `FBSDKLocalizedErrorDescriptionKey` for a user facing message. */
-  FBSDKGraphRequestErrorCategoryOther = 0,
-  /** Indicates the error is temporary (such as server throttling). While a recoveryAttempter will be provided with the error instance, the attempt is guaranteed to succeed so you can simply retry the operation if you do not want to present an alert.  */
-  FBSDKGraphRequestErrorCategoryTransient = 1,
-  /** Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action. */
-  FBSDKGraphRequestErrorCategoryRecoverable = 2
-};
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
 
 /*
  @methodgroup error userInfo keys
  */
 
 /**
-  The userInfo key for the invalid collection for errors with FBSDKInvalidArgumentErrorCode.
+ The userInfo key for the invalid collection for errors with FBSDKErrorInvalidArgument.
+
+ If the invalid argument is a collection, the collection can be found with this key and the individual
+ invalid item can be found with FBSDKErrorArgumentValueKey.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey;
+
+/**
+ The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentNameKey;
+
+/**
+ The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentValueKey;
+
+/**
+ The userInfo key for the message for developers in NSErrors that originate from the SDK.
+
+ The developer message will not be localized and is not intended to be presented within the app.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorDeveloperMessageKey;
+
+/**
+ The userInfo key describing a localized description that can be presented to the user.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorLocalizedDescriptionKey;
+
+/**
+ The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
+
+/*
+ @methodgroup FBSDKGraphRequest error userInfo keys
+ */
+
+/**
+ The userInfo key describing the error category, for error recovery purposes.
+
+ See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorKey;
+
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorCategoryKey
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
+
+/*
+ The userInfo key for the Graph API error code.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCodeKey;
+
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCode
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
+
+/*
+ The userInfo key for the Graph API error subcode.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
+
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcode
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
+
+/*
+ The userInfo key for the HTTP status code.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorHTTPStatusCodeKey;
+
+/*
+ The userInfo key for the raw JSON response.
+ */
+FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKey;
+
+#else
+
+/*
+ @methodgroup error userInfo keys
+ */
+
+/**
+ The userInfo key for the invalid collection for errors with FBSDKErrorInvalidArgument.
 
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
@@ -143,29 +136,29 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
 FBSDK_EXTERN NSString *const FBSDKErrorArgumentCollectionKey;
 
 /**
-  The userInfo key for the invalid argument name for errors with FBSDKInvalidArgumentErrorCode.
+ The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorArgumentNameKey;
 
 /**
- The userInfo key for the invalid argument value for errors with FBSDKInvalidArgumentErrorCode.
+ The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorArgumentValueKey;
 
 /**
-  The userInfo key for the message for developers in NSErrors that originate from the SDK.
+ The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorDeveloperMessageKey;
 
 /**
-  The userInfo key describing a localized description that can be presented to the user.
+ The userInfo key describing a localized description that can be presented to the user.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorLocalizedDescriptionKey;
 
 /**
-  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
+ The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
 FBSDK_EXTERN NSString *const FBSDKErrorLocalizedTitleKey;
 
@@ -174,39 +167,153 @@ FBSDK_EXTERN NSString *const FBSDKErrorLocalizedTitleKey;
  */
 
 /**
-  The userInfo key describing the error category, for error recovery purposes.
+ The userInfo key describing the error category, for error recovery purposes.
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorCategoryKey;
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorKey;
+
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorCategoryKey
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
 
 /*
-  The userInfo key for the Graph API error code.
+ The userInfo key for the Graph API error code.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorCode;
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorCodeKey;
+
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorCode
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
 
 /*
-  The userInfo key for the Graph API error subcode.
+ The userInfo key for the Graph API error subcode.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorSubcode;
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
+
+FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorSubcode
+DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
 
 /*
-  The userInfo key for the HTTP status code.
+ The userInfo key for the HTTP status code.
  */
 FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorHTTPStatusCodeKey;
 
 /*
-  The userInfo key for the raw JSON response.
+ The userInfo key for the raw JSON response.
  */
 FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
 
+#endif
+
+#ifndef NS_ERROR_ENUM
+#define NS_ERROR_ENUM(_domain, _name) \
+enum _name: NSInteger _name; \
+enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+#endif
+
 /**
-  a formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
+ FBSDKError
+ Error codes for FBSDKErrorDomain.
+ */
+typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKError)
+{
+  /**
+   Reserved.
+   */
+  FBSDKErrorReserved = 0,
+
+  /**
+   The error code for errors from invalid encryption on incoming encryption URLs.
+   */
+  FBSDKErrorEncryption,
+
+  /**
+   The error code for errors from invalid arguments to SDK methods.
+   */
+  FBSDKErrorInvalidArgument,
+
+  /**
+   The error code for unknown errors.
+   */
+  FBSDKErrorUnknown,
+
+  /**
+   A request failed due to a network error. Use NSUnderlyingErrorKey to retrieve
+   the error object from the NSURLConnection for more information.
+   */
+  FBSDKErrorNetwork,
+
+  /**
+   The error code for errors encountered during an App Events flush.
+   */
+  FBSDKErrorAppEventsFlush,
+
+  /**
+   An endpoint that returns a binary response was used with FBSDKGraphRequestConnection.
+
+   Endpoints that return image/jpg, etc. should be accessed using NSURLRequest
+   */
+  FBSDKErrorGraphRequestNonTextMimeTypeReturned,
+
+  /**
+   The operation failed because the server returned an unexpected response.
+
+   You can get this error if you are not using the most recent SDK, or you are accessing a version of the
+   Graph API incompatible with the current SDK.
+   */
+  FBSDKErrorGraphRequestProtocolMismatch,
+
+  /**
+   The Graph API returned an error.
+
+   See below for useful userInfo keys (beginning with FBSDKGraphRequestError*)
+   */
+  FBSDKErrorGraphRequestGraphAPI,
+
+  /**
+   The specified dialog configuration is not available.
+
+   This error may signify that the configuration for the dialogs has not yet been downloaded from the server
+   or that the dialog is unavailable.  Subsequent attempts to use the dialog may succeed as the configuration is loaded.
+   */
+  FBSDKErrorDialogUnavailable,
+
+  /**
+   Indicates an operation failed because a required access token was not found.
+   */
+  FBSDKErrorAccessTokenRequired,
+
+  /**
+   Indicates an app switch (typically for a dialog) failed because the destination app is out of date.
+   */
+  FBSDKErrorAppVersionUnsupported,
+
+  /**
+   Indicates an app switch to the browser (typically for a dialog) failed.
+   */
+  FBSDKErrorBrowserUnavailable,
+};
+
+/**
+ FBSDKGraphRequestError
+ Describes the category of Facebook error. See `FBSDKGraphRequestErrorKey`.
+ */
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
+{
+  /** The default error category that is not known to be recoverable. Check `FBSDKLocalizedErrorDescriptionKey` for a user facing message. */
+  FBSDKGraphRequestErrorOther = 0,
+  /** Indicates the error is temporary (such as server throttling). While a recoveryAttempter will be provided with the error instance, the attempt is guaranteed to succeed so you can simply retry the operation if you do not want to present an alert.  */
+  FBSDKGraphRequestErrorTransient = 1,
+  /** Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action. */
+  FBSDKGraphRequestErrorRecoverable = 2
+};
+
+/**
+ a formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
  */
 @protocol FBSDKErrorRecoveryAttempting<NSObject>
 
 /**
-  attempt the recovery
+ attempt the recovery
  @param error the error
  @param recoveryOptionIndex the selected option index
  @param delegate the delegate
@@ -223,3 +330,34 @@ FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
 - (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo;
 
 @end
+
+/**
+ Deprecated
+ */
+typedef NS_ENUM(NSInteger, FBSDKErrorCode)
+{
+  FBSDKReservedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorReserved instead") = 0,
+  FBSDKEncryptionErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorEncryption instead"),
+  FBSDKInvalidArgumentErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorInvalidArgument instead"),
+  FBSDKUnknownErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorUnknown instead"),
+  FBSDKNetworkErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorNetwork instead"),
+  FBSDKAppEventsFlushErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAppEventsFlush instead"),
+  FBSDKGraphRequestNonTextMimeTypeReturnedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestNonTextMimeTypeReturned instead"),
+  FBSDKGraphRequestProtocolMismatchErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestProtocolMismatch instead"),
+  FBSDKGraphRequestGraphAPIErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestGraphAPI instead"),
+  FBSDKDialogUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorDialogUnavailable instead"),
+  FBSDKAccessTokenRequiredErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAccessTokenRequired instead"),
+  FBSDKAppVersionUnsupportedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAppVersionUnsupported instead"),
+  FBSDKBrowserUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorBrowserUnavailable instead"),
+  FBSDKBrowswerUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorBrowserUnavailable instead") = FBSDKBrowserUnavailableErrorCode,
+} DEPRECATED_MSG_ATTRIBUTE("use FBSDKError instead");
+
+/**
+ Deprecated
+ */
+typedef NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
+{
+  FBSDKGraphRequestErrorCategoryOther DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorOther instead") = 0,
+  FBSDKGraphRequestErrorCategoryTransient DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorTransient instead") = 1,
+  FBSDKGraphRequestErrorCategoryRecoverable DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorRecoverable instead") = 2
+} DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestError instead");

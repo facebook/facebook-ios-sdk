@@ -583,7 +583,7 @@ static id g_mockNSBundle;
   }];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     //verify we get the second error instance.
-    XCTAssertEqual(2, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue]);
+    XCTAssertEqual(2, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
     [expectation fulfill];
   }];
 
@@ -615,7 +615,7 @@ static id g_mockNSBundle;
   }];
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     //verify we don't get the second error instance.
-    XCTAssertEqual(1, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue]);
+    XCTAssertEqual(1, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
     [expectation fulfill];
   }];
 

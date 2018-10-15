@@ -36,7 +36,7 @@
 
 - (instancetype)initWithRecoveryDescription:(NSString *)description
                          optionDescriptions:(NSArray *)optionDescriptions
-                                   category:(FBSDKGraphRequestErrorCategory)category
+                                   category:(FBSDKGraphRequestError)category
                          recoveryActionName:(NSString *)recoveryActionName {
   if ((self = [super init])) {
     _localizedRecoveryDescription = [description copy];

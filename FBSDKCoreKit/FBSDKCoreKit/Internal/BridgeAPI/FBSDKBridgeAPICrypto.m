@@ -58,7 +58,7 @@ static NSString *g_cipherKey = nil;
       NSDictionary *userInfo = @{
                                  FBSDKErrorArgumentValueKey: queryParameters,
                                  };
-      *errorRef = [FBSDKError errorWithCode:FBSDKEncryptionErrorCode
+      *errorRef = [NSError fbErrorWithCode:FBSDKErrorEncryption
                                    userInfo:userInfo
                                     message:@"Error decrypting incoming query parameters."
                             underlyingError:nil];
@@ -88,7 +88,7 @@ static NSString *g_cipherKey = nil;
                                      @"version": additionalSignedDataArray[4],
                                      },
                                  };
-      *errorRef = [FBSDKError errorWithCode:FBSDKEncryptionErrorCode
+      *errorRef = [NSError fbErrorWithCode:FBSDKErrorEncryption
                                    userInfo:userInfo
                                     message:@"Error decrypting incoming query parameters."
                             underlyingError:nil];

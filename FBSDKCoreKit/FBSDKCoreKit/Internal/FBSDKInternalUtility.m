@@ -285,7 +285,7 @@ setJSONStringForObject:(id)object
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
     if (![NSJSONSerialization isValidJSONObject:object]) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"object"
+        *errorRef = [NSError fbInvalidArgumentErrorWithName:@"object"
                                                        value:object
                                                      message:@"Invalid object for JSON serialization."];
       }
@@ -419,7 +419,7 @@ setJSONStringForObject:(id)object
                                                                                   error:&queryStringError]];
     if (!queryString) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"queryParameters"
+        *errorRef = [NSError fbInvalidArgumentErrorWithName:@"queryParameters"
                                                        value:queryParameters
                                                      message:nil
                                              underlyingError:queryStringError];
@@ -438,7 +438,7 @@ setJSONStringForObject:(id)object
     if (URL) {
       *errorRef = nil;
     } else {
-      *errorRef = [FBSDKError unknownErrorWithMessage:@"Unknown error building URL."];
+      *errorRef = [NSError fbUnknownErrorWithMessage:@"Unknown error building URL."];
     }
   }
   return URL;

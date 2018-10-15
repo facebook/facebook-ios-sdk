@@ -52,13 +52,13 @@
     }
   }
 
-  FBSDKGraphRequestErrorCategory errorCategory = [error.userInfo[FBSDKGraphRequestErrorCategoryKey] unsignedIntegerValue];
+  FBSDKGraphRequestError errorCategory = [error.userInfo[FBSDKGraphRequestErrorKey] unsignedIntegerValue];
   switch (errorCategory) {
-    case FBSDKGraphRequestErrorCategoryTransient :
+    case FBSDKGraphRequestErrorTransient :
       [self.delegate processorDidAttemptRecovery:self didRecover:YES error:nil];
       self.delegate = nil;
       return YES;
-    case FBSDKGraphRequestErrorCategoryRecoverable :
+    case FBSDKGraphRequestErrorRecoverable :
       if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         _recoveryAttempter = error.recoveryAttempter;
         BOOL isLoginRecoveryAttempter = [_recoveryAttempter isKindOfClass:NSClassFromString(@"_FBSDKLoginRecoveryAttempter")];
@@ -101,7 +101,7 @@
         return standardRecoveryWork();
       }
       return NO;
-    case FBSDKGraphRequestErrorCategoryOther :
+    case FBSDKGraphRequestErrorOther :
       if ([request.tokenString isEqualToString:[FBSDKAccessToken currentAccessToken].tokenString]) {
         NSString *message = error.userInfo[FBSDKErrorLocalizedDescriptionKey];
         NSString *title = error.userInfo[FBSDKErrorLocalizedTitleKey];

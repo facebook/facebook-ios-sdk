@@ -15,11 +15,11 @@
 // COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 #import <UIKit/UIKit.h>
 #import <XCTest/XCTest.h>
 
 #import <FBSDKCoreKit/FBSDKTestUsersManager.h>
-
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
@@ -252,14 +252,14 @@
      };
      code = 400;
      */
-    XCTAssertEqual(FBSDKGraphRequestGraphAPIErrorCode, error.code);
-    XCTAssertEqualObjects(@(400), error.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey][@"code"]);
-    XCTAssertEqualObjects(@(400), error.userInfo[FBSDKGraphRequestErrorHTTPStatusCodeKey]);
-    XCTAssertEqualObjects(@(2500), error.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey][@"body"][@"error"][@"code"]);
-    XCTAssertEqualObjects(@(2500), error.userInfo[FBSDKGraphRequestErrorGraphErrorCode]);
+    XCTAssertEqual(FBSDKErrorGraphRequestGraphAPI, error.code);
+    XCTAssertEqualObjects(@400, error.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey][@"code"]);
+    XCTAssertEqualObjects(@400, error.userInfo[FBSDKGraphRequestErrorHTTPStatusCodeKey]);
+    XCTAssertEqualObjects(@2500, error.userInfo[FBSDKGraphRequestErrorParsedJSONResponseKey][@"body"][@"error"][@"code"]);
+    XCTAssertEqualObjects(@2500, error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey]);
     XCTAssertTrue([error.userInfo[FBSDKErrorDeveloperMessageKey] rangeOfString:@"active access token"].location != NSNotFound);
     XCTAssertNil(error.userInfo[NSLocalizedDescriptionKey]);
-    XCTAssertNil(error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcode]);
+    XCTAssertNil(error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey]);
     [blocker signal];
   };
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{ @"fields": @"id" }];
@@ -287,8 +287,8 @@
   completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(result);
     XCTAssertEqualObjects(@"Invalid parameter", error.userInfo[FBSDKErrorDeveloperMessageKey]);
-    XCTAssertEqualObjects(@(100), error.userInfo[FBSDKGraphRequestErrorGraphErrorCode]);
-    XCTAssertEqualObjects(@(1349125), error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcode]);
+    XCTAssertEqualObjects(@100, error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey]);
+    XCTAssertEqualObjects(@1349125, error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey]);
     XCTAssertEqualObjects(@"Missing message or attachment.", error.localizedDescription);
     XCTAssertEqualObjects(error.localizedDescription, error.userInfo[FBSDKErrorLocalizedDescriptionKey]);
     XCTAssertEqualObjects(@"Missing Message Or Attachment", error.userInfo[FBSDKErrorLocalizedTitleKey]);

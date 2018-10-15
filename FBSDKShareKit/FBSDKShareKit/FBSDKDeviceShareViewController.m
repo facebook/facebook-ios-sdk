@@ -80,7 +80,7 @@
     NSString *code = result[@"user_code"];
     NSUInteger expires = [result[@"expires_in"] unsignedIntegerValue];
     if (!code || !expires) {
-      [self _dismissWithError:[FBSDKError unknownErrorWithMessage:@"Malformed response from server"]];
+      [self _dismissWithError:[NSError fbUnknownErrorWithMessage:@"Malformed response from server"]];
       return;
     }
     self.deviceDialogView.confirmationCode = code;
@@ -112,7 +112,7 @@
   }
   if (!_shareContent) {
     if (error != NULL) {
-      *error = [FBSDKError requiredArgumentErrorWithName:@"shareContent" message:nil];
+      *error = [NSError fbRequiredArgumentErrorWithName:@"shareContent" message:nil];
     }
     return nil;
   }
@@ -127,8 +127,8 @@
     return params;
   }
   if (error != NULL) {
-    *error = [FBSDKError
-              invalidArgumentErrorWithName:@"shareContent"
+    *error = [NSError
+              fbInvalidArgumentErrorWithName:@"shareContent"
               value:shareContent
               message:[NSString stringWithFormat:@"%@ is not a supported content type", [shareContent class]]];
   }

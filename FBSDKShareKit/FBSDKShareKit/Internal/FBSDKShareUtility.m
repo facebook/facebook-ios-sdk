@@ -20,7 +20,8 @@
 
 #import <FBSDKShareKit/FBSDKHashtag.h>
 
-#import "FBSDKShareError.h"
+#import "FBSDKCoreKit+Internal.h"
+#import "FBSDKShareConstants.h"
 #import "FBSDKShareLinkContent+Internal.h"
 
 @implementation FBSDKShareUtility
@@ -382,7 +383,10 @@
     return [shareContent validateWithOptions:bridgeOptions error:errorRef];
   } else {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:@"shareContent" value:shareContent message:nil];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:@"shareContent"
+                                                      value:shareContent
+                                                    message:nil];
     }
     return NO;
   }
@@ -616,7 +620,10 @@
                            name,
                            (unsigned long)minCount,
                            (unsigned long)maxCount];
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:array message:message];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:name
+                                                      value:array
+                                                    message:message];
     }
     return NO;
   } else {
@@ -637,7 +644,10 @@
   }
   if (!URL.isFileURL) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:URL message:nil];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:name
+                                                      value:URL
+                                                    message:nil];
     }
     return NO;
   }
@@ -648,10 +658,11 @@
                                      options:NSDataReadingMapped
                                        error:&fileError]) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name
-                                                          value:URL
-                                                        message:@"Error reading file"
-                                                underlyingError:fileError];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:name
+                                                      value:URL
+                                                    message:@"Error reading file"
+                                            underlyingError:fileError];
     }
     return NO;
   }
@@ -670,7 +681,10 @@
     return YES;
   } else {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:URL message:nil];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:name
+                                                      value:URL
+                                                    message:nil];
     }
     return NO;
   }
@@ -683,7 +697,9 @@
       ([value isKindOfClass:[NSArray class]] && ![(NSArray *)value count]) ||
       ([value isKindOfClass:[NSDictionary class]] && ![(NSDictionary *)value count])) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError requiredArgumentErrorWithName:name message:nil];
+      *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:name
+                                                     message:nil];
     }
     return NO;
   }
@@ -707,7 +723,10 @@
     }
   }
   if (errorRef != NULL) {
-    *errorRef = [FBSDKShareError invalidArgumentErrorWithName:argumentName value:@(value) message:nil];
+    *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                     name:argumentName
+                                                    value:@(value)
+                                                  message:nil];
   }
   return NO;
 }
@@ -721,7 +740,10 @@
     return YES;
   } else {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError invalidArgumentErrorWithName:name value:videoURL message:nil];
+      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                       name:name
+                                                      value:videoURL
+                                                    message:nil];
     }
     return NO;
   }

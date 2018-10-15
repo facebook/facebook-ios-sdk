@@ -130,9 +130,9 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
     NSCharacterSet* nonDigitCharacters = [[NSCharacterSet decimalDigitCharacterSet] invertedSet];
     if ([_effectID rangeOfCharacterFromSet:nonDigitCharacters].location != NSNotFound) {
       if (errorRef != NULL) {
-        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"effectID"
-                                                       value:_effectID
-                                                     message:@"Invalid value for effectID, effectID can contain only numerical characters."];
+        *errorRef = [NSError fbInvalidArgumentErrorWithName:@"effectID"
+                                                      value:_effectID
+                                                    message:@"Invalid value for effectID, effectID can contain only numerical characters."];
       }
       return NO;
     }

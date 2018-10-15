@@ -149,7 +149,7 @@ static FBSDKAccessToken *g_currentAccessToken;
     [connection start];
   } else {
     if (completionHandler) {
-      completionHandler(nil, nil, [FBSDKError errorWithCode:FBSDKAccessTokenRequiredErrorCode message:@"No current access token to refresh"]);
+      completionHandler(nil, nil, [NSError fbErrorWithCode:FBSDKErrorAccessTokenRequired message:@"No current access token to refresh"]);
     }
   }
 }

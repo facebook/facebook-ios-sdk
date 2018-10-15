@@ -20,7 +20,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareError.h"
+#import "FBSDKShareConstants.h"
 #import "FBSDKShareMessengerContentUtility.h"
 
 static NSString *const kMediaTemplatePageIDKey = @"pageID";
@@ -157,7 +157,9 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
 {
   if (!_mediaURL && !_attachmentID) {
     if (errorRef != NULL) {
-      *errorRef = [FBSDKShareError requiredArgumentErrorWithName:@"attachmentID/mediaURL" message:@"Must specify either attachmentID or mediaURL"];
+      *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:@"attachmentID/mediaURL"
+                                                     message:@"Must specify either attachmentID or mediaURL"];
     }
     return NO;
   }

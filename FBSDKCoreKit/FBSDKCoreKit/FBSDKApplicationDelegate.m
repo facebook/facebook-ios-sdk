@@ -335,10 +335,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
       self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
-        openedURLError = [FBSDKError errorWithCode:FBSDKBrowserUnavailableErrorCode
+        openedURLError = [NSError fbErrorWithCode:FBSDKErrorBrowserUnavailable
                                            message:@"the app switch failed because the browser is unavailable"];
       } else {
-        openedURLError = [FBSDKError errorWithCode:FBSDKAppVersionUnsupportedErrorCode
+        openedURLError = [NSError fbErrorWithCode:FBSDKErrorAppVersionUnsupported
                                            message:@"the app switch failed because the destination app is out of date"];
       }
       FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request

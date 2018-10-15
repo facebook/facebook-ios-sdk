@@ -188,7 +188,7 @@
                                                       error:&error]);
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqual(error.domain, FBSDKErrorDomain);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"bridge_args");
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentValueKey], bridgeArgs);
@@ -215,7 +215,7 @@
                                                       error:&error]);
   XCTAssertFalse(cancelled);
   XCTAssertNotNil(error);
-  XCTAssertEqual(error.code, FBSDKInvalidArgumentErrorCode);
+  XCTAssertEqual(error.code, FBSDKErrorInvalidArgument);
   XCTAssertEqual(error.domain, FBSDKErrorDomain);
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentNameKey], @"method_results");
   XCTAssertEqualObjects(error.userInfo[FBSDKErrorArgumentValueKey], methodResults);

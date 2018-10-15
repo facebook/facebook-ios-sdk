@@ -721,7 +721,7 @@ static NSString *g_overrideAppID = nil;
 
   if (userID.length == 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-    NSError *error = [FBSDKError requiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+    NSError *error = [NSError fbRequiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
     if (handler) {
       handler(nil, nil, error);
     }
@@ -736,7 +736,7 @@ static NSString *g_overrideAppID = nil;
   __block NSError *invalidObjectError;
   NSString *dataJSONString = [FBSDKInternalUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
     *stop = YES;
-    invalidObjectError = [FBSDKError unknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
+    invalidObjectError = [NSError fbUnknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
     return nil;
   }];
   if (!error) {
@@ -1157,7 +1157,7 @@ static NSString *g_overrideAppID = nil;
   if (flushResult == FlushResultServerError) {
     // Only log events that developer can do something with (i.e., if parameters are incorrect).
     //  as opposed to cases where the token is bad.
-    if ([error.userInfo[FBSDKGraphRequestErrorCategoryKey] unsignedIntegerValue] == FBSDKGraphRequestErrorCategoryOther) {
+    if ([error.userInfo[FBSDKGraphRequestErrorKey] unsignedIntegerValue] == FBSDKGraphRequestErrorOther) {
       NSString *message = [NSString stringWithFormat:@"Failed to send AppEvents: %@", error];
       [FBSDKAppEventsUtility logAndNotify:message allowLogAsDeveloperError:!appEventsState.areAllEventsImplicit];
     }

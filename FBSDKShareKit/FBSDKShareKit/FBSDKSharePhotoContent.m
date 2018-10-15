@@ -22,7 +22,6 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKHashtag.h"
-#import "FBSDKShareError.h"
 #import "FBSDKSharePhoto.h"
 #import "FBSDKShareUtility.h"
 

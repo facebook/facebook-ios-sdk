@@ -18,4 +18,12 @@
 
 #import "FBSDKTVOSConstants.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+NSErrorDomain const FBSDKTVOSErrorDomain = @"com.facebook.sdk.tvos";
+
+#else
+
 NSString *const FBSDKTVOSErrorDomain = @"com.facebook.sdk.tvos";
+
+#endif

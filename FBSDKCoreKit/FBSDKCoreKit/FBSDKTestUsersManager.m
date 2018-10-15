@@ -166,8 +166,8 @@ static NSMutableDictionary *gInstancesDictionary;
   __block int expectedCount = 2;
   void (^complete)(NSError *) = ^(NSError *error) {
     // ignore if they're already friends or pending request
-    if ([error.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue] == 522 ||
-        [error.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue] == 520) {
+    if ([error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue] == 522 ||
+        [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue] == 520) {
       error = nil;
     }
     if (--expectedCount == 0 || error) {
