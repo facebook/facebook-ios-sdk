@@ -42,19 +42,20 @@ public enum LoginResult {
       self = .failed(error)
       return
     }
-    if sdkResult.isCancelled {
-      self = .cancelled
-    } else {
-      let grantedPermissions = (sdkResult.grantedPermissions?.compactMap { $0 as? String }
-        .map { Permission(name: $0) })
-        .map(Set.init)
-      let declinedPermissions = (sdkResult.declinedPermissions?.compactMap { $0 as? String }
-        .map { Permission(name: $0) })
-        .map(Set.init)
-      self = .success(grantedPermissions: grantedPermissions ?? [],
-                      declinedPermissions: declinedPermissions ?? [],
-                      token: AccessToken(sdkAccessToken: sdkResult.token))
 
+    guard !sdkResult.isCancelled, let token = sdkResult.token else {
+      self = .cancelled
+      return
     }
+
+    let grantedPermissions = (sdkResult.grantedPermissions?.compactMap { $0 as? String }
+      .map { Permission(name: $0) })
+      .map(Set.init)
+    let declinedPermissions = (sdkResult.declinedPermissions?.compactMap { $0 as? String }
+      .map { Permission(name: $0) })
+      .map(Set.init)
+    self = .success(grantedPermissions: grantedPermissions ?? [],
+                    declinedPermissions: declinedPermissions ?? [],
+                    token: AccessToken(sdkAccessToken: token))
   }
 }
