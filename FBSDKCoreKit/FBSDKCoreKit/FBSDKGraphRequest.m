@@ -154,10 +154,9 @@ static NSString *const kPostHTTPMethod = @"POST";
                   forBatch:(BOOL)forBatch {
   params = [self preprocessParams: params];
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  NSURL *parsedURL = [NSURL URLWithString:[baseUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-#pragma clang pop
+  NSCharacterSet *urlAllowedSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
+  NSURL *parsedURL = [NSURL URLWithString:[baseUrl stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet]];
+
   if ([httpMethod isEqualToString:kPostHTTPMethod] && !forBatch) {
     return baseUrl;
   }

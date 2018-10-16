@@ -131,14 +131,14 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 @warning use logInWithReadPermissions:fromViewController:handler: instead
  */
 - (void)logInWithReadPermissions:(NSArray *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler
-__attribute__ ((deprecated("use logInWithReadPermissions:fromViewController:handler: instead")));
+DEPRECATED_MSG_ATTRIBUTE("use logInWithReadPermissions:fromViewController:handler: instead");
 
 /**
 
 @warning use logInWithPublishPermissions:fromViewController:handler: instead
  */
 - (void)logInWithPublishPermissions:(NSArray *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler
-__attribute__ ((deprecated("use logInWithPublishPermissions:fromViewController:handler: instead")));
+DEPRECATED_MSG_ATTRIBUTE("use logInWithPublishPermissions:fromViewController:handler: instead");
 
 /**
   Logs the user in or authorizes additional permissions.

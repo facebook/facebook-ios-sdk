@@ -104,14 +104,16 @@
 
         status = fbsdkdfl_SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
         if (status == errSecItemNotFound) {
-#if TARGET_OS_IPHONE || (defined(MAC_OS_X_VERSION_10_9) && MAC_OS_X_VERSION_MIN_REQUIRED >= MAC_OS_X_VERSION_10_9)
+#if !TARGET_OS_TV
+          if (@available(macOS 10.9, iOS 8, *)) {
             if (accessibility) {
-                [query setObject:(__bridge id)(accessibility) forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessible]];
+              [query setObject:(__bridge id)(accessibility) forKey:[FBSDKDynamicFrameworkLoader loadkSecAttrAccessible]];
             }
+          }
 #endif
-            [query setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
+          [query setObject:value forKey:[FBSDKDynamicFrameworkLoader loadkSecValueData]];
 
-            status = fbsdkdfl_SecItemAdd((__bridge CFDictionaryRef)query, NULL);
+          status = fbsdkdfl_SecItemAdd((__bridge CFDictionaryRef)query, NULL);
         }
     } else {
         status = fbsdkdfl_SecItemDelete((__bridge CFDictionaryRef)query);

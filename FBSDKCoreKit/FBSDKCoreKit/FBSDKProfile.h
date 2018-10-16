@@ -156,7 +156,7 @@ FBSDK_EXTERN NSString *const FBSDKProfileChangeNewKey;
  @param size The height and width. This will be rounded to integer precision.
  */
 - (NSString *)imagePathForPictureMode:(FBSDKProfilePictureMode)mode size:(CGSize)size
-__attribute__ ((deprecated("use imageURLForPictureMode:size: instead")));
+DEPRECATED_MSG_ATTRIBUTE("use imageURLForPictureMode:size: instead");
 
 /**
   Returns YES if the profile is equivalent to the receiver.

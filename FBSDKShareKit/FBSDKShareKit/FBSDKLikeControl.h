@@ -91,7 +91,7 @@ FBSDK_EXTERN NSString *NSStringFromFBSDKLikeControlStyle(FBSDKLikeControlStyle s
  fast-app-switch that allows the user to like the object.  Upon return to the calling app, the view will update
  with the new state and send actions for the UIControlEventValueChanged event.
  */
-__attribute__ ((deprecated))
+DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
 @interface FBSDKLikeControl : UIControl <FBSDKLiking>
 
 /**
