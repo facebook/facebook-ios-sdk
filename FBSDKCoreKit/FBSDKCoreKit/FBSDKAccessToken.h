@@ -20,7 +20,6 @@
 
 #import <FBSDKCoreKit/FBSDKCopying.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
-#import <FBSDKCoreKit/FBSDKMacros.h>
 
 /**
   Notification indicating that the `currentAccessToken` has changed.
@@ -29,7 +28,7 @@
  `FBSDKAccessTokenChangeOldKey` and
  `FBSDKAccessTokenChangeNewKey`.
  */
-FBSDK_EXTERN NSString *const FBSDKAccessTokenDidChangeNotification;
+FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidChangeNotification;
 
 /**
   A key in the notification's userInfo that will be set
@@ -44,27 +43,27 @@ FBSDK_EXTERN NSString *const FBSDKAccessTokenDidChangeNotification;
   of an access token, this key will also exist since the access token
   is moving from a null state (no user) to a non-null state (user).
  */
-FBSDK_EXTERN NSString *const FBSDKAccessTokenDidChangeUserID;
+FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidChangeUserID;
 
 /*
   key in notification's userInfo object for getting the old token.
 
  If there was no old token, the key will not be present.
  */
-FBSDK_EXTERN NSString *const FBSDKAccessTokenChangeOldKey;
+FOUNDATION_EXPORT NSString *const FBSDKAccessTokenChangeOldKey;
 
 /*
   key in notification's userInfo object for getting the new token.
 
  If there is no new token, the key will not be present.
  */
-FBSDK_EXTERN NSString *const FBSDKAccessTokenChangeNewKey;
+FOUNDATION_EXPORT NSString *const FBSDKAccessTokenChangeNewKey;
 
 /*
  A key in the notification's userInfo that will be set
  if and only if the token has expired.
  */
-FBSDK_EXTERN NSString *const FBSDKAccessTokenDidExpire;
+FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidExpire;
 
 
 /**

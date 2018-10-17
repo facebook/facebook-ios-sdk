@@ -39,11 +39,6 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
   NSUInteger _videoSize;
 }
 
-- (instancetype)init NS_UNAVAILABLE
-{
-  assert(0);
-}
-
 #pragma Public Method
 - (instancetype)initWithVideoName:(NSString *)videoName videoSize:(NSUInteger)videoSize parameters:(NSDictionary *)parameters delegate:(id<FBSDKVideoUploaderDelegate>)delegate
 {

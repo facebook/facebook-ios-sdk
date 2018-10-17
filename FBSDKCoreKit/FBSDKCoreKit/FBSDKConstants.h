@@ -18,8 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
@@ -27,7 +25,7 @@
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
-FBSDK_EXTERN NSErrorDomain const FBSDKErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const FBSDKErrorDomain;
 
 #else
 
@@ -36,7 +34,7 @@ FBSDK_EXTERN NSErrorDomain const FBSDKErrorDomain;
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKErrorDomain;
 
 #endif
 
@@ -52,34 +50,34 @@ FBSDK_EXTERN NSString *const FBSDKErrorDomain;
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey;
 
 /**
  The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentNameKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentNameKey;
 
 /**
  The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorArgumentValueKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentValueKey;
 
 /**
  The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorDeveloperMessageKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorDeveloperMessageKey;
 
 /**
  The userInfo key describing a localized description that can be presented to the user.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorLocalizedDescriptionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedDescriptionKey;
 
 /**
  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
 
 /*
  @methodgroup FBSDKGraphRequest error userInfo keys
@@ -90,36 +88,36 @@ FBSDK_EXTERN NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorKey;
 
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorCategoryKey
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorCategoryKey
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
 
 /*
  The userInfo key for the Graph API error code.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCodeKey;
 
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCode
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
 
 /*
  The userInfo key for the Graph API error subcode.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
 
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcode
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
 
 /*
  The userInfo key for the HTTP status code.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorHTTPStatusCodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorHTTPStatusCodeKey;
 
 /*
  The userInfo key for the raw JSON response.
  */
-FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKey;
 
 #else
 
@@ -133,34 +131,34 @@ FBSDK_EXTERN NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKe
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorArgumentCollectionKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentCollectionKey;
 
 /**
  The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorArgumentNameKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentNameKey;
 
 /**
  The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorArgumentValueKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentValueKey;
 
 /**
  The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorDeveloperMessageKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorDeveloperMessageKey;
 
 /**
  The userInfo key describing a localized description that can be presented to the user.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorLocalizedDescriptionKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedDescriptionKey;
 
 /**
  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
-FBSDK_EXTERN NSString *const FBSDKErrorLocalizedTitleKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedTitleKey;
 
 /*
  @methodgroup FBSDKGraphRequest error userInfo keys
@@ -171,36 +169,36 @@ FBSDK_EXTERN NSString *const FBSDKErrorLocalizedTitleKey;
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorKey;
 
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorCategoryKey
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorCategoryKey
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
 
 /*
  The userInfo key for the Graph API error code.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorCodeKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorCodeKey;
 
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorCode
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorCode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
 
 /*
  The userInfo key for the Graph API error subcode.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
 
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorGraphErrorSubcode
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorSubcode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
 
 /*
  The userInfo key for the HTTP status code.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorHTTPStatusCodeKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorHTTPStatusCodeKey;
 
 /*
  The userInfo key for the raw JSON response.
  */
-FBSDK_EXTERN NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
 
 #endif
 

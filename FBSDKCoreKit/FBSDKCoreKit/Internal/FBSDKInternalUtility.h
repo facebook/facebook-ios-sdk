@@ -36,6 +36,9 @@ typedef NS_ENUM(int32_t, FBSDKUIKitVersion)
 
 @interface FBSDKInternalUtility : NSObject
 
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
 /**
   Constructs the scheme for apps that come to the current app through the bridge.
  */

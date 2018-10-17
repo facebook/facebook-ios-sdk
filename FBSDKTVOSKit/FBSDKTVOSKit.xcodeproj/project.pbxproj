@@ -293,7 +293,7 @@
 		9D82CF181C56C3EE00CB7AD7 /* FBSDKTVLoginViewControllerElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTVLoginViewControllerElement.m; sourceTree = "<group>"; };
 		9D82CF1B1C56EB5300CB7AD7 /* FBSDKJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKJS.h; sourceTree = "<group>"; };
 		9D82CF1C1C56EB5300CB7AD7 /* FBSDKJS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJS.m; sourceTree = "<group>"; };
-		9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
+		9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
 		9D8E94761BC332900012023B /* FBSDKTVOSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKTVOSConstants.h; sourceTree = "<group>"; };
 		9D8E94771BC332900012023B /* FBSDKTVOSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTVOSConstants.m; sourceTree = "<group>"; };
 		9DEC55831BBA636A00C7DB4A /* FBSDKTVOSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKTVOSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -361,6 +361,14 @@
 				0B9DBF66207C080600662776 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		526CE1CD21768C9100F69C7C /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */,
+			);
+			name = Internal;
 			sourceTree = "<group>";
 		};
 		8117C2131D302F6900784D79 /* Configurations */ = {
@@ -495,7 +503,7 @@
 				9DEC55861BBA636A00C7DB4A /* FBSDKTVOSKit.h */,
 				9D084B131CB57FF000A51DA0 /* FBSDKTVShareButtonElement.h */,
 				9D084B141CB57FF000A51DA0 /* FBSDKTVShareButtonElement.m */,
-				9DEC55FA1BBA786700C7DB4A /* Internal */,
+				526CE1CD21768C9100F69C7C /* Internal */,
 				9DEC55BD1BBA684500C7DB4A /* Supporting Files */,
 			);
 			path = FBSDKTVOSKit;
@@ -549,14 +557,6 @@
 			);
 			name = Frameworks;
 			path = FBSDKTVOSKit;
-			sourceTree = "<group>";
-		};
-		9DEC55FA1BBA786700C7DB4A /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */,
-			);
-			path = Internal;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

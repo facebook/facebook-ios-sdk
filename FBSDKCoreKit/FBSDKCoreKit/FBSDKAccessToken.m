@@ -43,11 +43,6 @@ static FBSDKAccessToken *g_currentAccessToken;
 
 @implementation FBSDKAccessToken
 
-- (instancetype)init NS_UNAVAILABLE
-{
-  assert(0);
-}
-
 - (instancetype)initWithTokenString:(NSString *)tokenString
                         permissions:(NSArray *)permissions
                 declinedPermissions:(NSArray *)declinedPermissions

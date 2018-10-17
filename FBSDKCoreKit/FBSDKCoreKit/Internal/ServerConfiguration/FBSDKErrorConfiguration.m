@@ -32,12 +32,6 @@ static NSString *const kErrorCategoryLogin = @"login";
   NSMutableDictionary *_configurationDictionary;
 }
 
-- (instancetype)init
-{
-  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithDictionary:);
-  return [self initWithDictionary:nil];
-}
-
 - (instancetype)initWithDictionary:(NSDictionary *)dictionary
 {
   if ((self = [super init])) {

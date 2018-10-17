@@ -48,12 +48,6 @@ static NSMutableDictionary *gInstancesDictionary;
   return self;
 }
 
-- (instancetype)init
-{
-  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithAppID:appSecret:);
-  return [self initWithAppID:nil appSecret:nil];
-}
-
 + (instancetype)sharedInstanceForAppID:(NSString *)appID appSecret:(NSString *)appSecret {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{

@@ -400,14 +400,6 @@
   return containsVideos && containsPhotos;
 }
 
-#pragma mark - Object Lifecycle
-
-- (instancetype)init
-{
-  FBSDK_NO_DESIGNATED_INITIALIZER();
-  return nil;
-}
-
 #pragma mark - Helper Methods
 
 + (id)_convertObject:(id)object

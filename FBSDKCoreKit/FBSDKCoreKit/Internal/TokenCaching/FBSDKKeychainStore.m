@@ -25,7 +25,6 @@
 #import "FBSDKKeychainStore.h"
 
 #import "FBSDKDynamicFrameworkLoader.h"
-#import "FBSDKMacros.h"
 
 @implementation FBSDKKeychainStore
 
@@ -38,12 +37,6 @@
     }
 
     return self;
-}
-
-- (instancetype)init
-{
-  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithService:accessGroup:);
-  return [self initWithService:nil accessGroup:nil];
 }
 
 - (BOOL)setDictionary:(NSDictionary *)value forKey:(NSString *)key accessibility:(CFTypeRef)accessibility

@@ -24,7 +24,6 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKError.h"
-#import "FBSDKMacros.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
@@ -526,14 +525,6 @@ static NSMapTable *_transientObjects;
     [FBSDKInternalUtility checkRegisteredCanOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
   });
   return [self _canOpenURLScheme:FBSDK_CANOPENURL_MSQRD_PLAYER];
-}
-
-#pragma mark - Object Lifecycle
-
-- (instancetype)init
-{
-  FBSDK_NO_DESIGNATED_INITIALIZER();
-  return nil;
 }
 
 #pragma mark - Helper Methods

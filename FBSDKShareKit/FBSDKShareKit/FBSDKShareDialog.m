@@ -46,7 +46,7 @@
 #define FBSDK_SHARE_METHOD_QUOTE_MIN_VERSION @"20160328"
 #define FBSDK_SHARE_METHOD_MMP_MIN_VERSION @"20160328"
 
-FBSDK_STATIC_INLINE void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl()
+static inline void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUrl()
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
@@ -54,7 +54,7 @@ FBSDK_STATIC_INLINE void FBSDKShareDialogValidateAPISchemeRegisteredForCanOpenUr
   });
 }
 
-FBSDK_STATIC_INLINE void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl()
+static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanOpenUrl()
 {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{

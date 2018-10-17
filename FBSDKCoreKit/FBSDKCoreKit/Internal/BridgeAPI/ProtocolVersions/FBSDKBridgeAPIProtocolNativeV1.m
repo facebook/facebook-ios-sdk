@@ -20,8 +20,6 @@
 
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
-
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKBase64.h"
 #import "FBSDKBridgeAPIRequest.h"
@@ -123,12 +121,6 @@ static const struct
     _includeAppIcon = includeAppIcon;
   }
   return self;
-}
-
-- (instancetype)init
-{
-  FBSDK_NOT_DESIGNATED_INITIALIZER(initWithAppScheme:);
-  return [self initWithAppScheme:nil];
 }
 
 #pragma mark - FBSDKBridgeAPIProtocol

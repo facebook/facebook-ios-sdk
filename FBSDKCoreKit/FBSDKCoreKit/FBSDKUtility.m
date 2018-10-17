@@ -21,7 +21,6 @@
 #import <CommonCrypto/CommonDigest.h>
 
 #import "FBSDKInternalUtility.h"
-#import "FBSDKMacros.h"
 
 @implementation FBSDKUtility
 
@@ -122,12 +121,6 @@
   }
 
   return encryptedStuff;
-}
-
-- (instancetype)init
-{
-  FBSDK_NO_DESIGNATED_INITIALIZER();
-  return nil;
 }
 
 @end

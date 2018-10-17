@@ -18,8 +18,6 @@
 
 #import "FBSDKBase64.h"
 
-#import "FBSDKMacros.h"
-
 @implementation FBSDKBase64
 
 static FBSDKBase64 *_decoder;

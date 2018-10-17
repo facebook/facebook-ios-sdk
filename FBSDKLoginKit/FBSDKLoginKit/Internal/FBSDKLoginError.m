@@ -20,6 +20,12 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+#ifndef NS_ERROR_ENUM
+#define NS_ERROR_ENUM(_domain, _name) \
+enum _name: NSInteger _name; \
+enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
+#endif
+
 typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
 {
   FBSDKLoginErrorSubcodeUserCheckpointed = 459,

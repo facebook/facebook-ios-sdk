@@ -18,8 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
-
 NS_ASSUME_NONNULL_BEGIN
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
@@ -28,7 +26,7 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
-FBSDK_EXTERN NSErrorDomain const FBSDKTVOSErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const FBSDKTVOSErrorDomain;
 
 #else
 
@@ -36,14 +34,8 @@ FBSDK_EXTERN NSErrorDomain const FBSDKTVOSErrorDomain;
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
-FBSDK_EXTERN NSString *const FBSDKTVOSErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKTVOSErrorDomain;
 
-#endif
-
-#ifndef NS_ERROR_ENUM
-#define NS_ERROR_ENUM(_domain, _name) \
-enum _name: NSInteger _name; \
-enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
 #endif
 
 /*!

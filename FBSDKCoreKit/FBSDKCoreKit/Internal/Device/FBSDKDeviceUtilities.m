@@ -18,8 +18,6 @@
 
 #import "FBSDKDeviceUtilities.h"
 
-#import "FBSDKMacros.h"
-
 @implementation FBSDKDeviceUtilities
 
 + (UIImage *)buildQRCodeWithAuthorizationCode:(NSString *)authorizationCode
@@ -45,9 +43,4 @@
   return [UIImage imageWithCIImage:resizedImage];
 }
 
-- (instancetype)init
-{
-  FBSDK_NO_DESIGNATED_INITIALIZER();
-  return nil;
-}
 @end

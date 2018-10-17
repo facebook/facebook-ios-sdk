@@ -30,7 +30,6 @@
 #import "FBSDKError.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
-#import "FBSDKMacros.h"
 #import "FBSDKSettings.h"
 #import "FBSDKTimeSpentData.h"
 
@@ -381,12 +380,6 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   }
 
   return value;
-}
-
-- (instancetype)init
-{
-  FBSDK_NO_DESIGNATED_INITIALIZER();
-  return nil;
 }
 
 @end

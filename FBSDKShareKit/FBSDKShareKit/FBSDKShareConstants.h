@@ -18,8 +18,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
@@ -27,7 +25,7 @@
 
  Error codes from the SDK in the range 200-299 are reserved for this domain.
  */
-FBSDK_EXTERN NSErrorDomain const FBSDKShareErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const FBSDKShareErrorDomain;
 
 #else
 
@@ -36,7 +34,7 @@ FBSDK_EXTERN NSErrorDomain const FBSDKShareErrorDomain;
 
  Error codes from the SDK in the range 200-299 are reserved for this domain.
  */
-FBSDK_EXTERN NSString *const FBSDKShareErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKShareErrorDomain;
 
 #endif
 

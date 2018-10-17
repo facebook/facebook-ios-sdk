@@ -19,14 +19,12 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKMacros.h>
-
 #import <FBSDKShareKit/FBSDKLikeObjectType.h>
 
-FBSDK_EXTERN NSString *const FBSDKLikeActionControllerDidDisableNotification;
-FBSDK_EXTERN NSString *const FBSDKLikeActionControllerDidResetNotification;
-FBSDK_EXTERN NSString *const FBSDKLikeActionControllerDidUpdateNotification;
-FBSDK_EXTERN NSString *const FBSDKLikeActionControllerAnimatedKey;
+FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidDisableNotification;
+FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidResetNotification;
+FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidUpdateNotification;
+FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerAnimatedKey;
 
 @interface FBSDKLikeActionController : NSObject <NSDiscardableContent, NSSecureCoding>
 

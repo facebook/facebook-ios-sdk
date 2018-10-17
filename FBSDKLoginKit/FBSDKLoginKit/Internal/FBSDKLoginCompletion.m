@@ -108,11 +108,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   ;  BOOL _performExplicitFallback;
 }
 
-- (instancetype)init NS_UNAVAILABLE
-{
-  assert(0);
-}
-
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID
 {
   if ((self = [super init]) != nil) {
@@ -243,11 +238,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   FBSDKLoginCompletionParameters *_parameters;
 }
 
-- (instancetype)init NS_UNAVAILABLE
-{
-  assert(0);
-}
-
 - (instancetype)initWithTokenString:(NSString *)tokenString appID:(NSString *)appID
 {
   if ((self = [super init]) != nil) {
@@ -299,11 +289,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 @implementation FBSDKLoginSystemAccountErrorCompleter
 {
   FBSDKLoginCompletionParameters *_parameters;
-}
-
-- (instancetype)init NS_UNAVAILABLE
-{
-  assert(0);
 }
 
 - (instancetype)initWithError:(NSError *)accountStoreError permissions:(NSSet *)permissions
