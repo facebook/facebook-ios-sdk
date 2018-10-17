@@ -23,7 +23,16 @@
 #import "FBSDKMath.h"
 #import "FBSDKSettings+Internal.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+NSNotificationName const FBSDKAccessTokenDidChangeNotification = @"com.facebook.sdk.FBSDKAccessTokenData.FBSDKAccessTokenDidChangeNotification";
+
+#else
+
 NSString *const FBSDKAccessTokenDidChangeNotification = @"com.facebook.sdk.FBSDKAccessTokenData.FBSDKAccessTokenDidChangeNotification";
+
+#endif
+
 NSString *const FBSDKAccessTokenDidChangeUserID = @"FBSDKAccessTokenDidChangeUserID";
 NSString *const FBSDKAccessTokenChangeNewKey = @"FBSDKAccessToken";
 NSString *const FBSDKAccessTokenChangeOldKey = @"FBSDKAccessTokenOld";

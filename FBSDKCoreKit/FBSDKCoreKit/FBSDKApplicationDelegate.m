@@ -46,7 +46,15 @@
 #import "FBSDKProfile+Internal.h"
 #endif
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+NSNotificationName const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
+
+#else
+
 NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk.FBSDKApplicationDidBecomeActiveNotification";
+
+#endif
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 

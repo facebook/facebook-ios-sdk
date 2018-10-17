@@ -21,9 +21,20 @@
 
 #import <FBSDKShareKit/FBSDKLikeObjectType.h>
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+FOUNDATION_EXPORT NSNotificationName const FBSDKLikeActionControllerDidDisableNotification;
+FOUNDATION_EXPORT NSNotificationName const FBSDKLikeActionControllerDidResetNotification;
+FOUNDATION_EXPORT NSNotificationName const FBSDKLikeActionControllerDidUpdateNotification;
+
+#else
+
 FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidDisableNotification;
 FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidResetNotification;
 FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidUpdateNotification;
+
+#endif
+
 FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerAnimatedKey;
 
 @interface FBSDKLikeActionController : NSObject <NSDiscardableContent, NSSecureCoding>

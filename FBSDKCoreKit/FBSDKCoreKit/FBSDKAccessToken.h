@@ -21,6 +21,19 @@
 #import <FBSDKCoreKit/FBSDKCopying.h>
 #import <FBSDKCoreKit/FBSDKGraphRequestConnection.h>
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+/**
+  Notification indicating that the `currentAccessToken` has changed.
+
+ the userInfo dictionary of the notification will contain keys
+ `FBSDKAccessTokenChangeOldKey` and
+ `FBSDKAccessTokenChangeNewKey`.
+ */
+FOUNDATION_EXPORT NSNotificationName const FBSDKAccessTokenDidChangeNotification;
+
+#else
+
 /**
   Notification indicating that the `currentAccessToken` has changed.
 
@@ -29,6 +42,8 @@
  `FBSDKAccessTokenChangeNewKey`.
  */
 FOUNDATION_EXPORT NSString *const FBSDKAccessTokenDidChangeNotification;
+
+#endif
 
 /**
   A key in the notification's userInfo that will be set

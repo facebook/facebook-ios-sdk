@@ -22,7 +22,15 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+
+FOUNDATION_EXPORT NSNotificationName const FBSDKApplicationDidBecomeActiveNotification;
+
+#else
+
 FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
+
+#endif
 
 @class FBSDKApplicationCall;
 
