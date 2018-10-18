@@ -12,6 +12,7 @@ env:
     - TEST_TYPE=Lint
     - TEST_TYPE=Samples
     - TEST_TYPE=CocoaPods
+    - TEST_TYPE=Carthage
 before_install:
 - |
   if [ "$TEST_TYPE" = Lint ] || [ "$TEST_TYPE" = Carthage ]; then
@@ -25,6 +26,8 @@ install:
     brew install swiftlint || brew upgrade swiftlint
   elif [ "$TEST_TYPE" = CocoaPods ]; then
     pod repo update --silent
+  elif [ "$TEST_TYPE" = Carthage ]; then
+    brew install carthage || brew upgrade carthage
   fi
 script:
 - |
@@ -43,4 +46,6 @@ script:
     pod lib lint FacebookCore.podspec --allow-warnings
     pod lib lint FacebookLogin.podspec --allow-warnings
     pod lib lint FacebookShare.podspec --allow-warnings
+  elif [ "$TEST_TYPE" = Carthage ]; then
+    carthage build --no-skip-current
   fi

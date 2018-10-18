@@ -1,1 +1,1 @@
-github "facebook/facebook-objc-sdk" == 4.36.0
+github "facebook/facebook-objc-sdk" "master"

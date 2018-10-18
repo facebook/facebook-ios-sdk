@@ -1,5 +1,19 @@
 # Change Log
 
+## [0.5.0](https://github.com/facebook/facebook-sdk-swift/tree/0.5.0) (2018-10-17)
+[Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.4.0...0.5.0)
+
+**Fixed bugs:**
+
+- Resolve Carthage Issue with Xcode 10
+
+## [0.4.0](https://github.com/facebook/facebook-sdk-swift/tree/0.4.0) (2018-09-24)
+[Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.3.0...0.4.0)
+
+**Implemented enhancements:**
+
+- Updated to Swift 4.2
+
 ## [0.3.0](https://github.com/facebook/facebook-sdk-swift/tree/0.3.0) (2017-10-11)
 [Full Changelog](https://github.com/facebook/facebook-sdk-swift/compare/0.2.0...0.3.0)
 
