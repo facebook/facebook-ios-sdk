@@ -37,6 +37,7 @@
 		0302743E1C98A661000D666D /* FBSDKShareMediaContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0302743D1C98A661000D666D /* FBSDKShareMediaContentTests.m */; };
 		03A419DA1C922A2A006E7767 /* FBSDKShareMediaContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 03A419D81C922A2A006E7767 /* FBSDKShareMediaContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03A419DB1C922A2A006E7767 /* FBSDKShareMediaContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 03A419D91C922A2A006E7767 /* FBSDKShareMediaContent.m */; };
+		524A2201217816330047ABFE /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388E34B20A0E22500BFECA5 /* Photos.framework */; };
 		8131FB1A1D261D8B000350FF /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6411D0A49B500962084 /* FBSDKCoreKit.framework */; };
 		8131FB4E1D261E5E000350FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A71A3B807300BE2807 /* UIKit.framework */; };
 		8131FB4F1D261E5F000350FF /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893774A71A3B807300BE2807 /* UIKit.framework */; };
@@ -687,6 +688,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				524A2201217816330047ABFE /* Photos.framework in Frameworks */,
 				939000641EB80C1A00250D4C /* CoreGraphics.framework in Frameworks */,
 				8131FB1A1D261D8B000350FF /* FBSDKCoreKit.framework in Frameworks */,
 				8131FB4F1D261E5F000350FF /* UIKit.framework in Frameworks */,
