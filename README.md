@@ -14,6 +14,8 @@ Swift-taylored experience to integrate your app with Facebook. Including:
 - [App Events](https://developers.facebook.com/docs/swift/appevents) - Understand your audience and the performance of your app.
 - [Graph API](https://developers.facebook.com/docs/swift/graph) - Read and write directly to Facebook social graph.
 
+**NOTE:** This SDK is currently in Beta and may be unstable at times. Please also check out our [ObjC SDK](https://github.com/facebook/facebook-objc-sdk).
+
 ## Installation
 
 ### CocoaPods
@@ -58,12 +60,15 @@ brew update
 brew upgrade carthage
 ```
 
-**Note:** We recommend using Carthage version 0.17.2 or later.
+**Note:** We recommend using Carthage version 0.31.1 or later.
 
 Add the following line to your Cartfile:
 
 ```bash
-github "facebook/Facebook-SDK-Swift"
+github "facebook/facebook-sdk-swift"
+
+# If you run into issues, try targeting the master branch
+github "facebook/facebook-sdk-swift" "master"
 ```
 
 Run `carthage update`.
