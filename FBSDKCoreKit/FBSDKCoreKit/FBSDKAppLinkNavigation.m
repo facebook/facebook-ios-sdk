@@ -37,9 +37,9 @@ static id<FBSDKAppLinkResolving> defaultResolver;
 
 @interface FBSDKAppLinkNavigation ()
 
-@property (nonatomic, copy, readwrite) NSDictionary<NSString *, id> *extras;
-@property (nonatomic, copy, readwrite) NSDictionary<NSString *, id> *appLinkData;
-@property (nonatomic, strong, readwrite) FBSDKAppLink *appLink;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *extras;
+@property (nonatomic, copy) NSDictionary<NSString *, id> *appLinkData;
+@property (nonatomic, strong) FBSDKAppLink *appLink;
 
 @end
 

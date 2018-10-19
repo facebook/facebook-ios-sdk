@@ -151,7 +151,7 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 /**
   Gets or sets the timeout interval to wait for a response before giving up.
  */
-@property (nonatomic) NSTimeInterval timeout;
+@property (nonatomic, assign) NSTimeInterval timeout;
 
 /**
   The raw response that was returned from the server.  (readonly)

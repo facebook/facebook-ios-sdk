@@ -34,7 +34,7 @@ static NSTimeInterval const scanLength = 0.5;
 @property (nonatomic, strong) NSTimer *updateTimeoutTimer;
 @property (nonatomic, strong) NSMutableArray<FBSDKBluetoothBeacon *> *discoveredBeacons;
 @property (atomic, strong) NSMutableArray<BluetoothBeaconScanCompletion> *scanCompletionBlocks;
-@property (nonatomic) BOOL didPerformScan;
+@property (nonatomic, assign) BOOL didPerformScan;
 
 @property (nonatomic, copy, readonly) NSArray<CBUUID *> *bluetoothServices;
 @property (nonatomic, strong, readonly) CBUUID *eddystoneBeaconUUID;

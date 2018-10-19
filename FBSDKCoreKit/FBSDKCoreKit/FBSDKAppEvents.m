@@ -288,7 +288,7 @@ static NSString *g_overrideAppID = nil;
 
 @interface FBSDKAppEvents ()
 
-@property (nonatomic, readwrite) FBSDKAppEventsFlushBehavior flushBehavior;
+@property (nonatomic, assign) FBSDKAppEventsFlushBehavior flushBehavior;
 //for testing only.
 @property (nonatomic, assign) BOOL disableTimer;
 
