@@ -75,12 +75,16 @@ static NSTimeInterval const scanLength = 0.5;
 
 - (void)_startScan
 {
-  if (self.manager.isScanning) {
-    return;
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_9_0
+  if (@available(iOS 9.0, *)) {
+    if (self.manager.isScanning) {
+      return;
+    }
   }
-  
+#endif
+
   [self.discoveredBeacons removeAllObjects];
-  
+
   [self.manager scanForPeripheralsWithServices:self.bluetoothServices options:@{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES }];
   self.updateTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:scanLength target:self selector:@selector(_finalizeBluetoothScan) userInfo:nil repeats:NO];
   self.didPerformScan = YES;

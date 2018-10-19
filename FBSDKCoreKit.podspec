@@ -2,9 +2,9 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "FBSDKCoreKit"
-  s.version      = "4.38.0"
-  s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's core features"
+  s.name         = 'FBSDKCoreKit'
+  s.version      = '4.38.0'
+  s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform core features'
 
   s.description  = <<-DESC
                    The Facebook SDK for iOS CoreKit framework provides:
@@ -13,20 +13,26 @@ Pod::Spec.new do |s|
                    * Working with Access Tokens and User Profiles
                    DESC
 
-  s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
+  s.homepage     = 'https://developers.facebook.com/docs/ios/'
+  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
 
-  s.source       = { :git => "https://github.com/facebook/facebook-objc-sdk.git",
-                     :tag => "sdk-version-4.38.0"
+  s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
+                     :tag => 'sdk-version-4.38.0'
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
   s.tvos.weak_frameworks = 'CoreLocation', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
+
+  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
+  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
+
+  s.ios.dependency 'Bolts', '~> 1.9'
 
   s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
   s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
@@ -53,7 +59,6 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/Codeless/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
-                          'FBSDKCoreKit/FBSDKCoreKit/Internal/Cryptography/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLinkReturnToRefererView_Internal.h',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLink_Internal.h',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAudioResourceLoader.{h,m}',
@@ -68,10 +73,4 @@ Pod::Spec.new do |s|
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKColor.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/UI/FBSDKMaleSilhouetteIcon.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/WebDialog/**/*'
-
-  # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
-  s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
-                    'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
-
-  s.ios.dependency 'Bolts', '~> 1.7'
 end

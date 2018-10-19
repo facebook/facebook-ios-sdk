@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
@@ -30,12 +30,17 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
+  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
+  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
+  s.dependency 'FBSDKCoreKit'
+
   s.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
   s.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'
   s.tvos.source_files = 'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.{h,m}',
                         'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginCodeInfo.{h,m}',
                         'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.{h,m}',
                         'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.{h,m}',
+                        'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKError.{h,m}',
                         'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginCodeInfo+Internal.h',
                         'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginError.{h,m}',
                         'FBSDKLoginKit/FBSDKLoginKit/Internal/FBSDKDeviceLoginManagerResult+Internal.h'
@@ -43,9 +48,5 @@ Pod::Spec.new do |s|
                                'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManager.h',
                                'FBSDKLoginKit/FBSDKLoginKit/FBSDKDeviceLoginManagerResult.h',
                                'FBSDKLoginKit/FBSDKLoginKit/FBSDKLoginConstants.h'
-
-  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.dependency 'FBSDKCoreKit'
 
 end

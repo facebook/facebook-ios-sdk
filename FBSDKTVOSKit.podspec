@@ -26,8 +26,8 @@ Pod::Spec.new do |s|
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
   s.header_dir = 'FBSDKTVOSKit'
 
-  s.dependency 'FBSDKCoreKit', '~> 4.11'
+  s.dependency 'FBSDKCoreKit'
   # We have a compile time depend on FBSDKShareKit
-  s.dependency 'FBSDKShareKit', '~> 4.33'
-  s.dependency 'FBSDKLoginKit', '~> 4.11'
+  s.dependency 'FBSDKShareKit'
+  s.dependency 'FBSDKLoginKit'
 end

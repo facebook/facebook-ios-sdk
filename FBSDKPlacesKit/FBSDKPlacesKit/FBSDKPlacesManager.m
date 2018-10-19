@@ -127,6 +127,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     locationError = error;
     dispatch_group_leave(locationAndBeaconsGroup);
   }];
+
   [self.locationManager requestLocation];
 
   dispatch_group_enter(locationAndBeaconsGroup);

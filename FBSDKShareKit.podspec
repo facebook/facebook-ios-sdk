@@ -2,9 +2,9 @@
 
 Pod::Spec.new do |s|
 
-  s.name         = "FBSDKShareKit"
-  s.version      = "4.38.0"
-  s.summary      = "Official Facebook SDK for iOS to access Facebook Platform's Sharing Features"
+  s.name         = 'FBSDKShareKit'
+  s.version      = '4.38.0'
+  s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
   s.description  = <<-DESC
                    The Facebook SDK for iOS ShareKit framework provides:
@@ -13,16 +13,16 @@ Pod::Spec.new do |s|
                    * Publish content and open graph stories with the Graph API
                    DESC
 
-  s.homepage     = "https://developers.facebook.com/docs/ios/"
-  s.license      = { :type => "Facebook Platform License", :file => "LICENSE" }
+  s.homepage     = 'https://developers.facebook.com/docs/ios/'
+  s.license      = { :type => 'Facebook Platform License', :file => 'LICENSE' }
   s.author       = 'Facebook'
 
   s.platform     = :ios, :tvos
-  s.ios.deployment_target = '7.0'
+  s.ios.deployment_target = '8.0'
   s.tvos.deployment_target = '9.0'
 
-  s.source       = { :git => "https://github.com/facebook/facebook-objc-sdk.git",
-                     :tag => "sdk-version-4.38.0"
+  s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
+                     :tag => 'sdk-version-4.38.0'
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'AudioToolbox', 'CoreGraphics', 'CoreLocation', 'Foundation', 'QuartzCore', 'Security', 'Social', 'UIKit'
@@ -30,10 +30,36 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
+  s.header_dir = 'FBSDKShareKit'
+  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
+  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
+  s.dependency 'FBSDKCoreKit'
+
   s.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
+  s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
   s.ios.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}'
+  s.tvos.exclude_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKAppGroupAddDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKAppGroupContent.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKAppGroupJoinDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKAppInviteContent.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKAppInviteDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKCameraEffectArguments.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKCameraEffectTextures.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKGameRequestContent.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKGameRequestDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKLikeButton.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKLikeControl.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKLikeObjectType.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKLiking.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKMessageDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKSendButton.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareButton.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareCameraEffectContent.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareDialog.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareDialogMode.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKSharingButton.{h,m}',
+                         'FBSDKShareKit/FBSDKShareKit/FBSDKSharingScheme.{h,m}'
   s.tvos.source_files = 'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareButton.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKDeviceShareViewController.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/FBSDKHashtag.{h,m}',
@@ -66,10 +92,4 @@ Pod::Spec.new do |s|
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.{h,m}'
-
-  s.header_dir = "FBSDKShareKit"
-  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
-  s.dependency 'FBSDKCoreKit', '~> 4.38.0'
-
 end
