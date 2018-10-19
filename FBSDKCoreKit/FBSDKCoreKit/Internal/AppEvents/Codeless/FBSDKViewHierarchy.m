@@ -261,12 +261,51 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     [componentInfo setObject:@0 forKey:CODELESS_MAPPING_INDEX_KEY];
   }
 
-  if ([obj isKindOfClass:[UIView class]]) {
-    [componentInfo setObject:@(((UIView *)obj).tag)
-                      forKey:CODELESS_MAPPING_TAG_KEY];
-  }
+  [componentInfo setObject:@([FBSDKViewHierarchy getTag:obj])
+                    forKey:CODELESS_VIEW_TREE_TAG_KEY];
 
   return [componentInfo copy];
+}
+
++ (NSMutableDictionary<NSString *, id> *)getDetailAttributesOf:(NSObject *)obj
+{
+  if (!obj) {
+    return nil;
+  }
+
+  NSObject *parent = [FBSDKViewHierarchy getParent:obj];
+
+  NSDictionary *simpleAttributes = [FBSDKViewHierarchy getAttributesOf:obj parent:parent];
+
+  NSMutableDictionary *result = [NSMutableDictionary dictionaryWithDictionary:simpleAttributes];
+
+  NSString *className = NSStringFromClass([obj class]);
+  [result setObject:className forKey:CODELESS_VIEW_TREE_CLASS_NAME_KEY];
+
+  NSUInteger classBitmask = [FBSDKViewHierarchy getClassBitmask:obj];
+  [result setObject:[NSString stringWithFormat:@"%lu", (unsigned long)classBitmask]
+             forKey:CODELESS_VIEW_TREE_CLASS_TYPE_BIT_MASK_KEY];
+
+  if ([obj isKindOfClass:[UIControl class]]) {
+    // Get actions of UIControl
+    UIControl *control = (UIControl *)obj;
+    NSMutableSet *actions = [NSMutableSet set];
+    NSSet *targets = [control allTargets];
+    for (NSObject *target in targets) {
+      NSArray *ary = [control actionsForTarget:target forControlEvent:0];
+      if (ary.count > 0) {
+        [actions addObjectsFromArray:ary];
+      }
+    }
+    if (targets.count > 0) {
+      [result setObject:[actions allObjects] forKey:CODELESS_VIEW_TREE_ACTIONS_KEY];
+    }
+  }
+
+  [result setObject:[FBSDKViewHierarchy getDimensionOf:obj]
+             forKey:CODELESS_VIEW_TREE_DIMENSION_KEY];
+
+  return result;
 }
 
 + (NSIndexPath *)getIndexPath:(NSObject *)obj
@@ -479,6 +518,33 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   }
 
   return 0;
+}
+
++ (NSDictionary<NSString *, NSNumber *> *)getDimensionOf:(NSObject *)obj
+{
+  UIView *view = nil;
+
+  if ([obj isKindOfClass:[UIView class]]) {
+    view = (UIView *)obj;
+  } else if ([obj isKindOfClass:[UIViewController class]]) {
+    view = ((UIViewController *)obj).view;
+  }
+
+  CGRect frame = view.frame;
+  CGPoint offset = CGPointZero;
+
+  if ([view isKindOfClass:[UIScrollView class]])
+    offset = ((UIScrollView *)view).contentOffset;
+
+  return @{
+           CODELESS_VIEW_TREE_TOP_KEY: @((int)frame.origin.y),
+           CODELESS_VIEW_TREE_LEFT_KEY: @((int)frame.origin.x),
+           CODELESS_VIEW_TREE_WIDTH_KEY: @((int)frame.size.width),
+           CODELESS_VIEW_TREE_HEIGHT_KEY: @((int)frame.size.height),
+           CODELESS_VIEW_TREE_OFFSET_X_KEY: @((int)offset.x),
+           CODELESS_VIEW_TREE_OFFSET_Y_KEY: @((int)offset.y),
+           CODELESS_VIEW_TREE_VISIBILITY_KEY: view.isHidden ? @4 : @0
+           };
 }
 
 @end

@@ -58,5 +58,6 @@ typedef NS_ENUM(NSUInteger, FBSDKAppEventsFlushReason)
 + (BOOL)validateIdentifier:(NSString *)identifier;
 + (id)getVariable:(NSString *)variableName fromInstance:(NSObject *)instance;
 + (NSNumber *)getNumberValue:(NSString *)text;
++ (BOOL)isDebugBuild;
 
 @end

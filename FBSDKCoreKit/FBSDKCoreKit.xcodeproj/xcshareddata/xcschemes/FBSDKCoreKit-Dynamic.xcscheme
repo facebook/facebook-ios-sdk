@@ -29,6 +29,15 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "81B71CFC1D19C87400933E93"
+            BuildableName = "FBSDKCoreKit.framework"
+            BlueprintName = "FBSDKCoreKit-Dynamic"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>
