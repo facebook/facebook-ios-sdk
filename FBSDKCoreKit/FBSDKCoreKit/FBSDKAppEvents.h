@@ -726,4 +726,22 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterNameOrderID;
 + (void)augmentHybridWKWebView:(WKWebView *)webView;
 #endif
 
+/*
+ * Unity helper functions
+ */
+
+/**
+
+ Set if the Unity is already initialized
+
+ @param isUnityInit   whether Unity is initialized.
+
+ */
++ (void)setIsUnityInit:(BOOL)isUnityInit;
+
+/*
+ Send event binding to Unity
+ */
++ (void)sendEventBindingsToUnity;
+
 @end

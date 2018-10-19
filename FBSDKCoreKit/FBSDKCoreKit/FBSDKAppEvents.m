@@ -307,6 +307,7 @@ static NSString *g_overrideAppID = nil;
   FBSDKEventBindingManager *_eventBindingManager;
 #endif
   NSString *_userID;
+  BOOL _isUnityInit;
 }
 
 #pragma mark - Object Lifecycle
@@ -798,6 +799,30 @@ static NSString *g_overrideAppID = nil;
 }
 #endif
 
++ (void)setIsUnityInit:(BOOL)isUnityInit
+{
+  [FBSDKAppEvents singleton]->_isUnityInit = isUnityInit;
+}
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
++ (void)sendEventBindingsToUnity
+{
+  // Send event bindings to Unity only Unity is initialized
+  if ([FBSDKAppEvents singleton]->_isUnityInit) {
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
+                                                       options:0
+                                                         error:nil];
+    NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    Class classFBUnityUtility = objc_lookUpClass(FBUnityUtilityClassName);
+    SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
+    if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
+      [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
+    }
+  }
+}
+#pragma clang diagnostic pop
+
 #pragma mark - Internal Methods
 
 + (void)logImplicitEvent:(NSString *)eventName
@@ -881,8 +906,6 @@ static NSString *g_overrideAppID = nil;
 }
 
 #if !TARGET_OS_TV
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (void)enableCodelessEvents {
   if (_serverConfiguration.isCodelessEventsEnabled) {
     if (!_eventBindingManager) {
@@ -891,22 +914,13 @@ static NSString *g_overrideAppID = nil;
     }
 
     if ([FBSDKInternalUtility isUnity]) {
-      NSData *jsonData = [NSJSONSerialization dataWithJSONObject:_serverConfiguration.eventBindings ?: @""
-                                                         options:0
-                                                           error:nil];
-      NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-      Class classFBUnityUtility = objc_lookUpClass(FBUnityUtilityClassName);
-      SEL updateBindingSelector = NSSelectorFromString(FBUnityUtilityUpdateBindingsSelector);
-      if ([classFBUnityUtility respondsToSelector:updateBindingSelector]) {
-        [classFBUnityUtility performSelector:updateBindingSelector withObject:jsonString];
-      }
+      [FBSDKAppEvents sendEventBindingsToUnity];
     } else {
       [_eventBindingManager updateBindings:[FBSDKEventBindingManager
                                             parseArray:_serverConfiguration.eventBindings]];
     }
   }
 }
-#pragma clang diagnostic pop
 #endif
 
 // app events can use a server configuration up to 24 hours old to minimize network traffic.
