@@ -31,7 +31,8 @@
 
 #define FBSDK_GATEKEEPER_USER_DEFAULTS_KEY @"com.facebook.sdk:gateKeeper%@"
 
-#define FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELD @"mobile_sdk_gk"
+#define FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE @"mobile_sdk_gk"
+#define FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS @"gatekeepers"
 
 @implementation FBSDKGateKeeperManager
 
@@ -46,7 +47,7 @@ static BOOL _requeryFinishedForAppStart;
              appID:(NSString *)appID
       defaultValue:(BOOL)defaultValue
 {
-  if (_gateKeepers == nil || _gateKeepers[appID] == nil) {
+  if (appID == nil || _gateKeepers == nil || _gateKeepers[appID] == nil) {
     return defaultValue;
   }
   NSDictionary<NSString *, id> *gateKeeper = [FBSDKTypeUtility dictionaryValue:_gateKeepers[appID]];
@@ -99,10 +100,11 @@ static BOOL _requeryFinishedForAppStart;
 
   NSDictionary<NSString *, NSString *> *parameters = @{ @"platform": @"ios" ,
                                                         @"device_id": advertiserID ?: @"",
-                                                        @"sdk_version": sdkVersion};
+                                                        @"sdk_version": sdkVersion,
+                                                        @"fields": FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS};
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
-                                                                             appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELD]
+                                                                             appID, FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE]
                                                                  parameters:parameters
                                                                 tokenString:nil
                                                                  HTTPMethod:nil
@@ -123,13 +125,21 @@ static BOOL _requeryFinishedForAppStart;
     gateKeeper = [[NSMutableDictionary alloc] init];
   }
   NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-  NSArray<id> *fetchedData = [FBSDKTypeUtility arrayValue:resultDictionary[@"data"]];
-  if (fetchedData != nil) {
-    // updates gate keeper  with fetched data
-    for (id key in fetchedData) {
-      [gateKeeper addEntriesFromDictionary:[FBSDKTypeUtility dictionaryValue:key]];
+  NSDictionary<NSString *, id> *fetchedData = [FBSDKTypeUtility dictionaryValue:[resultDictionary[@"data"] firstObject]];
+  NSArray<id> *gateKeeperList = fetchedData != nil ? [FBSDKTypeUtility arrayValue:fetchedData[FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS]] : nil;
+
+  if (gateKeeperList != nil) {
+    // updates gate keeper with fetched data
+    for (id gateKeeperEntry in gateKeeperList) {
+      NSDictionary<NSString *, id> *entry = [FBSDKTypeUtility dictionaryValue:gateKeeperEntry];
+      NSString *key = [FBSDKTypeUtility stringValue:[entry objectForKey:@"key"]];
+      id value = [entry objectForKey:@"value"];
+      if (entry != nil && key != nil && value != nil) {
+        [gateKeeper setObject: value forKey:key];
+      }
     }
     [_gateKeepers setObject:gateKeeper forKey:appID];
+
   }
 
   // update the cached copy in user defaults
