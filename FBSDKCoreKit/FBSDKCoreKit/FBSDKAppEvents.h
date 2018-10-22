@@ -537,7 +537,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterNameOrderID;
 + (void)activateApp;
 
 /*
- * Push Notifications Registration
+ * Push Notifications Registration and Uninstall Tracking
  */
 
 /**

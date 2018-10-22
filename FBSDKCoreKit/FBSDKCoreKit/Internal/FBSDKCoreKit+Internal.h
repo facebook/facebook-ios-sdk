@@ -52,7 +52,6 @@
 #import "AppEvents/FBSDKAppEvents+Internal.h"
 #import "AppEvents/FBSDKAppEventsState.h"
 #import "AppEvents/FBSDKAppEventsStateManager.h"
-#import "AppEvents/FBSDKAppEventsUninstall.h"
 #import "AppEvents/FBSDKAppEventsUtility.h"
 #import "AppEvents/FBSDKTimeSpentData.h"
 #import "Base64/FBSDKBase64.h"

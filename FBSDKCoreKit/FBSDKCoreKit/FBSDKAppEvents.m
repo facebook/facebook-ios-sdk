@@ -284,6 +284,11 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 #define FBUnityUtilityClassName "FBUnityUtility"
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
 
+#define UNINSTALL_TRACKING_DEVICE_ID_KEY          @"device_id"
+#define UNINSTALL_TRACKING_PLATFORM_KEY           @"platform"
+#define UNINSTALL_TRACKING_DEVICE_TOKEN_KEY       @"device_token"
+#define UNINSTALL_TRACKING_TOKEN_ENDPOINT         @"app_push_device_token"
+
 static NSString *g_overrideAppID = nil;
 
 @interface FBSDKAppEvents ()
@@ -623,6 +628,23 @@ static NSString *g_overrideAppID = nil;
     if ([FBSDKAppEvents flushBehavior] != FBSDKAppEventsFlushBehaviorExplicitOnly) {
       [[FBSDKAppEvents singleton] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
     }
+
+    // Update device push token for uninstall tracking
+    [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
+      if (serverConfiguration.uninstallTrackingEnabled) {
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
+                                      initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
+                                                         [FBSDKSettings appID], UNINSTALL_TRACKING_TOKEN_ENDPOINT]
+                                      parameters:@{
+                                                   UNINSTALL_TRACKING_DEVICE_TOKEN_KEY: deviceTokenString,
+                                                   UNINSTALL_TRACKING_PLATFORM_KEY: @"ios",
+                                                   // advertiserID could be 0s if user select limit ad tracking
+                                                   UNINSTALL_TRACKING_DEVICE_ID_KEY:  [FBSDKAppEventsUtility advertiserID] ?: @""
+                                                   }
+                                      HTTPMethod:@"POST"];
+        [request startWithCompletionHandler:nil];
+      }
+    }];
   }
 }
 
