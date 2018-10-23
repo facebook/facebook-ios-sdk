@@ -387,6 +387,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				OTHER_LDFLAGS = "-ObjC";
 			};
 			name = Debug;
@@ -395,6 +396,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8986C7EF1890A571004B90DD /* Application.xcconfig */;
 			buildSettings = {
+				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
 				OTHER_LDFLAGS = "-ObjC";
 			};
 			name = Release;
