@@ -305,6 +305,11 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   [result setObject:[FBSDKViewHierarchy getDimensionOf:obj]
              forKey:CODELESS_VIEW_TREE_DIMENSION_KEY];
 
+  NSDictionary<NSString *, id> *textStyle = [FBSDKViewHierarchy getTextStyle:obj];
+  if (textStyle) {
+    [result setObject:textStyle forKey:CODELESS_VIEW_TREE_TEXT_STYLE_KEY];
+  }
+
   return result;
 }
 
@@ -391,6 +396,35 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   }
 
   return text.length > 0 ? text : nil;
+}
+
++ (NSDictionary<NSString *, id> *)getTextStyle:(NSObject *)obj
+{
+  UIFont *font = nil;
+  if ([obj isKindOfClass:[UIButton class]]) {
+    font = ((UIButton *)obj).titleLabel.font;
+  } else if ([obj isKindOfClass:[UILabel class]]) {
+    font = ((UILabel *)obj).font;
+  } else if ([obj isKindOfClass:[UITextField class]]) {
+    font = ((UITextField *)obj).font;
+  } else if ([obj isKindOfClass:[UITextView class]]) {
+    font = ((UITextView *)obj).font;
+  }
+
+  if (font) {
+    UIFontDescriptorSymbolicTraits traits = font.fontDescriptor.symbolicTraits;
+    BOOL isBold = (traits & UIFontDescriptorTraitBold) != 0;
+    BOOL isItalic = (traits & UIFontDescriptorTraitItalic) != 0;
+    CGFloat fontSize = font.pointSize;
+
+    return @{
+             CODELESS_VIEW_TREE_TEXT_IS_BOLD_KEY: @(isBold),
+             CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY: @(isItalic),
+             CODELESS_VIEW_TREE_TEXT_SIZE_KEY: @(fontSize)
+             };
+  }
+
+  return nil;
 }
 
 + (NSString *)getHint:(NSObject *)obj

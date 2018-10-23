@@ -77,4 +77,9 @@
 #define CODELESS_VIEW_TREE_OFFSET_Y_KEY         @"scrolly"
 #define CODELESS_VIEW_TREE_VISIBILITY_KEY       @"visibility"
 
+#define CODELESS_VIEW_TREE_TEXT_STYLE_KEY       @"text_style"
+#define CODELESS_VIEW_TREE_TEXT_IS_BOLD_KEY     @"is_bold"
+#define CODELESS_VIEW_TREE_TEXT_IS_ITALIC_KEY   @"is_italic"
+#define CODELESS_VIEW_TREE_TEXT_SIZE_KEY        @"font_size"
+
 #endif /* FBSDKCodelessMacros_h */
