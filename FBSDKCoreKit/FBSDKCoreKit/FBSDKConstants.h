@@ -236,7 +236,7 @@ typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKError)
 
   /**
    A request failed due to a network error. Use NSUnderlyingErrorKey to retrieve
-   the error object from the NSURLConnection for more information.
+   the error object from the NSURLSession for more information.
    */
   FBSDKErrorNetwork,
 

@@ -116,7 +116,7 @@ typedef void (^FBSDKGraphRequestHandler)(FBSDKGraphRequestConnection *connection
 
  The byte count arguments refer to the aggregated <FBSDKGraphRequest> objects, not a particular <FBSDKGraphRequest>.
 
- Like `NSURLConnection`, the values may change in unexpected ways if data needs to be resent.
+ Like `NSURLSession`, the values may change in unexpected ways if data needs to be resent.
 
  @param connection                The request connection transmitting data to a remote host
  @param bytesWritten              The number of bytes sent in the last transmission
@@ -287,8 +287,6 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite;
 
  By default, a connection is scheduled on the current thread in the default mode when it is created.
  You cannot reschedule a connection after it has started.
-
- This is very similar to `[NSURLConnection setDelegateQueue:]`.
  */
 - (void)setDelegateQueue:(NSOperationQueue *)queue;
 
