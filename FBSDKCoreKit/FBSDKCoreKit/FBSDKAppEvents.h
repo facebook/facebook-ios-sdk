@@ -684,16 +684,16 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterNameOrderID;
  @param zip user's zip
  @param country user's country
  */
-+ (void)setUserEmail:(nullable NSString *)email
-           firstName:(nullable NSString *)firstName
-            lastName:(nullable NSString *)lastName
-               phone:(nullable NSString *)phone
-         dateOfBirth:(nullable NSString *)dateOfBirth
-              gender:(nullable NSString *)gender
-                city:(nullable NSString *)city
-               state:(nullable NSString *)state
-                 zip:(nullable NSString *)zip
-             country:(nullable NSString *)country;
++ (void)setUserEmail:(NSString *)email
+           firstName:(NSString *)firstName
+            lastName:(NSString *)lastName
+               phone:(NSString *)phone
+         dateOfBirth:(NSString *)dateOfBirth
+              gender:(NSString *)gender
+                city:(NSString *)city
+               state:(NSString *)state
+                 zip:(NSString *)zip
+             country:(NSString *)country;
 /*
   Returns the set user data else nil
 */
