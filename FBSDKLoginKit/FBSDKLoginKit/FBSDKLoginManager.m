@@ -230,7 +230,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   if (expectChallenge) {
     // Perform this check early so we be sure to clear expected challenge in all cases.
     NSString *challengeReceived = parameters.challenge;
-    NSString *challengeExpected = [self loadExpectedChallenge];
+    NSString *challengeExpected = [[self loadExpectedChallenge] stringByReplacingOccurrencesOfString:@"+" withString:@" "];
     if (![challengeExpected isEqualToString:challengeReceived]) {
       challengePassed = NO;
     }
