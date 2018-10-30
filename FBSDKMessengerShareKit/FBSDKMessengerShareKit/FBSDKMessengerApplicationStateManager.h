@@ -23,6 +23,6 @@
 
 + (instancetype)sharedInstance;
 
-@property (nonatomic, readwrite, strong) FBSDKMessengerContext *currentContext;
+@property (nonatomic, strong) FBSDKMessengerContext *currentContext;
 
 @end

@@ -24,7 +24,7 @@ const NSUInteger ThemeTypeCount = 11;
 
 @interface Theme ()
 
-@property (nonatomic, assign, readwrite) ThemeType themeType;
+@property (nonatomic, assign) ThemeType themeType;
 
 @end
 

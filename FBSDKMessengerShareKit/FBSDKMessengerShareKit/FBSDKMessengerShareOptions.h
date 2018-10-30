@@ -30,7 +30,7 @@
   Pass additional information to be sent to Messenger which is sent back to
  the user's app when they reply to an attributed message.
  */
-@property (nonatomic, readwrite, copy) NSString *metadata;
+@property (nonatomic, copy) NSString *metadata;
 
 /**
  Optional property describing the www source URL of the content
@@ -40,7 +40,7 @@
  the content directly rather than uploading the content from your app.
  This option is only used for animated GIFs and WebPs.
  */
-@property (nonatomic, readwrite, copy) NSURL *sourceURL;
+@property (nonatomic, copy) NSURL *sourceURL;
 
 /**
   Optional property describing whether the content should be rendered like a sticker
@@ -50,7 +50,7 @@
  as a sticker.
  This option is only used for static images.
  */
-@property (nonatomic, readwrite, assign) BOOL renderAsSticker;
+@property (nonatomic, assign) BOOL renderAsSticker;
 
 /**
   Optional property that overrides the default way the content will be shared to messenger
@@ -62,6 +62,6 @@
  trigger the reply flow, then overriding this with FBSDKMessengerBroadcastContext will trigger the
  broadcast flow in messenger.
  */
-@property (nonatomic, readwrite, strong) FBSDKMessengerContext *contextOverride;
+@property (nonatomic, strong) FBSDKMessengerContext *contextOverride;
 
 @end
