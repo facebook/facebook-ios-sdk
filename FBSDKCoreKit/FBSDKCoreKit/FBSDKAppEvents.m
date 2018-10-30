@@ -100,6 +100,31 @@ NSString *const FBSDKAppEventParameterNameAdType                 = @"ad_type";
 NSString *const FBSDKAppEventParameterNameOrderID                = @"fb_order_id";
 
 //
+// Public event parameter names for DPA Catalog
+//
+
+NSString *const FBSDKAppEventParameterProductCustomLabel0               = @"fb_product_custom_label_0";
+NSString *const FBSDKAppEventParameterProductCustomLabel1               = @"fb_product_custom_label_1";
+NSString *const FBSDKAppEventParameterProductCustomLabel2               = @"fb_product_custom_label_2";
+NSString *const FBSDKAppEventParameterProductCustomLabel3               = @"fb_product_custom_label_3";
+NSString *const FBSDKAppEventParameterProductCustomLabel4               = @"fb_product_custom_label_4";
+NSString *const FBSDKAppEventParameterProductAppLinkIOSUrl              = @"fb_product_applink_ios_url";
+NSString *const FBSDKAppEventParameterProductAppLinkIOSAppStoreID       = @"fb_product_applink_ios_app_store_id";
+NSString *const FBSDKAppEventParameterProductAppLinkIOSAppName          = @"fb_product_applink_ios_app_name";
+NSString *const FBSDKAppEventParameterProductAppLinkIPhoneUrl           = @"fb_product_applink_iphone_url";
+NSString *const FBSDKAppEventParameterProductAppLinkIPhoneAppStoreID    = @"fb_product_applink_iphone_app_store_id";
+NSString *const FBSDKAppEventParameterProductAppLinkIPhoneAppName       = @"fb_product_applink_iphone_app_name";
+NSString *const FBSDKAppEventParameterProductAppLinkIPadUrl             = @"fb_product_applink_ipad_url";
+NSString *const FBSDKAppEventParameterProductAppLinkIPadAppStoreID      = @"fb_product_applink_ipad_app_store_id";
+NSString *const FBSDKAppEventParameterProductAppLinkIPadAppName         = @"fb_product_applink_ipad_app_name";
+NSString *const FBSDKAppEventParameterProductAppLinkAndroidUrl          = @"fb_product_applink_android_url";
+NSString *const FBSDKAppEventParameterProductAppLinkAndroidPackage      = @"fb_product_applink_android_package";
+NSString *const FBSDKAppEventParameterProductAppLinkAndroidAppName      = @"fb_product_applink_android_app_name";
+NSString *const FBSDKAppEventParameterProductAppLinkWindowsPhoneUrl     = @"fb_product_applink_windows_phone_url";
+NSString *const FBSDKAppEventParameterProductAppLinkWindowsPhoneAppID   = @"fb_product_applink_windows_phone_app_id";
+NSString *const FBSDKAppEventParameterProductAppLinkWindowsPhoneAppName = @"fb_product_applink_windows_phone_app_name";
+
+//
 // Public event parameter values
 //
 
