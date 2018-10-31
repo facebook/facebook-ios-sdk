@@ -328,13 +328,6 @@ else
 		\cp -R "$FB_SDK_BUILD"/AccountKitStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy AccountKitStrings.bundle"
 
-		# Build Messenger Kit
-		if [ -z $SKIPBUILD ]; then
-		  (xcodebuild -project "${FB_SDK_ROOT}"/FBSDKMessengerShareKit/FBSDKMessengerShareKit.xcodeproj -scheme "FBSDKMessengerShareKit-universal" -configuration Release clean build) || die "Failed to build messenger kit"
-		fi
-		\cp -R "$FB_SDK_BUILD"/FBSDKMessengerShareKit.framework "$FB_SDK_BUILD_PACKAGE" \
-		  || die "Could not copy FBSDKMessengerShareKit.framework"
-
 		# Build docs
 		if [ -z $SKIPBUILD ]; then
 		  . "$FB_SDK_SCRIPT/build_documentation.sh"

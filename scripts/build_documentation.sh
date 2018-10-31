@@ -30,7 +30,6 @@ KITS=("FBSDKCoreKit"
       "FBSDKShareKit"
       "FBSDKLoginKit"
       "FBSDKPlacesKit"
-      "FBSDKMessengerShareKit"
       "AccountKit"
       "FBSDKMarketingKit")
 
