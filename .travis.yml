@@ -1,0 +1,77 @@
+language: objective-c
+os: osx
+osx_image: xcode10
+
+xcode_workspace: FacebookSDK.xcworkspace
+xcode_scheme:
+- BuildAllKits
+- BuildAllKits_TV
+xcode_sdk:
+- iphonesimulator12.0
+- appletvsimulator12.0
+
+env:
+  global:
+  - SCRIPT_ENV=TRAVISCI
+
+matrix:
+  include:
+  - name: "iOS"
+    xcode_scheme: BuildAllKits
+    xcode_sdk: iphonesimulator12.0
+  - name: "tvOS"
+    xcode_scheme: BuildAllKits_TV
+    xcode_sdk: appletvsimulator12.0
+
+branches:
+  only:
+  - master
+
+before_install:
+- echo "Will update Brew"
+- brew update
+
+install:
+- echo "Will Bundle Brew"
+- brew bundle
+
+before_script:
+- echo "Will start scripts"
+
+script:
+- echo "Did start scripts"
+- echo "Env $SCRIPT_ENV"
+- carthage build --no-skip-current
+
+after_success:
+- echo "Did succeed"
+
+after_failure:
+- echo "Did fail"
+
+after_script:
+- echo "Did complete scripts"
+
+before_deploy:
+- echo "Will deploy"
+- test $TRAVIS_TEST_RESULT = 0
+
+deploy:
+- provider: script
+  script: echo "Should deploy"
+  on:
+    tags: true
+    branch: master
+
+after_deploy:
+- echo "Did deploy"
+
+notifications: # set notification options
+  email:
+    on_success: change
+    on_failure: always
+    recipients:
+      - codytwinton@fb.com
+  # Enable webhooks later
+  # webhooks:
+    # on_failure: always
