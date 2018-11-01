@@ -10,12 +10,16 @@ env:
 
 matrix:
   include:
-  - name: "iOS"
+  - name: "iOS 12.0"
     xcode_scheme: BuildAllKits
     xcode_sdk: iphonesimulator12.0
-  - name: "tvOS"
+    env: MATRIX_ENV=iOS
+  - name: "tvOS 12.0"
     xcode_scheme: BuildAllKits_TV
     xcode_sdk: appletvsimulator12.0
+    env: MATRIX_ENV=tvOS
+  - name: "Carthage"
+    env: MATRIX_ENV=Carthage
 
 branches:
   only:
@@ -34,8 +38,10 @@ before_script:
 
 script:
 - echo "Did start scripts"
-- echo "Env $SCRIPT_ENV"
-- carthage build --no-skip-current
+- echo "Env $SCRIPT_ENV $MATRIX_ENV"
+- if [ "$MATRIX_ENV" = "Carthage" ]; then \
+    carthage build --no-skip-current \
+  fi
 
 after_success:
 - echo "Did succeed"
