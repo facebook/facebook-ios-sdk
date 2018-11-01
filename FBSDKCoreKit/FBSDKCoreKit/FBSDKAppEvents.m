@@ -856,7 +856,10 @@ static NSString *g_overrideAppID = nil;
 + (void)sendEventBindingsToUnity
 {
   // Send event bindings to Unity only Unity is initialized
-  if ([FBSDKAppEvents singleton]->_isUnityInit) {
+  if ([FBSDKAppEvents singleton]->_isUnityInit
+      && [FBSDKAppEvents singleton]->_serverConfiguration
+      && [NSJSONSerialization isValidJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings]
+      ) {
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:[FBSDKAppEvents singleton]->_serverConfiguration.eventBindings ?: @""
                                                        options:0
                                                          error:nil];
