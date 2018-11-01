@@ -10,6 +10,19 @@ xcode_sdk:
 - iphonesimulator12.0
 - appletvsimulator12.0
 
+env:
+  global:
+  - SCRIPT_ENV=TRAVISCI
+
+matrix:
+  include:
+  - name: "iOS"
+    xcode_scheme: BuildAllKits
+    xcode_sdk: iphonesimulator12.0
+  - name: "tvOS"
+    xcode_scheme: BuildAllKits_TV
+    xcode_sdk: appletvsimulator12.0
+
 branches:
   only:
   - master
@@ -27,6 +40,7 @@ before_script:
 
 script:
 - echo "Did start scripts"
+- echo "Env $SCRIPT_ENV"
 - carthage build --no-skip-current
 
 after_success:
