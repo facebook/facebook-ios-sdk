@@ -3,12 +3,6 @@ os: osx
 osx_image: xcode10
 
 xcode_workspace: FacebookSDK.xcworkspace
-xcode_scheme:
-- BuildAllKits
-- BuildAllKits_TV
-xcode_sdk:
-- iphonesimulator12.0
-- appletvsimulator12.0
 
 env:
   global:
