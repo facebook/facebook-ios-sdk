@@ -433,6 +433,9 @@
     if (value) {
       NSString *namespace;
       key = [self getOpenGraphNameAndNamespaceFromFullName:key namespace:&namespace];
+      if (!key) {
+        return;
+      }
 
       if (requireNamespace) {
         if ([namespace isEqualToString:@"og"]) {
