@@ -639,6 +639,11 @@ static NSString *g_overrideAppID = nil;
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
 {
   NSString *deviceTokenString = [FBSDKInternalUtility hexadecimalStringFromData:deviceToken];
+  [FBSDKAppEvents setPushNotificationsDeviceTokenString:deviceTokenString];
+}
+
++ (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString
+{
   if (deviceTokenString == nil) {
     [FBSDKAppEvents singleton].pushNotificationsDeviceTokenString = nil;
     return;

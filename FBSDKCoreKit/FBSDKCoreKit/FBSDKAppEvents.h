@@ -615,6 +615,17 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterNameOrderID;
  */
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken;
 
+/**
+ Sets and sends device token string to register the current application for push notifications.
+
+
+
+ Sets and sends a device token string
+
+ @param deviceTokenString Device token string.
+ */
++ (void)setPushNotificationsDeviceTokenString:(NSString *)deviceTokenString;
+
 /*
  * Control over event batching/flushing
  */
