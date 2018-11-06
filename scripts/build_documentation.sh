@@ -40,7 +40,7 @@ do
   KITREFDOCS=${KITS[$i]};
 
   # Actually generate the documentation
-  jazzy --objc --framework-root "$FB_SDK_ROOT"/"$KITREFDOCS" --umbrella-header "$FB_SDK_ROOT"/"$KITREFDOCS"/"$KITREFDOCS"/"$KITREFDOCS".h --sdk iphonesimulator --clean --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS"
+  jazzy --config "$FB_SDK_ROOT"/.jazzy.yaml --framework-root "$FB_SDK_ROOT"/"$KITREFDOCS" --umbrella-header "$FB_SDK_ROOT"/"$KITREFDOCS"/"$KITREFDOCS"/"$KITREFDOCS".h --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS"
 
   # Zip the result so it can be uploaded easily
   pushd $FB_SDK_ROOT/docs/
