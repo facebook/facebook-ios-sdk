@@ -1,27 +1,31 @@
 language: objective-c
 os: osx
-
-xcode_workspace: FacebookSDK.xcworkspace
+osx_image: xcode10
 
 env:
   global:
   - SCRIPT_ENV=TRAVISCI
+  - TEST_GLOBAL=Test1
+  - XCODE_WORKSPACE=FacebookSDK.xcworkspace
 
 matrix:
   include:
   - name: "iOS 12.0"
-    osx_image: xcode10
-    xcode_scheme: BuildAllKits
-    xcode_sdk: iphonesimulator12.0
-    env: MATRIX_ENV=iOS
+    env:
+    - MATRIX_TYPE=Xcode
+    - XCODE_SDK=iphonesimulator12.0
+    - XCODE_SCHEME=BuildAllKits
+    - XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 5"
   - name: "tvOS 12.0"
-    osx_image: xcode10
-    xcode_scheme: BuildAllKits_TV
-    xcode_sdk: appletvsimulator12.0
-    env: MATRIX_ENV=tvOS
+    env:
+    - MATRIX_TYPE=Xcode
+    - XCODE_SDK=appletvsimulator12.0
+    - XCODE_SCHEME=BuildAllKits_TV
+    - XCODE_DESTINATION="platform=iOS Simulator,name=iPhone 5"
   - name: "Carthage"
-    osx_image: xcode10
-    env: MATRIX_ENV=Carthage
+    env:
+    - MATRIX_TYPE=Carthage
+    - TEST_GLOBAL=Test2
 
 branches:
   only:
@@ -40,10 +44,18 @@ before_script:
 
 script:
 - echo "Did start scripts"
-- echo "Env $SCRIPT_ENV $MATRIX_ENV"
+- echo "Env $SCRIPT_ENV $TEST_GLOBAL $MATRIX_TYPE $XCODE_SDK $XCODE_SCHEME $XCODE_DESTINATION"
 - |
-  if [ "$MATRIX_ENV" = Carthage ]; then
+  if [ "$MATRIX_TYPE" = Carthage ]; then
     carthage build --no-skip-current
+  elif [ "$MATRIX_TYPE" = Xcode ]; then
+    xcodebuild build \
+      -workspace $XCODE_WORKSPACE \
+      -sdk $XCODE_SDK \
+      -scheme $XCODE_SCHEME \
+      -configuration Debug \
+      -destination $XCODE_DESTINATION | \
+      xcpretty -c
   fi
 
 after_success:
