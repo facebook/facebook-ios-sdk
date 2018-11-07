@@ -1,6 +1,8 @@
 language: objective-c
 os: osx
 
+xcode_workspace: FacebookSDK.xcworkspace
+
 env:
   global:
   - SCRIPT_ENV=TRAVISCI
@@ -9,13 +11,11 @@ matrix:
   include:
   - name: "iOS 12.0"
     osx_image: xcode10
-    xcode_workspace: FacebookSDK.xcworkspace
     xcode_scheme: BuildAllKits
     xcode_sdk: iphonesimulator12.0
     env: MATRIX_ENV=iOS
   - name: "tvOS 12.0"
     osx_image: xcode10
-    xcode_workspace: FacebookSDK.xcworkspace
     xcode_scheme: BuildAllKits_TV
     xcode_sdk: appletvsimulator12.0
     env: MATRIX_ENV=tvOS
