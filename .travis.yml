@@ -1,0 +1,93 @@
+language: objective-c
+os: osx
+osx_image: xcode10
+
+env:
+  global:
+  - SCRIPT_ENV=TRAVISCI
+  - XCODE_WORKSPACE=FacebookSDK.xcworkspace
+
+matrix:
+  include:
+  - name: "iOS 12.0"
+    env:
+    - MATRIX_TYPE=Xcode
+    - XCODE_SDK=iphonesimulator12.0
+    - XCODE_SCHEME=BuildAllKits
+  - name: "tvOS 12.0"
+    env:
+    - MATRIX_TYPE=Xcode
+    - XCODE_SDK=appletvsimulator12.0
+    - XCODE_SCHEME=BuildAllKits_TV
+  - name: "iOS 11.0"
+    osx_image: xcode9.4
+    env:
+    - MATRIX_TYPE=Xcode
+    - XCODE_SDK=iphonesimulator11.4
+    - XCODE_SCHEME=BuildAllKits
+  - name: "Carthage Xcode 10"
+    env:
+    - MATRIX_TYPE=Carthage
+
+branches:
+  only:
+  - master
+
+before_install:
+- echo "Will update Brew"
+- brew update
+
+install:
+- echo "Will Bundle Brew"
+- brew bundle
+
+before_script:
+- echo "Will start scripts"
+
+script:
+- echo "Did start scripts"
+- echo "Env $SCRIPT_ENV $TEST_GLOBAL $MATRIX_TYPE $XCODE_SDK $XCODE_SCHEME $XCODE_DESTINATION"
+- |
+  if [ "$MATRIX_TYPE" = Carthage ]; then
+    carthage build --no-skip-current
+  elif [ "$MATRIX_TYPE" = Xcode ]; then
+    xcodebuild build \
+      -workspace $XCODE_WORKSPACE \
+      -sdk $XCODE_SDK \
+      -scheme $XCODE_SCHEME \
+      -configuration Debug | \
+      xcpretty
+  fi
+
+after_success:
+- echo "Did succeed"
+
+after_failure:
+- echo "Did fail"
+
+after_script:
+- echo "Did complete scripts"
+
+before_deploy:
+- echo "Will deploy"
+- test $TRAVIS_TEST_RESULT = 0
+
+deploy:
+- provider: script
+  script: echo "Should deploy"
+  on:
+    tags: true
+    branch: master
+
+after_deploy:
+- echo "Did deploy"
+
+notifications: # set notification options
+  email:
+    on_success: change
+    on_failure: always
+    recipients:
+      - codytwinton@fb.com
+  # Enable webhooks later
+  # webhooks:
+    # on_failure: always
