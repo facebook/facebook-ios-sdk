@@ -23,7 +23,7 @@ matrix:
     osx_image: xcode9.4
     env:
     - MATRIX_TYPE=Xcode
-    - XCODE_SDK=iphonesimulator11.0
+    - XCODE_SDK=iphonesimulator11.4
     - XCODE_SCHEME=BuildAllKits
   - name: "Carthage Xcode 10"
     env:
@@ -55,8 +55,8 @@ script:
       -workspace $XCODE_WORKSPACE \
       -sdk $XCODE_SDK \
       -scheme $XCODE_SCHEME \
-      -configuration Debug \
-      xcpretty -c
+      -configuration Debug | \
+      xcpretty
   fi
 
 after_success:
