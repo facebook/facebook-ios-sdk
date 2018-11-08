@@ -160,7 +160,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventNameSchedule;
 /** The start of a free trial of a product or service you offer (example: trial subscription). */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameStartTrial;
 
-/** The submission of an application for a product, service or program you offer (example: credit card, educational program or job).. */
+/** The submission of an application for a product, service or program you offer (example: credit card, educational program or job). */
 FOUNDATION_EXPORT NSString *const FBSDKAppEventNameSubmitApplication;
 
 /** The start of a paid subscription for a product or service you offer. */
