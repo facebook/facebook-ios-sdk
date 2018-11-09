@@ -145,25 +145,25 @@ static Class g_BFTaskClass;
       return;
     }
     for (NSURL *url in toFind) {
-      id nestedObject = [[result objectForKey:url.absoluteString] objectForKey:kAppLinksKey];
+      id nestedObject = result[url.absoluteString][kAppLinksKey];
       NSMutableArray *rawTargets = [NSMutableArray array];
       if (idiomSpecificField) {
-        [rawTargets addObjectsFromArray:[nestedObject objectForKey:idiomSpecificField]];
+        [rawTargets addObjectsFromArray:nestedObject[idiomSpecificField]];
       }
-      [rawTargets addObjectsFromArray:[nestedObject objectForKey:kIOSKey]];
+      [rawTargets addObjectsFromArray:nestedObject[kIOSKey]];
 
       NSMutableArray<FBSDKAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
       for (id rawTarget in rawTargets) {
-        [targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:[rawTarget objectForKey:kURLKey]]
-                                                         appStoreId:[rawTarget objectForKey:kIOSAppStoreIdKey]
-                                                            appName:[rawTarget objectForKey:kIOSAppNameKey]]];
+        [targets addObject:[FBSDKAppLinkTarget appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
+                                                         appStoreId:rawTarget[kIOSAppStoreIdKey]
+                                                            appName:rawTarget[kIOSAppNameKey]]];
       }
 
-      id webTarget = [nestedObject objectForKey:kWebKey];
-      NSString *webFallbackString = [webTarget objectForKey:kURLKey];
+      id webTarget = nestedObject[kWebKey];
+      NSString *webFallbackString = webTarget[kURLKey];
       NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
 
-      NSNumber *shouldFallback = [webTarget objectForKey:kShouldFallbackKey];
+      NSNumber *shouldFallback = webTarget[kShouldFallbackKey];
       if (shouldFallback && !shouldFallback.boolValue) {
         fallbackUrl = nil;
       }
@@ -236,25 +236,25 @@ static Class g_BFTaskClass;
       return;
     }
     for (NSURL *url in toFind) {
-      id nestedObject = [[result objectForKey:url.absoluteString] objectForKey:kAppLinksKey];
+      id nestedObject = result[url.absoluteString][kAppLinksKey];
       NSMutableArray *rawTargets = [NSMutableArray array];
       if (idiomSpecificField) {
-        [rawTargets addObjectsFromArray:[nestedObject objectForKey:idiomSpecificField]];
+        [rawTargets addObjectsFromArray:nestedObject[idiomSpecificField]];
       }
-      [rawTargets addObjectsFromArray:[nestedObject objectForKey:kIOSKey]];
+      [rawTargets addObjectsFromArray:nestedObject[kIOSKey]];
 
       NSMutableArray<BFAppLinkTarget *> *targets = [NSMutableArray arrayWithCapacity:rawTargets.count];
       for (id rawTarget in rawTargets) {
-        [targets addObject:[g_BFAppLinkTargetClass appLinkTargetWithURL:[NSURL URLWithString:[rawTarget objectForKey:kURLKey]]
-                                                             appStoreId:[rawTarget objectForKey:kIOSAppStoreIdKey]
-                                                                appName:[rawTarget objectForKey:kIOSAppNameKey]]];
+        [targets addObject:[g_BFAppLinkTargetClass appLinkTargetWithURL:[NSURL URLWithString:rawTarget[kURLKey]]
+                                                             appStoreId:rawTarget[kIOSAppStoreIdKey]
+                                                                appName:rawTarget[kIOSAppNameKey]]];
       }
 
-      id webTarget = [nestedObject objectForKey:kWebKey];
-      NSString *webFallbackString = [webTarget objectForKey:kURLKey];
+      id webTarget = nestedObject[kWebKey];
+      NSString *webFallbackString = webTarget[kURLKey];
       NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
 
-      NSNumber *shouldFallback = [webTarget objectForKey:kShouldFallbackKey];
+      NSNumber *shouldFallback = webTarget[kShouldFallbackKey];
       if (shouldFallback && !shouldFallback.boolValue) {
         fallbackUrl = nil;
       }
@@ -284,7 +284,7 @@ static Class g_BFTaskClass;
 }
 #pragma clang diagnostic pop
 
-+ (id)resolver
++ (instancetype)resolver
 {
   return [[self alloc] initWithUserInterfaceIdiom:UI_USER_INTERFACE_IDIOM()];
 }

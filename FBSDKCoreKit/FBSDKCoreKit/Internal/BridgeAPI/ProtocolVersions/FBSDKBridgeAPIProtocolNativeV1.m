@@ -139,7 +139,7 @@ static const struct
   [FBSDKInternalUtility dictionary:queryParameters setObject:methodVersion
                             forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
-  if ([parameters count]) {
+  if (parameters.count) {
     NSString *const parametersString = [self _JSONStringForObject:parameters enablePasteboard:YES error:errorRef];
     if (!parametersString) {
       return nil;
@@ -240,7 +240,7 @@ static const struct
   NSArray *files = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIcons"]
   [@"CFBundlePrimaryIcon"]
   [@"CFBundleIconFiles"];
-  if (![files count]) {
+  if (!files.count) {
     return nil;
   }
   return [UIImage imageNamed:files[0]];
@@ -312,7 +312,7 @@ static const struct
       }
       return dictionary;
     } else if ([invalidObject isKindOfClass:[NSURL class]]) {
-      return [(NSURL *)invalidObject absoluteString];
+      return ((NSURL *)invalidObject).absoluteString;
     }
     return invalidObject;
   }];

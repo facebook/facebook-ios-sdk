@@ -30,7 +30,7 @@
   NSArray *parts = [queryString componentsSeparatedByString:@"&"];
 
   for (NSString *part in parts) {
-    if ([part length] == 0) {
+    if (part.length == 0) {
       continue;
     }
 

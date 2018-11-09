@@ -69,7 +69,7 @@ static BOOL _requeryFinishedForAppStart;
     if ([data isKindOfClass:[NSData class]]) {
       NSMutableDictionary<NSString *, id> *gatekeeper = [NSKeyedUnarchiver unarchiveObjectWithData:data];
       if (gatekeeper != nil && [gatekeeper isKindOfClass:[NSMutableDictionary class]] && appID != nil) {
-        [_gateKeepers setObject:gatekeeper forKey:appID];
+        _gateKeepers[appID] = gatekeeper;
       }
     }
 
@@ -132,13 +132,13 @@ static BOOL _requeryFinishedForAppStart;
     // updates gate keeper with fetched data
     for (id gateKeeperEntry in gateKeeperList) {
       NSDictionary<NSString *, id> *entry = [FBSDKTypeUtility dictionaryValue:gateKeeperEntry];
-      NSString *key = [FBSDKTypeUtility stringValue:[entry objectForKey:@"key"]];
-      id value = [entry objectForKey:@"value"];
+      NSString *key = [FBSDKTypeUtility stringValue:entry[@"key"]];
+      id value = entry[@"value"];
       if (entry != nil && key != nil && value != nil) {
-        [gateKeeper setObject: value forKey:key];
+        gateKeeper[key] = value;
       }
     }
-    [_gateKeepers setObject:gateKeeper forKey:appID];
+    _gateKeepers[appID] = gateKeeper;
 
   }
 

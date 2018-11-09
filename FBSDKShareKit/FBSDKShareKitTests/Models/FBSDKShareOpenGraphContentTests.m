@@ -96,7 +96,7 @@
 
 - (void)testValidationWithInvalidPreviewPropertyName
 {
-  NSString *previewPropertyName = [[NSUUID UUID] UUIDString];
+  NSString *previewPropertyName = [NSUUID UUID].UUIDString;
   FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
   content.action = [FBSDKShareModelTestUtility openGraphAction];
   content.previewPropertyName = previewPropertyName;

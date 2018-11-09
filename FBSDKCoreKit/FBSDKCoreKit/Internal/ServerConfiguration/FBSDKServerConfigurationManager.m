@@ -381,7 +381,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
 
 #ifdef DEBUG
       NSString *updateMessage = _serverConfiguration.updateMessage;
-      if (updateMessage && [updateMessage length] > 0 && !_printedUpdateMessage) {
+      if (updateMessage && updateMessage.length > 0 && !_printedUpdateMessage) {
         _printedUpdateMessage = YES;
         NSLog(@"%@", updateMessage);
       }
@@ -418,7 +418,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     NSDictionary *dialogConfigurationDictionary = [FBSDKTypeUtility dictionaryValue:dialogConfiguration];
     if (dialogConfigurationDictionary) {
       NSString *name = [FBSDKTypeUtility stringValue:dialogConfigurationDictionary[@"name"]];
-      if ([name length]) {
+      if (name.length) {
         NSURL *URL = [FBSDKTypeUtility URLValue:dialogConfigurationDictionary[@"url"]];
         NSArray *appVersions = [FBSDKTypeUtility arrayValue:dialogConfigurationDictionary[@"versions"]];
         dialogConfigurations[name] = [[FBSDKDialogConfiguration alloc] initWithName:name

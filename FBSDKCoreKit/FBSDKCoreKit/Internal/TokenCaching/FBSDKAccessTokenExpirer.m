@@ -52,7 +52,7 @@
   if (accessToken == nil || accessToken.isExpired) {
     return;
   }
-  _timer = [NSTimer scheduledTimerWithTimeInterval:[accessToken.expirationDate timeIntervalSinceNow] target:self selector:@selector(_timerDidFire) userInfo:nil repeats:NO];
+  _timer = [NSTimer scheduledTimerWithTimeInterval:accessToken.expirationDate.timeIntervalSinceNow target:self selector:@selector(_timerDidFire) userInfo:nil repeats:NO];
 }
 
 - (void)_timerDidFire

@@ -88,7 +88,7 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
 
 + (CGFloat)JPEGCompressionQuality
 {
-  return [[self _JPEGCompressionQualityNumber] floatValue];
+  return [self _JPEGCompressionQualityNumber].floatValue;
 }
 
 + (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality

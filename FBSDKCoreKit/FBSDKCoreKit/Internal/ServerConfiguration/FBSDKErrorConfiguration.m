@@ -123,18 +123,18 @@ static NSString *const kErrorCategoryLogin = @"login";
         NSArray *subcodes = codeSubcodesDictionary[@"subcodes"];
         if (subcodes.count > 0) {
           for (NSNumber *subcodeNumber in subcodes) {
-            currentSubcodes[[subcodeNumber stringValue]] = [[FBSDKErrorRecoveryConfiguration alloc]
-                                                            initWithRecoveryDescription:suggestion
-                                                            optionDescriptions:options
-                                                            category:category
-                                                            recoveryActionName:action];
-          }
-        } else {
-          currentSubcodes[@"*"] = [[FBSDKErrorRecoveryConfiguration alloc]
+            currentSubcodes[subcodeNumber.stringValue] = [[FBSDKErrorRecoveryConfiguration alloc]
                                                           initWithRecoveryDescription:suggestion
                                                           optionDescriptions:options
                                                           category:category
                                                           recoveryActionName:action];
+          }
+        } else {
+          currentSubcodes[@"*"] = [[FBSDKErrorRecoveryConfiguration alloc]
+                                   initWithRecoveryDescription:suggestion
+                                   optionDescriptions:options
+                                   category:category
+                                   recoveryActionName:action];
         }
       }
     }];

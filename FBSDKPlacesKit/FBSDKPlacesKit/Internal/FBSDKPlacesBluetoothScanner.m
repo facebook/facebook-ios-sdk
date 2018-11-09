@@ -166,7 +166,7 @@ static NSTimeInterval const scanLength = 0.5;
 - (NSString *)_hexStringForData:(NSData *)data
 {
   NSMutableString *hexString = [NSMutableString stringWithCapacity:data.length * 2];
-  const unsigned char *rawBytes = [data bytes];
+  const unsigned char *rawBytes = data.bytes;
   for (NSInteger i = 0; i < data.length; i++) {
     [hexString appendFormat:@"%02x", rawBytes[i]];
   }

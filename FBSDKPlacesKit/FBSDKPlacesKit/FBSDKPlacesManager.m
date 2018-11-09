@@ -308,7 +308,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray<CLLocation *> *)locations
 {
-  CLLocation *mostRecentLocation = [locations lastObject];
+  CLLocation *mostRecentLocation = locations.lastObject;
   [self _callCompletionBlocksWithLocation:mostRecentLocation error:nil];
 }
 

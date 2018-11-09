@@ -110,10 +110,10 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    [_data hash],
-    [_videoAsset hash],
-    [_videoURL hash],
-    [_previewPhoto hash],
+    _data.hash,
+    _videoAsset.hash,
+    _videoURL.hash,
+    _previewPhoto.hash,
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -187,7 +187,7 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
                     error:(NSError *__autoreleasing *)errorRef
 {
   if (videoURL) {
-    if ([[videoURL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
+    if ([videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
       return YES; // will bridge the legacy "assets-library" URL
     } else if (videoURL.isFileURL) {
       if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
@@ -232,7 +232,7 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
     _data = [decoder decodeObjectOfClass:[NSData class] forKey:kFBSDKShareVideoDataKey];

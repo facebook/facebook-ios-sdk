@@ -87,22 +87,22 @@
 }
 
 - (void)testMatching {
-  NSArray *bindings = [FBSDKEventBindingManager parseArray:[[FBSDKSampleEventBinding getSampleDictionary] objectForKey:@"event_bindings"]];
-  FBSDKEventBinding *binding = [bindings objectAtIndex:0];
+  NSArray *bindings = [FBSDKEventBindingManager parseArray:[FBSDKSampleEventBinding getSampleDictionary][@"event_bindings"]];
+  FBSDKEventBinding *binding = bindings[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:stepper path:binding.path]);
 
-  binding = [bindings objectAtIndex:1];
-  FBSDKCodelessParameterComponent *component = [binding.parameters objectAtIndex:0];
+  binding = bindings[1];
+  FBSDKCodelessParameterComponent *component = binding.parameters[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:btnBuy path:binding.path]);
   NSString *price = [FBSDKEventBinding findParameterOfPath:component.path  pathType:component.pathType sourceView:btnBuy];
   XCTAssertEqual(price, @"$2.0");
 
-  binding = [bindings objectAtIndex:2];
-  component = [binding.parameters objectAtIndex:0];
+  binding = bindings[2];
+  component = binding.parameters[0];
   XCTAssertTrue([FBSDKEventBinding isViewMatchPath:btnConfirm path:binding.path]);
   price = [FBSDKEventBinding findParameterOfPath:component.path pathType:component.pathType sourceView:btnConfirm];
   XCTAssertEqual(price, @"$3.0");
-  component = [binding.parameters objectAtIndex:1];
+  component = binding.parameters[1];
   NSString *action = [FBSDKEventBinding findParameterOfPath:component.path pathType:component.pathType sourceView:btnConfirm];
   XCTAssertEqual(action, @"Confirm");
 

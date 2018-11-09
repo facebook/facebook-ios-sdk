@@ -424,7 +424,7 @@ static NSString *g_overrideAppID = nil;
       parameters:(NSDictionary *)parameters
 {
   [FBSDKAppEvents logEvent:eventName
-                valueToSum:[NSNumber numberWithDouble:valueToSum]
+                valueToSum:@(valueToSum)
                 parameters:parameters
                accessToken:nil];
 }
@@ -476,7 +476,7 @@ static NSString *g_overrideAppID = nil;
   }
 
   [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased
-                valueToSum:[NSNumber numberWithDouble:purchaseAmount]
+                valueToSum:@(purchaseAmount)
                 parameters:newParameters
                accessToken:accessToken];
 
@@ -567,7 +567,7 @@ static NSString *g_overrideAppID = nil;
     [dict setValuesForKeysWithDictionary:parameters];
   }
 
-  [dict setObject:itemID forKey:FBSDKAppEventParameterProductItemID];
+  dict[FBSDKAppEventParameterProductItemID] = itemID;
 
   NSString *avail = nil;
   switch (availability) {
@@ -583,7 +583,7 @@ static NSString *g_overrideAppID = nil;
       avail = @"DISCONTINUED"; break;
   }
   if (avail) {
-    [dict setObject:avail forKey:FBSDKAppEventParameterProductAvailability];
+    dict[FBSDKAppEventParameterProductAvailability] = avail;
   }
 
   NSString *cond = nil;
@@ -596,23 +596,23 @@ static NSString *g_overrideAppID = nil;
       cond = @"USED"; break;
   }
   if (cond) {
-    [dict setObject:cond forKey:FBSDKAppEventParameterProductCondition];
+    dict[FBSDKAppEventParameterProductCondition] = cond;
   }
 
-  [dict setObject:description forKey:FBSDKAppEventParameterProductDescription];
-  [dict setObject:imageLink forKey:FBSDKAppEventParameterProductImageLink];
-  [dict setObject:link forKey:FBSDKAppEventParameterProductLink];
-  [dict setObject:title forKey:FBSDKAppEventParameterProductTitle];
-  [dict setObject:[NSString stringWithFormat:@"%.3lf", priceAmount] forKey:FBSDKAppEventParameterProductPriceAmount];
-  [dict setObject:currency forKey:FBSDKAppEventParameterProductPriceCurrency];
+  dict[FBSDKAppEventParameterProductDescription] = description;
+  dict[FBSDKAppEventParameterProductImageLink] = imageLink;
+  dict[FBSDKAppEventParameterProductLink] = link;
+  dict[FBSDKAppEventParameterProductTitle] = title;
+  dict[FBSDKAppEventParameterProductPriceAmount] = [NSString stringWithFormat:@"%.3lf", priceAmount];
+  dict[FBSDKAppEventParameterProductPriceCurrency] = currency;
   if (gtin) {
-    [dict setObject:gtin forKey:FBSDKAppEventParameterProductGTIN];
+    dict[FBSDKAppEventParameterProductGTIN] = gtin;
   }
   if (mpn) {
-    [dict setObject:mpn forKey:FBSDKAppEventParameterProductMPN];
+    dict[FBSDKAppEventParameterProductMPN] = mpn;
   }
   if (brand) {
-    [dict setObject:brand forKey:FBSDKAppEventParameterProductBrand];
+    dict[FBSDKAppEventParameterProductBrand] = brand;
   }
 
   [FBSDKAppEvents logEvent:FBSDKAppEventNameProductCatalogUpdate
@@ -930,7 +930,7 @@ static NSString *g_overrideAppID = nil;
 - (void)publishInstall
 {
   NSString *appID = [self appID];
-  if ([appID length] == 0) {
+  if (appID.length == 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appID] for [FBSDKAppEvents publishInstall:]"];
     return;
   }
@@ -1143,7 +1143,7 @@ static NSString *g_overrideAppID = nil;
     return;
   }
 
-  if ([appEventsState.appID length] == 0) {
+  if (appEventsState.appID.length == 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents appEventsState.appID] for [FBSDKAppEvents flushOnMainQueue:]"];
     return;
   }
@@ -1162,7 +1162,7 @@ static NSString *g_overrideAppID = nil;
                                            activityParametersDictionaryForEvent:@"CUSTOM_APP_EVENTS"
                                            implicitEventsOnly:appEventsState.areAllEventsImplicit
                                            shouldAccessAdvertisingID:self->_serverConfiguration.advertisingIDEnabled];
-    NSInteger length = [receipt_data length];
+    NSInteger length = receipt_data.length;
     if (length > 0) {
       postParameters[@"receipt_data"] = receipt_data;
     }
@@ -1260,7 +1260,7 @@ static NSString *g_overrideAppID = nil;
       break;
 
     case FlushResultServerError:
-      resultString = [NSString stringWithFormat:@"Server Error - %@", [error description]];
+      resultString = [NSString stringWithFormat:@"Server Error - %@", error.description];
       break;
   }
 

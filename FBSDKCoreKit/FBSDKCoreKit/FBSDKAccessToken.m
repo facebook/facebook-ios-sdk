@@ -132,7 +132,7 @@ static FBSDKAccessToken *g_currentAccessToken;
       [FBSDKInternalUtility deleteFacebookCookies];
     }
 
-    [[FBSDKSettings accessTokenCache] cacheAccessToken:token];
+    [FBSDKSettings accessTokenCache].accessToken = token;
     [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
                                                         object:[self class]
                                                       userInfo:userInfo];
@@ -163,14 +163,14 @@ static FBSDKAccessToken *g_currentAccessToken;
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    [self.tokenString hash],
-    [self.permissions hash],
-    [self.declinedPermissions hash],
-    [self.appID hash],
-    [self.userID hash],
-    [self.refreshDate hash],
-    [self.expirationDate hash],
-    [self.dataAccessExpirationDate hash]
+    self.tokenString.hash,
+    self.permissions.hash,
+    self.declinedPermissions.hash,
+    self.appID.hash,
+    self.userID.hash,
+    self.refreshDate.hash,
+    self.expirationDate.hash,
+    self.dataAccessExpirationDate.hash
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -214,7 +214,7 @@ static FBSDKAccessToken *g_currentAccessToken;
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
   NSSet *declinedPermissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
@@ -226,8 +226,8 @@ static FBSDKAccessToken *g_currentAccessToken;
   NSDate *dataAccessExpirationDate = [decoder decodeObjectOfClass:[NSDate class] forKey:FBSDK_ACCESSTOKEN_DATA_EXPIRATIONDATE_KEY];
 
   return [self initWithTokenString:tokenString
-                       permissions:[permissions allObjects]
-               declinedPermissions:[declinedPermissions allObjects]
+                       permissions:permissions.allObjects
+               declinedPermissions:declinedPermissions.allObjects
                              appID:appID
                             userID:userID
                     expirationDate:expirationDate

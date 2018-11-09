@@ -73,12 +73,12 @@
     return;
   }
   NSArray *components = [key componentsSeparatedByString:@":"];
-  if ([components count] < 2) {
+  if (components.count < 2) {
     NSString *reason = [[NSString alloc] initWithFormat:@"Open Graph keys must be namespaced: %@", key];
     @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
   }
   for (NSString *component in components) {
-    if (![component length]) {
+    if (!component.length) {
       NSString *reason = [[NSString alloc] initWithFormat:@"Invalid key found in Open Graph dictionary: %@", key];
       @throw [NSException exceptionWithName:NSInvalidArgumentException reason:reason userInfo:nil];
     }
@@ -448,7 +448,7 @@
       }
     }
   }];
-  if ([data count]) {
+  if (data.count) {
     dictionary[@"data"] = data;
   }
   return dictionary;
@@ -608,7 +608,7 @@
                  name:(NSString *)name
                 error:(NSError *__autoreleasing *)errorRef
 {
-  NSUInteger count = [array count];
+  NSUInteger count = array.count;
   if ((count < minCount) || (count > maxCount)) {
     if (errorRef != NULL) {
       NSString *message = [[NSString alloc] initWithFormat:@"%@ must have %lu to %lu values",
@@ -688,9 +688,9 @@
 + (BOOL)validateRequiredValue:(id)value name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
   if (!value ||
-      ([value isKindOfClass:[NSString class]] && ![(NSString *)value length]) ||
-      ([value isKindOfClass:[NSArray class]] && ![(NSArray *)value count]) ||
-      ([value isKindOfClass:[NSDictionary class]] && ![(NSDictionary *)value count])) {
+      ([value isKindOfClass:[NSString class]] && !((NSString *)value).length) ||
+      ([value isKindOfClass:[NSArray class]] && !((NSArray *)value).count) ||
+      ([value isKindOfClass:[NSDictionary class]] && !((NSDictionary *)value).count)) {
     if (errorRef != NULL) {
       *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
                                                         name:name
@@ -710,7 +710,7 @@
                            error:(NSError *__autoreleasing *)errorRef
 {
   for (NSNumber *possibleValue in possibleValues) {
-    if (value == [possibleValue unsignedIntegerValue]) {
+    if (value == possibleValue.unsignedIntegerValue) {
       if (errorRef != NULL) {
         *errorRef = nil;
       }
@@ -728,7 +728,7 @@
 
 + (BOOL)_validateAssetLibraryVideoURL:(NSURL *)videoURL name:(NSString *)name error:(NSError *__autoreleasing *)errorRef
 {
-  if (!videoURL || [[videoURL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
+  if (!videoURL || [videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
     if (errorRef != NULL) {
       *errorRef = nil;
     }

@@ -1015,8 +1015,8 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       BOOL isOGURLShare = [self _isOpenGraphURLShare:ogContent];
 
       BOOL isValidOGShare = (isOGURLShare &&
-                             [ogContent.action.actionType length] != 0 &&
-                             [ogContent.previewPropertyName length] != 0);
+                             ogContent.action.actionType.length != 0 &&
+                             ogContent.previewPropertyName.length != 0);
       if (!isValidOGShare) {
         if ((errorRef != NULL) && !*errorRef) {
           NSString *message = @"Share content must include an URL in the action, an action type, and a preview property name in order to share with the share sheet.";
@@ -1145,7 +1145,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       initialTextDictionary[@"hashtags"] = @[hashtag];
     }
     if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
-      NSString *quote = [(FBSDKShareLinkContent *)self.shareContent quote];
+      NSString *quote = ((FBSDKShareLinkContent *)self.shareContent).quote;
       if (quote != nil) {
         initialTextDictionary[@"quotes"] = @[quote];
       }

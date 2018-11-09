@@ -40,7 +40,7 @@
 {
   [super setUp];
   _mockAppEventsUtility = OCMClassMock([FBSDKAppEventsUtility class]);
-  [[[_mockAppEventsUtility stub] andReturn:[[NSUUID UUID] UUIDString]] advertiserID];
+  [[[_mockAppEventsUtility stub] andReturn:[NSUUID UUID].UUIDString] advertiserID];
   [FBSDKAppEvents setUserID:@"test-user-id"];
   _mockNSLocale = OCMClassMock([NSLocale class]);
 }

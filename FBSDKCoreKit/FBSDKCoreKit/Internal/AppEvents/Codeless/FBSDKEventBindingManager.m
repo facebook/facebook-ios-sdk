@@ -165,12 +165,12 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
       if ([event isKindOfClass:objc_lookUpClass(ReactNativeClassRCTTouchEvent)]) {
         @try {
           NSArray<id> *eventArgs = [event arguments];
-          NSString *eventName = [eventArgs objectAtIndex:0];
-          NSArray<NSDictionary *> *touches = [eventArgs objectAtIndex:1];
+          NSString *eventName = eventArgs[0];
+          NSArray<NSDictionary *> *touches = eventArgs[1];
           if (eventName && touches && [eventName isEqualToString:ReactNativeTouchEndEventName]) {
             for (NSDictionary<NSString *, id> *touch in touches) {
               NSNumber *targetTag = touch[ReactNativeTargetKey];
-              FBSDKEventBinding *eventBinding = [self->reactBindings objectForKey:targetTag];
+              FBSDKEventBinding *eventBinding = self->reactBindings[targetTag];
               if (eventBinding) {
                 [eventBinding trackEvent:nil];
               }
@@ -294,12 +294,12 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
               fb_dispatch_on_main_thread(^{
                 // React Native button's event is targeted at RCTTextView,
                 // so extract the RCTTextView and set the binding for it
-                UIView *reactView = [[view subviews] firstObject];
-                UIView *reactTextView = [[reactView subviews] firstObject];
+                UIView *reactView = view.subviews.firstObject;
+                UIView *reactTextView = reactView.subviews.firstObject;
                 if (reactTextView && [reactTextView isKindOfClass:classRCTTextView]) {
                   NSNumber *reactTag = [reactTextView performSelector:@selector(reactTag)];
                   if (reactTag && [reactTag isKindOfClass:[NSNumber class]]) {
-                    [self->reactBindings setObject:binding forKey:reactTag];
+                    self->reactBindings[reactTag] = binding;
                   }
                 }
               });
@@ -322,7 +322,7 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
           }
 
           if (matchedBindings.count > 0) {
-            NSArray *bindings = [matchedBindings allObjects];
+            NSArray *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UITableView *tableView, NSIndexPath *indexPath) {
               fb_dispatch_on_main_thread(^{
                 for (FBSDKEventBinding *binding in bindings) {
@@ -356,7 +356,7 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
           }
 
           if (matchedBindings.count > 0) {
-            NSArray *bindings = [matchedBindings allObjects];
+            NSArray *bindings = matchedBindings.allObjects;
             void (^block)(id, SEL, id, id) = ^(id target, SEL command, UICollectionView *collectionView, NSIndexPath *indexPath) {
               fb_dispatch_on_main_thread(^{
                 for (FBSDKEventBinding *binding in bindings) {

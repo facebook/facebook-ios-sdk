@@ -467,7 +467,7 @@ static void FBSDKLikeActionControllerLogError(NSString *currentAction,
                                @"object_id": objectID,
                                @"object_type": NSStringFromFBSDKLikeObjectType(objectType),
                                @"current_action": currentAction,
-                               @"error": [error description] ?: @"",
+                               @"error": error.description ?: @"",
                                };
   NSString *eventName = (error.isNetworkError ?
                          FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable :

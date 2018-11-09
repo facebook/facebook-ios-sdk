@@ -37,7 +37,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
 
 @interface NSURL (BFAppLinkResolverTests)
 
-- (id)queryParameters;
+@property (nonatomic, readonly, strong) id queryParameters;
 
 @end
 
@@ -518,7 +518,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                           }
                                statusCode:200
                                  callback:^(NSURLRequest *request) {
-                                   NSUInteger callCount = [callCounts[request.URL.absoluteString] unsignedIntegerValue];
+                                   NSUInteger callCount = callCounts[request.URL.absoluteString].unsignedIntegerValue;
                                    ++callCount;
                                    callCounts[request.URL.absoluteString] = @(callCount);
                                  }];
@@ -533,7 +533,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
 
   // Note: callCount is not necessarily 1, as the callback may be called multiple times during processing of the request.
   NSString *firstCallKey = callCounts.allKeys[0];
-  NSUInteger expectedCallCount = [callCounts[firstCallKey] unsignedIntegerValue];
+  NSUInteger expectedCallCount = callCounts[firstCallKey].unsignedIntegerValue;
 
   // Now request them both; we expect the call count for kAppLinkURL to be unchanged.
   task = [resolver appLinksFromURLsInBackground:@[[NSURL URLWithString:kAppLinkURLString], [NSURL URLWithString:kAppLinkURL2String]]];

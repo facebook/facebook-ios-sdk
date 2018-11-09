@@ -175,7 +175,7 @@ static NSString *const kPostHTTPMethod = @"POST";
   NSString *debugValue = [FBSDKSettings graphAPIDebugParamValue];
   if (debugValue) {
     NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:params];
-    [mutableParams setObject:debugValue forKey:@"debug"];
+    mutableParams[@"debug"] = debugValue;
     return mutableParams;
   }
 
@@ -203,7 +203,7 @@ static NSString *const kPostHTTPMethod = @"POST";
   if (self.HTTPMethod) {
     [result appendFormat:@", HTTPMethod: %@", self.HTTPMethod];
   }
-  [result appendFormat:@", parameters: %@>", [self.parameters description]];
+  [result appendFormat:@", parameters: %@>", self.parameters.description];
   return result;
 }
 

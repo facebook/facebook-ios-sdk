@@ -97,9 +97,9 @@
       [[PHImageManager defaultManager] requestAVAssetForVideo:_video.videoAsset
                                                       options:options
                                                 resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary<NSString *, id> *info) {
-                                                  NSURL *filePathURL = [[(AVURLAsset *)avAsset URL] filePathURL];
-                                                  NSString *pathExtension = [filePathURL pathExtension];
-                                                  NSString *localIdentifier = [self->_video.videoAsset localIdentifier];
+                                                  NSURL *filePathURL = ((AVURLAsset *)avAsset).URL.filePathURL;
+                                                  NSString *pathExtension = filePathURL.pathExtension;
+                                                  NSString *localIdentifier = self->_video.videoAsset.localIdentifier;
                                                   NSRange range = [localIdentifier rangeOfString:@"/"];
                                                   NSString *uuid = [localIdentifier substringToIndex:range.location];
                                                   NSString *assetPath = [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@", pathExtension, uuid, pathExtension];
@@ -120,7 +120,7 @@
                                 forKey:@"data"];
     }
   } else if (_video.videoURL) {
-    if ([[_video.videoURL.scheme lowercaseString] isEqualToString:@"assets-library"]) {
+    if ([_video.videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
       // bridge the legacy "assets-library" URL
       [FBSDKInternalUtility dictionary:videoParameters
                              setObject:_video.videoURL
@@ -161,15 +161,15 @@
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    [_contentURL hash],
-    [_hashtag hash],
-    [_peopleIDs hash],
-    [_placeID hash],
-    [_previewPhoto hash],
-    [_ref hash],
-    [_pageID hash],
-    [_video hash],
-    [_shareUUID hash],
+    _contentURL.hash,
+    _hashtag.hash,
+    _peopleIDs.hash,
+    _placeID.hash,
+    _previewPhoto.hash,
+    _ref.hash,
+    _pageID.hash,
+    _video.hash,
+    _shareUUID.hash,
   };
   return [FBSDKMath hashWithIntegerArray:subhashes count:sizeof(subhashes) / sizeof(subhashes[0])];
 }
@@ -209,7 +209,7 @@
   return YES;
 }
 
-- (id)initWithCoder:(NSCoder *)decoder
+- (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
     _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_VIDEO_CONTENT_CONTENT_URL_KEY];

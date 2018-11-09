@@ -55,7 +55,7 @@ static void *fbsdkdfl_load_library_once(const char *path)
 static void *fbsdkdfl_load_framework_once(NSString *framework)
 {
   NSString *path = [NSString stringWithFormat:g_frameworkPathTemplate, framework, framework];
-  return fbsdkdfl_load_library_once([path fileSystemRepresentation]);
+  return fbsdkdfl_load_library_once(path.fileSystemRepresentation);
 }
 
 // Implements the callback for dispatch_once() that loads the handle for specified framework name

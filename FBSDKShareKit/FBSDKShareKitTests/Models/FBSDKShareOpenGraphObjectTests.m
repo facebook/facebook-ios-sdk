@@ -33,13 +33,13 @@
 - (void)testProperties
 {
   FBSDKShareOpenGraphObject *object = [FBSDKShareModelTestUtility openGraphObject];
-  BOOL boolValue = [[object numberForKey:(NSString *)kFBSDKShareModelTestUtilityOpenGraphBoolValueKey] boolValue];
+  BOOL boolValue = [object numberForKey:(NSString *)kFBSDKShareModelTestUtilityOpenGraphBoolValueKey].boolValue;
   XCTAssertEqual(boolValue, [FBSDKShareModelTestUtility openGraphBoolValue]);
-  double doubleValue = [[object numberForKey:kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey] doubleValue];
+  double doubleValue = [object numberForKey:kFBSDKShareModelTestUtilityOpenGraphDoubleValueKey].doubleValue;
   XCTAssertEqual(doubleValue, [FBSDKShareModelTestUtility openGraphDoubleValue]);
-  float floatValue = [[object numberForKey:kFBSDKShareModelTestUtilityOpenGraphFloatValueKey] floatValue];
+  float floatValue = [object numberForKey:kFBSDKShareModelTestUtilityOpenGraphFloatValueKey].floatValue;
   XCTAssertEqual(floatValue, [FBSDKShareModelTestUtility openGraphFloatValue]);
-  NSInteger integerValue = [[object numberForKey:kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey] integerValue];
+  NSInteger integerValue = [object numberForKey:kFBSDKShareModelTestUtilityOpenGraphIntegerValueKey].integerValue;
   XCTAssertEqual(integerValue, [FBSDKShareModelTestUtility openGraphIntegerValue]);
   NSArray *numberArray = [object arrayForKey:kFBSDKShareModelTestUtilityOpenGraphNumberArrayKey];
   XCTAssertEqualObjects(numberArray, [FBSDKShareModelTestUtility openGraphNumberArray]);
