@@ -363,6 +363,7 @@ static NSString *g_overrideAppID = nil;
 
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     _userID = [defaults stringForKey:USER_ID_USER_DEFAULTS_KEY];
+    [self fetchServerConfiguration:nil];
   }
 
   return self;
