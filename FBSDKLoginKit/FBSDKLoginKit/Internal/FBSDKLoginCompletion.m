@@ -104,8 +104,8 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 @implementation FBSDKLoginURLCompleter
 {
   FBSDKLoginCompletionParameters *_parameters;
-  id<NSObject> _observer
-  ;  BOOL _performExplicitFallback;
+  id<NSObject> _observer;
+  BOOL _performExplicitFallback;
 }
 
 - (instancetype)initWithURLParameters:(NSDictionary *)parameters appID:(NSString *)appID
