@@ -18,8 +18,6 @@
 
 #import "FBSDKShareVideo.h"
 
-#import <Photos/Photos.h>
-
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareConstants.h"
 #import "FBSDKSharePhoto.h"
@@ -264,6 +262,38 @@ NSString *const kFBSDKShareVideoURLKey = @"videoURL";
   copy->_videoURL = [_videoURL copy];
   copy->_previewPhoto = [_previewPhoto copy];
   return copy;
+}
+
+@end
+
+@implementation PHAsset (FBSDKShareVideo)
+
+- (NSURL *)videoURL
+{
+  __block NSURL *videoURL = nil;
+  // obtain the legacy "assets-library" URL from AVAsset
+  dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+  PHVideoRequestOptions *const options = [PHVideoRequestOptions new];
+  options.version = PHVideoRequestOptionsVersionCurrent;
+  options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
+  options.networkAccessAllowed = YES;
+  [[PHImageManager defaultManager] requestAVAssetForVideo:self
+                                                  options:options
+                                            resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary<NSString *, id> *info) {
+                                              NSURL *const filePathURL = ((AVURLAsset *)avAsset).URL.filePathURL;
+                                              NSString *const pathExtension = filePathURL.pathExtension;
+                                              NSString *const localIdentifier = self.localIdentifier;
+                                              const NSRange range = [localIdentifier rangeOfString:@"/"];
+                                              NSString *const uuid = [localIdentifier substringToIndex:range.location];
+                                              NSString *const assetPath = [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@",
+                                                                           pathExtension,
+                                                                           uuid,
+                                                                           pathExtension];
+                                              videoURL = [NSURL URLWithString:assetPath];
+                                              dispatch_semaphore_signal(semaphore);
+                                            }];
+  dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC));
+  return videoURL;
 }
 
 @end

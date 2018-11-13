@@ -89,28 +89,9 @@
                                 forKey:@"assetIdentifier"];
     } else {
       // bridge the legacy "assets-library" URL from AVAsset
-      dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-      PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
-      options.version = PHVideoRequestOptionsVersionCurrent;
-      options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
-      options.networkAccessAllowed = YES;
-      [[PHImageManager defaultManager] requestAVAssetForVideo:_video.videoAsset
-                                                      options:options
-                                                resultHandler:^(AVAsset *avAsset, AVAudioMix *audioMix, NSDictionary<NSString *, id> *info) {
-                                                  NSURL *filePathURL = ((AVURLAsset *)avAsset).URL.filePathURL;
-                                                  NSString *pathExtension = filePathURL.pathExtension;
-                                                  NSString *localIdentifier = self->_video.videoAsset.localIdentifier;
-                                                  NSRange range = [localIdentifier rangeOfString:@"/"];
-                                                  NSString *uuid = [localIdentifier substringToIndex:range.location];
-                                                  NSString *assetPath = [NSString stringWithFormat:@"assets-library://asset/asset.%@?id=%@&ext=%@", pathExtension, uuid, pathExtension];
-                                                  if (assetPath) {
-                                                    [FBSDKInternalUtility dictionary:videoParameters
-                                                                           setObject:[NSURL URLWithString:assetPath]
-                                                                              forKey:@"assetURL"];
-                                                  }
-                                                  dispatch_semaphore_signal(semaphore);
-                                                }];
-      dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, 500 * NSEC_PER_MSEC));
+      [FBSDKInternalUtility dictionary:videoParameters
+                             setObject:_video.videoAsset.videoURL
+                                forKey:@"assetURL"];
     }
   } else if (_video.data) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {

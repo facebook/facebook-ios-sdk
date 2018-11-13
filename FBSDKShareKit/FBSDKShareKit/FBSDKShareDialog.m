@@ -69,6 +69,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 @implementation FBSDKShareDialog
 {
   FBSDKWebDialog *_webDialog;
+  NSMutableArray<NSURL *> *_temporaryFiles;
 }
 
 #pragma mark - Class Methods
@@ -98,6 +99,13 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
 - (void)dealloc
 {
   _webDialog.delegate = nil;
+  if (_temporaryFiles) {
+    NSFileManager *const fileManager = [NSFileManager defaultManager];
+    for (NSURL *temporaryFile in _temporaryFiles) {
+      [fileManager removeItemAtURL:temporaryFile error:nil];
+    }
+    _temporaryFiles = nil;
+  }
 }
 
 #pragma mark - Properties
@@ -418,19 +426,43 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return [ret copy];
 }
 
+- (NSURL *)_contentVideoURL:(FBSDKShareVideo *)video
+{
+  if (video.videoAsset != nil) {
+    return video.videoAsset.videoURL;
+  } else if (video.data != nil) {
+    NSURL *const temporaryDirectory = [NSURL fileURLWithPath:NSTemporaryDirectory() isDirectory:YES];
+    if (temporaryDirectory) {
+      NSURL *const temporaryFile = [temporaryDirectory URLByAppendingPathComponent:[[NSUUID UUID] UUIDString]];
+      if (temporaryFile) {
+        if (!_temporaryFiles) {
+          _temporaryFiles = [NSMutableArray new];
+        }
+        [_temporaryFiles addObject:temporaryFile];
+        if ([video.data writeToURL:temporaryFile atomically:YES]) {
+          return temporaryFile;
+        }
+      }
+    }
+  } else if (video.videoURL != nil) {
+    return video.videoURL;
+  }
+  return nil;
+}
+
 - (NSArray *)_contentVideoURLs
 {
-  NSMutableArray *ret = [NSMutableArray new];
-  id<FBSDKSharingContent> shareContent = self.shareContent;
+  NSMutableArray<NSURL *> *const ret = [NSMutableArray new];
+  const id<FBSDKSharingContent> shareContent = self.shareContent;
   if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
-    NSURL *videoURL = ((FBSDKShareVideoContent *)shareContent).video.videoURL;
+    NSURL *const videoURL = [self _contentVideoURL:[(FBSDKShareVideoContent *)shareContent video]];
     if (videoURL != nil) {
       [ret addObject:videoURL];
     }
   } else if ([shareContent isKindOfClass:[FBSDKShareMediaContent class]]) {
-    for (id media in ((FBSDKShareMediaContent *)shareContent).media) {
+    for (const id media in ((FBSDKShareMediaContent *)shareContent).media) {
       if ([media isKindOfClass:[FBSDKShareVideo class]]) {
-        NSURL *videoURL = ((FBSDKShareVideo *)media).videoURL;
+        NSURL *const videoURL = [self _contentVideoURL:(FBSDKShareVideo *)media];
         if (videoURL != nil) {
           [ret addObject:videoURL];
         }
