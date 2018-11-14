@@ -154,20 +154,20 @@ NSURLSessionDataDelegate
 - (void)addRequest:(FBSDKGraphRequest *)request
  completionHandler:(FBSDKGraphRequestHandler)handler
 {
-  [self addRequest:request completionHandler:handler batchEntryName:nil];
+  [self addRequest:request batchEntryName:nil completionHandler:handler];
 }
 
 - (void)addRequest:(FBSDKGraphRequest *)request
- completionHandler:(FBSDKGraphRequestHandler)handler
     batchEntryName:(NSString *)name
+ completionHandler:(FBSDKGraphRequestHandler)handler
 {
   NSDictionary *batchParams = (name)? @{kBatchEntryName : name } : nil;
-  [self addRequest:request completionHandler:handler batchParameters:batchParams];
+  [self addRequest:request batchParameters:batchParams completionHandler:handler];
 }
 
 - (void)addRequest:(FBSDKGraphRequest *)request
+   batchParameters:(NSDictionary<NSString *, id> *)batchParameters
  completionHandler:(FBSDKGraphRequestHandler)handler
-   batchParameters:(NSDictionary *)batchParameters
 {
   if (self.state != kStateCreated) {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -181,6 +181,20 @@ NSURLSessionDataDelegate
   [self.requests addObject:metadata];
 }
 
+- (void)addRequest:(FBSDKGraphRequest *)request
+ completionHandler:(FBSDKGraphRequestHandler)handler
+    batchEntryName:(NSString *)name
+{
+  [self addRequest:request batchEntryName:name completionHandler:handler];
+}
+
+- (void)addRequest:(FBSDKGraphRequest *)request
+ completionHandler:(FBSDKGraphRequestHandler)handler
+   batchParameters:(NSDictionary *)batchParameters
+{
+  [self addRequest:request batchParameters:batchParameters completionHandler:handler];
+}
+
 - (void)cancel
 {
   self.state = kStateCancelled;
@@ -188,11 +202,16 @@ NSURLSessionDataDelegate
   [self cleanUpSession];
 }
 
-- (void)overrideVersionPartWith:(NSString *)version
+- (void)overrideGraphAPIVersion:(NSString *)version
 {
   if (![_overrideVersionPart isEqualToString:version]) {
     _overrideVersionPart = [version copy];
   }
+}
+
+- (void)overrideVersionPartWith:(NSString *)version
+{
+  [self overrideGraphAPIVersion:version];
 }
 
 - (void)start
