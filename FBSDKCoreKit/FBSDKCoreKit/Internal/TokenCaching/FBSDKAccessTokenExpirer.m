@@ -61,7 +61,7 @@
   NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
   [FBSDKInternalUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeNewKey];
   [FBSDKInternalUtility dictionary:userInfo setObject:accessToken forKey:FBSDKAccessTokenChangeOldKey];
-  userInfo[FBSDKAccessTokenDidExpire] = @YES;
+  userInfo[FBSDKAccessTokenDidExpireKey] = @YES;
 
   [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAccessTokenDidChangeNotification
                                                       object:[FBSDKAccessToken class]

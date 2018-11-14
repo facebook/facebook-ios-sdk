@@ -33,9 +33,11 @@ NSString *const FBSDKAccessTokenDidChangeNotification = @"com.facebook.sdk.FBSDK
 
 #endif
 
+NSString *const FBSDKAccessTokenDidChangeUserIDKey = @"FBSDKAccessTokenDidChangeUserID";
 NSString *const FBSDKAccessTokenDidChangeUserID = @"FBSDKAccessTokenDidChangeUserID";
 NSString *const FBSDKAccessTokenChangeNewKey = @"FBSDKAccessToken";
 NSString *const FBSDKAccessTokenChangeOldKey = @"FBSDKAccessTokenOld";
+NSString *const FBSDKAccessTokenDidExpireKey = @"FBSDKAccessTokenDidExpire";
 NSString *const FBSDKAccessTokenDidExpire = @"FBSDKAccessTokenDidExpire";
 
 static FBSDKAccessToken *g_currentAccessToken;
@@ -121,7 +123,7 @@ static FBSDKAccessToken *g_currentAccessToken;
     [FBSDKInternalUtility dictionary:userInfo setObject:g_currentAccessToken forKey:FBSDKAccessTokenChangeOldKey];
     // We set this flag also when the current Access Token was not valid, since there might be legacy code relying on it
     if (![g_currentAccessToken.userID isEqualToString:token.userID] || ![self currentAccessTokenIsActive]) {
-      userInfo[FBSDKAccessTokenDidChangeUserID] = @YES;
+      userInfo[FBSDKAccessTokenDidChangeUserIDKey] = @YES;
     }
 
     g_currentAccessToken = token;

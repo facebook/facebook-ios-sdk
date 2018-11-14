@@ -106,7 +106,7 @@
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
-  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
+  if (notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
     [self _updateContent];
   }
 }
