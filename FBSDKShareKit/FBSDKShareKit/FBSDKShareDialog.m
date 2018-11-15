@@ -525,9 +525,6 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     return NO;
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
-  NSString *methodName;
-  NSDictionary *parameters;
-
   if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
     void(^completion)(BOOL, NSString *, NSDictionary *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary *cParameters) {
       if (successfullyBuilt) {
@@ -552,6 +549,8 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     [FBSDKShareUtility buildAsyncWebPhotoContent:shareContent
                                completionHandler:completion];
   } else {
+    NSString *methodName;
+    NSDictionary<NSString *, id> *parameters;
     if (![FBSDKShareUtility buildWebShareContent:shareContent
                                       methodName:&methodName
                                       parameters:&parameters

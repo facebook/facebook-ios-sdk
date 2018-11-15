@@ -198,7 +198,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
-  if (notification.userInfo[FBSDKAccessTokenDidChangeUserID] || notification.userInfo[FBSDKAccessTokenDidExpire]) {
+  if (notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey] || notification.userInfo[FBSDKAccessTokenDidExpireKey]) {
     [self _updateContent];
   }
 }

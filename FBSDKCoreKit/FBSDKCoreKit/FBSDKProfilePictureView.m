@@ -240,7 +240,7 @@
 
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
-  if (![_profileID isEqualToString:@"me"] || !notification.userInfo[FBSDKAccessTokenDidChangeUserID]) {
+  if (![_profileID isEqualToString:@"me"] || !notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
     return;
   }
   _lastState = nil;
