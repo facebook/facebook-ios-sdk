@@ -21,6 +21,7 @@
 #import <objc/runtime.h>
 
 #import "FBSDKAppEventsUtility.h"
+#import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKImageDownloader.h"
@@ -168,6 +169,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   if (loadBlock != NULL) {
     loadBlock();
   }
+
+  // Fetch app gatekeepers
+  [FBSDKGateKeeperManager loadGateKeepers];
 }
 
 #pragma mark - Internal Class Methods
