@@ -388,6 +388,10 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     }
   }
 
+  if ([FBSDKAppEventsUtility isSensitiveUserData:text]) {
+    return nil;
+  }
+
   return text.length > 0 ? text : nil;
 }
 

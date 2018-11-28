@@ -415,4 +415,56 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
 #endif
 }
 
++ (BOOL)isSensitiveUserData:(NSString *)text
+{
+  if (0 == text.length) {
+    return NO;
+  }
+
+  return [self isEmailAddress:text] || [self isCreditCardNumber:text];
+}
+
++ (BOOL)isCreditCardNumber:(NSString *)text
+{
+  text = [[text componentsSeparatedByCharactersInSet:[NSCharacterSet.decimalDigitCharacterSet invertedSet]] componentsJoinedByString:@""];
+
+  if (text.doubleValue == 0) {
+    return NO;
+  }
+
+  if (text.length < 9 || text.length > 21) {
+    return NO;
+  }
+
+  const char *chars = [text cStringUsingEncoding:NSUTF8StringEncoding];
+  if (NULL == chars) {
+    return NO;
+  }
+
+  BOOL isOdd = YES;
+  int oddSum = 0;
+  int evenSum = 0;
+
+  for (int i = (int)text.length - 1; i >= 0; i--) {
+    int digit = chars[i] - '0';
+
+    if (isOdd)
+      oddSum += digit;
+    else
+      evenSum += digit / 5 + (2 * digit) % 10;
+
+    isOdd = !isOdd;
+  }
+
+  return ((oddSum + evenSum) % 10 == 0);
+}
+
++ (BOOL)isEmailAddress:(NSString *)text
+{
+  NSString *pattern = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+  NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+  NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, [text length])];
+  return matches > 0;
+}
+
 @end
