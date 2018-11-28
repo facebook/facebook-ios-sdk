@@ -67,11 +67,17 @@
           withString:@" "].stringByRemovingPercentEncoding;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
-  NSCharacterSet *urlAllowedSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
-  return [value stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
+  return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                               (CFStringRef)value,
+                                                                               NULL, // characters to leave unescaped
+                                                                               CFSTR(":!*();@/&?+$,='"),
+                                                                               kCFStringEncodingUTF8);
 }
+#pragma clang diagnostic pop
 
 + (dispatch_source_t)startGCDTimerWithInterval:(double)interval block:(dispatch_block_t)block
 {
