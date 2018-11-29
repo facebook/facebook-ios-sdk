@@ -99,6 +99,11 @@
 
 + (NSString *)advertiserID
 {
+  if ([self advertisingTrackingStatus] != FBSDKAdvertisingTrackingAllowed ||
+      ![[FBSDKSettings autoLogAppEventsEnabled] boolValue] ) {
+    return nil;
+  }
+
   NSString *result = nil;
 
   Class ASIdentifierManagerClass = fbsdkdfl_ASIdentifierManagerClass();

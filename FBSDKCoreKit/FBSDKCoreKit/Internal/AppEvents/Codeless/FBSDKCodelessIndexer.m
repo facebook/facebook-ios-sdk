@@ -115,12 +115,8 @@ static NSString *_lastTreeHash;
   struct utsname systemInfo;
   uname(&systemInfo);
   NSString *machine = @(systemInfo.machine);
-  NSString *advertiserID = nil;
-  if (FBSDKAdvertisingTrackingAllowed == [FBSDKAppEventsUtility advertisingTrackingStatus]) {
-    advertiserID = [FBSDKAppEventsUtility advertiserID];
-  }
+  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID] ?: @"";
   machine = machine ?: @"";
-  advertiserID = advertiserID ?: @"";
   NSString *debugStatus = [FBSDKAppEventsUtility isDebugBuild] ? @"1" : @"0";
 #if TARGET_IPHONE_SIMULATOR
   NSString *isSimulator = @"1";
