@@ -99,8 +99,7 @@
 
 + (NSString *)advertiserID
 {
-  if ([self advertisingTrackingStatus] != FBSDKAdvertisingTrackingAllowed ||
-      ![[FBSDKSettings autoLogAppEventsEnabled] boolValue] ) {
+  if (![[FBSDKSettings advertiserIDCollectionEnabled] boolValue]) {
     return nil;
   }
 

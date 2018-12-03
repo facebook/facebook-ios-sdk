@@ -77,6 +77,8 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAutoLogAppEvent
   setAutoLogAppEventsEnabled, @1);
 FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLogEnabled, codelessDebugLogEnabled,
   setCodelessDebugLogEnabled, @0);
+FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookAdvertiserIDCollectionEnabled, advertiserIDCollectionEnabled,
+  setAdvertiserIDCollectionEnabled, @1);
 
 + (void)setGraphErrorRecoveryDisabled:(BOOL)disableGraphErrorRecovery {
   g_disableErrorRecovery = disableGraphErrorRecovery;
