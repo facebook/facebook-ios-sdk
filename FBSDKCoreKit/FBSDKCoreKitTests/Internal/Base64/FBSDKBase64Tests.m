@@ -22,35 +22,17 @@
 
 #import "FBSDKBase64.h"
 
-@interface FBSDKBase64 (FBSDKBase64Tests)
-
-- (instancetype)initWithOptionsEnabled:(BOOL)optionsEnabled;
-- (NSData *)decodeAsData:(NSString *)string;
-- (NSString *)decodeAsString:(NSString *)string;
-- (NSString *)encodeData:(NSData *)data;
-- (NSString *)encodeString:(NSString *)string;
-
-@end
-
 @interface FBSDKBase64Tests : XCTestCase
 
 @end
 
 @implementation FBSDKBase64Tests
 
-- (void)runBackwardCompatibilityWithBlock:(void(^)(FBSDKBase64 *base64))block
-{
-  block([[FBSDKBase64 alloc] initWithOptionsEnabled:YES]);
-  block([[FBSDKBase64 alloc] initWithOptionsEnabled:NO]);
-}
-
 - (void)runTests:(NSDictionary *)tests
 {
-  [self runBackwardCompatibilityWithBlock:^(FBSDKBase64 *base64){
-    [tests enumerateKeysAndObjectsUsingBlock:^(NSString *plainString, NSString *base64String, BOOL *stop) {
-      XCTAssertEqualObjects([base64 encodeString:plainString], base64String);
-      XCTAssertEqualObjects([base64 decodeAsString:base64String], plainString);
-    }];
+  [tests enumerateKeysAndObjectsUsingBlock:^(NSString *plainString, NSString *base64String, BOOL *stop) {
+    XCTAssertEqualObjects([FBSDKBase64 encodeString:plainString], base64String);
+    XCTAssertEqualObjects([FBSDKBase64 decodeAsString:base64String], plainString);
   }];
 }
 
@@ -69,12 +51,10 @@
 
 - (void)testDecodeVariations
 {
-  [self runBackwardCompatibilityWithBlock:^(FBSDKBase64 *base64) {
-    XCTAssertEqualObjects([base64 decodeAsString:@"aGVsbG8gd29ybGQh"], @"hello world!");
-    XCTAssertEqualObjects([base64 decodeAsString:@"a  GVs\tb\r\nG8gd2\n9y\rbGQ h"], @"hello world!");
-    XCTAssertEqualObjects([base64 decodeAsString:@"aGVsbG8gd29ybGQh"], @"hello world!");
-    XCTAssertEqualObjects([base64 decodeAsString:@"aGVs#bG8*gd^29yb$GQh"], @"hello world!");
-  }];
+  XCTAssertEqualObjects([FBSDKBase64 decodeAsString:@"aGVsbG8gd29ybGQh"], @"hello world!");
+  XCTAssertEqualObjects([FBSDKBase64 decodeAsString:@"a  GVs\tb\r\nG8gd2\n9y\rbGQ h"], @"hello world!");
+  XCTAssertEqualObjects([FBSDKBase64 decodeAsString:@"aGVsbG8gd29ybGQh"], @"hello world!");
+  XCTAssertEqualObjects([FBSDKBase64 decodeAsString:@"aGVs#bG8*gd^29yb$GQh"], @"hello world!");
 }
 
 - (void)testEncodeDecode

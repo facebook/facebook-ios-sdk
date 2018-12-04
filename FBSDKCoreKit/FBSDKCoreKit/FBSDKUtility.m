@@ -71,11 +71,9 @@
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
-  return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                               (CFStringRef)value,
-                                                                               NULL, // characters to leave unescaped
-                                                                               CFSTR(":!*();@/&?+$,='"),
-                                                                               kCFStringEncodingUTF8);
+  NSCharacterSet *urlAllowedSet = [NSCharacterSet
+                                   characterSetWithCharactersInString:@" !*();:'@&=+$,/?%#[]\""].invertedSet;
+  return [value stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
 }
 #pragma clang diagnostic pop
 

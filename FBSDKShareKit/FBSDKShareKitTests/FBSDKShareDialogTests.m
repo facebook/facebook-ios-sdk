@@ -543,7 +543,7 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
     XCTAssertEqualObjects(request.methodName, methodName);
     return YES;
   }]
-                                    useSafariViewController:OCMOCK_ANY
+                                    useSafariViewController:(BOOL)OCMOCK_ANY
                                          fromViewController:OCMOCK_ANY
                                             completionBlock:OCMOCK_ANY];
 

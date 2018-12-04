@@ -89,17 +89,7 @@
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
 
-  dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   error = nil;
   XCTAssertFalse([dialog validateWithError:&error]);
   XCTAssertNotNil(error);
