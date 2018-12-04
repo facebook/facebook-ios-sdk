@@ -464,12 +464,8 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
       bitmask |= FBCodelessClassBitmaskLabel;
     }
 
-    if (((UIView *)obj).isAccessibilityElement &&
-        ((UIView *)obj).accessibilityTraits == UIAccessibilityTraitButton) {
-      Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
-      if (classRCTView && [obj isKindOfClass:classRCTView]) {
-        bitmask |= FBCodelessClassBitmaskReactNativeButton;
-      }
+    if ([FBSDKViewHierarchy isRCTButton:((UIView *)obj)]) {
+      bitmask |= FBCodelessClassBitmaskReactNativeButton;
     }
 
     // Check selector of UITextInput protocol instead of checking conformsToProtocol
@@ -482,6 +478,45 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
 
   return bitmask;
 }
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
++ (BOOL)isRCTButton:(UIView *)view
+{
+  if (view == nil) {
+    return NO;
+  }
+
+  Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
+  if (classRCTView && [view isKindOfClass:classRCTView] &&
+      [view respondsToSelector:@selector(reactTagAtPoint:)] &&
+      [view respondsToSelector:@selector(reactTag)] &&
+      view.userInteractionEnabled) {
+    NSNumber *reactTag = [view performSelector:@selector(reactTagAtPoint:)
+                                    withObject:[NSValue valueWithCGPoint:view.frame.origin]];
+    // We get the reactTag at upper left of the view and thus check with its first subview
+    UIView *subView = view.subviews.firstObject;
+    NSNumber *subViewReactTag = [FBSDKViewHierarchy getViewReactTag:subView];
+    if (reactTag != nil && subViewReactTag != nil && ![subView isKindOfClass:classRCTView] && [reactTag isEqualToNumber:subViewReactTag]) {
+      return YES;
+    }
+  }
+
+  return NO;
+}
+
++ (NSNumber *)getViewReactTag:(UIView *)view
+{
+  if (view != nil && [view respondsToSelector:@selector(reactTag)]) {
+    NSNumber *reactTag = [view performSelector:@selector(reactTag)];
+    if (reactTag != nil && [reactTag isKindOfClass:[NSNumber class]]) {
+      return reactTag;
+    }
+  }
+
+  return nil;
+}
+#pragma clang diagnostic pop
 
 + (BOOL)isView:(NSObject *)obj1 superViewOfView:(UIView *)obj2
 {
