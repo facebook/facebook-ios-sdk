@@ -30,12 +30,12 @@
 #import "FBSDKViewHierarchy.h"
 
 #define ReactNativeTargetKey          @"target"
-#define ReactNativeTouchEndEventName  @"topTouchEnd"
+#define ReactNativeTouchEndEventName  @"touchEnd"
 
 #define ReactNativeClassRCTTextView   "RCTTextView"
 #define ReactNativeClassRCTImageView  "RCTImageVIew"
-#define ReactNativeClassRCTEventDispatcher "RCTEventDispatcher"
 #define ReactNativeClassRCTTouchEvent "RCTTouchEvent"
+#define ReactNativeClassRCTTouchHandler "RCTTouchHandler"
 
 static void fb_dispatch_on_main_thread(dispatch_block_t block) {
   dispatch_async(dispatch_get_main_queue(), block);
@@ -139,13 +139,12 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
                          onClass:[UIControl class]
                        withBlock:blockToWindow named:@"map_control"];
 
-
   // ReactNative
   if (hasReactNative) { // If app is built via ReactNative
     Class classRCTView = objc_lookUpClass(ReactNativeClassRCTView);
     Class classRCTTextView = objc_lookUpClass(ReactNativeClassRCTTextView);
     Class classRCTImageView = objc_lookUpClass(ReactNativeClassRCTImageView);
-    Class classRCTEventDispatcher = objc_lookUpClass(ReactNativeClassRCTEventDispatcher);
+    Class classRCTTouchHandler = objc_lookUpClass(ReactNativeClassRCTTouchHandler);
 
     //  All react-native views would be added tp RCTRootView, so no need to check didMoveToWindow
     [FBSDKSwizzler swizzleSelector:@selector(didMoveToSuperview)
@@ -161,17 +160,26 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
                          withBlock:blockToSuperview
                              named:@"match_react_native"];
 
-    [FBSDKSwizzler swizzleSelector:@selector(dispatchEvent:) onClass:classRCTEventDispatcher withBlock:^(id dispatcher, SEL command, id event){
-      if ([event isKindOfClass:objc_lookUpClass(ReactNativeClassRCTTouchEvent)]) {
+    // RCTTouchHandler handles with touch events, like touchEnd and uses RCTEventDispather to dispatch events, so we can check _updateAndDispatchTouches to fire events
+    [FBSDKSwizzler swizzleSelector:@selector(_updateAndDispatchTouches:eventName:) onClass:classRCTTouchHandler withBlock:^(id touchHandler, SEL command, id touches, id eventName){
+      if ([touches isKindOfClass:[NSSet class]] && [eventName isKindOfClass:[NSString class]]) {
         @try {
-          NSArray<id> *eventArgs = [event arguments];
-          NSString *eventName = eventArgs[0];
-          NSArray<NSDictionary *> *touches = eventArgs[1];
-          if (eventName && touches && [eventName isEqualToString:ReactNativeTouchEndEventName]) {
-            for (NSDictionary<NSString *, id> *touch in touches) {
-              NSNumber *targetTag = touch[ReactNativeTargetKey];
-              FBSDKEventBinding *eventBinding = self->reactBindings[targetTag];
-              if (eventBinding) {
+          NSString *reactEventName = (NSString *)eventName;
+          NSSet<UITouch *> *reactTouches = (NSSet<UITouch *> *)touches;
+          if ([reactEventName isEqualToString:ReactNativeTouchEndEventName]) {
+            for (UITouch *touch in reactTouches) {
+              UIView *targetView = ((UITouch *)touch).view.superview;
+              NSNumber *reactTag = nil;
+              // Find the closest React-managed touchable view like RCTTouchHandler
+              while(targetView) {
+                reactTag = [FBSDKViewHierarchy getViewReactTag:targetView];
+                if (reactTag != nil && targetView.userInteractionEnabled) {
+                  break;
+                }
+                targetView = targetView.superview;
+              }
+              FBSDKEventBinding *eventBinding = self->reactBindings[reactTag];
+              if (reactTag != nil && eventBinding != nil) {
                 [eventBinding trackEvent:nil];
               }
             }
@@ -290,11 +298,8 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
         for (FBSDKEventBinding *binding in self->eventBindings) {
           if ([FBSDKEventBinding isPath:binding.path matchViewPath:path]) {
             fb_dispatch_on_main_thread(^{
-              // React Native touchable event is targeted at first subview,
-              // so extract the first subview and set the binding for it
-              UIView *reactView = view.subviews.firstObject;
-              if (reactView) {
-                NSNumber *reactTag = [FBSDKViewHierarchy getViewReactTag:reactView];
+              if (view) {
+                NSNumber *reactTag = [FBSDKViewHierarchy getViewReactTag:view];
                 if (reactTag != nil) {
                   self->reactBindings[reactTag] = binding;
                 }

@@ -492,13 +492,16 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
       [view respondsToSelector:@selector(reactTagAtPoint:)] &&
       [view respondsToSelector:@selector(reactTag)] &&
       view.userInteractionEnabled) {
-    NSNumber *reactTag = [view performSelector:@selector(reactTagAtPoint:)
-                                    withObject:[NSValue valueWithCGPoint:view.frame.origin]];
-    // We get the reactTag at upper left of the view and thus check with its first subview
-    UIView *subView = view.subviews.firstObject;
-    NSNumber *subViewReactTag = [FBSDKViewHierarchy getViewReactTag:subView];
-    if (reactTag != nil && subViewReactTag != nil && ![subView isKindOfClass:classRCTView] && [reactTag isEqualToNumber:subViewReactTag]) {
-      return YES;
+    // We check all its subviews locations and the view is clickable if there exists one that mathces reactTagAtPoint
+    for (UIView *subview in view.subviews) {
+      if (subview && ![subview isKindOfClass:classRCTView]) {
+        NSNumber *reactTag = [view performSelector:@selector(reactTagAtPoint:)
+                                        withObject:[NSValue valueWithCGPoint:subview.frame.origin]];
+        NSNumber *subviewReactTag = [FBSDKViewHierarchy getViewReactTag:subview];
+        if (reactTag != nil && subviewReactTag != nil && [reactTag isEqualToNumber:subviewReactTag]) {
+          return YES;
+        }
+      }
     }
   }
 
