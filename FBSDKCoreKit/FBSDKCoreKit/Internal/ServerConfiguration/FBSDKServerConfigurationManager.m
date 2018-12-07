@@ -129,12 +129,20 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       NSData *data = [defaults objectForKey:defaultsKey];
       if ([data isKindOfClass:[NSData class]]) {
         // decode the configuration
-        FBSDKServerConfiguration *serverConfiguration = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-        if ([serverConfiguration isKindOfClass:[FBSDKServerConfiguration class]]) {
-          // ensure that the configuration points to the current appID
-          if ([serverConfiguration.appID isEqualToString:appID]) {
-            _serverConfiguration = serverConfiguration;
+        FBSDKServerConfiguration *serverConfiguration;
+        if (@available(iOS 11, *)) {
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
+          serverConfiguration = [NSKeyedUnarchiver unarchivedObjectOfClass:FBSDKServerConfiguration.class fromData:data error:NULL];
+#endif
+        } else {
+          serverConfiguration = [NSKeyedUnarchiver unarchiveTopLevelObjectWithData:data error:NULL];
+          if (serverConfiguration != nil && ![serverConfiguration isKindOfClass:[FBSDKServerConfiguration class]]) {
+            serverConfiguration = nil;
           }
+        }
+        // ensure that the configuration points to the current appID
+        if (serverConfiguration != nil && [serverConfiguration.appID isEqualToString:appID]) {
+          _serverConfiguration = serverConfiguration;
         }
       }
     }
