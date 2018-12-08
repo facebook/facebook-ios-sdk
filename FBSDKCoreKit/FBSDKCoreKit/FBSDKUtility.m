@@ -72,7 +72,7 @@
 + (NSString *)URLEncode:(NSString *)value
 {
   NSCharacterSet *urlAllowedSet = [NSCharacterSet
-                                   characterSetWithCharactersInString:@" !*();:'@&=+$,/?%#[]\""].invertedSet;
+                                   characterSetWithCharactersInString:@" !*();:'@&=+$,/?%#[]{}\""].invertedSet;
   return [value stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
 }
 #pragma clang diagnostic pop
