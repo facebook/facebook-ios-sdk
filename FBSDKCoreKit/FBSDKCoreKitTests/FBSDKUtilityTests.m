@@ -36,9 +36,22 @@
   NSString *url = @"https://www.facebook.com/index.html?a=b&c=d";
   NSString *encoded = @"https%3A%2F%2Fwww.facebook.com%2Findex.html%3Fa%3Db%26c%3Dd";
   XCTAssertTrue([encoded isEqualToString:[FBSDKUtility URLEncode:url]]);
+  XCTAssertTrue([url isEqualToString:[FBSDKUtility URLDecode:url]]);
+}
 
+- (void)testURLEncodeWithJSON {
+  NSURL *url = @"https://m.facebook.com/v3.2/dialog/oauth?auth_type=rerequest&client_id=123456789&default_audience=friends&display=touch&e2e={\"init\":123456.1234567890}&fbapp_pres=0&redirect_uri=fb111111111111111://authorize/&response_type=token,signed_request&return_scopes=true&scope=&sdk=ios&sdk_version=4.39.0&state={\"challenge\":\"aBcDeFghiJKlmnOpQRS%tU\",\"0_auth_logger_id\":\"01234ABC-12AB-34DE-1234-ABCDEFG12345\",\"com.facebook.some_identifier\":true,\"3_method\":\"sfvc_auth\"}";
+  NSString *encoded = @"https://m.facebook.com/v3.2/dialog/oauth?auth_type=rerequest&client_id=123456789&default_audience=friends&display=touch&e2e=%7B%22init%22%3A123456.1234567890%7D&fbapp_pres=0&redirect_uri=fb111111111111111%3A%2F%2Fauthorize%2F&response_type=token%2Csigned_request&return_scopes=true&scope=&sdk=ios&sdk_version=4.39.0&state=%7B%22challenge%22%3A%22aBcDeFghiJKlmnOpQRS%25tU%22%2C%220_auth_logger_id%22%3A%2201234ABC-12AB-34DE-1234-ABCDEFG12345%22%2C%22com.facebook.some_identifier%22%3Atrue%2C%223_method%22%3A%22sfvc_auth%22%7D";
+  XCTAssertTrue([encoded isEqualToString:[FBSDKUtility URLEncode:url]]);
+  XCTAssertTrue([url isEqualToString:[FBSDKUtility URLDecode:url]]);
+}
+
+- (void)testNewEncodeWorksLikeLegacy {
   for (int i = 0; i < 256; i++) {
     NSString *str = [NSString stringWithFormat:@"%c", (char)i];
+    if ([str isEqualToString:@"{"] || [str isEqualToString:@"}"]) {
+      continue; // Curly braces were not included in legacy URL encode
+    }
     XCTAssertTrue([[FBSDKUtility URLEncode:str] isEqualToString:[self legacyURLEncode:str]]);
   }
 }
