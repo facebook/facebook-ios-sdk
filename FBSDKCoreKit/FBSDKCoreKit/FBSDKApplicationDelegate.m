@@ -21,15 +21,8 @@
 
 #import <objc/runtime.h>
 
-#ifndef __IPHONE_12_0
-#define __IPHONE_12_0 120000
-#endif
-
 #if !TARGET_OS_TV
 #import <SafariServices/SafariServices.h>
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-#import <AuthenticationServices/AuthenticationServices.h>
-#endif
 #endif
 
 #import "FBSDKAppEvents+Internal.h"
@@ -65,17 +58,24 @@ NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
+typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
+
+@protocol FBSDKAuthenticationSession <NSObject>
+
+- (instancetype)initWithURL:(NSURL *)URL callbackURLScheme:(nullable NSString *)callbackURLScheme completionHandler:(FBSDKAuthenticationCompletionHandler)completionHandler;
+- (BOOL)start;
+- (void)cancel;
+
+@end
+
 @implementation FBSDKApplicationDelegate
 {
 #if !TARGET_OS_TV
     FBSDKBridgeAPIRequest *_pendingRequest;
     FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
     id<FBSDKURLOpening> _pendingURLOpen;
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-    ASWebAuthenticationSession *_webAuthenticationSession NS_AVAILABLE_IOS(12_0);
-#endif
-    SFAuthenticationSession *_sfAuthenticationSession NS_AVAILABLE_IOS(11_0);
-    SFAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
+    id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
+    FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 #endif
     BOOL _expectingBackground;
     BOOL _isRequestingSFAuthenticationSession;
@@ -199,22 +199,14 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
         [_safariViewController.presentingViewController dismissViewControllerAnimated:YES
                                                                            completion:completePendingOpenURLBlock];
         _safariViewController = nil;
-    } else {
-        if (@available(iOS 12.0, *)) {
-            #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-            if (_webAuthenticationSession != nil) {
-                [_webAuthenticationSession cancel];
-                _webAuthenticationSession = nil;
-            }
-            #endif
-        } else if (@available(iOS 11.0, *)) {
-            if (_sfAuthenticationSession != nil) {
-                [_sfAuthenticationSession cancel];
-                _sfAuthenticationSession = nil;
-            }
+    } else if (@available(iOS 11.0, *)) {
+        if (_authenticationSession != nil) {
+            [_authenticationSession cancel];
+            _authenticationSession = nil;
         }
         completePendingOpenURLBlock();
     }
+
     if ([pendingURLOpen canOpenURL:url
                     forApplication:application
                  sourceApplication:sourceApplication
@@ -293,13 +285,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
             _authenticationSessionCompletionHandler(nil, nil);
         }
 
-        if (@available(iOS 12.0, *)) {
-            #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-            notExpectingBackground = notExpectingBackground && !_webAuthenticationSession;
-            #endif
-        } else {
-            notExpectingBackground = notExpectingBackground && !_sfAuthenticationSession;
-        }
+        notExpectingBackground = notExpectingBackground && !_authenticationSession;
     }
 #endif
     if (notExpectingBackground) {
@@ -404,16 +390,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     _expectingBackground = NO;
     _pendingURLOpen = sender;
 
-    if ([sender isAuthenticationURL:url]) {
-        if (@available(iOS 12.0, *)) {
-            [self _setSessionCompletionHandlerFromHandler:handler];
-            [self _openURLWithWebAuthenticationSession:url];
-            return;
-        } else if (@available(iOS 11.0, *)) {
-            [self _setSessionCompletionHandlerFromHandler:handler];
-            [self _openURLWithSFAuthenticationSession:url];
-            return;
-        }
+    if (@available(iOS 11.0, *) && [sender isAuthenticationURL:url]) {
+        [self _setSessionCompletionHandlerFromHandler:handler];
+        [self _openURLWithAuthenticationSession:url];
+        return;
     }
 
     // trying to dynamically load SFSafariViewController class
@@ -464,41 +444,29 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     }
 }
 
-- (void)_openURLWithWebAuthenticationSession:(NSURL *)url NS_AVAILABLE_IOS(12_0)
+- (void)_openURLWithAuthenticationSession:(NSURL *)url
 {
-    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-    if (_webAuthenticationSession != nil) {
-        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           formatString:@"There is already a request for authenticated session. Cancelling active ASWebAuthenticationSession before starting the new one.", nil];
-        [_webAuthenticationSession cancel];
-    }
-    _webAuthenticationSession = [[ASWebAuthenticationSession alloc] initWithURL:url
-                                                              callbackURLScheme:[FBSDKInternalUtility appURLScheme]
-                                                              completionHandler:_authenticationSessionCompletionHandler
-                                 ];
-    _isRequestingSFAuthenticationSession = YES;
-    [_webAuthenticationSession start];
-    #endif
-}
+    Class AuthenticationSessionClass = fbsdkdfl_ASWebAuthenticationSessionClass();
 
-- (void)_openURLWithSFAuthenticationSession:(NSURL *)url NS_AVAILABLE_IOS(11_0)
-{
-    Class SFAuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
-    if (SFAuthenticationSessionClass != nil) {
-        if (_sfAuthenticationSession != nil) {
+    if (!AuthenticationSessionClass) {
+        AuthenticationSessionClass = fbsdkdfl_SFAuthenticationSessionClass();
+    }
+
+    if (AuthenticationSessionClass != nil) {
+        if (_authenticationSession != nil) {
             [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                                formatString:@"There is already a request for authenticated session. Cancelling active SFAuthenticationSession before starting the new one.", nil];
-            [_sfAuthenticationSession cancel];
+            [_authenticationSession cancel];
         }
-        _sfAuthenticationSession = [[SFAuthenticationSessionClass alloc] initWithURL:url
+        _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
                                                                    callbackURLScheme:[FBSDKInternalUtility appURLScheme]
                                                                    completionHandler:_authenticationSessionCompletionHandler];
         _isRequestingSFAuthenticationSession = YES;
-        [_sfAuthenticationSession start];
+        [_authenticationSession start];
     }
 }
 
-- (void)_setSessionCompletionHandlerFromHandler:(void(^)(BOOL, NSError *))handler NS_AVAILABLE_IOS(11_0)
+- (void)_setSessionCompletionHandlerFromHandler:(void(^)(BOOL, NSError *))handler
 {
     __weak typeof(self) weakSelf = self;
     _authenticationSessionCompletionHandler = ^ (NSURL *aURL, NSError *error) {
@@ -508,10 +476,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
         if (error == nil) {
             [strongSelf application:[UIApplication sharedApplication] openURL:aURL sourceApplication:@"com.apple" annotation:nil];
         }
-        #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_12_0
-        strongSelf->_webAuthenticationSession = nil;
-        #endif
-        strongSelf->_sfAuthenticationSession = nil;
+        strongSelf->_authenticationSession = nil;
         strongSelf->_authenticationSessionCompletionHandler = nil;
     };
 }

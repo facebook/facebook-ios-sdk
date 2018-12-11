@@ -704,7 +704,6 @@
 		C5696FA9209CCEB4009C931F /* FBSDKSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */; };
 		C5696FAA209CCEB4009C931F /* FBSDKSwizzler.m in Sources */ = {isa = PBXBuildFile; fileRef = C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */; };
 		C5BB3EA621BB010200096874 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BB3E8F21BB010100096874 /* Bolts.framework */; };
-		C5BB3ECA21BB020800096874 /* AuthenticationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5BB3EB321BB020800096874 /* AuthenticationServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		C5D25D3621795B790037B13D /* FBSDKCodelessIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = C5D25D3421795B790037B13D /* FBSDKCodelessIndexer.h */; };
 		C5D25D3721795B790037B13D /* FBSDKCodelessIndexer.h in Headers */ = {isa = PBXBuildFile; fileRef = C5D25D3421795B790037B13D /* FBSDKCodelessIndexer.h */; };
 		C5D25D3821795B790037B13D /* FBSDKCodelessIndexer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5D25D3521795B790037B13D /* FBSDKCodelessIndexer.m */; };
@@ -1259,7 +1258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5BB3EA621BB010200096874 /* Bolts.framework in Frameworks */,
-				C5BB3ECA21BB020800096874 /* AuthenticationServices.framework in Frameworks */,
 				81B71DD21D19C8CF00933E93 /* CoreGraphics.framework in Frameworks */,
 				81B71DCE1D19C8BF00933E93 /* UIKit.framework in Frameworks */,
 				81B71D461D19C87400933E93 /* SafariServices.framework in Frameworks */,
