@@ -62,23 +62,18 @@
 
 + (NSString *)URLDecode:(NSString *)value
 {
-  value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#pragma clang diagnostic pop
-  return value;
+  return [value
+          stringByReplacingOccurrencesOfString:@"+"
+          withString:@" "].stringByRemovingPercentEncoding;
 }
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
-  return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                               (CFStringRef)value,
-                                                                               NULL, // characters to leave unescaped
-                                                                               CFSTR(":!*();@/&?+$,='"),
-                                                                               kCFStringEncodingUTF8);
+  NSCharacterSet *urlAllowedSet = [NSCharacterSet
+                                   characterSetWithCharactersInString:@" !*();:'@&=+$,/?%#[]{}\""].invertedSet;
+  return [value stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
 }
 #pragma clang diagnostic pop
 
