@@ -390,10 +390,12 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     _expectingBackground = NO;
     _pendingURLOpen = sender;
 
-    if (@available(iOS 11.0, *) && [sender isAuthenticationURL:url]) {
-        [self _setSessionCompletionHandlerFromHandler:handler];
-        [self _openURLWithAuthenticationSession:url];
-        return;
+    if (@available(iOS 11.0, *)) {
+        if ([sender isAuthenticationURL:url]) {
+            [self _setSessionCompletionHandlerFromHandler:handler];
+            [self _openURLWithAuthenticationSession:url];
+            return;
+        }
     }
 
     // trying to dynamically load SFSafariViewController class
