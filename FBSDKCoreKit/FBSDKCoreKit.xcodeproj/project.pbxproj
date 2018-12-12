@@ -1494,6 +1494,7 @@
 				9DEE5C7F1A6716D100D750E1 /* CoreText.framework */,
 				893F44A11A644512001DB0B6 /* CoreGraphics.framework */,
 				893F449F1A64450C001DB0B6 /* UIKit.framework */,
+				C5BB3E8F21BB010100096874 /* Bolts.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
