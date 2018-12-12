@@ -208,9 +208,12 @@ FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorDeveloperErrors;
 + (NSString *)sdkVersion;
 
 /**
-  Retrieve the current Facebook SDK logging behavior.
+  The current Facebook SDK logging behavior.
  */
-+ (NSSet *)loggingBehavior;
+@property (class, nonatomic, copy) NSSet<NSString *> *loggingBehaviors;
+
++ (NSSet *)loggingBehavior
+DEPRECATED_MSG_ATTRIBUTE("Renamed `loggingBehaviors`");
 
 /**
   Set the current Facebook SDK logging behavior.  This should consist of strings defined as

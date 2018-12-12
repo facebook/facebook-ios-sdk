@@ -1177,7 +1177,7 @@ static NSString *g_overrideAppID = nil;
     }
 
     NSString *loggingEntry = nil;
-    if ([[FBSDKSettings loggingBehavior] containsObject:FBSDKLoggingBehaviorAppEvents]) {
+    if ([FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAppEvents]) {
       NSData *prettyJSONData = [NSJSONSerialization dataWithJSONObject:appEventsState.events
                                                                options:NSJSONWritingPrettyPrinted
                                                                  error:NULL];

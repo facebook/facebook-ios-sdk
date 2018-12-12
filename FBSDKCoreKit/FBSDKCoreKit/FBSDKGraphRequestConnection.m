@@ -980,7 +980,7 @@ NSURLSessionDataDelegate
 
 - (void)registerTokenToOmitFromLog:(NSString *)token
 {
-  if (![[FBSDKSettings loggingBehavior] containsObject:FBSDKLoggingBehaviorAccessTokens]) {
+  if (![FBSDKSettings.loggingBehaviors containsObject:FBSDKLoggingBehaviorAccessTokens]) {
     [FBSDKLogger registerStringToReplace:token replaceWith:@"ACCESS_TOKEN_REMOVED"];
   }
 }
