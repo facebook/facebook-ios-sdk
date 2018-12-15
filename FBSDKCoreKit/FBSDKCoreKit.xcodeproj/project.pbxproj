@@ -1230,7 +1230,6 @@
 		C5696FA1209CCEB3009C931F /* FBSDKSwizzler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSwizzler.h; sourceTree = "<group>"; };
 		C5696FA2209CCEB4009C931F /* FBSDKSwizzler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSwizzler.m; sourceTree = "<group>"; };
 		C5BB3E8F21BB010100096874 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../Carthage/Build/iOS/Bolts.framework; sourceTree = "<group>"; };
-		C5BB3EB321BB020800096874 /* AuthenticationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AuthenticationServices.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.1.sdk/System/Library/Frameworks/AuthenticationServices.framework; sourceTree = DEVELOPER_DIR; };
 		C5D25D3421795B790037B13D /* FBSDKCodelessIndexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCodelessIndexer.h; sourceTree = "<group>"; };
 		C5D25D3521795B790037B13D /* FBSDKCodelessIndexer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCodelessIndexer.m; sourceTree = "<group>"; };
 		C5F6EC851FA24FAF009EB258 /* FBSDKPaymentObserverTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKPaymentObserverTests.m; sourceTree = "<group>"; };
@@ -1483,7 +1482,6 @@
 		893F44A31A644536001DB0B6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				C5BB3EB321BB020800096874 /* AuthenticationServices.framework */,
 				C4513900202CBF1F0063275D /* WebKit.framework */,
 				4AF47CFE1F424A8700A57A67 /* CoreImage.framework */,
 				9894BFFA1B73D8B300FBA6DB /* SafariServices.framework */,
