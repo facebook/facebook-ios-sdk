@@ -1,5 +1,3 @@
-swiftlint_version: 0.26.0
-
 included:
 - Sources
 - Samples
