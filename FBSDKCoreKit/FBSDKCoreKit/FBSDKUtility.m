@@ -62,9 +62,8 @@
 
 + (NSString *)URLDecode:(NSString *)value
 {
-  return [value
-          stringByReplacingOccurrencesOfString:@"+"
-          withString:@" "].stringByRemovingPercentEncoding;
+  return [value.stringByRemovingPercentEncoding
+          stringByReplacingOccurrencesOfString:@"+" withString:@" "];
 }
 
 #pragma clang diagnostic push
