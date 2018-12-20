@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
-                     :tag => 'sdk-version-4.39.0' }
+                     :tag => 'v4.39.0' }
 
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'
