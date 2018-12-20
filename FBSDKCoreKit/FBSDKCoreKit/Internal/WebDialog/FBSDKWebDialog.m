@@ -90,7 +90,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
     return NO;
   }
 
-  _dialogView = [[FBSDKWebDialogView alloc] initWithFrame:window.screen.bounds];
+  CGRect frame = [self _applicationFrameForOrientation];
+  _dialogView = [[FBSDKWebDialogView alloc] initWithFrame:frame];
 
   _dialogView.delegate = self;
   [_dialogView loadURL:URL];
@@ -280,6 +281,17 @@ static FBSDKWebDialog *g_currentDialog = nil;
 - (CGRect)_applicationFrameForOrientation
 {
   CGRect applicationFrame = _dialogView.window.screen.bounds;
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
+  if (@available(iOS 11.0, *)) {
+    UIEdgeInsets insets = _dialogView.window.safeAreaInsets;
+    applicationFrame.origin.x += insets.left;
+    applicationFrame.origin.y += insets.top;
+    applicationFrame.size.width -= insets.left + insets.right;
+    applicationFrame.size.height -= insets.top + insets.bottom;
+  }
+#endif
+
   if ([FBSDKInternalUtility shouldManuallyAdjustOrientation]) {
     switch ([UIApplication sharedApplication].statusBarOrientation) {
       case UIInterfaceOrientationLandscapeLeft:
@@ -311,10 +323,8 @@ static FBSDKWebDialog *g_currentDialog = nil;
   transform = CGAffineTransformScale([self _transformForOrientation], scale, scale);
   void(^updateBlock)(void) = ^{
     self->_dialogView.transform = transform;
-
-    CGRect mainFrame = self->_dialogView.window.screen.bounds;
-    self->_dialogView.center = CGPointMake(CGRectGetMidX(mainFrame),
-                                     CGRectGetMidY(mainFrame));
+    self->_dialogView.center = CGPointMake(CGRectGetMidX(applicationFrame),
+                                     CGRectGetMidY(applicationFrame));
     self->_backgroundView.alpha = alpha;
   };
   if (animationDuration == 0.0) {
