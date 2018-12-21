@@ -167,7 +167,10 @@ static NSString *const kPostHTTPMethod = @"POST";
     }
     return object;
   }];
-  return [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
+
+  NSString *combinedURL = [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
+
+  return [combinedURL stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
 }
 
 + (NSDictionary *)preprocessParams:(NSDictionary *)params
