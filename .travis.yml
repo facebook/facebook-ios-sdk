@@ -39,6 +39,7 @@ before_install:
 
 install:
 - echo "Will Bundle Brew"
+- bundle install
 - brew bundle
 
 before_script:
