@@ -169,13 +169,7 @@ static NSString *const kPostHTTPMethod = @"POST";
     }
     return object;
   }];
-
-  NSString *combinedURL = [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  return [combinedURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#pragma clang pop
+  return [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
 }
 
 + (NSDictionary *)preprocessParams:(NSDictionary *)params
