@@ -149,8 +149,10 @@ static NSString *const kPostHTTPMethod = @"POST";
                   forBatch:(BOOL)forBatch {
   params = [self preprocessParams: params];
 
-  NSCharacterSet *urlAllowedSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
-  NSURL *parsedURL = [NSURL URLWithString:[baseUrl stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet]];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  NSURL *parsedURL = [NSURL URLWithString:[baseUrl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+#pragma clang pop
 
   if ([httpMethod isEqualToString:kPostHTTPMethod] && !forBatch) {
     return baseUrl;
@@ -170,7 +172,10 @@ static NSString *const kPostHTTPMethod = @"POST";
 
   NSString *combinedURL = [NSString stringWithFormat:@"%@%@%@", baseUrl, queryPrefix, query];
 
-  return [combinedURL stringByAddingPercentEncodingWithAllowedCharacters:urlAllowedSet];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  return [combinedURL stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#pragma clang pop
 }
 
 + (NSDictionary *)preprocessParams:(NSDictionary *)params
