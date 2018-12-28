@@ -62,12 +62,7 @@
 
 + (NSString *)URLDecode:(NSString *)value
 {
-  value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#pragma clang diagnostic pop
-  return value;
+  return value.stringByRemovingPercentEncoding;
 }
 
 #pragma clang diagnostic push
