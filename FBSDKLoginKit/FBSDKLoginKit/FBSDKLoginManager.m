@@ -491,7 +491,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 }
 
 + (NSString *)stringForChallenge {
-  return [FBSDKCrypto randomString:FBClientStateChallengeLength];
+  NSString *challenge = [FBSDKCrypto randomString:FBClientStateChallengeLength];
+
+  return [challenge stringByReplacingOccurrencesOfString:@"+" withString:@"="];
 }
 
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult
