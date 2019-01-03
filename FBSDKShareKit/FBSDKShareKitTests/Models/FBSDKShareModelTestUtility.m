@@ -45,7 +45,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSURL *)contentURL
 {
-  return [[NSURL alloc] initWithString:@"https://developers.facebook.com/"];
+  return [NSURL URLWithString:@"https://developers.facebook.com/"];
 }
 
 + (FBSDKHashtag *)hashtag
@@ -88,7 +88,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSURL *)linkImageURL
 {
-  return [[NSURL alloc] initWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xpa1/t39.2178-6/851594_549760571770473_1178259000_n.png"];
+  return [NSURL URLWithString:@"https://fbcdn-dragon-a.akamaihd.net/hphotos-ak-xpa1/t39.2178-6/851594_549760571770473_1178259000_n.png"];
 }
 
 + (FBSDKShareOpenGraphAction *)openGraphAction
@@ -243,7 +243,7 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (NSURL *)photoImageURL
 {
-  return [[NSURL alloc] initWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yC/r/YRwxe7CPWSs.png"];
+  return [NSURL URLWithString:@"https://fbstatic-a.akamaihd.net/rsrc.php/v2/yC/r/YRwxe7CPWSs.png"];
 }
 
 + (BOOL)photoUserGenerated
