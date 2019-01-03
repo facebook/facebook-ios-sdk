@@ -86,10 +86,12 @@ At a minimum, you'll need to drag & drop the following frameworks from `Carthage
 To use Login with Facebook:
 
 - `FacebookLogin.framework`
+- `FBSDKLoginKit.framework`
 
 To use Share and Send Dialogs
 
 - `FacebookShare.framework`
+- `FBSDKShareKit.framework`
 
 On your application targets' `Build Phases` tab:
 
