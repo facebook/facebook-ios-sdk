@@ -244,7 +244,6 @@ static FBSDKWebDialog *g_currentDialog = nil;
   _backgroundView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
   _backgroundView.backgroundColor = [UIColor colorWithWhite:0.3 alpha:0.8];
   [window addSubview:_backgroundView];
-
   [window addSubview:_dialogView];
 
   [_dialogView becomeFirstResponder]; // dismisses the keyboard if it there was another first responder with it
@@ -285,6 +284,9 @@ static FBSDKWebDialog *g_currentDialog = nil;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
   if (@available(iOS 11.0, *)) {
     UIEdgeInsets insets = _dialogView.window.safeAreaInsets;
+    if (insets.top == 0.0) {
+      insets.top = [[UIApplication sharedApplication] statusBarFrame].size.height;
+    }
     applicationFrame.origin.x += insets.left;
     applicationFrame.origin.y += insets.top;
     applicationFrame.size.width -= insets.left + insets.right;
@@ -325,6 +327,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
     self->_dialogView.transform = transform;
     self->_dialogView.center = CGPointMake(CGRectGetMidX(applicationFrame),
                                      CGRectGetMidY(applicationFrame));
+    self->_dialogView.alpha = alpha;
     self->_backgroundView.alpha = alpha;
   };
   if (animationDuration == 0.0) {
