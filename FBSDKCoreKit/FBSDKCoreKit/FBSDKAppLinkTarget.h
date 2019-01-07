@@ -27,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface FBSDKAppLinkTarget : NSObject
 
 /*! Creates a FBSDKAppLinkTarget with the given app site and target URL. */
-+ (instancetype)appLinkTargetWithURL:(NSURL *)url
++ (instancetype)appLinkTargetWithURL:(nullable NSURL *)url
                           appStoreId:(nullable NSString *)appStoreId
                              appName:(NSString *)appName;
 
