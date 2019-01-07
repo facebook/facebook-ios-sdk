@@ -286,7 +286,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     NSString *webUrlString = webDict[FBSDKWebViewAppLinkResolverWebURLKey][0][FBSDKWebViewAppLinkResolverDictionaryValueKey];
     NSString *shouldFallbackString = webDict[FBSDKWebViewAppLinkResolverShouldFallbackKey][0][FBSDKWebViewAppLinkResolverDictionaryValueKey];
 
-    NSURL *webUrl = destination;
+    NSURL *webUrl = destination = nil;
 
     if (shouldFallbackString &&
         [@[ @"no", @"false", @"0" ] containsObject:shouldFallbackString.lowercaseString]) {
