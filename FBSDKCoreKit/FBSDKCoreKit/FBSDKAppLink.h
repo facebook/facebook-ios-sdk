@@ -42,7 +42,7 @@ FOUNDATION_EXPORT NSString *const FBSDKAppLinkVersion;
  from App Link metadata.
  @param webURL the fallback web URL, if any, for the app link.
  */
-+ (instancetype)appLinkWithSourceURL:(NSURL *)sourceURL
++ (instancetype)appLinkWithSourceURL:(nullable NSURL *)sourceURL
                              targets:(NSArray<FBSDKAppLinkTarget *> *)targets
                               webURL:(nullable NSURL *)webURL;
 
