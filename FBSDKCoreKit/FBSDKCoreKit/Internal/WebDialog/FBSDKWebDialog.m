@@ -281,18 +281,20 @@ static FBSDKWebDialog *g_currentDialog = nil;
 {
   CGRect applicationFrame = _dialogView.window.screen.bounds;
 
+  UIEdgeInsets insets = UIEdgeInsetsZero;
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_0
   if (@available(iOS 11.0, *)) {
-    UIEdgeInsets insets = _dialogView.window.safeAreaInsets;
-    if (insets.top == 0.0) {
-      insets.top = [[UIApplication sharedApplication] statusBarFrame].size.height;
-    }
-    applicationFrame.origin.x += insets.left;
-    applicationFrame.origin.y += insets.top;
-    applicationFrame.size.width -= insets.left + insets.right;
-    applicationFrame.size.height -= insets.top + insets.bottom;
+    insets = _dialogView.window.safeAreaInsets;
   }
 #endif
+
+  if (insets.top == 0.0) {
+    insets.top = [[UIApplication sharedApplication] statusBarFrame].size.height;
+  }
+  applicationFrame.origin.x += insets.left;
+  applicationFrame.origin.y += insets.top;
+  applicationFrame.size.width -= insets.left + insets.right;
+  applicationFrame.size.height -= insets.top + insets.bottom;
 
   if ([FBSDKInternalUtility shouldManuallyAdjustOrientation]) {
     switch ([UIApplication sharedApplication].statusBarOrientation) {
