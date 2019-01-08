@@ -17,6 +17,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# shellcheck disable=SC2039
+# shellcheck disable=SC2140
+
 # This script builds the API documentation from source-level comments.
 # This script requires jazzy be installed: https://github.com/realm/jazzy
 
@@ -39,8 +42,14 @@ for (( i = 0; i < CNT; i++ ))
 do
   KITREFDOCS=${KITS[$i]};
 
+  if [ "$KITREFDOCS" == "FBSDKMarketingKit" ]; then PREFIX="internal/"; else PREFIX=""; fi
+
   # Actually generate the documentation
-  jazzy --config "$FB_SDK_ROOT"/.jazzy.yaml --framework-root "$FB_SDK_ROOT"/"$KITREFDOCS" --umbrella-header "$FB_SDK_ROOT"/"$KITREFDOCS"/"$KITREFDOCS"/"$KITREFDOCS".h --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS"
+  jazzy \
+    --config "$FB_SDK_ROOT"/.jazzy.yaml \
+    --framework-root "$FB_SDK_ROOT"/"$PREFIX$KITREFDOCS" \
+    --umbrella-header "$FB_SDK_ROOT"/"$PREFIX$KITREFDOCS"/"$KITREFDOCS"/"$KITREFDOCS".h \
+    --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS"
 
   # Zip the result so it can be uploaded easily
   pushd $FB_SDK_ROOT/docs/
