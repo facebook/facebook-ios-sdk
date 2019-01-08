@@ -289,10 +289,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD
 #endif
                       ];
-  NSString *advertiserID = [FBSDKAppEventsUtility advertiserID] ?: @"";
-  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields": [fields componentsJoinedByString:@","],
-                                @"advertiser_id": advertiserID
-                                };
+  NSDictionary<NSString *, NSString *> *parameters = @{ @"fields": [fields componentsJoinedByString:@","]};
 
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:appID
                                                                  parameters:parameters
