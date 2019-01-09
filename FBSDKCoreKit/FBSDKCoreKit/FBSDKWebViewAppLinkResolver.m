@@ -241,7 +241,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
 /*
  Converts app link data into a FBSDKAppLink containing the targets relevant for this platform.
  */
-- (FBSDKAppLink *)appLinkFromALData:(NSDictionary<NSString *, id> *)appLinkDict destination:(NSURL *)destination {
+- (FBSDKAppLink *)appLinkFromALData:(nonnull NSDictionary<NSString *, id> *)appLinkDict destination:(nonnull NSURL * )destination {
     NSMutableArray<FBSDKAppLinkTarget *> *linkTargets = [NSMutableArray array];
 
     NSArray *platformData = nil;
