@@ -49,7 +49,8 @@ do
     --config "$FB_SDK_ROOT"/.jazzy.yaml \
     --framework-root "$FB_SDK_ROOT"/"$PREFIX$KITREFDOCS" \
     --umbrella-header "$FB_SDK_ROOT"/"$PREFIX$KITREFDOCS"/"$KITREFDOCS"/"$KITREFDOCS".h \
-    --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS"
+    --output "$FB_SDK_ROOT"/docs/"$KITREFDOCS" \
+    --readme /dev/null
 
   # Zip the result so it can be uploaded easily
   pushd $FB_SDK_ROOT/docs/
