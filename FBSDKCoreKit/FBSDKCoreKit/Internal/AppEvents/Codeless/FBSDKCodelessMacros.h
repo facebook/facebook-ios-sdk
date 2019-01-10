@@ -62,7 +62,7 @@
 #define CODELESS_SETUP_ENABLED_KEY              @"codeless_setup_enabled"
 #define CODELESS_SETTING_KEY                    @"com.facebook.sdk:codelessSetting%@"
 #define CODELESS_SETTING_TIMESTAMP_KEY          @"codeless_setting_timestamp"
-#define CODELESS_SETTING_CACHE_TIMEOUT          (7 * 24 * 3600)
+#define CODELESS_SETTING_CACHE_TIMEOUT          (7 * 24 * 60 * 60)
 
 //  keys for view tree
 #define CODELESS_VIEW_TREE_CLASS_NAME_KEY       @"classname"

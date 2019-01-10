@@ -59,7 +59,8 @@ static NSString *_lastTreeHash;
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
   NSString *appID = [FBSDKSettings appID];
-  if (appID == nil) {
+  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
+  if (appID == nil || !serverConfiguration || !serverConfiguration.codelessEventsEnabled) {
     return;
   }
 
