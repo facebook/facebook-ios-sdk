@@ -1,1 +1,1 @@
-github "facebook/facebook-objc-sdk" "master"
+github "facebook/facebook-objc-sdk" ~> 4.39
