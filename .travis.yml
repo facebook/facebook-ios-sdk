@@ -6,7 +6,7 @@ env:
   - XCODE_WORKSPACE=FacebookSDK.xcworkspace
 
 stages:
-  # - test
+  - test
   - name: deploy
     if: tag IS present
 
