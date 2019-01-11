@@ -10,10 +10,6 @@ stages:
   - name: deploy
     if: tag IS present
 
-branches:
-  only:
-  - master
-
 jobs:
   include:
   - name: "Xcode - iOS 12.0"
