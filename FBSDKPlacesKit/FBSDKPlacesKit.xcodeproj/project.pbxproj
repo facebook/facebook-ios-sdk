@@ -604,7 +604,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/build-universal-framework.sh\n";
+			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

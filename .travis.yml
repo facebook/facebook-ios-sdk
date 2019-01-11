@@ -1,94 +1,71 @@
 language: objective-c
 os: osx
-osx_image: xcode10
 
 env:
   global:
-  - SCRIPT_ENV=TRAVISCI
   - XCODE_WORKSPACE=FacebookSDK.xcworkspace
 
-matrix:
-  include:
-  - name: "iOS 12.0"
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=iphonesimulator12.0
-    - XCODE_SCHEME=BuildAllKits
-  - name: "tvOS 12.0"
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=appletvsimulator12.0
-    - XCODE_SCHEME=BuildAllKits_TV
-  - name: "iOS 11.0"
-    osx_image: xcode9.4
-    env:
-    - MATRIX_TYPE=Xcode
-    - XCODE_SDK=iphonesimulator11.4
-    - XCODE_SCHEME=BuildAllKits
-  - name: "Carthage Xcode 10"
-    env:
-    - MATRIX_TYPE=Carthage
+stages:
+  # - test
+  - name: deploy
+    if: tag IS present
 
 branches:
   only:
   - master
 
+jobs:
+  include:
+  - name: "Xcode - iOS 12.0"
+    osx_image: xcode10.1
+    env:
+    - XCODE_SDK=iphonesimulator12.1
+    - XCODE_SCHEME=BuildAllKits
+  - name: "Xcode - tvOS 12.0"
+    osx_image: xcode10.1
+    env:
+    - XCODE_SDK=appletvsimulator12.1
+    - XCODE_SCHEME=BuildAllKits_TV
+  - name: "Xcode - iOS 11.4"
+    osx_image: xcode9.4
+    env:
+    - XCODE_SDK=iphonesimulator11.4
+    - XCODE_SCHEME=BuildAllKits
+  - name: "Carthage - Xcode 10.1"
+    osx_image: xcode10.1
+    if: tag IS blank
+  - stage: deploy
+    name: "Release"
+    osx_image: xcode10.1
+    script: sh scripts/run.sh build carthage --archive
+    deploy:
+      provider: releases
+      api_key:
+        secure: BSTnHjigw154gY3ETTqZwYkwPweF43dukZIqrJUKDKiyYc7VI//ibYprkNYbrluVW3pZOfbgHYamM9Vxi9HG0eA/5Wuq3WACfqh7eLcqO5up/lK0zzbntFHQp/olel/TqlX+cqYRLjjN1Atlokvl+sFhN8CUpirRdrW/Cg+buQFUvbiIAU7uey7fanG29Y5fy+JpVHpYE7rbQq3Z+pSTRrfEbJHsLenzV5mi8argqFwd7cLN+NrpGQYLEO92CXZGuBP1ksSecNIcZb8bgRnojnhf1NeZB2h6sf37OPtRnOgqUaOSlP+uqO0ydxXjjEFhcnsZUpqAod66k9210WiaxzciVIYgcEg4Vr/OkJhTcZON+iUbySKDpdO4hE2B5UI1Z+3xPk99lXN3AlceO2McdKK89QfRjHeQzUEjGi58ByGVyNlB4lUImHq1UVPMFYeLv4XwTO9OvG/1bfnb8IiFI2sp4lJfrBPHr5kcAvaETIAO9gjfseMF5I90KniyzUf3hH/88N1z04RtBdFZU1QdIwYzrxsdPqz4AIquwH3XYwYr4LTsTK7Ed73TFkwP+GOxdWZ7/LUoSRAVxEdg7hwmGXdAObF7XsG2xd9TQ0KNuoxmuxpt85lDZBdvNCvTJdmv5i8ypVut81zybeYWNgL6YRJuW7o3/UeF6fzwCbRatUY=
+      file: Carthage/Release/*
+      file_glob: true
+      skip_cleanup: true
+      on:
+        tags: true
+        branch: master
+
 before_install:
-- echo "Will update Brew"
 - brew update
 
 install:
-- echo "Will Bundle Brew"
 - bundle install
 - brew bundle
 
 before_script:
-- echo "Will start scripts"
+- sh scripts/test_scripts.sh
 
 script:
-- echo "Did start scripts"
-- echo "Env $SCRIPT_ENV $TEST_GLOBAL $MATRIX_TYPE $XCODE_SDK $XCODE_SCHEME $XCODE_DESTINATION"
-- |
-  if [ "$MATRIX_TYPE" = Carthage ]; then
-    carthage build --no-skip-current
-  elif [ "$MATRIX_TYPE" = Xcode ]; then
-    xcodebuild build \
-      -workspace $XCODE_WORKSPACE \
-      -sdk $XCODE_SDK \
-      -scheme $XCODE_SCHEME \
-      -configuration Debug | \
-      xcpretty
-  fi
+- BUILD_TYPE=$(echo "$TRAVIS_JOB_NAME" | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+- sh scripts/run.sh build $BUILD_TYPE $XCODE_WORKSPACE $XCODE_SDK $XCODE_SCHEME
 
-after_success:
-- echo "Did succeed"
-
-after_failure:
-- echo "Did fail"
-
-after_script:
-- echo "Did complete scripts"
-
-before_deploy:
-- echo "Will deploy"
-- test $TRAVIS_TEST_RESULT = 0
-
-deploy:
-- provider: script
-  script: echo "Should deploy"
-  on:
-    tags: true
-    branch: master
-
-after_deploy:
-- echo "Did deploy"
-
-notifications: # set notification options
+notifications:
   email:
     on_success: change
     on_failure: always
     recipients:
-      - codytwinton@fb.com
-  # Enable webhooks later
-  # webhooks:
-    # on_failure: always
+    - codytwinton@fb.com
