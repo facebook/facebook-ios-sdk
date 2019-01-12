@@ -20,17 +20,19 @@
 
 @class FBSDKAccessToken;
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
 
   Callback block for returning an array of FBSDKAccessToken instances (and possibly `NSNull` instances); or an error.
  */
-typedef void (^FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)(NSArray *tokens, NSError *error) ;
+typedef void (^FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)(NSArray<FBSDKAccessToken *> * _Nullable tokens, NSError * _Nullable error);
 
 /**
 
   Callback block for removing a test user.
  */
-typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError *error) ;
+typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError * _Nullable error);
 
 
 /**
@@ -74,24 +76,24 @@ typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError *error) ;
  `arrayOfPermissionsArrays` so that the most number of permissions come first to minimize creation of new
  test accounts.
  */
-- (void)requestTestAccountTokensWithArraysOfPermissions:(NSArray *)arraysOfPermissions
+- (void)requestTestAccountTokensWithArraysOfPermissions:(NSArray<NSSet<NSString *> *> * _Nullable)arraysOfPermissions
                                        createIfNotFound:(BOOL)createIfNotFound
-                                      completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)handler;
+                                      completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler _Nullable)handler;
 
 /**
   add a test account with the specified permissions
  @param permissions the set of permissions, e.g., [NSSet setWithObjects:@"email", @"user_friends"]
  @param handler the callback handler
  */
-- (void)addTestAccountWithPermissions:(NSSet *)permissions
-                    completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)handler;
+- (void)addTestAccountWithPermissions:(NSSet<NSString *> *)permissions
+                    completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler _Nullable)handler;
 
 /**
   remove a test account for the given user id
  @param userId the user id
  @param handler the callback handler
  */
-- (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler)handler;
+- (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler _Nullable)handler;
 
 /**
   Make two test users friends with each other.
@@ -99,6 +101,8 @@ typedef void (^FBSDKTestUsersManagerRemoveTestAccountHandler)(NSError *error) ;
  @param second the token of the second user
  @param callback the callback handler
  */
-- (void)makeFriendsWithFirst:(FBSDKAccessToken *)first second:(FBSDKAccessToken *)second callback:(void (^)(NSError *))callback;
+- (void)makeFriendsWithFirst:(FBSDKAccessToken *)first second:(FBSDKAccessToken *)second callback:(void (^ _Nullable)(NSError * _Nullable))callback;
 
 @end
+
+NS_ASSUME_NONNULL_END
