@@ -61,9 +61,9 @@ static NSMutableDictionary *gInstancesDictionary;
   return gInstancesDictionary[instanceKey];
 }
 
-- (void)requestTestAccountTokensWithArraysOfPermissions:(NSArray<NSSet<NSString *> *> * _Nullable)arraysOfPermissions
+- (void)requestTestAccountTokensWithArraysOfPermissions:(NSArray *)arraysOfPermissions
                                        createIfNotFound:(BOOL)createIfNotFound
-                                      completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler _Nullable)handler {
+                                      completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)handler {
   arraysOfPermissions = arraysOfPermissions ?: @[[NSSet set]];
 
   // wrap work in a block so that we can chain it to after a fetch of existing accounts if we need to.
@@ -122,8 +122,8 @@ static NSMutableDictionary *gInstancesDictionary;
   }
 }
 
-- (void)addTestAccountWithPermissions:(NSSet<NSString *> *)permissions
-                    completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler _Nullable)handler {
+- (void)addTestAccountWithPermissions:(NSSet *)permissions
+                    completionHandler:(FBSDKTestUsersManagerRetrieveTestAccountTokensHandler)handler {
   NSDictionary *params = @{
                            @"installed" : @"true",
                            @"permissions" : [permissions.allObjects componentsJoinedByString:@","],
@@ -155,8 +155,7 @@ static NSMutableDictionary *gInstancesDictionary;
   }];
 }
 
-- (void)makeFriendsWithFirst:(FBSDKAccessToken *)first second:(FBSDKAccessToken *)second
-                    callback:(void (^ _Nullable)(NSError * _Nullable))callback;
+- (void)makeFriendsWithFirst:(FBSDKAccessToken *)first second:(FBSDKAccessToken *)second callback:(void (^)(NSError *))callback
 {
   __block int expectedCount = 2;
   void (^complete)(NSError *) = ^(NSError *error) {
@@ -193,7 +192,7 @@ static NSMutableDictionary *gInstancesDictionary;
   [conn start];
 }
 
-- (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler _Nullable)handler {
+- (void)removeTestAccount:(NSString *)userId completionHandler:(FBSDKTestUsersManagerRemoveTestAccountHandler)handler {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:userId
                                                                  parameters:nil
                                                                 tokenString:self.appAccessToken
