@@ -39,7 +39,7 @@
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
-#import "FBSDKBoltsMeasurementEventListener.h"
+#import "FBSDKMeasurementEventListener.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKContainerViewController.h"
@@ -104,8 +104,8 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     [[self sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchData];
 
 #if !TARGET_OS_TV
-    // Register Listener for Bolts measurement events
-    [FBSDKBoltsMeasurementEventListener defaultListener];
+    // Register Listener for App Link measurement events
+    [FBSDKMeasurementEventListener defaultListener];
 #endif
     // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
     [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]

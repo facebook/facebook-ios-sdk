@@ -69,11 +69,7 @@ typedef void (^FBSDKDeferredAppInviteHandler)(NSURL *url);
 DEPRECATED_MSG_ATTRIBUTE("This method is no longer available.");
 
 /*
-  Call this method to fetch promotion code from the url, if it's present. This function
- requires Bolts framework.
-
- Note: This throws an exception if Bolts.framework is not linked. Add '[BFURL class]' in intialize method
- of your AppDelegate.
+  Call this method to fetch promotion code from the url, if it's present.
 
  @param url App Link url that was passed to the app.
 

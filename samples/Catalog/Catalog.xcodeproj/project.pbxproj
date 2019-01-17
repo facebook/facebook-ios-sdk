@@ -26,7 +26,6 @@
 		93DA31091BDE0BB200C9D5A1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93DA31081BDE0BB200C9D5A1 /* CoreGraphics.framework */; };
 		93E4B5921C3B42E500A21170 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */; };
 		93E4B5931C3B42E500A21170 /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */; };
-		93E4B5941C3B42E500A21170 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5901C3B42E500A21170 /* Bolts.framework */; };
 		93E4B5951C3B42E500A21170 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */; };
 		93E4B5971C3B464F00A21170 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */; };
 		93E4B5991C3B466D00A21170 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93E4B5981C3B466D00A21170 /* UIKit.framework */; };
@@ -72,7 +71,6 @@
 		93E4B57F1C3B406F00A21170 /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Project.xcconfig; path = ../Configurations/Project.xcconfig; sourceTree = "<group>"; };
 		93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../build/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
-		93E4B5901C3B42E500A21170 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../build/Bolts.framework; sourceTree = "<group>"; };
 		93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		93E4B5981C3B466D00A21170 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -93,7 +91,6 @@
 				93E4B5921C3B42E500A21170 /* FBSDKShareKit.framework in Frameworks */,
 				93DA31091BDE0BB200C9D5A1 /* CoreGraphics.framework in Frameworks */,
 				93E4B5931C3B42E500A21170 /* FBSDKLoginKit.framework in Frameworks */,
-				93E4B5941C3B42E500A21170 /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,7 +178,6 @@
 				93E4B5961C3B464F00A21170 /* MobileCoreServices.framework */,
 				93E4B58E1C3B42E500A21170 /* FBSDKShareKit.framework */,
 				93E4B58F1C3B42E500A21170 /* FBSDKLoginKit.framework */,
-				93E4B5901C3B42E500A21170 /* Bolts.framework */,
 				93E4B5911C3B42E500A21170 /* FBSDKCoreKit.framework */,
 				93DA31081BDE0BB200C9D5A1 /* CoreGraphics.framework */,
 			);

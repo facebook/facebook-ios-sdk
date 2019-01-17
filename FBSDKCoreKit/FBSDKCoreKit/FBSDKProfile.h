@@ -111,7 +111,7 @@ FOUNDATION_EXPORT NSString *const FBSDKProfileChangeNewKey;
 /**
   A URL to the user's profile.
 
- Consider using Bolts and `FBSDKAppLinkResolver` to resolve this
+ Consider using `FBSDKAppLinkResolver` to resolve this
  to an app link to link directly to the user's profile in the Facebook app.
  */
 @property (nonatomic, readonly) NSURL *linkURL;

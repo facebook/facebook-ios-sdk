@@ -42,7 +42,6 @@
 		85C69D741602B098008AD9A0 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D711602B098008AD9A0 /* Default-568h@2x.png */; };
 		85C69D751602B098008AD9A0 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D721602B098008AD9A0 /* Default.png */; };
 		85C69D761602B098008AD9A0 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 85C69D731602B098008AD9A0 /* Default@2x.png */; };
-		9D7073461AA8D194000230AC /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D70729A1AA8D193000230AC /* Bolts.framework */; };
 		DB8278D01AAFB72E004247DA /* RPSFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */; };
 		DBCEEA4E1A95439C00D2C8AE /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */; };
 		DBCEEA4F1A95439C00D2C8AE /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */; };
@@ -96,7 +95,6 @@
 		8986C7F01890A571004B90DD /* Project-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
 		8986C7F11890A571004B90DD /* Project-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "Project-Release.xcconfig"; sourceTree = "<group>"; };
 		8986C7F21890A571004B90DD /* Project.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Project.xcconfig; sourceTree = "<group>"; };
-		9D70729A1AA8D193000230AC /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../build/Bolts.framework; sourceTree = "<group>"; };
 		9D9ACC431ABFBD9B0050BF2E /* ReadMe.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; };
 		DB8278CE1AAFB715004247DA /* RPSFriendsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RPSFriendsViewController.h; sourceTree = "<group>"; };
 		DB8278CF1AAFB72E004247DA /* RPSFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RPSFriendsViewController.m; sourceTree = "<group>"; };
@@ -117,7 +115,6 @@
 				84070D1B1540AA2B00E39703 /* UIKit.framework in Frameworks */,
 				84070D1D1540AA2B00E39703 /* Foundation.framework in Frameworks */,
 				84070D1F1540AA2B00E39703 /* CoreGraphics.framework in Frameworks */,
-				9D7073461AA8D194000230AC /* Bolts.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,7 +146,6 @@
 			isa = PBXGroup;
 			children = (
 				84EB807017033179007561AE /* AVFoundation.framework */,
-				9D70729A1AA8D193000230AC /* Bolts.framework */,
 				84070D1E1540AA2B00E39703 /* CoreGraphics.framework */,
 				DBCEEA4B1A95439C00D2C8AE /* FBSDKCoreKit.framework */,
 				DBCEEA4C1A95439C00D2C8AE /* FBSDKLoginKit.framework */,

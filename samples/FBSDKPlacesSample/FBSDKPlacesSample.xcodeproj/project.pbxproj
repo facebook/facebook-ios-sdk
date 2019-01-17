@@ -13,7 +13,6 @@
 		41128B3F1E9EBC58007C0E88 /* Project.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 41128B3B1E9EBC58007C0E88 /* Project.xcconfig */; };
 		4120F5F31E73752F006D9380 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4120F5F11E73752F006D9380 /* Main.storyboard */; };
 		4120F5F61E737535006D9380 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4120F5F41E737535006D9380 /* LaunchScreen.storyboard */; };
-		412C1C9A1E81B97300BBA19E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412C1C951E81B97300BBA19E /* Bolts.framework */; };
 		412C1C9B1E81B97300BBA19E /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412C1C961E81B97300BBA19E /* FBSDKCoreKit.framework */; };
 		412C1C9C1E81B97300BBA19E /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412C1C971E81B97300BBA19E /* FBSDKLoginKit.framework */; };
 		412C1C9D1E81B97300BBA19E /* FBSDKPlacesKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412C1C981E81B97300BBA19E /* FBSDKPlacesKit.framework */; };
@@ -38,7 +37,6 @@
 		4117F43C1E492495005F8991 /* FBSDKPlacesSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FBSDKPlacesSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4120F5F21E73752F006D9380 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = FBSDKPlacesSample/Base.lproj/Main.storyboard; sourceTree = SOURCE_ROOT; };
 		4120F5F51E737535006D9380 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = FBSDKPlacesSample/Base.lproj/LaunchScreen.storyboard; sourceTree = SOURCE_ROOT; };
-		412C1C951E81B97300BBA19E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../build/Bolts.framework; sourceTree = "<group>"; };
 		412C1C961E81B97300BBA19E /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		412C1C971E81B97300BBA19E /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../build/FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		412C1C981E81B97300BBA19E /* FBSDKPlacesKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKPlacesKit.framework; path = ../../build/FBSDKPlacesKit.framework; sourceTree = "<group>"; };
@@ -67,7 +65,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				41D778B41E9806E100590979 /* MapKit.framework in Frameworks */,
-				412C1C9A1E81B97300BBA19E /* Bolts.framework in Frameworks */,
 				412C1C9B1E81B97300BBA19E /* FBSDKCoreKit.framework in Frameworks */,
 				412C1C9C1E81B97300BBA19E /* FBSDKLoginKit.framework in Frameworks */,
 				412C1C9D1E81B97300BBA19E /* FBSDKPlacesKit.framework in Frameworks */,
@@ -137,7 +134,6 @@
 			isa = PBXGroup;
 			children = (
 				41D778B31E9806E100590979 /* MapKit.framework */,
-				412C1C951E81B97300BBA19E /* Bolts.framework */,
 				412C1C961E81B97300BBA19E /* FBSDKCoreKit.framework */,
 				412C1C971E81B97300BBA19E /* FBSDKLoginKit.framework */,
 				412C1C981E81B97300BBA19E /* FBSDKPlacesKit.framework */,

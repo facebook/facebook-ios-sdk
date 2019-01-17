@@ -370,5 +370,4 @@ setJSONStringForObject:(id)object
 
 #define FB_BASE_URL @"facebook.com"
 
-+ (Class)resolveBoltsClassWithName:(NSString *)className;
 @end

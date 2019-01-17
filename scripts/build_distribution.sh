@@ -295,8 +295,6 @@ else
 		  || die "Could not copy FBSDKShareKit.framework"
 		\cp -R "$FB_SDK_BUILD"/FBSDKPlacesKit.framework "$FB_SDK_BUILD_PACKAGE" \
 			|| die "Could not copy FBSDKPlacesKit.framework"
-		\cp -R "$FB_SDK_BUILD"/Bolts.framework "$FB_SDK_BUILD_PACKAGE" \
-		  || die "Could not copy Bolts.framework"
 		\cp -R $"$FB_SDK_ROOT"/FacebookSDKStrings.bundle "$FB_SDK_BUILD_PACKAGE" \
 		  || die "Could not copy FacebookSDKStrings.bundle"
 		for SAMPLE in Configurations Iconicus RPSSample Scrumptious ShareIt SwitchUserSample FBSDKPlacesSample; do
@@ -310,7 +308,7 @@ else
 
 		# Fixup projects to point to the SDK framework
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
-		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Carthage/Checkouts/Bolts-ObjC/build/ios||g' \
+		  sed 's|\(\.\.\(/\.\.\)*\)/build|\1|g;s|\.\.\(/\.\.\)*/Carthage/Checkouts/build/ios||g' \
 		    ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 		done
 		for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \

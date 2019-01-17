@@ -764,19 +764,6 @@ static NSMapTable *_transientObjects;
   return YES;
 }
 
-+ (Class)resolveBoltsClassWithName:(NSString *)className;
-{
-  Class clazz = NSClassFromString(className);
-  if (clazz == nil) {
-    NSString *message = [NSString stringWithFormat:@"Unable to load class %@. Did you link Bolts.framework?", className];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:message
-                                 userInfo:nil];
-  }
-
-  return clazz;
-}
-
 + (BOOL)isUnity
 {
   NSString *userAgentSuffix = [FBSDKSettings userAgentSuffix];

@@ -48,20 +48,6 @@
                ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81ED94111BE147CF00795F05"
-               BuildableName = "Bolts.framework"
-               BlueprintName = "Bolts-iOS"
-               ReferencedContainer = "container:../Carthage/Checkouts/Bolts-ObjC/Bolts.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
