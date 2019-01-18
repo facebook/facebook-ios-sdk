@@ -26,7 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSErrorDomain const FBSDKTVOSErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const FBSDKTVOSErrorDomain
+NS_SWIFT_NAME(TVOSErrorDomain);
 
 #else
 
@@ -34,7 +35,8 @@ FOUNDATION_EXPORT NSErrorDomain const FBSDKTVOSErrorDomain;
  @abstract The error domain for all errors from FBSDKTVOSKit.
  @discussion Error codes from the SDK in the range 400-499 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSString *const FBSDKTVOSErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKTVOSErrorDomain
+NS_SWIFT_NAME(TVOSErrorDomain);
 
 #endif
 
@@ -53,15 +55,6 @@ typedef NS_ERROR_ENUM(FBSDKTVOSErrorDomain, FBSDKTVOSError)
    @abstract The error code for unknown errors.
    */
   FBSDKTVOSErrorUnknown,
-};
-
-/**
- Deprecated
- */
-typedef NS_ENUM(NSInteger, FBSDKTVOSErrorCode)
-{
-  FBSDKTVOSReservedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSErrorReserved instead") = 400,
-  FBSDKTVOSUnknownErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSErrorUnknown instead"),
-} DEPRECATED_MSG_ATTRIBUTE("use FBSDKTVOSError instead");
+} NS_SWIFT_NAME(TVOSError);
 
 NS_ASSUME_NONNULL_END

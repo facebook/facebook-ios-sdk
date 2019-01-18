@@ -42,6 +42,7 @@ NS_ASSUME_NONNULL_BEGIN
  - `redirectURL` an optional URL to redirect the user to after completing the login.
 
  */
+NS_SWIFT_NAME(FBTVLoginButtonElement)
 @interface FBSDKTVLoginButtonElement : TVViewElement <FBSDKDeviceLoginButtonDelegate>
 
 @end

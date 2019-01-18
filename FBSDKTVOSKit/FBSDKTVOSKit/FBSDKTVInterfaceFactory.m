@@ -56,23 +56,17 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   id<TVInterfaceCreating> _interfaceCreator;
 }
 
-- (instancetype)init {
-  return [self initWithInterfaceCreator:nil];
-}
-
 - (instancetype)initWithInterfaceCreator:(id<TVInterfaceCreating>)interfaceCreator
 {
   if ((self = [super init])) {
     _interfaceCreator = interfaceCreator;
   }
-  return self;
-}
 
-+ (void)initialize
-{
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginButtonElement class] forElementName:FBSDKLoginButtonTag];
   [TVElementFactory registerViewElementClass:[FBSDKTVLoginViewControllerElement class] forElementName:FBSDKLoginViewControllerTag];
   [TVElementFactory registerViewElementClass:[FBSDKTVShareButtonElement class] forElementName:FBSDKShareButtonTag];
+
+  return self;
 }
 
 #pragma mark - TVInterfaceCreating

@@ -34,6 +34,7 @@ NS_ASSUME_NONNULL_BEGIN
  `FBSDKLoginButton` has an instrinsic size and you should avoid changing its dimensions. `initWithFrame:CGRectZero`
  will size the button to its desired frame.
  */
+NS_SWIFT_NAME(FBDeviceLoginButton)
 @interface FBSDKDeviceLoginButton : FBSDKDeviceButton
 
 /*!
@@ -49,7 +50,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
-@property (nullable, nonatomic, copy) NSArray<NSString *> *publishPermissions;
+@property (nonatomic, copy) NSArray<NSString *> *publishPermissions;
 
 /*!
  @abstract The read permissions to request.
@@ -58,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
 
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
-@property (nullable, nonatomic, copy) NSArray<NSString *> *readPermissions;
+@property (nonatomic, copy) NSArray<NSString *> *readPermissions;
 
 /*!
  @abstract the optional URL to redirect the user to after they complete the login.
@@ -72,6 +73,7 @@ NS_ASSUME_NONNULL_BEGIN
  @protocol
  @abstract A delegate protocol for `FBSDKDeviceLoginButton`
  */
+NS_SWIFT_NAME(DeviceLoginButtonDelegate)
 @protocol FBSDKDeviceLoginButtonDelegate <NSObject>
 
 /*!
@@ -82,7 +84,8 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @abstract Indicates the login finished. The `FBSDKAccessToken.currentAccessToken` will be set.
  */
-- (void)deviceLoginButtonDidLogIn:(FBSDKDeviceLoginButton *)button;
+- (void)deviceLoginButtonDidLogIn:(FBSDKDeviceLoginButton *)button
+NS_SWIFT_NAME(deviceLoginButtonDidLogIn(_:));
 
 /*!
  @abstract Indicates the logout finished. The `FBSDKAccessToken.currentAccessToken` will be nil.
@@ -93,11 +96,6 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract Indicates an error with the login.
  */
 - (void)deviceLoginButton:(FBSDKDeviceLoginButton *)button didFailWithError:(NSError *)error;
-
-@optional
-
-- (void)deviceLoginButtonDidFail:(FBSDKDeviceLoginButton *)button error:(NSError *)error
-DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginButton:didFailWithError:`");
 
 @end
 

@@ -110,13 +110,8 @@
         [self _cancel];
       } else if (token != nil) {
         [self _notifySuccessForDelegate:delegate token:token];
-      } else if ([delegate respondsToSelector:@selector(deviceLoginViewController:didFailWithError:)]) {
+      } else {
         [delegate deviceLoginViewController:self didFailWithError:error];
-      } else if ([delegate respondsToSelector:@selector(deviceLoginViewControllerDidFail:error:)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        [delegate deviceLoginViewControllerDidFail:self error:error];
-#pragma clang diagnostic pop
       }
     }];
   }

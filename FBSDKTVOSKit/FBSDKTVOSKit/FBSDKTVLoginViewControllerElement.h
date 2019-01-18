@@ -54,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  These events can bubble up the DOM.
  */
 
+NS_SWIFT_NAME(FBTVLoginViewControllerElement)
 @interface FBSDKTVLoginViewControllerElement : TVViewElement <FBSDKDeviceLoginViewControllerDelegate>
 
 @end

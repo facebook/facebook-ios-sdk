@@ -40,12 +40,11 @@ NS_ASSUME_NONNULL_BEGIN
  * `<FBSDKShareButton />` (see FBSDKTVShareButtonElement.h for details)
 
  */
+NS_SWIFT_NAME(TVInterfaceFactory)
 @interface FBSDKTVInterfaceFactory : NSObject <TVInterfaceCreating>
 
-/*!
- @abstract The default initializer.
- */
-- (instancetype)init;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 /*!
  @abstract The designated initializer which can chain a `<TVInterfaceCreating>` implementation.

@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
 /*!
  @abstract A delegate for `FBSDKDeviceLoginViewController`
  */
+NS_SWIFT_NAME(DeviceLoginViewControllerDelegate)
 @protocol FBSDKDeviceLoginViewControllerDelegate <NSObject>
 
 /*!
@@ -43,11 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract Indicates an error with the login.
 */
 - (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error;
-
-@optional
-
-- (void)deviceLoginViewControllerDidFail:(FBSDKDeviceLoginViewController *)viewController error:(NSError *)error
-DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginViewController:didFailWithError:`");
 
 @end
 
@@ -68,6 +64,7 @@ DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginViewController:didFailWithError:`
                     animated:YES
                   completion:NULL];
  */
+NS_SWIFT_NAME(FBDeviceLoginViewController)
 @interface FBSDKDeviceLoginViewController : FBSDKDeviceViewControllerBase
 
 /*!
@@ -83,7 +80,7 @@ DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginViewController:didFailWithError:`
 
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
-@property (nullable, nonatomic, copy) NSArray<NSString *> *publishPermissions;
+@property (nonatomic, copy) NSArray<NSString *> *publishPermissions;
 
 /*!
  @abstract The read permissions to request.
@@ -92,7 +89,7 @@ DEPRECATED_MSG_ATTRIBUTE("Renamed: `deviceLoginViewController:didFailWithError:`
 
  See [the permissions guide](https://developers.facebook.com/docs/facebook-login/permissions/) for more details.
  */
-@property (nullable, nonatomic, copy) NSArray<NSString *> *readPermissions;
+@property (nonatomic, copy) NSArray<NSString *> *readPermissions;
 
 /*!
  @abstract the optional URL to redirect the user to after they complete the login.
