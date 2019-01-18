@@ -20,6 +20,7 @@
 
 #import "FBSDKLikeBoxView.h"
 
+NS_SWIFT_NAME(FBLikeBoxBorderView)
 @interface FBSDKLikeBoxBorderView : UIView
 
 @property (nonatomic, assign) CGFloat borderCornerRadius;

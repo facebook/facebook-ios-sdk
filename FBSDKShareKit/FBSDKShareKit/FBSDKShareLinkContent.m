@@ -16,23 +16,19 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKShareLinkContent+Internal.h"
+#import "FBSDKShareLinkContent.h"
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKHashtag.h"
 #import "FBSDKShareUtility.h"
 
-#define FBSDK_SHARE_STATUS_CONTENT_CONTENT_DESCRIPTION_KEY @"contentDescription"
-#define FBSDK_SHARE_STATUS_CONTENT_CONTENT_TITLE_KEY @"contentTitle"
 #define FBSDK_SHARE_STATUS_CONTENT_CONTENT_URL_KEY @"contentURL"
 #define FBSDK_SHARE_STATUS_CONTENT_HASHTAG_KEY @"hashtag"
-#define FBSDK_SHARE_STATUS_CONTENT_IMAGE_URL_KEY @"imageURL"
 #define FBSDK_SHARE_STATUS_CONTENT_PEOPLE_IDS_KEY @"peopleIDs"
 #define FBSDK_SHARE_STATUS_CONTENT_PLACE_ID_KEY @"placeID"
 #define FBSDK_SHARE_STATUS_CONTENT_REF_KEY @"ref"
 #define FBSDK_SHARE_STATUS_CONTENT_PAGE_ID_KEY @"pageID"
 #define FBSDK_SHARE_STATUS_CONTENT_QUOTE_TEXT_KEY @"quote"
-#define FBSDK_SHARE_STATUS_CONTENT_FEED_PARAMETERS_KEY @"feedParameters"
 #define FBSDK_SHARE_STATUS_CONTENT_UUID_KEY @"uuid"
 
 @implementation FBSDKShareLinkContent
@@ -45,7 +41,6 @@
 @synthesize placeID = _placeID;
 @synthesize ref = _ref;
 @synthesize pageID = _pageID;
-@synthesize feedParameters = _feedParameters;
 @synthesize quote = _quote;
 @synthesize shareUUID = _shareUUID;
 
@@ -62,7 +57,7 @@
 
 #pragma mark - Setters
 
-- (void)setPeopleIDs:(NSArray *)peopleIDs
+- (void)setPeopleIDs:(NSArray<NSString *> *)peopleIDs
 {
   [FBSDKShareUtility assertCollection:peopleIDs ofClass:[NSString class] name:@"peopleIDs"];
   if (![FBSDKInternalUtility object:_peopleIDs isEqualToObject:peopleIDs]) {
@@ -70,20 +65,7 @@
   }
 }
 
-- (void)setFeedParameters:(NSDictionary *)feedParameters
-{
-  if (![_feedParameters isEqualToDictionary:feedParameters]) {
-    _feedParameters = [feedParameters copy];
-  }
-}
-
 #pragma mark - FBSDKSharingContent
-
-- (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
-          bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-{
-  [parameters addEntriesFromDictionary:[self addParameters:parameters bridgeOptions:bridgeOptions]];
-}
 
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
@@ -91,13 +73,6 @@
   NSMutableDictionary<NSString *, id> *updatedParameters = [NSMutableDictionary dictionaryWithDictionary:existingParameters];
 
   [FBSDKInternalUtility dictionary:updatedParameters setObject:_contentURL forKey:@"link"];
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [FBSDKInternalUtility dictionary:updatedParameters setObject:_contentTitle forKey:@"name"];
-  [FBSDKInternalUtility dictionary:updatedParameters setObject:_contentDescription forKey:@"description"];
-  [FBSDKInternalUtility dictionary:updatedParameters setObject:_imageURL forKey:@"picture"];
-#pragma clang diagnostic pop
   [FBSDKInternalUtility dictionary:updatedParameters setObject:_quote forKey:@"quote"];
 
   /**
@@ -113,11 +88,7 @@
 
 - (BOOL)validateWithOptions:(FBSDKShareBridgeOptions)bridgeOptions error:(NSError *__autoreleasing *)errorRef
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  return ([FBSDKShareUtility validateNetworkURL:_contentURL name:@"contentURL" error:errorRef] &&
-          [FBSDKShareUtility validateNetworkURL:_imageURL name:@"imageURL" error:errorRef]);
-#pragma clang diagnostic pop
+  return [FBSDKShareUtility validateNetworkURL:_contentURL name:@"contentURL" error:errorRef];
 }
 
 #pragma mark - Equality
@@ -125,16 +96,12 @@
 - (NSUInteger)hash
 {
   NSUInteger subhashes[] = {
-    _contentDescription.hash,
     _contentURL.hash,
     _hashtag.hash,
-    _imageURL.hash,
     _peopleIDs.hash,
     _placeID.hash,
     _ref.hash,
     _pageID.hash,
-    _contentTitle.hash,
-    _feedParameters.hash,
     _quote.hash,
     _shareUUID.hash,
   };
@@ -154,22 +121,15 @@
 
 - (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content
 {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   return (content &&
-          [FBSDKInternalUtility object:_contentDescription isEqualToObject:content.contentDescription] &&
-          [FBSDKInternalUtility object:_contentTitle isEqualToObject:content.contentTitle] &&
           [FBSDKInternalUtility object:_contentURL isEqualToObject:content.contentURL] &&
           [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
-          [FBSDKInternalUtility object:_feedParameters isEqualToObject:content.feedParameters] &&
-          [FBSDKInternalUtility object:_imageURL isEqualToObject:content.imageURL] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
           [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID] &&
           [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID]) &&
           [FBSDKInternalUtility object:_quote isEqualToObject:content.quote];
-#pragma clang diagnostic pop
 }
 
 #pragma mark - NSCoding
@@ -182,13 +142,8 @@
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
   if ((self = [self init])) {
-    _contentDescription = [decoder decodeObjectOfClass:[NSString class]
-                                                forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_DESCRIPTION_KEY];
-    _contentTitle = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_TITLE_KEY];
     _contentURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_URL_KEY];
-    _feedParameters = [decoder decodeObjectOfClass:[NSDictionary class] forKey:FBSDK_SHARE_STATUS_CONTENT_FEED_PARAMETERS_KEY];
     _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_STATUS_CONTENT_HASHTAG_KEY];
-    _imageURL = [decoder decodeObjectOfClass:[NSURL class] forKey:FBSDK_SHARE_STATUS_CONTENT_IMAGE_URL_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_STATUS_CONTENT_PEOPLE_IDS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_STATUS_CONTENT_PLACE_ID_KEY];
     _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_STATUS_CONTENT_REF_KEY];
@@ -201,12 +156,8 @@
 
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
-  [encoder encodeObject:_contentDescription forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_DESCRIPTION_KEY];
-  [encoder encodeObject:_contentTitle forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_TITLE_KEY];
   [encoder encodeObject:_contentURL forKey:FBSDK_SHARE_STATUS_CONTENT_CONTENT_URL_KEY];
-  [encoder encodeObject:_feedParameters forKey:FBSDK_SHARE_STATUS_CONTENT_FEED_PARAMETERS_KEY];
   [encoder encodeObject:_hashtag forKey:FBSDK_SHARE_STATUS_CONTENT_HASHTAG_KEY];
-  [encoder encodeObject:_imageURL forKey:FBSDK_SHARE_STATUS_CONTENT_IMAGE_URL_KEY];
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_STATUS_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_STATUS_CONTENT_PLACE_ID_KEY];
   [encoder encodeObject:_ref forKey:FBSDK_SHARE_STATUS_CONTENT_REF_KEY];
@@ -220,12 +171,8 @@
 - (id)copyWithZone:(NSZone *)zone
 {
   FBSDKShareLinkContent *copy = [[FBSDKShareLinkContent alloc] init];
-  copy->_contentDescription = [_contentDescription copy];
-  copy->_contentTitle = [_contentTitle copy];
   copy->_contentURL = [_contentURL copy];
-  copy->_feedParameters = [_feedParameters copy];
   copy->_hashtag = [_hashtag copy];
-  copy->_imageURL = [_imageURL copy];
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
   copy->_ref = [_ref copy];

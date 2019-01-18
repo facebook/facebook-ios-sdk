@@ -69,12 +69,6 @@
 
 #pragma mark - FBSDKSharingContent
 
-- (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
-          bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-{
-  [parameters addEntriesFromDictionary:[self addParameters:parameters bridgeOptions:bridgeOptions]];
-}
-
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 {
@@ -117,7 +111,7 @@
     }
   }
   [FBSDKInternalUtility dictionary:videoParameters
-                         setObject:[FBSDKShareUtility convertPhoto:_previewPhoto]
+                         setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
                             forKey:@"previewPhoto"];
 
   [FBSDKInternalUtility dictionary:updatedParameters
@@ -146,7 +140,6 @@
     _hashtag.hash,
     _peopleIDs.hash,
     _placeID.hash,
-    _previewPhoto.hash,
     _ref.hash,
     _pageID.hash,
     _video.hash,
@@ -173,10 +166,6 @@
           [FBSDKInternalUtility object:_hashtag isEqualToObject:content.hashtag] &&
           [FBSDKInternalUtility object:_peopleIDs isEqualToObject:content.peopleIDs] &&
           [FBSDKInternalUtility object:_placeID isEqualToObject:content.placeID] &&
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-          [FBSDKInternalUtility object:_previewPhoto isEqualToObject:content.previewPhoto] &&
-#pragma clang diagnostic pop
           [FBSDKInternalUtility object:_ref isEqualToObject:content.ref] &&
           [FBSDKInternalUtility object:_pageID isEqualToObject:content.pageID] &&
           [FBSDKInternalUtility object:_shareUUID isEqualToObject:content.shareUUID] &&
@@ -197,8 +186,6 @@
     _hashtag = [decoder decodeObjectOfClass:[FBSDKHashtag class] forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
     _peopleIDs = [decoder decodeObjectOfClass:[NSArray class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
     _placeID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
-    _previewPhoto = [decoder decodeObjectOfClass:[FBSDKSharePhoto class]
-                                          forKey:FBSDK_SHARE_VIDEO_CONTENT_PREVIEW_PHOTO_KEY];
     _ref = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
     _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
     _video = [decoder decodeObjectOfClass:[FBSDKShareVideo class] forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
@@ -213,7 +200,6 @@
   [encoder encodeObject:_hashtag forKey:FBSDK_SHARE_VIDEO_CONTENT_HASHTAG_KEY];
   [encoder encodeObject:_peopleIDs forKey:FBSDK_SHARE_VIDEO_CONTENT_PEOPLE_IDS_KEY];
   [encoder encodeObject:_placeID forKey:FBSDK_SHARE_VIDEO_CONTENT_PLACE_ID_KEY];
-  [encoder encodeObject:_previewPhoto forKey:FBSDK_SHARE_VIDEO_CONTENT_PREVIEW_PHOTO_KEY];
   [encoder encodeObject:_ref forKey:FBSDK_SHARE_VIDEO_CONTENT_REF_KEY];
   [encoder encodeObject:_pageID forKey:FBSDK_SHARE_VIDEO_CONTENT_PAGE_ID_KEY];
   [encoder encodeObject:_video forKey:FBSDK_SHARE_VIDEO_CONTENT_VIDEO_KEY];
@@ -229,7 +215,6 @@
   copy->_hashtag = [_hashtag copy];
   copy->_peopleIDs = [_peopleIDs copy];
   copy->_placeID = [_placeID copy];
-  copy->_previewPhoto = [_previewPhoto copy];
   copy->_ref = [_ref copy];
   copy->_pageID = [_pageID copy];
   copy->_video = [_video copy];

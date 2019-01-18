@@ -20,45 +20,13 @@
 
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
   A model for status and link content to be shared.
  */
+NS_SWIFT_NAME(ShareLinkContent)
 @interface FBSDKShareLinkContent : NSObject <FBSDKSharingContent>
-
-/**
-  The description of the link.
-
- If not specified, this field is automatically populated by information scraped from the contentURL,
- typically the title of the page.  This value may be discarded for specially handled links (ex: iTunes URLs).
- @return The description of the link
-
- @deprecated `contentDescription` is deprecated from Graph API 2.9.
- For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations.
- */
-@property (nonatomic, readonly) NSString *contentDescription
-  DEPRECATED_MSG_ATTRIBUTE("`contentDescription` is deprecated from Graph API 2.9");
-
-/**
-  The title to display for this link.
-
- This value may be discarded for specially handled links (ex: iTunes URLs).
- @return The link title
-
- @deprecated `contentTitle` is deprecated from Graph API 2.9.
- For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations
- */
-@property (nonatomic, readonly) NSString *contentTitle
-  DEPRECATED_MSG_ATTRIBUTE("`contentTitle` is deprecated from Graph API 2.9");
-
-/**
-  The URL of a picture to attach to this content.
- @return The network URL of an image
-
- @deprecated `imageURL` is deprecated from Graph API 2.9.
- For more information, see https://developers.facebook.com/docs/apps/changelog#v2_9_deprecations
- */
-@property (nonatomic, readonly) NSURL *imageURL
-  DEPRECATED_MSG_ATTRIBUTE("`imageURL` is deprecated from Graph API 2.9");
 
 /**
   Some quote text of the link.
@@ -66,7 +34,7 @@
  If specified, the quote text will render with custom styling on top of the link.
  @return The quote text of a link
  */
-@property (nonatomic, copy) NSString *quote;
+@property (nonatomic, copy, nullable) NSString *quote;
 
 /**
   Compares the receiver to another link content.
@@ -76,3 +44,5 @@
 - (BOOL)isEqualToShareLinkContent:(FBSDKShareLinkContent *)content;
 
 @end
+
+NS_ASSUME_NONNULL_END

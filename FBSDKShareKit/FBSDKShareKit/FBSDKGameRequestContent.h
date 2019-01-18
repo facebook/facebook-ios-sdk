@@ -21,6 +21,8 @@
 #import <FBSDKCoreKit/FBSDKCopying.h>
 #import <FBSDKShareKit/FBSDKSharingValidation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
   Additional context about the nature of the request.
@@ -35,7 +37,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestActionType)
   FBSDKGameRequestActionTypeAskFor,
   /** Turn action type: It is the turn of the friends to play against the user in a match. (no object) */
   FBSDKGameRequestActionTypeTurn,
-};
+} NS_SWIFT_NAME(GameRequestActionType);
 
 /**
  NS_ENUM(NSUInteger, FBSDKGameRequestFilters)
@@ -49,11 +51,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
   FBSDKGameRequestFilterAppUsers,
   /** Friends not using the app can be displayed. */
   FBSDKGameRequestFilterAppNonUsers,
-};
+} NS_SWIFT_NAME(GameRequestFilter);
 
 /**
   A model for a game request.
  */
+NS_SWIFT_NAME(GameRequestContent)
 @interface FBSDKGameRequestContent : NSObject <FBSDKCopying, FBSDKSharingValidation, NSSecureCoding>
 
 /**
@@ -77,7 +80,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
   Additional freeform data you may pass for tracking. This will be stored as part of
  the request objects created. The maximum length is 255 characters.
  */
-@property (nonatomic, copy) NSString *data;
+@property (nonatomic, copy, nullable) NSString *data;
 
 /**
   This controls the set of friends someone sees if a multi-friend selector is shown.
@@ -110,7 +113,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
 
  This is equivalent to the "to" parameter when using the web game request dialog.
  */
-@property (nonatomic, copy) NSArray *recipients;
+@property (nonatomic, copy) NSArray<NSString *> *recipients;
 
 /**
   An array of user IDs that will be included in the dialog as the first suggested friends.
@@ -118,25 +121,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGameRequestFilter)
 
  This is equivalent to the "suggestions" parameter when using the web game request dialog.
 */
-@property (nonatomic, copy) NSArray *recipientSuggestions;
-
-/**
-
-@warning Use `recipientSuggestions` instead.
-*/
-@property (nonatomic, copy) NSArray *suggestions
-DEPRECATED_MSG_ATTRIBUTE("use recipientSuggestions instead");
+@property (nonatomic, copy) NSArray<NSString *> *recipientSuggestions;
 
 /**
   The title for the dialog.
  */
 @property (nonatomic, copy) NSString *title;
 
-/**
-
-@warning Use `recipients` instead.
- */
-@property (nonatomic, copy) NSArray *to
-DEPRECATED_MSG_ATTRIBUTE("use recipients instead");
-
 @end
+
+NS_ASSUME_NONNULL_END

@@ -213,9 +213,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
     [blocker signal];
   };
   // but send as the other token
-  FBSDKShareAPI *sharer = [[FBSDKShareAPI alloc] init];
-  sharer.shareContent = content;
-  sharer.delegate = self;
+  FBSDKShareAPI *sharer = [FBSDKShareAPI apiWithContent:content delegate:self];
   sharer.accessToken = tokenWithPublish;
   [sharer share];
 

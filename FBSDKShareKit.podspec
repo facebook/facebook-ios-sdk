@@ -86,7 +86,6 @@ Pod::Spec.new do |s|
                         'FBSDKShareKit/FBSDKShareKit/FBSDKShareMessengerURLActionButton.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareDefines.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareError.{h,m}',
-                        'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareLinkContent+Internal.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareOpenGraphValueContainer+Internal.h',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKShareUtility.{h,m}',
                         'FBSDKShareKit/FBSDKShareKit/Internal/FBSDKVideoUploader.{h,m}'

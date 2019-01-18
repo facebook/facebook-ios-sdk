@@ -22,8 +22,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- Describes the callback for appLinkFromURLInBackground.
- @param image the Image downloaded
+ Describes the callback for downloadImageWithURL:ttl:completion:.
+ @param image the optional image returned
  */
 typedef void (^FBSDKImageDownloadBlock)(UIImage *_Nullable image)
 NS_SWIFT_NAME(ImageDownloadBlock);

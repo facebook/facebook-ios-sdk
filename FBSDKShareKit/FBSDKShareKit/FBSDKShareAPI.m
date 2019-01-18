@@ -56,11 +56,17 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 #pragma mark - Class Methods
 
-+ (instancetype)shareWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
++ (instancetype)apiWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
 {
   FBSDKShareAPI *API = [[self alloc] init];
   API.shareContent = content;
   API.delegate = delegate;
+  return API;
+}
+
++ (instancetype)shareWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
+{
+  FBSDKShareAPI *API = [self apiWithContent:content delegate:delegate];
   [API share];
   return API;
 }
@@ -281,12 +287,6 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   [self _addCommonParameters:parameters content:linkContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
   [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
-  [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
-#pragma clang diagnostic pop
   [[[FBSDKGraphRequest alloc] initWithGraphPath:[self _graphPathWithSuffix:@"feed", nil]
                                      parameters:parameters
                                     tokenString:self.accessToken.tokenString
@@ -408,10 +408,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   [self _addCommonParameters:parameters content:videoContent];
   [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"description"];
   if ([self.accessToken.permissions containsObject:@"ads_management"]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    FBSDKSharePhoto *photo = videoContent.previewPhoto;
-#pragma clang diagnostic pop
+    FBSDKSharePhoto *photo = videoContent.video.previewPhoto;
     UIImage *image = photo.image;
     if (!image && photo.imageURL.fileURL) {
       image = [UIImage imageWithContentsOfFile:photo.imageURL.path];

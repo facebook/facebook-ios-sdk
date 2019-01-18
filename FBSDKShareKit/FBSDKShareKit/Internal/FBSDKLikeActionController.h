@@ -37,6 +37,7 @@ FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerDidUpdateNotification
 
 FOUNDATION_EXPORT NSString *const FBSDKLikeActionControllerAnimatedKey;
 
+NS_SWIFT_NAME(LikeActionController)
 @interface FBSDKLikeActionController : NSObject <NSDiscardableContent, NSSecureCoding>
 
 + (BOOL)isDisabled;

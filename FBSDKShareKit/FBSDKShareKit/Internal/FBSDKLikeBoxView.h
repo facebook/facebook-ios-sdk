@@ -33,8 +33,9 @@ typedef NS_ENUM(NSUInteger, FBSDKLikeBoxCaretPosition)
   FBSDKLikeBoxCaretPositionBottom,
   /** The caret is on the right of the box. */
   FBSDKLikeBoxCaretPositionRight,
-};
+} NS_SWIFT_NAME(LikeBoxCaretPosition);
 
+NS_SWIFT_NAME(FBLikeBoxView)
 @interface FBSDKLikeBoxView : UIView
 
 @property (nonatomic, assign) FBSDKLikeBoxCaretPosition caretPosition;

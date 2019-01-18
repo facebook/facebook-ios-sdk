@@ -50,7 +50,8 @@ static NSString *const kCachedResponseUserInfoKeyTimestamp = @"timestamp";
   [_urlCache removeAllCachedResponses];
 }
 
-- (void)downloadImageWithURL:(NSURL *)url ttl:(NSTimeInterval)ttl
+- (void)downloadImageWithURL:(NSURL *)url
+                         ttl:(NSTimeInterval)ttl
                   completion:(FBSDKImageDownloadBlock)completion
 {
   NSURLRequest *request = [NSURLRequest requestWithURL:url];

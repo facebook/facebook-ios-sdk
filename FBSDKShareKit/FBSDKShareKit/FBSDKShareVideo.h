@@ -20,7 +20,10 @@
 #import <UIKit/UIKit.h>
 
 #import <FBSDKCoreKit/FBSDKCopying.h>
+#import <FBSDKShareKit/FBSDKShareMediaContent.h>
 #import <FBSDKShareKit/FBSDKSharingValidation.h>
+
+NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKSharePhoto;
 @class PHAsset;
@@ -28,7 +31,8 @@
 /**
   A video for sharing.
  */
-@interface FBSDKShareVideo : NSObject <FBSDKCopying, FBSDKSharingValidation, NSSecureCoding>
+NS_SWIFT_NAME(ShareVideo)
+@interface FBSDKShareVideo : NSObject <NSSecureCoding, FBSDKCopying, FBSDKShareMedia, FBSDKSharingValidation>
 
 /**
  Convenience method to build a new video object from raw data.
@@ -73,25 +77,25 @@
  The raw video data.
  - Returns: The video data.
  */
-@property (nonatomic, strong) NSData *data;
+@property (nonatomic, strong, nullable) NSData *data;
 
 /**
  The representation of the video in the Photos library.
  @return PHAsset that represents the video in the Photos library.
  */
-@property (nonatomic, copy) PHAsset *videoAsset;
+@property (nonatomic, copy, nullable) PHAsset *videoAsset;
 
 /**
   The file URL to the video.
  @return URL that points to the location of the video on disk
  */
-@property (nonatomic, copy) NSURL *videoURL;
+@property (nonatomic, copy, nullable) NSURL *videoURL;
 
 /**
   The photo that represents the video.
  @return The photo
  */
-@property (nonatomic, copy) FBSDKSharePhoto *previewPhoto;
+@property (nonatomic, copy, nullable) FBSDKSharePhoto *previewPhoto;
 
 /**
   Compares the receiver to another video.
@@ -107,3 +111,5 @@
 @property (nonatomic, copy, readonly) NSURL *videoURL;
 
 @end
+
+NS_ASSUME_NONNULL_END
