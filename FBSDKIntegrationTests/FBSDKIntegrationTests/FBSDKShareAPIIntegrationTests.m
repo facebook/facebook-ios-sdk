@@ -278,7 +278,12 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   FBSDKGraphRequestConnection *batch = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *getPhotoIDRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:postID
                                                                            parameters:@{ @"fields" : @"object_id"}];
-  [batch addRequest:getPhotoIDRequest completionHandler:NULL batchEntryName:@"get-id"];
+
+  FBSDKGraphRequestBlock handler = ^(FBSDKGraphRequestConnection *_Nullable connection,
+                                       id _Nullable result,
+                                       NSError *_Nullable error) {};
+
+  [batch addRequest:getPhotoIDRequest completionHandler:handler batchEntryName:@"get-id"];
   FBSDKGraphRequest *getTagsToVerifyRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=get-id:$.object_id}" parameters:@{ @"fields" : @"id,tags.limit(1){name}, place.limit(1){id}"}];
   [batch addRequest:getTagsToVerifyRequest completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(error);

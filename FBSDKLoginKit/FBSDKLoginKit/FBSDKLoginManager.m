@@ -571,7 +571,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSURL *authURL = nil;
   NSError *error;
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:nil queryParameters:nil error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     NSMutableDictionary *browserParams = [loginParams mutableCopy];
     [FBSDKInternalUtility dictionary:browserParams

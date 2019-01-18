@@ -41,7 +41,7 @@
                                                                  parameters:@{ @"fields": @"id" }
                                                                 tokenString:token.tokenString
                                                                     version:nil
-                                                                 HTTPMethod:nil];
+                                                                 HTTPMethod:@""];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);
@@ -171,7 +171,7 @@
                                                      parameters:@{ @"fields":@"id" }
                                                     tokenString:tokenWithLikes.tokenString
                                                         version:nil
-                                                     HTTPMethod:nil]
+                                                     HTTPMethod:@""]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error, @"failed for %@", tokenWithLikes.tokenString);
    [blocker signal];
@@ -180,7 +180,7 @@
                                                      parameters:nil
                                                     tokenString:tokenWithEmail.tokenString
                                                         version:nil
-                                                     HTTPMethod:nil]
+                                                     HTTPMethod:@""]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error, @"failed for %@", tokenWithEmail.tokenString);
    XCTAssertEqualObjects(tokenWithEmail.userID, result[@"id"]);
@@ -241,7 +241,7 @@
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:3];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
 
-  FBSDKGraphRequestHandler assertMissingTokenErrorHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  FBSDKGraphRequestBlock assertMissingTokenErrorHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     /* error JSON should be :
      body =     {
      error =         {
@@ -308,7 +308,7 @@
                                                                  parameters:@{ @"fields": @"gender" }
                                                                 tokenString:token.tokenString
                                                                     version:nil
-                                                                 HTTPMethod:nil];
+                                                                 HTTPMethod:@""];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);
@@ -328,7 +328,7 @@
                                                   @"locale" : @"de_DE" }
                                    tokenString:token.tokenString
                                        version:nil
-                                    HTTPMethod:nil] startWithCompletionHandler:
+                                    HTTPMethod:@""] startWithCompletionHandler:
   ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);

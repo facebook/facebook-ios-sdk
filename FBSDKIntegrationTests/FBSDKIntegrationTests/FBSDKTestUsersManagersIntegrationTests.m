@@ -43,7 +43,7 @@
                                                                  parameters:@{ @"fields": @"id" }
                                                                 tokenString:token
                                                                     version:nil
-                                                                 HTTPMethod:nil];
+                                                                 HTTPMethod:@""];
 
   __block NSUInteger count = 0;
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
@@ -125,7 +125,7 @@
 {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   FBSDKTestUsersManager *testAccountsManager = [FBSDKTestUsersManager sharedInstanceForAppID:[self testAppID] appSecret:[self testAppSecret]];
-  [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:nil
+  [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:@[]
                                                       createIfNotFound:YES
                                                      completionHandler:^(NSArray *tokens, NSError *error) {
                                                        XCTAssertNil(error);
@@ -137,7 +137,7 @@
   NSUInteger startingUserCount = [self countTestUsers];
 
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:nil
+  [testAccountsManager requestTestAccountTokensWithArraysOfPermissions:@[]
                                                       createIfNotFound:YES
                                                      completionHandler:^(NSArray *tokens, NSError *error) {
                                                        XCTAssertNil(error);

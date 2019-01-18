@@ -22,6 +22,6 @@ typedef void(^FBSDKCodelessSettingLoadBlock)(BOOL isCodelessSetupEnabled, NSErro
 
 @interface FBSDKCodelessIndexer : NSObject
 
-+ (NSString *)extInfo;
+@property (class, nonatomic, copy, readonly) NSString *extInfo;
 
 @end

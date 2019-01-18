@@ -134,9 +134,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
 
@@ -191,9 +191,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:existingToken];
@@ -218,9 +218,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile", @"read_stream"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:existingToken];
@@ -253,9 +253,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
     // set up a current token with public_profile
     FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                         permissions:@[@"public_profile", @"read_stream"]
-                                                                declinedPermissions:nil
-                                                                              appID:nil
-                                                                             userID:nil
+                                                                declinedPermissions:@[]
+                                                                              appID:@""
+                                                                             userID:@""
                                                                      expirationDate:nil
                                                                         refreshDate:nil];
     [FBSDKAccessToken setCurrentAccessToken:existingToken];

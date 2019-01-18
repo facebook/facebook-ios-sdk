@@ -41,8 +41,8 @@
   [cache clearCache];
   XCTAssertNil([cache fetchAccessToken], @"failed to clear cache");
   FBSDKAccessToken* token = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
-                                                              permissions:nil
-                                                      declinedPermissions:nil
+                                                              permissions:@[]
+                                                      declinedPermissions:@[]
                                                                     appID:@"appid"
                                                                    userID:@"userid"
                                                            expirationDate:nil

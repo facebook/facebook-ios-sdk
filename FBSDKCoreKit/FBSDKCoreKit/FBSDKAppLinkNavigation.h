@@ -33,7 +33,7 @@ typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
     FBSDKAppLinkNavigationTypeBrowser,
     /*! Indicates that the navigation succeeded by opening the URL in an app on the device */
     FBSDKAppLinkNavigationTypeApp
-};
+} NS_SWIFT_NAME(AppLinkNavigation.Type);
 
 /**
  Describes the callback for appLinkFromURLInBackground.
@@ -41,7 +41,8 @@ typedef NS_ENUM(NSInteger, FBSDKAppLinkNavigationType) {
  @param error the error during the request, if any
 
  */
-typedef void (^FBSDKAppLinkNavigationHandler)(FBSDKAppLinkNavigationType navType, NSError * _Nullable error);
+typedef void (^FBSDKAppLinkNavigationBlock)(FBSDKAppLinkNavigationType navType, NSError * _Nullable error)
+NS_SWIFT_NAME(AppLinkNavigationBlock);
 
 /*!
  Represents a pending request to navigate to an App Link. Most developers will
@@ -50,7 +51,18 @@ typedef void (^FBSDKAppLinkNavigationHandler)(FBSDKAppLinkNavigationType navType
  creating FBSDKAppLinkNavigations themselves.
  */
 NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
+NS_SWIFT_NAME(AppLinkNavigation)
 @interface FBSDKAppLinkNavigation : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+/*!
+ The default resolver to be used for App Link resolution. If the developer has not set one explicitly,
+ a basic, built-in FBSDKWebViewAppLinkResolver will be used.
+ */
+@property (class, nonatomic, strong) id<FBSDKAppLinkResolving> defaultResolver
+NS_SWIFT_NAME(default);
 
 /*!
  The extras for the AppLinkNavigation. This will generally contain application-specific
@@ -78,28 +90,32 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
 /*! Creates an AppLinkNavigation with the given link, extras, and App Link data */
 + (instancetype)navigationWithAppLink:(FBSDKAppLink *)appLink
                                extras:(NSDictionary<NSString *, id> *)extras
-                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData;
+                          appLinkData:(NSDictionary<NSString *, id> *)appLinkData
+NS_SWIFT_NAME(init(appLink:extras:appLinkData:));
 
 /*!
  Creates an NSDictionary with the correct format for iOS callback URLs,
  to be used as 'appLinkData' argument in the call to navigationWithAppLink:extras:appLinkData:
  */
 + (NSDictionary<NSString *, NSDictionary<NSString *, NSString *> *> *)callbackAppLinkDataForAppWithName:(NSString *)appName
-                                                                                                    url:(NSString *)url;
+                                                                                                    url:(NSString *)url
+NS_SWIFT_NAME(callbackAppLinkData(forApp:url:));
 
 /*! Performs the navigation */
-- (FBSDKAppLinkNavigationType)navigate:(NSError *__autoreleasing *)error;
+- (FBSDKAppLinkNavigationType)navigate:(NSError **)error
+__attribute__((swift_error(nonnull_error)));
 
 /*! Returns a FBSDKAppLink for the given URL */
-+ (void)resolveAppLink:(NSURL *)destination handler:(FBSDKAppLinkFromURLHandler)handler;
++ (void)resolveAppLink:(NSURL *)destination handler:(FBSDKAppLinkBlock)handler;
 
 /*! Returns a FBSDKAppLink for the given URL using the given App Link resolution strategy */
 + (void)resolveAppLink:(NSURL *)destination
               resolver:(id<FBSDKAppLinkResolving>)resolver
-               handler:(FBSDKAppLinkFromURLHandler)handler;
+               handler:(FBSDKAppLinkBlock)handler;
 
 /*! Navigates to a FBSDKAppLink and returns whether it opened in-app or in-browser */
-+ (FBSDKAppLinkNavigationType)navigateToAppLink:(FBSDKAppLink *)link error:(NSError *__autoreleasing *)error;
++ (FBSDKAppLinkNavigationType)navigateToAppLink:(FBSDKAppLink *)link error:(NSError **)error
+__attribute__((swift_error(nonnull_error)));
 
 /*!
  Returns a FBSDKAppLinkNavigationType based on a FBSDKAppLink.
@@ -110,7 +126,7 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
 + (FBSDKAppLinkNavigationType)navigationTypeForLink:(FBSDKAppLink *)link;
 
 /*! Navigates to a URL (an asynchronous action) and returns a FBSDKNavigationType */
-+ (void)navigateToURL:(NSURL *)destination handler:(FBSDKAppLinkNavigationHandler)handler;
++ (void)navigateToURL:(NSURL *)destination handler:(FBSDKAppLinkNavigationBlock)handler;
 
 /*!
  Navigates to a URL (an asynchronous action) using the given App Link resolution
@@ -118,19 +134,7 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
  */
 + (void)navigateToURL:(NSURL *)destination
              resolver:(id<FBSDKAppLinkResolving>)resolver
-              handler:(FBSDKAppLinkNavigationHandler)handler;
-
-/*!
- Gets the default resolver to be used for App Link resolution. If the developer has not set one explicitly,
- a basic, built-in resolver will be used.
- */
-+ (id<FBSDKAppLinkResolving>)defaultResolver;
-
-/*!
- Sets the default resolver to be used for App Link resolution. Setting this to nil will revert the
- default resolver to the basic, built-in resolver provided by FBSDK.
- */
-+ (void)setDefaultResolver:(id<FBSDKAppLinkResolving>)resolver;
+              handler:(FBSDKAppLinkNavigationBlock)handler;
 
 @end
 

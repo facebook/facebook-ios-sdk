@@ -18,6 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(MeasurementEventListener)
 @interface FBSDKMeasurementEventListener : NSObject
-+ (FBSDKMeasurementEventListener *)defaultListener;
+
+@property (class, nonatomic, strong, readonly) FBSDKMeasurementEventListener *defaultListener
+NS_SWIFT_NAME(default);
+
 @end
+
+NS_ASSUME_NONNULL_END

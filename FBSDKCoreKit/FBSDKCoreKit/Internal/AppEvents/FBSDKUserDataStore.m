@@ -20,6 +20,7 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKProfile.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
@@ -59,19 +60,6 @@ static volatile bool initialized = false;
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   hashedUserData = [defaults stringForKey:USER_DATA_KEY];
   initialized = true;
-}
-
-+ (void)setUserDataAndHash:(NSDictionary *)ud
-{
-  if (!initialized){
-    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                           logEntry:@"initStore should have been called before calling setUserData"];
-    [FBSDKUserDataStore initAndWait];
-  }
-
-  hashedUserData = [FBSDKUserDataStore hashUserData:ud];
-  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:(hashedUserData) forKey:(USER_DATA_KEY)];
 }
 
 + (void)setUserDataAndHash:(nullable NSString *)email

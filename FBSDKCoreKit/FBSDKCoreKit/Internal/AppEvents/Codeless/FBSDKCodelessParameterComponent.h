@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(CodelessParameterComponent)
 @interface FBSDKCodelessParameterComponent : NSObject
 
 @property (nonatomic, copy, readonly) NSString *name;

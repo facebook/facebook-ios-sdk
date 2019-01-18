@@ -199,12 +199,13 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @interface FBSDKAppEvents (Internal)
 
+@property (class, nonatomic, strong, readonly) FBSDKAppEvents *singleton;
+
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(NSDictionary *)parameters
              accessToken:(FBSDKAccessToken *)accessToken;
 
-+ (FBSDKAppEvents *)singleton;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)registerNotifications;
 

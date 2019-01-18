@@ -34,6 +34,7 @@ static NSString *const kAppLinksKey = @"app_links";
 static id g_mockAccountStoreAdapter;
 
 typedef void (^HTTPStubCallback)(NSURLRequest *request);
+typedef _Nullable id (^StringURLBlock)(NSString *urlString);
 
 @interface NSURL (FBSDKAppLinkResolverTests)
 
@@ -92,7 +93,7 @@ typedef void (^HTTPStubCallback)(NSURLRequest *request);
                                statusCode:(int)statusCode
                                  callback:(HTTPStubCallback)callback
 {
-  id (^matchingKey)(NSString *) = ^id (NSString *urlString) {
+  StringURLBlock matchingKey = ^id (NSString *urlString) {
     for (NSString *substring in requestsAndResponses.allKeys) {
       // The first @"" always matches
       if (substring.length == 0 ||

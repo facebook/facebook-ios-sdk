@@ -181,8 +181,8 @@
   blockers[0] = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   // now update the token again
   [FBSDKAccessToken setCurrentAccessToken:[[FBSDKAccessToken alloc] initWithTokenString:@"tokenstring"
-                                                                            permissions:nil
-                                                                    declinedPermissions:nil
+                                                                            permissions:@[]
+                                                                    declinedPermissions:@[]
                                                                                   appID:token.appID
                                                                                  userID:token.userID
                                                                          expirationDate:nil

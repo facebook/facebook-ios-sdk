@@ -108,7 +108,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   }
 }
 
-+ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationManagerLoadBlock)completionBlock
++ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock
 {
   void (^loadBlock)(void) = NULL;
   NSString *appID = [FBSDKSettings appID];
@@ -390,7 +390,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
 
     // wrap the completion blocks
-    for (FBSDKServerConfigurationManagerLoadBlock completionBlock in _completionBlocks) {
+    for (FBSDKServerConfigurationBlock completionBlock in _completionBlocks) {
       [completionBlocks addObject:[self _wrapperBlockForLoadBlock:completionBlock]];
     }
     [_completionBlocks removeAllObjects];
@@ -428,7 +428,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   return ([[NSDate date] timeIntervalSinceDate:timestamp] < FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT);
 }
 
-+ (void(^)(void))_wrapperBlockForLoadBlock:(FBSDKServerConfigurationManagerLoadBlock)loadBlock
++ (FBSDKCodeBlock)_wrapperBlockForLoadBlock:(FBSDKServerConfigurationBlock)loadBlock
 {
   if (loadBlock == NULL) {
     return NULL;

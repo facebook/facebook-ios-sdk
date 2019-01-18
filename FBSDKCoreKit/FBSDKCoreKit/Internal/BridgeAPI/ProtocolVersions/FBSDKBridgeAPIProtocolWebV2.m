@@ -65,7 +65,7 @@
   if (!requestURL.scheme) {
     requestURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m"
                                                             path:requestURL.path
-                                                 queryParameters:nil
+                                                 queryParameters:@{}
                                                   defaultVersion:@""
                                                            error:errorRef];
   }

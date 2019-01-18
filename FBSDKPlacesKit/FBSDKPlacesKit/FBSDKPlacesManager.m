@@ -106,7 +106,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 }
 
 - (void)generateCurrentPlaceRequestWithMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
@@ -184,7 +184,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 }
 
 #pragma mark - Helper Methods
@@ -232,7 +232,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 
 }
 

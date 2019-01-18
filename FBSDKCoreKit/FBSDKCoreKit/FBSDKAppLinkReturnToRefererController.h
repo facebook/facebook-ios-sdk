@@ -30,19 +30,22 @@ NS_ASSUME_NONNULL_BEGIN
  Protocol that a class can implement in order to be notified when the user has navigated back
  to the referer of an App Link.
  */
+NS_SWIFT_NAME(AppLinkReturnToRefererControllerDelegate)
 @protocol FBSDKAppLinkReturnToRefererControllerDelegate <NSObject>
 
 @optional
 
 /*! Called when the user has tapped to navigate, but before the navigation has been performed. */
 - (void)returnToRefererController:(FBSDKAppLinkReturnToRefererController *)controller
-            willNavigateToAppLink:(FBSDKAppLink *)appLink;
+            willNavigateToAppLink:(FBSDKAppLink *)appLink
+NS_SWIFT_NAME(return(to:willNavigateTo:));
 
 /*! Called after the navigation has been attempted, with an indication of whether the referer
  app link was successfully opened. */
 - (void)returnToRefererController:(FBSDKAppLinkReturnToRefererController *)controller
              didNavigateToAppLink:(FBSDKAppLink *)url
-                             type:(FBSDKAppLinkNavigationType)type;
+                             type:(FBSDKAppLinkNavigationType)type
+NS_SWIFT_NAME(return(to:didNavigateTo:type:));
 
 @end
 
@@ -51,6 +54,7 @@ NS_ASSUME_NONNULL_BEGIN
  the ability to display the view above the navigation bar for navigation-based apps.
  */
 NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
+NS_SWIFT_NAME(AppLinkReturnToRefererController)
 @interface FBSDKAppLinkReturnToRefererController : NSObject <FBSDKAppLinkReturnToRefererViewDelegate>
 
 /*!
@@ -72,8 +76,11 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
 /*!
  Initializes a controller suitable for controlling a FBSDKAppLinkReturnToRefererView that is to be displayed
  displayed above the navigation bar.
+
+ @param navController The Navigation Controller for display above
  */
-- (instancetype)initForDisplayAboveNavController:(UINavigationController *)navController;
+- (instancetype)initForDisplayAboveNavController:(UINavigationController *)navController
+NS_SWIFT_NAME(init(navController:));
 
 /*!
  Removes the view entirely from the navigation controller it is currently displayed in.
@@ -83,12 +90,14 @@ NS_EXTENSION_UNAVAILABLE_IOS("Not available in app extension")
 /*!
  Shows the FBSDKAppLinkReturnToRefererView with the specified referer information. If nil or missing data,
  the view will not be displayed. */
-- (void)showViewForRefererAppLink:(FBSDKAppLink *)refererAppLink;
+- (void)showViewForRefererAppLink:(FBSDKAppLink *)refererAppLink
+NS_SWIFT_NAME(showView(forReferer:));
 
 /*!
  Shows the FBSDKAppLinkReturnToRefererView with referer information extracted from the specified URL.
  If nil or missing referer App Link data, the view will not be displayed. */
-- (void)showViewForRefererURL:(NSURL *)url;
+- (void)showViewForRefererURL:(NSURL *)url
+NS_SWIFT_NAME(showView(forReferer:));
 
 /*!
  Closes the view, possibly animating it.

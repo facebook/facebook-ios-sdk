@@ -63,14 +63,14 @@ static NSString *const kAppLinksKey = @"app_links";
   return self;
 }
 
-- (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkFromURLHandler)handler
+- (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler
 {
   [self appLinksFromURLs:@[url] handler:^(NSDictionary<NSURL *, FBSDKAppLink *> *urls, NSError * _Nullable error) {
     handler(urls[url], error);
   }];
 }
 
-- (void)appLinksFromURLs:(NSArray<NSURL *> *)urls handler:(FBSDKAppLinksFromURLArrayHandler)handler
+- (void)appLinksFromURLs:(NSArray<NSURL *> *)urls handler:(FBSDKAppLinksBlock)handler
 {
   if (![FBSDKSettings clientToken] && ![FBSDKAccessToken currentAccessToken]) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
@@ -150,7 +150,7 @@ static NSString *const kAppLinksKey = @"app_links";
       NSURL *fallbackUrl = webFallbackString ? [NSURL URLWithString:webFallbackString] : url;
 
       NSNumber *shouldFallback = webTarget[kShouldFallbackKey];
-      if (shouldFallback && !shouldFallback.boolValue) {
+      if (shouldFallback != nil && !shouldFallback.boolValue) {
         fallbackUrl = nil;
       }
 

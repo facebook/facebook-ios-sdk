@@ -55,7 +55,7 @@
   return result;
 }
 
-+ (NSString *)queryStringWithDictionary:(NSDictionary *)dictionary error:(NSError *__autoreleasing *)errorRef
++ (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary error:(NSError **)errorRef
 {
   return [FBSDKInternalUtility queryStringWithDictionary:dictionary error:errorRef invalidObjectHandler:NULL];
 }
@@ -108,20 +108,13 @@
   }
 }
 
-+ (NSString *)SHA256Hash:(NSObject *)input
++ (NSString *)SHA256HashString:(NSString *)string
 {
-  NSData *data = nil;
+  return [self SHA256HashData:[string dataUsingEncoding:NSUTF8StringEncoding]];
+}
 
-  if ([input isKindOfClass:[NSString class]]) {
-    data = [(NSString *)input dataUsingEncoding:NSUTF8StringEncoding];
-  } else if ([input isKindOfClass:[NSData class]]) {
-    data = (NSData *)input;
-  }
-
-  if (!data) {
-    return nil;
-  }
-
++ (NSString *)SHA256HashData:(NSData *)data
+{
   uint8_t digest[CC_SHA256_DIGEST_LENGTH];
   CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
   NSMutableString *encryptedStuff = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
@@ -130,6 +123,17 @@
   }
 
   return encryptedStuff;
+}
+
++ (NSString *)SHA256Hash:(NSObject *)input
+{
+  if ([input isKindOfClass:[NSString class]]) {
+    return [self SHA256HashString:(NSString *)input];
+  } else if ([input isKindOfClass:[NSData class]]) {
+    return [self SHA256HashData:(NSData *)input];
+  }
+
+  return nil;
 }
 
 @end

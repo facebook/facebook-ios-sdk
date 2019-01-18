@@ -261,7 +261,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 - (BOOL)_shareLinkContent:(FBSDKShareLinkContent *)linkContent
 {
-  FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  FBSDKGraphRequestBlock completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (!self->_delegate) {
       return;
     }
@@ -308,7 +308,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     [self _addCommonParameters:parameters content:openGraphContent];
     [FBSDKInternalUtility dictionary:parameters setObject:self.message forKey:@"message"];
 
-    FBSDKGraphRequestHandler requestHandler = ^(FBSDKGraphRequestConnection *requestConnection,
+    FBSDKGraphRequestBlock requestHandler = ^(FBSDKGraphRequestConnection *requestConnection,
                                                 id result,
                                                 NSError *requestError) {
       if (!self->_delegate) {
@@ -371,7 +371,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   NSMutableArray *results = [[NSMutableArray alloc] init];
   NSMutableArray *errors = [[NSMutableArray alloc] init];
   __block NSUInteger completedCount = 0;
-  FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  FBSDKGraphRequestBlock completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     result = [FBSDKTypeUtility dictionaryValue:result];
     [FBSDKInternalUtility array:results addObject:result];
     [FBSDKInternalUtility array:errors addObject:error];
@@ -591,7 +591,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                   tokenString:self.accessToken.tokenString
                                                                       version:nil
                                                                    HTTPMethod:@"POST"];
-    FBSDKGraphRequestHandler requestCompletionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
+    FBSDKGraphRequestBlock requestCompletionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
                                                           id result,
                                                           NSError *requestError) {
       if (!self->_delegate) {
@@ -703,7 +703,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                                   tokenString:self.accessToken.tokenString
                                                                       version:nil
                                                                    HTTPMethod:@"POST"];
-    FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
+    FBSDKGraphRequestBlock completionHandler = ^(FBSDKGraphRequestConnection *requestConnection,
                                                    id result,
                                                    NSError *requestError) {
       NSString *stagedPhotoURLString = [FBSDKTypeUtility stringValue:result[@"uri"]];
@@ -770,7 +770,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
 
 - (NSString *)_connection:(FBSDKGraphRequestConnection *)connection
                addRequest:(FBSDKGraphRequest *)request
-        completionHandler:(FBSDKGraphRequestHandler)completionHandler
+        completionHandler:(FBSDKGraphRequestBlock)completionHandler
 {
   NSUInteger requestCount = connection.requests.count;
   NSString *batchEntryName = [[NSString alloc] initWithFormat:@"request_%lu", (unsigned long)requestCount];

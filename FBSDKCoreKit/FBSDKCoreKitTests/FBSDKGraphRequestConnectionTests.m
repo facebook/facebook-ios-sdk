@@ -287,8 +287,8 @@ static id g_mockNSBundle;
   }];
   FBSDKAccessToken *tokenThatNeedsRefresh = [[FBSDKAccessToken alloc]
                                              initWithTokenString:@"token"
-                                             permissions:nil
-                                             declinedPermissions:nil
+                                             permissions:@[]
+                                             declinedPermissions:@[]
                                              appID:@"appid"
                                              userID:@"userid"
                                              expirationDate:[NSDate distantPast]
@@ -319,8 +319,8 @@ static id g_mockNSBundle;
   [FBSDKAccessToken setCurrentAccessToken:nil];
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
-                                      permissions:nil
-                                      declinedPermissions:nil
+                                      permissions:@[]
+                                      declinedPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
@@ -367,7 +367,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -408,7 +408,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -428,7 +428,7 @@ static id g_mockNSBundle;
                                      parameters:@{@"fields":@""}
                                     tokenString:@"notCurrentToken"
                                         version:nil
-                                     HTTPMethod:nil]
+                                     HTTPMethod:@""]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(result);
      XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -454,7 +454,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -542,8 +542,8 @@ static id g_mockNSBundle;
   // adding fresh token to avoid piggybacking a token refresh
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
-                                      permissions:nil
-                                      declinedPermissions:nil
+                                      permissions:@[]
+                                      declinedPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
@@ -597,7 +597,7 @@ static id g_mockNSBundle;
 - (void)testRetryDisabled
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
-  [FBSDKSettings setGraphErrorRecoveryDisabled:YES];
+  FBSDKSettings.graphErrorRecoveryEnabled = YES;
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -623,7 +623,7 @@ static id g_mockNSBundle;
     XCTAssertNil(error);
   }];
   XCTAssertEqual(1, requestCount);
-  [FBSDKSettings setGraphErrorRecoveryDisabled:NO];
+  FBSDKSettings.graphErrorRecoveryEnabled = NO;
   [mockPiggybackManager stopMocking];
 }
 @end

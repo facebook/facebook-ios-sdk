@@ -27,9 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
  This is an internal API that should not be used directly and is subject to change.
  */
+NS_SWIFT_NAME(FBDeviceButton)
 @interface FBSDKDeviceButton : FBSDKButton
 
 @end
 
 NS_ASSUME_NONNULL_END
-

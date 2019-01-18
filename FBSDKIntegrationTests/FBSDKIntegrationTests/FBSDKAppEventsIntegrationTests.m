@@ -313,7 +313,7 @@
 
   [FBSDKAccessToken setCurrentAccessToken:nil];
   // this should still just queue up another event for that user's token.
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
 
   // now this should trigger a flush of the user's events, and leave this event queued.
   [FBSDKAppEvents logEvent:@"event-without-user"];
@@ -363,18 +363,18 @@
   // log events with and without token interleaved, which would normally
   // cause flushes but should simply be retained now.
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
 
   // now flush the last one (no user)
   [FBSDKAppEvents flush];
 
   // now log one more with user to flush
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents flush];
 
   XCTAssertTrue([blocker waitWithTimeout:16], @"did not get both flushes");

@@ -18,9 +18,11 @@
 
 #import <UIKit/UIKit.h>
 
+NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate;
 
 // internal class, APIs are subject to change.
+NS_SWIFT_NAME(FBDeviceDialogView)
 @interface FBSDKDeviceDialogView : UIView
 
 @property (nonatomic, weak) id<FBSDKDeviceDialogViewDelegate> delegate;
@@ -31,6 +33,7 @@
 
 @end
 
+NS_SWIFT_NAME(DeviceDialogViewDelegate)
 @protocol FBSDKDeviceDialogViewDelegate <NSObject>
 
 - (void)deviceDialogViewDidCancel:(FBSDKDeviceDialogView *)deviceDialogView;

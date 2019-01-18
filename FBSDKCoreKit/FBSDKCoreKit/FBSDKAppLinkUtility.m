@@ -30,7 +30,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 
 @implementation FBSDKAppLinkUtility {}
 
-+ (void)fetchDeferredAppLink:(FBSDKDeferredAppLinkHandler)handler
++ (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
 {
   NSAssert([NSThread isMainThread], @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
 
@@ -79,12 +79,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
   }];
 }
 
-+ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler
-{
-  return NO;
-}
-
-+ (NSString*)appInvitePromotionCodeFromURL:(NSURL*)url;
++ (NSString *)appInvitePromotionCodeFromURL:(NSURL *)url;
 {
   FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
   NSDictionary *extras = parsedUrl.appLinkExtras;

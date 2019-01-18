@@ -206,7 +206,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 - (void)_buttonPressed:(id)sender
 {
   [self logTapEventWithEventName:FBSDKAppEventNameFBSDKLoginButtonDidTap parameters:self.analyticsParameters];
-  if ([FBSDKAccessToken currentAccessTokenIsActive]) {
+  if (FBSDKAccessToken.isCurrentAccessTokenActive) {
     NSString *title = nil;
 
     if (_userName) {
@@ -312,7 +312,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (void)_updateContent
 {
-  BOOL accessTokenIsValid = [FBSDKAccessToken currentAccessTokenIsActive];
+  BOOL accessTokenIsValid = FBSDKAccessToken.isCurrentAccessTokenActive;
   self.selected = accessTokenIsValid;
   if (accessTokenIsValid) {
     if (![[FBSDKAccessToken currentAccessToken].userID isEqualToString:_userID]) {

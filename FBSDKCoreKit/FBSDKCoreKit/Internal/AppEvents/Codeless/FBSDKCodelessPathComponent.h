@@ -27,6 +27,7 @@ typedef NS_OPTIONS(int, FBSDKCodelessMatchBitmaskField)
   FBSDKCodelessMatchBitmaskFieldHint = 1 << 4
 };
 
+NS_SWIFT_NAME(CodelessPathComponent)
 @interface FBSDKCodelessPathComponent : NSObject
 
 @property (nonatomic, copy, readonly) NSString *className;
