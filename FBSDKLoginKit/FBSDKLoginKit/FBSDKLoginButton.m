@@ -257,7 +257,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
       }
     }
 
-    FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
       if ([self.delegate respondsToSelector:@selector(loginButton:didCompleteWithResult:error:)]) {
         [self.delegate loginButton:self didCompleteWithResult:result error:error];
       }

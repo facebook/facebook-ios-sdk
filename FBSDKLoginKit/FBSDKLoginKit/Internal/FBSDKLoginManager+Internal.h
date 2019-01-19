@@ -25,6 +25,13 @@
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 
+/**
+ Success Block
+ */
+typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSString *authMethod, NSError *error)
+NS_SWIFT_NAME(BrowserLoginSuccessBlock);
+
+NS_SWIFT_NAME(LoginManagerSystemAccountState)
 @interface FBSDKLoginManagerSystemAccountState : NSObject
 @property (nonatomic, assign) BOOL didShowDialog;
 @property (nonatomic, getter=isReauthorize) BOOL reauthorize;
@@ -35,10 +42,13 @@
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet *requestedPermissions;
 
+// for testing only
+@property (nonatomic, readonly, copy) NSString *loadExpectedChallenge;
+
 - (void)completeAuthentication:(FBSDKLoginCompletionParameters *)parameters expectChallenge:(BOOL)expectChallenge;
 
 // available to internal types to trigger login without checking read/publish mixtures.
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler;
+- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler;
 - (void)logInWithBehavior:(FBSDKLoginBehavior)loginBehavior;
 
 // made available for testing only
@@ -47,18 +57,17 @@
 - (void)validateReauthentication:(FBSDKAccessToken *)currentToken withResult:(FBSDKLoginManagerLoginResult *)loginResult;
 
 // for testing only
-- (void)setHandler:(FBSDKLoginManagerRequestTokenHandler)handler;
+- (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;
 // for testing only
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions;
-// for testing only
-- (NSString *)loadExpectedChallenge;
+
 @end
 
 // the category is made available for testing only
 @interface FBSDKLoginManager (Native) <FBSDKURLOpening>
 
-- (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler;
-- (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSString *,NSError*))handler;
+- (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKSuccessBlock)handler;
+- (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 @end
 
@@ -76,6 +85,6 @@
 // the category is made available for testing only
 @interface FBSDKLoginManager (WebDialog) <FBSDKWebDialogDelegate>
 
-- (void)performWebLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler;
+- (void)performWebLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKSuccessBlock)handler;
 
 @end
