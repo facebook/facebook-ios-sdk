@@ -186,9 +186,8 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block FBSDKAccessToken *tokenWithPublish;
   __block FBSDKAccessToken *tokenWithEmail;
-  [[self testUsersManager] requestTestAccountTokensWithArraysOfPermissions:@[
-                                                                             [NSSet setWithObject:@"publish_actions"],
-                                                                             [NSSet setWithObject:@"email"]                                                                            ]
+  [[self testUsersManager] requestTestAccountTokensWithArraysOfPermissions:@[[NSSet setWithObject:@"publish_actions"],
+                                                                             [NSSet setWithObject:@"email"]]
                                                           createIfNotFound:YES
                                                          completionHandler:^(NSArray *tokens, NSError *error) {
                                                            tokenWithPublish = tokens[0];
@@ -323,7 +322,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
 
 - (void)testVideoUploader
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"publish_actions"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
@@ -331,7 +330,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   __block FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   _fileHandle = [NSFileHandle fileHandleForReadingFromURL:bundleURL error:nil];
   NSCAssert(_fileHandle,  @"Fail to get file handler");
-  FBSDKVideoUploader *videoUploader = [[FBSDKVideoUploader alloc] initWithVideoName:[bundleURL lastPathComponent] videoSize:(unsigned long)[_fileHandle seekToEndOfFile] parameters:dictionary delegate:self];
+  FBSDKVideoUploader *videoUploader = [[FBSDKVideoUploader alloc] initWithVideoName:bundleURL.lastPathComponent videoSize:(unsigned long)[_fileHandle seekToEndOfFile] parameters:dictionary delegate:self];
   self.uploadCallback = ^(NSDictionary *results, NSError *error) {
     NSCAssert(error == nil, @"upload failed :%@", error);
     NSCAssert(results[@"success"], @"upload fail");

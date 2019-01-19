@@ -170,7 +170,7 @@
       }];
       XCTAssertEqual(3, logTimes.count);
       // verify _logTime differences (2 sec and 3 sec)
-      NSArray *sortedLogTimes = [[logTimes allObjects] sortedArrayUsingSelector:@selector(compare:)];
+      NSArray *sortedLogTimes = [logTimes.allObjects sortedArrayUsingSelector:@selector(compare:)];
       XCTAssertEqual(duration1, [sortedLogTimes[1] longValue] - [sortedLogTimes[0] longValue], @"expected 2 seconds between first and second log times");
       XCTAssertEqual(duration2, [sortedLogTimes[2] longValue] - [sortedLogTimes[1] longValue], @"expected 3 seconds between second and third log times");
       [blocker signal];
@@ -304,7 +304,7 @@
   // this should queue up one event.
   [FBSDKAppEvents logEvent:@"event-without-user"];
 
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   [FBSDKAccessToken setCurrentAccessToken:token];
 
   // this should trigger a session change flush.
@@ -358,7 +358,7 @@
   }];
 
   [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
 
   // log events with and without token interleaved, which would normally
   // cause flushes but should simply be retained now.

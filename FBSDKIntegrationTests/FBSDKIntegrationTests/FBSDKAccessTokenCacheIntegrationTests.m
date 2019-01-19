@@ -40,7 +40,7 @@
   FBSDKAccessTokenCache *cache = [[FBSDKAccessTokenCache alloc] init];
   [cache clearCache];
   XCTAssertNil([cache fetchAccessToken], @"failed to clear cache");
-  FBSDKAccessToken* token = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
+  FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                               permissions:@[]
                                                       declinedPermissions:@[]
                                                                     appID:@"appid"
@@ -49,7 +49,7 @@
                                                               refreshDate:nil];
   [cache cacheAccessToken:token];
 
-  FBSDKAccessToken* retrievedToken = [cache fetchAccessToken];
+  FBSDKAccessToken *retrievedToken = cache.fetchAccessToken;
   XCTAssertTrue([token isEqualToAccessToken:retrievedToken], @"did not retrieve the same token");
   [cache clearCache];
 }
@@ -58,14 +58,14 @@
 #if IPHONE_SIMULATOR
   [[NSUserDefaults standardUserDefaults] setPersistentDomain:[NSDictionary dictionary] forName:[[NSBundle mainBundle] bundleIdentifier]];
 #endif
-  
+
   NSDictionary *tokenDictionary = @{
                                     @"com.facebook.sdk:TokenInformationTokenKey" : @"tokenString",
                                     @"com.facebook.sdk:TokenInformationPermissionsKey": @[ @"email"],
                                     @"com.facebook.sdk:TokenInformationExpirationDateKey": [[NSDate date] dateByAddingTimeInterval:-1],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : self.testAppID,
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -73,7 +73,7 @@
 
   [FBSDKAccessTokenCache resetV3CacheChecks];
   FBSDKAccessTokenCache *cache = [[FBSDKAccessTokenCache alloc] init];
-  FBSDKAccessToken* retrievedToken = [cache fetchAccessToken];
+  FBSDKAccessToken *retrievedToken = cache.fetchAccessToken;
   XCTAssertNil(retrievedToken, @"should not have retrieved expired token");
 
   [cache clearCache];
@@ -85,7 +85,7 @@
                                     @"com.facebook.sdk:TokenInformationPermissionsKey": @[ @"email"],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : self.testAppID,
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -97,7 +97,7 @@
 
   [FBSDKAccessTokenCache resetV3CacheChecks];
   FBSDKAccessTokenCache *cache = [[FBSDKAccessTokenCache alloc] init];
-  FBSDKAccessToken* retrievedToken = [cache fetchAccessToken];
+  FBSDKAccessToken *retrievedToken = cache.fetchAccessToken;
   XCTAssertNotNil(retrievedToken);
   XCTAssertEqualObjects(retrievedToken.tokenString, @"tokenString");
   XCTAssertEqualObjects(retrievedToken.permissions, [NSSet setWithObject:@"email"]);
@@ -115,20 +115,20 @@
                                     @"com.facebook.sdk:TokenInformationExpirationDateKey": [[NSDate date] dateByAddingTimeInterval:200],
                                     @"com.facebook.sdk:TokenInformationUserFBIDKey" : @"userid2",
                                     @"com.facebook.sdk:TokenInformationDeclinedPermissionsKey" : @[ @"read_stream" ],
-                                    @"com.facebook.sdk:TokenInformationAppIDKey" : [self testAppID],
+                                    @"com.facebook.sdk:TokenInformationAppIDKey" : self.testAppID,
                                     @"com.facebook.sdk:TokenInformationUUIDKey" : @"someuuid"
                                     };
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSString *uuidKey = [[FBSDKSettings legacyUserDefaultTokenInformationKeyName] stringByAppendingString:@"UUID"];
   [defaults setObject:@"someuuid" forKey:uuidKey];
 
-  NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [[NSBundle mainBundle] bundleIdentifier]];
+  NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.tokencache.%@", [NSBundle mainBundle].bundleIdentifier];
   FBSDKKeychainStore *keyChainstore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
   [keyChainstore setDictionary:tokenDictionary forKey:[FBSDKSettings legacyUserDefaultTokenInformationKeyName] accessibility:nil];
 
   [FBSDKAccessTokenCache resetV3CacheChecks];
   FBSDKAccessTokenCache *cache = [[FBSDKAccessTokenCache alloc] init];
-  FBSDKAccessToken* retrievedToken = [cache fetchAccessToken];
+  FBSDKAccessToken *retrievedToken = cache.fetchAccessToken;
   XCTAssertNotNil(retrievedToken);
   XCTAssertEqualObjects(retrievedToken.tokenString, @"tokenString");
   XCTAssertEqualObjects(retrievedToken.permissions, [NSSet setWithObject:@"email"]);

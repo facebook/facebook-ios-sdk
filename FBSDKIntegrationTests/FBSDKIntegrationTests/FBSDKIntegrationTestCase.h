@@ -19,14 +19,17 @@
 
 #import <XCTest/XCTest.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKAccessToken;
 @class FBSDKTestUsersManager;
 
-@interface NSString(FBSDKAppEventsIntegrationTests)
-- (NSUInteger)countOfSubstring:(NSString *)substring;
+@interface NSString (FBSDKAppEventsIntegrationTests)
+- (NSUInteger)countOfSubstring:(NSString *)substring
+NS_SWIFT_NAME(count(of:));
 @end
 
-@implementation NSString(FBSDKAppEventsIntegrationTests)
+@implementation NSString (FBSDKAppEventsIntegrationTests)
 - (NSUInteger)countOfSubstring:(NSString *)substring {
   NSUInteger count = 0;
   NSUInteger index = 0;
@@ -40,12 +43,16 @@
 }
 @end
 
+NS_SWIFT_NAME(IntegrationTestCase)
 @interface FBSDKIntegrationTestCase : XCTestCase
 
 @property (readonly, copy) NSString *testAppID;
 @property (readonly, copy) NSString *testAppClientToken;
 @property (readonly, copy) NSString *testAppSecret;
 @property (readonly, copy) NSString *testAppToken;
+
+// get the test manager (i.e., if you need multiple tokens at once).
+@property (nonatomic, readonly, strong) FBSDKTestUsersManager *testUsersManager;
 
 // removes all keys from user defaults
 - (void)clearUserDefaults;
@@ -54,10 +61,9 @@
 - (UIImage *)createSquareTestImage:(int)size;
 
 // helper method to get single test user with desired permissions.
-- (FBSDKAccessToken *)getTokenWithPermissions:(NSSet *)permissions;
-
-// get the test manager (i.e., if you need multiple tokens at once).
-- (FBSDKTestUsersManager *)testUsersManager;
+- (nullable FBSDKAccessToken *)getTokenWithPermissions:(NSArray<NSString *> *)permissions;
 
 
 @end
+
+NS_ASSUME_NONNULL_END

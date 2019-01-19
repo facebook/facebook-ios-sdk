@@ -35,7 +35,7 @@
 
 - (void)testFetchMe {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
                                                                  parameters:@{ @"fields": @"id" }
@@ -56,7 +56,7 @@
 
 - (void)testFetchLikesWithCurrentToken {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"user_likes"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"user_likes"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/likes"
@@ -76,7 +76,7 @@
 - (void)testRefreshToken {
   XCTestExpectation *expectation = [self expectationWithDescription:@"token refreshed"];
   // create token locally without permissions
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@""]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@""]];
   [FBSDKAccessToken setCurrentAccessToken:token];
 
   XCTAssertFalse([[FBSDKAccessToken currentAccessToken] hasGranted: @"public_profile"], "Permission is not expected to be granted.");
@@ -112,7 +112,7 @@
 - (void)testBatchSimple
 {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:3];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"user_likes"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"user_likes"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/likes"
@@ -193,7 +193,7 @@
 
 - (void)testBatchPhotoUpload
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObjects:@"publish_actions", nil]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"publish_actions"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:4];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
@@ -276,7 +276,7 @@
   XCTAssertTrue([blocker waitWithTimeout:5], @"request timeout");
 
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  FBSDKAccessToken *accessToken = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
+  FBSDKAccessToken *accessToken = [self getTokenWithPermissions:@[@"publish_actions"]];
   FBSDKGraphRequest *feedRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/feed"
                                                                      parameters:@{ @"fields": @"" }
                                                                     tokenString:accessToken.tokenString
@@ -301,7 +301,7 @@
 
 - (void)testFetchGenderLocale {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   __block NSString *originalGender;
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
