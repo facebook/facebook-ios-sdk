@@ -33,7 +33,7 @@ static NSTimeInterval const scanLength = 0.5;
 @property (nonatomic, strong) CBCentralManager *manager;
 @property (nonatomic, strong) NSTimer *updateTimeoutTimer;
 @property (nonatomic, strong) NSMutableArray<FBSDKBluetoothBeacon *> *discoveredBeacons;
-@property (atomic, strong) NSMutableArray<BluetoothBeaconScanCompletion> *scanCompletionBlocks;
+@property (atomic, strong) NSMutableArray<FBSDKBluetoothBeaconBlock> *scanCompletionBlocks;
 @property (nonatomic, assign) BOOL didPerformScan;
 
 @property (nonatomic, copy, readonly) NSArray<CBUUID *> *bluetoothServices;
@@ -56,13 +56,13 @@ static NSTimeInterval const scanLength = 0.5;
   return self;
 }
 
-- (void)scanForBeaconsWithCompletion:(BluetoothBeaconScanCompletion)completion
+- (void)scanForBeaconsWithCompletion:(FBSDKBluetoothBeaconBlock)completion
 {
   if (self.manager.state == CBCentralManagerStatePoweredOff ||
       self.manager.state == CBCentralManagerStateUnsupported ||
       self.manager.state == CBCentralManagerStateUnauthorized) {
 
-    completion(nil);
+    completion(@[]);
     return;
   }
 
@@ -94,12 +94,12 @@ static NSTimeInterval const scanLength = 0.5;
 {
   [self.manager stopScan];
 
-  for (BluetoothBeaconScanCompletion completion in self.scanCompletionBlocks) {
+  for (FBSDKBluetoothBeaconBlock completion in self.scanCompletionBlocks) {
     if (self.didPerformScan) {
       completion(self.discoveredBeacons);
     }
     else {
-      completion(nil);
+      completion(@[]);
     }
   }
   [self.scanCompletionBlocks removeAllObjects];
