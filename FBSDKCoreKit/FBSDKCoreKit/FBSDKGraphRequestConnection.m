@@ -515,7 +515,8 @@ NSURLSessionDataDelegate
   } else {
     NSString *token = [self accessTokenWithRequest:request];
     if (token) {
-      [request.parameters setValue:token forKey:kAccessTokenKey];
+      [params setValue:token forKey:kAccessTokenKey];
+      request.parameters = params;
       [self registerTokenToOmitFromLog:token];
     }
 
