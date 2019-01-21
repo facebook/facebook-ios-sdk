@@ -326,7 +326,9 @@
     dataTaskWithRequest:request
     completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
       if (!error && data.length) {
-        [weakSelf _updateImageWithData:data state:state];
+				dispatch_async(dispatch_get_main_queue(), ^{
+					[weakSelf _updateImageWithData:data state:state];
+				});
       }
     }] resume];
 }
@@ -341,6 +343,7 @@
 
 - (void)_updateImageWithData:(NSData *)data state:(FBSDKProfilePictureViewState *)state
 {
+	NSAssert([NSThread isMainThread], @"%@ %@: must be invoked from main thread.", NSStringFromClass(self.class), NSStringFromSelector(_cmd));
   // make sure we haven't updated the state since we began fetching the image
   if (![state isValidForState:_lastState]) {
     return;
