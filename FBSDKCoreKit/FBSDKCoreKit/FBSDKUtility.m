@@ -77,7 +77,7 @@
   return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
                                                                                (CFStringRef)value,
                                                                                NULL, // characters to leave unescaped
-                                                                               CFSTR(":!*();@/&?+$,='"),
+                                                                               CFSTR(":!*();@/&?+$,='%#[]{}"),
                                                                                kCFStringEncodingUTF8);
 }
 #pragma clang diagnostic pop
