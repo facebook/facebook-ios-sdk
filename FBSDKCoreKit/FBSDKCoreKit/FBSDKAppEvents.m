@@ -96,7 +96,7 @@ FBSDKAppEventParameterName FBSDKAppEventParameterNamePaymentInfoAvailable   = @"
 FBSDKAppEventParameterName FBSDKAppEventParameterNameNumItems               = @"fb_num_items";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameLevel                  = @"fb_level";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameDescription            = @"fb_description";
-NSString *const FBSDKAppEventParameterLaunchSource               = @"fb_mobile_launch_source";
+FBSDKAppEventParameterName FBSDKAppEventParameterLaunchSource               = @"fb_mobile_launch_source";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType                 = @"ad_type";
 FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID                = @"fb_order_id";
 
@@ -187,7 +187,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlError               = @"fb_li
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlImpression          = @"fb_like_control_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable  = @"fb_like_control_network_unavailable";
 
-NSString *const FBSDLAppEventNameFBSDKEventShareDialogResult =              @"fb_dialog_share_result";
+FBSDKAppEventName FBSDLAppEventNameFBSDKEventShareDialogResult =              @"fb_dialog_share_result";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult =     @"fb_messenger_dialog_share_result";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult =     @"fb_app_invite_dialog_share_result";
 
