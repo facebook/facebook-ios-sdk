@@ -73,6 +73,7 @@ FBSDKAppEventName FBSDKAppEventNameAddedToWishlist         = @"fb_mobile_add_to_
 FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout       = @"fb_mobile_initiated_checkout";
 FBSDKAppEventName FBSDKAppEventNameAddedPaymentInfo        = @"fb_mobile_add_payment_info";
 FBSDKAppEventName FBSDKAppEventNameProductCatalogUpdate    = @"fb_mobile_catalog_update";
+FBSDKAppEventName FBSDKAppEventNamePurchased               = @"fb_mobile_purchase";
 
 // Gaming related
 FBSDKAppEventName FBSDKAppEventNameAchievedLevel           = @"fb_mobile_level_achieved";
@@ -134,8 +135,6 @@ FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes                   = @
 //
 // Event names internal to this file
 //
-FBSDKAppEventName FBSDKAppEventNamePurchased        = @"fb_mobile_purchase";
-
 FBSDKAppEventName FBSDKAppEventNameLoginViewUsage                   = @"fb_login_view_usage";
 FBSDKAppEventName FBSDKAppEventNameShareSheetLaunch                 = @"fb_share_sheet_launch";
 FBSDKAppEventName FBSDKAppEventNameShareSheetDismiss                = @"fb_share_sheet_dismiss";
@@ -308,11 +307,6 @@ NSString *const FBSDKAPPEventsWKWebViewMessagesProtocolKey = @"fbmq-0.1";
 
 #define FBUnityUtilityClassName "FBUnityUtility"
 #define FBUnityUtilityUpdateBindingsSelector @"triggerUpdateBindings:"
-
-#define UNINSTALL_TRACKING_DEVICE_ID_KEY          @"device_id"
-#define UNINSTALL_TRACKING_PLATFORM_KEY           @"platform"
-#define UNINSTALL_TRACKING_DEVICE_TOKEN_KEY       @"device_token"
-#define UNINSTALL_TRACKING_TOKEN_ENDPOINT         @"app_push_device_token"
 
 static NSString *g_overrideAppID = nil;
 
