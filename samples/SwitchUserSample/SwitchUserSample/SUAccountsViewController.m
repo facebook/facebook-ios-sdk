@@ -214,7 +214,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
         }
         SUProfileTableViewCell *cell = (SUProfileTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.userName = @"Loading ...";
-        [login logInWithReadPermissions:nil
+        [login logInWithReadPermissions:@[]
                      fromViewController:self
                                 handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
             if (error || result.isCancelled) {
