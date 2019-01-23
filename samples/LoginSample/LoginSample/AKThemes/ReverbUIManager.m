@@ -54,7 +54,11 @@
 
 - (nullable UIView *)actionBarViewForState:(AKFLoginFlowState)state
 {
-  return [[ReverbActionBarView alloc] initWithState:state theme:_theme delegate:self];
+  if ([_theme isKindOfClass:[ReverbTheme class]]) {
+    return [[ReverbActionBarView alloc] initWithState:state theme:(ReverbTheme *)_theme delegate:self];
+  }
+
+  return nil;
 }
 
 - (nullable UIView *)bodyViewForState:(AKFLoginFlowState)state
@@ -95,7 +99,11 @@
       return nil;
   }
 
-  return [[ReverbBodyView alloc] initWithImage:image shouldRotate:shouldRotate];
+  if ([_theme isKindOfClass:[ReverbTheme class]]) {
+    return [[ReverbBodyView alloc] initWithImage:image shouldRotate:shouldRotate];
+  }
+
+  return nil;
 }
 
 - (AKFButtonType)buttonTypeForState:(AKFLoginFlowState)state
@@ -154,7 +162,7 @@
                                         maxProgress:5
                                 showSwitchLoginType:showSwitchLoginType
                                           loginType:_loginType
-                                              theme:_theme
+                                              theme:(ReverbTheme *)_theme
                                            delegate:self];
 }
 
