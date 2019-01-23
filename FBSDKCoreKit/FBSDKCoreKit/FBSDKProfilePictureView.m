@@ -141,7 +141,7 @@
     if (!CGRectEqualToRect(currentBounds, bounds)) {
       super.bounds = bounds;
       if (!CGSizeEqualToSize(currentBounds.size, bounds.size)) {
-        _placeholderImageIsValid = NO;
+        self->_placeholderImageIsValid = NO;
         [self setNeedsImageUpdate];
       }
     }
@@ -184,21 +184,21 @@
 - (void)setNeedsImageUpdate
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    if (!_imageView || CGRectIsEmpty(self.bounds)) {
+    if (!self->_imageView || CGRectIsEmpty(self.bounds)) {
       // we can't do anything with an empty view, so just bail out until we have a size
       return;
     }
 
     // ensure that we have an image.  do this here so we can draw the placeholder image synchronously if we don't have one
-    if (!_placeholderImageIsValid && !_hasProfileImage) {
+    if (!self->_placeholderImageIsValid && !self->_hasProfileImage) {
       [self _setPlaceholderImage];
     }
 
     // debounce calls to needsImage against the main runloop
-    if (_needsImageUpdate) {
+    if (self->_needsImageUpdate) {
       return;
     }
-    _needsImageUpdate = YES;
+    self->_needsImageUpdate = YES;
     [self _needsImageUpdate];
   });
 }
@@ -339,7 +339,7 @@
   _hasProfileImage = NO;
 
   dispatch_async(dispatch_get_main_queue(), ^{
-    _imageView.image = [[[FBSDKMaleSilhouetteIcon alloc] initWithColor:fillColor] imageWithSize:_imageView.bounds.size];
+    self->_imageView.image = [[[FBSDKMaleSilhouetteIcon alloc] initWithColor:fillColor] imageWithSize:self->_imageView.bounds.size];
   });
 }
 
@@ -354,7 +354,7 @@
   if (image) {
     _hasProfileImage = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
-      _imageView.image = image;
+      self->_imageView.image = image;
     });
   } else {
     _hasProfileImage = NO;
