@@ -65,7 +65,7 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
                       parameters:parameters
                      tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                          version:nil
-                      HTTPMethod:HTTPMethod];
+                      HTTPMethod:method];
 }
 
 - (instancetype)initWithGraphPath:(NSString *)graphPath
@@ -87,7 +87,7 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
                            parameters:parameters
                           tokenString:tokenString
                               version:[FBSDKSettings graphAPIVersion]
-                           HTTPMethod:HTTPMethod])) {
+                           HTTPMethod:method])) {
     self.flags |= flags;
   }
   return self;
