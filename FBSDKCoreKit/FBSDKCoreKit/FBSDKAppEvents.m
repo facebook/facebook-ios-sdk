@@ -187,7 +187,7 @@ FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlError               = @"fb_li
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlImpression          = @"fb_like_control_impression";
 FBSDKAppEventName FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable  = @"fb_like_control_network_unavailable";
 
-FBSDKAppEventName FBSDLAppEventNameFBSDKEventShareDialogResult =              @"fb_dialog_share_result";
+FBSDKAppEventName FBSDKAppEventNameFBSDKEventShareDialogResult =              @"fb_dialog_share_result";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventMessengerShareDialogResult =     @"fb_messenger_dialog_share_result";
 FBSDKAppEventName FBSDKAppEventNameFBSDKEventAppInviteShareDialogResult =     @"fb_app_invite_dialog_share_result";
 

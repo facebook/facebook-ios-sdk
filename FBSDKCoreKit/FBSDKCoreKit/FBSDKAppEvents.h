@@ -134,6 +134,9 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameCompletedTutorial;
 /** Log this event when the user has entered the checkout process.  The valueToSum passed to logEvent should be the total price in the cart. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameInitiatedCheckout;
 
+/** Log this event when the user has completed a transaction.  The valueToSum passed to logEvent should be the total price of the transaction. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNamePurchased;
+
 /** Log this event when the user has rated an item in the app.  The valueToSum passed to logEvent should be the numeric rating. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameRated;
 

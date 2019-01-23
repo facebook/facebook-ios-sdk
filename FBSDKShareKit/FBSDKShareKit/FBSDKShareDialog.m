@@ -1108,7 +1108,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1122,7 +1122,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1137,7 +1137,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];
