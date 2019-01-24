@@ -231,9 +231,14 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   NSMutableDictionary *componentInfo = [NSMutableDictionary dictionary];
   componentInfo[CODELESS_MAPPING_CLASS_NAME_KEY] = NSStringFromClass([obj class]);
 
-  NSString *text = [FBSDKViewHierarchy getText:obj];
-  if (text) {
-    componentInfo[CODELESS_MAPPING_TEXT_KEY] = text;
+  if (![FBSDKViewHierarchy isUserInputView:obj]) {
+    NSString *text = [FBSDKViewHierarchy getText:obj];
+    if (text) {
+      componentInfo[CODELESS_MAPPING_TEXT_KEY] = text;
+    }
+  } else {
+    componentInfo[CODELESS_MAPPING_TEXT_KEY] = @"";
+    componentInfo[CODELESS_MAPPING_IS_USER_INPUT_KEY] = @YES;
   }
 
   NSString *hint = [FBSDKViewHierarchy getHint:obj];
@@ -373,25 +378,6 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     text = attributedText.string;
   }
 
-  if ([obj conformsToProtocol:@protocol(UITextInput)]) {
-    id<UITextInput> input = (id<UITextInput>)obj;
-    if (input.secureTextEntry) {
-      text = nil;
-    } else {
-      switch (input.keyboardType) {
-        case UIKeyboardTypePhonePad:
-        case UIKeyboardTypeEmailAddress:
-          text = nil;
-          break;
-        default: break;
-      }
-    }
-  }
-
-  if ([FBSDKAppEventsUtility isSensitiveUserData:text]) {
-    return nil;
-  }
-
   return text.length > 0 ? text : nil;
 }
 
@@ -477,6 +463,26 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
   }
 
   return bitmask;
+}
+
++ (BOOL)isUserInputView:(NSObject *)obj
+{
+  if (obj && [obj conformsToProtocol:@protocol(UITextInput)]) {
+    id<UITextInput> input = (id<UITextInput>)obj;
+    if (input.secureTextEntry) {
+      return YES;
+    } else {
+      switch (input.keyboardType) {
+        case UIKeyboardTypePhonePad:
+        case UIKeyboardTypeEmailAddress:
+          return YES;
+        default: break;
+      }
+    }
+  }
+
+  NSString *text = [FBSDKViewHierarchy getText:obj];
+  return text && [FBSDKAppEventsUtility isSensitiveUserData:text];
 }
 
 #pragma clang diagnostic push

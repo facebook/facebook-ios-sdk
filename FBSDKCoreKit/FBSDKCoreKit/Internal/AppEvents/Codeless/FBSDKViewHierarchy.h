@@ -36,4 +36,6 @@ NS_SWIFT_NAME(ViewHierarchy)
 + (NSInteger)getTag:(NSObject *)obj;
 + (NSNumber *)getViewReactTag:(UIView *)view;
 
++ (BOOL)isUserInputView:(NSObject *)obj;
+
 @end
