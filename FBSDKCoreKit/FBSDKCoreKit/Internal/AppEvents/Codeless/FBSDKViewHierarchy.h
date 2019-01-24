@@ -35,4 +35,6 @@
 + (NSInteger)getTag:(NSObject *)obj;
 + (NSNumber *)getViewReactTag:(UIView *)view;
 
++ (BOOL)isUserInputView:(NSObject *)obj;
+
 @end
