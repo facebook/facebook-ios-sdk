@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 NS_SWIFT_NAME(ShareAPI)
 @interface FBSDKShareAPI : NSObject <FBSDKSharing>
 
-- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)init NS_DESIGNATED_INITIALIZER
+NS_SWIFT_UNAVAILABLE("Use init(content:delegate:) instead");
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
