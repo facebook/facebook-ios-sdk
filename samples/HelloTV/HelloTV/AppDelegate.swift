@@ -25,14 +25,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-    FBSDKApplicationDelegate.sharedInstance().application(
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    ApplicationDelegate.shared.application(
       application,
       didFinishLaunchingWithOptions: launchOptions)
     return true
   }
 
   func applicationDidBecomeActive(_ application: UIApplication) {
-    FBSDKAppEvents.activateApp()
+    AppEvents.activateApp()
   }
 }
