@@ -238,6 +238,9 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameSuccess;
 /// typedef for FBSDKAppEventParameterProduct
 typedef NSString *const FBSDKAppEventParameterProduct NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.ParameterProduct);
 
+/** Parameter key used to specify the product item's category. */
+FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCategory;
+
 /** Parameter key used to specify the product item's custom label 0. */
 FOUNDATION_EXPORT FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCustomLabel0;
 

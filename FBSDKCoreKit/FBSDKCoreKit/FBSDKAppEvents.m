@@ -109,6 +109,7 @@ FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCustomLabel1         
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCustomLabel2               = @"fb_product_custom_label_2";
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCustomLabel3               = @"fb_product_custom_label_3";
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCustomLabel4               = @"fb_product_custom_label_4";
+FBSDKAppEventParameterProduct FBSDKAppEventParameterProductCategory                   = @"fb_product_category";
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductAppLinkIOSUrl              = @"fb_product_applink_ios_url";
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductAppLinkIOSAppStoreID       = @"fb_product_applink_ios_app_store_id";
 FBSDKAppEventParameterProduct FBSDKAppEventParameterProductAppLinkIOSAppName          = @"fb_product_applink_ios_app_name";
