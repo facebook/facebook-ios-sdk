@@ -133,7 +133,7 @@ static NSMutableDictionary<NSString *, FBSDKTestUsersManager *> *gInstancesDicti
                                                                  parameters:params
                                                                 tokenString:[self appAccessToken]
                                                                     version:nil
-                                                                 HTTPMethod:@"POST"];
+                                                                 HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     if (error) {
       if (handler) {
@@ -172,12 +172,12 @@ static NSMutableDictionary<NSString *, FBSDKTestUsersManager *> *gInstancesDicti
                                                              parameters:@{}
                                                             tokenString:first.tokenString
                                                                 version:nil
-                                                             HTTPMethod:@"POST"];
+                                                             HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequest *two = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/friends/%@", second.userID, first.userID]
                                                              parameters:@{}
                                                             tokenString:second.tokenString
                                                                 version:nil
-                                                             HTTPMethod:@"POST"];
+                                                             HTTPMethod:FBSDKHTTPMethodPOST];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   [conn addRequest:one
     batchEntryName:@"first"

@@ -48,7 +48,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                                                                 parameters:deferredAppLinkParameters
                                                                                tokenString:nil
                                                                                    version:nil
-                                                                                HTTPMethod:@"POST"];
+                                                                                HTTPMethod:FBSDKHTTPMethodPOST];
 
   [deferredAppLinkRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
                                                        id result,

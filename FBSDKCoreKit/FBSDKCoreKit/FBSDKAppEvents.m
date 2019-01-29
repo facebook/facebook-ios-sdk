@@ -788,7 +788,7 @@ static NSString *g_overrideAppID = nil;
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/user_properties", [[self singleton] appID]]
                                                                  parameters:params
                                                                 tokenString:[FBSDKAccessToken currentAccessToken].tokenString
-                                                                 HTTPMethod:@"POST"
+                                                                 HTTPMethod:FBSDKHTTPMethodPOST
                                                                       flags:FBSDKGraphRequestFlagDisableErrorRecovery |
                                                                             FBSDKGraphRequestFlagDoNotInvalidateTokenOnError |
                                                                             FBSDKGraphRequestFlagSkipClientToken
@@ -921,7 +921,7 @@ static NSString *g_overrideAppID = nil;
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:path
                                                          parameters:params
                                                         tokenString:nil
-                                                         HTTPMethod:@"POST"
+                                                         HTTPMethod:FBSDKHTTPMethodPOST
                                                               flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (!error) {
@@ -1171,7 +1171,7 @@ static NSString *g_overrideAppID = nil;
     FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:[NSString stringWithFormat:@"%@/activities", appEventsState.appID]
                                                          parameters:postParameters
                                                         tokenString:appEventsState.tokenString
-                                                         HTTPMethod:@"POST"
+                                                         HTTPMethod:FBSDKHTTPMethodPOST
                                                               flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
