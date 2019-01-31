@@ -28,5 +28,5 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = { 'ENABLE_TESTABILITY' => 'YES' }
 
   s.ios.dependency 'Bolts', '~> 1.9'
-  s.ios.dependency 'FBSDKCoreKit', '~> 4.39'
+  s.ios.dependency 'FBSDKCoreKit', '~> 4.40'
 end
