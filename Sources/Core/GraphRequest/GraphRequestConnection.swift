@@ -108,8 +108,8 @@ public class GraphRequestConnection {
                      batchParameters: [String: Any]?,
                      completion: Completion<T>? = nil) {
     sdkConnection.add(request.sdkRequest,
-                      completionHandler: completion.map(type(of: self).sdkRequestCompletion),
-                      batchParameters: batchParameters)
+                      batchParameters: batchParameters,
+                      completionHandler: completion.map(type(of: self).sdkRequestCompletion))
   }
 
   /**
