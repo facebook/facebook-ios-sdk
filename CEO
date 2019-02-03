@@ -1,0 +1,13 @@
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+  <key>CFBundleURLSchemes</key>
+  <array>
+    <string>fb389237848318309</string>
+  </array>
+  </dict>
+</array>
+<key>FacebookAppID</key>
+<string>389237848318309</string>
+<key>FacebookDisplayName</key>
+<string>gmright</string>
