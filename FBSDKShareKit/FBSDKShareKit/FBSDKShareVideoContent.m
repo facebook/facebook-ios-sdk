@@ -110,9 +110,12 @@
       }
     }
   }
-  [FBSDKInternalUtility dictionary:videoParameters
-                         setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
-                            forKey:@"previewPhoto"];
+
+  if (_video.previewPhoto) {
+    [FBSDKInternalUtility dictionary:videoParameters
+                           setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
+                              forKey:@"previewPhoto"];
+  }
 
   [FBSDKInternalUtility dictionary:updatedParameters
                          setObject:videoParameters
