@@ -357,6 +357,10 @@
 		A4B471F11E662F74009678AA /* FBSDKCameraEffectTextures.m in Sources */ = {isa = PBXBuildFile; fileRef = A4B471ED1E662F74009678AA /* FBSDKCameraEffectTextures.m */; };
 		A4F33E741E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */; };
 		A4F33E751E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */; };
+		B331E2182208C94800F3E4EE /* FBSDKShareExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B331E2132208C94800F3E4EE /* FBSDKShareExtension.m */; };
+		B331E2192208C94800F3E4EE /* FBSDKShareExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B331E2132208C94800F3E4EE /* FBSDKShareExtension.m */; };
+		B331E21A2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = B331E2172208C94800F3E4EE /* FBSDKShareExtension.h */; };
+		B331E21B2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = B331E2172208C94800F3E4EE /* FBSDKShareExtension.h */; };
 		B37494B420BA52E600CF7DC1 /* FBSDKSharingValidation.h in Headers */ = {isa = PBXBuildFile; fileRef = B37494B320BA52E600CF7DC1 /* FBSDKSharingValidation.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B388E34F20A0E22500BFECA5 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B388E34B20A0E22500BFECA5 /* Photos.framework */; };
 		B38A44BA20BC71E800DDE80D /* FBSDKSharingScheme.h in Headers */ = {isa = PBXBuildFile; fileRef = B38A44B920BC71E800DDE80D /* FBSDKSharingScheme.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -629,6 +633,8 @@
 		A4B471EC1E662F74009678AA /* FBSDKCameraEffectTextures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKCameraEffectTextures.h; sourceTree = "<group>"; };
 		A4B471ED1E662F74009678AA /* FBSDKCameraEffectTextures.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCameraEffectTextures.m; sourceTree = "<group>"; };
 		A4F33E731E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKCameraEffectArguments+Internal.h"; sourceTree = "<group>"; };
+		B331E2132208C94800F3E4EE /* FBSDKShareExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareExtension.m; sourceTree = "<group>"; };
+		B331E2172208C94800F3E4EE /* FBSDKShareExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKShareExtension.h; sourceTree = "<group>"; };
 		B37494B320BA52E600CF7DC1 /* FBSDKSharingValidation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingValidation.h; sourceTree = "<group>"; };
 		B388E34B20A0E22500BFECA5 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.3.sdk/System/Library/Frameworks/Photos.framework; sourceTree = DEVELOPER_DIR; };
 		B38A44B920BC71E800DDE80D /* FBSDKSharingScheme.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingScheme.h; sourceTree = "<group>"; };
@@ -875,6 +881,8 @@
 				891687E41AB35F2D00F55364 /* FBSDKMessengerIcon.h */,
 				891687E51AB35F2D00F55364 /* FBSDKMessengerIcon.m */,
 				8904148A1A648DAC00617215 /* FBSDKShareDefines.h */,
+				B331E2172208C94800F3E4EE /* FBSDKShareExtension.h */,
+				B331E2132208C94800F3E4EE /* FBSDKShareExtension.m */,
 				890414791A6481AB00617215 /* FBSDKShareKit+Internal.h */,
 				886F746C1F9EA38400BD9AC3 /* FBSDKShareMessengerContentUtility.h */,
 				886F746D1F9EA38400BD9AC3 /* FBSDKShareMessengerContentUtility.m */,
@@ -1108,6 +1116,7 @@
 				81A07F351D1A2E6A0041A29C /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
 				81A07F361D1A2E6A0041A29C /* FBSDKHashtag.h in Headers */,
 				81A07F371D1A2E6A0041A29C /* FBSDKSharePhotoContent.h in Headers */,
+				B331E21B2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */,
 				81A07F381D1A2E6A0041A29C /* FBSDKCheckmarkIcon.h in Headers */,
 				8836449E1F9551B000124BCB /* FBSDKShareMessengerActionButton.h in Headers */,
 				A4F33E751E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */,
@@ -1209,6 +1218,7 @@
 				89F203A11AAA0DF80053499E /* FBSDKGameRequestFrictionlessRecipientCache.h in Headers */,
 				D5158B5C1C5FD492003E32EE /* FBSDKHashtag.h in Headers */,
 				89FC9C6F1A3FA1E00001910E /* FBSDKSharePhotoContent.h in Headers */,
+				B331E21A2208C94800F3E4EE /* FBSDKShareExtension.h in Headers */,
 				891687E21AB35E8400F55364 /* FBSDKCheckmarkIcon.h in Headers */,
 				8836449D1F9551B000124BCB /* FBSDKShareMessengerActionButton.h in Headers */,
 				A4F33E741E677A8600747AFD /* FBSDKCameraEffectArguments+Internal.h in Headers */,
@@ -1529,6 +1539,7 @@
 				81A07EE71D1A2E6A0041A29C /* FBSDKMessageDialog.m in Sources */,
 				81A07EE81D1A2E6A0041A29C /* FBSDKLikeObjectType.m in Sources */,
 				81A07EE91D1A2E6A0041A29C /* FBSDKShareLinkContent.m in Sources */,
+				B331E2192208C94800F3E4EE /* FBSDKShareExtension.m in Sources */,
 				883644B81F95776500124BCB /* FBSDKShareMessengerMediaTemplateContent.m in Sources */,
 				81A07EEA1D1A2E6A0041A29C /* FBSDKSharePhotoContent.m in Sources */,
 				81A07EEB1D1A2E6A0041A29C /* FBSDKLikeButtonPopWAV.m in Sources */,
@@ -1609,6 +1620,7 @@
 				8904147E1A64843500617215 /* FBSDKMessageDialog.m in Sources */,
 				89D05A711A9FE02400609300 /* FBSDKLikeObjectType.m in Sources */,
 				89CE02E61A3F56470033C9CA /* FBSDKShareLinkContent.m in Sources */,
+				B331E2182208C94800F3E4EE /* FBSDKShareExtension.m in Sources */,
 				883644B71F95776500124BCB /* FBSDKShareMessengerMediaTemplateContent.m in Sources */,
 				89FC9C701A3FA1E00001910E /* FBSDKSharePhotoContent.m in Sources */,
 				89D05AA61AA1105400609300 /* FBSDKLikeButtonPopWAV.m in Sources */,
