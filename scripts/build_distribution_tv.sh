@@ -73,6 +73,8 @@ echo Building Distribution.
 for SAMPLE in Configurations HelloTV; do
   \cp -R "$FB_SDK_SAMPLES/$SAMPLE" "$FB_SDK_BUILD_PACKAGE_SAMPLES" \
     || die "Could not copy $SAMPLE"
+    # Workspace doesn't work with Sample project because the framework projects are not present, so we'll delete it
+    find "$FB_SDK_BUILD_PACKAGE_SAMPLES/$SAMPLE" -name "$SAMPLE.xcworkspace" -type d -exec rm -r "{}" \;
 done
 \cp "$FB_SDK_ROOT/README_TV.txt" "$FB_SDK_BUILD_PACKAGE" \
   || die "Could not copy README"
@@ -84,8 +86,18 @@ done
 # Fixup projects to point to the SDK framework
 #
 for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project-TVOS.xcconfig" -print); do \
-  sed "s|../../build/tv|../../|g" \
+  sed "s|../../build\(/tv\)\{0,1\}|../../|g" \
     ${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
+
+for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "Project.xcconfig" -print); do \
+sed "s|../../build\(/tv\)\{0,1\}|../../|g" \
+${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
+done
+
+for fname in $(find "$FB_SDK_BUILD_PACKAGE_SAMPLES" -name "project.pbxproj" -print); do \
+sed 's|\(path[[:space:]]*=[[:space:]]*\.\.\(/\.\.\)*\)/build\(/tv\)\{0,1\}|\1|g' \
+${fname} > ${fname}.tmpfile  && mv ${fname}.tmpfile ${fname}; \
 done
 
 # -----------------------------------------------------------------------------
