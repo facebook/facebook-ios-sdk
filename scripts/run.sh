@@ -78,14 +78,11 @@ set_globals() {
   MAIN_VERSION_FILE="Configurations/Version.xcconfig"
 
   FRAMEWORK_NAME="FacebookSDK"
-  POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}");
 
-  local pod_specs_cnt=${#POD_SPECS[@]}
-  for ((i=0;i<pod_specs_cnt;i++)); do
-    POD_SPECS[i]="${POD_SPECS[i]}.podspec"
-  done
+  POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
+  POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
 
-  export POD_SPECS;
+  export POD_SPECS
 }
 
 # Build
@@ -210,7 +207,7 @@ confirm_semver() {
 
 lint_podspecs() {
   for spec in "${POD_SPECS[@]}"; do
-    pod lib lint "$spec"
+    pod lib lint "$spec" "$@"
   done
 }
 
