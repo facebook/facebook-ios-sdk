@@ -80,7 +80,7 @@ set_globals() {
 
   local pod_specs_cnt=${#POD_SPECS[@]}
   for ((i=0;i<pod_specs_cnt;i++)); do
-      POD_SPECS[i]="${POD_SPECS[i]}.podspec"
+    POD_SPECS[i]="${POD_SPECS[i]}.podspec"
   done
 
   export POD_SPECS;
