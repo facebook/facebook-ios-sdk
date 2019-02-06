@@ -160,6 +160,13 @@ bump_version() {
 confirm_semver() {
   local actual_version="$1"
 
+  local sem_ver_re="[[:digit:]]+[.][[:digit:]]+[.][[:digit:]]+"
+
+  if ! [[ $actual_version =~ $sem_ver_re ]]; then
+    false
+    return
+  fi
+
   local num_re='^[0-9]+$'
 
   local version_major
