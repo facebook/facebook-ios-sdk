@@ -67,24 +67,23 @@ set_globals() {
     "AccountKit"
   );
 
-  VERSION_CHANGE_FILES=(
+  VERSION_FILES=(
     "Configurations/Version.xcconfig"
     "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
-    "FBSDKCoreKit.podspec"
-    "FBSDKShareKit.podspec"
-    "FBSDKLoginKit.podspec"
-    "FBSDKTVOSKit.podspec"
-    "FBSDKMarketingKit.podspec"
-    "FacebookSDK.podspec"
     "AccountKit/AccountKit/Internal/AKFConstants.m"
-    "AccountKit/AccountKit.podspec"
-    "FBSDKPlacesKit.podspec"
   )
 
   MAIN_VERSION_FILE="Configurations/Version.xcconfig"
 
   FRAMEWORK_NAME="FacebookSDK"
-  POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}"); export POD_SPECS;
+  POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}");
+
+  local pod_specs_cnt=${#POD_SPECS[@]}
+  for ((i=0;i<pod_specs_cnt;i++)); do
+      POD_SPECS[i]="${POD_SPECS[i]}.podspec"
+  done
+
+  export POD_SPECS;
 }
 
 # Build
@@ -131,8 +130,13 @@ bump_version() {
   current_version=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
   local new_version="$1"
 
+  local version_change_files=(
+    "${VERSION_FILES[@]}"
+    "${POD_SPECS[@]}"
+  )
+
   # Replace the previous version to the new version in relative files
-  for file_path in "${VERSION_CHANGE_FILES[@]}"; do
+  for file_path in "${version_change_files[@]}"; do
     local full_file_path="$SDK_DIR/$file_path"
     local temp_file="$full_file_path.tmp"
     sed -e "s/$current_version/$new_version/g" "$full_file_path" > "$temp_file"

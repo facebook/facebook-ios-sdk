@@ -67,28 +67,20 @@ test_shared_setup() {
   );
 
   local test_pod_specs=(
-    "FacebookSDK"
-    "FBSDKCoreKit"
-    "FBSDKLoginKit"
-    "FBSDKShareKit"
-    "FBSDKPlacesKit"
-    "FBSDKMarketingKit"
-    "FBSDKTVOSKit"
-    "AccountKit"
+    "FacebookSDK.podspec"
+    "FBSDKCoreKit.podspec"
+    "FBSDKLoginKit.podspec"
+    "FBSDKShareKit.podspec"
+    "FBSDKPlacesKit.podspec"
+    "FBSDKMarketingKit.podspec"
+    "FBSDKTVOSKit.podspec"
+    "AccountKit.podspec"
   );
 
   local test_version_change_files=(
     "Configurations/Version.xcconfig"
     "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
-    "FBSDKCoreKit.podspec"
-    "FBSDKShareKit.podspec"
-    "FBSDKLoginKit.podspec"
-    "FBSDKTVOSKit.podspec"
-    "FBSDKMarketingKit.podspec"
-    "FacebookSDK.podspec"
     "AccountKit/AccountKit/Internal/AKFConstants.m"
-    "AccountKit/AccountKit.podspec"
-    "FBSDKPlacesKit.podspec"
   )
 
   local test_main_version_file="Configurations/Version.xcconfig"
@@ -121,8 +113,8 @@ test_shared_setup() {
     ((TEST_FAILURES+=1))
   fi
 
-  if [ "${VERSION_CHANGE_FILES[*]}" != "${test_version_change_files[*]}" ]; then
-    test_failure "VERSION_CHANGE_FILES not correct"
+  if [ "${VERSION_FILES[*]}" != "${test_version_change_files[*]}" ]; then
+    test_failure "VERSION_FILES not correct"
     ((TEST_FAILURES+=1))
   fi
 
