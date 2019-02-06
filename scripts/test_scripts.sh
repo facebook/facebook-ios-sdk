@@ -29,7 +29,7 @@ main() {
   TEST_FAILURES=$((0))
 
   test_shared_setup
-  test_build_sdk
+  test_run_routing
   test_confirm_semver
 
   case $TEST_FAILURES in
@@ -192,18 +192,40 @@ test_confirm_semver() {
 }
 
 # Test Build SDK
-test_build_sdk() {
+test_run_routing() {
   # Arrange
-  local actual
+  local inputs=(
+    "build unsupported"
+    "lint unsupported"
+    "release unsupported"
+    "help"
+    ""
+    "unsupported"
+  )
+
+  local expected=(
+    "Unsupported Build: unsupported"
+    "Unsupported Lint: unsupported"
+    "Unsupported Release: unsupported"
+    "Check main() for supported commands"
+    "Check main() for supported commands"
+    "Check main() for supported commands"
+  )
 
   # Act
-  actual=$(sh "$PWD"/scripts/run.sh build unsupported)
+  for i in "${!inputs[@]}"; do
+    local input_string="${inputs[$i]}"
+    IFS=" " read -r -a input_params <<<"$input_string"
 
-  # Assert
-  if [ "$actual" != "Unsupported Build" ]; then
-    test_failure "build_sdk not correct"
-    ((TEST_FAILURES += 1))
-  fi
+    local actual
+    actual=$(sh "$PWD"/scripts/run.sh "${input_params[@]}")
+
+    # Assert
+    if [ "$actual" != "${expected[$i]}" ]; then
+      test_failure "expected: ${expected[$i]} but got: $actual"
+      ((TEST_FAILURES += 1))
+    fi
+  done
 }
 
 # --------------

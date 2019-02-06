@@ -36,15 +36,19 @@ main() {
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
   "confirm-semver") confirm_semver "$@" ;;
-  "help") echo "Check main() for supported commands" ;;
-  "lint-podspecs") lint_podspecs "$@" ;;
+  "release") release_sdk "$@" ;;
+  "lint") lint_sdk "$@" ;;
   "test-file-upload")
     mkdir -p Carthage/Release
     echo "This is a test" >>Carthage/Release/file.txt
     ;;
-  "") return ;;
-  *) echo "Unsupported Command" ;;
+  "help" | *) show_help "$@" ;;
   esac
+}
+
+# Help
+show_help() {
+  echo "Check main() for supported commands"
 }
 
 # Set Globals
@@ -109,7 +113,54 @@ build_sdk() {
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
-  *) echo "Unsupported Build" ;;
+  *) echo "Unsupported Build: $build_type" ;;
+  esac
+}
+
+# Lint
+lint_sdk() {
+  # Lint Podspecs
+  lint_podspecs() {
+    for spec in "${POD_SPECS[@]}"; do
+      if [ ! -f "$spec" ]; then
+        echo "*** ERROR: unable to lint $spec"
+        continue
+      fi
+
+      pod lib lint "$spec" "$@"
+    done
+  }
+
+  local lint_type="$1"
+  shift
+
+  case "$lint_type" in
+  "podspecs") release_cocoapods "$@" ;;
+  *) echo "Unsupported Lint: $lint_type" ;;
+  esac
+}
+
+# Release
+release_sdk() {
+
+  # Release Cocoapods
+  release_cocoapods() {
+    for spec in "${POD_SPECS[@]}"; do
+      if [ ! -f "$spec" ]; then
+        echo "*** ERROR: unable to release $spec"
+        continue
+      fi
+
+      pod trunk push "$spec" "$@"
+    done
+  }
+
+  local release_type="$1"
+  shift
+
+  case "$release_type" in
+  "cocoapods") release_cocoapods "$@" ;;
+  *) echo "Unsupported Release: $release_type" ;;
   esac
 }
 
@@ -151,12 +202,6 @@ confirm_semver() {
     false
     return
   fi
-}
-
-lint_podspecs() {
-  for spec in "${POD_SPECS[@]}"; do
-    pod lib lint "$spec" "$@"
-  done
 }
 
 # --------------
