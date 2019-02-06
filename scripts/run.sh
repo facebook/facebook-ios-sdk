@@ -35,6 +35,8 @@ main() {
   case "$command_type" in
     "build" )
       build_sdk "$@" ;;
+    "bump-version" )
+      bump_version "$@" ;;
     "help" )
       echo "Check main() for supported commands" ;;
     "test-file-upload" )
@@ -62,6 +64,20 @@ set_globals() {
     "FBSDKTVOSKit"
     "AccountKit"
   );
+
+  VERSION_CHANGE_FILES=(
+    "Configurations/Version.xcconfig"
+    "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+    "FBSDKCoreKit.podspec"
+    "FBSDKShareKit.podspec"
+    "FBSDKLoginKit.podspec"
+    "FBSDKTVOSKit.podspec"
+    "FBSDKMarketingKit.podspec"
+    "FacebookSDK.podspec"
+    "AccountKit/AccountKit/Internal/AKFConstants.m"
+    "AccountKit/AccountKit.podspec"
+    "FBSDKPlacesKit.podspec"
+  )
 
   FRAMEWORK_NAME="FacebookSDK"
   POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}"); export POD_SPECS;
@@ -103,6 +119,27 @@ build_sdk() {
     *)
       echo "Unsupported Build" ;;
   esac
+}
+
+# Bump Version
+bump_version() {
+  echo "Bump to version: $1"
+
+  local current_version="4.39.1"
+  local new_version="$1"
+
+  # Replace the previous version to the new version in relative files
+  for file_path in "${VERSION_CHANGE_FILES[@]}"; do
+    local full_file_path="$SDK_DIR/$file_path"
+    local temp_file="$full_file_path.tmp"
+    sed -e "s/$current_version/$new_version/g" "$full_file_path" > "$temp_file"
+    if diff "$full_file_path" "$temp_file" > /dev/null ; then
+      echo "*** ERROR **** unable to update $full_file_path"
+      rm "$temp_file"
+      exit 1
+    fi
+    mv "$temp_file" "$full_file_path"
+  done
 }
 
 # --------------

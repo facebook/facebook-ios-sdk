@@ -76,6 +76,20 @@ test_shared_setup() {
     "AccountKit"
   );
 
+  local test_version_change_files=(
+    "Configurations/Version.xcconfig"
+    "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+    "FBSDKCoreKit.podspec"
+    "FBSDKShareKit.podspec"
+    "FBSDKLoginKit.podspec"
+    "FBSDKTVOSKit.podspec"
+    "FBSDKMarketingKit.podspec"
+    "FacebookSDK.podspec"
+    "AccountKit/AccountKit/Internal/AKFConstants.m"
+    "AccountKit/AccountKit.podspec"
+    "FBSDKPlacesKit.podspec"
+  )
+
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"
   fi
@@ -101,6 +115,11 @@ test_shared_setup() {
 
   if [ "${POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
     test_failure "POD_SPECS not correct"
+    ((TEST_FAILURES+=1))
+  fi;
+
+  if [ "${VERSION_CHANGE_FILES[*]}" != "${test_version_change_files[*]}" ]; then
+    test_failure "VERSION_CHANGE_FILES not correct"
     ((TEST_FAILURES+=1))
   fi;
 
