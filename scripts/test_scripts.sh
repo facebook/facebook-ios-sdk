@@ -132,10 +132,29 @@ test_shared_setup() {
 test_confirm_semver() {
   # Arrange
   local proper_versions=(
+    "0.0.0"
     "1.0.0"
+    "0.1.0"
+    "0.0.1"
     "0.1.1"
     "10.1.0"
     "10.10.10"
+    "1.9.0"
+    "1.10.0"
+    "1.11.0"
+    "1.0.0-alpha"
+    "1.0.0-alpha.1"
+    "1.0.0-0.3.7"
+    "1.0.0-x.7.z.92"
+    "1.0.0-alpha+001"
+    "1.0.0+alpha-001"
+    "1.0.0+20130313144700"
+    "1.0.0-beta+exp.sha.5114f85"
+    "1.0.0-alpha"
+    "1.0.0-alpha.1"
+    "1.0.0-alpha.beta"
+    "1.0.0-beta"
+    "1.0.0-beta.2"
   )
 
   local improper_versions=(

@@ -147,52 +147,10 @@ bump_version() {
 
 # Proper Semantic Version
 confirm_semver() {
-  local actual_version="$1"
-
-  local sem_ver_re="[[:digit:]]+[.][[:digit:]]+[.][[:digit:]]+"
-
-  if ! [[ $actual_version =~ $sem_ver_re ]]; then
+  if ! [[ "$1" =~ ^[0-9]+\.[0-9]+\.[0-9]+($|[-+][0-9A-Za-z+.-]+$) ]]; then
     false
     return
   fi
-
-  local num_re='^[0-9]+$'
-
-  local version_major
-  version_major=$(echo "$actual_version" | awk -F'.' '{print $1}')
-  version_major=${version_major:-0}
-
-  if ! [[ $version_major =~ $num_re ]]; then
-    false
-    return
-  fi
-
-  local version_minor
-  version_minor=$(echo "$actual_version" | awk -F'.' '{print $2}')
-  version_minor=${version_minor:-0}
-
-  if ! [[ $version_minor =~ $num_re ]]; then
-    false
-    return
-  fi
-
-  local version_patch
-  version_patch=$(echo "$actual_version" | awk -F'.' '{print $3}')
-  version_patch=${version_patch:-0}
-
-  if ! [[ $version_patch =~ $num_re ]]; then
-    false
-    return
-  fi
-
-  local semantic_version=$version_major.$version_minor.$version_patch
-
-  if [[ "$semantic_version" != "$*" ]]; then
-    false
-    return
-  fi
-
-  return
 }
 
 lint_podspecs() {
