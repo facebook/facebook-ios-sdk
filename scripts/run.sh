@@ -138,13 +138,20 @@ bump_version() {
   # Replace the previous version to the new version in relative files
   for file_path in "${version_change_files[@]}"; do
     local full_file_path="$SDK_DIR/$file_path"
+
+    if [ ! -f "$full_file_path" ]; then
+      echo "*** ERROR: unable to find $full_file_path"
+      continue
+    fi
+
     local temp_file="$full_file_path.tmp"
     sed -e "s/$current_version/$new_version/g" "$full_file_path" > "$temp_file"
     if diff "$full_file_path" "$temp_file" > /dev/null ; then
-      echo "*** ERROR **** unable to update $full_file_path"
+      echo "*** ERROR: unable to update $full_file_path"
       rm "$temp_file"
-      exit 1
+      continue
     fi
+
     mv "$temp_file" "$full_file_path"
   done
 }
