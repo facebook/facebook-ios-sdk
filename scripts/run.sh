@@ -41,6 +41,8 @@ main() {
       confirm_semver "$@" ;;
     "help" )
       echo "Check main() for supported commands" ;;
+    "lint-podspecs" )
+      lint_podspecs "$@" ;;
     "test-file-upload" )
       mkdir -p Carthage/Release
       echo "This is a test" >> Carthage/Release/file.txt
@@ -204,6 +206,12 @@ confirm_semver() {
   fi
 
   return
+}
+
+lint_podspecs() {
+  for spec in "${POD_SPECS[@]}"; do
+    pod lib lint "$spec"
+  done
 }
 
 # --------------
