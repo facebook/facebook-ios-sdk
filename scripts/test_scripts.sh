@@ -30,6 +30,7 @@ main() {
 
   test_shared_setup
   test_build_sdk
+  test_confirm_semver
 
   case $TEST_FAILURES in
     0) test_success "test_scripts tests" ;;
@@ -90,6 +91,8 @@ test_shared_setup() {
     "FBSDKPlacesKit.podspec"
   )
 
+  local test_main_version_file="Configurations/Version.xcconfig"
+
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"
   fi
@@ -111,22 +114,60 @@ test_shared_setup() {
   if [ "${SDK_KITS[*]}" != "${test_sdk_kits[*]}" ]; then
     test_failure "SDK_KITS not correct"
     ((TEST_FAILURES+=1))
-  fi;
+  fi
 
   if [ "${POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
     test_failure "POD_SPECS not correct"
     ((TEST_FAILURES+=1))
-  fi;
+  fi
 
   if [ "${VERSION_CHANGE_FILES[*]}" != "${test_version_change_files[*]}" ]; then
     test_failure "VERSION_CHANGE_FILES not correct"
     ((TEST_FAILURES+=1))
-  fi;
+  fi
+
+  if [ "$MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
+    test_failure "MAIN_VERSION_FILE not correct"
+    ((TEST_FAILURES+=1))
+  fi
 
   if [ "$FRAMEWORK_NAME" != "FacebookSDK" ]; then
     test_failure "FRAMEWORK_NAME not correct"
     ((TEST_FAILURES+=1))
   fi
+}
+
+test_confirm_semver() {
+  # Arrange
+  local proper_versions=(
+    "1.0.0"
+    "0.1.1"
+    "10.1.0"
+    "10.10.10"
+  )
+
+  local improper_versions=(
+    "1.0."
+    "0.1"
+    "10.1.0.1"
+    "a.b.c"
+  )
+
+  # Act
+  for version in "${proper_versions[@]}"; do
+    # Assert
+    if ! $(sh "$PWD"/scripts/run.sh confirm-semver "$version"); then
+      test_failure "$version is valid, but returns false"
+      ((TEST_FAILURES+=1))
+    fi
+  done
+
+  for version in "${improper_versions[@]}"; do
+    # Assert
+    if $(sh "$PWD"/scripts/run.sh confirm-semver "$version"); then
+      test_failure "$version is invalid, but returns true"
+    fi
+  done
 }
 
 # Test Build SDK

@@ -37,6 +37,8 @@ main() {
       build_sdk "$@" ;;
     "bump-version" )
       bump_version "$@" ;;
+    "confirm-semver" )
+      confirm_semver "$@" ;;
     "help" )
       echo "Check main() for supported commands" ;;
     "test-file-upload" )
@@ -78,6 +80,8 @@ set_globals() {
     "AccountKit/AccountKit.podspec"
     "FBSDKPlacesKit.podspec"
   )
+
+  MAIN_VERSION_FILE="Configurations/Version.xcconfig"
 
   FRAMEWORK_NAME="FacebookSDK"
   POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}"); export POD_SPECS;
@@ -123,9 +127,8 @@ build_sdk() {
 
 # Bump Version
 bump_version() {
-  echo "Bump to version: $1"
-
-  local current_version="4.39.1"
+  local current_version
+  current_version=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
   local new_version="$1"
 
   # Replace the previous version to the new version in relative files
@@ -140,6 +143,49 @@ bump_version() {
     fi
     mv "$temp_file" "$full_file_path"
   done
+}
+
+# Proper Semantic Version
+confirm_semver() {
+  local actual_version="$1"
+
+  local num_re='^[0-9]+$'
+
+  local version_major
+  version_major=$(echo "$actual_version" | awk -F'.' '{print $1}')
+  version_major=${version_major:-0}
+
+  if ! [[ $version_major =~ $num_re ]]; then
+    false
+    return
+  fi
+
+  local version_minor
+  version_minor=$(echo "$actual_version" | awk -F'.' '{print $2}')
+  version_minor=${version_minor:-0}
+
+  if ! [[ $version_minor =~ $num_re ]]; then
+    false
+    return
+  fi
+
+  local version_patch
+  version_patch=$(echo "$actual_version" | awk -F'.' '{print $3}')
+  version_patch=${version_patch:-0}
+
+  if ! [[ $version_patch =~ $num_re ]]; then
+    false
+    return
+  fi
+
+  local semantic_version=$version_major.$version_minor.$version_patch
+
+  if [[ "$semantic_version" != "$*" ]]; then
+    false
+    return
+  fi
+
+  return
 }
 
 # --------------
