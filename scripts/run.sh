@@ -33,31 +33,25 @@ main() {
   shift
 
   case "$command_type" in
-    "build" )
-      build_sdk "$@" ;;
-    "bump-version" )
-      bump_version "$@" ;;
-    "confirm-semver" )
-      confirm_semver "$@" ;;
-    "help" )
-      echo "Check main() for supported commands" ;;
-    "lint-podspecs" )
-      lint_podspecs "$@" ;;
-    "test-file-upload" )
-      mkdir -p Carthage/Release
-      echo "This is a test" >> Carthage/Release/file.txt
-      ;;
-    "" )
-      return ;;
-    *)
-      echo "Unsupported Command" ;;
+  "build") build_sdk "$@" ;;
+  "bump-version") bump_version "$@" ;;
+  "confirm-semver") confirm_semver "$@" ;;
+  "help") echo "Check main() for supported commands" ;;
+  "lint-podspecs") lint_podspecs "$@" ;;
+  "test-file-upload")
+    mkdir -p Carthage/Release
+    echo "This is a test" >>Carthage/Release/file.txt
+    ;;
+  "") return ;;
+  *) echo "Unsupported Command" ;;
   esac
 }
 
 # Set Globals
 set_globals() {
   SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
-  SDK_DIR="$(dirname "$SCRIPTS_DIR")"; export SDK_DIR;
+  SDK_DIR="$(dirname "$SCRIPTS_DIR")"
+  export SDK_DIR
 
   SDK_KITS=(
     "FBSDKCoreKit"
@@ -67,7 +61,7 @@ set_globals() {
     "FBSDKMarketingKit"
     "FBSDKTVOSKit"
     "AccountKit"
-  );
+  )
 
   VERSION_FILES=(
     "Configurations/Version.xcconfig"
@@ -92,16 +86,15 @@ build_sdk() {
       -workspace "$1" \
       -sdk "$2" \
       -scheme "$3" \
-      -configuration Debug \
-      | xcpretty
+      -configuration Debug |
+      xcpretty
   }
 
   build_carthage() {
     carthage build --no-skip-current
 
     if [ "$1" == "--archive" ]; then
-      for kit in "${SDK_KITS[@]}";
-      do
+      for kit in "${SDK_KITS[@]}"; do
         if [ -d "$SDK_DIR"/Carthage/Build/iOS/"$kit".framework ] ||
           [ -d "$SDK_DIR"/Carthage/Build/tvOS/"$kit".framework ]; then
           carthage archive "$kit" --output Carthage/Release/
@@ -114,12 +107,9 @@ build_sdk() {
   shift
 
   case "$build_type" in
-    "carthage" )
-      build_carthage "$@" ;;
-    "xcode" )
-      build_xcode_workspace "$@" ;;
-    *)
-      echo "Unsupported Build" ;;
+  "carthage") build_carthage "$@" ;;
+  "xcode") build_xcode_workspace "$@" ;;
+  *) echo "Unsupported Build" ;;
   esac
 }
 
@@ -144,8 +134,8 @@ bump_version() {
     fi
 
     local temp_file="$full_file_path.tmp"
-    sed -e "s/$current_version/$new_version/g" "$full_file_path" > "$temp_file"
-    if diff "$full_file_path" "$temp_file" > /dev/null ; then
+    sed -e "s/$current_version/$new_version/g" "$full_file_path" >"$temp_file"
+    if diff "$full_file_path" "$temp_file" >/dev/null; then
       echo "*** ERROR: unable to update $full_file_path"
       rm "$temp_file"
       continue

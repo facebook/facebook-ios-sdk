@@ -33,8 +33,8 @@ main() {
   test_confirm_semver
 
   case $TEST_FAILURES in
-    0) test_success "test_scripts tests" ;;
-    *) test_failure "$TEST_FAILURES test_scripts tests" ;;
+  0) test_success "test_scripts tests" ;;
+  *) test_failure "$TEST_FAILURES test_scripts tests" ;;
   esac
 }
 
@@ -64,7 +64,7 @@ test_shared_setup() {
     "FBSDKMarketingKit"
     "FBSDKTVOSKit"
     "AccountKit"
-  );
+  )
 
   local test_pod_specs=(
     "FacebookSDK.podspec"
@@ -75,7 +75,7 @@ test_shared_setup() {
     "FBSDKMarketingKit.podspec"
     "FBSDKTVOSKit.podspec"
     "AccountKit.podspec"
-  );
+  )
 
   local test_version_change_files=(
     "Configurations/Version.xcconfig"
@@ -95,37 +95,37 @@ test_shared_setup() {
   # Assert
   if [ -z "$SCRIPTS_DIR" ]; then
     test_failure "SCRIPTS_DIR"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "$SCRIPTS_DIR" != "$SDK_DIR"/scripts ]; then
     test_failure "SCRIPTS_DIR not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "${SDK_KITS[*]}" != "${test_sdk_kits[*]}" ]; then
     test_failure "SDK_KITS not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "${POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
     test_failure "POD_SPECS not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "${VERSION_FILES[*]}" != "${test_version_change_files[*]}" ]; then
     test_failure "VERSION_FILES not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "$MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
     test_failure "MAIN_VERSION_FILE not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 
   if [ "$FRAMEWORK_NAME" != "FacebookSDK" ]; then
     test_failure "FRAMEWORK_NAME not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 }
 
@@ -148,15 +148,15 @@ test_confirm_semver() {
   # Act
   for version in "${proper_versions[@]}"; do
     # Assert
-    if ! $(sh "$PWD"/scripts/run.sh confirm-semver "$version"); then
+    if ! sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
       test_failure "$version is valid, but returns false"
-      ((TEST_FAILURES+=1))
+      ((TEST_FAILURES += 1))
     fi
   done
 
   for version in "${improper_versions[@]}"; do
     # Assert
-    if $(sh "$PWD"/scripts/run.sh confirm-semver "$version"); then
+    if sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
       test_failure "$version is invalid, but returns true"
     fi
   done
@@ -173,7 +173,7 @@ test_build_sdk() {
   # Assert
   if [ "$actual" != "Unsupported Build" ]; then
     test_failure "build_sdk not correct"
-    ((TEST_FAILURES+=1))
+    ((TEST_FAILURES += 1))
   fi
 }
 
