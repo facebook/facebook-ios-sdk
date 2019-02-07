@@ -14,26 +14,26 @@ stages:
 
 jobs:
   include:
-    - name: "Xcode - iOS 12.0"
+    - name: 'Xcode - iOS 12.0'
       osx_image: xcode10.1
       env:
         - XCODE_SDK=iphonesimulator12.1
         - XCODE_SCHEME=BuildAllKits
-    - name: "Xcode - tvOS 12.0"
+    - name: 'Xcode - tvOS 12.0'
       osx_image: xcode10.1
       env:
         - XCODE_SDK=appletvsimulator12.1
         - XCODE_SCHEME=BuildAllKits_TV
-    - name: "Xcode - iOS 11.4"
+    - name: 'Xcode - iOS 11.4'
       osx_image: xcode9.4
       env:
         - XCODE_SDK=iphonesimulator11.4
         - XCODE_SCHEME=BuildAllKits
-    - name: "Carthage - Xcode 10.1"
+    - name: 'Carthage - Xcode 10.1'
       osx_image: xcode10.1
       if: tag IS blank
     - stage: release
-      name: "GitHub"
+      name: 'GitHub'
       osx_image: xcode10.1
       script: sh scripts/run.sh build carthage --archive
       deploy:
@@ -45,10 +45,12 @@ jobs:
         skip_cleanup: true
         on:
           tags: true
-          condition: $TRAVIS_TAG =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/ # Tag is v0.0.0 format
+          condition:
+            $TRAVIS_TAG =~
+            /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
           branch: master
     - stage: deploy
-      name: "Cocoapods"
+      name: 'Cocoapods'
       osx_image: xcode10.1
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
