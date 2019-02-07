@@ -2416,7 +2416,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/build-universal-framework.sh\n";
+			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
 		};
 		9D6DEEFD1BC2E546001A94ED /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2429,7 +2429,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/build-universal-tvos-framework.sh\n";
+			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
