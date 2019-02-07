@@ -35,7 +35,8 @@ main() {
   case "$command_type" in
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
-  "confirm-semver") confirm_semver "$@" ;;
+  "is-valid-semver") is_valid_semver "$@" ;;
+  "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
   "lint") lint_sdk "$@" ;;
   "test-file-upload")
@@ -55,7 +56,6 @@ show_help() {
 set_globals() {
   SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
   SDK_DIR="$(dirname "$SCRIPTS_DIR")"
-  export SDK_DIR
 
   SDK_KITS=(
     "FBSDKCoreKit"
@@ -80,7 +80,8 @@ set_globals() {
   POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
   POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
 
-  export POD_SPECS
+  CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
+  export CURRENT_VERSION
 }
 
 # Build
@@ -166,9 +167,13 @@ release_sdk() {
 
 # Bump Version
 bump_version() {
-  local current_version
-  current_version=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
+  CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
   local new_version="$1"
+
+  if ! is_valid_semver "$new_version"; then
+    false
+    return
+  fi
 
   local version_change_files=(
     "${VERSION_FILES[@]}"
@@ -185,7 +190,7 @@ bump_version() {
     fi
 
     local temp_file="$full_file_path.tmp"
-    sed -e "s/$current_version/$new_version/g" "$full_file_path" >"$temp_file"
+    sed -e "s/$CURRENT_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
     if diff "$full_file_path" "$temp_file" >/dev/null; then
       echo "*** ERROR: unable to update $full_file_path"
       rm "$temp_file"
@@ -197,11 +202,20 @@ bump_version() {
 }
 
 # Proper Semantic Version
-confirm_semver() {
+is_valid_semver() {
   if ! [[ "$1" =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
     false
     return
   fi
+}
+
+# Check Version Tag Exists
+does_version_exist() {
+  if git rev-parse "v$1" >/dev/null 2>&1; then
+    return
+  fi
+
+  false
 }
 
 # --------------

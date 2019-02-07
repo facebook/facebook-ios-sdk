@@ -30,7 +30,8 @@ main() {
 
   test_shared_setup
   test_run_routing
-  test_confirm_semver
+  test_is_valid_semver
+  test_find_git_tag
 
   case $TEST_FAILURES in
   0) test_success "test_scripts tests" ;;
@@ -129,7 +130,7 @@ test_shared_setup() {
   fi
 }
 
-test_confirm_semver() {
+test_is_valid_semver() {
   # Arrange
   local proper_versions=(
     "0.0.0"
@@ -163,7 +164,7 @@ test_confirm_semver() {
   # Act
   for version in "${proper_versions[@]}"; do
     # Assert
-    if ! sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
+    if ! sh "$PWD"/scripts/run.sh is-valid-semver "$version"; then
       test_failure "$version is valid, but returns false"
       ((TEST_FAILURES += 1))
     fi
@@ -187,7 +188,7 @@ test_confirm_semver() {
   # Act
   for version in "${improper_versions[@]}"; do
     # Assert
-    if sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
+    if sh "$PWD"/scripts/run.sh is-valid-semver "$version"; then
       test_failure "$version is invalid, but returns true"
     fi
   done
@@ -228,6 +229,19 @@ test_run_routing() {
       ((TEST_FAILURES += 1))
     fi
   done
+}
+
+test_find_git_tag() {
+  # Arrange, Act, & Assert
+  if ! sh "$PWD"/scripts/run.sh does-version-exist 4.40.0; then
+    test_failure "4.40.0 is valid, but returns false"
+    ((TEST_FAILURES += 1))
+  fi
+
+  if sh "$PWD"/scripts/run.sh does-version-exist 0.0.0; then
+    test_failure "0.0.0 is valid, but returns true"
+    ((TEST_FAILURES += 1))
+  fi
 }
 
 # --------------
