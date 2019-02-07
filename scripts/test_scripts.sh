@@ -160,6 +160,16 @@ test_confirm_semver() {
     "1.0.0-rc.1"
   )
 
+  # Act
+  for version in "${proper_versions[@]}"; do
+    # Assert
+    if ! sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
+      test_failure "$version is valid, but returns false"
+      ((TEST_FAILURES += 1))
+    fi
+  done
+
+  # Arrange
   local improper_versions=(
     "1.0."
     "0.1"
@@ -175,14 +185,6 @@ test_confirm_semver() {
   )
 
   # Act
-  for version in "${proper_versions[@]}"; do
-    # Assert
-    if ! sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
-      test_failure "$version is valid, but returns false"
-      ((TEST_FAILURES += 1))
-    fi
-  done
-
   for version in "${improper_versions[@]}"; do
     # Assert
     if sh "$PWD"/scripts/run.sh confirm-semver "$version"; then
