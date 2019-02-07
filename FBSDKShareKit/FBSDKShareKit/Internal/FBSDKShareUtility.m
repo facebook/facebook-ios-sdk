@@ -22,7 +22,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 #import "FBSDKShareConstants.h"
-#import "FBSDKShareLinkContent+Internal.h"
+#import "FBSDKShareLinkContent.h"
 
 @implementation FBSDKShareUtility
 
@@ -174,7 +174,7 @@
 }
 
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
-                completionHandler:(void(^)(BOOL, NSString *, NSDictionary *))completion
+                completionHandler:(FBSDKWebPhotoContentBlock)completion
 {
   void(^stageImageCompletion)(NSArray<NSString *> *) = ^(NSArray<NSString *> *stagedURIs) {
     NSString *const methodName = @"share";
@@ -243,19 +243,13 @@
   NSMutableDictionary<NSString *, id> *parameters = nil;
   if ([content isKindOfClass:[FBSDKShareLinkContent class]]) {
     FBSDKShareLinkContent *linkContent = (FBSDKShareLinkContent *)content;
-    parameters = [[NSMutableDictionary alloc] initWithDictionary:linkContent.feedParameters];
+    parameters = [[NSMutableDictionary alloc] init];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentURL forKey:@"link"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.quote forKey:@"quote"];
     [FBSDKInternalUtility dictionary:parameters setObject:[self hashtagStringFromHashtag:linkContent.hashtag] forKey:@"hashtag"];
     [FBSDKInternalUtility dictionary:parameters setObject:content.placeID forKey:@"place"];
     [FBSDKInternalUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
     [FBSDKInternalUtility dictionary:parameters setObject:linkContent.ref forKey:@"ref"];
-#pragma clang diagnostic pop
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentDescription forKey:@"description"];
-    [FBSDKInternalUtility dictionary:parameters setObject:linkContent.contentTitle forKey:@"name"];
-    [FBSDKInternalUtility dictionary:parameters setObject:linkContent.imageURL forKey:@"picture"];
-#pragma clang diagnostic pop
   }
   return [parameters copy];
 }

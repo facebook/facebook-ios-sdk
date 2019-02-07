@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKLoginKit'
-  s.version      = '4.39.1'
+  s.version      = '4.40.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API'
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
-                     :tag => 'v4.39.1'
+                     :tag => "v#{s.version}"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
@@ -30,8 +30,6 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  # Allow the weak linking to Bolts (see FBSDKAppLinkResolver.h) in Cocoapods 0.39.0
-  s.pod_target_xcconfig = { 'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES' }
   s.dependency 'FBSDKCoreKit'
 
   s.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'

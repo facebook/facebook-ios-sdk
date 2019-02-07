@@ -19,7 +19,6 @@
 		89D558311AB8908900000502 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89D5582F1AB8908900000502 /* Main.storyboard */; };
 		89D558331AB8908900000502 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89D558321AB8908900000502 /* Images.xcassets */; };
 		89D558361AB8908900000502 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89D558341AB8908900000502 /* LaunchScreen.xib */; };
-		89D558541AB8A1CC00000502 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558501AB8A1CC00000502 /* Bolts.framework */; };
 		89D558551AB8A1CC00000502 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */; };
 		89D558571AB8A1CC00000502 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */; };
 		89D558631AB8A2B600000502 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89D558621AB8A2B600000502 /* UIKit.framework */; };
@@ -52,7 +51,6 @@
 		89D558301AB8908900000502 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		89D558321AB8908900000502 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		89D558351AB8908900000502 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		89D558501AB8A1CC00000502 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../build/Bolts.framework; sourceTree = SOURCE_ROOT; };
 		89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../build/FBSDKCoreKit.framework; sourceTree = SOURCE_ROOT; };
 		89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../build/FBSDKShareKit.framework; sourceTree = SOURCE_ROOT; };
 		89D558591AB8A22200000502 /* Application.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Application.xcconfig; path = ../Configurations/Application.xcconfig; sourceTree = "<group>"; };
@@ -75,7 +73,6 @@
 				89D558671AB8A2C200000502 /* CoreGraphics.framework in Frameworks */,
 				89D558651AB8A2BC00000502 /* Foundation.framework in Frameworks */,
 				89D558631AB8A2B600000502 /* UIKit.framework in Frameworks */,
-				89D558541AB8A1CC00000502 /* Bolts.framework in Frameworks */,
 				89D558551AB8A1CC00000502 /* FBSDKCoreKit.framework in Frameworks */,
 				89D558571AB8A1CC00000502 /* FBSDKShareKit.framework in Frameworks */,
 			);
@@ -144,7 +141,6 @@
 		89D5584F1AB8A1B100000502 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				89D558501AB8A1CC00000502 /* Bolts.framework */,
 				89D558661AB8A2C200000502 /* CoreGraphics.framework */,
 				89D558511AB8A1CC00000502 /* FBSDKCoreKit.framework */,
 				89D558531AB8A1CC00000502 /* FBSDKShareKit.framework */,

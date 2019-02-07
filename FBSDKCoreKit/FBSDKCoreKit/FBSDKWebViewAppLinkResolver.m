@@ -29,7 +29,8 @@
  @param error the error during the request, if any
 
  */
-typedef void (^FBSDKURLFollowRedirectsHandler)(NSDictionary<NSString *, id> *result, NSError * _Nullable error);
+typedef void (^FBSDKURLFollowRedirectsBlock)(NSDictionary<NSString *, id> *result, NSError * _Nullable error)
+NS_SWIFT_NAME(URLFollowRedirectsBlock);
 
 // Defines JavaScript to extract app link tags from HTML content
 static NSString *const FBSDKWebViewAppLinkResolverTagExtractionJavaScript = @""
@@ -110,7 +111,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     return instance;
 }
 
-- (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsHandler)handler
+- (void)followRedirects:(NSURL *)url handler:(FBSDKURLFollowRedirectsBlock)handler
 {
   // This task will be resolved with either the redirect NSURL
   // or a dictionary with the response data to be returned.
@@ -145,7 +146,7 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
   }] resume];
 }
 
-- (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkFromURLHandler)handler
+- (void)appLinkFromURL:(NSURL *)url handler:(FBSDKAppLinkBlock)handler
 {
   dispatch_async(dispatch_get_main_queue(), ^{
     [self followRedirects:url handler:^(NSDictionary<NSString *,id> *result, NSError * _Nullable error) {

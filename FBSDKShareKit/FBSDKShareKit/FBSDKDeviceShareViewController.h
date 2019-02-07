@@ -29,6 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
   A delegate for `FBSDKDeviceShareViewController`
  */
+NS_SWIFT_NAME(DeviceShareViewControllerDelegate)
 @protocol FBSDKDeviceShareViewControllerDelegate <NSObject>
 
 /**
@@ -37,7 +38,8 @@ NS_ASSUME_NONNULL_BEGIN
  This can happen if the user tapped cancel, or menu on their Siri remote, or if the
   device code has expired. You will not be informed if the user actually posted a share to Facebook.
  */
-- (void)deviceShareViewControllerDidComplete:(FBSDKDeviceShareViewController *)viewController error:(nullable NSError *)error;
+- (void)deviceShareViewControllerDidComplete:(FBSDKDeviceShareViewController *)viewController
+                                       error:(nullable NSError *)error;
 
 @end
 
@@ -58,6 +60,7 @@ NS_ASSUME_NONNULL_BEGIN
                     animated:YES
                   completion:NULL];
  */
+NS_SWIFT_NAME(FBDeviceShareViewController)
 @interface FBSDKDeviceShareViewController : FBSDKDeviceViewControllerBase
 
 /**
@@ -69,12 +72,15 @@ NS_ASSUME_NONNULL_BEGIN
  For `FBSDKShareLinkContent`, only contentURL is used (e.g., <FBSDKSharingContent> properties are not supported)
  For `FBSDKShareOpenGraphContent`, only the action is used (e.g., <FBSDKSharingContent> properties are not supported).
  */
-- (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithShareContent:(id<FBSDKSharingContent>)shareContent
+NS_SWIFT_NAME(init(content:))
+NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 - (nullable instancetype)initWithCoder:(NSCoder *)aDecoder NS_UNAVAILABLE;
-- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil bundle:(nullable NSBundle *)nibBundleOrNil  NS_UNAVAILABLE;
+- (instancetype)initWithNibName:(nullable NSString *)nibNameOrNil
+                         bundle:(nullable NSBundle *)nibBundleOrNil NS_UNAVAILABLE;
 
 /**
   The delegate.

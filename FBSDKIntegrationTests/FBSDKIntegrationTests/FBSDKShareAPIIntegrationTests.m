@@ -186,9 +186,8 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block FBSDKAccessToken *tokenWithPublish;
   __block FBSDKAccessToken *tokenWithEmail;
-  [[self testUsersManager] requestTestAccountTokensWithArraysOfPermissions:@[
-                                                                             [NSSet setWithObject:@"publish_actions"],
-                                                                             [NSSet setWithObject:@"email"]                                                                            ]
+  [[self testUsersManager] requestTestAccountTokensWithArraysOfPermissions:@[[NSSet setWithObject:@"publish_actions"],
+                                                                             [NSSet setWithObject:@"email"]]
                                                           createIfNotFound:YES
                                                          completionHandler:^(NSArray *tokens, NSError *error) {
                                                            tokenWithPublish = tokens[0];
@@ -213,9 +212,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
     [blocker signal];
   };
   // but send as the other token
-  FBSDKShareAPI *sharer = [[FBSDKShareAPI alloc] init];
-  sharer.shareContent = content;
-  sharer.delegate = self;
+  FBSDKShareAPI *sharer = [FBSDKShareAPI apiWithContent:content delegate:self];
   sharer.accessToken = tokenWithPublish;
   [sharer share];
 
@@ -278,7 +275,12 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   FBSDKGraphRequestConnection *batch = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *getPhotoIDRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:postID
                                                                            parameters:@{ @"fields" : @"object_id"}];
-  [batch addRequest:getPhotoIDRequest completionHandler:NULL batchEntryName:@"get-id"];
+
+  FBSDKGraphRequestBlock handler = ^(FBSDKGraphRequestConnection *_Nullable connection,
+                                       id _Nullable result,
+                                       NSError *_Nullable error) {};
+
+  [batch addRequest:getPhotoIDRequest completionHandler:handler batchEntryName:@"get-id"];
   FBSDKGraphRequest *getTagsToVerifyRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"{result=get-id:$.object_id}" parameters:@{ @"fields" : @"id,tags.limit(1){name}, place.limit(1){id}"}];
   [batch addRequest:getTagsToVerifyRequest completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(error);
@@ -320,7 +322,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
 
 - (void)testVideoUploader
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"publish_actions"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   NSMutableDictionary *dictionary = [[NSMutableDictionary alloc] init];
   NSURL *bundleURL = [[NSBundle mainBundle] URLForResource:@"videoviewdemo" withExtension:@"mp4"];
@@ -328,7 +330,7 @@ static NSString *const kTaggedPlaceID = @"110843418940484";
   __block FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   _fileHandle = [NSFileHandle fileHandleForReadingFromURL:bundleURL error:nil];
   NSCAssert(_fileHandle,  @"Fail to get file handler");
-  FBSDKVideoUploader *videoUploader = [[FBSDKVideoUploader alloc] initWithVideoName:[bundleURL lastPathComponent] videoSize:(unsigned long)[_fileHandle seekToEndOfFile] parameters:dictionary delegate:self];
+  FBSDKVideoUploader *videoUploader = [[FBSDKVideoUploader alloc] initWithVideoName:bundleURL.lastPathComponent videoSize:(unsigned long)[_fileHandle seekToEndOfFile] parameters:dictionary delegate:self];
   self.uploadCallback = ^(NSDictionary *results, NSError *error) {
     NSCAssert(error == nil, @"upload failed :%@", error);
     NSCAssert(results[@"success"], @"upload fail");

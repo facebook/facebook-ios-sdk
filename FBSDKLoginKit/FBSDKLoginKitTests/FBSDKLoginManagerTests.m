@@ -134,9 +134,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
 
@@ -145,7 +145,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // and verify it's treated as a cancellation.
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=user_likes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
 
-  FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertTrue(result.isCancelled);
     [expectation fulfill];
   };
@@ -167,7 +167,7 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // receive url with denied_scopes more than what was requested.
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=user_friends,user_likes&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
 
-  FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  FBSDKLoginManagerLoginResultBlock handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     XCTAssertFalse(result.isCancelled);
     XCTAssertEqualObjects(result.declinedPermissions, [NSSet setWithObject:@"user_friends"]);
     NSSet *expectedDeclinedPermissions = [NSSet setWithObjects:@"user_friends", @"user_likes", nil];
@@ -191,9 +191,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:existingToken];
@@ -218,9 +218,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   // set up a current token with public_profile
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile", @"read_stream"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
+                                                              declinedPermissions:@[]
+                                                                            appID:@""
+                                                                           userID:@""
                                                                    expirationDate:nil
                                                                       refreshDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:existingToken];
@@ -253,9 +253,9 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
     // set up a current token with public_profile
     FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                         permissions:@[@"public_profile", @"read_stream"]
-                                                                declinedPermissions:nil
-                                                                              appID:nil
-                                                                             userID:nil
+                                                                declinedPermissions:@[]
+                                                                              appID:@""
+                                                                             userID:@""
                                                                      expirationDate:nil
                                                                         refreshDate:nil];
     [FBSDKAccessToken setCurrentAccessToken:existingToken];

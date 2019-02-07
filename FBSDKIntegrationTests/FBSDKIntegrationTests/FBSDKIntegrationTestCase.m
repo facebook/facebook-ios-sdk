@@ -39,10 +39,10 @@ static id g_mockNSBundle;
 + (void)setUp {
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    NSDictionary *environment = [[NSProcessInfo processInfo] environment];
-    g_AppID = [environment objectForKey:FBSDKPLISTTestAppIDKey];
-    g_AppSecret = [environment objectForKey:FBSDKPLISTTestAppSecretKey];
-    g_AppClientToken= [environment objectForKey:FBSDKPLISTTestAppClientTokenKey];
+    NSDictionary *environment = [NSProcessInfo processInfo].environment;
+    g_AppID = environment[FBSDKPLISTTestAppIDKey];
+    g_AppSecret = environment[FBSDKPLISTTestAppSecretKey];
+    g_AppClientToken = environment[FBSDKPLISTTestAppClientTokenKey];
     if (g_AppID.length == 0 || g_AppSecret.length == 0 || g_AppClientToken.length == 0) {
       [[NSException exceptionWithName:NSInternalInconsistencyException
                                reason:
@@ -146,15 +146,17 @@ static size_t getPixels(void *info, void *buffer, size_t count) {
   return count;
 }
 
-- (FBSDKAccessToken *) getTokenWithPermissions:(NSSet *)permissions {
+- (FBSDKAccessToken *)getTokenWithPermissions:(NSArray<NSString *> *)permissions {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   __block FBSDKAccessToken *token = nil;
-  [g_testUsersManager requestTestAccountTokensWithArraysOfPermissions:(permissions ? @[permissions] : nil)
-                                                     createIfNotFound:YES completionHandler:^(NSArray *tokens, NSError *error) {
-                                                       XCTAssertNil(error, @"unexpected error trying to get test user");
-                                                       token = tokens[0];
-                                                       [blocker signal];
-                                                     }];
+  [g_testUsersManager
+   requestTestAccountTokensWithArraysOfPermissions:(permissions ? @[[NSSet setWithArray:permissions]] : @[])
+   createIfNotFound:YES
+   completionHandler:^(NSArray<FBSDKAccessToken *> *tokens, NSError *_Nullable error) {
+     XCTAssertNil(error, @"unexpected error trying to get test user");
+     token = tokens[0];
+     [blocker signal];
+   }];
   XCTAssertTrue([blocker waitWithTimeout:15], @"timeout - failed to fetch test user.");
   return token;
 }

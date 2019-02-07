@@ -230,14 +230,7 @@
 
 - (void)deviceLoginViewController:(FBSDKDeviceLoginViewController *)viewController didFailWithError:(NSError *)error
 {
-  if ([self.delegate respondsToSelector:@selector(deviceLoginButton:didFailWithError:)]) {
-    [self.delegate deviceLoginButton:self didFailWithError:error];
-  } else if ([self.delegate respondsToSelector:@selector(deviceLoginButtonDidFail:error:)]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    [self.delegate deviceLoginButtonDidFail:self error:error];
-#pragma clang diagnostic pop
-  }
+  [self.delegate deviceLoginButton:self didFailWithError:error];
 }
 
 @end

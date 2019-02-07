@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKTVOSKit'
-  s.version      = '4.39.1'
+  s.version      = '4.40.0'
   s.summary      = 'Official Facebook SDK for tvOS to access Facebook Platform with features like Login and Graph API.'
 
   s.description  = <<-DESC
@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
-                     :tag => 'v4.39.1' }
+                     :tag => "v#{s.version}" }
 
   s.source_files   = 'FBSDKTVOSKit/FBSDKTVOSKit/**/*.{h,m}'
   s.public_header_files = 'FBSDKTVOSKit/FBSDKTVOSKit/*.h'

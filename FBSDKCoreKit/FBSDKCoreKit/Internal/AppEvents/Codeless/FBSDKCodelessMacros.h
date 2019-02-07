@@ -29,6 +29,7 @@
 #define CODELESS_MAPPING_MATCH_BITMASK_KEY      @"match_bitmask"
 #define CODELESS_MAPPING_ID_KEY                 @"id"
 #define CODELESS_MAPPING_INDEX_KEY              @"index"
+#define CODELESS_MAPPING_IS_USER_INPUT_KEY      @"is_user_input"
 #define CODELESS_MAPPING_SECTION_KEY            @"section"
 #define CODELESS_MAPPING_ROW_KEY                @"row"
 #define CODELESS_MAPPING_TEXT_KEY               @"text"

@@ -18,10 +18,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLikeControl.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKLikeControl ()
+extern NSString *const FBSDKShareExtensionParamAppID; // application identifier string
+extern NSString *const FBSDKShareExtensionParamHashtags; // array of hashtag strings (max 1)
+extern NSString *const FBSDKShareExtensionParamQuotes; // array of quote strings (max 1)
+extern NSString *const FBSDKShareExtensionParamOGData; // dictionary of Open Graph data
 
-- (NSDictionary *)analyticsParameters;
+NSString *_Nullable FBSDKShareExtensionInitialText(NSString *_Nullable appID,
+                                                   NSString *_Nullable hashtag,
+                                                   NSString *_Nullable jsonString);
 
-@end
+NS_ASSUME_NONNULL_END

@@ -83,7 +83,7 @@
                                                                                  methodVersion:nil
                                                                                     parameters:parameters
                                                                                       userInfo:nil];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters error:response.error];
   };
 

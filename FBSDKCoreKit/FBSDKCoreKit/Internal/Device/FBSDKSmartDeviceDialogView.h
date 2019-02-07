@@ -20,6 +20,7 @@
 
 #import "FBSDKDeviceDialogView.h"
 
+NS_SWIFT_NAME(FBSmartDeviceDialogView)
 @interface FBSDKSmartDeviceDialogView : FBSDKDeviceDialogView
 
 @end

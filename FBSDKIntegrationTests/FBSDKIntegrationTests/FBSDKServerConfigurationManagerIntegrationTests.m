@@ -34,7 +34,7 @@
 - (void)testLoadServerConfiguration
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed load"];
-  FBSDKServerConfigurationManagerLoadBlock completionBlock = ^(FBSDKServerConfiguration *serverConfiguration,
+  FBSDKServerConfigurationBlock completionBlock = ^(FBSDKServerConfiguration *serverConfiguration,
                                                                NSError *error) {
     XCTAssertNotNil(serverConfiguration);
     XCTAssertNil(error, @"unexpected error: %@", error);

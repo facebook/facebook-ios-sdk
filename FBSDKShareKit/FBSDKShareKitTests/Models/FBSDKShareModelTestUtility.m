@@ -337,12 +337,8 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   content.hashtag = [self hashtag];
   content.peopleIDs = [self peopleIDs];
   content.placeID = [self placeID];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  content.previewPhoto = [self photoWithImage];
-#pragma clang diagnostic pop
   content.ref = [self ref];
-  content.video = [self video];
+  content.video = [self videoWithPreviewPhoto];
   return content;
 }
 

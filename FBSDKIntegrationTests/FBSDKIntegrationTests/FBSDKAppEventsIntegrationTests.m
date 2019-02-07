@@ -170,7 +170,7 @@
       }];
       XCTAssertEqual(3, logTimes.count);
       // verify _logTime differences (2 sec and 3 sec)
-      NSArray *sortedLogTimes = [[logTimes allObjects] sortedArrayUsingSelector:@selector(compare:)];
+      NSArray *sortedLogTimes = [logTimes.allObjects sortedArrayUsingSelector:@selector(compare:)];
       XCTAssertEqual(duration1, [sortedLogTimes[1] longValue] - [sortedLogTimes[0] longValue], @"expected 2 seconds between first and second log times");
       XCTAssertEqual(duration2, [sortedLogTimes[2] longValue] - [sortedLogTimes[1] longValue], @"expected 3 seconds between second and third log times");
       [blocker signal];
@@ -304,7 +304,7 @@
   // this should queue up one event.
   [FBSDKAppEvents logEvent:@"event-without-user"];
 
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   [FBSDKAccessToken setCurrentAccessToken:token];
 
   // this should trigger a session change flush.
@@ -313,7 +313,7 @@
 
   [FBSDKAccessToken setCurrentAccessToken:nil];
   // this should still just queue up another event for that user's token.
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
 
   // now this should trigger a flush of the user's events, and leave this event queued.
   [FBSDKAppEvents logEvent:@"event-without-user"];
@@ -358,23 +358,23 @@
   }];
 
   [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
 
   // log events with and without token interleaved, which would normally
   // cause flushes but should simply be retained now.
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents logEvent:@"event-without-user"];
 
   // now flush the last one (no user)
   [FBSDKAppEvents flush];
 
   // now log one more with user to flush
-  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:nil accessToken:token];
+  [FBSDKAppEvents logEvent:@"event-with-user" valueToSum:nil parameters:@{} accessToken:token];
   [FBSDKAppEvents flush];
 
   XCTAssertTrue([blocker waitWithTimeout:16], @"did not get both flushes");

@@ -22,10 +22,10 @@
 
 #import "FBSDKAppLinkUtility.h"
 
-@interface BFURLAppInvitesTests : XCTestCase
+@interface FBSDKURLAppInvitesTests : XCTestCase
 @end
 
-@implementation BFURLAppInvitesTests
+@implementation FBSDKURLAppInvitesTests
 
 - (void)testWithNoPromoCode
 {

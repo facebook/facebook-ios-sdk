@@ -59,51 +59,56 @@ static NSString *_lastTreeHash;
 + (void)loadCodelessSettingWithCompletionBlock:(FBSDKCodelessSettingLoadBlock)completionBlock
 {
   NSString *appID = [FBSDKSettings appID];
-  FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
-  if (appID == nil || !serverConfiguration || !serverConfiguration.codelessEventsEnabled) {
+  if (appID == nil) {
     return;
   }
 
-  // load the defaults
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
-  NSData *data = [defaults objectForKey:defaultKey];
-  if ([data isKindOfClass:[NSData class]]) {
-    NSMutableDictionary<NSString *, id> *codelessSetting = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-    if (codelessSetting) {
-      _codelessSetting = codelessSetting;
-    }
-  }
-  if (!_codelessSetting) {
-    _codelessSetting = [[NSMutableDictionary alloc] init];
-  }
-
-  if (![self _codelessSetupTimestampIsValid:[_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY]]) {
-    FBSDKGraphRequest *request = [self requestToLoadCodelessSetup:appID];
-    if (request == nil) {
+  [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *serverConfigurationLoadingError) {
+    if (!serverConfiguration.codelessEventsEnabled) {
       return;
     }
-    FBSDKGraphRequestConnection *requestConnection = [[FBSDKGraphRequestConnection alloc] init];
-    requestConnection.timeout = kTimeout;
-    [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
-      if (error) {
+
+    // load the defaults
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *defaultKey = [NSString stringWithFormat:CODELESS_SETTING_KEY, appID];
+    NSData *data = [defaults objectForKey:defaultKey];
+    if ([data isKindOfClass:[NSData class]]) {
+      NSMutableDictionary<NSString *, id> *codelessSetting = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+      if (codelessSetting) {
+        _codelessSetting = codelessSetting;
+      }
+    }
+    if (!_codelessSetting) {
+      _codelessSetting = [[NSMutableDictionary alloc] init];
+    }
+
+    if (![self _codelessSetupTimestampIsValid:[_codelessSetting objectForKey:CODELESS_SETTING_TIMESTAMP_KEY]]) {
+      FBSDKGraphRequest *request = [self requestToLoadCodelessSetup:appID];
+      if (request == nil) {
         return;
       }
+      FBSDKGraphRequestConnection *requestConnection = [[FBSDKGraphRequestConnection alloc] init];
+      requestConnection.timeout = kTimeout;
+      [requestConnection addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *codelessLoadingError) {
+        if (codelessLoadingError) {
+          return;
+        }
 
-      NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
-      if (resultDictionary) {
-        BOOL isCodelessSetupEnabled = [FBSDKTypeUtility boolValue:resultDictionary[CODELESS_SETUP_ENABLED_FIELD]];
-        [_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
-        [_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
-        // update the cached copy in user defaults
-        [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
-        completionBlock(isCodelessSetupEnabled, error);
-      }
-    }];
-    [requestConnection start];
-  } else {
-    completionBlock([FBSDKTypeUtility boolValue:[_codelessSetting objectForKey:CODELESS_SETUP_ENABLED_KEY]], nil);
-  }
+        NSDictionary<NSString *, id> *resultDictionary = [FBSDKTypeUtility dictionaryValue:result];
+        if (resultDictionary) {
+          BOOL isCodelessSetupEnabled = [FBSDKTypeUtility boolValue:resultDictionary[CODELESS_SETUP_ENABLED_FIELD]];
+          [_codelessSetting setObject:@(isCodelessSetupEnabled) forKey:CODELESS_SETUP_ENABLED_KEY];
+          [_codelessSetting setObject:[NSDate date] forKey:CODELESS_SETTING_TIMESTAMP_KEY];
+          // update the cached copy in user defaults
+          [defaults setObject:[NSKeyedArchiver archivedDataWithRootObject:_codelessSetting] forKey:defaultKey];
+          completionBlock(isCodelessSetupEnabled, codelessLoadingError);
+        }
+      }];
+      [requestConnection start];
+    } else {
+      completionBlock([FBSDKTypeUtility boolValue:[_codelessSetting objectForKey:CODELESS_SETUP_ENABLED_KEY]], nil);
+    }
+  }];
 }
 
 + (FBSDKGraphRequest *)requestToLoadCodelessSetup:(NSString *)appID
@@ -155,8 +160,8 @@ static NSString *_lastTreeHash;
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                 initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                    [FBSDKSettings appID], CODELESS_INDEXING_SESSION_ENDPOINT]
-                                parameters: parameters
-                                HTTPMethod:@"POST"];
+                                parameters:parameters
+                                HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary class]]) {
@@ -284,7 +289,7 @@ static NSString *_lastTreeHash;
                                                CODELESS_INDEXING_PLATFORM_KEY: @"iOS",
                                                CODELESS_INDEXING_SESSION_ID_KEY: [self currentSessionDeviceID]
                                                }
-                                  HTTPMethod:@"POST"];
+                                  HTTPMethod:FBSDKHTTPMethodPOST];
     _isCodelessIndexing = YES;
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         _isCodelessIndexing = NO;

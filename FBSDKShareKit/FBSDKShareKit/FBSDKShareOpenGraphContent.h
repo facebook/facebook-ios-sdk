@@ -21,9 +21,12 @@
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
   A model for Open Graph content to be shared.
  */
+NS_SWIFT_NAME(ShareOpenGraphContent)
 @interface FBSDKShareOpenGraphContent : NSObject <FBSDKSharingContent>
 
 /**
@@ -36,7 +39,6 @@
   Property name that points to the primary Open Graph Object in the action.
 
  The value that this action points to will be use for rendering the preview for the share.
- @return The property name for the Open Graph Object in the action
  */
 @property (nonatomic, copy) NSString *previewPropertyName;
 
@@ -48,3 +50,5 @@
 - (BOOL)isEqualToShareOpenGraphContent:(FBSDKShareOpenGraphContent *)content;
 
 @end
+
+NS_ASSUME_NONNULL_END

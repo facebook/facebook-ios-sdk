@@ -50,7 +50,7 @@
     return YES;
   }];
 
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   [self waitForExpectationsWithTimeout:5 handler:^(NSError *error) {
     XCTAssertNil(error);
@@ -83,7 +83,7 @@
     return YES;
   }];
 
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   FBSDKProfile *manualProfile = [[FBSDKProfile alloc] initWithUserID:@"123" firstName:@"not" middleName:nil lastName:@"sure" name:@"not sure" linkURL:nil refreshDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:token];
   [FBSDKProfile setCurrentProfile:manualProfile];
@@ -115,7 +115,7 @@
     return YES;
   }];
 
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   [FBSDKAccessToken setCurrentAccessToken:nil];
   [FBSDKAccessToken setCurrentAccessToken:token];
@@ -142,7 +142,7 @@
 
 - (void)testProfileStale
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   // set a profile with a matching user id and today's date.
   // this posts the nofication but we're not observing yet.
   [FBSDKProfile setCurrentProfile:[[FBSDKProfile alloc] initWithUserID:token.userID
@@ -181,8 +181,8 @@
   blockers[0] = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
   // now update the token again
   [FBSDKAccessToken setCurrentAccessToken:[[FBSDKAccessToken alloc] initWithTokenString:@"tokenstring"
-                                                                            permissions:nil
-                                                                    declinedPermissions:nil
+                                                                            permissions:@[]
+                                                                    declinedPermissions:@[]
                                                                                   appID:token.appID
                                                                                  userID:token.userID
                                                                          expirationDate:nil
@@ -196,7 +196,7 @@
 - (void)testImageURLForPictureMode
 {
   CGSize size = CGSizeMake(10, 10);
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   [FBSDKProfile setCurrentProfile:[[FBSDKProfile alloc] initWithUserID:token.userID
                                                              firstName:nil
@@ -205,7 +205,7 @@
                                                                   name:nil
                                                                linkURL:nil
                                                            refreshDate:[NSDate date]]];
-  NSString *imageURL = [[[FBSDKProfile currentProfile] imageURLForPictureMode:FBSDKProfilePictureModeNormal size:size] absoluteString];
+  NSString *imageURL = [[FBSDKProfile currentProfile] imageURLForPictureMode:FBSDKProfilePictureModeNormal size:size].absoluteString;
   NSString *expectedImageURLSuffix = [NSString stringWithFormat:@".facebook.com/%@/%@/picture?type=%@&width=%d&height=%d",
                                 FBSDK_TARGET_PLATFORM_VERSION,
                                 token.userID,

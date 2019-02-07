@@ -19,6 +19,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+NS_SWIFT_NAME(ViewHierarchy)
 @interface FBSDKViewHierarchy : NSObject
 
 + (NSObject *)getParent:(NSObject *)obj;
@@ -34,5 +35,7 @@
 + (UICollectionView *)getParentCollectionView:(UIView *)cell;
 + (NSInteger)getTag:(NSObject *)obj;
 + (NSNumber *)getViewReactTag:(UIView *)view;
+
++ (BOOL)isUserInputView:(NSObject *)obj;
 
 @end

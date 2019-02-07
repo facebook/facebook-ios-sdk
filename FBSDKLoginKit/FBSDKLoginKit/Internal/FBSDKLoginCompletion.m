@@ -125,7 +125,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   return self;
 }
 
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
+- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   if (_performExplicitFallback && loginManager.loginBehavior == FBSDKLoginBehaviorNative) {
     // UIKit and iOS don't like an application opening a URL during a URL open callback, so
@@ -251,9 +251,9 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   return self;
 }
 
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
+- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
-  void(^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
+  FBSDKLoginCompletionParametersBlock handlerCopy = [handler copy];
   FBSDKLoginRequestMeAndPermissions(_parameters, ^{
     // Transform the FBSDKCoreKit error in to an FBSDKLoginKit error, if necessary. This specializes
     // the graph errors in to User Checkpointed, Password Changed or Unconfirmed User.
@@ -309,7 +309,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   return self;
 }
 
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
+- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   handler(_parameters);
 }

@@ -53,7 +53,7 @@ static NSMapTable *g_mdnsAdvertisementServices;
 {
   struct utsname systemInfo;
   uname(&systemInfo);
-  NSDictionary *deviceInfo = @{
+  NSDictionary<NSString *, NSString *> *deviceInfo = @{
                                FBSDK_DEVICE_INFO_DEVICE: @(systemInfo.machine),
                                FBSDK_DEVICE_INFO_MODEL: [UIDevice currentDevice].model,
                                };

@@ -25,22 +25,31 @@ NS_ASSUME_NONNULL_BEGIN
  @abstract Marker protocol to export native functions to Javascript contexts.
  @discussion see `FBSDKJS` for integration in TVML apps.
  */
+NS_SWIFT_NAME(JSExports)
 @protocol FBSDKJSExports <JSExport>
 
 /*!
  @abstract Returns the current access token string, if available.
  */
-+ (nullable NSString *)accessTokenString;
-
-/*!
- @abstract Returns true if there is a current access token and the permission has been granted.
- */
-+ (BOOL)hasGranted:(NSString *)permission;
+@property (class, nonatomic, copy, readonly, nullable) NSString *accessTokenString;
 
 /*!
  @abstract returns true if there is a current access token.
  */
-+ (BOOL)isLoggedIn;
+@property (class, nonatomic, assign, readonly, getter=isLoggedIn) BOOL loggedIn;
+
+/*!
+ @abstract Returns true if there is a current access token and the permission has been granted.
+ */
++ (BOOL)hasGranted:(NSString *)permission
+NS_SWIFT_NAME(hasGranted(permission:));
+
+/*!
+ @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
+ @param eventName the event name
+ @discussion See `FBSDKAppEvents logEvent:parameters:`.
+ */
++ (void)logEvent:(NSString *)eventName;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logEventParameters(...)`.
@@ -48,7 +57,15 @@ NS_ASSUME_NONNULL_BEGIN
  @param parameters the parameters (optional).
  @discussion See `FBSDKAppEvents logEvent:parameters:`.
  */
-+ (void)logEvent:(NSString *)eventName parameters:(nullable NSDictionary<NSString *, id> *)parameters;
++ (void)logEvent:(NSString *)eventName parameters:(NSDictionary<NSString *, id> *)parameters;
+
+/*!
+ @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
+ @param purchaseAmount the purchase amount
+ @param currency the currency, e.g, "USD"
+ @discussion See `FBSDKAppEvents logPurchase:currency:parameters:`.
+ */
++ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency;
 
 /*!
  @abstract Log an event for analytics. In TVJS this is defined as `FBSDKJS.logPurchaseCurrencyParameters(...)`.
@@ -57,7 +74,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param parameters additional parameters (optional).
  @discussion See `FBSDKAppEvents logPurchase:currency:parameters:`.
  */
-+ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(nullable NSDictionary<NSString *, id> *)parameters;
++ (void)logPurchase:(double)purchaseAmount
+           currency:(NSString *)currency
+         parameters:(NSDictionary<NSString *, id> *)parameters;
 
 @end
 
@@ -74,6 +93,7 @@ NS_ASSUME_NONNULL_BEGIN
  Then your TVJS scripts can call functions like `FBSDKJS.hasLoggedIn()` to conditionally perform work
  if the user is logged in.
  */
+NS_SWIFT_NAME(JS)
 @interface FBSDKJS : NSObject <FBSDKJSExports>
 
 @end

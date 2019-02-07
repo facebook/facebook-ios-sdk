@@ -20,5 +20,6 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_SWIFT_NAME(LikeButtonPopWAV)
 @interface FBSDKLikeButtonPopWAV : FBSDKAudioResourceLoader
 @end

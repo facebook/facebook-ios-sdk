@@ -18,16 +18,21 @@
 
 #import "FBSDKShareDialogMode.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  A base interface for indicating a custom URL scheme
  */
+NS_SWIFT_NAME(SharingScheme)
 @protocol FBSDKSharingScheme
 
 /**
  Asks the receiver to provide a custom scheme.
- - Parameter mode: The intended dialog mode for sharing the content.
- - Returns: A custom URL scheme to use for the specified mode, or nil.
+ @param mode The intended dialog mode for sharing the content.
+ @return A custom URL scheme to use for the specified mode, or nil.
  */
 - (nullable NSString *)schemeForMode:(FBSDKShareDialogMode)mode;
 
 @end
+
+NS_ASSUME_NONNULL_END

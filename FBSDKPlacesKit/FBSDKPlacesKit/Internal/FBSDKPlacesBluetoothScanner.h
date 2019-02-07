@@ -18,17 +18,24 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(BluetoothBeacon)
 @interface FBSDKBluetoothBeacon : NSObject
 
-@property (nonatomic, strong) NSNumber *_Nonnull RSSI;
-@property (nonatomic, copy) NSString *_Nonnull payload;
+@property (nonatomic, strong) NSNumber *RSSI;
+@property (nonatomic, copy) NSString *payload;
 
 @end
 
-typedef void (^BluetoothBeaconScanCompletion)(NSArray<FBSDKBluetoothBeacon *> *_Nullable beacons);
+typedef void (^FBSDKBluetoothBeaconBlock)(NSArray<FBSDKBluetoothBeacon *> *beacons)
+NS_SWIFT_NAME(BluetoothBeaconBlock);
 
+NS_SWIFT_NAME(PlacesBluetoothScanner)
 @interface FBSDKPlacesBluetoothScanner : NSObject
 
-- (void)scanForBeaconsWithCompletion:(nonnull BluetoothBeaconScanCompletion)completion;
+- (void)scanForBeaconsWithCompletion:(FBSDKBluetoothBeaconBlock)completion;
 
 @end
+
+NS_ASSUME_NONNULL_END

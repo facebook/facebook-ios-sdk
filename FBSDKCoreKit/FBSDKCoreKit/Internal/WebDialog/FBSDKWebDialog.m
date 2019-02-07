@@ -29,6 +29,8 @@
 #define FBSDK_WEB_DIALOG_SHOW_ANIMATION_DURATION 0.2
 #define FBSDK_WEB_DIALOG_DISMISS_ANIMATION_DURATION 0.3
 
+typedef void (^FBSDKBoolBlock)(BOOL finished);
+
 static FBSDKWebDialog *g_currentDialog = nil;
 
 @interface FBSDKWebDialog () <FBSDKWebDialogViewDelegate>
@@ -314,7 +316,7 @@ static FBSDKWebDialog *g_currentDialog = nil;
 - (void)_updateViewsWithScale:(CGFloat)scale
                         alpha:(CGFloat)alpha
             animationDuration:(CFTimeInterval)animationDuration
-                   completion:(void(^)(BOOL finished))completion
+                   completion:(FBSDKBoolBlock)completion
 {
   CGAffineTransform transform;
   CGRect applicationFrame = [self _applicationFrameForOrientation];

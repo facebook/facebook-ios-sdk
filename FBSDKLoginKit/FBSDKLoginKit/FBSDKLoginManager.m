@@ -36,6 +36,10 @@ static NSString *const FBSDKOauthPath = @"/dialog/oauth";
 static NSString *const SFVCCanceledLogin = @"com.apple.SafariServices.Authentication";
 static NSString *const ASCanceledLogin = @"com.apple.AuthenticationServices.WebAuthenticationSession";
 
+// constants
+FBSDKLoginAuthType FBSDKLoginAuthTypeRerequest = @"rerequest";
+FBSDKLoginAuthType FBSDKLoginAuthTypeReauthorize = @"reauthorize";
+
 typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   FBSDKLoginManagerStateIdle,
   // We received a call to start login.
@@ -46,7 +50,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 @implementation FBSDKLoginManager
 {
-  FBSDKLoginManagerRequestTokenHandler _handler;
+  FBSDKLoginManagerLoginResultBlock _handler;
   FBSDKLoginManagerLogger *_logger;
   FBSDKLoginManagerState _state;
   FBSDKKeychainStore *_keychainStore;
@@ -65,22 +69,16 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 {
   self = [super init];
   if (self) {
-    self.authType = @"rerequest";
+    self.authType = FBSDKLoginAuthTypeRerequest;
     NSString *keyChainServiceIdentifier = [NSString stringWithFormat:@"com.facebook.sdk.loginmanager.%@", [NSBundle mainBundle].bundleIdentifier];
     _keychainStore = [[FBSDKKeychainStore alloc] initWithService:keyChainServiceIdentifier accessGroup:nil];
   }
   return self;
 }
 
-- (void)logInWithReadPermissions:(NSArray *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler
-{
-  [self logInWithReadPermissions:permissions
-              fromViewController:nil
-                         handler:handler];
-}
 - (void)logInWithReadPermissions:(NSArray *)permissions
               fromViewController:(UIViewController *)fromViewController
-                         handler:(FBSDKLoginManagerRequestTokenHandler)handler
+                         handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;
@@ -96,16 +94,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [self logInWithPermissions:permissionSet handler:handler];
 }
 
-- (void)logInWithPublishPermissions:(NSArray *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler
-{
-  [self logInWithPublishPermissions:permissions
-                 fromViewController:nil
-                            handler:handler];
-}
-
 - (void)logInWithPublishPermissions:(NSArray *)permissions
                  fromViewController:(UIViewController *)fromViewController
-                            handler:(FBSDKLoginManagerRequestTokenHandler)handler
+                            handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;
@@ -121,7 +112,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [self logInWithPermissions:permissionSet handler:handler];
 }
 
-- (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerRequestTokenHandler)handler
+- (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;
@@ -137,7 +128,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [FBSDKProfile setCurrentProfile:nil];
 }
 
-+ (void)renewSystemCredentials:(void (^)(ACAccountCredentialRenewResult result, NSError *error))handler
++ (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler
 {
   FBSDKSystemAccountStoreAdapter *adapter = [FBSDKSystemAccountStoreAdapter sharedInstance];
 
@@ -162,8 +153,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 {
   FBSDKLoginManagerLoginResult *result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
                                                                                  isCancelled:YES
-                                                                          grantedPermissions:nil
-                                                                         declinedPermissions:nil];
+                                                                          grantedPermissions:NSSet.set
+                                                                         declinedPermissions:NSSet.set];
   [result addLoggingExtra:@YES forKey:@"implicit_cancel"];
   [self invokeHandler:result error:nil];
 }
@@ -294,7 +285,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
       result = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
                                                        isCancelled:cancelled
-                                                grantedPermissions:nil
+                                                grantedPermissions:NSSet.set
                                                declinedPermissions:declinedPermissions];
     }
   }
@@ -342,7 +333,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   _state = FBSDKLoginManagerStateIdle;
 
   if (_handler) {
-    FBSDKLoginManagerRequestTokenHandler handler = _handler;
+    FBSDKLoginManagerLoginResultBlock handler = _handler;
     _handler(result, error);
     if (handler == _handler) {
       _handler = nil;
@@ -389,7 +380,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   return loginParams;
 }
 
-- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerRequestTokenHandler)handler
+- (void)logInWithPermissions:(NSSet *)permissions handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
@@ -402,14 +393,14 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [self logInWithBehavior:self.loginBehavior];
 }
 
-- (void)reauthorizeDataAccess:(FBSDKLoginManagerRequestTokenHandler)handler
+- (void)reauthorizeDataAccess:(FBSDKLoginManagerLoginResultBlock)handler
 {
   FBSDKServerConfiguration *serverConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   _logger = [[FBSDKLoginManagerLogger alloc] initWithLoggingToken:serverConfiguration.loggingToken];
   _handler = [handler copy];
   // Don't need to pass permissions for data reauthorization.
   _requestedPermissions = [NSSet set];
-  self.authType = @"reauthorize";
+  self.authType = FBSDKLoginAuthTypeReauthorize;
   [_logger startSessionForLoginManager:self];
   [self logInWithBehavior:self.loginBehavior];
 }
@@ -521,7 +512,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 #pragma mark - Test Methods
 
-- (void)setHandler:(FBSDKLoginManagerRequestTokenHandler)handler
+- (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   _handler = [handler copy];
 }
@@ -559,7 +550,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
 // change bool to auth method string.
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams
-                                  handler:(void(^)(BOOL didOpen, NSString *authMethod, NSError *error))handler
+                                  handler:(FBSDKBrowserLoginSuccessBlock)handler
 {
   [_logger willAttemptAppSwitchingBehavior];
 
@@ -571,7 +562,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSURL *authURL = nil;
   NSError *error;
-  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:nil queryParameters:nil error:&error];
+  NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     NSMutableDictionary *browserParams = [loginParams mutableCopy];
     [FBSDKInternalUtility dictionary:browserParams
@@ -821,8 +812,8 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 {
   FBSDKLoginManagerLoginResult *skippedResult = [[FBSDKLoginManagerLoginResult alloc] initWithToken:nil
                                                                                         isCancelled:NO
-                                                                                 grantedPermissions:nil
-                                                                                declinedPermissions:nil];
+                                                                                 grantedPermissions:NSSet.set
+                                                                                declinedPermissions:NSSet.set];
   skippedResult.isSkipped = YES;
   [_logger endLoginWithResult:skippedResult error:nil];
   // any necessary strong reference will be maintained by the mechanism that is used

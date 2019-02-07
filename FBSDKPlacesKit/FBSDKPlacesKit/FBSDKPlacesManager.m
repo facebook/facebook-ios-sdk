@@ -29,7 +29,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 @interface FBSDKPlacesManager() <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
-@property (atomic, strong) NSMutableArray <FBSDKLocationRequestCompletion> *locationCompletionBlocks;
+@property (atomic, strong) NSMutableArray<FBSDKLocationRequestCompletion> *locationCompletionBlocks;
 
 @property (nonatomic, strong) FBSDKPlacesBluetoothScanner *bluetoothScanner;
 
@@ -52,11 +52,11 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 #pragma mark - Place Search
 
 - (void)generatePlaceSearchRequestForSearchTerm:(NSString *)searchTerm
-                                     categories:(NSArray<NSString *> *)categories
-                                         fields:(NSArray<NSString *> *)fields
+                                     categories:(NSArray<FBSDKPlacesCategoryKey> *)categories
+                                         fields:(NSArray<FBSDKPlacesFieldKey> *)fields
                                        distance:(CLLocationDistance)distance
                                          cursor:(NSString *)cursor
-                                     completion:(FBSDKPlaceGraphRequestCompletion)completion
+                                     completion:(FBSDKPlaceGraphRequestBlock)completion
 {
   __weak FBSDKPlacesManager *weakSelf = self;
   [self.locationCompletionBlocks addObject:^void (CLLocation *location, NSError *error) {
@@ -74,8 +74,8 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 
 - (FBSDKGraphRequest *)placeSearchRequestForLocation:(CLLocation *)location
                                           searchTerm:(NSString *)searchTerm
-                                          categories:(NSArray<NSString *> *)categories
-                                              fields:(NSArray<NSString *> *)fields
+                                          categories:(NSArray<FBSDKPlacesCategoryKey> *)categories
+                                              fields:(NSArray<FBSDKPlacesFieldKey> *)fields
                                             distance:(CLLocationDistance)distance
                                               cursor:(NSString *)cursor
 {
@@ -88,7 +88,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   if (searchTerm) {
     parameters[@"q"] = searchTerm;
   }
-  if (categories) {
+  if (categories && categories.count > 0) {
     parameters[@"categories"] = [self _jsonStringForObject:categories];
   }
   if (location) {
@@ -97,7 +97,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   if (distance > 0) {
     parameters[@"distance"] = @(distance);
   }
-  if (fields) {
+  if (fields && fields.count > 0) {
     parameters[ParameterKeyFields] = [fields componentsJoinedByString:@","];
   }
 
@@ -106,12 +106,12 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 }
 
 - (void)generateCurrentPlaceRequestWithMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                                       fields:(NSArray<NSString *> *)fields
-                                                   completion:(FBSDKCurrentPlaceGraphRequestCompletion)completion
+                                                       fields:(NSArray<FBSDKPlacesFieldKey> *)fields
+                                                   completion:(FBSDKCurrentPlaceGraphRequestBlock)completion
 {
 
   dispatch_group_t locationAndBeaconsGroup = dispatch_group_create();
@@ -131,7 +131,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
   [self.locationManager requestLocation];
 
   dispatch_group_enter(locationAndBeaconsGroup);
-  [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> * _Nullable beacons) {
+  [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> *beacons) {
     currentBeacons = beacons;
     dispatch_group_leave(locationAndBeaconsGroup);
   }];
@@ -148,10 +148,10 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 
 - (void)generateCurrentPlaceRequestForCurrentLocation:(CLLocation *)currentLocation
                            withMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                               fields:(nullable NSArray<NSString *> *)fields
-                                           completion:(nonnull FBSDKCurrentPlaceGraphRequestCompletion)completion
+                                               fields:(NSArray<FBSDKPlacesFieldKey> *)fields
+                                           completion:(nonnull FBSDKCurrentPlaceGraphRequestBlock)completion
 {
-  [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> * _Nullable beacons) {
+  [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> *beacons) {
     completion([self _currentPlaceGraphRequestForLocation:currentLocation bluetoothBeacons:beacons minimumConfidenceLevel:minimumConfidence fields:fields], nil);
   }];
 }
@@ -172,10 +172,10 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 }
 
 - (FBSDKGraphRequest *)placeInfoRequestForPlaceID:(NSString *)placeID
-                                           fields:(NSArray<NSString *> *)fields
+                                           fields:(NSArray<FBSDKPlacesFieldKey> *)fields
 {
   NSDictionary *parameters = @{};
-  if (fields) {
+  if (fields && fields.count) {
     parameters = @{ParameterKeyFields : [fields componentsJoinedByString:@","]};
   }
 
@@ -184,7 +184,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 }
 
 #pragma mark - Helper Methods
@@ -192,7 +192,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
 - (FBSDKGraphRequest *)_currentPlaceGraphRequestForLocation:(CLLocation *)location
                                            bluetoothBeacons:(NSArray<FBSDKBluetoothBeacon *> *)beacons
                                      minimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                                     fields:(NSArray<NSString *> *)fields
+                                                     fields:(NSArray<FBSDKPlacesFieldKey> *)fields
 {
   NSMutableDictionary *parameters = [NSMutableDictionary new];
 
@@ -223,7 +223,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     parameters[@"min_confidence_level"] = [self _confidenceWebKeyForConfidence:minimumConfidence];
   }
 
-  if (fields) {
+  if (fields && fields.count > 0) {
     parameters[ParameterKeyFields] = [fields componentsJoinedByString:@","];
   }
 
@@ -232,7 +232,7 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
           parameters:parameters
           tokenString:self._tokenString
           version:nil
-          HTTPMethod:nil];
+          HTTPMethod:@""];
 
 }
 

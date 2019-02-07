@@ -22,8 +22,8 @@
 
 @interface FBSDKShareOpenGraphValueContainer ()
 
-- (NSDictionary *)allProperties;
+@property (nonatomic, readonly) BOOL requireKeyNamespace;
+
 - (BOOL)isEqualToShareOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)object;
-- (BOOL)requireKeyNamespace;
 
 @end

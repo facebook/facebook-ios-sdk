@@ -35,13 +35,13 @@
 
 - (void)testFetchMe {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
                                                                  parameters:@{ @"fields": @"id" }
                                                                 tokenString:token.tokenString
                                                                     version:nil
-                                                                 HTTPMethod:nil];
+                                                                 HTTPMethod:@""];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);
@@ -56,7 +56,7 @@
 
 - (void)testFetchLikesWithCurrentToken {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"user_likes"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"user_likes"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/likes"
@@ -76,7 +76,7 @@
 - (void)testRefreshToken {
   XCTestExpectation *expectation = [self expectationWithDescription:@"token refreshed"];
   // create token locally without permissions
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@""]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@""]];
   [FBSDKAccessToken setCurrentAccessToken:token];
 
   XCTAssertFalse([[FBSDKAccessToken currentAccessToken] hasGranted: @"public_profile"], "Permission is not expected to be granted.");
@@ -112,7 +112,7 @@
 - (void)testBatchSimple
 {
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:3];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObject:@"user_likes"]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"user_likes"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   [conn addRequest:[[FBSDKGraphRequest alloc] initWithGraphPath:@"me/likes"
@@ -171,7 +171,7 @@
                                                      parameters:@{ @"fields":@"id" }
                                                     tokenString:tokenWithLikes.tokenString
                                                         version:nil
-                                                     HTTPMethod:nil]
+                                                     HTTPMethod:@""]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error, @"failed for %@", tokenWithLikes.tokenString);
    [blocker signal];
@@ -180,7 +180,7 @@
                                                      parameters:nil
                                                     tokenString:tokenWithEmail.tokenString
                                                         version:nil
-                                                     HTTPMethod:nil]
+                                                     HTTPMethod:@""]
  completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
    XCTAssertNil(error, @"failed for %@", tokenWithEmail.tokenString);
    XCTAssertEqualObjects(tokenWithEmail.userID, result[@"id"]);
@@ -193,7 +193,7 @@
 
 - (void)testBatchPhotoUpload
 {
-  FBSDKAccessToken *token = [self getTokenWithPermissions:[NSSet setWithObjects:@"publish_actions", nil]];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[@"publish_actions"]];
   [FBSDKAccessToken setCurrentAccessToken:token];
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:4];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
@@ -241,7 +241,7 @@
   FBSDKTestBlocker *blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:3];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
 
-  FBSDKGraphRequestHandler assertMissingTokenErrorHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  FBSDKGraphRequestBlock assertMissingTokenErrorHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     /* error JSON should be :
      body =     {
      error =         {
@@ -276,7 +276,7 @@
   XCTAssertTrue([blocker waitWithTimeout:5], @"request timeout");
 
   blocker = [[FBSDKTestBlocker alloc] initWithExpectedSignalCount:1];
-  FBSDKAccessToken *accessToken = [self getTokenWithPermissions:[NSSet setWithObject:@"publish_actions"]];
+  FBSDKAccessToken *accessToken = [self getTokenWithPermissions:@[@"publish_actions"]];
   FBSDKGraphRequest *feedRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me/feed"
                                                                      parameters:@{ @"fields": @"" }
                                                                     tokenString:accessToken.tokenString
@@ -301,14 +301,14 @@
 
 - (void)testFetchGenderLocale {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
-  FBSDKAccessToken *token = [self getTokenWithPermissions:nil];
+  FBSDKAccessToken *token = [self getTokenWithPermissions:@[]];
   FBSDKGraphRequestConnection *conn = [[FBSDKGraphRequestConnection alloc] init];
   __block NSString *originalGender;
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"
                                                                  parameters:@{ @"fields": @"gender" }
                                                                 tokenString:token.tokenString
                                                                     version:nil
-                                                                 HTTPMethod:nil];
+                                                                 HTTPMethod:@""];
   [conn addRequest:request completionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);
@@ -328,7 +328,7 @@
                                                   @"locale" : @"de_DE" }
                                    tokenString:token.tokenString
                                        version:nil
-                                    HTTPMethod:nil] startWithCompletionHandler:
+                                    HTTPMethod:@""] startWithCompletionHandler:
   ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     XCTAssertNil(error, "@unexpected error: %@", error);
     XCTAssertNotNil(result);

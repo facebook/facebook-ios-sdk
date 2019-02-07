@@ -43,11 +43,18 @@
   }
 }
 
-+ (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
++ (instancetype)dialogWithContent:(id<FBSDKSharingContent>)content
+                         delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
   FBSDKMessageDialog *dialog = [[self alloc] init];
   dialog.shareContent = content;
   dialog.delegate = delegate;
+  return dialog;
+}
+
++ (instancetype)showWithContent:(id<FBSDKSharingContent>)content delegate:(id<FBSDKSharingDelegate>)delegate
+{
+  FBSDKMessageDialog *dialog = [self dialogWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
 }
@@ -96,7 +103,7 @@
                                                            userInfo:nil];
   FBSDKServerConfiguration *configuration = [FBSDKServerConfigurationManager cachedServerConfiguration];
   BOOL useSafariViewController = [configuration useSafariViewControllerForDialogName:FBSDKDialogConfigurationNameMessage];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
     [FBSDKInternalUtility unregisterTransientObject:self];
   };

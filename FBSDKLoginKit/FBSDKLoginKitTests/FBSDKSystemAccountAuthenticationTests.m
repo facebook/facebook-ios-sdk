@@ -241,7 +241,7 @@
   id serverConfigurationManager = [OCMockObject mockForClass:[FBSDKServerConfigurationManager class]];
   [[[serverConfigurationManager stub] andReturn:serverConfiguration] cachedServerConfiguration];
   [[[serverConfigurationManager stub] andDo:^(NSInvocation *invocation) {
-    FBSDKServerConfigurationManagerLoadBlock block;
+    FBSDKServerConfigurationBlock block;
     [invocation getArgument:&block atIndex:2];
     block(serverConfiguration, nil);
   }] loadServerConfigurationWithCompletionBlock:[OCMArg any]];

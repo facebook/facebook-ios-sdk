@@ -16,37 +16,37 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKBoltsMeasurementEventListener.h"
+#import "FBSDKMeasurementEventListener.h"
 
 #import "FBSDKAppEvents+Internal.h"
 #import "FBSDKTimeSpentData.h"
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
-static NSNotificationName const BoltsMeasurementEventNotification = @"com.parse.bolts.measurement_event";
+static NSNotificationName const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 
 #else
 
-static NSString *const BoltsMeasurementEventNotification = @"com.parse.bolts.measurement_event";
+static NSString *const FBSDKMeasurementEventNotification = @"com.facebook.facebook-objc-sdk.measurement_event";
 
 #endif
 
-static NSString *const BoltsMeasurementEventName = @"event_name";
-static NSString *const BoltsMeasurementEventArgs = @"event_args";
-static NSString *const BoltsMeasurementEventPrefix = @"bf_";
+static NSString *const FBSDKMeasurementEventName = @"event_name";
+static NSString *const FBSDKMeasurementEventArgs = @"event_args";
+static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
 
-@implementation FBSDKBoltsMeasurementEventListener
+@implementation FBSDKMeasurementEventListener
 
 + (instancetype)defaultListener
 {
     static dispatch_once_t dispatchOnceLocker = 0;
-    static FBSDKBoltsMeasurementEventListener *defaultListener = nil;
+    static FBSDKMeasurementEventListener *defaultListener = nil;
     dispatch_once(&dispatchOnceLocker, ^{
         defaultListener = [[self alloc] init];
         NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         [center addObserver:defaultListener
                    selector:@selector(logFBAppEventForNotification:)
-                       name:BoltsMeasurementEventNotification
+                       name:FBSDKMeasurementEventNotification
                      object:nil];
     });
     return defaultListener;
@@ -55,15 +55,15 @@ static NSString *const BoltsMeasurementEventPrefix = @"bf_";
 - (void)logFBAppEventForNotification:(NSNotification *)note
 {
     // when catch al_nav_in event, we set source application for FBAppEvents.
-    if ([note.userInfo[BoltsMeasurementEventName] isEqualToString:@"al_nav_in"]) {
-        NSString *sourceApplication = note.userInfo[BoltsMeasurementEventArgs][@"sourceApplication"];
+    if ([note.userInfo[FBSDKMeasurementEventName] isEqualToString:@"al_nav_in"]) {
+        NSString *sourceApplication = note.userInfo[FBSDKMeasurementEventArgs][@"sourceApplication"];
         if (sourceApplication) {
             [FBSDKTimeSpentData setSourceApplication:sourceApplication isFromAppLink:YES];
         }
     }
-    NSDictionary *eventArgs = note.userInfo[BoltsMeasurementEventArgs];
-    NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
-    for(NSString *key in eventArgs.allKeys) {
+    NSDictionary<NSString *, id> *eventArgs = note.userInfo[FBSDKMeasurementEventArgs];
+    NSMutableDictionary<NSString *, id> *logData = [[NSMutableDictionary alloc] init];
+    for (NSString *key in eventArgs.allKeys) {
         NSError *error = nil;
         NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9a-zA-Z _-]" options:0 error:&error];
         NSString *safeKey = [regex stringByReplacingMatchesInString:key
@@ -73,7 +73,7 @@ static NSString *const BoltsMeasurementEventPrefix = @"bf_";
         safeKey = [safeKey stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" -"]];
         logData[safeKey] = eventArgs[key];
     }
-    [FBSDKAppEvents logImplicitEvent:[BoltsMeasurementEventPrefix stringByAppendingString:note.userInfo[BoltsMeasurementEventName]]
+    [FBSDKAppEvents logImplicitEvent:[FBSDKMeasurementEventPrefix stringByAppendingString:note.userInfo[FBSDKMeasurementEventName]]
                           valueToSum:nil
                           parameters:logData
                          accessToken:nil];

@@ -39,7 +39,7 @@
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
-#import "FBSDKBoltsMeasurementEventListener.h"
+#import "FBSDKMeasurementEventListener.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKContainerViewController.h"
@@ -72,7 +72,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 {
 #if !TARGET_OS_TV
     FBSDKBridgeAPIRequest *_pendingRequest;
-    FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
+    FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
     id<FBSDKURLOpening> _pendingURLOpen;
     id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
     FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
@@ -104,8 +104,8 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     [[self sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchData];
 
 #if !TARGET_OS_TV
-    // Register Listener for Bolts measurement events
-    [FBSDKBoltsMeasurementEventListener defaultListener];
+    // Register Listener for App Link measurement events
+    [FBSDKMeasurementEventListener defaultListener];
 #endif
     // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
     [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]
@@ -118,19 +118,19 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-+ (instancetype)sharedInstance
++ (FBSDKApplicationDelegate *)sharedInstance
 {
     static FBSDKApplicationDelegate *_sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] _init];
+        _sharedInstance = [[self alloc] init];
     });
     return _sharedInstance;
 }
 
 #pragma mark - Object Lifecycle
 
-- (instancetype)_init
+- (instancetype)init
 {
     if ((self = [super init]) != nil) {
         NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -140,11 +140,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         [[FBSDKAppEvents singleton] registerNotifications];
     }
     return self;
-}
-
-- (instancetype)init
-{
-    return nil;
 }
 
 - (void)dealloc
@@ -236,7 +231,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     // fetch gate keepers
     [FBSDKGateKeeperManager loadGateKeepers];
 
-    if ([FBSDKSettings autoLogAppEventsEnabled].boolValue) {
+    if (FBSDKSettings.isAutoLogAppEventsEnabled) {
         [self _logSDKInitialize];
     }
 #if !TARGET_OS_TV
@@ -272,8 +267,8 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
     // Auto log basic events in case autoLogAppEventsEnabled is set
-    if ([FBSDKSettings autoLogAppEventsEnabled].boolValue) {
-        [FBSDKAppEvents activateApp];
+    if (FBSDKSettings.isAutoLogAppEventsEnabled) {
+      [FBSDKAppEvents activateApp];
     }
     //  _expectingBackground can be YES if the caller started doing work (like login)
     // within the app delegate's lifecycle like openURL, in which case there
@@ -304,7 +299,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 #if !TARGET_OS_TV
 
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(void(^)(BOOL, NSError *))handler
+- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
 {
     _expectingBackground = YES;
     _pendingURLOpen = sender;
@@ -338,7 +333,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
      useSafariViewController:(BOOL)useSafariViewController
           fromViewController:(UIViewController *)fromViewController
-             completionBlock:(FBSDKBridgeAPICallbackBlock)completionBlock
+             completionBlock:(FBSDKBridgeAPIResponseBlock)completionBlock
 {
     if (!request) {
         return;
@@ -380,7 +375,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (void)openURLWithSafariViewController:(NSURL *)url
                                  sender:(id<FBSDKURLOpening>)sender
                      fromViewController:(UIViewController *)fromViewController
-                                handler:(void(^)(BOOL, NSError *))handler
+                                handler:(FBSDKSuccessBlock)handler
 {
     if (![url.scheme hasPrefix:@"http"]) {
         [self openURL:url sender:sender handler:handler];
@@ -560,7 +555,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)_logSDKInitialize
 {
-    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
     params[@"core_lib_included"] = @1;
     if (objc_lookUpClass("FBSDKShareDialog") != nil) {
         params[@"share_lib_included"] = @1;
@@ -591,7 +586,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (BOOL)_handleBridgeAPIResponseURL:(NSURL *)responseURL sourceApplication:(NSString *)sourceApplication
 {
     FBSDKBridgeAPIRequest *request = _pendingRequest;
-    FBSDKBridgeAPICallbackBlock completionBlock = _pendingRequestCompletionBlock;
+    FBSDKBridgeAPIResponseBlock completionBlock = _pendingRequestCompletionBlock;
     _pendingRequest = nil;
     _pendingRequestCompletionBlock = NULL;
     if (![responseURL.scheme isEqualToString:[FBSDKInternalUtility appURLScheme]]) {

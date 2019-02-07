@@ -23,6 +23,7 @@
 
 @protocol FBSDKLikeDialogDelegate;
 
+NS_SWIFT_NAME(LikeDialog)
 @interface FBSDKLikeDialog : NSObject
 
 + (instancetype)likeWithObjectID:(NSString *)objectID
@@ -41,9 +42,10 @@
 
 @end
 
+NS_SWIFT_NAME(LikeDialogDelegate)
 @protocol FBSDKLikeDialogDelegate <NSObject>
 
-- (void)likeDialog:(FBSDKLikeDialog *)likeDialog didCompleteWithResults:(NSDictionary *)results;
+- (void)likeDialog:(FBSDKLikeDialog *)likeDialog didCompleteWithResults:(NSDictionary<NSString *, id> *)results;
 - (void)likeDialog:(FBSDKLikeDialog *)likeDialog didFailWithError:(NSError *)error;
 
 @end

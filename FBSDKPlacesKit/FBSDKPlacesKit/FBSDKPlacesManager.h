@@ -23,6 +23,8 @@
 
 #import "FBSDKPlacesKitConstants.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  Completion block for aysnchronous place request generation.
 
@@ -34,7 +36,10 @@
 
  @param error An error indicating a failure in a location services request.
  */
-typedef void (^FBSDKPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Nullable graphRequest, CLLocation *_Nullable location, NSError *_Nullable error);
+typedef void (^FBSDKPlaceGraphRequestBlock)(FBSDKGraphRequest *_Nullable graphRequest,
+                                                 CLLocation *_Nullable location,
+                                                 NSError *_Nullable error)
+NS_SWIFT_NAME(PlaceGraphRequestBlock);
 
 /**
  Completion block for aysnchronous current place request generation.
@@ -44,7 +49,9 @@ typedef void (^FBSDKPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Nullable gr
 
  @param error An error indicating a failure in a location services request.
  */
-typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Nullable graphRequest, NSError *_Nullable error);
+typedef void (^FBSDKCurrentPlaceGraphRequestBlock)(FBSDKGraphRequest *_Nullable graphRequest,
+                                                   NSError *_Nullable error)
+NS_SWIFT_NAME(CurrentPlaceGraphRequestBlock);
 
 /**
  `FBSDKPlacesManager` provides methods for searching for nearby places, as well as for
@@ -56,6 +63,7 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  for your app, see:
  https://developer.apple.com/library/content/documentation/UserExperience/Conceptual/LocationAwarenessPG/CoreLocation/CoreLocation.html.
  */
+NS_SWIFT_NAME(PlacesManager)
 @interface FBSDKPlacesManager : NSObject
 
 
@@ -79,16 +87,17 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
 
  @param cursor A pagination cursor.
 
- @param completion An `FBSDKPlaceGraphRequestCompletion` block. Note that this block will
+ @param completion An `FBSDKPlaceGraphRequestBlock` block. Note that this block will
  return the location, which you can choose to cache and use on calls to the synchronous
  `placesGraphRequestForLocation` method.
  */
 - (void)generatePlaceSearchRequestForSearchTerm:(nullable NSString *)searchTerm
-                                     categories:(nullable NSArray<NSString *> *)categories
-                                         fields:(nullable NSArray<NSString *> *)fields
+                                     categories:(NSArray<FBSDKPlacesCategoryKey> *)categories
+                                         fields:(NSArray<FBSDKPlacesFieldKey> *)fields
                                        distance:(CLLocationDistance)distance
                                          cursor:(nullable NSString *)cursor
-                                     completion:(nonnull FBSDKPlaceGraphRequestCompletion)completion;
+                                     completion:(FBSDKPlaceGraphRequestBlock)completion
+NS_SWIFT_NAME(generatePlaceSearchRequest(for:categories:fields:distance:cursor:completion:));
 
 /**
  Method for generating a graph request for searching the Places API.
@@ -115,8 +124,8 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  */
 - (nullable FBSDKGraphRequest *)placeSearchRequestForLocation:(nullable CLLocation *)location
                                                    searchTerm:(nullable NSString *)searchTerm
-                                                   categories:(nullable NSArray<NSString *> *)categories
-                                                       fields:(nullable NSArray<NSString *> *)fields
+                                                   categories:(NSArray<FBSDKPlacesCategoryKey> *)categories
+                                                       fields:(NSArray<FBSDKPlacesFieldKey> *)fields
                                                      distance:(CLLocationDistance)distance
                                                        cursor:(nullable NSString *)cursor;
 
@@ -132,11 +141,12 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
- @param completion A `FBSDKCurrentPlaceGraphRequestCompletion` block, that contains the graph request.
+ @param completion A `FBSDKCurrentPlaceGraphRequestBlock` block, that contains the graph request.
  */
 - (void)generateCurrentPlaceRequestWithMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                                       fields:(nullable NSArray<NSString *> *)fields
-                                                   completion:(nonnull FBSDKCurrentPlaceGraphRequestCompletion)completion;
+                                                       fields:(NSArray<FBSDKPlacesFieldKey> *)fields
+                                                   completion:(FBSDKCurrentPlaceGraphRequestBlock)completion
+NS_SWIFT_NAME(generateCurrentPlaceRequest(confidence:fields:completion:));
 
 /**
  Method for generating a graph request to query for places the device is likely
@@ -155,12 +165,13 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
  `FBSDKPlacesKitConstants.h` for the fields exposed by the SDK, and see https://developers.facebook.com/docs/places/fields
  for the most up to date list.
 
- @param completion A `FBSDKCurrentPlaceGraphRequestCompletion` block, that contains the graph request.
+ @param completion A `FBSDKCurrentPlaceGraphRequestBlock` block, that contains the graph request.
  */
-- (void)generateCurrentPlaceRequestForCurrentLocation:(nonnull CLLocation *)currentLocation
+- (void)generateCurrentPlaceRequestForCurrentLocation:(CLLocation *)currentLocation
                            withMinimumConfidenceLevel:(FBSDKPlaceLocationConfidence)minimumConfidence
-                                               fields:(nullable NSArray<NSString *> *)fields
-                                           completion:(nonnull FBSDKCurrentPlaceGraphRequestCompletion)completion;
+                                               fields:(NSArray<FBSDKPlacesFieldKey> *)fields
+                                           completion:(FBSDKCurrentPlaceGraphRequestBlock)completion
+NS_SWIFT_NAME(generateCurrentPlaceRequest(for:confidence:fields:completion:));
 
 /**
  Method for generating a graph request to provide feedback to the Places Graph about
@@ -177,9 +188,10 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
 
  @return An `FBSDKGraphRequest` for the given parameters.
  */
-- (nonnull FBSDKGraphRequest *)currentPlaceFeedbackRequestForPlaceID:(nonnull NSString *)placeID
-                                                            tracking:(nonnull NSString *)tracking
-                                                             wasHere:(BOOL)wasHere;
+- (FBSDKGraphRequest *)currentPlaceFeedbackRequestForPlaceID:(NSString *)placeID
+                                                    tracking:(NSString *)tracking
+                                                     wasHere:(BOOL)wasHere
+NS_SWIFT_NAME(currentPlaceFeedbackRequest(for:tracking:wasHere:));
 
 /**
  Method for generating a graph request to fetch additional information for a given place.
@@ -192,8 +204,11 @@ typedef void (^FBSDKCurrentPlaceGraphRequestCompletion)(FBSDKGraphRequest *_Null
 
  @return An `FBSDKGraphRequest` for the given parameters.
  */
-- (nonnull FBSDKGraphRequest *)placeInfoRequestForPlaceID:(nonnull NSString *)placeID
-                                                   fields:(nullable NSArray<NSString *> *)fields;
+- (FBSDKGraphRequest *)placeInfoRequestForPlaceID:(NSString *)placeID
+                                           fields:(NSArray<FBSDKPlacesFieldKey> *)fields
+NS_SWIFT_NAME(currentPlaceFeedbackRequest(for:fields:));
 
 
 @end
+
+NS_ASSUME_NONNULL_END

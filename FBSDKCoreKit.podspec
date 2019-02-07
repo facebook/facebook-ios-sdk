@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKCoreKit'
-  s.version      = '4.39.1'
+  s.version      = '4.40.0'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform core features'
 
   s.description  = <<-DESC
@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
-                     :tag => 'v4.39.1'
+                     :tag => "v#{s.version}"
                     }
 
   s.ios.weak_frameworks = 'Accounts', 'CoreLocation', 'Social', 'Security', 'QuartzCore', 'CoreGraphics', 'UIKit', 'Foundation', 'AudioToolbox'
@@ -31,8 +31,6 @@ Pod::Spec.new do |s|
   # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
-
-  s.ios.dependency 'Bolts', '~> 1.9'
 
   s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
   s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'

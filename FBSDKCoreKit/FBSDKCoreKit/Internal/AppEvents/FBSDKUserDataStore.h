@@ -18,12 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+NS_SWIFT_NAME(UserDataStore)
 @interface FBSDKUserDataStore : NSObject
 
 + (void)initStore;
-
-+ (void)setUserDataAndHash:(NSDictionary *)ud;
-
 + (void)setUserDataAndHash:(nullable NSString *)email
                  firstName:(nullable NSString *)firstName
                   lastName:(nullable NSString *)lastName
@@ -35,6 +35,8 @@
                        zip:(nullable NSString *)zip
                    country:(nullable NSString *)country;
 
-+ (NSString *) getHashedUserData;
++ (nullable NSString *) getHashedUserData;
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -20,9 +20,12 @@
 
 #import <OCMock/OCMock.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @class FBSDKTestBlocker;
 
-typedef void (^FBSDKTestBlockerPeriodicHandler)(FBSDKTestBlocker *blocker);
+typedef void (^FBSDKTestBlockerPeriodicHandler)(FBSDKTestBlocker *blocker)
+NS_SWIFT_NAME(TestBlockerPeriodicHandler);
 
 // FBSDKTestBlocker class
 //
@@ -33,15 +36,27 @@ typedef void (^FBSDKTestBlockerPeriodicHandler)(FBSDKTestBlocker *blocker);
 // the currentRunLoop, and framework code, etc., is not guaranteed to be re-entrant.
 // XCTest does not run tests in the context of a run loop.
 // Also, not thread-safe, expects all signaling to happen on the same thread.
+NS_SWIFT_NAME(TestBlocker)
 @interface FBSDKTestBlocker : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithExpectedSignalCount:(NSInteger)expectedSignalCount NS_DESIGNATED_INITIALIZER;
 - (void)wait;
-- (BOOL)waitWithTimeout:(NSTimeInterval)timeout;
-- (void)waitWithPeriodicHandler:(FBSDKTestBlockerPeriodicHandler)handler;
-- (BOOL)waitWithTimeout:(NSTimeInterval)timeout periodicHandler:(FBSDKTestBlockerPeriodicHandler)handler;
-- (void)signal;
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout
+NS_SWIFT_NAME(wait(timeout:));
 
-+ (void)waitForVerifiedMock:(OCMockObject *)inMock delay:(NSTimeInterval)inDelay;
+- (void)waitWithPeriodicHandler:(FBSDKTestBlockerPeriodicHandler)handler
+NS_SWIFT_NAME(wait(handler:));
+
+- (BOOL)waitWithTimeout:(NSTimeInterval)timeout periodicHandler:(FBSDKTestBlockerPeriodicHandler)handler
+NS_SWIFT_NAME(wait(timeout:handler:));
+
+- (void)signal;
++ (void)waitForVerifiedMock:(OCMockObject *)inMock delay:(NSTimeInterval)inDelay
+NS_SWIFT_NAME(wait(for:delay:));
 
 @end
+
+NS_ASSUME_NONNULL_END

@@ -24,6 +24,8 @@
 
 #import "FBSDKTooltipView.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @protocol FBSDKLoginButtonDelegate;
 
 /**
@@ -40,7 +42,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
   /** Force disable. In this case you can still exert more refined
    control by manually constructing a `FBSDKLoginTooltipView` instance. */
   FBSDKLoginButtonTooltipBehaviorDisable = 2
-};
+} NS_SWIFT_NAME(FBLoginButton.TooltipBehavior);
 
 /**
   A button that initiates a log in or log out flow upon tapping.
@@ -55,6 +57,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
  `FBSDKLoginButton` has a fixed height of @c 30 pixels, but you may change the width. `initWithFrame:CGRectZero`
  will size the button to its minimum frame.
 */
+NS_SWIFT_NAME(FBLoginButton)
 @interface FBSDKLoginButton : FBSDKButton
 
 /**
@@ -72,12 +75,11 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
 /**
   The publish permissions to request.
 
-
  Use `defaultAudience` to specify the default audience to publish to.
  Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  */
-@property (copy, nonatomic) NSArray *publishPermissions;
+@property (copy, nonatomic) NSArray<NSString *> *publishPermissions;
 /**
   The read permissions to request.
 
@@ -85,7 +87,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
  Note, that if read permissions are specified, then publish permissions should not be specified. This is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  */
-@property (copy, nonatomic) NSArray *readPermissions;
+@property (copy, nonatomic) NSArray<NSString *> *readPermissions;
 /**
   Gets or sets the desired tooltip behavior.
  */
@@ -101,6 +103,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
  @protocol
   A delegate for `FBSDKLoginButton`
  */
+NS_SWIFT_NAME(LoginButtonDelegate)
 @protocol FBSDKLoginButtonDelegate <NSObject>
 
 @required
@@ -111,8 +114,8 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginButtonTooltipBehavior)
  @param error The error (if any) from the login
  */
 - (void)loginButton:(FBSDKLoginButton *)loginButton
-didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
-                error:(NSError *)error;
+didCompleteWithResult:(nullable FBSDKLoginManagerLoginResult *)result
+                error:(nullable NSError *)error;
 
 /**
   Sent to the delegate when the button was used to logout.
@@ -126,6 +129,8 @@ didCompleteWithResult:(FBSDKLoginManagerLoginResult *)result
  @param loginButton the sender
  @return YES if the login should be allowed to proceed, NO otherwise
  */
-- (BOOL) loginButtonWillLogin:(FBSDKLoginButton *)loginButton;
+- (BOOL)loginButtonWillLogin:(FBSDKLoginButton *)loginButton;
 
 @end
+
+NS_ASSUME_NONNULL_END

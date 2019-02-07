@@ -53,22 +53,25 @@ static id g_mockNSBundle;
 }
 
 - (void)testAutoLogAppEventsEnabled {
-  OCMStub(ClassMethod([_settingsMock autoLogAppEventsEnabled])).
+  OCMStub(ClassMethod([_settingsMock isAutoLogAppEventsEnabled])).
   _andReturn(OCMOCK_VALUE(@YES));
 
   FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
   id delegateMock = OCMPartialMock(delegate);
-  [delegate application:nil didFinishLaunchingWithOptions:nil];
+  id app = OCMClassMock([UIApplication class]);
+  [delegate application:app didFinishLaunchingWithOptions:nil];
 
   OCMVerify([delegateMock _logSDKInitialize]);
 }
 
 - (void)testAutoLogAppEventsDisabled {
-  OCMStub(ClassMethod([_settingsMock autoLogAppEventsEnabled])).
+  OCMStub(ClassMethod([_settingsMock isAutoLogAppEventsEnabled])).
   _andReturn(OCMOCK_VALUE(@NO));
+
   FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
   id delegateMock = OCMPartialMock(delegate);
-  [delegate application:nil didFinishLaunchingWithOptions:nil];
+  id app = OCMClassMock([UIApplication class]);
+  [delegate application:app didFinishLaunchingWithOptions:nil];
 
   [[delegateMock reject] _logSDKInitialize];
 }

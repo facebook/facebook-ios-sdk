@@ -72,14 +72,14 @@
 - (void)deauthorize
 {
   if ([FBSDKAccessToken currentAccessToken] != nil) {
-    FBSDKGraphRequestHandler completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+    FBSDKGraphRequestBlock completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
       if (error == nil) {
         [FBSDKAccessToken setCurrentAccessToken:nil];
         [self dismissViewControllerAnimated:YES completion:nil];
       }
     };
     [[[FBSDKGraphRequest alloc] initWithGraphPath:@"/me/permissions"
-                                       parameters:nil
+                                       parameters:@{}
                                       tokenString:[FBSDKAccessToken currentAccessToken].tokenString
                                           version:nil
                                        HTTPMethod:@"DELETE"] startWithCompletionHandler:completionHandler];
