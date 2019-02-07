@@ -86,6 +86,9 @@ test_shared_setup() {
 
   local test_main_version_file="Configurations/Version.xcconfig"
 
+  local test_current_version
+  test_current_version=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$PWD/$test_main_version_file" | awk -F'=' '{print $2}')
+
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"
   fi
@@ -126,6 +129,11 @@ test_shared_setup() {
 
   if [ "$FRAMEWORK_NAME" != "FacebookSDK" ]; then
     test_failure "FRAMEWORK_NAME not correct"
+    ((TEST_FAILURES += 1))
+  fi
+
+  if [ "$CURRENT_VERSION" != "$test_current_version" ]; then
+    test_failure "CURRENT_VERSION not correct"
     ((TEST_FAILURES += 1))
   fi
 }
@@ -233,6 +241,12 @@ test_run_routing() {
 
 test_find_git_tag() {
   # Arrange, Act, & Assert
+
+  if ! sh "$PWD"/scripts/run.sh does-version-exist; then
+    test_failure "Current version is valid, but returns false"
+    ((TEST_FAILURES += 1))
+  fi
+
   if ! sh "$PWD"/scripts/run.sh does-version-exist 4.40.0; then
     test_failure "4.40.0 is valid, but returns false"
     ((TEST_FAILURES += 1))

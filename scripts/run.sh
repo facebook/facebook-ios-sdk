@@ -211,7 +211,13 @@ is_valid_semver() {
 
 # Check Version Tag Exists
 does_version_exist() {
-  if git rev-parse "v$1" >/dev/null 2>&1; then
+  local version_to_check="$1"
+
+  if [ "$version_to_check" == "" ]; then
+    version_to_check=$CURRENT_VERSION
+  fi
+
+  if git rev-parse "v$version_to_check" >/dev/null 2>&1; then
     return
   fi
 
