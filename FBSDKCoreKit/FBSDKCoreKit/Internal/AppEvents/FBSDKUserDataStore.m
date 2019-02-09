@@ -23,7 +23,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
-#define USER_DATA_KEY @"com.facebook.appevents.UserDataStore.userData"
+static NSString *const  FBSDKUserDataKey  = @"com.facebook.appevents.UserDataStore.userData";
 
 static NSString *const  FBSDKEmail        = @"em";
 static NSString *const  FBSDKFirstName    = @"fn";
@@ -47,17 +47,8 @@ static volatile bool initialized = false;
     return;
   }
 
-  [FBSDKUserDataStore initAndWait];
-}
-
-+ (void)initAndWait
-{
-  if (initialized){
-    return;
-  }
-
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  hashedUserData = [defaults stringForKey:USER_DATA_KEY];
+  hashedUserData = [defaults stringForKey:FBSDKUserDataKey];
   initialized = true;
 }
 
@@ -85,9 +76,7 @@ static volatile bool initialized = false;
                        zip:(nullable NSString *)zip
                    country:(nullable NSString *)country
 {
-  if (!initialized){
-    [FBSDKUserDataStore initAndWait];
-  }
+  [FBSDKUserDataStore initStore];
 
   NSMutableDictionary *ud = [[NSMutableDictionary alloc] init];
   if (email != nil) {
@@ -123,7 +112,7 @@ static volatile bool initialized = false;
 
   hashedUserData = [FBSDKUserDataStore hashUserData:ud];
   NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:(hashedUserData) forKey:(USER_DATA_KEY)];
+  [defaults setObject:(hashedUserData) forKey:(FBSDKUserDataKey)];
 }
 
 + (NSString *)getHashedUserData
@@ -131,7 +120,7 @@ static volatile bool initialized = false;
   if (!initialized){
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"initStore should have been called before calling setUserID"];
-    [FBSDKUserDataStore initAndWait];
+    [FBSDKUserDataStore initStore];
   }
 
   return hashedUserData;
