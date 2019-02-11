@@ -231,4 +231,9 @@ Facebook SDK in Swift is still in beta, and we would love to hear your thoughts 
 
 ## Contribute
 
-All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new contributors with tremendous joy. We request that you read our [contributing guidelines](.github/CONTRIBUTING.md) before submitting a Pull Request.
+All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new contributors with tremendous joy. We request that you read our [contributing guidelines](./CONTRIBUTING.md) before submitting a Pull Request.
+
+## License
+
+Facebook SDK in Swift is MIT licensed, as found in the [`LICENSE`](https://github.com/facebook/facebook-sdk-swift/blob/master/LICENSE) file.
+
