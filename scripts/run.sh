@@ -65,6 +65,7 @@ main() {
   case "$command_type" in
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
+  "can-release-current") can_release_current "$@" ;;
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
@@ -219,6 +220,14 @@ does_version_exist() {
   fi
 
   if git rev-parse "v$version_to_check" >/dev/null 2>&1; then
+    return
+  fi
+
+  false
+}
+
+can_release_current() {
+  if ! does_version_exist; then
     return
   fi
 
