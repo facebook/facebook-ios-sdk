@@ -35,6 +35,10 @@ jobs:
     - name: 'Carthage - Xcode 10.1'
       osx_image: xcode10.1
       if: tag IS blank
+    - stage: canrelease
+      name: 'The Test of Jobs'
+      osx_image: xcode10.1
+      script: echo "Worked here"
     - stage: release
       name: 'GitHub'
       osx_image: xcode10.1
