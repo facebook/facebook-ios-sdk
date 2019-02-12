@@ -167,13 +167,21 @@ release_sdk() {
 
 # Bump Version
 bump_version() {
-  CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
   local new_version="$1"
 
-  if ! is_valid_semver "$new_version"; then
+  if [ "$new_version" == "$CURRENT_VERSION" ]; then
+    echo "This version is the same as the current version"
     false
     return
   fi
+
+  if ! is_valid_semver "$new_version"; then
+    echo "This version isn't a valid semantic versioning"
+    false
+    return
+  fi
+
+  echo "Changing from: $CURRENT_VERSION to: $new_version"
 
   local version_change_files=(
     "${VERSION_FILES[@]}"
