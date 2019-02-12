@@ -64,7 +64,7 @@ set_globals() {
     "FBSDKPlacesKit"
     "FBSDKMarketingKit"
     "FBSDKTVOSKit"
-    "AccountKit/AccountKit"
+    "AccountKit"
   )
 
   VERSION_FILES=(
@@ -79,6 +79,7 @@ set_globals() {
 
   POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
   POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
+  POD_SPECS[7]="AccountKit/${POD_SPECS[7]}"
 
   CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
   export CURRENT_VERSION

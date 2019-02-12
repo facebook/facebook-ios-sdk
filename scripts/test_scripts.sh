@@ -75,7 +75,7 @@ test_shared_setup() {
     "FBSDKPlacesKit.podspec"
     "FBSDKMarketingKit.podspec"
     "FBSDKTVOSKit.podspec"
-    "AccountKit.podspec"
+    "AccountKit/AccountKit.podspec"
   )
 
   local test_version_change_files=(
