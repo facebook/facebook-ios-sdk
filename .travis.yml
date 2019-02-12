@@ -10,7 +10,7 @@ env:
 stages:
   - test
   - name: canrelease
-    if: env(CAN_RELEASE)
+    if: env(CAN_RELEASE) = true
   - name: release
     if: tag IS present
   - name: publish
