@@ -65,10 +65,10 @@ main() {
   case "$command_type" in
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
-  "can-release-current") can_release_current "$@" ;;
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
+  "tag-push-current-version") tag_push_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
   "test-file-upload")
     mkdir -p Carthage/Release
@@ -203,6 +203,36 @@ release_sdk() {
   esac
 }
 
+tag_push_current_version() {
+  local current_git_email
+  local current_git_name
+
+  current_git_email=$(git config --global user.email)
+  current_git_name=$(git config --global user.name)
+
+  echo "$current_git_email"
+  echo "$current_git_name"
+
+  if ! is_valid_semver "$CURRENT_VERSION"; then
+    exit 1
+  fi
+
+  if does_version_exist "$CURRENT_VERSION"; then
+    echo "Version $CURRENT_VERSION already exists"
+    false
+    return
+  fi
+
+  git config --global user.email "opensource+sdk-bot@fb.com"
+  git config --global user.name "facebook-sdk-bot"
+
+  git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
+  git push --follow-tags
+
+  git config --global user.email "$current_git_email"
+  git config --global user.name "$current_git_name"
+}
+
 # Proper Semantic Version
 is_valid_semver() {
   if ! [[ "$1" =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
@@ -220,14 +250,6 @@ does_version_exist() {
   fi
 
   if git rev-parse "v$version_to_check" >/dev/null 2>&1; then
-    return
-  fi
-
-  false
-}
-
-can_release_current() {
-  if ! does_version_exist; then
     return
   fi
 

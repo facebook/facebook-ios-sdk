@@ -31,7 +31,7 @@ main() {
   test_shared_setup
   test_run_routing
   test_is_valid_semver
-  test_find_git_tag
+  test_does_version_exist
   test_can_release
 
   case $TEST_FAILURES in
@@ -240,7 +240,7 @@ test_run_routing() {
   done
 }
 
-test_find_git_tag() {
+test_does_version_exist() {
   # Arrange, Act, & Assert
 
   if ! sh "$PWD"/scripts/run.sh does-version-exist; then
@@ -255,14 +255,6 @@ test_find_git_tag() {
 
   if sh "$PWD"/scripts/run.sh does-version-exist 0.0.0; then
     test_failure "0.0.0 is valid, but returns true"
-    ((TEST_FAILURES += 1))
-  fi
-}
-
-test_can_release() {
-  # Arrange, Act, & Assert
-  if sh "$PWD"/scripts/run.sh can-release-current; then
-    test_failure "Current version is already released, but returns true"
     ((TEST_FAILURES += 1))
   fi
 }
