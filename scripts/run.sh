@@ -64,7 +64,7 @@ set_globals() {
     "FBSDKPlacesKit"
     "FBSDKMarketingKit"
     "FBSDKTVOSKit"
-    "AccountKit"
+    "AccountKit/AccountKit"
   )
 
   VERSION_FILES=(
@@ -193,7 +193,7 @@ bump_version() {
     local full_file_path="$SDK_DIR/$file_path"
 
     if [ ! -f "$full_file_path" ]; then
-      echo "*** ERROR: unable to find $full_file_path"
+      echo "*** NOTE: unable to find $full_file_path."
       continue
     fi
 
