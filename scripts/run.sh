@@ -227,7 +227,8 @@ tag_push_current_version() {
   git config --global user.name "facebook-sdk-bot"
 
   git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
-  git push --follow-tags
+  git push origin HEAD:"$TRAVIS_BRANCH"
+  git push origin "v$CURRENT_VERSION"
 
   git config --global user.email "$current_git_email"
   git config --global user.name "$current_git_name"
