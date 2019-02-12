@@ -26,7 +26,37 @@
 # Main
 main() {
   if [ -z "$SCRIPTS_DIR" ]; then
-    set_globals
+    # Set global variables
+
+    SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+    SDK_DIR="$(dirname "$SCRIPTS_DIR")"
+
+    SDK_KITS=(
+      "FBSDKCoreKit"
+      "FBSDKLoginKit"
+      "FBSDKShareKit"
+      "FBSDKPlacesKit"
+      "FBSDKMarketingKit"
+      "FBSDKTVOSKit"
+      "AccountKit"
+    )
+
+    VERSION_FILES=(
+      "Configurations/Version.xcconfig"
+      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "AccountKit/AccountKit/Internal/AKFConstants.m"
+    )
+
+    MAIN_VERSION_FILE="Configurations/Version.xcconfig"
+
+    FRAMEWORK_NAME="FacebookSDK"
+
+    POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
+    POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
+    POD_SPECS[7]="AccountKit/${POD_SPECS[7]}"
+
+    CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
+    export CURRENT_VERSION
   fi
 
   local command_type="$1"
@@ -43,46 +73,8 @@ main() {
     mkdir -p Carthage/Release
     echo "This is a test" >>Carthage/Release/file.txt
     ;;
-  "help" | *) show_help "$@" ;;
+  "help" | *) echo "Check main() for supported commands" ;;
   esac
-}
-
-# Help
-show_help() {
-  echo "Check main() for supported commands"
-}
-
-# Set Globals
-set_globals() {
-  SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
-  SDK_DIR="$(dirname "$SCRIPTS_DIR")"
-
-  SDK_KITS=(
-    "FBSDKCoreKit"
-    "FBSDKLoginKit"
-    "FBSDKShareKit"
-    "FBSDKPlacesKit"
-    "FBSDKMarketingKit"
-    "FBSDKTVOSKit"
-    "AccountKit"
-  )
-
-  VERSION_FILES=(
-    "Configurations/Version.xcconfig"
-    "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
-    "AccountKit/AccountKit/Internal/AKFConstants.m"
-  )
-
-  MAIN_VERSION_FILE="Configurations/Version.xcconfig"
-
-  FRAMEWORK_NAME="FacebookSDK"
-
-  POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
-  POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
-  POD_SPECS[7]="AccountKit/${POD_SPECS[7]}"
-
-  CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
-  export CURRENT_VERSION
 }
 
 # Bump Version
