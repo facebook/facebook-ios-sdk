@@ -188,7 +188,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (token) {
         // We have a saved token, issue a request to make sure it's still valid.
         [FBSDKAccessToken setCurrentAccessToken:token];
-        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:nil];
+        FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me"];
         if (indexPath.section == 1) {
             // Disable the error recovery for the slots that require the webview login,
             // since error recovery uses FBSDKLoginBehaviorNative

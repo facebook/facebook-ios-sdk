@@ -28,7 +28,7 @@
 {
   CGPoint _dragOffset;
   GameController *_gameController;
-  BFAppLinkReturnToRefererController *_returnToRefererController;
+  FBSDKAppLinkReturnToRefererController *_returnToRefererController;
 }
 
 #pragma mark - View Management
