@@ -8,15 +8,11 @@ This document will guide you through the process of issuing a new version of the
 
 ### Bump Version
 
-Run this script:
+1. Run the bump version script:
 
-```sh
-# Change directory to the SDK directory
-cd path/to/sdk
+   ```sh
+   # Call `bump-version` and pass in the desired semantic version, e.g. 4.40.0
+   sh scripts/run.sh bump-version 4.40.0
+   ```
 
-# Run the bump version script and pass in the desired semantic version
-sh scripts/run.sh bump-version "4.40.0"
-
-# Commit these changes
-git commit -am "Bump version: 4.40.0"
-```
+2. Commit these changes with the title: "Bump Version: 4.40.0"
