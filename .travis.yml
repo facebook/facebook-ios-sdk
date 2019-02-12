@@ -10,7 +10,7 @@ stages:
   - test
   - name: release
     if: tag IS present
-  - name: deploy
+  - name: publish
     if: tag IS present
 
 jobs:
@@ -48,7 +48,7 @@ jobs:
           tags: true
           condition: $TRAVIS_TAG =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
           branch: master
-    - stage: deploy
+    - stage: publish
       name: 'Cocoapods'
       osx_image: xcode10.1
       script: sh scripts/run.sh release cocoapods --allow-warnings
