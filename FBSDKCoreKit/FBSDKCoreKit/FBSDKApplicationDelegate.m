@@ -266,6 +266,13 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
+    if (!_safariViewController) {
+        UIViewController *topController = FBSDKInternalUtility.topMostViewController;
+        if ([topController isKindOfClass:[SFSafariViewController class]]) {
+            _safariViewController = topController;
+        }
+    }
+
     // Auto log basic events in case autoLogAppEventsEnabled is set
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
       [FBSDKAppEvents activateApp];
