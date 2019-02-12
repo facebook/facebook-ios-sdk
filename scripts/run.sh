@@ -85,6 +85,50 @@ set_globals() {
   export CURRENT_VERSION
 }
 
+# Bump Version
+bump_version() {
+  local new_version="$1"
+
+  if [ "$new_version" == "$CURRENT_VERSION" ]; then
+    echo "This version is the same as the current version"
+    false
+    return
+  fi
+
+  if ! is_valid_semver "$new_version"; then
+    echo "This version isn't a valid semantic versioning"
+    false
+    return
+  fi
+
+  echo "Changing from: $CURRENT_VERSION to: $new_version"
+
+  local version_change_files=(
+    "${VERSION_FILES[@]}"
+    "${POD_SPECS[@]}"
+  )
+
+  # Replace the previous version to the new version in relative files
+  for file_path in "${version_change_files[@]}"; do
+    local full_file_path="$SDK_DIR/$file_path"
+
+    if [ ! -f "$full_file_path" ]; then
+      echo "*** NOTE: unable to find $full_file_path."
+      continue
+    fi
+
+    local temp_file="$full_file_path.tmp"
+    sed -e "s/$CURRENT_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
+    if diff "$full_file_path" "$temp_file" >/dev/null; then
+      echo "*** ERROR: unable to update $full_file_path"
+      rm "$temp_file"
+      continue
+    fi
+
+    mv "$temp_file" "$full_file_path"
+  done
+}
+
 # Build
 build_sdk() {
   build_xcode_workspace() {
@@ -164,50 +208,6 @@ release_sdk() {
   "cocoapods") release_cocoapods "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
-}
-
-# Bump Version
-bump_version() {
-  local new_version="$1"
-
-  if [ "$new_version" == "$CURRENT_VERSION" ]; then
-    echo "This version is the same as the current version"
-    false
-    return
-  fi
-
-  if ! is_valid_semver "$new_version"; then
-    echo "This version isn't a valid semantic versioning"
-    false
-    return
-  fi
-
-  echo "Changing from: $CURRENT_VERSION to: $new_version"
-
-  local version_change_files=(
-    "${VERSION_FILES[@]}"
-    "${POD_SPECS[@]}"
-  )
-
-  # Replace the previous version to the new version in relative files
-  for file_path in "${version_change_files[@]}"; do
-    local full_file_path="$SDK_DIR/$file_path"
-
-    if [ ! -f "$full_file_path" ]; then
-      echo "*** NOTE: unable to find $full_file_path."
-      continue
-    fi
-
-    local temp_file="$full_file_path.tmp"
-    sed -e "s/$CURRENT_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
-    if diff "$full_file_path" "$temp_file" >/dev/null; then
-      echo "*** ERROR: unable to update $full_file_path"
-      rm "$temp_file"
-      continue
-    fi
-
-    mv "$temp_file" "$full_file_path"
-  done
 }
 
 # Proper Semantic Version
