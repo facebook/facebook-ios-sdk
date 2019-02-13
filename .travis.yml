@@ -49,8 +49,12 @@ jobs:
             secure: vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE=
           file: Carthage/Release/*
           file_glob: true
+          on:
+            repo: facebook/facebook-objc-sdk
         - provider: script
           script: sh scripts/run.sh release cocoapods --allow-warnings
+          on:
+            repo: facebook/facebook-objc-sdk
 
 before_install:
   - brew update
