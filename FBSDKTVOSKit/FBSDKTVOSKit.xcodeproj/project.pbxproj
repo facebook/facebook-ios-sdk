@@ -859,7 +859,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "../scripts/build-universal-tvos-framework.sh";
+			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh";
 		};
 /* End PBXShellScriptBuildPhase section */
 
