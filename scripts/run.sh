@@ -223,8 +223,12 @@ tag_push_current_version() {
     return
   fi
 
+  ssh -T git@github.com
+
   git config --global user.email "opensource+sdk-bot@fb.com"
   git config --global user.name "facebook-sdk-bot"
+
+  git remote set-url origin git@github.com:"$TRAVIS_REPO_SLUG"
 
   git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
   git push origin HEAD:"$TRAVIS_BRANCH"
