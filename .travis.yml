@@ -4,13 +4,13 @@ os: osx
 env:
   global:
     - XCODE_WORKSPACE=FacebookSDK.xcworkspace
-    - secure: 'vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE='
+    - secure: vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE=
 
 stages:
   - name: test
-    if: ! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+    if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   - name: tag
-    if: ! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+    if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   - name: release
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
   - name: publish
@@ -18,41 +18,41 @@ stages:
 
 jobs:
   include:
-    - name: 'Xcode - iOS 12.0'
+    - name: Xcode - iOS 12.0
       osx_image: xcode10.1
       env:
         - XCODE_SDK=iphonesimulator12.1
         - XCODE_SCHEME=BuildAllKits
-    - name: 'Xcode - tvOS 12.0'
+    - name: Xcode - tvOS 12.0
       osx_image: xcode10.1
       env:
         - XCODE_SDK=appletvsimulator12.1
         - XCODE_SCHEME=BuildAllKits_TV
-    - name: 'Xcode - iOS 11.4'
+    - name: Xcode - iOS 11.4
       osx_image: xcode9.4
       env:
         - XCODE_SDK=iphonesimulator11.4
         - XCODE_SCHEME=BuildAllKits
-    - name: 'Carthage - Xcode 10.1'
+    - name: Carthage - Xcode 10.1
       osx_image: xcode10.1
       if: tag IS blank
     - stage: tag
-      name: 'Tag Version'
+      name: Tag Version
       osx_image: xcode10.1
       script: sh scripts/run.sh tag-push-current-version
     - stage: release
-      name: 'GitHub'
+      name: GitHub
       osx_image: xcode10.1
       script: sh scripts/run.sh build carthage --archive
       deploy:
         provider: releases
         api_key:
-          secure: 'vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE='
+          secure: vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE=
         file: Carthage/Release/*
         file_glob: true
         skip_cleanup: true
     - stage: publish
-      name: 'Cocoapods'
+      name: Cocoapods
       osx_image: xcode10.1
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
