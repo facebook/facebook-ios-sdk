@@ -5,5 +5,5 @@ useTabs: false
 semi: false
 singleQuote: true
 jsxSingleQuote: true
-proseWrap: never
+proseWrap: always
 endOfLine: lf
