@@ -122,6 +122,22 @@ bump_version() {
   done
 }
 
+# Tag push current version
+tag_push_current_version() {
+  if ! is_valid_semver "$CURRENT_VERSION"; then
+    exit 1
+  fi
+
+  if does_version_exist "$CURRENT_VERSION"; then
+    echo "Version $CURRENT_VERSION already exists"
+    false
+    return
+  fi
+
+  git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
+  git push origin "v$CURRENT_VERSION"
+}
+
 # Build
 build_sdk() {
   build_xcode_workspace() {
@@ -201,21 +217,6 @@ release_sdk() {
   "cocoapods") release_cocoapods "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
-}
-
-tag_push_current_version() {
-  if ! is_valid_semver "$CURRENT_VERSION"; then
-    exit 1
-  fi
-
-  if does_version_exist "$CURRENT_VERSION"; then
-    echo "Version $CURRENT_VERSION already exists"
-    false
-    return
-  fi
-
-  git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
-  git push origin "v$CURRENT_VERSION"
 }
 
 # Proper Semantic Version
