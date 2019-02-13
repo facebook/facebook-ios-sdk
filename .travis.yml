@@ -51,12 +51,14 @@ jobs:
           file_glob: true
           on:
             all_branches: true
-            condition: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+            condition:
+              tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
         - provider: script
           script: sh scripts/run.sh release cocoapods --allow-warnings
           on:
             all_branches: true
-            condition: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
+            condition:
+              tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
