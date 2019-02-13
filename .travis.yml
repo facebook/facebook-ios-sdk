@@ -9,8 +9,8 @@ env:
 stages:
   - name: test
     if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
-  - name: tag
-    if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
+  # - name: tag
+  #   if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   - name: release
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
@@ -34,10 +34,10 @@ jobs:
     - name: Carthage - Xcode 10.1
       osx_image: xcode10.1
       if: tag IS blank
-    - stage: tag
-      name: Tag Version
-      osx_image: xcode10.1
-      script: sh scripts/run.sh tag-push-current-version
+    # - stage: tag
+    #   name: Tag Version
+    #   osx_image: xcode10.1
+    #   script: sh scripts/run.sh tag-push-current-version
     - stage: release
       name: GitHub
       osx_image: xcode10.1

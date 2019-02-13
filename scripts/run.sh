@@ -204,15 +204,6 @@ release_sdk() {
 }
 
 tag_push_current_version() {
-  local current_git_email
-  local current_git_name
-
-  current_git_email=$(git config --global user.email)
-  current_git_name=$(git config --global user.name)
-
-  echo "$current_git_email"
-  echo "$current_git_name"
-
   if ! is_valid_semver "$CURRENT_VERSION"; then
     exit 1
   fi
@@ -223,19 +214,8 @@ tag_push_current_version() {
     return
   fi
 
-  ssh -T git@github.com
-
-  git config --global user.email "opensource+sdk-bot@fb.com"
-  git config --global user.name "facebook-sdk-bot"
-
-  git remote set-url origin git@github.com:"$TRAVIS_REPO_SLUG"
-
   git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
-  git push origin HEAD:"$TRAVIS_BRANCH"
   git push origin "v$CURRENT_VERSION"
-
-  git config --global user.email "$current_git_email"
-  git config --global user.name "$current_git_name"
 }
 
 # Proper Semantic Version
