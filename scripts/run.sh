@@ -70,7 +70,7 @@ main() {
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
-  "tag-push-current-version") tag_push_current_version "$@" ;;
+  "tag-current-version") tag_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
   "test-file-upload")
     mkdir -p Carthage/Release
@@ -157,7 +157,7 @@ bump_changelog() {
 }
 
 # Tag push current version
-tag_push_current_version() {
+tag_current_version() {
   if ! is_valid_semver "$CURRENT_VERSION"; then
     exit 1
   fi
@@ -169,7 +169,10 @@ tag_push_current_version() {
   fi
 
   git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
-  git push origin "v$CURRENT_VERSION"
+
+  if [ "$1" == "--push" ]; then
+    git push origin "v$CURRENT_VERSION"
+  fi
 }
 
 # Build
