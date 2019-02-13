@@ -1,5 +1,4 @@
 #!/bin/sh
-#
 # Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
 #
 # You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
@@ -18,18 +17,9 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-# This script installs the docsets in the current folder into the user's ~/Library
-(
-cd "$(dirname "$0")"
-DESTINATION="$HOME/Library/Developer/Shared/Documentation/DocSets/"
-echo "This script will install the docsets in the current folder into $DESTINATION"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes )
-            \ls -d *.docset | xargs -I {} cp -R {} $DESTINATION
-            echo "Installation complete. Please restart Xcode."
-            break;;
-        No ) exit;;
-    esac
-done
-)
+# --------------
+# Main Script
+# --------------
+
+bundle install
+brew bundle
