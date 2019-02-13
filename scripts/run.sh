@@ -65,6 +65,7 @@ main() {
   case "$command_type" in
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
+  "bump-changelog") bump_changelog "$@" ;;
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
@@ -120,6 +121,38 @@ bump_version() {
 
     mv "$temp_file" "$full_file_path"
   done
+
+  bump_changelog "$new_version"
+}
+
+bump_changelog() {
+  local new_version="$1"
+
+  # Edit Changelog
+  local updated_changelog=""
+
+  while IFS= read -r line; do
+    local updated_line
+
+    case "$line" in
+    "[Full Changelog]("*"$CURRENT_VERSION...HEAD)")
+      local current_date
+      current_date=$(date +%Y-%m-%d)
+
+      updated_line="\n""${line/$CURRENT_VERSION/$new_version}""\n\n"
+      updated_line=$updated_line"## $new_version\n\n"
+      updated_line=$updated_line"[$current_date]"
+      updated_line=$updated_line"(https://github.com/facebook/facebook-objc-sdk/releases/tag/v$new_version) |\n"
+      updated_line=$updated_line"[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v$CURRENT_VERSION...v$new_version)"
+      ;;
+    "# Changelog") updated_line=$line ;;
+    *) updated_line="\n"$line ;;
+    esac
+
+    updated_changelog=$updated_changelog$updated_line
+  done <"CHANGELOG.md"
+
+  echo "$updated_changelog" >CHANGELOG.md
 }
 
 # Tag push current version
