@@ -56,7 +56,8 @@ main() {
     POD_SPECS[7]="AccountKit/${POD_SPECS[7]}"
 
     CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
-    export CURRENT_VERSION
+
+    GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
   fi
 
   local command_type="$1"
@@ -142,8 +143,8 @@ bump_changelog() {
       updated_line="\n""${line/$CURRENT_VERSION/$new_version}""\n\n"
       updated_line=$updated_line"## $new_version\n\n"
       updated_line=$updated_line"[$current_date]"
-      updated_line=$updated_line"(https://github.com/facebook/facebook-objc-sdk/releases/tag/v$new_version) |\n"
-      updated_line=$updated_line"[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v$CURRENT_VERSION...v$new_version)"
+      updated_line=$updated_line"($GIT_REMOTE/releases/tag/v$new_version) |\n"
+      updated_line=$updated_line"[Full Changelog]($GIT_REMOTE/compare/v$CURRENT_VERSION...v$new_version)"
       ;;
     "# Changelog") updated_line=$line ;;
     *) updated_line="\n"$line ;;

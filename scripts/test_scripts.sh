@@ -136,6 +136,11 @@ test_shared_setup() {
     test_failure "CURRENT_VERSION not correct"
     ((TEST_FAILURES += 1))
   fi
+
+  if [ "$GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
+    test_failure "GIT_REMOTE not correct"
+    ((TEST_FAILURES += 1))
+  fi
 }
 
 test_is_valid_semver() {
