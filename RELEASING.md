@@ -22,12 +22,13 @@ Version: 4.40.0"
 
 ### 2. Tag Version
 
-Once the bump version diff has successfully landed on the branch you wish to release, follow these steps:
+Once the bump version diff has successfully landed on the branch you wish to release, and all CI builds have passed, run
+the tag current version script:
 
 ```sh
 # Ensure you're on the correct, e.g. master
 git checkout master && git pull
 
-# Ship the currently set version
-sh scripts/run.sh tag-push-current-version
+# Tag the currently set version and, optionally, push to origin
+sh scripts/run.sh tag-current-version --push
 ```
