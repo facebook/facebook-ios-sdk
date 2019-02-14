@@ -267,15 +267,26 @@ check_release_status() {
     ((release_success += 1))
   fi
 
-  if [ "$version_to_check" != "$CURRENT_VERSION" ]; then
-    echo "$version_to_check isn't current: $CURRENT_VERSION"
-    ((release_success += 1))
-  fi
-
   if ! does_version_exist "$version_to_check"; then
     echo "$version_to_check isn't tagged in GitHub"
     ((release_success += 1))
   fi
+
+  local pod_info
+
+  for spec in "${POD_SPECS[@]}"; do
+    if [ ! -f "$spec" ]; then
+      echo "*** ERROR: unable to release $spec"
+      continue
+    fi
+
+    pod_info=$(pod trunk info "${spec/.podspec/}")
+
+    if [[ $pod_info != *"$version_to_check"* ]]; then
+      echo "$spec hasn't been released yet"
+      ((release_success += 1))
+    fi
+  done
 
   case $release_success in
   0) return ;;
@@ -300,6 +311,10 @@ does_version_exist() {
   fi
 
   if git rev-parse "v$version_to_check" >/dev/null 2>&1; then
+    return
+  fi
+
+  if git rev-parse "sdk-version-$version_to_check" >/dev/null 2>&1; then
     return
   fi
 
