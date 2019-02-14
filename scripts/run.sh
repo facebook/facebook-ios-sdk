@@ -67,6 +67,7 @@ main() {
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
   "bump-changelog") bump_changelog "$@" ;;
+  "check-release-status") check_release_status "$@" ;;
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
@@ -253,6 +254,32 @@ release_sdk() {
   case "$release_type" in
   "cocoapods") release_cocoapods "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
+  esac
+}
+
+# Check Release Status
+check_release_status() {
+  local version_to_check="$1"
+  local release_success=0
+
+  if ! is_valid_semver "$version_to_check"; then
+    echo "$version_to_check isn't a valid semantic versioning"
+    ((release_success += 1))
+  fi
+
+  if [ "$version_to_check" != "$CURRENT_VERSION" ]; then
+    echo "$version_to_check isn't current: $CURRENT_VERSION"
+    ((release_success += 1))
+  fi
+
+  if ! does_version_exist "$version_to_check"; then
+    echo "$version_to_check isn't tagged in GitHub"
+    ((release_success += 1))
+  fi
+
+  case $release_success in
+  0) return ;;
+  *) false ;;
   esac
 }
 
