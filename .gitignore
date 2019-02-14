@@ -5,6 +5,8 @@
 ## Build generated
 build/
 DerivedData/
+*-Focused.xcworkspace/
+*-Focused.xcodeproj/
 
 ## Various settings
 *.pbxuser
