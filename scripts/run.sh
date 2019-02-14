@@ -200,11 +200,37 @@ build_sdk() {
     fi
   }
 
+  build_docs() {
+    for kit in "${SDK_KITS[@]}"; do
+      local prefix
+      if [ "$kit" == "FBSDKMarketingKit" ]; then prefix="internal/"; else prefix=""; fi
+
+      local header_file="$SDK_DIR/$prefix$kit/$kit/$kit".h
+
+      if [ ! -f "$header_file" ]; then
+        echo "*** ERROR: unable to document $kit"
+        continue
+      fi
+
+      jazzy \
+        --config "$SDK_DIR"/.jazzy.yaml \
+        --framework-root "$SDK_DIR/$prefix$kit" \
+        --umbrella-header "$header_file" \
+        --output "$SDK_DIR"/docs/"$kit"
+
+      # Zip the result so it can be uploaded easily
+      pushd "$SDK_DIR"/docs/ || continue
+      zip -r "$kit.zip" "$kit"
+      popd || continue
+    done
+  }
+
   local build_type="$1"
   shift
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
+  "docs" | "documentation") build_docs "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
