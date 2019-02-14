@@ -32,3 +32,10 @@ git checkout master && git pull
 # Tag the currently set version and, optionally, push to origin
 sh scripts/run.sh tag-current-version --push
 ```
+
+### 3. Release Version
+
+Head over to the [GitHub Releases](https://github.com/facebook/facebook-objc-sdk/releases), click "Edit", and add the
+copy for the new release from the Changelog to the release body. When done, click "Update Release".
+
+**Note:** Automation of this step is a WIP.
