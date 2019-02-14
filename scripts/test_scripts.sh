@@ -32,6 +32,7 @@ main() {
   test_run_routing
   test_is_valid_semver
   test_does_version_exist
+  test_check_release_status
 
   case $TEST_FAILURES in
   0) test_success "test_scripts tests" ;;
@@ -261,6 +262,15 @@ test_does_version_exist() {
 
   if sh "$PWD"/scripts/run.sh does-version-exist 0.0.0; then
     test_failure "0.0.0 is valid, but returns true"
+    ((TEST_FAILURES += 1))
+  fi
+}
+
+test_check_release_status() {
+  # Arrange, Act, & Assert
+
+  if ! sh "$PWD"/scripts/run.sh check-release-status 4.40.0; then
+    test_failure "Version 4.40.0 is valid, but returns false"
     ((TEST_FAILURES += 1))
   fi
 }
