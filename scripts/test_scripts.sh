@@ -269,7 +269,7 @@ test_does_version_exist() {
 test_check_release_status() {
   # Arrange, Act, & Assert
 
-  if ! sh "$PWD"/scripts/run.sh check-release-status 4.40.0; then
+  if ! sh "$PWD"/scripts/run.sh check-release-status 4.38.0; then
     test_failure "Version 4.40.0 is valid, but returns false"
     ((TEST_FAILURES += 1))
   fi
