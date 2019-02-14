@@ -68,7 +68,6 @@ test_shared_setup() {
   )
 
   local test_pod_specs=(
-    "FacebookSDK.podspec"
     "FBSDKCoreKit.podspec"
     "FBSDKLoginKit.podspec"
     "FBSDKShareKit.podspec"
@@ -76,6 +75,7 @@ test_shared_setup() {
     "FBSDKMarketingKit.podspec"
     "FBSDKTVOSKit.podspec"
     "AccountKit/AccountKit.podspec"
+    "FacebookSDK.podspec"
   )
 
   local test_version_change_files=(

@@ -51,9 +51,9 @@ main() {
 
     FRAMEWORK_NAME="FacebookSDK"
 
-    POD_SPECS=("$FRAMEWORK_NAME" "${SDK_KITS[@]}")
+    POD_SPECS=("${SDK_KITS[@]}" "$FRAMEWORK_NAME")
     POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
-    POD_SPECS[7]="AccountKit/${POD_SPECS[7]}"
+    POD_SPECS[6]="AccountKit/${POD_SPECS[6]}"
 
     CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
 
