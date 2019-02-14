@@ -38,7 +38,10 @@ jobs:
     - stage: test
       name: Carthage - Xcode 10.1
       osx_image: xcode10.1
-      if: tag IS blank
+    - stage: test
+      name: Pod Lint - Xcode 10.1
+      osx_image: xcode10.1
+      script: sh scripts/run.sh lint podspecs
     # - stage: tag
     #   name: Tag Version
     #   osx_image: xcode10.1
@@ -53,8 +56,8 @@ jobs:
           api_key: $api_key
           file: Carthage/Release/*
           file_glob: true
-          name: 'Facebook SDK: ${CURRENT_VERSION}'
-          body: Consult Changelog
+          name: Facebook SDK $TRAVIS_TAG
+          body: Consult Changelog $CURRENT_VERSION
           on:
             all_branches: true
             tags: true
@@ -67,7 +70,6 @@ jobs:
 before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
 script: sh scripts/travis/script.sh
-before_deploy: sh scripts/travis/before_deploy.sh
 
 notifications: # set notification options
   email:
