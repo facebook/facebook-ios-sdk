@@ -18,7 +18,7 @@ sh scripts/run.sh bump-version 4.40.0
 This script will modify the relevant version references and will edit the Changelog.
 
 Ensure that the version changes and Changelog updates are correct, then commit these changes with the title: "Bump
-Version: 4.40.0"
+Version: 4.40.0" and submit a Pull Request.
 
 ### 2. Tag Version
 
