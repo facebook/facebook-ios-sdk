@@ -17,22 +17,26 @@ stages:
 
 jobs:
   include:
-    - name: Xcode - iOS 12.0
+    - stage: test
+      name: Xcode - iOS 12.0
       osx_image: xcode10.1
       env:
         - XCODE_SDK=iphonesimulator12.1
         - XCODE_SCHEME=BuildAllKits
-    - name: Xcode - tvOS 12.0
+    - stage: test
+      name: Xcode - tvOS 12.0
       osx_image: xcode10.1
       env:
         - XCODE_SDK=appletvsimulator12.1
         - XCODE_SCHEME=BuildAllKits_TV
-    - name: Xcode - iOS 11.4
+    - stage: test
+      name: Xcode - iOS 11.4
       osx_image: xcode9.4
       env:
         - XCODE_SDK=iphonesimulator11.4
         - XCODE_SCHEME=BuildAllKits
-    - name: Carthage - Xcode 10.1
+    - stage: test
+      name: Carthage - Xcode 10.1
       osx_image: xcode10.1
       if: tag IS blank
     # - stage: tag
@@ -54,10 +58,12 @@ jobs:
           body: Consult Changelog
           on:
             all_branches: true
+            tags: true
         - provider: script
           script: sh scripts/run.sh release cocoapods --allow-warnings
           on:
             all_branches: true
+            tags: true
 
 before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
