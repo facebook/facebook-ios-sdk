@@ -57,12 +57,12 @@ static volatile bool initialized = false;
   if (!initialized){
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"initStore should have been called before calling setUserData"];
-    [FBSDKUserDataStore initAndWait];
+    [FBSDKUserDataStore initStore];
   }
 
   hashedUserData = [FBSDKUserDataStore hashUserData:ud];
   NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-  [defaults setObject:(hashedUserData) forKey:(USER_DATA_KEY)];
+  [defaults setObject:(hashedUserData) forKey:(FBSDKUserDataKey)];
 }
 
 + (void)setUserDataAndHash:(nullable NSString *)email
