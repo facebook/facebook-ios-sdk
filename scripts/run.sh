@@ -239,7 +239,7 @@ build_sdk() {
 # Lint
 lint_sdk() {
   # Lint Podspecs
-  lint_podspecs() {
+  lint_cocoapods() {
     for spec in "${POD_SPECS[@]}"; do
       if [ ! -f "$spec" ]; then
         echo "*** ERROR: unable to lint $spec"
@@ -254,7 +254,7 @@ lint_sdk() {
   shift
 
   case "$lint_type" in
-  "podspecs") release_cocoapods "$@" ;;
+  "cocoapods") lint_cocoapods "$@" ;;
   *) echo "Unsupported Lint: $lint_type" ;;
   esac
 }
