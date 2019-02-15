@@ -271,15 +271,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-#if !TARGET_OS_TV
-    if (!_safariViewController) {
-        UIViewController *topController = FBSDKInternalUtility.topMostViewController;
-        if ([topController isKindOfClass:[SFSafariViewController class]]) {
-            _safariViewController = topController;
-        }
-    }
-#endif
-
     // Auto log basic events in case autoLogAppEventsEnabled is set
     if ([FBSDKSettings autoLogAppEventsEnabled].boolValue) {
         [FBSDKAppEvents activateApp];
@@ -288,15 +279,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     // within the app delegate's lifecycle like openURL, in which case there
     // might have been a "didBecomeActive" event pending that we want to ignore.
     BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController && !_isRequestingSFAuthenticationSession;
-#if !TARGET_OS_TV
-    if (@available(iOS 11.0, *)) {
-        if (notExpectingBackground && _authenticationSessionCompletionHandler != nil) {
-            _authenticationSessionCompletionHandler(nil, nil);
-        }
-
-        notExpectingBackground = notExpectingBackground && !_authenticationSession;
-    }
-#endif
     if (notExpectingBackground) {
         _active = YES;
 #if !TARGET_OS_TV
