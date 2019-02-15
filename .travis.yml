@@ -45,7 +45,7 @@ jobs:
     # - stage: tag
     #   name: Tag Version
     #   osx_image: xcode10.1
-    #   script: sh scripts/run.sh tag-push-current-version
+    #   script: sh scripts/run.sh tag-current-version --push
     - stage: release
       name: GitHub
       osx_image: xcode10.1
