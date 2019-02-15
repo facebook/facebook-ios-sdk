@@ -469,14 +469,17 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
 {
   if (obj && [obj conformsToProtocol:@protocol(UITextInput)]) {
     id<UITextInput> input = (id<UITextInput>)obj;
-    if (input.secureTextEntry) {
+    if ([input respondsToSelector:@selector(isSecureTextEntry)]
+        && input.secureTextEntry) {
       return YES;
     } else {
-      switch (input.keyboardType) {
-        case UIKeyboardTypePhonePad:
-        case UIKeyboardTypeEmailAddress:
-          return YES;
-        default: break;
+      if ([input respondsToSelector:@selector(keyboardType)]) {
+        switch (input.keyboardType) {
+          case UIKeyboardTypePhonePad:
+          case UIKeyboardTypeEmailAddress:
+            return YES;
+          default: break;
+        }
       }
     }
   }
