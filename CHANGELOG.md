@@ -2,12 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## Unreleased
 
-Expected 5.X release
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.40.0...HEAD)
 
 ### Added
 
@@ -42,20 +42,17 @@ Expected 5.X release
 
 - Various bug fixes
 
-## [4.40.0] - 2019-01-17
+## 4.40.0
+
+[2019-01-17](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.40.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.39.1...v4.40.0)
 
 ### Fixed
 
 - Various bug fixes
 
-## [4.39.1] - 2019-01-08
+## 4.39.1
 
-### Other
-
-- Facebook Developer Docs: [Changelog v4.x](https://developers.facebook.com/docs/ios/change-log-4x)
-
-<!-- Links -->
-
-[Unreleased]: https://github.com/facebook/facebook-objc-sdk/compare/v4.40.0...HEAD
-[4.40.0]: https://github.com/facebook/facebook-objc-sdk/compare/v4.39.1...v4.40.0
-[4.39.1]: https://github.com/facebook/facebook-objc-sdk/compare/sdk-version-4.0.0...v4.39.1
+[2019-01-08](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.39.1) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/sdk-version-4.0.0...v4.39.1) |
+[Facebook Developer Docs Changelog](https://developers.facebook.com/docs/ios/change-log-4x)
