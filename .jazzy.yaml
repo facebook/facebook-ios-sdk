@@ -3,3 +3,4 @@ author: Facebook
 objc: true
 clean: true
 sdk: iphonesimulator
+readme: /dev/null
