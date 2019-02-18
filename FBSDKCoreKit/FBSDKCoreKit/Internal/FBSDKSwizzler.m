@@ -43,7 +43,7 @@
 static NSMapTable *swizzles;
 
 static FBSDKSwizzle* fb_findSwizzle(id self, SEL _cmd){
-  Method aMethod = class_getInstanceMethod([FBSDKSwizzler class], _cmd);
+  Method aMethod = class_getInstanceMethod([self class], _cmd);
   FBSDKSwizzle *swizzle = (FBSDKSwizzle *)[swizzles objectForKey:MAPTABLE_ID(aMethod)];
   Class this_class = [FBSDKSwizzler class];
   while (!swizzle && class_getSuperclass(this_class)){
