@@ -60,7 +60,6 @@ static id g_mockNSBundle;
   g_mockNSBundle = nil;
   [g_mockAccountStoreAdapter stopMocking];
   g_mockAccountStoreAdapter = nil;
-
 }
 
 #pragma mark - Helpers
@@ -597,7 +596,7 @@ static id g_mockNSBundle;
 - (void)testRetryDisabled
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
-  [FBSDKSettings setGraphErrorRecoveryDisabled:YES];
+  [FBSDKSettings setGraphErrorRecoveryDisabled:NO];
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -607,13 +606,16 @@ static id g_mockNSBundle;
     NSString *responseJSON = (requestCount == 1 ?
                               @"{\"error\": {\"message\": \"Server is busy\",\"code\": 1,\"error_subcode\": 463}}"
                               : @"{\"error\": {\"message\": \"Server is busy\",\"code\": 2,\"error_subcode\": 463}}" );
-    NSData *data =  [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [responseJSON dataUsingEncoding:NSUTF8StringEncoding];
 
     return [OHHTTPStubsResponse responseWithData:data
                                       statusCode:400
                                          headers:nil];
   }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+
+  FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
+
+  [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     //verify we don't get the second error instance.
     XCTAssertEqual(1, [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue]);
     [expectation fulfill];
