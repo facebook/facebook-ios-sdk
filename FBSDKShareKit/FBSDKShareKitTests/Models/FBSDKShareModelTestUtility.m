@@ -115,7 +115,8 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
 
 + (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID
 {
-  FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc] init];
+  FBSDKShareOpenGraphObject *graphObject = [FBSDKShareOpenGraphObject objectWithProperties: @{}];
+  FBSDKShareOpenGraphAction *action = [FBSDKShareOpenGraphAction actionWithType:@"Foo" object: graphObject key: @"Bar"];
   action.actionType = [self openGraphActionType];
   [action setString:[self openGraphObjectID] forKey:[self previewPropertyName]];
   [action parseProperties:[self _openGraphProperties:NO]];
