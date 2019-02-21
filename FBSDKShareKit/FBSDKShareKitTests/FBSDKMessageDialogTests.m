@@ -68,7 +68,6 @@
     dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
     XCTAssertTrue([dialog canShow]);
   }];
-  dialog.shareContent = nil;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
     XCTAssertFalse([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
