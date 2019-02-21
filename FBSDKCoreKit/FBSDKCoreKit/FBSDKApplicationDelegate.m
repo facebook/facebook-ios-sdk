@@ -224,7 +224,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    if (_isAppLaunched) {
+    if ([self isAppLaunched]) {
         return NO;
     }
 
@@ -575,6 +575,11 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         params[@"marketing_lib_included"] = @1;
     }
     [FBSDKAppEvents logEvent:@"fb_sdk_initialize" parameters:params];
+}
+
+// Wrapping this makes it mockable and enables testability
+- (BOOL)isAppLaunched {
+  return _isAppLaunched;
 }
 
 #pragma mark -- (non-tvos)
