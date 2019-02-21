@@ -69,51 +69,101 @@
   [FBSDKShareKitTestUtility mainBundleMock];
 }
 
-- (void)testCanShowNative
-{
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+#pragma mark - Native
+
+- (void)testCanShowNativeDialogWithoutShareContent {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeNative;
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
     [self _mockUseNativeDialogUsingBlock:^{
-      XCTAssertTrue([dialog canShow]);
-      dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-      XCTAssertTrue([dialog canShow]);
-      dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-      XCTAssertTrue([dialog canShow]);
-      dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-      XCTAssertTrue([dialog canShow]);
-      dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-      XCTAssertTrue([dialog canShow]);
+      XCTAssertTrue([dialog canShow],
+                    @"A dialog without share content should be showable on a native dialog");
     }];
   }];
-  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
-    XCTAssertFalse([dialog canShow]);
+}
+
+- (void)testCanShowNativeLinkContent {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockUseNativeDialogUsingBlock:^{
+
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-    XCTAssertFalse([dialog canShow]);
+    XCTAssertTrue([dialog canShow],
+                  @"A dialog with valid link content should be showable on a native dialog");
+  }];
+}
+
+- (void)testCanShowNativePhotoContent {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockUseNativeDialogUsingBlock:^{
     dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-    XCTAssertFalse([dialog canShow]);
+    XCTAssertFalse([dialog canShow],
+                   @"Photo content with photos that have web urls should not be showable on a native dialog");
+  }];
+}
+
+- (void)testCanShowNativePhotoContentWithFileURL {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockUseNativeDialogUsingBlock:^{
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithFileURLs];
+    XCTAssertTrue([dialog canShow],
+                  @"Photo content with photos that have file urls should be showable on a native dialog");
+  }];
+}
+
+- (void)testCanShowNativeOpenGraphContent {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    [self _mockUseNativeDialogUsingBlock:^{
+      dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
+      XCTAssertTrue([dialog canShow],
+                    @"Open graph content should be showable on a native dialog");
+    }];
+  }];
+}
+
+- (void)testCanShowNativeVideoContentWithoutPreviewPhoto {
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
+    [self _mockUseNativeDialogUsingBlock:^{
+      dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+      XCTAssertTrue([dialog canShow],
+                    @"Video content without a preview photo should be showable on a native dialog");
+    }];
+  }];
+}
+
+- (void)testCanShowNative
+{
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
+  dialog.mode = FBSDKShareDialogModeNative;
+  [self _mockApplicationForURL:OCMOCK_ANY canOpen:NO usingBlock:^{
+    [self _mockUseNativeDialogUsingBlock:^{
+      XCTAssertFalse([dialog canShow],
+                     @"A native dialog should not be showable if the application is unable to open a url, this can also occur if the api scheme is not whitelisted in the third party app or if the application cannot handle the share API scheme");
+    }];
   }];
 }
 
 - (void)testShowNativeDoesValidate
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeNative;
-  FBSDKSharePhotoContent *content = [[FBSDKSharePhotoContent alloc] init];
-  content.photos = @[ [FBSDKSharePhoto photoWithImageURL:[FBSDKShareModelTestUtility photoImageURL] userGenerated:NO] ];
-  dialog.shareContent = content;
+  dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
   [self _mockApplicationForURL:OCMOCK_ANY canOpen:YES usingBlock:^{
     XCTAssertFalse([dialog show]);
   }];
 }
 
+#pragma mark - Share sheet
+
 - (void)testValidateShareSheet
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeShareSheet;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContentWithoutQuote];
@@ -136,24 +186,33 @@
   XCTAssertNil(error);
 }
 
+#pragma mark - Browser
+
 - (void)testCanShowBrowser
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeBrowser;
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog without share content should be showable in a browser");
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog with link content should be showable in a browser");
+  [self _performBlockWithAccessToken:^{
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithFileURLs];
+    XCTAssertTrue([dialog canShow],
+                  @"A dialog with photo content with file urls should be showable in a browser when there is a current access token");
+    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
+    XCTAssertFalse([dialog canShow],
+                   @"A dialog with open graph content should not be showable since browser dialogs cannot include photos");
+    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+    XCTAssertTrue([dialog canShow],
+                  @"A dialog with video content without a preview photo should be showable in a browser when there is a current access token");
+  }];
 }
 
 - (void)testValidateBrowser
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeBrowser;
   __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -176,64 +235,103 @@
   XCTAssertNotNil(error);
 }
 
+#pragma mark - Web
+
 - (void)testCanShowWeb
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeWeb;
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog without share content should be showable on web");
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog canShow]);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog with link content should be showable on web");
+  [self _performBlockWithAccessToken:^{
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
+    XCTAssertFalse([dialog canShow],
+                   @"A dialog with photos should not be showable on web");
+    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
+    XCTAssertFalse([dialog canShow],
+                   @"A dialog with content that contains photos should not be showable on web");
+    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+    XCTAssertFalse([dialog canShow],
+                   @"A dialog with content that contains local media should not be showable on web");
+  }];
 }
 
 - (void)testValidateWeb
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeWeb;
   __block NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
   XCTAssertTrue([dialog validateWithError:&error]);
   XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
+
   [self _performBlockWithAccessToken:^{
-    XCTAssertTrue([dialog validateWithError:&error]);
-    XCTAssertNil(error);
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
+    XCTAssertFalse([dialog validateWithError:&error],
+                   @"A dialog with photo content that points to remote urls should not be considered valid on web");
+    XCTAssertNotNil(error,
+                    @"Validating a dialog with photo content on web should provide a meaningful error");
+
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithImages];
+    XCTAssertFalse([dialog validateWithError:&error],
+                   @"A dialog with photo content that is already loaded should not be considered valid on web");
+    XCTAssertNotNil(error,
+                    @"Validating a dialog with photo content that is already loaded on web should provide a meaningful error");
+
+    dialog.shareContent = [FBSDKShareModelTestUtility photoContentWithFileURLs];
+    XCTAssertFalse([dialog validateWithError:&error],
+                   @"A dialog with photo content that points to file urls should not be considered valid on web");
+    XCTAssertNotNil(error,
+                    @"Validating a dialog with photo content that points to file urls on web should provide a meaningful error");
+
+    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContentWithObjectID];
+    XCTAssertTrue([dialog validateWithError:&error],
+                  @"A dialog with open graph content that has an object id should be considered valid on web");
+    XCTAssertNil(error,
+                 @"Validating a dialog with open graph content that has an object id should not provide an error");
+
+    dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
+    XCTAssertFalse([dialog validateWithError:&error],
+                   @"A dialog that includes local media should not be considered valid on web");
+    XCTAssertNotNil(error,
+                 @"Validating a dialog that includes local media should provide a meaningful error");
   }];
   [self _performBlockWithNilAccessToken:^{
-    XCTAssertFalse([dialog validateWithError:&error]);
-    XCTAssertNotNil(error);
+    XCTAssertFalse([dialog validateWithError:&error],
+                   @"A dialog with content but no access token should not be considered valid on web");
+    XCTAssertNotNil(error,
+                    @"Validating a dialog with content but no access token should provide a meaningful error");
   }];
-  dialog.shareContent = [FBSDKShareModelTestUtility openGraphContentWithObjectID];
-  XCTAssertTrue([dialog validateWithError:&error]);
-  XCTAssertNil(error);
-  dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertFalse([dialog validateWithError:&error]);
-  XCTAssertNotNil(error);
 }
+
+#pragma mark - Feed browser
 
 - (void)testCanShowFeedBrowser
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeFeedBrowser;
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog without content should be showable in a browser feed");
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog with link content should be showable in a browser feed");
   dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with photo content should not be showable in a browser feed");
   dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with open graph content should not be showable in a browser feed");
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with video content that has no preview photo should not be showable in a browser feed");
 }
 
 - (void)testValidateFeedBrowser
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeFeedBrowser;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -250,24 +348,31 @@
   XCTAssertNotNil(error);
 }
 
+#pragma mark - Feed web
+
 - (void)testCanShowFeedWeb
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeFeedWeb;
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog without content should be showable in a web feed");
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertTrue([dialog canShow],
+                @"A dialog with link content should be showable in a web feed");
   dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with photo content should not be showable in a web feed");
   dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with open graph content should not be showable in a web feed");
   dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
-  XCTAssertTrue([dialog canShow]);
+  XCTAssertFalse([dialog canShow],
+                 @"A dialog with video content and no preview photo should not be showable in a web feed");
 }
 
 - (void)testValidateFeedWeb
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.mode = FBSDKShareDialogModeFeedWeb;
   NSError *error;
   dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
@@ -286,7 +391,7 @@
 
 - (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsAvailable
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContent];
   content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
   content.quote = @"a quote";
@@ -304,7 +409,7 @@ expectedPreJSONtext:@"fb-app-id:appID #hashtag"
 
 - (void)testCameraShareModes
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
 
   // When native is available.
@@ -357,7 +462,7 @@ expectedPreJSONtext:@"fb-app-id:appID #hashtag"
 
 - (void)testShowCameraShareToPlayerWhenPlayerInstalled
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   [self _showNativeDialog:dialog
        nonSupportedScheme:nil
@@ -367,7 +472,7 @@ expectedPreJSONtext:@"fb-app-id:appID #hashtag"
 
 - (void)testShowCameraShareToFBWhenPlayerNotInstalled
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   dialog.shareContent = [FBSDKShareModelTestUtility cameraEffectContent];
   [self _showNativeDialog:dialog
        nonSupportedScheme:[NSString stringWithFormat:@"%@:/", FBSDK_CANOPENURL_MSQRD_PLAYER]
@@ -379,7 +484,7 @@ expectedPreJSONtext:@"fb-app-id:appID #hashtag"
 
 - (void)testThatInitialTextIsSetCorrectlyWhenShareExtensionIsNOTAvailable
 {
-  FBSDKShareDialog *dialog = [[FBSDKShareDialog alloc] init];
+  FBSDKShareDialog *const dialog = [[FBSDKShareDialog alloc] init];
   FBSDKShareLinkContent *content = [FBSDKShareModelTestUtility linkContentWithoutQuote];
   content.hashtag = [FBSDKHashtag hashtagWithString:@"#hashtag"];
   dialog.shareContent = content;
@@ -456,7 +561,7 @@ expectedPreJSONtext:@"#hashtag" expectedJSON:nil];
   [[[mockSLController stub] andReturnValue:@YES] isAvailableForServiceType:OCMOCK_ANY];
 
   UIViewController *vc = [UIViewController new];
-  FBSDKShareDialog *dialog = [FBSDKShareDialog new];
+  FBSDKShareDialog *const dialog = [FBSDKShareDialog new];
   dialog.shareContent = shareContent;
   dialog.mode = mode;
   dialog.fromViewController = vc;
