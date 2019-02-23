@@ -18,7 +18,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # shellcheck disable=SC2039
-# shellcheck disable=SC1090
+# shellcheck source=./run.sh
 
 # --------------
 # Functions
@@ -28,7 +28,7 @@
 main() {
   TEST_FAILURES=$((0))
 
-  test_shared_setup
+  test_main_setup
   test_run_routing
   test_is_valid_semver
   test_does_version_exist
@@ -55,7 +55,7 @@ test_failure() {
 }
 
 # Test Shared Setup
-test_shared_setup() {
+test_main_setup() {
 
   # Arrange
   local test_sdk_kits=(
@@ -98,13 +98,13 @@ test_shared_setup() {
   . "$PWD/scripts/run.sh"
 
   # Assert
-  if [ -z "$SCRIPTS_DIR" ]; then
-    test_failure "SCRIPTS_DIR"
+  if [ -z "$SDK_SCRIPTS_DIR" ]; then
+    test_failure "SDK_SCRIPTS_DIR"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$SCRIPTS_DIR" != "$SDK_DIR"/scripts ]; then
-    test_failure "SCRIPTS_DIR not correct"
+  if [ "$SDK_SCRIPTS_DIR" != "$SDK_DIR"/scripts ]; then
+    test_failure "SDK_SCRIPTS_DIR not correct"
     ((TEST_FAILURES += 1))
   fi
 
@@ -113,33 +113,41 @@ test_shared_setup() {
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "${POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
-    test_failure "POD_SPECS not correct"
+  if [ "${SDK_POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
+    test_failure "SDK_POD_SPECS not correct"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "${VERSION_FILES[*]}" != "${test_version_change_files[*]}" ]; then
-    test_failure "VERSION_FILES not correct"
+  if [ "${SDK_VERSION_FILES[*]}" != "${test_version_change_files[*]}" ]; then
+    test_failure "SDK_VERSION_FILES not correct"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
-    test_failure "MAIN_VERSION_FILE not correct"
+  if [ "$SDK_MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
+    test_failure "SDK_MAIN_VERSION_FILE not correct"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$FRAMEWORK_NAME" != "FacebookSDK" ]; then
-    test_failure "FRAMEWORK_NAME not correct"
+  if [ "$SDK_FRAMEWORK_NAME" != "FacebookSDK" ]; then
+    test_failure "SDK_FRAMEWORK_NAME not correct"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$CURRENT_VERSION" != "$test_current_version" ]; then
-    test_failure "CURRENT_VERSION not correct"
+  if [ "$SDK_CURRENT_VERSION" != "$test_current_version" ]; then
+    test_failure "SDK_CURRENT_VERSION not correct"
     ((TEST_FAILURES += 1))
   fi
 
-  if [ "$GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
-    test_failure "GIT_REMOTE not correct"
+  if [ "$SDK_GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
+    test_failure "SDK_GIT_REMOTE not correct"
+    ((TEST_FAILURES += 1))
+  fi
+
+  if [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 0 ]]; then
+    test_failure "SDK_INTERNAL not correct"
+    ((TEST_FAILURES += 1))
+  elif ! [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 1 ]]; then
+    test_failure "SDK_INTERNAL not correct"
     ((TEST_FAILURES += 1))
   fi
 }
@@ -217,16 +225,12 @@ test_run_routing() {
     "release unsupported"
     "help"
     "--help"
-    ""
-    "unsupported"
   )
 
   local expected=(
     "Unsupported Build: unsupported"
     "Unsupported Lint: unsupported"
     "Unsupported Release: unsupported"
-    "Check main() for supported commands"
-    "Check main() for supported commands"
     "Check main() for supported commands"
     "Check main() for supported commands"
   )
@@ -250,6 +254,11 @@ test_run_routing() {
 test_does_version_exist() {
   # Arrange, Act, & Assert
 
+  if [ ! -d "$SDK_DIR"/.git ]; then
+    echo "Not a Git Repository"
+    return
+  fi
+
   if ! sh "$PWD"/scripts/run.sh does-version-exist; then
     test_failure "Current version is valid, but returns false"
     ((TEST_FAILURES += 1))
@@ -261,7 +270,7 @@ test_does_version_exist() {
   fi
 
   if sh "$PWD"/scripts/run.sh does-version-exist 0.0.0; then
-    test_failure "0.0.0 is valid, but returns true"
+    test_failure "0.0.0 is invalid, but returns true"
     ((TEST_FAILURES += 1))
   fi
 }
@@ -270,7 +279,7 @@ test_check_release_status() {
   # Arrange, Act, & Assert
 
   if ! sh "$PWD"/scripts/run.sh check-release-status 4.38.0; then
-    test_failure "Version 4.40.0 is valid, but returns false"
+    test_failure "Version 4.38.0 is valid, but returns false"
     ((TEST_FAILURES += 1))
   fi
 }
