@@ -20,16 +20,25 @@
 # shellcheck disable=SC2039
 
 # --------------
+# Imports
+# --------------
+
+if [ -f "$PWD/internal/scripts/intern_api.sh" ]; then
+  # shellcheck source=../internal/scripts/intern_api.sh
+  . "$PWD/internal/scripts/intern_api.sh"
+fi
+
+# --------------
 # Functions
 # --------------
 
 # Main
 main() {
-  if [ -z "$SCRIPTS_DIR" ]; then
+  if [ -z "$SDK_SCRIPTS_DIR" ]; then
     # Set global variables
 
-    SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
-    SDK_DIR="$(dirname "$SCRIPTS_DIR")"
+    SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
+    SDK_DIR="$(dirname "$SDK_SCRIPTS_DIR")"
 
     SDK_KITS=(
       "FBSDKCoreKit"
@@ -41,23 +50,25 @@ main() {
       "AccountKit"
     )
 
-    VERSION_FILES=(
+    SDK_VERSION_FILES=(
       "Configurations/Version.xcconfig"
       "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
       "AccountKit/AccountKit/Internal/AKFConstants.m"
     )
 
-    MAIN_VERSION_FILE="Configurations/Version.xcconfig"
+    SDK_MAIN_VERSION_FILE="Configurations/Version.xcconfig"
 
-    FRAMEWORK_NAME="FacebookSDK"
+    SDK_FRAMEWORK_NAME="FacebookSDK"
 
-    POD_SPECS=("${SDK_KITS[@]}" "$FRAMEWORK_NAME")
-    POD_SPECS=("${POD_SPECS[@]/%/.podspec}")
-    POD_SPECS[6]="AccountKit/${POD_SPECS[6]}"
+    SDK_POD_SPECS=("${SDK_KITS[@]}" "$SDK_FRAMEWORK_NAME")
+    SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
+    SDK_POD_SPECS[6]="AccountKit/${SDK_POD_SPECS[6]}"
 
-    CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
+    SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
 
-    GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
+    SDK_GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
+
+    if [ -f "$PWD/internal/scripts/run.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
   local command_type="$1"
@@ -77,7 +88,7 @@ main() {
     mkdir -p Carthage/Release
     echo "This is a test" >>Carthage/Release/file.txt
     ;;
-  "--help" | "help" | *) echo "Check main() for supported commands" ;;
+  "--help" | "help") echo "Check main() for supported commands" ;;
   esac
 }
 
@@ -85,7 +96,7 @@ main() {
 bump_version() {
   local new_version="$1"
 
-  if [ "$new_version" == "$CURRENT_VERSION" ]; then
+  if [ "$new_version" == "$SDK_CURRENT_VERSION" ]; then
     echo "This version is the same as the current version"
     false
     return
@@ -97,11 +108,11 @@ bump_version() {
     return
   fi
 
-  echo "Changing from: $CURRENT_VERSION to: $new_version"
+  echo "Changing from: $SDK_CURRENT_VERSION to: $new_version"
 
   local version_change_files=(
-    "${VERSION_FILES[@]}"
-    "${POD_SPECS[@]}"
+    "${SDK_VERSION_FILES[@]}"
+    "${SDK_POD_SPECS[@]}"
   )
 
   # Replace the previous version to the new version in relative files
@@ -114,7 +125,7 @@ bump_version() {
     fi
 
     local temp_file="$full_file_path.tmp"
-    sed -e "s/$CURRENT_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
+    sed -e "s/$SDK_CURRENT_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
     if diff "$full_file_path" "$temp_file" >/dev/null; then
       echo "*** ERROR: unable to update $full_file_path"
       rm "$temp_file"
@@ -137,15 +148,15 @@ bump_changelog() {
     local updated_line
 
     case "$line" in
-    "[Full Changelog]("*"$CURRENT_VERSION...HEAD)")
+    "[Full Changelog]("*"$SDK_CURRENT_VERSION...HEAD)")
       local current_date
       current_date=$(date +%Y-%m-%d)
 
-      updated_line="\n""${line/$CURRENT_VERSION/$new_version}""\n\n"
+      updated_line="\n""${line/$SDK_CURRENT_VERSION/$new_version}""\n\n"
       updated_line=$updated_line"## $new_version\n\n"
       updated_line=$updated_line"[$current_date]"
-      updated_line=$updated_line"($GIT_REMOTE/releases/tag/v$new_version) |\n"
-      updated_line=$updated_line"[Full Changelog]($GIT_REMOTE/compare/v$CURRENT_VERSION...v$new_version)"
+      updated_line=$updated_line"($SDK_GIT_REMOTE/releases/tag/v$new_version) |\n"
+      updated_line=$updated_line"[Full Changelog]($SDK_GIT_REMOTE/compare/v$SDK_CURRENT_VERSION...v$new_version)"
       ;;
     "# Changelog") updated_line=$line ;;
     *) updated_line="\n"$line ;;
@@ -159,20 +170,20 @@ bump_changelog() {
 
 # Tag push current version
 tag_current_version() {
-  if ! is_valid_semver "$CURRENT_VERSION"; then
+  if ! is_valid_semver "$SDK_CURRENT_VERSION"; then
     exit 1
   fi
 
-  if does_version_exist "$CURRENT_VERSION"; then
-    echo "Version $CURRENT_VERSION already exists"
+  if does_version_exist "$SDK_CURRENT_VERSION"; then
+    echo "Version $SDK_CURRENT_VERSION already exists"
     false
     return
   fi
 
-  git tag -a "v$CURRENT_VERSION" -m "Version $CURRENT_VERSION"
+  git tag -a "v$SDK_CURRENT_VERSION" -m "Version $SDK_CURRENT_VERSION"
 
   if [ "$1" == "--push" ]; then
-    git push origin "v$CURRENT_VERSION"
+    git push origin "v$SDK_CURRENT_VERSION"
   fi
 }
 
@@ -183,8 +194,8 @@ build_sdk() {
       -workspace "$1" \
       -sdk "$2" \
       -scheme "$3" \
-      -configuration Debug |
-      xcpretty
+      -configuration Debug \
+      | xcpretty
   }
 
   build_carthage() {
@@ -192,37 +203,12 @@ build_sdk() {
 
     if [ "$1" == "--archive" ]; then
       for kit in "${SDK_KITS[@]}"; do
-        if [ -d "$SDK_DIR"/Carthage/Build/iOS/"$kit".framework ] ||
-          [ -d "$SDK_DIR"/Carthage/Build/tvOS/"$kit".framework ]; then
+        if [ -d "$SDK_DIR"/Carthage/Build/iOS/"$kit".framework ] \
+          || [ -d "$SDK_DIR"/Carthage/Build/tvOS/"$kit".framework ]; then
           carthage archive "$kit" --output Carthage/Release/
         fi
       done
     fi
-  }
-
-  build_docs() {
-    for kit in "${SDK_KITS[@]}"; do
-      local prefix
-      if [ "$kit" == "FBSDKMarketingKit" ]; then prefix="internal/"; else prefix=""; fi
-
-      local header_file="$SDK_DIR/$prefix$kit/$kit/$kit".h
-
-      if [ ! -f "$header_file" ]; then
-        echo "*** ERROR: unable to document $kit"
-        continue
-      fi
-
-      jazzy \
-        --config "$SDK_DIR"/.jazzy.yaml \
-        --framework-root "$SDK_DIR/$prefix$kit" \
-        --umbrella-header "$header_file" \
-        --output "$SDK_DIR"/docs/"$kit"
-
-      # Zip the result so it can be uploaded easily
-      pushd "$SDK_DIR"/docs/ || continue
-      zip -r "$kit.zip" "$kit"
-      popd || continue
-    done
   }
 
   local build_type="$1"
@@ -230,7 +216,6 @@ build_sdk() {
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
-  "docs" | "documentation") build_docs "$@" ;;
   "xcode") build_xcode_workspace "$@" ;;
   *) echo "Unsupported Build: $build_type" ;;
   esac
@@ -240,7 +225,7 @@ build_sdk() {
 lint_sdk() {
   # Lint Podspecs
   lint_cocoapods() {
-    for spec in "${POD_SPECS[@]}"; do
+    for spec in "${SDK_POD_SPECS[@]}"; do
       if [ ! -f "$spec" ]; then
         echo "*** ERROR: unable to lint $spec"
         continue
@@ -264,7 +249,7 @@ release_sdk() {
 
   # Release Cocoapods
   release_cocoapods() {
-    for spec in "${POD_SPECS[@]}"; do
+    for spec in "${SDK_POD_SPECS[@]}"; do
       if [ ! -f "$spec" ]; then
         echo "*** ERROR: unable to release $spec"
         continue
@@ -274,11 +259,77 @@ release_sdk() {
     done
   }
 
+  release_docs() {
+    for kit in "${SDK_KITS[@]}"; do
+      local prefix
+      if [ "$kit" == "FBSDKMarketingKit" ]; then prefix="internal/"; else prefix=""; fi
+
+      local header_file="$SDK_DIR/$prefix$kit/$kit/$kit".h
+
+      if [ ! -f "$header_file" ]; then
+        echo "*** ERROR: unable to document $kit"
+        continue
+      fi
+
+      jazzy \
+        --config "$SDK_DIR"/.jazzy.yaml \
+        --framework-root "$SDK_DIR/$prefix$kit" \
+        --umbrella-header "$header_file" \
+        --output "$SDK_DIR"/docs/"$kit"
+
+      # Zip the result so it can be uploaded easily
+      pushd "$SDK_DIR"/docs/ || continue
+      zip -r "$kit.zip" "$kit"
+      popd || continue
+
+      if [[ $SDK_INTERNAL == 1 ]] && [ "$1" == "--publish" ]; then
+        echo api_update_reference_doc "$kit"
+      fi
+    done
+  }
+
+  # Generate External Docs Changelog
+  release_external_changelog() {
+    local current_version_underscore=${SDK_CURRENT_VERSION//./_}
+    local current_date
+    current_date=$(date +%Y-%m-%d)
+    local external_changelog="## $SDK_CURRENT_VERSION - $current_date {#$current_version_underscore}"
+    local start_logging=0
+
+    while IFS= read -r line; do
+      local updated_line
+
+      case "$line" in
+      "## $SDK_CURRENT_VERSION")
+        start_logging=1
+        ;;
+      "## "*)
+        if [[ $start_logging == 1 ]]; then
+          start_logging=0
+        fi
+        ;;
+      *)
+        if [[ $start_logging == 1 ]]; then
+          updated_line="\n"$line
+        fi
+        ;;
+      esac
+
+      external_changelog=$external_changelog$updated_line
+    done <"CHANGELOG.md"
+
+    external_changelog="<card>\n$external_changelog\n</card>"
+
+    api_update_guide_doc "$external_changelog"
+  }
+
   local release_type="$1"
   shift
 
   case "$release_type" in
   "cocoapods") release_cocoapods "$@" ;;
+  "docs" | "documentation") release_docs "$@" ;;
+  "changelog") release_external_changelog "$@" ;;
   *) echo "Unsupported Release: $release_type" ;;
   esac
 }
@@ -300,7 +351,7 @@ check_release_status() {
 
   local pod_info
 
-  for spec in "${POD_SPECS[@]}"; do
+  for spec in "${SDK_POD_SPECS[@]}"; do
     if [ ! -f "$spec" ]; then
       echo "*** ERROR: unable to release $spec"
       continue
@@ -322,7 +373,7 @@ check_release_status() {
 
 # Proper Semantic Version
 is_valid_semver() {
-  if ! [[ "$1" =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
+  if ! [[ $1 =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
     false
     return
   fi
@@ -333,7 +384,12 @@ does_version_exist() {
   local version_to_check="$1"
 
   if [ "$version_to_check" == "" ]; then
-    version_to_check=$CURRENT_VERSION
+    version_to_check=$SDK_CURRENT_VERSION
+  fi
+
+  if [ ! -d "$SDK_DIR"/.git ]; then
+    echo "Not a Git Repository"
+    return
   fi
 
   if git rev-parse "v$version_to_check" >/dev/null 2>&1; then

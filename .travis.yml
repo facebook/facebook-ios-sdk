@@ -57,7 +57,7 @@ jobs:
           file: Carthage/Release/*
           file_glob: true
           name: Facebook SDK $TRAVIS_TAG
-          body: Consult Changelog $CURRENT_VERSION
+          body: Consult Changelog $SDK_CURRENT_VERSION
           on:
             all_branches: true
             tags: true

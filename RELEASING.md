@@ -2,17 +2,6 @@
 
 This document will guide you through the process of issuing a new version of the Facebook SDK.
 
-## Table of Contents
-
-- [Table of Contents](#table-of-contents)
-- [Release Steps](#release-steps)
-  - [Bump Version](#bump-version)
-  - [Tag Version](#tag-version)
-  - [Release Version](#release-version)
-- [Advanced Steps](#advanced-steps)
-  - [Upload Frameworks for Carthage](#upload-frameworks-for-carthage)
-  - [Release to Cocoapods](#release-to-cocoapods)
-
 ## Release Steps
 
 ### Bump Version
@@ -49,6 +38,53 @@ add the copy for the new release from the Changelog to the release body. Give it
 click "Publish Release".
 
 **Note:** Automation of this step is a WIP.
+
+### Release FBSDKMarketingKit
+
+On your machine, run:
+
+```sh
+cd internal/FBSDKMarketingKit/
+carthage build --archive
+zip \
+  -x "*.DS_Store" \
+  -r Carthage/Build/iOS/Static/FBSDKMarketingKit.zip \
+  Carthage/Build/iOS/Static/FBSDKMarketingKit.framework
+```
+
+Take this file and upload it to the latest GitHub releases.
+
+Once done, run:
+
+```sh
+pod trunk push FBSDKMarketingKit.podspec --allow-warnings
+```
+
+**Note:** You'll need edit access for GitHub releases. Automation of this step is a WIP.
+
+### Update Reference Documentation
+
+On your machine, run:
+
+```sh
+sh scripts/run.sh release docs --publish
+```
+
+This will construct the documentation via. Jazzy and, optionally, upload them to developers.facebook.com.
+
+**Note:** You'll need access to the internal repository scripts.
+
+### Update Guides Documentation
+
+On your machine, run:
+
+```sh
+sh scripts/run.sh release changelog
+```
+
+This will upload the Changelog and new version to developers.facebook.com.
+
+**Note:** You'll need access to the internal repository scripts.
 
 ## Advanced Steps
 
