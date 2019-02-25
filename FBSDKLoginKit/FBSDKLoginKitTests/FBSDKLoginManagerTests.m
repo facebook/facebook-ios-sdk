@@ -29,7 +29,8 @@
 #import "FBSDKLoginUtilityTests.h"
 
 static NSString *const kFakeAppID = @"7391628439";
-static NSString *const kFakeChallenge = @"a+=bcdef";
+
+static NSString *const kFakeChallenge = @"a =bcdef";
 
 @interface FBSDKLoginManagerTests : XCTestCase
 
@@ -127,38 +128,6 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   XCTAssertEqualObjects(actualToken.declinedPermissions, expectedDeclined, @"unexpected permissions");
 }
 
-// verify a cancellation of reauth.
-- (void)testOpenURLReauthCancel
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed reauth"];
-  // set up a current token with public_profile
-  FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
-                                                                      permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
-                                                                   expirationDate:nil
-                                                                      refreshDate:nil];
-
-  [FBSDKAccessToken setCurrentAccessToken:existingToken];
-  // receive url with no additional granted scopes and a denial (as if they asked user_likes and user said no).
-  // and verify it's treated as a cancellation.
-  NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile&denied_scopes=user_likes=&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
-
-  FBSDKLoginManagerRequestTokenHandler handler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    XCTAssertTrue(result.isCancelled);
-    [expectation fulfill];
-  };
-  FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
-  [target setRequestedPermissions:[NSSet setWithObject:@"user_likes"]];
-  [target setHandler:handler];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-}
-
 // verify that recentlyDeclined is a subset of requestedPermissions (i.e., other declined permissions are not in recentlyDeclined)
 - (void)testOpenURLRecentlyDeclined
 {
@@ -178,33 +147,6 @@ static NSString *const kFakeChallenge = @"a+=bcdef";
   FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
   [target setRequestedPermissions:[NSSet setWithObject:@"user_friends"]];
   [target setHandler:handler];
-  XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
-  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
-    XCTAssertNil(error);
-  }];
-}
-
-// verify that a reauth that returns other grants on the wire but not what was requested, is classified as a cancel.
-- (void)testOpenURLReauthOtherGrantsButStillCancelled
-{
-  XCTestExpectation *expectation = [self expectationWithDescription:@"completed reauth"];
-  // set up a current token with public_profile
-  FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
-                                                                      permissions:@[@"public_profile"]
-                                                              declinedPermissions:nil
-                                                                            appID:nil
-                                                                           userID:nil
-                                                                   expirationDate:nil
-                                                                      refreshDate:nil];
-  [FBSDKAccessToken setCurrentAccessToken:existingToken];
-  NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile,read_stream&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
-  FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
-  [target setRequestedPermissions:[NSSet setWithObject:@"email"]];
-  [target setHandler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-    XCTAssertTrue(result.isCancelled);
-    XCTAssertEqualObjects(existingToken, [FBSDKAccessToken currentAccessToken]);
-    [expectation fulfill];
-  }];
   XCTAssertTrue([target application:nil openURL:url sourceApplication:@"com.apple.mobilesafari" annotation:nil]);
   [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
     XCTAssertNil(error);
