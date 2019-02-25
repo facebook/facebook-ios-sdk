@@ -194,10 +194,12 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         [_safariViewController.presentingViewController dismissViewControllerAnimated:YES
                                                                            completion:completePendingOpenURLBlock];
         _safariViewController = nil;
-    } else if (@available(iOS 11.0, *)) {
-        if (_authenticationSession != nil) {
-            [_authenticationSession cancel];
-            _authenticationSession = nil;
+    } else {
+        if (@available(iOS 11.0, *)) {
+            if (_authenticationSession != nil) {
+                [_authenticationSession cancel];
+                _authenticationSession = nil;
+            }
         }
         completePendingOpenURLBlock();
     }
