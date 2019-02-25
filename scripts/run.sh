@@ -23,6 +23,11 @@
 # Imports
 # --------------
 
+if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then
+  # shellcheck source=../internal/scripts/internal_globals.sh
+  . "$PWD/internal/scripts/internal_globals.sh"
+fi
+
 if [ -f "$PWD/internal/scripts/intern_api.sh" ]; then
   # shellcheck source=../internal/scripts/intern_api.sh
   . "$PWD/internal/scripts/intern_api.sh"
@@ -82,6 +87,7 @@ main() {
   "is-valid-semver") is_valid_semver "$@" ;;
   "does-version-exist") does_version_exist "$@" ;;
   "release") release_sdk "$@" ;;
+  "setup") setup_sdk "$@" ;;
   "tag-current-version") tag_current_version "$@" ;;
   "lint") lint_sdk "$@" ;;
   "test-file-upload")
@@ -90,6 +96,26 @@ main() {
     ;;
   "--help" | "help") echo "Check main() for supported commands" ;;
   esac
+}
+
+# Setup SDK
+setup_sdk() {
+  local sdk_test_app_id="$1"
+  local sdk_test_app_secret="$2"
+  local sdk_test_client_token="$3"
+
+  if [ "$1" == "" ]; then sdk_test_app_id="$SDK_TEST_FB_APP_ID"; fi
+  if [ "$2" == "" ]; then sdk_test_app_secret="$SDK_TEST_FB_APP_SECRET"; fi
+  if [ "$3" == "" ]; then sdk_test_client_token="$SDK_TEST_FB_CLIENT_TOKEN"; fi
+
+  if [ -f "$PWD/internal/scripts/run.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
+
+  {
+    echo "IOS_SDK_TEST_APP_ID = $sdk_test_app_id"
+    echo "IOS_SDK_TEST_APP_SECRET = $sdk_test_app_secret"
+    echo "IOS_SDK_TEST_CLIENT_TOKEN = $sdk_test_client_token"
+    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $4"
+  } >>"$SDK_DIR"/Configurations/TestAppIdAndSecret.xcconfig
 }
 
 # Bump Version
