@@ -1,0 +1,31 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+#include "../Common.xcconfig"
+
+// Architectures
+ONLY_ACTIVE_ARCH = YES
+
+// Optimization
+GCC_OPTIMIZATION_LEVEL = 0
+SWIFT_OPTIMIZATION_LEVEL = -Onone
+
+// Preprocessor
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
+ENABLE_NS_ASSERTIONS = YES
+
+// Testability
+ENABLE_TESTABILITY = YES
+
+// Deployment 
+COPY_PHASE_STRIP = NO
+
+SANITIZE_FLAGS = -fsanitize-undefined-trap-on-error -fsanitize=undefined-trap
+OTHER_CFLAGS = $(value) $(SANITIZE_FLAGS)
+OTHER_LDFLAGS = $(value) $(SANITIZE_FLAGS)

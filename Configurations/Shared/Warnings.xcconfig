@@ -1,0 +1,68 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+ENABLE_STRICT_OBJC_MSGSEND = YES
+
+GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES
+GCC_WARN_ABOUT_MISSING_NEWLINE = YES
+GCC_WARN_ABOUT_POINTER_SIGNEDNESS = YES
+GCC_WARN_CHECK_SWITCH_STATEMENTS = YES
+GCC_WARN_MISSING_PARENTHESES = YES
+GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES
+GCC_WARN_UNKNOWN_PRAGMAS = YES
+GCC_WARN_UNUSED_FUNCTION = YES
+GCC_WARN_UNUSED_LABEL = YES
+GCC_WARN_UNUSED_VALUE = YES
+GCC_WARN_UNUSED_VARIABLE = YES
+GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES
+GCC_WARN_UNDECLARED_SELECTOR = YES
+GCC_WARN_64_TO_32_BIT_CONVERSION = YES
+GCC_WARN_UNINITIALIZED_AUTOS = YES
+GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES
+GCC_WARN_SHADOW = YES
+
+CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES
+CLANG_WARN_OBJC_REPEATED_USE_OF_WEAK = YES
+CLANG_WARN__ARC_BRIDGE_CAST_NONARC = YES
+CLANG_WARN_BOOL_CONVERSION = YES
+CLANG_WARN_CONSTANT_CONVERSION = YES
+CLANG_WARN_DOCUMENTATION_COMMENTS = YES
+CLANG_WARN_EMPTY_BODY = YES
+CLANG_WARN_ENUM_CONVERSION = YES
+CLANG_WARN_UNREACHABLE_CODE = YES
+CLANG_WARN__DUPLICATE_METHOD_MATCH = YES
+CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES
+CLANG_WARN_OBJC_IMPLICIT_ATOMIC_PROPERTIES = YES
+CLANG_WARN_BOOL_CONVERSION = YES
+CLANG_WARN_INFINITE_RECURSION = YES
+CLANG_WARN_SUSPICIOUS_MOVE = YES
+
+// Errors
+GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR
+CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR
+CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR
+
+// Static Analyzer Warnings
+CLANG_ANALYZER_NONNULL = YES
+CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES
+
+//
+// Extra warnings, not available directly in build settings.
+// 'auto-import' - warns when an old-style hashed import could be replaced with modular import aka @import.
+// 'switch-enum' - enforces explicit handling of cases in switch statements.
+// 'method-signatures' - enforces method signatures to always match.
+// 'idiomatic-parentheses' - do not allow usage of an assignment as a condition without extra paranthesis.
+// 'covered-switch-default' - warns when implementing 'default' case in switch statement that covers all options.
+// 'custom-atomic-properties' - safeguards atomic properties with custom implementations.
+// 'cstring-format-directive' - do not allow NSString * to be used as c-string formatting argument aka '%s'.
+// 'conditional-uninitialized' - warn about potential use of of uninitialized variables.
+// 'unused-exception-parameter' - @try @catch without usage of exception parameter.
+// 'missing-variable-declarations' - will mark all variables that are missing declarations, including non-static extern constants.
+//
+WARNING_CFLAGS = $(inherited) -Wswitch-enum -Wmethod-signatures -Widiomatic-parentheses -Wcustom-atomic-properties -Wconditional-uninitialized -Wunused-exception-parameter -Wmissing-variable-declarations

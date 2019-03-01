@@ -1,0 +1,48 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+#include "Warnings.xcconfig"
+
+// Disable legacy-compatible header searching
+ALWAYS_SEARCH_USER_PATHS = NO
+
+// Architectures to build
+ARCHS = $(ARCHS_STANDARD)
+
+// Whether to enable module imports
+CLANG_ENABLE_MODULES = YES
+CLANG_ENABLE_MODULE_DEBUGGING = NO
+
+// Build Options
+CLANG_ENABLE_OBJC_ARC = YES
+GCC_VERSION = com.apple.compilers.llvm.clang.1_0
+
+// Whether to strip out code that isn't called from anywhere
+DEAD_CODE_STRIPPING = NO
+
+// The format of debugging symbols
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+// C Language
+GCC_C_LANGUAGE_STANDARD = gnu11
+
+// C++ Language
+CLANG_CXX_LANGUAGE_STANDARD = gnu++14
+CLANG_CXX_LIBRARY = libc++
+
+// Code Generation
+GCC_DYNAMIC_NO_PIC = NO
+GCC_INLINES_ARE_PRIVATE_EXTERN = YES
+GCC_NO_COMMON_BLOCKS = YES
+GCC_SYMBOLS_PRIVATE_EXTERN = NO
+
+// Static Analyzer - Analysis Policy
+RUN_CLANG_STATIC_ANALYZER = YES
+CLANG_STATIC_ANALYZER_MODE_ON_ANALYZE_ACTION = deep
+CLANG_STATIC_ANALYZER_MODE = shallow

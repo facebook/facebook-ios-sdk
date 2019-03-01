@@ -1,0 +1,17 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+SDKROOT = iphoneos
+IPHONEOS_DEPLOYMENT_TARGET = 7.0
+
+// Supported device families (1 is iPhone, 2 is iPad, 3 is Apple TV)
+TARGETED_DEVICE_FAMILY = 1,2
+
+// Where to find embedded frameworks
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks @loader_path/Frameworks

@@ -1,0 +1,29 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+#include "../Common.xcconfig"
+
+// Architectures
+ONLY_ACTIVE_ARCH = NO
+
+// Build
+VALIDATE_PRODUCT = YES
+
+// Optimization
+GCC_OPTIMIZATION_LEVEL = s
+SWIFT_OPTIMIZATION_LEVEL = -Owholemodule
+
+// Preprocessor
+ENABLE_NS_ASSERTIONS = NO
+
+// Deployment
+DEPLOYMENT_POSTPROCESSING = YES
+COPY_PHASE_STRIP = YES
+STRIP_STYLE = debugging
+STRIP_INSTALLED_PRODUCT = YES

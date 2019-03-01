@@ -1,0 +1,36 @@
+//
+// Copyright (c) 2015-present, Parse, LLC.
+// All rights reserved.
+//
+// This source code is licensed under the BSD-style license found in the
+// LICENSE file in the root directory of this source tree. An additional grant
+// of patent rights can be found in the PATENTS file in the same directory.
+//
+
+// Static frameworks are backed by static libraries
+MACH_O_TYPE = staticlib
+
+// Whether this framework should define an LLVM module
+DEFINES_MODULE = YES
+
+// Disable clang modules autolink
+CLANG_MODULES_AUTOLINK = NO
+
+// Whether to strip out code that isn't called from anywhere
+DEAD_CODE_STRIPPING = NO
+
+// Whether function calls should be position-dependent (should always be disabled for shared code)
+GCC_DYNAMIC_NO_PIC = NO
+
+// Enables the framework to be included from any location as long as the loader’s runpath search paths includes it.
+// For example from an application bundle (inside the "Frameworks" folder) or shared folder
+INSTALL_PATH = @rpath
+
+// Don't include in an xcarchive
+SKIP_INSTALL = YES
+
+// Do not require code signing
+CODE_SIGNING_REQUIRED = NO
+
+// Disable code signing
+CODE_SIGN_IDENTITY = 
