@@ -9,12 +9,16 @@
 
 Swift-taylored experience to integrate your app with Facebook. Including:
 
-- [Facebook Login](https://developers.facebook.com/docs/swift/login) - Authenticate people with their Facebook credentials.
-- [Share and Send Dialogs](https://developers.facebook.com/docs/swift/sharing) - Enable sharing content from your app to Facebook.
-- [App Events](https://developers.facebook.com/docs/swift/appevents) - Understand your audience and the performance of your app.
+- [Facebook Login](https://developers.facebook.com/docs/swift/login) - Authenticate people with their Facebook
+  credentials.
+- [Share and Send Dialogs](https://developers.facebook.com/docs/swift/sharing) - Enable sharing content from your app to
+  Facebook.
+- [App Events](https://developers.facebook.com/docs/swift/appevents) - Understand your audience and the performance of
+  your app.
 - [Graph API](https://developers.facebook.com/docs/swift/graph) - Read and write directly to Facebook social graph.
 
-**NOTE:** This SDK is currently in Beta and may be unstable at times. Please also check out our [ObjC SDK](https://github.com/facebook/facebook-objc-sdk).
+**NOTE:** This SDK is currently in Beta and may be unstable at times. Please also check out our
+[ObjC SDK](https://github.com/facebook/facebook-objc-sdk).
 
 ## Installation
 
@@ -113,16 +117,20 @@ $(SRCROOT)/Carthage/Build/iOS/Bolts.framework
 
 ### Using Facebook SDK as a sub-project
 
-While not recommended, it is entirely possible for you to build the Facebook SDK for Swift outside of any dependency management system.
+While not recommended, it is entirely possible for you to build the Facebook SDK for Swift outside of any dependency
+management system.
 
-**Note:** You will have to manage updating this solution (as well as the dependencies on the Facebook SDK for iOS) on your own.
+**Note:** You will have to manage updating this solution (as well as the dependencies on the Facebook SDK for iOS) on
+your own.
 
 - Clone the repository.
 - Run the following command in the root directory of the repository: `git submodule update --init --recursive`
 - Add `FacebookSwift.xcodeproj` as a sub-project to your applications' project.
-- Add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from the sub-project to your applications `Link Frameworks and Libraries` and `Embedded Binaries` sections.
+- Add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from the
+  sub-project to your applications `Link Frameworks and Libraries` and `Embedded Binaries` sections.
 
-Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, `FBSDKShareKit.framework` and `Bolts.framework` too!
+Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, `FBSDKShareKit.framework` and
+`Bolts.framework` too!
 
 ## Modules
 
@@ -154,7 +162,8 @@ Logging behaviors are now implemented as a type-safe set, based on Swift enums.
 
 - `Permission`
 
-Are no longer stringly-typed (string-based), but separate types for read and write permissions (also includes a built-in permission list, which includes most common permissions by default).
+Are no longer stringly-typed (string-based), but separate types for read and write permissions (also includes a built-in
+permission list, which includes most common permissions by default).
 
 ### FacebookLogin
 
@@ -166,12 +175,14 @@ The following types are included, with enhancements for Swift:
 
 - `LoginManager`
 
-Now uses the type-safe permissions from `FacebookCore`, and has constructors with `LoginBehavior` and `DefaultAudience`, instead of requiring manual setting of properties.
+Now uses the type-safe permissions from `FacebookCore`, and has constructors with `LoginBehavior` and `DefaultAudience`,
+instead of requiring manual setting of properties.
 
 - `LoginButton`
 
-Can no longer change permissions after creation, helping to enforce using a single login button for a given set of permissions.
-Note that `LoginButton` is not intended to work with interface builder or storyboards at this time. We may re-address this in the future.
+Can no longer change permissions after creation, helping to enforce using a single login button for a given set of
+permissions. Note that `LoginButton` is not intended to work with interface builder or storyboards at this time. We may
+re-address this in the future.
 
 ### FacebookShare
 
@@ -187,7 +198,8 @@ Now a struct, and has a proper initializer enforcing required properties.
 
 - `OpenGraphShareContent`
 
-Now a struct, uses type-safe `OpenGraphPropertyName` and `OpenGraphPropertyValue`, as well as structs for `OpenGraphObject` and `OpenGraphAction`.
+Now a struct, uses type-safe `OpenGraphPropertyName` and `OpenGraphPropertyValue`, as well as structs for
+`OpenGraphObject` and `OpenGraphAction`.
 
 - `PhotoShareContent`
 
@@ -225,15 +237,20 @@ Now a struct, use a type-safe `Promotion` property, instead of separate `promoti
 
 Facebook SDK in Swift is still in beta, and we would love to hear your thoughts and feedback on it.
 
-- **Have an idea or feature request?** [Open an issue](https://github.com/facebook/facebook-sdk-swift/issues/new). Tell us more about the feature or an idea and why you think it's relevant.
-- **Have a bug to report?** [Open an issue](https://github.com/facebook/facebook-sdk-swift/issues/new). If possible, include the version of the SDK you are using, and any technical details.
-- **Need help with your code?** Join [Facebook Developers Group](https://www.facebook.com/groups/fbdevelopers) on Facebook or ask questions on [Stack Overflow](https://facebook.stackoverflow.com).
+- **Have an idea or feature request?** [Open an issue](https://github.com/facebook/facebook-sdk-swift/issues/new). Tell
+  us more about the feature or an idea and why you think it's relevant.
+- **Have a bug to report?** [Open an issue](https://github.com/facebook/facebook-sdk-swift/issues/new). If possible,
+  include the version of the SDK you are using, and any technical details.
+- **Need help with your code?** Join [Facebook Developers Group](https://www.facebook.com/groups/fbdevelopers) on
+  Facebook or ask questions on [Stack Overflow](https://facebook.stackoverflow.com).
 
 ## Contribute
 
-All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new contributors with tremendous joy. We request that you read our [contributing guidelines](./CONTRIBUTING.md) before submitting a Pull Request.
+All of Facebook SDK for Swift development happens on GitHub. Contributions make for good karma and we welcome new
+contributors with tremendous joy. We request that you read our [contributing guidelines](./CONTRIBUTING.md) before
+submitting a Pull Request.
 
 ## License
 
-Facebook SDK in Swift is MIT licensed, as found in the [`LICENSE`](https://github.com/facebook/facebook-sdk-swift/blob/master/LICENSE) file.
-
+Facebook SDK in Swift is MIT licensed, as found in the
+[`LICENSE`](https://github.com/facebook/facebook-sdk-swift/blob/master/LICENSE) file.
