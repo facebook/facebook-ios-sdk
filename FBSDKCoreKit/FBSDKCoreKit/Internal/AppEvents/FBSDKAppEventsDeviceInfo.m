@@ -265,7 +265,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
 
 + (NSString *)_getCarrier
 {
-#if TARGET_OS_TV
+#if TARGET_OS_TV || TARGET_IPHONE_SIMULATOR
   return @"NoCarrier";
 #else
   // Dynamically load class for this so calling app doesn't need to link framework in.
