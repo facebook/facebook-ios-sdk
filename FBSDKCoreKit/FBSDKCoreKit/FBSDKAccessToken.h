@@ -122,7 +122,8 @@ NS_SWIFT_NAME(AccessToken)
 /**
   Returns the known declined permissions.
  */
-@property (nonatomic, copy, readonly) NSSet<NSString *> *declinedPermissions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *declinedPermissions
+NS_REFINED_FOR_SWIFT;
 
 /**
  Returns the known declined permissions.
@@ -137,7 +138,8 @@ NS_SWIFT_NAME(AccessToken)
 /**
   Returns the known granted permissions.
  */
-@property (nonatomic, copy, readonly) NSSet<NSString *> *permissions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *permissions
+NS_REFINED_FOR_SWIFT;
 
 /**
   Returns the date the token was last refreshed.
@@ -202,8 +204,7 @@ NS_DESIGNATED_INITIALIZER;
   Convenience getter to determine if a permission has been granted
  @param permission  The permission to check.
  */
-- (BOOL)hasGranted:(NSString *)permission
-NS_SWIFT_NAME(hasGranted(permission:));
+- (BOOL)hasGranted:(NSString *)permission;
 
 /**
   Compares the receiver to another FBSDKAccessToken
