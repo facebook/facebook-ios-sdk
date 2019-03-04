@@ -5,6 +5,9 @@
       location = "group:FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:FBSDKCoreKitSwift/FBSDKCoreKitSwift.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:FBSDKTVOSKit/FBSDKTVOSKit.xcodeproj">
    </FileRef>
    <FileRef

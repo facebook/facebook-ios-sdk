@@ -169,7 +169,8 @@ NS_SWIFT_NAME(jpegCompressionQuality);
 
  The default is a set consisting of FBSDKLoggingBehaviorDeveloperErrors
  */
-@property (class, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
+@property (class, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors
+NS_REFINED_FOR_SWIFT;
 
 /**
   Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_TARGET_PLATFORM_VERSION`.

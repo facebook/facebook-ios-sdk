@@ -1,0 +1,204 @@
+swiftlint_version: 0.30.1
+
+included:
+  - FBSDKCoreKitSwift
+
+indentation: 2
+line_length: 120
+
+conditional_returns_on_newline:
+  if_only: true
+discouraged_object_literal:
+  image_literal: false
+
+explicit_type_interface:
+  excluded:
+    - local
+file_header:
+  required_pattern: |
+    \/\/ Copyright \(c\) \d{4}-present, Facebook, Inc\. All rights reserved\.
+    \/\/
+    \/\/ You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
+    \/\/ copy, modify, and distribute this software in source code or binary form for use
+    \/\/ in connection with the web services and APIs provided by Facebook\.
+    \/\/
+    \/\/ As with any software that integrates with the Facebook platform, your use of
+    \/\/ this software is subject to the Facebook Developer Principles and Policies
+    \/\/ \[http:\/\/developers\.facebook\.com\/policy\/\]\. This copyright notice shall be
+    \/\/ included in all copies or substantial portions of the software\.
+    \/\/
+    \/\/ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    \/\/ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+    \/\/ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT\. IN NO EVENT SHALL THE AUTHORS OR
+    \/\/ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+    \/\/ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+    \/\/ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE\.
+
+disabled_rules:
+  - custom_rules
+  - explicit_acl # Require explicit public/private/internal
+  - explicit_enum_raw_value # Require case = value
+  - explicit_self # `self.` required
+  - no_extension_access_modifier # Prefer extension_access_modifier
+  - number_separator # 1_000_000
+  - prefixed_toplevel_constant # Requires k Prefix
+  - switch_case_on_newline # Require newline on Switch Case
+  # Enable occasionally
+  - multiline_parameters_brackets
+
+opt_in_rules:
+  - array_init
+  - anyobject_protocol
+  - attributes
+  - block_based_kvo
+  - class_delegate_protocol
+  - closing_brace
+  - closure_body_length
+  - closure_end_indentation
+  - closure_parameter_position
+  - closure_spacing
+  - collection_alignment
+  - colon
+  - comma
+  - compiler_protocol_init
+  - conditional_returns_on_newline
+  - contains_over_first_not_nil
+  - control_statement
+  - convenience_type
+  - cyclomatic_complexity
+  - discarded_notification_center_observer
+  - discouraged_direct_init
+  - discouraged_object_literal
+  - discouraged_optional_boolean
+  - discouraged_optional_collection
+  - duplicate_imports
+  - dynamic_inline
+  - empty_count
+  - empty_string
+  - empty_enum_arguments
+  - empty_parameters
+  - empty_parentheses_with_trailing_closure
+  - empty_xctest_method
+  - explicit_init
+  - explicit_top_level_acl
+  - explicit_type_interface
+  - extension_access_modifier
+  - fallthrough
+  - fatal_error_message
+  - file_header
+  - file_length
+  - file_name
+  - first_where
+  - for_where
+  - force_cast
+  - force_try
+  - force_unwrapping
+  - function_body_length
+  - function_default_parameter_at_end
+  - function_parameter_count
+  - generic_type_name
+  - identical_operands
+  - identifier_name
+  - implicit_getter
+  - implicit_return
+  - implicitly_unwrapped_optional
+  - is_disjoint
+  - joined_default_parameter
+  - large_tuple
+  - last_where
+  - leading_whitespace
+  - legacy_cggeometry_functions
+  - legacy_constant
+  - legacy_constructor
+  - legacy_hashing
+  - legacy_nsgeometry_functions
+  - legacy_random
+  - let_var_whitespace
+  - line_length
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - mark
+  - modifier_order
+  - missing_docs
+  - multiline_arguments
+  - multiline_arguments_brackets
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - multiple_closures_with_trailing_closure
+  - nesting
+  - nimble_operator
+  - no_fallthrough_only
+  - no_grouping_extension
+  - notification_center_detachment
+  - nslocalizedstring_key
+  - object_literal
+  - opening_brace
+  - operator_usage_whitespace
+  - operator_whitespace
+  - overridden_super_call
+  - override_in_extension
+  - pattern_matching_keywords
+  - private_action
+  - private_outlet
+  - private_over_fileprivate
+  - private_unit_test
+  - prohibited_interface_builder
+  - prohibited_super_call
+  - protocol_property_accessors_order
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
+  - redundant_discardable_let
+  - redundant_nil_coalescing
+  - redundant_objc_attribute
+  - redundant_optional_initialization
+  - redundant_set_access_control
+  - redundant_string_enum_value
+  - redundant_type_annotation
+  - redundant_void_return
+  - required_enum_case
+  - return_arrow_whitespace
+  - shorthand_operator
+  - single_test_class
+  - sorted_first_last
+  - sorted_imports
+  - statement_position
+  - static_operator
+  - strict_fileprivate
+  - strong_iboutlet
+  - superfluous_disable_command
+  - switch_case_alignment
+  - syntactic_sugar
+  - todo
+  - toggle_bool
+  - trailing_closure
+  - trailing_comma
+  - trailing_newline
+  - trailing_semicolon
+  - trailing_whitespace
+  - type_body_length
+  - type_name
+  - unavailable_function
+  - unneeded_break_in_switch
+  - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
+  - unused_closure_parameter
+  - unused_control_flow_label
+  - unused_enumerated
+  - unused_import
+  - unused_optional_binding
+  - unused_private_declaration
+  - unused_setter_value
+  - valid_ibinspectable
+  - vertical_parameter_alignment
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace
+  - vertical_whitespace_between_cases
+  - vertical_whitespace_closing_braces
+  - vertical_whitespace_opening_braces
+  - void_return
+  - weak_delegate
+  - xctfail_message
+  - xct_specific_matcher
+  - yoda_condition
