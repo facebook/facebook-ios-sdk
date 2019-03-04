@@ -1,6 +1,10 @@
 # Facebook SDK for iOS
 
+[![Platforms](https://img.shields.io/cocoapods/p/FBSDKCoreKit.svg)](https://cocoapods.org/pods/FBSDKCoreKit)
 [![Build Status](https://travis-ci.org/facebook/facebook-objc-sdk.svg?branch=master)](https://travis-ci.org/facebook/facebook-objc-sdk)
+
+[![CocoaPods](https://img.shields.io/cocoapods/v/FBSDKCoreKit.svg)](https://cocoapods.org/pods/FBSDKCoreKit)
+[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
 This open-source library allows you to integrate Facebook into your iOS app.
 
