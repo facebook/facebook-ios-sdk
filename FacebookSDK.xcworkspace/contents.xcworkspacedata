@@ -17,6 +17,9 @@
       location = "group:FBSDKLoginKit/FBSDKLoginKit.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:FBSDKLoginKitSwift/FBSDKLoginKitSwift.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:FBSDKPlacesKit/FBSDKPlacesKit.xcodeproj">
    </FileRef>
    <FileRef
