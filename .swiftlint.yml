@@ -3,6 +3,7 @@ swiftlint_version: 0.30.1
 included:
   - FBSDKCoreKitSwift
   - FBSDKLoginKitSwift
+  - FBSDKShareKitSwift
 
 indentation: 2
 line_length: 120

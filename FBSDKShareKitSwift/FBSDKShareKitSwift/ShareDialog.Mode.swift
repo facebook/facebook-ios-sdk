@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,28 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
+import FBSDKShareKit
 
 /**
- NS_ENUM (NSUInteger, FBSDKLikeObjectType)
-  Specifies the type of object referenced by the objectID for likes.
+ ShareDialog.Mode CustomStringConvertible
  */
-typedef NS_ENUM(NSUInteger, FBSDKLikeObjectType)
-{
-  /** The objectID refers to an unknown object type. */
-  FBSDKLikeObjectTypeUnknown = 0,
-  /** The objectID refers to an Open Graph object. */
-  FBSDKLikeObjectTypeOpenGraph,
-  /** The objectID refers to an Page object. */
-  FBSDKLikeObjectTypePage,
-} NS_SWIFT_NAME(LikeObjectType);
+extension ShareDialog.Mode: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKShareDialogMode(self)
+  }
+}
 
 /**
-  Converts an FBLikeControlObjectType to an NSString.
+ AppGroupPrivacy CustomStringConvertible
  */
-FOUNDATION_EXPORT NSString *NSStringFromFBSDKLikeObjectType(FBSDKLikeObjectType objectType)
-NS_REFINED_FOR_SWIFT;
+extension AppGroupPrivacy: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKAppGroupPrivacy(self)
+  }
+}
 
-NS_ASSUME_NONNULL_END
+/**
+ LikeObjectType CustomStringConvertible
+ */
+extension LikeObjectType: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKLikeObjectType(self)
+  }
+}
