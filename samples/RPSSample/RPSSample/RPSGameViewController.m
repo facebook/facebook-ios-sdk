@@ -112,7 +112,27 @@ typedef void (^RPSBlock)(void);
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    // Check for a 15 digit FB App ID. If the FB App ID is less than 15 digits, display an alert.
+    
+    NSString *strFbAppId = [FBSDKSettings appID];
+    NSString *strEmptyFBId = @"{your-facebook-app-id}";
+        
+    if ([strFbAppId isEqualToString:strEmptyFBId]){
+        
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Missing the Facebook App ID" message:@"The RPSSample-info.plist is missing the Facebook App ID in the FacebookAppID key.\r\n\nPlease close the app, add your Facebook App ID to FacebookAppID key in RPSSample-info.plist, and then restart the app.\r\n\nFor more information, see ReadMe.txt." preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Dismiss" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [alert dismissViewControllerAnimated:YES completion:nil];
+        }];
+        
+        [alert addAction:cancel];
+        
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+    
+    else {
+        
     UIColor *fontColor = self.rockLabel.textColor;
     [self.rockButton.layer setCornerRadius:8.0];
     [self.rockButton.layer setBorderWidth:4.0];
@@ -157,6 +177,7 @@ typedef void (^RPSBlock)(void);
 
     [self updateScoreLabel];
     [self resetField];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated {
