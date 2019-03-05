@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = 'FBSDKCoreKitSwift'
+  s.name         = 'FBSDKShareKitSwift'
   s.version      = '5.0.0'
   s.author       = 'Facebook'
   s.homepage     = 'https://developers.facebook.com/docs/swift'
@@ -24,9 +24,10 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'FBSDKCoreKitSwift/FBSDKCoreKitSwift/**/*.{swift,h,m}'
-  s.module_name = 'FBSDKCoreKitSwift'
+  s.source_files = 'FBSDKShareKitSwift/FBSDKShareKitSwift/**/*.{swift,h,m}'
+  s.module_name = 'FBSDKShareKitSwift'
   s.pod_target_xcconfig = { 'ENABLE_TESTABILITY' => 'YES' }
 
-  s.ios.dependency 'FBSDKCoreKit'
+  s.ios.dependency 'FBSDKCoreKitSwift'
+  s.ios.dependency 'FBSDKShareKit'
 end
