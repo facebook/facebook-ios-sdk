@@ -34,13 +34,25 @@ Pod::Spec.new do |s|
   s.subspec 'CoreKit' do |ss|
     ss.dependency 'FBSDKCoreKit'
   end
+  s.subspec 'CoreKitSwift' do |ss|
+    ss.dependency 'FacebookSDK/CoreKit'
+    ss.dependency 'FBSDKCoreKitSwift'
+  end
   s.subspec 'LoginKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
     ss.dependency 'FBSDKLoginKit'
   end
+  s.subspec 'LoginKitSwift' do |ss|
+    ss.dependency 'FacebookSDK/LoginKit'
+    ss.dependency 'FBSDKLoginKitSwift'
+  end
   s.subspec 'ShareKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
     ss.dependency 'FBSDKShareKit'
+  end
+  s.subspec 'ShareKitSwift' do |ss|
+    ss.dependency 'FacebookSDK/ShareKit'
+    ss.dependency 'FBSDKShareKitSwift'
   end
   s.subspec 'TVOSKit' do |ss|
     ss.platform = :tvos
