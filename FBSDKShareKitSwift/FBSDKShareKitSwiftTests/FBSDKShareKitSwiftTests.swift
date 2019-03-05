@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) 2016-present, Facebook, Inc. All rights reserved.
 //
 // You are hereby granted a non-exclusive, worldwide, royalty-free license to use,
 // copy, modify, and distribute this software in source code or binary form for use
@@ -16,28 +16,17 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+@testable import FBSDKShareKitSwift
+import XCTest
 
-NS_ASSUME_NONNULL_BEGIN
+internal class FBSDKShareKitSwiftTests: XCTestCase {
+  override func setUp() {
+    super.setUp()
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+  }
 
-/**
- NS_ENUM (NSUInteger, FBSDKLikeObjectType)
-  Specifies the type of object referenced by the objectID for likes.
- */
-typedef NS_ENUM(NSUInteger, FBSDKLikeObjectType)
-{
-  /** The objectID refers to an unknown object type. */
-  FBSDKLikeObjectTypeUnknown = 0,
-  /** The objectID refers to an Open Graph object. */
-  FBSDKLikeObjectTypeOpenGraph,
-  /** The objectID refers to an Page object. */
-  FBSDKLikeObjectTypePage,
-} NS_SWIFT_NAME(LikeObjectType);
-
-/**
-  Converts an FBLikeControlObjectType to an NSString.
- */
-FOUNDATION_EXPORT NSString *NSStringFromFBSDKLikeObjectType(FBSDKLikeObjectType objectType)
-NS_REFINED_FOR_SWIFT;
-
-NS_ASSUME_NONNULL_END
+  override func tearDown() {
+    super.tearDown()
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+  }
+}
