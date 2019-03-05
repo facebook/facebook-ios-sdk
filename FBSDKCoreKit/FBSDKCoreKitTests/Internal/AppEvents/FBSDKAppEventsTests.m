@@ -18,6 +18,8 @@
 
 #import <XCTest/XCTest.h>
 
+#import <OCMock/OCMock.h>
+
 #import "FBSDKAppEvents.h"
 
 @interface FBSDKAppEventsTests : XCTestCase
@@ -26,20 +28,30 @@
 
 @implementation FBSDKAppEventsTests
 
+- (void)testLogPurchase
+{
+  double mockPurchaseAmount = 1.0;
+  NSString *mockCurrency = @"USD";
+  id mockAppEvents = [OCMockObject niceMockForClass:[FBSDKAppEvents class]];
+  [[mockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
+  [FBSDKAppEvents logPurchase:mockPurchaseAmount currency:mockCurrency];
+  [mockAppEvents verify];
+}
+
 - (void)testSetAndClearUserID
 {
-  NSString *testUserId = @"1";
-  [FBSDKAppEvents setUserID:testUserId];
-  XCTAssertEqualObjects([FBSDKAppEvents userID], testUserId);
+  NSString *mockUserId = @"1";
+  [FBSDKAppEvents setUserID:mockUserId];
+  XCTAssertEqualObjects([FBSDKAppEvents userID], mockUserId);
   [FBSDKAppEvents clearUserID];
   XCTAssertNil([FBSDKAppEvents userID]);
 }
 
 - (void)testSetLoggingOverrideAppID
 {
-  NSString *testOverrideAppID = @"2";
-  [FBSDKAppEvents setLoggingOverrideAppID:testOverrideAppID];
-  XCTAssertEqualObjects([FBSDKAppEvents loggingOverrideAppID], testOverrideAppID);
+  NSString *mockOverrideAppID = @"2";
+  [FBSDKAppEvents setLoggingOverrideAppID:mockOverrideAppID];
+  XCTAssertEqualObjects([FBSDKAppEvents loggingOverrideAppID], mockOverrideAppID);
 }
 
 @end
