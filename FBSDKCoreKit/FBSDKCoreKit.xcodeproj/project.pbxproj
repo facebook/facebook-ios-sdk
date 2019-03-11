@@ -642,10 +642,6 @@
 		C5188DFA222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
 		C5188DFB222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
 		C5188DFC222F388400F4D8BC /* FBSDKApplicationObserving.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */; };
-		C5188E332231C4B500F4D8BC /* FBSDKBridgeAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188E312231C4B500F4D8BC /* FBSDKBridgeAPI.h */; };
-		C5188E342231C4B500F4D8BC /* FBSDKBridgeAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = C5188E312231C4B500F4D8BC /* FBSDKBridgeAPI.h */; };
-		C5188E372231C4B500F4D8BC /* FBSDKBridgeAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = C5188E322231C4B500F4D8BC /* FBSDKBridgeAPI.m */; };
-		C5188E382231C4B500F4D8BC /* FBSDKBridgeAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = C5188E322231C4B500F4D8BC /* FBSDKBridgeAPI.m */; };
 		C5696F47209BBC35009C931F /* FBSDKCodelessPathComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = C5696F1E209BBC35009C931F /* FBSDKCodelessPathComponent.m */; };
 		C5696F48209BBC35009C931F /* FBSDKCodelessPathComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = C5696F1E209BBC35009C931F /* FBSDKCodelessPathComponent.m */; };
 		C5696F53209BBC35009C931F /* FBSDKViewHierarchy.m in Sources */ = {isa = PBXBuildFile; fileRef = C5696F21209BBC35009C931F /* FBSDKViewHierarchy.m */; };
@@ -1087,8 +1083,6 @@
 		C51121CA20A27EF50041DC94 /* FBSDKSampleEventBinding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSampleEventBinding.m; sourceTree = "<group>"; };
 		C511229F20A4BCEB0041DC94 /* FBSDKApplicationDelegateTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FBSDKApplicationDelegateTests.m; sourceTree = "<group>"; };
 		C5188DF8222F388400F4D8BC /* FBSDKApplicationObserving.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FBSDKApplicationObserving.h; sourceTree = "<group>"; };
-		C5188E312231C4B500F4D8BC /* FBSDKBridgeAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKBridgeAPI.h; sourceTree = "<group>"; };
-		C5188E322231C4B500F4D8BC /* FBSDKBridgeAPI.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKBridgeAPI.m; sourceTree = "<group>"; };
 		C5696F1E209BBC35009C931F /* FBSDKCodelessPathComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKCodelessPathComponent.m; sourceTree = "<group>"; };
 		C5696F21209BBC35009C931F /* FBSDKViewHierarchy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKViewHierarchy.m; sourceTree = "<group>"; };
 		C5696F23209BBC35009C931F /* FBSDKEventBindingManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKEventBindingManager.m; sourceTree = "<group>"; };

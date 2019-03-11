@@ -46,6 +46,8 @@ NS_SWIFT_NAME(BridgeAPIResponseBlock);
 + (BOOL)isSDKInitialized;
 + (UIApplicationState)applicationState;
 
+@property (nonatomic, readonly, getter=isActive) BOOL active;
+
 @end
 
 NS_ASSUME_NONNULL_END
