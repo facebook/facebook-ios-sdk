@@ -18,7 +18,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "../FBSDKMath.h"
+#import "FBSDKMath.h"
 
 /**
   Insets a CGSize with the insets in a UIEdgeInsets.
