@@ -57,6 +57,7 @@
 #import "Base64/FBSDKBase64.h"
 #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKDynamicFrameworkLoader.h"
+#import "FBSDKApplicationObserving.h"
 #import "FBSDKApplicationDelegate+Internal.h"
 #import "FBSDKDeviceRequestsHelper.h"
 #import "FBSDKError.h"

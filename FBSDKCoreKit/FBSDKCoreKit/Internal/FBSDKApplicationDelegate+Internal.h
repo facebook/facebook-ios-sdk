@@ -54,6 +54,9 @@ typedef void(^FBSDKBridgeAPICallbackBlock)(FBSDKBridgeAPIResponse *response);
 
 #endif
 
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
+
 @property (nonatomic, readonly, getter=isActive) BOOL active;
 
 @end

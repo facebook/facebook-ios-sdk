@@ -71,17 +71,18 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 @implementation FBSDKApplicationDelegate
 {
 #if !TARGET_OS_TV
-    FBSDKBridgeAPIRequest *_pendingRequest;
-    FBSDKBridgeAPICallbackBlock _pendingRequestCompletionBlock;
-    id<FBSDKURLOpening> _pendingURLOpen;
-    id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
-    FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
+  FBSDKBridgeAPIRequest *_pendingRequest;
+  FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
+  id<FBSDKURLOpening> _pendingURLOpen;
+  id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
+  FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 #endif
-    BOOL _expectingBackground;
-    BOOL _isRequestingSFAuthenticationSession;
-    UIViewController *_safariViewController;
-    BOOL _isDismissingSafariViewController;
-    BOOL _isAppLaunched;
+  NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
+  BOOL _expectingBackground;
+  BOOL _isRequestingSFAuthenticationSession;
+  UIViewController *_safariViewController;
+  BOOL _isDismissingSafariViewController;
+  BOOL _isAppLaunched;
 }
 
 #pragma mark - Class Methods
@@ -132,14 +133,15 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 - (instancetype)_init
 {
-    if ((self = [super init]) != nil) {
-        NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-        [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-        [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+  if ((self = [super init]) != nil) {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
 
-        [[FBSDKAppEvents singleton] registerNotifications];
-    }
-    return self;
+    [[FBSDKAppEvents singleton] registerNotifications];
+    _applicationObservers = [[NSHashTable alloc] init];
+  }
+  return self;
 }
 
 - (instancetype)init
@@ -218,6 +220,23 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     if ([self _handleBridgeAPIResponseURL:url sourceApplication:sourceApplication]) {
         return YES;
     }
+
+  BOOL handled = NO;
+  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  for (id<FBSDKApplicationObserving> observer in observers) {
+    if ([observer respondsToSelector:@selector(application:openURL:sourceApplication:annotation:)]) {
+      if ([observer application:application
+                        openURL:url
+              sourceApplication:sourceApplication
+                     annotation:annotation]) {
+        handled = YES;
+      }
+    }
+  }
+
+  if (handled) {
+    return YES;
+  }
 #endif
     [self _logIfAppLinkEvent:url];
 
@@ -261,14 +280,31 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
         }
     }
 #endif
-    return NO;
+  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  BOOL handled = NO;
+  for (id<FBSDKApplicationObserving> observer in observers) {
+    if ([observer respondsToSelector:@selector(application:didFinishLaunchingWithOptions:)]) {
+      if ([observer application:application didFinishLaunchingWithOptions:launchOptions]) {
+        handled = YES;
+      }
+    }
+  }
+
+  return handled;
 }
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-    _isRequestingSFAuthenticationSession = NO;
-    _active = NO;
-    _expectingBackground = NO;
+  _isRequestingSFAuthenticationSession = NO;
+  _active = NO;
+  _expectingBackground = NO;
+
+  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
+  for (id<FBSDKApplicationObserving> observer in observers) {
+    if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
+      [observer applicationDidEnterBackground:notification.object];
+    }
+  }
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
@@ -289,6 +325,13 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 #endif
         [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
     }
+
+  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers copy];
+  for (id<FBSDKApplicationObserving> observer in observers) {
+    if ([observer respondsToSelector:@selector(applicationDidBecomeActive:)]) {
+      [observer applicationDidBecomeActive:notification.object];
+    }
+  }
 }
 
 #pragma mark - Internal Methods
@@ -437,6 +480,20 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     } else {
         [self openURL:url sender:sender handler:handler];
     }
+}
+
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer
+{
+  if (![_applicationObservers containsObject:observer]) {
+    [_applicationObservers addObject:observer];
+  }
+}
+
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
+{
+  if ([_applicationObservers containsObject:observer]) {
+    [_applicationObservers removeObject:observer];
+  }
 }
 
 - (void)_openURLWithAuthenticationSession:(NSURL *)url
