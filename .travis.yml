@@ -7,6 +7,11 @@ env:
     - secure: vjVOdxnuHnkDiPXoddLycTQ2WwbYudHU53xbaz86Su0J+xTSNDmxmd2GFn45EMn5BixwVzTnLWhDg7EvNvQhHWDAuHUaK7X/KXoR41s3PzlucWtxczxxt3eIRtk7U4y22tSwr/r1cl6Q2QM5IK8ICZshhSyiHHEz/EAaodcJkUE= # $api_key=VALUE
     - secure: mpObzf4FG+JHEN6Gm/Jp96pLONe4nYpgtXxkRLlULlD23c6aHAwMJhT/pjYKINmBmxd0/Vnw5LVvBcU0rCrjANFn4nfotP4KoexIO4As+wjRGAmd9IUvosio9zdv1DasUZlHliyPElfsbKqK3aZjBDw1Cx99t6dog0H6aIKUOQA= # $COCOAPODS_TRUNK_TOKEN=VALUE
 
+branches:
+  only:
+    - master
+    - 4.x-branch
+
 stages:
   - name: test
     if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
