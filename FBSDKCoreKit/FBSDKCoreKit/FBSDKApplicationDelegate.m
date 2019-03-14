@@ -366,20 +366,6 @@ static UIApplicationState _applicationState;
   }
 }
 
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if (![_applicationObservers containsObject:observer]) {
-    [_applicationObservers addObject:observer];
-  }
-}
-
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if ([_applicationObservers containsObject:observer]) {
-    [_applicationObservers removeObject:observer];
-  }
-}
-
 - (void)_openURLWithAuthenticationSession:(NSURL *)url
 {
   // Auto log basic events in case autoLogAppEventsEnabled is set
@@ -413,9 +399,22 @@ static UIApplicationState _applicationState;
   }
 }
 
-+ (UIApplicationState)applicationState
+#endif
+
+#pragma mark - FBSDKApplicationObserving
+
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer
 {
-  return _applicationState;
+  if (![_applicationObservers containsObject:observer]) {
+    [_applicationObservers addObject:observer];
+  }
+}
+
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
+{
+  if ([_applicationObservers containsObject:observer]) {
+    [_applicationObservers removeObject:observer];
+  }
 }
 
 #pragma mark - Helper Methods
