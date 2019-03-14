@@ -482,20 +482,6 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
     }
 }
 
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if (![_applicationObservers containsObject:observer]) {
-    [_applicationObservers addObject:observer];
-  }
-}
-
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if ([_applicationObservers containsObject:observer]) {
-    [_applicationObservers removeObject:observer];
-  }
-}
-
 - (void)_openURLWithAuthenticationSession:(NSURL *)url
 {
     Class AuthenticationSessionClass = fbsdkdfl_ASWebAuthenticationSessionClass();
@@ -567,6 +553,22 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 }
 
 #endif
+
+#pragma mark - FBSDKApplicationObserving
+
+- (void)addObserver:(id<FBSDKApplicationObserving>)observer
+{
+  if (![_applicationObservers containsObject:observer]) {
+    [_applicationObservers addObject:observer];
+  }
+}
+
+- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
+{
+  if ([_applicationObservers containsObject:observer]) {
+    [_applicationObservers removeObject:observer];
+  }
+}
 
 #pragma mark - Helper Methods
 
