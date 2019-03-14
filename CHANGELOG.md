@@ -7,12 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.0-rc.1...HEAD)
-
-## 5.0.0-rc.1
-
-[2019-04-03](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.0-rc.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...v5.0.0-rc.1)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.0...HEAD)
 
 ### Added
 
@@ -62,72 +57,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Various bug fixes
-
-## 4.44.0
-
-[2019-04-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...v4.44.0)
-
-### Added
-
-- Add parameter `_inBackground` for app events
-
-### Fixed
-
-- Various bug fixes
-
-## 4.43.0
-
-[2019-04-01](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.43.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.42.0...v4.43.0)
-
-### Added
-
-- Support for Xcode 10.2
-
-### Deprecated
-
-- `FBSDKLoginBehaviorNative`
-- `FBSDKLoginBehaviorSystemAccount`
-- `FBSDKLoginBehaviorWeb`
-- `[FBSDKLoginManager renewSystemCredentials]`
-
-### Fixed
-
-- Various bug fixes
-
-## 4.42.0
-
-[2019-03-20](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.42.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.2...v4.42.0)
-
-### Changed
-
-- Moved directory structure for better separation
-
-### Fixed
-
-- Various bug fixes
-
-## 4.41.2
-
-[2019-03-18](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.41.2) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.1...v4.41.2)
-
-### Fixed
-
-- Resolved issues with the release process
-- Various bug fixes
-
-## 4.41.1
-
-[2019-03-18](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.41.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.0...v4.41.1)
-
-### Fixed
-
-- Resolved build failures with Carthage and Cocoapods
 - Various bug fixes
 
 ## 4.41.0
