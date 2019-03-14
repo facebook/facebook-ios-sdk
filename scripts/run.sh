@@ -19,6 +19,8 @@
 
 # shellcheck disable=SC2039
 
+set -euo pipefail
+
 # --------------
 # Imports
 # --------------
@@ -39,7 +41,7 @@ fi
 
 # Main
 main() {
-  if [ -z "$SDK_SCRIPTS_DIR" ]; then
+  if [ -z "${SDK_SCRIPTS_DIR:-}" ]; then
     # Set global variables
 
     SDK_SCRIPTS_DIR=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
@@ -76,8 +78,8 @@ main() {
     if [ -f "$PWD/internal/scripts/run.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
-  local command_type="$1"
-  shift
+  local command_type=${1:-}
+  if [ -n "$command_type" ]; then shift; fi
 
   case "$command_type" in
   "build") build_sdk "$@" ;;
@@ -100,27 +102,22 @@ main() {
 
 # Setup SDK
 setup_sdk() {
-  local sdk_test_app_id="$1"
-  local sdk_test_app_secret="$2"
-  local sdk_test_client_token="$3"
-
-  if [ "$1" == "" ]; then sdk_test_app_id="$SDK_TEST_FB_APP_ID"; fi
-  if [ "$2" == "" ]; then sdk_test_app_secret="$SDK_TEST_FB_APP_SECRET"; fi
-  if [ "$3" == "" ]; then sdk_test_client_token="$SDK_TEST_FB_CLIENT_TOKEN"; fi
-
-  if [ -f "$PWD/internal/scripts/run.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
+  local sdk_test_app_id=${1:-$SDK_TEST_FB_APP_ID}
+  local sdk_test_app_secret=${2:-$SDK_TEST_FB_APP_SECRET}
+  local sdk_test_client_token=${3:-$SDK_TEST_FB_CLIENT_TOKEN}
+  local sdk_machine_unique_user_key=${4:-}
 
   {
     echo "IOS_SDK_TEST_APP_ID = $sdk_test_app_id"
     echo "IOS_SDK_TEST_APP_SECRET = $sdk_test_app_secret"
     echo "IOS_SDK_TEST_CLIENT_TOKEN = $sdk_test_client_token"
-    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $4"
+    echo "IOS_SDK_MACHINE_UNIQUE_USER_KEY = $sdk_machine_unique_user_key"
   } >>"$SDK_DIR"/Configurations/TestAppIdAndSecret.xcconfig
 }
 
 # Bump Version
 bump_version() {
-  local new_version="$1"
+  local new_version=${1:-}
 
   if [ "$new_version" == "$SDK_CURRENT_VERSION" ]; then
     echo "This version is the same as the current version"
@@ -165,7 +162,7 @@ bump_version() {
 }
 
 bump_changelog() {
-  local new_version="$1"
+  local new_version=${1:-}
 
   # Edit Changelog
   local updated_changelog=""
@@ -208,7 +205,7 @@ tag_current_version() {
 
   git tag -a "v$SDK_CURRENT_VERSION" -m "Version $SDK_CURRENT_VERSION"
 
-  if [ "$1" == "--push" ]; then
+  if [ "${1:-}" == "--push" ]; then
     git push origin "v$SDK_CURRENT_VERSION"
   fi
 }
@@ -217,9 +214,9 @@ tag_current_version() {
 build_sdk() {
   build_xcode_workspace() {
     xcodebuild build \
-      -workspace "$1" \
-      -sdk "$2" \
-      -scheme "$3" \
+      -workspace "${1:-}" \
+      -sdk "${2:-}" \
+      -scheme "${3:-}" \
       -configuration Debug \
       | xcpretty
   }
@@ -227,7 +224,7 @@ build_sdk() {
   build_carthage() {
     carthage build --no-skip-current
 
-    if [ "$1" == "--archive" ]; then
+    if [ "${1:-}" == "--archive" ]; then
       for kit in "${SDK_KITS[@]}"; do
         if [ -d "$SDK_DIR"/Carthage/Build/iOS/"$kit".framework ] \
           || [ -d "$SDK_DIR"/Carthage/Build/tvOS/"$kit".framework ]; then
@@ -237,8 +234,8 @@ build_sdk() {
     fi
   }
 
-  local build_type="$1"
-  shift
+  local build_type=${1:-}
+  if [ -n "$build_type" ]; then shift; fi
 
   case "$build_type" in
   "carthage") build_carthage "$@" ;;
@@ -261,8 +258,8 @@ lint_sdk() {
     done
   }
 
-  local lint_type="$1"
-  shift
+  local lint_type=${1:-}
+  if [ -n "$lint_type" ]; then shift; fi
 
   case "$lint_type" in
   "cocoapods") lint_cocoapods "$@" ;;
@@ -308,7 +305,7 @@ release_sdk() {
       zip -r "$kit.zip" "$kit"
       popd || continue
 
-      if [[ $SDK_INTERNAL == 1 ]] && [ "$1" == "--publish" ]; then
+      if [[ $SDK_INTERNAL == 1 ]] && [ "${1:-}" == "--publish" ]; then
         echo api_update_reference_doc "$kit"
       fi
     done
@@ -349,8 +346,8 @@ release_sdk() {
     api_update_guide_doc "$external_changelog"
   }
 
-  local release_type="$1"
-  shift
+  local release_type=${1:-}
+  if [ -n "$release_type" ]; then shift; fi
 
   case "$release_type" in
   "cocoapods") release_cocoapods "$@" ;;
@@ -362,7 +359,7 @@ release_sdk() {
 
 # Check Release Status
 check_release_status() {
-  local version_to_check="$1"
+  local version_to_check=${1:-}
   local release_success=0
 
   if ! is_valid_semver "$version_to_check"; then
@@ -399,7 +396,7 @@ check_release_status() {
 
 # Proper Semantic Version
 is_valid_semver() {
-  if ! [[ $1 =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
+  if ! [[ ${1:-} =~ ^([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$) ]]; then
     false
     return
   fi
@@ -407,7 +404,7 @@ is_valid_semver() {
 
 # Check Version Tag Exists
 does_version_exist() {
-  local version_to_check="$1"
+  local version_to_check=${1:-}
 
   if [ "$version_to_check" == "" ]; then
     version_to_check=$SDK_CURRENT_VERSION
