@@ -57,10 +57,9 @@ NS_SWIFT_NAME(BridgeAPIResponseBlock);
          sender:(nullable id<FBSDKURLOpening>)sender
         handler:(FBSDKSuccessBlock)handler;
 
-#endif
-
 - (void)addObserver:(id<FBSDKApplicationObserving>)observer;
 - (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
+#endif
 
 @property (nonatomic, readonly, getter=isActive) BOOL active;
 
