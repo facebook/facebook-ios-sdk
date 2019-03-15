@@ -639,10 +639,10 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
   id mockInternalUtility = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
   [[mockInternalUtility stub] validateURLSchemes];
 
-  id mockSDKApplicationDelegate = [OCMockObject niceMockForClass:[FBSDKApplicationDelegate class]];
-  [[[mockSDKApplicationDelegate stub] andReturn:mockSDKApplicationDelegate] sharedInstance];
+  id mockSDKBridgeAPI = [OCMockObject niceMockForClass:[FBSDKBridgeAPI class]];
+  [[[mockSDKBridgeAPI stub] andReturn:mockSDKBridgeAPI] sharedInstance];
   // Check API bridge request
-  [[mockSDKApplicationDelegate expect] openBridgeAPIRequest:[OCMArg checkWithBlock:^BOOL(FBSDKBridgeAPIRequest *request) {
+  [[mockSDKBridgeAPI expect] openBridgeAPIRequest:[OCMArg checkWithBlock:^BOOL(FBSDKBridgeAPIRequest *request) {
     XCTAssertEqualObjects(request.scheme, scheme);
     XCTAssertEqualObjects(request.methodName, methodName);
     return YES;
@@ -655,7 +655,7 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
   dialog.fromViewController = vc;
   XCTAssert([dialog show]);
 
-  [mockSDKApplicationDelegate stopMocking];
+  [mockSDKBridgeAPI stopMocking];
   [mockInternalUtility stopMocking];
   [settingsClassMock stopMocking];
   [mockApplication stopMocking];

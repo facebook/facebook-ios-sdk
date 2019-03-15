@@ -133,7 +133,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     // perform the browser log in behavior. However we also need to wait for the application
     // to become active so FBSDKApplicationDelegate doesn't erroneously call back the URL
     // opener before the URL has been opened.
-    if ([FBSDKApplicationDelegate sharedInstance].isActive) {
+    if ([FBSDKBridgeAPI sharedInstance].isActive) {
       // The application is active so there's no need to wait.
       [loginManager logInWithBehavior:FBSDKLoginBehaviorBrowser];
     } else {
@@ -220,7 +220,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
     _observer = nil;
   }
 
-  if ([FBSDKApplicationDelegate sharedInstance].isActive) {
+  if ([FBSDKBridgeAPI sharedInstance].isActive) {
     [loginManager logInWithBehavior:FBSDKLoginBehaviorBrowser];
   } else {
     // The application is active but due to notification ordering the FBSDKApplicationDelegate
