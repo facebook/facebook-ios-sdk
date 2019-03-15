@@ -1287,6 +1287,7 @@
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
+				7EB63D901A9BE720003A7AED /* AppLink */,
 				894C0B0E1A7021F8009137EF /* Base64 */,
 				894C0AE11A6F1D27009137EF /* BridgeAPI */,
 				894C0B061A702194009137EF /* Cryptography */,
@@ -1300,7 +1301,6 @@
 				89D05AA81AA1134000609300 /* FBSDKAudioResourceLoader.m */,
 				9D195CC61B9FE2E000BD6BEC /* FBSDKContainerViewController.h */,
 				9D195CC71B9FE2E000BD6BEC /* FBSDKContainerViewController.m */,
-				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
 				520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */,
 				520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */,
 				81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */,
@@ -1565,7 +1565,6 @@
 			children = (
 				5DF60D07225DB6B200934A0E /* Basics */,
 				C5188EC122371EE400F4D8BC /* AppEvents */,
-				C5188F1C223857D700F4D8BC /* AppLink */,
 				9D3029081A65C4420086B9ED /* FBSDKAccessToken.h */,
 				9D3029091A65C4420086B9ED /* FBSDKAccessToken.m */,
 				9D34A11D1A5F038300C37317 /* FBSDKApplicationDelegate.h */,
@@ -1576,6 +1575,7 @@
 				894C0B671A7150CC009137EF /* FBSDKConstants.m */,
 				890414861A64893100617215 /* FBSDKCopying.h */,
 				9D26974C1A5DF40700143BFC /* FBSDKCoreKit.h */,
+				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
 				9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */,
 				9D9E16AB1CB46C7D00C8B68F /* FBSDKDeviceButton.m */,
 				9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */,
@@ -1740,40 +1740,6 @@
 				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
 				F9169B822155A02000FA1789 /* FBSDKUserDataStore.h */,
 				F9169B832155A03C00FA1789 /* FBSDKUserDataStore.m */,
-			);
-			path = Internal;
-			sourceTree = "<group>";
-		};
-		C5188F1C223857D700F4D8BC /* AppLink */ = {
-			isa = PBXGroup;
-			children = (
-				C5188F1D223857D700F4D8BC /* Internal */,
-				52963A70215992F200C7B252 /* FBSDKAppLink.h */,
-				52963A6C215992F100C7B252 /* FBSDKAppLink.m */,
-				7E5557361A8D833100344F86 /* FBSDKAppLinkResolver.h */,
-				7E5557351A8D833100344F86 /* FBSDKAppLinkResolver.m */,
-				52963A69215992F100C7B252 /* FBSDKAppLinkResolving.h */,
-				52963A6E215992F200C7B252 /* FBSDKAppLinkReturnToRefererController.h */,
-				52963A71215992F200C7B252 /* FBSDKAppLinkReturnToRefererController.m */,
-				52963A73215992F300C7B252 /* FBSDKAppLinkReturnToRefererView.h */,
-				52963A65215992F000C7B252 /* FBSDKAppLinkReturnToRefererView.m */,
-				52963A6A215992F100C7B252 /* FBSDKAppLinkNavigation.h */,
-				52963A68215992F000C7B252 /* FBSDKAppLinkNavigation.m */,
-				52963A72215992F300C7B252 /* FBSDKAppLinkTarget.h */,
-				52963A67215992F000C7B252 /* FBSDKAppLinkTarget.m */,
-				7E30916C1AA907BD004E91D5 /* FBSDKAppLinkUtility.h */,
-				7E3091791AA907E0004E91D5 /* FBSDKAppLinkUtility.m */,
-				52963A74215992F300C7B252 /* FBSDKWebViewAppLinkResolver.h */,
-				52963A6D215992F100C7B252 /* FBSDKWebViewAppLinkResolver.m */,
-			);
-			path = AppLink;
-			sourceTree = "<group>";
-		};
-		C5188F1D223857D700F4D8BC /* Internal */ = {
-			isa = PBXGroup;
-			children = (
-				7EB63D9E1A9BE730003A7AED /* FBSDKMeasurementEventListener.h */,
-				7EB63D9D1A9BE730003A7AED /* FBSDKMeasurementEventListener.m */,
 			);
 			path = Internal;
 			sourceTree = "<group>";

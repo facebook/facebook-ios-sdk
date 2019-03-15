@@ -20,149 +20,150 @@
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKProfile.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
 static NSString *const  FBSDKUserDataKey  = @"com.facebook.appevents.UserDataStore.userData";
 
-static NSMutableDictionary<NSString *, NSString *> *hashedUserData;
-static dispatch_queue_t serialQueue;
+static NSString *const  FBSDKEmail        = @"em";
+static NSString *const  FBSDKFirstName    = @"fn";
+static NSString *const  FBSDKLastName     = @"ln";
+static NSString *const  FBSDKPhone        = @"ph";
+static NSString *const  FBSDKDateOfBirth  = @"db";
+static NSString *const  FBSDKGender       = @"ge";
+static NSString *const  FBSDKCity         = @"ct";
+static NSString *const  FBSDKState        = @"st";
+static NSString *const  FBSDKZip          = @"zp";
+static NSString *const  FBSDKCountry      = @"country";
+
+static NSString *hashedUserData;
+static volatile bool initialized = false;
 
 @implementation FBSDKUserDataStore
 
-+ (void)initialize
++ (void)initStore
 {
-  serialQueue = dispatch_queue_create("com.facebook.appevents.UserDataStore", DISPATCH_QUEUE_SERIAL);
-  NSString *userData = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKUserDataKey];
-  if (userData) {
-    hashedUserData = (NSMutableDictionary<NSString *, NSString *> *)[NSJSONSerialization JSONObjectWithData:[userData dataUsingEncoding:NSUTF8StringEncoding]
-                                                                                                    options:NSJSONReadingMutableContainers
-                                                                                                      error:nil];
+  if (initialized){
+    return;
   }
-  if (!hashedUserData) {
-    hashedUserData = [[NSMutableDictionary alloc] init];
-  }
+
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  hashedUserData = [defaults stringForKey:FBSDKUserDataKey];
+  initialized = true;
 }
 
-+ (void)setAndHashUserEmail:(nullable NSString *)email
-                  firstName:(nullable NSString *)firstName
-                   lastName:(nullable NSString *)lastName
-                      phone:(nullable NSString *)phone
-                dateOfBirth:(nullable NSString *)dateOfBirth
-                     gender:(nullable NSString *)gender
-                       city:(nullable NSString *)city
-                      state:(nullable NSString *)state
-                        zip:(nullable NSString *)zip
-                    country:(nullable NSString *)country
++ (void)setUserDataAndHash:(nullable NSString *)email
+                 firstName:(nullable NSString *)firstName
+                  lastName:(nullable NSString *)lastName
+                     phone:(nullable NSString *)phone
+               dateOfBirth:(nullable NSString *)dateOfBirth
+                    gender:(nullable NSString *)gender
+                      city:(nullable NSString *)city
+                     state:(nullable NSString *)state
+                       zip:(nullable NSString *)zip
+                   country:(nullable NSString *)country
 {
+  [FBSDKUserDataStore initStore];
+
   NSMutableDictionary *ud = [[NSMutableDictionary alloc] init];
-  if (email) {
-    ud[FBSDKAppEventEmail] = [FBSDKUserDataStore encryptData:email type:FBSDKAppEventEmail];
+  if (email != nil) {
+    ud[FBSDKEmail] = email;
   }
-  if (firstName) {
-    ud[FBSDKAppEventFirstName] = [FBSDKUserDataStore encryptData:firstName type:FBSDKAppEventFirstName];
+  if (firstName != nil) {
+    ud[FBSDKFirstName] = firstName;
   }
-  if (lastName) {
-    ud[FBSDKAppEventLastName] = [FBSDKUserDataStore encryptData:lastName type:FBSDKAppEventLastName];
+  if (lastName != nil) {
+    ud[FBSDKLastName] = lastName;
   }
-  if (phone) {
-    ud[FBSDKAppEventPhone] = [FBSDKUserDataStore encryptData:phone type:FBSDKAppEventPhone];
+  if (phone != nil) {
+    ud[FBSDKPhone] = phone;
   }
-  if (dateOfBirth) {
-    ud[FBSDKAppEventDateOfBirth] = [FBSDKUserDataStore encryptData:dateOfBirth type:FBSDKAppEventDateOfBirth];
+  if (dateOfBirth != nil) {
+    ud[FBSDKDateOfBirth] = dateOfBirth;
   }
-  if (gender) {
-    ud[FBSDKAppEventGender] = [FBSDKUserDataStore encryptData:gender type:FBSDKAppEventGender];
+  if (gender != nil) {
+    ud[FBSDKGender] = gender;
   }
-  if (city) {
-    ud[FBSDKAppEventCity] = [FBSDKUserDataStore encryptData:city type:FBSDKAppEventCity];
+  if (city != nil) {
+    ud[FBSDKCity] = city;
   }
-  if (state) {
-    ud[FBSDKAppEventState] = [FBSDKUserDataStore encryptData:state type:FBSDKAppEventState];
+  if (state != nil) {
+    ud[FBSDKState] = state;
   }
-  if (zip) {
-    ud[FBSDKAppEventZip] = [FBSDKUserDataStore encryptData:zip type:FBSDKAppEventZip];
+  if (zip != nil) {
+    ud[FBSDKZip] = zip;
   }
-  if (country) {
-    ud[FBSDKAppEventCountry] = [FBSDKUserDataStore encryptData:country type:FBSDKAppEventCountry];
+  if (country != nil) {
+    ud[FBSDKCountry] = country;
   }
 
-  dispatch_async(serialQueue, ^{
-    hashedUserData = [ud mutableCopy];
-    [[NSUserDefaults standardUserDefaults] setObject:[FBSDKUserDataStore stringByHashedData:hashedUserData]
-                                              forKey:FBSDKUserDataKey];
-  });
+  hashedUserData = [FBSDKUserDataStore hashUserData:ud];
+  NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:(hashedUserData) forKey:(FBSDKUserDataKey)];
 }
 
-+ (void)setAndHashData:(nullable NSString *)data
-               forType:(FBSDKAppEventUserDataType)type
++ (NSString *)getHashedUserData
 {
-  [FBSDKUserDataStore setHashData:[FBSDKUserDataStore encryptData:data type:type]
-                          forType:type];
+  if (!initialized){
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                           logEntry:@"initStore should have been called before calling setUserID"];
+    [FBSDKUserDataStore initStore];
+  }
+
+  return hashedUserData;
 }
 
-+ (void)setHashData:(nullable NSString *)hashData
-            forType:(FBSDKAppEventUserDataType)type
++ (NSString *)hashUserData:(NSDictionary *)ud
 {
-  dispatch_async(serialQueue, ^{
-    if (!hashData) {
-      [hashedUserData removeObjectForKey:type];
+  if (ud == nil){
+    return nil;
+  }
+
+  NSMutableDictionary<NSString *, id> *encryptUserData = [NSMutableDictionary dictionaryWithCapacity:ud.count];
+
+  for (NSString *key in ud){
+    NSString *const value = ud[key];
+    if ([FBSDKUserDataStore maybeSHA256Hashed:value]){
+      encryptUserData[key] = value;
     } else {
-      hashedUserData[type] = hashData;
+      NSString *const normalizedValue = [FBSDKUserDataStore normalizeData:key data:value];
+      NSString *const encryptedValue = [FBSDKUserDataStore encryptData:normalizedValue];
+      if (encryptedValue != nil){
+        encryptUserData[key] = encryptedValue;
+      }
     }
-    [[NSUserDefaults standardUserDefaults] setObject:[FBSDKUserDataStore stringByHashedData:hashedUserData]
-                                              forKey:FBSDKUserDataKey];
-  });
-}
+  }
 
-+ (void)clearDataForType:(FBSDKAppEventUserDataType)type
-{
-  [FBSDKUserDataStore setAndHashData:nil forType:type];
-}
-
-+ (NSString *)getHashedData
-{
-  __block NSString *hashedUserDataString;
-  dispatch_sync(serialQueue, ^{
-    hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUserData];
-  });
-  return hashedUserDataString;
-}
-
-+ (NSString *)stringByHashedData:(id)hashedData
-{
   NSError *error;
-  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:hashedData
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:encryptUserData
                                                      options:0
                                                        error:&error];
-  if (jsonData) {
+  if (jsonData){
     return [[NSString alloc] initWithData:jsonData
                                  encoding:NSUTF8StringEncoding];
   } else {
-    [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"Invalid json object: %@", error]];
-    return @"";
+    [FBSDKAppEventsUtility logAndNotify:[NSString stringWithFormat:@"invalid json object: %@", error]];
+    return nil;
   }
 }
 
 + (NSString *)encryptData:(NSString *)data
-                     type:(FBSDKAppEventUserDataType)type
 {
-  if (data.length == 0 || [FBSDKUserDataStore maybeSHA256Hashed:data]) {
-    return data;
+  if (data == nil || data.length == 0){
+    return nil;
   }
-  return [FBSDKUtility SHA256Hash:[FBSDKUserDataStore normalizeData:data type:type]];
+  return [FBSDKUtility SHA256Hash:data];
 }
 
-+ (NSString *)normalizeData:(NSString *)data
-                       type:(FBSDKAppEventUserDataType)type
-{
++ (NSString *)normalizeData:(NSString *)type data:(NSString *)data{
   NSString *normalizedData = @"";
-  NSSet<FBSDKAppEventUserDataType> *set = [NSSet setWithArray:
-                                           @[FBSDKAppEventEmail, FBSDKAppEventFirstName, FBSDKAppEventLastName, FBSDKAppEventCity, FBSDKAppEventState, FBSDKAppEventCountry]];
-  if ([set containsObject:type]) {
+  if ([type isEqualToString:FBSDKEmail] || [type isEqualToString:FBSDKFirstName]
+      || [type isEqualToString:FBSDKLastName] || [type isEqualToString:FBSDKCity]
+      || [type isEqualToString:FBSDKState] || [type isEqualToString:FBSDKCountry]) {
     normalizedData = [data stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     normalizedData = normalizedData.lowercaseString;
-  } else if ([type isEqualToString:FBSDKAppEventPhone]) {
+  } else if ([type isEqualToString:FBSDKPhone]){
     NSError *error = nil;
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"[^0-9]"
                                                                            options:NSRegularExpressionCaseInsensitive
@@ -173,11 +174,12 @@ static dispatch_queue_t serialQueue;
                                                        range:NSMakeRange(0, data.length)
                                                 withTemplate:@""
                       ];
-  } else if ([type isEqualToString:FBSDKAppEventGender]) {
+  } else if ([type isEqualToString:FBSDKGender]){
     NSString *temp = [data stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     temp = temp.lowercaseString;
     normalizedData = temp.length > 0 ? [temp substringToIndex:1]: @"";
   }
+
   return normalizedData;
 }
 
