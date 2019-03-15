@@ -14,12 +14,6 @@ branches:
   only:
     - master
     - 4.x-branch
-    - /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
-
-branches:
-  only:
-    - master
-    - 4.x-branch
 
 stages:
   - name: test
@@ -65,20 +59,21 @@ jobs:
       osx_image: xcode10.2
       script: sh scripts/run.sh build carthage --archive
       deploy:
-        provider: releases
-        skip_cleanup: true
-        api_key: $GITHUB_ACCESS_TOKEN
-        file: Carthage/Release/*
-        file_glob: true
-        name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $TRAVIS_TAG
-        on:
-          all_branches: true
-          tags: true
-    - stage: release
-      name: Publish Cocoapods
-      osx_image: xcode10.2
-      script: sh scripts/run.sh release cocoapods --allow-warnings
+        - provider: releases
+          skip_cleanup: true
+          api_key: $GITHUB_ACCESS_TOKEN
+          file: Carthage/Release/*
+          file_glob: true
+          name: Facebook SDK $TRAVIS_TAG
+          body: Consult Changelog $SDK_CURRENT_VERSION
+          on:
+            all_branches: true
+            tags: true
+        - provider: script
+          script: sh scripts/run.sh release cocoapods --allow-warnings
+          on:
+            all_branches: true
+            tags: true
 
 before_install: sh scripts/travis/before_install.sh
 install: sh scripts/travis/install.sh
