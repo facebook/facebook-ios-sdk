@@ -19,20 +19,20 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-#import <FBSDKCoreKit/FBSDKCoreKit.h>
-
 #import "FBSDKBridgeAPIProtocol.h"
 #import "FBSDKBridgeAPIProtocolType.h"
 #import "FBSDKBridgeAPIRequest.h"
 #import "FBSDKBridgeAPIResponse.h"
 #import "FBSDKURLOpening.h"
 
+#import "FBSDKCoreKit+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
 NS_SWIFT_NAME(BridgeAPIResponseBlock);
 
-@interface FBSDKBridgeAPI : NSObject
+@interface FBSDKBridgeAPI : NSObject<FBSDKContainerViewControllerDelegate>
 
 - (void)openBridgeAPIRequest:(FBSDKBridgeAPIRequest *)request
      useSafariViewController:(BOOL)useSafariViewController

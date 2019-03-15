@@ -56,18 +56,7 @@ static UIApplicationState _applicationState;
 
 @implementation FBSDKApplicationDelegate
 {
-#if !TARGET_OS_TV
-  FBSDKBridgeAPIRequest *_pendingRequest;
-  FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
-  id<FBSDKURLOpening> _pendingURLOpen;
-  id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
-  FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
-#endif
   NSHashTable<id<FBSDKApplicationObserving>> *_applicationObservers;
-  BOOL _expectingBackground;
-  BOOL _isRequestingSFAuthenticationSession;
-  UIViewController *_safariViewController;
-  BOOL _isDismissingSafariViewController;
   BOOL _isAppLaunched;
 }
 
@@ -175,49 +164,12 @@ static UIApplicationState _applicationState;
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-    if (sourceApplication != nil && ![sourceApplication isKindOfClass:[NSString class]]) {
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:@"Expected 'sourceApplication' to be NSString. Please verify you are passing in 'sourceApplication' from your app delegate (not the UIApplication* parameter). If your app delegate implements iOS 9's application:openURL:options:, you should pass in options[UIApplicationOpenURLOptionsSourceApplicationKey]. "
-                                     userInfo:nil];
-    }
-    [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
-
-#if !TARGET_OS_TV
-    id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
-
-    void (^completePendingOpenURLBlock)(void) = ^{
-        self->_pendingURLOpen = nil;
-        [pendingURLOpen application:application
-                            openURL:url
-                  sourceApplication:sourceApplication
-                         annotation:annotation];
-        self->_isDismissingSafariViewController = NO;
-    };
-    // if they completed a SFVC flow, dismiss it.
-    if (_safariViewController) {
-        _isDismissingSafariViewController = YES;
-        [_safariViewController.presentingViewController dismissViewControllerAnimated:YES
-                                                                           completion:completePendingOpenURLBlock];
-        _safariViewController = nil;
-    } else {
-        if (@available(iOS 11.0, *)) {
-            if (_authenticationSession != nil) {
-                [_authenticationSession cancel];
-                _authenticationSession = nil;
-            }
-        }
-        completePendingOpenURLBlock();
-    }
-
-    if ([pendingURLOpen canOpenURL:url
-                    forApplication:application
-                 sourceApplication:sourceApplication
-                        annotation:annotation]) {
-        return YES;
-    }
-    if ([self _handleBridgeAPIResponseURL:url sourceApplication:sourceApplication]) {
-        return YES;
-    }
+  if (sourceApplication != nil && ![sourceApplication isKindOfClass:[NSString class]]) {
+    @throw [NSException exceptionWithName:NSInvalidArgumentException
+                                   reason:@"Expected 'sourceApplication' to be NSString. Please verify you are passing in 'sourceApplication' from your app delegate (not the UIApplication* parameter). If your app delegate implements iOS 9's application:openURL:options:, you should pass in options[UIApplicationOpenURLOptionsSourceApplicationKey]. "
+                                 userInfo:nil];
+  }
+  [FBSDKTimeSpentData setSourceApplication:sourceApplication openURL:url];
 
   BOOL handled = NO;
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
@@ -235,10 +187,10 @@ static UIApplicationState _applicationState;
   if (handled) {
     return YES;
   }
-#endif
-    [self _logIfAppLinkEvent:url];
 
-    return NO;
+  [self _logIfAppLinkEvent:url];
+
+  return NO;
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -277,10 +229,6 @@ static UIApplicationState _applicationState;
 
 - (void)applicationDidEnterBackground:(NSNotification *)notification
 {
-  _isRequestingSFAuthenticationSession = NO;
-  _active = NO;
-  _expectingBackground = NO;
-
   NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
   for (id<FBSDKApplicationObserving> observer in observers) {
     if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
@@ -290,83 +238,6 @@ static UIApplicationState _applicationState;
 }
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
-{
-    // Auto log basic events in case autoLogAppEventsEnabled is set
-    if (FBSDKSettings.isAutoLogAppEventsEnabled) {
-      [FBSDKAppEvents activateApp];
-    }
-    //  _expectingBackground can be YES if the caller started doing work (like login)
-    // within the app delegate's lifecycle like openURL, in which case there
-    // might have been a "didBecomeActive" event pending that we want to ignore.
-    BOOL notExpectingBackground = !_expectingBackground && !_safariViewController && !_isDismissingSafariViewController && !_isRequestingSFAuthenticationSession;
-    if (notExpectingBackground) {
-        _active = YES;
-#if !TARGET_OS_TV
-        [_pendingURLOpen applicationDidBecomeActive:notification.object];
-        [self _cancelBridgeRequest];
-#endif
-        [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKApplicationDidBecomeActiveNotification object:self];
-    }
-
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers copy];
-  for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(applicationDidBecomeActive:)]) {
-      [observer applicationDidBecomeActive:notification.object];
-    }
-  }
-}
-
-#pragma mark - Internal Methods
-
-#pragma mark -- (non-tvos)
-
-#if !TARGET_OS_TV
-
-- (void)openURL:(NSURL *)url sender:(id<FBSDKURLOpening>)sender handler:(FBSDKSuccessBlock)handler
-{
-    _expectingBackground = YES;
-    _pendingURLOpen = sender;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        // Dispatch openURL calls to prevent hangs if we're inside the current app delegate's openURL flow already
-        NSOperatingSystemVersion iOS10Version = { .majorVersion = 10, .minorVersion = 0, .patchVersion = 0 };
-        if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS10Version]) {
-            if (@available(iOS 10.0, *)) {
-                [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:^(BOOL success) {
-                    handler(success, nil);
-                }];
-            }
-        } else {
-            BOOL opened = [[UIApplication sharedApplication] openURL:url];
-
-            if ([url.scheme hasPrefix:@"http"] && !opened) {
-                NSOperatingSystemVersion iOS8Version = { .majorVersion = 8, .minorVersion = 0, .patchVersion = 0 };
-                if (![FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS8Version]) {
-                    // Safari openURL calls can wrongly return NO on iOS 7 so manually overwrite that case to YES.
-                    // Otherwise we would rather trust in the actual result of openURL
-                    opened = YES;
-                }
-            }
-            if (handler) {
-                handler(opened, nil);
-            }
-        }
-    });
-}
-
-  return handled;
-}
-
-- (void)applicationDidEnterBackground:(NSNotification *)notification
-{
-  NSArray<id<FBSDKApplicationObserving>> *observers = [_applicationObservers allObjects];
-  for (id<FBSDKApplicationObserving> observer in observers) {
-    if ([observer respondsToSelector:@selector(applicationDidEnterBackground:)]) {
-      [observer applicationDidEnterBackground:notification.object];
-    }
-  }
-}
-
-- (void)_openURLWithAuthenticationSession:(NSURL *)url
 {
   // Auto log basic events in case autoLogAppEventsEnabled is set
   if (FBSDKSettings.isAutoLogAppEventsEnabled) {
@@ -382,24 +253,6 @@ static UIApplicationState _applicationState;
 }
 
 #pragma mark - Internal Methods
-
-#pragma mark - FBSDKApplicationObserving
-
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if (![_applicationObservers containsObject:observer]) {
-    [_applicationObservers addObject:observer];
-  }
-}
-
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer
-{
-  if ([_applicationObservers containsObject:observer]) {
-    [_applicationObservers removeObject:observer];
-  }
-}
-
-#endif
 
 #pragma mark - FBSDKApplicationObserving
 

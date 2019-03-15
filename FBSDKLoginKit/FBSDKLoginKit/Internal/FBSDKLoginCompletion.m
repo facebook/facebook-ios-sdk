@@ -130,6 +130,24 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
 
 - (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
+  if (_performExplicitFallback && loginManager.loginBehavior == FBSDKLoginBehaviorNative) {
+    // UIKit and iOS don't like an application opening a URL during a URL open callback, so
+    // we need to wait until *at least* the next turn of the run loop to open the URL to
+    // perform the browser log in behavior. However we also need to wait for the application
+    // to become active so FBSDKApplicationDelegate doesn't erroneously call back the URL
+    // opener before the URL has been opened.
+    if ([FBSDKBridgeAPI sharedInstance].isActive) {
+      // The application is active so there's no need to wait.
+      [loginManager logInWithBehavior:FBSDKLoginBehaviorBrowser];
+    } else {
+      // use the block version to guarantee there's a strong reference to self
+      _observer = [[NSNotificationCenter defaultCenter] addObserverForName:UIApplicationDidBecomeActiveNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^ (NSNotification *notification) {
+        [self attemptBrowserLogIn:loginManager];
+      }];
+    }
+    return;
+  }
+
   if (_parameters.accessTokenString && !_parameters.userID) {
     void(^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
     FBSDKLoginRequestMeAndPermissions(_parameters, ^{

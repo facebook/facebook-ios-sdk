@@ -451,6 +451,32 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   _requestedPermissions = [requestedPermissions copy];
 }
 
+@end
+
+#pragma mark -
+
+@implementation FBSDKLoginManager (Native)
+
+- (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler
+{
+  [_logger willAttemptAppSwitchingBehavior];
+  loginParams = [_logger parametersWithTimeStampAndClientState:loginParams forAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Native];
+
+  NSString *scheme = ([FBSDKSettings appURLSchemeSuffix] ? @"fbauth2" : @"fbauth");
+  NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:loginParams];
+  mutableParams[@"legacy_override"] = FBSDK_TARGET_PLATFORM_VERSION;
+  NSError *error;
+  NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:mutableParams error:&error];
+
+  NSDate *start = [NSDate date];
+  [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL, NSError *anError) {
+    [self->_logger logNativeAppDialogResult:openedURL dialogDuration:-start.timeIntervalSinceNow];
+    if (handler) {
+      handler(openedURL, anError);
+    }
+  }];
+}
+
 // change bool to auth method string.
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams
                                   handler:(FBSDKBrowserLoginSuccessBlock)handler

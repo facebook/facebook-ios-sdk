@@ -34,19 +34,12 @@ FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
 
 #endif
 
-#if !TARGET_OS_TV
-typedef void (^FBSDKBridgeAPIResponseBlock)(FBSDKBridgeAPIResponse *response)
-NS_SWIFT_NAME(BridgeAPIResponseBlock);
-#endif
-
 @interface FBSDKApplicationDelegate ()
 
 - (void)addObserver:(id<FBSDKApplicationObserving>)observer;
 - (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
 + (BOOL)isSDKInitialized;
 + (UIApplicationState)applicationState;
-
-@property (nonatomic, readonly, getter=isActive) BOOL active;
 
 @end
 

@@ -21,9 +21,9 @@
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
 #if !TARGET_OS_TV
-#import "../AppEvents/Internal/Codeless/FBSDKViewHierarchy.h"
-#import "../AppEvents/Internal/Codeless/FBSDKCodelessMacros.h"
-#import "../AppEvents/Internal/Codeless/FBSDKCodelessIndexer.h"
+#import "AppEvents/Codeless/FBSDKViewHierarchy.h"
+#import "AppEvents/Codeless/FBSDKCodelessMacros.h"
+#import "AppEvents/Codeless/FBSDKCodelessIndexer.h"
 #import "Cryptography/FBSDKCrypto.h"
 #import "FBSDKAudioResourceLoader.h"
 #import "FBSDKContainerViewController.h"
