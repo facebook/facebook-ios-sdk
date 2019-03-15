@@ -1275,7 +1275,6 @@
 		893F44921A64448E001DB0B6 /* Internal */ = {
 			isa = PBXGroup;
 			children = (
-				9D0BC1481A8D236200BE8BA4 /* AppEvents */,
 				7EB63D901A9BE720003A7AED /* AppLink */,
 				894C0B0E1A7021F8009137EF /* Base64 */,
 				894C0AE11A6F1D27009137EF /* BridgeAPI */,
@@ -1290,7 +1289,6 @@
 				89D05AA81AA1134000609300 /* FBSDKAudioResourceLoader.m */,
 				9D195CC61B9FE2E000BD6BEC /* FBSDKContainerViewController.h */,
 				9D195CC71B9FE2E000BD6BEC /* FBSDKContainerViewController.m */,
-				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
 				520223F51D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.h */,
 				520223F61D83C8D200CE0AB5 /* FBSDKDeviceRequestsHelper.m */,
 				81C969301C114723002FC037 /* FBSDKDynamicFrameworkLoader.h */,
@@ -1505,31 +1503,6 @@
 			path = WebDialog;
 			sourceTree = "<group>";
 		};
-		9D0BC1481A8D236200BE8BA4 /* AppEvents */ = {
-			isa = PBXGroup;
-			children = (
-				C5696F1D209BBC35009C931F /* Codeless */,
-				9D0BC1531A8D23DB00BE8BA4 /* FBSDKAppEvents+Internal.h */,
-				5F7063FA1AF733F300E42ED7 /* FBSDKAppEventsDeviceInfo.h */,
-				5F7064081AF7342600E42ED7 /* FBSDKAppEventsDeviceInfo.m */,
-				C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */,
-				C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */,
-				9D0BC1641A8E892C00BE8BA4 /* FBSDKAppEventsState.h */,
-				9D0BC1651A8E892C00BE8BA4 /* FBSDKAppEventsState.m */,
-				9D0BC15D1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.h */,
-				9D0BC15E1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.m */,
-				9D0BC1591A8D427800BE8BA4 /* FBSDKAppEventsUtility.h */,
-				9D0BC15A1A8D427800BE8BA4 /* FBSDKAppEventsUtility.m */,
-				9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */,
-				9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */,
-				9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */,
-				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
-				F9169B822155A02000FA1789 /* FBSDKUserDataStore.h */,
-				F9169B832155A03C00FA1789 /* FBSDKUserDataStore.m */,
-			);
-			path = AppEvents;
-			sourceTree = "<group>";
-		};
 		9D18A8D91A95403F00A41042 /* AppEvents */ = {
 			isa = PBXGroup;
 			children = (
@@ -1580,10 +1553,9 @@
 		9D2697491A5DF40700143BFC /* FBSDKCoreKit */ = {
 			isa = PBXGroup;
 			children = (
+				C5188EC122371EE400F4D8BC /* AppEvents */,
 				9D3029081A65C4420086B9ED /* FBSDKAccessToken.h */,
 				9D3029091A65C4420086B9ED /* FBSDKAccessToken.m */,
-				9D0BC1551A8D23E200BE8BA4 /* FBSDKAppEvents.h */,
-				9D0BC1561A8D23E200BE8BA4 /* FBSDKAppEvents.m */,
 				9D34A11D1A5F038300C37317 /* FBSDKApplicationDelegate.h */,
 				9D34A11E1A5F038300C37317 /* FBSDKApplicationDelegate.m */,
 				52963A70215992F200C7B252 /* FBSDKAppLink.h */,
@@ -1607,6 +1579,7 @@
 				894C0B671A7150CC009137EF /* FBSDKConstants.m */,
 				890414861A64893100617215 /* FBSDKCopying.h */,
 				9D26974C1A5DF40700143BFC /* FBSDKCoreKit.h */,
+				890414731A647D2E00617215 /* FBSDKCoreKit+Internal.h */,
 				9D9E16AA1CB46C7D00C8B68F /* FBSDKDeviceButton.h */,
 				9D9E16AB1CB46C7D00C8B68F /* FBSDKDeviceButton.m */,
 				9D10A68B1CB38D5D00F42AC1 /* FBSDKDeviceViewControllerBase.h */,
@@ -1740,6 +1713,41 @@
 				C51121C920A27EF50041DC94 /* FBSDKEventBindingTests.m */,
 			);
 			path = Codeless;
+			sourceTree = "<group>";
+		};
+		C5188EC122371EE400F4D8BC /* AppEvents */ = {
+			isa = PBXGroup;
+			children = (
+				C5188EC322371F4000F4D8BC /* Internal */,
+				9D0BC1551A8D23E200BE8BA4 /* FBSDKAppEvents.h */,
+				9D0BC1561A8D23E200BE8BA4 /* FBSDKAppEvents.m */,
+			);
+			path = AppEvents;
+			sourceTree = "<group>";
+		};
+		C5188EC322371F4000F4D8BC /* Internal */ = {
+			isa = PBXGroup;
+			children = (
+				C5696F1D209BBC35009C931F /* Codeless */,
+				9D0BC1531A8D23DB00BE8BA4 /* FBSDKAppEvents+Internal.h */,
+				5F7063FA1AF733F300E42ED7 /* FBSDKAppEventsDeviceInfo.h */,
+				5F7064081AF7342600E42ED7 /* FBSDKAppEventsDeviceInfo.m */,
+				C4FC99D7202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.h */,
+				C4FC99D8202CD5590038C5ED /* FBSDKHybridAppEventsScriptMessageHandler.m */,
+				9D0BC1641A8E892C00BE8BA4 /* FBSDKAppEventsState.h */,
+				9D0BC1651A8E892C00BE8BA4 /* FBSDKAppEventsState.m */,
+				9D0BC15D1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.h */,
+				9D0BC15E1A8D428700BE8BA4 /* FBSDKAppEventsStateManager.m */,
+				9D0BC1591A8D427800BE8BA4 /* FBSDKAppEventsUtility.h */,
+				9D0BC15A1A8D427800BE8BA4 /* FBSDKAppEventsUtility.m */,
+				9D0BC14A1A8D236200BE8BA4 /* FBSDKPaymentObserver.h */,
+				9D0BC14B1A8D236200BE8BA4 /* FBSDKPaymentObserver.m */,
+				9D0BC14C1A8D236200BE8BA4 /* FBSDKTimeSpentData.h */,
+				9D0BC14D1A8D236200BE8BA4 /* FBSDKTimeSpentData.m */,
+				F9169B822155A02000FA1789 /* FBSDKUserDataStore.h */,
+				F9169B832155A03C00FA1789 /* FBSDKUserDataStore.m */,
+			);
+			path = Internal;
 			sourceTree = "<group>";
 		};
 		C5696F1D209BBC35009C931F /* Codeless */ = {
