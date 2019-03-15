@@ -107,7 +107,7 @@
     [self _handleCompletionWithDialogResults:response.responseParameters response:response];
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:useSafariViewController
                                                fromViewController:nil
                                                   completionBlock:completionBlock];
