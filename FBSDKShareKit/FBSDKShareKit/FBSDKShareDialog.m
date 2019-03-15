@@ -541,7 +541,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                             methodVersion:nil
                                                                parameters:cParameters
                                                                  userInfo:nil];
-        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+        [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                                 useSafariViewController:[self _useSafariViewController]
                                                      fromViewController:self.fromViewController
                                                         completionBlock:completionBlock];
@@ -570,7 +570,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                         methodVersion:nil
                                                            parameters:parameters
                                                              userInfo:nil];
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                             useSafariViewController:[self _useSafariViewController]
                                                  fromViewController:self.fromViewController
                                                     completionBlock:completionBlock];
@@ -596,7 +596,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];
@@ -673,7 +673,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];

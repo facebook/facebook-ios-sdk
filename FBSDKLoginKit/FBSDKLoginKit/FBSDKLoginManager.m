@@ -549,7 +549,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:mutableParams error:&error];
 
   NSDate *start = [NSDate date];
-  [[FBSDKApplicationDelegate sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL, NSError *anError) {
+  [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL, NSError *anError) {
     [self->_logger logNativeAppDialogResult:openedURL dialogDuration:-start.timeIntervalSinceNow];
     if (handler) {
       handler(openedURL, anError);
@@ -592,12 +592,12 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
     if (useSafariViewController) {
       // Note based on above, authURL must be a http scheme. If that changes, add a guard, otherwise SFVC can throw
       self->_usedSFAuthSession = YES;
-      [[FBSDKApplicationDelegate sharedInstance] openURLWithSafariViewController:authURL
+      [[FBSDKBridgeAPI sharedInstance] openURLWithSafariViewController:authURL
                                                                           sender:self
                                                               fromViewController:self.fromViewController
                                                                          handler:handlerWrapper];
     } else {
-      [[FBSDKApplicationDelegate sharedInstance] openURL:authURL sender:self handler:handlerWrapper];
+      [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:handlerWrapper];
     }
   } else {
     error = error ?: [NSError fbErrorWithCode:FBSDKLoginErrorUnknown message:@"Failed to construct oauth browser url"];
