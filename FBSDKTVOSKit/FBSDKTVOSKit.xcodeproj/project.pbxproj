@@ -293,7 +293,7 @@
 		9D82CF181C56C3EE00CB7AD7 /* FBSDKTVLoginViewControllerElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTVLoginViewControllerElement.m; sourceTree = "<group>"; };
 		9D82CF1B1C56EB5300CB7AD7 /* FBSDKJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKJS.h; sourceTree = "<group>"; };
 		9D82CF1C1C56EB5300CB7AD7 /* FBSDKJS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKJS.m; sourceTree = "<group>"; };
-		9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
+		9D8E94741BC32F920012023B /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
 		9D8E94761BC332900012023B /* FBSDKTVOSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKTVOSConstants.h; sourceTree = "<group>"; };
 		9D8E94771BC332900012023B /* FBSDKTVOSConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTVOSConstants.m; sourceTree = "<group>"; };
 		9DEC55831BBA636A00C7DB4A /* FBSDKTVOSKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FBSDKTVOSKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
