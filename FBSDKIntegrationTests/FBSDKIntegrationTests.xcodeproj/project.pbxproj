@@ -201,7 +201,7 @@
 		9D1999C81A7AF5EF00CAD112 /* FBSDKTestBlocker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKTestBlocker.h; sourceTree = "<group>"; };
 		9D1999C91A7AF5EF00CAD112 /* FBSDKTestBlocker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestBlocker.m; sourceTree = "<group>"; };
 		9D1999CE1A7AF63600CAD112 /* libOCMock.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOCMock.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9D1999D61A7AF67B00CAD112 /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
+		9D1999D61A7AF67B00CAD112 /* FBSDKCoreKit+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "FBSDKCoreKit+Internal.h"; path = "../../FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKCoreKit+Internal.h"; sourceTree = "<group>"; };
 		9D1999D71A7AF6E400CAD112 /* FBSDKTestUsersManagersIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKTestUsersManagersIntegrationTests.m; sourceTree = "<group>"; };
 		9D1999D91A7AF75A00CAD112 /* FBSDKAccessTokenCacheIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAccessTokenCacheIntegrationTests.m; sourceTree = "<group>"; };
 		9D1999DB1A7AF76200CAD112 /* FBSDKKeychainIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKKeychainIntegrationTests.m; sourceTree = "<group>"; };
