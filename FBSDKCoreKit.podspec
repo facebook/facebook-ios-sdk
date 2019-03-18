@@ -30,34 +30,29 @@ Pod::Spec.new do |s|
 
   # This excludes `FBSDKCoreKit/FBSDKCoreKit/Internal_NoARC/` folder, as that folder includes only `no-arc` files.
   s.requires_arc = ['FBSDKCoreKit/FBSDKCoreKit/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/AppEvents/**/*',
+                    'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
   s.ios.dependency 'Bolts', '~> 1.9'
 
-  s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h'
+  s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*[^+]*.h',
+                          'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
+                          'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'
   s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
   s.resources = 'FacebookSDKStrings.bundle'
   s.ios.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceButton.{h,m}',
                         'FBSDKCoreKit/FBSDKCoreKit/FBSDKDeviceViewControllerBase.{h,m}',
                         'FBSDKCoreKit/FBSDKCoreKit/Internal/Device/**/*'
-  s.tvos.exclude_files = 'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolver.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkUtility.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLink.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkNavigation.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkResolving.h',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkReturnToRefererController.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkReturnToRefererView.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKAppLinkTarget.{h,m}',
+  s.tvos.exclude_files =  'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/Codeless/*',
+                          'FBSDKCoreKit/FBSDKCoreKit/AppEvents/Internal/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
+                          'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKGraphErrorRecoveryProcessor.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKMeasurementEvent.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKMutableCopying.h',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfile.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKProfilePictureView.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/FBSDKURL.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/FBSDKWebViewAppLinkResolver.{h,m}',
-                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppLink/**/*',
-                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/Codeless/*',
-                          'FBSDKCoreKit/FBSDKCoreKit/Internal/AppEvents/FBSDKHybridAppEventsScriptMessageHandler.{h,m}',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/BridgeAPI/**/*',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLinkReturnToRefererView_Internal.h',
                           'FBSDKCoreKit/FBSDKCoreKit/Internal/FBSDKAppLink_Internal.h',
