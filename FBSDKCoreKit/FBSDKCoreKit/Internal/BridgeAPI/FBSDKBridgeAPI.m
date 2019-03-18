@@ -18,6 +18,8 @@
 
 #import "FBSDKBridgeAPI.h"
 
+#import "FBSDKCoreKit+Internal.h"
+
 typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackURL, NSError *_Nullable error);
 
 @protocol FBSDKAuthenticationSession <NSObject>
@@ -28,7 +30,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 
 @end
 
-@interface FBSDKBridgeAPI() <FBSDKApplicationObserving>
+@interface FBSDKBridgeAPI() <FBSDKApplicationObserving, FBSDKContainerViewControllerDelegate>
 
 @end
 
