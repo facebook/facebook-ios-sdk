@@ -35,7 +35,7 @@ Pod::Spec.new do |s|
 		    'FBSDKCoreKit/FBSDKCoreKit/Basics/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
-  s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*[^+]*.h',
+  s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h',
                           'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
                           'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'
   s.source_files = 'FBSDKCoreKit/FBSDKCoreKit/**/*.{h,m}'
