@@ -278,12 +278,14 @@ release_sdk() {
         continue
       fi
 
+      set +e
       # shellcheck disable=SC2086
       if [ $TRAVIS ]; then
         pod trunk push --verbose --allow-warnings "$spec" "$@" | tee pod.log | ruby -e 'ARGF.each{ print "." }'
       else
         pod trunk push "$spec" "$@"
       fi
+      set -e
     done
   }
 
