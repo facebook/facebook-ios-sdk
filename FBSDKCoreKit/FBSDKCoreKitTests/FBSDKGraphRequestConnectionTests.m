@@ -35,7 +35,6 @@
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
 @end
 
-static id g_mockAccountStoreAdapter;
 static id g_mockNSBundle;
 
 @implementation FBSDKGraphRequestConnectionTests
@@ -51,15 +50,12 @@ static id g_mockNSBundle;
 {
   [FBSDKSettings setAppID:@"appid"];
   g_mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
-  g_mockAccountStoreAdapter = [FBSDKCoreKitTestUtility mockAccountStoreAdapter];
 }
 
 + (void)tearDown
 {
   [g_mockNSBundle stopMocking];
   g_mockNSBundle = nil;
-  [g_mockAccountStoreAdapter stopMocking];
-  g_mockAccountStoreAdapter = nil;
 }
 
 #pragma mark - Helpers

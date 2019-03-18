@@ -26,6 +26,4 @@
  */
 + (id)mainBundleMock;
 
-+ (id)mockAccountStoreAdapter;
-
 @end

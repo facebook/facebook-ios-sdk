@@ -31,7 +31,6 @@
 static NSString *const kAppLinkURLString = @"http://example.com/1234567890";
 static NSString *const kAppLinkURL2String = @"http://example.com/0987654321";
 static NSString *const kAppLinksKey = @"app_links";
-static id g_mockAccountStoreAdapter;
 
 typedef void (^HTTPStubCallback)(NSURLRequest *request);
 typedef _Nullable id (^StringURLBlock)(NSString *urlString);
@@ -54,17 +53,6 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
 @implementation FBSDKAppLinkResolverTests
 {
   id _mockNSBundle;
-}
-
-+ (void)setUp
-{
-  g_mockAccountStoreAdapter = [FBSDKCoreKitTestUtility mockAccountStoreAdapter];
-}
-
-+ (void)tearDown
-{
-  [g_mockAccountStoreAdapter stopMocking];
-  g_mockAccountStoreAdapter = nil;
 }
 
 #pragma mark - HTTP stubbing helpers

@@ -81,7 +81,6 @@
 		6B5D2DEE1A8EB1D200D3EF09 /* FBSDKLoginCompletion.h in Headers */ = {isa = PBXBuildFile; fileRef = 6B5D2DEC1A8EB1D200D3EF09 /* FBSDKLoginCompletion.h */; };
 		6B5D2DEF1A8EB1D200D3EF09 /* FBSDKLoginCompletion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2DED1A8EB1D200D3EF09 /* FBSDKLoginCompletion.m */; };
 		6B6276341A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B6276331A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m */; };
-		6BCDC8301A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6BCDC82F1A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m */; };
 		817491551D1C6D08006E09DF /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8118B6811D0A5B9400962084 /* FBSDKCoreKit.framework */; };
 		818EB4251D1A283100252851 /* FBSDKLoginButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D65ACA71A803FF200E375C2 /* FBSDKLoginButton.m */; };
 		818EB4261D1A283100252851 /* FBSDKLoginCompletion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B5D2DED1A8EB1D200D3EF09 /* FBSDKLoginCompletion.m */; };
@@ -254,7 +253,6 @@
 		6B6276331A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKLoginUtilityTests.m; sourceTree = "<group>"; };
 		6BADA8CF1A9544BC00A5ADC1 /* FBSDKLoginKit+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginKit+Internal.h"; sourceTree = "<group>"; };
 		6BAFD01F1A9531EA0096E4B5 /* FBSDKLoginCompletion+Internal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FBSDKLoginCompletion+Internal.h"; sourceTree = "<group>"; };
-		6BCDC82F1A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSystemAccountAuthenticationTests.m; sourceTree = "<group>"; };
 		8118B6781D0A5B9400962084 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = ../FBSDKCoreKit/FBSDKCoreKit.xcodeproj; sourceTree = "<group>"; };
 		812E0CFC1D23840500291B71 /* Common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Common.xcconfig; sourceTree = "<group>"; };
 		812E0CFE1D23840500291B71 /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
@@ -551,7 +549,6 @@
 				6B6276321A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.h */,
 				6B6276331A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m */,
 				9D641F831A7B69160048F563 /* FBSDKLoginManagerTests.m */,
-				6BCDC82F1A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m */,
 				9D9DB8E91A114E500086167B /* Supporting Files */,
 			);
 			path = FBSDKLoginKitTests;
@@ -967,7 +964,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9D641F841A7B69160048F563 /* FBSDKLoginManagerTests.m in Sources */,
-				6BCDC8301A8AD43900D589BF /* FBSDKSystemAccountAuthenticationTests.m in Sources */,
 				6B6276341A8C1BBF0030FEBD /* FBSDKLoginUtilityTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
