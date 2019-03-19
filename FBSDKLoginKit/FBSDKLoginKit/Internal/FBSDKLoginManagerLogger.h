@@ -20,8 +20,6 @@
 
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Native;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Browser;
-FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_System;
-FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_Webview;
 FOUNDATION_EXPORT NSString *const FBSDKLoginManagerLoggerAuthMethod_SFVC;
 
 

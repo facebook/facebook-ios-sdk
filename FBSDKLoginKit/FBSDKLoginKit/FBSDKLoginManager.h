@@ -94,20 +94,8 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
     Attempts log in through the Safari or SFSafariViewController, if available.
    */
   FBSDKLoginBehaviorBrowser,
-  /**
-    Attempts log in through the Facebook account currently signed in through
-   the device Settings.
-   @note If the account is not available to the app (either not configured by user or
-   as determined by the SDK) this behavior falls back to \c FBSDKLoginBehaviorNative.
-   */
   FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
-  /**
-    Attempts log in through a modal \c UIWebView pop up
-
-   @note This behavior is only available to certain types of apps. Please check the Facebook
-   Platform Policy to verify your app meets the restrictions.
-   */
-  FBSDKLoginBehaviorWeb,
+  FBSDKLoginBehaviorWeb __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
 } NS_SWIFT_NAME(LoginBehavior);
 
 /**
@@ -210,22 +198,6 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
  */
 - (void)logOut;
 
-/**
- @method
-
- Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
-
- @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
-
-
- This can be used to explicitly renew account credentials and is provided as a convenience wrapper around
- `[ACAccountStore renewCredentialsForAccount:completion]`. Note the method will not issue the renewal call if the the
- Facebook account has not been set on the device, or if access had not been granted to the account (though the handler
- wil receive an error).
-
- If the `[FBSDKAccessToken currentAccessToken]` was from the account store, a succesful renewal will also set
- a new "currentAccessToken".
- */
 + (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler DEPRECATED_MSG_ATTRIBUTE("The system account login behavior is no longer supported.");
 
 @end

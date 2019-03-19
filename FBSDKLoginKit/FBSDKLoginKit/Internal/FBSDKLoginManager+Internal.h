@@ -63,10 +63,3 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 @end
-
-// the category is made available for testing only
-@interface FBSDKLoginManager (WebDialog) <FBSDKWebDialogDelegate>
-
-- (void)performWebLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKSuccessBlock)handler;
-
-@end
