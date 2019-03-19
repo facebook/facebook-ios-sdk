@@ -134,6 +134,21 @@ FBSDKAppEventParameterValue FBSDKAppEventParameterValueNo                    = @
 FBSDKAppEventParameterValue FBSDKAppEventParameterValueYes                   = @"1";
 
 //
+// Public event user data types
+//
+
+FBSDKAppEventUserDataType FBSDKAppEventEmail                = @"em";
+FBSDKAppEventUserDataType FBSDKAppEventFirstName            = @"fn";
+FBSDKAppEventUserDataType FBSDKAppEventLastName             = @"ln";
+FBSDKAppEventUserDataType FBSDKAppEventPhone                = @"ph";
+FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth          = @"dob";
+FBSDKAppEventUserDataType FBSDKAppEventGender               = @"ge";
+FBSDKAppEventUserDataType FBSDKAppEventCity                 = @"ct";
+FBSDKAppEventUserDataType FBSDKAppEventState                = @"st";
+FBSDKAppEventUserDataType FBSDKAppEventZip                  = @"zp";
+FBSDKAppEventUserDataType FBSDKAppEventCountry              = @"country";
+
+//
 // Event names internal to this file
 //
 FBSDKAppEventName FBSDKAppEventNameLoginViewUsage                   = @"fb_login_view_usage";
@@ -629,7 +644,6 @@ static NSString *g_overrideAppID = nil;
   // when appropriate, result in logging an "activated app" and "deactivated app" (for the
   // previous session) App Event.
   [FBSDKTimeSpentData restore:YES];
-  [FBSDKUserDataStore initStore];
 }
 
 + (void)setPushNotificationsDeviceToken:(NSData *)deviceToken
@@ -719,36 +733,48 @@ static NSString *g_overrideAppID = nil;
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
 {
-  [FBSDKUserDataStore setUserDataAndHash:email
-                               firstName:firstName
-                                lastName:lastName
-                                   phone:phone
-                             dateOfBirth:dateOfBirth
-                                  gender:gender
-                                    city:city
-                                   state:state
-                                     zip:zip
-                                 country:country];
+  [FBSDKUserDataStore setAndHashUserEmail:email
+                                firstName:firstName
+                                 lastName:lastName
+                                    phone:phone
+                              dateOfBirth:dateOfBirth
+                                   gender:gender
+                                     city:city
+                                    state:state
+                                      zip:zip
+                                  country:country];
 }
 
 + (NSString*)getUserData
 {
-  return [FBSDKUserDataStore getHashedUserData];
+  return [FBSDKUserDataStore getHashedData];
 }
 
 + (void)clearUserData
 {
-  [self setUserEmail:nil
-           firstName:nil
-            lastName:nil
-               phone:nil
-         dateOfBirth:nil
-              gender:nil
-                city:nil
-               state:nil
-                 zip:nil
-             country:nil];
+  [FBSDKUserDataStore setAndHashUserEmail:nil
+                                firstName:nil
+                                 lastName:nil
+                                    phone:nil
+                              dateOfBirth:nil
+                                   gender:nil
+                                     city:nil
+                                    state:nil
+                                      zip:nil
+                                  country:nil];
 }
+
++ (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type
+{
+  [FBSDKUserDataStore setAndHashData:data forType:type];
+}
+
++ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type
+{
+  [FBSDKUserDataStore clearDataForType:type];
+}
+
 
 + (void)updateUserProperties:(NSDictionary<NSString *, id> *)properties handler:(FBSDKGraphRequestBlock)handler
 {

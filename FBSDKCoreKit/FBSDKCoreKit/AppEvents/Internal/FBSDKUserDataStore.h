@@ -18,24 +18,27 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKAppEvents+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 NS_SWIFT_NAME(UserDataStore)
 @interface FBSDKUserDataStore : NSObject
 
-+ (void)initStore;
-+ (void)setUserDataAndHash:(nullable NSString *)email
-                 firstName:(nullable NSString *)firstName
-                  lastName:(nullable NSString *)lastName
-                     phone:(nullable NSString *)phone
-               dateOfBirth:(nullable NSString *)dateOfBirth
-                    gender:(nullable NSString *)gender
-                      city:(nullable NSString *)city
-                     state:(nullable NSString *)state
-                       zip:(nullable NSString *)zip
-                   country:(nullable NSString *)country;
-
-+ (nullable NSString *) getHashedUserData;
++ (void)setAndHashUserEmail:(nullable NSString *)email
+                  firstName:(nullable NSString *)firstName
+                   lastName:(nullable NSString *)lastName
+                      phone:(nullable NSString *)phone
+                dateOfBirth:(nullable NSString *)dateOfBirth
+                     gender:(nullable NSString *)gender
+                       city:(nullable NSString *)city
+                      state:(nullable NSString *)state
+                        zip:(nullable NSString *)zip
+                    country:(nullable NSString *)country;
++ (void)setAndHashData:(nullable NSString *)data
+               forType:(FBSDKAppEventUserDataType)type;
++ (nullable NSString *)getHashedData;
++ (void)clearDataForType:(FBSDKAppEventUserDataType)type;
 
 @end
 

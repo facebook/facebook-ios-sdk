@@ -324,6 +324,43 @@ FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameAdType;
  * in an FBSDKAppEventNameSubscribe or FBSDKAppEventNameStartTrial event. */
 FOUNDATION_EXPORT FBSDKAppEventParameterName FBSDKAppEventParameterNameOrderID;
 
+/*
+ @methodgroup Predefined values to assign to user data store
+ */
+
+/// typedef for FBSDKAppEventUserDataType
+typedef NSString *const FBSDKAppEventUserDataType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(AppEvents.UserDataType);
+
+/** Parameter key used to specify user's email. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventEmail;
+
+/** Parameter key used to specify user's first name. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventFirstName;
+
+/** Parameter key used to specify user's last name. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventLastName;
+
+/** Parameter key used to specify user's phone. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventPhone;
+
+/** Parameter key used to specify user's date of birth. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventDateOfBirth;
+
+/** Parameter key used to specify user's gender. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventGender;
+
+/** Parameter key used to specify user's city. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCity;
+
+/** Parameter key used to specify user's state. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventState;
+
+/** Parameter key used to specify user's zip. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventZip;
+
+/** Parameter key used to specify user's country. */
+FOUNDATION_EXPORT FBSDKAppEventUserDataType FBSDKAppEventCountry;
+
 /**
 
 
@@ -748,6 +785,7 @@ NS_SWIFT_NAME(setPushNotificationsDeviceToken(_:));
                  zip:(nullable NSString *)zip
              country:(nullable NSString *)country
 NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:state:zip:country:));
+
 /*
   Returns the set user data else nil
 */
@@ -757,6 +795,23 @@ NS_SWIFT_NAME(setUser(email:firstName:lastName:phone:dateOfBirth:gender:city:sta
   Clears the current user data
 */
 + (void)clearUserData;
+
+/*
+ Sets custom user data to associate with all app events. All user data are hashed
+ and used to match Facebook user from this instance of an application.
+
+ The user data will be persisted between application instances.
+
+ @param data  data
+ @param type  data type, e.g. FBSDKAppEventEmail, FBSDKAppEventPhone
+ */
++ (void)setUserData:(nullable NSString *)data
+            forType:(FBSDKAppEventUserDataType)type;
+
+/*
+ Clears the current user data of certain type
+ */
++ (void)clearUserDataForType:(FBSDKAppEventUserDataType)type;
 
 /*
   Sends a request to update the properties for the current user, set by `setUserID:`
