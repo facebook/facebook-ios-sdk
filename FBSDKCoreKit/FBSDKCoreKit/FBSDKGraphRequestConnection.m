@@ -793,43 +793,14 @@ NSURLSessionDataDelegate
 
   };
 
-  FBSDKSystemAccountStoreAdapter *adapter = [FBSDKSystemAccountStoreAdapter sharedInstance];
   NSString *metadataTokenString = metadata.request.tokenString;
   NSString *currentTokenString = [FBSDKAccessToken currentAccessToken].tokenString;
-  NSString *accountStoreTokenString = adapter.accessTokenString;
-  BOOL isAccountStoreLogin = [metadataTokenString isEqualToString:accountStoreTokenString];
 
-  if ([metadataTokenString isEqualToString:currentTokenString] || isAccountStoreLogin) {
+  if ([metadataTokenString isEqualToString:currentTokenString]) {
     NSInteger errorCode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue];
     NSInteger errorSubcode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] integerValue];
     if (errorCode == 190 || errorCode == 102) {
-      if (isAccountStoreLogin) {
-        if (errorSubcode == 460) {
-          // For iOS6, when the password is changed on the server, the system account store
-          // will continue to issue the old token until the user has changed the
-          // password AND _THEN_ a renew call is made. To prevent opening
-          // with an old token which would immediately be closed, we tell our adapter
-          // that we want to force a blocking renew until success.
-          adapter.forceBlockingRenew = YES;
-        } else {
-          [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-            NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
-            [queue addOperationWithBlock:^{
-              clearToken(errorSubcode);
-              finishAndInvokeCompletionHandler();
-            }];
-          }];
-          return;
-        }
-      }
       clearToken(errorSubcode);
-    } else if (errorCode >= 200 && errorCode < 300) {
-      // permission error
-      [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-        NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
-        [queue addOperationWithBlock:finishAndInvokeCompletionHandler];
-      }];
-      return;
     }
   }
 #endif

@@ -29,6 +29,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Dot notation for access to properties
 - Collections/Dictionaries became non null when at all possible
 - Class creation methods become Swift inits
+- Deprecated `FBSDKLoginBehaviorSystemAccount`
+- Deprecated `[FBSDKLoginManager renewSystemCredentials] `
 
 ### Removed
 

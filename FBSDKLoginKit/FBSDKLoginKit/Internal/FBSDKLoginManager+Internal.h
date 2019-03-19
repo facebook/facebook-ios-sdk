@@ -25,12 +25,6 @@
 @class FBSDKAccessToken;
 @class FBSDKLoginCompletionParameters;
 
-@interface FBSDKLoginManagerSystemAccountState : NSObject
-@property (nonatomic, assign) BOOL didShowDialog;
-@property (nonatomic, getter=isReauthorize) BOOL reauthorize;
-@property (nonatomic, getter=isUnTOSedDevice) BOOL unTOSedDevice;
-@end
-
 @interface FBSDKLoginManager ()
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet *requestedPermissions;
@@ -59,17 +53,6 @@
 
 - (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler;
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSString *,NSError*))handler;
-
-@end
-
-// the category is made available for testing only
-@interface FBSDKLoginManager (Accounts)
-
-- (void)beginSystemLogIn;
-- (void)performSystemLogIn;
-- (void)continueSystemLogInWithTokenString:(NSString *)oauthToken error:(NSError *)accountStoreError state:(FBSDKLoginManagerSystemAccountState *)state;
-
-- (void)fallbackToNativeBehavior;
 
 @end
 

@@ -50,7 +50,6 @@ static NSString *const FBSDKLoginManagerLoggerResultSkippedString = @"skipped";
 
 static NSString *const FBSDKLoginManagerLoggerTryNative = @"tryFBAppAuth";
 static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
-static NSString *const FBSDKLoginManagerLoggerTrySystemAccount = @"tryIntegratedAuth";
 static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
 
 @implementation FBSDKLoginManagerLogger
@@ -98,7 +97,6 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
   BOOL isReauthorize = ([FBSDKAccessToken currentAccessToken] != nil);
   BOOL willTryNative = NO;
   BOOL willTryBrowser = NO;
-  BOOL willTrySystemAccount = NO;
   BOOL willTryWebView = NO;
   NSString *behaviorString = nil;
 
@@ -112,12 +110,6 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
       willTryBrowser = YES;
       behaviorString = @"FBSDKLoginBehaviorBrowser";
       break;
-    case FBSDKLoginBehaviorSystemAccount:
-      willTryNative = YES;
-      willTryBrowser = YES;
-      willTrySystemAccount = YES;
-      behaviorString = @"FBSDKLoginBehaviorSystemAccount";
-      break;
     case FBSDKLoginBehaviorWeb:
       willTryWebView = YES;
       behaviorString = @"FBSDKLoginBehaviorWeb";
@@ -127,7 +119,6 @@ static NSString *const FBSDKLoginManagerLoggerTryWebView = @"tryFallback";
   [_extras addEntriesFromDictionary:@{
     FBSDKLoginManagerLoggerTryNative : @(willTryNative),
     FBSDKLoginManagerLoggerTryBrowser : @(willTryBrowser),
-    FBSDKLoginManagerLoggerTrySystemAccount : @(willTrySystemAccount),
     FBSDKLoginManagerLoggerTryWebView : @(willTryWebView),
     @"isReauthorize" : @(isReauthorize),
     @"login_behavior" : behaviorString,

@@ -29,7 +29,6 @@
 #import "FBSDKContainerViewController.h"
 #import "BridgeAPI/FBSDKBridgeAPI.h"
 #import "FBSDKMonotonicTime.h"
-#import "FBSDKSystemAccountStoreAdapter.h"
 #import "FBSDKTriStateBOOL.h"
 #import "UI/FBSDKCloseIcon.h"
 #import "UI/FBSDKColor.h"
