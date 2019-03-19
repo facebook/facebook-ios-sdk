@@ -452,11 +452,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
       }];
       break;
     }
-    case FBSDKLoginBehaviorWeb:
-      [self performWebLogInWithParameters:loginParams handler:^(BOOL openedURL, NSError *openedURLError) {
-        completion(openedURL, FBSDKLoginManagerLoggerAuthMethod_Webview, openedURLError);
-      }];
-      break;
   }
 }
 
@@ -633,56 +628,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (BOOL)isAuthenticationURL:(NSURL *)url
 {
   return [url.path hasSuffix:FBSDKOauthPath];
-}
-
-@end
-
-@implementation FBSDKLoginManager (WebDialog)
-
-- (void)performWebLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler
-{
-  [FBSDKInternalUtility registerTransientObject:self];
-  [FBSDKInternalUtility deleteFacebookCookies];
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] initWithDictionary:loginParams];
-  parameters[@"title"] = NSLocalizedStringWithDefaultValue(@"LoginWeb.LogInTitle",
-                                                           @"FacebookSDK",
-                                                           [FBSDKInternalUtility bundleForStrings],
-                                                           @"Log In",
-                                                           @"Title of the web dialog that prompts the user to log in to Facebook.");
-  [FBSDKWebDialog showWithName:@"oauth" parameters:parameters delegate:self];
-
-  if (handler) {
-    handler(YES, nil);
-  }
-}
-
-- (void)webDialog:(FBSDKWebDialog *)webDialog didCompleteWithResults:(NSDictionary *)results
-{
-  NSString *token = results[@"access_token"];
-
-  if (token.length == 0) {
-    [self webDialogDidCancel:webDialog];
-  } else {
-    id<FBSDKLoginCompleting> completer = [[FBSDKLoginURLCompleter alloc] initWithURLParameters:results appID:[FBSDKSettings appID]];
-    [completer completeLogIn:self withHandler:^(FBSDKLoginCompletionParameters *parameters) {
-      [self completeAuthentication:parameters expectChallenge:YES];
-    }];
-    [FBSDKInternalUtility unregisterTransientObject:self];
-  }
-}
-
-- (void)webDialog:(FBSDKWebDialog *)webDialog didFailWithError:(NSError *)error
-{
-  FBSDKLoginCompletionParameters *parameters = [[FBSDKLoginCompletionParameters alloc] initWithError:error];
-  [self completeAuthentication:parameters expectChallenge:YES];
-  [FBSDKInternalUtility unregisterTransientObject:self];
-}
-
-- (void)webDialogDidCancel:(FBSDKWebDialog *)webDialog
-{
-  FBSDKLoginCompletionParameters *parameters = [[FBSDKLoginCompletionParameters alloc] init];
-  [self completeAuthentication:parameters expectChallenge:YES];
-  [FBSDKInternalUtility unregisterTransientObject:self];
 }
 
 @end

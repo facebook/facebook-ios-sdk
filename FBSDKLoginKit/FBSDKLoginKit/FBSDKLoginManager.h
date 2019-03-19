@@ -80,20 +80,8 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
     Attempts log in through the Safari or SFSafariViewController, if available.
    */
   FBSDKLoginBehaviorBrowser,
-  /**
-    Attempts log in through the Facebook account currently signed in through
-   the device Settings.
-   @note If the account is not available to the app (either not configured by user or
-   as determined by the SDK) this behavior falls back to \c FBSDKLoginBehaviorNative.
-   */
   FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
-  /**
-    Attempts log in through a modal \c UIWebView pop up
-
-   @note This behavior is only available to certain types of apps. Please check the Facebook
-   Platform Policy to verify your app meets the restrictions.
-   */
-  FBSDKLoginBehaviorWeb,
+  FBSDKLoginBehaviorWeb __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
 };
 
 /**

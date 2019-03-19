@@ -55,10 +55,3 @@
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSString *,NSError*))handler;
 
 @end
-
-// the category is made available for testing only
-@interface FBSDKLoginManager (WebDialog) <FBSDKWebDialogDelegate>
-
-- (void)performWebLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler;
-
-@end
