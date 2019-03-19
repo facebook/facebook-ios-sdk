@@ -23,8 +23,6 @@ stages:
   #   if: '! tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/'
   - name: release
     if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
-  - name: publish
-    if: tag =~ /^v([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)\.([0-9]{1}|[1-9][0-9]+)($|[-+][0-9A-Za-z+.-]+$)/
 
 jobs:
   include:
@@ -58,7 +56,7 @@ jobs:
     #   osx_image: xcode10.1
     #   script: sh scripts/run.sh tag-current-version --push
     - stage: release
-      name: GitHub
+      name: GitHub Release
       osx_image: xcode10.1
       script: sh scripts/run.sh build carthage --archive
       deploy:
@@ -68,12 +66,12 @@ jobs:
         file: Carthage/Release/*
         file_glob: true
         name: Facebook SDK $TRAVIS_TAG
-        body: Consult Changelog $SDK_CURRENT_VERSION
+        body: Consult Changelog $TRAVIS_TAG
         on:
           all_branches: true
           tags: true
-    - stage: publish
-      name: Cocoapods
+    - stage: release
+      name: Publish Cocoapods
       osx_image: xcode10.1
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
