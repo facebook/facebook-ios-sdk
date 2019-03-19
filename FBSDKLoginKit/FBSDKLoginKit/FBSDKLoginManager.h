@@ -16,13 +16,14 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Accounts/Accounts.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKLoginManagerLoginResult;
+typedef NSInteger ACAccountCredentialRenewResult;
+typedef void (^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewResult renewResult, NSError *error);
 
 /// typedef for FBSDKLoginAuthType
 typedef NSString *const FBSDKLoginAuthType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoginAuthType);
@@ -99,7 +100,7 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
    @note If the account is not available to the app (either not configured by user or
    as determined by the SDK) this behavior falls back to \c FBSDKLoginBehaviorNative.
    */
-  FBSDKLoginBehaviorSystemAccount,
+  FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
   /**
     Attempts log in through a modal \c UIWebView pop up
 
@@ -212,7 +213,7 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
 /**
  @method
 
-  Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
+ Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
 
  @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
 
@@ -225,7 +226,7 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
  If the `[FBSDKAccessToken currentAccessToken]` was from the account store, a succesful renewal will also set
  a new "currentAccessToken".
  */
-+ (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler;
++ (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler DEPRECATED_MSG_ATTRIBUTE("The system account login behavior is no longer supported.");
 
 @end
 

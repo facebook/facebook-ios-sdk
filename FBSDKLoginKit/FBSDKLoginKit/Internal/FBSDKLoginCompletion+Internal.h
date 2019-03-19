@@ -30,7 +30,6 @@
 
 @property (nonatomic, copy) NSError *error;
 
-@property (nonatomic, assign, getter=isSystemAccount) BOOL systemAccount;
 @property (nonatomic, copy) NSDate *expirationDate;
 @property (nonatomic, copy) NSDate *dataAccessExpirationDate;
 
