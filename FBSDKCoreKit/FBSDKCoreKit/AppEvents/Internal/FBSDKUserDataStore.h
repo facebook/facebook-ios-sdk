@@ -37,8 +37,6 @@ NS_SWIFT_NAME(UserDataStore)
                     country:(nullable NSString *)country;
 + (void)setAndHashData:(nullable NSString *)data
                forType:(FBSDKAppEventUserDataType)type;
-+ (void)setHashData:(nullable NSString *)hashData
-            forType:(FBSDKAppEventUserDataType)type;
 + (nullable NSString *)getHashedData;
 + (void)clearDataForType:(FBSDKAppEventUserDataType)type;
 
