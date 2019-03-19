@@ -115,7 +115,11 @@ static dispatch_queue_t serialQueue;
 
 + (NSString *)getHashedData
 {
-  return [FBSDKUserDataStore stringByHashedData:[hashedUserData copy]];
+  __block NSString *hashedUserDataString;
+  dispatch_sync(serialQueue, ^{
+    hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUserData];
+  });
+  return hashedUserDataString;
 }
 
 + (NSString *)stringByHashedData:(id)hashedData
