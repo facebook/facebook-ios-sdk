@@ -530,7 +530,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   if ([shareContent isKindOfClass:[FBSDKSharePhotoContent class]] && [self _photoContentHasAtLeastOneImage:(FBSDKSharePhotoContent *)shareContent]) {
     void(^completion)(BOOL, NSString *, NSDictionary *) = ^(BOOL successfullyBuilt, NSString *cMethodName, NSDictionary *cParameters) {
       if (successfullyBuilt) {
-        FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+        FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
           [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled: response.isCancelled];
           [FBSDKInternalUtility unregisterTransientObject:self];
         };
@@ -541,7 +541,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                             methodVersion:nil
                                                                parameters:cParameters
                                                                  userInfo:nil];
-        [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+        [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                                 useSafariViewController:[self _useSafariViewController]
                                                      fromViewController:self.fromViewController
                                                         completionBlock:completionBlock];
@@ -559,7 +559,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                            error:errorRef]) {
       return NO;
     }
-    FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+    FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
       [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled: response.isCancelled];
       [FBSDKInternalUtility unregisterTransientObject:self];
     };
@@ -570,7 +570,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                         methodVersion:nil
                                                            parameters:parameters
                                                              userInfo:nil];
-    [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+    [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                             useSafariViewController:[self _useSafariViewController]
                                                  fromViewController:self.fromViewController
                                                     completionBlock:completionBlock];
@@ -585,7 +585,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
   id<FBSDKSharingContent> shareContent = self.shareContent;
   NSDictionary *parameters = [FBSDKShareUtility feedShareDictionaryForContent:shareContent];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     [self _handleWebResponseParameters:response.responseParameters error:response.error cancelled:response.isCancelled];
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
@@ -596,7 +596,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                       methodVersion:nil
                                                          parameters:parameters
                                                            userInfo:nil];
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];
@@ -649,7 +649,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                       methodVersion:methodVersion
                                                          parameters:parameters
                                                            userInfo:nil];
-  FBSDKBridgeAPICallbackBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
+  FBSDKBridgeAPIResponseBlock completionBlock = ^(FBSDKBridgeAPIResponse *response) {
     if (response.error.code == FBSDKErrorAppVersionUnsupported) {
       NSError *fallbackError;
       if ([self _showShareSheetWithCanShowError:NULL validationError:&fallbackError] ||
@@ -673,7 +673,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
     [FBSDKInternalUtility unregisterTransientObject:self];
   };
-  [[FBSDKApplicationDelegate sharedInstance] openBridgeAPIRequest:request
+  [[FBSDKBridgeAPI sharedInstance] openBridgeAPIRequest:request
                                           useSafariViewController:[self _useSafariViewController]
                                                fromViewController:self.fromViewController
                                                   completionBlock:completionBlock];

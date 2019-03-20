@@ -18,23 +18,21 @@
 
 #import <Foundation/Foundation.h>
 
-#import <FBSDKCoreKit/FBSDKApplicationDelegate.h>
+NS_ASSUME_NONNULL_BEGIN
 
-#import "FBSDKCoreKit+Internal.h"
+@protocol FBSDKApplicationObserving <NSObject>
 
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
+@optional
+- (void)applicationDidBecomeActive:(nullable UIApplication *)application;
+- (void)applicationDidEnterBackground:(nullable UIApplication *)application;
+- (BOOL)application:(UIApplication *)application
+didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
-FOUNDATION_EXPORT NSNotificationName const FBSDKApplicationDidBecomeActiveNotification;
-
-#else
-
-FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
-
-#endif
-
-@interface FBSDKApplicationDelegate ()
-
-- (void)addObserver:(id<FBSDKApplicationObserving>)observer;
-- (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(nullable NSString *)sourceApplication
+         annotation:(nullable id)annotation;
 
 @end
+
+NS_ASSUME_NONNULL_END
