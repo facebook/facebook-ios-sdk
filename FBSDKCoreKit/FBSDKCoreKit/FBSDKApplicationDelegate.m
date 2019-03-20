@@ -226,7 +226,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
   // Auto log basic events in case autoLogAppEventsEnabled is set
-  if (FBSDKSettings.isAutoLogAppEventsEnabled) {
+  if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
     [FBSDKAppEvents activateApp];
   }
 

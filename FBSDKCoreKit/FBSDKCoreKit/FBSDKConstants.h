@@ -202,6 +202,28 @@ FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
 
 #endif
 
+/*
+ @methodgroup Common Code Block typedefs
+ */
+
+/**
+ Success Block
+ */
+typedef void (^FBSDKCodeBlock)(void)
+NS_SWIFT_NAME(CodeBlock);
+
+/**
+ Error Block
+ */
+typedef void (^FBSDKErrorBlock)(NSError *_Nullable error)
+NS_SWIFT_NAME(ErrorBlock);
+
+/**
+ Success Block
+ */
+typedef void (^FBSDKSuccessBlock)(BOOL success, NSError *_Nullable error)
+NS_SWIFT_NAME(SuccessBlock);
+
 #ifndef NS_ERROR_ENUM
 #define NS_ERROR_ENUM(_domain, _name) \
 enum _name: NSInteger _name; \
