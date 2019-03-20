@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.2...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.42.0...HEAD)
 
 ### Added
 
@@ -37,6 +37,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Deprecated properties
 - Made `init` and `new` unavailable where necessary
 - Used `NS_SWIFT_UNAVAILABLE` where necessary
+
+### Fixed
+
+- Various bug fixes
+
+## 4.42.0
+
+[2019-03-20](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.42.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.41.2...v4.42.0)
+
+### Changed
+
+- Moved directory structure for better separation
 
 ### Fixed
 
