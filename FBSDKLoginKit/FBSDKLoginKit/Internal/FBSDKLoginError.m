@@ -94,37 +94,6 @@ typedef NS_ERROR_ENUM(FBSDKLoginErrorDomain, FBSDKLoginErrorSubcode)
                          userInfo:userInfo];
 }
 
-+ (NSError *)fbErrorForSystemAccountStoreError:(NSError *)accountStoreError
-{
-  NSError *err = nil;
-  BOOL cancellation = NO;
-
-  if ([accountStoreError.domain isEqualToString:FBSDKLoginErrorDomain] ||
-      [accountStoreError.domain isEqualToString:FBSDKErrorDomain]) {
-    // If the requestAccess call results in a Facebook error, surface it as a top-level
-    // error. This implies it is not the typical user "disallows" case.
-    err = accountStoreError;
-  } else if ([accountStoreError.domain isEqualToString:@"com.apple.accounts"] && accountStoreError.code == 7) {
-    err = [self fbErrorWithSystemAccountStoreDeniedError:accountStoreError isCancellation:&cancellation];
-  }
-
-  if (err == nil && !cancellation) {
-    // create an error object with additional info regarding failed login
-    NSInteger errorCode = FBSDKLoginErrorSystemAccountUnavailable;
-
-    NSString *errorDomain = accountStoreError.domain;
-    if ([errorDomain isEqualToString:NSURLErrorDomain] ||
-        [errorDomain isEqualToString:@"kCFErrorDomainCFNetwork"]) {
-      errorCode = FBSDKErrorNetwork;
-    }
-
-    err = [self fbErrorForFailedLoginWithCode:errorCode
-                                   innerError:accountStoreError];
-  }
-
-  return err;
-}
-
 + (NSError *)fbErrorForSystemPasswordChange:(NSError *)innerError
 {
   NSString *failureReasonAndDescription =

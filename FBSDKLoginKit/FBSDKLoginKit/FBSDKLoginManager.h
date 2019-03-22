@@ -16,11 +16,11 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Accounts/Accounts.h>
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
 @class FBSDKLoginManagerLoginResult;
+typedef NSInteger ACAccountCredentialRenewResult;
 
 /**
   Describes the call back to the FBSDKLoginManager
@@ -80,20 +80,8 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
     Attempts log in through the Safari or SFSafariViewController, if available.
    */
   FBSDKLoginBehaviorBrowser,
-  /**
-    Attempts log in through the Facebook account currently signed in through
-   the device Settings.
-   @note If the account is not available to the app (either not configured by user or
-   as determined by the SDK) this behavior falls back to \c FBSDKLoginBehaviorNative.
-   */
-  FBSDKLoginBehaviorSystemAccount,
-  /**
-    Attempts log in through a modal \c UIWebView pop up
-
-   @note This behavior is only available to certain types of apps. Please check the Facebook
-   Platform Policy to verify your app meets the restrictions.
-   */
-  FBSDKLoginBehaviorWeb,
+  FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
+  FBSDKLoginBehaviorWeb __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
 };
 
 /**
@@ -209,7 +197,7 @@ DEPRECATED_MSG_ATTRIBUTE("use logInWithPublishPermissions:fromViewController:han
 /**
  @method
 
-  Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
+ Issues an asynchronous renewCredentialsForAccount call to the device's Facebook account store.
 
  @param handler The completion handler to call when the renewal is completed. This can be invoked on an arbitrary thread.
 
@@ -222,6 +210,6 @@ DEPRECATED_MSG_ATTRIBUTE("use logInWithPublishPermissions:fromViewController:han
  If the `[FBSDKAccessToken currentAccessToken]` was from the account store, a succesful renewal will also set
  a new "currentAccessToken".
  */
-+ (void)renewSystemCredentials:(void (^)(ACAccountCredentialRenewResult result, NSError *error))handler;
++ (void)renewSystemCredentials:(void (^)(ACAccountCredentialRenewResult result, NSError *error))handler DEPRECATED_MSG_ATTRIBUTE("The system account login behavior is no longer supported.");
 
 @end
