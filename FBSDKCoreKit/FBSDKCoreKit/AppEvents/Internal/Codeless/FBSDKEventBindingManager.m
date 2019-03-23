@@ -122,6 +122,11 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
   if (isStarted) {
     return;
   }
+
+  if (0 == eventBindings.count) {
+    return;
+  }
+
   isStarted = YES;
 
   void (^blockToWindow)(id view) = ^(id view) {
@@ -382,6 +387,10 @@ static void fb_dispatch_on_default_thread(dispatch_block_t block) {
 - (void)updateBindings:(NSArray *)bindings {
   eventBindings = bindings;
   [reactBindings removeAllObjects];
+  if (!isStarted) {
+    [self start];
+  }
+
   fb_dispatch_on_main_thread(^{
     [self rematchBindings];
   });

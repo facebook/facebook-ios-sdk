@@ -965,7 +965,6 @@ static NSString *g_overrideAppID = nil;
   if (_serverConfiguration.isCodelessEventsEnabled) {
     if (!_eventBindingManager) {
       _eventBindingManager = [[FBSDKEventBindingManager alloc] init];
-      [_eventBindingManager start];
     }
 
     if ([FBSDKInternalUtility isUnity]) {
