@@ -248,14 +248,37 @@ build_sdk() {
 lint_sdk() {
   # Lint Podspecs
   lint_cocoapods() {
+    pod_lint_failures=()
+
     for spec in "${SDK_POD_SPECS[@]}"; do
       if [ ! -f "$spec" ]; then
         echo "*** ERROR: unable to lint $spec"
         continue
       fi
 
-      pod lib lint "$spec" "$@"
+      if [ "$spec" == "AccountKit/AccountKit.podspec" ]; then
+        continue
+      fi
+
+      local pod_lint_type="lib"
+
+      if [ "$spec" == "FBSDKMarketingKit.podspec" ]; then
+        pod_lint_type="spec"
+      fi
+
+      set +e
+      if ! pod "$pod_lint_type" lint "$spec" "$@"; then
+        pod_lint_failures+=("$spec")
+      fi
+      set -e
     done
+
+    if [ ${#pod_lint_failures[@]} -ne 0 ]; then
+      echo "Failed lint for: ${pod_lint_failures[*]}"
+      exit 1
+    else
+      exit 0
+    fi
   }
 
   local lint_type=${1:-}
