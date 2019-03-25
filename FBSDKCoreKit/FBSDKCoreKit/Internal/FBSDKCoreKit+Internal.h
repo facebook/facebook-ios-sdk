@@ -49,6 +49,7 @@
 #import "../AppEvents/Internal/FBSDKAppEventsStateManager.h"
 #import "../AppEvents/Internal/FBSDKAppEventsUtility.h"
 #import "../AppEvents/Internal/FBSDKTimeSpentData.h"
+#import "../AppEvents/Internal/FBSDKUserDataStore.h"
 #import "Base64/FBSDKBase64.h"
 #import "ErrorRecovery/FBSDKErrorRecoveryAttempter.h"
 #import "FBSDKDynamicFrameworkLoader.h"
