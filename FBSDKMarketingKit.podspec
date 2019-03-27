@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name              = 'FBSDKMarketingKit'
-    s.version           = '4.41.2'
+    s.version           = '4.42.0'
     s.summary           = 'Official Facebook SDK for iOS to set up Codeless Events'
 
     s.description  = <<-DESC
@@ -32,7 +32,7 @@ Pod::Spec.new do |s|
                             LICENSE
                           }
     s.platform          = :ios
-    s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.zip",
+    s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.framework.zip",
                             :type => :zip }
     s.source_files      = 'FBSDKMarketingKit.framework/**/*.h'
     s.public_header_files = 'FBSDKMarketingKit.framework/**/*.h'

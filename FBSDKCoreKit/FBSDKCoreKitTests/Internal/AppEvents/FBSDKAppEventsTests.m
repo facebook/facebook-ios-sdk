@@ -20,13 +20,32 @@
 
 #import <OCMock/OCMock.h>
 
+#import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
-#import "FBSDKGraphRequestConnection.h"
+#import "FBSDKAppEventsState.h"
+#import "FBSDKAppEventsUtility.h"
+#import "FBSDKApplicationDelegate.h"
+#import "FBSDKConstants.h"
+#import "FBSDKGraphRequest+Internal.h"
+#import "FBSDKGraphRequest.h"
+#import "FBSDKUtility.h"
+
+// An extension that redeclares a private method so that it can be mocked
+@interface FBSDKApplicationDelegate()
+- (void)_logSDKInitialize;
+@end
+
+@interface FBSDKAppEvents ()
+@property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
+- (void)publishInstall;
+- (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
+- (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
++ (FBSDKAppEvents *)singleton;
+@end
 
 @interface FBSDKAppEventsTests : XCTestCase
 {
   id _mockAppEvents;
-  id _mockGraphRequestConnection;
 }
 @end
 
@@ -35,16 +54,28 @@
 - (void)setUp
 {
   _mockAppEvents = [OCMockObject niceMockForClass:[FBSDKAppEvents class]];
-  _mockGraphRequestConnection = [OCMockObject niceMockForClass:[FBSDKGraphRequestConnection class]];
+}
+
+- (void)tearDown
+{
+  [_mockAppEvents stopMocking];
 }
 
 - (void)testLogPurchase
 {
   double mockPurchaseAmount = 1.0;
   NSString *mockCurrency = @"USD";
-  [[_mockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
+
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+
+  [[partialMockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
+  [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
+
+  OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
+
   [FBSDKAppEvents logPurchase:mockPurchaseAmount currency:mockCurrency];
-  [_mockAppEvents verify];
+
+  [partialMockAppEvents verify];
 }
 
 - (void)testLogProductItem
@@ -85,17 +116,32 @@
 
 - (void)testSetAndClearUserData
 {
-  [FBSDKAppEvents setUserEmail:@"em"
-                     firstName:@"fn"
-                      lastName:@"ln"
-                         phone:@"123"
+  NSString *mockEmail= @"test_em";
+  NSString *mockFirstName = @"test_fn";
+  NSString *mockLastName = @"test_ln";
+  NSString *mockPhone = @"123";
+
+  [FBSDKAppEvents setUserEmail:mockEmail
+                     firstName:mockFirstName
+                      lastName:mockLastName
+                         phone:mockPhone
                    dateOfBirth:nil
                         gender:nil
                           city:nil
                          state:nil
                            zip:nil
                        country:nil];
-  NSString *expectedUserData = @"{\"ln\":\"e545c2c24e6463d7c4fe3829940627b226c0b9be7a8c7dbe964768da48f1ab9d\",\"ph\":\"a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3\",\"em\":\"84a47f61dd341ce731390149a904abcd58a6044263071abf44a475cf91563029\",\"fn\":\"0f1e18bb4143dc4be22e61ea4deb0491c2bf7018c6504ad631038aed5ca4a0ca\"}";
+
+  NSDictionary<NSString *, NSString *> *expectedHashedDict = @{@"em":[FBSDKUtility SHA256Hash:mockEmail],
+                                                               @"fn":[FBSDKUtility SHA256Hash:mockFirstName],
+                                                               @"ln":[FBSDKUtility SHA256Hash:mockLastName],
+                                                               @"ph":[FBSDKUtility SHA256Hash:mockPhone],
+                                                               };
+  NSData *jsonData = [NSJSONSerialization dataWithJSONObject:expectedHashedDict
+                                                     options:0
+                                                       error:nil];
+  NSString *expectedUserData = [[NSString alloc] initWithData:jsonData
+                                 encoding:NSUTF8StringEncoding];
   NSString *userData = [FBSDKAppEvents getUserData];
   XCTAssertEqualObjects(userData, expectedUserData);
 
@@ -118,6 +164,57 @@
   NSString *mockOverrideAppID = @"2";
   [FBSDKAppEvents setLoggingOverrideAppID:mockOverrideAppID];
   XCTAssertEqualObjects([FBSDKAppEvents loggingOverrideAppID], mockOverrideAppID);
+}
+
+- (void)testSetPushNotificationsDeviceTokenString
+{
+  NSString *mockDeviceTokenString = @"testDeviceTokenString";
+
+  [[_mockAppEvents expect] logEvent:@"fb_mobile_obtain_push_token"];
+
+  [FBSDKAppEvents setPushNotificationsDeviceTokenString:mockDeviceTokenString];
+
+  [_mockAppEvents verify];
+
+  XCTAssertEqualObjects([FBSDKAppEvents singleton].pushNotificationsDeviceTokenString, mockDeviceTokenString);
+}
+
+- (void)testLogInitialize
+{
+  FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
+  id delegateMock = OCMPartialMock(delegate);
+
+  [[_mockAppEvents expect] logEvent:@"fb_sdk_initialize"
+                         valueToSum:nil
+                         parameters:[OCMArg any]
+                        accessToken:nil];
+
+  [delegateMock _logSDKInitialize];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testActivateApp
+{
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [[partialMockAppEvents expect] publishInstall];
+  [[partialMockAppEvents expect] fetchServerConfiguration:NULL];
+
+  [FBSDKAppEvents activateApp];
+
+  [partialMockAppEvents verify];
+}
+
+- (void)testLogPushNotificationOpen
+{
+  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"test"};
+  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
+
+  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
+
+  [FBSDKAppEvents logPushNotificationOpen:mockPayload];
+
+  [_mockAppEvents verify];
 }
 
 @end

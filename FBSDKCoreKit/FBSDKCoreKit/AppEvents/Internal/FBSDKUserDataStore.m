@@ -97,11 +97,18 @@ static dispatch_queue_t serialQueue;
 + (void)setAndHashData:(nullable NSString *)data
                forType:(FBSDKAppEventUserDataType)type
 {
+  [FBSDKUserDataStore setHashData:[FBSDKUserDataStore encryptData:data type:type]
+                          forType:type];
+}
+
++ (void)setHashData:(nullable NSString *)hashData
+            forType:(FBSDKAppEventUserDataType)type
+{
   dispatch_async(serialQueue, ^{
-    if (!data) {
+    if (!hashData) {
       [hashedUserData removeObjectForKey:type];
     } else {
-      hashedUserData[type] = [FBSDKUserDataStore encryptData:data type:type];
+      hashedUserData[type] = hashData;
     }
     [[NSUserDefaults standardUserDefaults] setObject:[FBSDKUserDataStore stringByHashedData:hashedUserData]
                                               forKey:FBSDKUserDataKey];
@@ -115,7 +122,11 @@ static dispatch_queue_t serialQueue;
 
 + (NSString *)getHashedData
 {
-  return [FBSDKUserDataStore stringByHashedData:[hashedUserData copy]];
+  __block NSString *hashedUserDataString;
+  dispatch_sync(serialQueue, ^{
+    hashedUserDataString = [FBSDKUserDataStore stringByHashedData:hashedUserData];
+  });
+  return hashedUserDataString;
 }
 
 + (NSString *)stringByHashedData:(id)hashedData
