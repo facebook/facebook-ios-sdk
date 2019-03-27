@@ -20,6 +20,7 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_SWIFT_NAME(CheckmarkIcon)
 @interface FBSDKCheckmarkIcon : FBSDKIcon
 
 @end

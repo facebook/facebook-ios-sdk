@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
   Describes the callback for fetchDeferredAppLink.
  @param url the url representing the deferred App Link
@@ -27,20 +29,18 @@
  The url may also have a fb_click_time_utc query parameter that
  represents when the click occurred that caused the deferred App Link to be created.
  */
-typedef void (^FBSDKDeferredAppLinkHandler)(NSURL *url, NSError *error);
-
-
-/**
-  Describes the callback for fetchOrganicDeferredAppLink.
- @param url the url representing the deferred App Link
- */
-typedef void (^FBSDKDeferredAppInviteHandler)(NSURL *url);
+typedef void (^FBSDKURLBlock)(NSURL *_Nullable url, NSError *_Nullable error)
+NS_SWIFT_NAME(URLBlock);
 
 
 /**
   Class containing App Links related utility methods.
  */
+NS_SWIFT_NAME(AppLinkUtility)
 @interface FBSDKAppLinkUtility : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 /**
   Call this method from the main thread to fetch deferred applink data if you use Mobile App
@@ -59,21 +59,10 @@ typedef void (^FBSDKDeferredAppInviteHandler)(NSURL *url);
  been processed (e.g., you should call this method from your application delegate's
  applicationDidBecomeActive:).
  */
-+ (void)fetchDeferredAppLink:(FBSDKDeferredAppLinkHandler)handler;
-
-/**
-
-@warning This method is no longer available and will always return NO.
- */
-+ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler
-DEPRECATED_MSG_ATTRIBUTE("This method is no longer available.");
++ (void)fetchDeferredAppLink:(nullable FBSDKURLBlock)handler;
 
 /*
-  Call this method to fetch promotion code from the url, if it's present. This function
- requires Bolts framework.
-
- Note: This throws an exception if Bolts.framework is not linked. Add '[BFURL class]' in intialize method
- of your AppDelegate.
+  Call this method to fetch promotion code from the url, if it's present.
 
  @param url App Link url that was passed to the app.
 
@@ -84,6 +73,8 @@ DEPRECATED_MSG_ATTRIBUTE("This method is no longer available.");
  This can be used to fetch the promotion code that was associated with the invite when it
  was created. This method should be called with the url from the openURL method.
 */
-+ (NSString*)appInvitePromotionCodeFromURL:(NSURL*)url;
++ (nullable NSString *)appInvitePromotionCodeFromURL:(NSURL *)url;
 
 @end
+
+NS_ASSUME_NONNULL_END

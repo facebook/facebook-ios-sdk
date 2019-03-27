@@ -125,7 +125,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   return self;
 }
 
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
+- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(FBSDKLoginCompletionParametersBlock)handler
 {
   if (_performExplicitFallback && loginManager.loginBehavior == FBSDKLoginBehaviorNative) {
     // UIKit and iOS don't like an application opening a URL during a URL open callback, so
@@ -229,89 +229,6 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
       [self attemptBrowserLogIn:loginManager];
     });
   }
-}
-
-@end
-
-@implementation FBSDKLoginSystemAccountCompleter
-{
-  FBSDKLoginCompletionParameters *_parameters;
-}
-
-- (instancetype)initWithTokenString:(NSString *)tokenString appID:(NSString *)appID
-{
-  if ((self = [super init]) != nil) {
-    _parameters = [[FBSDKLoginCompletionParameters alloc] init];
-
-    _parameters.accessTokenString = tokenString;
-    _parameters.appID = appID;
-
-    _parameters.systemAccount = YES;
-  }
-  return self;
-}
-
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
-{
-  void(^handlerCopy)(FBSDKLoginCompletionParameters *) = [handler copy];
-  FBSDKLoginRequestMeAndPermissions(_parameters, ^{
-    // Transform the FBSDKCoreKit error in to an FBSDKLoginKit error, if necessary. This specializes
-    // the graph errors in to User Checkpointed, Password Changed or Unconfirmed User.
-    //
-    // It's possible the graph error has a value set for NSRecoveryAttempterErrorKey but we don't
-    // have any login-specific attempter to provide since system auth succeeded and the error is a
-    // graph API error.
-    NSError *serverError = self->_parameters.error;
-    NSError *error = [NSError fbErrorFromServerError:serverError];
-    if (error != nil) {
-      // In the event the user's password changed the Accounts framework will still return
-      // an access token but API calls will fail. Clear the access token from the result
-      // and use the special-case System Password changed error, which has different text
-      // to display to the user.
-      if (error.code == FBSDKLoginErrorPasswordChanged) {
-        [FBSDKSystemAccountStoreAdapter sharedInstance].forceBlockingRenew = YES;
-
-        self->_parameters.accessTokenString = nil;
-        self->_parameters.appID = nil;
-
-        error = [NSError fbErrorForSystemPasswordChange:serverError];
-      }
-
-      self->_parameters.error = error;
-    }
-
-    handlerCopy(self->_parameters);
-  });
-}
-
-@end
-
-@implementation FBSDKLoginSystemAccountErrorCompleter
-{
-  FBSDKLoginCompletionParameters *_parameters;
-}
-
-- (instancetype)initWithError:(NSError *)accountStoreError permissions:(NSSet *)permissions
-{
-  if ((self = [super init]) != nil) {
-    _parameters = [[FBSDKLoginCompletionParameters alloc] init];
-
-    NSError *error = [NSError fbErrorForSystemAccountStoreError:accountStoreError];
-    if (error != nil) {
-      _parameters.error = error;
-    } else {
-      // The lack of an error indicates the user declined permissions
-      _parameters.declinedPermissions = permissions;
-    }
-
-    _parameters.systemAccount = YES;
-  }
-  return self;
-}
-
-- (void)completeLogIn:(FBSDKLoginManager *)loginManager withHandler:(void(^)(FBSDKLoginCompletionParameters *parameters))handler
-{
-  handler(_parameters);
 }
 
 @end

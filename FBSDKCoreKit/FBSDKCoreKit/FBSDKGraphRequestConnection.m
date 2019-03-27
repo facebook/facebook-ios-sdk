@@ -151,23 +151,27 @@ NSURLSessionDataDelegate
   }
 }
 
++ (NSTimeInterval)defaultConnectionTimeout {
+  return g_defaultTimeout;
+}
+
 - (void)addRequest:(FBSDKGraphRequest *)request
- completionHandler:(FBSDKGraphRequestHandler)handler
+ completionHandler:(FBSDKGraphRequestBlock)handler
 {
-  [self addRequest:request batchEntryName:nil completionHandler:handler];
+  [self addRequest:request batchEntryName:@"" completionHandler:handler];
 }
 
 - (void)addRequest:(FBSDKGraphRequest *)request
     batchEntryName:(NSString *)name
- completionHandler:(FBSDKGraphRequestHandler)handler
+ completionHandler:(FBSDKGraphRequestBlock)handler
 {
-  NSDictionary *batchParams = (name)? @{kBatchEntryName : name } : nil;
+  NSDictionary<NSString *, id> *batchParams = name.length > 0 ? @{kBatchEntryName : name } : nil;
   [self addRequest:request batchParameters:batchParams completionHandler:handler];
 }
 
 - (void)addRequest:(FBSDKGraphRequest *)request
    batchParameters:(NSDictionary<NSString *, id> *)batchParameters
- completionHandler:(FBSDKGraphRequestHandler)handler
+ completionHandler:(FBSDKGraphRequestBlock)handler
 {
   if (self.state != kStateCreated) {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException
@@ -179,20 +183,6 @@ NSURLSessionDataDelegate
                                                                            batchParameters:batchParameters];
 
   [self.requests addObject:metadata];
-}
-
-- (void)addRequest:(FBSDKGraphRequest *)request
- completionHandler:(FBSDKGraphRequestHandler)handler
-    batchEntryName:(NSString *)name
-{
-  [self addRequest:request batchEntryName:name completionHandler:handler];
-}
-
-- (void)addRequest:(FBSDKGraphRequest *)request
- completionHandler:(FBSDKGraphRequestHandler)handler
-   batchParameters:(NSDictionary *)batchParameters
-{
-  [self addRequest:request batchParameters:batchParameters completionHandler:handler];
 }
 
 - (void)cancel
@@ -207,11 +197,6 @@ NSURLSessionDataDelegate
   if (![_overrideVersionPart isEqualToString:version]) {
     _overrideVersionPart = [version copy];
   }
-}
-
-- (void)overrideVersionPartWith:(NSString *)version
-{
-  [self overrideGraphAPIVersion:version];
 }
 
 - (void)start
@@ -236,9 +221,9 @@ NSURLSessionDataDelegate
   [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
   _requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
 
-  FBSDKURLSessionTaskHandler handler =  ^(NSError *error,
-                                          NSURLResponse *response,
-                                          NSData *responseData) {
+  FBSDKURLSessionTaskBlock handler = ^(NSError *error,
+                                       NSURLResponse *response,
+                                       NSData *responseData) {
     [self completeFBSDKURLSessionWithResponse:response
                                          data:responseData
                                  networkError:error];
@@ -265,6 +250,11 @@ NSURLSessionDataDelegate
   }
 }
 
+- (NSOperationQueue *)delegateQueue
+{
+  return _delegateQueue;
+}
+
 - (void)setDelegateQueue:(NSOperationQueue *)queue
 {
   _delegateQueue = queue;
@@ -289,7 +279,10 @@ NSURLSessionDataDelegate
   }
 
   if (batchToken) {
-    metadata.request.parameters[kAccessTokenKey] = batchToken;
+    NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary
+                                                   dictionaryWithDictionary:metadata.request.parameters];
+    params[kAccessTokenKey] = batchToken;
+    metadata.request.parameters = params;
     [self registerTokenToOmitFromLog:batchToken];
   }
 
@@ -472,7 +465,13 @@ NSURLSessionDataDelegate
                 addFormData:NO
                      logger:attachmentLogger];
 
-    NSURL *url = [FBSDKInternalUtility facebookURLWithHostPrefix:kGraphURLPrefix path:nil queryParameters:nil defaultVersion:_overrideVersionPart error:NULL];
+    NSURL *url = [FBSDKInternalUtility
+                  facebookURLWithHostPrefix:kGraphURLPrefix
+                  path:@""
+                  queryParameters:@{}
+                  defaultVersion:_overrideVersionPart
+                  error:NULL];
+
     request = [NSMutableURLRequest requestWithURL:url
                                       cachePolicy:NSURLRequestUseProtocolCachePolicy
                                   timeoutInterval:timeout];
@@ -503,9 +502,12 @@ NSURLSessionDataDelegate
 //
 - (NSString *)urlStringForSingleRequest:(FBSDKGraphRequest *)request forBatch:(BOOL)forBatch
 {
-  request.parameters[@"format"] = @"json";
-  request.parameters[@"sdk"] = kSDK;
-  request.parameters[@"include_headers"] = @"false";
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:request.parameters];
+  params[@"format"] = @"json";
+  params[@"sdk"] = kSDK;
+  params[@"include_headers"] = @"false";
+
+  request.parameters = params;
 
   NSString *baseURL;
   if (forBatch) {
@@ -513,7 +515,8 @@ NSURLSessionDataDelegate
   } else {
     NSString *token = [self accessTokenWithRequest:request];
     if (token) {
-      [request.parameters setValue:token forKey:kAccessTokenKey];
+      [params setValue:token forKey:kAccessTokenKey];
+      request.parameters = params;
       [self registerTokenToOmitFromLog:token];
     }
 
@@ -530,7 +533,12 @@ NSURLSessionDataDelegate
       }
     }
 
-    baseURL = [FBSDKInternalUtility facebookURLWithHostPrefix:prefix path:request.graphPath queryParameters:nil defaultVersion:request.version error:NULL].absoluteString;
+    baseURL = [FBSDKInternalUtility
+                facebookURLWithHostPrefix:prefix
+                path:request.graphPath
+                queryParameters:@{}
+                defaultVersion:request.version
+                error:NULL].absoluteString;
   }
 
   NSString *url = [FBSDKGraphRequest serializeURL:baseURL
@@ -554,13 +562,13 @@ NSURLSessionDataDelegate
   }
 
   NSArray *results = nil;
-  _URLResponse = (NSHTTPURLResponse *)response;
+  _urlResponse = (NSHTTPURLResponse *)response;
   if (response) {
     NSAssert([response isKindOfClass:[NSHTTPURLResponse class]],
              @"Expected NSHTTPURLResponse, got %@",
              response);
 
-    NSInteger statusCode = _URLResponse.statusCode;
+    NSInteger statusCode = _urlResponse.statusCode;
 
     if (!error && [response.MIMEType hasPrefix:@"image"]) {
       error = [NSError fbErrorWithCode:FBSDKErrorGraphRequestNonTextMimeTypeReturned
@@ -793,43 +801,14 @@ NSURLSessionDataDelegate
 
   };
 
-  FBSDKSystemAccountStoreAdapter *adapter = [FBSDKSystemAccountStoreAdapter sharedInstance];
   NSString *metadataTokenString = metadata.request.tokenString;
   NSString *currentTokenString = [FBSDKAccessToken currentAccessToken].tokenString;
-  NSString *accountStoreTokenString = adapter.accessTokenString;
-  BOOL isAccountStoreLogin = [metadataTokenString isEqualToString:accountStoreTokenString];
 
-  if ([metadataTokenString isEqualToString:currentTokenString] || isAccountStoreLogin) {
+  if ([metadataTokenString isEqualToString:currentTokenString]) {
     NSInteger errorCode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue];
     NSInteger errorSubcode = [error.userInfo[FBSDKGraphRequestErrorGraphErrorSubcodeKey] integerValue];
     if (errorCode == 190 || errorCode == 102) {
-      if (isAccountStoreLogin) {
-        if (errorSubcode == 460) {
-          // For iOS6, when the password is changed on the server, the system account store
-          // will continue to issue the old token until the user has changed the
-          // password AND _THEN_ a renew call is made. To prevent opening
-          // with an old token which would immediately be closed, we tell our adapter
-          // that we want to force a blocking renew until success.
-          adapter.forceBlockingRenew = YES;
-        } else {
-          [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-            NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
-            [queue addOperationWithBlock:^{
-              clearToken(errorSubcode);
-              finishAndInvokeCompletionHandler();
-            }];
-          }];
-          return;
-        }
-      }
       clearToken(errorSubcode);
-    } else if (errorCode >= 200 && errorCode < 300) {
-      // permission error
-      [adapter renewSystemAuthorization:^(ACAccountCredentialRenewResult result, NSError *renewError) {
-        NSOperationQueue *queue = self->_delegateQueue ?: [NSOperationQueue mainQueue];
-        [queue addOperationWithBlock:finishAndInvokeCompletionHandler];
-      }];
-      return;
     }
   }
 #endif

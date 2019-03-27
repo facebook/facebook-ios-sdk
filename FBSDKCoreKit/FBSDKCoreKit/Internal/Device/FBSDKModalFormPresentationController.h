@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Custom UIPresentationController that is similar to
 // UIModalPresentationFormSheet style (which is not available
 // on tvOS).
+NS_SWIFT_NAME(FBModalFormPresentationController)
 @interface FBSDKModalFormPresentationController : UIPresentationController
 
 @end

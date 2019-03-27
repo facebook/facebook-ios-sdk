@@ -43,33 +43,36 @@
 }
 
 - (void)waitWithPeriodicHandler:(FBSDKTestBlockerPeriodicHandler)handler {
-    [self waitWithTimeout:0
-          periodicHandler:handler];
+    [self handleWaitWithTimeout:0 periodicHandler:handler];
 }
 
 - (BOOL)waitWithTimeout:(NSTimeInterval)timeout {
-    return [self waitWithTimeout:timeout
-                 periodicHandler:nil];
+    return [self handleWaitWithTimeout:timeout periodicHandler:nil];
 }
 
 - (BOOL)waitWithTimeout:(NSTimeInterval)timeout
         periodicHandler:(FBSDKTestBlockerPeriodicHandler)handler {
-    NSDate *start = [NSDate date];
+  return [self handleWaitWithTimeout:timeout periodicHandler:handler];
+}
 
-    // loop until the previous call completes
-    while (_signalsRemaining > 0) {
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
-        if (timeout > 0 &&
-            [[NSDate date] timeIntervalSinceDate:start] > timeout) {
-            [self reset];
-            return NO;
-        }
-        if (handler) {
-            handler(self);
-        }
-    };
-    [self reset];
-    return YES;
+- (BOOL)handleWaitWithTimeout:(NSTimeInterval)timeout
+              periodicHandler:(nullable FBSDKTestBlockerPeriodicHandler)handler {
+  NSDate *start = [NSDate date];
+
+  // loop until the previous call completes
+  while (_signalsRemaining > 0) {
+    [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:.01]];
+    if (timeout > 0 &&
+        [[NSDate date] timeIntervalSinceDate:start] > timeout) {
+      [self reset];
+      return NO;
+    }
+    if (handler) {
+      handler(self);
+    }
+  };
+  [self reset];
+  return YES;
 }
 
 - (void)signal {

@@ -92,21 +92,6 @@
   XCTAssertNotNil(error);
 }
 
-- (void)testMediaTemplateWithoutAttachmentIDOrMediaURL
-{
-  FBSDKShareMessengerMediaTemplateContent *contentWithNilAttachmentInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:nil];
-  XCTAssertNotNil(contentWithNilAttachmentInitializer.shareUUID);
-  NSError *error;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilAttachmentInitializer bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error]);
-  XCTAssertNotNil(error);
-
-  FBSDKShareMessengerMediaTemplateContent *contentWithNilURLInitializer = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithMediaURL:nil];
-  XCTAssertNotNil(contentWithNilURLInitializer.shareUUID);
-  NSError *error2;
-  XCTAssertFalse([FBSDKShareUtility validateShareContent:contentWithNilURLInitializer bridgeOptions:FBSDKShareBridgeOptionsDefault error:&error2]);
-  XCTAssertNotNil(error2);
-}
-
 - (void)testMediaTemplateWithAttachmentID
 {
   FBSDKShareMessengerMediaTemplateContent *content = [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:@"1"];

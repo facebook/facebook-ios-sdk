@@ -22,6 +22,8 @@
 
 #import "FBSDKCoreKit+Internal.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 FOUNDATION_EXPORT NSNotificationName const FBSDKApplicationDidBecomeActiveNotification;
@@ -38,3 +40,5 @@ FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
 - (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
 
 @end
+
+NS_ASSUME_NONNULL_END

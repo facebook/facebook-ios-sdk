@@ -207,6 +207,7 @@
                                                                                             }];
     ++pendingRequestCount;
     [connection addRequest:gameActivityRequest
+            batchEntryName:@"games-post"
          completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id result, NSError *error) {
              if (error) {
                  NSLog(@"Failed to get game activity %@:", error);
@@ -215,7 +216,7 @@
                  callback(selectedUserActiviy);
              }
          }
-            batchEntryName:@"games-post"];
+     ];
     // A batch request that id dependent on the previous result
     FBSDKGraphRequest *gameData = [[FBSDKGraphRequest alloc] initWithGraphPath:@"?ids={result=games-post:$.data.*.data.game.id}"
                                                                     parameters:@{
@@ -226,7 +227,7 @@
     [connection addRequest:gameData completionHandler:^(FBSDKGraphRequestConnection *innerConnection, id games, NSError *innerError) {
         if (innerError) {
             // ignore code 2500 errors since that indicates the parent games-post error was empty.
-            if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCode] integerValue] != 2500) {
+            if ([innerError.userInfo[FBSDKGraphRequestErrorGraphErrorCodeKey] integerValue] != 2500) {
                 NSLog(@"Failed to get detailed game data for 'play' objects: %@", innerError);
             }
         } else if (games) {

@@ -32,7 +32,7 @@
 #import "FBSDKSettings.h"
 #import "FBSDKTypeUtility.h"
 
-// one hour
+// one minute
 #define DEFAULT_SESSION_TIMEOUT_INTERVAL 60
 
 #define FBSDK_SERVER_CONFIGURATION_USER_DEFAULTS_KEY @"com.facebook.sdk:serverConfiguration%@"
@@ -101,16 +101,16 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSString *appID = [FBSDKSettings appID];
   @synchronized(self) {
     // load the server configuration if we don't have it already
-    [self loadServerConfigurationWithCompletionBlock:NULL];
+    [self loadServerConfigurationWithCompletionBlock:nil];
 
     // use whatever configuration we have or the default
     return _serverConfiguration ?: [self _defaultServerConfigurationForAppID:appID];
   }
 }
 
-+ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationManagerLoadBlock)completionBlock
++ (void)loadServerConfigurationWithCompletionBlock:(FBSDKServerConfigurationBlock)completionBlock
 {
-  void (^loadBlock)(void) = NULL;
+  void (^loadBlock)(void) = nil;
   NSString *appID = [FBSDKSettings appID];
   @synchronized(self) {
     // validate the cached configuration has the correct appID
@@ -165,7 +165,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
   }
 
-  if (loadBlock != NULL) {
+  if (loadBlock) {
     loadBlock();
   }
 
@@ -243,10 +243,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       smartLoginBookmarkIconURL) {
       [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginBookmarkIconURL
                                                               ttl:kSmartLoginIconsTTL
-                                                       completion:NULL];
+                                                       completion:nil];
       [[FBSDKImageDownloader sharedInstance] downloadImageWithURL:serverConfiguration.smartLoginMenuIconURL
                                                               ttl:kSmartLoginIconsTTL
-                                                       completion:NULL];
+                                                       completion:nil];
   }
 #endif
   [self _didProcessConfigurationFromNetwork:serverConfiguration appID:appID error:nil];
@@ -390,7 +390,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
     }
 
     // wrap the completion blocks
-    for (FBSDKServerConfigurationManagerLoadBlock completionBlock in _completionBlocks) {
+    for (FBSDKServerConfigurationBlock completionBlock in _completionBlocks) {
       [completionBlocks addObject:[self _wrapperBlockForLoadBlock:completionBlock]];
     }
     [_completionBlocks removeAllObjects];
@@ -428,10 +428,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   return ([[NSDate date] timeIntervalSinceDate:timestamp] < FBSDK_SERVER_CONFIGURATION_MANAGER_CACHE_TIMEOUT);
 }
 
-+ (void(^)(void))_wrapperBlockForLoadBlock:(FBSDKServerConfigurationManagerLoadBlock)loadBlock
++ (FBSDKCodeBlock)_wrapperBlockForLoadBlock:(FBSDKServerConfigurationBlock)loadBlock
 {
-  if (loadBlock == NULL) {
-    return NULL;
+  if (!loadBlock) {
+    return nil;
   }
 
   // create local vars to capture the current values from the ivars to allow this wrapper to be called outside of a lock

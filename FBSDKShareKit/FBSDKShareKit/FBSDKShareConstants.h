@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
@@ -25,7 +27,8 @@
 
  Error codes from the SDK in the range 200-299 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSErrorDomain const FBSDKShareErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const FBSDKShareErrorDomain
+NS_SWIFT_NAME(ShareErrorDomain);
 
 #else
 
@@ -34,7 +37,8 @@ FOUNDATION_EXPORT NSErrorDomain const FBSDKShareErrorDomain;
 
  Error codes from the SDK in the range 200-299 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSString *const FBSDKShareErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKShareErrorDomain
+NS_SWIFT_NAME(ShareErrorDomain);
 
 #endif
 
@@ -71,15 +75,6 @@ typedef NS_ERROR_ENUM(FBSDKShareErrorDomain, FBSDKShareError)
    @The error code for unknown errors.
    */
   FBSDKShareErrorUnknown,
-};
+} NS_SWIFT_NAME(ShareError);
 
-/**
- Deprecated
- */
-typedef NS_ENUM(NSInteger, FBSDKShareErrorCode)
-{
-  FBSDKShareReservedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKShareErrorReserved instead") = 200,
-  FBSDKShareOpenGraphErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKShareErrorOpenGraph instead"),
-  FBSDKShareDialogNotAvailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKShareErrorDialogNotAvailable instead"),
-  FBSDKShareUnknownErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKShareErrorUnknown instead"),
-} DEPRECATED_MSG_ATTRIBUTE("use FBSDKShareError instead");
+NS_ASSUME_NONNULL_END

@@ -115,12 +115,6 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
 
 #pragma mark - FBSDKSharingContent
 
-- (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
-          bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-{
-  [parameters addEntriesFromDictionary:[self addParameters:parameters bridgeOptions:bridgeOptions]];
-}
-
 - (NSDictionary<NSString *, id> *)addParameters:(NSDictionary<NSString *, id> *)existingParameters
                                   bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
 {
@@ -178,7 +172,7 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
 
 - (instancetype)initWithCoder:(NSCoder *)decoder
 {
-  if ((self = [self init])) {
+  if (self = [self initWithAttachmentID:@""]) {
     _pageID = [decoder decodeObjectOfClass:[NSString class] forKey:kMediaTemplatePageIDKey];
     _mediaType = [[decoder decodeObjectForKey:kMediaTemplateMediaTypeKey] unsignedIntegerValue];
     _attachmentID = [decoder decodeObjectOfClass:[NSString class] forKey:kMediaTemplateAttachmentIDKey];
@@ -203,7 +197,8 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  FBSDKShareMessengerMediaTemplateContent *copy = [[FBSDKShareMessengerMediaTemplateContent alloc] init];
+  FBSDKShareMessengerMediaTemplateContent *copy =
+   [[FBSDKShareMessengerMediaTemplateContent alloc] initWithAttachmentID:@""];
   copy->_pageID = [_pageID copy];
   copy->_mediaType = _mediaType;
   copy->_attachmentID = [_attachmentID copy];

@@ -167,7 +167,7 @@ setJSONStringForObject:(id)object
   return [self facebookURLWithHostPrefix:hostPrefix
                                     path:path
                          queryParameters:queryParameters
-                          defaultVersion:nil
+                          defaultVersion:@""
                                    error:errorRef];
 }
 
@@ -188,7 +188,7 @@ setJSONStringForObject:(id)object
   }
   host = [NSString stringWithFormat:@"%@%@", hostPrefix ?: @"", host ?: @""];
 
-  NSString *version = defaultVersion ?: [FBSDKSettings graphAPIVersion];
+  NSString *version = (defaultVersion.length > 0) ? defaultVersion : [FBSDKSettings graphAPIVersion];
   if (version.length) {
     version = [@"/" stringByAppendingString:version];
   }
@@ -278,7 +278,7 @@ setJSONStringForObject:(id)object
 
 + (NSString *)JSONStringForObject:(id)object
                             error:(NSError *__autoreleasing *)errorRef
-             invalidObjectHandler:(id(^)(id object, BOOL *stop))invalidObjectHandler
+             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
   if (invalidObjectHandler || ![NSJSONSerialization isValidJSONObject:object]) {
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
@@ -356,7 +356,7 @@ setJSONStringForObject:(id)object
 
 + (NSString *)queryStringWithDictionary:(NSDictionary *)dictionary
                                   error:(NSError *__autoreleasing *)errorRef
-                   invalidObjectHandler:(id(^)(id object, BOOL *stop))invalidObjectHandler
+                   invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
 {
   NSMutableString *queryString = [[NSMutableString alloc] init];
   __block BOOL hasParameters = NO;
@@ -448,7 +448,7 @@ setJSONStringForObject:(id)object
   NSHTTPCookieStorage *cookies = [NSHTTPCookieStorage sharedHTTPCookieStorage];
   NSArray *facebookCookies = [cookies cookiesForURL:[self facebookURLWithHostPrefix:@"m."
                                                                                path:@"/dialog/"
-                                                                    queryParameters:nil
+                                                                    queryParameters:@{}
                                                                               error:NULL]];
 
   for (NSHTTPCookie *cookie in facebookCookies) {
@@ -550,7 +550,7 @@ static NSMapTable *_transientObjects;
 }
 
 + (id)_convertObjectToJSONObject:(id)object
-            invalidObjectHandler:(id(^)(id object, BOOL *stop))invalidObjectHandler
+            invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
                             stop:(BOOL *)stopRef
 {
   __block BOOL stop = NO;
@@ -762,19 +762,6 @@ static NSMapTable *_transientObjects;
     }
   }
   return YES;
-}
-
-+ (Class)resolveBoltsClassWithName:(NSString *)className;
-{
-  Class clazz = NSClassFromString(className);
-  if (clazz == nil) {
-    NSString *message = [NSString stringWithFormat:@"Unable to load class %@. Did you link Bolts.framework?", className];
-    @throw [NSException exceptionWithName:NSInternalInconsistencyException
-                                   reason:message
-                                 userInfo:nil];
-  }
-
-  return clazz;
 }
 
 + (BOOL)isUnity

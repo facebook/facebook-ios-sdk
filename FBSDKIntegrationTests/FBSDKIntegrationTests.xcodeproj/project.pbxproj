@@ -36,7 +36,6 @@
 		9D2BA0A71AB9E110004C7C0C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9D2BA0A61AB9E110004C7C0C /* Images.xcassets */; };
 		9D2BA0AA1AB9E110004C7C0C /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9D2BA0A81AB9E110004C7C0C /* LaunchScreen.xib */; };
 		9D2BA0BF1AB9EAEE004C7C0C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D1999E91A7AF7F100CAD112 /* UIKit.framework */; };
-		9D4D73521C19F4D0001C505D /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9D4D73501C19F30E001C505D /* Bolts.framework */; };
 		9D5F8ADC1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */; };
 		9D9ACC3B1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */; };
 		9DA81B071AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9DA81B061AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m */; };
@@ -224,9 +223,7 @@
 		9D2BA0A41AB9E110004C7C0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9D2BA0A61AB9E110004C7C0C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		9D2BA0A91AB9E110004C7C0C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
-		9D4D73501C19F30E001C505D /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../build/Bolts.framework; sourceTree = "<group>"; };
 		9D5F8ADB1A97C15400EC4FD3 /* FBSDKAppEventsStateManagerIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKAppEventsStateManagerIntegrationTests.m; sourceTree = "<group>"; };
-		9D5FB1FD1C19EE06002F07BD /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = "../Carthage/Checkouts/Bolts-ObjC/build/Debug-iphoneos/Bolts.framework"; sourceTree = "<group>"; };
 		9D9ACC3A1ABCAF950050BF2E /* FBSDKShareAPIIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareAPIIntegrationTests.m; sourceTree = "<group>"; };
 		9DA81B061AA5092800B9FE0B /* FBSDKProfileIntegrationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKProfileIntegrationTests.m; sourceTree = "<group>"; };
 		9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libOHHTTPStubs.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -243,7 +240,6 @@
 				8118B6CD1D0A6FF300962084 /* FBSDKShareKit.framework in Frameworks */,
 				9D1999D21A7AF63600CAD112 /* libOCMock.a in Frameworks */,
 				9D18A8FB1A95981F00A41042 /* libOHHTTPStubs.a in Frameworks */,
-				9D4D73521C19F4D0001C505D /* Bolts.framework in Frameworks */,
 				9D1999EA1A7AF7F100CAD112 /* UIKit.framework in Frameworks */,
 				9D1999E81A7AF7E900CAD112 /* XCTest.framework in Frameworks */,
 				9D1999E61A7AF7C900CAD112 /* Foundation.framework in Frameworks */,
@@ -375,8 +371,6 @@
 				8118B69F1D0A6FD600962084 /* FBSDKCoreKit.xcodeproj */,
 				8118B6AD1D0A6FDB00962084 /* FBSDKShareKit.xcodeproj */,
 				8118B6BB1D0A6FE300962084 /* FBSDKLoginKit.xcodeproj */,
-				9D4D73501C19F30E001C505D /* Bolts.framework */,
-				9D5FB1FD1C19EE06002F07BD /* Bolts.framework */,
 				9DAD79F81B7B244B00DFEF8F /* libOHHTTPStubs.a */,
 				9D18A8FA1A95981F00A41042 /* libOHHTTPStubs.a */,
 				9D1999E91A7AF7F100CAD112 /* UIKit.framework */,
@@ -463,7 +457,7 @@
 		9D1999A91A7AF41B00CAD112 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				TargetAttributes = {
 					9D1999B21A7AF44B00CAD112 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -477,7 +471,7 @@
 			};
 			buildConfigurationList = 9D1999AC1A7AF41B00CAD112 /* Build configuration list for PBXProject "FBSDKIntegrationTests" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -718,6 +712,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C11A7AF46300CAD112 /* FacebookSDK-Project-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -736,6 +731,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C21A7AF46300CAD112 /* FacebookSDK-Project-Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;

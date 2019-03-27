@@ -32,7 +32,7 @@ static void ensurePermission(UIViewController* viewController, NSString* permiss
     block();
   } else {
     FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-    FBSDKLoginManagerRequestTokenHandler logInHandler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    FBSDKLoginManagerLoginResultBlock logInHandler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
       NSString *title = nil;
       NSString *message = nil;
       if (error) {

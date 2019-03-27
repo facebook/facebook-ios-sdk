@@ -53,7 +53,7 @@
 	<key>CFBundleVersion</key>
 	<string>4.0</string>
 	<key>FacebookAppID</key>
-	<string>157578437735213</string>
+	<string>{your-facebook-app-id}</string>
 	<key>FacebookDisplayName</key>
 	<string>Rock Paper Scissors SDK Sample</string>
 	<key>FacebookUrlSchemeSuffix</key>

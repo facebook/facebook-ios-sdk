@@ -18,56 +18,56 @@
 
 #include "FBSDKPlacesKitConstants.h"
 
-NSString *const FBSDKPlacesFieldKeyAbout = @"about";
-NSString *const FBSDKPlacesFieldKeyAppLinks = @"app_links";
-NSString *const FBSDKPlacesFieldKeyCategories = @"category_list";
-NSString *const FBSDKPlacesFieldKeyCheckins = @"checkins";
-NSString *const FBSDKPlacesFieldKeyConfidence = @"confidence_level";
-NSString *const FBSDKPlacesFieldKeyCoverPhoto = @"cover";
-NSString *const FBSDKPlacesFieldKeyDescription = @"description";
-NSString *const FBSDKPlacesFieldKeyEngagement = @"engagement";
-NSString *const FBSDKPlacesFieldKeyHours = @"hours";
-NSString *const FBSDKPlacesFieldKeyIsAlwaysOpen = @"is_always_open";
-NSString *const FBSDKPlacesFieldKeyIsPermanentlyClosed = @"is_permanently_closed";
-NSString *const FBSDKPlacesFieldKeyIsVerified = @"is_verified";
-NSString *const FBSDKPlacesFieldKeyLink = @"link";
-NSString *const FBSDKPlacesFieldKeyLocation = @"location";
-NSString *const FBSDKPlacesFieldKeyName = @"name";
-NSString *const FBSDKPlacesFieldKeyOverallStarRating = @"overall_star_rating";
-NSString *const FBSDKPlacesFieldKeyPlaceID = @"id";
-NSString *const FBSDKPlacesFieldKeyPage = @"page";
-NSString *const FBSDKPlacesFieldKeyParking = @"parking";
-NSString *const FBSDKPlacesFieldKeyPaymentOptions = @"payment_options";
-NSString *const FBSDKPlacesFieldKeyPhone = @"phone";
-NSString *const FBSDKPlacesFieldKeyProfilePhoto = @"picture";
-NSString *const FBSDKPlacesFieldKeyPhotos = @"photos";
-NSString *const FBSDKPlacesFieldKeyPriceRange = @"price_range";
-NSString *const FBSDKPlacesFieldKeyRatingCount = @"rating_count";
-NSString *const FBSDKPlacesFieldKeyRestaurantServices = @"restaurant_services";
-NSString *const FBSDKPlacesFieldKeyRestaurantSpecialties = @"restaurant_specialties";
-NSString *const FBSDKPlacesFieldKeySingleLineAddress = @"single_line_address";
-NSString *const FBSDKPlacesFieldKeyWebsite = @"website";
-NSString *const FBSDKPlacesFieldKeyWorkflows = @"workflows";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyAbout = @"about";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyAppLinks = @"app_links";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyCategories = @"category_list";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyCheckins = @"checkins";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyConfidence = @"confidence_level";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyCoverPhoto = @"cover";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyDescription = @"description";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyEngagement = @"engagement";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyHours = @"hours";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyIsAlwaysOpen = @"is_always_open";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyIsPermanentlyClosed = @"is_permanently_closed";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyIsVerified = @"is_verified";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyLink = @"link";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyLocation = @"location";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyName = @"name";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyOverallStarRating = @"overall_star_rating";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPlaceID = @"id";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPage = @"page";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyParking = @"parking";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPaymentOptions = @"payment_options";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPhone = @"phone";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyProfilePhoto = @"picture";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPhotos = @"photos";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyPriceRange = @"price_range";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyRatingCount = @"rating_count";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyRestaurantServices = @"restaurant_services";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyRestaurantSpecialties = @"restaurant_specialties";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeySingleLineAddress = @"single_line_address";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyWebsite = @"website";
+FBSDKPlacesFieldKey FBSDKPlacesFieldKeyWorkflows = @"workflows";
 
-NSString *const FBSDKPlacesResponseKeyCity = @"city";
-NSString *const FBSDKPlacesResponseKeyCityID = @"city_id";
-NSString *const FBSDKPlacesResponseKeyCountry = @"country";
-NSString *const FBSDKPlacesResponseKeyCountryCode = @"country_code";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyCity = @"city";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyCityID = @"city_id";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyCountry = @"country";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyCountryCode = @"country_code";
 
-NSString *const FBSDKPlacesResponseKeyLatitude = @"latitude";
-NSString *const FBSDKPlacesResponseKeyLongitude = @"longitude";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyLatitude = @"latitude";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyLongitude = @"longitude";
 
-NSString *const FBSDKPlacesResponseKeyRegion = @"region";
-NSString *const FBSDKPlacesResponseKeyRegionID = @"region_id";
-NSString *const FBSDKPlacesResponseKeyState = @"state";
-NSString *const FBSDKPlacesResponseKeyStreet = @"street";
-NSString *const FBSDKPlacesResponseKeyZip = @"zip";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyRegion = @"region";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyRegionID = @"region_id";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyState = @"state";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyStreet = @"street";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyZip = @"zip";
 
-NSString *const FBSDKPlacesResponseKeyMatchedCategories = @"matched_categories";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyMatchedCategories = @"matched_categories";
 
-NSString *const FBSDKPlacesResponseKeyPhotoSource = @"source";
-NSString *const FBSDKPlacesResponseKeyData = @"data";
-NSString *const FBSDKPlacesResponseKeyUrl = @"url";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyPhotoSource = @"source";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyData = @"data";
+FBSDKPlacesResponseKey FBSDKPlacesResponseKeyUrl = @"url";
 
-NSString *const FBSDKPlacesParameterKeySummary = @"summary";
-NSString *const FBSDKPlacesSummaryKeyTracking = @"tracking";
+FBSDKPlacesParameterKey FBSDKPlacesParameterKeySummary = @"summary";
+FBSDKPlacesSummaryKey FBSDKPlacesSummaryKeyTracking = @"tracking";

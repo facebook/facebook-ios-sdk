@@ -35,7 +35,9 @@
 #import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
+
 #import "FBSDKBoltsMeasurementEventListener.h"
+#import "FBSDKMeasurementEventListener.h"
 #import "FBSDKContainerViewController.h"
 #import "FBSDKProfile+Internal.h"
 #endif
@@ -78,8 +80,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     [[self sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchData];
 
 #if !TARGET_OS_TV
-    // Register Listener for Bolts measurement events
-    [FBSDKBoltsMeasurementEventListener defaultListener];
+    // Register Listener for App Link measurement events
+    [FBSDKMeasurementEventListener defaultListener];
 #endif
     // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
     [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]
@@ -92,12 +94,12 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-+ (instancetype)sharedInstance
++ (FBSDKApplicationDelegate *)sharedInstance
 {
     static FBSDKApplicationDelegate *_sharedInstance;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] _init];
+        _sharedInstance = [[self alloc] init];
     });
     return _sharedInstance;
 }
@@ -115,11 +117,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     _applicationObservers = [[NSHashTable alloc] init];
   }
   return self;
-}
-
-- (instancetype)init
-{
-    return nil;
 }
 
 - (void)dealloc
@@ -193,7 +190,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     // fetch gate keepers
     [FBSDKGateKeeperManager loadGateKeepers];
 
-    if ([FBSDKSettings autoLogAppEventsEnabled].boolValue) {
+    if (FBSDKSettings.isAutoLogAppEventsEnabled) {
         [self _logSDKInitialize];
     }
 #if !TARGET_OS_TV
@@ -226,7 +223,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
   // Auto log basic events in case autoLogAppEventsEnabled is set
-  if ([[FBSDKSettings autoLogAppEventsEnabled] boolValue]) {
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
     [FBSDKAppEvents activateApp];
   }
 
@@ -239,6 +236,8 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 }
 
 #pragma mark - Internal Methods
+
+#pragma mark - FBSDKApplicationObserving
 
 - (void)addObserver:(id<FBSDKApplicationObserving>)observer
 {
@@ -296,7 +295,7 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (void)_logSDKInitialize
 {
-    NSMutableDictionary *params = [NSMutableDictionary new];
+    NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
     params[@"core_lib_included"] = @1;
     if (objc_lookUpClass("FBSDKShareDialog") != nil) {
         params[@"share_lib_included"] = @1;

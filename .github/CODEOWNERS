@@ -1,5 +1,9 @@
 # Project Owners
+<<<<<<< HEAD
 * @codytwinton @jingping2015 @kalendae
+=======
+* @codytwinton @jingping2015 @kalendae @robtimp
+>>>>>>> 0988e028012293e373b60946596e6076e281c640
 
 # Login Kit
 FBSDKLoginKit/* @codytwinton @robtimp @abeatte

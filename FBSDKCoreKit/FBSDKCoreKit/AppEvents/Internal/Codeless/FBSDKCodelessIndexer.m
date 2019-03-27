@@ -160,8 +160,8 @@ static NSString *_lastTreeHash;
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc]
                                 initWithGraphPath:[NSString stringWithFormat:@"%@/%@",
                                                    [FBSDKSettings appID], CODELESS_INDEXING_SESSION_ENDPOINT]
-                                parameters: parameters
-                                HTTPMethod:@"POST"];
+                                parameters:parameters
+                                HTTPMethod:FBSDKHTTPMethodPOST];
   [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     _isCheckingSession = NO;
     if ([result isKindOfClass:[NSDictionary class]]) {
@@ -289,7 +289,7 @@ static NSString *_lastTreeHash;
                                                CODELESS_INDEXING_PLATFORM_KEY: @"iOS",
                                                CODELESS_INDEXING_SESSION_ID_KEY: [self currentSessionDeviceID]
                                                }
-                                  HTTPMethod:@"POST"];
+                                  HTTPMethod:FBSDKHTTPMethodPOST];
     _isCodelessIndexing = YES;
     [request startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
         _isCodelessIndexing = NO;

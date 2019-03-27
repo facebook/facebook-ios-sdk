@@ -21,11 +21,14 @@
 #import <FBSDKShareKit/FBSDKShareMessengerActionButton.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
  This share content allows sharing a bubble that plays songs with Open Graph music.
  See https://developers.facebook.com/docs/messenger-platform/send-messages/template/open-graph
  for details. Passing <FBSDKSharingContent> property pageID is required for this type of share.
  */
+NS_SWIFT_NAME(ShareMessengerOpenGraphMusicTemplateContent)
 @interface FBSDKShareMessengerOpenGraphMusicTemplateContent : NSObject <FBSDKSharingContent>
 
 /**
@@ -36,6 +39,8 @@
 /**
  This specifies what action button to show below the open graph music bubble. Optional.
  */
-@property (nonatomic, copy) id<FBSDKShareMessengerActionButton> button;
+@property (nonatomic, copy, nullable) id<FBSDKShareMessengerActionButton> button;
 
 @end
+
+NS_ASSUME_NONNULL_END

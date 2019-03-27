@@ -20,16 +20,21 @@
 
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
+@class FBSDKSharePhoto;
+
 /**
   A model for photo content to be shared.
  */
+NS_SWIFT_NAME(SharePhotoContent)
 @interface FBSDKSharePhotoContent : NSObject <FBSDKSharingContent>
 
 /**
   Photos to be shared.
  @return Array of the photos (FBSDKSharePhoto)
  */
-@property (nonatomic, copy) NSArray *photos;
+@property (nonatomic, copy) NSArray<FBSDKSharePhoto *> *photos;
 
 /**
   Compares the receiver to another photo content.
@@ -39,3 +44,5 @@
 - (BOOL)isEqualToSharePhotoContent:(FBSDKSharePhotoContent *)content;
 
 @end
+
+NS_ASSUME_NONNULL_END

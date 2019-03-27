@@ -1,6 +1,3 @@
-[submodule "Carthage/Checkouts/Bolts-ObjC"]
-  path = Carthage/Checkouts/Bolts-ObjC
-  url = https://github.com/BoltsFramework/Bolts-ObjC.git
 [submodule "Carthage/Checkouts/OHHTTPStubs"]
   path = Carthage/Checkouts/OHHTTPStubs
   url = https://github.com/AliSoftware/OHHTTPStubs.git

@@ -43,7 +43,7 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
   }
 }
 
-+ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestHandler)permissionHandler
++ (void)addRefreshPiggyback:(FBSDKGraphRequestConnection *)connection permissionHandler:(FBSDKGraphRequestBlock)permissionHandler
 {
   FBSDKAccessToken *expectedToken = [FBSDKAccessToken currentAccessToken];
   __block NSMutableSet *permissions = nil;
@@ -56,13 +56,13 @@ static int const FBSDKTokenRefreshRetrySeconds = 60 * 60;           // hour
     if (--expectingCallbacksCount == 0) {
       FBSDKAccessToken *currentToken = [FBSDKAccessToken currentAccessToken];
       NSDate *expirationDate = currentToken.expirationDate;
-      if (expirationDateNumber) {
+      if (expirationDateNumber != nil) {
         expirationDate = (expirationDateNumber.doubleValue > 0 ?
                           [NSDate dateWithTimeIntervalSince1970:expirationDateNumber.doubleValue] :
                           [NSDate distantFuture]);
       }
       NSDate *dataExpirationDate = currentToken.dataAccessExpirationDate;
-      if (dataAccessExpirationDateNumber) {
+      if (dataAccessExpirationDateNumber != nil) {
             dataExpirationDate = (dataAccessExpirationDateNumber.doubleValue > 0 ?
                               [NSDate dateWithTimeIntervalSince1970:dataAccessExpirationDateNumber.doubleValue] :
                               [NSDate distantFuture]);

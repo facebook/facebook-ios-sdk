@@ -672,7 +672,7 @@ static void FBSDKLikeActionControllerAddPublishUnlikeRequest(FBSDKAccessToken *a
                                                              fbsdk_like_action_controller_publish_unlike_completion_block completionHandler)
 {
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:unlikeToken
-                                                                 parameters:nil
+                                                                 parameters:@{}
                                                                 tokenString:accessToken.tokenString
                                                                     version:nil
                                                                  HTTPMethod:@"DELETE"];

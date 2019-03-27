@@ -83,14 +83,24 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }
 }
 
-+ (instancetype)showFromViewController:(UIViewController *)viewController
-                           withContent:(id<FBSDKSharingContent>)content
-                              delegate:(id<FBSDKSharingDelegate>)delegate
++ (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
+                             withContent:(id<FBSDKSharingContent>)content
+                                delegate:(nullable id<FBSDKSharingDelegate>)delegate
 {
   FBSDKShareDialog *dialog = [[self alloc] init];
   dialog.fromViewController = viewController;
   dialog.shareContent = content;
   dialog.delegate = delegate;
+  return dialog;
+}
+
++ (instancetype)showFromViewController:(UIViewController *)viewController
+                           withContent:(id<FBSDKSharingContent>)content
+                              delegate:(id<FBSDKSharingDelegate>)delegate
+{
+  FBSDKShareDialog *dialog = [self dialogWithViewController:viewController
+                                                withContent:content
+                                                   delegate:delegate];
   [dialog show];
   return dialog;
 }
@@ -1099,7 +1109,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Cancelled,
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1113,7 +1123,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogOutcome : FBSDKAppEventsDialogOutcomeValue_Completed
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];
@@ -1128,7 +1138,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                FBSDKAppEventParameterDialogErrorMessage : [NSString stringWithFormat:@"%@", error]
                                };
 
-  [FBSDKAppEvents logImplicitEvent:FBSDLAppEventNameFBSDKEventShareDialogResult
+  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKEventShareDialogResult
                         valueToSum:nil
                         parameters:parameters
                        accessToken:[FBSDKAccessToken currentAccessToken]];

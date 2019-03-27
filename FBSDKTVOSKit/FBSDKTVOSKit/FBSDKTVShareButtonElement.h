@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_BEGIN
  <FBSDKShareButton action_type="video.watches" object_url="http://samples.ogp.me/453907197960619" key="movie"/>
 
  */
+NS_SWIFT_NAME(FBTVShareButtonElement)
 @interface FBSDKTVShareButtonElement : TVViewElement
 
 @end

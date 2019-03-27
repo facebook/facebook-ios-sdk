@@ -115,7 +115,7 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
     FBSDKGraphRequest *graphRequest = [self.placesManager
                                        placeSearchRequestForLocation:self.mostRecentLocation
                                        searchTerm:searchTerm
-                                       categories:nil fields:placeFields
+                                       categories:@[] fields:placeFields
                                        distance:0
                                        cursor:nil];
     [graphRequest startWithCompletionHandler:graphCompletionHandler];
@@ -123,7 +123,7 @@ typedef NS_ENUM(NSInteger, PlacesMode) {
   else {
     [self.placesManager
      generatePlaceSearchRequestForSearchTerm:searchTerm
-     categories:nil
+     categories:@[]
      fields:placeFields
      distance:0 cursor:nil
      completion:^(FBSDKGraphRequest * _Nullable graphRequest, CLLocation * _Nullable location, NSError * _Nullable error) {

@@ -22,20 +22,35 @@
 #import <FBSDKShareKit/FBSDKSharing.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /**
   A dialog for sharing content on Facebook.
  */
+NS_SWIFT_NAME(ShareDialog)
 @interface FBSDKShareDialog : NSObject <FBSDKSharingDialog>
 
 /**
-  Convenience method to show an FBSDKShareDialog with a fromViewController, content and a delegate.
+  Convenience method to create a FBSDKShareDialog with a fromViewController, content and a delegate.
+ @param viewController A UIViewController to present the dialog from, if appropriate.
+ @param content The content to be shared.
+ @param delegate The receiver's delegate.
+ */
++ (instancetype)dialogWithViewController:(nullable UIViewController *)viewController
+                             withContent:(id<FBSDKSharingContent>)content
+                                delegate:(nullable id<FBSDKSharingDelegate>)delegate
+NS_SWIFT_NAME(init(fromViewController:content:delegate:));
+
+/**
+ Convenience method to show an FBSDKShareDialog with a fromViewController, content and a delegate.
  @param viewController A UIViewController to present the dialog from, if appropriate.
  @param content The content to be shared.
  @param delegate The receiver's delegate.
  */
 + (instancetype)showFromViewController:(UIViewController *)viewController
                            withContent:(id<FBSDKSharingContent>)content
-                              delegate:(id<FBSDKSharingDelegate>)delegate;
+                              delegate:(nullable id<FBSDKSharingDelegate>)delegate
+NS_SWIFT_UNAVAILABLE("Use init(fromViewController:content:delegate:).show() instead");
 
 /**
   A UIViewController to present the dialog from.
@@ -52,3 +67,5 @@
 @property (nonatomic, assign) FBSDKShareDialogMode mode;
 
 @end
+
+NS_ASSUME_NONNULL_END

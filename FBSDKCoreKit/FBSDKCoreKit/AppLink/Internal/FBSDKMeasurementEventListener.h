@@ -18,10 +18,14 @@
 
 #import <Foundation/Foundation.h>
 
-#import "FBSDKLikeControl.h"
+NS_ASSUME_NONNULL_BEGIN
 
-@interface FBSDKLikeControl ()
+NS_SWIFT_NAME(MeasurementEventListener)
+@interface FBSDKMeasurementEventListener : NSObject
 
-- (NSDictionary *)analyticsParameters;
+@property (class, nonatomic, strong, readonly) FBSDKMeasurementEventListener *defaultListener
+NS_SWIFT_NAME(default);
 
 @end
+
+NS_ASSUME_NONNULL_END

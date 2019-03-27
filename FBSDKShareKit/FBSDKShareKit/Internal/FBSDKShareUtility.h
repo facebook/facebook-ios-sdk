@@ -25,6 +25,13 @@
 #import <FBSDKShareKit/FBSDKShareVideoContent.h>
 #import <FBSDKShareKit/FBSDKSharingContent.h>
 
+/**
+ Web Share Block
+ */
+typedef void (^FBSDKWebPhotoContentBlock)(BOOL, NSString *, NSDictionary<NSString *, id> *)
+NS_SWIFT_NAME(WebPhotoContentBlock);
+
+NS_SWIFT_NAME(ShareUtility)
 @interface FBSDKShareUtility : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -42,7 +49,7 @@
                        error:(NSError *__autoreleasing *)errorRef;
 + (NSString *)buildWebShareTags:(NSArray<NSString *> *)peopleIDs;
 + (void)buildAsyncWebPhotoContent:(FBSDKSharePhotoContent *)content
-                completionHandler:(void(^)(BOOL, NSString *, NSDictionary *))completion;
+                completionHandler:(FBSDKWebPhotoContentBlock)completion;
 + (id)convertOpenGraphValue:(id)value;
 + (NSDictionary<NSString *, id> *)convertOpenGraphValueContainer:(FBSDKShareOpenGraphValueContainer *)container
                                                 requireNamespace:(BOOL)requireNamespace;

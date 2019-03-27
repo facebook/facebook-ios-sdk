@@ -18,6 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FBSDKLikeObjectType.h"
+
+NS_ASSUME_NONNULL_BEGIN
+
 /**
   The common interface for components that initiate liking.
 
@@ -25,6 +29,7 @@
 
  @see FBSDKLikeControl
  */
+NS_SWIFT_NAME(Liking)
 @protocol FBSDKLiking <NSObject>
 
 /**
@@ -32,7 +37,7 @@
 
 
  This value may be an Open Graph object ID or a string representation of an URL that describes an
- Open Graph object.  The objects may be public objects, like pages, or objects that are defined by your application.
+ Open Graph object. The objects may be public objects, like pages, or objects that are defined by your application.
  */
 @property (nonatomic, copy) NSString *objectID;
 
@@ -47,3 +52,5 @@
 @property (nonatomic, assign) FBSDKLikeObjectType objectType;
 
 @end
+
+NS_ASSUME_NONNULL_END

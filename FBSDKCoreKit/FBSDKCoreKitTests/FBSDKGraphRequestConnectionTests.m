@@ -35,7 +35,6 @@
 @property (nonatomic, copy) void (^requestConnectionCallback)(FBSDKGraphRequestConnection *connection, NSError *error);
 @end
 
-static id g_mockAccountStoreAdapter;
 static id g_mockNSBundle;
 
 @implementation FBSDKGraphRequestConnectionTests
@@ -51,15 +50,17 @@ static id g_mockNSBundle;
 {
   [FBSDKSettings setAppID:@"appid"];
   g_mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
-  g_mockAccountStoreAdapter = [FBSDKCoreKitTestUtility mockAccountStoreAdapter];
 }
 
 + (void)tearDown
 {
   [g_mockNSBundle stopMocking];
   g_mockNSBundle = nil;
+<<<<<<< HEAD
   [g_mockAccountStoreAdapter stopMocking];
   g_mockAccountStoreAdapter = nil;
+=======
+>>>>>>> 0988e028012293e373b60946596e6076e281c640
 }
 
 #pragma mark - Helpers
@@ -286,8 +287,8 @@ static id g_mockNSBundle;
   }];
   FBSDKAccessToken *tokenThatNeedsRefresh = [[FBSDKAccessToken alloc]
                                              initWithTokenString:@"token"
-                                             permissions:nil
-                                             declinedPermissions:nil
+                                             permissions:@[]
+                                             declinedPermissions:@[]
                                              appID:@"appid"
                                              userID:@"userid"
                                              expirationDate:[NSDate distantPast]
@@ -318,8 +319,8 @@ static id g_mockNSBundle;
   [FBSDKAccessToken setCurrentAccessToken:nil];
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
-                                      permissions:nil
-                                      declinedPermissions:nil
+                                      permissions:@[]
+                                      declinedPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
@@ -366,7 +367,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -407,7 +408,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -427,7 +428,7 @@ static id g_mockNSBundle;
                                      parameters:@{@"fields":@""}
                                     tokenString:@"notCurrentToken"
                                         version:nil
-                                     HTTPMethod:nil]
+                                     HTTPMethod:@""]
    startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
      XCTAssertNil(result);
      XCTAssertEqualObjects(@"Token is broke", error.userInfo[FBSDKErrorDeveloperMessageKey]);
@@ -453,7 +454,7 @@ static id g_mockNSBundle;
                            }];
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
-                                                            declinedPermissions:nil
+                                                            declinedPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
@@ -541,8 +542,8 @@ static id g_mockNSBundle;
   // adding fresh token to avoid piggybacking a token refresh
   FBSDKAccessToken *tokenNoRefresh = [[FBSDKAccessToken alloc]
                                       initWithTokenString:@"token"
-                                      permissions:nil
-                                      declinedPermissions:nil
+                                      permissions:@[]
+                                      declinedPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
@@ -596,7 +597,12 @@ static id g_mockNSBundle;
 - (void)testRetryDisabled
 {
   id mockPiggybackManager = [[self class] mockCachedServerConfiguration];
+<<<<<<< HEAD
   [FBSDKSettings setGraphErrorRecoveryDisabled:NO];
+=======
+  FBSDKSettings.graphErrorRecoveryEnabled = NO;
+
+>>>>>>> 0988e028012293e373b60946596e6076e281c640
   __block int requestCount = 0;
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed request"];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -625,7 +631,7 @@ static id g_mockNSBundle;
     XCTAssertNil(error);
   }];
   XCTAssertEqual(1, requestCount);
-  [FBSDKSettings setGraphErrorRecoveryDisabled:NO];
+  FBSDKSettings.graphErrorRecoveryEnabled = NO;
   [mockPiggybackManager stopMocking];
 }
 @end

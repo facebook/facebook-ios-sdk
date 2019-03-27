@@ -26,29 +26,6 @@
 
 #pragma mark - Class Methods
 
-- (BOOL)isNetworkError
-{
-  NSError *innerError = self.userInfo[NSUnderlyingErrorKey];
-  if (innerError && innerError.isNetworkError) {
-    return YES;
-  }
-
-  switch (self.code) {
-    case NSURLErrorTimedOut:
-    case NSURLErrorCannotFindHost:
-    case NSURLErrorCannotConnectToHost:
-    case NSURLErrorNetworkConnectionLost:
-    case NSURLErrorDNSLookupFailed:
-    case NSURLErrorNotConnectedToInternet:
-    case NSURLErrorInternationalRoamingOff:
-    case NSURLErrorCallIsActive:
-    case NSURLErrorDataNotAllowed:
-      return YES;
-    default:
-      return NO;
-  }
-}
-
 + (NSError *)fbErrorWithCode:(NSInteger)code message:(NSString *)message
 {
   return [self fbErrorWithCode:code message:message underlyingError:nil];
@@ -63,7 +40,7 @@
 
 + (NSError *)fbErrorWithCode:(NSInteger)code message:(NSString *)message underlyingError:(NSError *)underlyingError
 {
-  return [self fbErrorWithCode:code userInfo:nil message:message underlyingError:underlyingError];
+  return [self fbErrorWithCode:code userInfo:@{} message:message underlyingError:underlyingError];
 }
 
 + (NSError *)fbErrorWithDomain:(NSErrorDomain)domain
@@ -197,9 +174,34 @@
 + (NSError *)fbUnknownErrorWithMessage:(NSString *)message
 {
   return [self fbErrorWithCode:FBSDKErrorUnknown
-                      userInfo:nil
+                      userInfo:@{}
                        message:message
                underlyingError:nil];
+}
+
+#pragma mark - Instance Properties
+
+- (BOOL)isNetworkError
+{
+  NSError *innerError = self.userInfo[NSUnderlyingErrorKey];
+  if (innerError && innerError.isNetworkError) {
+    return YES;
+  }
+
+  switch (self.code) {
+    case NSURLErrorTimedOut:
+    case NSURLErrorCannotFindHost:
+    case NSURLErrorCannotConnectToHost:
+    case NSURLErrorNetworkConnectionLost:
+    case NSURLErrorDNSLookupFailed:
+    case NSURLErrorNotConnectedToInternet:
+    case NSURLErrorInternationalRoamingOff:
+    case NSURLErrorCallIsActive:
+    case NSURLErrorDataNotAllowed:
+      return YES;
+    default:
+      return NO;
+  }
 }
 
 @end

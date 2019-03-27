@@ -28,7 +28,7 @@
 {
   CGPoint _dragOffset;
   GameController *_gameController;
-  BFAppLinkReturnToRefererController *_returnToRefererController;
+  FBSDKAppLinkReturnToRefererController *_returnToRefererController;
 }
 
 #pragma mark - View Management
@@ -63,7 +63,7 @@
     }
 
     // only show the back to referer navigation-banner when refererURL is set.
-    // In this version of Bolts, we will need to change the size of this view frame manually to none-zero.
+    // In this version of FBSDKCoreKit, we will need to change the size of this view frame manually to none-zero.
     _returnToRefererController.view = self.returnToRefererView;
     [_returnToRefererController showViewForRefererAppLink:appLinkURL.appLinkReferer];
   }

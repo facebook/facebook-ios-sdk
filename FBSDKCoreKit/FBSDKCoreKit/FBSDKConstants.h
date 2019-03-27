@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
@@ -25,7 +27,8 @@
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSErrorDomain const _Nullable FBSDKErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const _Nullable FBSDKErrorDomain
+NS_SWIFT_NAME(ErrorDomain);
 
 #else
 
@@ -34,7 +37,8 @@ FOUNDATION_EXPORT NSErrorDomain const _Nullable FBSDKErrorDomain;
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorDomain;
+FOUNDATION_EXPORT NSString *const FBSDKErrorDomain
+NS_SWIFT_NAME(ErrorDomain);
 
 #endif
 
@@ -50,34 +54,40 @@ FOUNDATION_EXPORT NSString *const FBSDKErrorDomain;
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentCollectionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentCollectionKey
+NS_SWIFT_NAME(ErrorArgumentCollectionKey);
 
 /**
  The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentNameKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentNameKey
+NS_SWIFT_NAME(ErrorArgumentNameKey);
 
 /**
  The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentValueKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentValueKey
+NS_SWIFT_NAME(ErrorArgumentValueKey);
 
 /**
  The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorDeveloperMessageKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorDeveloperMessageKey
+NS_SWIFT_NAME(ErrorDeveloperMessageKey);
 
 /**
  The userInfo key describing a localized description that can be presented to the user.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedDescriptionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedDescriptionKey
+NS_SWIFT_NAME(ErrorLocalizedDescriptionKey);
 
 /**
  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedTitleKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedTitleKey
+NS_SWIFT_NAME(ErrorLocalizedTitleKey);
 
 /*
  @methodgroup FBSDKGraphRequest error userInfo keys
@@ -88,36 +98,32 @@ FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedTitleKey
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorKey;
-
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorCategoryKey
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorKey
+NS_SWIFT_NAME(GraphRequestErrorKey);
 
 /*
  The userInfo key for the Graph API error code.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorCodeKey;
-
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorCode
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorCodeKey
+NS_SWIFT_NAME(GraphRequestErrorGraphErrorCodeKey);
 
 /*
  The userInfo key for the Graph API error subcode.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorSubcodeKey;
-
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorSubcode
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorSubcodeKey
+NS_SWIFT_NAME(GraphRequestErrorGraphErrorSubcodeKey);
 
 /*
  The userInfo key for the HTTP status code.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorHTTPStatusCodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorHTTPStatusCodeKey
+NS_SWIFT_NAME(GraphRequestErrorHTTPStatusCodeKey);
 
 /*
  The userInfo key for the raw JSON response.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorParsedJSONResponseKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorParsedJSONResponseKey
+NS_SWIFT_NAME(GraphRequestErrorParsedJSONResponseKey);
 
 #else
 
@@ -131,34 +137,40 @@ FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorParse
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentCollectionKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentCollectionKey
+NS_SWIFT_NAME(ErrorArgumentCollectionKey);
 
 /**
  The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentNameKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentNameKey
+NS_SWIFT_NAME(ErrorArgumentNameKey);
 
 /**
  The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentValueKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorArgumentValueKey
+NS_SWIFT_NAME(ErrorArgumentValueKey);
 
 /**
  The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorDeveloperMessageKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorDeveloperMessageKey
+NS_SWIFT_NAME(ErrorDeveloperMessageKey);
 
 /**
  The userInfo key describing a localized description that can be presented to the user.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedDescriptionKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedDescriptionKey
+NS_SWIFT_NAME(ErrorLocalizedDescriptionKey);
 
 /**
  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
-FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedTitleKey;
+FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedTitleKey
+NS_SWIFT_NAME(ErrorLocalizedTitleKey);
 
 /*
  @methodgroup FBSDKGraphRequest error userInfo keys
@@ -169,36 +181,32 @@ FOUNDATION_EXPORT NSString *const FBSDKErrorLocalizedTitleKey;
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorKey;
-
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorCategoryKey
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorKey
+NS_SWIFT_NAME(GraphRequestErrorKey);
 
 /*
  The userInfo key for the Graph API error code.
  */
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorCodeKey;
-
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorCode
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorCodeKey
+NS_SWIFT_NAME(GraphRequestErrorGraphErrorCodeKey);
 
 /*
  The userInfo key for the Graph API error subcode.
  */
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
-
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorSubcode
-DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorGraphErrorSubcodeKey
+NS_SWIFT_NAME(GraphRequestErrorGraphErrorSubcodeKey);
 
 /*
  The userInfo key for the HTTP status code.
  */
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorHTTPStatusCodeKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorHTTPStatusCodeKey
+NS_SWIFT_NAME(GraphRequestErrorHTTPStatusCodeKey);
 
 /*
  The userInfo key for the raw JSON response.
  */
-FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey;
+FOUNDATION_EXPORT NSString *const FBSDKGraphRequestErrorParsedJSONResponseKey
+NS_SWIFT_NAME(GraphRequestErrorParsedJSONResponseKey);
 
 #endif
 
@@ -224,6 +232,9 @@ NS_SWIFT_NAME(ErrorBlock);
 typedef void (^FBSDKSuccessBlock)(BOOL success, NSError *_Nullable error)
 NS_SWIFT_NAME(SuccessBlock);
 
+/*
+ @methodgroup Enums
+ */
 #ifndef NS_ERROR_ENUM
 #define NS_ERROR_ENUM(_domain, _name) \
 enum _name: NSInteger _name; \
@@ -311,7 +322,7 @@ typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKError)
    Indicates an app switch to the browser (typically for a dialog) failed.
    */
   FBSDKErrorBrowserUnavailable,
-};
+} NS_SWIFT_NAME(CoreError);
 
 /**
  FBSDKGraphRequestError
@@ -325,11 +336,12 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
   FBSDKGraphRequestErrorTransient = 1,
   /** Indicates the error can be recovered (such as requiring a login). A recoveryAttempter will be provided with the error instance that can take UI action. */
   FBSDKGraphRequestErrorRecoverable = 2
-};
+} NS_SWIFT_NAME(GraphRequestError);
 
 /**
  a formal protocol very similar to the informal protocol NSErrorRecoveryAttempting
  */
+NS_SWIFT_UNAVAILABLE("")
 @protocol FBSDKErrorRecoveryAttempting<NSObject>
 
 /**
@@ -347,37 +359,13 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
 
  The value passed for didRecover must be YES if error recovery was completely successful, NO otherwise.
  */
-- (void)attemptRecoveryFromError:(NSError *_Nullable)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id _Nullable )delegate didRecoverSelector:(SEL _Nullable )didRecoverSelector contextInfo:(void *_Nullable)contextInfo;
+
+- (void)attemptRecoveryFromError:(NSError *_Nullable)error
+                     optionIndex:(NSUInteger)recoveryOptionIndex
+                        delegate:(id _Nullable)delegate
+              didRecoverSelector:(SEL _Nullable)didRecoverSelector
+                     contextInfo:(void *_Nullable)contextInfo;
 
 @end
 
-/**
- Deprecated
- */
-typedef NS_ENUM(NSInteger, FBSDKErrorCode)
-{
-  FBSDKReservedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorReserved instead") = 0,
-  FBSDKEncryptionErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorEncryption instead"),
-  FBSDKInvalidArgumentErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorInvalidArgument instead"),
-  FBSDKUnknownErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorUnknown instead"),
-  FBSDKNetworkErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorNetwork instead"),
-  FBSDKAppEventsFlushErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAppEventsFlush instead"),
-  FBSDKGraphRequestNonTextMimeTypeReturnedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestNonTextMimeTypeReturned instead"),
-  FBSDKGraphRequestProtocolMismatchErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestProtocolMismatch instead"),
-  FBSDKGraphRequestGraphAPIErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorGraphRequestGraphAPI instead"),
-  FBSDKDialogUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorDialogUnavailable instead"),
-  FBSDKAccessTokenRequiredErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAccessTokenRequired instead"),
-  FBSDKAppVersionUnsupportedErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorAppVersionUnsupported instead"),
-  FBSDKBrowserUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorBrowserUnavailable instead"),
-  FBSDKBrowswerUnavailableErrorCode DEPRECATED_MSG_ATTRIBUTE("use FBSDKErrorBrowserUnavailable instead") = FBSDKBrowserUnavailableErrorCode,
-} DEPRECATED_MSG_ATTRIBUTE("use FBSDKError instead");
-
-/**
- Deprecated
- */
-typedef NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
-{
-  FBSDKGraphRequestErrorCategoryOther DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorOther instead") = 0,
-  FBSDKGraphRequestErrorCategoryTransient DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorTransient instead") = 1,
-  FBSDKGraphRequestErrorCategoryRecoverable DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorRecoverable instead") = 2
-} DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestError instead");
+NS_ASSUME_NONNULL_END

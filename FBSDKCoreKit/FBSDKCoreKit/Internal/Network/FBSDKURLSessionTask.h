@@ -18,10 +18,12 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^FBSDKURLSessionTaskHandler)(NSError *error,
-                                           NSURLResponse *response,
-                                           NSData *responseData);
+typedef void (^FBSDKURLSessionTaskBlock)(NSError *error,
+                                         NSURLResponse *response,
+                                         NSData *responseData)
+NS_SWIFT_NAME(URLSessionTaskBlock);
 
+NS_SWIFT_NAME(URLSessionTask)
 @interface FBSDKURLSessionTask : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
@@ -29,7 +31,7 @@ typedef void (^FBSDKURLSessionTaskHandler)(NSError *error,
 
 - (instancetype)initWithRequest:(NSURLRequest *)request
                     fromSession:(NSURLSession *)session
-              completionHandler:(FBSDKURLSessionTaskHandler)handler
+              completionHandler:(FBSDKURLSessionTaskBlock)handler
 NS_DESIGNATED_INITIALIZER;
 
 - (void)cancel;

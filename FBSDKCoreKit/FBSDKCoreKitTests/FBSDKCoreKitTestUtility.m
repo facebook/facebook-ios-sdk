@@ -34,10 +34,4 @@
   return mockNSBundle;
 }
 
-+ (id)mockAccountStoreAdapter
-{
-  id mockAccountStoreAdapter = [OCMockObject partialMockForObject:[FBSDKSystemAccountStoreAdapter sharedInstance]];
-  [[[mockAccountStoreAdapter stub]andReturn:nil] accessTokenString];
-  return mockAccountStoreAdapter;
-}
 @end

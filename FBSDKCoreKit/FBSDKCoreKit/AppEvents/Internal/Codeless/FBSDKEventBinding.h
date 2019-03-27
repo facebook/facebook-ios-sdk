@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+NS_SWIFT_NAME(EventBinding)
 @interface FBSDKEventBinding : NSObject
 
 @property (nonatomic, copy, readonly) NSString *eventName;

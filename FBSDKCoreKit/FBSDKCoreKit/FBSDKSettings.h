@@ -18,255 +18,182 @@
 
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 /*
  * Constants defining logging behavior.  Use with <[FBSDKSettings setLoggingBehavior]>.
  */
 
+/// typedef for FBSDKAppEventName
+typedef NSString *const FBSDKLoggingBehavior NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoggingBehavior);
+
 /** Include access token in logging. */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorAccessTokens;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorAccessTokens;
 
 /** Log performance characteristics */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorPerformanceCharacteristics;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorPerformanceCharacteristics;
 
 /** Log FBSDKAppEvents interactions */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorAppEvents;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorAppEvents;
 
 /** Log Informational occurrences */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorInformational;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorInformational;
 
 /** Log cache errors. */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorCacheErrors;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorCacheErrors;
 
 /** Log errors from SDK UI controls */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorUIControlErrors;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorUIControlErrors;
 
 /** Log debug warnings from API response, i.e. when friends fields requested, but user_friends permission isn't granted. */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorGraphAPIDebugWarning;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugWarning;
 
 /** Log warnings from API response, i.e. when requested feature will be deprecated in next version of API.
  Info is the lowest level of severity, using it will result in logging all previously mentioned levels.
  */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorGraphAPIDebugInfo;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorGraphAPIDebugInfo;
 
 /** Log errors from SDK network requests */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorNetworkRequests;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests;
 
 /** Log errors likely to be preventable by the developer. This is in the default set of enabled logging behaviors. */
-FOUNDATION_EXPORT NSString *const FBSDKLoggingBehaviorDeveloperErrors;
+FOUNDATION_EXPORT FBSDKLoggingBehavior FBSDKLoggingBehaviorDeveloperErrors;
 
+NS_SWIFT_NAME(Settings)
 @interface FBSDKSettings : NSObject
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
 /**
-  Get the Facebook App ID used by the SDK.
+ Retrieve the current iOS SDK version.
+ */
+@property (class, nonatomic, copy, readonly) NSString *sdkVersion;
 
+/**
+ Retrieve the current default Graph API version.
+ */
+@property (class, nonatomic, copy, readonly) NSString *defaultGraphAPIVersion;
+
+/**
+ The quality of JPEG images sent to Facebook from the SDK,
+ expressed as a value from 0.0 to 1.0.
+ 
+ If not explicitly set, the default is 0.9.
+ 
+ @see [UIImageJPEGRepresentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKitFunctionReference/#//apple_ref/c/func/UIImageJPEGRepresentation) */
+@property (class, nonatomic, assign) CGFloat JPEGCompressionQuality
+NS_SWIFT_NAME(jpegCompressionQuality);
+
+/**
+ Controls the auto logging of basic app events, such as activateApp and deactivateApp.
+ If not explicitly set, the default is true
+ */
+@property (class, nonatomic, assign, getter=isAutoLogAppEventsEnabled) BOOL autoLogAppEventsEnabled;
+
+/**
+ Controls the fb_codeless_debug logging event
+ If not explicitly set, the default is true
+ */
+@property (class, nonatomic, assign, getter=isCodelessDebugLogEnabled) BOOL codelessDebugLogEnabled;
+
+/**
+ Controls the fb_codeless_debug logging event
+ If not explicitly set, the default is true
+ */
+@property (class, nonatomic, assign, getter=isAdvertiserIDCollectionEnabled) BOOL advertiserIDCollectionEnabled;
+
+/**
+ Whether data such as that generated through FBSDKAppEvents and sent to Facebook
+ should be restricted from being used for other than analytics and conversions.
+ Defaults to NO. This value is stored on the device and persists across app launches.
+ */
+@property (class, nonatomic, assign, getter=shouldLimitEventAndDataUsage) BOOL limitEventAndDataUsage;
+
+/**
+ A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
+ */
+@property (class, nonatomic, assign, getter=isGraphErrorRecoveryEnabled) BOOL graphErrorRecoveryEnabled;
+
+/**
+ The Facebook App ID used by the SDK.
+ 
  If not explicitly set, the default will be read from the application's plist (FacebookAppID).
  */
-+ (NSString *)appID;
+@property (class, nonatomic, copy, null_resettable) NSString *appID;
 
 /**
-  Set the Facebook App ID to be used by the SDK.
- @param appID The Facebook App ID to be used by the SDK.
- */
-+ (void)setAppID:(NSString *)appID;
-
-/**
-  Get the default url scheme suffix used for sessions.
-
+ The default url scheme suffix used for sessions.
+ 
  If not explicitly set, the default will be read from the application's plist (FacebookUrlSchemeSuffix).
  */
-+ (NSString *)appURLSchemeSuffix;
+@property (class, nonatomic, copy, null_resettable) NSString *appURLSchemeSuffix;
 
 /**
-  Set the app url scheme suffix used by the SDK.
- @param appURLSchemeSuffix The url scheme suffix to be used by the SDK.
- */
-+ (void)setAppURLSchemeSuffix:(NSString *)appURLSchemeSuffix;
-
-/**
-  Retrieve the Client Token that has been set via [FBSDKSettings setClientToken].
-
+ The Client Token that has been set via [FBSDKSettings setClientToken].
+ This is needed for certain API calls when made anonymously, without a user-based access token.
+ 
+ The Facebook App's "client token", which, for a given appid can be found in the Security
+ section of the Advanced tab of the Facebook App settings found at <https://developers.facebook.com/apps/[your-app-id]>
+ 
  If not explicitly set, the default will be read from the application's plist (FacebookClientToken).
  */
-+ (NSString *)clientToken;
+@property (class, nonatomic, copy, null_resettable) NSString *clientToken;
 
 /**
-  Sets the Client Token for the Facebook App.
-
- This is needed for certain API calls when made anonymously, without a user-based access token.
- @param clientToken The Facebook App's "client token", which, for a given appid can be found in the Security
- section of the Advanced tab of the Facebook App settings found at <https://developers.facebook.com/apps/[your-app-id]>
- */
-+ (void)setClientToken:(NSString *)clientToken;
-
-/**
-  A convenient way to toggle error recovery for all FBSDKGraphRequest instances created after this is set.
- @param disableGraphErrorRecovery YES or NO.
- */
-+ (void)setGraphErrorRecoveryDisabled:(BOOL)disableGraphErrorRecovery;
-
-/**
-  Get the Facebook Display Name used by the SDK.
-
+ The Facebook Display Name used by the SDK.
+ 
+ This should match the Display Name that has been set for the app with the corresponding Facebook App ID,
+ in the Facebook App Dashboard.
+ 
  If not explicitly set, the default will be read from the application's plist (FacebookDisplayName).
  */
-+ (NSString *)displayName;
+@property (class, nonatomic, copy, null_resettable) NSString *displayName;
 
 /**
-  Set the default Facebook Display Name to be used by the SDK.
-
-  This should match the Display Name that has been set for the app with the corresponding Facebook App ID,
- in the Facebook App Dashboard.
- @param displayName The Facebook Display Name to be used by the SDK.
- */
-+ (void)setDisplayName:(NSString *)displayName;
-
-/**
-  Get the Facebook domain part.
-
+ The Facebook domain part. This can be used to change the Facebook domain
+ (e.g. @"beta") so that requests will be sent to `graph.beta.facebook.com`
+ 
  If not explicitly set, the default will be read from the application's plist (FacebookDomainPart).
  */
-+ (NSString *)facebookDomainPart;
+@property (class, nonatomic, copy, null_resettable) NSString *facebookDomainPart;
 
 /**
-  Set the subpart of the Facebook domain.
-
- This can be used to change the Facebook domain (e.g. @"beta") so that requests will be sent to
- graph.beta.facebook.com
- @param facebookDomainPart The domain part to be inserted into facebook.com.
- */
-+ (void)setFacebookDomainPart:(NSString *)facebookDomainPart;
-
-/**
-  The quality of JPEG images sent to Facebook from the SDK.
-
- If not explicitly set, the default is 0.9.
-
- @see [UIImageJPEGRepresentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKitFunctionReference/#//apple_ref/c/func/UIImageJPEGRepresentation) */
-+ (CGFloat)JPEGCompressionQuality;
-
-/**
-  Set the quality of JPEG images sent to Facebook from the SDK.
- @param JPEGCompressionQuality The quality for JPEG images, expressed as a value from 0.0 to 1.0.
-
- @see [UIImageJPEGRepresentation](https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIKitFunctionReference/#//apple_ref/c/func/UIImageJPEGRepresentation) */
-+ (void)setJPEGCompressionQuality:(CGFloat)JPEGCompressionQuality;
-
-/**
-  Flag which controls the auto logging of basic app events, such as activateApp and deactivateApp.
- If not explicitly set, the default is 1 - true
- */
-+ (NSNumber *)autoLogAppEventsEnabled;
-
-/**
- Set the flag which controls the auto logging of basic app events, such as activateApp and deactivateApp.
- @param AutoLogAppEventsEnabled Flag value, expressed as a value from 0 - false or 1 - true.
- */
-+ (void)setAutoLogAppEventsEnabled:(NSNumber *)AutoLogAppEventsEnabled;
-
-/**
- Flag which controls the fb_codeless_debug logging event
- If not explicitly set, the default is 1 - true
- */
-+ (NSNumber *)codelessDebugLogEnabled;
-
-/**
- Set the flag which controls the fb_codeless_debug logging event
- @param CodelessDebugLogEnabled Flag value, expressed as a value from 0 - false or 1 - true.
- */
-+ (void)setCodelessDebugLogEnabled:(NSNumber *)CodelessDebugLogEnabled;
-
-/**
- Flag which controls whether advertiserID could be collected.
- If not explicitly set, the default is 1 - true
- */
-+ (NSNumber *)advertiserIDCollectionEnabled;
-
-/**
- Set the flag which controls ontrols whether advertiserID could be collected.
- @param AdvertiserIDCollectionEnabled Flag value, expressed as a value from 0 - false or 1 - true.
- */
-+ (void)setAdvertiserIDCollectionEnabled:(NSNumber *)AdvertiserIDCollectionEnabled;
-
-/**
-  Gets whether data such as that generated through FBSDKAppEvents and sent to Facebook should be restricted from being used for other than analytics and conversions.  Defaults to NO.  This value is stored on the device and persists across app launches.
- */
-+ (BOOL)limitEventAndDataUsage;
-
-/**
-  Sets whether data such as that generated through FBSDKAppEvents and sent to Facebook should be restricted from being used for other than analytics and conversions.  Defaults to NO.  This value is stored on the device and persists across app launches.
-
- @param limitEventAndDataUsage   The desired value.
- */
-+ (void)setLimitEventAndDataUsage:(BOOL)limitEventAndDataUsage;
-
-/**
-  Retrieve the current iOS SDK version.
- */
-+ (NSString *)sdkVersion;
-
-/**
-  The current Facebook SDK logging behavior.
- */
-@property (class, nonatomic, copy) NSSet<NSString *> *loggingBehaviors;
-
-+ (NSSet *)loggingBehavior
-DEPRECATED_MSG_ATTRIBUTE("Renamed `loggingBehaviors`");
-
-/**
-  Set the current Facebook SDK logging behavior.  This should consist of strings defined as
- constants with FBSDKLoggingBehavior*.
-
- @param loggingBehavior A set of strings indicating what information should be logged.  If nil is provided, the logging
- behavior is reset to the default set of enabled behaviors.  Set to an empty set in order to disable all logging.
-
-
+ The current Facebook SDK logging behavior. This should consist of strings
+ defined as constants with FBSDKLoggingBehavior*.
+ 
+ This should consist a set of strings indicating what information should be logged
+ defined as constants with FBSDKLoggingBehavior*. Set to an empty set in order to disable all logging.
+ 
  You can also define this via an array in your app plist with key "FacebookLoggingBehavior" or add and remove individual values via enableLoggingBehavior: or disableLogginBehavior:
+ 
+ The default is a set consisting of FBSDKLoggingBehaviorDeveloperErrors
  */
-+ (void)setLoggingBehavior:(NSSet *)loggingBehavior;
+@property (class, nonatomic, copy) NSSet<FBSDKLoggingBehavior> *loggingBehaviors;
 
 /**
-  Enable a particular Facebook SDK logging behavior.
+ Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_TARGET_PLATFORM_VERSION`.
+ 
+ The string should be of the form `@"v2.7"`.
+ 
+ Defaults to `FBSDK_TARGET_PLATFORM_VERSION`.
+ */
+@property (class, nonatomic, copy, null_resettable) NSString *graphAPIVersion;
 
+/**
+ Enable a particular Facebook SDK logging behavior.
+ 
  @param loggingBehavior The LoggingBehavior to enable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
  */
-+ (void)enableLoggingBehavior:(NSString *)loggingBehavior;
++ (void)enableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 /**
-  Disable a particular Facebook SDK logging behavior.
-
+ Disable a particular Facebook SDK logging behavior.
+ 
  @param loggingBehavior The LoggingBehavior to disable. This should be a string defined as a constant with FBSDKLoggingBehavior*.
  */
-+ (void)disableLoggingBehavior:(NSString *)loggingBehavior;
-
-/**
-  Set the user defaults key used by legacy token caches.
-
- @param tokenInformationKeyName the key used by legacy token caches.
-
-
- Use this only if you customized FBSessionTokenCachingStrategy in v3.x of
-  the Facebook SDK for iOS.
-*/
-+ (void)setLegacyUserDefaultTokenInformationKeyName:(NSString *)tokenInformationKeyName;
-
-/**
-  Get the user defaults key used by legacy token caches.
-*/
-+ (NSString *)legacyUserDefaultTokenInformationKeyName;
-
-/**
-  Overrides the default Graph API version to use with `FBSDKGraphRequests`. This overrides `FBSDK_TARGET_PLATFORM_VERSION`.
-
- The string should be of the form `@"v2.7"`.
-*/
-+ (void)setGraphAPIVersion:(NSString *)version;
-
-/**
-  Returns the default Graph API version. Defaults to `FBSDK_TARGET_PLATFORM_VERSION`
-*/
-+ (NSString *)graphAPIVersion;
++ (void)disableLoggingBehavior:(FBSDKLoggingBehavior)loggingBehavior;
 
 @end
+
+NS_ASSUME_NONNULL_END

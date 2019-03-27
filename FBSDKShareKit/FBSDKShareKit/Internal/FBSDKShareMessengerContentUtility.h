@@ -35,6 +35,7 @@ void AddToContentPreviewDictionaryForButton(NSMutableDictionary<NSString *, id> 
 NSDictionary<NSString *, id> *SerializableButtonFromURLButton(FBSDKShareMessengerURLActionButton *button, BOOL isDefaultAction);
 NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKShareMessengerActionButton> button);
 
+NS_SWIFT_NAME(ShareMessengerContentUtility)
 @interface FBSDKShareMessengerContentUtility : NSObject
 
 + (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters

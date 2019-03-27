@@ -662,7 +662,13 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
 }
 - (void)_performBlockWithAccessToken:(dispatch_block_t)block
 {
-  FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"FBSDKShareDialogTests" permissions:nil declinedPermissions:nil appID:nil userID:nil expirationDate:nil refreshDate:nil];
+  FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"FBSDKShareDialogTests"
+                                                                    permissions:@[]
+                                                            declinedPermissions:@[]
+                                                                          appID:@""
+                                                                         userID:@""
+                                                                 expirationDate:nil
+                                                                    refreshDate:nil];
   [self _setCurrentAccessToken:accessToken andPerformBlock:block];
 }
 

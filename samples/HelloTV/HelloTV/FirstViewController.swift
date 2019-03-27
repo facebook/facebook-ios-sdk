@@ -22,8 +22,8 @@ import FBSDKTVOSKit
 
 class FirstViewController: UIViewController {
   @IBOutlet fileprivate weak var imageView: UIImageView?
-  @IBOutlet fileprivate weak var loginButton: FBSDKDeviceLoginButton?
-  @IBOutlet fileprivate weak var shareButton: FBSDKDeviceShareButton?
+  @IBOutlet fileprivate weak var loginButton: FBDeviceLoginButton?
+  @IBOutlet fileprivate weak var shareButton: FBDeviceShareButton?
 
   fileprivate var blankImage: UIImage?
 
@@ -35,19 +35,19 @@ class FirstViewController: UIViewController {
 
     // Subscribe to FB session changes (in case they logged in or out in the second tab)
     NotificationCenter.default.addObserver(
-      forName: .FBSDKAccessTokenDidChange,
+      forName: .AccessTokenDidChange,
       object: nil,
       queue: .main) { (notification) -> Void in
         self.updateContent()
     }
 
     // If the user is already logged in.
-    if FBSDKAccessToken.current() != nil {
+    if AccessToken.current != nil {
       updateContent()
     }
 
-    let linkContent = FBSDKShareLinkContent()
-    linkContent.contentURL = URL(string: "https://developers.facebook.com/docs/tvos")
+    let linkContent = ShareLinkContent()
+    linkContent.contentURL = URL(string: "https://developers.facebook.com/docs/tvos")!
     shareButton?.shareContent = linkContent
   }
 
@@ -57,16 +57,16 @@ class FirstViewController: UIViewController {
     UIView.transition(with: imageView,
                       duration: 1,
                       options:.transitionCrossDissolve,
-                      animations: { () -> Void in
+                      animations: {
                         self.imageView?.image = image
-      }, completion: nil)
+    }, completion: nil)
   }
 
   fileprivate func updateContent() {
     guard let imageView = imageView else {
       return
     }
-    guard FBSDKAccessToken.current() != nil else {
+    guard AccessToken.current != nil else {
       imageView.image = blankImage
       return
     }
@@ -77,7 +77,7 @@ class FirstViewController: UIViewController {
       format: "https://graph.facebook.com/v2.5/me/picture?type=square&width=%d&height=%d&access_token=%@",
       Int(imageView.bounds.size.width),
       Int(imageView.bounds.size.height),
-      FBSDKAccessToken.current().tokenString)
+      AccessToken.current?.tokenString ?? "")
 
     guard let url = URL(string: urlString) else {
       print("Invalid URL")
@@ -98,30 +98,31 @@ class FirstViewController: UIViewController {
   }
 }
 
-extension FirstViewController: FBSDKDeviceLoginButtonDelegate {
-  func deviceLoginButtonDidCancel(_ button: FBSDKDeviceLoginButton) {
+extension FirstViewController: DeviceLoginButtonDelegate {
+
+  func deviceLoginButtonDidCancel(_ button: FBDeviceLoginButton) {
     print("Login cancelled")
   }
 
-  func deviceLoginButtonDidLog(in button: FBSDKDeviceLoginButton) {
+  func deviceLoginButtonDidLogIn(_ button: FBDeviceLoginButton) {
     print("Login complete")
     updateContent()
   }
 
-  func deviceLoginButtonDidLogOut(_ button: FBSDKDeviceLoginButton) {
+  func deviceLoginButtonDidLogOut(_ button: FBDeviceLoginButton) {
     print("Logout complete")
     flipImageViewToImage(blankImage)
   }
 
-  public func deviceLoginButtonDidFail(_ button: FBSDKDeviceLoginButton, error: Error) {
+  func deviceLoginButton(_ button: FBDeviceLoginButton, didFailWithError error: Error) {
     print("Login error : ", error)
   }
 }
 
-extension FirstViewController: FBSDKDeviceShareViewControllerDelegate {
+extension FirstViewController: DeviceShareViewControllerDelegate {
 
-  public func deviceShareViewControllerDidComplete(_ viewController: FBSDKDeviceShareViewController, error: Error?) {
-    print("Device share finished with error?", error)
+  public func deviceShareViewControllerDidComplete(_ viewController: FBDeviceShareViewController, error: Error?) {
+    print("Device share finished with error?", error as Any)
   }
 }
 

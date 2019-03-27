@@ -24,12 +24,17 @@ NS_ASSUME_NONNULL_BEGIN
  Represents a target defined in App Link metadata, consisting of at least
  a URL, and optionally an App Store ID and name.
  */
+NS_SWIFT_NAME(AppLinkTarget)
 @interface FBSDKAppLinkTarget : NSObject
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 /*! Creates a FBSDKAppLinkTarget with the given app site and target URL. */
 + (instancetype)appLinkTargetWithURL:(NSURL *)url
                           appStoreId:(nullable NSString *)appStoreId
-                             appName:(NSString *)appName;
+                             appName:(NSString *)appName
+NS_SWIFT_NAME(init(url:appStoreId:appName:));
 
 /*! The URL prefix for this app link target */
 @property (nonatomic, strong, readonly) NSURL *URL;

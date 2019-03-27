@@ -18,10 +18,10 @@
 
 #import <Foundation/Foundation.h>
 
+NS_SWIFT_NAME(EventBindingManager)
 @interface FBSDKEventBindingManager : NSObject
 
 - (FBSDKEventBindingManager*)initWithJSON:(NSDictionary*)dict;
-- (void)start;
 - (void)updateBindings:(NSArray *)bindings;
 + (NSArray *)parseArray:(NSArray *)array;
 

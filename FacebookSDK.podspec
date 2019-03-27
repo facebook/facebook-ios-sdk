@@ -29,7 +29,6 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'Bolts', '~> 1.9'
   s.default_subspecs = 'CoreKit', 'MarketingKit'
 
   s.subspec 'CoreKit' do |ss|

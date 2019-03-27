@@ -18,12 +18,11 @@
 
 #import "FBSDKAppLinkUtility.h"
 
-#import <Bolts/BFURL.h>
-
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKSettings.h"
+#import "FBSDKURL.h"
 #import "FBSDKUtility.h"
 
 static NSString *const FBSDKLastDeferredAppLink = @"com.facebook.sdk:lastDeferredAppLink%@";
@@ -31,7 +30,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
 
 @implementation FBSDKAppLinkUtility {}
 
-+ (void)fetchDeferredAppLink:(FBSDKDeferredAppLinkHandler)handler
++ (void)fetchDeferredAppLink:(FBSDKURLBlock)handler
 {
   NSAssert([NSThread isMainThread], @"FBSDKAppLink fetchDeferredAppLink: must be invoked from main thread.");
 
@@ -49,7 +48,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
                                                                                 parameters:deferredAppLinkParameters
                                                                                tokenString:nil
                                                                                    version:nil
-                                                                                HTTPMethod:@"POST"];
+                                                                                HTTPMethod:FBSDKHTTPMethodPOST];
 
   [deferredAppLinkRequest startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection,
                                                        id result,
@@ -80,14 +79,9 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
   }];
 }
 
-+ (BOOL)fetchDeferredAppInvite:(FBSDKDeferredAppInviteHandler)handler
++ (NSString *)appInvitePromotionCodeFromURL:(NSURL *)url;
 {
-  return NO;
-}
-
-+ (NSString*)appInvitePromotionCodeFromURL:(NSURL*)url;
-{
-  BFURL *parsedUrl = [[FBSDKInternalUtility resolveBoltsClassWithName:@"BFURL"] URLWithURL:url];
+  FBSDKURL *parsedUrl = [FBSDKURL URLWithURL:url];
   NSDictionary *extras = parsedUrl.appLinkExtras;
   if (extras) {
     NSString *deeplinkContextString = extras[@"deeplink_context"];

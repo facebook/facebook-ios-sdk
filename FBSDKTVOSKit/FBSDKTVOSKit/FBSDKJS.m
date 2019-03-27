@@ -36,9 +36,19 @@
   return ([FBSDKAccessToken currentAccessToken] != nil);
 }
 
++ (void)logEvent:(NSString *)eventName
+{
+  [FBSDKAppEvents logEvent:eventName];
+}
+
 + (void)logEvent:(NSString *)eventName parameters:(NSDictionary *)parameters
 {
   [FBSDKAppEvents logEvent:eventName parameters:parameters];
+}
+
++ (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency
+{
+  [FBSDKAppEvents logPurchase:purchaseAmount currency:currency];
 }
 
 + (void)logPurchase:(double)purchaseAmount currency:(NSString *)currency parameters:(NSDictionary *)parameters

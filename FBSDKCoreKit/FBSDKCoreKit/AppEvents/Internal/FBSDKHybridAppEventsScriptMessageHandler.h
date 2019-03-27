@@ -20,6 +20,7 @@
 #import <Foundation/Foundation.h>
 #import <WebKit/WebKit.h>
 
+NS_SWIFT_NAME(HybridAppEventsScriptMessageHandler)
 @interface FBSDKHybridAppEventsScriptMessageHandler : NSObject <WKScriptMessageHandler>
 
 @end

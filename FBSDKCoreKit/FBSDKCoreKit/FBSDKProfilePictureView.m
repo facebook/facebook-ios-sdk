@@ -205,40 +205,6 @@
 
 #pragma mark - Helper Methods
 
-+ (void)_downloadImageWithState:(FBSDKProfilePictureViewState *)state
-                completionBlock:(void(^)(NSData *data))completionBlock;
-{
-  NSURL *imageURL = [self _imageURLWithState:state];
-  if (!imageURL) {
-    return;
-  }
-
-  NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
-  NSURLSession *session = [NSURLSession sharedSession];
-  [[session
-    dataTaskWithRequest:request
-    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-      if (!error && data.length) {
-        completionBlock(data);
-      }
-    }] resume];
-}
-
-+ (NSURL *)_imageURLWithState:(FBSDKProfilePictureViewState *)state
-{
-  FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
-  if ([state.profileID isEqualToString:@"me"] && !accessToken) {
-    return nil;
-  }
-  NSString *path = [[NSString alloc] initWithFormat:@"/%@/picture", [FBSDKUtility URLEncode:state.profileID]];
-  CGSize size = state.size;
-  NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-  parameters[@"width"] = @(size.width);
-  parameters[@"height"] = @(size.height);
-  [FBSDKInternalUtility dictionary:parameters setObject:accessToken.tokenString forKey:@"access_token"];
-  return [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph" path:path queryParameters:parameters error:NULL];
-}
-
 - (void)_accessTokenDidChangeNotification:(NSNotification *)notification
 {
   if (![_profileID isEqualToString:@"me"] || !notification.userInfo[FBSDKAccessTokenDidChangeUserIDKey]) {
@@ -340,10 +306,30 @@
   }
   _lastState = state;
 
+  FBSDKAccessToken *accessToken = [FBSDKAccessToken currentAccessToken];
+  if ([state.profileID isEqualToString:@"me"] && !accessToken) {
+    return;
+  }
+
+  NSString *path = [[NSString alloc] initWithFormat:@"/%@/picture", [FBSDKUtility URLEncode:state.profileID]];
+  CGSize size = state.size;
+  NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
+  parameters[@"width"] = @(size.width);
+  parameters[@"height"] = @(size.height);
+  [FBSDKInternalUtility dictionary:parameters setObject:accessToken.tokenString forKey:@"access_token"];
+  NSURL *imageURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph" path:path queryParameters:parameters error:NULL];
+
   __weak FBSDKProfilePictureView *weakSelf = self;
-  [[self class] _downloadImageWithState:state completionBlock:^(NSData *data) {
-    [weakSelf _updateImageWithData:data state:state];
-  }];
+
+  NSURLRequest *request = [[NSURLRequest alloc] initWithURL:imageURL];
+  NSURLSession *session = [NSURLSession sharedSession];
+  [[session
+    dataTaskWithRequest:request
+    completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+      if (!error && data.length) {
+        [weakSelf _updateImageWithData:data state:state];
+      }
+    }] resume];
 }
 
 - (void)_setPlaceholderImage

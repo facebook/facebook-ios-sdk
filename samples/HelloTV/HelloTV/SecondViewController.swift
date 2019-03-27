@@ -34,17 +34,17 @@ class SecondViewController: UIViewController {
     // and dispatch similar events to our TVJS. This would not be necessary for pure
     // TVML apps.
     NotificationCenter.default.addObserver(
-      forName: NSNotification.Name.FBSDKAccessTokenDidChange,
+      forName: .AccessTokenDidChange,
       object: nil,
-      queue: OperationQueue.main) { notification -> Void in
-        let event = ((notification as NSNotification).userInfo![FBSDKAccessTokenChangeNewKey] != nil) ? "customOnFacebookLogin" : "customOnFacebookLogout"
+      queue: OperationQueue.main) { notification in
+        let event = ((notification as NSNotification).userInfo![AccessTokenChangeNewKey] != nil) ? "customOnFacebookLogin" : "customOnFacebookLogout"
         self.appController?.evaluate(inJavaScriptContext: { context -> Void in
           context.evaluateScript("navigationDocument.documents[0].dispatchEvent(new CustomEvent('\(event)'))")
           }, completion: nil)
     }
 
     // Connect the FBSDK to get TVML extensions
-    TVInterfaceFactory.shared().extendedInterfaceCreator = FBSDKTVInterfaceFactory()
+    TVInterfaceFactory.shared().extendedInterfaceCreator = TVInterfaceFactory(interfaceCreator: nil)
 
     // Make sure you start a webserver that can serve the 'client' directory.
     // For example, run `python -m SimpleHTTPServer 9002` from the 'client' directory.
@@ -59,22 +59,22 @@ extension SecondViewController: TVApplicationControllerDelegate {
 
   func appController(_ appController: TVApplicationController, didFinishLaunching options: [String: Any]?) {
     // TVJS loaded, add its navigation controller to our heirarchy.
-    navigationController?.addChildViewController(appController.navigationController)
+    navigationController?.addChild(appController.navigationController)
     navigationController?.view.addSubview(appController.navigationController.view)
-    appController.navigationController.didMove(toParentViewController: navigationController)
+    appController.navigationController.didMove(toParent: navigationController)
   }
 
   func appController(_ appController: TVApplicationController, evaluateAppJavaScriptIn jsContext: JSContext) {
     // Add the TVML/TVJS extensions for FBSDK
-    jsContext.setObject(FBSDKJS.self, forKeyedSubscript: "FBSDKJS" as (NSCopying & NSObjectProtocol)!)
+    jsContext.setObject(FBSDKTVOSKit.JS.self, forKeyedSubscript: "FBSDKJS" as (NSCopying & NSObjectProtocol))
 
     // Define a custom _shareLink helper
-    let shareLink: @convention(block) (Void) -> Void = {
-      let content = FBSDKShareLinkContent()
+    let shareLink: @convention(block) () -> Void = {
+      let content = ShareLinkContent()
       content.contentURL = URL(string: "http://www.apple.com/tv/")!
-      FBSDKShareAPI.share(with: content, delegate: self)
+      ShareAPI(content: content, delegate: self).share()
     }
-    jsContext.setObject(unsafeBitCast(shareLink, to: AnyObject.self), forKeyedSubscript: "_shareLink" as (NSCopying & NSObjectProtocol)!)
+    jsContext.setObject(unsafeBitCast(shareLink, to: AnyObject.self), forKeyedSubscript: "_shareLink" as (NSCopying & NSObjectProtocol))
   }
 
   func appController(_ appController: TVApplicationController, didFail error: Error) {
@@ -91,19 +91,19 @@ extension SecondViewController: TVApplicationControllerDelegate {
   }
 }
 
-extension SecondViewController: FBSDKSharingDelegate {
+extension SecondViewController: SharingDelegate {
 
-  func sharer(_ sharer: FBSDKSharing!, didCompleteWithResults results: [AnyHashable: Any]!) {
+  func sharer(_ sharer: Sharing, didCompleteWithResults results: [String : Any]) {
     appController!.evaluate(inJavaScriptContext: { (context) -> Void in
       context.evaluateScript("shareLinkCallback()")
-      }, completion: nil)
+    }, completion: nil)
   }
 
-  public func sharer(_ sharer: FBSDKSharing!, didFailWithError error: Error!) {
+  public func sharer(_ sharer: Sharing, didFailWithError error: Error) {
     print("Share failed %@", error)
   }
 
-  func sharerDidCancel(_ sharer: FBSDKSharing!) {
+  func sharerDidCancel(_ sharer: Sharing) {
     print("Share cancelled")
   }
 }

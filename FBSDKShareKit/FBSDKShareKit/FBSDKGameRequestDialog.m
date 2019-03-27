@@ -45,11 +45,17 @@ static FBSDKGameRequestFrictionlessRecipientCache *_recipientCache = nil;
   }
 }
 
-+ (instancetype)showWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
++ (instancetype)dialogWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
 {
   FBSDKGameRequestDialog *dialog = [[self alloc] init];
   dialog.content = content;
   dialog.delegate = delegate;
+  return dialog;
+}
+
++ (instancetype)showWithContent:(FBSDKGameRequestContent *)content delegate:(id<FBSDKGameRequestDialogDelegate>)delegate
+{
+  FBSDKGameRequestDialog *dialog = [self dialogWithContent:content delegate:delegate];
   [dialog show];
   return dialog;
 }

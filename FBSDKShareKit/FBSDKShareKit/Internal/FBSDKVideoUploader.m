@@ -63,7 +63,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
 
 - (void)_postStartRequest
 {
-  FBSDKGraphRequestHandler startRequestCompletionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
+  FBSDKGraphRequestBlock startRequestCompletionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error)
   {
     if (error) {
       [self.delegate videoUploader:self didFailWithError:error];
@@ -133,7 +133,7 @@ static NSString *const FBSDKVideoUploaderEdge = @"videos";
       dispatch_async(dispatch_get_main_queue(), ^{
         FBSDKGraphRequestDataAttachment *dataAttachment = [[FBSDKGraphRequestDataAttachment alloc] initWithData:data
                                                                                                        filename:self->_videoName
-                                                                                                    contentType:nil];
+                                                                                                    contentType:@""];
         FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:self->_graphPath
                                                                        parameters:@{
                                                                                     FBSDK_SHARE_VIDEO_UPLOAD_PHASE: FBSDK_SHARE_VIDEO_UPLOAD_PHASE_TRANSFER,

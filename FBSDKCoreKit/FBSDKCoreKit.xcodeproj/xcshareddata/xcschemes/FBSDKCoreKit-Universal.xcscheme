@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
+<<<<<<< HEAD
    LastUpgradeVersion = "1020"
+=======
+   LastUpgradeVersion = "1000"
+>>>>>>> 0988e028012293e373b60946596e6076e281c640
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "NO"
@@ -46,20 +50,6 @@
                BuildableName = "FBSDKCoreKitTests.xctest"
                BlueprintName = "FBSDKCoreKitTests"
                ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "81ED94111BE147CF00795F05"
-               BuildableName = "Bolts.framework"
-               BlueprintName = "Bolts-iOS"
-               ReferencedContainer = "container:../Carthage/Checkouts/Bolts-ObjC/Bolts.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>

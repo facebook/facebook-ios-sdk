@@ -41,7 +41,7 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, assign, readonly) AKFButtonType entryButtonType;
 @property (nonatomic, assign, readonly) AKFLoginType loginType;
 @property (nonatomic, assign, readonly) AKFTextPosition textPosition;
-@property (nonatomic, copy, readonly) ReverbTheme *theme;
+@property (nonatomic, copy, readonly, nullable) AKFTheme *theme;
 
 @end
 
