@@ -76,6 +76,8 @@ typedef struct FBSDKLikeControlLayout
 
 typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize constrainedSize);
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 @implementation FBSDKLikeControl
 {
   BOOL _isExplicitlyDisabled;
@@ -84,6 +86,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
   UIView *_likeButtonContainer;
   UILabel *_socialSentenceLabel;
 }
+#pragma clang diagnostic pop
 
 #pragma mark - Class Methods
 
@@ -132,10 +135,10 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (void)setForegroundColor:(UIColor *)foregroundColor
 {
-  if (![_foregroundColor isEqual:foregroundColor]) {
-    _foregroundColor = foregroundColor;
+  if (![foregroundColor isEqual:foregroundColor]) {
+    _foregroundColor__deprecated = foregroundColor;
     [_likeButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    _socialSentenceLabel.textColor = foregroundColor;
+    _socialSentenceLabel.textColor = _foregroundColor__deprecated;
   }
 }
 
@@ -147,8 +150,8 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (void)setLikeControlAuxiliaryPosition:(FBSDKLikeControlAuxiliaryPosition)likeControlAuxiliaryPosition
 {
-  if (_likeControlAuxiliaryPosition != likeControlAuxiliaryPosition) {
-    _likeControlAuxiliaryPosition = likeControlAuxiliaryPosition;
+  if (_likeControlAuxiliaryPosition__deprecated != likeControlAuxiliaryPosition) {
+    likeControlAuxiliaryPosition = _likeControlAuxiliaryPosition__deprecated;
     [self _updateLikeBoxCaretPosition];
     [self setNeedsLayout];
     [self setNeedsUpdateConstraints];
@@ -158,8 +161,8 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (void)setLikeControlHorizontalAlignment:(FBSDKLikeControlHorizontalAlignment)likeControlHorizontalAlignment
 {
-  if (_likeControlHorizontalAlignment != likeControlHorizontalAlignment) {
-    _likeControlHorizontalAlignment = likeControlHorizontalAlignment;
+  if (_likeControlHorizontalAlignment__deprecated != likeControlHorizontalAlignment) {
+    likeControlHorizontalAlignment = _likeControlHorizontalAlignment__deprecated;
     [self _updateLikeBoxCaretPosition];
     [self setNeedsLayout];
     [self setNeedsUpdateConstraints];
@@ -169,8 +172,8 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (void)setLikeControlStyle:(FBSDKLikeControlStyle)likeControlStyle
 {
-  if (_likeControlStyle != likeControlStyle) {
-    _likeControlStyle = likeControlStyle;
+  if (_likeControlStyle__deprecated != likeControlStyle) {
+    likeControlStyle = _likeControlStyle__deprecated;
     [self _updateLikeBoxCaretPosition];
     [self setNeedsLayout];
     [self setNeedsUpdateConstraints];
@@ -225,7 +228,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (CGSize)intrinsicContentSize
 {
-  CGFloat width = self.preferredMaxLayoutWidth;
+  CGFloat width = self.preferredMaxLayoutWidth__deprecated;
   if (width == 0) {
     width = CGFLOAT_MAX;
   }
@@ -268,7 +271,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (CGSize)sizeThatFits:(CGSize)size
 {
-  switch (self.likeControlAuxiliaryPosition) {
+  switch (self.likeControlAuxiliaryPosition__deprecated) {
     case FBSDKLikeControlAuxiliaryPositionInline:{
       size.height = MAX(size.height, CGRectGetHeight(self.bounds));
       break;
@@ -291,12 +294,12 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 - (NSDictionary *)analyticsParameters
 {
   return @{
-           @"auxiliary_position": NSStringFromFBSDKLikeControlAuxiliaryPosition(self.likeControlAuxiliaryPosition),
-           @"horizontal_alignment": NSStringFromFBSDKLikeControlHorizontalAlignment(self.likeControlHorizontalAlignment),
+           @"auxiliary_position": NSStringFromFBSDKLikeControlAuxiliaryPosition(self.likeControlAuxiliaryPosition__deprecated),
+           @"horizontal_alignment": NSStringFromFBSDKLikeControlHorizontalAlignment(self.likeControlHorizontalAlignment__deprecated),
            @"object_id": (self.objectID ?: [NSNull null]),
            @"object_type": (NSStringFromFBSDKLikeObjectType(self.objectType) ?: [NSNull null]),
-           @"sound_enabled": @(self.soundEnabled),
-           @"style": NSStringFromFBSDKLikeControlStyle(self.likeControlStyle),
+           @"sound_enabled": @(self.soundEnabled__deprecated),
+           @"style": NSStringFromFBSDKLikeControlStyle(self.likeControlStyle__deprecated),
            };
 }
 
@@ -305,7 +308,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 - (UIView *)_auxiliaryView
 {
   [self _ensureLikeActionController];
-  switch (_likeControlStyle) {
+  switch (_likeControlStyle__deprecated) {
     case FBSDKLikeControlStyleStandard:{
       return (_socialSentenceLabel.text.length == 0 ? nil : _socialSentenceLabel);
     }
@@ -318,7 +321,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
 
 - (CGFloat)_auxiliaryViewPadding
 {
-  switch (_likeControlStyle) {
+  switch (_likeControlStyle__deprecated) {
     case FBSDKLikeControlStyleStandard:{
       return 8.0;
     }
@@ -338,17 +341,22 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (void)_handleLikeButtonTap:(FBSDKLikeButton *)likeButton
 {
   [self _ensureLikeActionController];
   [self sendActionsForControlEvents:UIControlEventTouchUpInside];
 }
+#pragma clang diagnostic pop
 
 - (void)_initializeContent
 {
   self.backgroundColor = [UIColor clearColor];
-  _foregroundColor = [UIColor blackColor];
-
+  _foregroundColor__deprecated = [UIColor blackColor];
+  
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
   _likeButtonContainer = [[UIView alloc] initWithFrame:CGRectZero];
   _likeButtonContainer.backgroundColor = self.backgroundColor;
   _likeButtonContainer.opaque = self.opaque;
@@ -357,7 +365,7 @@ typedef CGSize (^fbsdk_like_control_sizing_block_t)(UIView *subview, CGSize cons
   _likeButton = [[FBSDKLikeButton alloc] initWithFrame:CGRectZero];
   [_likeButton addTarget:self action:@selector(_handleLikeButtonTap:) forControlEvents:UIControlEventTouchUpInside];
   [_likeButtonContainer addSubview:_likeButton];
-
+#pragma clang diagnostic pop
   _socialSentenceLabel = [[UILabel alloc] initWithFrame:CGRectZero];
   _socialSentenceLabel.font = [UIFont systemFontOfSize:11.0];
   _socialSentenceLabel.numberOfLines = 2;
@@ -449,7 +457,7 @@ static CGSize FBSDKLikeControlCalculateContentSize(FBSDKLikeControlLayout layout
   UIView *auxiliaryView = [self _auxiliaryView];
   CGFloat auxiliaryViewPadding = [self _auxiliaryViewPadding];
   CGSize auxiliaryViewSize = CGSizeZero;
-  switch (self.likeControlAuxiliaryPosition) {
+  switch (self.likeControlAuxiliaryPosition__deprecated) {
     case FBSDKLikeControlAuxiliaryPositionInline:{
       if (auxiliaryView) {
         auxiliaryViewSize = CGSizeMake((CGRectGetWidth(bounds) -
@@ -477,7 +485,7 @@ static CGSize FBSDKLikeControlCalculateContentSize(FBSDKLikeControlLayout layout
       layout.contentSize = FBSDKLikeControlCalculateContentSize(layout);
 
       // layout the subviews next to each other
-      switch (self.likeControlHorizontalAlignment) {
+      switch (self.likeControlHorizontalAlignment__deprecated) {
         case FBSDKLikeControlHorizontalAlignmentLeft:{
           // already done
           break;
@@ -524,10 +532,10 @@ static CGSize FBSDKLikeControlCalculateContentSize(FBSDKLikeControlLayout layout
       // calculate the size before offsetting the horizontal alignment, using the total calculated width
       layout.contentSize = FBSDKLikeControlCalculateContentSize(layout);
 
-      FBSDKLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment);
+      FBSDKLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment__deprecated);
       FBSDKLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame,
                                                bounds,
-                                               self.likeControlHorizontalAlignment);
+                                               self.likeControlHorizontalAlignment__deprecated);
       break;
     }
     case FBSDKLikeControlAuxiliaryPositionBottom:{
@@ -548,10 +556,10 @@ static CGSize FBSDKLikeControlCalculateContentSize(FBSDKLikeControlLayout layout
       // calculate the size before offsetting the horizontal alignment, using the total calculated width
       layout.contentSize = FBSDKLikeControlCalculateContentSize(layout);
 
-      FBSDKLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment);
+      FBSDKLikeControlApplyHorizontalAlignment(&layout.likeButtonFrame, bounds, self.likeControlHorizontalAlignment__deprecated);
       FBSDKLikeControlApplyHorizontalAlignment(&layout.auxiliaryViewFrame,
                                                bounds,
-                                               self.likeControlHorizontalAlignment);
+                                               self.likeControlHorizontalAlignment__deprecated);
       break;
     }
   }
@@ -631,13 +639,13 @@ static CGSize FBSDKLikeControlCalculateContentSize(FBSDKLikeControlLayout layout
 
 - (void)_updateLikeBoxCaretPosition
 {
-  if (self.likeControlStyle != FBSDKLikeControlStyleBoxCount) {
+  if (self.likeControlStyle__deprecated != FBSDKLikeControlStyleBoxCount) {
     return;
   }
 
-  switch (self.likeControlAuxiliaryPosition) {
+  switch (self.likeControlAuxiliaryPosition__deprecated) {
     case FBSDKLikeControlAuxiliaryPositionInline:{
-      switch (self.likeControlHorizontalAlignment) {
+      switch (self.likeControlHorizontalAlignment__deprecated) {
         case FBSDKLikeControlHorizontalAlignmentLeft:
         case FBSDKLikeControlHorizontalAlignmentCenter:{
           _likeBoxView.caretPosition = FBSDKLikeBoxCaretPositionLeft;

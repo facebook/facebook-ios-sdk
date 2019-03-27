@@ -739,9 +739,11 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventParameterNameOrderID;
                    Zip: zp
                    Country: country
  */
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (void)setUserData:(NSDictionary *)userData
   DEPRECATED_MSG_ATTRIBUTE("Renamed `setUserEmail:firstName: ...`");
-
+#pragma clang diagnostic pop
 /*
   Sets custom user data to associate with all app events. All user data are hashed
   and used to match Facebook user from this instance of an application.

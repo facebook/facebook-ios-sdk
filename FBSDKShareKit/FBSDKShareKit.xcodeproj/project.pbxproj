@@ -1403,7 +1403,7 @@
 		9D46C5E71A11E5D800A0DDB6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D2D99931BC452DE00929E76 = {
@@ -1425,10 +1425,11 @@
 			};
 			buildConfigurationList = 9D46C5EA1A11E5D800A0DDB6 /* Build configuration list for PBXProject "FBSDKShareKit" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 9D46C5E61A11E5D800A0DDB6;
 			productRefGroup = 9D46C5F11A11E5D800A0DDB6 /* Products */;
@@ -1869,8 +1870,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043D31D261A7900B2E437 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1885,8 +1888,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043D41D261A7900B2E437 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;

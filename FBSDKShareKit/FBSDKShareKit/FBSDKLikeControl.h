@@ -89,13 +89,12 @@ FOUNDATION_EXPORT NSString *NSStringFromFBSDKLikeControlStyle(FBSDKLikeControlSt
  fast-app-switch that allows the user to like the object.  Upon return to the calling app, the view will update
  with the new state and send actions for the UIControlEventValueChanged event.
  */
-DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
 @interface FBSDKLikeControl : UIControl <FBSDKLiking>
 
 /**
   The foreground color to use for the content of the receiver.
  */
-@property (nonatomic, strong) UIColor *foregroundColor;
+@property (nonatomic, strong) UIColor *foregroundColor__deprecated;
 
 /**
   The position for the auxiliary view for the receiver.
@@ -103,7 +102,7 @@ DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
 
  @see FBSDKLikeControlAuxiliaryPosition
  */
-@property (nonatomic, assign) FBSDKLikeControlAuxiliaryPosition likeControlAuxiliaryPosition;
+@property (nonatomic, assign) FBSDKLikeControlAuxiliaryPosition likeControlAuxiliaryPosition__deprecated;
 
 /**
   The text alignment of the social sentence.
@@ -112,7 +111,7 @@ DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
  This value is only valid for FBSDKLikeControlStyleStandard with
  FBSDKLikeControlAuxiliaryPositionTop|Bottom.
  */
-@property (nonatomic, assign) FBSDKLikeControlHorizontalAlignment likeControlHorizontalAlignment;
+@property (nonatomic, assign) FBSDKLikeControlHorizontalAlignment likeControlHorizontalAlignment__deprecated;
 
 /**
   The style to use for the receiver.
@@ -120,7 +119,7 @@ DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
 
  @see FBSDKLikeControlStyle
  */
-@property (nonatomic, assign) FBSDKLikeControlStyle likeControlStyle;
+@property (nonatomic, assign) FBSDKLikeControlStyle likeControlStyle__deprecated;
 
 /**
   The preferred maximum width (in points) for autolayout.
@@ -130,13 +129,13 @@ DEPRECATED_MSG_ATTRIBUTE("This is no longer available")
  if the text extends beyond the width specified by this property, the additional text is flowed to one or more new
  lines, thereby increasing the height of the receiver.
  */
-@property (nonatomic, assign) CGFloat preferredMaxLayoutWidth;
+@property (nonatomic, assign) CGFloat preferredMaxLayoutWidth__deprecated;
 
 /**
   If YES, a sound is played when the receiver is toggled.
 
  @default YES
  */
-@property (nonatomic, assign, getter = isSoundEnabled) BOOL soundEnabled;
+@property (nonatomic, assign, getter = isSoundEnabled) BOOL soundEnabled__deprecated;
 
 @end

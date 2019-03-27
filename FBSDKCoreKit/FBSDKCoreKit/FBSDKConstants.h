@@ -25,7 +25,7 @@
 
  Error codes from the SDK in the range 0-99 are reserved for this domain.
  */
-FOUNDATION_EXPORT NSErrorDomain const FBSDKErrorDomain;
+FOUNDATION_EXPORT NSErrorDomain const _Nullable FBSDKErrorDomain;
 
 #else
 
@@ -50,34 +50,34 @@ FOUNDATION_EXPORT NSString *const FBSDKErrorDomain;
  If the invalid argument is a collection, the collection can be found with this key and the individual
  invalid item can be found with FBSDKErrorArgumentValueKey.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentCollectionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentCollectionKey;
 
 /**
  The userInfo key for the invalid argument name for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentNameKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentNameKey;
 
 /**
  The userInfo key for the invalid argument value for errors with FBSDKErrorInvalidArgument.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorArgumentValueKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorArgumentValueKey;
 
 /**
  The userInfo key for the message for developers in NSErrors that originate from the SDK.
 
  The developer message will not be localized and is not intended to be presented within the app.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorDeveloperMessageKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorDeveloperMessageKey;
 
 /**
  The userInfo key describing a localized description that can be presented to the user.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedDescriptionKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedDescriptionKey;
 
 /**
  The userInfo key describing a localized title that can be presented to the user, used with `FBSDKLocalizedErrorDescriptionKey`.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKErrorLocalizedTitleKey;
 
 /*
  @methodgroup FBSDKGraphRequest error userInfo keys
@@ -88,36 +88,36 @@ FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKErrorLocalizedTitleKey;
 
  See `FBSDKGraphErrorRecoveryProcessor` and `[FBSDKGraphRequest disableErrorRecovery]`.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorKey;
 
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorCategoryKey
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorCategoryKey
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorKey instead");
 
 /*
  The userInfo key for the Graph API error code.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorCodeKey;
 
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorCode
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorCode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorCodeKey instead");
 
 /*
  The userInfo key for the Graph API error subcode.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorSubcodeKey;
 
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorGraphErrorSubcode
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorGraphErrorSubcode
 DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorGraphErrorSubcodeKey instead");
 
 /*
  The userInfo key for the HTTP status code.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorHTTPStatusCodeKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorHTTPStatusCodeKey;
 
 /*
  The userInfo key for the raw JSON response.
  */
-FOUNDATION_EXPORT NSErrorUserInfoKey const FBSDKGraphRequestErrorParsedJSONResponseKey;
+FOUNDATION_EXPORT NSErrorUserInfoKey const _Nullable FBSDKGraphRequestErrorParsedJSONResponseKey;
 
 #else
 
@@ -347,7 +347,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
 
  The value passed for didRecover must be YES if error recovery was completely successful, NO otherwise.
  */
-- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo;
+- (void)attemptRecoveryFromError:(NSError *_Nullable)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id _Nullable )delegate didRecoverSelector:(SEL _Nullable )didRecoverSelector contextInfo:(void *_Nullable)contextInfo;
 
 @end
 

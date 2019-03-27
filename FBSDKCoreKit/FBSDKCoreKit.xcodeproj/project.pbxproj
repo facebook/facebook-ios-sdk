@@ -2475,10 +2475,11 @@
 			};
 			buildConfigurationList = 9D2697411A5DF40700143BFC /* Build configuration list for PBXProject "FBSDKCoreKit" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 9D26973D1A5DF40700143BFC;
 			productRefGroup = 9D2697481A5DF40700143BFC /* Products */;

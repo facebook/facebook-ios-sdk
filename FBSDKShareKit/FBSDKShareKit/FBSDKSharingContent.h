@@ -88,11 +88,10 @@
 /**
  Adds content to a dictionary as key/value pairs.
  @param parameters A mutable dictionary that may be appended with key/value pairs of content.
- @param bridgeOptions The options for bridging
+ @param bridgeOptions__deprecated The options for bridging
  */
 
 - (void)addToParameters:(NSMutableDictionary<NSString *, id> *)parameters
-          bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions
-DEPRECATED_MSG_ATTRIBUTE("`addToParameters` is deprecated. Use `addParameters`");
+          bridgeOptions:(FBSDKShareBridgeOptions)bridgeOptions__deprecated;
 
 @end
