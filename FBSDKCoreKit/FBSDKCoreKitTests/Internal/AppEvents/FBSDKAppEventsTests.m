@@ -37,6 +37,7 @@
 
 @interface FBSDKAppEvents ()
 @property (nonatomic, copy) NSString *pushNotificationsDeviceTokenString;
+- (void)checkPersistedEvents;
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
@@ -78,7 +79,7 @@
   [partialMockAppEvents verify];
 }
 
-- (void)testLogProductItem
+- (void)testLogProductItemNonNil
 {
   NSDictionary<NSString *, NSString *> *expectedDict = @{
                                  @"fb_product_availability":@"IN_STOCK",
@@ -109,6 +110,39 @@
                             gtin:@"BLUE MOUNTAIN"
                              mpn:@"BLUE MOUNTAIN"
                            brand:@"PHILZ"
+                      parameters:@{}];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testLogProductItemNilGtinMpnBrand
+{
+  NSDictionary<NSString *, NSString *> *expectedDict = @{
+                                                         @"fb_product_availability":@"IN_STOCK",
+                                                         @"fb_product_condition":@"NEW",
+                                                         @"fb_product_description":@"description",
+                                                         @"fb_product_image_link":@"https://www.sample.com",
+                                                         @"fb_product_item_id":@"F40CEE4E-471E-45DB-8541-1526043F4B21",
+                                                         @"fb_product_link":@"https://www.sample.com",
+                                                         @"fb_product_price_amount":@"1.000",
+                                                         @"fb_product_price_currency":@"USD",
+                                                         @"fb_product_title":@"title",
+                                                         };
+  [[_mockAppEvents reject] logEvent:@"fb_mobile_catalog_update"
+                         parameters:expectedDict];
+
+  [FBSDKAppEvents logProductItem:@"F40CEE4E-471E-45DB-8541-1526043F4B21"
+                    availability:FBSDKProductAvailabilityInStock
+                       condition:FBSDKProductConditionNew
+                     description:@"description"
+                       imageLink:@"https://www.sample.com"
+                            link:@"https://www.sample.com"
+                           title:@"title"
+                     priceAmount:1.0
+                        currency:@"USD"
+                            gtin:nil
+                             mpn:nil
+                           brand:nil
                       parameters:@{}];
 
   [_mockAppEvents verify];
@@ -215,6 +249,30 @@
   [FBSDKAppEvents logPushNotificationOpen:mockPayload];
 
   [_mockAppEvents verify];
+}
+
+- (void)testSetFlushBehavior
+{
+  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorAuto];
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorAuto, FBSDKAppEvents.flushBehavior);
+
+  [FBSDKAppEvents setFlushBehavior:FBSDKAppEventsFlushBehaviorExplicitOnly];
+  XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.flushBehavior);
+}
+
+- (void)testcheckPersistedEventsCalledWhenLogEvent
+{
+  double mockPurchaseAmount = 1.0;
+
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+
+  [[partialMockAppEvents expect] checkPersistedEvents];
+
+  OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
+
+  [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:@{} accessToken:nil];
+
+  [partialMockAppEvents verify];
 }
 
 @end

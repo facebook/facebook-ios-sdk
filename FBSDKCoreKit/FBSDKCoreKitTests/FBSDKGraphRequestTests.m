@@ -24,6 +24,7 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKGraphRequestConnection+Internal.h"
 #import "FBSDKGraphRequestConnection.h"
+#import "FBSDKGraphRequestDataAttachment.h"
 #import "FBSDKGraphRequestMetadata.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKUtility.h"
@@ -159,7 +160,8 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParamter(void)
                        error:NULL].absoluteString;
   NSString *url = [FBSDKGraphRequest serializeURL:baseURL
                                            params:_mockParameters()
-                                       httpMethod:FBSDKHTTPMethodPOST forBatch:YES];
+                                       httpMethod:FBSDKHTTPMethodPOST
+                                         forBatch:YES];
   NSString *expectedURL = @"https://graph.facebook.com/v3.2/me?fields=";
 
   XCTAssertEqualObjects(url, expectedURL);
@@ -170,6 +172,29 @@ static NSDictionary<NSString *, NSString *> *const _mockEmptyParamter(void)
 
   XCTAssertEqualObjects(encodedSerializedURL, expectedEncodedURL);
   XCTAssertEqualObjects([FBSDKUtility URLDecode:encodedSerializedURL], expectedURL);
+}
+
+- (void)testIsAttachments
+{
+  id mockUIImage = [OCMockObject niceMockForClass:[UIImage class]];
+  id mockData = [OCMockObject niceMockForClass:[NSData class]];
+  id mockDataAttachments = [OCMockObject niceMockForClass:[FBSDKGraphRequestDataAttachment class]];
+
+  XCTAssertTrue([FBSDKGraphRequest isAttachment:mockUIImage]);
+  XCTAssertTrue([FBSDKGraphRequest isAttachment:mockData]);
+  XCTAssertTrue([FBSDKGraphRequest isAttachment:mockDataAttachments]);
+
+  id mockString = [OCMockObject niceMockForClass:[NSString class]];
+  XCTAssertTrue(![mockString isKindOfClass:[UIImage class]] &&
+                ![mockString isKindOfClass:[NSData class]] &&
+                ![mockString isKindOfClass:[FBSDKGraphRequestDataAttachment class]]);
+  XCTAssertFalse([FBSDKGraphRequest isAttachment:mockString]);
+
+  id mockDate = [OCMockObject niceMockForClass:[NSDate class]];
+  XCTAssertTrue(![mockDate isKindOfClass:[UIImage class]] &&
+                ![mockDate isKindOfClass:[NSData class]] &&
+                ![mockDate isKindOfClass:[FBSDKGraphRequestDataAttachment class]]);
+  XCTAssertFalse([FBSDKGraphRequest isAttachment:mockDate]);
 }
 
 #pragma mark - helper function
