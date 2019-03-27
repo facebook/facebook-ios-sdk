@@ -30,6 +30,8 @@
 #import "FBSDKGraphRequest.h"
 #import "FBSDKUtility.h"
 
+static NSString *const _mockAppID = @"mockAppID";
+
 // An extension that redeclares a private method so that it can be mocked
 @interface FBSDKApplicationDelegate()
 - (void)_logSDKInitialize;
@@ -55,6 +57,7 @@
 - (void)setUp
 {
   _mockAppEvents = [OCMockObject niceMockForClass:[FBSDKAppEvents class]];
+  [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 }
 
 - (void)tearDown
@@ -313,6 +316,36 @@
   OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
   [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:@{} accessToken:nil];
+
+  [partialMockAppEvents verify];
+}
+
+- (void)testRequestForCustomAudienceThirdPartyIDWithAccessToken
+{
+  id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
+
+  NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:mockAccessToken];
+  NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", _mockAppID];
+  FBSDKGraphRequest *expectedRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
+                                                                         parameters:@{}
+                                                                        tokenString:tokenString
+                                                                         HTTPMethod:nil
+                                                                              flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
+
+  OCMStub([FBSDKAppEventsUtility advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed ).andReturn(@YES);
+  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:mockAccessToken];
+
+  XCTAssertEqualObjects(expectedRequest.graphPath, request.graphPath);
+  XCTAssertEqualObjects(expectedRequest.HTTPMethod, request.HTTPMethod);
+  XCTAssertEqualObjects(expectedRequest.parameters, expectedRequest.parameters);
+}
+
+- (void)testPublishInstall
+{
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [[partialMockAppEvents expect] fetchServerConfiguration:[OCMArg any]];
+
+  [[FBSDKAppEvents singleton] publishInstall];
 
   [partialMockAppEvents verify];
 }
