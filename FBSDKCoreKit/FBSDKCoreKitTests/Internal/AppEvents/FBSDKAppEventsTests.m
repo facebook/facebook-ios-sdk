@@ -241,12 +241,54 @@
 
 - (void)testLogPushNotificationOpen
 {
-  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"test"};
+  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"testCampaign"};
   NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
 
-  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
+  NSDictionary <NSString *, NSString *> *expectedParams = @{
+                                                            @"fb_push_campaign":@"testCampaign",
+                                                            };
+
+  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
 
   [FBSDKAppEvents logPushNotificationOpen:mockPayload];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testLogPushNotificationOpenEmptyCampaign
+{
+  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @""};
+  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
+
+  [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
+
+  [FBSDKAppEvents logPushNotificationOpen:mockPayload];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testLogPushNotificationOpenWithNonEmptyAction
+{
+  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"testCampaign"};
+  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
+
+  NSDictionary <NSString *, NSString *> *expectedParams = @{
+                                                            @"fb_push_action":@"testAction",
+                                                            @"fb_push_campaign":@"testCampaign",
+                                                            };
+
+  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
+
+  [FBSDKAppEvents logPushNotificationOpen:mockPayload action:@"testAction"];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testLogPushNotificationOpenWithEmptyPayload
+{
+  [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
+
+  [FBSDKAppEvents logPushNotificationOpen:@{}];
 
   [_mockAppEvents verify];
 }
