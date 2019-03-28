@@ -478,14 +478,18 @@ NSURLSessionDataDelegate
     request.HTTPMethod = @"POST";
   }
 
-  request.HTTPBody = body.data;
-  NSUInteger bodyLength = body.data.length / 1024;
-
+  NSData *compressedData;
+  if ([request.HTTPMethod isEqualToString:@"POST"] && (compressedData = [body compressedData])) {
+    request.HTTPBody = compressedData;
+    [request setValue:@"gzip" forHTTPHeaderField:@"Content-Encoding"];
+  } else {
+    request.HTTPBody = body.data;
+  }
   [request setValue:[FBSDKGraphRequestConnection userAgent] forHTTPHeaderField:@"User-Agent"];
   [request setValue:[body mimeContentType] forHTTPHeaderField:@"Content-Type"];
   [request setHTTPShouldHandleCookies:NO];
 
-  [self logRequest:request bodyLength:bodyLength bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
+  [self logRequest:request bodyLength:(request.HTTPBody.length / 1024) bodyLogger:bodyLogger attachmentLogger:attachmentLogger];
 
   return request;
 }

@@ -45,4 +45,6 @@ NS_SWIFT_NAME(GraphRequestBody)
 
 - (NSString *)mimeContentType;
 
+- (NSData *)compressedData;
+
 @end
