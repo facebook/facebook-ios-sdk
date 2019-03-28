@@ -46,18 +46,11 @@ On your machine, run:
 ```sh
 cd internal/FBSDKMarketingKit/
 carthage build --archive
-<<<<<<< HEAD
-zip \
-  -x "*.DS_Store" \
-  -r Carthage/Build/iOS/Static/FBSDKMarketingKit.zip \
-  Carthage/Build/iOS/Static/FBSDKMarketingKit.framework
-=======
 cd Carthage/Build/iOS/Static/
 zip \
   -x "*.DS_Store" \
   -r FBSDKMarketingKit.framework.zip \
   FBSDKMarketingKit.framework
->>>>>>> 0988e028012293e373b60946596e6076e281c640
 ```
 
 Take this file and upload it to the latest GitHub releases.

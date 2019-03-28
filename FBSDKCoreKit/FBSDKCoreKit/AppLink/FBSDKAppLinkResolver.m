@@ -79,7 +79,7 @@ static NSString *const kAppLinksKey = @"app_links";
   NSMutableDictionary<NSURL *, FBSDKAppLink *> *appLinks = [NSMutableDictionary dictionary];
   NSMutableArray<NSURL *> *toFind = [NSMutableArray array];
   NSMutableArray<NSString *> *toFindStrings = [NSMutableArray array];
-  
+
   @synchronized (self.cachedFBSDKAppLinks) {
     for (NSURL *url in urls) {
       if (self.cachedFBSDKAppLinks[url]) {

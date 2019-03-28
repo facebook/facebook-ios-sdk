@@ -34,11 +34,8 @@ Pod::Spec.new do |s|
                     'FBSDKCoreKit/FBSDKCoreKit/AppLink/**/*',
                     'FBSDKCoreKit/FBSDKCoreKit/Internal/**/*']
 
-<<<<<<< HEAD
   s.ios.dependency 'Bolts', '~> 1.9'
 
-=======
->>>>>>> 0988e028012293e373b60946596e6076e281c640
   s.public_header_files = 'FBSDKCoreKit/FBSDKCoreKit/*.h',
                           'FBSDKCoreKit/FBSDKCoreKit/AppEvents/*.h',
                           'FBSDKCoreKit/FBSDKCoreKit/AppLink/*.h'

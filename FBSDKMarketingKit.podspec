@@ -32,11 +32,7 @@ Pod::Spec.new do |s|
                             LICENSE
                           }
     s.platform          = :ios
-<<<<<<< HEAD
-    s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.zip",
-=======
     s.source            = { :http => "https://github.com/facebook/facebook-objc-sdk/releases/download/v#{s.version}/FBSDKMarketingKit.framework.zip",
->>>>>>> 0988e028012293e373b60946596e6076e281c640
                             :type => :zip }
     s.source_files      = 'FBSDKMarketingKit.framework/**/*.h'
     s.public_header_files = 'FBSDKMarketingKit.framework/**/*.h'

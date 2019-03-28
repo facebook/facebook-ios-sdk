@@ -30,15 +30,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Collections/Dictionaries became non null when at all possible
 - Class creation methods become Swift inits
 
-<<<<<<< HEAD
-=======
 ### Deprecated
 
 - `FBSDKLoginBehaviorSystemAccount`
 - `FBSDKLoginBehaviorWeb`
 - `[FBSDKLoginManager renewSystemCredentials]`
 
->>>>>>> 0988e028012293e373b60946596e6076e281c640
 ### Removed
 
 - Deprecated methods
