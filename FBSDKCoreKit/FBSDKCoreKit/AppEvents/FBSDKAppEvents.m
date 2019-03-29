@@ -235,6 +235,7 @@ NSString *const FBSDKAppEventParameterShareTrayResult             = @"fb_share_t
 NSString *const FBSDKAppEventParameterLogTime = @"_logTime";
 NSString *const FBSDKAppEventParameterEventName = @"_eventName";
 NSString *const FBSDKAppEventParameterImplicitlyLogged = @"_implicitlyLogged";
+NSString *const FBSDKAppEventParameterInBackground = @"_inBackground";
 
 NSString *const FBSDKAppEventParameterLiveStreamingPrevStatus    = @"live_streaming_prev_status";
 NSString *const FBSDKAppEventParameterLiveStreamingStatus        = @"live_streaming_status";
@@ -348,6 +349,7 @@ static NSString *g_overrideAppID = nil;
 #endif
   NSString *_userID;
   BOOL _isUnityInit;
+  UIApplicationState _applicationState;
 }
 
 #pragma mark - Object Lifecycle
@@ -396,6 +398,12 @@ static NSString *g_overrideAppID = nil;
    addObserver:self
    selector:@selector(applicationDidBecomeActive)
    name:UIApplicationDidBecomeActiveNotification
+   object:NULL];
+
+  [[NSNotificationCenter defaultCenter]
+   addObserver:self
+   selector:@selector(applicationDidEnterBackground)
+   name:UIApplicationDidEnterBackgroundNotification
    object:NULL];
 }
 
@@ -1047,6 +1055,10 @@ static NSString *g_overrideAppID = nil;
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
 
+  if (_applicationState == UIApplicationStateBackground) {
+    eventDictionary[FBSDKAppEventParameterInBackground] = @"1";
+  }
+
   NSString *currentViewControllerName;
   if ([NSThread isMainThread]) {
     // We only collect the view controller when on the main thread, as the behavior off
@@ -1277,12 +1289,19 @@ static NSString *g_overrideAppID = nil;
 
 - (void)applicationDidBecomeActive
 {
+  _applicationState = UIApplicationStateActive;
+
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self checkPersistedEvents];
 
   // Restore time spent data, indicating that we're not being called from "activateApp".
   [FBSDKTimeSpentData restore:NO];
+}
+
+- (void)applicationDidEnterBackground
+{
+  _applicationState = UIApplicationStateBackground;
 }
 
 - (void)applicationMovingFromActiveStateOrTerminating
