@@ -199,6 +199,18 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @property (class, nonatomic, strong, readonly) FBSDKAppEvents *singleton;
 
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName;
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum;
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters;
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+              parameters:(NSDictionary *)parameters;
+
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(NSDictionary *)parameters

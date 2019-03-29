@@ -888,6 +888,39 @@ static NSString *g_overrideAppID = nil;
 
 #pragma mark - Internal Methods
 
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+{
+  [FBSDKAppEvents logImplicitEvent:eventName
+                        parameters:@{}];
+}
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+{
+  [FBSDKAppEvents logImplicitEvent:eventName
+                        valueToSum:valueToSum
+                        parameters:@{}];
+}
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+{
+  [FBSDKAppEvents logImplicitEvent:eventName
+                        valueToSum:nil
+                        parameters:parameters
+                       accessToken:nil];
+}
+
++ (void)logImplicitEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+              parameters:(NSDictionary *)parameters
+{
+  [FBSDKAppEvents logImplicitEvent:eventName
+                        valueToSum:@(valueToSum)
+                        parameters:parameters
+                       accessToken:nil];
+}
+
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(NSDictionary *)parameters
@@ -1011,19 +1044,16 @@ static NSString *g_overrideAppID = nil;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  if (isImplicitlyLogged && _serverConfiguration && !_serverConfiguration.isImplicitLoggingSupported) {
+  if (isImplicitlyLogged &&
+      (![FBSDKSettings isAutoLogAppEventsEnabled] ||
+       (_serverConfiguration && !_serverConfiguration.isImplicitLoggingSupported))) {
     return;
   }
 
   if (!isImplicitlyLogged && !_explicitEventsLoggedYet) {
     _explicitEventsLoggedYet = YES;
   }
-
-  __block BOOL failed = NO;
-
-  if (![FBSDKAppEventsUtility validateIdentifier:eventName]) {
-    failed = YES;
-  }
+  __block BOOL failed = ![FBSDKAppEventsUtility validateIdentifier:eventName];
 
   // Make sure parameter dictionary is well formed.  Log and exit if not.
   [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
