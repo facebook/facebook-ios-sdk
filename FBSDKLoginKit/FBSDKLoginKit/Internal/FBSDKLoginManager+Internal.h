@@ -31,7 +31,7 @@
 typedef void (^FBSDKBrowserLoginSuccessBlock)(BOOL didOpen, NSString *authMethod, NSError *error)
 NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 
-@interface FBSDKLoginManager ()
+@interface FBSDKLoginManager () <FBSDKURLOpening>
 @property (nonatomic, weak) UIViewController *fromViewController;
 @property (nonatomic, readonly) NSSet *requestedPermissions;
 
@@ -53,13 +53,7 @@ NS_SWIFT_NAME(BrowserLoginSuccessBlock);
 - (void)setHandler:(FBSDKLoginManagerLoginResultBlock)handler;
 // for testing only
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions;
-
-@end
-
-// the category is made available for testing only
-@interface FBSDKLoginManager (Native) <FBSDKURLOpening>
-
-- (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKSuccessBlock)handler;
+// for testing only
 - (void)performBrowserLogInWithParameters:(NSDictionary *)loginParams handler:(FBSDKBrowserLoginSuccessBlock)handler;
 
 @end

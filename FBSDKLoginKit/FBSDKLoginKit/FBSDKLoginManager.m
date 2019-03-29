@@ -412,38 +412,11 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
     }
   };
 
-  switch (loginBehavior) {
-    case FBSDKLoginBehaviorNative: {
-      if ([FBSDKInternalUtility isFacebookAppInstalled]) {
-        BOOL useNativeDialog = [serverConfiguration useNativeDialogForDialogName:FBSDKDialogConfigurationNameLogin];
-        if (useNativeDialog) {
-          [self performNativeLogInWithParameters:loginParams handler:^(BOOL openedURL, NSError *openedURLError) {
-            if (openedURLError) {
-              [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                                 formatString:@"FBSDKLoginBehaviorNative failed : %@\nTrying FBSDKLoginBehaviorBrowser", openedURLError];
-            }
-            if (openedURL) {
-              completion(YES, FBSDKLoginManagerLoggerAuthMethod_Native, openedURLError);
-            } else {
-              [self logInWithBehavior:FBSDKLoginBehaviorBrowser];
-            }
-          }];
-        } else {
-          [self logInWithBehavior:FBSDKLoginBehaviorBrowser];
-        }
-        break;
-      }
-      // Intentional fall through. Switching to browser login instead.
-    }
-    case FBSDKLoginBehaviorBrowser: {
-      [self performBrowserLogInWithParameters:loginParams handler:^(BOOL openedURL,
-                                                                    NSString *authMethod,
-                                                                    NSError *openedURLError) {
-        completion(openedURL, authMethod, openedURLError);
-      }];
-      break;
-    }
-  }
+  [self performBrowserLogInWithParameters:loginParams handler:^(BOOL openedURL,
+                                                                NSString *authMethod,
+                                                                NSError *openedURLError) {
+    completion(openedURL, authMethod, openedURLError);
+  }];
 }
 
 - (void)storeExpectedChallenge:(NSString *)challengeExpected
@@ -492,32 +465,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 - (void)setRequestedPermissions:(NSSet *)requestedPermissions
 {
   _requestedPermissions = [requestedPermissions copy];
-}
-
-@end
-
-#pragma mark -
-
-@implementation FBSDKLoginManager (Native)
-
-- (void)performNativeLogInWithParameters:(NSDictionary *)loginParams handler:(void(^)(BOOL, NSError*))handler
-{
-  [_logger willAttemptAppSwitchingBehavior];
-  loginParams = [_logger parametersWithTimeStampAndClientState:loginParams forAuthMethod:FBSDKLoginManagerLoggerAuthMethod_Native];
-
-  NSString *scheme = ([FBSDKSettings appURLSchemeSuffix] ? @"fbauth2" : @"fbauth");
-  NSMutableDictionary *mutableParams = [NSMutableDictionary dictionaryWithDictionary:loginParams];
-  mutableParams[@"legacy_override"] = FBSDK_TARGET_PLATFORM_VERSION;
-  NSError *error;
-  NSURL *authURL = [FBSDKInternalUtility URLWithScheme:scheme host:@"authorize" path:@"" queryParameters:mutableParams error:&error];
-
-  NSDate *start = [NSDate date];
-  [[FBSDKBridgeAPI sharedInstance] openURL:authURL sender:self handler:^(BOOL openedURL, NSError *anError) {
-    [self->_logger logNativeAppDialogResult:openedURL dialogDuration:-start.timeIntervalSinceNow];
-    if (handler) {
-      handler(openedURL, anError);
-    }
-  }];
 }
 
 // change bool to auth method string.
@@ -570,6 +517,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   }
 }
 
+#pragma mark - FBSDKURLOpening
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
   BOOL isFacebookURL = [self canOpenURL:url forApplication:application sourceApplication:sourceApplication annotation:annotation];
