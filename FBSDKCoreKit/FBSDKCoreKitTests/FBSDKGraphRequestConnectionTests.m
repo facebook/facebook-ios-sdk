@@ -24,6 +24,8 @@
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
+#import "../FBSDKCoreKit/Internal/FBSDKInternalUtility.h"
+
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
 #import "FBSDKGraphRequest+Internal.h"
@@ -481,6 +483,9 @@ static id g_mockNSBundle;
 
 - (void)testUserAgentSuffix
 {
+  // Disable compressing network request
+  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
 
