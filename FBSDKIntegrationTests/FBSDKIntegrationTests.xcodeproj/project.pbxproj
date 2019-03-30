@@ -457,7 +457,7 @@
 		9D1999A91A7AF41B00CAD112 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				TargetAttributes = {
 					9D1999B21A7AF44B00CAD112 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -474,6 +474,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -712,6 +713,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C11A7AF46300CAD112 /* FacebookSDK-Project-Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -730,6 +732,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999C21A7AF46300CAD112 /* FacebookSDK-Project-Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
@@ -748,7 +751,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
@@ -759,7 +761,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 8918E3E61AFA66CD003F7B88 /* FacebookSDK-ApplicationTests.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEVELOPMENT_TEAM = V9WTTPBFK9;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/FBSDKTestHost.app/FBSDKTestHost";
@@ -770,7 +771,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999BE1A7AF46300CAD112 /* FacebookSDK-Application.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Debug;
@@ -779,7 +779,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9D1999BE1A7AF46300CAD112 /* FacebookSDK-Application.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.sdk.$(PRODUCT_NAME:rfc1034identifier)";
 			};
 			name = Release;
