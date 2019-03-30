@@ -1403,7 +1403,7 @@
 		9D46C5E71A11E5D800A0DDB6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					9D2D99931BC452DE00929E76 = {
@@ -1428,6 +1428,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 9D46C5E61A11E5D800A0DDB6;
@@ -1869,6 +1870,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043D31D261A7900B2E437 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
@@ -1885,6 +1887,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 819043D41D261A7900B2E437 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
