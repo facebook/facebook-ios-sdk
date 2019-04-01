@@ -97,11 +97,6 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   NSString *behaviorString = nil;
 
   switch (loginManager.loginBehavior) {
-    case FBSDKLoginBehaviorNative:
-      willTryNative = YES;
-      willTryBrowser = YES;
-      behaviorString = @"FBSDKLoginBehaviorNative";
-      break;
     case FBSDKLoginBehaviorBrowser:
       willTryBrowser = YES;
       behaviorString = @"FBSDKLoginBehaviorBrowser";
