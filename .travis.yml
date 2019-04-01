@@ -27,16 +27,16 @@ stages:
 jobs:
   include:
     - stage: test
-      name: Xcode - iOS 12.0
-      osx_image: xcode10.1
+      name: Xcode - iOS 12.2
+      osx_image: xcode10.2
       env:
-        - XCODE_SDK=iphonesimulator12.1
+        - XCODE_SDK=iphonesimulator12.2
         - XCODE_SCHEME=BuildAllKits
     - stage: test
-      name: Xcode - tvOS 12.0
-      osx_image: xcode10.1
+      name: Xcode - tvOS 12.2
+      osx_image: xcode10.2
       env:
-        - XCODE_SDK=appletvsimulator12.1
+        - XCODE_SDK=appletvsimulator12.2
         - XCODE_SCHEME=BuildAllKits_TV
     - stage: test
       name: Xcode - iOS 11.4
@@ -45,19 +45,19 @@ jobs:
         - XCODE_SDK=iphonesimulator11.4
         - XCODE_SCHEME=BuildAllKits
     - stage: test
-      name: Carthage - Xcode 10.1
-      osx_image: xcode10.1
+      name: Carthage - Xcode 10.2
+      osx_image: xcode10.2
     - stage: test
-      name: Pod Lint - Xcode 10.1
-      osx_image: xcode10.1
+      name: Pod Lint - Xcode 10.2
+      osx_image: xcode10.2
       script: sh scripts/run.sh lint cocoapods --allow-warnings
     # - stage: tag
     #   name: Tag Version
-    #   osx_image: xcode10.1
+    #   osx_image: xcode10.2
     #   script: sh scripts/run.sh tag-current-version --push
     - stage: release
       name: GitHub Release
-      osx_image: xcode10.1
+      osx_image: xcode10.2
       script: sh scripts/run.sh build carthage --archive
       deploy:
         provider: releases
@@ -72,7 +72,7 @@ jobs:
           tags: true
     - stage: release
       name: Publish Cocoapods
-      osx_image: xcode10.1
+      osx_image: xcode10.2
       script: sh scripts/run.sh release cocoapods --allow-warnings
 
 before_install: sh scripts/travis/before_install.sh
