@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 /**
@@ -347,7 +349,7 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestError)
 
  The value passed for didRecover must be YES if error recovery was completely successful, NO otherwise.
  */
-- (void)attemptRecoveryFromError:(NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(id)delegate didRecoverSelector:(SEL)didRecoverSelector contextInfo:(void *)contextInfo;
+- (void)attemptRecoveryFromError:(null_unspecified NSError *)error optionIndex:(NSUInteger)recoveryOptionIndex delegate:(null_unspecified id)delegate didRecoverSelector:(null_unspecified SEL)didRecoverSelector contextInfo:(null_unspecified void *)contextInfo;
 
 @end
 
@@ -381,3 +383,5 @@ typedef NS_ENUM(NSUInteger, FBSDKGraphRequestErrorCategory)
   FBSDKGraphRequestErrorCategoryTransient DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorTransient instead") = 1,
   FBSDKGraphRequestErrorCategoryRecoverable DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestErrorRecoverable instead") = 2
 } DEPRECATED_MSG_ATTRIBUTE("use FBSDKGraphRequestError instead");
+
+NS_ASSUME_NONNULL_END
