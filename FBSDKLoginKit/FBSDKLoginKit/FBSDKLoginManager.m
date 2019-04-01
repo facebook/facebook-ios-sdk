@@ -128,13 +128,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [FBSDKProfile setCurrentProfile:nil];
 }
 
-+ (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler
-{
-  ACAccountCredentialRenewResult failed = 2; // ACAccountCredentialRenewResultFailed
-  NSError *error = [NSError fbErrorForFailedLoginWithCode:FBSDKLoginErrorSystemAccountUnavailable];
-  handler(failed, error);
-}
-
 #pragma mark - Private
 
 - (void)raiseLoginException:(NSException *)exception

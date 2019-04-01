@@ -90,9 +90,6 @@ typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
     which present specialized SafariViewControllers. Falls back to plain SFSafariViewController (iOS 9 and 10) or Safari (iOS 8).
    */
   FBSDKLoginBehaviorBrowser = 0,
-  FBSDKLoginBehaviorNative __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
-  FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
-  FBSDKLoginBehaviorWeb __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
 } NS_SWIFT_NAME(LoginBehavior);
 
 /**
@@ -194,8 +191,6 @@ NS_SWIFT_NAME(reauthorizeDataAccess(from:handler:));
  This calls [FBSDKAccessToken setCurrentAccessToken:nil] and [FBSDKProfile setCurrentProfile:nil].
  */
 - (void)logOut;
-
-+ (void)renewSystemCredentials:(ACAccountStoreCredentialRenewalHandler)handler DEPRECATED_MSG_ATTRIBUTE("The system account login behavior is no longer supported.");
 
 @end
 
