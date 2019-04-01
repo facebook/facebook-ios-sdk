@@ -69,7 +69,7 @@
  Note that Facebook recovery attempters can present UI or even cause app switches (such as to login). Any such
  work is dispatched to the main thread (therefore your request handlers may then run on the main thread).
 
- Login recovery requires FBSDKLoginKit. Login will use FBSDKLoginBehaviorNative and will prompt the user
+ Login recovery requires FBSDKLoginKit. Login will prompt the user
  for all permissions last granted. If any are declined on the new request, the recovery is not successful but
  the `[FBSDKAccessToken currentAccessToken]` might still have been updated.
  .

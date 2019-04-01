@@ -72,14 +72,11 @@ typedef NS_ENUM(NSUInteger, FBSDKDefaultAudience)
 typedef NS_ENUM(NSUInteger, FBSDKLoginBehavior)
 {
   /**
-    This is the default behavior, and indicates logging in through the native
-   Facebook app may be used. The SDK may still use Safari instead.
+    This is the default behavior, and indicates logging in via ASWebAuthenticationSession (iOS 12+) or SFAuthenticationSession (iOS 11),
+    which present specialized SafariViewControllers. Falls back to plain SFSafariViewController (iOS 9 and 10) or Safari (iOS 8).
    */
-  FBSDKLoginBehaviorNative = 0,
-  /**
-    Attempts log in through the Safari or SFSafariViewController, if available.
-   */
-  FBSDKLoginBehaviorBrowser,
+  FBSDKLoginBehaviorBrowser = 0,
+  FBSDKLoginBehaviorNative __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
   FBSDKLoginBehaviorSystemAccount __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
   FBSDKLoginBehaviorWeb __deprecated_enum_msg("Use FBSDKLoginBehaviorBrowser.") = FBSDKLoginBehaviorBrowser,
 };
