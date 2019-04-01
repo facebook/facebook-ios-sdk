@@ -26,18 +26,11 @@
 
 # Main
 main() {
-  TEST_FAILURES=$((0))
-
   test_main_setup
   test_run_routing
   test_is_valid_semver
   test_does_version_exist
   test_check_release_status
-
-  case $TEST_FAILURES in
-  0) test_success "test_scripts tests" ;;
-  *) test_failure "$TEST_FAILURES test_scripts tests" ;;
-  esac
 }
 
 # Test Success
@@ -54,10 +47,27 @@ test_failure() {
   echo "${red}* Failed:${none} $*"
 }
 
+log_test_begin() {
+  echo "Testing ${FUNCNAME[1]}"
+}
+
+log_test_results() {
+  # $1: Number of Test Failures
+  local test_failures=$1
+  local func_name=${FUNCNAME[1]}
+
+  case $test_failures in
+  0) test_success "$func_name tests" ;;
+  *) test_failure "$test_failures $func_name tests" ;;
+  esac
+}
+
 # Test Shared Setup
 test_main_setup() {
 
   # Arrange
+  local test_failures=$((0))
+
   local test_sdk_kits=(
     "FBSDKCoreKit"
     "FBSDKLoginKit"
@@ -79,6 +89,14 @@ test_main_setup() {
     "FacebookSDK.podspec"
   )
 
+  local test_lint_pod_specs=(
+    "FBSDKCoreKit.podspec"
+    "FBSDKLoginKit.podspec"
+    "FBSDKShareKit.podspec"
+    "FBSDKPlacesKit.podspec"
+    "FBSDKTVOSKit.podspec"
+  )
+
   local test_version_change_files=(
     "Configurations/Version.xcconfig"
     "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
@@ -95,65 +113,78 @@ test_main_setup() {
   fi
 
   # Act
+  log_test_begin
+
   . "$PWD/scripts/run.sh"
 
   # Assert
   if [ -z "$SDK_SCRIPTS_DIR" ]; then
     test_failure "SDK_SCRIPTS_DIR"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "$SDK_SCRIPTS_DIR" != "$SDK_DIR"/scripts ]; then
     test_failure "SDK_SCRIPTS_DIR not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "${SDK_KITS[*]}" != "${test_sdk_kits[*]}" ]; then
     test_failure "SDK_KITS not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "${SDK_POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
     test_failure "SDK_POD_SPECS not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
+  fi
+
+  if [ "${SDK_LINT_POD_SPECS[*]}" != "${test_lint_pod_specs[*]}" ]; then
+    test_failure "SDK_LINT_POD_SPECS not correct"
+    ((test_failures += 1))
   fi
 
   if [ "${SDK_VERSION_FILES[*]}" != "${test_version_change_files[*]}" ]; then
     test_failure "SDK_VERSION_FILES not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "$SDK_MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
     test_failure "SDK_MAIN_VERSION_FILE not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "$SDK_FRAMEWORK_NAME" != "FacebookSDK" ]; then
     test_failure "SDK_FRAMEWORK_NAME not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "$SDK_CURRENT_VERSION" != "$test_current_version" ]; then
     test_failure "SDK_CURRENT_VERSION not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ "$SDK_GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
     test_failure "SDK_GIT_REMOTE not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 0 ]]; then
     test_failure "SDK_INTERNAL not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   elif ! [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 1 ]]; then
     test_failure "SDK_INTERNAL not correct"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
+
+  log_test_results $test_failures
 }
 
 test_is_valid_semver() {
+
   # Arrange
+  local test_failures=$((0))
+  local func_name=${FUNCNAME[0]}
+
   local proper_versions=(
     "0.0.0"
     "1.0.0"
@@ -184,11 +215,13 @@ test_is_valid_semver() {
   )
 
   # Act
+  log_test_begin
+
   for version in "${proper_versions[@]}"; do
     # Assert
     if ! sh "$PWD"/scripts/run.sh is-valid-semver "$version"; then
       test_failure "$version is valid, but returns false"
-      ((TEST_FAILURES += 1))
+      ((test_failures += 1))
     fi
   done
 
@@ -214,11 +247,17 @@ test_is_valid_semver() {
       test_failure "$version is invalid, but returns true"
     fi
   done
+
+  log_test_results $test_failures
 }
 
 # Test Build SDK
 test_run_routing() {
+
   # Arrange
+  local test_failures=$((0))
+  local func_name=${FUNCNAME[0]}
+
   local inputs=(
     "build unsupported"
     "lint unsupported"
@@ -236,6 +275,8 @@ test_run_routing() {
   )
 
   # Act
+  log_test_begin
+
   for i in "${!inputs[@]}"; do
     local input_string="${inputs[$i]}"
     IFS=" " read -r -a input_params <<<"$input_string"
@@ -246,14 +287,23 @@ test_run_routing() {
     # Assert
     if [ "$actual" != "${expected[$i]}" ]; then
       test_failure "expected: ${expected[$i]} but got: $actual"
-      ((TEST_FAILURES += 1))
+      ((test_failures += 1))
     fi
   done
+
+  log_test_results $test_failures
 }
 
 test_does_version_exist() {
-  # Arrange, Act, & Assert
 
+  # Arrange
+  local test_failures=$((0))
+  local func_name=${FUNCNAME[0]}
+
+  # Act
+  log_test_begin
+
+  # Assert
   if [ ! -d "$SDK_DIR"/.git ]; then
     echo "Not a Git Repository"
     return
@@ -261,27 +311,38 @@ test_does_version_exist() {
 
   if ! sh "$PWD"/scripts/run.sh does-version-exist; then
     test_failure "Current version is valid, but returns false"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if ! sh "$PWD"/scripts/run.sh does-version-exist 4.40.0; then
     test_failure "4.40.0 is valid, but returns false"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
 
   if sh "$PWD"/scripts/run.sh does-version-exist 0.0.0; then
     test_failure "0.0.0 is invalid, but returns true"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
+
+  log_test_results $test_failures
 }
 
 test_check_release_status() {
-  # Arrange, Act, & Assert
 
+  # Arrange
+  local test_failures=$((0))
+  local func_name=${FUNCNAME[0]}
+
+  # Act
+  log_test_begin
+
+  # Assert
   if ! sh "$PWD"/scripts/run.sh check-release-status 4.38.0; then
     test_failure "Version 4.38.0 is valid, but returns false"
-    ((TEST_FAILURES += 1))
+    ((test_failures += 1))
   fi
+
+  log_test_results $test_failures
 }
 
 # --------------
