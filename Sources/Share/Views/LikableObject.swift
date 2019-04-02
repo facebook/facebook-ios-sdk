@@ -42,7 +42,7 @@ public enum LikableObject: Equatable {
     case .unknown: self = .unknown(objectId: sdkObjectId)
     @unknown default:
       assertionFailure("Unknown Case")
-      self = .unknown
+      self = .unknown(objectId: sdkObjectId)
     }
   }
 
