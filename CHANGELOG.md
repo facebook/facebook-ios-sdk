@@ -9,11 +9,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 [Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...HEAD)
 
-## 4.44.0
-
-[2019-04-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.0) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...v4.44.0)
-
 ### Added
 
 - Typedefs for public Objective-C blocks
@@ -23,7 +18,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `NS_ASSUME_NONNULL_BEGIN`, `NS_ASSUME_NONNULL_END`, and other nullability annotations
 - Generics for Arrays, Sets, and Dictionaries
 - `NS_SWIFT_NAME` to remove the `FBSDK` prefix where necessary (left `FB` prefix for UI elements)
-- Add parameter `_inBackground` for app events
 
 ### Changed
 
@@ -43,6 +37,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Deprecated properties
 - Made `init` and `new` unavailable where necessary
 - Used `NS_SWIFT_UNAVAILABLE` where necessary
+
+### Fixed
+
+- Various bug fixes
+
+## 4.44.0
+
+[2019-04-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...v4.44.0)
+
+### Added
+
+- Add parameter `_inBackground` for app events
 
 ### Fixed
 
