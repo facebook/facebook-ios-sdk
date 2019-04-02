@@ -62,8 +62,9 @@ public extension AppInvite {
       sdkDialog = FBSDKAppInviteDialog()
       sdkDialog.content = invite.sdkInviteRepresentation
 
-      sdkDelegate = SDKDelegate()
-      sdkDelegate?.setupAsDelegateFor(sdkDialog)
+      let delegate = SDKDelegate()
+      delegate.setupAsDelegateFor(sdkDialog)
+      sdkDelegate = delegate
 
       self.invite = invite
     }

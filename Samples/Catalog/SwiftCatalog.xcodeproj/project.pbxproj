@@ -39,6 +39,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		52D2CB9F2252AA8E007695E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF2C207C05CD00662776;
+			remoteInfo = FBSDKLoginKit_TV;
+		};
+		52D2CBA12252AA8E007695E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF52207C07C600662776;
+			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
+		};
 		815463391D3808EA0069489A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
@@ -439,6 +453,8 @@
 				81AB8B851D36D60100066F63 /* FBSDKLoginKit.framework */,
 				81AB8B871D36D60100066F63 /* FBSDKLoginKit.framework */,
 				81AB8B891D36D60100066F63 /* FBSDKLoginKitTests.xctest */,
+				52D2CBA02252AA8E007695E9 /* FBSDKLoginKit.framework */,
+				52D2CBA22252AA8E007695E9 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -667,12 +683,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Facebook, Inc";
 				TargetAttributes = {
 					81EDA31D1D025F4600E742F4 = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 1;
@@ -686,6 +702,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -722,6 +739,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		52D2CBA02252AA8E007695E9 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52D2CB9F2252AA8E007695E9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52D2CBA22252AA8E007695E9 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52D2CBA12252AA8E007695E9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		81AB8B5A1D36D60100066F63 /* Bolts.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1030,7 +1061,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81BA3CBF1D35949E00017B14 /* SwiftCatalog.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1038,7 +1069,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81BA3CBF1D35949E00017B14 /* SwiftCatalog.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1046,6 +1077,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81BA3CBC1D35949E00017B14 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1058,6 +1090,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81BA3CBD1D35949E00017B14 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;

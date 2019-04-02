@@ -112,13 +112,6 @@ public struct OpenGraphPropertyName: Hashable, RawRepresentable, ExpressibleBySt
     self.init(stringLiteral: value)
   }
 
-  // MARK: Hashable
-
-  /// Calculates the hash value of this `OpenGraphPropertyName`.
-  public var hashValue: Int {
-    return rawValue.hashValue
-  }
-
   /**
    Compares two `OpenGraphPropertyName`s for equality.
 

@@ -31,9 +31,11 @@ public final class MessageDialog<Content: ContentProtocol>: ContentSharingProtoc
    */
   public init(content: Content) {
     sdkSharer = FBSDKMessageDialog()
-    sdkShareDelegate = SDKSharingDelegateBridge<Content>()
 
-    sdkShareDelegate?.setupAsDelegateFor(sdkSharer)
+    let delegate = SDKSharingDelegateBridge<Content>()
+    delegate.setupAsDelegateFor(sdkSharer)
+    sdkShareDelegate = delegate
+
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
 

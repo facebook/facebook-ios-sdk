@@ -49,6 +49,9 @@ public extension LikeControl {
         case .left: self = .left
         case .center: self = .center
         case .right: self = .right
+        @unknown default:
+          assertionFailure("Unknown Case")
+          self = .left
         }
       }
 
@@ -79,6 +82,9 @@ public extension LikeControl {
         case .top: self = .top
         case .inline: self = .inline
         case .bottom: self = .bottom
+        @unknown default:
+          assertionFailure("Unknown Case")
+          self = .top
         }
       }
 
@@ -141,6 +147,9 @@ public extension LikeControl {
       switch sdkStyle {
       case .standard: self = .standard(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
       case .boxCount: self = .boxCount(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
+      @unknown default:
+        assertionFailure("Unknown Case")
+        self = .standard(horizontalAlignment: horizontalAlignment, verticalAlignment: verticalAlignment)
       }
     }
 

@@ -55,7 +55,7 @@ public final class LoginManager {
    - parameter loginBehavior: Optional login behavior to use. Default: `.Native`.
    - parameter defaultAudience: Optional default audience to use. Default: `.Friends`.
    */
-  public init(loginBehavior: LoginBehavior = .native,
+  public init(loginBehavior: LoginBehavior = .browser,
               defaultAudience: LoginDefaultAudience = .friends) {
     self.loginBehavior = loginBehavior
     self.defaultAudience = defaultAudience

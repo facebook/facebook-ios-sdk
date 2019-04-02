@@ -117,13 +117,6 @@ public enum AppEventParameterName: Hashable, RawRepresentable, ExpressibleByStri
     self.init(stringLiteral: value)
   }
 
-  // MARK: Hashable
-
-  /// The hash value.
-  public var hashValue: Int {
-    return self.rawValue.hashValue
-  }
-
   /**
    Compare two `AppEventParameterName`s for equality.
 

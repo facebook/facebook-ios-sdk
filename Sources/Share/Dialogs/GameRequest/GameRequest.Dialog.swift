@@ -40,7 +40,7 @@ public extension GameRequest {
         return sdkDialog.frictionlessRequestsEnabled
       }
       set {
-        sdkDialog.frictionlessRequestsEnabled = false
+        sdkDialog.frictionlessRequestsEnabled = newValue
       }
     }
 
@@ -53,9 +53,11 @@ public extension GameRequest {
       self.request = request
 
       sdkDialog = FBSDKGameRequestDialog()
-      sdkDelegate = SDKDelegate()
 
-      sdkDelegate?.setupAsDelegateFor(sdkDialog)
+      let delegate = SDKDelegate()
+      delegate.setupAsDelegateFor(sdkDialog)
+      sdkDelegate = delegate
+
       sdkDialog.content = request.sdkContentRepresentation
     }
 

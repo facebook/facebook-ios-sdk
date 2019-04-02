@@ -21,7 +21,7 @@ import FBSDKShareKit
 /// A dialog for sharing content on Facebook.
 public final class ShareDialog<Content: ContentProtocol>: ContentSharingProtocol, ContentSharingDialogProtocol {
   private let sdkSharer: FBSDKShareDialog
-  private var sdkShareDelegate: SDKSharingDelegateBridge<Content>?
+  private weak var sdkShareDelegate: SDKSharingDelegateBridge<Content>?
 
   /**
    A `UIViewController` to present the dialog from.
@@ -58,9 +58,11 @@ public final class ShareDialog<Content: ContentProtocol>: ContentSharingProtocol
    */
   public init(content: Content) {
     sdkSharer = FBSDKShareDialog()
-    sdkShareDelegate = SDKSharingDelegateBridge<Content>()
 
-    sdkShareDelegate?.setupAsDelegateFor(sdkSharer)
+    let delegate = SDKSharingDelegateBridge<Content>()
+    delegate.setupAsDelegateFor(sdkSharer)
+    sdkShareDelegate = delegate
+
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
 

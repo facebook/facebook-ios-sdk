@@ -102,6 +102,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		52D2CB892252AA57007695E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A0C1D36D41700066F63 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF2C207C05CD00662776;
+			remoteInfo = FBSDKLoginKit_TV;
+		};
+		52D2CB8B2252AA57007695E9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A0C1D36D41700066F63 /* FBSDKLoginKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0B9DBF52207C07C600662776;
+			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
+		};
 		811C5E471CFFD4C800E4A925 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 8115C0CF1CFE540D001FF33B /* Project object */;
@@ -709,6 +723,8 @@
 				81AB8A491D36D41700066F63 /* FBSDKLoginKit.framework */,
 				81AB8A4B1D36D41700066F63 /* FBSDKLoginKit.framework */,
 				81AB8A4D1D36D41700066F63 /* FBSDKLoginKitTests.xctest */,
+				52D2CB8A2252AA57007695E9 /* FBSDKLoginKit.framework */,
+				52D2CB8C2252AA57007695E9 /* FBSDKLoginKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1034,18 +1050,18 @@
 		8115C0CF1CFE540D001FF33B /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Facebook Inc";
 				TargetAttributes = {
 					8115C0D71CFE540D001FF33B = {
 						CreatedOnToolsVersion = 7.3.1;
-						LastSwiftMigration = 0800;
+						LastSwiftMigration = 1020;
 					};
 					811C5DF21CFFD36600E4A925 = {
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 					811C5DFF1CFFD36D00E4A925 = {
-						LastSwiftMigration = 1000;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -1054,6 +1070,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 8115C0CE1CFE540D001FF33B;
@@ -1087,6 +1104,20 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		52D2CB8A2252AA57007695E9 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52D2CB892252AA57007695E9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		52D2CB8C2252AA57007695E9 /* FBSDKLoginKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKLoginKit.framework;
+			remoteRef = 52D2CB8B2252AA57007695E9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		81AB8A3B1D36D41700066F63 /* FBSDKCoreKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -1489,6 +1520,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DD41D356E9A006401F1 /* Debug.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1501,6 +1533,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DD51D356E9A006401F1 /* Release.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
@@ -1514,7 +1547,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC41D356E9A006401F1 /* FacebookCore.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1522,7 +1555,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC41D356E9A006401F1 /* FacebookCore.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1530,7 +1563,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC51D356E9A006401F1 /* FacebookLogin.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1538,7 +1571,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC51D356E9A006401F1 /* FacebookLogin.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1546,7 +1579,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC61D356E9A006401F1 /* FacebookShare.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1554,7 +1587,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC61D356E9A006401F1 /* FacebookShare.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

@@ -66,13 +66,6 @@ public struct Permission: Hashable, ExpressibleByStringLiteral {
     self.init(name: value)
   }
 
-  // MARK: Hashable
-
-  /// The hash value.
-  public var hashValue: Int {
-    return name.hashValue
-  }
-
   /**
    Compare two `Permission`s for equality.
 

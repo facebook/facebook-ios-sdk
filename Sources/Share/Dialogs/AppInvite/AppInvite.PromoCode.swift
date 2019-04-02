@@ -52,13 +52,6 @@ public extension AppInvite {
       rawValue = string
     }
 
-    // MARK: Hashable
-
-    /// The hash of this promo code.
-    public var hashValue: Int {
-      return rawValue.hashValue
-    }
-
     /**
      Compare two `PromoCode`s for equality.
 

@@ -41,8 +41,8 @@ public class LoginButton: UIView {
   public weak var delegate: LoginButtonDelegate?
   private var delegateBridge: LoginButtonDelegateBridge
 
-  /// The login behavior that is going to be used. Default: `.Native`.
-  public var loginBehavior: LoginBehavior = .native {
+  /// The login behavior that is going to be used. Default: `.browser`.
+  public var loginBehavior: LoginBehavior = .browser {
     didSet {
       sdkLoginButton.loginBehavior = loginBehavior.sdkBehavior
     }

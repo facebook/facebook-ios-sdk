@@ -71,9 +71,11 @@ public final class GraphSharer<Content: ContentProtocol>: ContentSharingProtocol
    */
   public init(content: Content) {
     sdkSharer = FBSDKShareAPI()
-    sdkShareDelegate = SDKSharingDelegateBridge()
 
-    sdkShareDelegate?.setupAsDelegateFor(sdkSharer)
+    let delegate = SDKSharingDelegateBridge<Content>()
+    delegate.setupAsDelegateFor(sdkSharer)
+    sdkShareDelegate = delegate
+
     sdkSharer.shareContent = ContentBridger.bridgeToObjC(content)
   }
 

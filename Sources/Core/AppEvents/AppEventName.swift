@@ -139,13 +139,6 @@ public enum AppEventName: Hashable, RawRepresentable, CustomStringConvertible, E
     self.init(stringLiteral: value)
   }
 
-  // MARK: Hashable
-
-  /// The hash value.
-  public var hashValue: Int {
-    return self.rawValue.hashValue
-  }
-
   /**
    Compare two `AppEventName`s for equality.
 

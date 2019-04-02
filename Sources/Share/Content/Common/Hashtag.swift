@@ -47,13 +47,6 @@ public struct Hashtag: Hashable {
     return FBSDKHashtag(string: stringValue)
   }
 
-  // MARK: Hashable
-
-  /// Calculates the hash value of this Hashtag (yo dawg).
-  public var hashValue: Int {
-    return stringValue.hashValue
-  }
-
   /**
    Check if two hashtags are equal.
 

@@ -39,6 +39,9 @@ public extension AppEventsLogger {
       switch sdkFlushBehavior {
       case .auto: self = .auto
       case .explicitOnly: self = .explicitOnly
+      @unknown default:
+        assertionFailure("Unknown Case")
+        self = .auto
       }
     }
 
