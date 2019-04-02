@@ -71,6 +71,14 @@ main() {
     SDK_POD_SPECS=("${SDK_POD_SPECS[@]/%/.podspec}")
     SDK_POD_SPECS[6]="AccountKit/${SDK_POD_SPECS[6]}"
 
+    SDK_LINT_POD_SPECS=(
+      "FBSDKCoreKit.podspec"
+      "FBSDKLoginKit.podspec"
+      "FBSDKShareKit.podspec"
+      "FBSDKPlacesKit.podspec"
+      "FBSDKTVOSKit.podspec"
+    )
+
     SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
@@ -250,24 +258,14 @@ lint_sdk() {
   lint_cocoapods() {
     pod_lint_failures=()
 
-    for spec in "${SDK_POD_SPECS[@]}"; do
+    for spec in "${SDK_LINT_POD_SPECS[@]}"; do
       if [ ! -f "$spec" ]; then
         echo "*** ERROR: unable to lint $spec"
         continue
       fi
 
-      if [ "$spec" == "AccountKit/AccountKit.podspec" ]; then
-        continue
-      fi
-
-      local pod_lint_type="lib"
-
-      if [ "$spec" == "FBSDKMarketingKit.podspec" ]; then
-        pod_lint_type="spec"
-      fi
-
       set +e
-      if ! pod "$pod_lint_type" lint "$spec" "$@"; then
+      if ! pod lib lint "$spec" "$@"; then
         pod_lint_failures+=("$spec")
       fi
       set -e

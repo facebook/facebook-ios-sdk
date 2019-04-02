@@ -89,6 +89,14 @@ test_main_setup() {
     "FacebookSDK.podspec"
   )
 
+  local test_lint_pod_specs=(
+    "FBSDKCoreKit.podspec"
+    "FBSDKLoginKit.podspec"
+    "FBSDKShareKit.podspec"
+    "FBSDKPlacesKit.podspec"
+    "FBSDKTVOSKit.podspec"
+  )
+
   local test_version_change_files=(
     "Configurations/Version.xcconfig"
     "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
@@ -127,6 +135,11 @@ test_main_setup() {
 
   if [ "${SDK_POD_SPECS[*]}" != "${test_pod_specs[*]}" ]; then
     test_failure "SDK_POD_SPECS not correct"
+    ((test_failures += 1))
+  fi
+
+  if [ "${SDK_LINT_POD_SPECS[*]}" != "${test_lint_pod_specs[*]}" ]; then
+    test_failure "SDK_LINT_POD_SPECS not correct"
     ((test_failures += 1))
   fi
 

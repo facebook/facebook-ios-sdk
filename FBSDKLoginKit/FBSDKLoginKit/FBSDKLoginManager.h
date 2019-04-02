@@ -22,8 +22,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @class FBSDKLoginManagerLoginResult;
-typedef NSInteger ACAccountCredentialRenewResult;
-typedef void (^ACAccountStoreCredentialRenewalHandler)(ACAccountCredentialRenewResult renewResult, NSError *error);
 
 /// typedef for FBSDKLoginAuthType
 typedef NSString *const FBSDKLoginAuthType NS_TYPED_EXTENSIBLE_ENUM NS_SWIFT_NAME(LoginAuthType);
