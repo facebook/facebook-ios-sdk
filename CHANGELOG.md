@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...HEAD)
 
 ### Added
 
@@ -37,6 +37,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Deprecated properties
 - Made `init` and `new` unavailable where necessary
 - Used `NS_SWIFT_UNAVAILABLE` where necessary
+
+### Fixed
+
+- Various bug fixes
+
+## 4.44.0
+
+[2019-04-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.43.0...v4.44.0)
+
+### Added
+
+- Add parameter `_inBackground` for app events
 
 ### Fixed
 
