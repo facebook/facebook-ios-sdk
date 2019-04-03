@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKLoginKit'
-  s.version      = '4.43.0'
+  s.version      = '5.0.0-rc.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform with features like Login, Share and Message Dialog, App Links, and Graph API'
 
   s.description  = <<-DESC
@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'FBSDKCoreKit'
+  s.dependency 'FBSDKCoreKit', "#{s.version}"
 
   s.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
   s.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'

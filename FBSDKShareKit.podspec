@@ -3,7 +3,7 @@
 Pod::Spec.new do |s|
 
   s.name         = 'FBSDKShareKit'
-  s.version      = '4.43.0'
+  s.version      = '5.0.0-rc.1'
   s.summary      = 'Official Facebook SDK for iOS to access Facebook Platform Sharing Features'
 
   s.description  = <<-DESC
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.header_dir = 'FBSDKShareKit'
-  s.dependency 'FBSDKCoreKit'
+  s.dependency 'FBSDKCoreKit', "#{s.version}"
 
   s.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
   s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'
