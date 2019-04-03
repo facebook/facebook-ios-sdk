@@ -83,7 +83,7 @@ main() {
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
 
-    if [ -f "$PWD/internal/scripts/run.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
+    if [ -f "$PWD/internal/scripts/internal_globals.sh" ]; then SDK_INTERNAL=1; else SDK_INTERNAL=0; fi
   fi
 
   local command_type=${1:-}
@@ -315,7 +315,7 @@ release_sdk() {
       local prefix
       if [ "$kit" == "FBSDKMarketingKit" ]; then prefix="internal/"; else prefix=""; fi
 
-      local header_file="$SDK_DIR/$prefix$kit/$kit/$kit".h
+      local header_file="$prefix$kit/$kit/$kit".h
 
       if [ ! -f "$header_file" ]; then
         echo "*** ERROR: unable to document $kit"
@@ -323,18 +323,17 @@ release_sdk() {
       fi
 
       jazzy \
-        --config "$SDK_DIR"/.jazzy.yaml \
-        --framework-root "$SDK_DIR/$prefix$kit" \
-        --umbrella-header "$header_file" \
-        --output "$SDK_DIR"/docs/"$kit"
+        --framework-root "$prefix$kit" \
+        --output docs/"$kit" \
+        --umbrella-header "$header_file"
 
       # Zip the result so it can be uploaded easily
-      pushd "$SDK_DIR"/docs/ || continue
+      pushd docs/ || continue
       zip -r "$kit.zip" "$kit"
       popd || continue
 
       if [[ $SDK_INTERNAL == 1 ]] && [ "${1:-}" == "--publish" ]; then
-        echo api_update_reference_doc "$kit"
+        api_update_reference_doc "$kit"
       fi
     done
   }
