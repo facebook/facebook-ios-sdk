@@ -762,11 +762,11 @@
 			};
 			buildConfigurationList = 9D9DB8D31A114E500086167B /* Build configuration list for PBXProject "FBSDKLoginKit" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 9D9DB8CF1A114E500086167B;
 			productRefGroup = 9D9DB8DA1A114E500086167B /* Products */;

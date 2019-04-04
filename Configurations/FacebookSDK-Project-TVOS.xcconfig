@@ -21,7 +21,7 @@
 #include "FacebookSDK-Library.xcconfig"
 
 ARCHS = x86_64 arm64
-TVOS_DEPLOYMENT_TARGET = 9.0
+TVOS_DEPLOYMENT_TARGET = 10.0
 SDKROOT = appletvos
 PRODUCT_NAME = $(PROJECT_NAME)
 INFOPLIST_FILE = $(PROJECT_NAME)/Info.plist
@@ -33,7 +33,7 @@ GCC_VERSION = com.apple.compilers.llvm.clang.1_0
 
 // Deployment
 SKIP_INSTALL = YES
-CODE_SIGN_IDENTITY = 
+CODE_SIGN_IDENTITY =
 TARGETED_DEVICE_FAMILY = 3 // tvos
 
 // Bitcode Support

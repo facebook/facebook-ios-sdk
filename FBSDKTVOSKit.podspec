@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.author       = 'Facebook'
 
   s.platform     = :tvos
-  s.tvos.deployment_target = '9.0'
+  s.tvos.deployment_target = '10.0'
 
   s.source       = { :git => 'https://github.com/facebook/facebook-objc-sdk.git',
                      :tag => "v#{s.version}" }
