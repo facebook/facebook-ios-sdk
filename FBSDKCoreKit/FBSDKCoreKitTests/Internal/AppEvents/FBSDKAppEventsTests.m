@@ -33,7 +33,7 @@
 static NSString *const _mockAppID = @"mockAppID";
 
 // An extension that redeclares a private method so that it can be mocked
-@interface FBSDKApplicationDelegate()
+@interface FBSDKApplicationDelegate ()
 - (void)_logSDKInitialize;
 @end
 
@@ -305,7 +305,7 @@ static NSString *const _mockAppID = @"mockAppID";
   XCTAssertEqual(FBSDKAppEventsFlushBehaviorExplicitOnly, FBSDKAppEvents.flushBehavior);
 }
 
-- (void)testcheckPersistedEventsCalledWhenLogEvent
+- (void)testCheckPersistedEventsCalledWhenLogEvent
 {
   double mockPurchaseAmount = 1.0;
 
