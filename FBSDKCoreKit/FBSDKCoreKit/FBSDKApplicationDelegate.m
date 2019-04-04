@@ -88,8 +88,10 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     [FBSDKTimeSpentData registerAutoResetSourceApplication];
 
     [FBSDKInternalUtility validateFacebookReservedURLSchemes];
-    // Remove the observer
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+  // Remove the observer
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:UIApplicationDidFinishLaunchingNotification
+                                                object:nil];
 }
 
 + (FBSDKApplicationDelegate *)sharedInstance
