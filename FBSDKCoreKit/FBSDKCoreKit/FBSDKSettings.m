@@ -64,6 +64,24 @@ static NSString *g_userAgentSuffix;
 static NSString *g_defaultGraphAPIVersion;
 static FBSDKAccessTokenExpirer *g_accessTokenExpirer;
 
+//
+//  Warning messages for App Event Flags
+//
+
+static NSString *const autoLogAppEventsEnabledNotSetWarning =
+  @"<Warning>: Please set a value for FacebookAutoLogAppEventsEnabled. Set the flag to TRUE if you want "
+  "to collect app install, app launch and in-app purchase events automatically. To request user consent "
+  "before collecting data, set the flag value to FALSE, then change to TRUE once user consent is received. "
+  "Learn more: https://developers.facebook.com/docs/app-events/getting-started-app-events-ios#disable-auto-events.";
+static NSString *const advertiserIDCollectionEnabledNotSetWarning =
+  @"<Warning>: You haven't set a value for FacebookAdvertiserIDCollectionEnabled. Set the flag to TRUE if "
+  "you want to collect Advertiser ID for better advertising and analytics results. To request user consent "
+  "before collecting data, set the flag value to FALSE, then change to TRUE once user consent is received. "
+  "Learn more: https://developers.facebook.com/docs/app-events/getting-started-app-events-ios#disable-auto-events.";
+static NSString *const advertiserIDCollectionEnabledFalseWarning =
+  @"<Warning>: The value for FacebookAdvertiserIDCollectionEnabled is currently set to FALSE so you're sending app "
+  "events without collecting Advertiser ID. This can affect the quality of your advertising and analytics results.";
+
 @implementation FBSDKSettings
 
 + (void)initialize
@@ -71,6 +89,8 @@ static FBSDKAccessTokenExpirer *g_accessTokenExpirer;
   if (self == [FBSDKSettings class]) {
     g_tokenCache = [[FBSDKAccessTokenCache alloc] init];
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
+
+    [FBSDKSettings logWarnings];
   }
 }
 
@@ -271,6 +291,21 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
     return (NSNumber *)data;
   }
   return defaultValue;
+}
+
++ (void)logWarnings
+{
+  NSBundle *mainBundle = [NSBundle mainBundle];
+  // Log warnings for App Event Flags
+  if (![mainBundle objectForInfoDictionaryKey:@"FacebookAutoLogAppEventsEnabled"]) {
+    NSLog(autoLogAppEventsEnabledNotSetWarning);
+  }
+  if (![mainBundle objectForInfoDictionaryKey:@"FacebookAdvertiserIDCollectionEnabled"]) {
+    NSLog(advertiserIDCollectionEnabledNotSetWarning);
+  }
+  if (![FBSDKSettings isAdvertiserIDCollectionEnabled]) {
+    NSLog(advertiserIDCollectionEnabledFalseWarning);
+  }
 }
 
 #pragma mark - Internal - Graph API Debug
