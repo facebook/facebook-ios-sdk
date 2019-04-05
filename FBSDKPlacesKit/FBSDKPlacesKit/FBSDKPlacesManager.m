@@ -69,7 +69,11 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     }
   }];
 
-  [self.locationManager requestLocation];
+  if (@available(iOS 9.0, *)) {
+    [self.locationManager requestLocation];
+  } else {
+    [self.locationManager startUpdatingLocation];
+  }
 }
 
 - (FBSDKGraphRequest *)placeSearchRequestForLocation:(CLLocation *)location
@@ -128,7 +132,11 @@ typedef void (^FBSDKLocationRequestCompletion)(CLLocation *_Nullable location, N
     dispatch_group_leave(locationAndBeaconsGroup);
   }];
 
-  [self.locationManager requestLocation];
+  if (@available(iOS 9.0, *)) {
+    [self.locationManager requestLocation];
+  } else {
+    [self.locationManager startUpdatingLocation];
+  }
 
   dispatch_group_enter(locationAndBeaconsGroup);
   [self.bluetoothScanner scanForBeaconsWithCompletion:^(NSArray<FBSDKBluetoothBeacon *> *beacons) {

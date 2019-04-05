@@ -379,6 +379,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
         NSLog(@"%@", updateMessage);
       }
 #endif
+
+      if (!_printedUpdateMessage) {
+        _printedUpdateMessage = _printedUpdateMessage;
+      }
     }
 
     // update the cached copy in NSUserDefaults
