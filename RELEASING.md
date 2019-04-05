@@ -33,11 +33,10 @@ sh scripts/run.sh tag-current-version --push
 
 ### Release Version
 
-Head over to the [GitHub Releases](https://github.com/facebook/facebook-objc-sdk/releases), select the pushed tag, and
-add the copy for the new release from the Changelog to the release body. Give it the title of "Facebook SDK: X.Y.Z" and
-click "Publish Release".
+Travis will handle publishing the new release to:
 
-**Note:** Automation of this step is a WIP.
+- GitHub Releases (complete with framework binaries for Carthage)
+- CocoaPods
 
 ### Release FBSDKMarketingKit
 
