@@ -345,10 +345,10 @@ release_sdk() {
     current_date=$(date +%Y-%m-%d)
     local external_changelog="## $SDK_CURRENT_VERSION - $current_date {#$current_version_underscore}"
     local start_logging=0
+    local tfile
+    tfile=$(mktemp)
 
     while IFS= read -r line; do
-      local updated_line
-
       case "$line" in
       "## $SDK_CURRENT_VERSION")
         start_logging=1
@@ -360,17 +360,14 @@ release_sdk() {
         ;;
       *)
         if [[ $start_logging == 1 ]]; then
-          updated_line="\n"$line
+          external_changelog=$external_changelog"\n"$line
         fi
         ;;
       esac
-
-      external_changelog=$external_changelog$updated_line
     done <"CHANGELOG.md"
 
-    external_changelog="<card>\n$external_changelog\n</card>"
-
-    api_update_guide_doc "$external_changelog"
+    echo "$external_changelog" >"$tfile"
+    api_update_guide_doc "$tfile"
   }
 
   local release_type=${1:-}
