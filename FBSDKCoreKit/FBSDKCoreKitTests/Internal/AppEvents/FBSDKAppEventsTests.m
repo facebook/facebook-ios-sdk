@@ -44,6 +44,11 @@ static NSString *const _mockAppID = @"mockAppID";
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
 + (FBSDKAppEvents *)singleton;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
 @end
 
 @interface FBSDKAppEventsTests : XCTestCase
@@ -221,10 +226,9 @@ static NSString *const _mockAppID = @"mockAppID";
   FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
   id delegateMock = OCMPartialMock(delegate);
 
-  [[_mockAppEvents expect] logEvent:@"fb_sdk_initialize"
-                         valueToSum:nil
-                         parameters:[OCMArg any]
-                        accessToken:nil];
+  [[_mockAppEvents expect] logInternalEvent:@"fb_sdk_initialize"
+                                 parameters:[OCMArg any]
+                         isImplicitlyLogged:NO];
 
   [delegateMock _logSDKInitialize];
 

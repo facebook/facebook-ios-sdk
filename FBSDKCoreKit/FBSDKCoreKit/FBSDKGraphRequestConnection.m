@@ -640,10 +640,8 @@ NSURLSessionDataDelegate
   if (responseUTF8 == nil) {
     NSString *base64Data = data.length != 0 ? [data base64EncodedStringWithOptions:0] : @"";
     if (base64Data != nil) {
-      [FBSDKAppEvents logImplicitEvent:@"fb_response_invalid_utf8"
-                            valueToSum:nil
-                            parameters:nil
-                           accessToken:nil];
+      [FBSDKAppEvents logInternalEvent:@"fb_response_invalid_utf8"
+                    isImplicitlyLogged:YES];
     }
   }
 

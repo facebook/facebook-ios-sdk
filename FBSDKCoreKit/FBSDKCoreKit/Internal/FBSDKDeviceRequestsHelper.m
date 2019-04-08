@@ -95,10 +95,8 @@ static NSMapTable *g_mdnsAdvertisementServices;
                                             port:0];
   mdnsAdvertisementService.delegate = delegate;
   [mdnsAdvertisementService publishWithOptions:NSNetServiceNoAutoRename | NSNetServiceListenForConnections];
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKSmartLoginService
-                        valueToSum:nil
-                        parameters:nil
-                       accessToken:nil];
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKSmartLoginService
+                isImplicitlyLogged:YES];
   [g_mdnsAdvertisementServices setObject:mdnsAdvertisementService forKey:delegate];
 
   return YES;

@@ -73,10 +73,9 @@ static NSString *const FBSDKMeasurementEventPrefix = @"bf_";
         safeKey = [safeKey stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@" -"]];
         logData[safeKey] = eventArgs[key];
     }
-    [FBSDKAppEvents logImplicitEvent:[FBSDKMeasurementEventPrefix stringByAppendingString:note.userInfo[FBSDKMeasurementEventName]]
-                          valueToSum:nil
+    [FBSDKAppEvents logInternalEvent:[FBSDKMeasurementEventPrefix stringByAppendingString:note.userInfo[FBSDKMeasurementEventName]]
                           parameters:logData
-                         accessToken:nil];
+                  isImplicitlyLogged:YES];
 }
 
 - (void)dealloc

@@ -54,7 +54,9 @@ NSString *const FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey = @"_fb_pix
       else {
         params[FBSDKAppEventsWKWebViewMessagesPixelReferralParamKey] = pixelID;
       }
-      [FBSDKAppEvents logEvent:event parameters:params];
+      [FBSDKAppEvents logInternalEvent:event
+                            parameters:params
+                    isImplicitlyLogged:NO];
     }
   }
 }

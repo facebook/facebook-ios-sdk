@@ -257,40 +257,39 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 - (void)_logIfAppLinkEvent:(NSURL *)url
 {
-    if (!url) {
-        return;
-    }
-    NSDictionary *params = [FBSDKUtility dictionaryWithQueryString:url.query];
-    NSString *applinkDataString = params[@"al_applink_data"];
-    if (!applinkDataString) {
-        return;
-    }
+  if (!url) {
+    return;
+  }
+  NSDictionary *params = [FBSDKUtility dictionaryWithQueryString:url.query];
+  NSString *applinkDataString = params[@"al_applink_data"];
+  if (!applinkDataString) {
+    return;
+  }
 
-    NSDictionary *applinkData = [FBSDKInternalUtility objectForJSONString:applinkDataString error:NULL];
-    if (!applinkData) {
-        return;
-    }
+  NSDictionary *applinkData = [FBSDKInternalUtility objectForJSONString:applinkDataString error:NULL];
+  if (!applinkData) {
+    return;
+  }
 
-    NSString *targetURLString = applinkData[@"target_url"];
-    NSURL *targetURL = [targetURLString isKindOfClass:[NSString class]] ? [NSURL URLWithString:targetURLString] : nil;
+  NSString *targetURLString = applinkData[@"target_url"];
+  NSURL *targetURL = [targetURLString isKindOfClass:[NSString class]] ? [NSURL URLWithString:targetURLString] : nil;
 
-    NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
-    [FBSDKInternalUtility dictionary:logData setObject:targetURL.absoluteString forKey:@"targetURL"];
-    [FBSDKInternalUtility dictionary:logData setObject:targetURL.host forKey:@"targetURLHost"];
+  NSMutableDictionary *logData = [[NSMutableDictionary alloc] init];
+  [FBSDKInternalUtility dictionary:logData setObject:targetURL.absoluteString forKey:@"targetURL"];
+  [FBSDKInternalUtility dictionary:logData setObject:targetURL.host forKey:@"targetURLHost"];
 
-    NSDictionary *refererData = applinkData[@"referer_data"];
-    if (refererData) {
-        [FBSDKInternalUtility dictionary:logData setObject:refererData[@"target_url"] forKey:@"referralTargetURL"];
-        [FBSDKInternalUtility dictionary:logData setObject:refererData[@"url"] forKey:@"referralURL"];
-        [FBSDKInternalUtility dictionary:logData setObject:refererData[@"app_name"] forKey:@"referralAppName"];
-    }
-    [FBSDKInternalUtility dictionary:logData setObject:url.absoluteString forKey:@"inputURL"];
-    [FBSDKInternalUtility dictionary:logData setObject:url.scheme forKey:@"inputURLScheme"];
+  NSDictionary *refererData = applinkData[@"referer_data"];
+  if (refererData) {
+    [FBSDKInternalUtility dictionary:logData setObject:refererData[@"target_url"] forKey:@"referralTargetURL"];
+    [FBSDKInternalUtility dictionary:logData setObject:refererData[@"url"] forKey:@"referralURL"];
+    [FBSDKInternalUtility dictionary:logData setObject:refererData[@"app_name"] forKey:@"referralAppName"];
+  }
+  [FBSDKInternalUtility dictionary:logData setObject:url.absoluteString forKey:@"inputURL"];
+  [FBSDKInternalUtility dictionary:logData setObject:url.scheme forKey:@"inputURLScheme"];
 
-    [FBSDKAppEvents logImplicitEvent:FBSDKAppLinkInboundEvent
-                          valueToSum:nil
-                          parameters:logData
-                         accessToken:nil];
+  [FBSDKAppEvents logInternalEvent:FBSDKAppLinkInboundEvent
+                        parameters:logData
+                isImplicitlyLogged:YES];
 }
 
 - (void)_logSDKInitialize
@@ -318,7 +317,9 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
     if (objc_lookUpClass("FBSDKAutoLog") != nil) {
         params[@"marketing_lib_included"] = @1;
     }
-    [FBSDKAppEvents logEvent:@"fb_sdk_initialize" parameters:params];
+    [FBSDKAppEvents logInternalEvent:@"fb_sdk_initialize"
+                          parameters:params
+                  isImplicitlyLogged:NO];
 }
 
 // Wrapping this makes it mockable and enables testability
