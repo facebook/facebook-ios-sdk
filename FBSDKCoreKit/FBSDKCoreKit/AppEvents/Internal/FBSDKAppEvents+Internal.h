@@ -199,17 +199,32 @@ FOUNDATION_EXPORT NSString *const FBSDKAppEventsWKWebViewMessagesPixelIDKey;
 
 @property (class, nonatomic, strong, readonly) FBSDKAppEvents *singleton;
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName;
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum;
-
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters;
-
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
               valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters;
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+            accessToken:(FBSDKAccessToken *)accessToken;
 
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum

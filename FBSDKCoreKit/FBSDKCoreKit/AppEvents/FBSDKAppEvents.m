@@ -888,37 +888,82 @@ static NSString *g_overrideAppID = nil;
 
 #pragma mark - Internal Methods
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 {
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        parameters:@{}];
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [FBSDKAppEvents logInternalEvent:eventName
+                          parameters:@{}
+                  isImplicitlyLogged:isImplicitlyLogged];
+  }
 }
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+               valueToSum:(double)valueToSum
+       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        valueToSum:valueToSum
-                        parameters:@{}];
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [FBSDKAppEvents logInternalEvent:eventName
+                          valueToSum:valueToSum
+                          parameters:@{}
+                  isImplicitlyLogged:isImplicitlyLogged];
+  }
 }
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+               parameters:(NSDictionary *)parameters
+       isImplicitlyLogged:(BOOL)isImplicitlyLogged
+{
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [FBSDKAppEvents logInternalEvent:eventName
+                           valueToSum:nil
+                           parameters:parameters
+                   isImplicitlyLogged:isImplicitlyLogged
+                          accessToken:nil];
+  }
+}
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
               parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken
 {
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        valueToSum:nil
-                        parameters:parameters
-                       accessToken:nil];
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [FBSDKAppEvents logInternalEvent:eventName
+                          valueToSum:nil
+                          parameters:parameters
+                  isImplicitlyLogged:isImplicitlyLogged
+                         accessToken:accessToken];
+  }
 }
 
-+ (void)logImplicitEvent:(FBSDKAppEventName)eventName
-              valueToSum:(double)valueToSum
-              parameters:(NSDictionary *)parameters
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+               valueToSum:(double)valueToSum
+               parameters:(NSDictionary *)parameters
+       isImplicitlyLogged:(BOOL)isImplicitlyLogged
 {
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        valueToSum:@(valueToSum)
-                        parameters:parameters
-                       accessToken:nil];
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [FBSDKAppEvents logInternalEvent:eventName
+                          valueToSum:@(valueToSum)
+                          parameters:parameters
+                  isImplicitlyLogged:isImplicitlyLogged
+                         accessToken:nil];
+  }
+}
+
++ (void)logInternalEvent:(NSString *)eventName
+               valueToSum:(NSNumber *)valueToSum
+               parameters:(NSDictionary *)parameters
+       isImplicitlyLogged:(BOOL)isImplicitlyLogged
+              accessToken:(FBSDKAccessToken *)accessToken
+{
+  if ([FBSDKSettings isAutoLogAppEventsEnabled]) {
+    [[FBSDKAppEvents singleton] instanceLogEvent:eventName
+                                      valueToSum:valueToSum
+                                      parameters:parameters
+                              isImplicitlyLogged:isImplicitlyLogged
+                                     accessToken:accessToken];
+  }
 }
 
 + (void)logImplicitEvent:(NSString *)eventName
@@ -1044,9 +1089,7 @@ static NSString *g_overrideAppID = nil;
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken
 {
-  if (isImplicitlyLogged &&
-      (![FBSDKSettings isAutoLogAppEventsEnabled] ||
-       (_serverConfiguration && !_serverConfiguration.isImplicitLoggingSupported))) {
+  if (isImplicitlyLogged && _serverConfiguration && !_serverConfiguration.isImplicitLoggingSupported) {
     return;
   }
 
