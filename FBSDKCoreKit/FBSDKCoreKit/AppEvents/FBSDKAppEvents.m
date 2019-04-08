@@ -550,7 +550,8 @@ static NSString *g_overrideAppID = nil;
                   gtin:(NSString *)gtin
                    mpn:(NSString *)mpn
                  brand:(NSString *)brand
-            parameters:(NSDictionary *)parameters {
+            parameters:(NSDictionary *)parameters
+{
   if (itemID == nil) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
                            logEntry:@"itemID cannot be null"];
@@ -1069,7 +1070,7 @@ static NSString *g_overrideAppID = nil;
   [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:^(FBSDKServerConfiguration *serverConfiguration, NSError *error) {
     self->_serverConfiguration = serverConfiguration;
 
-    if (self->_serverConfiguration.implicitPurchaseLoggingEnabled) {
+    if (self->_serverConfiguration.implicitPurchaseLoggingEnabled && [FBSDKSettings isAutoLogAppEventsEnabled]) {
       [FBSDKPaymentObserver startObservingTransactions];
     } else {
       [FBSDKPaymentObserver stopObservingTransactions];

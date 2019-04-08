@@ -65,9 +65,7 @@ static NSMutableArray *g_pendingRequestors;
   [[self singleton] stopObservingTransactions];
 }
 
-//
-// Internal methods
-//
+#pragma mark - Internal Methods
 
 + (FBSDKPaymentObserver *)singleton
 {
@@ -325,7 +323,8 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)logImplicitPurchaseEvent:(NSString *)eventName
                       valueToSum:(double)valueToSum
-                      parameters:(NSDictionary *)parameters {
+                      parameters:(NSDictionary *)parameters
+{
   NSMutableDictionary *eventParameters = [NSMutableDictionary dictionaryWithDictionary:parameters];
 
   if ([eventName isEqualToString:FBSDKAppEventNamePurchased]) {
@@ -349,7 +348,8 @@ static NSMutableArray *g_pendingRequestors;
 }
 
 // Fetch the current receipt for this application.
-- (NSData*)fetchDeviceReceipt {
+- (NSData*)fetchDeviceReceipt
+{
   NSURL *receiptURL = [NSBundle bundleForClass:[self class]].appStoreReceiptURL;
   NSData *receipt = [NSData dataWithContentsOfURL:receiptURL];
   return receipt;
