@@ -308,9 +308,9 @@ static FBSDKLikeActionControllerCache *_cache = nil;
 
 - (void)toggleLikeWithSoundEnabled:(BOOL)soundEnabled analyticsParameters:(NSDictionary *)analyticsParameters fromViewController:(UIViewController *)fromViewController
 {
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKLikeControlDidTap
-                        valueToSum:nil
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidTap
                         parameters:analyticsParameters
+                isImplicitlyLogged:YES
                        accessToken:_accessToken];
 
   [self _setExecuting:YES forKey:FBSDK_LIKE_ACTION_CONTROLLER_LIKE_PROPERTY_KEY];
@@ -429,9 +429,9 @@ static FBSDKLikeActionControllerCache *_cache = nil;
   if ([error.userInfo[@"error_reason"] isEqualToString:@"dialog_disabled"]) {
     _fbsdkLikeActionControllerDisabled = YES;
 
-    [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKLikeControlDidDisable
-                          valueToSum:nil
+    [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidDisable
                           parameters:[_dialogToAnalyticsParametersMap objectForKey:likeDialog]
+                  isImplicitlyLogged:YES
                          accessToken:_accessToken];
 
     [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKLikeActionControllerDidDisableNotification
@@ -472,9 +472,9 @@ static void FBSDKLikeActionControllerLogError(NSString *currentAction,
   NSString *eventName = (error.isNetworkError ?
                          FBSDKAppEventNameFBSDKLikeControlNetworkUnavailable :
                          FBSDKAppEventNameFBSDKLikeControlError);
-  [FBSDKAppEvents logImplicitEvent:eventName
-                        valueToSum:nil
+  [FBSDKAppEvents logInternalEvent:eventName
                         parameters:parameters
+                isImplicitlyLogged:YES
                        accessToken:accessToken];
 }
 
@@ -797,9 +797,9 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                       analyticsParameters:(NSDictionary *)analyticsParameters
                        fromViewController:(UIViewController *)fromViewController
 {
-  [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKLikeControlDidPresentDialog
-                        valueToSum:nil
+  [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidPresentDialog
                         parameters:analyticsParameters
+                isImplicitlyLogged:YES
                        accessToken:_accessToken];
   FBSDKLikeDialog *dialog = [[FBSDKLikeDialog alloc] init];
   dialog.objectID = _objectID;
@@ -839,9 +839,9 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
                                                                                      NSString *unlikeToken) {
       self->_objectIsLikedIsPending = NO;
       if (success) {
-        [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKLikeControlDidLike
-                              valueToSum:nil
+        [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidLike
                               parameters:analyticsParameters
+                      isImplicitlyLogged:YES
                              accessToken:self->_accessToken];
         self->_objectIsLikedOnServer = YES;
         self->_unlikeToken = [unlikeToken copy];
@@ -879,9 +879,9 @@ static void FBSDKLikeActionControllerAddRefreshRequests(FBSDKAccessToken *access
   fbsdk_like_action_controller_publish_unlike_completion_block completionHandler = ^(BOOL success) {
     self->_objectIsLikedIsPending = NO;
     if (success) {
-      [FBSDKAppEvents logImplicitEvent:FBSDKAppEventNameFBSDKLikeControlDidUnlike
-                            valueToSum:nil
+      [FBSDKAppEvents logInternalEvent:FBSDKAppEventNameFBSDKLikeControlDidUnlike
                             parameters:analyticsParameters
+                    isImplicitlyLogged:YES
                            accessToken:self->_accessToken];
       self->_objectIsLikedOnServer = NO;
       self->_unlikeToken = nil;

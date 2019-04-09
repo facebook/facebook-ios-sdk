@@ -166,9 +166,9 @@
 
 - (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
 {
-    [FBSDKAppEvents logImplicitEvent:eventName
-                          valueToSum:nil
+    [FBSDKAppEvents logInternalEvent:eventName
                           parameters:parameters
+                  isImplicitlyLogged:YES
                          accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
