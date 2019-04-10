@@ -42,7 +42,7 @@
       [self handleRequestCompletionWithResult:request error:error];
     }];
   };
-  EnsureWritePermission(self, @"publish_actions", postCheckinCompletion);
+  EnsurePermission(self, @"publish_actions", postCheckinCompletion);
 }
 
 #pragma mark - Helper Method

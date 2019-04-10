@@ -44,9 +44,9 @@
   };
   FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
   if (![FBSDKAccessToken currentAccessToken]) {
-    [loginManager logInWithReadPermissions: @[@"public_profile", @"user_friends"]
-                        fromViewController:self
-                                   handler:loginHandler];
+      [loginManager logInWithPermissions: @[@"public_profile", @"user_friends"]
+                      fromViewController:self
+                                 handler:loginHandler];
   } else {
     [loginManager logOut];
     UIAlertController *alertController = [AlertControllerUtility alertControllerWithTitle:@"Logout"

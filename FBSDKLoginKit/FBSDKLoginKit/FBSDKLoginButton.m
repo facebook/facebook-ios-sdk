@@ -67,6 +67,24 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   _loginManager.loginBehavior = loginBehavior;
 }
 
+- (void)setReadPermissions:(NSArray<NSString *> *)readPermissions
+{
+  _readPermissions = readPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_publishPermissions];
+  [newPermissions addObjectsFromArray:readPermissions];
+  _permissions = [newPermissions allObjects];
+}
+
+- (void)setPublishPermissions:(NSArray<NSString *> *)publishPermissions
+{
+  _publishPermissions = publishPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_readPermissions];
+  [newPermissions addObjectsFromArray:publishPermissions];
+  _permissions = [newPermissions allObjects];
+}
+
 - (UIFont *)defaultFont
 {
   return [UIFont systemFontOfSize:13];
@@ -263,15 +281,10 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
       }
     };
 
-    if (self.publishPermissions.count > 0) {
-      [_loginManager logInWithPublishPermissions:self.publishPermissions
-                              fromViewController:[FBSDKInternalUtility viewControllerForView:self]
-                                         handler:handler];
-    } else {
-      [_loginManager logInWithReadPermissions:self.readPermissions
-                           fromViewController:[FBSDKInternalUtility viewControllerForView:self]
-                                      handler:handler];
-    }
+    [_loginManager logInWithPermissions:self.permissions
+                     fromViewController:[FBSDKInternalUtility viewControllerForView:self]
+                                handler:handler];
+
   }
 }
 

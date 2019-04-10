@@ -77,8 +77,7 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   if ([element isKindOfClass:[FBSDKTVLoginButtonElement class]]) {
     FBSDKDeviceLoginButton *button = [[FBSDKDeviceLoginButton alloc] initWithFrame:CGRectZero];
     button.delegate = (FBSDKTVLoginButtonElement *)element;
-    button.publishPermissions = [element.attributes[@"publishPermissions"] componentsSeparatedByString:@","];
-    button.readPermissions = [element.attributes[@"readPermissions"] componentsSeparatedByString:@","];
+    button.permissions = [self permissionsFromElement:element];
     button.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return button;
   } else if ([element isKindOfClass:[FBSDKTVShareButtonElement class]]) {
@@ -121,10 +120,7 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   if ([element isKindOfClass:[FBSDKTVLoginViewControllerElement class]]) {
     FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
     vc.delegate = (FBSDKTVLoginViewControllerElement *)element;
-    NSArray *publishPermissions = [element.attributes[@"publishPermissions"] componentsSeparatedByString:@","];
-    vc.publishPermissions = publishPermissions;
-    NSArray *readPermissions = [element.attributes[@"readPermissions"] componentsSeparatedByString:@","];
-    vc.readPermissions = readPermissions;
+    button.permissions = [self permissionsFromElement:element];
     vc.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return vc;
   }
@@ -141,4 +137,15 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   }
   return nil;
 }
+
+- (NSArray<NSString *> *)permissionsFromElement:(TVViewElement *)element
+{
+  NSMutableArray<NSString *> *permissions = [NSMutableArray new];
+  [permissions addObjectsFromArray:[element.attributes[@"permissions"] componentsSeparatedByString:@","]];
+  [permissions addObjectsFromArray:[element.attributes[@"readPermissions"] componentsSeparatedByString:@","]];
+  [permissions addObjectsFromArray:[element.attributes[@"publishPermissions"] componentsSeparatedByString:@","]];
+
+  return permissions;
+}
+
 @end

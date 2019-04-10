@@ -30,7 +30,6 @@
 @implementation FBSDKDeviceLoginViewController {
   FBSDKDeviceLoginManager *_loginManager;
   BOOL _isRetry;
-  NSArray<NSString *> *_permissions;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -43,27 +42,6 @@
 {
   [super viewDidLoad];
 
-  if ((self.readPermissions).count > 0) {
-    NSSet<NSString *> *permissionSet = [NSSet setWithArray:self.readPermissions];
-    if ((self.publishPermissions).count > 0 || ![FBSDKInternalUtility areAllPermissionsReadPermissions:permissionSet]) {
-      [[NSException exceptionWithName:NSInvalidArgumentException
-                               reason:@"Read permissions are not permitted to be requested with publish or manage permissions."
-                             userInfo:nil]
-       raise];
-    } else {
-      _permissions = self.readPermissions;
-    }
-  } else {
-    NSSet<NSString *> *permissionSet = [NSSet setWithArray:self.publishPermissions];
-    if (![FBSDKInternalUtility areAllPermissionsPublishPermissions:permissionSet]) {
-      [[NSException exceptionWithName:NSInvalidArgumentException
-                               reason:@"Publish or manage permissions are not permitted to be requested with read permissions."
-                             userInfo:nil]
-       raise];
-    } else {
-      _permissions = self.publishPermissions;
-    }
-  }
   [self _initializeLoginManager];
 }
 
@@ -158,6 +136,24 @@
 
 #pragma mark - Private impl
 
+- (void)setReadPermissions:(NSArray<NSString *> *)readPermissions
+{
+  _readPermissions = readPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_publishPermissions];
+  [newPermissions addObjectsFromArray:readPermissions];
+  _permissions = [newPermissions allObjects];
+}
+
+- (void)setPublishPermissions:(NSArray<NSString *> *)publishPermissions
+{
+  _publishPermissions = publishPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_readPermissions];
+  [newPermissions addObjectsFromArray:publishPermissions];
+  _permissions = [newPermissions allObjects];
+}
+
 - (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
   token:(FBSDKAccessToken *)token
 {
@@ -169,7 +165,7 @@
                                   token:(FBSDKAccessToken *)token
                                    name:(NSString *)name
 {
-    NSString *title =
+  NSString *title =
   NSLocalizedStringWithDefaultValue(@"SmartLogin.ConfirmationTitle", @"FacebookSDK", [FBSDKInternalUtility bundleForStrings],
                                     @"Confirm Login",
                                     @"The title for the alert when smart login requires confirmation");

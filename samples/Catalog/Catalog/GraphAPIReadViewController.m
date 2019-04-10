@@ -53,7 +53,7 @@
       [self handleRequestCompletionWithResult:result error:error];
     }];
   };
-  EnsureReadPermission(self, @"user_events", readEventsBlock);
+  EnsurePermission(self, @"user_events", readEventsBlock);
 }
 
 #pragma mark - Read User Friend List
@@ -70,7 +70,7 @@
       [self handleRequestCompletionWithResult:result error:error];
     }];
   };
-  EnsureReadPermission(self, @"user_friends", readFriendsBlock);
+  EnsurePermission(self, @"user_friends", readFriendsBlock);
 }
 
 #pragma mark - Helper Method

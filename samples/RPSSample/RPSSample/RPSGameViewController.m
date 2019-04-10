@@ -508,9 +508,9 @@ typedef void (^RPSBlock)(void);
                            declinedOrCanceledHandler:(RPSBlock) declinedOrCanceledHandler
                                         errorHandler:(void (^)(NSError *)) errorHandler{
     FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-    [login logInWithPublishPermissions:@[@"publish_actions"]
-                    fromViewController:self
-                               handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+    [login logInWithPermissions:@[@"publish_actions"]
+             fromViewController:self
+                        handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                    if (error) {
                                        if (errorHandler) {
                                            errorHandler(error);

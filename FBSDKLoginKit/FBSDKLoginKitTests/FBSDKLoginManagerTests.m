@@ -223,30 +223,6 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     [target verify];
 }
 
-- (void)testInvalidPermissions
-{
-  FBSDKLoginManager *target = [self loginManagerExpectingChallenge];
-  NSArray *publishPermissions = @[@"publish_actions", @"manage_notifications"];
-  NSArray *readPermissions = @[@"user_birthday", @"user_hometown"];
-  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:@[[publishPermissions componentsJoinedByString:@","]]
-                                                fromViewController:nil
-                                                           handler:NULL],
-                               NSException,
-                               NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithPublishPermissions:readPermissions
-                                                fromViewController:nil
-                                                           handler:NULL],
-                               NSException, NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:@[[readPermissions componentsJoinedByString:@","]]
-                                             fromViewController:nil
-                                                        handler:NULL],
-                               NSException,
-                               NSInvalidArgumentException);
-  XCTAssertThrowsSpecificNamed([target logInWithReadPermissions:publishPermissions
-                                             fromViewController:nil
-                                                        handler:NULL], NSException, NSInvalidArgumentException);
-}
-
 - (void)testOpenURLWithBadChallenge
 {
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
@@ -305,7 +281,7 @@ static NSString *const kFakeChallenge = @"a =bcdef";
 
   XCTestExpectation *expectation = [self expectationWithDescription:@"completed auth"];
   FBSDKLoginManager *manager = [FBSDKLoginManager new];
-  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     [expectation fulfill];
   }];
   // This makes sure that FBSDKLoginManager is retaining itself for the duration of the call
@@ -329,12 +305,12 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   [[[(id)manager stub] andDo:^(NSInvocation *invocation) {
     loginCount++;
   }] logInWithBehavior:FBSDKLoginBehaviorBrowser];
-  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     // This will never be called
     XCTFail(@"Should not be called");
   }];
 
-  [manager logInWithReadPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+  [manager logInWithPermissions:@[@"public_profile"] fromViewController:nil handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
     // This will never be called
     XCTFail(@"Should not be called");
   }];

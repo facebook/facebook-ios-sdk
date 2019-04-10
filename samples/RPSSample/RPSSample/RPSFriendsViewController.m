@@ -56,9 +56,9 @@
         if (![accessToken.permissions containsObject:@"user_friends"]) {
             FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
             _isPerformingLogin = YES;
-            [loginManager logInWithReadPermissions:@[@"user_friends"]
-                                fromViewController:self
-                                           handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            [loginManager logInWithPermissions:@[@"user_friends"]
+                            fromViewController:self
+                                       handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
                                                _isPerformingLogin = NO;
                                                if (error) {
                                                    NSLog(@"Failed to login:%@", error);

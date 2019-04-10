@@ -18,7 +18,7 @@
 
 // Architectures
 ARCHS = i386 armv7 x86_64 arm64
-IPHONEOS_DEPLOYMENT_TARGET = 7.0
+IPHONEOS_DEPLOYMENT_TARGET = 8.0
 SDKROOT = iphoneos
 
 // Build Options

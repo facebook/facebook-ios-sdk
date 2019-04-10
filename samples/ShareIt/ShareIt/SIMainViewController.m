@@ -70,7 +70,7 @@
 - (void)viewDidLoad
 {
   [super viewDidLoad];
-  self.loginButton.publishPermissions = @[@"publish_actions"];
+  self.loginButton.permissions = @[@"publish_actions"];
 
   [self _configurePhotos];
 }

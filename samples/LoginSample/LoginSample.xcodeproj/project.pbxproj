@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0301F3C61D75067900BFD0CE /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0301F3C41D75067900BFD0CE /* Info.plist */; };
 		0301F3C71D75067900BFD0CE /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3C51D75067900BFD0CE /* main.m */; };
 		0301F3CF1D75069300BFD0CE /* SettingsUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3C81D75069300BFD0CE /* SettingsUtil.m */; };
 		0301F3D01D75069300BFD0CE /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0301F3CA1D75069300BFD0CE /* LoginViewController.m */; };
@@ -361,6 +360,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -384,7 +384,6 @@
 				03052A031D6B7D2C0072BA47 /* LaunchScreen.storyboard in Resources */,
 				03F4CF141D80BBE400C8135E /* Application.xcconfig in Resources */,
 				0301F3F81D7508DC00BFD0CE /* Assets.xcassets in Resources */,
-				0301F3C61D75067900BFD0CE /* Info.plist in Resources */,
 				03F4CF171D80BBE400C8135E /* Project.xcconfig in Resources */,
 				035BFC1F1D80A37000908056 /* AccountKitStrings.bundle in Resources */,
 			);

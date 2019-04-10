@@ -91,8 +91,8 @@
         object = [FBSDKShareOpenGraphObject objectWithProperties:objectProperties];
     }
 
-    FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc] init];
-    action.actionType = @"fb_sample_scrumps:eat";
+    FBSDKShareOpenGraphAction *action = [[FBSDKShareOpenGraphAction alloc]
+                                         initWithActionType:@"fb_sample_scrumps:eat"];
     [action setObject:object forKey:previewPropertyName];
     if (_photo) {
         [action setArray:@[[FBSDKSharePhoto photoWithImage:_photo userGenerated:YES]] forKey:@"og:image"];
@@ -118,7 +118,7 @@
         [_shareAPI share];
     } else {
         [[[FBSDKLoginManager alloc] init]
-         logInWithPublishPermissions:@[publish_actions]
+         logInWithPermissions:@[publish_actions]
          fromViewController:nil
          handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
              if ([result.grantedPermissions containsObject:publish_actions]) {

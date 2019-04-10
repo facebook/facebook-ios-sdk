@@ -151,8 +151,7 @@
   } else {
     FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
     vc.delegate = self;
-    vc.readPermissions = self.readPermissions;
-    vc.publishPermissions = self.publishPermissions;
+    vc.permissions = self.permissions;
     vc.redirectURL = self.redirectURL;
     [parentViewController presentViewController:vc animated:YES completion:NULL];
   }
@@ -214,6 +213,24 @@
     // https://openradar.appspot.com/radar?id=5053414262177792
     [self setAttributedTitle:[self _loginTitle] forState:UIControlStateFocused];
   }
+}
+
+- (void)setReadPermissions:(NSArray<NSString *> *)readPermissions
+{
+  _readPermissions = readPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_publishPermissions];
+  [newPermissions addObjectsFromArray:readPermissions];
+  _permissions = [newPermissions allObjects];
+}
+
+- (void)setPublishPermissions:(NSArray<NSString *> *)publishPermissions
+{
+  _publishPermissions = publishPermissions;
+
+  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_readPermissions];
+  [newPermissions addObjectsFromArray:publishPermissions];
+  _permissions = [newPermissions allObjects];
 }
 
 #pragma mark - FBSDKDeviceLoginViewControllerDelegate

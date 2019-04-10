@@ -24,58 +24,42 @@
 
 #import "AlertControllerUtility.h"
 
-#pragma mark - Helper Method
-
-static void ensurePermission(UIViewController* viewController, NSString* permission, BOOL isPublishPermission, dispatch_block_t block)
-{
-  if ([[FBSDKAccessToken currentAccessToken].permissions containsObject:permission] && block != NULL) {
-    block();
-  } else {
-    FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
-    FBSDKLoginManagerLoginResultBlock logInHandler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
-      NSString *title = nil;
-      NSString *message = nil;
-      if (error) {
-        title = @"Authorization fail";
-        message = [NSString stringWithFormat: @"Error authorizing user for %@ permission.", permission];
-      } else if (!result || result.isCancelled) {
-        title = @"Authorization cancelled";
-        message = @"User cancelled permissions dialog.";
-      } else if ([result.declinedPermissions containsObject:permission]) {
-        title = @"Authorization fail";
-        message = [NSString stringWithFormat:@"User declined %@ permission.", permission];
-      } else if (![result.grantedPermissions containsObject:permission]) {
-        title = @"Authorization fail";
-        message = [NSString stringWithFormat:@"Expected to find %@ permission granted, but only found %@",
-                   permission,
-                   [[result.grantedPermissions allObjects] componentsJoinedByString:@", "]];
-      }
-      if (title != nil && message != nil) {
-        UIAlertController *alertController = [AlertControllerUtility alertControllerWithTitle:title
-                                                                                      message:message];
-        [viewController presentViewController:alertController animated:YES completion:nil];
-        return;
-      }
-      if (block != NULL) {
-        block();
-      }
-    };
-    if (isPublishPermission) {
-      [loginManager logInWithPublishPermissions:@[permission] fromViewController:viewController handler:logInHandler];
-    } else {
-      [loginManager logInWithReadPermissions:@[permission] fromViewController:viewController handler:logInHandler];
-    }
-  }
-}
-
 #pragma mark - Public Method
 
-void EnsureReadPermission(UIViewController *viewController, NSString *permission, dispatch_block_t block)
+void EnsurePermission(UIViewController* viewController, NSString* permission, dispatch_block_t block)
 {
-  ensurePermission(viewController, permission, NO, block);
-}
-
-void EnsureWritePermission(UIViewController *viewController, NSString *permission, dispatch_block_t block)
-{
-  ensurePermission(viewController, permission, YES, block);
+    if ([[FBSDKAccessToken currentAccessToken].permissions containsObject:permission] && block != NULL) {
+        block();
+    } else {
+        FBSDKLoginManager *loginManager = [[FBSDKLoginManager alloc] init];
+        FBSDKLoginManagerLoginResultBlock logInHandler = ^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+            NSString *title = nil;
+            NSString *message = nil;
+            if (error) {
+                title = @"Authorization fail";
+                message = [NSString stringWithFormat: @"Error authorizing user for %@ permission.", permission];
+            } else if (!result || result.isCancelled) {
+                title = @"Authorization cancelled";
+                message = @"User cancelled permissions dialog.";
+            } else if ([result.declinedPermissions containsObject:permission]) {
+                title = @"Authorization fail";
+                message = [NSString stringWithFormat:@"User declined %@ permission.", permission];
+            } else if (![result.grantedPermissions containsObject:permission]) {
+                title = @"Authorization fail";
+                message = [NSString stringWithFormat:@"Expected to find %@ permission granted, but only found %@",
+                           permission,
+                           [[result.grantedPermissions allObjects] componentsJoinedByString:@", "]];
+            }
+            if (title != nil && message != nil) {
+                UIAlertController *alertController = [AlertControllerUtility alertControllerWithTitle:title
+                                                                                              message:message];
+                [viewController presentViewController:alertController animated:YES completion:nil];
+                return;
+            }
+            if (block != NULL) {
+                block();
+            }
+        };
+        [loginManager logInWithPermissions:@[permission] fromViewController:viewController handler:logInHandler];
+    }
 }

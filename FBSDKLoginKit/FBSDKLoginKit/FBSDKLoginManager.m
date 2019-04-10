@@ -76,40 +76,30 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   return self;
 }
 
-- (void)logInWithReadPermissions:(NSArray *)permissions
-              fromViewController:(UIViewController *)fromViewController
-                         handler:(FBSDKLoginManagerLoginResultBlock)handler
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+          fromViewController:(UIViewController *)fromViewController
+                     handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {
     return;
   }
-  [self assertPermissions:permissions];
-  NSSet *permissionSet = [NSSet setWithArray:permissions];
-  if (![FBSDKInternalUtility areAllPermissionsReadPermissions:permissionSet]) {
-    [self raiseLoginException:[NSException exceptionWithName:NSInvalidArgumentException
-                                                      reason:@"Publish or manage permissions are not permitted to be requested with read permissions."
-                                                    userInfo:nil]];
-  }
   self.fromViewController = fromViewController;
+  NSSet<NSString *> *permissionSet = [NSSet setWithArray:permissions];
   [self logInWithPermissions:permissionSet handler:handler];
 }
 
-- (void)logInWithPublishPermissions:(NSArray *)permissions
+- (void)logInWithReadPermissions:(NSArray<NSString *> *)permissions
+              fromViewController:(UIViewController *)fromViewController
+                         handler:(FBSDKLoginManagerLoginResultBlock)handler
+{
+  [self logInWithPermissions:permissions fromViewController:fromViewController handler:handler];
+}
+
+- (void)logInWithPublishPermissions:(NSArray<NSString *> *)permissions
                  fromViewController:(UIViewController *)fromViewController
                             handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
-  if (![self validateLoginStartState]) {
-    return;
-  }
-  [self assertPermissions:permissions];
-  NSSet *permissionSet = [NSSet setWithArray:permissions];
-  if (![FBSDKInternalUtility areAllPermissionsPublishPermissions:permissionSet]) {
-    [self raiseLoginException:[NSException exceptionWithName:NSInvalidArgumentException
-                                                      reason:@"Read permissions are not permitted to be requested with publish or manage permissions."
-                                                    userInfo:nil]];
-  }
-  self.fromViewController = fromViewController;
-  [self logInWithPermissions:permissionSet handler:handler];
+  [self logInWithPermissions:permissions fromViewController:fromViewController handler:handler];
 }
 
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler

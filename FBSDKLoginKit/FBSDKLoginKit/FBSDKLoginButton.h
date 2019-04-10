@@ -72,22 +72,24 @@ NS_SWIFT_NAME(FBLoginButton)
   Gets or sets the login behavior to use
  */
 @property (assign, nonatomic) FBSDKLoginBehavior loginBehavior;
-/**
-  The publish permissions to request.
 
- Use `defaultAudience` to specify the default audience to publish to.
+/*!
+ @abstract The permissions to request.
+ @discussion To provide the best experience, you should minimize the number of permissions you request, and only ask for them when needed.
+ For example, do not ask for "user_location" until you the information is actually used by the app.
+
  Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
- */
-@property (copy, nonatomic) NSArray<NSString *> *publishPermissions;
-/**
-  The read permissions to request.
 
-
- Note, that if read permissions are specified, then publish permissions should not be specified. This is converted to NSSet and is only
- an NSArray for the convenience of literal syntax.
+ See [the permissions guide]( https://developers.facebook.com/docs/facebook-login/permissions/ ) for more details.
  */
-@property (copy, nonatomic) NSArray<NSString *> *readPermissions;
+@property (copy, nonatomic) NSArray<NSString *> *permissions;
+
+@property (copy, nonatomic) NSArray<NSString *> *publishPermissions
+DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
+
+@property (copy, nonatomic) NSArray<NSString *> *readPermissions
+DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
 /**
   Gets or sets the desired tooltip behavior.
  */

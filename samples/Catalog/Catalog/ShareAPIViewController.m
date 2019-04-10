@@ -38,7 +38,7 @@
     content.contentURL = [NSURL URLWithString:@"https://newsroom.fb.com/"];
     [FBSDKShareAPI shareWithContent:content delegate:self];
   };
-  EnsureWritePermission(self, @"publish_actions", shareLinkBlock);
+  EnsurePermission(self, @"publish_actions", shareLinkBlock);
 }
 
 #pragma mark - FBSDKSharePhotoContent
@@ -50,7 +50,7 @@
     content.photos = @[[FBSDKSharePhoto photoWithImage:[UIImage imageNamed:@"sky.jpg"] userGenerated:YES]];
     [FBSDKShareAPI shareWithContent:content delegate:self];
   };
-  EnsureWritePermission(self, @"publish_actions", sharePhotoBlock);
+  EnsurePermission(self, @"publish_actions", sharePhotoBlock);
 }
 
 #pragma mark - FBSDKShareVideoContent
@@ -63,7 +63,7 @@
     content.video = [FBSDKShareVideo videoWithVideoURL:bundleURL];
     [FBSDKShareAPI shareWithContent:content delegate:self];
   };
-  EnsureWritePermission(self, @"publish_actions", shareVideoBlock);
+  EnsurePermission(self, @"publish_actions", shareVideoBlock);
 }
 
 #pragma mark - Helper Method

@@ -39,9 +39,9 @@
     if (self.requiredPermission && ![[FBSDKAccessToken currentAccessToken] hasGranted:self.requiredPermission])
     {
         FBSDKLoginManager *login = [[FBSDKLoginManager alloc] init];
-        [login logInWithReadPermissions:@[self.requiredPermission]
-                     fromViewController:self
-                                handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
+        [login logInWithPermissions:@[self.requiredPermission]
+                 fromViewController:self
+                            handler:^(FBSDKLoginManagerLoginResult *result, NSError *error) {
             if ([result.grantedPermissions containsObject:self.requiredPermission]) {
                 [self fetchData];
             } else {

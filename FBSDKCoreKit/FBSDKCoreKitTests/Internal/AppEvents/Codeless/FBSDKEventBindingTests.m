@@ -44,41 +44,43 @@
 @implementation FBSDKEventBindingTests
 
 - (void)setUp {
-    [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-  eventBindingManager = [[FBSDKEventBindingManager alloc]
-                         initWithJSON:[FBSDKSampleEventBinding getSampleDictionary]];
-  window = [[UIWindow alloc] init];
-  UIViewController *vc = [[UIViewController alloc] init];
-  UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+  [super setUp];
 
-  UITabBarController *tab = [[UITabBarController alloc] init];
-  tab.viewControllers = @[nav];
-  window.rootViewController = tab;
+  if (@available(iOS 9.0, *)) {
+    eventBindingManager = [[FBSDKEventBindingManager alloc]
+                           initWithJSON:[FBSDKSampleEventBinding getSampleDictionary]];
+    window = [[UIWindow alloc] init];
+    UIViewController *vc = [[UIViewController alloc] init];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
 
-  UIStackView *firstStackView = [[UIStackView alloc] init];
-  [vc.view addSubview:firstStackView];
-  UIStackView *secondStackView = [[UIStackView alloc] init];
-  [firstStackView addSubview:secondStackView];
+    UITabBarController *tab = [[UITabBarController alloc] init];
+    tab.viewControllers = @[nav];
+    window.rootViewController = tab;
 
-  btnBuy = [UIButton buttonWithType:UIButtonTypeCustom];
-  [btnBuy setTitle:@"Buy" forState:UIControlStateNormal];
-  [firstStackView addSubview:btnBuy];
+    UIStackView *firstStackView = [[UIStackView alloc] init];
+    [vc.view addSubview:firstStackView];
+    UIStackView *secondStackView = [[UIStackView alloc] init];
+    [firstStackView addSubview:secondStackView];
 
-  UILabel *lblPrice = [[UILabel alloc] init];
-  lblPrice.text = @"$2.0";
-  [firstStackView addSubview:lblPrice];
+    btnBuy = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnBuy setTitle:@"Buy" forState:UIControlStateNormal];
+    [firstStackView addSubview:btnBuy];
 
-  btnConfirm = [UIButton buttonWithType:UIButtonTypeCustom];
-  [btnConfirm setTitle:@"Confirm" forState:UIControlStateNormal];
-  [firstStackView addSubview:btnConfirm];
+    UILabel *lblPrice = [[UILabel alloc] init];
+    lblPrice.text = @"$2.0";
+    [firstStackView addSubview:lblPrice];
 
-  lblPrice = [[UILabel alloc] init];
-  lblPrice.text = @"$3.0";
-  [secondStackView addSubview:lblPrice];
+    btnConfirm = [UIButton buttonWithType:UIButtonTypeCustom];
+    [btnConfirm setTitle:@"Confirm" forState:UIControlStateNormal];
+    [firstStackView addSubview:btnConfirm];
 
-  stepper = [[UIStepper alloc] init];
-  [secondStackView addSubview:stepper];
+    lblPrice = [[UILabel alloc] init];
+    lblPrice.text = @"$3.0";
+    [secondStackView addSubview:lblPrice];
+
+    stepper = [[UIStepper alloc] init];
+    [secondStackView addSubview:stepper];
+  }
 }
 
 - (void)tearDown {

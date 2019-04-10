@@ -122,37 +122,14 @@ NS_SWIFT_NAME(LoginManager)
 @property (assign, nonatomic) FBSDKLoginBehavior loginBehavior;
 
 /**
-  Logs the user in or authorizes additional permissions.
- @param permissions the optional array of permissions. Note this is converted to NSSet and is only
-  an NSArray for the convenience of literal syntax.
- @param fromViewController the view controller to present from. If nil, the topmost view controller will be
-  automatically determined as best as possible.
- @param handler the callback.
-
- Use this method when asking for read permissions. You should only ask for permissions when they
-  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
-  provide more information to the user if they decline permissions.
-
- This method will present UI the user. You typically should check if `[FBSDKAccessToken currentAccessToken]`
- already contains the permissions you need before asking to reduce unnecessary app switching. For example,
- you could make that check at viewDidLoad.
- You can only do one login call at a time. Calling a login method before the completion handler is called
- on a previous login will return an error.
- */
-- (void)logInWithReadPermissions:(NSArray<NSString *> *)permissions
-              fromViewController:(nullable UIViewController *)fromViewController
-                         handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-NS_SWIFT_NAME(logIn(readPermissions:from:handler:));
-
-/**
-  Logs the user in or authorizes additional permissions.
+ Logs the user in or authorizes additional permissions.
  @param permissions the optional array of permissions. Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  @param fromViewController the view controller to present from. If nil, the topmost view controller will be
  automatically determined as best as possible.
  @param handler the callback.
 
- Use this method when asking for publish permissions. You should only ask for permissions when they
+ Use this method when asking for read permissions. You should only ask for permissions when they
  are needed and explain the value to the user. You can inspect the result.declinedPermissions to also
  provide more information to the user if they decline permissions.
 
@@ -162,11 +139,22 @@ NS_SWIFT_NAME(logIn(readPermissions:from:handler:));
  You can only do one login call at a time. Calling a login method before the completion handler is called
  on a previous login will return an error.
  */
+- (void)logInWithPermissions:(NSArray<NSString *> *)permissions
+              fromViewController:(nullable UIViewController *)fromViewController
+                         handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
+NS_SWIFT_NAME(logIn(permissions:from:handler:));
+
+- (void)logInWithReadPermissions:(NSArray<NSString *> *)permissions
+              fromViewController:(nullable UIViewController *)fromViewController
+                         handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
+__attribute__((deprecated("Use -logInWithPermissions:fromViewController:handler: instead.", "-logInWithPermissions:fromViewController:handler:")))
+NS_SWIFT_NAME(logIn(readPermissions:from:handler:));
+
 - (void)logInWithPublishPermissions:(NSArray<NSString *> *)permissions
                  fromViewController:(nullable UIViewController *)fromViewController
                             handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
+__attribute__((deprecated("Use -logInWithPermissions:fromViewController:handler: instead.", "-logInWithPermissions:fromViewController:handler:")))
 NS_SWIFT_NAME(logIn(publishPermissions:from:handler:));
-
 
 /**
   Requests user's permission to reathorize application's data access, after it has expired due to inactivity.

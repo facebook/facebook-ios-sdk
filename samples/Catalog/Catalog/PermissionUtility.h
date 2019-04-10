@@ -18,5 +18,4 @@
 
 #import <Foundation/Foundation.h>
 
-void EnsureReadPermission(UIViewController *viewController, NSString *permission, dispatch_block_t block);
-void EnsureWritePermission(UIViewController *viewController, NSString *permission, dispatch_block_t block);
+void EnsurePermission(UIViewController *viewController, NSString *permission, dispatch_block_t block);

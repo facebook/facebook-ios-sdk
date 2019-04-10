@@ -50,7 +50,7 @@
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeProfileChange:) name:FBSDKProfileDidChangeNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(observeTokenChange:) name:FBSDKAccessTokenDidChangeNotification object:nil];
-    self.loginButton.readPermissions = @[@"public_profile", @"user_friends"];
+    self.loginButton.permissions = @[@"public_profile", @"user_friends"];
 
     // If there's already a cached token, read the profile information.
     if ([FBSDKAccessToken currentAccessToken]) {
