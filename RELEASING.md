@@ -15,8 +15,15 @@ sh scripts/run.sh bump-version 4.40.0
 
 This script will modify the relevant version references and will edit the Changelog.
 
-Ensure that the version changes and Changelog updates are correct, then commit these changes with the title: "Bump
-Version: 4.40.0" and submit a Pull Request.
+If you need to bump the Graph API version as well, run this script:
+
+```sh
+# Call `bump-version` and pass in the desired semantic version, e.g. 4.40.0
+sh scripts/run.sh bump-api-version v3.2
+```
+
+Ensure that the version changes and Changelog updates are correct, then commit with the title: "Bump Version: 4.40.0"
+and submit a Pull Request.
 
 ### Tag Version
 

@@ -63,7 +63,12 @@ main() {
       "AccountKit/AccountKit/Internal/AKFConstants.m"
     )
 
-    SDK_MAIN_VERSION_FILE="Configurations/Version.xcconfig"
+    SDK_GRAPH_API_VERSION_FILES=(
+      "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+      "FBSDKCoreKit/FBSDKCoreKitTests/FBSDKGraphRequestTests.m"
+    )
+
+    SDK_MAIN_VERSION_FILE="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
 
     SDK_FRAMEWORK_NAME="FacebookSDK"
 
@@ -79,7 +84,8 @@ main() {
       "FBSDKTVOSKit.podspec"
     )
 
-    SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'=' '{print $2}')
+    SDK_CURRENT_VERSION=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
+    SDK_CURRENT_GRAPH_API_VERSION=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$SDK_DIR/$SDK_MAIN_VERSION_FILE" | awk -F'"' '{print $2}')
 
     SDK_GIT_REMOTE="https://github.com/facebook/facebook-objc-sdk"
 
@@ -92,6 +98,7 @@ main() {
   case "$command_type" in
   "build") build_sdk "$@" ;;
   "bump-version") bump_version "$@" ;;
+  "bump-api-version") bump_api_version "$@" ;;
   "bump-changelog") bump_changelog "$@" ;;
   "check-release-status") check_release_status "$@" ;;
   "is-valid-semver") is_valid_semver "$@" ;;
@@ -167,6 +174,39 @@ bump_version() {
   done
 
   bump_changelog "$new_version"
+}
+
+# Bump Version
+bump_api_version() {
+  local new_version=${1:-}
+
+  if [ "$new_version" == "$SDK_CURRENT_GRAPH_API_VERSION" ]; then
+    echo "This version is the same as the current version"
+    false
+    return
+  fi
+
+  echo "Changing from: $SDK_CURRENT_GRAPH_API_VERSION to: $new_version"
+
+  # Replace the previous version to the new version in relative files
+  for file_path in "${SDK_GRAPH_API_VERSION_FILES[@]}"; do
+    local full_file_path="$SDK_DIR/$file_path"
+
+    if [ ! -f "$full_file_path" ]; then
+      echo "*** NOTE: unable to find $full_file_path."
+      continue
+    fi
+
+    local temp_file="$full_file_path.tmp"
+    sed -e "s/$SDK_CURRENT_GRAPH_API_VERSION/$new_version/g" "$full_file_path" >"$temp_file"
+    if diff "$full_file_path" "$temp_file" >/dev/null; then
+      echo "*** ERROR: unable to update $full_file_path"
+      rm "$temp_file"
+      continue
+    fi
+
+    mv "$temp_file" "$full_file_path"
+  done
 }
 
 bump_changelog() {

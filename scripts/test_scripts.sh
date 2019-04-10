@@ -103,10 +103,18 @@ test_main_setup() {
     "AccountKit/AccountKit/Internal/AKFConstants.m"
   )
 
-  local test_main_version_file="Configurations/Version.xcconfig"
+  local test_graph_api_version_change_files=(
+    "FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
+    "FBSDKCoreKit/FBSDKCoreKitTests/FBSDKGraphRequestTests.m"
+  )
+
+  local test_main_version_file="FBSDKCoreKit/FBSDKCoreKit/FBSDKCoreKit.h"
 
   local test_current_version
-  test_current_version=$(grep -Eo 'FBSDK_PROJECT_VERSION=.*' "$PWD/$test_main_version_file" | awk -F'=' '{print $2}')
+  test_current_version=$(grep -Eo 'FBSDK_VERSION_STRING @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
+
+  local test_sdk_current_graph_api_version
+  test_sdk_current_graph_api_version=$(grep -Eo 'FBSDK_TARGET_PLATFORM_VERSION @".*"' "$PWD/$test_main_version_file" | awk -F'"' '{print $2}')
 
   if [ ! -f "$PWD/scripts/run.sh" ]; then
     test_failure "You're not in the correct working directory. Please change to the scripts/ parent directory"
@@ -148,6 +156,11 @@ test_main_setup() {
     ((test_failures += 1))
   fi
 
+  if [ "${SDK_GRAPH_API_VERSION_FILES[*]}" != "${test_graph_api_version_change_files[*]}" ]; then
+    test_failure "SDK_GRAPH_API_VERSION_FILES not correct"
+    ((test_failures += 1))
+  fi
+
   if [ "$SDK_MAIN_VERSION_FILE" != "$test_main_version_file" ]; then
     test_failure "SDK_MAIN_VERSION_FILE not correct"
     ((test_failures += 1))
@@ -163,15 +176,20 @@ test_main_setup() {
     ((test_failures += 1))
   fi
 
+  if [ "$SDK_CURRENT_GRAPH_API_VERSION" != "$test_sdk_current_graph_api_version" ]; then
+    test_failure "SDK_CURRENT_GRAPH_API_VERSION not correct"
+    ((test_failures += 1))
+  fi
+
   if [ "$SDK_GIT_REMOTE" != "https://github.com/facebook/facebook-objc-sdk" ]; then
     test_failure "SDK_GIT_REMOTE not correct"
     ((test_failures += 1))
   fi
 
-  if [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 0 ]]; then
+  if [ -f "$PWD/internal/scripts/internal_globals.sh" ] && [[ $SDK_INTERNAL == 0 ]]; then
     test_failure "SDK_INTERNAL not correct"
     ((test_failures += 1))
-  elif ! [ -f "$PWD/internal/scripts/run.sh" ] && [[ $SDK_INTERNAL == 1 ]]; then
+  elif ! [ -f "$PWD/internal/scripts/internal_globals.sh" ] && [[ $SDK_INTERNAL == 1 ]]; then
     test_failure "SDK_INTERNAL not correct"
     ((test_failures += 1))
   fi
