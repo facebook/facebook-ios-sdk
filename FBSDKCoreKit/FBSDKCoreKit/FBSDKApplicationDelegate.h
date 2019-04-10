@@ -97,6 +97,16 @@ controlled via 'FacebookAutoLogAppEventsEnabled' key in the project info plist f
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
 
+/**
+  Call this method to manually initialize SDK.
+  As we initialize SDK automatically, this should only be called when auto initialization is disabled, this can be
+ controlled via 'FacebookAutoInitEnabled' key in the project info plist file.
+
+ @param launchOptions The launchOptions as passed to [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
+ Could be nil if you don't call this function from [UIApplicationDelegate application:didFinishLaunchingWithOptions:].
+ */
++ (void)initializeSDK:(nullable NSDictionary<UIApplicationLaunchOptionsKey, id> *)launchOptions;
+
 @end
 
 NS_ASSUME_NONNULL_END

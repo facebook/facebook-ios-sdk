@@ -51,6 +51,7 @@ NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk
 #endif
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
+static BOOL g_isSDKInitialized = NO;
 
 @implementation FBSDKApplicationDelegate
 {
@@ -62,46 +63,66 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 
 + (void)load
 {
+  if ([FBSDKSettings isAutoInitEnabled]) {
     // when the app becomes active by any means,  kick off the initialization.
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(initializeWithLaunchData:)
                                                  name:UIApplicationDidFinishLaunchingNotification
                                                object:nil];
+  }
 }
 
 // Initialize SDK listeners
 // Don't call this function in any place else. It should only be called when the class is loaded.
 + (void)initializeWithLaunchData:(NSNotification *)note
 {
-    NSDictionary *launchData = note.userInfo;
-
-    [[self sharedInstance] application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchData];
-
-#if !TARGET_OS_TV
-    // Register Listener for App Link measurement events
-    [FBSDKMeasurementEventListener defaultListener];
-#endif
-    // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
-    [FBSDKTimeSpentData setSourceApplication:launchData[UIApplicationLaunchOptionsSourceApplicationKey]
-                                     openURL:launchData[UIApplicationLaunchOptionsURLKey]];
-    // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
-    [FBSDKTimeSpentData registerAutoResetSourceApplication];
-
-    [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+  [self initializeSDK:note.userInfo];
   // Remove the observer
   [[NSNotificationCenter defaultCenter] removeObserver:self
                                                   name:UIApplicationDidFinishLaunchingNotification
                                                 object:nil];
 }
 
++ (void)initializeSDK:(NSDictionary<UIApplicationLaunchOptionsKey,id> *)launchOptions
+{
+  if (g_isSDKInitialized) {
+    //  Do nothing if initialized already
+    return;
+  }
+
+  g_isSDKInitialized = YES;
+
+  FBSDKApplicationDelegate *delegate = [self sharedInstance];
+
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter addObserver:delegate selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+  [defaultCenter addObserver:delegate selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+  [[FBSDKAppEvents singleton] registerNotifications];
+
+  [delegate application:[UIApplication sharedApplication] didFinishLaunchingWithOptions:launchOptions];
+
+#if !TARGET_OS_TV
+  // Register Listener for App Link measurement events
+  [FBSDKMeasurementEventListener defaultListener];
+#endif
+  // Set the SourceApplication for time spent data. This is not going to update the value if the app has already launched.
+  [FBSDKTimeSpentData setSourceApplication:launchOptions[UIApplicationLaunchOptionsSourceApplicationKey]
+                                   openURL:launchOptions[UIApplicationLaunchOptionsURLKey]];
+  // Register on UIApplicationDidEnterBackgroundNotification events to reset source application data when app backgrounds.
+  [FBSDKTimeSpentData registerAutoResetSourceApplication];
+
+  [FBSDKInternalUtility validateFacebookReservedURLSchemes];
+}
+
 + (FBSDKApplicationDelegate *)sharedInstance
 {
-    static FBSDKApplicationDelegate *_sharedInstance;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
-    });
-    return _sharedInstance;
+  static FBSDKApplicationDelegate *_sharedInstance;
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    _sharedInstance = [[self alloc] init];
+  });
+  return _sharedInstance;
 }
 
 #pragma mark - Object Lifecycle
@@ -109,11 +130,6 @@ static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
 - (instancetype)init
 {
   if ((self = [super init]) != nil) {
-    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-    [defaultCenter addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
-    [defaultCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-
-    [[FBSDKAppEvents singleton] registerNotifications];
     _applicationObservers = [[NSHashTable alloc] init];
   }
   return self;
