@@ -27,7 +27,6 @@
 #import "FBSDKError.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings.h"
-#import "FBSDKUtility.h"
 
 #define kChunkSize 1024
 
@@ -121,13 +120,44 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   // version 3.3 and above encode the parameters in the fragment;
   // merge them together with fragment taking priority.
   NSMutableDictionary *params = [NSMutableDictionary dictionary];
-  [params addEntriesFromDictionary:[FBSDKUtility dictionaryWithQueryString:url.query]];
+  [params addEntriesFromDictionary:[self dictionaryWithQueryString:url.query]];
 
   // Only get the params from the fragment if it has authorize as the host
   if ([url.host isEqualToString:@"authorize"]) {
-    [params addEntriesFromDictionary:[FBSDKUtility dictionaryWithQueryString:url.fragment]];
+    [params addEntriesFromDictionary:[self dictionaryWithQueryString:url.fragment]];
   }
   return params;
+}
+
++ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString
+{
+  NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
+  NSArray<NSString *> *parts = [queryString componentsSeparatedByString:@"&"];
+
+  for (NSString *part in parts) {
+    if (part.length == 0) {
+      continue;
+    }
+
+    NSRange index = [part rangeOfString:@"="];
+    NSString *key;
+    NSString *value;
+
+    if (index.location == NSNotFound) {
+      key = part;
+      value = @"";
+    } else {
+      key = [part substringToIndex:index.location];
+      value = [part substringFromIndex:index.location + index.length];
+    }
+
+    key = [self URLDecode:key];
+    value = [self URLDecode:value];
+    if (key && value) {
+      result[key] = value;
+    }
+  }
+  return result;
 }
 
 + (void)array:(NSMutableArray *)array addObject:(id)object
@@ -422,7 +452,7 @@ setJSONStringForObject:(id)object
     for (NSString *key in keys) {
       id value = [self convertRequestValue:dictionary[key]];
       if ([value isKindOfClass:[NSString class]]) {
-        value = [FBSDKUtility URLEncode:value];
+        value = [self URLEncode:value];
       }
       if (invalidObjectHandler && ![value isKindOfClass:[NSString class]]) {
         value = invalidObjectHandler(value, &stop);
@@ -445,6 +475,25 @@ setJSONStringForObject:(id)object
   return (queryString.length ? [queryString copy] : nil);
 }
 
++ (NSString *)URLDecode:(NSString *)value
+{
+  value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic pop
+  return value;
+}
+
++ (NSString *)URLEncode:(NSString *)value
+{
+  return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
+                                                                               (CFStringRef)value,
+                                                                               NULL, // characters to leave unescaped
+                                                                               CFSTR(":!*();@/&?+$,='"),
+                                                                               kCFStringEncodingUTF8);
+}
+
 + (BOOL)shouldManuallyAdjustOrientation
 {
   return (![self isUIKitLinkTimeVersionAtLeast:FBSDKUIKitVersion_8_0] ||
@@ -464,8 +513,9 @@ setJSONStringForObject:(id)object
   NSString *queryString = nil;
   if (queryParameters.count) {
     NSError *queryStringError;
-    queryString = [@"?" stringByAppendingString:[FBSDKUtility queryStringWithDictionary:queryParameters
-                                                                                  error:&queryStringError]];
+    queryString = [@"?" stringByAppendingString:[self queryStringWithDictionary:queryParameters
+                                                                          error:&queryStringError
+                                                           invalidObjectHandler:NULL]];
     if (!queryString) {
       if (errorRef != NULL) {
         *errorRef = [NSError fbInvalidArgumentErrorWithName:@"queryParameters"

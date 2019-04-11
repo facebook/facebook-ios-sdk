@@ -251,6 +251,13 @@ setJSONStringForObject:(id)object
 + (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
+ Parses a query string into a dictionary.
+ @param queryString The query string value.
+ @return A dictionary with the key/value pairs.
+ */
++ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString;
+
+/**
   Converts a JSON string into an object
  @param string The JSON string to convert.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
@@ -269,6 +276,20 @@ setJSONStringForObject:(id)object
 + (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
                                   error:(NSError *__autoreleasing *)errorRef
                    invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
+
+/**
+ Decodes a value from an URL.
+ @param value The value to decode.
+ @return The decoded value.
+ */
++ (NSString *)URLDecode:(NSString *)value;
+
+/**
+ Encodes a value for an URL.
+ @param value The value to encode.
+ @return The encoded value.
+ */
++ (NSString *)URLEncode:(NSString *)value;
 
 /**
   Constructs an NSURL.
