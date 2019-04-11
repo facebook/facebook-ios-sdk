@@ -205,6 +205,13 @@ NSURLSessionDataDelegate
   dispatch_once(&onceToken, ^{
     g_errorConfiguration = [[FBSDKErrorConfiguration alloc] initWithDictionary:nil];
   });
+
+  if (![FBSDKApplicationDelegate isSDKInitialized]) {
+    [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                       formatString:@"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized."];
+    return;
+  }
+
   //optimistically check for updated server configuration;
   g_errorConfiguration = [FBSDKServerConfigurationManager cachedServerConfiguration].errorConfiguration ?: g_errorConfiguration;
 

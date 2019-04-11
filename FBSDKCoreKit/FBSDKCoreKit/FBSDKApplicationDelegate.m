@@ -337,6 +337,11 @@ static BOOL g_isSDKInitialized = NO;
                   isImplicitlyLogged:NO];
 }
 
++ (BOOL)isSDKInitialized
+{
+  return g_isSDKInitialized;
+}
+
 // Wrapping this makes it mockable and enables testability
 - (BOOL)isAppLaunched {
   return _isAppLaunched;

@@ -51,6 +51,7 @@ static id g_mockNSBundle;
 + (void)setUp
 {
   [FBSDKSettings setAppID:@"appid"];
+  [FBSDKApplicationDelegate initializeSDK:nil];
   g_mockNSBundle = [FBSDKCoreKitTestUtility mainBundleMock];
 }
 
