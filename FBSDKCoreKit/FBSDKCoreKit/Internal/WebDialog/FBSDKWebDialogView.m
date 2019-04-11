@@ -161,7 +161,7 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
   NSURL *URL = request.URL;
 
   if ([URL.scheme isEqualToString:@"fbconnect"]) {
-    NSMutableDictionary<NSString *, NSString *> *parameters = [[FBSDKInternalUtility dictionaryWithQueryString:URL.query] mutableCopy];
+    NSMutableDictionary<NSString *, id> *parameters = [[FBSDKInternalUtility dictionaryWithQueryString:URL.query] mutableCopy];
     [parameters addEntriesFromDictionary:[FBSDKInternalUtility dictionaryWithQueryString:URL.fragment]];
     if ([URL.resourceSpecifier hasPrefix:@"//cancel"]) {
       NSInteger errorCode = [FBSDKTypeUtility integerValue:parameters[@"error_code"]];
