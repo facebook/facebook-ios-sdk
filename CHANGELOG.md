@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.1...HEAD)
 
 ### Added
 
@@ -41,6 +41,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Various bug fixes
+
+## 4.44.1
+
+[2019-04-11](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.1) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...v4.44.1)
+
+### Fixed
+
+- `_inBackground` now indicates correct application state
 
 ## 4.44.0
 
