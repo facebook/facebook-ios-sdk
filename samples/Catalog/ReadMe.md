@@ -1,10 +1,10 @@
-#FBSDKCatalog sample
+# FBSDKCatalog sample
 
-This sample demonstrates use of Facebook SDK in Login, Share, App Events, App Invites, App Links and Graph API. 
+This sample demonstrates use of Facebook SDK in Login, Share, App Events, App Invites, App Links and Graph API.
 
 It consists of six sections, each section showcases a feature of the SDK.
 
-##App structure
+## App structure
 
 [Login](https://developers.facebook.com/products/login)
 
@@ -35,10 +35,10 @@ It consists of six sections, each section showcases a feature of the SDK.
 * Graph API read requests
 * Graph API post requests
 
-##Using the Sample
+## Using the Sample
 
 Install the Facebook SDK for iOS.
 
-Launch the FBSDKCatalog project using Xcode from the <Facebook SDK>/samples/FBSDKCatalog directory.
+Launch the FBSDKCatalog project using Xcode from the `<Facebook SDK>/samples/FBSDKCatalog` directory.
 
 Please note that this app will require permission to post on the user's Facebook account.
