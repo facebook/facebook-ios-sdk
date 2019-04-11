@@ -39,6 +39,7 @@ FOUNDATION_EXPORT NSString *const FBSDKApplicationDidBecomeActiveNotification;
 - (void)addObserver:(id<FBSDKApplicationObserving>)observer;
 - (void)removeObserver:(id<FBSDKApplicationObserving>)observer;
 + (BOOL)isSDKInitialized;
++ (UIApplicationState)applicationState;
 
 @end
 
