@@ -20,8 +20,8 @@
 
 #import "FBSDKCloseIcon.h"
 #import "FBSDKError.h"
+#import "FBSDKInternalUtility.h"
 #import "FBSDKTypeUtility.h"
-#import "FBSDKUtility.h"
 
 #define FBSDK_WEB_DIALOG_VIEW_BORDER_WIDTH 10.0
 
@@ -161,8 +161,8 @@ shouldStartLoadWithRequest:(NSURLRequest *)request
   NSURL *URL = request.URL;
 
   if ([URL.scheme isEqualToString:@"fbconnect"]) {
-    NSMutableDictionary *parameters = [[FBSDKUtility dictionaryWithQueryString:URL.query] mutableCopy];
-    [parameters addEntriesFromDictionary:[FBSDKUtility dictionaryWithQueryString:URL.fragment]];
+    NSMutableDictionary<NSString *, NSString *> *parameters = [[FBSDKInternalUtility dictionaryWithQueryString:URL.query] mutableCopy];
+    [parameters addEntriesFromDictionary:[FBSDKInternalUtility dictionaryWithQueryString:URL.fragment]];
     if ([URL.resourceSpecifier hasPrefix:@"//cancel"]) {
       NSInteger errorCode = [FBSDKTypeUtility integerValue:parameters[@"error_code"]];
       if (errorCode) {

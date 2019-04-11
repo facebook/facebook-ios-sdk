@@ -32,7 +32,6 @@
 #import "FBSDKServerConfigurationManager.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKTimeSpentData.h"
-#import "FBSDKUtility.h"
 
 #if !TARGET_OS_TV
 #import "FBSDKMeasurementEventListener.h"
@@ -276,7 +275,7 @@ static BOOL g_isSDKInitialized = NO;
   if (!url) {
     return;
   }
-  NSDictionary *params = [FBSDKUtility dictionaryWithQueryString:url.query];
+  NSDictionary<NSString *, NSString *> *params = [FBSDKInternalUtility dictionaryWithQueryString:url.query];
   NSString *applinkDataString = params[@"al_applink_data"];
   if (!applinkDataString) {
     return;
