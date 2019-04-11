@@ -39,14 +39,10 @@
   return [FBSDKInternalUtility URLDecode:value];
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
   return [FBSDKInternalUtility URLEncode:value];
 }
-
-#pragma clang diagnostic pop
 
 + (dispatch_source_t)startGCDTimerWithInterval:(double)interval block:(dispatch_block_t)block
 {

@@ -485,6 +485,8 @@ setJSONStringForObject:(id)object
   return value;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSString *)URLEncode:(NSString *)value
 {
   return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
@@ -493,6 +495,8 @@ setJSONStringForObject:(id)object
                                                                                CFSTR(":!*();@/&?+$,='"),
                                                                                kCFStringEncodingUTF8);
 }
+
+#pragma clang diagnostic pop
 
 + (BOOL)shouldManuallyAdjustOrientation
 {
