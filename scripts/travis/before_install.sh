@@ -21,4 +21,4 @@
 # Main Script
 # --------------
 
-brew update
+#brew update
