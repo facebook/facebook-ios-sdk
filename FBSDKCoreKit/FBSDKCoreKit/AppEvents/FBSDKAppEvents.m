@@ -18,7 +18,7 @@
 
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEvents+Internal.h"
-
+#import "FBSDKApplicationDelegate+Internal.h"
 #import <objc/runtime.h>
 
 #import <UIKit/UIApplication.h>
@@ -339,7 +339,6 @@ static NSString *g_overrideAppID = nil;
 #endif
   NSString *_userID;
   BOOL _isUnityInit;
-  UIApplicationState _applicationState;
 }
 
 #pragma mark - Object Lifecycle
@@ -388,12 +387,6 @@ static NSString *g_overrideAppID = nil;
    addObserver:self
    selector:@selector(applicationDidBecomeActive)
    name:UIApplicationDidBecomeActiveNotification
-   object:NULL];
-
-  [[NSNotificationCenter defaultCenter]
-   addObserver:self
-   selector:@selector(applicationDidEnterBackground)
-   name:UIApplicationDidEnterBackgroundNotification
    object:NULL];
 }
 
@@ -1040,11 +1033,8 @@ static NSString *g_overrideAppID = nil;
     eventDictionary[FBSDKAppEventParameterImplicitlyLogged] = @"1";
   }
 
-  if (_applicationState == UIApplicationStateBackground) {
-    eventDictionary[FBSDKAppEventParameterInBackground] = @"1";
-  }
-
   NSString *currentViewControllerName;
+  UIApplicationState applicationState;
   if ([NSThread isMainThread]) {
     // We only collect the view controller when on the main thread, as the behavior off
     // the main thread is unpredictable.  Besides, UI state for off-main-thread computations
@@ -1055,10 +1045,16 @@ static NSString *g_overrideAppID = nil;
     } else {
       currentViewControllerName = @"no_ui";
     }
+    applicationState = [UIApplication sharedApplication].applicationState;
   } else {
     currentViewControllerName = @"off_thread";
+    applicationState = [FBSDKApplicationDelegate applicationState];
   }
   eventDictionary[@"_ui"] = currentViewControllerName;
+
+  if (applicationState == UIApplicationStateBackground) {
+    eventDictionary[FBSDKAppEventParameterInBackground] = @"1";
+  }
 
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:accessToken];
   NSString *appID = [self appID];
@@ -1274,19 +1270,12 @@ static NSString *g_overrideAppID = nil;
 
 - (void)applicationDidBecomeActive
 {
-  _applicationState = UIApplicationStateActive;
-
   [FBSDKAppEventsUtility ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass([self class])];
 
   [self checkPersistedEvents];
 
   // Restore time spent data, indicating that we're not being called from "activateApp".
   [FBSDKTimeSpentData restore:NO];
-}
-
-- (void)applicationDidEnterBackground
-{
-  _applicationState = UIApplicationStateBackground;
 }
 
 - (void)applicationMovingFromActiveStateOrTerminating
