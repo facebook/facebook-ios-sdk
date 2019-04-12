@@ -26,13 +26,16 @@
 #import "FBSDKSettings.h"
 
 static NSString *const FBSDKAppEventParameterImplicitlyLoggedPurchase = @"_implicitlyLogged";
+static NSString *const FBSDKAppEventNameSubscriptionHeartbeat = @"SubscriptionHeartbeat";
 static NSString *const FBSDKAppEventNamePurchaseFailed = @"fb_mobile_purchase_failed";
 static NSString *const FBSDKAppEventNamePurchaseRestored = @"fb_mobile_purchase_restored";
 static NSString *const FBSDKAppEventParameterNameInAppPurchaseType = @"fb_iap_product_type";
 static NSString *const FBSDKAppEventParameterNameProductTitle = @"fb_content_title";
+static NSString *const FBSDKAppEventParameterNameOriginalTransactionID = @"fb_original_transaction_id";
 static NSString *const FBSDKAppEventParameterNameTransactionID = @"fb_transaction_id";
 static NSString *const FBSDKAppEventParameterNameTransactionDate = @"fb_transaction_date";
 static NSString *const FBSDKAppEventParameterNameSubscriptionPeriod = @"fb_iap_subs_period";
+static NSString *const FBSDKAppEventParameterNameHasFreeTrial = @"fb_iap_has_free_trial";
 static NSString *const FBSDKAppEventParameterNameTrialPeriod = @"fb_iap_trial_period";
 static NSString *const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_price";
 static int const FBSDKMaxParameterValueLength = 100;
@@ -125,10 +128,6 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)handleTransaction:(SKPaymentTransaction *)transaction
 {
-  // Ignore restored transaction
-  if (transaction.originalTransaction != nil) {
-    return;
-  }
   FBSDKPaymentProductRequestor *productRequest = [[FBSDKPaymentProductRequestor alloc] initWithTransaction:transaction];
   [productRequest resolveProducts];
 }
@@ -200,7 +199,11 @@ static NSMutableArray *g_pendingRequestors;
       eventName = FBSDKAppEventNameInitiatedCheckout;
       break;
     case SKPaymentTransactionStatePurchased:
-      eventName = FBSDKAppEventNamePurchased;
+      if ([self isSubscription:product]) {
+        eventName = FBSDKAppEventNameSubscriptionHeartbeat;
+      } else {
+        eventName = FBSDKAppEventNamePurchased;
+      }
       transactionID = self.transaction.transactionIdentifier;
       transactionDate = [formatter stringFromDate:self.transaction.transactionDate];
       break;
@@ -239,14 +242,18 @@ static NSMutableArray *g_pendingRequestors;
 #if !TARGET_OS_TV
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_2
     if (@available(iOS 11.2, *)) {
-      BOOL isSubscription = (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
-      if (isSubscription) {
+      if ([self isSubscription:product]) {
         // subs inapp
         eventParameters[FBSDKAppEventParameterNameSubscriptionPeriod] = [self lengthOfSubscriptionPeriod:product.subscriptionPeriod];
         eventParameters[FBSDKAppEventParameterNameInAppPurchaseType] = @"subs";
         // trial information for subs
         SKProductDiscount *discount = product.introductoryPrice;
         if (discount) {
+          if (discount.paymentMode == SKProductDiscountPaymentModeFreeTrial) {
+            eventParameters[FBSDKAppEventParameterNameHasFreeTrial] = @"1";
+          } else {
+            eventParameters[FBSDKAppEventParameterNameHasFreeTrial] = @"0";
+          }
           eventParameters[FBSDKAppEventParameterNameTrialPeriod] = [self lengthOfSubscriptionPeriod:discount.subscriptionPeriod];
           eventParameters[FBSDKAppEventParameterNameTrialPrice] = discount.price;
         }
@@ -259,11 +266,26 @@ static NSMutableArray *g_pendingRequestors;
     if (transactionID) {
       eventParameters[FBSDKAppEventParameterNameTransactionID] = transactionID;
     }
+    if (self.transaction.originalTransaction.transactionIdentifier) {
+      eventParameters[FBSDKAppEventParameterNameOriginalTransactionID] = self.transaction.originalTransaction.transactionIdentifier;
+    }
   }
 
   [self logImplicitPurchaseEvent:eventName
                       valueToSum:totalAmount
                       parameters:eventParameters];
+}
+
+- (BOOL)isSubscription:(SKProduct *)product
+{
+#if !TARGET_OS_TV
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_2
+  if (@available(iOS 11.2, *)) {
+    return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
+  }
+#endif
+#endif
+  return NO;
 }
 
 - (NSString *)lengthOfSubscriptionPeriod:(id)subcriptionPeriod
