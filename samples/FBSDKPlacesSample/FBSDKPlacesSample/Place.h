@@ -16,11 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+#import <CoreLocation/CoreLocation.h>
 #import <Foundation/Foundation.h>
-@import MapKit;
-@import CoreLocation;
+#import <MapKit/MapKit.h>
 
 #import <FBSDKPlacesKit/FBSDKPlacesKitConstants.h>
+
 #import "Hours.h"
 
 @interface Place : NSObject <MKAnnotation>

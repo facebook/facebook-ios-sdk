@@ -19,9 +19,9 @@
 #import "PlaceListViewController.h"
 
 #import <CoreLocation/CoreLocation.h>
+#import <MapKit/MapKit.h>
 
 #import <FBSDKPlacesKit/FBSDKPlacesKit.h>
-@import MapKit;
 
 #import "Place.h"
 #import "PlaceDetailViewController.h"
