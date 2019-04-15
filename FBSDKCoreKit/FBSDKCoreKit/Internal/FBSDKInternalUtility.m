@@ -531,12 +531,12 @@ setJSONStringForObject:(id)object
     }
   }
 
-  NSURL *URL = [[NSURL alloc] initWithString:[NSString stringWithFormat:
-                                              @"%@://%@%@%@",
-                                              scheme ?: @"",
-                                              host ?: @"",
-                                              path ?: @"",
-                                              queryString ?: @""]];
+  NSURL *const URL = [NSURL URLWithString:[NSString stringWithFormat:
+                                           @"%@://%@%@%@",
+                                           scheme ?: @"",
+                                           host ?: @"",
+                                           path ?: @"",
+                                           queryString ?: @""]];
   if (errorRef != NULL) {
     if (URL) {
       *errorRef = nil;
