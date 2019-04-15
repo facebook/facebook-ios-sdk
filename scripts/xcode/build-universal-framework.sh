@@ -23,8 +23,6 @@
 
 UNIVERSAL_BUILD_FOLDER=../build/
 
-echo "ECHO: $UNIVERSAL_BUILD_FOLDER"
-
 # make the output directory and delete the framework directory
 mkdir -p "${UNIVERSAL_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_BUILD_FOLDER}/${PROJECT_NAME}.framework"
