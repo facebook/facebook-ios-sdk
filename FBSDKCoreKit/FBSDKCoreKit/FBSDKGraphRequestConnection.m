@@ -73,6 +73,7 @@ static FBSDKAccessToken *_CreateExpiredAccessToken(FBSDKAccessToken *accessToken
   return [[FBSDKAccessToken alloc] initWithTokenString:accessToken.tokenString
                                            permissions:accessToken.permissions.allObjects
                                    declinedPermissions:accessToken.declinedPermissions.allObjects
+                                   expiredPermissions:accessToken.expiredPermissions.allObjects
                                                  appID:accessToken.appID
                                                 userID:accessToken.userID
                                         expirationDate:expirationDate

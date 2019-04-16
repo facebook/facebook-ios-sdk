@@ -223,6 +223,7 @@ setJSONStringForObject:(id)object
 + (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
+                    expiredPermissions:(NSMutableSet *)expiredPermissions
 {
   NSArray *resultData = responseObject[@"data"];
   if (resultData.count > 0) {
@@ -234,6 +235,8 @@ setJSONStringForObject:(id)object
         [grantedPermissions addObject:permissionName];
       } else if ([status isEqualToString:@"declined"]) {
         [declinedPermissions addObject:permissionName];
+      } else if ([status isEqualToString:@"expired"]) {
+          [expiredPermissions addObject:permissionName];
       }
     }
   }

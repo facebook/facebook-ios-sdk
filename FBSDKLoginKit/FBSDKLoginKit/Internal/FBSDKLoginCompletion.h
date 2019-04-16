@@ -42,6 +42,7 @@ NS_SWIFT_NAME(LoginCompletionParameters)
 
 @property (nonatomic, copy, readonly) NSSet *permissions;
 @property (nonatomic, copy, readonly) NSSet *declinedPermissions;
+@property (nonatomic, copy, readonly) NSSet *expiredPermissions;
 
 @property (nonatomic, copy, readonly) NSString *appID;
 @property (nonatomic, copy, readonly) NSString *userID;

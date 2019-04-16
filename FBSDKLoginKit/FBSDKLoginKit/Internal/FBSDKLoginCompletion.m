@@ -65,13 +65,16 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
                                                                 NSError *error) {
     NSMutableSet *grantedPermissions = [NSMutableSet set];
     NSMutableSet *declinedPermissions = [NSMutableSet set];
+    NSMutableSet *expiredPermissions = [NSMutableSet set];
 
     [FBSDKInternalUtility extractPermissionsFromResponse:result
                                       grantedPermissions:grantedPermissions
-                                     declinedPermissions:declinedPermissions];
+                                     declinedPermissions:declinedPermissions
+                                      expiredPermissions:expiredPermissions];
 
     parameters.permissions = [grantedPermissions copy];
     parameters.declinedPermissions = [declinedPermissions copy];
+    parameters.expiredPermissions = [expiredPermissions copy];
     if (error) {
       parameters.error = error;
     }
@@ -153,6 +156,8 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   _parameters.declinedPermissions = (declinedPermissionsString.length > 0)
   ? [NSSet setWithArray:[declinedPermissionsString componentsSeparatedByString:@","]]
   : [NSSet set];
+
+  _parameters.expiredPermissions = [NSSet set];
 
   _parameters.appID = appID;
 

@@ -43,10 +43,12 @@
   FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                               permissions:@[]
                                                       declinedPermissions:@[]
+                                                       expiredPermissions:@[]
                                                                     appID:@"appid"
                                                                    userID:@"userid"
                                                            expirationDate:nil
-                                                              refreshDate:nil];
+                                                              refreshDate:nil
+                                                 dataAccessExpirationDate:nil];
   [cache cacheAccessToken:token];
 
   FBSDKAccessToken *retrievedToken = cache.fetchAccessToken;

@@ -287,10 +287,12 @@ static id g_mockNSBundle;
                                              initWithTokenString:@"token"
                                              permissions:@[]
                                              declinedPermissions:@[]
+                                             expiredPermissions:@[]
                                              appID:@"appid"
                                              userID:@"userid"
                                              expirationDate:[NSDate distantPast]
-                                             refreshDate:[NSDate distantPast]];
+                                             refreshDate:[NSDate distantPast]
+                                             dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenThatNeedsRefresh];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
@@ -319,10 +321,12 @@ static id g_mockNSBundle;
                                       initWithTokenString:@"token"
                                       permissions:@[]
                                       declinedPermissions:@[]
+                                      expiredPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
-                                      refreshDate:[NSDate date]];
+                                      refreshDate:[NSDate date]
+                                      dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
   FBSDKGraphRequest *request = [[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
@@ -366,10 +370,12 @@ static id g_mockNSBundle;
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
+                                                            expiredPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
-                                                                    refreshDate:nil];
+                                                                    refreshDate:nil
+                                                       dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     return YES;
@@ -407,10 +413,12 @@ static id g_mockNSBundle;
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
+                                                             expiredPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
-                                                                    refreshDate:nil];
+                                                                    refreshDate:nil
+                                                       dataAccessExpirationDate:nil];
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -453,10 +461,12 @@ static id g_mockNSBundle;
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                     permissions:@[@"public_profile"]
                                                             declinedPermissions:@[]
+                                                             expiredPermissions:@[]
                                                                           appID:@"appid"
                                                                          userID:@"userid"
                                                                  expirationDate:nil
-                                                                    refreshDate:nil];
+                                                                    refreshDate:nil
+                                                       dataAccessExpirationDate:nil];
 
   [FBSDKAccessToken setCurrentAccessToken:accessToken];
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
@@ -545,10 +555,12 @@ static id g_mockNSBundle;
                                       initWithTokenString:@"token"
                                       permissions:@[]
                                       declinedPermissions:@[]
+                                      expiredPermissions:@[]
                                       appID:@"appid"
                                       userID:@"userid"
                                       expirationDate:[NSDate distantPast]
-                                      refreshDate:[NSDate date]];
+                                      refreshDate:[NSDate date]
+                                      dataAccessExpirationDate:[NSDate distantPast]];
   [FBSDKAccessToken setCurrentAccessToken:tokenNoRefresh];
 
   [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {

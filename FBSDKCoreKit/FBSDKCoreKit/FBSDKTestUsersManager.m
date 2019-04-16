@@ -211,6 +211,7 @@ static NSMutableDictionary<NSString *, FBSDKTestUsersManager *> *gInstancesDicti
   return [[FBSDKAccessToken alloc] initWithTokenString:tokenString
                                            permissions:permissions.allObjects
                                    declinedPermissions:@[]
+                                    expiredPermissions:@[]
                                                  appID:_appID
                                                 userID:userId
                                         expirationDate:nil

@@ -319,7 +319,8 @@ setJSONStringForObject:(id)object
  */
 + (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
-                   declinedPermissions:(NSMutableSet *)declinedPermissions;
+                   declinedPermissions:(NSMutableSet *)declinedPermissions
+                    expiredPermissions:(NSMutableSet *)expiredPermissions;
 
 /**
   Registers a transient object so that it will not be deallocated until unregistered

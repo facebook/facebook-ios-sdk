@@ -43,6 +43,7 @@ static FBSDKAccessToken *g_currentAccessToken;
 #define FBSDK_ACCESSTOKEN_TOKENSTRING_KEY @"tokenString"
 #define FBSDK_ACCESSTOKEN_PERMISSIONS_KEY @"permissions"
 #define FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY @"declinedPermissions"
+#define FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY @"expiredPermissions"
 #define FBSDK_ACCESSTOKEN_APPID_KEY @"appID"
 #define FBSDK_ACCESSTOKEN_USERID_KEY @"userID"
 #define FBSDK_ACCESSTOKEN_REFRESHDATE_KEY @"refreshDate"
@@ -55,41 +56,25 @@ static FBSDKAccessToken *g_currentAccessToken;
 - (instancetype)initWithTokenString:(NSString *)tokenString
                         permissions:(NSArray *)permissions
                 declinedPermissions:(NSArray *)declinedPermissions
-                              appID:(NSString *)appID
-                             userID:(NSString *)userID
-                     expirationDate:(NSDate *)expirationDate
-                        refreshDate:(NSDate *)refreshDate
-{
-    return [self initWithTokenString:tokenString
-                         permissions:permissions
-                 declinedPermissions:declinedPermissions
-                               appID:appID
-                              userID:userID
-                      expirationDate:expirationDate
-                         refreshDate:refreshDate
-            dataAccessExpirationDate:[NSDate distantFuture]];
-}
-
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray *)permissions
-                declinedPermissions:(NSArray *)declinedPermissions
+                expiredPermissions:(NSArray *)expiredPermissions
                               appID:(NSString *)appID
                              userID:(NSString *)userID
                      expirationDate:(NSDate *)expirationDate
                         refreshDate:(NSDate *)refreshDate
            dataAccessExpirationDate:(NSDate *)dataAccessExpirationDate
 {
-  if ((self = [super init])) {
-    _tokenString = [tokenString copy];
-    _permissions = [NSSet setWithArray:permissions];
-    _declinedPermissions = [NSSet setWithArray:declinedPermissions];
-    _appID = [appID copy];
-    _userID = [userID copy];
-    _expirationDate = [expirationDate copy] ?: [NSDate distantFuture];
-    _refreshDate = [refreshDate copy] ?: [NSDate date];
-    _dataAccessExpirationDate = [dataAccessExpirationDate copy] ?: [NSDate distantFuture];
-  }
-  return self;
+    if ((self = [super init])) {
+        _tokenString = [tokenString copy];
+        _permissions = [NSSet setWithArray:permissions];
+        _declinedPermissions = [NSSet setWithArray:declinedPermissions];
+        _expiredPermissions = [NSSet setWithArray:expiredPermissions];
+        _appID = [appID copy];
+        _userID = [userID copy];
+        _expirationDate = [expirationDate copy] ?: [NSDate distantFuture];
+        _refreshDate = [refreshDate copy] ?: [NSDate date];
+        _dataAccessExpirationDate = [dataAccessExpirationDate copy] ?: [NSDate distantFuture];
+    }
+    return self;
 }
 
 - (BOOL)hasGranted:(NSString *)permission
@@ -166,6 +151,7 @@ static FBSDKAccessToken *g_currentAccessToken;
     self.tokenString.hash,
     self.permissions.hash,
     self.declinedPermissions.hash,
+    self.expiredPermissions.hash,
     self.appID.hash,
     self.userID.hash,
     self.refreshDate.hash,
@@ -192,6 +178,7 @@ static FBSDKAccessToken *g_currentAccessToken;
           [FBSDKInternalUtility object:self.tokenString isEqualToObject:token.tokenString] &&
           [FBSDKInternalUtility object:self.permissions isEqualToObject:token.permissions] &&
           [FBSDKInternalUtility object:self.declinedPermissions isEqualToObject:token.declinedPermissions] &&
+          [FBSDKInternalUtility object:self.expiredPermissions isEqualToObject:token.expiredPermissions] &&
           [FBSDKInternalUtility object:self.appID isEqualToObject:token.appID] &&
           [FBSDKInternalUtility object:self.userID isEqualToObject:token.userID] &&
           [FBSDKInternalUtility object:self.refreshDate isEqualToObject:token.refreshDate] &&
@@ -218,6 +205,7 @@ static FBSDKAccessToken *g_currentAccessToken;
 {
   NSString *appID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
   NSSet *declinedPermissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
+  NSSet *expiredPermissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
   NSSet *permissions = [decoder decodeObjectOfClass:[NSSet class] forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
   NSString *tokenString = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_TOKENSTRING_KEY];
   NSString *userID = [decoder decodeObjectOfClass:[NSString class] forKey:FBSDK_ACCESSTOKEN_USERID_KEY];
@@ -228,6 +216,7 @@ static FBSDKAccessToken *g_currentAccessToken;
   return [self initWithTokenString:tokenString
                        permissions:permissions.allObjects
                declinedPermissions:declinedPermissions.allObjects
+                expiredPermissions:expiredPermissions.allObjects
                              appID:appID
                             userID:userID
                     expirationDate:expirationDate
@@ -239,6 +228,7 @@ static FBSDKAccessToken *g_currentAccessToken;
 {
   [encoder encodeObject:self.appID forKey:FBSDK_ACCESSTOKEN_APPID_KEY];
   [encoder encodeObject:self.declinedPermissions forKey:FBSDK_ACCESSTOKEN_DECLINEDPERMISSIONS_KEY];
+  [encoder encodeObject:self.expiredPermissions forKey:FBSDK_ACCESSTOKEN_EXPIREDPERMISSIONS_KEY];
   [encoder encodeObject:self.permissions forKey:FBSDK_ACCESSTOKEN_PERMISSIONS_KEY];
   [encoder encodeObject:self.tokenString forKey:FBSDK_ACCESSTOKEN_TOKENSTRING_KEY];
   [encoder encodeObject:self.userID forKey:FBSDK_ACCESSTOKEN_USERID_KEY];

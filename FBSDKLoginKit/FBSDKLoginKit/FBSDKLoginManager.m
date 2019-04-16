@@ -226,6 +226,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
         FBSDKAccessToken *token = [[FBSDKAccessToken alloc] initWithTokenString:tokenString
                                                                     permissions:grantedPermissions.allObjects
                                                             declinedPermissions:declinedPermissions.allObjects
+                                                             expiredPermissions:@[]
                                                                           appID:parameters.appID
                                                                          userID:parameters.userID
                                                                  expirationDate:parameters.expirationDate

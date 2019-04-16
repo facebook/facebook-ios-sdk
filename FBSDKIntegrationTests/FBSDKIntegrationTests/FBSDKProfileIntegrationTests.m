@@ -183,10 +183,12 @@
   [FBSDKAccessToken setCurrentAccessToken:[[FBSDKAccessToken alloc] initWithTokenString:@"tokenstring"
                                                                             permissions:@[]
                                                                     declinedPermissions:@[]
+                                                                     expiredPermissions:@[]
                                                                                   appID:token.appID
                                                                                  userID:token.userID
                                                                          expirationDate:nil
-                                                                            refreshDate:nil]];
+                                                                            refreshDate:nil
+                                                               dataAccessExpirationDate:nil]];
   XCTAssertTrue([blockers[0] waitWithTimeout:5], @"expected notification for profile change after token change");
   expectNotification = NO;
   [FBSDKProfile setCurrentProfile:nil];

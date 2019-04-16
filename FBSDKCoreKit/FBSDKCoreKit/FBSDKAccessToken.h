@@ -125,6 +125,11 @@ NS_SWIFT_NAME(AccessToken)
 @property (nonatomic, copy, readonly) NSSet<NSString *> *declinedPermissions;
 
 /**
+ Returns the known declined permissions.
+ */
+@property (nonatomic, copy, readonly) NSSet<NSString *> *expiredPermissions;
+
+/**
   Returns the expiration date.
  */
 @property (nonatomic, copy, readonly) NSDate *expirationDate;
@@ -169,29 +174,7 @@ NS_SWIFT_NAME(AccessToken)
  an NSArray for the convenience of literal syntax.
  @param declinedPermissions the declined permissions. Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
- @param appID the app ID.
- @param userID the user ID.
- @param expirationDate the optional expiration date (defaults to distantFuture).
- @param refreshDate the optional date the token was last refreshed (defaults to today).
-
- This initializer should only be used for advanced apps that
- manage tokens explicitly. Typical login flows only need to use `FBSDKLoginManager`
- along with `+currentAccessToken`.
- */
-- (instancetype)initWithTokenString:(NSString *)tokenString
-                        permissions:(NSArray<NSString *> *)permissions
-                declinedPermissions:(NSArray<NSString *> *)declinedPermissions
-                              appID:(NSString *)appID
-                             userID:(NSString *)userID
-                     expirationDate:(nullable NSDate *)expirationDate
-                        refreshDate:(nullable NSDate *)refreshDate;
-
-/**
-  Initializes a new instance.
- @param tokenString the opaque token string.
- @param permissions the granted permissions. Note this is converted to NSSet and is only
- an NSArray for the convenience of literal syntax.
- @param declinedPermissions the declined permissions. Note this is converted to NSSet and is only
+ @param expiredPermissions the expired permissions. Note this is converted to NSSet and is only
  an NSArray for the convenience of literal syntax.
  @param appID the app ID.
  @param userID the user ID.
@@ -207,6 +190,7 @@ NS_SWIFT_NAME(AccessToken)
 - (instancetype)initWithTokenString:(NSString *)tokenString
                         permissions:(NSArray<NSString *> *)permissions
                 declinedPermissions:(NSArray<NSString *> *)declinedPermissions
+                 expiredPermissions:(NSArray<NSString *> *)expiredPermissions
                               appID:(NSString *)appID
                              userID:(NSString *)userID
                      expirationDate:(nullable NSDate *)expirationDate

@@ -666,10 +666,12 @@ expectedPreJSONtext:(NSString *)expectedPreJSONText
   FBSDKAccessToken *accessToken = [[FBSDKAccessToken alloc] initWithTokenString:@"FBSDKShareDialogTests"
                                                                     permissions:@[]
                                                             declinedPermissions:@[]
+                                                             expiredPermissions:@[]
                                                                           appID:@""
                                                                          userID:@""
                                                                  expirationDate:nil
-                                                                    refreshDate:nil];
+                                                                    refreshDate:nil
+                                                       dataAccessExpirationDate:nil];
   [self _setCurrentAccessToken:accessToken andPerformBlock:block];
 }
 

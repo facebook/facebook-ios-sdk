@@ -161,10 +161,12 @@ static NSString *const kFakeChallenge = @"a =bcdef";
   FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                       permissions:@[@"public_profile", @"read_stream"]
                                                               declinedPermissions:@[]
+                                                              expiredPermissions:@[]
                                                                             appID:@""
                                                                            userID:@""
                                                                    expirationDate:nil
-                                                                      refreshDate:nil];
+                                                                      refreshDate:nil
+                                                         dataAccessExpirationDate:nil];
   [FBSDKAccessToken setCurrentAccessToken:existingToken];
   NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile,read_stream&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
   // Use OCMock to verify the validateReauthentication: call and verify the result there.
@@ -196,10 +198,12 @@ static NSString *const kFakeChallenge = @"a =bcdef";
     FBSDKAccessToken *existingToken = [[FBSDKAccessToken alloc] initWithTokenString:@"token"
                                                                         permissions:@[@"public_profile", @"read_stream"]
                                                                 declinedPermissions:@[]
+                                                                 expiredPermissions:@[]
                                                                               appID:@""
                                                                              userID:@""
                                                                      expirationDate:nil
-                                                                        refreshDate:nil];
+                                                                        refreshDate:nil
+                                                           dataAccessExpirationDate:nil];
     [FBSDKAccessToken setCurrentAccessToken:existingToken];
     NSURL *url = [self authorizeURLWithFragment:@"granted_scopes=public_profile,read_stream&denied_scopes=email%2Cuser_friends&signed_request=ggarbage.eyJhbGdvcml0aG0iOiJITUFDSEEyNTYiLCJjb2RlIjoid2h5bm90IiwiaXNzdWVkX2F0IjoxNDIyNTAyMDkyLCJ1c2VyX2lkIjoiMTIzIn0&access_token=sometoken&expires_in=5183949"];
     // Use OCMock to verify the validateReauthentication: call and verify the result there.
