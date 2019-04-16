@@ -120,7 +120,7 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
   if ([element isKindOfClass:[FBSDKTVLoginViewControllerElement class]]) {
     FBSDKDeviceLoginViewController *vc = [[FBSDKDeviceLoginViewController alloc] init];
     vc.delegate = (FBSDKTVLoginViewControllerElement *)element;
-    button.permissions = [self permissionsFromElement:element];
+    vc.permissions = [self permissionsFromElement:element];
     vc.redirectURL = [NSURL URLWithString:element.attributes[@"redirectURL"]];
     return vc;
   }
