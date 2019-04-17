@@ -47,10 +47,10 @@ jobs:
     - stage: test
       name: Carthage - Xcode 10.2
       osx_image: xcode10.2
-    - stage: test
-      name: Pod Lint - Xcode 10.2
-      osx_image: xcode10.2
-      script: sh scripts/run.sh lint cocoapods --allow-warnings
+    # - stage: test # Re-enable after 5.0 releases
+    #   name: Pod Lint - Xcode 10.2
+    #   osx_image: xcode10.2
+    #   script: sh scripts/run.sh lint cocoapods --allow-warnings
     # - stage: tag
     #   name: Tag Version
     #   osx_image: xcode10.2
