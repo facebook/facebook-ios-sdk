@@ -17,9 +17,17 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+# shellcheck disable=SC2039
+
 # --------------
 # Main Script
 # --------------
 
 bundle install
-brew bundle
+brew bundle check || brew bundle
+
+BUILD_TYPE=$(echo "$TRAVIS_JOB_NAME" | awk '{print $1}' | tr '[:upper:]' '[:lower:]')
+
+if [ "$BUILD_TYPE" == "pod" ]; then
+  pod repo update
+fi
