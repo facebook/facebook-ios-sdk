@@ -331,10 +331,7 @@ static UIApplicationState _applicationState;
     if (objc_lookUpClass("FBSDKMessengerButton") != nil) {
         params[@"messenger_lib_included"] = @1;
     }
-    if (objc_lookUpClass("FBSDKMessengerButton") != nil) {
-        params[@"messenger_lib_included"] = @1;
-    }
-    if (objc_lookUpClass("FBSDKTVInterfaceFactory.m") != nil) {
+    if (objc_lookUpClass("FBSDKTVInterfaceFactory") != nil) {
         params[@"tv_lib_included"] = @1;
     }
     if (objc_lookUpClass("FBSDKAutoLog") != nil) {
