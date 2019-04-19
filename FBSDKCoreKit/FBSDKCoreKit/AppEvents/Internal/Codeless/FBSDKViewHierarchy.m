@@ -308,6 +308,10 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     result[CODELESS_VIEW_TREE_TEXT_STYLE_KEY] = textStyle;
   }
 
+  // hash text and hint
+  result[CODELESS_VIEW_TREE_TEXT_KEY] = [FBSDKUtility SHA256Hash:result[CODELESS_VIEW_TREE_TEXT_KEY]];
+  result[CODELESS_VIEW_TREE_HINT_KEY] = [FBSDKUtility SHA256Hash:result[CODELESS_VIEW_TREE_HINT_KEY]];
+
   return result;
 }
 

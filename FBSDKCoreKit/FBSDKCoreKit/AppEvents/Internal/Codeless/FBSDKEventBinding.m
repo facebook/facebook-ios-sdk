@@ -19,6 +19,7 @@
 #import "FBSDKEventBinding.h"
 
 #import <FBSDKCoreKit/FBSDKAppEvents.h>
+#import <FBSDKCoreKit/FBSDKUtility.h>
 
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKCodelessMacros.h"
@@ -175,7 +176,8 @@ pathComponent:(FBSDKCodelessPathComponent *)component
     if ((pathComponent.matchBitmask & FBSDKCodelessMatchBitmaskFieldText) > 0) {
       NSString *text = viewPathComponent.text;
       BOOL match = ((text.length == 0 && pathComponent.text.length == 0)
-                    || [text isEqualToString:pathComponent.text]);
+                    || [text isEqualToString:pathComponent.text]
+                    || [[FBSDKUtility SHA256Hash:text] isEqualToString:pathComponent.text]);
       if (!match) {
         return NO;
       }
@@ -189,7 +191,8 @@ pathComponent:(FBSDKCodelessPathComponent *)component
     if ((pathComponent.matchBitmask & FBSDKCodelessMatchBitmaskFieldHint) > 0) {
       NSString *hint = viewPathComponent.hint;
       BOOL match = ((hint.length == 0 && pathComponent.hint.length == 0)
-                    || [hint isEqualToString:pathComponent.hint]);
+                    || [hint isEqualToString:pathComponent.hint]
+                    || [[FBSDKUtility SHA256Hash:hint] isEqualToString:pathComponent.hint]);
       if (!match) {
         return NO;
       }
