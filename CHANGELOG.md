@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `NS_ASSUME_NONNULL_BEGIN`, `NS_ASSUME_NONNULL_END`, and other nullability annotations
 - Generics for Arrays, Sets, and Dictionaries
 - `NS_SWIFT_NAME` to remove the `FBSDK` prefix where necessary (left `FB` prefix for UI elements)
-- `FBSDKLoginManager -logInWithPermissions:fromViewController:handler:` 
+- `FBSDKLoginManager -logInWithPermissions:fromViewController:handler:`
 - `FBSDKLoginButton permissions`
 - `FBSDKDeviceLoginButton permissions`
 - `FBSDKDeviceLoginViewController permissions`
@@ -41,14 +41,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Deprecated
 
-- `FBSDKLoginManager -logInWithReadPermissions:fromViewController:handler:` 
-- `FBSDKLoginManager -logInWithWritePermissions:fromViewController:handler:` 
+- `FBSDKLoginManager -logInWithReadPermissions:fromViewController:handler:`
+- `FBSDKLoginManager -logInWithWritePermissions:fromViewController:handler:`
 - `FBSDKLoginButton readPermissions`
 - `FBSDKLoginButton writePermissions`
 - `FBSDKDeviceLoginButton readPermissions`
 - `FBSDKDeviceLoginButton writePermissions`
 - `FBSDKDeviceLoginViewController readPermissions`
 - `FBSDKDeviceLoginViewController writePermissions`
+- `FBSDKUtility SHA256HashString`
+- `FBSDKUtility SHA256HashData`
 
 ### Removed
 

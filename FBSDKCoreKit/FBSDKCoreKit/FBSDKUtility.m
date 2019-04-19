@@ -70,32 +70,28 @@
   }
 }
 
-+ (NSString *)SHA256HashString:(NSString *)string
-{
-  return [self SHA256HashData:[string dataUsingEncoding:NSUTF8StringEncoding]];
-}
-
-+ (NSString *)SHA256HashData:(NSData *)data
-{
-  uint8_t digest[CC_SHA256_DIGEST_LENGTH];
-  CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
-  NSMutableString *encryptedStuff = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
-  for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
-    [encryptedStuff appendFormat:@"%02x", digest[i]];
-  }
-
-  return encryptedStuff;
-}
-
 + (NSString *)SHA256Hash:(NSObject *)input
 {
-  if ([input isKindOfClass:[NSString class]]) {
-    return [self SHA256HashString:(NSString *)input];
-  } else if ([input isKindOfClass:[NSData class]]) {
-    return [self SHA256HashData:(NSData *)input];
+  NSData *data = nil;
+
+  if ([input isKindOfClass:[NSData class]]) {
+    data = (NSData *)input;
+  } else if ([input isKindOfClass:[NSString class]]) {
+    data = [(NSString *)input dataUsingEncoding:NSUTF8StringEncoding];
   }
 
-  return nil;
+  if (!data) {
+    return nil;
+  }
+
+  uint8_t digest[CC_SHA256_DIGEST_LENGTH];
+  CC_SHA256(data.bytes, (CC_LONG)data.length, digest);
+  NSMutableString *hashed = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+  for (int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+    [hashed appendFormat:@"%02x", digest[i]];
+  }
+
+  return [hashed copy];
 }
 
 @end

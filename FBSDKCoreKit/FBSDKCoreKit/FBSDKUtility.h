@@ -83,23 +83,7 @@ NS_SWIFT_NAME(encode(urlString:));
 
  @param input The data that needs to be hashed, it could be NSString or NSData.
  */
-+ (nullable NSString *)SHA256Hash:(NSObject *)input
-NS_SWIFT_UNAVAILABLE("Use sha256Hash instead");
-
-/**
- Get SHA256 hashed string from String
-
- @param string The string that needs to be hashed.
- */
-+ (NSString *)SHA256HashString:(NSString *)string
-NS_SWIFT_NAME(sha256Hash(_:));
-
-/**
- Get SHA256 hashed string from Data
-
- @param data The data that needs to be hashed.
- */
-+ (NSString *)SHA256HashData:(NSData *)data
++ (nullable NSString *)SHA256Hash:(nullable NSObject *)input
 NS_SWIFT_NAME(sha256Hash(_:));
 
 @end
