@@ -208,8 +208,14 @@ NSURLSessionDataDelegate
   });
 
   if (![FBSDKApplicationDelegate isSDKInitialized]) {
+    NSString *msg = @"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized.";
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
-                       formatString:@"FBSDKGraphRequestConnection cannot be started before Facebook SDK initialized."];
+                       formatString:@"%@", msg];
+    self.state = kStateCancelled;
+    [self completeFBSDKURLSessionWithResponse:nil
+                                         data:nil
+                                 networkError:[NSError fbUnknownErrorWithMessage:msg]];
+
     return;
   }
 
