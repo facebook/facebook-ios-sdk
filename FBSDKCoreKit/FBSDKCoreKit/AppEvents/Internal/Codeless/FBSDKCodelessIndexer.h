@@ -27,6 +27,8 @@ NS_SWIFT_NAME(CodelessIndexer)
 
 @property (class, nonatomic, copy, readonly) NSString *extInfo;
 
++ (void)enable;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -1033,6 +1033,8 @@ static NSString *g_overrideAppID = nil;
 #if !TARGET_OS_TV
 - (void)enableCodelessEvents {
   if (_serverConfiguration.isCodelessEventsEnabled) {
+    [FBSDKCodelessIndexer enable];
+
     if (!_eventBindingManager) {
       _eventBindingManager = [[FBSDKEventBindingManager alloc] init];
     }

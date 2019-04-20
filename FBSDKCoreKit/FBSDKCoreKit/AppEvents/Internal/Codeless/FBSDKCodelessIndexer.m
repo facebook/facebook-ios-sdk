@@ -34,6 +34,7 @@
 static BOOL _isCodelessIndexing;
 static BOOL _isCheckingSession;
 static BOOL _isCodelessIndexingEnabled;
+static BOOL _isGestureSet;
 
 static NSMutableDictionary<NSString *, id> *_codelessSetting;
 static const NSTimeInterval kTimeout = 4.0;
@@ -42,8 +43,11 @@ static NSString *_deviceSessionID;
 static NSTimer *_appIndexingTimer;
 static NSString *_lastTreeHash;
 
-+ (void)load
++ (void)enable
 {
+  if (_isGestureSet) {
+    return;
+  }
 #if TARGET_OS_SIMULATOR
   [self setupGesture];
 #else
@@ -138,6 +142,7 @@ static NSString *_lastTreeHash;
 
 + (void)setupGesture
 {
+  _isGestureSet = YES;
   [UIApplication sharedApplication].applicationSupportsShakeToEdit = YES;
   Class class = [UIApplication class];
 
