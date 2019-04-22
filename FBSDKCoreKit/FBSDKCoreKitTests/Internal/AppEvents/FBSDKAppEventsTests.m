@@ -226,6 +226,9 @@ static NSString *const _mockAppID = @"mockAppID";
   FBSDKApplicationDelegate *delegate = [FBSDKApplicationDelegate sharedInstance];
   id delegateMock = OCMPartialMock(delegate);
 
+  NSUserDefaults *userDefaults = [NSUserDefaults standardUserDefaults];
+  id userDefaultsMock = OCMPartialMock(userDefaults);
+  [OCMStub([userDefaultsMock integerForKey:[OCMArg any]]) andReturnValue: OCMOCK_VALUE(1)];
   [[_mockAppEvents expect] logInternalEvent:@"fb_sdk_initialize"
                                  parameters:[OCMArg any]
                          isImplicitlyLogged:NO];

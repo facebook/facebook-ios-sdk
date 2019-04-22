@@ -50,6 +50,7 @@ NSString *const FBSDKApplicationDidBecomeActiveNotification = @"com.facebook.sdk
 #endif
 
 static NSString *const FBSDKAppLinkInboundEvent = @"fb_al_inbound";
+static NSString *const FBSDKKitsBitmaskKey  = @"com.facebook.sdk.kits.bitmask";
 static BOOL g_isSDKInitialized = NO;
 static UIApplicationState _applicationState;
 
@@ -317,29 +318,39 @@ static UIApplicationState _applicationState;
 
 - (void)_logSDKInitialize
 {
-    NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
-    params[@"core_lib_included"] = @1;
-    if (objc_lookUpClass("FBSDKShareDialog") != nil) {
-        params[@"share_lib_included"] = @1;
+  NSDictionary *metaInfo = [NSDictionary dictionaryWithObjects:@[@"login_lib_included",
+                                                                 @"marketing_lib_included",
+                                                                 @"messenger_lib_included",
+                                                                 @"places_lib_included",
+                                                                 @"share_lib_included",
+                                                                 @"tv_lib_included"]
+                                                       forKeys:@[@"FBSDKLoginManager",
+                                                                 @"FBSDKAutoLog",
+                                                                 @"FBSDKMessengerButton",
+                                                                 @"FBSDKPlacesManager",
+                                                                 @"FBSDKShareDialog",
+                                                                 @"FBSDKTVInterfaceFactory"]];
+
+  NSInteger bitmask = 0;
+  NSInteger bit = 0;
+  NSMutableDictionary<NSString *, NSNumber *> *params = NSMutableDictionary.new;
+  params[@"core_lib_included"] = @1;
+  for (NSString *className in metaInfo.allKeys) {
+    NSString *keyName = [metaInfo objectForKey:className];
+    if (objc_lookUpClass([className UTF8String])) {
+      params[keyName] = @1;
+      bitmask |=  1 << bit;
     }
-    if (objc_lookUpClass("FBSDKLoginManager") != nil) {
-        params[@"login_lib_included"] = @1;
-    }
-    if (objc_lookUpClass("FBSDKPlacesManager") != nil) {
-        params[@"places_lib_included"] = @1;
-    }
-    if (objc_lookUpClass("FBSDKMessengerButton") != nil) {
-        params[@"messenger_lib_included"] = @1;
-    }
-    if (objc_lookUpClass("FBSDKTVInterfaceFactory") != nil) {
-        params[@"tv_lib_included"] = @1;
-    }
-    if (objc_lookUpClass("FBSDKAutoLog") != nil) {
-        params[@"marketing_lib_included"] = @1;
-    }
+    bit++;
+  }
+
+  NSInteger existingBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKKitsBitmaskKey];
+  if (existingBitmask != bitmask) {
+    [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKKitsBitmaskKey];
     [FBSDKAppEvents logInternalEvent:@"fb_sdk_initialize"
                           parameters:params
                   isImplicitlyLogged:NO];
+  }
 }
 
 + (BOOL)isSDKInitialized
