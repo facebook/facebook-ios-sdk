@@ -19,39 +19,31 @@
 import FBSDKShareKit
 
 /**
- Represents an error returned by the FacebookShare framework.
+ ShareDialog.Mode CustomStringConvertible
  */
-public enum ShareError: Error {
+extension ShareDialog.Mode: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKShareDialogMode(self)
+  }
+}
 
-  /// Reserved.
-  case reserved
+/**
+ AppGroupPrivacy CustomStringConvertible
+ */
+extension AppGroupPrivacy: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKAppGroupPrivacy(self)
+  }
+}
 
-  /// The error code for errors from uploading open graph objects.
-  case openGraph
-
-  /**
-   The error code for when a sharing dialog is not available.
-   Use the `validate()` function on the dialog/sharer to check for this case before calling `show()`.
-   */
-  case dialogNotAvailable
-
-  /// The error code for unknown errors.
-  case unknown
-
-  /**
-   Attempt to create a share error from a NSError returned by the Facebook SDK.
-
-   - parameter error: The error to attempt to convert.
-   */
-  internal init?(error: NSError) {
-    let error = FBSDKShareError(_nsError: error)
-
-    switch error {
-    case FBSDKShareError.reserved: self = .reserved
-    case FBSDKShareError.openGraph: self = .openGraph
-    case FBSDKShareError.dialogNotAvailable: self = .dialogNotAvailable
-    case FBSDKShareError.unknown: self = .unknown
-    default: return nil
-    }
+/**
+ LikeObjectType CustomStringConvertible
+ */
+extension LikeObjectType: CustomStringConvertible {
+  /// The string description
+  public var description: String {
+    return __NSStringFromFBSDKLikeObjectType(self)
   }
 }

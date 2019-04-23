@@ -16,42 +16,32 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FacebookCore
 import FBSDKCoreKit
-import Foundation
+import FBSDKLoginKit
+import UIKit
 
 /**
- A container for data attachments so that additional metadata can be provided about the attachment
- (like content type or filename).
+ A button that initiates a log in or log out flow upon tapping.
+
+ `LoginButton` works with `AccessToken.current` to determine what to display,
+ and automatically starts authentication when tapped (i.e., you do not need to manually subscribe action targets).
+
+ Like `LoginManager`, you should make sure your app delegate is connected to `ApplicationDelegate`
+ in order for the button's delegate to receive messages.
+
+ `LoginButton` has a fixed height of @c 30 pixels, but you may change the width.
+ Initializing the button with `nil` frame will size the button to its minimum frame.
  */
-public class GraphRequestDataAttachment {
-
-  /// The attachment data.
-  public let data: Data
-
-  /// The file name of the attachment.
-  public let filename: String?
-
-  /// The content type of the attachment.
-  public let contentType: String?
-
+public extension FBLoginButton {
   /**
-   Initializes a data attachment
+   Create a new `LoginButton` with a given optional frame and read permissions.
 
-   - parameter data: The attachment data (retained, not copied).
-   - parameter filename: Optional filename for the attachment. Default: `nil`.
-   - parameter contentType: Optional content type for the attachment. Default: `nil`.
+   - Parameter frame: Optional frame to initialize with. Default: `nil`, which uses a default size for the button.
+   - Parameter permissions: Array of read permissions to request when logging in.
    */
-  public init(data: Data, filename: String? = nil, contentType: String? = nil) {
-    self.data = data
-    self.filename = filename
-    self.contentType = contentType
-  }
-
-  //--------------------------------------
-  // MARK: - Bridging
-  //--------------------------------------
-
-  internal var sdkDataAttachment: FBSDKGraphRequestDataAttachment {
-    return FBSDKGraphRequestDataAttachment(data: data, filename: filename, contentType: contentType)
+  convenience init(frame: CGRect = .zero, permissions: [Permission] = [.publicProfile]) {
+    self.init(frame: frame)
+    self.permissions = permissions.map { $0.name }
   }
 }

@@ -16,47 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKShareKit
+import FBSDKCoreKit
+import Foundation
+
+//--------------------------------------
+// MARK: - SDKSettings
+//--------------------------------------
 
 /**
- Represents a valid hashtag.
+ Provides access to settings and configuration used by the entire SDK.
  */
-public struct Hashtag: Hashable {
-  /// The hashtag string.
-  public let stringValue: String
+public extension Settings {
+  //--------------------------------------
+  // MARK: - SDKSettings + Logging Behavior
+  //--------------------------------------
 
   /**
-   Attempt to create a hashtag for a given string.
-
-   - parameter string: The string to create from.
-   If this is not a valid hashtag (matching the regular expression `#\w+`), the initializer returns `nil`.
+   Current logging behaviors of Facebook SDK.
+   The default enabled behavior is `.DeveloperErrors` only.
    */
-  public init?(_ string: String) {
-    guard let sdkHashtag = FBSDKHashtag(string: string) else { return nil }
-    self.init(sdkHashtag: sdkHashtag)
-  }
-
-  internal init?(sdkHashtag: FBSDKHashtag) {
-    if !sdkHashtag.isValid {
-      return nil
+  static var loggingBehaviors: Set<LoggingBehavior> {
+    get {
+      return Set(Settings.__loggingBehaviors.map { LoggingBehavior(rawValue: $0) })
     }
-    self.stringValue = sdkHashtag.stringRepresentation
+    set {
+      Settings.__loggingBehaviors = Set(newValue.map { $0.rawValue })
+    }
   }
-
-  internal var sdkHashtagRepresentation: FBSDKHashtag {
-    return FBSDKHashtag(string: stringValue)
-  }
-
-  /**
-   Check if two hashtags are equal.
-
-   - parameter lhs: The first hashtag to compare.
-   - parameter rhs: The second hashtag to compare.
-
-   - returns: `true` if the hashtags are equal, `false` otherwise.
-   */
-  public static func == (lhs: Hashtag, rhs: Hashtag) -> Bool {
-    return lhs.stringValue == rhs.stringValue
-  }
-
 }

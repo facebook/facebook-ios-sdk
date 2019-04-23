@@ -16,42 +16,28 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBSDKCoreKit
 import Foundation
+import UIKit
 
-import FBSDKLoginKit
+/**
+ FBProfilePictureView Extension
+ */
+public extension FBProfilePictureView {
+  /**
+   Create a new instance of `UserProfilePictureView`.
 
-internal class LoginButtonDelegateBridge: NSObject, FBSDKLoginButtonDelegate {
-  internal weak var loginButton: LoginButton?
+   - Parameter frame: Optional frame rectangle for the view, measured in points.
+   - Parameter profile: Optional profile to display a picture for. Default: `UserProfile.current`.
+   */
+  convenience init(frame: CGRect = .zero, profile: Profile? = nil) {
+    self.init(frame: frame)
 
-  func setupAsDelegateFor(_ sdkLoginButton: FBSDKLoginButton, loginButton: LoginButton) {
-    self.loginButton = loginButton
-    sdkLoginButton.delegate = self
-  }
-
-  // MARK: FBSDKLoginButtonDelegate
-
-  // swiftlint:disable:next implicitly_unwrapped_optional
-  func loginButton(_ sdkButton: FBSDKLoginButton!,
-                   didCompleteWith sdkResult: FBSDKLoginManagerLoginResult?,
-                   error: Error?) {
-    guard
-      let loginButton = loginButton,
-      let delegate = loginButton.delegate else {
-        return
+    if let profile = profile {
+      profileID = profile.userID
     }
 
-    let result = LoginResult(sdkResult: sdkResult, error: error)
-    delegate.loginButtonDidCompleteLogin(loginButton, result: result)
-  }
-
-  // swiftlint:disable:next implicitly_unwrapped_optional
-  func loginButtonDidLogOut(_ sdkButton: FBSDKLoginButton!) {
-    guard
-      let loginButton = loginButton,
-      let delegate = loginButton.delegate else {
-        return
-    }
-
-    delegate.loginButtonDidLogOut(loginButton)
+    autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    setNeedsImageUpdate()
   }
 }

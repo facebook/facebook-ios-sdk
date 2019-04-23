@@ -8,8 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		813C9C241D1DB8E500288BFA /* LoginButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 813C9C231D1DB8E500288BFA /* LoginButtonViewController.swift */; };
-		815463371D3808EA0069489A /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B5C1D36D60100066F63 /* Bolts.framework */; };
-		815463381D3808EA0069489A /* Bolts.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B5C1D36D60100066F63 /* Bolts.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		815463411D38090E0069489A /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B791D36D60100066F63 /* FBSDKCoreKit.framework */; };
 		815463421D38090E0069489A /* FBSDKCoreKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B791D36D60100066F63 /* FBSDKCoreKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		815463451D38090E0069489A /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81AB8B871D36D60100066F63 /* FBSDKLoginKit.framework */; };
@@ -53,13 +51,6 @@
 			remoteGlobalIDString = 0B9DBF52207C07C600662776;
 			remoteInfo = "FBSDKLoginKit_TV-Dynamic";
 		};
-		815463391D3808EA0069489A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1D5D7DA61BE3CE8200FD67C7;
-			remoteInfo = "Bolts-iOS-Dynamic";
-		};
 		815463431D38090E0069489A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */;
@@ -80,83 +71,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
 			remoteInfo = "FBSDKShareKit-Dynamic";
-		};
-		81AB8B591D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 81ED94291BE147CF00795F05;
-			remoteInfo = "Bolts-iOS";
-		};
-		81AB8B5B1D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1D5D7DD31BE3CE8200FD67C7;
-			remoteInfo = "Bolts-iOS-Dynamic";
-		};
-		81AB8B5D1D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 81ED946E1BE14B5200795F05;
-			remoteInfo = "Bolts-OSX";
-		};
-		81AB8B5F1D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F5AFCA021BA752750076E927;
-			remoteInfo = "Bolts-tvOS";
-		};
-		81AB8B611D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 81E94D6A1C2B8BF200A6291E;
-			remoteInfo = "Bolts-tvOS-Dynamic";
-		};
-		81AB8B631D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8178F99C1BB0F87700AD289D;
-			remoteInfo = "Bolts-watchOS";
-		};
-		81AB8B651D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 819573F11C2B8ECB00BFCA39;
-			remoteInfo = "Bolts-watchOS-Dynamic";
-		};
-		81AB8B671D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8E8C8EE917F23D1D00E3F1C7;
-			remoteInfo = "BoltsTests-iOS";
-		};
-		81AB8B691D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8E8C8F1917F241DA00E3F1C7;
-			remoteInfo = "BoltsTests-OSX";
-		};
-		81AB8B6B1D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = F5AFCA131BA752770076E927;
-			remoteInfo = "BoltsTests-tvOS";
-		};
-		81AB8B6D1D36D60100066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1EC3016018CDAA8400D06D07;
-			remoteInfo = BoltsTestUI;
 		};
 		81AB8B761D36D60100066F63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -249,13 +163,6 @@
 			remoteGlobalIDString = 8144D91B1D261D2900C8E4AC;
 			remoteInfo = "FBSDKShareKit_TV-Dynamic";
 		};
-		81AB8B9B1D36D63000066F63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 1D5D7DA61BE3CE8200FD67C7;
-			remoteInfo = "Bolts-iOS-Dynamic";
-		};
 		81AB8B9D1D36D63000066F63 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */;
@@ -334,7 +241,6 @@
 				8154634A1D38090E0069489A /* FBSDKShareKit.framework in Embed Frameworks */,
 				81F43A1B1D060C6E00569A1A /* FacebookLogin.framework in Embed Frameworks */,
 				81F43A171D060C6E00569A1A /* FacebookCore.framework in Embed Frameworks */,
-				815463381D3808EA0069489A /* Bolts.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,7 +253,6 @@
 		816B75FB1D07B70B0012AC43 /* GraphAPIReadViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphAPIReadViewController.swift; sourceTree = "<group>"; };
 		8197009F1D07921100286023 /* LoginManagerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginManagerViewController.swift; sourceTree = "<group>"; };
 		81A63BD31D94896000392266 /* SwiftCatalog.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftCatalog.entitlements; sourceTree = "<group>"; };
-		81AB8B421D36D60100066F63 /* Bolts.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Bolts.xcodeproj; path = "../../Carthage/Checkouts/facebook-objc-sdk/Bolts-ObjC/Bolts.xcodeproj"; sourceTree = "<group>"; };
 		81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKCoreKit.xcodeproj; path = "../../Carthage/Checkouts/facebook-objc-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj"; sourceTree = "<group>"; };
 		81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKLoginKit.xcodeproj; path = "../../Carthage/Checkouts/facebook-objc-sdk/FBSDKLoginKit/FBSDKLoginKit.xcodeproj"; sourceTree = "<group>"; };
 		81AB8B4B1D36D60100066F63 /* FBSDKShareKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FBSDKShareKit.xcodeproj; path = "../../Carthage/Checkouts/facebook-objc-sdk/FBSDKShareKit/FBSDKShareKit.xcodeproj"; sourceTree = "<group>"; };
@@ -387,7 +292,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				815463411D38090E0069489A /* FBSDKCoreKit.framework in Frameworks */,
-				815463371D3808EA0069489A /* Bolts.framework in Frameworks */,
 				815463451D38090E0069489A /* FBSDKLoginKit.framework in Frameworks */,
 				815463491D38090E0069489A /* FBSDKShareKit.framework in Frameworks */,
 				81F43A1E1D060C6F00569A1A /* FacebookShare.framework in Frameworks */,
@@ -415,24 +319,6 @@
 				813C9C231D1DB8E500288BFA /* LoginButtonViewController.swift */,
 			);
 			name = Login;
-			sourceTree = "<group>";
-		};
-		81AB8B431D36D60100066F63 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				81AB8B5A1D36D60100066F63 /* Bolts.framework */,
-				81AB8B5C1D36D60100066F63 /* Bolts.framework */,
-				81AB8B5E1D36D60100066F63 /* Bolts.framework */,
-				81AB8B601D36D60100066F63 /* Bolts.framework */,
-				81AB8B621D36D60100066F63 /* Bolts.framework */,
-				81AB8B641D36D60100066F63 /* Bolts.framework */,
-				81AB8B661D36D60100066F63 /* Bolts.framework */,
-				81AB8B681D36D60100066F63 /* BoltsTests-iOS.xctest */,
-				81AB8B6A1D36D60100066F63 /* BoltsTests-OSX.xctest */,
-				81AB8B6C1D36D60100066F63 /* BoltsTests-tvOS.xctest */,
-				81AB8B6E1D36D60100066F63 /* BoltsTestUI.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		81AB8B461D36D60100066F63 /* Products */ = {
@@ -578,7 +464,6 @@
 		81F43A091D060C5C00569A1A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				81AB8B421D36D60100066F63 /* Bolts.xcodeproj */,
 				81AB8B451D36D60100066F63 /* FBSDKCoreKit.xcodeproj */,
 				81AB8B481D36D60100066F63 /* FBSDKLoginKit.xcodeproj */,
 				81AB8B4B1D36D60100066F63 /* FBSDKShareKit.xcodeproj */,
@@ -659,14 +544,12 @@
 			buildRules = (
 			);
 			dependencies = (
-				81AB8B9C1D36D63000066F63 /* PBXTargetDependency */,
 				81AB8B9E1D36D63000066F63 /* PBXTargetDependency */,
 				81AB8BA01D36D63000066F63 /* PBXTargetDependency */,
 				81AB8BA21D36D63000066F63 /* PBXTargetDependency */,
 				81F43A191D060C6E00569A1A /* PBXTargetDependency */,
 				81F43A1D1D060C6F00569A1A /* PBXTargetDependency */,
 				81F43A211D060C6F00569A1A /* PBXTargetDependency */,
-				8154633A1D3808EA0069489A /* PBXTargetDependency */,
 				815463441D38090E0069489A /* PBXTargetDependency */,
 				815463481D38090E0069489A /* PBXTargetDependency */,
 				8154634C1D38090E0069489A /* PBXTargetDependency */,
@@ -711,10 +594,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 81AB8B431D36D60100066F63 /* Products */;
-					ProjectRef = 81AB8B421D36D60100066F63 /* Bolts.xcodeproj */;
-				},
-				{
 					ProductGroup = 81F43A0B1D060C6700569A1A /* Products */;
 					ProjectRef = 81F43A0A1D060C6700569A1A /* FacebookSwift.xcodeproj */;
 				},
@@ -751,83 +630,6 @@
 			fileType = wrapper.framework;
 			path = FBSDKLoginKit.framework;
 			remoteRef = 52D2CBA12252AA8E007695E9 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B5A1D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B591D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B5C1D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B5B1D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B5E1D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B5D1D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B601D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B5F1D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B621D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B611D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B641D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B631D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B661D36D60100066F63 /* Bolts.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Bolts.framework;
-			remoteRef = 81AB8B651D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B681D36D60100066F63 /* BoltsTests-iOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "BoltsTests-iOS.xctest";
-			remoteRef = 81AB8B671D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B6A1D36D60100066F63 /* BoltsTests-OSX.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "BoltsTests-OSX.xctest";
-			remoteRef = 81AB8B691D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B6C1D36D60100066F63 /* BoltsTests-tvOS.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = "BoltsTests-tvOS.xctest";
-			remoteRef = 81AB8B6B1D36D60100066F63 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		81AB8B6E1D36D60100066F63 /* BoltsTestUI.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = BoltsTestUI.app;
-			remoteRef = 81AB8B6D1D36D60100066F63 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		81AB8B771D36D60100066F63 /* FBSDKCoreKit.framework */ = {
@@ -980,11 +782,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		8154633A1D3808EA0069489A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Bolts-iOS-Dynamic";
-			targetProxy = 815463391D3808EA0069489A /* PBXContainerItemProxy */;
-		};
 		815463441D38090E0069489A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "FBSDKCoreKit-Dynamic";
@@ -999,11 +796,6 @@
 			isa = PBXTargetDependency;
 			name = "FBSDKShareKit-Dynamic";
 			targetProxy = 8154634B1D38090E0069489A /* PBXContainerItemProxy */;
-		};
-		81AB8B9C1D36D63000066F63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Bolts-iOS-Dynamic";
-			targetProxy = 81AB8B9B1D36D63000066F63 /* PBXContainerItemProxy */;
 		};
 		81AB8B9E1D36D63000066F63 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

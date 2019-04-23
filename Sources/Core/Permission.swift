@@ -19,11 +19,11 @@
 import Foundation
 
 /**
- Enum that represents a Graph API read permission.
+ Represents a Graph API permission.
  Each permission has its own set of requirements and suggested use cases.
  See a full list at https://developers.facebook.com/docs/facebook-login/permissions
  */
-public enum ReadPermission: PermissionRepresentable {
+public enum Permission: Hashable, ExpressibleByStringLiteral {
   /// Provides access to a subset of items that are part of a person's public profile.
   case publicProfile
   /// Provides access the list of friends that also use your app.
@@ -109,45 +109,143 @@ public enum ReadPermission: PermissionRepresentable {
    */
   case custom(String)
 
-  // MARK: PermissionRepresentable
-  internal var permissionValue: Permission {
+  public init(stringLiteral value: String) {
+    guard let permission = StringPermission(rawValue: value)?.permission else {
+      self = .custom(value)
+      return
+    }
+
+    self = permission
+  }
+
+  public var name: String {
+    if let permission = stringPermission {
+      return permission.rawValue
+    }
+
+    if case let .custom(permission) = self {
+      return permission
+    }
+
+    return ""
+  }
+
+  private var stringPermission: StringPermission? {
     switch self {
-    case .publicProfile: return "public_profile"
-    case .userFriends: return "user_friends"
-    case .email: return "email"
-    case .userAboutMe: return "user_about_me"
-    case .userActionsBooks: return "user_actions.books"
-    case .userActionsFitness: return "user_action.fitness"
-    case .userActionsMusic: return "user_actions.music"
-    case .userActionsNews: return "user_actions.news"
-    case .userActionsVideo: return "user_actions.video"
-    case .userBirthday: return "user_birthday"
-    case .userEducationHistory: return "user_education_history"
-    case .userEvents: return "user_events"
-    case .userGamesActivity: return "user_games_activity"
-    case .userGender: return "user_gender"
-    case .userHometown: return "user_hometown"
-    case .userLikes: return "user_likes"
-    case .userLocation: return "user_location"
-    case .userManagedGroups: return "user_managed_groups"
-    case .userPhotos: return "user_photos"
-    case .userPosts: return "user_posts"
-    case .userRelationships: return "user_relationships"
-    case .userRelationshipDetails: return "user_relationship_details"
-    case .userReligionPolitics: return "user_religion_politics"
-    case .userTaggedPlaces: return "user_tagged_places"
-    case .userVideos: return "user_videos"
-    case .userWebsite: return "user_website"
-    case .userWorkHistory: return "user_work_history"
-    case .readCustomFriendlists: return "read_custom_friendlists"
-    case .readInsights: return "read_insights"
-    case .readAudienceNetworkInsights: return "read_audience_network_insights"
-    case .readPageMailboxes: return "read_page_mailboxes"
-    case .pagesShowList: return "pages_show_list"
-    case .pagesManageCta: return "pages_manage_cta"
-    case .pagesManageInstantArticles: return "pages_manage_instant_articles"
-    case .adsRead: return "ads_read"
-    case .custom(let string): return Permission(name: string)
+    case .publicProfile: return .publicProfile
+    case .userFriends: return .userFriends
+    case .email: return .email
+    case .userAboutMe: return .userAboutMe
+    case .userActionsBooks: return .userActionsBooks
+    case .userActionsFitness: return .userActionsFitness
+    case .userActionsMusic: return .userActionsMusic
+    case .userActionsNews: return .userActionsNews
+    case .userActionsVideo: return .userActionsVideo
+    case .userBirthday: return .userBirthday
+    case .userEducationHistory: return .userEducationHistory
+    case .userEvents: return .userEvents
+    case .userGamesActivity: return .userGamesActivity
+    case .userGender: return .userGender
+    case .userHometown: return .userHometown
+    case .userLikes: return .userLikes
+    case .userLocation: return .userLocation
+    case .userManagedGroups: return .userManagedGroups
+    case .userPhotos: return .userPhotos
+    case .userPosts: return .userPosts
+    case .userRelationships: return .userRelationships
+    case .userRelationshipDetails: return .userRelationshipDetails
+    case .userReligionPolitics: return .userReligionPolitics
+    case .userTaggedPlaces: return .userTaggedPlaces
+    case .userVideos: return .userVideos
+    case .userWebsite: return .userWebsite
+    case .userWorkHistory: return .userWorkHistory
+    case .readCustomFriendlists: return .readCustomFriendlists
+    case .readInsights: return .readInsights
+    case .readAudienceNetworkInsights: return .readAudienceNetworkInsights
+    case .readPageMailboxes: return .readPageMailboxes
+    case .pagesShowList: return .pagesShowList
+    case .pagesManageCta: return .pagesManageCta
+    case .pagesManageInstantArticles: return .pagesManageInstantArticles
+    case .adsRead: return .adsRead
+    case .custom: return nil
+    }
+  }
+}
+
+private enum StringPermission: String {
+  case publicProfile = "public_profile"
+  case userFriends = "user_friends"
+  case email = "email"
+  case userAboutMe = "user_about_me"
+  case userActionsBooks = "user_actions.books"
+  case userActionsFitness = "user_action.fitness"
+  case userActionsMusic = "user_actions.music"
+  case userActionsNews = "user_actions.news"
+  case userActionsVideo = "user_actions.video"
+  case userBirthday = "user_birthday"
+  case userEducationHistory = "user_education_history"
+  case userEvents = "user_events"
+  case userGamesActivity = "user_games_activity"
+  case userGender = "user_gender"
+  case userHometown = "user_hometown"
+  case userLikes = "user_likes"
+  case userLocation = "user_location"
+  case userManagedGroups = "user_managed_groups"
+  case userPhotos = "user_photos"
+  case userPosts = "user_posts"
+  case userRelationships = "user_relationships"
+  case userRelationshipDetails = "user_relationship_details"
+  case userReligionPolitics = "user_religion_politics"
+  case userTaggedPlaces = "user_tagged_places"
+  case userVideos = "user_videos"
+  case userWebsite = "user_website"
+  case userWorkHistory = "user_work_history"
+  case readCustomFriendlists = "read_custom_friendlists"
+  case readInsights = "read_insights"
+  case readAudienceNetworkInsights = "read_audience_network_insights"
+  case readPageMailboxes = "read_page_mailboxes"
+  case pagesShowList = "pages_show_list"
+  case pagesManageCta = "pages_manage_cta"
+  case pagesManageInstantArticles = "pages_manage_instant_articles"
+  case adsRead = "ads_read"
+
+  var permission: Permission {
+    switch self {
+    case .publicProfile: return .publicProfile
+    case .userFriends: return .userFriends
+    case .email: return .email
+    case .userAboutMe: return .userAboutMe
+    case .userActionsBooks: return .userActionsBooks
+    case .userActionsFitness: return .userActionsFitness
+    case .userActionsMusic: return .userActionsMusic
+    case .userActionsNews: return .userActionsNews
+    case .userActionsVideo: return .userActionsVideo
+    case .userBirthday: return .userBirthday
+    case .userEducationHistory: return .userEducationHistory
+    case .userEvents: return .userEvents
+    case .userGamesActivity: return .userGamesActivity
+    case .userGender: return .userGender
+    case .userHometown: return .userHometown
+    case .userLikes: return .userLikes
+    case .userLocation: return .userLocation
+    case .userManagedGroups: return .userManagedGroups
+    case .userPhotos: return .userPhotos
+    case .userPosts: return .userPosts
+    case .userRelationships: return .userRelationships
+    case .userRelationshipDetails: return .userRelationshipDetails
+    case .userReligionPolitics: return .userReligionPolitics
+    case .userTaggedPlaces: return .userTaggedPlaces
+    case .userVideos: return .userVideos
+    case .userWebsite: return .userWebsite
+    case .userWorkHistory: return .userWorkHistory
+    case .readCustomFriendlists: return .readCustomFriendlists
+    case .readInsights: return .readInsights
+    case .readAudienceNetworkInsights: return .readAudienceNetworkInsights
+    case .readPageMailboxes: return .readPageMailboxes
+    case .pagesShowList: return .pagesShowList
+    case .pagesManageCta: return .pagesManageCta
+    case .pagesManageInstantArticles: return .pagesManageInstantArticles
+    case .adsRead: return .adsRead
     }
   }
 }

@@ -15,9 +15,6 @@
       location = "container:"
       name = "ObjC">
       <FileRef
-         location = "group:Carthage/Checkouts/facebook-objc-sdk/Bolts-ObjC/Bolts.xcodeproj">
-      </FileRef>
-      <FileRef
          location = "group:Carthage/Checkouts/facebook-objc-sdk/FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
       </FileRef>
       <FileRef

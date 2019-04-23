@@ -16,29 +16,13 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import FBSDKCoreKit
-
-public extension UserProfile {
-  /**
-   Describes the result of a fetch of `UserProfile`.
-   */
-  enum FetchResult {
-    /// Profile was succesfully fetched.
-    case success(UserProfile)
-    /// Profile fetch failed.
-    case failed(Error)
-
-    internal init(sdkProfile: FBSDKProfile?, error: Error?) {
-      if let error = error {
-        self = .failed(error)
-      } else if let sdkProfile = sdkProfile {
-        let profile = UserProfile(sdkProfile: sdkProfile)
-        self = .success(profile)
-      } else {
-        //FIXME: (nlutsenko) Use a good error type here.
-        let error = NSError(domain: "", code: 42, userInfo: nil)
-        self = .failed(error)
-      }
+internal extension Dictionary {
+  func mapKeyValues<K, V>(_ transform: (Element) throws -> (K, V)) rethrows -> [K: V] {
+    var dictionary: [K: V] = [:]
+    try forEach {
+      let transformed = try transform($0)
+      dictionary[transformed.0] = transformed.1
     }
+    return dictionary
   }
 }

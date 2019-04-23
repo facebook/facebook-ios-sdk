@@ -16,10 +16,41 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-@testable import FacebookCore
+import FacebookCore
 import FBSDKLoginKit
 import Foundation
 import UIKit
+
+/// Login Result Block
+public typealias LoginResultBlock = (LoginResult) -> Void
+
+/**
+ Describes the result of a login attempt.
+ */
+public enum LoginResult {
+  /// User succesfully logged in. Contains granted, declined permissions and access token.
+  case success(granted: Set<Permission>, declined: Set<Permission>, token: AccessToken)
+  /// Login attempt was cancelled by the user.
+  case cancelled
+  /// Login attempt failed.
+  case failed(Error)
+
+  internal init(result: LoginManagerLoginResult?, error: Error?) {
+    guard let result = result, error == nil else {
+      self = .failed(error ?? LoginError(.unknown))
+      return
+    }
+
+    guard !result.isCancelled, let token = result.token else {
+      self = .cancelled
+      return
+    }
+
+    let granted: Set<Permission> = Set(result.grantedPermissions.map { Permission(stringLiteral: $0) })
+    let declined: Set<Permission> = Set(result.declinedPermissions.map { Permission(stringLiteral: $0) })
+    self = .success(granted: granted, declined: declined, token: token)
+  }
+}
 
 /**
  This class provides methods for logging the user in and out.
@@ -32,35 +63,17 @@ import UIKit
  If you are managing your own token instances outside of `AccessToken.current`, you will need to set
  `current` before calling `logIn()` to authorize further permissions on your tokens.
  */
-public final class LoginManager {
-  private let sdkManager: FBSDKLoginManager = FBSDKLoginManager()
-
-  /// The login behavior that is going to be used. Default: `.Native`.
-  public var loginBehavior: LoginBehavior {
-    didSet {
-      sdkManager.loginBehavior = loginBehavior.sdkBehavior
-    }
-  }
-
-  /// The default audience. Default: `.Friends`.
-  public var defaultAudience: LoginDefaultAudience {
-    didSet {
-      sdkManager.defaultAudience = defaultAudience.sdkAudience
-    }
-  }
-
+public extension LoginManager {
   /**
    Initialize an instance of `LoginManager.`
 
    - parameter loginBehavior: Optional login behavior to use. Default: `.Native`.
    - parameter defaultAudience: Optional default audience to use. Default: `.Friends`.
    */
-  public init(loginBehavior: LoginBehavior = .browser,
-              defaultAudience: LoginDefaultAudience = .friends) {
+  convenience init(loginBehavior: LoginBehavior = .browser, defaultAudience: DefaultAudience = .friends) {
+    self.init()
     self.loginBehavior = loginBehavior
     self.defaultAudience = defaultAudience
-    sdkManager.loginBehavior = loginBehavior.sdkBehavior
-    sdkManager.defaultAudience = defaultAudience.sdkAudience
   }
 
   /**
@@ -77,54 +90,18 @@ public final class LoginManager {
    - parameter viewController: Optional view controller to present from. Default: topmost view controller.
    - parameter completion: Optional callback.
    */
-  public func logIn(readPermissions: [ReadPermission] = [.publicProfile],
-                    viewController: UIViewController? = nil,
-                    completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = readPermissions.map { $0.permissionValue.name }
-    sdkManager.logIn(withReadPermissions: sdkPermissions,
-                     from: viewController,
-                     handler: LoginManager.sdkCompletionFor(completion))
+  func logIn(permissions: [Permission] = [.publicProfile],
+             viewController: UIViewController? = nil,
+             completion: LoginResultBlock? = nil) {
+    self.logIn(permissions: permissions.map { $0.name }, from: viewController, handler: sdkCompletion(completion))
   }
 
-  /**
-   Logs the user in or authorizes additional permissions.
-
-   Use this method when asking for publish permissions. You should only ask for permissions when they
-   are needed and explain the value to the user. You can inspect the `declinedPermissions` in the result to also
-   provide more information to the user if they decline permissions.
-
-   This method will present UI the user. You typically should check if `AccessToken.current` already
-   contains the permissions you need before asking to reduce unnecessary app switching.
-
-   - parameter permissions: Array of publish permissions. Default: `[.PublishActions]`
-   - parameter viewController: Optional view controller to present from. Default: topmost view controller.
-   - parameter completion: Optional callback.
-   */
-  public func logIn(publishPermissions: [PublishPermission] = [.publishActions],
-                    viewController: UIViewController? = nil,
-                    completion: ((LoginResult) -> Void)? = nil) {
-    let sdkPermissions = publishPermissions.map { $0.permissionValue.name }
-    sdkManager.logIn(withPublishPermissions: sdkPermissions,
-                     from: viewController,
-                     handler: LoginManager.sdkCompletionFor(completion))
-  }
-
-  /**
-   Logs the user out.
-   This calls `AccessToken.current = nil` and `Profile.current = nil`.
-   */
-  public func logOut() {
-    AccessToken.current = nil
-    UserProfile.current = nil
-
-  }
-
-  private class func sdkCompletionFor(_ completion: ((LoginResult) -> Void)?) -> FBSDKLoginManagerRequestTokenHandler? {
+  private func sdkCompletion(_ completion: LoginResultBlock?) -> LoginManagerLoginResultBlock? {
     guard let completion = completion else {
       return nil
     }
-    return { (sdkResult: FBSDKLoginManagerLoginResult?, error: Error?) -> Void in
-      let result = LoginResult(sdkResult: sdkResult, error: error)
+    return { (result: LoginManagerLoginResult?, error: Error?) in
+      let result = LoginResult(result: result, error: error)
       completion(result)
     }
   }

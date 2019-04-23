@@ -16,12 +16,39 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import FBSDKCoreKit
 import Foundation
 
-// Taken from FBSDKShareDefines.h
+/**
+ AccessToken Extension
+ */
+public extension AccessToken {
+  /**
+   Returns the known granted permissions.
+   */
+  var permissions: Set<Permission> {
+    return Set(__permissions.map { Permission(stringLiteral: $0) })
+  }
 
-enum ShareResultKeys: String {
-  case completionGesture
-  case didComplete
-  case postId
+  /**
+   Returns the known declined permissions.
+   */
+  var declinedPermissions: Set<Permission> {
+    return Set(__declinedPermissions.map { Permission(stringLiteral: $0) })
+  }
+
+  /**
+   Returns the known expired permissions.
+   */
+  var expiredPermissions: Set<Permission> {
+    return Set(__expiredPermissions.map { Permission(stringLiteral: $0) })
+  }
+
+  /**
+   Convenience getter to determine if a permission has been granted
+   - parameter permission: The permission to check
+   */
+  func hasGranted(_ permission: Permission) -> Bool {
+    return hasGranted(permission: permission.name)
+  }
 }
