@@ -127,13 +127,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (NSDictionary *)dictionaryFromFBURL:(NSURL *)url;
 
 /**
-  Adds an object to an array if it is not nil.
- @param array The array to add the object to.
- @param object The object to add to the array.
- */
-+ (void)array:(NSMutableArray *)array addObject:(id)object;
-
-/**
   Converts simple value types to the string equivalent for serializing to a request query or body.
  @param value The value to be converted.
  @return The value that may have been converted if able (otherwise the input param).

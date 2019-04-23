@@ -99,7 +99,7 @@ NSArray<NSDictionary<NSString *, id> *> *SerializableButtonsFromButton(id<FBSDKS
   // Return NSArray even though there is just one button to match proper json structure
   NSMutableArray<NSDictionary<NSString *, id> *> *serializableButtons = [NSMutableArray array];
   if ([button isKindOfClass:[FBSDKShareMessengerURLActionButton class]]) {
-    [FBSDKInternalUtility array:serializableButtons addObject:SerializableButtonFromURLButton(button, NO)];
+    [FBSDKBasicUtility array:serializableButtons addObject:SerializableButtonFromURLButton(button, NO)];
   }
 
   return serializableButtons;

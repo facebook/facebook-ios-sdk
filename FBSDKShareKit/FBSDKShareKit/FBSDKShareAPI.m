@@ -373,8 +373,8 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   __block NSUInteger completedCount = 0;
   FBSDKGraphRequestBlock completionHandler = ^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     result = [FBSDKTypeUtility dictionaryValue:result];
-    [FBSDKInternalUtility array:results addObject:result];
-    [FBSDKInternalUtility array:errors addObject:error];
+    [FBSDKBasicUtility array:results addObject:result];
+    [FBSDKBasicUtility array:errors addObject:error];
     if (++completedCount != requestCount) {
       return;
     }

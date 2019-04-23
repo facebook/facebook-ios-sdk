@@ -160,11 +160,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return result;
 }
 
-+ (void)array:(NSMutableArray *)array addObject:(id)object
-{
-  [FBSDKBasicUtility array:array addObject:object];
-}
-
 + (NSBundle *)bundleForStrings
 {
   static NSBundle *bundle;

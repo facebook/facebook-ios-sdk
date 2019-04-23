@@ -221,7 +221,7 @@
   } else if ([value isKindOfClass:[NSArray class]]) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (id subValue in (NSArray *)value) {
-      [FBSDKInternalUtility array:array addObject:[self convertOpenGraphValue:subValue]];
+      [FBSDKBasicUtility array:array addObject:[self convertOpenGraphValue:subValue]];
     }
     return [array copy];
   } else {
@@ -422,7 +422,7 @@
   } else if ([object isKindOfClass:[NSArray class]]) {
     NSMutableArray *array = [[NSMutableArray alloc] init];
     for (id item in (NSArray *)object) {
-      [FBSDKInternalUtility array:array addObject:[self _convertObject:item]];
+      [FBSDKBasicUtility array:array addObject:[self _convertObject:item]];
     }
     object = array;
   }
