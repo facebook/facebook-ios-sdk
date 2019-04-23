@@ -38,6 +38,6 @@ typedef NS_ENUM(NSUInteger, FBSDKLikeObjectType)
   Converts an FBLikeControlObjectType to an NSString.
  */
 FOUNDATION_EXPORT NSString *NSStringFromFBSDKLikeObjectType(FBSDKLikeObjectType objectType)
-NS_SWIFT_UNAVAILABLE("");
+NS_REFINED_FOR_SWIFT;
 
 NS_ASSUME_NONNULL_END

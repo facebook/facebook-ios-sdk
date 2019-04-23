@@ -63,6 +63,6 @@ typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode)
   Converts an FBSDKShareDialogMode to an NSString.
  */
 FOUNDATION_EXPORT NSString *NSStringFromFBSDKShareDialogMode(FBSDKShareDialogMode dialogMode)
-NS_SWIFT_UNAVAILABLE("");
+NS_REFINED_FOR_SWIFT;
 
 NS_ASSUME_NONNULL_END

@@ -38,7 +38,7 @@ typedef NS_ENUM(NSUInteger, FBSDKAppGroupPrivacy)
   Converts an FBSDKAppGroupPrivacy to an NSString.
  */
 FOUNDATION_EXPORT NSString *NSStringFromFBSDKAppGroupPrivacy(FBSDKAppGroupPrivacy privacy)
-NS_SWIFT_UNAVAILABLE("");
+NS_REFINED_FOR_SWIFT;
 
 /**
   A model for creating an app group.
