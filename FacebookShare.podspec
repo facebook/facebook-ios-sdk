@@ -21,7 +21,6 @@ Pod::Spec.new do |s|
   s.module_name = "FacebookShare"
 
   s.ios.dependency "FacebookCore", "~> 0.5"
-  s.ios.dependency "Bolts", "~> 1.9"
   s.ios.dependency "FBSDKCoreKit", "~> 4.43"
   s.ios.dependency "FBSDKShareKit", "~> 4.43"
 end

@@ -85,7 +85,6 @@ At a minimum, you'll need to drag & drop the following frameworks from `Carthage
 
 - `FacebookCore.framework`
 - `FBSDKCoreKit.framework`
-- `Bolts.framework`
 
 To use Login with Facebook:
 
@@ -112,7 +111,6 @@ On your application targets' `Build Phases` tab:
 ```bash
 $(SRCROOT)/Carthage/Build/iOS/FacebookCore.framework
 $(SRCROOT)/Carthage/Build/iOS/FBSDKCoreKit.framework
-$(SRCROOT)/Carthage/Build/iOS/Bolts.framework
 ```
 
 ### Using Facebook SDK as a sub-project
@@ -129,8 +127,7 @@ your own.
 - Add the `FacebookCore.framework`, `FacebookLogin.framework`, and `FacebookShare.framework` build products from the
   sub-project to your applications `Link Frameworks and Libraries` and `Embedded Binaries` sections.
 
-Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, `FBSDKShareKit.framework` and
-`Bolts.framework` too!
+Don't forget to also embed/link `FBSDKCoreKit.framework`, `FBSDKLoginKit.framework`, and `FBSDKShareKit.framework`.
 
 ## Modules
 
@@ -142,7 +139,7 @@ They also currently depend upon the Facebook SDK for iOS, although this may chan
 
 [![FacebookCore on CocoaPods](https://img.shields.io/cocoapods/v/FacebookCore.svg)](https://cocoapods.org/pods/FacebookCore)
 
-Depends on `FBSDKCoreKit.framework` and `Bolts.framework`.
+Depends on `FBSDKCoreKit.framework`.
 
 The following types are included, with enhancements for Swift:
 
