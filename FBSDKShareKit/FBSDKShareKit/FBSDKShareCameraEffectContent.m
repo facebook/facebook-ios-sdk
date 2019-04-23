@@ -73,9 +73,9 @@ static NSString *const kFBSDKShareCameraEffectContentUUIDKey = @"uuid";
 
   NSString *effectArgumentsJSON;
   if (_effectArguments) {
-    effectArgumentsJSON = [FBSDKInternalUtility JSONStringForObject:[_effectArguments allArguments]
-                                                              error:NULL
-                                               invalidObjectHandler:NULL];
+    effectArgumentsJSON = [FBSDKBasicUtility JSONStringForObject:[_effectArguments allArguments]
+                                                           error:NULL
+                                            invalidObjectHandler:NULL];
   }
   [FBSDKInternalUtility dictionary:updatedParameters
                          setObject:effectArgumentsJSON

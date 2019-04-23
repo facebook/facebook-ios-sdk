@@ -203,7 +203,7 @@ setJSONStringForObject:(id)object
   if (!object || !key) {
     return YES;
   }
-  NSString *JSONString = [self JSONStringForObject:object error:errorRef invalidObjectHandler:NULL];
+  NSString *JSONString = [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:NULL];
   if (!JSONString) {
     return NO;
   }
@@ -353,13 +353,6 @@ setJSONStringForObject:(id)object
   } else {
     return 0;
   }
-}
-
-+ (NSString *)JSONStringForObject:(id)object
-                            error:(NSError *__autoreleasing *)errorRef
-             invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
-{
-  return [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:invalidObjectHandler];
 }
 
 + (BOOL)object:(id)object isEqualToObject:(id)other;

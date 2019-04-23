@@ -374,7 +374,7 @@ NSURLSessionDataDelegate
           batchToken:[batchToken isEqualToString:individualToken] ? nil : individualToken];
   }
 
-  NSString *jsonBatch = [FBSDKInternalUtility JSONStringForObject:batch error:NULL invalidObjectHandler:NULL];
+  NSString *jsonBatch = [FBSDKBasicUtility JSONStringForObject:batch error:NULL invalidObjectHandler:NULL];
 
   [body appendWithKey:kBatchKey formValue:jsonBatch logger:logger];
   if (batchToken) {
@@ -732,7 +732,7 @@ NSURLSessionDataDelegate
       // consistent with the rest of the output of this function (note, if perf turns out
       // to be a problem -- unlikely -- we can return the following dictionary outright)
       NSDictionary *original = @{ FBSDKNonJSONResponseProperty : utf8 };
-      NSString *jsonrep = [FBSDKInternalUtility JSONStringForObject:original error:NULL invalidObjectHandler:NULL];
+      NSString *jsonrep = [FBSDKBasicUtility JSONStringForObject:original error:NULL invalidObjectHandler:NULL];
       NSError *reparseError = nil;
       parsed = [FBSDKInternalUtility objectForJSONString:jsonrep error:&reparseError];
       if (!reparseError) {

@@ -574,9 +574,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   }
   void(^containerHandler)(NSDictionary *) = ^(NSDictionary *stagedContainer) {
     NSError *JSONError;
-    NSString *objectString = [FBSDKInternalUtility JSONStringForObject:stagedContainer
-                                                                 error:&JSONError
-                                                  invalidObjectHandler:NULL];
+    NSString *objectString = [FBSDKBasicUtility JSONStringForObject:stagedContainer
+                                                              error:&JSONError
+                                               invalidObjectHandler:NULL];
     if (!objectString) {
       [self->_delegate sharer:self didFailWithError:JSONError];
       return;

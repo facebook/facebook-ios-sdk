@@ -91,7 +91,7 @@
   });
 
   if (urlSchemes.count > 0) {
-    parameters[@"url_schemes"] = [FBSDKInternalUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL];
+    parameters[@"url_schemes"] = [FBSDKBasicUtility JSONStringForObject:urlSchemes error:NULL invalidObjectHandler:NULL];
   }
 
   return parameters;
@@ -289,7 +289,7 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
 {
   [[self class] ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
   NSDictionary *data = @{ FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY : anonymousID };
-  NSString *content = [FBSDKInternalUtility JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
+  NSString *content = [FBSDKBasicUtility JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
 
   [content writeToFile:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
             atomically:YES

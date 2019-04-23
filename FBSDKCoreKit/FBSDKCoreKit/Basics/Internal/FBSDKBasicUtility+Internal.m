@@ -16,12 +16,12 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKBasicUtility.h"
+#import "FBSDKBasicUtility+Internal.h"
 
 #import "FBSDKError.h"
 #import "FBSDKTypeUtility.h"
 
-@implementation FBSDKBasicUtility
+@implementation FBSDKBasicUtility (Internal)
 
 + (NSString *)JSONStringForObject:(id)object
                             error:(NSError *__autoreleasing *)errorRef

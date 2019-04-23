@@ -124,7 +124,7 @@
     FBSDKShareOpenGraphContent *const openGraphContent = (FBSDKShareOpenGraphContent *)content;
     FBSDKShareOpenGraphAction *const action = openGraphContent.action;
     NSDictionary<NSString *, id> *const properties = [self convertOpenGraphValueContainer:action requireNamespace:NO];
-    NSString *const propertiesJSON = [FBSDKInternalUtility JSONStringForObject:properties
+    NSString *const propertiesJSON = [FBSDKBasicUtility JSONStringForObject:properties
                                                                          error:errorRef
                                                           invalidObjectHandler:NULL];
     parameters = [NSMutableDictionary new];
@@ -183,12 +183,12 @@
                                       bridgeOptions:FBSDKShareBridgeOptionsWebHashtag
                               shouldFailOnDataError:NO] mutableCopy];
     [parameters removeObjectForKey:@"photos"];
-    NSString *const stagedURIJSONString = [FBSDKInternalUtility JSONStringForObject:stagedURIs
-                                                                              error:nil
-                                                               invalidObjectHandler:NULL];
+    NSString *const stagedURIJSONString = [FBSDKBasicUtility JSONStringForObject:stagedURIs
+                                                                           error:nil
+                                                            invalidObjectHandler:NULL];
     [FBSDKInternalUtility dictionary:parameters
-                           setObject:stagedURIJSONString
-                              forKey:@"media"];
+                        setObject:stagedURIJSONString
+                           forKey:@"media"];
     [FBSDKInternalUtility dictionary:parameters setObject:[FBSDKShareUtility buildWebShareTags:content.peopleIDs] forKey:@"tags"];
     if (completion != NULL) {
       completion(YES, methodName, [parameters copy]);

@@ -155,7 +155,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
   NSMutableDictionary *params = [loginParams mutableCopy];
 
   NSTimeInterval timeValue = (NSTimeInterval)FBSDKMonotonicTimeGetCurrentSeconds();
-  NSString *e2eTimestampString = [FBSDKInternalUtility JSONStringForObject:@{ @"init" : @(timeValue) }
+  NSString *e2eTimestampString = [FBSDKBasicUtility JSONStringForObject:@{ @"init" : @(timeValue) }
                                                                      error:NULL
                                                       invalidObjectHandler:NULL];
   params[@"e2e"] = e2eTimestampString;
@@ -215,7 +215,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
     clientState = mutableState;
   }
 
-  return [FBSDKInternalUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
+  return [FBSDKBasicUtility JSONStringForObject:clientState error:NULL invalidObjectHandler:NULL];
 }
 
 - (NSMutableDictionary *)_parametersForNewEvent
@@ -238,7 +238,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 - (void)logEvent:(NSString *)eventName params:(NSMutableDictionary *)params
 {
   if (_identifier) {
-    NSString *extrasJSONString = [FBSDKInternalUtility JSONStringForObject:_extras
+    NSString *extrasJSONString = [FBSDKBasicUtility JSONStringForObject:_extras
                                                                      error:NULL
                                                       invalidObjectHandler:NULL];
     if (extrasJSONString) {

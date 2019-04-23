@@ -91,8 +91,8 @@
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
       // bridge the data
       [FBSDKInternalUtility dictionary:videoParameters
-                             setObject:_video.data
-                                forKey:@"data"];
+                          setObject:_video.data
+                             forKey:@"data"];
     }
   } else if (_video.videoURL) {
     if ([_video.videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {

@@ -229,7 +229,7 @@ static const u_int FB_GIGABYTE = 1024 * 1024 * 1024;  // bytes
                    _timeZoneName ?: @""
                    ];
 
-  return [FBSDKInternalUtility JSONStringForObject:arr error:NULL invalidObjectHandler:NULL];
+  return [FBSDKBasicUtility JSONStringForObject:arr error:NULL invalidObjectHandler:NULL];
 }
 
 #pragma mark - Helper Methods

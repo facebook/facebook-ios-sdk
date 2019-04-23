@@ -343,7 +343,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
   NSDictionary *state = @{@"challenge": [FBSDKUtility URLEncode:expectedChallenge]};
-  loginParams[@"state"] = [FBSDKInternalUtility JSONStringForObject:state error:NULL invalidObjectHandler:nil];
+  loginParams[@"state"] = [FBSDKBasicUtility JSONStringForObject:state error:NULL invalidObjectHandler:nil];
 
   [self storeExpectedChallenge:expectedChallenge];
 

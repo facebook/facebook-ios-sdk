@@ -1204,7 +1204,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     }
 
     NSError *error = nil;
-    NSString *const jsonString = [FBSDKInternalUtility JSONStringForObject:parameters error:&error invalidObjectHandler:NULL];
+    NSString *const jsonString = [FBSDKBasicUtility JSONStringForObject:parameters error:&error invalidObjectHandler:NULL];
     if (error != nil) {
       return nil;
     }

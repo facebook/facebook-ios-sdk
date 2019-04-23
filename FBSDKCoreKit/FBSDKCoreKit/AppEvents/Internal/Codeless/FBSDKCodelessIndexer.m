@@ -218,13 +218,13 @@ static NSString *_lastTreeHash;
     localeString = [NSString stringWithFormat:@"%@_%@", languageCode, countryCode];
   }
 
-  NSString *extinfo = [FBSDKInternalUtility JSONStringForObject:@[machine,
-                                                                  advertiserID,
-                                                                  debugStatus,
-                                                                  isSimulator,
-                                                                  localeString]
-                                                          error:NULL
-                                           invalidObjectHandler:NULL];
+  NSString *extinfo = [FBSDKBasicUtility JSONStringForObject:@[machine,
+                                                               advertiserID,
+                                                               debugStatus,
+                                                               isSimulator,
+                                                               localeString]
+                                                       error:NULL
+                                        invalidObjectHandler:NULL];
 
   return extinfo ?: @"";
 }

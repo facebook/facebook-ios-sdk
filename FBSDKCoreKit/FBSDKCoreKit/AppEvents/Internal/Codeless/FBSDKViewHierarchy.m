@@ -361,9 +361,9 @@ typedef NS_ENUM(NSUInteger, FBCodelessClassBitmask) {
     }
 
     if (titles.count > 0) {
-      text = [FBSDKInternalUtility JSONStringForObject:titles
-                                                 error:NULL
-                                  invalidObjectHandler:NULL];
+      text = [FBSDKBasicUtility JSONStringForObject:titles
+                                              error:NULL
+                               invalidObjectHandler:NULL];
     }
   } else if ([obj isKindOfClass:[UIDatePicker class]]) {
     UIDatePicker *picker = (UIDatePicker *)obj;

@@ -43,9 +43,9 @@
 {
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:parameters];
   queryParameters[@"display"] = @"touch";
-  NSString *bridgeArgs = [FBSDKInternalUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY: actionID }
-                                                             error:NULL
-                                              invalidObjectHandler:NULL];
+  NSString *bridgeArgs = [FBSDKBasicUtility JSONStringForObject:@{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_ACTION_ID_KEY: actionID }
+                                                          error:NULL
+                                           invalidObjectHandler:NULL];
   NSDictionary *redirectQueryParameters = @{ FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY: bridgeArgs };
   NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"bridge"
                                                        path:methodName

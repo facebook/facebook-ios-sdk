@@ -154,7 +154,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
     FBSDKTimeSpentPersistKeySessionID : _sessionID,
     };
 
-  NSString *content = [FBSDKInternalUtility JSONStringForObject:timeSpentData error:NULL invalidObjectHandler:NULL];
+  NSString *content = [FBSDKBasicUtility JSONStringForObject:timeSpentData error:NULL invalidObjectHandler:NULL];
 
   [content writeToFile:[FBSDKAppEventsUtility persistenceFilePath:FBSDKTimeSpentFilename]
             atomically:YES

@@ -19,6 +19,8 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+#import "../Basics/Internal/FBSDKBasicUtility+Internal.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 #define FBSDK_CANOPENURL_FACEBOOK @"fbauth2"
@@ -228,17 +230,6 @@ setJSONStringForObject:(id)object
  @return YES if the runtime UIKit version is greater than or equal to the specified version, otherwise NO.
  */
 + (BOOL)isUIKitRunTimeVersionAtLeast:(FBSDKUIKitVersion)version;
-
-/**
-  Converts an object into a JSON string.
- @param object The object to convert to JSON.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @param invalidObjectHandler Handles objects that are invalid, returning a replacement value or nil to ignore.
- @return A JSON string or nil if the object cannot be converted to JSON.
- */
-+ (NSString *)JSONStringForObject:(id)object
-                            error:(NSError *__autoreleasing *)errorRef
-             invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
 
 /**
   Checks equality between 2 objects.

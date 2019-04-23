@@ -276,7 +276,7 @@ static const struct
 - (NSString *)_JSONStringForObject:(id)object enablePasteboard:(BOOL)enablePasteboard error:(NSError **)errorRef
 {
   __block BOOL didAddToPasteboard = NO;
-  return [FBSDKInternalUtility JSONStringForObject:object error:errorRef invalidObjectHandler:^id(id invalidObject, BOOL *stop) {
+  return [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:^id(id invalidObject, BOOL *stop) {
     NSString *dataTag = FBSDKBridgeAPIProtocolNativeV1DataTypeTags.data;
     if ([invalidObject isKindOfClass:[UIImage class]]) {
       UIImage *image = (UIImage *)invalidObject;
@@ -291,8 +291,8 @@ static const struct
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;
         [FBSDKInternalUtility dictionary:dictionary
-                               setObject:[FBSDKBase64 encodeData:data]
-                                  forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
+                            setObject:[FBSDKBase64 encodeData:data]
+                               forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
       } else {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isPasteboard] = @YES;
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;

@@ -100,9 +100,9 @@ typedef _Nullable id (^StringURLBlock)(NSString *urlString);
     return matchingKey(request.URL.absoluteString) != nil;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
     id result = requestsAndResponses[matchingKey(request.URL.absoluteString)];
-    NSData *data = [[FBSDKInternalUtility JSONStringForObject:result
-                                                        error:NULL
-                                         invalidObjectHandler:NULL] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [[FBSDKBasicUtility JSONStringForObject:result
+                                                     error:NULL
+                                      invalidObjectHandler:NULL] dataUsingEncoding:NSUTF8StringEncoding];
 
     return [OHHTTPStubsResponse responseWithData:data
                                       statusCode:statusCode

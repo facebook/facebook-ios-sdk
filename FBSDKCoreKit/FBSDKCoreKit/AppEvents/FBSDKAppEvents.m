@@ -797,7 +797,7 @@ static NSString *g_overrideAppID = nil;
 
   NSError *error;
   __block NSError *invalidObjectError;
-  NSString *dataJSONString = [FBSDKInternalUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
+  NSString *dataJSONString = [FBSDKBasicUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
     *stop = YES;
     invalidObjectError = [NSError fbUnknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
     return nil;
