@@ -78,48 +78,48 @@
   if (_video.videoAsset) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoAsset) {
       // bridge the PHAsset.localIdentifier
-      [FBSDKInternalUtility dictionary:videoParameters
-                             setObject:_video.videoAsset.localIdentifier
-                                forKey:@"assetIdentifier"];
+      [FBSDKBasicUtility dictionary:videoParameters
+                          setObject:_video.videoAsset.localIdentifier
+                             forKey:@"assetIdentifier"];
     } else {
       // bridge the legacy "assets-library" URL from AVAsset
-      [FBSDKInternalUtility dictionary:videoParameters
-                             setObject:_video.videoAsset.videoURL
-                                forKey:@"assetURL"];
+      [FBSDKBasicUtility dictionary:videoParameters
+                          setObject:_video.videoAsset.videoURL
+                             forKey:@"assetURL"];
     }
   } else if (_video.data) {
     if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
       // bridge the data
-      [FBSDKInternalUtility dictionary:videoParameters
+      [FBSDKBasicUtility dictionary:videoParameters
                           setObject:_video.data
                              forKey:@"data"];
     }
   } else if (_video.videoURL) {
     if ([_video.videoURL.scheme.lowercaseString isEqualToString:@"assets-library"]) {
       // bridge the legacy "assets-library" URL
-      [FBSDKInternalUtility dictionary:videoParameters
-                             setObject:_video.videoURL
-                                forKey:@"assetURL"];
+      [FBSDKBasicUtility dictionary:videoParameters
+                          setObject:_video.videoURL
+                             forKey:@"assetURL"];
     } else if (_video.videoURL.isFileURL) {
       if (bridgeOptions & FBSDKShareBridgeOptionsVideoData) {
         // load the contents of the file and bridge the data
         NSData *data = [NSData dataWithContentsOfURL:_video.videoURL options:NSDataReadingMappedIfSafe error:NULL];
-        [FBSDKInternalUtility dictionary:videoParameters
-                               setObject:data
-                                  forKey:@"data"];
+        [FBSDKBasicUtility dictionary:videoParameters
+                            setObject:data
+                               forKey:@"data"];
       }
     }
   }
 
   if (_video.previewPhoto) {
-    [FBSDKInternalUtility dictionary:videoParameters
-                           setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
-                              forKey:@"previewPhoto"];
+    [FBSDKBasicUtility dictionary:videoParameters
+                        setObject:[FBSDKShareUtility convertPhoto:_video.previewPhoto]
+                           forKey:@"previewPhoto"];
   }
 
-  [FBSDKInternalUtility dictionary:updatedParameters
-                         setObject:videoParameters
-                            forKey:@"video"];
+  [FBSDKBasicUtility dictionary:updatedParameters
+                      setObject:videoParameters
+                         forKey:@"video"];
 
   return updatedParameters;
 }

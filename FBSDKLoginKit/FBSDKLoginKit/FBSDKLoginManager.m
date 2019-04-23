@@ -337,9 +337,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   loginParams[@"auth_type"] = self.authType;
   loginParams[@"logging_token"] = serverConfiguration.loggingToken;
 
-  [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
-  [FBSDKInternalUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
-  [FBSDKInternalUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
+  [FBSDKBasicUtility dictionary:loginParams setObject:[FBSDKSettings appURLSchemeSuffix] forKey:@"local_client_id"];
+  [FBSDKBasicUtility dictionary:loginParams setObject:[FBSDKLoginUtility stringForAudience:self.defaultAudience] forKey:@"default_audience"];
+  [FBSDKBasicUtility dictionary:loginParams setObject:[permissions.allObjects componentsJoinedByString:@","] forKey:@"scope"];
 
   NSString *expectedChallenge = [FBSDKLoginManager stringForChallenge];
   NSDictionary *state = @{@"challenge": [FBSDKUtility URLEncode:expectedChallenge]};
@@ -430,7 +430,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
       [self invokeHandler:loginResult error:nil];
     } else {
       NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-      [FBSDKInternalUtility dictionary:userInfo setObject:error forKey:NSUnderlyingErrorKey];
+      [FBSDKBasicUtility dictionary:userInfo setObject:error forKey:NSUnderlyingErrorKey];
       NSError *resultError = [NSError errorWithDomain:FBSDKLoginErrorDomain
                                                  code:FBSDKLoginErrorUserMismatch
                                              userInfo:userInfo];
@@ -468,9 +468,9 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   NSURL *redirectURL = [FBSDKInternalUtility appURLWithHost:@"authorize" path:@"" queryParameters:@{} error:&error];
   if (!error) {
     NSMutableDictionary *browserParams = [loginParams mutableCopy];
-    [FBSDKInternalUtility dictionary:browserParams
-                           setObject:redirectURL
-                              forKey:@"redirect_uri"];
+    [FBSDKBasicUtility dictionary:browserParams
+                        setObject:redirectURL
+                           forKey:@"redirect_uri"];
     authURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"m."
                                                          path:FBSDKOauthPath
                                               queryParameters:browserParams

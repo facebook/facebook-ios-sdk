@@ -73,10 +73,10 @@
   }
 
   NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-  [FBSDKInternalUtility dictionary:parameters setObject:self.objectID forKey:@"object_id"];
-  [FBSDKInternalUtility dictionary:parameters
-                         setObject:NSStringFromFBSDKLikeObjectType(self.objectType)
-                            forKey:@"object_type"];
+  [FBSDKBasicUtility dictionary:parameters setObject:self.objectID forKey:@"object_id"];
+  [FBSDKBasicUtility dictionary:parameters
+                      setObject:NSStringFromFBSDKLikeObjectType(self.objectType)
+                         forKey:@"object_type"];
   FBSDKBridgeAPIRequest * webRequest = [FBSDKBridgeAPIRequest bridgeAPIRequestWithProtocolType:FBSDKBridgeAPIProtocolTypeWeb
                                                                                         scheme:FBSDK_SHARE_JS_DIALOG_SCHEME
                                                                                     methodName:FBSDK_LIKE_METHOD_NAME

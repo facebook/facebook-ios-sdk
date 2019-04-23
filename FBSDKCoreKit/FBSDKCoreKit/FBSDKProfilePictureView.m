@@ -316,7 +316,7 @@
   NSMutableDictionary<NSString *, id> *parameters = [[NSMutableDictionary alloc] init];
   parameters[@"width"] = @(size.width);
   parameters[@"height"] = @(size.height);
-  [FBSDKInternalUtility dictionary:parameters setObject:accessToken.tokenString forKey:@"access_token"];
+  [FBSDKBasicUtility dictionary:parameters setObject:accessToken.tokenString forKey:@"access_token"];
   NSURL *imageURL = [FBSDKInternalUtility facebookURLWithHostPrefix:@"graph" path:path queryParameters:parameters error:NULL];
 
   __weak FBSDKProfilePictureView *weakSelf = self;

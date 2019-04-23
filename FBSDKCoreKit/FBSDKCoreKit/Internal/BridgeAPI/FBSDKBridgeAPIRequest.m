@@ -116,10 +116,10 @@ NSString *const FBSDKBridgeAPIVersionKey = @"version";
   NSDictionary<NSString *, NSString *> *requestQueryParameters = [FBSDKInternalUtility dictionaryWithQueryString:requestURL.query];
   NSMutableDictionary *queryParameters = [[NSMutableDictionary alloc] initWithDictionary:requestQueryParameters];
   [FBSDKBridgeAPICrypto addCipherKeyToQueryParameters:queryParameters];
-  [FBSDKInternalUtility dictionary:queryParameters setObject:[FBSDKSettings appID] forKey:FBSDKBridgeAPIAppIDKey];
-  [FBSDKInternalUtility dictionary:queryParameters
-                         setObject:[FBSDKSettings appURLSchemeSuffix]
-                            forKey:FBSDKBridgeAPISchemeSuffixKey];
+  [FBSDKBasicUtility dictionary:queryParameters setObject:[FBSDKSettings appID] forKey:FBSDKBridgeAPIAppIDKey];
+  [FBSDKBasicUtility dictionary:queryParameters
+                      setObject:[FBSDKSettings appURLSchemeSuffix]
+                         forKey:FBSDKBridgeAPISchemeSuffixKey];
   requestURL = [FBSDKInternalUtility URLWithScheme:requestURL.scheme
                                               host:requestURL.host
                                               path:requestURL.path

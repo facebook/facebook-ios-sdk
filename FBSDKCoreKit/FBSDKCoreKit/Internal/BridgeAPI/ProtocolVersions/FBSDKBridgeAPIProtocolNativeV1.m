@@ -136,8 +136,8 @@ static const struct
   NSString *const path = [@"/" stringByAppendingString:methodName];
 
   NSMutableDictionary<NSString *, id> *const queryParameters = [[NSMutableDictionary alloc] init];
-  [FBSDKInternalUtility dictionary:queryParameters setObject:methodVersion
-                            forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
+  [FBSDKBasicUtility dictionary:queryParameters setObject:methodVersion
+                         forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodVersion];
 
   if (parameters.count) {
     NSString *const parametersString = [self _JSONStringForObject:parameters enablePasteboard:YES error:errorRef];
@@ -149,9 +149,9 @@ static const struct
                                                                                              options:NSCaseInsensitiveSearch
                                                                                                range:NSMakeRange(0,
                                                                                                                  parametersString.length)];
-    [FBSDKInternalUtility dictionary:queryParameters
-                           setObject:escapedParametersString
-                              forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodArgs];
+    [FBSDKBasicUtility dictionary:queryParameters
+                        setObject:escapedParametersString
+                           forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.methodArgs];
   }
 
   NSDictionary<NSString *, id> *const bridgeParameters = [self _bridgeParametersWithActionID:actionID error:errorRef];
@@ -162,9 +162,9 @@ static const struct
   if (!bridgeParametersString) {
     return nil;
   }
-  [FBSDKInternalUtility dictionary:queryParameters
-                         setObject:bridgeParametersString
-                            forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.bridgeArgs];
+  [FBSDKBasicUtility dictionary:queryParameters
+                      setObject:bridgeParametersString
+                         forKey:FBSDKBridgeAPIProtocolNativeV1OutputKeys.bridgeArgs];
 
 
   return [FBSDKInternalUtility URLWithScheme:self.appScheme
@@ -249,14 +249,14 @@ static const struct
 - (NSDictionary *)_bridgeParametersWithActionID:(NSString *)actionID error:(NSError *__autoreleasing *)errorRef
 {
   NSMutableDictionary *bridgeParameters = [[NSMutableDictionary alloc] init];
-  [FBSDKInternalUtility dictionary:bridgeParameters setObject:actionID
-                            forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.actionID];
-  [FBSDKInternalUtility dictionary:bridgeParameters setObject:[self _appIcon]
-                            forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appIcon];
-  [FBSDKInternalUtility dictionary:bridgeParameters setObject:[FBSDKSettings displayName]
-                            forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appName];
-  [FBSDKInternalUtility dictionary:bridgeParameters setObject:[FBSDKSettings sdkVersion]
-                            forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.sdkVersion];
+  [FBSDKBasicUtility dictionary:bridgeParameters setObject:actionID
+                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.actionID];
+  [FBSDKBasicUtility dictionary:bridgeParameters setObject:[self _appIcon]
+                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appIcon];
+  [FBSDKBasicUtility dictionary:bridgeParameters setObject:[FBSDKSettings displayName]
+                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.appName];
+  [FBSDKBasicUtility dictionary:bridgeParameters setObject:[FBSDKSettings sdkVersion]
+                         forKey:FBSDKBridgeAPIProtocolNativeV1BridgeParameterOutputKeys.sdkVersion];
   return bridgeParameters;
 }
 
@@ -290,7 +290,7 @@ static const struct
       if (didAddToPasteboard || !enablePasteboard || !self->_pasteboard || (data.length < self->_dataLengthThreshold)) {
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.isBase64] = @YES;
         dictionary[FBSDKBridgeAPIProtocolNativeV1DataKeys.tag] = dataTag;
-        [FBSDKInternalUtility dictionary:dictionary
+        [FBSDKBasicUtility dictionary:dictionary
                             setObject:[FBSDKBase64 encodeData:data]
                                forKey:FBSDKBridgeAPIProtocolNativeV1DataKeys.value];
       } else {

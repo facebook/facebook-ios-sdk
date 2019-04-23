@@ -114,9 +114,9 @@
     }
   }
   if (images.count > 0) {
-    [FBSDKInternalUtility dictionary:updatedParameters
-                           setObject:images
-                              forKey:@"photos"];
+    [FBSDKBasicUtility dictionary:updatedParameters
+                        setObject:images
+                           forKey:@"photos"];
   }
 
   return updatedParameters;

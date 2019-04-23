@@ -427,8 +427,8 @@
 {
   NSMutableDictionary *encoded = [[NSMutableDictionary alloc] init];
   [queryParameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
-    if (![FBSDKInternalUtility dictionary:encoded setJSONStringForObject:obj forKey:key error:NULL]) {
-      [FBSDKInternalUtility dictionary:encoded setObject:obj forKey:key];
+    if (![FBSDKBasicUtility dictionary:encoded setJSONStringForObject:obj forKey:key error:NULL]) {
+      [FBSDKBasicUtility dictionary:encoded setObject:obj forKey:key];
     }
   }];
   return [encoded copy];

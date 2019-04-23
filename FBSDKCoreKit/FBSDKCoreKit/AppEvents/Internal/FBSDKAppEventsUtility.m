@@ -47,12 +47,12 @@
 
 #if __IPHONE_OS_VERSION_MIN_REQUIRED < __IPHONE_7_0
   NSString *attributionID = [[self class] attributionID];  // Only present on iOS 6 and below.
-  [FBSDKInternalUtility dictionary:parameters setObject:attributionID forKey:@"attribution"];
+  [FBSDKBasicUtility dictionary:parameters setObject:attributionID forKey:@"attribution"];
 #endif
 
   if (!implicitEventsOnly && shouldAccessAdvertisingID) {
     NSString *advertiserID = [[self class] advertiserID];
-    [FBSDKInternalUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
+    [FBSDKBasicUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
   }
 
   parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [self anonymousID];

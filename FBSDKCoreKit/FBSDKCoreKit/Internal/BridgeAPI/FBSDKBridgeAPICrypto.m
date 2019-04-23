@@ -35,7 +35,7 @@ static NSString *g_cipherKey = nil;
 
 + (void)addCipherKeyToQueryParameters:(NSMutableDictionary *)queryParameters
 {
-  [FBSDKInternalUtility dictionary:queryParameters setObject:[self _cipherKey] forKey:FBSDKBridgeAPICryptoCipherKeyKey];
+  [FBSDKBasicUtility dictionary:queryParameters setObject:[self _cipherKey] forKey:FBSDKBridgeAPICryptoCipherKeyKey];
 }
 
 + (NSDictionary *)decryptResponseForRequest:(FBSDKBridgeAPIRequest *)request

@@ -134,27 +134,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (id)convertRequestValue:(id)value;
 
 /**
-  Sets an object for a key in a dictionary if it is not nil.
- @param dictionary The dictionary to set the value for.
- @param object The value to set after serializing to JSON.
- @param key The key to set the value for.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return NO if an error occurred while serializing the object, otherwise YES.
- */
-+ (BOOL)dictionary:(NSMutableDictionary *)dictionary
-setJSONStringForObject:(id)object
-            forKey:(id<NSCopying>)key
-             error:(NSError *__autoreleasing *)errorRef;
-
-/**
-  Sets an object for a key in a dictionary if it is not nil.
- @param dictionary The dictionary to set the value for.
- @param object The value to set.
- @param key The key to set the value for.
- */
-+ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key;
-
-/**
   Constructs a Facebook URL.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
  @param path The path for the URL.  This may or may not include a version.

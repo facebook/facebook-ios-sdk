@@ -190,27 +190,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return ((uint64_t)time.tv_sec * 1000) + (time.tv_usec / 1000);
 }
 
-+ (BOOL)dictionary:(NSMutableDictionary *)dictionary
-setJSONStringForObject:(id)object
-            forKey:(id<NSCopying>)key
-             error:(NSError *__autoreleasing *)errorRef
-{
-  if (!object || !key) {
-    return YES;
-  }
-  NSString *JSONString = [FBSDKBasicUtility JSONStringForObject:object error:errorRef invalidObjectHandler:NULL];
-  if (!JSONString) {
-    return NO;
-  }
-  [self dictionary:dictionary setObject:JSONString forKey:key];
-  return YES;
-}
-
-+ (void)dictionary:(NSMutableDictionary *)dictionary setObject:(id)object forKey:(id<NSCopying>)key
-{
-  [FBSDKBasicUtility dictionary:dictionary setObject:object forKey:key];
-}
-
 + (void)extractPermissionsFromResponse:(NSDictionary *)responseObject
                     grantedPermissions:(NSMutableSet *)grantedPermissions
                    declinedPermissions:(NSMutableSet *)declinedPermissions
