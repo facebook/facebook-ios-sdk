@@ -122,12 +122,14 @@ NS_SWIFT_NAME(AccessToken)
 /**
   Returns the known declined permissions.
  */
-@property (nonatomic, copy, readonly) NSSet<NSString *> *declinedPermissions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *declinedPermissions
+NS_REFINED_FOR_SWIFT;
 
 /**
  Returns the known declined permissions.
  */
-@property (nonatomic, copy, readonly) NSSet<NSString *> *expiredPermissions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *expiredPermissions
+NS_REFINED_FOR_SWIFT;
 
 /**
   Returns the expiration date.
@@ -137,7 +139,8 @@ NS_SWIFT_NAME(AccessToken)
 /**
   Returns the known granted permissions.
  */
-@property (nonatomic, copy, readonly) NSSet<NSString *> *permissions;
+@property (nonatomic, copy, readonly) NSSet<NSString *> *permissions
+NS_REFINED_FOR_SWIFT;
 
 /**
   Returns the date the token was last refreshed.
