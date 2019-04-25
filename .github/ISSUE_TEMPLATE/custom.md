@@ -1,6 +1,9 @@
 ---
 name: Custom issue template
 about: Describe this issue template's purpose here.
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
@@ -36,6 +39,3 @@ Gmright: "c:program files for the first time pass_users_by_the_username_and_pass
 
 
 Gmright.js computer systems release 8262838382839393_gmright
-
-
-
