@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
 
   s.summary = "Official Facebook SDK in Swift to access Facebook Platform's Sharing Features."
 
-  s.source = { :git => "https://github.com/facebook/facebook-sdk-swift.git", :tag => "v#{s.version}" }
+  s.source = { :git => "https://github.com/facebook/facebook-swift-sdk.git", :tag => "v#{s.version}" }
 
   s.requires_arc = true
   s.platform = :ios

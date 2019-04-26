@@ -16,5 +16,5 @@ If you have a specific question regarding this SDK, make sure you check out
 ## GitHub Issues
 
 If you are running into issues with this SDK, including potential bugs or feature requests, we recommend filing a
-[GitHub Issue](https://github.com/facebook/facebook-sdk-swift/issues). Please check out our
+[GitHub Issue](https://github.com/facebook/facebook-swift-sdk/issues). Please check out our
 [Contributing Guidelines](CONTRIBUTING.md).

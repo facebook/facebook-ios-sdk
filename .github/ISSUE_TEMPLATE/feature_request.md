@@ -7,7 +7,7 @@ labels: enhancement
 ## Checklist
 
 - [ ] I've updated to the latest released version of the SDK
-- [ ] I've searched for existing feature requests on [GitHub issues](https://github.com/facebook/facebook-sdk-swift/issues)
+- [ ] I've searched for existing feature requests on [GitHub issues](https://github.com/facebook/facebook-swift-sdk/issues)
 - [ ] I've read the [Code of Conduct](CODE_OF_CONDUCT.md)
 - [ ] I've given my issue the title: `Feature Request: [name of my feature request]`
 

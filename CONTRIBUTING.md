@@ -39,4 +39,4 @@ cases, please go through the process outlined on that page and do not file a pub
 
 ## License
 
-See the [`LICENSE`](https://github.com/facebook/facebook-sdk-swift/blob/master/LICENSE) file.
+See the [`LICENSE`](https://github.com/facebook/facebook-swift-sdk/blob/master/LICENSE) file.
