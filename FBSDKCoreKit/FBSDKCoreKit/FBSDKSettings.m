@@ -20,6 +20,7 @@
 
 #import "FBSDKAccessTokenCache.h"
 #import "FBSDKAccessTokenExpirer.h"
+#import "FBSDKAppEvents+Internal.h"
 #import "FBSDKCoreKit.h"
 
 #define FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(TYPE, PLIST_KEY, GETTER, SETTER, DEFAULT_VALUE, ENABLE_CACHE) \
@@ -43,6 +44,7 @@ static TYPE *g_##PLIST_KEY = nil; \
       [[NSUserDefaults standardUserDefaults] removeObjectForKey:@#PLIST_KEY]; \
     } \
   } \
+  [FBSDKSettings _logIfSDKSettingsChanged]; \
 }
 
 FBSDKLoggingBehavior FBSDKLoggingBehaviorAccessTokens = @"include_access_tokens";
@@ -59,6 +61,7 @@ FBSDKLoggingBehavior FBSDKLoggingBehaviorNetworkRequests = @"network_requests";
 static NSObject<FBSDKAccessTokenCaching> *g_tokenCache;
 static NSMutableSet<FBSDKLoggingBehavior> *g_loggingBehaviors;
 static NSString *const FBSDKSettingsLimitEventAndDataUsage = @"com.facebook.sdk:FBSDKSettingsLimitEventAndDataUsage";
+static NSString *const FBSDKSettingsBitmask = @"com.facebook.sdk:FBSDKSettingsBitmask";
 static BOOL g_disableErrorRecovery;
 static NSString *g_userAgentSuffix;
 static NSString *g_defaultGraphAPIVersion;
@@ -91,6 +94,7 @@ static NSString *const advertiserIDCollectionEnabledFalseWarning =
     g_accessTokenExpirer = [[FBSDKAccessTokenExpirer alloc] init];
 
     [FBSDKSettings logWarnings];
+    [FBSDKSettings _logIfSDKSettingsChanged];
   }
 }
 
@@ -305,6 +309,39 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
   }
   if (![FBSDKSettings isAdvertiserIDCollectionEnabled]) {
     NSLog(advertiserIDCollectionEnabledFalseWarning);
+  }
+}
+
++ (void)_logIfSDKSettingsChanged
+{
+  NSInteger bitmask = 0;
+  NSInteger bit = 0;
+  bitmask |= ([FBSDKSettings isAutoInitEnabled] ? 1 : 0) << bit++;
+  bitmask |= ([FBSDKSettings isAutoLogAppEventsEnabled] ? 1 : 0) << bit++;
+  bitmask |= ([FBSDKSettings isAdvertiserIDCollectionEnabled] ? 1 : 0) << bit++;
+
+  NSInteger previousBitmask = [[NSUserDefaults standardUserDefaults] integerForKey:FBSDKSettingsBitmask];
+  if (previousBitmask != bitmask) {
+    [[NSUserDefaults standardUserDefaults] setInteger:bitmask forKey:FBSDKSettingsBitmask];
+
+    NSArray<NSString *> *keys = @[@"FacebookAutoInitEnabled",
+                                  @"FacebookAutoLogAppEventsEnabled",
+                                  @"FacebookAdvertiserIDCollectionEnabled"];
+    NSArray<NSNumber *> *defaultValues = @[@YES, @YES, @YES];
+    NSInteger initialBitmask = 0;
+    NSInteger usageBitmask = 0;
+    for (int i = 0; i < keys.count; i++) {
+      NSNumber *plistValue = [[NSBundle mainBundle] objectForInfoDictionaryKey:keys[i]];
+      BOOL initialValue = [(plistValue ?: defaultValues[i]) boolValue];
+      initialBitmask |= (initialValue ? 1 : 0) << i;
+      usageBitmask |= (plistValue != nil ? 1 : 0) << i;
+    }
+    [FBSDKAppEvents logInternalEvent:@"fb_sdk_settings_changed"
+                          parameters:@{@"usage": @(usageBitmask),
+                                       @"initial": @(initialBitmask),
+                                       @"previous":@(previousBitmask),
+                                       @"current": @(bitmask)}
+                  isImplicitlyLogged:YES];
   }
 }
 
