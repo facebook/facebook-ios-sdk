@@ -20,7 +20,6 @@
 
 #import "FBSDKConstants.h"
 #import "FBSDKInternalUtility.h"
-#import "FBSDKTypeUtility.h"
 
 @implementation NSError (FBSDKError)
 
