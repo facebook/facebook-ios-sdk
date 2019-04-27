@@ -38,6 +38,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Dot notation for access to properties
 - Collections/Dictionaries became non null when at all possible
 - Class creation methods become Swift inits
+- Used `NS_REFINED_FOR_SWIFT` where advisable
 
 ### Deprecated
 
@@ -63,6 +64,63 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Various bug fixes
+
+### 5.X Upgrade Guide
+
+#### All Developers
+
+- Light-weight generics have been added for Arrays, Sets, and Dictionaries. Make sure you're passing in the proper
+  types.
+- Some methods used to have closures as arguments, but did not have them as the final argument. All these methods have
+  been rearranged to have the closure as the final argument.
+
+#### ObjC Developers
+
+- Certain string values, like App Event Names and HTTP Method, have been made NSString typedef with the
+  `NS_TYPED_EXTENSIBLE_ENUM` attribute. All your existing code should work just fine.
+
+#### Swift Developers
+
+- `NS_SWIFT_NAME` was applied where applicable. Most of these changes Xcode can fix automatically.
+  - The `FBSDK` prefix for UI elements has been replaced with the simpler `FB` prefix.
+  - The `FBSDK` prefix for all other types has been removed.
+  - `FBSDKError` is now `CoreError`.
+- `NS_ERROR_ENUM` is used to handling errors now. For more details, view Apple's documentation on
+  [Handling Cocoa Errors in Swift](https://developer.apple.com/documentation/swift/cocoa_design_patterns/handling_cocoa_errors_in_swift).
+- Certain string values, like App Event Names and HTTP Method, have been made extensible structs with the
+  `NS_TYPED_EXTENSIBLE_ENUM` attribute:
+  - `FBSDKAppEventNamePurchased` -> `AppEvents.Name.purchased`
+  - `"custom_app_event"` -> `AppEvents.Name("custom_app_event")`
+- Certain values have been annotated with `NS_REFINED_FOR_SWIFT` and can be customized via either:
+  1. The Facebook SDK in Swift (Beta)
+  2. Implementing custom extensions
+
+```swift
+// Custom extensions
+public extension AccessToken {
+  var permissions: Set<String> {
+    return Set(__permissions)
+  }
+}
+
+extension AppEvents.Name {
+  static let customAppEvent = AppEvents.Name("custom_app_event")
+}
+
+extension ShareDialog.Mode: CustomStringConvertible {
+  public var description: String {
+    return __NSStringFromFBSDKShareDialogMode(self)
+  }
+}
+
+// Later in code
+let perms: Set<String> = AccessToken(...).permissions
+
+let event: AppEvents.Name = .customAppEvent
+
+let mode: ShareDialog.Mode = .native
+let description: String = "\(mode)"
+```
 
 ## 4.44.0
 
