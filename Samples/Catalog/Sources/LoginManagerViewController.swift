@@ -21,6 +21,7 @@ import UIKit
 
 import FacebookCore
 import FacebookLogin
+import FBSDKLoginKit
 
 class LoginManagerViewController: UIViewController {
 
@@ -40,14 +41,7 @@ class LoginManagerViewController: UIViewController {
 
   @IBAction private func loginWithReadPermissions() {
     let loginManager = LoginManager()
-    loginManager.logIn(readPermissions: [.publicProfile, .userFriends], viewController: self) { result in
-      self.loginManagerDidComplete(result)
-    }
-  }
-
-  @IBAction private func loginWithPublishPermissions() {
-    let loginManager = LoginManager()
-    loginManager.logIn(publishPermissions: [.publishActions], viewController: self) { result in
+    loginManager.logIn(permissions: [.publicProfile, .userFriends], viewController: self) { result in
       self.loginManagerDidComplete(result)
     }
   }

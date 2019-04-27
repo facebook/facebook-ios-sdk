@@ -17,13 +17,15 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookLogin
+import FBSDKLoginKit
 import Foundation
 import UIKit
 
 class LoginButtonViewController: UIViewController, LoginButtonDelegate {
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    let button = LoginButton(publishPermissions: [.publishActions])
+    let button = FBLoginButton(permissions: [.publicProfile])
     button.delegate = self
     button.center = view.center
     view.addSubview(button)
@@ -31,11 +33,12 @@ class LoginButtonViewController: UIViewController, LoginButtonDelegate {
 
   // MARK: LoginButtonDelegate
 
-  func loginButtonDidCompleteLogin(_ loginButton: LoginButton, result: LoginResult) {
-    print("Did complete login via LoginButton with result \(result)")
+  func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+    print("Did complete login via LoginButton with result \(String(describing: result)) " +
+      "error\(String(describing: error))")
   }
 
-  func loginButtonDidLogOut(_ loginButton: LoginButton) {
+  func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
     print("Did logout via LoginButton")
   }
 }

@@ -20,32 +20,29 @@ import Foundation
 import UIKit
 
 import FacebookCore
-
-struct FBProfileRequest: GraphRequestProtocol {
-  typealias Response = GraphResponse
-
-  var graphPath: String = "/me"
-  var parameters: [String: Any]? = ["fields": "id, name"]
-  var accessToken: AccessToken? = .current
-  var httpMethod: GraphRequestHTTPMethod = .GET
-  var apiVersion: GraphAPIVersion = 2.7
-}
+import FBSDKCoreKit
 
 // MARK: -
 
 class GraphAPIReadViewController: UITableViewController {
 
-  func presentAlertControllerFor<P>(_ result: GraphRequestResult<P>) {
+  func presentAlertController(result: Any?, error: Error?) {
     let alertController: UIAlertController
-    switch result {
-    case .success(let response):
+
+    switch (result, error) {
+    case let (result?, nil):
+      print("Graph Request Succeeded: \(result)")
       alertController = UIAlertController(title: "Graph Request Success",
-                                          message: "Graph Request Succeeded with response: \(response)")
-    case .failed(let error):
+                                          message: "Graph Request Succeeded with result: \(result)")
+      present(alertController, animated: true, completion: nil)
+    case let (nil, error?):
+      print("Graph Request Failed: \(error)")
       alertController = UIAlertController(title: "Graph Request Failed",
                                           message: "Graph Request Failed with error: \(error)")
+      present(alertController, animated: true, completion: nil)
+    case (_, _):
+      print("Graph Request Failed: unknown error")
     }
-    present(alertController, animated: true, completion: nil)
   }
 
   //--------------------------------------
@@ -59,16 +56,11 @@ class GraphAPIReadViewController: UITableViewController {
    See https://developers.facebook.com/docs/graph-api/reference/user/ for details.
    */
   @IBAction private func readProfile() {
-    let request = FBProfileRequest()
-    request.start { _, result in
-      switch result {
-      case .success(let response):
-        print("Graph Request Succeeded: \(response)")
-      case .failed(let error):
-        print("Graph Request Failed: \(error)")
-      }
-
-      self.presentAlertControllerFor(result)
+    let request = GraphRequest(graphPath: "/me",
+                               parameters: ["fields": "id, name"],
+                               httpMethod: .get)
+    request.start { [weak self] _, result, error in
+      self?.presentAlertController(result: result, error: error)
     }
   }
 
@@ -82,16 +74,9 @@ class GraphAPIReadViewController: UITableViewController {
   @IBAction private func readUserEvents() {
     let request = GraphRequest(graphPath: "/me/events",
                                parameters: [ "fields": "data, description" ],
-                               httpMethod: .GET)
-    request.start { _, result in
-      switch result {
-      case .success(let response):
-        print("Graph Request Succeeded: \(response)")
-      case .failed(let error):
-        print("Graph Request Failed: \(error)")
-      }
-
-      self.presentAlertControllerFor(result)
+                               httpMethod: .get)
+    request.start { [weak self] _, result, error in
+      self?.presentAlertController(result: result, error: error)
     }
   }
 
@@ -105,16 +90,9 @@ class GraphAPIReadViewController: UITableViewController {
   @IBAction private func readUserFriendList() {
     let request = GraphRequest(graphPath: "/me/friends",
                                parameters: [ "fields": "data" ],
-                               httpMethod: .GET)
-    request.start { _, result in
-      switch result {
-      case .success(let response):
-        print("Graph Request Succeeded: \(response)")
-      case .failed(let error):
-        print("Graph Request Failed: \(error)")
-      }
-
-      self.presentAlertControllerFor(result)
+                               httpMethod: .get)
+    request.start { [weak self] _, result, error in
+      self?.presentAlertController(result: result, error: error)
     }
   }
 }

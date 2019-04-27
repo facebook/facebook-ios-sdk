@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookCore
+import FBSDKCoreKit
 import UIKit
 
 final class ManualAppEventViewController: UITableViewController {
@@ -44,8 +45,7 @@ final class ManualAppEventViewController: UITableViewController {
       return
     }
 
-    let event = AppEvent.purchased(amount: price, currency: currency)
-    AppEventsLogger.log(event)
+    AppEvents.logPurchase(price, currency: currency)
     // View your event at https://developers.facebook.com/analytics/<APP_ID>.
     // See https://developers.facebook.com/docs/analytics for details.
 
@@ -72,8 +72,8 @@ final class ManualAppEventViewController: UITableViewController {
       return
     }
 
-    let event = AppEvent.addedToCart(currency: currency, valueToSum: price)
-    AppEventsLogger.log(event)
+    let parameters: [String: String] = [AppEvents.ParameterName.currency.rawValue: currency]
+    AppEvents.logEvent(.addedToCart, valueToSum: price, parameters: parameters)
 
     let alertController = UIAlertController(title: "Log Event", message: "Log Event Success")
     present(alertController, animated: true, completion: nil)

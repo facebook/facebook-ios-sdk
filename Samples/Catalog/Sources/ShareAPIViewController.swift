@@ -19,36 +19,9 @@
 import UIKit
 
 import FacebookShare
+import FBSDKShareKit
 
-final class ShareAPIViewController: UITableViewController {
-
-  func share<C: ContentProtocol>(_ content: C) {
-    var title: String = ""
-    var message: String = ""
-
-    do {
-      try GraphSharer.share(content) { result in
-        switch result {
-        case .success(let contentResult):
-          title = "Share Success"
-          message = "Succesfully shared: \(contentResult)"
-        case .cancelled:
-          title = "Share Cancelled"
-          message = "Sharing was cancelled by user."
-        case .failed(let error):
-          title = "Share Failed"
-          message = "Sharing failed with error \(error)"
-        }
-        let alertController = UIAlertController(title: title, message: message)
-        self.present(alertController, animated: true, completion: nil)
-      }
-    } catch {
-      title = "Share API Fail"
-      message = "Failed to invoke share API with error: \(error)"
-      let alertController = UIAlertController(title: title, message: message)
-      present(alertController, animated: true, completion: nil)
-    }
-  }
+final class ShareAPIViewController: UITableViewController, SharingDelegate {
 
   //--------------------------------------
   // MARK: - Link Content
@@ -56,8 +29,9 @@ final class ShareAPIViewController: UITableViewController {
 
   @IBAction private func shareLink() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
-    let content = LinkShareContent(url: url)
-    share(content)
+    let content = ShareLinkContent()
+    content.contentURL = url
+    ShareAPI(content: content, delegate: self).share()
   }
 
   //--------------------------------------
@@ -65,9 +39,9 @@ final class ShareAPIViewController: UITableViewController {
   //--------------------------------------
 
   @IBAction private func sharePhoto() {
-    let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
-    let content = PhotoShareContent(photos: [photo])
-    share(content)
+    let content = SharePhotoContent()
+    content.photos = [SharePhoto(image: #imageLiteral(resourceName: "sky"), userGenerated: true)]
+    ShareAPI(content: content, delegate: self).share()
   }
 
   //--------------------------------------
@@ -76,8 +50,29 @@ final class ShareAPIViewController: UITableViewController {
 
   @IBAction private func shareVideo() {
     guard let url = Bundle.main.url(forResource: "sky", withExtension: "mp4") else { return }
-    let video = Video(url: url)
-    let content = VideoShareContent(video: video)
-    share(content)
+    let content = ShareVideoContent()
+    content.video = ShareVideo(videoURL: url)
+    ShareAPI(content: content, delegate: self).share()
+  }
+
+  func sharer(_ sharer: Sharing, didCompleteWithResults results: [String: Any]) {
+    let title = "Share Success"
+    let message = "Succesfully shared: \(results)"
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
+  }
+
+  func sharer(_ sharer: Sharing, didFailWithError error: Error) {
+    let title = "Share Failed"
+    let message = "Sharing failed with error \(error)"
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
+  }
+
+  func sharerDidCancel(_ sharer: Sharing) {
+    let title = "Share Cancelled"
+    let message = "Sharing was cancelled by user."
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
   }
 }

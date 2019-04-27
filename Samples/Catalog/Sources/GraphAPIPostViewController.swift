@@ -17,22 +17,11 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookCore
+import FBSDKCoreKit
 import Foundation
 import UIKit
 
 class GraphAPIPostViewController: UITableViewController {
-  func presentAlertControllerFor(_ result: GraphRequestResult<GraphRequest>) {
-    let alertController: UIAlertController
-    switch result {
-    case .success(let response):
-      alertController = UIAlertController(title: "Graph Request Success",
-                                          message: "Graph Request Succeeded with response: \(response)")
-    case .failed(let error):
-      alertController = UIAlertController(title: "Graph Request Failed",
-                                          message: "Graph Request Failed with error: \(error)")
-    }
-    present(alertController, animated: true, completion: nil)
-  }
 
   //--------------------------------------
   // MARK: - Post Checkin
@@ -48,16 +37,25 @@ class GraphAPIPostViewController: UITableViewController {
   @IBAction private func postCheckin() {
     let request = GraphRequest(graphPath: "/me/feed",
                                parameters: [ "message": "Here I am!", "place": "141887372509674" ],
-                               httpMethod: .POST)
-    request.start { _, result in
-      switch result {
-      case .success(let response):
-        print("Graph Request Succeeded: \(response)")
-      case .failed(let error):
-        print("Graph Request Failed: \(error)")
-      }
+                               httpMethod: .post)
+    request.start { [weak self] _, result, error in
 
-      self.presentAlertControllerFor(result)
+      let alertController: UIAlertController
+
+      switch (result, error) {
+      case let (result?, nil):
+        print("Graph Request Succeeded: \(result)")
+        alertController = UIAlertController(title: "Graph Request Success",
+                                            message: "Graph Request Succeeded with result: \(result)")
+        self?.present(alertController, animated: true, completion: nil)
+      case let (nil, error?):
+        print("Graph Request Failed: \(error)")
+        alertController = UIAlertController(title: "Graph Request Failed",
+                                            message: "Graph Request Failed with error: \(error)")
+        self?.present(alertController, animated: true, completion: nil)
+      case (_, _):
+        print("Graph Request Failed: unknown error")
+      }
     }
   }
 }

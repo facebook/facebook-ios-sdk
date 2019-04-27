@@ -20,22 +20,17 @@ import MobileCoreServices
 import UIKit
 
 import FacebookShare
+import FBSDKShareKit
 
 final class ShareDialogViewController: UITableViewController,
   UIImagePickerControllerDelegate,
-UINavigationControllerDelegate {
+  UINavigationControllerDelegate,
+SharingDelegate {
 
-  func showShareDialog<C: ContentProtocol>(_ content: C, mode: ShareDialogMode = .automatic) {
-    let dialog = ShareDialog(content: content)
-    dialog.presentingViewController = self
+  func showShareDialog<C: SharingContent>(_ content: C, mode: ShareDialog.Mode = .automatic) {
+    let dialog = ShareDialog(fromViewController: self, content: content, delegate: self)
     dialog.mode = mode
-    do {
-      try dialog.show()
-    } catch {
-      let alertController = UIAlertController(title: "Invalid share content",
-                                              message: "Failed to present share dialog with error \(error)")
-      present(alertController, animated: true, completion: nil)
-    }
+    dialog.show()
   }
 
   //--------------------------------------
@@ -44,22 +39,24 @@ UINavigationControllerDelegate {
 
   @IBAction private func showLinkShareDialogModeAutomatic() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
-    var content = LinkShareContent(url: url)
+    let content = ShareLinkContent()
+    content.contentURL = url
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
     // for building a place picker.
-    content.placeId = "166793820034304"
+    content.placeID = "166793820034304"
 
     showShareDialog(content, mode: .automatic)
   }
 
   @IBAction private func showLinkShareDialogModeWeb() {
     guard let url = URL(string: "https://newsroom.fb.com/") else { return }
-    var content = LinkShareContent(url: url)
+    let content = ShareLinkContent()
+    content.contentURL = url
 
     // placeId is hardcoded here, see https://developers.facebook.com/docs/graph-api/using-graph-api/#search
     // for building a place picker.
-    content.placeId = "166793820034304"
+    content.placeID = "166793820034304"
 
     showShareDialog(content, mode: .web)
   }
@@ -69,8 +66,8 @@ UINavigationControllerDelegate {
   //--------------------------------------
 
   @IBAction private func showShareDialogPhotoContent() {
-    let photo = Photo(image: #imageLiteral(resourceName: "sky"), userGenerated: true)
-    let content = PhotoShareContent(photos: [photo])
+    let content = SharePhotoContent()
+    content.photos = [SharePhoto(image: #imageLiteral(resourceName: "sky"), userGenerated: true)]
     showShareDialog(content)
   }
 
@@ -96,8 +93,29 @@ UINavigationControllerDelegate {
       return
     }
 
-    let video = Video(url: videoURL)
-    let content = VideoShareContent(video: video)
+    let content = ShareVideoContent()
+    content.video = ShareVideo(videoURL: videoURL)
     showShareDialog(content)
+  }
+
+  func sharer(_ sharer: Sharing, didCompleteWithResults results: [String: Any]) {
+    let title = "Share Success"
+    let message = "Succesfully shared: \(results)"
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
+  }
+
+  func sharer(_ sharer: Sharing, didFailWithError error: Error) {
+    let title = "Share Failed"
+    let message = "Sharing failed with error \(error)"
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
+  }
+
+  func sharerDidCancel(_ sharer: Sharing) {
+    let title = "Share Cancelled"
+    let message = "Sharing was cancelled by user."
+    let alertController = UIAlertController(title: title, message: message)
+    self.present(alertController, animated: true, completion: nil)
   }
 }

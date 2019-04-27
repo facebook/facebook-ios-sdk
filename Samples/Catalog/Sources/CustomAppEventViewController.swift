@@ -17,6 +17,7 @@
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import FacebookCore
+import FBSDKCoreKit
 import Foundation
 import UIKit
 
@@ -34,7 +35,8 @@ final class CustomAppEventViewController: UIViewController {
       return
     }
 
-    AppEventsLogger.log(eventName)
+    AppEvents.logEvent(AppEvents.Name(eventName))
+
     // View your event at https://developers.facebook.com/analytics/<APP_ID>.
     // See https://developers.facebook.com/docs/analytics for details.
 

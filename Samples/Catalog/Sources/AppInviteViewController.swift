@@ -19,35 +19,37 @@
 import UIKit
 
 import FacebookShare
+import FBSDKCoreKit
+import FBSDKShareKit
 
 final class AppInviteViewController: UITableViewController {
-  func showAppInviteDialog(for appInvite: AppInvite) {
-    do {
-      try AppInvite.Dialog.show(from: self, invite: appInvite) { result in
-        switch result {
-        case .success(let result):
-          print("App Invite Sent with result \(result)")
-        case .failed(let error):
-          print("Failed to send app invite with error \(error)")
-        }
-      }
-    } catch {
-      print("Failed to show app invite dialog with error \(error)")
-    }
+  func showAppInviteDialog(for appInvite: AppInviteContent) {
+    //    do {
+    //      try AppInvite.Dialog.show(from: self, invite: appInvite) { result in
+    //        switch result {
+    //        case .success(let result):
+    //          print("App Invite Sent with result \(result)")
+    //        case .failed(let error):
+    //          print("Failed to send app invite with error \(error)")
+    //        }
+    //      }
+    //    } catch {
+    //      print("Failed to show app invite dialog with error \(error)")
+    //    }
   }
 
   @IBAction private func appInviteWithDefaultImage() {
-    // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
-    guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
-    let appInvite = AppInvite(appLink: appLink, deliveryMethod: .facebook)
-    showAppInviteDialog(for: appInvite)
+    //    // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
+    //    guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
+    //    let appInvite = AppInviteContent(appLink: appLink, deliveryMethod: .facebook)
+    //    showAppInviteDialog(for: appInvite)
   }
 
   @IBAction private func appInviteWithCustomImage() {
-    // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
-    guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
-    let previewImageURL = URL(string: "http://catalogapp.parseapp.com/FacebookDeveloper.jpg")
-    let appInvite = AppInvite(appLink: appLink, deliveryMethod: .facebook, previewImageURL: previewImageURL)
-    showAppInviteDialog(for: appInvite)
+    //    // Facebook hosted App Link is used here. See https://developers.facebook.com/docs/applinks for details.
+    //    guard let appLink = URL(string: "https://fb.me/1539184863038815") else { return }
+    //    let previewImageURL = URL(string: "http://catalogapp.parseapp.com/FacebookDeveloper.jpg")
+    //    let appInvite = AppInviteContent(appLink: appLink, deliveryMethod: .facebook, previewImageURL: previewImageURL)
+    //    showAppInviteDialog(for: appInvite)
   }
 }
