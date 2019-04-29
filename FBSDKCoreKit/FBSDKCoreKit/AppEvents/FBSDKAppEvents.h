@@ -167,6 +167,9 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameFindLocation;
 /** The booking of an appointment to visit one of your locations. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSchedule;
 
+/** The subsequent subscriptions after the start of a paid subscription for a product or service you offer. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscriptionHeartbeat;
+
 /** The start of a free trial of a product or service you offer (example: trial subscription). */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameStartTrial;
 
