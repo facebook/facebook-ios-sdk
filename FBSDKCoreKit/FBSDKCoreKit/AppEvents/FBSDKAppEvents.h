@@ -176,6 +176,9 @@ FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubmitApplication;
 /** The start of a paid subscription for a product or service you offer. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscribe;
 
+/** The subsequent subscriptions after the start of a paid subscription for a product or service you offer. */
+FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameSubscriptionHeartbeat;
+
 /** Log this event when the user views an ad. */
 FOUNDATION_EXPORT FBSDKAppEventName FBSDKAppEventNameAdImpression;
 
