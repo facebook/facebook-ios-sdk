@@ -34,8 +34,6 @@
 #define FBSDK_GATEKEEPER_APP_GATEKEEPER_EDGE @"mobile_sdk_gk"
 #define FBSDK_GATEKEEPER_APP_GATEKEEPER_FIELDS @"gatekeepers"
 
-FBSDKGateKeeperKey FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_auto_log_subs";
-
 @implementation FBSDKGateKeeperManager
 
 static NSMutableDictionary<NSString *, id> *_gateKeepers;
