@@ -21,6 +21,7 @@
 #import <StoreKit/StoreKit.h>
 
 #import "FBSDKAppEvents+Internal.h"
+#import "FBSDKCoreKit+Internal.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
@@ -206,7 +207,10 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)logTransactionEvent:(SKProduct *)product
 {
-  if ([self isSubscription:product]) {
+  if ([self isSubscription:product] &&
+      [FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsIfAutoLogSubs
+                                   appID:[FBSDKSettings appID]
+                            defaultValue:YES]) {
     [self logImplicitSubscribeTransaction:self.transaction ofProduct:product];
   } else {
     [self logImplicitPurchaseTransaction:self.transaction ofProduct:product];
