@@ -20,6 +20,12 @@
 
 #import "FBSDKTypeUtility.h"
 
+@interface NSError(FBSDKError)
+
++ (NSError *)fbInvalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message;
+
+@end
+
 @implementation FBSDKBasicUtility (Internal)
 
 + (NSString *)JSONStringForObject:(id)object
@@ -30,7 +36,11 @@
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
     if (![NSJSONSerialization isValidJSONObject:object]) {
       if (errorRef != NULL) {
-        //TODO(T43623249): add "Invalid object for JSON serialization" error message back
+        if ([NSError respondsToSelector:@selector(fbInvalidArgumentErrorWithName:value:message:)]) {
+          *errorRef = [NSError fbInvalidArgumentErrorWithName:@"object"
+                                                        value:object
+                                                      message:@"Invalid object for JSON serialization."];
+        }
       }
       return nil;
     }
