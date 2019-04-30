@@ -7,12 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.0-rc.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.0.0...HEAD)
 
-## 5.0.0-rc.1
+## 5.0.0
 
-[2019-04-03](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.0-rc.1) |
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...v5.0.0-rc.1)
+[2019-04-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.0.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.1...v5.0.0)
 
 ### Added
 
@@ -122,6 +122,15 @@ let event: AppEvents.Name = .customAppEvent
 let mode: ShareDialog.Mode = .native
 let description: String = "\(mode)"
 ```
+
+## 4.44.1
+
+[2019-04-11](https://github.com/facebook/facebook-objc-sdk/releases/tag/v4.44.1) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.0...v4.44.1)
+
+### Fixed
+
+- `_inBackground` now indicates correct application state
 
 ## 4.44.0
 
