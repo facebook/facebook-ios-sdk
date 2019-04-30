@@ -210,7 +210,7 @@ static NSMutableArray *g_pendingRequestors;
   if ([self isSubscription:product] &&
       [FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsIfAutoLogSubs
                                    appID:[FBSDKSettings appID]
-                            defaultValue:YES]) {
+                            defaultValue:NO]) {
     [self logImplicitSubscribeTransaction:self.transaction ofProduct:product];
   } else {
     [self logImplicitPurchaseTransaction:self.transaction ofProduct:product];
