@@ -73,6 +73,7 @@
 #import "ServerConfiguration/FBSDKServerConfiguration.h"
 #import "ServerConfiguration/FBSDKServerConfigurationManager+Internal.h"
 #import "ServerConfiguration/FBSDKServerConfigurationManager.h"
+#import "ServerConfiguration/FBSDKGateKeeperManager.h"
 #import "TokenCaching/FBSDKAccessTokenCache.h"
 #import "TokenCaching/FBSDKAccessTokenCaching.h"
 #import "TokenCaching/FBSDKKeychainStore.h"

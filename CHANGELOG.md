@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `FBSDKLoginButton permissions`
 - `FBSDKDeviceLoginButton permissions`
 - `FBSDKDeviceLoginViewController permissions`
+- New `FBSDKAppEventName` values
 
 ### Changed
 
