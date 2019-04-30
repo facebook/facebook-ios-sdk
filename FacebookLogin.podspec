@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.exclude_files = "Sources/Login/LoginManager.DefaultAudience.swift"
   s.module_name = "FacebookLogin"
 
-  s.ios.dependency "FacebookCore", "~> 0.5"
-  s.ios.dependency "FBSDKCoreKit", "~> 4.43"
-  s.ios.dependency "FBSDKLoginKit", "~> 4.43"
+  s.ios.dependency "FacebookCore", "~> 0.7"
+  s.ios.dependency "FBSDKCoreKit", "~> 5.0"
+  s.ios.dependency "FBSDKLoginKit", "~> 5.0"
 end
