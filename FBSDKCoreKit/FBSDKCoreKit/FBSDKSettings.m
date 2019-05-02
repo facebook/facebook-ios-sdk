@@ -140,6 +140,9 @@ FBSDKSETTINGS_PLIST_CONFIGURATION_SETTING_IMPL(NSNumber, FacebookCodelessDebugLo
 + (void)setAutoInitEnabled:(BOOL)autoInitEnabled
 {
   [self _setAutoInitEnabled:@(autoInitEnabled)];
+  if (autoInitEnabled) {
+    [FBSDKApplicationDelegate initializeSDK:nil];
+  }
 }
 
 + (BOOL)isCodelessDebugLogEnabled
