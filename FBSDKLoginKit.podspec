@@ -30,7 +30,7 @@ Pod::Spec.new do |s|
 
   s.requires_arc = true
 
-  s.dependency 'FBSDKCoreKit', "#{s.version}"
+  s.dependency 'FBSDKCoreKit', "~> 5.0"
 
   s.ios.source_files   = 'FBSDKLoginKit/FBSDKLoginKit/**/*.{h,m}'
   s.ios.public_header_files = 'FBSDKLoginKit/FBSDKLoginKit/*.{h}'

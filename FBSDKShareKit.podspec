@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.header_dir = 'FBSDKShareKit'
-  s.dependency 'FBSDKCoreKit', "#{s.version}"
+  s.dependency 'FBSDKCoreKit', "~> 5.0"
 
   s.public_header_files = 'FBSDKShareKit/FBSDKShareKit/*.{h}'
   s.ios.source_files = 'FBSDKShareKit/FBSDKShareKit/**/*.{h,m}'

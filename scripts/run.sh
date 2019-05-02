@@ -380,6 +380,8 @@ release_sdk() {
 
   # Generate External Docs Changelog
   release_external_changelog() {
+    echo "Releasing Changelog"
+
     local current_version_underscore=${SDK_CURRENT_VERSION//./_}
     local current_date
     current_date=$(date +%Y-%m-%d)

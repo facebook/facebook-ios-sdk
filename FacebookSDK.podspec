@@ -32,30 +32,30 @@ Pod::Spec.new do |s|
   s.default_subspecs = 'CoreKit', 'MarketingKit'
 
   s.subspec 'CoreKit' do |ss|
-    ss.dependency 'FBSDKCoreKit', "#{s.version}"
+    ss.dependency 'FBSDKCoreKit', "~> 5.0"
   end
   s.subspec 'LoginKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKLoginKit', "#{s.version}"
+    ss.dependency 'FBSDKLoginKit', "~> 5.0"
   end
   s.subspec 'ShareKit' do |ss|
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKShareKit', "#{s.version}"
+    ss.dependency 'FBSDKShareKit', "~> 5.0"
   end
   s.subspec 'TVOSKit' do |ss|
     ss.platform = :tvos
     ss.dependency 'FacebookSDK/ShareKit'
     ss.dependency 'FacebookSDK/LoginKit'
-    ss.dependency 'FBSDKTVOSKit', "#{s.version}"
+    ss.dependency 'FBSDKTVOSKit', "~> 5.0"
   end
   s.subspec 'PlacesKit' do |ss|
     ss.platform = :ios
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKPlacesKit', "#{s.version}"
+    ss.dependency 'FBSDKPlacesKit', "~> 5.0"
   end
   s.subspec 'MarketingKit' do |ss|
     ss.platform = :ios
     ss.dependency 'FacebookSDK/CoreKit'
-    ss.dependency 'FBSDKMarketingKit', "#{s.version}"
+    ss.dependency 'FBSDKMarketingKit', "~> 5.0"
   end
 end
