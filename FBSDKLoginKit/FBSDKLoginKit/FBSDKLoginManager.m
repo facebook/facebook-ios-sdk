@@ -88,20 +88,6 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
   [self logInWithPermissions:permissionSet handler:handler];
 }
 
-- (void)logInWithReadPermissions:(NSArray<NSString *> *)permissions
-              fromViewController:(UIViewController *)fromViewController
-                         handler:(FBSDKLoginManagerLoginResultBlock)handler
-{
-  [self logInWithPermissions:permissions fromViewController:fromViewController handler:handler];
-}
-
-- (void)logInWithPublishPermissions:(NSArray<NSString *> *)permissions
-                 fromViewController:(UIViewController *)fromViewController
-                            handler:(FBSDKLoginManagerLoginResultBlock)handler
-{
-  [self logInWithPermissions:permissions fromViewController:fromViewController handler:handler];
-}
-
 - (void)reauthorizeDataAccess:(UIViewController *)fromViewController handler:(FBSDKLoginManagerLoginResultBlock)handler
 {
   if (![self validateLoginStartState]) {

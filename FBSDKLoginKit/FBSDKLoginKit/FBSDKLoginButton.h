@@ -84,12 +84,6 @@ NS_SWIFT_NAME(FBLoginButton)
  See [the permissions guide]( https://developers.facebook.com/docs/facebook-login/permissions/ ) for more details.
  */
 @property (copy, nonatomic) NSArray<NSString *> *permissions;
-
-@property (copy, nonatomic) NSArray<NSString *> *publishPermissions
-DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
-
-@property (copy, nonatomic) NSArray<NSString *> *readPermissions
-DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
 /**
   Gets or sets the desired tooltip behavior.
  */
