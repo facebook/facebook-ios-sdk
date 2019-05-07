@@ -566,7 +566,7 @@
   NSArray *lines = [body componentsSeparatedByString:@"\n"];
   for (int i = 0; i < lines.count; i++) {
     if ([lines[i] rangeOfString:@"Content-Disposition: form-data; name=\"custom_events_file\";"].location != NSNotFound) {
-      return [FBSDKInternalUtility objectForJSONString:lines[i+3] error:NULL];
+      return [FBSDKBasicUtility objectForJSONString:lines[i+3] error:NULL];
     }
   }
   return nil;

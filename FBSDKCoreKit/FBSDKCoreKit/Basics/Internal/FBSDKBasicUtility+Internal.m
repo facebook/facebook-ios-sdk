@@ -121,4 +121,16 @@ setJSONStringForObject:(id)object
   }
 }
 
++ (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef
+{
+  NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding];
+  if (!data) {
+    if (errorRef != NULL) {
+      *errorRef = nil;
+    }
+    return nil;
+  }
+  return [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:errorRef];
+}
+
 @end

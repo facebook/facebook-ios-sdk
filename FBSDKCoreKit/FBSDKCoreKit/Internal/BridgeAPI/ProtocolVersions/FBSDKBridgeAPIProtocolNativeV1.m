@@ -187,7 +187,7 @@ static const struct
   }
   NSError *error;
   NSString *bridgeParametersJSON = queryParameters[FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs];
-  NSDictionary *bridgeParameters = [FBSDKInternalUtility objectForJSONString:bridgeParametersJSON error:&error];
+  NSDictionary<id, id> *bridgeParameters = [FBSDKBasicUtility objectForJSONString:bridgeParametersJSON error:&error];
   bridgeParameters = [FBSDKTypeUtility dictionaryValue:bridgeParameters];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
@@ -213,7 +213,7 @@ static const struct
     return nil;
   }
   NSString *resultParametersJSON = queryParameters[FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults];
-  NSDictionary *resultParameters = [FBSDKInternalUtility objectForJSONString:resultParametersJSON error:&error];
+  NSDictionary<id, id> *resultParameters = [FBSDKBasicUtility objectForJSONString:resultParametersJSON error:&error];
   if (!resultParameters) {
     if (errorRef != NULL) {
       *errorRef = [NSError fbInvalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults

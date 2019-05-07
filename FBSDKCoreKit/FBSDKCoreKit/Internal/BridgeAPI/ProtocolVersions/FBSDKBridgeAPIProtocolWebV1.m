@@ -91,7 +91,7 @@
 
   NSError *error;
   NSString *bridgeParametersJSON = [FBSDKTypeUtility stringValue:queryParameters[FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY]];
-  NSDictionary *bridgeParameters = [FBSDKInternalUtility objectForJSONString:bridgeParametersJSON error:&error];
+  NSDictionary<id, id> *bridgeParameters = [FBSDKBasicUtility objectForJSONString:bridgeParametersJSON error:&error];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
       *errorRef = [NSError fbInvalidArgumentErrorWithName:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY

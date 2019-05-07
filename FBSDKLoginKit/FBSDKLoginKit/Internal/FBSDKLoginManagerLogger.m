@@ -64,7 +64,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
 
 + (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters
 {
-  NSDictionary *clientState = [FBSDKInternalUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
+  NSDictionary<id, id> *clientState = [FBSDKBasicUtility objectForJSONString:parameters[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
 
   id isClientState = clientState[FBSDKLoginManagerLoggingClientStateIsClientState];
   if ([isClientState isKindOfClass:[NSNumber class]] && [isClientState boolValue]) {
@@ -160,7 +160,7 @@ static NSString *const FBSDKLoginManagerLoggerTryBrowser = @"trySafariAuth";
                                                       invalidObjectHandler:NULL];
   params[@"e2e"] = e2eTimestampString;
 
-  NSDictionary *existingState = [FBSDKInternalUtility objectForJSONString:params[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
+  NSDictionary<id, id> *existingState = [FBSDKBasicUtility objectForJSONString:params[FBSDKLoginManagerLoggingClientStateKey] error:NULL];
   params[FBSDKLoginManagerLoggingClientStateKey] = [self clientStateForAuthMethod:authMethod andExistingState:existingState];
 
   return params;

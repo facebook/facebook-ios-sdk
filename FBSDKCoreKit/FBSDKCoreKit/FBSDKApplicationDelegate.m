@@ -290,7 +290,7 @@ static UIApplicationState _applicationState;
     return;
   }
 
-  NSDictionary *applinkData = [FBSDKInternalUtility objectForJSONString:applinkDataString error:NULL];
+  NSDictionary<id, id> *applinkData = [FBSDKBasicUtility objectForJSONString:applinkDataString error:NULL];
   if (!applinkData) {
     return;
   }

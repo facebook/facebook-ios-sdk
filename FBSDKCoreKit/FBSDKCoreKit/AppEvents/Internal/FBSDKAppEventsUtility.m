@@ -312,7 +312,7 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   NSString *content = [[NSString alloc] initWithContentsOfFile:file
                                                       encoding:NSASCIIStringEncoding
                                                          error:nil];
-  NSDictionary *results = [FBSDKInternalUtility objectForJSONString:content error:NULL];
+  NSDictionary<id, id> *results = [FBSDKBasicUtility objectForJSONString:content error:NULL];
   return results[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 }
 

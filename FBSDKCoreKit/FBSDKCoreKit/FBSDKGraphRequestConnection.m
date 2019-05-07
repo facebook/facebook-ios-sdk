@@ -724,7 +724,7 @@ NSURLSessionDataDelegate
 {
   id parsed = nil;
   if (!(*error) && [utf8 isKindOfClass:[NSString class]]) {
-    parsed = [FBSDKInternalUtility objectForJSONString:utf8 error:error];
+    parsed = [FBSDKBasicUtility objectForJSONString:utf8 error:error];
     // if we fail parse we attempt a re-parse of a modified input to support results in the form "foo=bar", "true", etc.
     // which is shouldn't be necessary since Graph API v2.1.
     if (*error) {
@@ -734,7 +734,7 @@ NSURLSessionDataDelegate
       NSDictionary *original = @{ FBSDKNonJSONResponseProperty : utf8 };
       NSString *jsonrep = [FBSDKBasicUtility JSONStringForObject:original error:NULL invalidObjectHandler:NULL];
       NSError *reparseError = nil;
-      parsed = [FBSDKInternalUtility objectForJSONString:jsonrep error:&reparseError];
+      parsed = [FBSDKBasicUtility objectForJSONString:jsonrep error:&reparseError];
       if (!reparseError) {
         *error = nil;
       }

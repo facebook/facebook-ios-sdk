@@ -69,7 +69,7 @@
   NSDictionary *queryParameters = [FBSDKUtility dictionaryWithQueryString:requestURL.query];
   NSSet *expectedKeys = [NSSet setWithObjects:@"bridge_args", @"method_args", @"version", nil];
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
-  XCTAssertEqualObjects([FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL], parameters);
+  XCTAssertEqualObjects([FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL], parameters);
 }
 
 - (void)testNilResponseParameters
@@ -309,7 +309,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"data"] = [self _testDataSerialized:(NSData *)parameters[@"data"]];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
   NSData *decodedData = [FBSDKBase64 decodeAsData:methodArgs[@"data"][@"fbAppBridgeType_jsonReadyValue"]];
   XCTAssertEqualObjects(decodedData, parameters[@"data"]);
@@ -342,7 +342,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"image"] = [self _testImageSerialized:(UIImage *)parameters[@"image"]];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
   NSData *decodedData = [FBSDKBase64 decodeAsData:methodArgs[@"image"][@"fbAppBridgeType_jsonReadyValue"]];
   XCTAssertNotNil([UIImage imageWithData:decodedData]);
@@ -381,7 +381,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"data"] = [self _testDataContainerWithPasteboardName:pasteboardName tag:@"data"];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
 }
 
@@ -419,7 +419,7 @@
   XCTAssertEqualObjects([NSSet setWithArray:[queryParameters allKeys]], expectedKeys);
   NSMutableDictionary *expectedMethodArgs = [parameters mutableCopy];
   expectedMethodArgs[@"image"] = [self _testDataContainerWithPasteboardName:pasteboardName tag:@"png"];
-  NSDictionary *methodArgs = [FBSDKInternalUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
+  NSDictionary<id, id> *methodArgs = [FBSDKBasicUtility objectForJSONString:queryParameters[@"method_args"] error:NULL];
   XCTAssertEqualObjects(methodArgs, expectedMethodArgs);
 }
 

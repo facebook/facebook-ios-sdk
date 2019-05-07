@@ -89,7 +89,7 @@ static NSString *const FBSDKDeferredAppLinkEvent = @"DEFERRED_APP_LINK";
     // Parse deeplinkContext and extract promo code
     if (deeplinkContextString.length > 0) {
       NSError *error = nil;
-      NSDictionary *deeplinkContextData = [FBSDKInternalUtility objectForJSONString:deeplinkContextString error:&error];
+      NSDictionary<id, id> *deeplinkContextData = [FBSDKBasicUtility objectForJSONString:deeplinkContextString error:&error];
       if (!error && [deeplinkContextData isKindOfClass:[NSDictionary class]]) {
         return deeplinkContextData[@"promo_code"];
       }

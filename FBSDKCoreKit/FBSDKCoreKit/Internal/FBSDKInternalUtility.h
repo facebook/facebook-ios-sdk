@@ -221,15 +221,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString;
 
 /**
-  Converts a JSON string into an object
- @param string The JSON string to convert.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @return An NSDictionary, NSArray, NSString or NSNumber containing the object representation, or nil if the string
- cannot be converted.
- */
-+ (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef;
-
-/**
   Constructs a query string from a dictionary.
  @param dictionary The dictionary with key/value pairs for the query string.
  @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.

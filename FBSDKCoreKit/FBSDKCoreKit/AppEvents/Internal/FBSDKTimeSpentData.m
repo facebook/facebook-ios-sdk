@@ -203,7 +203,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
     } else {
 
-      NSDictionary *results = [FBSDKInternalUtility objectForJSONString:content error:NULL];
+      NSDictionary<id, id> *results = [FBSDKBasicUtility objectForJSONString:content error:NULL];
 
       _lastSuspendTime = [results[FBSDKTimeSpentPersistKeyLastSuspendTime] longValue];
 
