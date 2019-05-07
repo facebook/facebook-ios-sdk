@@ -173,16 +173,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return bundle;
 }
 
-+ (id)convertRequestValue:(id)value
-{
-  if ([value isKindOfClass:[NSNumber class]]) {
-    value = ((NSNumber *)value).stringValue;
-  } else if ([value isKindOfClass:[NSURL class]]) {
-    value = ((NSURL *)value).absoluteString;
-  }
-  return value;
-}
-
 + (uint64_t)currentTimeInMilliseconds
 {
   struct timeval time;
@@ -373,47 +363,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   return operatingSystemVersion;
 }
 
-+ (NSString *)queryStringWithDictionary:(NSDictionary *)dictionary
-                                  error:(NSError *__autoreleasing *)errorRef
-                   invalidObjectHandler:(FBSDKInvalidObjectHandler)invalidObjectHandler
-{
-  NSMutableString *queryString = [[NSMutableString alloc] init];
-  __block BOOL hasParameters = NO;
-  if (dictionary) {
-    NSMutableArray<NSString *> *keys = [dictionary.allKeys mutableCopy];
-    // remove non-string keys, as they are not valid
-    [keys filterUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-      return [evaluatedObject isKindOfClass:[NSString class]];
-    }]];
-    // sort the keys so that the query string order is deterministic
-    [keys sortUsingSelector:@selector(compare:)];
-    BOOL stop = NO;
-    for (NSString *key in keys) {
-      id value = [self convertRequestValue:dictionary[key]];
-      if ([value isKindOfClass:[NSString class]]) {
-        value = [self URLEncode:value];
-      }
-      if (invalidObjectHandler && ![value isKindOfClass:[NSString class]]) {
-        value = invalidObjectHandler(value, &stop);
-        if (stop) {
-          break;
-        }
-      }
-      if (value) {
-        if (hasParameters) {
-          [queryString appendString:@"&"];
-        }
-        [queryString appendFormat:@"%@=%@", key, value];
-        hasParameters = YES;
-      }
-    }
-  }
-  if (errorRef != NULL) {
-    *errorRef = nil;
-  }
-  return (queryString.length ? [queryString copy] : nil);
-}
-
 + (NSString *)URLDecode:(NSString *)value
 {
   value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
@@ -423,19 +372,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
 #pragma clang diagnostic pop
   return value;
 }
-
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-+ (NSString *)URLEncode:(NSString *)value
-{
-  return (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(NULL,
-                                                                               (CFStringRef)value,
-                                                                               NULL, // characters to leave unescaped
-                                                                               CFSTR(":!*();@/&?+$,='"),
-                                                                               kCFStringEncodingUTF8);
-}
-
-#pragma clang diagnostic pop
 
 + (BOOL)shouldManuallyAdjustOrientation
 {
@@ -456,9 +392,9 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   NSString *queryString = nil;
   if (queryParameters.count) {
     NSError *queryStringError;
-    queryString = [@"?" stringByAppendingString:[self queryStringWithDictionary:queryParameters
-                                                                          error:&queryStringError
-                                                           invalidObjectHandler:NULL]];
+    queryString = [@"?" stringByAppendingString:[FBSDKBasicUtility queryStringWithDictionary:queryParameters
+                                                                                       error:&queryStringError
+                                                                        invalidObjectHandler:NULL]];
     if (!queryString) {
       if (errorRef != NULL) {
         *errorRef = [NSError fbInvalidArgumentErrorWithName:@"queryParameters"

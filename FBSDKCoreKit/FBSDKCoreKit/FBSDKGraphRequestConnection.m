@@ -329,7 +329,7 @@ NSURLSessionDataDelegate
                    logger:(FBSDKLogger *)logger
 {
   [attachments enumerateKeysAndObjectsUsingBlock:^(id key, id value, BOOL *stop) {
-    value = [FBSDKInternalUtility convertRequestValue:value];
+    value = [FBSDKBasicUtility convertRequestValue:value];
     if ([value isKindOfClass:[NSString class]]) {
       if (addFormData) {
         [body appendWithKey:key formValue:(NSString *)value logger:logger];

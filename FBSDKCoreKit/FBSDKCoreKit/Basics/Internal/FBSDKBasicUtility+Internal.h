@@ -81,6 +81,31 @@ setJSONStringForObject:(id)object
  */
 + (id)objectForJSONString:(NSString *)string error:(NSError *__autoreleasing *)errorRef;
 
+/**
+ Constructs a query string from a dictionary.
+ @param dictionary The dictionary with key/value pairs for the query string.
+ @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
+ @param invalidObjectHandler Handles objects that are invalid, returning a replacement value or nil to ignore.
+ @return Query string representation of the parameters.
+ */
++ (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
+                                  error:(NSError *__autoreleasing *)errorRef
+                   invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
+
+/**
+ Converts simple value types to the string equivalent for serializing to a request query or body.
+ @param value The value to be converted.
+ @return The value that may have been converted if able (otherwise the input param).
+ */
++ (id)convertRequestValue:(id)value;
+
+/**
+ Encodes a value for an URL.
+ @param value The value to encode.
+ @return The encoded value.
+ */
++ (NSString *)URLEncode:(NSString *)value;
+
 @end
 
 NS_ASSUME_NONNULL_END

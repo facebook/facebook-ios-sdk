@@ -31,7 +31,7 @@
 
 + (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary error:(NSError **)errorRef
 {
-  return [FBSDKInternalUtility queryStringWithDictionary:dictionary error:errorRef invalidObjectHandler:NULL];
+  return [FBSDKBasicUtility queryStringWithDictionary:dictionary error:errorRef invalidObjectHandler:NULL];
 }
 
 + (NSString *)URLDecode:(NSString *)value
@@ -41,7 +41,7 @@
 
 + (NSString *)URLEncode:(NSString *)value
 {
-  return [FBSDKInternalUtility URLEncode:value];
+  return [FBSDKBasicUtility URLEncode:value];
 }
 
 + (dispatch_source_t)startGCDTimerWithInterval:(double)interval block:(dispatch_block_t)block

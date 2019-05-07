@@ -173,7 +173,7 @@ FBSDKHTTPMethod FBSDKHTTPMethodDELETE = @"DELETE";
 
   NSString *queryPrefix = parsedURL.query ? @"&" : @"?";
 
-  NSString *query = [FBSDKInternalUtility queryStringWithDictionary:params error:NULL invalidObjectHandler:^id(id object, BOOL *stop) {
+  NSString *query = [FBSDKBasicUtility queryStringWithDictionary:params error:NULL invalidObjectHandler:^id(id object, BOOL *stop) {
     if ([self isAttachment:object]) {
       if ([httpMethod isEqualToString:FBSDKHTTPMethodGET]) {
         [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"can not use GET to upload a file"];

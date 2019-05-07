@@ -127,13 +127,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (NSDictionary *)dictionaryFromFBURL:(NSURL *)url;
 
 /**
-  Converts simple value types to the string equivalent for serializing to a request query or body.
- @param value The value to be converted.
- @return The value that may have been converted if able (otherwise the input param).
- */
-+ (id)convertRequestValue:(id)value;
-
-/**
   Constructs a Facebook URL.
  @param hostPrefix The prefix for the host, such as 'm', 'graph', etc.
  @param path The path for the URL.  This may or may not include a version.
@@ -221,29 +214,11 @@ NS_SWIFT_NAME(InternalUtility)
 + (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString;
 
 /**
-  Constructs a query string from a dictionary.
- @param dictionary The dictionary with key/value pairs for the query string.
- @param errorRef If an error occurs, upon return contains an NSError object that describes the problem.
- @param invalidObjectHandler Handles objects that are invalid, returning a replacement value or nil to ignore.
- @return Query string representation of the parameters.
- */
-+ (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary
-                                  error:(NSError *__autoreleasing *)errorRef
-                   invalidObjectHandler:(nullable FBSDKInvalidObjectHandler)invalidObjectHandler;
-
-/**
  Decodes a value from an URL.
  @param value The value to decode.
  @return The decoded value.
  */
 + (NSString *)URLDecode:(NSString *)value;
-
-/**
- Encodes a value for an URL.
- @param value The value to encode.
- @return The encoded value.
- */
-+ (NSString *)URLEncode:(NSString *)value;
 
 /**
   Constructs an NSURL.
