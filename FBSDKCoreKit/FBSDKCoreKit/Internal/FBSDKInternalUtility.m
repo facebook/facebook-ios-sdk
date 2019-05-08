@@ -643,26 +643,6 @@ static NSMapTable *_transientObjects;
   [permission isEqualToString:@"rsvp_event"];
 }
 
-+ (BOOL)areAllPermissionsReadPermissions:(NSSet *)permissions
-{
-  for (NSString *permission in permissions) {
-    if ([[self class] isPublishPermission:permission]) {
-      return NO;
-    }
-  }
-  return YES;
-}
-
-+ (BOOL)areAllPermissionsPublishPermissions:(NSSet *)permissions
-{
-  for (NSString *permission in permissions) {
-    if (![[self class] isPublishPermission:permission]) {
-      return NO;
-    }
-  }
-  return YES;
-}
-
 + (BOOL)isUnity
 {
   NSString *userAgentSuffix = [FBSDKSettings userAgentSuffix];

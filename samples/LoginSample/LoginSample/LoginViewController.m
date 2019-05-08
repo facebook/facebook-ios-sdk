@@ -121,8 +121,7 @@
 
 - (void)configureSettings
 {
-  _fbButton.publishPermissions = [SettingsUtil publishPermissions];
-  _fbButton.readPermissions = [SettingsUtil readPermissions];
+  _fbButton.permissions = [[SettingsUtil readPermissions] arrayByAddingObjectsFromArray:[SettingsUtil publishPermissions]];
   AKFResponseType responseType = [SettingsUtil responseType];
   if (_responseType != responseType) {
     _responseType = responseType;

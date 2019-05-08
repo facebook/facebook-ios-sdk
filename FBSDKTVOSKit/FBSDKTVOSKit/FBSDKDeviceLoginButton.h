@@ -54,12 +54,6 @@ NS_SWIFT_NAME(FBDeviceLoginButton)
  */
 @property (nonatomic, copy) NSArray<NSString *> *permissions;
 
-@property (nonatomic, copy) NSArray<NSString *> *publishPermissions
-DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
-
-@property (nonatomic, copy) NSArray<NSString *> *readPermissions
-DEPRECATED_MSG_ATTRIBUTE("Use permissions instead.");
-
 /*!
  @abstract the optional URL to redirect the user to after they complete the login.
  @discussion the URL must be configured in your App Settings -> Advanced -> OAuth Redirect URIs

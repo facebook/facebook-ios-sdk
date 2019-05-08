@@ -136,24 +136,6 @@
 
 #pragma mark - Private impl
 
-- (void)setReadPermissions:(NSArray<NSString *> *)readPermissions
-{
-  _readPermissions = readPermissions;
-
-  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_publishPermissions];
-  [newPermissions addObjectsFromArray:readPermissions];
-  _permissions = [newPermissions allObjects];
-}
-
-- (void)setPublishPermissions:(NSArray<NSString *> *)publishPermissions
-{
-  _publishPermissions = publishPermissions;
-
-  NSMutableSet<NSString *> *newPermissions = [NSMutableSet setWithArray:_readPermissions];
-  [newPermissions addObjectsFromArray:publishPermissions];
-  _permissions = [newPermissions allObjects];
-}
-
 - (void)_notifySuccessForDelegate:(id<FBSDKDeviceLoginViewControllerDelegate>)delegate
   token:(FBSDKAccessToken *)token
 {

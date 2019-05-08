@@ -300,16 +300,6 @@ NS_SWIFT_NAME(InternalUtility)
  */
 + (BOOL)isPublishPermission:(NSString *)permission;
 
-/*
-  Checks if the set of permissions are all read permissions.
- */
-+ (BOOL)areAllPermissionsReadPermissions:(NSSet *)permissions;
-
-/*
-  Checks if the set of permissions are all publish permissions.
- */
-+ (BOOL)areAllPermissionsPublishPermissions:(NSSet *)permissions;
-
 #pragma mark - FB Apps Installed
 
 @property (class, nonatomic, assign, readonly) BOOL isFacebookAppInstalled;

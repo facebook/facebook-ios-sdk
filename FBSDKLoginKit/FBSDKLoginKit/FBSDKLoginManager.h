@@ -144,18 +144,6 @@ NS_SWIFT_NAME(LoginManager)
                          handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
 NS_SWIFT_NAME(logIn(permissions:from:handler:));
 
-- (void)logInWithReadPermissions:(NSArray<NSString *> *)permissions
-              fromViewController:(nullable UIViewController *)fromViewController
-                         handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-__attribute__((deprecated("Use -logInWithPermissions:fromViewController:handler: instead.", "-logInWithPermissions:fromViewController:handler:")))
-NS_SWIFT_NAME(logIn(readPermissions:from:handler:));
-
-- (void)logInWithPublishPermissions:(NSArray<NSString *> *)permissions
-                 fromViewController:(nullable UIViewController *)fromViewController
-                            handler:(nullable FBSDKLoginManagerLoginResultBlock)handler
-__attribute__((deprecated("Use -logInWithPermissions:fromViewController:handler: instead.", "-logInWithPermissions:fromViewController:handler:")))
-NS_SWIFT_NAME(logIn(publishPermissions:from:handler:));
-
 /**
   Requests user's permission to reathorize application's data access, after it has expired due to inactivity.
  @param fromViewController the view controller to present from. If nil, the topmost view controller will be
