@@ -67,7 +67,7 @@ NS_DESIGNATED_INITIALIZER;
       break;
     }
   }
-  NSDictionary<NSString *, NSString *> *queryParameters = [FBSDKInternalUtility dictionaryWithQueryString:responseURL.query];
+  NSDictionary<NSString *, NSString *> *queryParameters = [FBSDKBasicUtility dictionaryWithQueryString:responseURL.query];
   queryParameters = [FBSDKBridgeAPICrypto decryptResponseForRequest:request
                                                     queryParameters:queryParameters
                                                               error:errorRef];

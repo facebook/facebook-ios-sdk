@@ -207,20 +207,6 @@ NS_SWIFT_NAME(InternalUtility)
 + (BOOL)object:(id)object isEqualToObject:(id)other;
 
 /**
- Parses a query string into a dictionary.
- @param queryString The query string value.
- @return A dictionary with the key/value pairs.
- */
-+ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString;
-
-/**
- Decodes a value from an URL.
- @param value The value to decode.
- @return The decoded value.
- */
-+ (NSString *)URLDecode:(NSString *)value;
-
-/**
   Constructs an NSURL.
  @param scheme The scheme for the URL.
  @param host The host for the URL.

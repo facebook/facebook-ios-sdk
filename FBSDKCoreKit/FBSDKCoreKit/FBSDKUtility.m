@@ -26,7 +26,7 @@
 
 + (NSDictionary *)dictionaryWithQueryString:(NSString *)queryString
 {
-  return [FBSDKInternalUtility dictionaryWithQueryString:queryString];
+  return [FBSDKBasicUtility dictionaryWithQueryString:queryString];
 }
 
 + (NSString *)queryStringWithDictionary:(NSDictionary<NSString *, id> *)dictionary error:(NSError **)errorRef
@@ -36,7 +36,7 @@
 
 + (NSString *)URLDecode:(NSString *)value
 {
-  return [FBSDKInternalUtility URLDecode:value];
+  return [FBSDKBasicUtility URLDecode:value];
 }
 
 + (NSString *)URLEncode:(NSString *)value

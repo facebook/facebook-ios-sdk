@@ -284,7 +284,7 @@ static UIApplicationState _applicationState;
   if (!url) {
     return;
   }
-  NSDictionary<NSString *, NSString *> *params = [FBSDKInternalUtility dictionaryWithQueryString:url.query];
+  NSDictionary<NSString *, NSString *> *params = [FBSDKBasicUtility dictionaryWithQueryString:url.query];
   NSString *applinkDataString = params[@"al_applink_data"];
   if (!applinkDataString) {
     return;

@@ -106,6 +106,20 @@ setJSONStringForObject:(id)object
  */
 + (NSString *)URLEncode:(NSString *)value;
 
+/**
+ Parses a query string into a dictionary.
+ @param queryString The query string value.
+ @return A dictionary with the key/value pairs.
+ */
++ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString;
+
+/**
+ Decodes a value from an URL.
+ @param value The value to decode.
+ @return The decoded value.
+ */
++ (NSString *)URLDecode:(NSString *)value;
+
 @end
 
 NS_ASSUME_NONNULL_END

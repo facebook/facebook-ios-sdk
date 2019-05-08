@@ -120,44 +120,13 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
   // version 3.3 and above encode the parameters in the fragment;
   // merge them together with fragment taking priority.
   NSMutableDictionary *params = [NSMutableDictionary dictionary];
-  [params addEntriesFromDictionary:[self dictionaryWithQueryString:url.query]];
+  [params addEntriesFromDictionary:[FBSDKBasicUtility dictionaryWithQueryString:url.query]];
 
   // Only get the params from the fragment if it has authorize as the host
   if ([url.host isEqualToString:@"authorize"]) {
-    [params addEntriesFromDictionary:[self dictionaryWithQueryString:url.fragment]];
+    [params addEntriesFromDictionary:[FBSDKBasicUtility dictionaryWithQueryString:url.fragment]];
   }
   return params;
-}
-
-+ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString
-{
-  NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
-  NSArray<NSString *> *parts = [queryString componentsSeparatedByString:@"&"];
-
-  for (NSString *part in parts) {
-    if (part.length == 0) {
-      continue;
-    }
-
-    NSRange index = [part rangeOfString:@"="];
-    NSString *key;
-    NSString *value;
-
-    if (index.location == NSNotFound) {
-      key = part;
-      value = @"";
-    } else {
-      key = [part substringToIndex:index.location];
-      value = [part substringFromIndex:index.location + index.length];
-    }
-
-    key = [self URLDecode:key];
-    value = [self URLDecode:value];
-    if (key && value) {
-      result[key] = value;
-    }
-  }
-  return result;
 }
 
 + (NSBundle *)bundleForStrings
@@ -361,16 +330,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
     }
   });
   return operatingSystemVersion;
-}
-
-+ (NSString *)URLDecode:(NSString *)value
-{
-  value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-  value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-#pragma clang diagnostic pop
-  return value;
 }
 
 + (BOOL)shouldManuallyAdjustOrientation

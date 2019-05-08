@@ -96,7 +96,7 @@
     return nil;
   }
 
-  NSMutableDictionary<NSString *, id> *queryParameters = [[FBSDKInternalUtility dictionaryWithQueryString:requestURL.query] mutableCopy];
+  NSMutableDictionary<NSString *, id> *queryParameters = [[FBSDKBasicUtility dictionaryWithQueryString:requestURL.query] mutableCopy];
   queryParameters[@"ios_bundle_id"] = [NSBundle mainBundle].bundleIdentifier;
   NSURL *redirectURL = [self _redirectURLWithActionID:nil methodName:methodName error:errorRef];
   if (!redirectURL) {

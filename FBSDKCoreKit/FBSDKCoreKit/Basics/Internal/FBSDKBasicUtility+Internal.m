@@ -197,4 +197,45 @@ setJSONStringForObject:(id)object
 
 #pragma clang diagnostic pop
 
++ (NSDictionary<NSString *, NSString *> *)dictionaryWithQueryString:(NSString *)queryString
+{
+  NSMutableDictionary<NSString *, NSString *> *result = [[NSMutableDictionary alloc] init];
+  NSArray<NSString *> *parts = [queryString componentsSeparatedByString:@"&"];
+
+  for (NSString *part in parts) {
+    if (part.length == 0) {
+      continue;
+    }
+
+    NSRange index = [part rangeOfString:@"="];
+    NSString *key;
+    NSString *value;
+
+    if (index.location == NSNotFound) {
+      key = part;
+      value = @"";
+    } else {
+      key = [part substringToIndex:index.location];
+      value = [part substringFromIndex:index.location + index.length];
+    }
+
+    key = [self URLDecode:key];
+    value = [self URLDecode:value];
+    if (key && value) {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+
++ (NSString *)URLDecode:(NSString *)value
+{
+  value = [value stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  value = [value stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#pragma clang diagnostic pop
+  return value;
+}
+
 @end

@@ -94,7 +94,7 @@ static NSString *g_cipherKey = nil;
     return nil;
   }
   NSString *decryptedString = [[NSString alloc] initWithData:decryptedData encoding:NSUTF8StringEncoding];
-  NSDictionary<NSString *, NSString *> *decryptedDictionary = [FBSDKInternalUtility dictionaryWithQueryString:decryptedString];
+  NSDictionary<NSString *, NSString *> *decryptedDictionary = [FBSDKBasicUtility dictionaryWithQueryString:decryptedString];
   NSMutableDictionary *decryptedQueryParameters = [[NSMutableDictionary alloc] initWithDictionary:decryptedDictionary];
   decryptedQueryParameters[FBSDKBridgeAPIVersionKey] = version;
   return [decryptedQueryParameters copy];
