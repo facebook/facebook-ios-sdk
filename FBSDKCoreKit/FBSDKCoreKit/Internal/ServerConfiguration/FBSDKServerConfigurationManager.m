@@ -376,7 +376,7 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
       NSString *updateMessage = _serverConfiguration.updateMessage;
       if (updateMessage && updateMessage.length > 0 && !_printedUpdateMessage) {
         _printedUpdateMessage = YES;
-        NSLog(@"%@", updateMessage);
+        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorInformational logEntry:updateMessage];
       }
 #endif
 
