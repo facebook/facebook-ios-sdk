@@ -26,6 +26,7 @@
 #import "FBSDKAppEventsUtility.h"
 #import "FBSDKApplicationDelegate.h"
 #import "FBSDKConstants.h"
+#import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
 #import "FBSDKUtility.h"
@@ -43,6 +44,12 @@ static NSString *const _mockAppID = @"mockAppID";
 - (void)publishInstall;
 - (void)flushForReason:(FBSDKAppEventsFlushReason)flushReason;
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
+- (void)instanceLogEvent:(FBSDKAppEventName)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken;
+
 + (FBSDKAppEvents *)singleton;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
@@ -54,6 +61,11 @@ static NSString *const _mockAppID = @"mockAppID";
 @interface FBSDKAppEventsTests : XCTestCase
 {
   id _mockAppEvents;
+  id _mockAppStates;
+  NSString *_mockEventName;
+  NSDictionary <NSString *, id> *_mockPayload;
+  double _mockPurchaseAmount;
+  NSString *_mockCurrency;
 }
 @end
 
@@ -62,27 +74,33 @@ static NSString *const _mockAppID = @"mockAppID";
 - (void)setUp
 {
   _mockAppEvents = [OCMockObject niceMockForClass:[FBSDKAppEvents class]];
+  _mockAppStates = OCMClassMock([FBSDKAppEventsState class]);
+  OCMStub([_mockAppStates alloc]).andReturn(_mockAppStates);
+  OCMStub([_mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(_mockAppStates);
+  _mockEventName = @"fb_mock_event";
+  _mockPayload  = @{@"fb_push_payload" : @{@"campaign" : @"testCampaign"}};
+  _mockPurchaseAmount = 1.0;
+  _mockCurrency = @"USD";
+
   [FBSDKAppEvents setLoggingOverrideAppID:_mockAppID];
 }
 
 - (void)tearDown
 {
   [_mockAppEvents stopMocking];
+  [_mockAppStates stopMocking];
 }
 
 - (void)testLogPurchase
 {
-  double mockPurchaseAmount = 1.0;
-  NSString *mockCurrency = @"USD";
-
   id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
 
-  [[partialMockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
+  [[partialMockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
   [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
 
   OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
-  [FBSDKAppEvents logPurchase:mockPurchaseAmount currency:mockCurrency];
+  [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
 
   [partialMockAppEvents verify];
 }
@@ -251,24 +269,20 @@ static NSString *const _mockAppID = @"mockAppID";
 
 - (void)testLogPushNotificationOpen
 {
-  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"testCampaign"};
-  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
-
   NSDictionary <NSString *, NSString *> *expectedParams = @{
                                                             @"fb_push_campaign":@"testCampaign",
                                                             };
 
   [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
 
-  [FBSDKAppEvents logPushNotificationOpen:mockPayload];
+  [FBSDKAppEvents logPushNotificationOpen:_mockPayload];
 
   [_mockAppEvents verify];
 }
 
 - (void)testLogPushNotificationOpenEmptyCampaign
 {
-  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @""};
-  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
+  NSDictionary <NSString *, id> *mockPayload = @{@"fb_push_payload" : @{@"campaign" : @""}};
 
   [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
 
@@ -279,9 +293,6 @@ static NSString *const _mockAppID = @"mockAppID";
 
 - (void)testLogPushNotificationOpenWithNonEmptyAction
 {
-  NSDictionary <NSString *, NSString *> *mockFacebookPayload = @{@"campaign" : @"testCampaign"};
-  NSDictionary <NSString *, NSDictionary<NSString *, NSString*> *> *mockPayload = @{@"fb_push_payload" : mockFacebookPayload};
-
   NSDictionary <NSString *, NSString *> *expectedParams = @{
                                                             @"fb_push_action":@"testAction",
                                                             @"fb_push_campaign":@"testCampaign",
@@ -289,7 +300,7 @@ static NSString *const _mockAppID = @"mockAppID";
 
   [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
 
-  [FBSDKAppEvents logPushNotificationOpen:mockPayload action:@"testAction"];
+  [FBSDKAppEvents logPushNotificationOpen:_mockPayload action:@"testAction"];
 
   [_mockAppEvents verify];
 }
@@ -314,15 +325,13 @@ static NSString *const _mockAppID = @"mockAppID";
 
 - (void)testCheckPersistedEventsCalledWhenLogEvent
 {
-  double mockPurchaseAmount = 1.0;
-
   id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
 
   [[partialMockAppEvents expect] checkPersistedEvents];
 
   OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
-  [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(mockPurchaseAmount) parameters:@{} accessToken:nil];
+  [FBSDKAppEvents logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   [partialMockAppEvents verify];
 }
@@ -355,6 +364,44 @@ static NSString *const _mockAppID = @"mockAppID";
   [[FBSDKAppEvents singleton] publishInstall];
 
   [partialMockAppEvents verify];
+}
+
+- (void)testAppEventsKillSwitchDisabled
+{
+  id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
+  OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
+                                      appID:[OCMArg any]
+                               defaultValue:NO]).andReturn(NO);
+
+  [[_mockAppStates expect] addEvent:[OCMArg any] isImplicit:NO];
+
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [partialMockAppEvents instanceLogEvent:_mockEventName
+                              valueToSum:@(_mockPurchaseAmount)
+                              parameters:nil
+                      isImplicitlyLogged:NO
+                             accessToken:nil];
+
+  [_mockAppStates verify];
+}
+
+- (void)testAppEventsKillSwitchEnabled
+{
+  id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
+  OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
+                                      appID:[OCMArg any]
+                               defaultValue:NO]).andReturn(YES);
+
+  [[_mockAppStates reject] addEvent:[OCMArg any] isImplicit:NO];
+
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [partialMockAppEvents instanceLogEvent:_mockEventName
+                              valueToSum:@(_mockPurchaseAmount)
+                              parameters:nil
+                      isImplicitlyLogged:NO
+                             accessToken:nil];
+
+  [_mockAppStates verify];
 }
 
 @end
