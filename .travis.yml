@@ -57,7 +57,7 @@ jobs:
     #   script: sh scripts/run.sh tag-current-version --push
     - stage: release
       name: GitHub Release
-      osx_image: xcode10.2
+      osx_image: xcode10.1
       script: sh scripts/run.sh build carthage --archive
       deploy:
         provider: releases
