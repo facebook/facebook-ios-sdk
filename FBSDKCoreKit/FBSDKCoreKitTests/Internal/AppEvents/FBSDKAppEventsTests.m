@@ -20,6 +20,9 @@
 
 #import <OCMock/OCMock.h>
 
+#import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
+#import <OHHTTPStubs/OHHTTPStubs.h>
+
 #import "FBSDKAccessToken.h"
 #import "FBSDKAppEvents.h"
 #import "FBSDKAppEventsState.h"
@@ -29,6 +32,7 @@
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
+#import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
 static NSString *const _mockAppID = @"mockAppID";
@@ -89,6 +93,7 @@ static NSString *const _mockAppID = @"mockAppID";
 {
   [_mockAppEvents stopMocking];
   [_mockAppStates stopMocking];
+  [OHHTTPStubs removeAllStubs];
 }
 
 - (void)testLogPurchase
@@ -402,6 +407,29 @@ static NSString *const _mockAppID = @"mockAppID";
                              accessToken:nil];
 
   [_mockAppStates verify];
+}
+
+- (void)testGraphRequestBannedWithAutoInitDisabled
+{
+  //test when autoInitEnabled is set to be NO
+  __block int activiesEndpointCalledCountDisabled = 0;
+  NSString *urlString = [NSString stringWithFormat:@"%@/activities", _mockAppID];
+
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    XCTAssertNotNil(request);
+    if ([request.URL.absoluteString rangeOfString:urlString].location != NSNotFound) {
+      ++activiesEndpointCalledCountDisabled;
+    }
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  [FBSDKSettings setAutoInitEnabled:NO];
+  [FBSDKAppEvents activateApp];
+  XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
 }
 
 @end
