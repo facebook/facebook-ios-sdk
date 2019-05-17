@@ -505,7 +505,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
     }
 
     // any necessary strong reference is maintained by the FBSDKLoginURLCompleter handler
-    [completer completeLogIn:self withHandler:^(FBSDKLoginCompletionParameters *parameters) {
+    [completer completeLoginWithHandler:^(FBSDKLoginCompletionParameters *parameters) {
       [self completeAuthentication:parameters expectChallenge:YES];
     }];
   }
