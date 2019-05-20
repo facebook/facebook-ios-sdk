@@ -36,6 +36,7 @@
 #import "FBSDKUtility.h"
 
 static NSString *const _mockAppID = @"mockAppID";
+static NSString *const _mockUserID = @"mockUserID";
 
 // An extension that redeclares a private method so that it can be mocked
 @interface FBSDKApplicationDelegate ()
@@ -217,9 +218,8 @@ static NSString *const _mockAppID = @"mockAppID";
 
 - (void)testSetAndClearUserID
 {
-  NSString *mockUserId = @"1";
-  [FBSDKAppEvents setUserID:mockUserId];
-  XCTAssertEqualObjects([FBSDKAppEvents userID], mockUserId);
+  [FBSDKAppEvents setUserID:_mockUserID];
+  XCTAssertEqualObjects([FBSDKAppEvents userID], _mockUserID);
   [FBSDKAppEvents clearUserID];
   XCTAssertNil([FBSDKAppEvents userID]);
 }
@@ -435,6 +435,30 @@ static NSString *const _mockAppID = @"mockAppID";
     XCTAssertNil(error);
   }];
   XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
+}
+
+- (void)testGraphRequestWhenUpdateUserProperties
+{
+  [FBSDKAppEvents setUserID:_mockUserID];
+  NSString *urlString = [NSString stringWithFormat:@"%@/user_properties", _mockAppID];
+  [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
+    XCTAssertNotNil(request);
+    XCTAssertTrue([request.URL.absoluteString rangeOfString:urlString].location != NSNotFound);
+    return NO;
+  } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
+    return [OHHTTPStubsResponse responseWithData:[NSData data]
+                                      statusCode:200
+                                         headers:nil];
+  }];
+
+  [FBSDKAppEvents updateUserProperties:@{
+                                         @"favorite_color" : @"blue",
+                                         @"created" : [NSDate date].description,
+                                         @"email" : @"someemail@email.com",
+                                         @"some_id" : @"Custom:1",
+                                         @"validated" : @YES,
+                                         }
+                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
 }
 
 @end
