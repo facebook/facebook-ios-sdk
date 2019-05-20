@@ -414,6 +414,7 @@ static NSString *const _mockAppID = @"mockAppID";
   //test when autoInitEnabled is set to be NO
   __block int activiesEndpointCalledCountDisabled = 0;
   NSString *urlString = [NSString stringWithFormat:@"%@/activities", _mockAppID];
+  XCTestExpectation *expectation = [self expectationWithDescription:@"No Graph Request is sent"];
 
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     XCTAssertNotNil(request);
@@ -428,7 +429,11 @@ static NSString *const _mockAppID = @"mockAppID";
   }];
 
   [FBSDKSettings setAutoInitEnabled:NO];
-  [FBSDKAppEvents activateApp];
+  [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
+  [expectation fulfill];
+  [self waitForExpectationsWithTimeout:3 handler:^(NSError *error) {
+    XCTAssertNil(error);
+  }];
   XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
 }
 
