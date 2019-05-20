@@ -41,6 +41,7 @@ static id g_mockNSBundle;
 @interface FBSDKApplicationDelegate(Test)
 
 - (void)_logSDKInitialize;
+- (void)applicationDidBecomeActive:(NSNotification *)notification;
 
 @end
 
@@ -85,4 +86,26 @@ static id g_mockNSBundle;
   [_delegate application:app didFinishLaunchingWithOptions:nil];
 }
 
+- (void)testAppEventsEnabled {
+
+  [OCMStub(ClassMethod([_settingsMock isAutoLogAppEventsEnabled])) andReturnValue: OCMOCK_VALUE(YES)];
+
+  id appEvents = OCMClassMock([FBSDKAppEvents class]);
+
+  id notification = OCMClassMock([NSNotification class]);
+  [_delegate applicationDidBecomeActive:notification];
+
+  OCMVerify([appEvents activateApp]);
+}
+
+-(void)testAppEventsDisabled {
+
+  [OCMStub(ClassMethod([_settingsMock isAutoLogAppEventsEnabled])) andReturnValue: OCMOCK_VALUE(NO)];
+
+  id appEvents = OCMStrictClassMock([FBSDKAppEvents class]);
+  OCMReject([appEvents activateApp]);
+
+  id notification = OCMClassMock([NSNotification class]);
+  [_delegate applicationDidBecomeActive:notification];
+}
 @end
