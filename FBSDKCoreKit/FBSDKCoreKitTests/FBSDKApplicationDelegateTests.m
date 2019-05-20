@@ -80,7 +80,7 @@ static id g_mockNSBundle;
 - (void)testAutoLogAppEventsDisabled {
   [OCMStub(ClassMethod([_settingsMock isAutoLogAppEventsEnabled])) andReturnValue: OCMOCK_VALUE(NO)];
 
-  [[_delegateMock reject] _logSDKInitialize];
+  OCMReject([_delegateMock _logSDKInitialize]);
 
   id app = OCMClassMock([UIApplication class]);
   [_delegate application:app didFinishLaunchingWithOptions:nil];
