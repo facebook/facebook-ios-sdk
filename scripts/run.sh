@@ -273,12 +273,7 @@ build_sdk() {
     carthage build --no-skip-current
 
     if [ "${1:-}" == "--archive" ]; then
-      for kit in "${SDK_KITS[@]}"; do
-        if [ -d "$SDK_DIR"/Carthage/Build/iOS/"$kit".framework ] \
-          || [ -d "$SDK_DIR"/Carthage/Build/tvOS/"$kit".framework ]; then
-          carthage archive "$kit" --output Carthage/Release/
-        fi
-      done
+      carthage archive --output Carthage/Release/
     fi
   }
 
