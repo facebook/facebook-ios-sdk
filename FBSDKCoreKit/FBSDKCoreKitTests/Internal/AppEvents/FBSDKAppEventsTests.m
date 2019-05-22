@@ -176,8 +176,6 @@ static NSString *const _mockUserID = @"mockUserID";
                              mpn:nil
                            brand:nil
                       parameters:@{}];
-
-  [_mockAppEvents verify];
 }
 
 - (void)testSetAndClearUserData
@@ -292,8 +290,6 @@ static NSString *const _mockUserID = @"mockUserID";
   [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
 
   [FBSDKAppEvents logPushNotificationOpen:mockPayload];
-
-  [_mockAppEvents verify];
 }
 
 - (void)testLogPushNotificationOpenWithNonEmptyAction
@@ -315,8 +311,6 @@ static NSString *const _mockUserID = @"mockUserID";
   [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
 
   [FBSDKAppEvents logPushNotificationOpen:@{}];
-
-  [_mockAppEvents verify];
 }
 
 - (void)testSetFlushBehavior
@@ -405,8 +399,6 @@ static NSString *const _mockUserID = @"mockUserID";
                               parameters:nil
                       isImplicitlyLogged:NO
                              accessToken:nil];
-
-  [_mockAppStates verify];
 }
 
 - (void)testGraphRequestBannedWithAutoInitDisabled
