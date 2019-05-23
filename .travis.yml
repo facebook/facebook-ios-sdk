@@ -58,12 +58,12 @@ jobs:
     - stage: release
       name: GitHub Release
       osx_image: xcode10.1
-      script: sh scripts/run.sh build carthage --archive
+      script: sh scripts/run.sh release github
       deploy:
         provider: releases
         skip_cleanup: true
         api_key: $GITHUB_ACCESS_TOKEN
-        file: Carthage/Release/*
+        file: build/Release/*
         file_glob: true
         name: Facebook SDK $TRAVIS_TAG
         body: Consult Changelog $TRAVIS_TAG
@@ -85,6 +85,7 @@ notifications: # set notification options
     on_failure: always
     recipients:
       - codytwinton@fb.com
+      - dreamolight@fb.com
   # Enable webhooks later
   # webhooks:
   # on_failure: always

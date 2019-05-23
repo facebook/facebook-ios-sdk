@@ -325,6 +325,59 @@ lint_sdk() {
 
 # Release
 release_sdk() {
+  # Release github
+  release_github() {
+    mkdir -p build/Release
+    rm -rf build/Release/*
+
+    # Release frameworks in dynamic (mostly for Carthage)
+    release_dynamic() {
+      carthage build --no-skip-current
+      carthage archive --output build/Release/
+      mv build/Release/FBSDKCoreKit.framework.zip build/Release/FacebookSDK_Dynamic.framework.zip
+    }
+
+    # Release frameworks in static
+    release_static() {
+      xcodebuild build \
+       -workspace FacebookSDK.xcworkspace \
+       -scheme BuildAllKits \
+       -configuration Release \
+       | xcpretty
+      xcodebuild build \
+       -workspace FacebookSDK.xcworkspace \
+       -scheme BuildAllKits_TV \
+       -configuration Release \
+       | xcpretty
+
+      cd build || exit
+      zip -r FacebookSDK_static.zip ./*.framework ./*/*.framework
+      mv FacebookSDK_Static.zip Release/
+      for kit in "${SDK_KITS[@]}"; do
+        if [ ! -d "$kit".framework ] \
+          && [ ! -d tv/"$kit".framework ]; then
+          continue
+        fi
+
+        mkdir -p Release/"$kit"
+        if [ -d "$kit".framework ]; then
+          mkdir -p Release/"$kit"/iOS
+          mv "$kit".framework Release/"$kit"/iOS
+        fi
+        if [ -d tv/"$kit".framework ]; then
+          mkdir -p Release/"$kit"/tvOS
+          mv tv/"$kit".framework Release/"$kit"/tvOS
+        fi
+        cd Release || exit
+        zip -r -m "$kit".zip "$kit"
+        cd ..
+      done
+      cd ..
+    }
+
+    release_dynamic
+    release_static
+  }
 
   # Release Cocoapods
   release_cocoapods() {
@@ -411,6 +464,7 @@ release_sdk() {
   if [ -n "$release_type" ]; then shift; fi
 
   case "$release_type" in
+  "github") release_github "$@" ;;
   "cocoapods") release_cocoapods "$@" ;;
   "docs" | "documentation") release_docs "$@" ;;
   "changelog") release_external_changelog "$@" ;;
