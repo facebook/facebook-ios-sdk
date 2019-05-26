@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
-               BuildableName = "FBSDKShareKit-universal"
-               BlueprintName = "FBSDKShareKit-universal"
+               BuildableName = "FBSDKShareKit-Universal"
+               BlueprintName = "FBSDKShareKit-Universal"
                ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -109,8 +109,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
-            BuildableName = "FBSDKShareKit-universal"
-            BlueprintName = "FBSDKShareKit-universal"
+            BuildableName = "FBSDKShareKit-Universal"
+            BlueprintName = "FBSDKShareKit-Universal"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -131,8 +131,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
-            BuildableName = "FBSDKShareKit-universal"
-            BlueprintName = "FBSDKShareKit-universal"
+            BuildableName = "FBSDKShareKit-Universal"
+            BlueprintName = "FBSDKShareKit-Universal"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -149,8 +149,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D46C6101A11E6D800A0DDB6"
-            BuildableName = "FBSDKShareKit-universal"
-            BlueprintName = "FBSDKShareKit-universal"
+            BuildableName = "FBSDKShareKit-Universal"
+            BlueprintName = "FBSDKShareKit-Universal"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

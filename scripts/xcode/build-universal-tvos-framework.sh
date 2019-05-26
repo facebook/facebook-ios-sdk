@@ -27,9 +27,12 @@ UNIVERSAL_TV_BUILD_FOLDER=../build/tv/
 mkdir -p "${UNIVERSAL_TV_BUILD_FOLDER}"
 rm -rf "${UNIVERSAL_TV_BUILD_FOLDER}/${PROJECT_NAME}.framework"
 
+# get target by removing '-Universal' from $TARGET_NAME
+TARGET=${TARGET_NAME%-Universal}
+
 # Step 1. Build Device and Simulator versions
-xcodebuild -target "${PROJECT_NAME}_TV" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk appletvos BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}" clean build
-xcodebuild -target "${PROJECT_NAME}_TV" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk appletvsimulator BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}" clean build
+xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk appletvos BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}" clean build
+xcodebuild -target "${TARGET}" ONLY_ACTIVE_ARCH=NO -configuration "${CONFIGURATION}" -sdk appletvsimulator BUILD_DIR="${BUILD_DIR}" BUILD_ROOT="${BUILD_ROOT}" clean build
 
 # Step 2. Copy the framework structure to the universal folder
 cp -R "${BUILD_DIR}/${CONFIGURATION}-appletvos/${PROJECT_NAME}.framework" "${UNIVERSAL_TV_BUILD_FOLDER}/"

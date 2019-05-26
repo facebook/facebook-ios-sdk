@@ -29,8 +29,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-               BuildableName = "FBSDKShareKit_TV-universal"
-               BlueprintName = "FBSDKShareKit_TV-universal"
+               BuildableName = "FBSDKShareKit_TV-Universal"
+               BlueprintName = "FBSDKShareKit_TV-Universal"
                ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -47,8 +47,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-            BuildableName = "FBSDKShareKit_TV-universal"
-            BlueprintName = "FBSDKShareKit_TV-universal"
+            BuildableName = "FBSDKShareKit_TV-Universal"
+            BlueprintName = "FBSDKShareKit_TV-Universal"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -69,8 +69,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "9D2D99BE1BC456B200929E76"
-            BuildableName = "FBSDKShareKit_TV-universal"
-            BlueprintName = "FBSDKShareKit_TV-universal"
+            BuildableName = "FBSDKShareKit_TV-Universal"
+            BlueprintName = "FBSDKShareKit_TV-Universal"
             ReferencedContainer = "container:FBSDKShareKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

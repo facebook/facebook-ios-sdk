@@ -31,6 +31,30 @@
 			name = "FBSDKCoreKit_TV-Universal";
 			productName = "FBSDKCoreKit-Universal";
 		};
+		C5FCE31D228E08CA00867DFD /* FBSDKCoreKit_Basics-Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C5FCE321228E08CA00867DFD /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics-Universal" */;
+			buildPhases = (
+				C5FCE320228E08CA00867DFD /* ShellScript */,
+			);
+			dependencies = (
+				C5FCE33B228E092900867DFD /* PBXTargetDependency */,
+			);
+			name = "FBSDKCoreKit_Basics-Universal";
+			productName = "FBSDKCoreKit-Universal";
+		};
+		C5FCE332228E08D400867DFD /* FBSDKCoreKit_Basics_TV-Universal */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = C5FCE336228E08D400867DFD /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics_TV-Universal" */;
+			buildPhases = (
+				C5FCE335228E08D400867DFD /* ShellScript */,
+			);
+			dependencies = (
+				C5FCE33D228E093100867DFD /* PBXTargetDependency */,
+			);
+			name = "FBSDKCoreKit_Basics_TV-Universal";
+			productName = "FBSDKCoreKit-Universal";
+		};
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
@@ -862,6 +886,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 095981C219806A7900807DBE;
 			remoteInfo = "OHHTTPStubs Mac Framework";
+		};
+		C5FCE33A228E092900867DFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D26973E1A5DF40700143BFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5C4B2E62276B51500CA3706;
+			remoteInfo = FBSDKCoreKit_Basics;
+		};
+		C5FCE33C228E093100867DFD /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9D26973E1A5DF40700143BFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C5C4B3BE2276B67200CA3706;
+			remoteInfo = FBSDKCoreKit_Basics_TV;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2535,8 +2573,10 @@
 				9D6DEEFA1BC2E546001A94ED /* FBSDKCoreKit_TV-Universal */,
 				C5C4B2E62276B51500CA3706 /* FBSDKCoreKit_Basics */,
 				C5C4B4012276BA1200CA3706 /* FBSDKCoreKit_Basics-Dynamic */,
+				C5FCE31D228E08CA00867DFD /* FBSDKCoreKit_Basics-Universal */,
 				C5C4B3BE2276B67200CA3706 /* FBSDKCoreKit_Basics_TV */,
 				C5C4B4DC2276BA8D00CA3706 /* FBSDKCoreKit_Basics_TV-Dynamic */,
+				C5FCE332228E08D400867DFD /* FBSDKCoreKit_Basics_TV-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -2723,6 +2763,32 @@
 			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
 		};
 		9D6DEEFD1BC2E546001A94ED /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../scripts/xcode/build-universal-tvos-framework.sh\n";
+		};
+		C5FCE320228E08CA00867DFD /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "../scripts/xcode/build-universal-framework.sh\n";
+		};
+		C5FCE335228E08D400867DFD /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3140,6 +3206,16 @@
 			name = "OHHTTPStubs iOS StaticLib";
 			targetProxy = 9DAD79FA1B7B27DE00DFEF8F /* PBXContainerItemProxy */;
 		};
+		C5FCE33B228E092900867DFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5C4B2E62276B51500CA3706 /* FBSDKCoreKit_Basics */;
+			targetProxy = C5FCE33A228E092900867DFD /* PBXContainerItemProxy */;
+		};
+		C5FCE33D228E093100867DFD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C5C4B3BE2276B67200CA3706 /* FBSDKCoreKit_Basics_TV */;
+			targetProxy = C5FCE33C228E093100867DFD /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
@@ -3285,6 +3361,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -3292,6 +3369,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -3299,6 +3377,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -3306,6 +3385,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -3313,6 +3393,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -3320,6 +3401,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81A4A6021D19BE0400D5BF66 /* FBSDKCoreKit-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -3327,6 +3409,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8751D1B52DC00D61E6C /* FBSDKCoreKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Debug;
 		};
@@ -3334,6 +3417,39 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 814AC8751D1B52DC00D61E6C /* FBSDKCoreKit-tvOS-Dynamic.xcconfig */;
 			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+			};
+			name = Release;
+		};
+		C5FCE322228E08CA00867DFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
+			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+			};
+			name = Debug;
+		};
+		C5FCE323228E08CA00867DFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 81A4A6031D19BE0400D5BF66 /* FBSDKCoreKit.xcconfig */;
+			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+			};
+			name = Release;
+		};
+		C5FCE337228E08D400867DFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
+			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
+			};
+			name = Debug;
+		};
+		C5FCE338228E08D400867DFD /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 814AC8971D1B5A0600D61E6C /* FBSDKCoreKit-tvOS.xcconfig */;
+			buildSettings = {
+				MODULEMAP_FILE = "$(SRCROOT)/FBSDKCoreKit/Basics/FBSDKCoreKit.modulemap";
 			};
 			name = Release;
 		};
@@ -3444,6 +3560,24 @@
 			buildConfigurations = (
 				C5C4B4E82276BA8D00CA3706 /* Debug */,
 				C5C4B4E92276BA8D00CA3706 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C5FCE321228E08CA00867DFD /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics-Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5FCE322228E08CA00867DFD /* Debug */,
+				C5FCE323228E08CA00867DFD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C5FCE336228E08D400867DFD /* Build configuration list for PBXAggregateTarget "FBSDKCoreKit_Basics_TV-Universal" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C5FCE337228E08D400867DFD /* Debug */,
+				C5FCE338228E08D400867DFD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -7,31 +7,31 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "YES"
+            buildForTesting = "NO"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
-               BuildableName = "FBSDKCoreKit_TV-Universal"
-               BlueprintName = "FBSDKCoreKit_TV-Universal"
-               ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+               BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+               BuildableName = "FBSDKCoreKit_Basics-Universal"
+               BlueprintName = "FBSDKCoreKit_Basics-Universal"
+               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
-            buildForTesting = "YES"
+            buildForTesting = "NO"
             buildForRunning = "YES"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9DEC559D1BBA63BC00C7DB4A"
-               BuildableName = "FBSDKTVOSKit_TV-Universal"
-               BlueprintName = "FBSDKTVOSKit_TV-Universal"
-               ReferencedContainer = "container:FBSDKTVOSKit.xcodeproj">
+               BlueprintIdentifier = "C5FCE332228E08D400867DFD"
+               BuildableName = "FBSDKCoreKit_Basics_TV-Universal"
+               BlueprintName = "FBSDKCoreKit_Basics_TV-Universal"
+               ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,10 +46,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9DEC559D1BBA63BC00C7DB4A"
-            BuildableName = "FBSDKTVOSKit_TV-Universal"
-            BlueprintName = "FBSDKTVOSKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKTVOSKit.xcodeproj">
+            BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+            BuildableName = "FBSDKCoreKit_Basics-Universal"
+            BlueprintName = "FBSDKCoreKit_Basics-Universal"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -68,10 +68,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9DEC559D1BBA63BC00C7DB4A"
-            BuildableName = "FBSDKTVOSKit_TV-Universal"
-            BlueprintName = "FBSDKTVOSKit_TV-Universal"
-            ReferencedContainer = "container:FBSDKTVOSKit.xcodeproj">
+            BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+            BuildableName = "FBSDKCoreKit_Basics-Universal"
+            BlueprintName = "FBSDKCoreKit_Basics-Universal"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -86,10 +86,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9D6DEEFA1BC2E546001A94ED"
-            BuildableName = "FBSDKCoreKit_TV-Universal"
-            BlueprintName = "FBSDKCoreKit_TV-Universal"
-            ReferencedContainer = "container:../FBSDKCoreKit/FBSDKCoreKit.xcodeproj">
+            BlueprintIdentifier = "C5FCE31D228E08CA00867DFD"
+            BuildableName = "FBSDKCoreKit_Basics-Universal"
+            BlueprintName = "FBSDKCoreKit_Basics-Universal"
+            ReferencedContainer = "container:FBSDKCoreKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

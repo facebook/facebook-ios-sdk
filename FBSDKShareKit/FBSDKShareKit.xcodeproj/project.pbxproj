@@ -7,28 +7,28 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
-		9D2D99BE1BC456B200929E76 /* FBSDKShareKit_TV-universal */ = {
+		9D2D99BE1BC456B200929E76 /* FBSDKShareKit_TV-Universal */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 9D2D99BF1BC456B200929E76 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit_TV-universal" */;
+			buildConfigurationList = 9D2D99BF1BC456B200929E76 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit_TV-Universal" */;
 			buildPhases = (
 				9D2D99C41BC456F100929E76 /* ShellScript */,
 			);
 			dependencies = (
 				9D2D99C31BC456EF00929E76 /* PBXTargetDependency */,
 			);
-			name = "FBSDKShareKit_TV-universal";
+			name = "FBSDKShareKit_TV-Universal";
 			productName = "FBSDKShareKit_TV-universal";
 		};
-		9D46C6101A11E6D800A0DDB6 /* FBSDKShareKit-universal */ = {
+		9D46C6101A11E6D800A0DDB6 /* FBSDKShareKit-Universal */ = {
 			isa = PBXAggregateTarget;
-			buildConfigurationList = 9D46C6111A11E6D800A0DDB6 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit-universal" */;
+			buildConfigurationList = 9D46C6111A11E6D800A0DDB6 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit-Universal" */;
 			buildPhases = (
 				9D46C6141A11E6E600A0DDB6 /* Run Script */,
 			);
 			dependencies = (
 				9D46C6161A11E6F100A0DDB6 /* PBXTargetDependency */,
 			);
-			name = "FBSDKShareKit-universal";
+			name = "FBSDKShareKit-Universal";
 			productName = "FBSDKShareKit-universal";
 		};
 /* End PBXAggregateTarget section */
@@ -473,6 +473,34 @@
 			remoteGlobalIDString = 9D46C5EF1A11E5D800A0DDB6;
 			remoteInfo = FBSDKShareKit;
 		};
+		C57538C42292B6D5007C2EFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
+			remoteInfo = FBSDKCoreKit_Basics;
+		};
+		C57538C62292B6D5007C2EFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
+		};
+		C57538C82292B6D5007C2EFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
+			remoteInfo = FBSDKCoreKit_Basics_TV;
+		};
+		C57538CA2292B6D5007C2EFF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 8118B6341D0A49B500962084 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -712,6 +740,10 @@
 				8118B63F1D0A49B500962084 /* FBSDKCoreKitTests.xctest */,
 				8118B6411D0A49B500962084 /* FBSDKCoreKit.framework */,
 				819043EF1D261A7900B2E437 /* FBSDKCoreKit.framework */,
+				C57538C52292B6D5007C2EFF /* FBSDKCoreKit.framework */,
+				C57538C72292B6D5007C2EFF /* FBSDKCoreKit.framework */,
+				C57538C92292B6D5007C2EFF /* FBSDKCoreKit.framework */,
+				C57538CB2292B6D5007C2EFF /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1379,10 +1411,10 @@
 				9D46C5EF1A11E5D800A0DDB6 /* FBSDKShareKit */,
 				81A07EDF1D1A2E6A0041A29C /* FBSDKShareKit-Dynamic */,
 				9D46C5FA1A11E5D800A0DDB6 /* FBSDKShareKitTests */,
-				9D46C6101A11E6D800A0DDB6 /* FBSDKShareKit-universal */,
+				9D46C6101A11E6D800A0DDB6 /* FBSDKShareKit-Universal */,
 				9D2D99931BC452DE00929E76 /* FBSDKShareKit_TV */,
 				8144D8E81D261D2900C8E4AC /* FBSDKShareKit_TV-Dynamic */,
-				9D2D99BE1BC456B200929E76 /* FBSDKShareKit_TV-universal */,
+				9D2D99BE1BC456B200929E76 /* FBSDKShareKit_TV-Universal */,
 			);
 		};
 /* End PBXProject section */
@@ -1421,6 +1453,34 @@
 			fileType = wrapper.framework;
 			path = FBSDKCoreKit.framework;
 			remoteRef = 819043EE1D261A7900B2E437 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C57538C52292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C57538C42292B6D5007C2EFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C57538C72292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C57538C62292B6D5007C2EFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C57538C92292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C57538C82292B6D5007C2EFF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C57538CB2292B6D5007C2EFF /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C57538CA2292B6D5007C2EFF /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -1898,7 +1958,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D2D99BF1BC456B200929E76 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit_TV-universal" */ = {
+		9D2D99BF1BC456B200929E76 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit_TV-Universal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D2D99C01BC456B200929E76 /* Debug */,
@@ -1934,7 +1994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9D46C6111A11E6D800A0DDB6 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit-universal" */ = {
+		9D46C6111A11E6D800A0DDB6 /* Build configuration list for PBXAggregateTarget "FBSDKShareKit-Universal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9D46C6121A11E6D800A0DDB6 /* Debug */,
