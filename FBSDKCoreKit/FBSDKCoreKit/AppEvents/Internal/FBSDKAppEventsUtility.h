@@ -63,5 +63,6 @@ NS_SWIFT_NAME(AppEventsUtility)
 + (id)getVariable:(NSString *)variableName fromInstance:(NSObject *)instance;
 + (NSNumber *)getNumberValue:(NSString *)text;
 + (BOOL)isSensitiveUserData:(NSString *)text;
++ (NSString *)anonymousID;
 
 @end
