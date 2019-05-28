@@ -37,7 +37,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 @implementation FBSDKBridgeAPI {
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
-  id<FBSDKURLOpening> _pendingURLOpen;
+  __weak id<FBSDKURLOpening> _pendingURLOpen;
   id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
   FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 
