@@ -339,6 +339,26 @@ release_sdk() {
 
     # Release frameworks in static
     release_static() {
+      release_basics() {
+        xcodebuild build \
+         -workspace FacebookSDK.xcworkspace \
+         -scheme BuildCoreKitBasics \
+         -configuration Release \
+         | xcpretty
+        kit="FBSDKCoreKit_Basics"
+        cd build || exit
+
+        mkdir -p Release/"$kit"/iOS
+        mv FBSDKCoreKit.framework Release/"$kit"/iOS
+        mkdir -p Release/"$kit"/tvOS
+        mv tv/FBSDKCoreKit.framework Release/"$kit"/tvOS
+        cd Release || exit
+        zip -r -m "$kit".zip "$kit"
+        cd ..
+
+        cd ..
+      }
+
       xcodebuild build \
        -workspace FacebookSDK.xcworkspace \
        -scheme BuildAllKits \
@@ -373,6 +393,8 @@ release_sdk() {
         cd ..
       done
       cd ..
+
+      release_basics
     }
 
     release_dynamic
