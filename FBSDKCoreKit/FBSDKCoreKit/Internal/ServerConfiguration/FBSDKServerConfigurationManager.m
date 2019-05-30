@@ -27,6 +27,7 @@
 #import "FBSDKImageDownloader.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 #import "FBSDKServerConfiguration+Internal.h"
 #import "FBSDKServerConfiguration.h"
 #import "FBSDKSettings.h"
@@ -235,6 +236,9 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                     eventBindings:eventBindings
                                                                                  restrictiveRules:restrictiveRules
                                                    ];
+  if (restrictiveRules) {
+    [FBSDKRestrictiveDataFilterManager updateRulesFromServerConfiguration:restrictiveRules];
+  }
 #if TARGET_OS_TV
   // don't download icons more than once a day.
   static const NSTimeInterval kSmartLoginIconsTTL = 60 * 60 * 24;
