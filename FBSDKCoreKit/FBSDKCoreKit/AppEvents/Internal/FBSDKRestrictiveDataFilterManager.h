@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 
 + (void)updateRulesFromServerConfiguration:(NSArray<id> *)restrictiveRules;
++ (nullable NSString *)getMatchedRuleTypeWithParamkey:(NSString *)paramKey
+                                           paramValue:(NSString *)paramValue;
 
 @end
 

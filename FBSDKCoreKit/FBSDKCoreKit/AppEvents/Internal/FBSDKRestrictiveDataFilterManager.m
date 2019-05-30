@@ -23,7 +23,7 @@
 @property (nonatomic, readonly, copy) NSString *keyRegex;
 @property (nonatomic, readonly, copy) NSString *valueRegex;
 @property (nonatomic, readonly, copy) NSString *valueNegativeRegex;
-@property (nonatomic, readonly, copy) NSString *type;
+@property (nonatomic, readonly, copy) NSString *dataType;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
@@ -31,7 +31,7 @@
 -(instancetype)initWithKeyRegex:(NSString *)keyRegex
                      valueRegex:(NSString *)valueRegex
              valueNegativeRegex:(NSString *)valueNegativeRegex
-                           type:(NSString *)type;
+                       dataType:(NSString *)dataType;
 
 @end
 
@@ -40,14 +40,14 @@
 -(instancetype)initWithKeyRegex:(NSString *)keyRegex
                      valueRegex:(NSString *)valueRegex
              valueNegativeRegex:(NSString *)valueNegativeRegex
-                           type:(NSString *)type
+                       dataType:(NSString *)dataType
 {
   self = [super init];
   if (self) {
     _keyRegex = keyRegex;
     _valueRegex = valueRegex;
     _valueNegativeRegex = valueNegativeRegex;
-    _type = type;
+    _dataType = dataType;
   }
 
   return self;
@@ -67,10 +67,42 @@ static NSMutableArray<FBSDKRestrictiveRule *> *_rules;
     FBSDKRestrictiveRule *restrictiveRule = [[FBSDKRestrictiveRule alloc] initWithKeyRegex:rule[@"key_regex"] ?: nil
                                                                                 valueRegex:rule[@"value_regex"] ?: nil
                                                                         valueNegativeRegex:rule[@"value_negative_regex"] ?: nil
-                                                                                      type:rule[@"type"]];
+                                                                                  dataType:rule[@"type"]];
     [rulesArray addObject:restrictiveRule];
   }
   _rules = rulesArray;
+}
+
++ (nullable NSString *)getMatchedRuleTypeWithParamkey:(NSString *)paramKey
+                                           paramValue:(NSString *)paramValue
+{
+  NSArray<FBSDKRestrictiveRule *> *rules = [_rules copy];
+  for (FBSDKRestrictiveRule *rule in rules) {
+    // not matched to key
+    if (rule.keyRegex.length != 0 && ![self isMatchedWithPattern:rule.keyRegex text:paramKey]) {
+      continue;
+    }
+    // matched to neg val
+    if (rule.valueNegativeRegex.length != 0 && [self isMatchedWithPattern:rule.valueNegativeRegex text:paramValue]) {
+      continue;
+    }
+    // not matched to val
+    if (rule.valueRegex.length != 0 && ![self isMatchedWithPattern:rule.valueRegex text:paramValue]) {
+      continue;
+    }
+    return rule.dataType;
+  }
+  return nil;
+}
+
+#pragma mark Helper functions
+
++ (BOOL)isMatchedWithPattern:(NSString *)pattern
+                        text:(NSString *)text
+{
+  NSRegularExpression *regex = [[NSRegularExpression alloc] initWithPattern:pattern options:NSRegularExpressionCaseInsensitive error:nil];
+  NSUInteger matches = [regex numberOfMatchesInString:text options:0 range:NSMakeRange(0, text.length)];
+  return matches > 0;
 }
 
 @end
