@@ -61,10 +61,8 @@ static NSMutableArray<FBSDKRestrictiveRule *> *_rules;
 
 + (void)updateRulesFromServerConfiguration:(NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
 {
-  NSMutableArray<FBSDKRestrictiveRule *> *rulesArray = _rules;
-  if (!rulesArray){
-    rulesArray = [[NSMutableArray alloc] init];
-  }
+  [_rules removeAllObjects];
+  NSMutableArray<FBSDKRestrictiveRule *> *rulesArray = [[NSMutableArray alloc] init];
   for (id rule in restrictiveRules) {
     FBSDKRestrictiveRule *restrictiveRule = [[FBSDKRestrictiveRule alloc] initWithKeyRegex:rule[@"key_regex"] ?: nil
                                                                                 valueRegex:rule[@"value_regex"] ?: nil
