@@ -55,22 +55,65 @@
 
 @end
 
+@interface FBSDKRestrictiveEventFilter : NSObject
+
+@property (nonatomic, readonly, copy) NSString *eventName;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> *eventParams;
+
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
+
+-(instancetype)initWithEventName:(NSString *)eventName
+                     eventParams:(NSDictionary<NSString *, id> *)eventParams;
+
+@end
+
+@implementation FBSDKRestrictiveEventFilter
+
+-(instancetype)initWithEventName:(NSString *)eventName
+                     eventParams:(NSDictionary<NSString *, id> *)eventParams;
+{
+  self = [super init];
+  if (self) {
+    _eventName = eventName;
+    _eventParams = eventParams;
+  }
+
+  return self;
+}
+
+@end
+
 @implementation FBSDKRestrictiveDataFilterManager
 
 static NSMutableArray<FBSDKRestrictiveRule *> *_rules;
+static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
 
-+ (void)updateRulesFromServerConfiguration:(NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
++ (void)updateFilters:(nullable NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
+    restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
-  [_rules removeAllObjects];
-  NSMutableArray<FBSDKRestrictiveRule *> *rulesArray = [[NSMutableArray alloc] init];
-  for (id rule in restrictiveRules) {
-    FBSDKRestrictiveRule *restrictiveRule = [[FBSDKRestrictiveRule alloc] initWithKeyRegex:rule[@"key_regex"] ?: nil
-                                                                                valueRegex:rule[@"value_regex"] ?: nil
-                                                                        valueNegativeRegex:rule[@"value_negative_regex"] ?: nil
-                                                                                  dataType:rule[@"type"]];
-    [rulesArray addObject:restrictiveRule];
+  if (restrictiveRules.count > 0) {
+    [_rules removeAllObjects];
+    NSMutableArray<FBSDKRestrictiveRule *> *rulesArray = [NSMutableArray array];
+    for (id rule in restrictiveRules) {
+      FBSDKRestrictiveRule *restrictiveRule = [[FBSDKRestrictiveRule alloc] initWithKeyRegex:rule[@"key_regex"] ?: nil
+                                                                                  valueRegex:rule[@"value_regex"] ?: nil
+                                                                          valueNegativeRegex:rule[@"value_negative_regex"] ?: nil
+                                                                                    dataType:rule[@"type"]];
+      [rulesArray addObject:restrictiveRule];
+    }
+    _rules = rulesArray;
   }
-  _rules = rulesArray;
+
+  if (restrictiveParams.count > 0) {
+    [_params removeAllObjects];
+    NSMutableArray<FBSDKRestrictiveEventFilter *> *eventFilterArray = [NSMutableArray array];
+    for (NSString *eventName in restrictiveParams.allKeys) {
+      FBSDKRestrictiveEventFilter *restrictiveEventFilter = [[FBSDKRestrictiveEventFilter alloc] initWithEventName:eventName eventParams:restrictiveParams[eventName][@"restrictive_param"]];
+      [eventFilterArray addObject:restrictiveEventFilter];
+    }
+    _params = eventFilterArray;
+  }
 }
 
 + (nullable NSString *)getMatchedRuleTypeWithParamkey:(NSString *)paramKey

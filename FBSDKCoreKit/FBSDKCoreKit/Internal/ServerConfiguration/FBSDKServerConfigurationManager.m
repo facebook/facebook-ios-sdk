@@ -239,8 +239,8 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                                  restrictiveRules:restrictiveRules
                                                                                 restrictiveParams:restrictiveParams
                                                    ];
-  if (restrictiveRules) {
-    [FBSDKRestrictiveDataFilterManager updateRulesFromServerConfiguration:restrictiveRules];
+  if (restrictiveRules || restrictiveParams) {
+    [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveRules restrictiveParams:restrictiveParams];
   }
 #if TARGET_OS_TV
   // don't download icons more than once a day.
