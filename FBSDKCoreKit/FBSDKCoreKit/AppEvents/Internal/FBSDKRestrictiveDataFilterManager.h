@@ -27,8 +27,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)updateFilters:(nullable NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
     restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams;
-+ (nullable NSString *)getMatchedRuleTypeWithParamkey:(NSString *)paramKey
-                                           paramValue:(NSString *)paramValue;
++ (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
+                                              paramKey:(NSString *)paramKey
+                                            paramValue:(NSString *)paramValue;
 
 @end
 

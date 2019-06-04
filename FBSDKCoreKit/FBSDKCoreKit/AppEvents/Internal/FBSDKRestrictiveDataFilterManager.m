@@ -116,9 +116,21 @@ static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
   }
 }
 
-+ (nullable NSString *)getMatchedRuleTypeWithParamkey:(NSString *)paramKey
-                                           paramValue:(NSString *)paramValue
++ (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
+                                              paramKey:(NSString *)paramKey
+                                            paramValue:(NSString *)paramValue
 {
+  // match by params in custom events with event name
+  for (FBSDKRestrictiveEventFilter *filter in _params) {
+    if ([filter.eventName isEqualToString:eventName]) {
+      NSString *type = filter.eventParams[paramKey];
+      if (type) {
+        return type;
+      }
+    }
+  }
+
+  // match by regex
   NSArray<FBSDKRestrictiveRule *> *rules = [_rules copy];
   for (FBSDKRestrictiveRule *rule in rules) {
     // not matched to key

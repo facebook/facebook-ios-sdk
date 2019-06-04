@@ -1121,7 +1121,9 @@ static NSString *g_overrideAppID = nil;
 
   if (parameters) {
     for (NSString *key in [parameters keyEnumerator]) {
-      NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedRuleTypeWithParamkey:key paramValue:parameters[key]];
+      NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
+                                                                                 paramKey:key
+                                                                               paramValue:parameters[key]];
       if (type) {
         [restrictedParams setObject:type forKey:key];
       } else {
