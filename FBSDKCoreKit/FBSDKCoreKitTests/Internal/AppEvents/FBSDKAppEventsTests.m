@@ -97,16 +97,39 @@ static NSString *const _mockUserID = @"mockUserID";
   [OHHTTPStubs removeAllStubs];
 }
 
-- (void)testLogPurchase
+- (void)testLogPurchaseFlush
 {
   id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
 
-  [[partialMockAppEvents expect] logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
   [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonEagerlyFlushingEvent];
 
   OCMStub([partialMockAppEvents flushBehavior]).andReturn(FBSDKAppEventsFlushReasonEagerlyFlushingEvent);
 
   [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
+
+  [partialMockAppEvents verify];
+}
+
+- (void)testLogPurchase
+{
+  [[[_mockAppEvents expect] andForwardToRealObject] logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any]];
+  [[[_mockAppEvents expect] andForwardToRealObject] logPurchase:_mockPurchaseAmount currency:_mockCurrency parameters:[OCMArg any] accessToken:[OCMArg any]];
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:FBSDKAppEventNamePurchased valueToSum:@(_mockPurchaseAmount) parameters:[OCMArg any] accessToken:[OCMArg any]];
+  [[_mockAppStates expect] addEvent:[OCMArg any] isImplicit:NO];
+
+  [FBSDKAppEvents logPurchase:_mockPurchaseAmount currency:_mockCurrency];
+
+  [_mockAppEvents verify];
+  [_mockAppStates verify];
+}
+
+- (void)testFlush
+{
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+
+  [[partialMockAppEvents expect] flushForReason:FBSDKAppEventsFlushReasonExplicit];
+
+  [FBSDKAppEvents flush];
 
   [partialMockAppEvents verify];
 }
