@@ -505,12 +505,15 @@ static id g_mockNSBundle;
   [OHHTTPStubs stubRequestsPassingTest:^BOOL(NSURLRequest *request) {
     NSString *actualUserAgent = [request valueForHTTPHeaderField:@"User-Agent"];
     NSString *body = [[NSString alloc] initWithData:request.OHHTTPStubs_HTTPBody encoding:NSUTF8StringEncoding];
-    BOOL expectUserAgentSuffix = ![body containsString:@"fields=name"];
-    if (expectUserAgentSuffix) {
-      XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
-    } else {
-      XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+    if ([body containsString:@"with_suffix"] || [body containsString:@"without_suffix"]) {
+      BOOL expectUserAgentSuffix = [body containsString:@"fields=with_suffix"];
+      if (expectUserAgentSuffix) {
+        XCTAssertTrue([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+      } else {
+        XCTAssertFalse([actualUserAgent hasSuffix:@"/UnitTest.1.0.0"], @"unexpected user agent %@", actualUserAgent);
+      }
     }
+
     return YES;
   } withStubResponse:^OHHTTPStubsResponse *(NSURLRequest *request) {
     NSData *data =  [@"{\"error\": {\"message\": \"Missing oktne\",\"code\": 190, \"type\":\"OAuthException\"}}" dataUsingEncoding:NSUTF8StringEncoding];
@@ -519,13 +522,13 @@ static id g_mockNSBundle;
                                       statusCode:400
                                          headers:nil];
   }];
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@""}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"with_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     [exp fulfill];
   }];
 
   [FBSDKSettings setUserAgentSuffix:nil];
   // issue a second request o verify clearing out of user agent suffix, passing a field=name to uniquely identify the request.
-  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"name"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
+  [[[FBSDKGraphRequest alloc] initWithGraphPath:@"me" parameters:@{@"fields":@"without_suffix"}] startWithCompletionHandler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {
     [exp2 fulfill];
   }];
 
