@@ -355,7 +355,7 @@ static UIApplicationState _applicationState;
 
 + (BOOL)isSDKInitialized
 {
-  return g_isSDKInitialized;
+  return [FBSDKSettings isAutoInitEnabled] || g_isSDKInitialized;
 }
 
 // Wrapping this makes it mockable and enables testability
