@@ -168,4 +168,25 @@
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isMatchedWithPattern:pattern text:text9]);
 }
 
+- (void)testGetMatchedDataTypeByRule
+{
+  NSMutableArray<NSMutableDictionary<NSString *, NSString *> *> *rules = [NSMutableArray array];
+  NSString *eventName = @"manual_initiated_checkout";
+
+  NSMutableDictionary<NSString *, NSString *> *rule1 =  [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                         @"key_regex" : @"^phone$|phone number|cell phone|mobile phone|^mobile$",
+                                                                                                         @"value_negative_regex" : @"required|true|false|yes|y|n|off|on",
+                                                                                                         @"type" : @"type",
+                                                                                                         }];
+
+  [rules addObject:rule1];
+  [FBSDKRestrictiveDataFilterManager updateFilters:rules restrictiveParams:nil];
+
+  NSString *type1 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"phone number" paramValue:@""];
+  XCTAssertEqualObjects(type1, @"type");
+
+  NSString *type2 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"cell phone" paramValue:@"required"];
+  XCTAssertNil(type2);
+}
+
 @end
