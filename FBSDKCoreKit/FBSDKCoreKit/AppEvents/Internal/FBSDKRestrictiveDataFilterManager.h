@@ -30,6 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                               paramKey:(NSString *)paramKey
                                             paramValue:(NSString *)paramValue;
++ (BOOL)isDeprecatedEvent:(NSString *)eventName;
 
 @end
 

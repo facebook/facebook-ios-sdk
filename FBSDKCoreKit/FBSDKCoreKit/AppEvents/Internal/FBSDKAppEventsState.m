@@ -19,6 +19,7 @@
 #import "FBSDKAppEventsState.h"
 
 #import "FBSDKBasicUtility+Internal.h"
+#import "FBSDKRestrictiveDataFilterManager.h"
 
 #define FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY @"isImplicit"
 
@@ -163,6 +164,13 @@
 
 - (NSString *)JSONStringForEvents:(BOOL)includeImplicitEvents
 {
+  NSArray<NSDictionary<NSString *, id> *> *eventArray = [_mutableEvents copy];
+  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in eventArray) {
+    if ([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:event[@"event"][@"_eventName"]]) {
+      [_mutableEvents removeObject:event];
+    }
+  }
+
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
   for (NSDictionary *eventAndImplicitFlag in _mutableEvents) {
     if (!includeImplicitEvents && [eventAndImplicitFlag[FBSDK_APPEVENTSTATE_ISIMPLICIT_KEY] boolValue]) {
