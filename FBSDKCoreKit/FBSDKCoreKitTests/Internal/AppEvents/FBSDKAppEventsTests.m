@@ -255,8 +255,15 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testSetPushNotificationsDeviceTokenString
 {
   NSString *mockDeviceTokenString = @"testDeviceTokenString";
+  NSString *eventName = @"fb_mobile_obtain_push_token";
 
-  [[_mockAppEvents expect] logEvent:@"fb_mobile_obtain_push_token"];
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName];
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName
+                                                  parameters:@{}];
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:eventName
+                                                  valueToSum:nil
+                                                  parameters:@{}
+                                                 accessToken:nil];
 
   [FBSDKAppEvents setPushNotificationsDeviceTokenString:mockDeviceTokenString];
 
