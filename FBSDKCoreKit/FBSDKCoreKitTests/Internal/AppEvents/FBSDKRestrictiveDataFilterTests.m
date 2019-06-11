@@ -20,6 +20,7 @@
 
 #import <OCMock/OCMock.h>
 
+#import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 
 @interface FBSDKRestrictiveDataFilterManager ()
@@ -186,6 +187,28 @@
   XCTAssertEqualObjects(type1, @"type");
 
   NSString *type2 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"cell phone" paramValue:@"required"];
+  XCTAssertNil(type2);
+}
+
+- (void)testGetMatchedDataTypeByParam
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
+  NSString *eventName = @"test_event_name";
+
+  NSMutableDictionary<NSString *, NSString *> *restrictiveParams = [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                                   @"first name" : @"6",
+                                                                                                                   @"last name" : @"7"
+                                                                                                                   }];
+  NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];;
+  [FBSDKBasicUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
+  [FBSDKBasicUtility dictionary:params setObject:paramsDict forKey:eventName];
+
+  [FBSDKRestrictiveDataFilterManager updateFilters:nil restrictiveParams:params];
+
+  NSString *type1 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"first name" paramValue:@""];
+  XCTAssertEqualObjects(type1, @"6");
+
+  NSString *type2 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"cell phone" paramValue:@""];
   XCTAssertNil(type2);
 }
 
