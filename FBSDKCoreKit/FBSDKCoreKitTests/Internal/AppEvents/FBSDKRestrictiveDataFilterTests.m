@@ -212,4 +212,27 @@
   XCTAssertNil(type2);
 }
 
+- (void)testIsDeprecatedEvent
+{
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
+  NSString *eventName = @"test_event_name";
+
+  NSMutableDictionary<NSString *, NSString *> *restrictiveParams = [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                                    @"first name" : @"6",
+                                                                                                                    @"last name" : @"7"
+                                                                                                                    }];
+  NSString *deprecatedEventName = @"deprecated_event_name";
+  NSMutableDictionary<NSString *, NSString *> *deprecatedEvent = [NSMutableDictionary dictionaryWithDictionary: @{@"is_deprecated_event" : @YES}];
+
+  NSMutableDictionary<NSString *, id> *paramsDict = [NSMutableDictionary dictionary];;
+  [FBSDKBasicUtility dictionary:paramsDict setObject:restrictiveParams forKey:@"restrictive_param"];
+  [FBSDKBasicUtility dictionary:params setObject:paramsDict forKey:eventName];
+  [FBSDKBasicUtility dictionary:params setObject:deprecatedEvent forKey:deprecatedEventName];
+
+  [FBSDKRestrictiveDataFilterManager updateFilters:nil restrictiveParams:params];
+
+  XCTAssertTrue([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:deprecatedEventName]);
+  XCTAssertFalse([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:eventName]);
+}
+
 @end
