@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
   A model for Open Graph content to be shared.
  */
 NS_SWIFT_NAME(ShareOpenGraphContent)
+DEPRECATED_MSG_ATTRIBUTE("Open Graph no longer available; use FBSDKShareLinkContent instead.")
 @interface FBSDKShareOpenGraphContent : NSObject <FBSDKSharingContent>
 
 /**
