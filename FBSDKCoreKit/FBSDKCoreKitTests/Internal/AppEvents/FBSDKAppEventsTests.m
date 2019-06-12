@@ -32,6 +32,8 @@
 #import "FBSDKGateKeeperManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKGraphRequest.h"
+#import "FBSDKInternalUtility.h"
+#import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 #import "FBSDKUtility.h"
 
@@ -481,6 +483,26 @@ static NSString *const _mockUserID = @"mockUserID";
                                          @"validated" : @YES,
                                          }
                                handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+}
+
+- (void)testUpdateUserPropertiesWithEmptyUserID
+{
+  [FBSDKAppEvents setUserID:@""];
+  id mockLogger = [OCMockObject niceMockForClass:[FBSDKLogger class]];
+  [[mockLogger expect] singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                                logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+  id mockBasicUtility = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
+  [[mockBasicUtility reject] dictionary:[OCMArg any] setObject:[FBSDKAppEvents userID] forKey:@"user_unique_id"];
+
+  [FBSDKAppEvents updateUserProperties:@{
+                                         @"favorite_color" : @"blue",
+                                         @"created" : [NSDate date].description,
+                                         @"email" : @"someemail@email.com",
+                                         @"some_id" : @"Custom:1",
+                                         @"validated" : @YES,
+                                         }
+                               handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
+  [mockLogger verify];
 }
 
 @end
