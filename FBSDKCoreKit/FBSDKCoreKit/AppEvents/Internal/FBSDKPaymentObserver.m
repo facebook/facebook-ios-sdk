@@ -164,7 +164,7 @@ static NSMutableArray *g_pendingRequestors;
     _formatter.dateFormat = @"yyyy-MM-dd HH:mm:ssZ";
     NSString *data = [[NSUserDefaults standardUserDefaults] stringForKey:FBSDKPaymentObserverOriginalTransactionKey];
     _eventsWithReceipt = [NSSet setWithArray:@[FBSDKAppEventNamePurchased, FBSDKAppEventNameSubscribe,
-                                               FBSDKAppEventNameStartTrial, FBSDKAppEventNameSubscriptionHeartbeat]];
+                                               FBSDKAppEventNameStartTrial]];
     if (data) {
       _originalTransactionSet = [NSMutableSet setWithArray:[data componentsSeparatedByString:FBSDKPaymentObserverDelimiter]];
     } else {
@@ -207,10 +207,7 @@ static NSMutableArray *g_pendingRequestors;
 
 - (void)logTransactionEvent:(SKProduct *)product
 {
-  if ([self isSubscription:product] &&
-      [FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsIfAutoLogSubs
-                                   appID:[FBSDKSettings appID]
-                            defaultValue:NO]) {
+  if ([self isSubscription:product]) {
     [self logImplicitSubscribeTransaction:self.transaction ofProduct:product];
   } else {
     [self logImplicitPurchaseTransaction:self.transaction ofProduct:product];
@@ -220,7 +217,7 @@ static NSMutableArray *g_pendingRequestors;
 - (BOOL)isSubscription:(SKProduct *)product
 {
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_11_2
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
   if (@available(iOS 11.2, *)) {
     return (product.subscriptionPeriod != nil) && ((unsigned long)product.subscriptionPeriod.numberOfUnits > 0);
   }
@@ -354,7 +351,7 @@ static NSMutableArray *g_pendingRequestors;
 - (BOOL)hasStartTrial:(SKProduct *)product
 {
 #if !TARGET_OS_TV
-#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_2
+#if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_1
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_11_4
 #if __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_12_1
   // promotional offer starting from iOS 12.2
@@ -449,11 +446,10 @@ static NSMutableArray *g_pendingRequestors;
         [self clearOriginalTransactionID:originalTransactionID];
       } else {
         if (originalTransactionID && [_originalTransactionSet containsObject:originalTransactionID]) {
-          eventName = FBSDKAppEventNameSubscriptionHeartbeat;
-        } else {
-          eventName = FBSDKAppEventNameSubscribe;
-          [self appendOriginalTransactionID:originalTransactionID];
+          return;
         }
+        eventName = FBSDKAppEventNameSubscribe;
+        [self appendOriginalTransactionID:(originalTransactionID ?: transaction.transactionIdentifier)];
       }
       break;
     case SKPaymentTransactionStateFailed:
