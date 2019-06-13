@@ -19,9 +19,11 @@
 #import <XCTest/XCTest.h>
 
 #import "FBSDKAppEventsState.h"
+#import "FBSDKBasicUtility+Internal.h"
+
+#define FBSDK_APPEVENTSSTATE_MAX_EVENTS 1000
 
 @interface FBSDKAppEventsStateTests : XCTestCase
-
 @end
 
 @implementation FBSDKAppEventsStateTests
@@ -54,6 +56,72 @@
   [target addEventsFromAppEventState:copy];
   XCTAssertEqual(5, target.events.count);
   XCTAssertFalse([target areAllEventsImplicit]);
+}
+
+- (void)testisCompatibleWithAppEventsState1
+{
+  FBSDKAppEventsState *eventState = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  FBSDKAppEventsState *target1 = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  XCTAssertTrue([eventState isCompatibleWithAppEventsState:target1]);
+
+  FBSDKAppEventsState *target2 = [[FBSDKAppEventsState alloc] initWithToken:@"token1" appID:@"app"];
+  XCTAssertFalse([eventState isCompatibleWithAppEventsState:target2]);
+}
+
+- (void)testIsCompatibleWithAppEventsState2
+{
+  FBSDKAppEventsState *target = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+
+  FBSDKAppEventsState *testTarget1 = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:nil];
+  FBSDKAppEventsState *testTarget2 = [[FBSDKAppEventsState alloc] initWithToken:nil appID:@"app"];
+  FBSDKAppEventsState *testTarget3 = [[FBSDKAppEventsState alloc] initWithToken:nil appID:nil];
+  FBSDKAppEventsState *testTarget4 = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+
+  XCTAssertFalse([target isCompatibleWithAppEventsState: testTarget1]);
+  XCTAssertFalse([target isCompatibleWithAppEventsState: testTarget2]);
+  XCTAssertFalse([target isCompatibleWithAppEventsState: testTarget3]);
+  XCTAssertTrue([target isCompatibleWithAppEventsState: testTarget4]);
+}
+
+- (void)testAddEvent
+{
+  FBSDKAppEventsState *target = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  for(size_t i = 0; i < FBSDK_APPEVENTSSTATE_MAX_EVENTS; ++i) {
+    [target addEvent:@{} isImplicit:NO];
+  }
+  [target addEvent:@{} isImplicit:NO];
+  XCTAssertEqual(1, target.numSkipped);
+}
+
+- (void)testAddEventsFromAppEventState
+{
+  FBSDKAppEventsState *target = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  for(size_t i = 0; i < FBSDK_APPEVENTSSTATE_MAX_EVENTS * 2; ++i) {
+    [target addEvent:@{} isImplicit:NO];
+  }
+  FBSDKAppEventsState *event = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  [target addEventsFromAppEventState:event];
+
+  XCTAssertEqual(FBSDK_APPEVENTSSTATE_MAX_EVENTS, target.numSkipped);
+  XCTAssertEqual(FBSDK_APPEVENTSSTATE_MAX_EVENTS, target.events.count);
+}
+
+- (void)testExtractReceiptData
+{
+  FBSDKAppEventsState *target = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  [target addEvent:@{@"receipt_data":@"some_data"} isImplicit:NO];
+  NSString* extractString = [target extractReceiptData];
+  XCTAssertTrue([extractString isEqualToString: @"receipt_1::some_data;;;"]);
+}
+
+- (void)testJSONStringForEvents
+{
+  FBSDKAppEventsState *target = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  NSDictionary<NSString*, NSString*>* someEvent = @{  @"receipt_data":@"some_receipt_data",@"data":@"mock_data"};
+  [target addEvent:someEvent isImplicit:YES];
+  NSString* jsonString = [target JSONStringForEvents:YES];
+  NSString* expectedString = [FBSDKBasicUtility JSONStringForObject:@[@{@"data":@"mock_data"}] error:nil invalidObjectHandler:nil];
+  XCTAssertTrue([jsonString isEqualToString:expectedString]);
 }
 
 @end
