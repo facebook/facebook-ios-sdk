@@ -29,7 +29,6 @@
 #import <FBSDKShareKit/FBSDKShareMessengerOpenGraphMusicTemplateContent.h>
 #import <FBSDKShareKit/FBSDKShareMessengerURLActionButton.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphAction.h>
-#import <FBSDKShareKit/FBSDKShareOpenGraphContent.h>
 #import <FBSDKShareKit/FBSDKShareOpenGraphObject.h>
 #import <FBSDKShareKit/FBSDKSharePhoto.h>
 #import <FBSDKShareKit/FBSDKSharePhotoContent.h>
@@ -61,9 +60,6 @@ FOUNDATION_EXPORT NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey;
 + (NSString *)openGraphActionType;
 + (FBSDKShareOpenGraphAction *)openGraphActionWithObjectID;
 + (BOOL)openGraphBoolValue;
-+ (FBSDKShareOpenGraphContent *)openGraphContent;
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithObjectID;
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithURLOnly;
 + (double)openGraphDoubleValue;
 + (float)openGraphFloatValue;
 + (NSInteger)openGraphIntegerValue;

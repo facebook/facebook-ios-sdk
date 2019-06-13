@@ -94,7 +94,10 @@ static Class FBSDKDynamicallyLoadShareKitClassFromString(NSString *className)
       if (actionType.length > 0 && url && key.length > 0) {
         FBSDKShareOpenGraphAction *action = [FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphAction") actionWithType:actionType objectURL:url key:key];
         content = [[FBSDKDynamicallyLoadShareKitClassFromString(@"FBSDKShareOpenGraphContent") alloc] init];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
         ((FBSDKShareOpenGraphContent *)content).action = action;
+#pragma clang diagnostic pop
       }
     }
 

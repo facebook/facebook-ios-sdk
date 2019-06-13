@@ -263,6 +263,8 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   return [configuration.defaultShareMode isEqualToString:@"share_sheet"];
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)_isOpenGraphURLShare:(FBSDKShareOpenGraphContent *)shareContent
 {
   __block BOOL hasOGURL = NO;
@@ -273,6 +275,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   }];
   return hasOGURL;
 }
+#pragma clang diagnostic pop
 
 -(BOOL)_showAutomatic:(NSError **)errorRef
 {
@@ -306,7 +309,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   // for an app that can handle the native share dialog
   NSString *methodName = nil;
   NSString *methodVersion = nil;
-  if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     methodName = FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME;
     BOOL containsMedia = NO;
     [FBSDKShareUtility testShareContent:shareContent containsMedia:&containsMedia containsPhotos:NULL containsVideos:NULL];
@@ -811,7 +814,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
     if ([self.shareContent isKindOfClass:[FBSDKShareCameraEffectContent class]] ||
         [self.shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
         [self.shareContent isKindOfClass:[FBSDKShareMediaContent class]] ||
-        [self.shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]] ||
+        [self.shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")] ||
         [self.shareContent isKindOfClass:[FBSDKSharePhotoContent class]] ||
         [self.shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     } else {
@@ -1053,7 +1056,9 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
       return ([self _canUseFBShareSheet] &&
               [self _validateShareMediaContentAvailability:shareContent error:errorRef] &&
               [(FBSDKShareMediaContent *)shareContent validateWithOptions:FBSDKShareBridgeOptionsDefault error:errorRef]);
-    } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+    } else if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
       FBSDKShareOpenGraphContent *ogContent = (FBSDKShareOpenGraphContent *)shareContent;
       BOOL isOGURLShare = [self _isOpenGraphURLShare:ogContent];
 
@@ -1069,6 +1074,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
                                                         message:message];
         }
       }
+#pragma GCC diagnostic pop
       return isValidOGShare;
     } else if ([shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
       return YES;
@@ -1151,7 +1157,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
   NSString *shareMode = NSStringFromFBSDKShareDialogMode(self.mode);
 
   NSString *contentType;
-  if([self.shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  if([self.shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     contentType = FBSDKAppEventsDialogShareContentTypeOpenGraph;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;
@@ -1196,7 +1202,7 @@ static inline void FBSDKShareDialogValidateShareExtensionSchemeRegisteredForCanO
         parameters[FBSDKShareExtensionParamQuotes] = @[quote];
       }
     }
-    if ([self.shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+    if ([self.shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
       NSDictionary<NSString *, id> *const ogData = [FBSDKShareUtility parametersForShareContent:self.shareContent
                                                                                   bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                                           shouldFailOnDataError:self.shouldFailOnDataError];
