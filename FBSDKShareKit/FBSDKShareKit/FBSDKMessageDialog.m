@@ -91,7 +91,7 @@
   NSDictionary *parameters = [FBSDKShareUtility parametersForShareContent:shareContent
                                                             bridgeOptions:FBSDKShareBridgeOptionsDefault
                                                     shouldFailOnDataError:self.shouldFailOnDataError];
-  NSString *methodName = ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]] ?
+  NSString *methodName = ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")] ?
                           FBSDK_SHARE_OPEN_GRAPH_METHOD_NAME :
                           FBSDK_SHARE_METHOD_NAME);
   FBSDKBridgeAPIRequest *request;
@@ -220,7 +220,7 @@
 - (void)_logDialogShow
 {
   NSString *contentType;
-  if([self.shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  if([self.shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     contentType = FBSDKAppEventsDialogShareContentTypeOpenGraph;
   } else if ([self.shareContent isKindOfClass:[FBSDKShareLinkContent class]]) {
     contentType = FBSDKAppEventsDialogShareContentTypeStatus;

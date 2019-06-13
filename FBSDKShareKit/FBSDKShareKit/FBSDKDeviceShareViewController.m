@@ -117,7 +117,7 @@
     return nil;
   }
   if ([_shareContent isKindOfClass:[FBSDKShareLinkContent class]] ||
-      [_shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+      [_shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     NSString *unused;
     NSDictionary *params;
     [FBSDKShareUtility buildWebShareContent:_shareContent

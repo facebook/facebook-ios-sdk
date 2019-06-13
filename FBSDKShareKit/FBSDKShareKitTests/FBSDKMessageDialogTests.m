@@ -63,8 +63,6 @@
     XCTAssertTrue([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
     XCTAssertTrue([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
-    XCTAssertTrue([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
     XCTAssertTrue([dialog canShow]);
   }];
@@ -73,8 +71,6 @@
     dialog.shareContent = [FBSDKShareModelTestUtility linkContent];
     XCTAssertFalse([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility photoContent];
-    XCTAssertFalse([dialog canShow]);
-    dialog.shareContent = [FBSDKShareModelTestUtility openGraphContent];
     XCTAssertFalse([dialog canShow]);
     dialog.shareContent = [FBSDKShareModelTestUtility videoContentWithoutPreviewPhoto];
     XCTAssertFalse([dialog canShow]);

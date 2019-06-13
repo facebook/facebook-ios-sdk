@@ -263,7 +263,6 @@
 		8973B37D1A40A93D0001EDC5 /* FBSDKSharingContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 8973B37B1A40A93D0001EDC5 /* FBSDKSharingContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		898D17E11A407F2F005E32C7 /* FBSDKShareOpenGraphContent.h in Headers */ = {isa = PBXBuildFile; fileRef = 898D17DF1A407F2F005E32C7 /* FBSDKShareOpenGraphContent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		898D17E21A407F2F005E32C7 /* FBSDKShareOpenGraphContent.m in Sources */ = {isa = PBXBuildFile; fileRef = 898D17E01A407F2F005E32C7 /* FBSDKShareOpenGraphContent.m */; };
-		898D17E81A40814B005E32C7 /* FBSDKShareOpenGraphContentTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 898D17E71A40814B005E32C7 /* FBSDKShareOpenGraphContentTests.m */; };
 		89C1DCB21A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 89C1DCB01A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		89C1DCB31A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C1DCB11A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.m */; };
 		89C1DCB61A43528900F0F9B2 /* FBSDKShareOpenGraphValueContainer+Internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 89C1DCB41A43528900F0F9B2 /* FBSDKShareOpenGraphValueContainer+Internal.h */; };
@@ -603,7 +602,6 @@
 		8973B37B1A40A93D0001EDC5 /* FBSDKSharingContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSharingContent.h; sourceTree = "<group>"; };
 		898D17DF1A407F2F005E32C7 /* FBSDKShareOpenGraphContent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKShareOpenGraphContent.h; sourceTree = "<group>"; };
 		898D17E01A407F2F005E32C7 /* FBSDKShareOpenGraphContent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareOpenGraphContent.m; sourceTree = "<group>"; };
-		898D17E71A40814B005E32C7 /* FBSDKShareOpenGraphContentTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareOpenGraphContentTests.m; sourceTree = "<group>"; };
 		89C1DCB01A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKShareOpenGraphValueContainer.h; sourceTree = "<group>"; };
 		89C1DCB11A4351F700F0F9B2 /* FBSDKShareOpenGraphValueContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKShareOpenGraphValueContainer.m; sourceTree = "<group>"; };
 		89C1DCB41A43528900F0F9B2 /* FBSDKShareOpenGraphValueContainer+Internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBSDKShareOpenGraphValueContainer+Internal.h"; sourceTree = "<group>"; };
@@ -938,7 +936,6 @@
 				8937749A1A3B6B6F00BE2807 /* FBSDKShareModelTestUtility.h */,
 				8937749B1A3B6B6F00BE2807 /* FBSDKShareModelTestUtility.m */,
 				891C545A1A3BBC1B00DF05AF /* FBSDKShareOpenGraphActionTests.m */,
-				898D17E71A40814B005E32C7 /* FBSDKShareOpenGraphContentTests.m */,
 				891C544C1A3B888000DF05AF /* FBSDKShareOpenGraphObjectTests.m */,
 				89FC9C751A3FAB4B0001910E /* FBSDKSharePhotoContentTests.m */,
 				893774971A3B6A2900BE2807 /* FBSDKSharePhotoTests.m */,
@@ -1722,7 +1719,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				898D17E81A40814B005E32C7 /* FBSDKShareOpenGraphContentTests.m in Sources */,
 				89FC9C6C1A3F9B6C0001910E /* FBSDKShareLinkContentTests.m in Sources */,
 				893774981A3B6A2900BE2807 /* FBSDKSharePhotoTests.m in Sources */,
 				896DE2231A9E33C000195731 /* FBSDKShareVideoContentTests.m in Sources */,

@@ -128,40 +128,6 @@ NSString *kFBSDKShareModelTestUtilityOpenGraphStringKey = @"TEST:OPEN_GRAPH_STRI
   return YES;
 }
 
-+ (FBSDKShareOpenGraphContent *)openGraphContent
-{
-  FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
-  content.action = [self openGraphAction];
-  content.contentURL = [self contentURL];
-  content.hashtag = [self hashtag];
-  content.peopleIDs = [self peopleIDs];
-  content.placeID = [self placeID];
-  content.previewPropertyName = [self previewPropertyName];
-  content.ref = [self ref];
-  return content;
-}
-
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithObjectID
-{
-  FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
-  content.action = [self openGraphActionWithObjectID];
-  content.contentURL = [self contentURL];
-  content.hashtag = [self hashtag];
-  content.peopleIDs = [self peopleIDs];
-  content.placeID = [self placeID];
-  content.previewPropertyName = [self previewPropertyName];
-  content.ref = [self ref];
-  return content;
-}
-
-+ (FBSDKShareOpenGraphContent *)openGraphContentWithURLOnly
-{
-  FBSDKShareOpenGraphContent *content = [[FBSDKShareOpenGraphContent alloc] init];
-  content.action = [self openGraphActionWithURLObject];
-  content.previewPropertyName = [self previewPropertyName];
-  return content;
-}
-
 + (double)openGraphDoubleValue
 {
   return DBL_MAX;

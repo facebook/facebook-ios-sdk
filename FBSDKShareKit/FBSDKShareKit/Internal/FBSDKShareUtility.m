@@ -119,10 +119,13 @@
 {
   NSString *methodName = nil;
   NSMutableDictionary<NSString *, id> *parameters = nil;
-  if ([content isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  if ([content isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     methodName = @"share_open_graph";
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     FBSDKShareOpenGraphContent *const openGraphContent = (FBSDKShareOpenGraphContent *)content;
     FBSDKShareOpenGraphAction *const action = openGraphContent.action;
+#pragma clang diagnostic pop
     NSDictionary<NSString *, id> *const properties = [self convertOpenGraphValueContainer:action requireNamespace:NO];
     NSString *const propertiesJSON = [FBSDKBasicUtility JSONStringForObject:properties
                                                                          error:errorRef
@@ -305,7 +308,9 @@
   }
   [FBSDKBasicUtility dictionary:parameters setObject:shareContent.pageID forKey:@"pageID"];
   [FBSDKBasicUtility dictionary:parameters setObject:shareContent.shareUUID forKey:@"shareUUID"];
-  if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+  if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
     FBSDKShareOpenGraphAction *const action = ((FBSDKShareOpenGraphContent *)shareContent).action;
     [action setArray:shareContent.peopleIDs forKey:@"tags"];
     [action setString:shareContent.placeID forKey:@"place"];
@@ -315,6 +320,7 @@
     [FBSDKBasicUtility dictionary:parameters setObject:shareContent.placeID forKey:@"place"];
     [FBSDKBasicUtility dictionary:parameters setObject:shareContent.ref forKey:@"ref"];
   }
+#pragma clang diagnostic pop
 
   parameters[@"dataFailuresFatal"] = @(shouldFailOnDataError);
 
@@ -353,11 +359,14 @@
         containsMedia:&containsMedia
        containsPhotos:&containsPhotos
        containsVideos:&containsVideos];
-  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  } else if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
     [self _testOpenGraphValueContainer:((FBSDKShareOpenGraphContent *)shareContent).action
                          containsMedia:&containsMedia
                         containsPhotos:&containsPhotos
                         containsVideos:&containsVideos];
+#pragma clang diagnostic pop
   }
   if (containsMediaRef != NULL) {
     *containsMediaRef = containsMedia;

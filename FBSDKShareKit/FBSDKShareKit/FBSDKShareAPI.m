@@ -177,8 +177,11 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     return [self _sharePhotoContent:(FBSDKSharePhotoContent *)shareContent];
   } else if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     return [self _shareVideoContent:(FBSDKShareVideoContent *)shareContent];
-  } else if ([shareContent isKindOfClass:[FBSDKShareOpenGraphContent class]]) {
+  } else if ([shareContent isKindOfClass:NSClassFromString(@"FBSDKShareOpenGraphContent")]) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     return [self _shareOpenGraphContent:(FBSDKShareOpenGraphContent *)shareContent];
+#pragma GCC diagnostic pop
   } else {
     return NO;
   }
@@ -295,6 +298,8 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   return YES;
 }
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 - (BOOL)_shareOpenGraphContent:(FBSDKShareOpenGraphContent *)openGraphContent
 {
   // In order to create a new Open Graph action using a custom object that does not already exist (objectID or URL), you
@@ -343,6 +348,7 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   }
   return YES;
 }
+#pragma GCC diagnostic pop
 
 - (BOOL)_sharePhotoContent:(FBSDKSharePhotoContent *)photoContent
 {
