@@ -357,7 +357,7 @@ static NSString *g_overrideAppID = nil;
 {
   if (self == [FBSDKAppEvents class]) {
     g_overrideAppID = [[[NSBundle mainBundle] objectForInfoDictionaryKey:FBSDKAppEventsOverrideAppIDBundleKey] copy];
-    [FBSDKAppEventsUtility anonymousID];
+    [FBSDKBasicUtility anonymousID];
   }
 }
 

@@ -55,7 +55,7 @@
     [FBSDKBasicUtility dictionary:parameters setObject:advertiserID forKey:@"advertiser_id"];
   }
 
-  parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [self anonymousID];
+  parameters[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY] = [FBSDKBasicUtility anonymousID];
 
   FBSDKAdvertisingTrackingStatus advertisingTrackingStatus = [[self class] advertisingTrackingStatus];
   if (advertisingTrackingStatus != FBSDKAdvertisingTrackingUnspecified) {
@@ -131,22 +131,6 @@
   });
 
   return status;
-}
-
-+ (NSString *)anonymousID
-{
-  // Grab previously written anonymous ID and, if none have been generated, create and
-  // persist a new one which will remain associated with this app.
-  NSString *result = [[self class] retrievePersistedAnonymousID];
-  if (!result) {
-    // Generate a new anonymous ID.  Create as a UUID, but then prepend the fairly
-    // arbitrary 'XZ' to the front so it's easily distinguishable from IDFA's which
-    // will only contain hex.
-    result = [NSString stringWithFormat:@"XZ%@", [NSUUID UUID].UUIDString];
-
-    [self persistAnonymousID:result];
-  }
-  return result;
 }
 
 + (NSString *)attributionID
@@ -283,37 +267,6 @@ restOfStringCharacterSet:(NSCharacterSet *)restOfStringCharacterSet
   }
 
   return YES;
-}
-
-+ (void)persistAnonymousID:(NSString *)anonymousID
-{
-  [[self class] ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
-  NSDictionary *data = @{ FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY : anonymousID };
-  NSString *content = [FBSDKBasicUtility JSONStringForObject:data error:NULL invalidObjectHandler:NULL];
-
-  [content writeToFile:[[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME]
-            atomically:YES
-              encoding:NSASCIIStringEncoding
-                 error:nil];
-}
-
-+ (NSString *)persistenceFilePath:(NSString *)filename
-{
-  NSSearchPathDirectory directory = NSLibraryDirectory;
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(directory, NSUserDomainMask, YES);
-  NSString *docDirectory = paths[0];
-  return [docDirectory stringByAppendingPathComponent:filename];
-}
-
-+ (NSString *)retrievePersistedAnonymousID
-{
-  [[self class] ensureOnMainThread:NSStringFromSelector(_cmd) className:NSStringFromClass(self)];
-  NSString *file = [[self class] persistenceFilePath:FBSDK_APPEVENTSUTILITY_ANONYMOUSIDFILENAME];
-  NSString *content = [[NSString alloc] initWithContentsOfFile:file
-                                                      encoding:NSASCIIStringEncoding
-                                                         error:nil];
-  NSDictionary<id, id> *results = [FBSDKBasicUtility objectForJSONString:content error:NULL];
-  return results[FBSDK_APPEVENTSUTILITY_ANONYMOUSID_KEY];
 }
 
 // Given a candidate token (which may be nil), find the real token to string to use.

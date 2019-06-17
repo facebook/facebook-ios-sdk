@@ -156,7 +156,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
 
   NSString *content = [FBSDKBasicUtility JSONStringForObject:timeSpentData error:NULL invalidObjectHandler:NULL];
 
-  [content writeToFile:[FBSDKAppEventsUtility persistenceFilePath:FBSDKTimeSpentFilename]
+  [content writeToFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
             atomically:YES
               encoding:NSASCIIStringEncoding
                  error:nil];
@@ -181,7 +181,7 @@ static const long INACTIVE_SECONDS_QUANTA[] =
   if (!_isCurrentlyLoaded) {
 
     NSString *content =
-    [[NSString alloc] initWithContentsOfFile:[FBSDKAppEventsUtility persistenceFilePath:FBSDKTimeSpentFilename]
+    [[NSString alloc] initWithContentsOfFile:[FBSDKBasicUtility persistenceFilePath:FBSDKTimeSpentFilename]
                                 usedEncoding:nil
                                        error:nil];
 

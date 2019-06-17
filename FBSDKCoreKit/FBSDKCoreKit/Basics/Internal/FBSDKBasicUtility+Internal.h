@@ -120,6 +120,9 @@ setJSONStringForObject:(id)object
  */
 + (NSString *)URLDecode:(NSString *)value;
 
++ (NSString *)anonymousID;
++ (NSString *)persistenceFilePath:(NSString *)filename;
+
 @end
 
 NS_ASSUME_NONNULL_END
