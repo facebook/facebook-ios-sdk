@@ -53,15 +53,24 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)fetchServerConfiguration:(FBSDKCodeBlock)callback;
 - (void)instanceLogEvent:(FBSDKAppEventName)eventName
               valueToSum:(NSNumber *)valueToSum
-              parameters:(NSDictionary *)parameters
+              parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
 + (FBSDKAppEvents *)singleton;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
-              parameters:(NSDictionary *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary<NSString *, id> *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary<NSString *, id> *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken;
 
 @end
 
@@ -503,6 +512,38 @@ static NSString *const _mockUserID = @"mockUserID";
                                          }
                                handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   [mockLogger verify];
+}
+
+- (void)testLogEventWithValueToSum
+{
+  double mockValue = 10.0;
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
+                                                  valueToSum:mockValue
+                                                  parameters:@{}];
+  [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
+                                                  valueToSum:@(mockValue)
+                                                  parameters:@{}
+                                                 accessToken:nil];
+
+  [FBSDKAppEvents logEvent:_mockEventName valueToSum:mockValue];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testLogInternalEvents
+{
+  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
+                                                          parameters:@{}
+                                                  isImplicitlyLogged:NO];
+  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
+                                                          valueToSum:nil
+                                                          parameters:@{}
+                                                  isImplicitlyLogged:NO
+                                                         accessToken:nil];
+
+  [FBSDKAppEvents logInternalEvent:_mockEventName isImplicitlyLogged:NO];
+
+  [_mockAppEvents verify];
 }
 
 @end
