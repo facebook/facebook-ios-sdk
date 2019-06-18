@@ -63,6 +63,15 @@ static NSString *const _mockUserID = @"mockUserID";
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
 + (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              parameters:(NSDictionary<NSString *, id> *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged;
+
++ (void)logInternalEvent:(FBSDKAppEventName)eventName
+              valueToSum:(double)valueToSum
               parameters:(NSDictionary<NSString *, id> *)parameters
       isImplicitlyLogged:(BOOL)isImplicitlyLogged;
 
@@ -516,16 +525,15 @@ static NSString *const _mockUserID = @"mockUserID";
 
 - (void)testLogEventWithValueToSum
 {
-  double mockValue = 10.0;
   [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
-                                                  valueToSum:mockValue
+                                                  valueToSum:_mockPurchaseAmount
                                                   parameters:@{}];
   [[[_mockAppEvents expect] andForwardToRealObject] logEvent:_mockEventName
-                                                  valueToSum:@(mockValue)
+                                                  valueToSum:@(_mockPurchaseAmount)
                                                   parameters:@{}
                                                  accessToken:nil];
 
-  [FBSDKAppEvents logEvent:_mockEventName valueToSum:mockValue];
+  [FBSDKAppEvents logEvent:_mockEventName valueToSum:_mockPurchaseAmount];
 
   [_mockAppEvents verify];
 }
@@ -544,6 +552,53 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents logInternalEvent:_mockEventName isImplicitlyLogged:NO];
 
   [_mockAppEvents verify];
+}
+
+- (void)testLogInternalEventsWithValue
+{
+  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
+                                                          valueToSum:_mockPurchaseAmount
+                                                          parameters:@{}
+                                                  isImplicitlyLogged:NO];
+  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
+                                                          valueToSum:@(_mockPurchaseAmount)
+                                                          parameters:@{}
+                                                  isImplicitlyLogged:NO
+                                                         accessToken:nil];
+
+  [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
+
+  [_mockAppEvents verify];
+}
+
+- (void)testInstanceLogEventWhenAutoLogAppEventsDisabled
+{
+  id mockSetting = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(NO);
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [[[partialMockAppEvents reject] andForwardToRealObject] instanceLogEvent:_mockEventName
+                                                                valueToSum:@(_mockPurchaseAmount)
+                                                                parameters:@{}
+                                                        isImplicitlyLogged:NO
+                                                               accessToken:nil];
+
+  [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
+}
+
+- (void)testInstanceLogEventWhenAutoLogAppEventsEnabled
+{
+  id mockSetting = [OCMockObject niceMockForClass:[FBSDKSettings class]];
+  OCMStub([mockSetting isAutoLogAppEventsEnabled]).andReturn(YES);
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [[[partialMockAppEvents expect] andForwardToRealObject] instanceLogEvent:_mockEventName
+                                                                valueToSum:@(_mockPurchaseAmount)
+                                                                parameters:@{}
+                                                        isImplicitlyLogged:NO
+                                                               accessToken:nil];
+
+  [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
+
+  [partialMockAppEvents verify];
 }
 
 @end
