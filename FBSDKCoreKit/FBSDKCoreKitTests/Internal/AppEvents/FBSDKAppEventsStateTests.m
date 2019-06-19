@@ -100,9 +100,10 @@
     [target addEvent:@{} isImplicit:NO];
   }
   FBSDKAppEventsState *event = [[FBSDKAppEventsState alloc] initWithToken:@"token" appID:@"app"];
+  [event addEvent:@{} isImplicit:NO];
   [target addEventsFromAppEventState:event];
 
-  XCTAssertEqual(FBSDK_APPEVENTSSTATE_MAX_EVENTS, target.numSkipped);
+  XCTAssertEqual(FBSDK_APPEVENTSSTATE_MAX_EVENTS + 1, target.numSkipped);
   XCTAssertEqual(FBSDK_APPEVENTSSTATE_MAX_EVENTS, target.events.count);
 }
 
