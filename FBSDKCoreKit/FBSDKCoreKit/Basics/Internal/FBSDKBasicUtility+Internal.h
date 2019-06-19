@@ -120,6 +120,13 @@ setJSONStringForObject:(id)object
  */
 + (NSString *)URLDecode:(NSString *)value;
 
+/**
+ Gzip data with default compression level if possible.
+ @param data The raw data.
+ @return nil if unable to gzip the data, otherwise gzipped data.
+ */
++ (NSData *)gzip:(NSData *)data;
+
 + (NSString *)anonymousID;
 + (NSString *)persistenceFilePath:(NSString *)filename;
 

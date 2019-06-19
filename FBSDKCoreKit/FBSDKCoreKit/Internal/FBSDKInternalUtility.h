@@ -113,13 +113,6 @@ NS_SWIFT_NAME(InternalUtility)
                     error:(NSError *__autoreleasing *)errorRef;
 
 /**
- Gzip data with default compression level if possible.
- @param data The raw data.
- @return nil if unable to gzip the data, otherwise gzipped data.
- */
-+ (NSData *)gzip:(NSData *)data;
-
-/**
   Parses an FB url's query params (and potentially fragment) into a dictionary.
  @param url The FB url.
  @return A dictionary with the key/value pairs.

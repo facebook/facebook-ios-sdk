@@ -19,7 +19,6 @@
 #import "FBSDKInternalUtility.h"
 
 #import <sys/time.h>
-#import <zlib.h>
 
 #import <mach-o/dyld.h>
 
@@ -27,8 +26,6 @@
 #import "FBSDKError.h"
 #import "FBSDKSettings+Internal.h"
 #import "FBSDKSettings.h"
-
-#define kChunkSize 1024
 
 typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionMask)
 {
@@ -65,53 +62,6 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
                         path:path
              queryParameters:queryParameters
                        error:errorRef];
-}
-
-+ (NSData *)gzip:(NSData *)data
-{
-  const void *bytes = data.bytes;
-  const NSUInteger length = data.length;
-
-  if (!bytes || !length) {
-    return nil;
-  }
-
-  #if defined(__LP64__) && __LP64__
-  if (length > UINT_MAX) {
-    return nil;
-  }
-  #endif
-
-  // initialze stream
-  z_stream stream;
-  bzero(&stream, sizeof(z_stream));
-
-  if (deflateInit2(&stream, -1, Z_DEFLATED, 31, 8, Z_DEFAULT_STRATEGY) != Z_OK) {
-    return nil;
-  }
-  stream.avail_in = (uint)length;
-  stream.next_in = (Bytef *)bytes;
-
-  int retCode;
-  NSMutableData *result = [NSMutableData dataWithCapacity:(length / 4)];
-  unsigned char output[kChunkSize];
-  do {
-    stream.avail_out = kChunkSize;
-    stream.next_out = output;
-    retCode = deflate(&stream, Z_FINISH);
-    if (retCode != Z_OK && retCode != Z_STREAM_END) {
-      deflateEnd(&stream);
-      return nil;
-    }
-    unsigned size = kChunkSize - stream.avail_out;
-    if (size > 0) {
-      [result appendBytes:output length:size];
-    }
-  } while (retCode == Z_OK);
-
-  deflateEnd(&stream);
-
-  return result;
 }
 
 + (NSDictionary *)dictionaryFromFBURL:(NSURL *)url

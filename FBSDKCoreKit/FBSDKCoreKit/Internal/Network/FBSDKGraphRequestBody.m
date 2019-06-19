@@ -18,6 +18,8 @@
 
 #import "FBSDKGraphRequestBody.h"
 
+#import "../../Basics/Internal/FBSDKBasicUtility+Internal.h"
+
 #import "FBSDKConstants.h"
 #import "FBSDKCrypto.h"
 #import "FBSDKGraphRequestDataAttachment.h"
@@ -160,7 +162,7 @@
     return nil;
   }
 
-  return [FBSDKInternalUtility gzip:self.data];
+  return [FBSDKBasicUtility gzip:self.data];
 }
 
 @end
