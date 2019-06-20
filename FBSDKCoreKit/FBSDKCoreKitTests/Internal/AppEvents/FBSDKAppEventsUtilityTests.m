@@ -149,6 +149,13 @@
 
   text = @"4716525502219086";
   XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  text = @"";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
+
+  // number of digits less than 9 will not be considered as credit card number
+  text = @"4716525";
+  XCTAssertFalse([FBSDKAppEventsUtility isSensitiveUserData:text]);
 }
 
 - (void)testFlushReasonToString
