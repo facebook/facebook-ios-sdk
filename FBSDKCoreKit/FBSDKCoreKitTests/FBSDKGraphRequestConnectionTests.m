@@ -24,7 +24,7 @@
 #import <OHHTTPStubs/NSURLRequest+HTTPBodyTesting.h>
 #import <OHHTTPStubs/OHHTTPStubs.h>
 
-#import "../FBSDKCoreKit/Internal/FBSDKInternalUtility.h"
+#import "../FBSDKCoreKit/Basics/Internal/FBSDKBasicUtility+Internal.h"
 
 #import "FBSDKCoreKit.h"
 #import "FBSDKCoreKitTestUtility.h"
@@ -496,7 +496,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 - (void)testUserAgentSuffix
 {
   // Disable compressing network request
-  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
   XCTestExpectation *exp2 = [self expectationWithDescription:@"completed request 2"];
@@ -650,7 +650,7 @@ static NSString *const _mockMobileAppInstallEventName = @"MOBILE_APP_INSTALL";
 
 - (void)testGraphRequestWithIDFATrackingEnabled
 {
-  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKInternalUtility class]];
+  id mockUtility  = [OCMockObject niceMockForClass:[FBSDKBasicUtility class]];
   [[[mockUtility stub] andReturn:nil] gzip:[OCMArg any]];
 
   XCTestExpectation *exp = [self expectationWithDescription:@"completed request"];
