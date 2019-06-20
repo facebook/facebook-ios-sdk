@@ -81,6 +81,11 @@ static NSString *const _mockUserID = @"mockUserID";
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
++ (void)logImplicitEvent:(NSString *)eventName
+              valueToSum:(NSNumber *)valueToSum
+              parameters:(NSDictionary<NSString *, id> *)parameters
+             accessToken:(FBSDKAccessToken *)accessToken;
+
 @end
 
 @interface FBSDKAppEventsTests : XCTestCase
@@ -154,6 +159,8 @@ static NSString *const _mockUserID = @"mockUserID";
   [partialMockAppEvents verify];
 }
 
+#pragma mark  Tests for log product item
+
 - (void)testLogProductItemNonNil
 {
   NSDictionary<NSString *, NSString *> *expectedDict = @{
@@ -221,6 +228,8 @@ static NSString *const _mockUserID = @"mockUserID";
                       parameters:@{}];
 }
 
+#pragma mark  Tests for set and clear user data
+
 - (void)testSetAndClearUserData
 {
   NSString *mockEmail= @"test_em";
@@ -255,6 +264,22 @@ static NSString *const _mockUserID = @"mockUserID";
   [FBSDKAppEvents clearUserData];
   NSString *clearedUserData = [FBSDKAppEvents getUserData];
   XCTAssertEqualObjects(clearedUserData, @"{}");
+}
+
+- (void)testSetAndClearUserDataForType
+{
+  NSString *testEmail = @"apptest@fb.com";
+  NSString *hashedEmailString = [FBSDKUtility SHA256Hash:testEmail];
+
+  [FBSDKAppEvents setUserData:testEmail forType:FBSDKAppEventEmail];
+  NSString *userData = [FBSDKAppEvents getUserData];
+  XCTAssertTrue([userData containsString:@"em"]);
+  XCTAssertTrue([userData containsString:hashedEmailString]);
+
+  [FBSDKAppEvents clearUserDataForType:FBSDKAppEventEmail];
+  userData = [FBSDKAppEvents getUserData];
+  XCTAssertFalse([userData containsString:@"em"]);
+  XCTAssertFalse([userData containsString:hashedEmailString]);
 }
 
 - (void)testSetAndClearUserID
@@ -319,6 +344,8 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [partialMockAppEvents verify];
 }
+
+#pragma mark  Tests for log push notification
 
 - (void)testLogPushNotificationOpen
 {
@@ -415,6 +442,8 @@ static NSString *const _mockUserID = @"mockUserID";
   [partialMockAppEvents verify];
 }
 
+#pragma mark  Tests for Kill Switch
+
 - (void)testAppEventsKillSwitchDisabled
 {
   id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
@@ -479,6 +508,8 @@ static NSString *const _mockUserID = @"mockUserID";
   XCTAssertEqual(0, activiesEndpointCalledCountDisabled, @"No Graph Request is sent");
 }
 
+#pragma mark  Tests for update user properties
+
 - (void)testGraphRequestWhenUpdateUserProperties
 {
   [FBSDKAppEvents setUserID:_mockUserID];
@@ -522,6 +553,8 @@ static NSString *const _mockUserID = @"mockUserID";
                                handler:^(FBSDKGraphRequestConnection *connection, id result, NSError *error) {}];
   [mockLogger verify];
 }
+
+#pragma mark  Tests for log event
 
 - (void)testLogEventWithValueToSum
 {
@@ -597,6 +630,20 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                accessToken:nil];
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
+
+  [partialMockAppEvents verify];
+}
+
+- (void)testLogImplicitEvent
+{
+  id partialMockAppEvents = [OCMockObject partialMockForObject:[FBSDKAppEvents singleton]];
+  [[partialMockAppEvents expect] instanceLogEvent:_mockEventName
+                                       valueToSum:@(_mockPurchaseAmount)
+                                       parameters:@{}
+                               isImplicitlyLogged:YES
+                                      accessToken:nil];
+
+  [FBSDKAppEvents logImplicitEvent:_mockEventName valueToSum:@(_mockPurchaseAmount) parameters:@{} accessToken:nil];
 
   [partialMockAppEvents verify];
 }
