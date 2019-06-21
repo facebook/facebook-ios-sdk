@@ -204,8 +204,6 @@ static UIApplicationState _applicationState;
     [FBSDKAccessToken setCurrentAccessToken:cachedToken];
     // fetch app settings
     [FBSDKServerConfigurationManager loadServerConfigurationWithCompletionBlock:NULL];
-    // fetch gate keepers
-    [FBSDKGateKeeperManager loadGateKeepers];
 
     if (FBSDKSettings.isAutoLogAppEventsEnabled) {
         [self _logSDKInitialize];
