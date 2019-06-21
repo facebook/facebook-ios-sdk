@@ -415,7 +415,7 @@ static NSString *const _mockUserID = @"mockUserID";
 - (void)testRequestForCustomAudienceThirdPartyIDWithAccessToken
 {
   id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
-
+  id mockAppEventsUtility = [OCMockObject niceMockForClass:[FBSDKAppEventsUtility class]];
   NSString *tokenString = [FBSDKAppEventsUtility tokenStringToUseFor:mockAccessToken];
   NSString *graphPath = [NSString stringWithFormat:@"%@/custom_audience_third_party_id", _mockAppID];
   FBSDKGraphRequest *expectedRequest = [[FBSDKGraphRequest alloc] initWithGraphPath:graphPath
@@ -425,7 +425,21 @@ static NSString *const _mockUserID = @"mockUserID";
                                                                               flags:FBSDKGraphRequestFlagDoNotInvalidateTokenOnError | FBSDKGraphRequestFlagDisableErrorRecovery];
 
   OCMStub([FBSDKAppEventsUtility advertisingTrackingStatus] == FBSDKAdvertisingTrackingDisallowed ).andReturn(@YES);
-  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:mockAccessToken];
+  OCMStub([mockAppEventsUtility attributionID]).andReturn(NULL);
+
+  // without access token
+  [[mockAppEventsUtility expect] advertiserID];
+
+  FBSDKGraphRequest *request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:nil];
+
+  [mockAppEventsUtility verify];
+
+  XCTAssertNil(request);
+
+  // with access token
+  [[mockAppEventsUtility reject] advertiserID];
+
+  request = [FBSDKAppEvents requestForCustomAudienceThirdPartyIDWithAccessToken:mockAccessToken];
 
   XCTAssertEqualObjects(expectedRequest.graphPath, request.graphPath);
   XCTAssertEqualObjects(expectedRequest.HTTPMethod, request.HTTPMethod);
