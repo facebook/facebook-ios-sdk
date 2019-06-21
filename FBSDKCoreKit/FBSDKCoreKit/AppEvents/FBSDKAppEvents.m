@@ -65,6 +65,7 @@ FBSDKAppEventName FBSDKAppEventNameSchedule                = @"Schedule";
 FBSDKAppEventName FBSDKAppEventNameStartTrial              = @"StartTrial";
 FBSDKAppEventName FBSDKAppEventNameSubmitApplication       = @"SubmitApplication";
 FBSDKAppEventName FBSDKAppEventNameSubscribe               = @"Subscribe";
+FBSDKAppEventName FBSDKAppEventNameSubscriptionHeartbeat   = @"SubscriptionHeartbeat";
 FBSDKAppEventName FBSDKAppEventNameAdImpression            = @"AdImpression";
 FBSDKAppEventName FBSDKAppEventNameAdClick                 = @"AdClick";
 
