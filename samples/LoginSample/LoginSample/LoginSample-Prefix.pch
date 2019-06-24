@@ -22,5 +22,3 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
 #endif
-
-#define FB_TWEAK_ENABLED 1
