@@ -19,7 +19,17 @@
 #import <StoreKit/StoreKit.h>
 #import <XCTest/XCTest.h>
 
+#import <OCMock/OCMock.h>
+
 #import "FBSDKPaymentObserver.h"
+
+@interface FBSDKPaymentObserver ()
+
++ (FBSDKPaymentObserver *)singleton;
+- (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions;
+- (void)handleTransaction:(SKPaymentTransaction *)transaction;
+
+@end
 
 @interface FBSDKPaymentObserverTests : XCTestCase
 
@@ -28,11 +38,7 @@
 @implementation FBSDKPaymentObserverTests
 
 - (void)testPaymentObserverAddRemove {
-  SEL selector = NSSelectorFromString(@"singleton");
-
-  XCTAssertTrue([FBSDKPaymentObserver respondsToSelector:selector]);
-
-  FBSDKPaymentObserver *observer = [FBSDKPaymentObserver performSelector:selector];
+  FBSDKPaymentObserver *observer = [FBSDKPaymentObserver singleton];
 
   BOOL isObserving = [[observer valueForKeyPath:@"_observingTransactions"] boolValue];
   XCTAssertFalse(isObserving);
@@ -45,5 +51,20 @@
   isObserving = [[observer valueForKeyPath:@"_observingTransactions"] boolValue];
   XCTAssertFalse(isObserving);
 }
+
+- (void)testPaymenQueueUpdateTransactions
+{
+  id mockQueue = [OCMockObject niceMockForClass:[SKPaymentQueue class]];
+  id partialMockObserver = [OCMockObject partialMockForObject:[FBSDKPaymentObserver singleton]];
+
+  NSMutableArray<SKPaymentTransaction *> *transactions = [NSMutableArray array];
+  SKPaymentTransaction *transaction = [[SKPaymentTransaction alloc] init];
+  [transactions addObject:transaction];
+
+  [[partialMockObserver expect] handleTransaction:[OCMArg any]];
+  [partialMockObserver paymentQueue:mockQueue updatedTransactions:transactions];
+  [partialMockObserver verify];
+}
+
 
 @end
