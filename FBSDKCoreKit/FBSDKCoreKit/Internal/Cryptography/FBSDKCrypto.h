@@ -34,35 +34,4 @@ NS_SWIFT_NAME(Crypto)
  */
 + (NSString *)randomString:(NSUInteger)numOfBytes;
 
-/**
-  Generate a fresh master key using SecRandomCopyBytes, the result is encoded in base64/.
- */
-+ (NSString *)makeMasterKey;
-
-/**
-  Initialize with a base64-encoded master key.
-
- This key and the current derivation function will be used to generate the encryption key and the mac key.
- */
-- (instancetype)initWithMasterKey:(NSString *)masterKey;
-
-/**
-  Initialize with base64-encoded encryption key and mac key.
- */
-- (instancetype)initWithEncryptionKey:(NSString *)encryptionKey macKey:(NSString *)macKey;
-
-/**
-  Encrypt plainText and return the base64 encoded result.
-
- MAC computation involves additionalDataToSign.
- */
-- (NSString *)encrypt:(NSData *)plainText additionalDataToSign:(NSData *)additionalDataToSign;
-
-/**
-  Decrypt base64EncodedCipherText.
-
- MAC computation involves additionalSignedData.
- */
-- (NSData *)decrypt:(NSString *)base64EncodedCipherText additionalSignedData:(NSData *)additionalSignedData;
-
 @end
