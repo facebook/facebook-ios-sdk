@@ -345,49 +345,36 @@ static NSString *const _mockUserID = @"mockUserID";
   [partialMockAppEvents verify];
 }
 
-#pragma mark  Tests for log push notification
+#pragma mark  Test for log push notification
 
 - (void)testLogPushNotificationOpen
 {
-  NSDictionary <NSString *, NSString *> *expectedParams = @{
-                                                            @"fb_push_campaign":@"testCampaign",
-                                                            };
-
-  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
-
-  [FBSDKAppEvents logPushNotificationOpen:_mockPayload];
-
-  [_mockAppEvents verify];
-}
-
-- (void)testLogPushNotificationOpenEmptyCampaign
-{
-  NSDictionary <NSString *, id> *mockPayload = @{@"fb_push_payload" : @{@"campaign" : @""}};
-
-  [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
-
-  [FBSDKAppEvents logPushNotificationOpen:mockPayload];
-}
-
-- (void)testLogPushNotificationOpenWithNonEmptyAction
-{
-  NSDictionary <NSString *, NSString *> *expectedParams = @{
+  NSString *eventName = @"fb_mobile_push_opened";
+  // with action and campaign
+  NSDictionary <NSString *, NSString *> *expectedParams1 = @{
                                                             @"fb_push_action":@"testAction",
                                                             @"fb_push_campaign":@"testCampaign",
                                                             };
-
-  [[_mockAppEvents expect] logEvent:@"fb_mobile_push_opened" parameters:expectedParams];
-
+  [[_mockAppEvents expect] logEvent:eventName parameters:expectedParams1];
   [FBSDKAppEvents logPushNotificationOpen:_mockPayload action:@"testAction"];
-
   [_mockAppEvents verify];
-}
 
-- (void)testLogPushNotificationOpenWithEmptyPayload
-{
-  [[_mockAppEvents reject] logEvent:@"fb_mobile_push_opened" parameters:[OCMArg any]];
+  // empty action
+  NSDictionary <NSString *, NSString *> *expectedParams2 = @{
+                                                             @"fb_push_campaign":@"testCampaign",
+                                                             };
+  [[_mockAppEvents expect] logEvent:eventName parameters:expectedParams2];
+  [FBSDKAppEvents logPushNotificationOpen:_mockPayload];
+  [_mockAppEvents verify];
 
+  // empty payload
+  [[_mockAppEvents reject] logEvent:eventName parameters:[OCMArg any]];
   [FBSDKAppEvents logPushNotificationOpen:@{}];
+
+  // empty campaign
+  NSDictionary <NSString *, id> *mockPayload = @{@"fb_push_payload" : @{@"campaign" : @""}};
+  [[_mockAppEvents reject] logEvent:eventName parameters:[OCMArg any]];
+  [FBSDKAppEvents logPushNotificationOpen:mockPayload];
 }
 
 - (void)testSetFlushBehavior
