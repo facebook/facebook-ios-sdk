@@ -313,7 +313,7 @@ typedef NS_ENUM(NSInteger, FBSDKLoginManagerState) {
 
   NSMutableDictionary *loginParams = [NSMutableDictionary dictionary];
   loginParams[@"client_id"] = [FBSDKSettings appID];
-  loginParams[@"response_type"] = @"token,signed_request";
+  loginParams[@"response_type"] = @"token_or_nonce,signed_request";
   loginParams[@"redirect_uri"] = @"fbconnect://success";
   loginParams[@"display"] = @"touch";
   loginParams[@"sdk"] = @"ios";
