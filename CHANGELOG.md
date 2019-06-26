@@ -41,6 +41,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 [Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v4.44.1...v5.0.0)
 
 ### Added
+- support manual SDK initialization
+
+### Changed
+- extend coverage of AutoLogAppEventsEnabled flag to all internal analytics events
+
+### Added
 
 - Typedefs for public Objective-C blocks
 - `NS_DESIGNATED_INITIALIZER` for required inits
