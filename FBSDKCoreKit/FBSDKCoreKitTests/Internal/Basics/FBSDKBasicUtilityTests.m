@@ -42,4 +42,21 @@
   XCTAssertEqualObjects(decoded[@"url"], URLString);
 }
 
+- (void)testConvertRequestValue
+{
+  NSNumber *value1 = @1;
+  id result1 = [FBSDKBasicUtility convertRequestValue:value1];
+  XCTAssertTrue([result1 isKindOfClass:[NSString class]]);
+  XCTAssertEqualObjects(result1, @"1");
+
+  NSURL *value2= [NSURL URLWithString:@"https://test"];
+  id result2 = [FBSDKBasicUtility convertRequestValue:value2];
+  XCTAssertTrue([result2 isKindOfClass:[NSString class]]);
+  XCTAssertEqualObjects(result2, @"https://test");
+
+  NSMutableArray<id> *value3 = [NSMutableArray array];
+  id result3 = [FBSDKBasicUtility convertRequestValue:value3];
+  XCTAssertTrue([result3 isKindOfClass:[NSMutableArray class]]);
+}
+
 @end
