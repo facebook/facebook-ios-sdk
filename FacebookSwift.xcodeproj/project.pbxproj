@@ -10,7 +10,6 @@
 		039F241D1F018FAA00489799 /* FBSDKSettingsInitializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 039F241B1F018FAA00489799 /* FBSDKSettingsInitializer.h */; };
 		039F241E1F018FAA00489799 /* FBSDKSettingsInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 039F241C1F018FAA00489799 /* FBSDKSettingsInitializer.m */; };
 		810192AE1D01305400B9E881 /* FBProfilePictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A31D01305400B9E881 /* FBProfilePictureView.swift */; };
-		810192B01D01305400B9E881 /* AppEvents.Name.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192A51D01305400B9E881 /* AppEvents.Name.swift */; };
 		810192B41D01305400B9E881 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AA1D01305400B9E881 /* AccessToken.swift */; };
 		810192B71D01305400B9E881 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 810192AD1D01305400B9E881 /* Settings.swift */; };
 		811C5E4D1CFFD4D100E4A925 /* FacebookCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8115C0D81CFE540D001FF33B /* FacebookCore.framework */; };
@@ -298,7 +297,6 @@
 			isa = PBXGroup;
 			children = (
 				810192AA1D01305400B9E881 /* AccessToken.swift */,
-				810192A51D01305400B9E881 /* AppEvents.Name.swift */,
 				811C5E751CFFD5DD00E4A925 /* Dictionary+KeyValueMap.swift */,
 				810192A31D01305400B9E881 /* FBProfilePictureView.swift */,
 				81FC4C971D067448003F3A46 /* Permission.swift */,
@@ -773,7 +771,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				810192B01D01305400B9E881 /* AppEvents.Name.swift in Sources */,
 				810192B71D01305400B9E881 /* Settings.swift in Sources */,
 				811C5E771CFFD5DD00E4A925 /* Dictionary+KeyValueMap.swift in Sources */,
 				810192AE1D01305400B9E881 /* FBProfilePictureView.swift in Sources */,
