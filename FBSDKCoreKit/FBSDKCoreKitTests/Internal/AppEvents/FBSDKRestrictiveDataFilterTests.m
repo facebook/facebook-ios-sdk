@@ -20,6 +20,8 @@
 
 #import <OCMock/OCMock.h>
 
+#import "FBSDKAppEvents.h"
+#import "FBSDKAppEventsState.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKRestrictiveDataFilterManager.h"
 
@@ -190,6 +192,95 @@
   XCTAssertNil(type2);
 }
 
+- (void)testFilterByRules
+{
+  NSMutableArray<NSMutableDictionary<NSString *, NSString *> *> *rules = [NSMutableArray array];
+
+  NSMutableDictionary<NSString *, NSString *> *rule1 =  [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                         @"value_regex" : @"required|true|false|yes|y|n|off|on",
+                                                                                                         @"type" : @"type",
+                                                                                                         }];
+
+  NSMutableDictionary<NSString *, NSString *> *rule2 =  [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                         @"key_regex" : @"^phone$|phone number|cell phone|mobile phone|^mobile$",
+                                                                                                         @"value_negative_regex" : @"required|true|false|yes|y|n|off|on",
+                                                                                                         @"type" : @"type",
+                                                                                                         }];
+
+  [rules addObject:rule1];
+  [rules addObject:rule2];
+  [FBSDKRestrictiveDataFilterManager updateFilters:rules restrictiveParams:nil];
+
+
+  id mockAppStates = [OCMockObject niceMockForClass:[FBSDKAppEventsState class]];
+  OCMStub([mockAppStates alloc]).andReturn(mockAppStates);
+  OCMStub([mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(mockAppStates);
+
+
+  // filtered by key
+  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value){
+    XCTAssertEqualObjects(value[@"_eventName"], @"test_event_1");
+    XCTAssertNil(value[@"phone"]);
+    XCTAssertEqualObjects(value[@"_restrictedParams"], @"{\"phone\":\"type\"}");
+    return YES;
+  }] isImplicit:NO];
+  [FBSDKAppEvents logEvent:@"test_event_1" parameters:@{@"phone" : @"123-234"}];
+  [mockAppStates verify];
+
+  // filtered by value
+  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value){
+    XCTAssertEqualObjects(value[@"_eventName"], @"test_event_2");
+    XCTAssertNil(value[@"key"]);
+    XCTAssertEqualObjects(value[@"_restrictedParams"], @"{\"key\":\"type\"}");
+    return YES;
+  }] isImplicit:NO];
+  [FBSDKAppEvents logEvent:@"test_event_2" parameters:@{@"key": @"yes"}];
+  [mockAppStates verify];
+
+  // should not be filtered
+  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value){
+    XCTAssertEqualObjects(value[@"_eventName"], @"test_event_3");
+    XCTAssertEqualObjects(value[@"_valueToSum"], @1);
+    XCTAssertEqualObjects(value[@"number"], @"0629");
+    XCTAssertNil(value[@"_restrictedParams"]);
+    return YES;
+  }] isImplicit:NO];
+  [FBSDKAppEvents logEvent:@"test_event_3" valueToSum:1 parameters:@{@"number" : @"0629"}];
+  [mockAppStates verify];
+}
+
+- (void)testFilterByParams
+{
+  NSString *testEventName = @"restrictive_event_name";
+  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary: @{ testEventName : @{@"restrictive_param" :@{@"dob" : @4}}}];
+
+  [FBSDKRestrictiveDataFilterManager updateFilters:nil restrictiveParams:params];
+
+  id mockAppStates = [OCMockObject niceMockForClass:[FBSDKAppEventsState class]];
+  OCMStub([mockAppStates alloc]).andReturn(mockAppStates);
+  OCMStub([mockAppStates initWithToken:[OCMArg any] appID:[OCMArg any]]).andReturn(mockAppStates);
+
+  // filtered by param key
+  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value){
+    XCTAssertEqualObjects(value[@"_eventName"], testEventName);
+    XCTAssertNil(value[@"dob"]);
+    XCTAssertEqualObjects(value[@"_restrictedParams"], @"{\"dob\":\"4\"}");
+    return YES;
+  }] isImplicit:NO];
+  [FBSDKAppEvents logEvent:testEventName parameters:@{@"dob": @"06-29-2019"}];
+  [mockAppStates verify];
+
+  // should not be filtered
+  [[mockAppStates expect] addEvent:[OCMArg checkWithBlock:^(id value){
+    XCTAssertEqualObjects(value[@"_eventName"], testEventName);
+    XCTAssertEqualObjects(value[@"test_key"], @66666);
+    XCTAssertNil(value[@"_restrictedParams"]);
+    return YES;
+  }] isImplicit:NO];
+  [FBSDKAppEvents logEvent:testEventName parameters:@{@"test_key": @66666}];
+  [mockAppStates verify];
+}
+
 - (void)testGetMatchedDataTypeByParam
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
@@ -208,7 +299,7 @@
   NSString *type1 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"first name" paramValue:@""];
   XCTAssertEqualObjects(type1, @"6");
 
-  NSString *type2 = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"cell phone" paramValue:@""];
+  NSString *type2= [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName paramKey:@"reservation number" paramValue:@"123"];
   XCTAssertNil(type2);
 }
 
