@@ -7,12 +7,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.0...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.1...HEAD)
+
+## 5.2.1
+
+[2019-07-02](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.1) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.0...v5.2.1)
+
+### Fixed
+
+- Various bug fixes
 
 ## 5.2.0
 
 [2019-06-30](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.0) |
 [Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.1.1...v5.2.0)
+
+### Fixed
+
+- Fixed a crash caused by sensitive data filtering
+- Fixed FB Login for iOS 13
 
 ## 5.1.1
 
