@@ -28,7 +28,7 @@ NS_SWIFT_NAME(LoginManagerLogger)
 + (FBSDKLoginManagerLogger *)loggerFromParameters:(NSDictionary *)parameters;
 
 - (instancetype)init NS_UNAVAILABLE;
-- (instancetype)new NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithLoggingToken:(NSString *)loggingToken NS_DESIGNATED_INITIALIZER;
 
