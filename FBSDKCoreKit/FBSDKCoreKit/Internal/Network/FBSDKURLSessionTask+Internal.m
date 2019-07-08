@@ -16,40 +16,31 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import "FBSDKURLSessionTask.h"
+#import "FBSDKURLSessionTask+Internal.h"
 
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
 #import "FBSDKSettings.h"
 
-@interface FBSDKURLSessionTask ()
-
-@property (nonatomic, strong) NSURLSessionTask *task;
-@property (nonatomic, copy) FBSDKURLSessionTaskBlock handler;
-@property (nonatomic, assign) uint64_t requestStartTime;
-@property (nonatomic, assign, readonly) NSUInteger loggerSerialNumber;
-
-@end
-
-@implementation FBSDKURLSessionTask
+@implementation FBSDKURLSessionTask(Internal)
 
 - (instancetype)initWithRequest:(NSURLRequest *)request
                     fromSession:(NSURLSession *)session
               completionHandler:(FBSDKURLSessionTaskBlock)handler
 {
   if ((self = [super init])) {
-    _requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
-    _loggerSerialNumber = [FBSDKLogger generateSerialNumber];
-    _handler = [handler copy];
+    self.requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
+    self.loggerSerialNumber = [FBSDKLogger generateSerialNumber];
+    self.handler = [handler copy];
     __weak FBSDKURLSessionTask *weakSelf = self;
-    _task = [session dataTaskWithRequest:request
-                       completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                         if (error) {
-                           [weakSelf taskDidCompleteWithError:error];
-                         } else {
-                           [weakSelf taskDidCompleteWithResponse:response data:data];
-                         }
-                       }];
+    self.task = [session dataTaskWithRequest:request
+                           completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+                             if (error) {
+                               [weakSelf taskDidCompleteWithError:error];
+                             } else {
+                               [weakSelf taskDidCompleteWithResponse:response data:data];
+                             }
+                           }];
   }
   return self;
 }
@@ -132,19 +123,6 @@
   } @finally {
     self.handler = nil;
   }
-}
-
-#pragma mark - Task State
-
-- (void)start
-{
-  [self.task resume];
-}
-
-- (void)cancel
-{
-  [self.task cancel];
-  self.handler = nil;
 }
 
 @end

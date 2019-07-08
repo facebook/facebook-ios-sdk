@@ -16,25 +16,34 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKURLSessionTask.h"
 
-typedef void (^FBSDKURLSessionTaskBlock)(NSError *error,
-                                         NSURLResponse *response,
-                                         NSData *responseData)
-NS_SWIFT_NAME(URLSessionTaskBlock);
+@implementation FBSDKURLSessionTask
 
-NS_SWIFT_NAME(URLSessionTask)
-@interface FBSDKURLSessionTask : NSObject
+- (instancetype)init
+{
+  if ((self = [super init])) {
+    _requestStartDate = [NSDate date];
+  }
+  return self;
+}
 
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
+- (NSURLSessionTaskState)state
+{
+  return self.task.state;
+}
 
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                    fromSession:(NSURLSession *)session
-              completionHandler:(FBSDKURLSessionTaskBlock)handler
-NS_DESIGNATED_INITIALIZER;
+#pragma mark - Task State
 
-- (void)cancel;
-- (void)start;
+- (void)start
+{
+  [self.task resume];
+}
+
+- (void)cancel
+{
+  [self.task cancel];
+  self.handler = nil;
+}
 
 @end
