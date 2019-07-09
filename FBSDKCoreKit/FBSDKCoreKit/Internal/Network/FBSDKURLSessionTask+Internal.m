@@ -24,52 +24,34 @@
 
 @implementation FBSDKURLSessionTask(Internal)
 
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                    fromSession:(NSURLSession *)session
-              completionHandler:(FBSDKURLSessionTaskBlock)handler
-{
-  if ((self = [super init])) {
-    self.requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
-    self.loggerSerialNumber = [FBSDKLogger generateSerialNumber];
-    self.handler = [handler copy];
-    __weak FBSDKURLSessionTask *weakSelf = self;
-    self.task = [session dataTaskWithRequest:request
-                           completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-                             if (error) {
-                               [weakSelf taskDidCompleteWithError:error];
-                             } else {
-                               [weakSelf taskDidCompleteWithResponse:response data:data];
-                             }
-                           }];
-  }
-  return self;
-}
-
 #pragma mark - Logging and Completion
 
-- (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
-                      error:(NSError *)error {
++ (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
+                      error:(NSError *)error
+{
   if (error) {
     NSString *logEntry = [NSString
                           stringWithFormat:@"FBSDKURLSessionTask <#%lu>:\n  Error: '%@'\n%@\n",
-                          (unsigned long)self.loggerSerialNumber,
+                          (unsigned long)[FBSDKLogger generateSerialNumber],
                           error.localizedDescription,
                           error.userInfo];
 
-    [self logMessage:logEntry];
+    [FBSDKURLSessionTask logMessage:logEntry];
   }
 
-  [self invokeHandler:handler error:error response:nil responseData:nil];
+  [FBSDKURLSessionTask invokeHandler:handler error:error response:nil responseData:nil];
 }
 
-- (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
++ (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
                    response:(NSURLResponse *)response
-               responseData:(NSData *)responseData {
+               responseData:(NSData *)responseData
+           requestStartTime:(uint64_t)requestStartTime
+{
   // Basic FBSDKURLSessionTask logging just prints out the URL.  FBSDKGraphRequest logging provides more details.
   NSString *mimeType = response.MIMEType;
   NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKURLSessionTask <#%lu>:\n  Duration: %llu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
-                                      (unsigned long)self.loggerSerialNumber,
-                                      [FBSDKInternalUtility currentTimeInMilliseconds] - self.requestStartTime,
+                                      (unsigned long)[FBSDKLogger generateSerialNumber],
+                                      [FBSDKInternalUtility currentTimeInMilliseconds] - requestStartTime,
                                       (unsigned long)responseData.length / 1024,
                                       mimeType];
 
@@ -78,37 +60,43 @@
     [mutableLogEntry appendFormat:@"  Response:\n%@\n\n", responseUTF8];
   }
 
-  [self logMessage:mutableLogEntry];
+  [FBSDKURLSessionTask logMessage:mutableLogEntry];
 
-  [self invokeHandler:handler error:nil response:response responseData:responseData];
+  [FBSDKURLSessionTask invokeHandler:handler error:nil response:response responseData:responseData];
 }
 
-- (void)invokeHandler:(FBSDKURLSessionTaskBlock)handler
++ (void)invokeHandler:(FBSDKURLSessionTaskBlock)handler
                 error:(NSError *)error
              response:(NSURLResponse *)response
-         responseData:(NSData *)responseData {
+         responseData:(NSData *)responseData
+{
   if (handler != nil) {
     dispatch_async(dispatch_get_main_queue(), ^{
-      handler(error, response, responseData);
+      handler(responseData, response, error);
     });
   }
 }
 
-- (void)logMessage:(NSString *)message
++ (void)logMessage:(NSString *)message
 {
   [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests formatString:@"%@", message];
 }
 
-- (void)taskDidCompleteWithResponse:(NSURLResponse *)response data:(NSData *)data
++ (void)taskDidCompleteWithResponse:(NSURLResponse *)response
+                               data:(NSData *)data
+                   requestStartTime:(uint64_t)requestStartTime
+                            handler:(FBSDKURLSessionTaskBlock)handler
 {
   @try {
-    [self logAndInvokeHandler:self.handler response:response responseData:data];
-  } @finally {
-    self.handler = nil;
-  }
+    [FBSDKURLSessionTask logAndInvokeHandler:handler
+                                    response:response
+                                responseData:data
+                            requestStartTime:requestStartTime];
+  } @finally {}
 }
 
-- (void)taskDidCompleteWithError:(NSError *)error
++ (void)taskDidCompleteWithError:(NSError *)error
+                         handler:(FBSDKURLSessionTaskBlock)handler
 {
   @try {
     if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
@@ -119,10 +107,8 @@
          "app for Application Transport Security compatibility described at https://developers.facebook.com/docs/ios/ios9"];
       }
     }
-    [self logAndInvokeHandler:self.handler error:error];
-  } @finally {
-    self.handler = nil;
-  }
+    [FBSDKURLSessionTask logAndInvokeHandler:handler error:error];
+  } @finally {}
 }
 
 @end

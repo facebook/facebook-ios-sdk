@@ -104,8 +104,7 @@ NSURLSessionDataDelegate
 #endif
 >
 
-@property (nonatomic, strong) NSURLSession *session;
-@property (nonatomic, strong) FBSDKURLSessionTask *task;
+@property (nonatomic, strong) FBSDKURLSession *session;
 @property (nonatomic, retain) NSMutableArray *requests;
 @property (nonatomic, assign) FBSDKGraphRequestConnectionState state;
 @property (nonatomic, strong) FBSDKLogger *logger;
@@ -134,13 +133,14 @@ NSURLSessionDataDelegate
     _timeout = g_defaultTimeout;
     _state = kStateCreated;
     _logger = [[FBSDKLogger alloc] initWithLoggingBehavior:FBSDKLoggingBehaviorNetworkRequests];
+    _session = [[FBSDKURLSession alloc] initWithDelegate:self delegateQueue:_delegateQueue];
   }
   return self;
 }
 
 - (void)dealloc
 {
-  [_session invalidateAndCancel];
+  [self.session invalidateAndCancel];
 }
 
 #pragma mark - Public
@@ -189,8 +189,7 @@ NSURLSessionDataDelegate
 - (void)cancel
 {
   self.state = kStateCancelled;
-  [self.task cancel];
-  [self cleanUpSession];
+  [self.session invalidateAndCancel];
 }
 
 - (void)overrideGraphAPIVersion:(NSString *)version
@@ -235,22 +234,22 @@ NSURLSessionDataDelegate
   [self logRequest:request bodyLength:0 bodyLogger:nil attachmentLogger:nil];
   _requestStartTime = [FBSDKInternalUtility currentTimeInMilliseconds];
 
-  FBSDKURLSessionTaskBlock handler = ^(NSError *error,
-                                       NSURLResponse *response,
-                                       NSData *responseData) {
-    [self completeFBSDKURLSessionWithResponse:response
-                                         data:responseData
-                                 networkError:error];
+  FBSDKURLSessionTaskBlock completionHanlder = ^(NSData *responseDataV1, NSURLResponse *responseV1, NSError *errorV1) {
+    FBSDKURLSessionTaskBlock handler = ^(NSData *responseDataV2,
+                                         NSURLResponse *responseV2,
+                                         NSError *errorV2) {
+      [self completeFBSDKURLSessionWithResponse:responseV2
+                                           data:responseDataV2
+                                   networkError:errorV2];
+    };
+
+    if(errorV1) {
+      [FBSDKURLSessionTask taskDidCompleteWithError:errorV1 handler:handler];
+    } else {
+      [FBSDKURLSessionTask taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
+    }
   };
-
-  if (!self.session) {
-    self.session = [self defaultSession];
-  }
-
-  self.task = [[FBSDKURLSessionTask alloc] initWithRequest:request
-                                               fromSession:self.session
-                                         completionHandler:handler];
-  [self.task start];
+  [self.session executeURLRequest:request completionHandler:completionHanlder];
 
   id<FBSDKGraphRequestConnectionDelegate> delegate = self.delegate;
   if ([delegate respondsToSelector:@selector(requestConnectionWillBeginLoading:)]) {
@@ -271,6 +270,7 @@ NSURLSessionDataDelegate
 
 - (void)setDelegateQueue:(NSOperationQueue *)queue
 {
+  _session.delegateQueue = queue;
   _delegateQueue = queue;
 }
 
@@ -625,7 +625,7 @@ NSURLSessionDataDelegate
 
   [self completeWithResults:results networkError:error];
 
-  [self cleanUpSession];
+  [self.session invalidateAndCancel];
 }
 
 //
@@ -992,20 +992,6 @@ NSURLSessionDataDelegate
     return [NSString stringWithFormat:@"%@/%@", agent, [FBSDKSettings userAgentSuffix]];
   }
   return agent;
-}
-
-- (NSURLSession *)defaultSession
-{
-    NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    return [NSURLSession sessionWithConfiguration:config
-                                         delegate:self
-                                    delegateQueue:_delegateQueue];
-}
-
-- (void)cleanUpSession
-{
-  [self.session invalidateAndCancel];
-  self.session = nil;
 }
 
 #pragma mark - NSURLSessionDataDelegate

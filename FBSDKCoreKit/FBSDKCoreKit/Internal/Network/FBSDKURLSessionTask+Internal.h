@@ -25,8 +25,12 @@
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithRequest:(NSURLRequest *)request
-                    fromSession:(NSURLSession *)session
-              completionHandler:(FBSDKURLSessionTaskBlock)handler;
++ (void)taskDidCompleteWithResponse:(NSURLResponse *)response
+                               data:(NSData *)data
+                   requestStartTime:(uint64_t)requestStartTime
+                            handler:(FBSDKURLSessionTaskBlock)handler;
+
++ (void)taskDidCompleteWithError:(NSError *)error
+                         handler:(FBSDKURLSessionTaskBlock)handler;
 
 @end

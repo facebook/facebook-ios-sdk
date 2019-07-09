@@ -28,6 +28,17 @@
   return self;
 }
 
+- (instancetype)initWithRequest:(NSURLRequest *)request
+                    fromSession:(NSURLSession *)session
+              completionHandler:(FBSDKURLSessionTaskBlock)handler
+{
+  if ((self = [self init])) {
+    self.requestStartTime = (uint64_t)([self.requestStartDate timeIntervalSince1970] * 1000);
+    self.task = [session dataTaskWithRequest:request completionHandler:handler];
+  }
+  return self;
+}
+
 - (NSURLSessionTaskState)state
 {
   return self.task.state;

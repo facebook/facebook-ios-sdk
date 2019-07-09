@@ -65,6 +65,7 @@
 #import "FBSDKSwizzler.h"
 #import "../Basics/Internal/FBSDKTypeUtility.h"
 #import "../Basics/Internal/FBSDKBasicUtility+Internal.h"
+#import "../Basics/Internal/FBSDKURLSession.h"
 #import "../Basics/Internal/FBSDKURLSessionTask.h"
 #import "Network/FBSDKGraphRequest+Internal.h"
 #import "Network/FBSDKGraphRequestConnection+Internal.h"
