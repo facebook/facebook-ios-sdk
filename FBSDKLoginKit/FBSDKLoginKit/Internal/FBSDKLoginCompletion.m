@@ -255,7 +255,11 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
                                                           NSError *error) {
     if (!error) {
       parameters.accessTokenString = result[@"access_token"];
-      parameters.expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
+      NSDate *expirationDate = [NSDate distantFuture];
+      if (result[@"expires_in"] && [result[@"expires_in"] integerValue] > 0) {
+        expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
+      }
+      parameters.expirationDate = expirationDate;
     } else {
       parameters.error = error;
     }
