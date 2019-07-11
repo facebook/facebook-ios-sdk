@@ -27,10 +27,17 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 - (instancetype)initWithURL:(NSURL *)URL callbackURLScheme:(nullable NSString *)callbackURLScheme completionHandler:(FBSDKAuthenticationCompletionHandler)completionHandler;
 - (BOOL)start;
 - (void)cancel;
+@optional
+- (void)setPresentationContextProvider:(id)presentationContextProvider;
 
 @end
 
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+#import <AuthenticationServices/AuthenticationServices.h>
+@interface FBSDKBridgeAPI() <FBSDKApplicationObserving, FBSDKContainerViewControllerDelegate, ASWebAuthenticationPresentationContextProviding>
+#else
 @interface FBSDKBridgeAPI() <FBSDKApplicationObserving, FBSDKContainerViewControllerDelegate>
+#endif
 
 @end
 
@@ -314,6 +321,9 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
                                                            callbackURLScheme:[FBSDKInternalUtility appURLScheme]
                                                            completionHandler:_authenticationSessionCompletionHandler];
+    if ([_authenticationSession respondsToSelector:@selector(setPresentationContextProvider:)]) {
+      [_authenticationSession setPresentationContextProvider:self];
+    }
     _isRequestingSFAuthenticationSession = YES;
     [_authenticationSession start];
   }
@@ -410,5 +420,13 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
   _pendingRequest = nil;
   _pendingRequestCompletionBlock = NULL;
 }
+
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+#pragma mark - ASWebAuthenticationPresentationContextProviding
+
+- (ASPresentationAnchor)presentationAnchorForWebAuthenticationSession:(ASWebAuthenticationSession *)session API_AVAILABLE(ios(13.0)){
+    return UIApplication.sharedApplication.keyWindow;
+}
+#endif
 
 @end
