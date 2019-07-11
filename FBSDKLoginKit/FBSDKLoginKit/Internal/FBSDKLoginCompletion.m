@@ -260,6 +260,12 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
         expirationDate = [NSDate dateWithTimeIntervalSinceNow:[result[@"expires_in"] integerValue]];
       }
       parameters.expirationDate = expirationDate;
+
+      NSDate *dataAccessExpirationDate = [NSDate distantFuture];
+      if (result[@"data_access_expiration_time"] && [result[@"data_access_expiration_time"] integerValue] > 0) {
+        dataAccessExpirationDate = [NSDate dateWithTimeIntervalSince1970:[result[@"data_access_expiration_time"] integerValue]];
+      }
+      parameters.dataAccessExpirationDate = dataAccessExpirationDate;
     } else {
       parameters.error = error;
     }
