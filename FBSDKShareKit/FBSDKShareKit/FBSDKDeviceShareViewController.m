@@ -80,7 +80,7 @@
     NSString *code = result[@"user_code"];
     NSUInteger expires = [result[@"expires_in"] unsignedIntegerValue];
     if (!code || !expires) {
-      [self _dismissWithError:[NSError fbUnknownErrorWithMessage:@"Malformed response from server"]];
+      [self _dismissWithError:[FBSDKError unknownErrorWithMessage:@"Malformed response from server"]];
       return;
     }
     self.deviceDialogView.confirmationCode = code;
