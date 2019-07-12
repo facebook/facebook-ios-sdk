@@ -28,9 +28,9 @@
 static NSString *const FBSDK_BASICUTILITY_ANONYMOUSIDFILENAME = @"com-facebook-sdk-PersistedAnonymousID.json";
 static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
 
-@interface NSError(FBSDKError)
+@protocol BASIC_FBSDKError
 
-+ (NSError *)fbInvalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message;
++ (NSError *)invalidArgumentErrorWithName:(NSString *)name value:(id)value message:(NSString *)message;
 
 @end
 
@@ -44,10 +44,11 @@ static NSString *const FBSDK_BASICUTILITY_ANONYMOUSID_KEY = @"anon_id";
     object = [self _convertObjectToJSONObject:object invalidObjectHandler:invalidObjectHandler stop:NULL];
     if (![NSJSONSerialization isValidJSONObject:object]) {
       if (errorRef != NULL) {
-        if ([NSError respondsToSelector:@selector(fbInvalidArgumentErrorWithName:value:message:)]) {
-          *errorRef = [NSError fbInvalidArgumentErrorWithName:@"object"
-                                                        value:object
-                                                      message:@"Invalid object for JSON serialization."];
+        Class FBSDKErrorClass = NSClassFromString(@"FBSDKError");
+        if ([FBSDKErrorClass respondsToSelector:@selector(invalidArgumentErrorWithName:value:message:)]) {
+          *errorRef = [FBSDKErrorClass invalidArgumentErrorWithName:@"object"
+                                                              value:object
+                                                            message:@"Invalid object for JSON serialization."];
         }
       }
       return nil;

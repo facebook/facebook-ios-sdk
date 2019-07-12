@@ -112,7 +112,7 @@
   }
   if (!_shareContent) {
     if (error != NULL) {
-      *error = [NSError fbRequiredArgumentErrorWithName:@"shareContent" message:nil];
+      *error = [FBSDKError requiredArgumentErrorWithName:@"shareContent" message:nil];
     }
     return nil;
   }
@@ -127,8 +127,8 @@
     return params;
   }
   if (error != NULL) {
-    *error = [NSError
-              fbInvalidArgumentErrorWithName:@"shareContent"
+    *error = [FBSDKError
+              invalidArgumentErrorWithName:@"shareContent"
               value:shareContent
               message:[NSString stringWithFormat:@"%@ is not a supported content type", [shareContent class]]];
   }

@@ -191,7 +191,7 @@ static const struct
   bridgeParameters = [FBSDKTypeUtility dictionaryValue:bridgeParameters];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [NSError fbInvalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
+      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.bridgeArgs
                                                      value:bridgeParametersJSON
                                                    message:@"Invalid bridge_args."
                                            underlyingError:error];
@@ -216,7 +216,7 @@ static const struct
   NSDictionary<id, id> *resultParameters = [FBSDKBasicUtility objectForJSONString:resultParametersJSON error:&error];
   if (!resultParameters) {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbInvalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
+      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDKBridgeAPIProtocolNativeV1InputKeys.methodResults
                                                      value:resultParametersJSON
                                                    message:@"Invalid method_results."
                                            underlyingError:error];

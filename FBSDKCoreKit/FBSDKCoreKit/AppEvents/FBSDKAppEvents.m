@@ -786,7 +786,7 @@ static NSString *g_overrideAppID = nil;
 
   if (userID.length == 0) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
-    NSError *error = [NSError fbRequiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
+    NSError *error = [FBSDKError requiredArgumentErrorWithName:@"userID" message:@"Missing [FBSDKAppEvents userID] for [FBSDKAppEvents updateUserProperties:]"];
     if (handler) {
       handler(nil, nil, error);
     }
@@ -801,7 +801,7 @@ static NSString *g_overrideAppID = nil;
   __block NSError *invalidObjectError;
   NSString *dataJSONString = [FBSDKBasicUtility JSONStringForObject:@[dataDictionary] error:&error invalidObjectHandler:^id(id object, BOOL *stop) {
     *stop = YES;
-    invalidObjectError = [NSError fbUnknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
+    invalidObjectError = [FBSDKError unknownErrorWithMessage:@"The values in the properties dictionary must be NSStrings or NSNumbers"];
     return nil;
   }];
   if (!error) {
