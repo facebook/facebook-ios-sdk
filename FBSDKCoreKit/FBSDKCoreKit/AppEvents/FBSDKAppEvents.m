@@ -1079,7 +1079,6 @@ static NSString *g_overrideAppID = nil;
 {
   // Kill events if kill-switch is enabled
   if ([FBSDKGateKeeperManager boolForKey:FBSDKGateKeeperAppEventsKillSwitch
-                                   appID:[FBSDKSettings appID]
                             defaultValue:NO]) {
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorAppEvents
                        formatString:@"FBSDKAppEvents: KillSwitch is enabled and fail to log app event: %@",

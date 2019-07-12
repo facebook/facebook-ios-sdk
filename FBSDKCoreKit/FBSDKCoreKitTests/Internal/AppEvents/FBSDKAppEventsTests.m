@@ -449,7 +449,6 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
   OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
-                                      appID:[OCMArg any]
                                defaultValue:NO]).andReturn(NO);
 
   [[_mockAppStates expect] addEvent:[OCMArg any] isImplicit:NO];
@@ -468,7 +467,6 @@ static NSString *const _mockUserID = @"mockUserID";
 {
   id mockGateKeeperManager = OCMClassMock([FBSDKGateKeeperManager class]);
   OCMStub([mockGateKeeperManager boolForKey:[OCMArg any]
-                                      appID:[OCMArg any]
                                defaultValue:NO]).andReturn(YES);
 
   [[_mockAppStates reject] addEvent:[OCMArg any] isImplicit:NO];

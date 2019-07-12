@@ -38,9 +38,7 @@ FOUNDATION_EXPORT FBSDKGateKeeperKey FBSDKGateKeeperAppEventsKillSwitch;
 /**
  Returns the locally cached configuration.
  */
-+ (BOOL)boolForKey:(NSString *)key
-             appID:(NSString *)appID
-      defaultValue:(BOOL)defaultValue;
++ (BOOL)boolForKey:(NSString *)key defaultValue:(BOOL)defaultValue;
 
 /**
  Load the gate keeper configurations from server
