@@ -72,11 +72,6 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
   return [UIFont systemFontOfSize:13];
 }
 
-- (UIColor *)backgroundColor
-{
-  return [UIColor colorWithRed:66.0/255.0 green:103.0/255.0 blue:178.0/255.0 alpha:1.0];
-}
-
 #pragma mark - UIView
 
 - (void)didMoveToWindow

@@ -227,7 +227,7 @@
 
 - (UIColor *)defaultBackgroundColor
 {
-  return [UIColor colorWithRed:65.0/255.0 green:93.0/255.0 blue:174.0/255.0 alpha:1.0];
+  return [UIColor colorWithRed:24.0/255.0 green:119.0/255.0 blue:242.0/255.0 alpha:1.0];
 }
 
 - (UIColor *)defaultDisabledColor
