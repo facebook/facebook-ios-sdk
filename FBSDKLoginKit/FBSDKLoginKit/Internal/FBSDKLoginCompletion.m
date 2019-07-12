@@ -234,7 +234,7 @@ static void FBSDKLoginRequestMeAndPermissions(FBSDKLoginCompletionParameters *pa
   NSString *appID = [FBSDKSettings appID] ?: @"";
 
   if (nonce.length == 0 || appID.length == 0) {
-    _parameters.error = [NSError fbErrorWithCode:FBSDKErrorInvalidArgument message:@"Missing required parameters to exchange nonce for access token."];
+    _parameters.error = [FBSDKError errorWithCode:FBSDKErrorInvalidArgument message:@"Missing required parameters to exchange nonce for access token."];
 
     handler(_parameters);
     return;

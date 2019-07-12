@@ -81,7 +81,7 @@
     }
     default:{
       if (errorRef != NULL) {
-        *errorRef = [NSError fbErrorWithCode:errorCode
+        *errorRef = [FBSDKError errorWithCode:errorCode
                                       message:[FBSDKTypeUtility stringValue:queryParameters[@"error_message"]]];
       }
       return nil;
@@ -94,7 +94,7 @@
   NSDictionary<id, id> *bridgeParameters = [FBSDKBasicUtility objectForJSONString:bridgeParametersJSON error:&error];
   if (!bridgeParameters) {
     if (error && (errorRef != NULL)) {
-      *errorRef = [NSError fbInvalidArgumentErrorWithName:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
+      *errorRef = [FBSDKError invalidArgumentErrorWithName:FBSDK_BRIDGE_API_PROTOCOL_WEB_V1_BRIDGE_ARGS_KEY
                                                      value:bridgeParametersJSON
                                                    message:nil
                                            underlyingError:error];

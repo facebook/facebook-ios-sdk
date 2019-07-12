@@ -61,9 +61,9 @@
 {
   NSError *error;
   if (![self canLike]) {
-    error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                  code:FBSDKShareErrorDialogNotAvailable
-                               message:@"Like dialog is not available."];
+    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                   code:FBSDKShareErrorDialogNotAvailable
+                                message:@"Like dialog is not available."];
     [_delegate likeDialog:self didFailWithError:error];
     return NO;
   }
@@ -124,9 +124,9 @@
 {
   if (!self.objectID.length) {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"objectID"
-                                                     message:nil];
+      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                         name:@"objectID"
+                                                      message:nil];
     }
     return NO;
   }

@@ -118,9 +118,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   NSError *error;
   if (!self.canShare) {
     NSString *message = @"Share API is not available; verify 'canShare' returns YES";
-    error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                  code:FBSDKShareErrorDialogNotAvailable
-                               message:message];
+    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                   code:FBSDKShareErrorDialogNotAvailable
+                                message:message];
     [_delegate sharer:self didFailWithError:error];
     return NO;
   }
@@ -129,9 +129,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors logEntry:message];
   }
   if (!openGraphObject) {
-    error = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                  name:@"openGraphObject"
-                                               message:nil];
+    error = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                   name:@"openGraphObject"
+                                                message:nil];
     [_delegate sharer:self didFailWithError:error];
     return NO;
   }
@@ -155,9 +155,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   NSError *error;
   if (!self.canShare) {
     NSString *message = @"Share API is not available; verify 'canShare' returns YES";
-    error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                  code:FBSDKShareErrorDialogNotAvailable
-                               message:message];
+    error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                   code:FBSDKShareErrorDialogNotAvailable
+                                message:message];
     [_delegate sharer:self didFailWithError:error];
     return NO;
   }
@@ -192,28 +192,28 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   id<FBSDKSharingContent> shareContent = self.shareContent;
   if (!shareContent) {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"shareContent"
-                                                     message:@"Share content cannot be null."];
+      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                         name:@"shareContent"
+                                                      message:@"Share content cannot be null."];
     }
     return NO;
   }
   if ([shareContent isKindOfClass:[FBSDKShareVideoContent class]]) {
     if (shareContent.peopleIDs.count > 0) {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:@"peopleIDs"
-                                                        value:shareContent.peopleIDs
-                                                      message:@"Cannot specify peopleIDs with FBSDKShareVideoContent."];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"peopleIDs"
+                                                         value:shareContent.peopleIDs
+                                                       message:@"Cannot specify peopleIDs with FBSDKShareVideoContent."];
       }
       return NO;
     }
     if (shareContent.placeID) {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:@"placeID"
-                                                        value:shareContent.placeID
-                                                      message:@"Cannot specify place ID with FBSDKShareVideoContent."];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"placeID"
+                                                         value:shareContent.placeID
+                                                       message:@"Cannot specify place ID with FBSDKShareVideoContent."];
       }
       return NO;
     }
@@ -320,10 +320,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
         return;
       }
       if (requestError) {
-        NSError *error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                               code:FBSDKShareErrorOpenGraph
-                                            message:@"Error sharing Open Graph content"
-                                    underlyingError:requestError];
+        NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                                code:FBSDKShareErrorOpenGraph
+                                             message:@"Error sharing Open Graph content"
+                                     underlyingError:requestError];
         [self->_delegate sharer:self didFailWithError:error];
       } else if (result) {
         NSMutableDictionary *shareResults = [[NSMutableDictionary alloc] init];
@@ -501,10 +501,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     }
   } else {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                       name:key
-                                                      value:value
-                                                    message:nil];
+      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:key
+                                                       value:value
+                                                     message:nil];
     }
     return NO;
   }
@@ -542,10 +542,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
         stagedArray[idx] = stagedValue;
         itemDidSucceed();
       } else {
-        NSError *error = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                              name:@"value"
-                                                             value:item
-                                                           message:@"Error staging object."];
+        NSError *error = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                               name:@"value"
+                                                              value:item
+                                                            message:@"Error staging object."];
         [self->_delegate sharer:self didFailWithError:error];
         itemDidFail();
         *stop = YES;
@@ -572,9 +572,9 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   NSString *type = [FBSDKTypeUtility stringValue:openGraphObject[@"og:type"]];
   if (!type) {
     NSString *message = @"Open Graph objects must contain a og:type value.";
-    NSError *error = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                           name:@"og:type"
-                                                        message:message];
+    NSError *error = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                            name:@"og:type"
+                                                         message:message];
     [_delegate sharer:self didFailWithError:error];
     return NO;
   }
@@ -603,10 +603,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
       if (requestError) {
         NSString *message = [[NSString alloc] initWithFormat:@"Error creating Open Graph object: %@",
                              requestError.description];
-        NSError *error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                               code:FBSDKShareErrorOpenGraph
-                                            message:message
-                                    underlyingError:requestError];
+        NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                                code:FBSDKShareErrorOpenGraph
+                                             message:message
+                                     underlyingError:requestError];
         [self->_delegate sharer:self didFailWithError:error];
       } else if (completionHandler != NULL) {
         completionHandler([FBSDKTypeUtility dictionaryValue:result]);
@@ -711,10 +711,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
                                                    NSError *requestError) {
       NSString *stagedPhotoURLString = [FBSDKTypeUtility stringValue:result[@"uri"]];
       if (requestError || !stagedPhotoURLString) {
-        NSError *error = [NSError fbErrorWithDomain:FBSDKShareErrorDomain
-                                               code:FBSDKShareErrorOpenGraph
-                                            message:@"Error staging photo"
-                                    underlyingError:requestError];
+        NSError *error = [FBSDKError errorWithDomain:FBSDKShareErrorDomain
+                                                code:FBSDKShareErrorOpenGraph
+                                             message:@"Error staging photo"
+                                     underlyingError:requestError];
         [self->_delegate sharer:self didFailWithError:error];
       } else if (stagingHandler) {
         NSMutableDictionary *stagedPhoto = [[NSMutableDictionary alloc] initWithDictionary: @{
@@ -728,10 +728,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
     [request startWithCompletionHandler:completionHandler];
     return YES;
   } else {
-    NSError *error = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"photo"
-                                                         value:photo
-                                                       message:@"Photos must have an imageURL or image."];
+    NSError *error = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                           name:@"photo"
+                                                          value:photo
+                                                        message:@"Photos must have an imageURL or image."];
     [self->_delegate sharer:self didFailWithError:error];
     return NO;
   }
@@ -762,10 +762,10 @@ static NSMutableArray *g_pendingFBSDKShareAPI;
   } else if ([value isKindOfClass:[NSArray class]]) {
     return [self _stageArray:(NSArray *)value connection:connection stagingHandler:stagingHandler];
   } else {
-    NSError *error = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                          name:@"value"
-                                                         value:value
-                                                       message:@"Invalid value type found in Open Graph object."];
+    NSError *error = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                           name:@"value"
+                                                          value:value
+                                                        message:@"Invalid value type found in Open Graph object."];
     [_delegate sharer:self didFailWithError:error];
     return NO;
   }

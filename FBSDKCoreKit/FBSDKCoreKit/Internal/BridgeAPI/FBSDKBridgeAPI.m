@@ -216,11 +216,11 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
       self->_pendingRequestCompletionBlock = nil;
       NSError *openedURLError;
       if ([request.scheme hasPrefix:@"http"]) {
-        openedURLError = [NSError fbErrorWithCode:FBSDKErrorBrowserUnavailable
-                                          message:@"the app switch failed because the browser is unavailable"];
+        openedURLError = [FBSDKError errorWithCode:FBSDKErrorBrowserUnavailable
+                                           message:@"the app switch failed because the browser is unavailable"];
       } else {
-        openedURLError = [NSError fbErrorWithCode:FBSDKErrorAppVersionUnsupported
-                                          message:@"the app switch failed because the destination app is out of date"];
+        openedURLError = [FBSDKError errorWithCode:FBSDKErrorAppVersionUnsupported
+                                           message:@"the app switch failed because the destination app is out of date"];
       }
       FBSDKBridgeAPIResponse *response = [FBSDKBridgeAPIResponse bridgeAPIResponseWithRequest:request
                                                                                         error:openedURLError];

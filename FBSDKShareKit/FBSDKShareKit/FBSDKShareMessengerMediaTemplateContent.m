@@ -151,9 +151,9 @@ static NSArray<NSDictionary<NSString *, id> *> *_SerializableMediaTemplateConten
 {
   if (!_mediaURL && !_attachmentID) {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbRequiredArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                        name:@"attachmentID/mediaURL"
-                                                     message:@"Must specify either attachmentID or mediaURL"];
+      *errorRef = [FBSDKError requiredArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                         name:@"attachmentID/mediaURL"
+                                                      message:@"Must specify either attachmentID or mediaURL"];
     }
     return NO;
   }

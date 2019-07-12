@@ -123,10 +123,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     if (_imageURL) {
       if (_imageURL.isFileURL) {
         if (errorRef != NULL) {
-          *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                           name:@"imageURL"
-                                                          value:_imageURL
-                                                        message:@"Cannot refer to a local file resource."];
+          *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                            name:@"imageURL"
+                                                           value:_imageURL
+                                                         message:@"Cannot refer to a local file resource."];
         }
         return NO;
       } else {
@@ -134,10 +134,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
       }
     } else {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:@"photo"
-                                                        value:self
-                                                      message:@"imageURL is required."];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"photo"
+                                                         value:self
+                                                       message:@"imageURL is required."];
       }
       return NO;
     }
@@ -150,10 +150,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
       }
     } else {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:@"photoAsset"
-                                                        value:_photoAsset
-                                                      message:@"Must refer to a photo or other static image."];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"photoAsset"
+                                                         value:_photoAsset
+                                                       message:@"Must refer to a photo or other static image."];
       }
       return NO;
     }
@@ -162,10 +162,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
       return YES; // will load the contents of the file and bridge the image
     } else {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                         name:@"imageURL"
-                                                        value:_imageURL
-                                                      message:@"Must refer to a local file resource."];
+        *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                          name:@"imageURL"
+                                                         value:_imageURL
+                                                       message:@"Must refer to a local file resource."];
       }
       return NO;
     }
@@ -173,10 +173,10 @@ NSString *const kFBSDKSharePhotoCaptionKey = @"caption";
     return YES; // will bridge the image
   } else {
     if (errorRef != NULL) {
-      *errorRef = [NSError fbInvalidArgumentErrorWithDomain:FBSDKShareErrorDomain
-                                                       name:@"photo"
-                                                      value:self
-                                                    message:@"Must have an asset, image, or imageURL value."];
+      *errorRef = [FBSDKError invalidArgumentErrorWithDomain:FBSDKShareErrorDomain
+                                                        name:@"photo"
+                                                       value:self
+                                                     message:@"Must have an asset, image, or imageURL value."];
     }
     return NO;
   }

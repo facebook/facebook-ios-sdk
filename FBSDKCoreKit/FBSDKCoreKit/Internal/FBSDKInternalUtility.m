@@ -306,7 +306,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
                                                                         invalidObjectHandler:NULL]];
     if (!queryString) {
       if (errorRef != NULL) {
-        *errorRef = [NSError fbInvalidArgumentErrorWithName:@"queryParameters"
+        *errorRef = [FBSDKError invalidArgumentErrorWithName:@"queryParameters"
                                                        value:queryParameters
                                                      message:nil
                                              underlyingError:queryStringError];
@@ -325,7 +325,7 @@ typedef NS_ENUM(NSUInteger, FBSDKInternalUtilityVersionShift)
     if (URL) {
       *errorRef = nil;
     } else {
-      *errorRef = [NSError fbUnknownErrorWithMessage:@"Unknown error building URL."];
+      *errorRef = [FBSDKError unknownErrorWithMessage:@"Unknown error building URL."];
     }
   }
   return URL;

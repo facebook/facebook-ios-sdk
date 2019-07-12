@@ -137,8 +137,8 @@ static FBSDKAccessToken *g_currentAccessToken;
     [FBSDKGraphRequestPiggybackManager addRefreshPiggyback:connection permissionHandler:completionHandler];
     [connection start];
   } else if (completionHandler) {
-    completionHandler(nil, nil, [NSError
-                                 fbErrorWithCode:FBSDKErrorAccessTokenRequired
+    completionHandler(nil, nil, [FBSDKError
+                                 errorWithCode:FBSDKErrorAccessTokenRequired
                                  message:@"No current access token to refresh"]);
   }
 }

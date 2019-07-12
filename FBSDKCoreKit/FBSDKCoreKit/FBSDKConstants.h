@@ -243,10 +243,10 @@ enum __attribute__((ns_error_domain(_domain))) _name: NSInteger
 #endif
 
 /**
- FBSDKError
+ FBSDKCoreError
  Error codes for FBSDKErrorDomain.
  */
-typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKError)
+typedef NS_ERROR_ENUM(FBSDKErrorDomain, FBSDKCoreError)
 {
   /**
    Reserved.

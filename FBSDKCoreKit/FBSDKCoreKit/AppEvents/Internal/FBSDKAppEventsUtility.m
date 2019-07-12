@@ -202,7 +202,7 @@
   }
 
   [FBSDKLogger singleShotLogEntry:behaviorToLog logEntry:msg];
-  NSError *error = [NSError fbErrorWithCode:FBSDKErrorAppEventsFlush message:msg];
+  NSError *error = [FBSDKError errorWithCode:FBSDKErrorAppEventsFlush message:msg];
   [[NSNotificationCenter defaultCenter] postNotificationName:FBSDKAppEventsLoggingResultNotification object:error];
 }
 
