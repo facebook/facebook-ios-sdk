@@ -7,7 +7,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.1...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.2...HEAD)
+
+## 5.2.2
+
+[2019-07-14](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.2.2) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.1...v5.2.2)
+
+### Fixed
+- Fixed Facebook Login on iOS 13 beta
+- Various bug fixes
 
 ## 5.2.1
 
