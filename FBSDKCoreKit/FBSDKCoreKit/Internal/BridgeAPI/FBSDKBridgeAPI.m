@@ -321,9 +321,13 @@ didFinishLaunchingWithOptions:(NSDictionary<UIApplicationLaunchOptionsKey, id> *
     _authenticationSession = [[AuthenticationSessionClass alloc] initWithURL:url
                                                            callbackURLScheme:[FBSDKInternalUtility appURLScheme]
                                                            completionHandler:_authenticationSessionCompletionHandler];
-    if ([_authenticationSession respondsToSelector:@selector(setPresentationContextProvider:)]) {
-      [_authenticationSession setPresentationContextProvider:self];
+#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 130000
+    if (@available(iOS 13.0, *)) {
+      if ([_authenticationSession respondsToSelector:@selector(setPresentationContextProvider:)]) {
+        [_authenticationSession setPresentationContextProvider:self];
+      }
     }
+#endif
     _isRequestingSFAuthenticationSession = YES;
     [_authenticationSession start];
   }
