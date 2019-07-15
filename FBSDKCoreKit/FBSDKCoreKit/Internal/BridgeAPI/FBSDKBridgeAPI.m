@@ -44,7 +44,7 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
 @implementation FBSDKBridgeAPI {
   FBSDKBridgeAPIRequest *_pendingRequest;
   FBSDKBridgeAPIResponseBlock _pendingRequestCompletionBlock;
-  __weak id<FBSDKURLOpening> _pendingURLOpen;
+  id<FBSDKURLOpening> _pendingURLOpen;
   id<FBSDKAuthenticationSession> _authenticationSession NS_AVAILABLE_IOS(11_0);
   FBSDKAuthenticationCompletionHandler _authenticationSessionCompletionHandler NS_AVAILABLE_IOS(11_0);
 
@@ -98,15 +98,18 @@ typedef void (^FBSDKAuthenticationCompletionHandler)(NSURL *_Nullable callbackUR
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation
 {
-  id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
+  __weak id<FBSDKURLOpening> pendingURLOpen = _pendingURLOpen;
+  __weak typeof(self) weakSelf = self;
 
   void (^completePendingOpenURLBlock)(void) = ^{
-    self->_pendingURLOpen = nil;
-    [pendingURLOpen application:application
-                        openURL:url
-              sourceApplication:sourceApplication
-                     annotation:annotation];
-    self->_isDismissingSafariViewController = NO;
+    id<FBSDKURLOpening> strongPendingURLOpen = pendingURLOpen;
+    __strong typeof(self) strongSelf = weakSelf;
+    [strongPendingURLOpen application:application
+                              openURL:url
+                    sourceApplication:sourceApplication
+                           annotation:annotation];
+    strongSelf->_isDismissingSafariViewController = NO;
+    strongSelf->_pendingURLOpen = nil;
   };
   // if they completed a SFVC flow, dismiss it.
   if (_safariViewController) {
