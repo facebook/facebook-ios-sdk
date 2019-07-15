@@ -1115,30 +1115,10 @@ static NSString *g_overrideAppID = nil;
     return;
   }
 
-  NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
-  NSMutableDictionary<NSString *, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
+  parameters = [FBSDKRestrictiveDataFilterManager processParameters:parameters
+                                                          eventName:eventName];
 
-  if (parameters) {
-    for (NSString *key in [parameters keyEnumerator]) {
-      NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
-                                                                                 paramKey:key
-                                                                               paramValue:parameters[key]];
-      if (type) {
-        [restrictedParams setObject:type forKey:key];
-      } else {
-        [params setObject:parameters[key] forKey:key];
-      }
-    }
-  }
-
-  if ([[restrictedParams allKeys] count] > 0) {
-    NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
-                                                                            error:NULL
-                                                             invalidObjectHandler:NULL];
-    [FBSDKBasicUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
-  }
-
-  NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:params];
+  NSMutableDictionary<NSString *, id> *eventDictionary = [NSMutableDictionary dictionaryWithDictionary:parameters];
   eventDictionary[FBSDKAppEventParameterEventName] = eventName;
   if (!eventDictionary[FBSDKAppEventParameterLogTime]) {
     eventDictionary[FBSDKAppEventParameterLogTime] = @([FBSDKAppEventsUtility unixTimeNow]);

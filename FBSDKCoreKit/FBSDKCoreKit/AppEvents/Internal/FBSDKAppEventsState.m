@@ -164,12 +164,7 @@
 
 - (NSString *)JSONStringForEvents:(BOOL)includeImplicitEvents
 {
-  NSArray<NSDictionary<NSString *, id> *> *eventArray = [_mutableEvents copy];
-  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in eventArray) {
-    if ([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:event[@"event"][@"_eventName"]]) {
-      [_mutableEvents removeObject:event];
-    }
-  }
+  [FBSDKRestrictiveDataFilterManager processEvents:_mutableEvents];
 
   NSMutableArray *events = [[NSMutableArray alloc] initWithCapacity:_mutableEvents.count];
   for (NSDictionary *eventAndImplicitFlag in _mutableEvents) {

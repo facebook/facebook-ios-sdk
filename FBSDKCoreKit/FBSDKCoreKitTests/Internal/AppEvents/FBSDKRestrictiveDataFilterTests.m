@@ -27,6 +27,10 @@
 
 @interface FBSDKRestrictiveDataFilterManager ()
 
++ (NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
+                                     paramKey:(NSString *)paramKey
+                                   paramValue:(id)paramValue;
++ (BOOL)isDeprecatedEvent:(NSString *)eventName;
 + (BOOL)isMatchedWithPattern:(NSString *)pattern
                         text:(NSString *)text;
 

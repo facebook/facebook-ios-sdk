@@ -18,6 +18,7 @@
 
 #import "FBSDKRestrictiveDataFilterManager.h"
 
+#import "FBSDKBasicUtility+Internal.h"
 #import "FBSDKTypeUtility.h"
 
 @interface FBSDKRestrictiveRule : NSObject
@@ -171,6 +172,46 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
 + (BOOL)isDeprecatedEvent:(NSString *)eventName
 {
   return [_deprecatedEvents containsObject:eventName];
+}
+
++ (void)processEvents:(NSMutableArray<NSDictionary<NSString *, id> *> *)events
+{
+  NSArray<NSDictionary<NSString *, id> *> *eventArray = [events copy];
+  for (NSDictionary<NSString *, NSDictionary<NSString *, id> *> *event in eventArray) {
+    if ([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:event[@"event"][@"_eventName"]]) {
+      [events removeObject:event];
+    }
+  }
+}
+
++ (NSDictionary<NSString *,id> *)processParameters:(NSDictionary<NSString *,id> *)parameters
+                                         eventName:(NSString *)eventName
+{
+  if (parameters) {
+    NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionaryWithDictionary:parameters];
+    NSMutableDictionary<NSString *, NSString *> *restrictedParams = [NSMutableDictionary dictionary];
+
+    for (NSString *key in [parameters keyEnumerator]) {
+      NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
+                                                                                 paramKey:key
+                                                                               paramValue:parameters[key]];
+      if (type) {
+        [restrictedParams setObject:type forKey:key];
+        [params removeObjectForKey:key];
+      }
+    }
+
+    if ([[restrictedParams allKeys] count] > 0) {
+      NSString *restrictedParamsJSONString = [FBSDKBasicUtility JSONStringForObject:restrictedParams
+                                                                              error:NULL
+                                                               invalidObjectHandler:NULL];
+      [FBSDKBasicUtility dictionary:params setObject:restrictedParamsJSONString forKey:@"_restrictedParams"];
+    }
+
+    return [params copy];
+  }
+
+  return nil;
 }
 
 #pragma mark Helper functions
