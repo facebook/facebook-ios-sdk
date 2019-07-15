@@ -244,9 +244,9 @@ NSURLSessionDataDelegate
     };
 
     if(errorV1) {
-      [FBSDKURLSessionTask taskDidCompleteWithError:errorV1 handler:handler];
+      [self taskDidCompleteWithError:errorV1 handler:handler];
     } else {
-      [FBSDKURLSessionTask taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
+      [self taskDidCompleteWithResponse:responseV1 data:responseDataV1 requestStartTime:self.requestStartTime handler:handler];
     }
   };
   [self.session executeURLRequest:request completionHandler:completionHanlder];
@@ -930,6 +930,93 @@ NSURLSessionDataDelegate
                     userInfo:userInfo];
 
   return error;
+}
+
+#pragma mark - Private methods (logging and completion)
+
+- (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
+                      error:(NSError *)error
+{
+  if (error) {
+    NSString *logEntry = [NSString
+                          stringWithFormat:@"FBSDKURLSessionTask <#%lu>:\n  Error: '%@'\n%@\n",
+                          (unsigned long)[FBSDKLogger generateSerialNumber],
+                          error.localizedDescription,
+                          error.userInfo];
+
+    [self logMessage:logEntry];
+  }
+
+  [self invokeHandler:handler error:error response:nil responseData:nil];
+}
+
+- (void)logAndInvokeHandler:(FBSDKURLSessionTaskBlock)handler
+                   response:(NSURLResponse *)response
+               responseData:(NSData *)responseData
+           requestStartTime:(uint64_t)requestStartTime
+{
+  // Basic logging just prints out the URL.  FBSDKGraphRequest logging provides more details.
+  NSString *mimeType = response.MIMEType;
+  NSMutableString *mutableLogEntry = [NSMutableString stringWithFormat:@"FBSDKGraphRequestConnection <#%lu>:\n  Duration: %llu msec\nResponse Size: %lu kB\n  MIME type: %@\n",
+                                      (unsigned long)[FBSDKLogger generateSerialNumber],
+                                      [FBSDKInternalUtility currentTimeInMilliseconds] - requestStartTime,
+                                      (unsigned long)responseData.length / 1024,
+                                      mimeType];
+
+  if ([mimeType isEqualToString:@"text/javascript"]) {
+    NSString *responseUTF8 = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+    [mutableLogEntry appendFormat:@"  Response:\n%@\n\n", responseUTF8];
+  }
+
+  [self logMessage:mutableLogEntry];
+
+  [self invokeHandler:handler error:nil response:response responseData:responseData];
+}
+
+- (void)invokeHandler:(FBSDKURLSessionTaskBlock)handler
+                error:(NSError *)error
+             response:(NSURLResponse *)response
+         responseData:(NSData *)responseData
+{
+  if (handler != nil) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+      handler(responseData, response, error);
+    });
+  }
+}
+
+- (void)logMessage:(NSString *)message
+{
+  [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorNetworkRequests formatString:@"%@", message];
+}
+
+- (void)taskDidCompleteWithResponse:(NSURLResponse *)response
+                               data:(NSData *)data
+                   requestStartTime:(uint64_t)requestStartTime
+                            handler:(FBSDKURLSessionTaskBlock)handler
+{
+  @try {
+    [self logAndInvokeHandler:handler
+                     response:response
+                 responseData:data
+             requestStartTime:requestStartTime];
+  } @finally {}
+}
+
+- (void)taskDidCompleteWithError:(NSError *)error
+                         handler:(FBSDKURLSessionTaskBlock)handler
+{
+  @try {
+    if ([error.domain isEqualToString:NSURLErrorDomain] && error.code == kCFURLErrorSecureConnectionFailed) {
+      NSOperatingSystemVersion iOS9Version = { .majorVersion = 9, .minorVersion = 0, .patchVersion = 0 };
+      if ([FBSDKInternalUtility isOSRunTimeVersionAtLeast:iOS9Version]) {
+        [FBSDKLogger singleShotLogEntry:FBSDKLoggingBehaviorDeveloperErrors
+                               logEntry:@"WARNING: FBSDK secure network request failed. Please verify you have configured your "
+         "app for Application Transport Security compatibility described at https://developers.facebook.com/docs/ios/ios9"];
+      }
+    }
+    [self logAndInvokeHandler:handler error:error];
+  } @finally {}
 }
 
 #pragma mark - Private methods (miscellaneous)

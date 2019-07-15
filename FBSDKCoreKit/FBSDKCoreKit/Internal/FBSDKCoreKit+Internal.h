@@ -70,7 +70,6 @@
 #import "Network/FBSDKGraphRequest+Internal.h"
 #import "Network/FBSDKGraphRequestConnection+Internal.h"
 #import "Network/FBSDKGraphRequestMetadata.h"
-#import "Network/FBSDKURLSessionTask+Internal.h"
 #import "ServerConfiguration/FBSDKDialogConfiguration.h"
 #import "ServerConfiguration/FBSDKServerConfiguration+Internal.h"
 #import "ServerConfiguration/FBSDKServerConfiguration.h"
