@@ -73,7 +73,6 @@ implicitPurchaseLoggingEnabled:(BOOL)implicitPurchaseLoggingEnabled
         smartLoginMenuIconURL:(NSURL *)smartLoginMenuIconURL
                 updateMessage:(NSString *)updateMessage
                 eventBindings:(NSArray *)eventBindings
-             restrictiveRules:(NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
             restrictiveParams:(NSDictionary<NSString *, id> *)restrictiveParams
 NS_DESIGNATED_INITIALIZER;
 
@@ -99,7 +98,6 @@ NS_DESIGNATED_INITIALIZER;
 @property (nonatomic, copy, readonly) NSURL *smartLoginMenuIconURL;
 @property (nonatomic, copy, readonly) NSString *updateMessage;
 @property (nonatomic, copy, readonly) NSArray *eventBindings;
-@property (nonatomic, copy, readonly) NSArray<NSDictionary<NSString *, id> *> *restrictiveRules;
 @property (nonatomic, copy, readonly) NSDictionary<NSString *, id> *restrictiveParams;
 @property (nonatomic, readonly) NSInteger version;
 

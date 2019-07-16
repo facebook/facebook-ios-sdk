@@ -56,7 +56,6 @@
 #define FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD @"smart_login_menu_icon_url"
 #define FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD @"sdk_update_message"
 #define FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD  @"auto_event_mapping_ios"
-#define FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_RULES_FIELD @"restrictive_data_filter_rules"
 #define FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD @"restrictive_data_filter_params"
 
 @implementation FBSDKServerConfigurationManager
@@ -209,7 +208,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
   NSURL *smartLoginMenuIconURL = [FBSDKTypeUtility URLValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_SMART_LOGIN_MENU_ICON_URL_FIELD]];
   NSString *updateMessage = [FBSDKTypeUtility stringValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_UPDATE_MESSAGE_FIELD]];
   NSArray *eventBindings = [FBSDKTypeUtility arrayValue:resultDictionary[FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD]];
-  NSArray<NSDictionary<NSString *, id> *> *restrictiveRules = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_RULES_FIELD] error:NULL];
   NSDictionary<NSString *, id> *restrictiveParams = [FBSDKBasicUtility objectForJSONString:resultDictionary[FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD] error:NULL];
   FBSDKServerConfiguration *serverConfiguration = [[FBSDKServerConfiguration alloc] initWithAppID:appID
                                                                                           appName:appName
@@ -235,11 +233,10 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                                             smartLoginMenuIconURL:smartLoginMenuIconURL
                                                                                     updateMessage:updateMessage
                                                                                     eventBindings:eventBindings
-                                                                                 restrictiveRules:restrictiveRules
                                                                                 restrictiveParams:restrictiveParams
                                                    ];
-  if (restrictiveRules || restrictiveParams) {
-    [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveRules restrictiveParams:restrictiveParams];
+  if (restrictiveParams) {
+    [FBSDKRestrictiveDataFilterManager updateFilters:restrictiveParams];
   }
 #if TARGET_OS_TV
   // don't download icons more than once a day.
@@ -282,7 +279,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                       FBSDK_SERVER_CONFIGURATION_SYSTEM_AUTHENTICATION_ENABLED_FIELD,
                       FBSDK_SERVER_CONFIGURATION_SESSION_TIMEOUT_FIELD,
                       FBSDK_SERVER_CONFIGURATION_LOGGIN_TOKEN_FIELD,
-                      FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_RULES_FIELD,
                       FBSDK_SERVER_CONFIGURATION_RESTRICTIVE_PARAMS_FIELD
 #if !TARGET_OS_TV
                       ,FBSDK_SERVER_CONFIGURATION_EVENT_BINDINGS_FIELD
@@ -353,7 +349,6 @@ typedef NS_OPTIONS(NSUInteger, FBSDKServerConfigurationManagerAppEventsFeatures)
                                                             smartLoginMenuIconURL:nil
                                                                     updateMessage:nil
                                                                     eventBindings:nil
-                                                                 restrictiveRules:nil
                                                                 restrictiveParams:nil
                                    ];
   }

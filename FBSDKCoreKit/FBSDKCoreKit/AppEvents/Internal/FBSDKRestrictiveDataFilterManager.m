@@ -21,43 +21,6 @@
 #import "FBSDKBasicUtility+Internal.h"
 #import "FBSDKTypeUtility.h"
 
-@interface FBSDKRestrictiveRule : NSObject
-
-@property (nonatomic, readonly, copy) NSString *keyRegex;
-@property (nonatomic, readonly, copy) NSString *valueRegex;
-@property (nonatomic, readonly, copy) NSString *valueNegativeRegex;
-@property (nonatomic, readonly, copy) NSString *dataType;
-
-- (instancetype)init NS_UNAVAILABLE;
-+ (instancetype)new NS_UNAVAILABLE;
-
--(instancetype)initWithKeyRegex:(NSString *)keyRegex
-                     valueRegex:(NSString *)valueRegex
-             valueNegativeRegex:(NSString *)valueNegativeRegex
-                       dataType:(NSString *)dataType;
-
-@end
-
-@implementation FBSDKRestrictiveRule
-
--(instancetype)initWithKeyRegex:(NSString *)keyRegex
-                     valueRegex:(NSString *)valueRegex
-             valueNegativeRegex:(NSString *)valueNegativeRegex
-                       dataType:(NSString *)dataType
-{
-  self = [super init];
-  if (self) {
-    _keyRegex = keyRegex;
-    _valueRegex = valueRegex;
-    _valueNegativeRegex = valueNegativeRegex;
-    _dataType = dataType;
-  }
-
-  return self;
-}
-
-@end
-
 @interface FBSDKRestrictiveEventFilter : NSObject
 
 @property (nonatomic, readonly, copy) NSString *eventName;
@@ -89,31 +52,11 @@
 
 @implementation FBSDKRestrictiveDataFilterManager
 
-static NSMutableArray<FBSDKRestrictiveRule *> *_rules;
 static NSMutableArray<FBSDKRestrictiveEventFilter *>  *_params;
 static NSMutableSet<NSString *> *_deprecatedEvents;
 
-+ (void)updateFilters:(nullable NSArray<NSDictionary<NSString *, id> *> *)restrictiveRules
-    restrictiveParams:(nullable NSDictionary<NSString *, id> *)restrictiveParams
++ (void)updateFilters:(nullable NSDictionary<NSString *, id> *)restrictiveParams
 {
-  if (restrictiveRules.count > 0) {
-    [_rules removeAllObjects];
-    NSMutableArray<FBSDKRestrictiveRule *> *rulesArray = [NSMutableArray array];
-    for (id rule in restrictiveRules) {
-      NSString *keyRegex = [FBSDKTypeUtility stringValue:rule[@"key_regex"]];
-      NSString *valueRegex = [FBSDKTypeUtility stringValue:rule[@"value_regex"]];
-      NSString *valueNegativeRegex = [FBSDKTypeUtility stringValue:rule[@"value_negative_regex"]];
-      NSString *type = [FBSDKTypeUtility stringValue:rule[@"type"]];
-
-      FBSDKRestrictiveRule *restrictiveRule = [[FBSDKRestrictiveRule alloc] initWithKeyRegex:keyRegex
-                                                                                  valueRegex:valueRegex
-                                                                          valueNegativeRegex:valueNegativeRegex
-                                                                                    dataType:type];
-      [rulesArray addObject:restrictiveRule];
-    }
-    _rules = rulesArray;
-  }
-
   if (restrictiveParams.count > 0) {
     [_params removeAllObjects];
     [_deprecatedEvents removeAllObjects];
@@ -136,7 +79,6 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
 
 + (nullable NSString *)getMatchedDataTypeWithEventName:(NSString *)eventName
                                               paramKey:(NSString *)paramKey
-                                            paramValue:(id)paramValue
 {
   // match by params in custom events with event name
   for (FBSDKRestrictiveEventFilter *filter in _params) {
@@ -146,25 +88,6 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
         return type;
       }
     }
-  }
-
-  // match by regex
-  NSArray<FBSDKRestrictiveRule *> *rules = [_rules copy];
-  NSString *paramValueString = [FBSDKTypeUtility stringValue:paramValue];
-  for (FBSDKRestrictiveRule *rule in rules) {
-    // not matched to key
-    if (rule.keyRegex.length != 0 && ![self isMatchedWithPattern:rule.keyRegex text:paramKey]) {
-      continue;
-    }
-    // matched to neg val
-    if (rule.valueNegativeRegex.length != 0 && [self isMatchedWithPattern:rule.valueNegativeRegex text:paramValueString]) {
-      continue;
-    }
-    // not matched to val
-    if (rule.valueRegex.length != 0 && ![self isMatchedWithPattern:rule.valueRegex text:paramValueString]) {
-      continue;
-    }
-    return rule.dataType;
   }
   return nil;
 }
@@ -193,8 +116,7 @@ static NSMutableSet<NSString *> *_deprecatedEvents;
 
     for (NSString *key in [parameters keyEnumerator]) {
       NSString *type = [FBSDKRestrictiveDataFilterManager getMatchedDataTypeWithEventName:eventName
-                                                                                 paramKey:key
-                                                                               paramValue:parameters[key]];
+                                                                                 paramKey:key];
       if (type) {
         [restrictedParams setObject:type forKey:key];
         [params removeObjectForKey:key];
