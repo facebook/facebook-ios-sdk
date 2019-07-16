@@ -30,6 +30,7 @@
 #import "FBSDKConstants.h"
 #import "FBSDKDynamicFrameworkLoader.h"
 #import "FBSDKError.h"
+#import "FBSDKFeatureManager.h"
 #import "FBSDKGraphRequest+Internal.h"
 #import "FBSDKInternalUtility.h"
 #import "FBSDKLogger.h"
@@ -1063,7 +1064,9 @@ static NSString *g_overrideAppID = nil;
       [FBSDKPaymentObserver stopObservingTransactions];
     }
 #if !TARGET_OS_TV
-    [self enableCodelessEvents];
+    if ([FBSDKFeatureManager isEnabled:FBSDKFeatureCodelessEvents]) {
+      [self enableCodelessEvents];
+    }
 #endif
     if (callback) {
       callback();
