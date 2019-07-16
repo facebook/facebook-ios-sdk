@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
     s.name              = 'FBSDKMarketingKit'
-    s.version           = '5.2.2'
+    s.version           = '5.2.3'
     s.summary           = 'Official Facebook SDK for iOS to set up Codeless Events'
 
     s.description  = <<-DESC
