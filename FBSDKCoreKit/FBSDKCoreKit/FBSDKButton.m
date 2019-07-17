@@ -166,10 +166,10 @@
 
 - (void)logTapEventWithEventName:(NSString *)eventName parameters:(NSDictionary *)parameters
 {
-    [FBSDKAppEvents logInternalEvent:eventName
-                          parameters:parameters
-                  isImplicitlyLogged:YES
-                         accessToken:[FBSDKAccessToken currentAccessToken]];
+  [FBSDKAppEvents logInternalEvent:eventName
+                        parameters:parameters
+                isImplicitlyLogged:YES
+                       accessToken:[FBSDKAccessToken currentAccessToken]];
 }
 
 - (void)checkImplicitlyDisabled
@@ -242,7 +242,7 @@
 
 - (UIColor *)defaultHighlightedColor
 {
-  return [UIColor colorWithRed:47.0/255.0 green:71.0/255.0 blue:122.0/255.0 alpha:1.0];
+  return [UIColor colorWithRed:21.0/255.0 green:105.0/255.0 blue:214.0/255.0 alpha:1.0];
 }
 
 - (FBSDKIcon *)defaultIcon
@@ -250,9 +250,19 @@
   return [[FBSDKLogo alloc] init];
 }
 
+- (FBSDKIcon *)highlightedIcon
+{
+  return [[FBSDKIcon alloc] initWithColor:[self highlightedContentColor]];
+}
+
 - (UIColor *)defaultSelectedColor
 {
   return [UIColor colorWithRed:124.0/255.0 green:143.0/255.0 blue:200.0/255.0 alpha:1.0];
+}
+
+- (UIColor *)highlightedContentColor
+{
+  return [UIColor colorWithRed:218.0/255.0 green:221.0/255.0 blue:226.0/255.0 alpha:1.0];
 }
 
 - (BOOL)isImplicitlyDisabled
@@ -327,6 +337,9 @@
   if (!icon) {
     icon = [self defaultIcon];
   }
+  if (!selectedIcon) {
+    selectedIcon = [self highlightedIcon];
+  }
   if (!backgroundColor) {
     backgroundColor = [self defaultBackgroundColor];
   }
@@ -377,6 +390,7 @@
   }
 
   [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+  [self setTitleColor:[self highlightedContentColor] forState: UIControlStateHighlighted | UIControlStateSelected];
 
   [self setTitle:title forState:UIControlStateNormal];
 #if TARGET_OS_TV
