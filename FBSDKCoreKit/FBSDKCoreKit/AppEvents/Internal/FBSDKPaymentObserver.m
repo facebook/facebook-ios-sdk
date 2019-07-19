@@ -45,6 +45,8 @@ static NSString *const FBSDKAppEventParameterNameTrialPrice = @"fb_iap_trial_pri
 static int const FBSDKMaxParameterValueLength = 100;
 static NSMutableArray *g_pendingRequestors;
 
+static NSString *const FBSDKGateKeeperAppEventsIfAutoLogSubs = @"app_events_if_auto_log_subs";
+
 @interface FBSDKPaymentProductRequestor : NSObject<SKProductsRequestDelegate>
 
 @property (nonatomic, retain) SKPaymentTransaction *transaction;

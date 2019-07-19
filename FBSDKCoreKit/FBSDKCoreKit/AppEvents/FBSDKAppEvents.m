@@ -284,6 +284,8 @@ NSString *const FBSDKAppEventsDialogShareContentTypeMessengerMediaTemplate      
 NSString *const FBSDKAppEventsDialogShareContentTypeMessengerOpenGraphMusicTemplate   = @"OpenGraphMusicTemplate";
 NSString *const FBSDKAppEventsDialogShareContentTypeUnknown                           = @"Unknown";
 
+NSString *const FBSDKGateKeeperAppEventsKillSwitch                                    = @"app_events_killswitch";
+
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_10_0
 
 NSNotificationName const FBSDKAppEventsLoggingResultNotification = @"com.facebook.sdk:FBSDKAppEventsLoggingResultNotification";
