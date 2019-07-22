@@ -81,18 +81,6 @@ This will construct the documentation via. Jazzy and, optionally, upload them to
 
 **Note:** You'll need access to the internal repository scripts.
 
-### Update Guides Documentation
-
-On your machine, run:
-
-```sh
-sh scripts/run.sh release changelog
-```
-
-This will upload the Changelog and new version to developers.facebook.com.
-
-**Note:** You'll need access to the internal repository scripts.
-
 ## Advanced Steps
 
 All the steps below will normally be handled by Travis CI. In case Travis CI automation fails, here are the remaining
