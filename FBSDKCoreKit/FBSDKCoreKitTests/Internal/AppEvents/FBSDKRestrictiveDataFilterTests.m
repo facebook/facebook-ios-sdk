@@ -228,7 +228,7 @@
   XCTAssertNil(type2);
 }
 
-- (void)testIsDeprecatedEvent
+- (void)testDeprecatedEvent
 {
   NSMutableDictionary<NSString *, id> *params = [NSMutableDictionary dictionary];
   NSString *eventName = @"test_event_name";
@@ -249,6 +249,38 @@
 
   XCTAssertTrue([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:deprecatedEventName]);
   XCTAssertFalse([FBSDKRestrictiveDataFilterManager isDeprecatedEvent:eventName]);
+
+  NSMutableDictionary<NSString *, id> *event1 = [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                 @"event" : @{
+                                                                                                     @"_eventName" : @"deprecated_event_name",
+                                                                                                     @"_session_id" : @"2747F240-A089-4368-816A-D8175E756A80",
+                                                                                                     @"fb_mobile_launch_source" : @"Unclassified"
+                                                                                                     }
+                                                                                                 }];
+  NSMutableDictionary<NSString *, id> *event2 = [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                 @"event" : @{
+                                                                                                     @"_eventName" : @"test_event",
+                                                                                                     @"_session_id" : @"2747F240-A089-4368-816A-D8175E756A80",
+                                                                                                     @"fb_mobile_time_between_sessions" : @"session_quanta_3"
+                                                                                                     }
+                                                                                                 }];
+  NSMutableDictionary<NSString *, id> *event3 = [NSMutableDictionary dictionaryWithDictionary: @{
+                                                                                                 @"event" : @{
+                                                                                                     @"_eventName" : @"background_event",
+                                                                                                     @"_session_id" : @"2747F240-A089-4368-816A-D8175E756A80",
+                                                                                                     @"fb_mobile_time_between_sessions" : @"session_quanta_3"
+                                                                                                     }
+                                                                                                 }];
+  NSMutableArray<NSDictionary<NSString *, id> *> *events = [NSMutableArray array];
+  [events addObject:event1];
+  [events addObject:event2];
+  [events addObject:event3];
+  [FBSDKRestrictiveDataFilterManager processEvents:events];
+  XCTAssertEqual(2, [events count]);
+
+  for (NSDictionary<NSString *, id> *event in events) {
+    XCTAssertFalse([event[@"event"][@"_eventName"] isEqualToString:deprecatedEventName]);
+  }
 }
 
 @end
