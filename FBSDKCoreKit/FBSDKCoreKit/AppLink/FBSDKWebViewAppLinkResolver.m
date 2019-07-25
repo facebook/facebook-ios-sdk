@@ -19,6 +19,7 @@
 #import "FBSDKWebViewAppLinkResolver.h"
 
 #import <UIKit/UIKit.h>
+#import <WebKit/WebKit.h>
 
 #import "FBSDKAppLink.h"
 #import "FBSDKAppLinkTarget.h"
@@ -62,40 +63,42 @@ static NSString *const FBSDKWebViewAppLinkResolverIPadKey = @"ipad";
 static NSString *const FBSDKWebViewAppLinkResolverWebURLKey = @"url";
 static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_fallback";
 
-@interface FBSDKWebViewAppLinkResolverWebViewDelegate : NSObject <UIWebViewDelegate>
+@interface FBSDKWebViewAppLinkResolverWebViewDelegate : NSObject <WKNavigationDelegate>
 
-@property (nonatomic, copy) void (^didFinishLoad)(UIWebView *webView);
-@property (nonatomic, copy) void (^didFailLoadWithError)(UIWebView *webView, NSError *error);
+@property (nonatomic, copy) void (^didFinishLoad)(WKWebView *webView);
+@property (nonatomic, copy) void (^didFailLoadWithError)(WKWebView *webView, NSError *error);
 @property (nonatomic, assign) BOOL hasLoaded;
 
 @end
 
 @implementation FBSDKWebViewAppLinkResolverWebViewDelegate
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     if (self.didFinishLoad) {
         self.didFinishLoad(webView);
     }
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     if (self.didFailLoadWithError) {
         self.didFailLoadWithError(webView, error);
     }
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     if (self.hasLoaded) {
         // Consider loading a second resource to be "success", since it indicates an inner frame
         // or redirect is happening. We can run the tag extraction script at this point.
         self.didFinishLoad(webView);
-        return NO;
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
     }
     self.hasLoaded = YES;
-    return YES;
+    decisionHandler(WKNavigationActionPolicyAllow);
+    return;
 }
 
 @end
@@ -159,32 +162,35 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
       NSData *responseData = result[@"data"];
       NSHTTPURLResponse *response = result[@"response"];
 
-      UIWebView *webView = [[UIWebView alloc] init];
+      WKWebView *webView = [[WKWebView alloc] init];
       FBSDKWebViewAppLinkResolverWebViewDelegate *listener = [[FBSDKWebViewAppLinkResolverWebViewDelegate alloc] init];
       __block FBSDKWebViewAppLinkResolverWebViewDelegate *retainedListener = listener;
-      listener.didFinishLoad = ^(UIWebView *view) {
+      listener.didFinishLoad = ^(WKWebView *view) {
         if (retainedListener) {
-          NSDictionary<NSString *, id> *ogData = [self getALDataFromLoadedPage:view];
-          [view removeFromSuperview];
-          view.delegate = nil;
-          retainedListener = nil;
-          handler([self appLinkFromALData:ogData destination:url], nil);
+          [self getALDataFromLoadedPage:view completionHandler:^(NSDictionary<NSString *, id> *ogData) {
+            [view removeFromSuperview];
+            view.navigationDelegate = nil;
+            retainedListener = nil;
+            handler([self appLinkFromALData:ogData destination:url], nil);
+          }];
         }
       };
-      listener.didFailLoadWithError = ^(UIWebView* view, NSError *loadError) {
+      listener.didFailLoadWithError = ^(WKWebView* view, NSError *loadError) {
         if (retainedListener) {
           [view removeFromSuperview];
-          view.delegate = nil;
+          view.navigationDelegate = nil;
           retainedListener = nil;
           handler(nil, loadError);
         }
       };
-      webView.delegate = listener;
+      webView.navigationDelegate = listener;
       webView.hidden = YES;
-      [webView loadData:responseData
-               MIMEType:response.MIMEType
-       textEncodingName:response.textEncodingName
-                baseURL:response.URL];
+      if (@available(iOS 9.0, *)) {
+        [webView loadData:responseData
+                 MIMEType:response.MIMEType
+    characterEncodingName:response.textEncodingName
+                  baseURL:response.URL];
+      }
       UIWindow *window = [UIApplication sharedApplication].windows.firstObject;
       [window addSubview:webView];
     }];
@@ -228,15 +234,21 @@ static NSString *const FBSDKWebViewAppLinkResolverShouldFallbackKey = @"should_f
     return al;
 }
 
-- (NSDictionary<NSString *, id> *)getALDataFromLoadedPage:(UIWebView *)webView {
+- (void)getALDataFromLoadedPage:(WKWebView *)webView completionHandler:(void (^)(NSDictionary<NSString *, id> * result))completionHandler {
     // Run some JavaScript in the webview to fetch the meta tags.
-    NSString *jsonString = [webView stringByEvaluatingJavaScriptFromString:FBSDKWebViewAppLinkResolverTagExtractionJavaScript];
-    NSError *error = nil;
-    NSArray<NSDictionary<NSString *, id> *> *arr =
-      [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
-                                      options:0
-                                        error:&error];
-    return [self parseALData:arr];
+    [webView evaluateJavaScript:FBSDKWebViewAppLinkResolverTagExtractionJavaScript completionHandler:^(id result, NSError *error) {
+      if (![result isKindOfClass:[NSString class]]) {
+        completionHandler(nil);
+        return;
+      }
+      NSString *jsonString = (NSString *)result;
+      NSError *serializationError = nil;
+      NSArray<NSDictionary<NSString *, id> *> *arr =
+        [NSJSONSerialization JSONObjectWithData:[jsonString dataUsingEncoding:NSUTF8StringEncoding]
+                                        options:0
+                                          error:&serializationError];
+      completionHandler([self parseALData:arr]);
+    }];
 }
 
 /*

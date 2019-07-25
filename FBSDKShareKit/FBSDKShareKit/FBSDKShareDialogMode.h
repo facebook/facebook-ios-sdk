@@ -46,7 +46,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode)
    */
   FBSDKShareDialogModeBrowser,
   /**
-   @Displays the dialog in a UIWebView within the app.
+   @Displays the dialog in a WKWebView within the app.
    */
   FBSDKShareDialogModeWeb,
   /**
@@ -54,7 +54,7 @@ typedef NS_ENUM(NSUInteger, FBSDKShareDialogMode)
    */
   FBSDKShareDialogModeFeedBrowser,
   /**
-   @Displays the feed dialog in a UIWebView within the app.
+   @Displays the feed dialog in a WKWebView within the app.
    */
   FBSDKShareDialogModeFeedWeb,
 } NS_SWIFT_NAME(ShareDialog.Mode);
