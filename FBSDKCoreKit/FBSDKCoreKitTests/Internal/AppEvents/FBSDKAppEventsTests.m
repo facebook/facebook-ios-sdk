@@ -81,6 +81,11 @@ static NSString *const _mockUserID = @"mockUserID";
       isImplicitlyLogged:(BOOL)isImplicitlyLogged
              accessToken:(FBSDKAccessToken *)accessToken;
 
++ (void)logInternalEvent:(NSString *)eventName
+              parameters:(NSDictionary<NSString *, id> *)parameters
+      isImplicitlyLogged:(BOOL)isImplicitlyLogged
+             accessToken:(FBSDKAccessToken *)accessToken;
+
 + (void)logImplicitEvent:(NSString *)eventName
               valueToSum:(NSNumber *)valueToSum
               parameters:(NSDictionary<NSString *, id> *)parameters
@@ -600,6 +605,18 @@ static NSString *const _mockUserID = @"mockUserID";
 
   [FBSDKAppEvents logInternalEvent:_mockEventName valueToSum:_mockPurchaseAmount isImplicitlyLogged:NO];
 
+  [_mockAppEvents verify];
+}
+
+- (void)testLogInternalEventWithAccessToken
+{
+  id mockAccessToken = [OCMockObject niceMockForClass:[FBSDKAccessToken class]];
+  [[[_mockAppEvents expect] andForwardToRealObject] logInternalEvent:_mockEventName
+                                                          valueToSum:nil
+                                                          parameters:@{}
+                                                  isImplicitlyLogged:NO
+                                                         accessToken:mockAccessToken];
+  [FBSDKAppEvents logInternalEvent:_mockEventName parameters:@{} isImplicitlyLogged:NO accessToken:mockAccessToken];
   [_mockAppEvents verify];
 }
 
