@@ -21,6 +21,9 @@ import FBSDKLoginKit
 import Foundation
 import UIKit
 
+/// LoginManager
+public typealias LoginManager = FBSDKLoginKit.LoginManager
+
 /// Login Result Block
 public typealias LoginResultBlock = (LoginResult) -> Void
 
