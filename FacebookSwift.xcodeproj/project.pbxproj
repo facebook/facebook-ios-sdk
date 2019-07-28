@@ -181,13 +181,40 @@
 			remoteGlobalIDString = 81A07EDF1D1A2E6A0041A29C;
 			remoteInfo = "FBSDKShareKit-Dynamic";
 		};
+		C5C09AAA22ED1C1000DF78C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A091D36D41700066F63 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3B62276B51500CA3706;
+			remoteInfo = FBSDKCoreKit_Basics;
+		};
+		C5C09AAC22ED1C1000DF78C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A091D36D41700066F63 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4D42276BA1200CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics-Dynamic";
+		};
+		C5C09AAE22ED1C1000DF78C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A091D36D41700066F63 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B3CC2276B67200CA3706;
+			remoteInfo = FBSDKCoreKit_Basics_TV;
+		};
+		C5C09AB022ED1C1000DF78C8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 81AB8A091D36D41700066F63 /* FBSDKCoreKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = C5C4B4EA2276BA8D00CA3706;
+			remoteInfo = "FBSDKCoreKit_Basics_TV-Dynamic";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		039F241B1F018FAA00489799 /* FBSDKSettingsInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBSDKSettingsInitializer.h; sourceTree = "<group>"; };
 		039F241C1F018FAA00489799 /* FBSDKSettingsInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBSDKSettingsInitializer.m; sourceTree = "<group>"; };
 		810192A31D01305400B9E881 /* FBProfilePictureView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FBProfilePictureView.swift; sourceTree = "<group>"; };
-		810192A51D01305400B9E881 /* AppEvents.Name.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppEvents.Name.swift; sourceTree = "<group>"; };
 		810192AA1D01305400B9E881 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		810192AD1D01305400B9E881 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		8115C0D81CFE540D001FF33B /* FacebookCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FacebookCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -395,6 +422,10 @@
 				81AB8A3F1D36D41700066F63 /* FBSDKCoreKitTests.xctest */,
 				81AB8A411D36D41700066F63 /* FBSDKCoreKit.framework */,
 				81AB8A431D36D41700066F63 /* FBSDKCoreKit.framework */,
+				C5C09AAB22ED1C1000DF78C8 /* FBSDKCoreKit.framework */,
+				C5C09AAD22ED1C1000DF78C8 /* FBSDKCoreKit.framework */,
+				C5C09AAF22ED1C1000DF78C8 /* FBSDKCoreKit.framework */,
+				C5C09AB122ED1C1000DF78C8 /* FBSDKCoreKit.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -695,6 +726,34 @@
 			remoteRef = 81AB8A5D1D36D41700066F63 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		C5C09AAB22ED1C1000DF78C8 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C5C09AAA22ED1C1000DF78C8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C5C09AAD22ED1C1000DF78C8 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C5C09AAC22ED1C1000DF78C8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C5C09AAF22ED1C1000DF78C8 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C5C09AAE22ED1C1000DF78C8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		C5C09AB122ED1C1000DF78C8 /* FBSDKCoreKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FBSDKCoreKit.framework;
+			remoteRef = C5C09AB022ED1C1000DF78C8 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -869,7 +928,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC41D356E9A006401F1 /* FacebookCore.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -877,7 +935,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC41D356E9A006401F1 /* FacebookCore.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -885,7 +942,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC51D356E9A006401F1 /* FacebookLogin.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -893,7 +949,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC51D356E9A006401F1 /* FacebookLogin.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -901,7 +956,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC61D356E9A006401F1 /* FacebookShare.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -909,7 +963,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 81654DC61D356E9A006401F1 /* FacebookShare.xcconfig */;
 			buildSettings = {
-				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
