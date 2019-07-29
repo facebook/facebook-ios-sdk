@@ -53,6 +53,5 @@ NS_SWIFT_NAME(LikeActionController)
 @property (nonatomic, copy, readonly) NSString *socialSentence;
 
 - (void)refresh;
-- (void)toggleLikeWithSoundEnabled:(BOOL)soundEnabled analyticsParameters:(NSDictionary *)analyticsParameters fromViewController:(UIViewController *)fromViewController;
 
 @end
