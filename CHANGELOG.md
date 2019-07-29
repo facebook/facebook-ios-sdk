@@ -7,7 +7,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## Unreleased
 
-[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.3...HEAD)
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.3.0...HEAD)
+
+## 5.3.0
+
+[2019-07-29](https://github.com/facebook/facebook-objc-sdk/releases/tag/v5.3.0) |
+[Full Changelog](https://github.com/facebook/facebook-objc-sdk/compare/v5.2.3...v5.3.0)
 
 ## 5.2.3
 
