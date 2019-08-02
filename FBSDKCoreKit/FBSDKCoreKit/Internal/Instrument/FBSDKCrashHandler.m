@@ -16,56 +16,33 @@
 // IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 // CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+#import "FBSDKCrashHandler.h"
 
-NS_ASSUME_NONNULL_BEGIN
+static NSUncaughtExceptionHandler *previousExceptionHandler = NULL;
 
-/**
- FBSDKFeature enum
- Defines features in SDK
+@implementation FBSDKCrashHandler
 
- Sample:
- FBSDKFeatureAppEvents = 0x000100,
-                            ^ ^ ^
-                            | | |
-                          kit | |
-                        feature |
-                      sub-feature
- 1st byte: kit
- 2nd byte: feature
- 3rd byte: sub-feature
- */
-typedef NS_ENUM(NSUInteger, FBSDKFeature)
++ (void)installExceptionsHandler
 {
-  // Features in CoreKit
-  /** Essential of CoreKit */
-  FBSDKFeatureCore = 0x000000,
+  NSUncaughtExceptionHandler *currentHandler = NSGetUncaughtExceptionHandler();
 
-  FBSDKFeatureAppEvents = 0x000100,
-  FBSDKFeatureCodelessEvents,
-  FBSDKFeatureRestrictiveDataFiltering,
-  FBSDKFeatureInstrument = 0x000200,
-  FBSDKFeatureCrashReport,
+  if (currentHandler != FBSDKExceptionHandler) {
+    previousExceptionHandler = currentHandler;
+    NSSetUncaughtExceptionHandler(&FBSDKExceptionHandler);
+  }
+}
 
++ (void)uninstallExceptionsHandler
+{
+  NSSetUncaughtExceptionHandler(previousExceptionHandler);
+  previousExceptionHandler = nil;
+}
 
-  // Features in LoginKit
-  /** Essential of LoginKit */
-  FBSDKFeatureLogin = 0x010000,
-
-  // Features in ShareKit
-  /** Essential of ShareKit */
-  FBDSDKFeatureShare = 0x020000,
-
-  // Features in PlacesKit
-  /** Essential of PlacesKit */
-  FBSDKFeaturePlaces = 0x030000,
-
-} NS_SWIFT_NAME(SDKFeature);
-
-@interface FBSDKFeatureManager : NSObject
-
-+ (BOOL)isEnabled:(FBSDKFeature)feature;
+static void FBSDKExceptionHandler(NSException *exception)
+{
+  if (previousExceptionHandler) {
+    previousExceptionHandler(exception);
+  }
+}
 
 @end
-
-NS_ASSUME_NONNULL_END

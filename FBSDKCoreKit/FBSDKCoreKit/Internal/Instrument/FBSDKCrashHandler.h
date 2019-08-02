@@ -18,54 +18,9 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+@interface FBSDKCrashHandler : NSObject
 
-/**
- FBSDKFeature enum
- Defines features in SDK
-
- Sample:
- FBSDKFeatureAppEvents = 0x000100,
-                            ^ ^ ^
-                            | | |
-                          kit | |
-                        feature |
-                      sub-feature
- 1st byte: kit
- 2nd byte: feature
- 3rd byte: sub-feature
- */
-typedef NS_ENUM(NSUInteger, FBSDKFeature)
-{
-  // Features in CoreKit
-  /** Essential of CoreKit */
-  FBSDKFeatureCore = 0x000000,
-
-  FBSDKFeatureAppEvents = 0x000100,
-  FBSDKFeatureCodelessEvents,
-  FBSDKFeatureRestrictiveDataFiltering,
-  FBSDKFeatureInstrument = 0x000200,
-  FBSDKFeatureCrashReport,
-
-
-  // Features in LoginKit
-  /** Essential of LoginKit */
-  FBSDKFeatureLogin = 0x010000,
-
-  // Features in ShareKit
-  /** Essential of ShareKit */
-  FBDSDKFeatureShare = 0x020000,
-
-  // Features in PlacesKit
-  /** Essential of PlacesKit */
-  FBSDKFeaturePlaces = 0x030000,
-
-} NS_SWIFT_NAME(SDKFeature);
-
-@interface FBSDKFeatureManager : NSObject
-
-+ (BOOL)isEnabled:(FBSDKFeature)feature;
++ (void)installExceptionsHandler;
++ (void)uninstallExceptionsHandler;
 
 @end
-
-NS_ASSUME_NONNULL_END
