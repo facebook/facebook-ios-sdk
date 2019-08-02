@@ -46,7 +46,7 @@
 
 + (BOOL)checkGK:(FBSDKFeature)feature
 {
-  NSString *key = [NSString stringWithFormat:@"fb_sdk_feature_%@", [self featureName:feature]];
+  NSString *key = [NSString stringWithFormat:@"FBSDKFeature%@", [self featureName:feature]];
   BOOL defaultValue = [self defaultStatus:feature];
 
   return [FBSDKGateKeeperManager boolForKey:key
@@ -57,16 +57,16 @@
 {
   NSString *featureName;
   switch (feature) {
-    case FBSDKFeatureCore: featureName = @"core_kit"; break;
-    case FBSDKFeatureAppEvents: featureName = @"app_events"; break;
-    case FBSDKFeatureCodelessEvents: featureName = @"codeless_events"; break;
-    case FBSDKFeatureRestrictiveDataFiltering: featureName = @"restrictive_data_filtering"; break;
+    case FBSDKFeatureCore: featureName = @"CoreKit"; break;
+    case FBSDKFeatureAppEvents: featureName = @"AppEvents"; break;
+    case FBSDKFeatureCodelessEvents: featureName = @"CodelessEvents"; break;
+    case FBSDKFeatureRestrictiveDataFiltering: featureName = @"RestrictiveDataFiltering"; break;
 
-    case FBSDKFeatureLogin: featureName = @"login_kit"; break;
+    case FBSDKFeatureLogin: featureName = @"LoginKit"; break;
 
-    case FBDSDKFeatureShare: featureName = @"share_kit"; break;
+    case FBDSDKFeatureShare: featureName = @"ShareKit"; break;
 
-    case FBSDKFeaturePlaces: featureName = @"places_kit"; break;
+    case FBSDKFeaturePlaces: featureName = @"PlacesKit"; break;
   }
 
   return featureName;
@@ -74,7 +74,11 @@
 
 + (BOOL)defaultStatus:(FBSDKFeature)feature
 {
-  return YES;
+  switch (feature) {
+    case FBSDKFeatureRestrictiveDataFiltering:
+      return NO;
+    default: return YES;
+  }
 }
 
 @end
