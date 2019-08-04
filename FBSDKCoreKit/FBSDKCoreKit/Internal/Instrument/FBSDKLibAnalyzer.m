@@ -20,7 +20,11 @@
 
 #import <objc/runtime.h>
 
+#import "FBSDKCrashStorage.h"
+
 @implementation FBSDKLibAnalyzer
+
+static NSArray<NSArray<NSString *> *> *addressMapping;
 
 + (void)initialize
 {
@@ -36,9 +40,10 @@
     NSArray<NSString *> *allClasses = [self getClassNames];
     for (NSString *className in allClasses) {
       Class class = NSClassFromString(className);
-      [self addClass:class methodMappings:methodMapping isClassMethod:NO];
-      [self addClass:object_getClass(class) methodMappings:methodMapping isClassMethod:YES];
+      [self addClass:class methodMapping:methodMapping isClassMethod:NO];
+      [self addClass:object_getClass(class) methodMapping:methodMapping isClassMethod:YES];
     }
+    [self processMapping:methodMapping];
   });
 }
 
@@ -66,7 +71,7 @@
 }
 
 + (void)addClass:(Class)class
-  methodMappings:(NSMutableArray<NSArray<NSString *> *> *)methodMappings
+   methodMapping:(NSMutableArray<NSArray<NSString *> *> *)methodMapping
    isClassMethod:(BOOL)isClassMethod
 {
   unsigned int methodsCount = 0;
@@ -81,7 +86,7 @@
       SEL selector = method_getName(method);
 
       IMP methodImplementation = class_getMethodImplementation(class, selector);
-      NSString *methodAddress = [NSString stringWithFormat:@"%lx", (unsigned long)methodImplementation];
+      NSString *methodAddress = [NSString stringWithFormat:@"0x%010lx", (unsigned long)methodImplementation];
       NSString *methodName = [NSString stringWithFormat:@"%@[%@ %@]",
                               methodType,
                               NSStringFromClass(class),
@@ -89,11 +94,21 @@
 
       if (methodAddress && methodName) {
         NSArray<NSString *> *addressMapEntry = @[methodAddress, methodName];
-        [methodMappings addObject:addressMapEntry];
+        [methodMapping addObject:addressMapEntry];
       }
     }
   }
   free(methods);
+}
+
++ (void)processMapping:(NSArray<NSArray<NSString *> *> *)unsortedMethodAddressMapping
+{
+  if (!unsortedMethodAddressMapping) {
+    return;
+  }
+  addressMapping = [unsortedMethodAddressMapping sortedArrayUsingComparator:^NSComparisonResult(id _Nonnull obj1, id _Nonnull obj2) {
+    return [obj1[0] compare:obj2[0]];
+  }];
 }
 
 @end
