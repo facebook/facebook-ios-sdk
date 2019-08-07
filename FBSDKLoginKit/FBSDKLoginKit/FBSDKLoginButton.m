@@ -69,7 +69,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
 
 - (UIFont *)defaultFont
 {
-  return [UIFont systemFontOfSize:13];
+  return [UIFont systemFontOfSize:15 weight:UIFontWeightSemibold];
 }
 
 #pragma mark - UIView
@@ -179,7 +179,7 @@ static const CGFloat kPaddingBetweenLogoTitle = 8.0;
                                                       toItem:nil
                                                    attribute:NSLayoutAttributeNotAnAttribute
                                                   multiplier:1
-                                                    constant:28]];
+                                                    constant:kButtonHeight]];
   [self _updateContent];
 
   [self addTarget:self action:@selector(_buttonPressed:) forControlEvents:UIControlEventTouchUpInside];

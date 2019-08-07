@@ -250,11 +250,6 @@
   return [[FBSDKLogo alloc] init];
 }
 
-- (FBSDKIcon *)highlightedIcon
-{
-  return [[FBSDKIcon alloc] initWithColor:[self highlightedContentColor]];
-}
-
 - (UIColor *)defaultSelectedColor
 {
   return [UIColor colorWithRed:124.0/255.0 green:143.0/255.0 blue:200.0/255.0 alpha:1.0];
@@ -338,7 +333,7 @@
     icon = [self defaultIcon];
   }
   if (!selectedIcon) {
-    selectedIcon = [self highlightedIcon];
+    selectedIcon = [self defaultIcon];
   }
   if (!backgroundColor) {
     backgroundColor = [self defaultBackgroundColor];
