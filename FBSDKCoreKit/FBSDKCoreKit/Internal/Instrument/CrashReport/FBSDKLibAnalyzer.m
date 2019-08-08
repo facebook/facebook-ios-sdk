@@ -107,7 +107,7 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
     NSArray<NSString *> *symbolicatedCallstack = [self symbolicateCallstack:callstack sortedAllAddress:sortedAllAddress addressMapping:previousMapping];
 
     NSMutableDictionary<NSString *, id> *mutableCrashInfo = [NSMutableDictionary dictionaryWithDictionary:crashInfo];
-    if (symbolicatedCallstack != nil) {
+    if (symbolicatedCallstack) {
       mutableCrashInfo[kFBSDKCallstack] = symbolicatedCallstack;
       reportBlock(mutableCrashInfo);
     }
@@ -121,16 +121,23 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
   if (!callstack){
     return nil;
   }
+  NSInteger nonSDKMethodCount = 0;
   NSMutableArray<NSString *> *symbolicatedCallstack = [NSMutableArray array];
   for (NSUInteger i = 0; i < callstack.count; i++){
     NSString *rawAddress = [self getAddress:callstack[i]];
     NSString *addressString = [NSString stringWithFormat:@"0x%@",[rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
-    NSString *functionAddress = [self searchFunction:addressString sortedAllAddress:sortedAllAddress];
-    if (functionAddress) {
-      NSString *functionName = [addressMapping objectForKey:functionAddress];
-      [symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@", functionName]];
+    NSString *methodAddress = [self searchMethod:addressString sortedAllAddress:sortedAllAddress];
+    if (methodAddress) {
+      nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", nonSDKMethodCount]];
+      nonSDKMethodCount = 0;
+      NSString *methodName = [addressMapping objectForKey:methodAddress];
+      [symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self getOffset:addressString secondString:methodAddress]]];
+    } else {
+      nonSDKMethodCount++;
     }
   }
+  nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", nonSDKMethodCount]];
+
   return symbolicatedCallstack;
 }
 
@@ -145,8 +152,25 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
   return nil;
 }
 
-+ (NSString *)searchFunction:(NSString *)address
-            sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
++ (NSString *)getOffset:(NSString *)firstString
+           secondString:(NSString *)secondString
+{
+  if (!firstString || !secondString) {
+    return nil;
+  }
+  unsigned long long first = 0, second = 0;
+  NSScanner *scanner = [NSScanner scannerWithString:firstString];
+  [scanner scanHexLongLong:&first];
+
+  scanner = [NSScanner scannerWithString:secondString];
+  [scanner scanHexLongLong:&second];
+
+  unsigned long long difference = first - second;
+  return [NSString stringWithFormat:@"+%llu", difference];
+}
+
++ (NSString *)searchMethod:(NSString *)address
+          sortedAllAddress:(NSArray<NSString *> *)sortedAllAddress
 {
   if (0 == sortedAllAddress.count)
   {

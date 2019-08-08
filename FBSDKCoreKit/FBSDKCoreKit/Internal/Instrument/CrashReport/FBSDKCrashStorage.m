@@ -24,8 +24,8 @@
 static NSString *CrashReportStorageLibName = @"unknown";
 
 NSString *const kFBSDKCallstack = @"callstack";
-NSString *const kFBSDKCrashReason = @"crash_reason";
-NSString *const kFBSDKCrashTimeStamp = @"crash_time_stamp";
+NSString *const kFBSDKCrashReason = @"reason";
+NSString *const kFBSDKCrashTimeStamp = @"timestamp";
 
 @implementation FBSDKCrashStorage
 
