@@ -128,7 +128,7 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
     NSString *addressString = [NSString stringWithFormat:@"0x%@",[rawAddress substringWithRange:NSMakeRange(rawAddress.length - 10, 10)]];
     NSString *methodAddress = [self searchMethod:addressString sortedAllAddress:sortedAllAddress];
     if (methodAddress) {
-      nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", nonSDKMethodCount]];
+      nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
       nonSDKMethodCount = 0;
       NSString *methodName = [addressMapping objectForKey:methodAddress];
       [symbolicatedCallstack addObject:[NSString stringWithFormat:@"%@%@", methodName, [self getOffset:addressString secondString:methodAddress]]];
@@ -136,7 +136,7 @@ static NSDictionary<NSString *,NSString *> *previousMapping;
       nonSDKMethodCount++;
     }
   }
-  nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", nonSDKMethodCount]];
+  nonSDKMethodCount == 0 ?: [symbolicatedCallstack addObject:[NSString stringWithFormat:@"(%ld DEV METHODS)", (long)nonSDKMethodCount]];
 
   return symbolicatedCallstack;
 }
